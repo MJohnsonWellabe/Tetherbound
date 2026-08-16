@@ -78,6 +78,7 @@ func _run() -> void:
 	await _check_backpack_tm_teach()
 	await _check_backpack_tm_refuses_when_nobody_can_learn()
 	await _check_backpack_drop_and_split()
+	await _check_backpack_move_and_quick_bar()
 	await _check_quest_log_tab()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_objective_line_updates_without_reload(world)
@@ -842,6 +843,193 @@ func _check_backpack_drop_and_split() -> void:
 		_fail("confirming Drop did not remove the item from the satchel")
 	else:
 		print("backpack_drop removes the stack for good once confirmed")
+
+
+## OW1 owner report: "I can't move things in my inventory. There's no separate
+## hot bar section. I can't move anything into it."
+##
+## Both halves were discoverability, not mechanism, so this checks the things a
+## player can actually PERCEIVE, not only that the model changed underneath:
+##
+##   - the quick bar has a home in this screen at all (five real, pressable
+##     chips), which is the half that simply did not exist;
+##   - a pick-up ANNOUNCES itself. The old code set `_held` and said nothing;
+##     the 2026-08-15 blind playtest picked up an orb stack by accident and had
+##     no way to tell. Asserting `_held` alone would have passed on that build;
+##   - a place announces itself and actually moves the stack;
+##   - a held stack can be put onto a quick slot with the same press, and the
+##     binding lands in `Game.hotbar` where the field HUD reads it;
+##   - `menu_cancel` while holding puts the stack back instead of closing the
+##     whole menu out from under a player who is mid-move;
+##   - the detail column NAMES the move verb. It never did, which is the
+##     literal content of "I can't move things in my inventory."
+func _check_backpack_move_and_quick_bar() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var game := _game
+	var inventory: RefCounted = game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+	var status: Label = _menu.get("_status") as Label
+
+	# --- the bar has a section on this screen ------------------------------
+	var bar_buttons: Array = body.get("_bar_buttons") if body.get("_bar_buttons") != null else []
+	if bar_buttons.size() != 5:
+		_fail("the backpack tab draws %d quick-bar slots, not 5 -- the hotbar still has no home in the UI" % bar_buttons.size())
+	else:
+		print("backpack draws a %d-slot quick bar section" % bar_buttons.size())
+
+	# --- pick up: it must say so -------------------------------------------
+	inventory.call("add", "orb_basic", 4)
+	var source: int = int(inventory.call("find_slot", "orb_basic"))
+	if source < 0:
+		_fail("could not find the orb slot after adding some")
+		return
+	var empty := -1
+	for i in int(inventory.call("slot_count")):
+		if bool(inventory.call("is_slot_empty", i)):
+			empty = i
+			break
+	if empty < 0:
+		_fail("the move check needs one empty satchel slot and the bag is full")
+		return
+
+	(body.get("_buttons")[source] as Button).grab_focus()
+	await process_frame
+	_menu.call("say", "")
+	await _press("ui_accept")
+
+	if int(body.get("_held")) != source:
+		_fail("pressing confirm on a full slot did not pick the stack up (_held=%d)" % int(body.get("_held")))
+		return
+	if status == null or status.text.is_empty():
+		_fail("picking a stack up said nothing on screen; a player cannot tell it happened")
+	elif not status.text.contains("Orb"):
+		_fail("the pick-up message does not name what was picked up: \"%s\"" % status.text)
+	else:
+		print("pick-up announces itself: \"%s\"" % status.text)
+
+	var banner: RichTextLabel = body.get("_held_banner") as RichTextLabel
+	if banner == null or not banner.visible:
+		_fail("nothing on the backpack screen shows that a stack is in hand")
+	elif not banner.text.contains("HOLDING"):
+		_fail("the held-stack banner is visible but does not say a stack is held: \"%s\"" % banner.text)
+
+	# --- cancel: put it back, and do NOT close the menu ---------------------
+	await _press("menu_cancel")
+	if not bool(_menu.call("is_open")):
+		_fail("`menu_cancel` while holding a stack closed the whole menu instead of putting the stack back")
+		return
+	if int(body.get("_held")) != -1:
+		_fail("`menu_cancel` while holding a stack did not put it back down")
+	else:
+		print("`menu_cancel` while holding puts the stack back and keeps the menu open")
+
+	# --- place into a chosen empty slot ------------------------------------
+	(body.get("_buttons")[source] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	if int(body.get("_held")) != source:
+		_fail("could not pick the stack up again for the place half of the check")
+		return
+
+	(body.get("_buttons")[empty] as Button).grab_focus()
+	await process_frame
+	_menu.call("say", "")
+	await _press("ui_accept")
+
+	if int(body.get("_held")) != -1:
+		_fail("placing onto an empty slot did not release the held stack")
+	if str((inventory.call("stack_at", empty) as Dictionary).get("id", "")) != "orb_basic":
+		_fail("placing onto slot %d did not move the orbs there" % (empty + 1))
+	elif status == null or not status.text.contains("Orb"):
+		_fail("placing a stack said nothing that names it: \"%s\"" % (status.text if status != null else ""))
+	else:
+		print("a stack moves to the CHOSEN slot and says so: \"%s\"" % status.text)
+
+	# --- place onto a quick slot -------------------------------------------
+	var moved: int = int(inventory.call("find_slot", "orb_basic"))
+	if moved < 0:
+		_fail("lost the orbs somewhere between the move and the bind check")
+		return
+	if bar_buttons.size() != 5:
+		# Already failed above. Everything past here presses a chip that does
+		# not exist, so stop rather than crash on an empty array -- the
+		# assertions before this point still ran against the real build.
+		return
+	game.call("assign_hotbar", 3, "")
+	(body.get("_buttons")[moved] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	if int(body.get("_held")) != moved:
+		_fail("could not pick the stack up for the quick-bar half of the check")
+		return
+
+	(bar_buttons[3] as Button).grab_focus()
+	await process_frame
+	_menu.call("say", "")
+	await _press("ui_accept")
+
+	var bar: Array = game.get("hotbar") as Array
+	if str(bar[3]) != "orb_basic":
+		_fail("placing a held stack onto quick slot 4 did not bind it (slot 4 holds '%s')" % str(bar[3]))
+	elif int(body.get("_held")) != -1:
+		_fail("binding to a quick slot did not release the held stack")
+	elif status == null or not status.text.contains("quick slot"):
+		_fail("binding to a quick slot said nothing about it: \"%s\"" % (status.text if status != null else ""))
+	else:
+		print("a held stack binds to the chosen quick slot: \"%s\"" % status.text)
+
+	# The satchel must be UNCHANGED by a bind -- the bar holds item ids, and a
+	# player who thought his orbs had left the bag would be right to panic.
+	if str((inventory.call("stack_at", moved) as Dictionary).get("id", "")) != "orb_basic":
+		_fail("binding an item to the quick bar removed it from the satchel")
+
+	# --- a raw material is refused, out loud, without dropping the stack ----
+	var wood_slot: int = int(inventory.call("find_slot", "wood"))
+	if wood_slot >= 0:
+		(body.get("_buttons")[wood_slot] as Button).grab_focus()
+		await process_frame
+		await _press("ui_accept")
+		(bar_buttons[4] as Button).grab_focus()
+		await process_frame
+		_menu.call("say", "")
+		await _press("ui_accept")
+		bar = game.get("hotbar") as Array
+		if str(bar[4]) == "wood":
+			_fail("a raw material was allowed onto the quick bar")
+		if int(body.get("_held")) != wood_slot:
+			_fail("refusing a raw material dropped the held stack; the player is left with nowhere to put it")
+		if status == null or status.text.is_empty():
+			_fail("refusing a raw material on the quick bar said nothing")
+		else:
+			print("a raw material is refused out loud and stays in hand: \"%s\"" % status.text)
+		await _press("menu_cancel")
+
+	# --- the screen names the move verb ------------------------------------
+	(body.get("_buttons")[moved] as Button).grab_focus()
+	for i in 4:
+		await process_frame
+	var hint: RichTextLabel = body.get("_detail_hint") as RichTextLabel
+	if hint == null:
+		_fail("the backpack's verb legend is not a RichTextLabel and cannot draw button glyphs")
+	elif not hint.text.to_lower().contains("pick up"):
+		_fail("the backpack's verb legend never names the move verb: \"%s\"" % hint.text.replace("\n", " / "))
+	else:
+		print("the verb legend names the move verb")
+
+	# --- and stops claiming satchel slot N is hotbar slot N -----------------
+	(body.get("_buttons")[0] as Button).grab_focus()
+	for i in 4:
+		await process_frame
+	var kind: Label = body.get("_detail_kind") as Label
+	var blurb: Label = body.get("_detail_blurb") as Label
+	var claim := "%s %s" % [kind.text if kind != null else "", blurb.text if blurb != null else ""]
+	if claim.to_lower().contains("hotbar 1") or claim.to_lower().contains("also hotbar"):
+		_fail("the detail column still claims satchel slot 1 is a hotbar slot: \"%s\"" % claim.strip_edges())
+	else:
+		print("the detail column no longer claims satchel slot N is hotbar slot N")
 
 
 ## SB11: the quest log tab reads the same flag store the HUD's tracked line

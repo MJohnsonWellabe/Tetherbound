@@ -100,7 +100,7 @@
         },
         {
           "name": "Quick items",
-          "note": "HD2. The five satchel slots at the top-left of the backpack grid, usable straight from the field.",
+          "note": "The five quick-bar slots, usable straight from the field. This note used to say they were 'the five satchel slots at the top-left of the backpack grid', which stopped being true when d21f32ce made the bar five assignable item bindings on game_state.gd::hotbar -- the backpack now draws the bar itself, above the satchel, and you put an item on it there (OW1).",
           "actions": ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
         },
         {
@@ -122,7 +122,7 @@
         },
         {
           "name": "Backpack",
-          "note": "backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. OF21 moved `torch_toggle` off Start (it used to collide with backpack_drop here) and, separately, put the new `build_open` (The world group) on Start too -- safe for the same reason: build_open is only read from ordinary exploration, a state backpack_drop's own `menu.is_open()` gate never overlaps with.",
+          "note": "OW1: backpack_drop and backpack_assign BOTH shipped on keyboard G, and both are read from tab_backpack.gd's one poll() with _read_drop() first -- so on a keyboard G always opened the drop confirmation and the assign verb was unreachable entirely, which is half of the owner's 'I can't move anything into [the hotbar]'. backpack_assign moved to J, putting the three backpack verbs on G/H/J side by side; tests/test_controls.gd::test_no_two_menu_context_actions_share_a_keyboard_key fails the build if they collide again. Original note follows. backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. OF21 moved `torch_toggle` off Start (it used to collide with backpack_drop here) and, separately, put the new `build_open` (The world group) on Start too -- safe for the same reason: build_open is only read from ordinary exploration, a state backpack_drop's own `menu.is_open()` gate never overlaps with.",
           "actions": ["backpack_drop", "backpack_split", "backpack_assign"]
         }
       ],
@@ -164,7 +164,7 @@
         "menu_cancel": "Back  /  close the menu",
         "backpack_drop": "Backpack: drop the focused item",
         "backpack_split": "Backpack: split the focused stack",
-        "backpack_assign": "Backpack: put the focused item on an action slot",
+        "backpack_assign": "Backpack: put the focused item on the quick bar",
         "build_place": "Build: place the piece",
         "build_cancel": "Build: put the piece away",
         "build_rotate_left": "Build: rotate left",

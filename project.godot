@@ -286,7 +286,7 @@ use_tool={
 }
 backpack_assign={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":74,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
 ]
 }

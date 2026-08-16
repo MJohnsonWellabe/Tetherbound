@@ -42,17 +42,31 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
-## Owner playtest report: "we should be able to pick what goes in the
-## hotbar in our inventory." That already works -- HD2's hotbar
-## (playground_hud.gd::_update_hotbar) mirrors satchel slots 0-4 directly,
-## and this grid already lets a player move any item into any slot
-## (pick-up-then-place, the same mechanic that powers Drop/Split). The gap
-## was never the mechanic, it was that nothing in this screen told the
-## player those five slots WERE the hotbar -- so placing an item in slot 3
-## silently changed what D-pad-right does out in the field with no visible
-## connection between the two. `_HOTBAR_ACTIONS` matches playground_hud.gd's
-## own list exactly, badge-for-badge, so the glyph shown here on a slot is
-## the identical glyph the field HUD shows for that same slot.
+## OW1. Owner, after playing: "I can't move things in my inventory. There's no
+## separate hot bar section. I can't move anything into it."
+##
+## Both halves were true as EXPERIENCE and neither was true as mechanism. The
+## move verb existed (pick-up-then-place, below) and nothing on screen named it:
+## the detail column's hint line listed Use/Drop/Split and never mentioned that
+## confirm picks a stack up, and a pick-up announced itself only by appending
+## muted grey text to the slot-count line at the top of the tab. The 2026-08-15
+## blind playtest hit the same wall from the other side -- a stray confirm press
+## picked an orb stack up and nothing legible said so.
+##
+## The hotbar had no section because it had no home in this screen at all.
+## `d21f32ce` made it a real assignable bar of five ITEM IDS on
+## `game_state.gd::hotbar`, drawn only by the field HUD; the mitigation left
+## behind in here was a per-tile badge, which shows nothing until an item is
+## already bound and so cannot answer "where is the hotbar". Worse, the detail
+## column still carried the pre-`d21f32ce` mirror's text -- "Whatever you place
+## here is also hotbar slot 3" -- which was by then simply false. A player who
+## read it, moved a potion into satchel slot 3 and found the field bar unchanged
+## was being lied to by the screen.
+##
+## So this tab now draws the bar itself, above the satchel grid, and a held
+## stack can be placed onto it with the same one press that places into a grid
+## slot. `HOTBAR_BADGE_ACTIONS` matches playground_hud.gd's own list exactly,
+## so a glyph shown here on a slot is the identical glyph the field HUD shows.
 const HOTBAR_BADGE_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
 
 ## Same button as the creatures tab's "set active": use the focused item.
@@ -65,19 +79,38 @@ const DROP_ACTION := "backpack_drop"
 ## same press with no picker or confirm.
 const SPLIT_ACTION := "backpack_split"
 
-## Put the focused item on an action slot (or take it off). Keyboard G, gamepad
+## Put the focused item on an action slot (or take it off). Keyboard J, gamepad
 ## Y -- Y is `inventory`'s button, which on this tab has nothing left to do
 ## (`game_menu.gd` now skips a shortcut aimed at the tab already showing).
+##
+## OW1 found this verb was DEAD on a keyboard: `backpack_assign` and
+## `backpack_drop` both shipped on G, both are read from this same `poll()`,
+## and `_read_drop()` runs first and opens the drop confirmation -- which then
+## gates `_read_assign()` out on the very same press. A keyboard player had no
+## way at all to put an item on the bar. G/H/J now sit next to each other as
+## the three backpack verbs; `tests/test_controls.gd` fails the build if two
+## of them collide again.
 const ASSIGN_ACTION := "backpack_assign"
 
 var _grid: GridContainer = null
 var _summary: Label = null
+## OW1's loud held-stack line. Separate from `_summary` rather than appended to
+## it, because the appended version was the thing that failed: muted grey, one
+## font size, at the far top of the screen, saying nothing a player skimming a
+## grid would catch. This one is warning-coloured, body-sized, carries the two
+## button glyphs that get you out, and is hidden entirely when nothing is held
+## so its presence alone means "you are carrying something".
+var _held_banner: RichTextLabel = null
 var _detail_name: Label = null
 var _detail_kind: Label = null
 var _detail_blurb: Label = null
 var _detail_effect: Label = null
 var _detail_count: Label = null
-var _detail_hint: Label = null
+## A RichTextLabel, not a Label: the verb legend is the one place in this tab a
+## player learns which BUTTON does what, and typing "A" into a string is the
+## defect `game_menu.gd::legend`'s own header describes at length (the pad's A
+## and the keyboard's A are different buttons). Glyphs are drawn per device.
+var _detail_hint: RichTextLabel = null
 var _preview_icon: TextureRect = null
 var _preview_name: Label = null
 var _buttons: Array = []
@@ -92,6 +125,24 @@ var _durability_bars: Array = []
 ## One badge per slot button, index-matched with `_buttons`. Shows the input
 ## glyph of the action slot the item in that tile is bound to, or nothing.
 var _hotbar_badges: Array = []
+
+## OW1's quick-bar strip: five chips drawing `game_state.gd::hotbar`, the same
+## five the field HUD draws, in the same order and with the same glyphs. These
+## are real focusable Buttons and not decoration -- placing a held stack onto
+## one binds it, which is the "I can't move anything into it" half of the
+## report. `_bar_focused` exists because `poll()` rewrites each chip's stylebox
+## every frame (to light the whole strip up while a stack is held) and would
+## otherwise stamp on the selected look the focus signals set.
+var _bar_buttons: Array = []
+var _bar_qty: Array = []
+var _bar_glyphs: Array = []
+var _bar_focused: int = -1
+
+## The strip's own instruction line. Rewritten every `poll()` rather than
+## written once, because what it should say depends on whether a stack is in
+## hand -- the moment a player IS holding something is the moment the sentence
+## "now press a quick slot" is worth reading.
+var _bar_hint: RichTextLabel = null
 
 ## Loaded icon textures, keyed by item id, so 24 slots redrawing every poll()
 ## does not mean 24 `load()` calls every frame. `load()` on a res:// path
@@ -169,6 +220,10 @@ func build() -> void:
 	_qty_labels.clear()
 	_durability_bars.clear()
 	_hotbar_badges.clear()
+	_bar_buttons.clear()
+	_bar_qty.clear()
+	_bar_glyphs.clear()
+	_bar_focused = -1
 	_target_rows.clear()
 	_confirm_rows.clear()
 	_held = -1
@@ -193,10 +248,30 @@ func build() -> void:
 	# so it moves onto the shared token instead of the config file.
 	var tile := Vector2(UITokens.SLOT, UITokens.SLOT)
 
+	# Summary and held banner share ONE row rather than stacking. A blind
+	# usability pass on the holding frame found the extra row pushed the whole
+	# panel down far enough to clip the descenders off the menu's footer legend
+	# -- an inventory screen that cuts its own button legend in half the moment
+	# you pick something up. Side by side costs three pixels of row height (26px
+	# banner against a 23px label) instead of a whole line.
+	var summary_row := HBoxContainer.new()
+	summary_row.add_theme_constant_override("separation", 24)
+	add_child(summary_row)
+
 	_summary = Label.new()
 	_summary.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_summary.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	add_child(_summary)
+	_summary.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	summary_row.add_child(_summary)
+
+	_held_banner = RichTextLabel.new()
+	_held_banner.bbcode_enabled = true
+	_held_banner.fit_content = true
+	_held_banner.scroll_active = false
+	_held_banner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_held_banner.add_theme_font_size_override("normal_font_size", UITokens.FONT_BODY)
+	_held_banner.visible = false
+	summary_row.add_child(_held_banner)
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 28)
@@ -217,7 +292,30 @@ func build() -> void:
 	# cells rather than the cells -- centering the fixed-size grid in its
 	# 35% column reads right at any window width.
 	_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	var left_panel := _panel(_grid)
+
+	# The quick bar sits ABOVE the satchel in the same column, not beside it and
+	# not on another tab. The owner looked for a hotbar section and did not find
+	# one; the cheapest way to be found is to be the first thing in the panel he
+	# was already looking at, under its own heading, drawn in the same 86px slot
+	# cells as the grid so the two read as one screen rather than two widgets.
+	var left_column := VBoxContainer.new()
+	left_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left_column.add_theme_constant_override("separation", 8)
+	left_column.add_child(_build_quick_bar())
+
+	var divider := HSeparator.new()
+	divider.add_theme_constant_override("separation", 14)
+	left_column.add_child(divider)
+
+	var satchel_heading := Label.new()
+	satchel_heading.text = "SATCHEL"
+	satchel_heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	satchel_heading.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	left_column.add_child(satchel_heading)
+	left_column.add_child(_grid)
+
+	var left_panel := _panel(left_column)
 	left_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left_panel.size_flags_stretch_ratio = 0.35
 	row.add_child(left_panel)
@@ -300,6 +398,8 @@ func build() -> void:
 		button.add_child(bar)
 		_durability_bars.append(bar)
 
+	_wire_bar_to_grid_focus()
+
 	_target_panel = _build_target_panel()
 	_target_panel.visible = false
 	add_child(_target_panel)
@@ -326,6 +426,115 @@ func _slot_style(selected: bool) -> StyleBoxFlat:
 	box.content_margin_right = 13
 	box.content_margin_bottom = 13
 	return box
+
+
+## OW1's quick-bar section: a heading that says what the strip IS, five chips
+## drawing `game_state.gd::hotbar`, and one line saying how to fill one.
+##
+## The instruction line is not decoration. Both halves of the owner's report
+## are a discoverability failure, and the two mechanisms it names -- pick a
+## stack up with confirm, then press a chip -- are exactly the two he could not
+## find. It is written with real glyphs rather than the letter "A" for the
+## reason `game_menu.gd::legend` documents: the pad's A and a keyboard's A are
+## different buttons, and this ships on both.
+func _build_quick_bar() -> VBoxContainer:
+	var section := VBoxContainer.new()
+	section.add_theme_constant_override("separation", 6)
+
+	var heading := Label.new()
+	heading.text = "QUICK BAR"
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	heading.add_theme_color_override("font_color", UITokens.TEAL)
+	section.add_child(heading)
+
+	var strip := HBoxContainer.new()
+	strip.add_theme_constant_override("separation", 10)
+	strip.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	section.add_child(strip)
+
+	for i in HOTBAR_BADGE_ACTIONS.size():
+		var chip := Button.new()
+		chip.custom_minimum_size = Vector2(UITokens.SLOT, UITokens.SLOT)
+		chip.text = ""
+		chip.expand_icon = true
+		chip.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		chip.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
+		chip.focus_mode = Control.FOCUS_ALL
+		chip.add_theme_stylebox_override("normal", _slot_style(false))
+		var index := i
+		chip.pressed.connect(func() -> void: _on_bar_slot(index))
+		chip.focus_entered.connect(func() -> void:
+			_bar_focused = index
+			_describe_bar_slot(index))
+		chip.focus_exited.connect(func() -> void:
+			if _bar_focused == index:
+				_bar_focused = -1)
+		strip.add_child(chip)
+		_bar_buttons.append(chip)
+
+		# The field HUD's own glyph for this slot, so the player learns the
+		# binding here and recognises it out in the world. Same id list, same
+		# artwork, same position on the tile as the satchel's own badges.
+		var glyph := RichTextLabel.new()
+		glyph.bbcode_enabled = true
+		glyph.fit_content = true
+		glyph.scroll_active = false
+		glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		glyph.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+		glyph.offset_left = 2
+		glyph.offset_top = 2
+		glyph.offset_right = 26
+		glyph.offset_bottom = 26
+		glyph.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[i], 20)
+		chip.add_child(glyph)
+		_bar_glyphs.append(glyph)
+
+		var qty := Label.new()
+		qty.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		qty.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		qty.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		qty.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		qty.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		qty.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+		qty.offset_left = -60
+		qty.offset_top = -24
+		qty.offset_right = -6
+		qty.offset_bottom = -3
+		chip.add_child(qty)
+		_bar_qty.append(qty)
+
+	_bar_hint = RichTextLabel.new()
+	_bar_hint.bbcode_enabled = true
+	_bar_hint.fit_content = true
+	_bar_hint.scroll_active = false
+	# FONT_LABEL, not FONT_TINY: this sentence is the instruction the whole
+	# section exists to deliver, and bible §17 is explicit that the Ally is a
+	# 7-inch panel. A 19px instruction nobody reads is the same as no section.
+	_bar_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	section.add_child(_bar_hint)
+
+	return section
+
+
+## Stick navigation between the strip and the grid, wired explicitly.
+##
+## Godot's geometric neighbour search does find these on its own most of the
+## time, but "most of the time" is not a property a controller-first screen can
+## ship on: the strip is five cells wide and the grid is six, so the rightmost
+## satchel column has nothing directly above it and the search can fall through
+## to whatever else is on screen. Column 5 is pinned to quick slot 5 by hand.
+func _wire_bar_to_grid_focus() -> void:
+	if _bar_buttons.is_empty() or _buttons.is_empty() or _grid == null:
+		return
+	var columns: int = maxi(1, _grid.columns)
+	for i in _bar_buttons.size():
+		var below: int = mini(i, _buttons.size() - 1)
+		(_bar_buttons[i] as Control).focus_neighbor_bottom = (_buttons[below] as Control).get_path()
+	for column in columns:
+		if column >= _buttons.size():
+			break
+		var above: int = mini(column, _bar_buttons.size() - 1)
+		(_buttons[column] as Control).focus_neighbor_top = (_bar_buttons[above] as Control).get_path()
 
 
 ## Center column, spec §7: a big icon of the selected item and its name
@@ -446,10 +655,17 @@ func _build_detail() -> Control:
 	_detail_count.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	panel.add_child(_detail_count)
 
-	_detail_hint = Label.new()
-	_detail_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_detail_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	_detail_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_hint = RichTextLabel.new()
+	_detail_hint.bbcode_enabled = true
+	_detail_hint.fit_content = true
+	_detail_hint.scroll_active = false
+	# FONT_LABEL rather than the FONT_TINY this line used to be. It is the one
+	# place the move/use/drop/split/bar verbs are named at all, and bible §17
+	# is explicit that the Ally is a 7-inch panel -- the previous 19px legend
+	# was the smallest text on the busiest screen in the game.
+	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
+	_detail_hint.custom_minimum_size = Vector2(320, 0)
 	panel.add_child(_detail_hint)
 
 	return panel
@@ -473,6 +689,7 @@ func poll() -> void:
 	_read_drop()
 	_read_split()
 	_read_assign()
+	_read_held_cancel()
 	_read_targeting_cancel()
 	_read_confirm_cancel()
 	if _targeting >= 0:
@@ -483,8 +700,8 @@ func poll() -> void:
 	var slots: int = int(inventory.call("slot_count"))
 	var used: int = int(inventory.call("used_slots"))
 	_summary.text = "%d of %d slots used" % [used, slots]
-	if _held >= 0:
-		_summary.text += "     holding slot %d — choose where it goes" % (_held + 1)
+	_refresh_held_banner()
+	_refresh_quick_bar()
 
 	# The preview/detail columns describe whatever is FOCUSED, and that can go
 	# stale mid-poll -- a Split changes the source slot's count while the
@@ -492,7 +709,13 @@ func poll() -> void:
 	# (label text writes, no node churn) and is the same "poll writes values"
 	# rule the rest of this file already follows.
 	if _targeting < 0 and _confirming < 0:
-		_describe(_focused)
+		# The cursor is either on a quick slot or in the grid, never both -- and
+		# whichever it is on owns the preview/detail columns, or this poll would
+		# overwrite what focusing a quick slot just wrote.
+		if _bar_focused >= 0:
+			_describe_bar_slot(_bar_focused)
+		else:
+			_describe(_focused)
 
 	var db: RefCounted = _items()
 	var game := state()
@@ -536,6 +759,116 @@ func poll() -> void:
 		button.button_pressed = i == _held
 
 
+## The one line that says "you are carrying a stack right now", drawn where a
+## player is already looking rather than in the corner. Hidden when nothing is
+## held, so its mere presence carries the message.
+func _refresh_held_banner() -> void:
+	if _held_banner == null:
+		return
+	if _held < 0:
+		_held_banner.visible = false
+		_held_banner.text = ""
+		return
+	var what := _stack_label(_held)
+	if what.is_empty():
+		what = "slot %d" % (_held + 1)
+	_held_banner.visible = true
+	_held_banner.text = "[color=#%s]HOLDING %s[/color]   %s put it down   %s put it back" % [
+		UITokens.WARNING.to_html(false), what,
+		INPUT_GLYPH.icon("confirm", 22), INPUT_GLYPH.icon("cancel", 22),
+	]
+
+
+## Draw the five quick slots from `game_state.gd::hotbar` -- the same array the
+## field HUD draws, read live rather than copied, so the two screens can never
+## disagree about what is on the bar.
+##
+## Deliberately does NOT call `autofill_hotbar()` the way playground_hud.gd
+## does. Autofill is a first-run courtesy that belongs to whichever screen the
+## player sees first; running it from here as well would mean opening the
+## backpack silently rearranged a bar the player had emptied on purpose.
+func _refresh_quick_bar() -> void:
+	var game := state()
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if game == null or inventory == null or db == null or _bar_buttons.is_empty():
+		return
+	var bar: Array = game.get("hotbar") as Array
+
+	for i in _bar_buttons.size():
+		var chip: Button = _bar_buttons[i]
+		var qty: Label = _bar_qty[i]
+		var id := str(bar[i]) if i < bar.size() else ""
+		# Every chip lights up while a stack is in hand: the strip is the answer
+		# to "where can this go", and a row of live-looking targets says that
+		# faster than any sentence.
+		chip.add_theme_stylebox_override("normal", _slot_style(_bar_focused == i or _held >= 0))
+		if id.is_empty():
+			chip.icon = null
+			qty.visible = false
+			continue
+		chip.icon = _icon_for(db, id)
+		var slot := int(inventory.call("find_slot", id))
+		var tool_max: int = int(inventory.call("max_durability_at", slot)) if slot >= 0 else 0
+		if tool_max > 0:
+			qty.visible = true
+			qty.text = "%d/%d" % [int(inventory.call("durability_at", slot)), tool_max]
+			qty.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		else:
+			var carried := int(inventory.call("count", id))
+			qty.visible = true
+			qty.text = str(carried)
+			# Bound but out of stock draws greyed rather than blank, matching
+			# playground_hud.gd: the habit has to survive running out.
+			qty.add_theme_color_override(
+				"font_color", UITokens.TEXT_PRIMARY if carried > 0 else UITokens.TEXT_MUTED
+			)
+
+	if _bar_hint != null:
+		_bar_hint.text = (
+			"[color=#%s]Press a slot to bind what you are holding.[/color]" % UITokens.TEAL.to_html(false)
+			if _held >= 0 else
+			"Usable out in the world. Pick a stack up with %s, then press a slot." % INPUT_GLYPH.icon("confirm", 22)
+		)
+
+
+## The center/right columns describe a quick slot while the cursor is on one,
+## so moving onto the strip is looking at it -- the same "focus IS inspection"
+## rule the satchel grid already follows.
+func _describe_bar_slot(index: int) -> void:
+	var game := state()
+	var db: RefCounted = _items()
+	var inventory: RefCounted = _inventory()
+	if game == null or db == null or inventory == null or _detail_name == null:
+		return
+	var bar: Array = game.get("hotbar") as Array
+	var id := str(bar[index]) if index < bar.size() else ""
+
+	_detail_kind.text = "QUICK SLOT %d" % (index + 1)
+	_detail_effect.text = ""
+	if id.is_empty():
+		_preview_icon.texture = null
+		_preview_name.text = "Quick slot %d" % (index + 1)
+		_detail_name.text = "Quick slot %d" % (index + 1)
+		_detail_blurb.text = "Nothing bound. Pick a stack up in the satchel and press here to put it on the bar."
+		_detail_count.text = ""
+		_detail_hint.text = "%s  Pick a stack up first" % INPUT_GLYPH.icon("confirm", 22)
+		return
+
+	var item_name := str(db.call("item_name", id))
+	_preview_icon.texture = _icon_for(db, id)
+	_preview_name.text = item_name
+	_detail_name.text = item_name
+	_detail_blurb.text = str((db.call("definition", id) as Dictionary).get("description", db.call("blurb", id)))
+	_detail_count.text = "%d held" % int(inventory.call("count", id))
+	# One button, two meanings depending on whether a stack is in hand, so the
+	# legend has to name the one that applies right now rather than both.
+	_detail_hint.text = "%s  %s" % [
+		INPUT_GLYPH.icon("confirm", 22),
+		"Bind what you are holding here" if _held >= 0 else "Take it off the bar",
+	]
+
+
 ## The loaded icon for `id`, cached -- see `_icon_cache`'s own comment.
 func _icon_for(db: RefCounted, id: String) -> Texture2D:
 	if _icon_cache.has(id):
@@ -560,26 +893,157 @@ func _durability_tier_color(fraction: float) -> Color:
 
 ## Pick up, or put down. Placing onto an occupied slot merges same-item stacks
 ## and swaps otherwise, which is autoload/inventory.gd's rule, not this file's.
+##
+## OW1: every branch here now SAYS what it did. The mechanism was already
+## correct and completely silent -- a press picked a stack up and the only
+## evidence was a pressed-looking tile and grey text at the top of the screen,
+## which is how the owner and a blind playtest both ended up holding something
+## without knowing it.
 func _on_slot(index: int) -> void:
 	var inventory: RefCounted = _inventory()
-	if inventory == null:
+	var db: RefCounted = _items()
+	if inventory == null or db == null:
 		return
 
 	if _held < 0:
 		if bool(inventory.call("is_slot_empty", index)):
-			say("That slot is empty.")
+			say("Slot %d is empty. Pick a stack up from a full slot first." % (index + 1))
 			return
-		_held = index
+		_begin_held(index)
 		return
 
 	if _held == index:
-		_held = -1
-		say("")
+		_end_held()
+		say("Put it back in slot %d." % (index + 1))
 		return
 
+	var moving := _stack_label(_held)
+	var displaced := _stack_label(index)
+	var merging := _same_item(_held, index)
 	inventory.call("move_slot", _held, index)
-	_held = -1
+	_end_held()
+	if merging:
+		say("Merged %s into slot %d." % [moving, index + 1])
+	elif displaced.is_empty():
+		say("Moved %s to slot %d." % [moving, index + 1])
+	else:
+		say("Swapped %s with %s." % [moving, displaced])
 	poll()
+
+
+## Place a held stack onto a quick slot, or take one off. This is the "I can't
+## move anything into it" half of the report, answered with the SAME gesture
+## the grid already uses: pick a stack up, press where it goes.
+##
+## Binding does not remove the stack from the satchel -- `game_state.gd::hotbar`
+## holds item IDs, not slot indices, precisely so a bound item survives being
+## sorted, split or run out of. The confirmation line says so out loud, because
+## "place it here" is a phrase that ordinarily means the thing moves, and a
+## player who thought their potions had left the bag would be right to be
+## alarmed by an unchanged satchel.
+func _on_bar_slot(index: int) -> void:
+	var game := state()
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if game == null or inventory == null or db == null:
+		return
+	var bar: Array = game.get("hotbar") as Array
+	if index < 0 or index >= bar.size():
+		return
+
+	if _held < 0:
+		var bound := str(bar[index])
+		if bound.is_empty():
+			say("Quick slot %d is empty. Pick a stack up from the satchel, then press here." % (index + 1))
+			return
+		game.call("assign_hotbar", index, "")
+		say("%s taken off quick slot %d." % [str(db.call("item_name", bound)), index + 1])
+		return
+
+	var stack: Dictionary = inventory.call("stack_at", _held)
+	if stack.is_empty():
+		# The source emptied under the player (nothing else can touch it while
+		# the shell is held deaf, but reporting a bind that did not happen is
+		# worse than refusing).
+		_end_held()
+		return
+
+	var id := str(stack.get("id", ""))
+	var item_name := str(db.call("item_name", id))
+	if not bool(game.call("hotbar_can_hold", id)):
+		# Refuse WITHOUT dropping the stack: the player is still carrying it and
+		# still needs somewhere to put it down.
+		say("%s is a raw material — the quick bar is for things you use." % item_name)
+		return
+
+	game.call("assign_hotbar", index, id)
+	_end_held()
+	say("%s on quick slot %d. It stays in the satchel." % [item_name, index + 1])
+
+
+## Enter the held state, loudly and on every path into it.
+##
+## `hold_input` is the same mechanism the drop confirmation and the target
+## picker already use: while a stack is in hand the shell stops reading
+## `menu_cancel` as Close, `_read_held_cancel()` reads it as "put it back", and
+## the tab row dims to show the sub-mode. Without it, B closed the whole menu
+## with a stack still notionally held and no way to find that out.
+func _begin_held(index: int) -> void:
+	_held = index
+	if menu != null:
+		menu.call("hold_input", true)
+		menu.call("override_footer",
+			"{menu_confirm} / A  Put it down        {menu_cancel} / B  Put it back")
+	say("Holding %s. Press a satchel slot to move it, or a quick slot to bind it." % _stack_label(index))
+
+
+func _end_held() -> void:
+	_held = -1
+	if menu != null:
+		menu.call("hold_input", false)
+		menu.call("override_footer", "")
+
+
+func _read_held_cancel() -> void:
+	if _held < 0 or _targeting >= 0 or _confirming >= 0:
+		return
+	if Input.is_action_just_pressed("menu_cancel"):
+		var where := _held + 1
+		_end_held()
+		say("Put it back in slot %d." % where)
+
+
+## "12 Wood" / "Stone Axe" for a satchel slot, or "" when it is empty. One
+## phrasing for every message this tab prints about a stack, so a tool (whose
+## count is always 1 and meaningless) never reads "1 Stone Axe".
+func _stack_label(index: int) -> String:
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if inventory == null or db == null:
+		return ""
+	var stack: Dictionary = inventory.call("stack_at", index)
+	if stack.is_empty():
+		return ""
+	var id := str(stack.get("id", ""))
+	var item_name := str(db.call("item_name", id))
+	if int(inventory.call("max_durability_at", index)) > 0:
+		return item_name
+	var n := int(stack.get("n", 0))
+	return item_name if n <= 1 else "%d %s" % [n, item_name]
+
+
+## Whether two satchel slots hold the same item, asked BEFORE the move so the
+## confirmation can say "merged" rather than "moved" -- afterwards the source
+## slot is empty and the answer is unrecoverable.
+func _same_item(a: int, b: int) -> bool:
+	var inventory: RefCounted = _inventory()
+	if inventory == null:
+		return false
+	var first: Dictionary = inventory.call("stack_at", a)
+	var second: Dictionary = inventory.call("stack_at", b)
+	if first.is_empty() or second.is_empty():
+		return false
+	return str(first.get("id", "")) == str(second.get("id", ""))
 
 
 ## Use the focused item, if it is usable. Today that is the healing
@@ -599,7 +1063,10 @@ func _on_slot(index: int) -> void:
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _targeting >= 0 or _confirming >= 0:
+	# `_held >= 0` joins the other two sub-modes here (OW1): a stack in hand is
+	# a sub-mode too, and letting Use fire mid-carry meant a player who pressed
+	# the wrong button while moving a potion drank it instead.
+	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
 		return
 	if not Input.is_action_just_pressed(USE_ACTION):
 		return
@@ -1276,27 +1743,38 @@ func _describe(index: int) -> void:
 	if inventory == null or db == null or _detail_name == null:
 		return
 
-	var hotbar_note := (
-		"  •  Hotbar %d" % (index + 1) if index < HOTBAR_BADGE_ACTIONS.size() else ""
-	)
-
 	var stack: Dictionary = inventory.call("stack_at", index)
 	if stack.is_empty():
 		_preview_icon.texture = null
 		_preview_name.text = "Empty"
 		_detail_name.text = "Empty"
 		_detail_kind.text = ""
-		_detail_blurb.text = "Slot %d.%s" % [
-			index + 1,
-			" Whatever you place here is also hotbar slot %d." % (index + 1)
-			if index < HOTBAR_BADGE_ACTIONS.size() else "",
-		]
+		# This used to read "Whatever you place here is also hotbar slot N" on
+		# the first five slots. That was true of the pre-`d21f32ce` mirror and
+		# false the moment the bar became five item bindings -- a screen telling
+		# a player his satchel order sets his action bar, while the bar sat
+		# above his cursor saying otherwise. What an empty slot is actually FOR
+		# is the destination of a move, so it says that instead.
+		_detail_blurb.text = (
+			"Slot %d. Holding a stack? Press here to put it down." % (index + 1)
+			if _held >= 0 else
+			"Slot %d, empty. Pick a stack up from a full slot to move it here." % (index + 1)
+		)
 		_detail_effect.text = ""
 		_detail_count.text = ""
-		_detail_hint.text = ""
+		_detail_hint.text = "%s  Pick up / put down        %s  Quick bar" % [
+			INPUT_GLYPH.icon("confirm", 22), _verb_glyph(ASSIGN_ACTION)
+		]
 		return
 
 	var id := str(stack.get("id", ""))
+	# The quick slot this ITEM is bound to, read live off `game_state.gd::hotbar`
+	# rather than derived from the tile's position -- position stopped being the
+	# answer when the bar became assignable, and this note was the last place in
+	# the UI still claiming otherwise.
+	var game_for_bar := state()
+	var bound_slot := int(game_for_bar.call("hotbar_slot_of", id)) if game_for_bar != null else -1
+	var hotbar_note := "  •  QUICK SLOT %d" % (bound_slot + 1) if bound_slot >= 0 else ""
 	var def := db.call("definition", id) as Dictionary
 	var name := str(db.call("item_name", id))
 	var kind := str(db.call("kind", id))
@@ -1345,25 +1823,68 @@ func _describe(index: int) -> void:
 	_detail_hint.text = _verb_hint(id, kind, def, tool_max)
 
 
-## The Use/Drop/Split legend for whatever is focused. Only offers a verb the
-## item can actually take -- Use never appears on a resource or a key, and a
-## tool's Use reads as repair rather than the generic word, matching what
-## `_read_use()` actually does with it.
+## The verb legend for whatever is focused. Only offers a verb the item can
+## actually take -- Use never appears on a resource or a key, and a tool's Use
+## reads as repair rather than the generic word, matching what `_read_use()`
+## actually does with it.
+##
+## OW1 rewrote this for two reasons. It never named the MOVE verb at all, which
+## is the whole of the owner's "I can't move things in my inventory" -- the verb
+## was there, unmentioned, on the same button the legend spent its first entry
+## calling "Use". And Drop and Split were listed as bare words with no button
+## beside them, so a player who wanted to drop something had nothing to press.
+## Every entry now carries its real glyph, one verb per line: this is the
+## busiest screen in the game and it is read on a 7-inch panel (bible §17).
 func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> String:
-	var parts: Array[String] = []
+	var lines: Array[String] = []
+	lines.append("%s  %s" % [
+		INPUT_GLYPH.icon("confirm", 22),
+		"Put it down here" if _held >= 0 else "Pick up / move this stack",
+	])
 	if tool_max > 0:
-		parts.append("A  Repair (free)")
+		lines.append("%s  Repair (free)" % INPUT_GLYPH.icon(USE_ACTION, 22))
 	elif float(def.get("satiety", 0.0)) > 0.0:
-		parts.append("A  Eat")
+		lines.append("%s  Eat" % INPUT_GLYPH.icon(USE_ACTION, 22))
 	elif kind == "tm":
-		parts.append("A  Teach a creature")
+		lines.append("%s  Teach a creature" % INPUT_GLYPH.icon(USE_ACTION, 22))
 	elif kind == "consumable" and (float(def.get("heal", 0.0)) > 0.0 or float(def.get("revive", 0.0)) > 0.0):
-		parts.append("A  Use on a creature")
-	parts.append("Drop")
+		lines.append("%s  Use on a creature" % INPUT_GLYPH.icon(USE_ACTION, 22))
+
+	# The quick-bar verb, and honest about which way it will go. `_read_assign`
+	# cycles forward off the end of the bar, so on a bound item the button
+	# UNBINDS as often as it binds; saying "Quick bar" flatly would be the same
+	# class of half-truth the old "Hotbar N" note was.
+	var game := state()
+	if game != null and bool(game.call("hotbar_can_hold", id)):
+		var bound := int(game.call("hotbar_slot_of", id))
+		lines.append("%s  %s" % [
+			_verb_glyph(ASSIGN_ACTION),
+			"Next quick slot (now %d)" % (bound + 1) if bound >= 0 else "Put on the quick bar",
+		])
+
+	lines.append("%s  Drop" % _verb_glyph(DROP_ACTION))
 	var db: RefCounted = _items()
 	if db != null and int(db.call("stack_size", id)) > 1:
-		parts.append("Split")
-	return "    ".join(parts)
+		lines.append("%s  Split the stack" % _verb_glyph(SPLIT_ACTION))
+	return "\n".join(lines)
+
+
+## The glyph for one of this tab's own verbs, naming BOTH devices.
+##
+## These three actions have gamepad artwork but no keyboard keycap PNG (the
+## vendored Kenney sheet has no G/H/J), so device-auto-detection drew a bare
+## "[J]" whenever the last input was a keypress -- and a blind usability pass on
+## a seven-inch proxy read that as "this action has no controller binding
+## anywhere, it is not pressable on an Ally". They are all bound on a pad; only
+## the drawing was one-sided. So this follows the pause menu's own footer
+## convention instead ("Enter / A"): the real key name, a slash, the real pad
+## glyph. Both halves come off the InputMap, so a rebind in Settings cannot
+## make either one lie.
+func _verb_glyph(action: String) -> String:
+	return "%s / %s" % [
+		INPUT_GLYPH.key_name_for_action(action),
+		INPUT_GLYPH.icon(action, 22, Color.WHITE, "gamepad"),
+	]
 
 
 ## OF29's detail block for a `kind: "tm"` item: what it teaches, that move's

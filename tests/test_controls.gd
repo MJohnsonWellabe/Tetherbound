@@ -276,6 +276,42 @@ func test_no_two_world_context_actions_share_a_gamepad_button() -> void:
 			claimed[key] = action
 
 
+## OW1: the same rule as the world-context test above, for the three verbs
+## `tab_backpack.gd` reads out of ONE `poll()` on the same frame.
+##
+## `backpack_drop` and `backpack_assign` both shipped on keyboard G. Because
+## `poll()` calls `_read_drop()` before `_read_assign()` and the drop
+## confirmation then gates the assign read out, pressing G could only ever open
+## the drop confirmation -- the quick-bar assign verb was unreachable on a
+## keyboard from the day it shipped. That is not a cross-context share the way
+## A being both `jump` and `menu_confirm` is; these three are read by the same
+## function, in the same state, on the same press.
+##
+## Deliberately keyboard-only. The gamepad half is already covered for these by
+## the world-context test's argument (Start, R3 and Y are each shared only with
+## an action that is never live while the backpack tab is open), and the pad
+## bindings are genuinely distinct.
+const BACKPACK_VERB_ACTIONS := ["backpack_drop", "backpack_split", "backpack_assign"]
+
+
+func test_no_two_menu_context_actions_share_a_keyboard_key() -> void:
+	var claimed: Dictionary = {}
+	for action in BACKPACK_VERB_ACTIONS:
+		assert_true(InputMap.has_action(str(action)), "%s is not a real action" % action)
+		for event in InputMap.action_get_events(str(action)):
+			var key := event as InputEventKey
+			if key == null:
+				continue
+			var code := "key:%d" % key.physical_keycode
+			assert_false(
+				claimed.has(code),
+				"%s and %s both claim keyboard %s -- tab_backpack.gd reads both from one poll(), so the first one read wins and the other verb is dead" % [
+					claimed.get(code), action, key.as_text()
+				]
+			)
+			claimed[code] = action
+
+
 func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
 	bindings.set_binding("map", "keyboard", _key(KEY_I))
 	assert_true(bindings.current_conflicts("map").has("inventory"))

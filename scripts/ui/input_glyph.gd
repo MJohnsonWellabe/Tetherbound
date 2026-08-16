@@ -162,6 +162,26 @@ const GLYPHS := {
 	## established for `combat_charged`/`build_rotate_left` on LT.
 	"build_open": {"keyboard": "keyboard_b.png", "gamepad": "xbox_button_start.png"},
 	"torch_place": {"keyboard": "keyboard_p.png", "gamepad": "xbox_rt.png"},
+
+	## OW1: the backpack's three own verbs, so its detail column can draw them
+	## instead of listing "Drop" and "Split" as bare words with no button
+	## attached -- the owner could not work out how to move a stack, and the one
+	## place that would have told him was naming verbs without naming buttons.
+	##
+	## GAMEPAD-ONLY on purpose. The keyboard defaults are G/H/J and the vendored
+	## Kenney keycap sheet has no G, H or J PNG, so rather than point at an
+	## unrelated icon these fall through `icon()`'s own missing-device path to
+	## "[G]" / "[H]" / "[J]" -- read off the InputMap, so a rebind in Settings
+	## cannot leave the legend lying. Same treatment `build_snap_cycle` above
+	## already gets for Shift.
+	##
+	## Files are reused, not new: Start is `backpack_drop`'s real button
+	## (see data/config/menu.json's "Backpack" group note), R3 is
+	## `backpack_split`'s and is shared with `torch_toggle` (world context,
+	## never on screen at the same moment), and Y is `backpack_assign`'s.
+	"backpack_drop": {"gamepad": "xbox_button_start.png"},
+	"backpack_split": {"gamepad": "xbox_stick_r_press.png"},
+	"backpack_assign": {"gamepad": "xbox_button_y.png"},
 }
 
 
@@ -220,10 +240,18 @@ static func key_name_for_action(action: String) -> String:
 	return action
 
 
-static func icon(id: String, px: int = 36, tint: Color = Color.WHITE) -> String:
+## `device`, when given ("keyboard" or "gamepad"), overrides the auto-detected
+## one. Added for OW1: the backpack's verb legend has to name BOTH halves of a
+## dual binding the way the pause menu's own footer does ("Enter / A"), and a
+## blind usability pass on a seven-inch proxy read the auto-detected single
+## half as "this action has no controller binding at all". Auto-detection is
+## still the default and still right for a legend with room for one glyph.
+static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_override: String = "") -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
-	var device := "gamepad" if using_gamepad() else "keyboard"
+	var device := device_override
+	if device.is_empty():
+		device = "gamepad" if using_gamepad() else "keyboard"
 	# A glyph entry may cover only one device — build_snap_cycle has a pad
 	# icon but no Shift keycap PNG exists to give it a keyboard one. Degrade
 	# to the action's real bound key name ("[Shift]") rather than the raw
