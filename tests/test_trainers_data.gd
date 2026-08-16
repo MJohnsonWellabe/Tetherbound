@@ -258,7 +258,6 @@ func test_every_band_one_trainer_pays_coins_alongside_their_authored_item() -> v
 
 # --- SE25: the relay trainers and the relay captain -----------------------------
 
-const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const RELAY_SITE_PATH := "res://data/config/relay_site.json"
 const RELAY_IDS := [
 	"relay_picket_hess",
