@@ -19,6 +19,10 @@ const BODY := preload("res://scripts/creatures/creature_body.gd")
 const OUT := "res://shots/_shiny_pairs.png"
 
 const SPACING := 2.6
+## Pairs per row, and how far back each next row sits -- 17 species in one
+## line runs far past any sane camera frustum (the first capture framed four).
+const PER_ROW := 5
+const ROW_DEPTH := 4.0
 
 
 func _init() -> void:
@@ -50,7 +54,13 @@ func _run() -> void:
 	world.add_child(key)
 
 	var x := 0.0
+	var z := 0.0
+	var placed := 0
 	for id in SPECIES_IDS:
+		if placed > 0 and placed % PER_ROW == 0:
+			x = 0.0
+			z -= ROW_DEPTH
+		placed += 1
 		for is_shiny in [false, true]:
 			var creature := CREATURE_SCENE.instantiate()
 			# The packed scene is a bare CharacterBody3D; the body script is
@@ -60,13 +70,14 @@ func _run() -> void:
 			world.add_child(creature)
 			creature.set_physics_process(false)
 			creature.call("setup", id, is_shiny)
-			creature.set("global_position", Vector3(x, 0.0, 0.0))
+			creature.set("global_position", Vector3(x, 0.0, z))
 			x += SPACING
 
 	var camera := Camera3D.new()
-	var mid := (x - SPACING) * 0.5
-	camera.position = Vector3(mid, 1.4, 6.4)
-	camera.look_at_from_position(camera.position, Vector3(mid, 0.8, 0.0))
+	var mid := (PER_ROW * 2 - 1) * SPACING * 0.5
+	var mid_z := z * 0.5
+	camera.position = Vector3(mid, 13.0, mid_z + 15.0)
+	camera.look_at_from_position(camera.position, Vector3(mid, 0.6, mid_z))
 	world.add_child(camera)
 	camera.make_current()
 
