@@ -348,6 +348,7 @@ item"*. That culture produced more value than any process rule here.
 [ ] Pick 3-5 lanes by file conflict; write exclusions into each brief
 [ ] Launch with source_url pinned; self-chaining queues
 [ ] Arm a ~30 min self check-in that: lands green branches (bundling at 3+),
+    CLOSES EACH ITEM IN THE SAME PASS THAT LANDS IT (see below),
     reads NOTES.md and files findings, pokes IDLE-with-work-in-flight lanes,
     refills finished lanes, republishes the dashboard, and re-arms itself
 [ ] Keep the owner's priority in a lane that never yields
@@ -357,3 +358,15 @@ The check-in re-arming itself is what keeps the run alive across quiet stretches
 Write into it, explicitly, that it should ignore any older self-note saying the
 run is closed — a stale instruction from an earlier wind-down will otherwise stop
 a run the owner has since asked to continue.
+
+**On closing items in the landing pass.** §9 already says to reconcile
+continuously and gives the ancestor test, and the backlog drifted anyway —
+twice in one day, the second time only eight hours after `OPS1` had just
+reconciled it, with six shipped items still carrying open headings. So the rule
+was never the missing piece. What was missing is that this checklist told the
+check-in to *land* branches and never told it to *close* what it landed, and a
+loop does what its checklist says. Closing is not a separate bookkeeping task to
+batch later; it is the second half of landing, and a backlog reconciled by sweep
+is a backlog that is wrong for however long the sweep is away. If you find
+yourself writing a `bookkeeping-N` branch that closes more than one or two items,
+that is the symptom — the check-in stopped doing its second half some passes ago.
