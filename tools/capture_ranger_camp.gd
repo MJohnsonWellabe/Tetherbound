@@ -26,13 +26,13 @@ const CAMP_CENTRE := Vector2(-258.0, 2258.0)
 const VIEWPOINTS := [
 	{
 		"name": "01-camp-close",
-		"eye": Vector2(-250.0, 2266.0), "eye_h": 1.8,
-		"target": CAMP_CENTRE, "target_h": 0.9,
+		"eye": Vector2(-254.0, 2262.5), "eye_h": 1.7,
+		"target": CAMP_CENTRE, "target_h": 0.8,
 	},
 	{
 		"name": "02-camp-with-spur",
-		"eye": Vector2(-232.0, 2282.0), "eye_h": 2.4,
-		"target": Vector2(-256.0, 2261.0), "target_h": 1.2,
+		"eye": Vector2(-244.0, 2270.0), "eye_h": 2.0,
+		"target": Vector2(-257.0, 2259.5), "target_h": 1.0,
 	},
 ]
 

@@ -87,10 +87,11 @@
             2256.5
           ],
           "yaw_deg": 40.0,
-          "pitch_deg": 78.0,
+          "roll_deg": 78.0,
+          "pitch_deg": 6.0,
           "sink_m": 0.05,
           "scale": 1.0,
-          "_why": "the shelter's own collapse -- the cot pitched over rather than standing, the cluster's anchor"
+          "_why": "the shelter's own collapse -- the cot is authored lying flat like real furniture, so ROLLING it onto its side reads as toppled; pitching it (tried first, see git history) instead stands it up on end like a crate, the opposite of collapsed. The cluster's anchor."
         },
         {
           "model": "Cabinet",
