@@ -13,10 +13,16 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/slope_test"
 
-## Found by tools/_diag scan (not committed): a real ~27deg uphill patch,
-## +z is the uphill direction there, cross-slope under 0.3m over 2m.
-const SLOPE_X := 65.0
-const SLOPE_Z := 130.0
+## Found by tools/_diag scan (not committed) requiring a MONOTONIC, near-
+## constant per-metre rise over a 6m span, not just two endpoints — the
+## first candidate this test used (65,130) passed a coarse two-point check
+## but sat at the trough of a local dip immediately before a near-cliff
+## (full 1m-step profile: a shallow -4deg basin through z=131, then +40deg+
+## from z=132 on), which is a landform, not a walkable hillside. This spot
+## is a clean, consistent ~16deg rise from z=-2 to z=13, cross-slope under
+## 0.09m over 2m: +z is uphill.
+const SLOPE_X := -32.0
+const SLOPE_Z := 8.0
 
 const SETTLE_FRAMES := 240
 const PHYSICS_SETTLE := 90
