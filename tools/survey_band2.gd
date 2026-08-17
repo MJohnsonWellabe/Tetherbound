@@ -33,29 +33,46 @@ const DEFAULT_HORIZON := 0.30
 
 const VIEWPOINTS := [
 	{
-		# South Bridge -> Old Quarry leg: meadowhart/trailpup/duskhush
-		# country, the first stretch of Band 2 a player actually walks.
+		# South Bridge -> Old Quarry leg: trailpup/meadowhart country. ROUND 2:
+		# round 1's eye sat ~86m from the trailpup spawn centre and the critic
+		# could not tell "creature, bush or rock apart" -- moved to ~39m, close
+		# enough that a spawned trailpup should actually read as an animal.
 		"name": "01-early-forest-day",
-		"eye": Vector2(100.0, 1480.0), "eye_h": 1.9,
-		"target": Vector2(150.0, 1550.0), "target_h": 1.2,
+		"eye": Vector2(120.0, 1525.0), "eye_h": 1.8,
+		"target": Vector2(150.0, 1550.0), "target_h": 1.0,
 		"time": "day", "horizon": 0.30,
-		"actor": Vector2(120.0, 1500.0),
+		"actor": Vector2(128.0, 1533.0),
 	},
 	{
-		# quarry_rim_overlook loop's own vantage: "the whole quarry floor
-		# read from above before you walk into it" (macro-layout 3.2).
-		"name": "02-quarry-overlook-day",
+		# quarry_rim_overlook's own distant vista -- kept deliberately far,
+		# it is meant to be an overview ("the whole quarry floor read from
+		# above", macro-layout 3.2), not a close look at the props.
+		"name": "02a-quarry-overlook-day",
 		"eye": Vector2(350.0, 1720.0), "eye_h": 2.0,
 		"target": Vector2(400.0, 1800.0), "target_h": 2.0,
 		"time": "day", "horizon": 0.26,
 	},
 	{
-		# The ranger_camp_spur's own approach, camp in the mid-frame the way
-		# a player would actually discover it off the road.
-		"name": "03-ranger-camp-day",
-		"eye": Vector2(-180.0, 2225.0), "eye_h": 1.9,
-		"target": Vector2(-258.0, 2258.0), "target_h": 1.0,
-		"time": "day", "horizon": 0.30,
+		# ROUND 2, new: the quarry_station prop cluster and the lit pylon
+		# line up close -- round 1's only quarry frame was the ~110m vista
+		# above, so none of props.json's crates/barrels/pickaxe or the
+		# pylons' own conduit cable (a real 11cm-radius CylinderMesh,
+		# scripts/world/severed_spokes.gd -- not missing geometry, just
+		# sub-pixel at 110m) were ever actually legible.
+		"name": "02b-quarry-station-close-day",
+		"eye": Vector2(390.0, 1791.0), "eye_h": 1.8,
+		"target": Vector2(402.0, 1800.0), "target_h": 1.2,
+		"time": "day", "horizon": 0.32,
+	},
+	{
+		# ROUND 2: replaces round 1's ~85m road-view of the ranger camp,
+		# which put every prop below a couple of pixels and read as "two
+		# objects, no camp." Same distance capture_ranger_camp.gd already
+		# proved legible for this exact cluster.
+		"name": "03-ranger-camp-close-day",
+		"eye": Vector2(-250.0, 2266.0), "eye_h": 1.8,
+		"target": Vector2(-258.0, 2258.0), "target_h": 0.9,
+		"time": "day", "horizon": 0.32,
 	},
 	{
 		# The Burrow Warrens mouth, Band 2's required dungeon.
@@ -65,16 +82,20 @@ const VIEWPOINTS := [
 		"time": "day", "horizon": 0.28,
 	},
 	{
-		# Past the Warrens, the sparser stretch toward Band 3 -- the "does
-		# this still read as authored, not empty" check for the far half.
+		# ROUND 2: retargeted onto one of the two new deadwood nodes
+		# (harvest.json order 2004) instead of an arbitrary spine point --
+		# round 1 showed bare grass with nothing identifiable in it, which
+		# is the honest emptiness finding, but gave no read on whether the
+		# content that IS there (this node, the duskhush spawn beside it)
+		# is legible once you're actually near it.
 		"name": "05-late-ridge-day",
-		"eye": Vector2(30.0, 3080.0), "eye_h": 1.9,
-		"target": Vector2(60.0, 3090.0), "target_h": 1.2,
+		"eye": Vector2(60.0, 2955.0), "eye_h": 1.8,
+		"target": Vector2(76.0, 2972.0), "target_h": 1.0,
 		"time": "day", "horizon": 0.30,
-		"actor": Vector2(45.0, 3082.0),
+		"actor": Vector2(66.0, 2961.0),
 	},
 	{
-		# Same overlook as 02, at night: the quarry's pylons are LIT (SD16,
+		# Same overlook as 02a, at night: the quarry's pylons are LIT (SD16,
 		# old_quarry.json) so this is the frame that tests whether that
 		# reads as intended after dark.
 		"name": "06-quarry-overlook-night",
@@ -83,12 +104,13 @@ const VIEWPOINTS := [
 		"time": "night", "horizon": 0.26,
 	},
 	{
-		# Same camp as 03, at night -- duskhush (nocturnal) lives on this
-		# stretch, and MQ2B's own checklist names day/night readability.
-		"name": "07-ranger-camp-night",
-		"eye": Vector2(-180.0, 2225.0), "eye_h": 1.9,
-		"target": Vector2(-258.0, 2258.0), "target_h": 1.0,
-		"time": "night", "horizon": 0.30,
+		# Same close camp framing as 03, at night -- duskhush (nocturnal)
+		# lives on this stretch, and MQ2B's own checklist names day/night
+		# readability.
+		"name": "07-ranger-camp-close-night",
+		"eye": Vector2(-250.0, 2266.0), "eye_h": 1.8,
+		"target": Vector2(-258.0, 2258.0), "target_h": 0.9,
+		"time": "night", "horizon": 0.32,
 	},
 ]
 
@@ -206,8 +228,17 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if player == null:
 		return
 	if not view.has("actor"):
+		# ROUND 2 fix: round 1 parked the body straight down (same XZ, -500m),
+		# which round 1's critic likely caught as an unexplained "kite-shaped
+		# shadow" intruding bottom-centre of 02/03/04 -- every actor-less
+		# frame, and none of the frames that DID place an actor. A directional
+		# light's shadow map does not reliably cull a caster on depth alone,
+		# so a body straight under the eye can still throw a shadow onto
+		# visible terrain even from 500m down. Parking far away in XZ as well
+		# (not just deep) puts it outside the shadow frustum by any measure.
 		var eye_xz: Vector2 = view["eye"]
-		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
+		var far_xz := eye_xz + Vector2(5000.0, 5000.0)
+		player.global_position = Vector3(far_xz.x, -500.0, far_xz.y)
 		return
 
 	var xz: Vector2 = view["actor"]
