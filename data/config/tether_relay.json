@@ -3,8 +3,8 @@
   "_comment_site": "The site coordinate is ADOPTED, not chosen. data/config/relay_site.json (SE25/SE27) picked [108,34] on the Old Quarry's own conduit bearing toward the stronghold and asked SE23 in writing to adopt it rather than name a second one. If the site ever moves, it moves THERE and here together, along with the four trainer positions derived from it.",
   "site": {
     "centre": [
-      108.0,
-      34.0
+      350.0,
+      3760.0
     ],
     "approach_bearing_deg": -34.4,
     "_frame": "Everything below is authored in the site's OWN frame: `s` runs along the approach bearing (positive = deeper in, the direction the conduits already walk toward the stronghold), `t` runs across it, both in metres. tether_relay.gd converts with u = (0.565,-0.826) and p = (-u.z, u.x). Authoring in world XZ instead would make every tuning nudge a two-number trigonometry problem, and the five people SE25/SE27 stood up here are all within 1m of t=0 \u2014 the road IS the axis, so the axis is the frame.",
@@ -304,5 +304,6 @@
     "_comment_tint": "Deliberately close to terrain_playground.json's own `drains.tint` (#bfb6a0), a shade further down because this skin ADDS over an untinted bake where the bake's own tint MULTIPLIES the albedo. Desaturated warm grey: sun-killed ground, not ash. TUNABLE.",
     "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through."
   },
-  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands."
+  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands.",
+  "_comment_ow5d_relocation": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved together with relay_site.json's `site.centre`, from (108,34) to (350,3760) -- see that file's own OW5D note. Everything below `site` (walls, gate, decks, ramps, apparatus, conduits) is authored in the site's OWN (s,t) frame per `_frame` below and needs no changes -- a pure translation of the centre carries the whole compound with it."
 }

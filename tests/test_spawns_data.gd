@@ -16,6 +16,7 @@ extends "res://tests/test_case.gd"
 
 const SPAWNS_PATH := "res://data/config/spawns.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
 const WEATHER_PATH := "res://data/config/weather.json"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
@@ -73,13 +74,15 @@ func test_every_count_is_positive() -> void:
 
 
 func test_every_cluster_is_inside_the_world() -> void:
-	# The playground is world_size metres on a side, centred on the origin. A
-	# centre outside it stands a creature on Terrain3D's procedural background
+	# OW5D: was symmetric (world_size / 2 on every side), which the corridor
+	# cannot express -- z runs -512..7680, nowhere near symmetric. Uses the
+	# same world_bounds() the bake and its own alignment guard read. A centre
+	# outside it stands a creature on Terrain3D's procedural background
 	# noise — ground that LOOKS real but has no collision — where place_on_ground
 	# still answers and nothing errors.
 	var terrain_file := FileAccess.open(TERRAIN_PATH, FileAccess.READ)
 	var terrain: Dictionary = JSON.parse_string(terrain_file.get_as_text())
-	var half := float(terrain.get("world_size", 512)) / 2.0
+	var bounds := ALIGNMENT.world_bounds(terrain)
 
 	for entry: Variant in _spawns():
 		var spawn: Dictionary = entry
@@ -90,11 +93,15 @@ func test_every_cluster_is_inside_the_world() -> void:
 			continue
 		var radius := float(spawn.get("radius", 0.0))
 		assert_true(radius >= 0.0, "the %s entry has a negative radius" % str(spawn.get("species", "?")))
-		for axis: int in [0, 2]:
-			var reach := absf(float(centre[axis])) + radius
-			assert_true(reach <= half,
-				"the %s cluster reaches %.0fm from the origin; the world ends at %.0fm" % [
-					str(spawn.get("species", "?")), reach, half])
+		var x := float(centre[0])
+		var z := float(centre[2])
+		var species := str(spawn.get("species", "?"))
+		assert_true(x - radius >= float(bounds.get("min_x", -256.0)) and x + radius <= float(bounds.get("max_x", 256.0)),
+			"the %s cluster's x reach [%.0f, %.0f] is outside the authored world bounds %s" % [
+				species, x - radius, x + radius, str(bounds)])
+		assert_true(z - radius >= float(bounds.get("min_z", -256.0)) and z + radius <= float(bounds.get("max_z", 256.0)),
+			"the %s cluster's z reach [%.0f, %.0f] is outside the authored world bounds %s" % [
+				species, z - radius, z + radius, str(bounds)])
 
 
 # --- the roles resolve -------------------------------------------------------

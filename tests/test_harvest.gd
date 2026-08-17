@@ -181,7 +181,20 @@ func test_every_harvest_item_named_in_vegetation_json_is_a_real_tool_gated_resou
 # the game, and a position outside the baked world simply never appears.
 
 const HARVEST_CONFIG := "res://data/config/harvest.json"
-const WORLD_HALF := 256.0
+const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
+const TERRAIN_CONFIG_FOR_BOUNDS := "res://data/config/terrain_playground.json"
+## OW5D: was a hardcoded WORLD_HALF := 256.0 (a symmetric square), which the
+## corridor cannot express -- z runs -512..7680, nowhere near symmetric. Reads
+## the same world_bounds() the bake and its own alignment guard use, so this
+## check tracks the actual authored footprint instead of a stale constant.
+static func _world_bounds() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_CONFIG_FOR_BOUNDS, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	return ALIGNMENT.world_bounds(parsed as Dictionary)
 ## Two authored spots closer than this contest for the same interact prompt
 ## (`interactable.gd`'s own radius here is 2.4m, and the arbiter picks by
 ## distance) — the exact problem `playground_world.gd`'s GATE_AT comment
@@ -214,8 +227,12 @@ func test_every_authored_harvest_spot_is_real_and_reachable() -> void:
 		var at: Array = spec.get("at", [])
 		assert_eq(at.size(), 2, "the '%s' spot's `at` is not an [x, z] pair" % item_id)
 		if at.size() == 2:
-			assert_true(absf(float(at[0])) <= WORLD_HALF and absf(float(at[1])) <= WORLD_HALF,
-				"the '%s' spot at %s is outside the ±%.0fm playground" % [item_id, str(at), WORLD_HALF])
+			var bounds := _world_bounds()
+			var x := float(at[0])
+			var z := float(at[1])
+			assert_true(x >= float(bounds.get("min_x", -256.0)) and x <= float(bounds.get("max_x", 256.0))
+				and z >= float(bounds.get("min_z", -256.0)) and z <= float(bounds.get("max_z", 256.0)),
+				"the '%s' spot at %s is outside the authored world bounds %s" % [item_id, str(at), str(bounds)])
 		var model := str(spec.get("model", ""))
 		if not model.is_empty():
 			assert_true(ResourceLoader.exists(model),

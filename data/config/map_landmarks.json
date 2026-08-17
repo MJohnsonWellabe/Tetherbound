@@ -40,9 +40,10 @@
       "id": "stronghold",
       "display_name": "Meadows Hall",
       "icon": "stronghold",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: set to the table's explicit new stronghold coordinate (0,7560). NOTE this is a simplification the macro-layout doc itself makes: the OLD value here (229.8,-144.4) was the actual castle silhouette placed by scripts/world/landmark.gd, which is NOT the same point as stronghold.json's `site.at` (141.8,-215.4) -- the two differ by ~180m in the old world (the castle sits behind/beyond the works). The relocation table gives one target for 'Stronghold' as a whole; this landmark now points at the SAME (0,7560) stronghold.json's `site.at` moved to, not at a separately re-derived castle position. Flagged for the reviewer rather than silently assumed identical.",
       "position": [
-        229.8,
-        -144.4
+        0.0,
+        7560.0
       ],
       "discover_radius": 60.0,
       "category": "major",
@@ -53,19 +54,21 @@
       "display_name": "The South Bridge",
       "icon": "bridge",
       "position": [
-        5.0,
-        80.0
+        0.0,
+        1330.0
       ],
       "discover_radius": 35.0,
-      "category": "major"
+      "category": "major",
+      "_comment_ow5d": "OW5D: south_bridge crossing itself moved to (0,1330) (docs/MEADOWS_MACRO_LAYOUT.md section 10.2), translated by the same (-5,+1250) this landmark follows."
     },
     {
       "id": "tether_relay",
       "display_name": "The Tether Relay",
       "icon": "relay",
+      "_comment_ow5d": "OW5D relocation: this file's own comment below says 'Position is the site centre data/config/relay_site.json authored ... if it moves, all three move together' -- moved to match relay_site.json's new `site.centre` (350,3760).",
       "position": [
-        108.0,
-        34.0
+        350.0,
+        3760.0
       ],
       "discover_radius": 45.0,
       "category": "major"
@@ -74,12 +77,14 @@
       "id": "old_mill_crossing",
       "display_name": "Old Mill Crossing",
       "icon": "bridge",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: the crossing's own terrain_playground.json entries (`crossings[1]`, `flats[9,10]`, the river) are OW5C's job and were left untouched by this pass, but the task explicitly asked this landmark to be relocated anyway, to (-150,4200), so the map does not show the crossing at its old empty coordinates in the meantime.",
       "position": [
-        162.4,
-        42.1
+        -152.0,
+        4203.0
       ],
       "discover_radius": 40.0,
-      "category": "major"
+      "category": "major",
+      "_comment_ow5c_seam": "OW5C follow-up: matches the crossing itself after its -2m seam-workaround shift (-150 -> -152)."
     }
   ],
   "_comment_tether_relay": "SE23, spec 3 Band 3. A `major` landmark: the chapter's first mini-stronghold and the rung of 32's ladder where Team Tether becomes a place rather than a rumour, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the relay is meant to be walked into, so it appears the ordinary way, by going there. `relay` is an icon that already exists in assets/ui/icons/map/ and was drawn for exactly this. Position is the site centre data/config/relay_site.json authored and scripts/world/tether_relay.gd builds from -- if it moves, all three move together.",
@@ -98,9 +103,10 @@
     {
       "id": "the_pond",
       "display_name": "The Pond",
+      "_comment_ow5d": "OW5D relocation: same offset as `water.pond_centre` in terrain_playground.json, (-145,138)->(-395,545) -- this region's centre keeps its old (+53,-38) offset from the pond centre applied to the new one.",
       "centre": [
-        -92.0,
-        100.0
+        -342.0,
+        507.0
       ],
       "radius": 55.0
     },
@@ -116,27 +122,30 @@
     {
       "id": "the_old_quarry",
       "display_name": "The Old Quarry",
+      "_comment_ow5d": "OW5D relocation, same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800)).",
       "centre": [
-        26.0,
-        152.0
+        403.0,
+        1794.0
       ],
       "radius": 62.0
     },
     {
       "id": "the_tether_relay",
       "display_name": "The Tether Relay",
+      "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
       "centre": [
-        106.0,
-        30.0
+        348.0,
+        3756.0
       ],
       "radius": 48.0
     },
     {
       "id": "the_long_water",
       "display_name": "The Long Water",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: the task explicitly asked BOTH `old_mill_crossing` and `the_long_water` to reference (-150,4200) -- the river/crossing geometry itself is OW5C's job and was not touched. This region's old centre (150,70) sat downstream of the old crossing on the river's own course; re-deriving an equivalent downstream offset on the NEW river course is OW5C's job too, so this was pinned to the same explicit reference point rather than guessed at.",
       "centre": [
-        150.0,
-        70.0
+        -150.0,
+        4200.0
       ],
       "radius": 52.0
     }
@@ -144,5 +153,5 @@
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",
   "_comment_the_old_quarry": "SD16, and D36's rule applied rather than quoted: few and LARGE. This is one region for the whole worked site -- the quarry floor, its foundations, the standing dead, and the conduit run leaving it on the stronghold bearing -- not one per feature, exactly the mistake D36 was written to correct. Its centre sits between the floor ([23,158]) and the first pylon out ([31.7,148.4]) so the map label lands over the site rather than off one edge of it, and 62m carries the whole run out to [41,121]. Separation from every existing region is comfortable: 175m to Grandpa's Village, 130m to The Pond, 205m to The Rise -- no two labels can crowd each other the way the first regions cut did. Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having crossed the South Bridge, so the name arrives at the moment the gate pays off. TUNABLE.",
   "_comment_old_mill_crossing": "SE22, spec 3 Band 3's main gate, and `major` for the reason the South Bridge is: it is the only ground link across SE21's river, so it is the thing a whole band of the chapter exists to reach, not furniture on the way somewhere else. Shares the South Bridge's `bridge` icon deliberately -- the player has already learned what that mark means and what standing at one costs. Position is the river's narrows, terrain_playground.json crossings[1].channel.centre; if that moves, this moves.",
-  "_comment_the_long_water": "SE21, and D36's rule again: few and LARGE. ONE region for the whole river -- both banks, the narrows, the mill, and the ground the water is the edge of -- not one for the crossing and another for the reach above it. Centre sits on the course itself just downstream of the Old Mill Crossing so the label lands over the water rather than off one bank, and 72m carries it up the reach to the gorge and down past the far bank the player first stands on. Separation is comfortable and was checked, not assumed: 129m to The Rise, 149m to The Old Quarry, 168m to Grandpa's Village -- no two labels can crowd each other. Discovery is by ENTERING (map_state.gd::update_region), which for this region means walking out to the water, and that is the point: the river is meant to be found by seeing it. The NAME is the one piece of world-building invented here rather than quoted from the spec (which says only 'a substantial river'); it is TUNABLE like everything else in this file and reads in the family the other three already set. MERGE NOTE (orchestrator): shipped at 72m and cut to 52m when SE21 and SE23 landed together — at 72m this region swallowed The Tether Relay's centre 59.5m away, and map_state's nearest-centre rule then depended on this file's order. 52m still carries the narrows, the Old Mill Crossing (30.5m out, the binding constraint) and the reach above it, and leaves 7.5m of clearance to the relay's centre. TUNABLE, but not upward past 59m without moving the relay."
+  "_comment_the_long_water": "SE21, and D36's rule again: few and LARGE. ONE region for the whole river -- both banks, the narrows, the mill, and the ground the water is the edge of -- not one for the crossing and another for the reach above it. Centre sits on the course itself just downstream of the Old Mill Crossing so the label lands over the water rather than off one bank, and 72m carries it up the reach to the gorge and down past the far bank the player first stands on. Separation is comfortable and was checked, not assumed: 129m to The Rise, 149m to The Old Quarry, 168m to Grandpa's Village -- no two labels can crowd each other. Discovery is by ENTERING (map_state.gd::update_region), which for this region means walking out to the water, and that is the point: the river is meant to be found by seeing it. The NAME is the one piece of world-building invented here rather than quoted from the spec (which says only 'a substantial river'); it is TUNABLE like everything else in this file and reads in the family the other three already set. MERGE NOTE (orchestrator): shipped at 72m and cut to 52m when SE21 and SE23 landed together \u2014 at 72m this region swallowed The Tether Relay's centre 59.5m away, and map_state's nearest-centre rule then depended on this file's order. 52m still carries the narrows, the Old Mill Crossing (30.5m out, the binding constraint) and the reach above it, and leaves 7.5m of clearance to the relay's centre. TUNABLE, but not upward past 59m without moving the relay."
 }
