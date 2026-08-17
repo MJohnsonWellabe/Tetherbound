@@ -147,6 +147,12 @@ func _tick_aggression(delta: float) -> bool:
 	var engage := float(_aggro_cfg.get("engage_range", 3.2))
 	var give_up := float(_aggro_cfg.get("give_up_distance", 26.0))
 
+	if OS.has_environment("DEBUG_AGGRO") and Engine.get_physics_frames() % 60 == 0:
+		print("[DBG %s] pos=%s home=%s player=%s notice=%.1f engage=%.1f grace=%.2f returning=%s dist3d=%.2f" % [
+			name, global_position, home, _player.global_position, notice, engage, _grace_left, _returning_home,
+			global_position.distance_to(_player.global_position)
+		])
+
 	var to_player := _player.global_position - global_position
 	to_player.y = 0.0
 	var from_home := global_position.distance_to(home)
@@ -181,6 +187,11 @@ func _tick_aggression(delta: float) -> bool:
 		else:
 			_stuck_frames = 0
 		_stuck_check_pos = global_position
+
+		if OS.has_environment("DEBUG_AGGRO") and Engine.get_physics_frames() % 30 == 0:
+			print("[DBG2 %s] to_player_len=%.2f chase_dir=%s vel=%s is_on_wall=%s is_on_floor=%s stuck_frames=%d" % [
+				name, to_player.length(), chase_dir, velocity, is_on_wall(), is_on_floor(), _stuck_frames
+			])
 
 		if _stuck_frames > UNSTICK_AFTER_FRAMES:
 			# Pinned against something the direct line runs straight through.
