@@ -118,6 +118,7 @@ func _run() -> void:
 	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
+	failures.append_array(await _the_berry_farm_can_be_worked(world))
 
 	print("")
 	if failures.is_empty():
@@ -512,3 +513,124 @@ func _assert_offer_clear_of_hotbar(
 				[r_prompt, r_hotbar, context])
 	return found
 
+
+
+## R7.6. The berry farm's whole loop, driven end to end in the real world:
+## till a bed with a hoe in the satchel, sow a seed into it, sleep a day, and
+## pick berries out of it.
+##
+## This is the check that would catch what a unit test structurally cannot.
+## `tests/test_farming.gd` pins the state machine, but every way this feature
+## can be broken while that suite stays green lives out here: beds placed off
+## the ground and skipped by the placer, a plot never registering its index
+## against `Game.farm_plots`, an interactable that never attaches to the
+## arbiter, a model path that loads as the wrong resource type. The scene has
+## to actually build the farm and the farm has to actually pay out.
+##
+## Driven through each plot's own `gather()` -- the single verb both the
+## interact prompt and a tool swing route through (`farm_plot.gd`'s header) --
+## rather than by simulating a button press, for the same reason
+## `_the_hotbar_heals_a_creature` calls the real handler: this is the code
+## path both inputs share, so proving it proves both.
+func _the_berry_farm_can_be_worked(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot drive the farm check"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory; cannot drive the farm check"] as Array[String]
+
+	var farm: Node3D = world.get_node_or_null(^"BerryFarm") as Node3D
+	if farm == null:
+		return ["no BerryFarm node in the world; the farm was never placed"] as Array[String]
+	var beds := farm.get_children()
+	print("")
+	print("--- berry farm ---")
+	print("beds placed: %d" % beds.size())
+	if beds.size() < 2:
+		found.append("the farm placed %d beds; farm.json asks for more" % beds.size())
+	if beds.is_empty():
+		return found
+
+	var bed: Node3D = beds[0] as Node3D
+	# Every bed must have found ground. `_place_farm_plots` skips one it
+	# cannot stand up, so a farm that quietly lost half its beds to a terrain
+	# change shows here as a count, but a bed at a nonsense height would not.
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.get("data") != null:
+		for entry: Node in beds:
+			var at: Vector3 = (entry as Node3D).global_position
+			var ground: float = (terrain.get("data") as Object).call(
+				"get_height", Vector3(at.x, 0.0, at.z))
+			if absf(at.y - ground) > 0.5:
+				found.append("bed '%s' sits %.2fm off the ground at its own xz" %
+					[entry.name, at.y - ground])
+
+	# A bed must offer SOMETHING even with an empty satchel -- a farm that
+	# goes silent when the player has nothing is the OF20 failure.
+	var interactable: Node3D = bed.get_node_or_null(^"Interactable") as Node3D
+	if interactable == null:
+		return (found + ["the bed has no Interactable child; it can never be pressed"]) as Array[String]
+	for i in 3:
+		await process_frame
+	var empty_handed := str(interactable.get("label"))
+	print("empty-handed label: '%s'" % empty_handed)
+	if empty_handed.is_empty():
+		found.append("a bed with nothing in the satchel offers no prompt line at all")
+	if bool(interactable.get("actionable")):
+		found.append("a bed the player cannot work is marked actionable: '%s'" % empty_handed)
+
+	# Till. Needs a working hoe OWNED, not equipped (docs/decisions/D50).
+	inventory.call("add", "hoe", 1)
+	var hoe_slot: int = int(inventory.call("find_slot", "hoe"))
+	var durability_before: int = int(inventory.call("durability_at", hoe_slot))
+	bed.call("gather")
+	var state_after_till := str(game.call("farm_plot_at", 0).get("state"))
+	print("after till: state=%s  hoe durability %d -> %d" %
+		[state_after_till, durability_before, int(inventory.call("durability_at", hoe_slot))])
+	if state_after_till != "tilled":
+		found.append("tilling with a hoe in the satchel left the bed '%s'" % state_after_till)
+	if int(inventory.call("durability_at", hoe_slot)) >= durability_before:
+		found.append("tilling did not wear the hoe down")
+
+	# Sow. Spends exactly one seed and needs no hoe.
+	inventory.call("add", "berry_seeds", 2)
+	bed.call("gather")
+	var state_after_sow := str(game.call("farm_plot_at", 0).get("state"))
+	var seeds_left: int = int(inventory.call("count", "berry_seeds"))
+	print("after sow: state=%s  seeds left %d" % [state_after_sow, seeds_left])
+	if state_after_sow != "sown":
+		found.append("sowing a seed into tilled ground left the bed '%s'" % state_after_sow)
+	if seeds_left != 1:
+		found.append("sowing one bed spent %d seeds, not 1" % (2 - seeds_left))
+
+	# Not pickable today. This is R7.6's "on a LATER day" in the live world.
+	var berries_before: int = int(inventory.call("count", "berries"))
+	bed.call("gather")
+	if int(inventory.call("count", "berries")) != berries_before:
+		found.append("a bed sown this very day paid out berries immediately")
+
+	# Sleep. `camp.gd`'s rest is what calls this in a real playthrough.
+	var day_before: int = int(game.get("day"))
+	game.call("advance_day")
+	for i in 3:
+		await process_frame
+	var ripe_label := str(interactable.get("label"))
+	print("day %d -> %d, label now '%s'" % [day_before, int(game.get("day")), ripe_label])
+	if str(game.call("farm_plot_at", 0).get("state")) != "sown":
+		found.append("the SAVED state changed on the day rolling over; " +
+			"ripening is meant to be recomputed from the day, not written back")
+
+	# Pick. Bare-handed pays the full yield -- berries are not tool-gated.
+	bed.call("gather")
+	var gained: int = int(inventory.call("count", "berries")) - berries_before
+	var state_after_pick := str(game.call("farm_plot_at", 0).get("state"))
+	print("after pick: +%d berries, state=%s" % [gained, state_after_pick])
+	if gained <= 0:
+		found.append("picking a ripe bed paid out no berries at all")
+	if state_after_pick != "tilled":
+		found.append("a picked bed went to '%s'; D50 says it stays worked soil" %
+			state_after_pick)
+
+	return found

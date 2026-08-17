@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 ## alone. `FakeGame` below stands in for the `Game` autoload — it needs no
 ## scene tree, no menu, nothing `save_game.gd` does not actually read or
 ## write (`day`, `party`, `inventory`, `placed_buildings`, `death_satchels`,
-## `map`, `satiety`, and — only when a test opts in — a live
+## `map`, `satiety`, `farm_plots`, and — only when a test opts in — a live
 ## `player_vitals()`).
 ##
 ## Writes to a dedicated `user://test_saves_format/` directory rather than the
@@ -41,6 +41,8 @@ class FakeGame:
 	var party: RefCounted = null
 	var inventory: RefCounted = null
 	var placed_buildings: Array = []
+	## R7.6 / VERSION 9. The berry farm's beds.
+	var farm_plots: Array = []
 	var death_satchels: Array = []
 	var map: RefCounted = null
 	var progression: RefCounted = null
@@ -178,6 +180,57 @@ func test_save_then_load_round_trips_placed_buildings() -> void:
 	assert_eq(read.placed_buildings.size(), 2)
 	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "camp")
 	assert_eq((read.placed_buildings[1] as Dictionary).get("position"), [4.25, 0.0, 6.0])
+
+
+## R7.6 / VERSION 9. A sown bed ripens off `day` rather than off a timer in a
+## loaded scene, so the day it was sown has to survive a quit — losing it
+## costs the player the entire wait they were sitting through.
+func test_save_then_load_round_trips_farm_plots() -> void:
+	var written := _game()
+	written.farm_plots = [
+		{"state": "sown", "ripe_on_day": 4},
+		{"state": "tilled", "ripe_on_day": 0},
+	]
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.farm_plots.size(), 2)
+	assert_eq(str((read.farm_plots[0] as Dictionary).get("state")), "sown")
+	assert_eq(int((read.farm_plots[0] as Dictionary).get("ripe_on_day")), 4)
+	assert_eq(str((read.farm_plots[1] as Dictionary).get("state")), "tilled")
+
+
+## The gap this file did not have a test for, and which shipped: `load_slot`
+## used to dispatch migrations through a hand-written per-version `if/elif`
+## ladder that carried branches for versions 1-5 and none for 6 or 7, so a
+## save written between the hotbar change and the elixir one was REFUSED even
+## though `_migrate_v6` and `_migrate_v7` both existed and worked. R7.6
+## replaced the ladder with a loop; this asserts the property the ladder could
+## not keep — EVERY version this build claims to read actually loads.
+func test_every_readable_save_version_actually_loads() -> void:
+	for version in range(1, SAVE_GAME.VERSION + 1):
+		var written := _game()
+		written.day = 7
+		assert_true(saver.save(written, 2), "could not write the fixture")
+		# Rewrite the version stamp in place: a real v6 file differs from a v9
+		# one in more than this, but every migration above is defensive about
+		# missing keys (that is what "nothing to migrate FROM" means), so the
+		# version number alone is enough to prove the DISPATCH reaches them.
+		var path: String = saver.slot_path(2)
+		var file := FileAccess.open(path, FileAccess.READ)
+		var data: Dictionary = JSON.parse_string(file.get_as_text())
+		file.close()
+		data["version"] = version
+		var out := FileAccess.open(path, FileAccess.WRITE)
+		out.store_string(JSON.stringify(data, "\t"))
+		out.close()
+
+		var read := _game(false)
+		assert_true(saver.load_slot(read, 2),
+			"a version %d save did not load, but this build claims to read %d"
+				% [version, SAVE_GAME.VERSION])
+		assert_eq(read.day, 7, "a version %d save loaded but lost its day" % version)
 
 
 func test_save_then_load_round_trips_a_placed_buildings_rotation() -> void:

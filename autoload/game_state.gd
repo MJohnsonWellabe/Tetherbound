@@ -30,6 +30,10 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+## R7.6. Only for `fresh()`/`sanitised()` — the shape of a farm bed is that
+## file's business, and this autoload should not carry a second opinion about
+## what a valid plot dictionary looks like.
+const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
@@ -108,6 +112,30 @@ var pending_catch: RefCounted = null
 ## `scripts/save/save_game.gd`); every building placed before that defaults
 ## to facing 0.
 var placed_buildings: Array = []
+
+## R7.6. What each bed of the berry farm is doing — `{state, ripe_on_day}` per
+## entry, in the order `data/config/farm.json` lists its plots.
+##
+## The same "registry, not the scene node, is what a save persists" split
+## `placed_buildings` draws above, and for a sharper reason: a crop is the
+## only thing in this game whose state advances while the player is somewhere
+## else entirely. `harvest_node.gd`'s piles can afford to respawn on a
+## `_process` timer and come back fresh on every load because losing 60
+## seconds of a respawn clock costs nobody anything; forgetting that six beds
+## were sown two days ago costs the player the entire wait they were sitting
+## through. Joined the save format at VERSION 8 -> 9 (see
+## `scripts/save/save_game.gd`).
+##
+## Indexed by POSITION in farm.json rather than keyed by world coordinates:
+## the plots are authored data, and a bed that gets nudged half a metre in a
+## later tuning pass should keep the crop growing in it rather than silently
+## forgetting it. Reordering that file WOULD shuffle a live save's crops,
+## which is the honest trade and is written down in farm.json's own header.
+##
+## Read and written only through `farm_plot_at()`/`set_farm_plot()` below, so
+## the "grow the array to fit" rule lives in one place — a save written when
+## the farm had four beds must not error the day it has six.
+var farm_plots: Array = []
 
 ## The five action slots, as item ids — NOT satchel indices.
 ##
@@ -299,6 +327,29 @@ func _input(event: InputEvent) -> void:
 func advance_day() -> int:
 	day += 1
 	return day
+
+
+## R7.6. The state of farm bed `index`, or a fresh fallow one.
+##
+## Grows `farm_plots` on demand rather than requiring anyone to size it up
+## front: a save written when `data/config/farm.json` listed four beds is
+## loaded by a build that lists six, and the two new beds should read as
+## unworked ground rather than as an out-of-range error. Same forgiving shape
+## `_array_to_inventory` already gives a satchel that changed size.
+func farm_plot_at(index: int) -> Dictionary:
+	if index < 0:
+		return FARM_LOGIC.fresh()
+	if index >= farm_plots.size():
+		return FARM_LOGIC.fresh()
+	return FARM_LOGIC.sanitised(farm_plots[index])
+
+
+func set_farm_plot(index: int, plot: Dictionary) -> void:
+	if index < 0:
+		return
+	while farm_plots.size() <= index:
+		farm_plots.append(FARM_LOGIC.fresh())
+	farm_plots[index] = FARM_LOGIC.sanitised(plot)
 
 
 ## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does

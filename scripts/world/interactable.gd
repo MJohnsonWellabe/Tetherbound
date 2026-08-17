@@ -62,6 +62,23 @@ signal activated()
 ## Beats proximity when it has to. Left at zero for everything ordinary.
 @export var priority: int = 0
 
+## False makes this a STATEMENT rather than an offer: the line draws with no
+## button glyph and pressing the button does nothing (`prompt_arbiter.gd`'s
+## own `actionable` field, and `interaction_arbiter.gd:127` which refuses to
+## activate one).
+##
+## The arbiter has supported this since it was written and every provider that
+## wanted it built its offer dictionary by hand — `encounter_director.gd` does
+## exactly that for "your creature is out of the fight". This node never
+## exposed it, so anything bolted on as an `Interactable` had to choose
+## between a lie ("Pick berries" on a bush with nothing on it) and silence.
+##
+## R7.6 needed the third answer: a farm bed says "Ripens tomorrow" or "Needs a
+## Hoe" and means it — a farm that goes quiet exactly when the player is
+## asking it what is wrong is the worse failure. Default true, so nothing that
+## existed before this behaves differently.
+@export var actionable: bool = true
+
 var _arbiter: Node = null
 
 
@@ -111,7 +128,7 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		return {}
 	if not _has_line_of_sight(from):
 		return {}
-	return ARBITER.offer(label, distance, priority)
+	return ARBITER.offer(label, distance, priority, actionable)
 
 
 ## Is there solid geometry between the player and this prompt?

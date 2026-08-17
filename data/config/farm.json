@@ -1,0 +1,20 @@
+{
+  "_comment": "R7.6. The berry farm beside Grandpa's house: where the beds are, and the three numbers that decide whether farming is worth walking back for. Placed by scripts/world/playground_world.gd, drawn by scripts/world/farm_plot.gd, ruled by scripts/world/farm_logic.gd. CLAUDE.md: data that will clearly vary lives here, never in gameplay code. ALL TUNABLE.",
+  "_comment_scope": "GAME_DESIGN.md §21 is the whole specification and it is four lines long -- 'Meadows only needs berries initially. Plant -> wait -> harvest. No watering chores.' §32 excludes *deep* farming. So there is no water key, no soil key, no fertiliser key and no second crop in this file, and adding one is a design change rather than a tuning pass.",
+  "_comment_placement": "South of the farmhouse, on its own yard. Grandpa's house stands at [-22,-16] (data/config/village.json's header) and measures 10m x 6m, so its south wall line is z=-13 and the nearest bed edge clears it by ~1.6m -- close enough to read as the house's own plot from the door, far enough that the beds are not under the eaves. Every bed sits inside the house pad's FULL-flatten radius (terrain_playground.json `flats`, centre [-22,-16] r14; the furthest bed centre is 7.7m out), so no new flattening was needed and no bed stands on the skirt. Clear of the square flat at [10,-10] r18 by 30m and of the fence run at [3,-18] by 24m, as R7.6's brief requires; also >11m from grandpa_house.gd's `outside` marker, where the opening stands the starter row, so no two interact prompts contest. The farmhouse_yard prop cluster (data/config/props.json) is 15m away on the house's NORTH side and is untouched.",
+  "_comment_grid": "Two rows of three at 2.4m centres. Six beds because it is enough that a rest is worth taking and few enough that tilling the farm is one errand, not an afternoon. Spacing comfortably exceeds the prompt radius (farm_plot.gd's PROMPT_RADIUS, 2.0m), so standing at one bed the arbiter's nearest-wins rule (prompt_arbiter.gd::choose_index) picks the one you are actually on rather than the one behind it. Was 2.0m centres at z -10.6/-8.6 until the visual pass: at that pitch, and hard against the house's south wall, the six beds rendered as one continuous band of planting rather than as six plots, and the farmhouse ate the frame. Moved out to z -9.0/-6.6 (still ~4m clear of the wall line at z=-13, still 9.7m from the pad centre and well inside its 14m full-flatten radius) and opened up, so the rows read as rows from the door.",
+  "_comment_grow_days": "In-game DAYS (autoload/game_state.gd::day, advanced only by scripts/build/camp.gd's rest), not seconds. One day, so R7.6's done-when -- 'harvest berries from it on a later day' -- is exactly one sleep away rather than a week of them. Raise it if the farm turns out to trivialise the berry economy; there is no other lever here on purpose.",
+  "_comment_yield": "Berries per bed, against the 3 a wild bush gives (data/config/harvest.json). Deliberately only one more: the farm's advantage over walking to a bush is that it is at home and six beds ripen together, not that a bed out-yields the wild by a multiple. recipes_ironwood.json:58 keeps berries in the Ridge Tonic cost 'so the berry plots stay worth walking to at Band 4' -- this is the plot that line was written for, and a 3x yield would make that sentence false in the other direction.",
+  "grow_days": 1,
+  "yield": 4,
+  "seed_item": "berry_seeds",
+  "crop_item": "berries",
+  "plots": [
+    { "at": [-24.4, -9.0] },
+    { "at": [-22.0, -9.0] },
+    { "at": [-19.6, -9.0] },
+    { "at": [-24.4, -6.6] },
+    { "at": [-22.0, -6.6] },
+    { "at": [-19.6, -6.6] }
+  ]
+}

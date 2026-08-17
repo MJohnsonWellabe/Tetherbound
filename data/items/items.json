@@ -6,7 +6,7 @@
   "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit — there is no `weight` key here and there must never be one.",
   "_comment_fiber": "Spelled `fiber`, matching MEADOWS_VERTICAL_SLICE.md section M8 AND the harvest data the gathering work will port from the pre-Godot prototype (git show c45dee5^:src/data/harvest.json), which drops wood, stone, fiber, berries and flint under exactly these ids. The id is what harvesting keys off, so it had to match one of them; it now matches both.",
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
-  "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
+  "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (unscheduled -- R7.6 was re-scoped off fishing and onto the berry farm) are what will read them. R7.6 added a sixth tool, `hoe`, and it is the first one that does NOT appear here: it gates TILLING, a preparation verb, not a gather, so it is named by scripts/world/farm_logic.gd::TILL_TOOL instead of by any resource's `gathered_with`. Berries are still the resource with no `gathered_with`, farmed ones included -- see docs/decisions/D50 for why that was kept deliberately rather than quietly changed the moment berries got a farm.",
   "_comment_durability": "R2.2. `durability` is the number of full-yield gathers a tool survives before it breaks (GAME_DESIGN.md 19: 'have durability', 'repair for free at appropriate station'). Tunable, same for all five for now. A broken tool (0 durability) stops counting as owned for item_db.gd's harvest_yield() gating until repaired -- inventory.gd tracks the current value per-slot, defaulting to this max when a slot carries no durability key of its own (so a freshly-added tool needs no special-cased add-time write). Only `axe`/`pickaxe`/`knife` actually lose durability today, from harvest_node.gd's gather loop; `hammer` and `fishing_rod` carry the field for GAME_DESIGN.md consistency but nothing damages them yet, matching R2.1's own precedent for those two.",
   "_comment_satiety": "D29. `satiety` is how much of player_vitals.gd's satiety meter one use restores (see data/config/vitals.json); `buff` is that same use's optional temporary buff, passed straight through to player_vitals.gd's eat() as-is: { id, stat, amount, duration_s }. Only berries carry it so far. Nothing calls eat() from an eating action yet -- that wiring lands with the HUD pass, per this task's brief.",
   "_comment_tm": "OF29 (owner: 'I can pick up a TM but it needs to go in my inventory and then I see it's stats and choose who to teach it to'). A `kind: \"tm\"` item is a teaching disc you carry: its id is EXACTLY the matching data/moves/tms.json id (that is the whole link between the two files -- tests/test_moves.gd asserts it both ways, so a TM item with no TM entry, or a TM entry with no item, fails the build). `move` names the data/moves/moves.json id it teaches and must match that TM entry's own `move_id`; the backpack detail view reads power/type/slot from move_db.gd and the compatibility list from tm_db.gd rather than duplicating either here. `stack: 1` because a TM is now CONSUMED on teach (owner-directed change to R4.4's never-consumed design) -- one disc teaches one creature, so a satchel slot holding 'a stack of TMs' would be a lie about what the player can actually do with it.",
@@ -71,6 +71,16 @@
       "icon": "res://assets/ui/icons/items/berries.png",
       "blurb": "A handful off a bush. Food buffs, never starvation.",
       "description": "A cupped handful picked straight off a meadow bush, still warm from the sun. A quick bite tops up satiety and leaves a little spring in your step for a couple of minutes after."
+    },
+    "berry_seeds": {
+      "name": "Berry Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#7d6a44",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "_comment": "R7.6. What a farm plot is sown with (data/config/farm.json, scripts/world/farm_plot.gd). `kind: resource` like wood and fiber rather than a new `seed` kind -- nothing in item_db.gd branches on kind except `tool`, so a seed-shaped id needs no new code path, and inventing a kind nothing reads is the speculative machinery CLAUDE.md's working-style section says not to build. Never tool-gated: seeds come from a recipe (3 berries -> 4 seeds, data/recipes/recipes.json) and from Mira (data/config/trade.json), not out of the ground. The icon reuses the existing `berries` silhouette in the same honest stand-in convention `rootstone` documents below -- the set has no seed glyph, and a berry is what is in the packet.",
+      "blurb": "A twist of dried berries, saved for planting.",
+      "description": "Seed saved out of last season's picking and dried in a twist of cloth. Sown into worked ground it comes up as a bush inside a day, which is the whole of what farming is here."
     },
     "rootstone": {
       "name": "Rootstone",
@@ -277,6 +287,29 @@
         0,
         0,
         -10
+      ]
+    },
+    "hoe": {
+      "name": "Hoe",
+      "kind": "tool",
+      "stack": 1,
+      "durability": 40,
+      "colour": "#8a6a3f",
+      "icon": "res://assets/ui/icons/items/pickaxe.png",
+      "_comment": "R7.6. The SIXTH tool, and the first that gates something other than a gather: it turns unworked ground into a seedbed (scripts/world/farm_logic.gd::TILL_TOOL) and does nothing else. It deliberately appears in NO item's `gathered_with` -- see docs/decisions/D50 and this file's own `_comment_tools` line, which records berries as the one resource that is never tool-gated. That stayed true: farmed berries are picked bare-handed exactly like wild ones. `durability` matches the other five, and D50's 'harvest returns the bed to TILLED' rule is what keeps a 40-charge hoe from being a permanent tax -- six beds cost six charges once, not six per crop.",
+      "_comment_model": "`held_model` and `icon` both reuse the bronze pickaxe. There is no hoe mesh and no hoe glyph in any vendored pack, and D24 forbids sourcing a new prop family for one tool; a bronze mattock head on a shaft is what a hoe looks like at hand scale, and this is the same honest stand-in `hammer` above already makes with the survival pack's axe. Held a little flatter than the pickaxe (-45 rather than -15 on roll) so the two read apart in the hand.",
+      "blurb": "Breaks ground into a seedbed. Nothing else.",
+      "description": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature — the only thing it is for is the ground in front of a farmhouse.",
+      "held_model": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+      "held_offset": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "held_rotation_deg": [
+        0,
+        0,
+        -45
       ]
     },
     "fishing_rod": {

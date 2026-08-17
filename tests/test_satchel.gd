@@ -34,6 +34,10 @@ class FakeGame:
 	var party: RefCounted = null
 	var inventory: RefCounted = null
 	var placed_buildings: Array = []
+	## R7.6 / VERSION 9. The berry farm's beds — save_game.gd reads it on every
+	## write, so a double that omits it fails the cast rather than this file's
+	## own subject.
+	var farm_plots: Array = []
 	var death_satchels: Array = []
 	var map: RefCounted = null
 	var progression: RefCounted = null
