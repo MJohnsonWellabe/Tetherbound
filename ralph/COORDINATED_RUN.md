@@ -275,6 +275,25 @@ Repo-specific; put the relevant ones in every brief.
 - **A route is not proven walkable by sampling the heightfield.**
   `ground_height_at()` lied to three separate investigations of the same bug.
   Walk a body and read what the physics engine reports.
+- **A keep-both merge needs a duplicate CALL-SITE check, not just a duplicate
+  declaration check.** Resolving a conflict by keeping both sides and then
+  grepping for duplicate `func`/`var`/`const` feels thorough and is not: it
+  cannot see two calls to the same function. That is exactly how a second
+  `vegetation.build()` — with a signature two refactors out of date — shipped in
+  `integrate-3` and errored on every boot until a lane found it. After any
+  keep-both resolution, diff the merged file against **both** parents and read
+  what you added, rather than checking a symbol list.
+- **Porting a stale branch means re-deriving its constants, not copying them.**
+  Every number on an old branch was calibrated against the world that existed
+  when it was written. `OF15`'s wedge detector was mechanically correct and
+  still failed on landing, because its exclusion was a 200 m *radius* around a
+  disc that no longer exists, and because it had no slope exclusion — it never
+  needed one on gentle ground, and the corridor is made of deliberately
+  unclimbable faces. Same class of bug as `smoke_boss.gd`'s `BARRIER_LIMIT_M`
+  (18 m from config arithmetic, 28.3 m when finally measured) and
+  `tether_relay`'s `deck_y` (an absolute height calibrated against the old
+  site's ground). When you port, list the branch's constants and ask what each
+  one was measured against.
 
 ---
 

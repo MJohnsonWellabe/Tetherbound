@@ -66,7 +66,7 @@ The owner also asked whether they were on an old build. Partly answered here:
 section *by design* — so those two are real regardless of build age.
 
 ### OW12 — The torch should be a carried item, not a thing you build
-**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+**CLOSED 2026-08-17 (OPS4).** Landed on `main` in the corridor merge `d4de94a3`. Verified in the tree, not by branch ref.
 
 `model: sonnet` · `tests: smoke_playground, test_inventory` · `area: ui`
 Owner, 2026-08-16: *"torches need to be a carry able item not placeable one."*
@@ -92,7 +92,7 @@ strands camp lighting at night, say so instead of inventing a replacement.
 and is not offered a torch to build.
 
 ### OW3 — The whole map is revealed before you explore anything
-**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+**CLOSED 2026-08-17 (OPS4).** Landed on `main` in the corridor merge `d4de94a3`. Verified in the tree, not by branch ref.
 
 `model: sonnet` · `tests: smoke_menu` · `area: ui`
 Owner: *"The full map is rendered before I explore anything."*
@@ -193,6 +193,19 @@ mistake once.
 
 
 ### OW5E — make the relocated world pass its own tests
+**CLOSED 2026-08-17 (OPS4).** Landed on `main` in `d4de94a3`, CI run 1349 green
+on all 19 jobs — the first fully green run the corridor has ever had. All six
+jobs fixed. Two of them were not the corridor's fault and are worth keeping in
+mind: `verify-unit-tests` was two stale test assertions (`test_map_state.gd`
+failed to PARSE on a removed `GRID` const, silently skipping all 21 map-state
+tests including the save-format ones), and the duplicate `vegetation.build()`
+it found came from a coordinator merge resolution, not a lane. Two further real
+bugs were found by walking the re-baked ground: `world_perimeter.gd` queried
+height exactly on the baked grid's EXCLUSIVE edge, so all 55 south-cap collision
+segments took one flat wrong height and a player could step over the wall into
+the void; and `smoke_boss.gd`'s `BARRIER_LIMIT_M` had been computed from carve
+config that postdated the only bake in existence, never measured.
+
 `model: sonnet` · `tests: the six failing jobs` · `area: terrain, tests`
 **The corridor cannot reach `main` until this closes.** `ralph/integrate-3` is 24
 commits ahead and 6 of 19 CI jobs fail (run 32023204240). They are not the
@@ -223,6 +236,12 @@ Also surfaced by the same run and worth its own commit: `verify-settings`
 reports *"Map is now I — so is Open the satchel. Both will fire."*
 
 ### OW5-walk — walk the corridor and prove the forty minutes
+**START HERE (OPS4, 2026-08-17).** `OW5E` has landed, so this is unblocked and
+it is the corridor's exit gate: the whole 8192x2048 m world is now on `main` and
+**nobody has walked it end to end.** Every number behind it is still arithmetic.
+Until this runs, `OW6` (the captain onto the trail) and `MQ2B` are building on an
+unverified route.
+
 `model: sonnet` · `tests: new probe` · `area: terrain`
 The owner's original ask, in his own words, and still unverified against
 anything but arithmetic. Once `OW5E` lands: drive a body along the real trail
@@ -277,7 +296,7 @@ the bottom half of frame on empty floor with the player's head at the very
 bottom edge. Predates this item.
 
 ### OW1-remainder — the backpack's remaining legibility defects
-**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+**CLOSED 2026-08-17 (OPS4).** Landed on `main` in the corridor merge `d4de94a3`. Verified in the tree, not by branch ref.
 
 `model: sonnet` · `tests: smoke_menu` · `area: ui`
 From the blind usability pass, judged at 40% scale as a seven-inch proxy. Two
@@ -438,6 +457,16 @@ behaves, close this item.
 Owner-reported, 2026-08-15. Movement getting wedged/blocked rather than passing
 through. Needs locations logged from a fresh playthrough before a fix can be
 scoped.
+
+**CLOSED 2026-08-17 (OPS4).** The detector landed on `main` in `05264fda`, and
+porting it taught something worth keeping: **its exclusions had to be re-derived,
+not copied.** `STUCK_EXCLUDE_RADIUS` was a 200 m radius because the world was a
+disc with a ring fence; the corridor has no centre. And it had no slope
+exclusion at all — it never needed one on the old gentle disc, but the corridor
+is built out of deliberately unclimbable rises, and ported as-is it reported
+three wedges on correct terrain near (62,-105), where the ground climbs 7.1 m
+over 8 m and a shape query finds no prop at all. Now excluded by edge margin and
+by a slope probe sampled at **both** 4 m and 8 m — one ring is not enough.
 
 **SOLVED 2026-08-17 — it was Captain Halder, and it took four diagnoses.**
 `WALL1` found it: `spawns.json`'s seeded rng resolved Galecrest's home to 3.15 m
