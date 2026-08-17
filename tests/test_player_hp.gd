@@ -53,11 +53,25 @@ func test_equipping_a_real_piece_fills_its_own_slot() -> void:
 		assert_eq(str(_equipment.call("equipped_in", slot)), item_id)
 
 
-func test_equipping_a_second_piece_in_the_same_slot_displaces_the_first() -> void:
+func test_equipping_a_different_slot_item_does_not_disturb_an_existing_slot() -> void:
 	_equipment.call("equip", "hide_helm")
 	var result: Dictionary = _equipment.call("equip", "hide_vest")
-	# hide_vest is upper_body, not helmet -- refused, and hide_helm still equipped.
-	assert_false(bool(result.get("ok", false)))
+	# hide_vest is upper_body, a DIFFERENT slot -- both equip and both stick.
+	assert_true(bool(result.get("ok", false)), "a correctly-slotted piece must not be refused")
+	assert_eq(str(_equipment.call("equipped_in", "helmet")), "hide_helm")
+	assert_eq(str(_equipment.call("equipped_in", "upper_body")), "hide_vest")
+
+
+func test_equipping_a_second_piece_in_the_same_slot_displaces_the_first() -> void:
+	_equipment.call("equip", "hide_helm")
+	# Only one real helmet-slot item exists in items.json, so re-equipping the
+	# same id still exercises the displacement path and its return contract:
+	# `equip()` must hand back whatever the slot held before the new piece
+	# went in, so a real "Equip" UI (not built by this task) can put the
+	# displaced piece back in the satchel rather than lose it.
+	var result: Dictionary = _equipment.call("equip", "hide_helm")
+	assert_true(bool(result.get("ok", false)))
+	assert_eq(str(result.get("displaced", "")), "hide_helm")
 	assert_eq(str(_equipment.call("equipped_in", "helmet")), "hide_helm")
 
 
