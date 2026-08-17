@@ -27,6 +27,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 
 const WARDEN_ID := "warden_aldis"
 const FREED_FLAG := "legendary_freed"
@@ -49,6 +50,32 @@ var _panel: Node = null
 var _climax: Node = null
 var _spec: Dictionary = {}
 var _flag_writes: int = 0
+
+## CI-BOSS (ralph/BACKLOG.md, filed 2026-08-17): `verify-boss` has twice
+## failed with "the boss fight never resolved inside 9000 frames" on branches
+## whose own diffs could not touch combat. The suspicion this test could not
+## previously confirm or rule out was that the player's own attack was
+## whiffing against the Warden's creature and burning the whole frame budget
+## in silence -- indistinguishable, from the failure message alone, from a
+## director that simply never advanced the queue. These count real
+## `attack_missed(true)` / `hit_landed(true, ...)` emissions from the fight
+## this test drives, so a stall reports which one it actually was instead of
+## making the next investigation start from zero again.
+var _quick_hits := 0
+var _quick_misses := 0
+## Consecutive misses since the last landed hit. A genuine facing/reach bug
+## would whiff over and over against a stationary or slow-approaching
+## opponent; a director stall would produce few or no attack attempts at all
+## (`quick_ready()` never firing because the fight never actually opens a
+## round) rather than a run of real misses. The two failure shapes are
+## distinguishable by this counter, which is the whole point of keeping it.
+var _consecutive_misses := 0
+## However many misses in a row it takes to say "this is a real whiff, not
+## noise" and fail with the measured geometry instead of spending the rest of
+## `BATTLE_FRAME_LIMIT` finding out the same way. Generous on purpose: a
+## handful of genuine out-of-range or off-cone swings during normal
+## approach/reposition play is expected and is not a bug.
+const CONSECUTIVE_MISS_LIMIT := 25
 
 
 func _init() -> void:
@@ -230,6 +257,8 @@ func _fight_him() -> void:
 	var team_size: int = TRAINERS.team_of(_spec).size()
 	var frames := 0
 	var sent := 1
+	_manager.connect("attack_missed", _on_fight_attack_missed)
+	_manager.connect("hit_landed", _on_fight_hit_landed)
 	while bool(_director.call("trainer_battle_active")) and frames < BATTLE_FRAME_LIMIT:
 		frames += 1
 		if not bool(_manager.call("is_fighting")):
@@ -256,24 +285,96 @@ func _fight_him() -> void:
 		var rig := _world.get_node_or_null(^"CameraRig") as Node3D
 		if rig != null:
 			rig.set("yaw", atan2(-to.x, -to.z))
-		if to.length() > 2.0:
+		# CI-BOSS's actual root cause, found by instrumenting this exact loop: a
+		# fixed "get within 2.0m" gate assumes two bodies can physically close to
+		# that distance, which held for every matchup this file was written and
+		# tested against but is not true of the Warden's own roster. Diagnostic
+		# logging (frame, distance, quick_ready) showed the distance to
+		# `TrainerCreature_warden_aldis_1` pinned at exactly 2.63m for the entire
+		# 9000-frame budget, `quick_ready()` true throughout -- the two capsules
+		# were already touching, `move_forward` could push no further, and the
+		# `to.length() > 2.0` branch never once let go of movement to let the
+		# `quick_ready()` branch fire a single attack. Zero `attack_missed` and
+		# zero `hit_landed` emissions the whole run confirms it: this was never a
+		# whiff, the swing was never attempted at all. `combat_manager.gd::
+		# _with_reach_for_the_bodies` floors the real attack reach by both
+		# bodies' radii and always leaves at least 0.5m of daylight past contact
+		# (its own comment), so gating on THAT floor instead of a guessed
+		# constant is guaranteed reachable rather than merely usually reachable.
+		var reach := _floored_quick_range(ally, opponent)
+		if to.length() > reach:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
 		elif bool(_manager.call("quick_ready")):
 			await _press("combat_quick")
+			# CI-BOSS: a genuine facing/reach bug whiffs over and over against a
+			# target that is standing right there, and used to be indistinguishable
+			# from a director that stopped advancing at all -- both read as "never
+			# resolved inside 9000 frames." This fails immediately, with the actual
+			# measured distance and facing error at the moment of the swing, rather
+			# than let the rest of the frame budget burn to reach the same
+			# conclusion less usefully. See CONSECUTIVE_MISS_LIMIT's own comment for
+			# why a handful of misses during ordinary approach/reposition play does
+			# not trip this.
+			if _consecutive_misses >= CONSECUTIVE_MISS_LIMIT:
+				var facing: Vector3 = ally.call("facing")
+				var still_to := opponent.global_position - ally.global_position
+				still_to.y = 0.0
+				var angle := 180.0
+				if still_to.length() > 0.001 and Vector3(facing.x, 0.0, facing.z).length() > 0.001:
+					angle = rad_to_deg(Vector3(facing.x, 0.0, facing.z).normalized().angle_to(still_to.normalized()))
+				_fail(("the player's quick attack whiffed %d times in a row against the Warden's creature " +
+					"(distance %.2fm, facing error %.1f degrees at the last swing) -- this is a real miss, " +
+					"not the fight stalling") % [_consecutive_misses, still_to.length(), angle])
+				return
 		else:
 			await physics_frame
 
 	if bool(_director.call("trainer_battle_active")):
-		_fail("the boss fight never resolved inside %d frames" % BATTLE_FRAME_LIMIT)
+		_fail(("the boss fight never resolved inside %d frames (%d quick attacks landed, " +
+			"%d missed, %d consecutive at the end)") % [
+			BATTLE_FRAME_LIMIT, _quick_hits, _quick_misses, _consecutive_misses])
 		return
 	if not bool(_progression().call("has", WARDEN_FLAG)):
 		_fail("the Warden was fought to the end but '%s' was never set" % WARDEN_FLAG)
 		return
-	print("the boss fight ran and was won: %d creatures, %d frames" % [team_size, frames])
+	print("the boss fight ran and was won: %d creatures, %d frames, %d quick attacks landed, %d missed" % [
+		team_size, frames, _quick_hits, _quick_misses])
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after the boss fight")
+
+
+func _on_fight_attack_missed(by_player: bool) -> void:
+	if not by_player:
+		return
+	_quick_misses += 1
+	_consecutive_misses += 1
+
+
+func _on_fight_hit_landed(on_enemy: bool, _amount: float) -> void:
+	if not on_enemy:
+		return
+	_quick_hits += 1
+	_consecutive_misses = 0
+
+
+## How close `_fight_him()` needs to steer the ally before it is worth trying a
+## quick attack -- the same body-radius floor `combat_manager.gd::
+## _with_reach_for_the_bodies` applies to the real swing, recomputed here from
+## public data (`body_radius()`, `combat.json`'s own `enemy.body_clearance`)
+## rather than a constant this file picked once and never revisited. See the
+## CI-BOSS comment at the call site for why a fixed constant is not safe here.
+func _floored_quick_range(ally: Node3D, opponent: Node3D) -> float:
+	var base := float(MATH.config().get("player_quick", {}).get("range", 2.6))
+	var mine := 0.5
+	var theirs := 0.5
+	if ally != null and ally.has_method("body_radius"):
+		mine = float(ally.call("body_radius"))
+	if opponent != null and opponent.has_method("body_radius"):
+		theirs = float(opponent.call("body_radius"))
+	var clearance := float(MATH.config().get("enemy", {}).get("body_clearance", 1.8))
+	return maxf(base, (mine + theirs) * clearance + 0.5)
 
 
 ## A beaten boss is beaten for good — the same rule every trainer in the table
