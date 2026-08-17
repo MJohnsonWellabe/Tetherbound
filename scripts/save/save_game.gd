@@ -101,6 +101,14 @@ extends RefCounted
 ## build that had both of their migration steps sitting right there. See that
 ## function's own comment.
 ##
+## ## VERSION 10 — permanently-chopped vegetation (HARVEST-ALL, D60)
+##
+## `game_state.gd::harvested_vegetation` did not exist before this. Same
+## "nothing to migrate FROM" answer every migration above gives: `_migrate_v9`
+## hands back `{}`, read as "nothing chopped yet" — a save from before this
+## shipped predates permanent harvesting entirely, so every tree and rock it
+## remembers comes back exactly as it was, not retroactively cleared.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -137,7 +145,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 9
+const VERSION := 10
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -191,6 +199,7 @@ func save(game: Object, slot: int) -> bool:
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
+		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 	}
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
@@ -227,6 +236,8 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
 	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
+	var harvested_raw: Variant = data.get("harvested_vegetation", {})
+	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -430,6 +441,19 @@ func _migrate_v8(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 9
 	migrated["farm_plots"] = []
+	return migrated
+
+
+## VERSION 9 -> 10: HARVEST-ALL/D60's permanently-chopped vegetation. An
+## empty dictionary — the same "nothing to migrate FROM" answer every step
+## above gives: a save written before this shipped recorded no chopped
+## placements because nothing was permanently removable yet, so the meadow
+## and quarry come back exactly as dense as they were the day that save was
+## written.
+func _migrate_v9(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 10
+	migrated["harvested_vegetation"] = {}
 	return migrated
 
 

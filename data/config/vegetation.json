@@ -52,9 +52,10 @@
       "seed_offset": 1,
       "_comment_clumping": "Fewer, tighter, larger copses rather than more small ones. 26 clumps of 9 spread over 512m is close enough to even that it reads as a distribution; twelve dense copses with real gaps between them reads as somebody deciding where a wood goes.",
       "clumps": 13,
-      "per_clump": 16,
+      "_comment_harvest_all_density": "HARVEST-ALL, D60. `per_clump`/`strays` 4x (16->64, 22->88) -- `clumps` (how many copse CENTRES exist, already tuned across five visual passes) is left untouched so this thickens the existing copses and adds more loners between them rather than proliferating new clump centres across the corridor. `_place_corridor_fill` draws candidates proportional to these same fields, so the corridor fills 4x denser too, at each band's own already-tuned rate. Measured before/after in D60. TUNABLE.",
+      "per_clump": 64,
       "clump_radius": 20.0,
-      "strays": 22,
+      "strays": 88,
       "_comment_corridor_fill": "VEG-CORRIDOR: the main canopy fills the corridor at the band table's own rate -- see corridor_bands above.",
       "corridor_fill": {
         "density_scale": 1.0
@@ -73,11 +74,10 @@
       "base_scale": 1.0,
       "collides": true,
       "collision_radius": 0.6,
-      "_comment_harvest_r2_3": "R2.3: the world's own scattered trees, not a second set of authored nodes on top of them -- makes the biggest single ground-cover layer double as the wood supply once harvest_node.gd's ~10 tutorial spots stop being enough. 1-in-12 (0.083) of ~230 trees is ~19 real gather points, spread evenly through the layer's own draw order (scatter_rules.gd) rather than clustered by chance. TUNABLE.",
+      "_comment_harvest_r2_3": "R2.3: the world's own scattered trees, not a second set of authored nodes on top of them -- makes the biggest single ground-cover layer double as the wood supply once harvest_node.gd's ~10 tutorial spots stop being enough. Originally 1-in-12 (0.083); HARVEST-ALL/D60 (owner directive) takes it to 1.0 -- every placed tree is harvestable, permanently, once chopped. See vegetation.gd::_mark_harvestable and harvest_permanently.",
       "harvest_item": "wood",
-      "harvest_fraction": 0.083,
+      "harvest_fraction": 1.0,
       "harvest_amount": 3,
-      "harvest_respawn_seconds": 120.0,
       "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "_comment_leaf_magenta_fix": "Backlog item 'A near-field tree renders with magenta/red-striped foliage', found in `dome-overview.png`/`road-end-lookup.png`. R9.4's own description of Leaves.png as a single 'muted leaf' colour was wrong: it is a MULTI-SPECIES SAMPLE SHEET -- green, blue, orange and a saturated magenta/pink leaf pair (measured RGB(216,55,135), full alpha) all on one 512x512 canvas. CommonTree's leaf cards are alpha-cutout billboards that each sample nearly the FULL 0-1 UV square (measured directly: median per-triangle UV bounding box 0.80x1.00 on CommonTree_1's canopy primitive), the same technique Leaves_NormalTree_C.png's own single-hue 'flower of leaflets' layout was built for. Pointed at Leaves.png instead, every card renders ALL of the atlas's leaf shapes at once, in their true colours -- confirmed with an isolated close-up repro (single tree, no terrain, no distance blending) that shows green, teal, orange AND magenta/crimson shards on one canopy. Reverted the swap target back to Leaves_NormalTree_C.png -- already proven safe as the `bushes` layer's own crimson-bush fix -- which removes the contamination entirely. Traded off: the round-2 desaturation this comment describes relied on Leaves.png's nonzero blue channel (texture*tint can only ever REDUCE saturation, never below what the base texture's own minimum channel allows, and Leaves_NormalTree_C.png's blue channel is 0 -- pinned at max saturation regardless of tint). The 3-step variant_retint hue spread below (94/97/81 degrees post-multiply) still applies and still gives CommonTree three distinguishable greens; only the saturation reduction R9.4 round 1 bought is given back. Not re-litigated here -- flagged honestly, not silently reintroduced.",
       "retexture": {
@@ -509,9 +509,10 @@
         "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
       ],
       "clumps": 32,
-      "per_clump": 9,
+      "_comment_harvest_all_density": "HARVEST-ALL, D60. Same lever as trees' own comment above: `per_clump`/`strays` 4x (9->36, 130->520), `clumps` left untouched. TUNABLE.",
+      "per_clump": 36,
       "clump_radius": 11.0,
-      "strays": 130,
+      "strays": 520,
       "_comment_corridor_fill": "VEG-CORRIDOR: the layer that makes steep corridor ground read as stone rather than grass at an angle, same job as it does inside the square.",
       "corridor_fill": {
         "density_scale": 1.0
@@ -531,11 +532,10 @@
       "base_scale": 1.0,
       "collides": true,
       "collision_radius": 0.9,
-      "_comment_harvest_r2_3": "R2.3: the world's own scattered rocks, the stone-gathering half of the same fix trees got above. 1-in-14 (0.071) of ~290 rocks is ~21 real gather points.",
+      "_comment_harvest_r2_3": "R2.3: the world's own scattered rocks, the stone-gathering half of the same fix trees got above. Originally 1-in-14 (0.071); HARVEST-ALL/D60 (owner directive) takes it to 1.0, same as trees -- every placed rock is harvestable, permanently.",
       "harvest_item": "stone",
-      "harvest_fraction": 0.071,
+      "harvest_fraction": 1.0,
       "harvest_amount": 2,
-      "harvest_respawn_seconds": 120.0,
       "_comment_tint_r9_4": "R9.4. Same treatment, milder, for the same reason: Rocks_Diffuse's faces measure value 0.46 at saturation 0.09, which is a cool light grey sitting on warm ground. The blind critic also noted the rock field is 'one prop instanced rather than a rock field' -- that part is scale_min/scale_max below, not colour. TUNABLE.",
       "retint": {
         "Rocks": "#c5ac9e"

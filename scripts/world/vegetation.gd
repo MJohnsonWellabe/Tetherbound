@@ -75,6 +75,61 @@ var _regrown: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
 var _harvest_points: int = 0
+
+## HARVEST-ALL / D60. Chopped stays chopped, forever, including across a
+## save/load — this is the record of it. layer name -> a real BITSET
+## (`PackedByteArray`, one BIT not one byte per placement, `_bitset_bytes()`
+## sized), one bit per placement in that layer's OWN placement order
+## (`RULES.all_placements()`'s per-layer array, the same order
+## `_mark_harvestable()` already walks with a stride). A bit set means that
+## placement was permanently harvested. Sized once in `_mark_harvestable()`
+## from the layer's own placement COUNT, which is fixed by the deterministic
+## scatter (seed + config) — only which bits are SET grows as the player
+## chops things, never the bitset itself, which is the bound the owner asked
+## for explicitly rather than an ever-growing id list.
+var _harvested: Dictionary = {}
+## layer name -> that layer's total placement count, for `restore_from_game`'s
+## loop bound (a save's own bitset size already gives this too, but a layer
+## can be ABSENT from `_harvested` entirely on this build, e.g. a config edit
+## that dropped it — this dict answers "how many, if at all" in one lookup).
+var _harvest_layer_counts: Dictionary = {}
+## "<layer>#<index>" -> {"mesh_id": int, "position": Vector3}. Built once per
+## harvestable placement in `_spawn_harvest_point()`. `harvest_permanently()`
+## uses this to find the exact render instance to remove and is the only
+## consumer; entries are erased as their instance is chopped, so this shrinks
+## back down rather than accumulating dead entries for the session.
+var _harvest_lookup: Dictionary = {}
+## Same key -> the live `vegetation_harvest_point.gd` node, so
+## `harvest_permanently()` can free it. Erased alongside `_harvest_lookup`.
+var _harvest_nodes: Dictionary = {}
+## Same key -> the `_collision_batches` entry (a direct Dictionary reference,
+## not a copy — mutating `placements`/`resident` here is the same array
+## `update_collision_streaming()` iterates) holding that placement's
+## collider, for the collidable layers (rocks). Trees are not collidable at
+## the harvest-point-bearing instance today (`collides: true` on the layer,
+## in fact they are — see `_add_collision`), so this applies to both.
+var _harvest_collision_lookup: Dictionary = {}
+## The `world_size` `build()` was last called with — `restore_from_game()`
+## never needs to re-run the whole build, but this is kept for symmetry with
+## the rest of the boot path and as a cheap sanity anchor if that ever
+## changes.
+var _last_world_size: float = 512.0
+## HARVEST_REMOVE_RADIUS: the `size` passed to `Terrain3DInstancer.
+## remove_instances()`. Verified empirically (not assumed) against this
+## vendored Terrain3D build with `tools/_probe_terrain_streaming.gd`-style
+## scratch probes: a `size` this small combined with `strength` 100 removes
+## EXACTLY the instance nearest the given position and none other, even at
+## 0.3m instance spacing (tighter than any real clump this scatter draws) —
+## the two ~1.0m/~0.3m grid tests that established this are recorded in
+## D60. `remove_instances()` is a probabilistic BRUSH tool built for the
+## editor's erase-instances tool (its params dict — asset_id, modifier_
+## shift/alt, size, strength, slope, on_collision, raycast_height — are the
+## brush's own, undocumented on this build and recovered by reading Terrain3D
+## upstream source), not a designed "remove exactly one instance" API — this
+## is deliberately called at the EXACT stored position of the placement being
+## harvested (never a player-aimed point) so the near-zero-distance case,
+## which strength 100 removes reliably, is the only case ever exercised.
+const HARVEST_REMOVE_RADIUS := 0.05
 ## OW7. Kept from `build` for `_spawn_harvest_point`, which stands a woodpile on
 ## the ground a metre or so off the tree it belongs to — and the ground there is
 ## not the ground under the tree.
@@ -126,6 +181,19 @@ func build(world_size: float, terrain: Node) -> void:
 	_tints.clear()
 	_mesh_ids.clear()
 	_next_mesh_id = 0
+	_harvested.clear()
+	_harvest_layer_counts.clear()
+	_harvest_lookup.clear()
+	_harvest_nodes.clear()
+	_harvest_collision_lookup.clear()
+	_last_world_size = world_size
+	# HARVEST-ALL: `restore_from_game()` needs to find this node to apply a
+	# save's permanently-chopped state on top of the fresh scatter build()
+	# always draws — the same "build fresh, then reconcile against the save"
+	# split `build_placer.gd`/`player_death.gd` already use for their own
+	# groups. Safe to call every build(): `add_to_group` on an id already
+	# held is a no-op.
+	add_to_group("harvest_state")
 
 	_terrain = terrain
 	if _terrain == null or not _terrain.has_method("get_instancer"):
@@ -215,11 +283,17 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 		if fraction <= 0.0:
 			continue
 		var amount := int(layer.get("harvest_amount", 2))
-		var respawn := float(layer.get("harvest_respawn_seconds", 90.0))
 		var placements: Array = by_layer[layer_name]
+		_harvest_layer_counts[layer_name] = placements.size()
+		_harvested[layer_name] = _new_bitset(placements.size())
 		# A stride through the layer's own draw order, not an independent
 		# per-instance coin flip -- spreads harvest points evenly across the
 		# whole layer instead of letting chance cluster (or skip) them.
+		# HARVEST-ALL: fraction is 1.0 for every harvestable layer today, so
+		# stride is 1 and every placement is marked -- the stride mechanism
+		# stays rather than being ripped out because a future layer could
+		# still ship with a fraction below 1.0 (a rare-resource species, say)
+		# and this is exactly the lever for that.
 		var stride := maxi(1, roundi(1.0 / fraction))
 		for i in placements.size():
 			if i % stride != 0:
@@ -227,7 +301,43 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 			var placement: Dictionary = placements[i]
 			placement["harvest_item"] = item_id
 			placement["harvest_amount"] = amount
-			placement["harvest_respawn_seconds"] = respawn
+			# HARVEST-ALL/D60: no more respawn. `harvest_respawn_seconds` (the
+			# old JSON key) is gone -- a chopped placement is removed for
+			# good, never dimmed-and-timed-out. See harvest_permanently().
+			placement["harvest_layer"] = layer_name
+			placement["harvest_index"] = i
+
+
+## HARVEST-ALL/D60. A real bitset, not one byte per flag: at this density
+## (thousands of harvestable placements per layer) a `PackedByteArray` of one
+## BYTE per instance would be 8x the save-file cost of one BIT per instance
+## for no benefit -- the record only ever answers "chopped or not", nothing
+## graded. Sized once per layer from that layer's own placement count and
+## never resized after -- see `_harvested`'s own comment for why that bound
+## matters.
+func _bitset_bytes(count: int) -> int:
+	return (count + 7) / 8
+
+
+func _new_bitset(count: int) -> PackedByteArray:
+	var bytes := PackedByteArray()
+	bytes.resize(_bitset_bytes(count))
+	bytes.fill(0)
+	return bytes
+
+
+func _bit_get(bytes: PackedByteArray, index: int) -> bool:
+	var byte_i := index / 8
+	if byte_i < 0 or byte_i >= bytes.size():
+		return false
+	return (bytes[byte_i] & (1 << (index % 8))) != 0
+
+
+func _bit_set(bytes: PackedByteArray, index: int) -> void:
+	var byte_i := index / 8
+	if byte_i < 0 or byte_i >= bytes.size():
+		return
+	bytes[byte_i] = bytes[byte_i] | (1 << (index % 8))
 
 
 ## A model used by two layers cannot carry two different tints.
@@ -573,15 +683,24 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	var drop := 0.0
 	if _field != null:
 		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
+	var layer_name := str(placement.get("harvest_layer", ""))
+	var index := int(placement.get("harvest_index", -1))
 	point.call("setup", {
 		"item": placement["harvest_item"],
 		"amount": placement["harvest_amount"],
-		"respawn_seconds": placement["harvest_respawn_seconds"],
 		"prompt_height": 1.0 + float(placement["scale"]),
 		"label": "Gather",
 		"prop_offset": Vector3(away.x, drop - SINK, away.y),
 		"prop_yaw": bearing,
+		"harvest_layer": layer_name,
+		"harvest_index": index,
 	})
+	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
+	# render mesh id/position and this node again, without scanning every
+	# child every time a resource is chopped.
+	var key := "%s#%d" % [layer_name, index]
+	_harvest_lookup[key] = {"mesh_id": _mesh_id_for(str(placement["model"])), "position": spot}
+	_harvest_nodes[key] = point
 	_harvest_points += 1
 
 
@@ -632,14 +751,26 @@ func _add_collision(model_path: String, placements: Array) -> void:
 
 	var resident: Array = []
 	resident.resize(placements.size())
-	_collision_batches.append({
+	var batch := {
 		"body": body,
 		"radius": radius,
 		"placements": placements,
 		"resident": resident,
-	})
+	}
+	_collision_batches.append(batch)
 	_solid += placements.size()
 	_stream_batch(_collision_batches[-1], Vector3.ZERO)
+
+	# HARVEST-ALL: index this batch (a Dictionary — a reference, so mutating
+	# `placements`/`resident` through this lookup later is the exact same
+	# arrays `_stream_batch`/`update_collision_streaming` already iterate) by
+	# every harvestable placement it holds, so `harvest_permanently()` can
+	# find and remove one collider without scanning every batch in the world.
+	for placement: Dictionary in placements:
+		if not placement.has("harvest_item"):
+			continue
+		var key := "%s#%d" % [str(placement.get("harvest_layer", "")), int(placement.get("harvest_index", -1))]
+		_harvest_collision_lookup[key] = batch
 
 
 ## Ensures every collidable placement within `COLLISION_STREAM_RADIUS` of
@@ -873,6 +1004,143 @@ func regrown_count() -> int:
 	return _regrown
 
 
+# --- HARVEST-ALL / D60: chopped stays chopped, forever -----------------------
+
+
+## Permanently remove one harvestable placement — the render instance, its
+## collider (if the layer has one) and this gather point's own node — and
+## mark it in `_harvested` so it never comes back, including on the next
+## boot. Called by `vegetation_harvest_point.gd::_on_gathered()` once the
+## resource has actually been granted (never speculatively — a refused
+## gather, wrong tool or a full satchel, must leave the tree standing).
+##
+## Idempotent by construction: the bit-already-set guard below means calling
+## this twice for the same placement (a double interact-press race, or
+## `restore_from_game()` re-applying a bit that a live chop already set)
+## does nothing the second time, rather than double-freeing a node or
+## double-decrementing a counter.
+func harvest_permanently(layer_name: String, index: int) -> void:
+	var key := "%s#%d" % [layer_name, index]
+	if not _harvest_lookup.has(key):
+		return
+	var bytes: PackedByteArray = _harvested.get(layer_name, PackedByteArray())
+	if bytes.is_empty() or _bit_get(bytes, index):
+		return
+	_bit_set(bytes, index)
+	_harvested[layer_name] = bytes
+
+	var info: Dictionary = _harvest_lookup[key]
+	_harvest_lookup.erase(key)
+	_remove_render_instance(int(info.get("mesh_id", -1)), info.get("position", Vector3.ZERO))
+	_remove_collision_instance(key)
+
+	if _harvest_nodes.has(key):
+		(_harvest_nodes[key] as Node).queue_free()
+		_harvest_nodes.erase(key)
+
+	_placed = maxi(0, _placed - 1)
+	_harvest_points = maxi(0, _harvest_points - 1)
+
+
+## See `HARVEST_REMOVE_RADIUS`'s own comment for why this is safe: called only
+## at the placement's own exact stored position, never a player-aimed point.
+func _remove_render_instance(mesh_id: int, position: Vector3) -> void:
+	if mesh_id < 0 or _instancer == null:
+		return
+	_instancer.call("remove_instances", position, {
+		"asset_id": mesh_id,
+		"modifier_shift": false,
+		"modifier_alt": false,
+		"size": HARVEST_REMOVE_RADIUS,
+		"strength": 100.0,
+		"slope": Vector2(0.0, 90.0),
+		"on_collision": false,
+		"raycast_height": 10.0,
+	})
+	_instancer.call("update_mmis", true)
+
+
+## Drops this placement's `CollisionShape3D` (if one was resident) and
+## removes it from its batch's `placements`/`resident` arrays entirely, so
+## `update_collision_streaming()` never tries to stream it back in.
+func _remove_collision_instance(key: String) -> void:
+	if not _harvest_collision_lookup.has(key):
+		return
+	var batch: Dictionary = _harvest_collision_lookup[key]
+	_harvest_collision_lookup.erase(key)
+	var placements: Array = batch["placements"]
+	var resident: Array = batch["resident"]
+	for i in placements.size():
+		var p: Dictionary = placements[i]
+		if "%s#%d" % [str(p.get("harvest_layer", "")), int(p.get("harvest_index", -1))] != key:
+			continue
+		if resident[i] != null:
+			(resident[i] as CollisionShape3D).queue_free()
+		placements.remove_at(i)
+		resident.remove_at(i)
+		_solid = maxi(0, _solid - 1)
+		return
+
+
+## Applies whatever a save remembers as permanently chopped, on top of the
+## fresh scatter `build()` always draws — mirrors `build_placer.gd`'s own
+## `restore_from_game()`, called once after boot and again by
+## `GameState.load_game` for a mid-session load (see that file's own group
+## registration).
+##
+## Deliberately never "un-chops" anything: a bit set locally (this session's
+## own chopping) that is ABSENT from the loaded save is left exactly as it
+## is — chopped stays chopped is the owner's rule regardless of which save
+## is loaded, not merely across a normal boot. Only bits the save has that
+## this session does not yet reflect are applied.
+func restore_from_game(game: Object) -> void:
+	if game == null:
+		return
+	var saved: Variant = game.get("harvested_vegetation")
+	if typeof(saved) != TYPE_DICTIONARY:
+		return
+	for layer_name: String in (saved as Dictionary).keys():
+		if not _harvested.has(layer_name):
+			continue  # this build's config has no such harvestable layer
+		var raw := Marshalls.base64_to_raw(str((saved as Dictionary)[layer_name]))
+		var current: PackedByteArray = _harvested[layer_name]
+		if raw.size() != current.size():
+			# The layer's placement count changed under this save (a config
+			# edit, a seed bump) -- a bitset that no longer lines up index-
+			# for-index with today's scatter cannot be trusted, the same
+			# "discard rather than guess" rule map_state.gd's own grid
+			# descriptor check uses for its fog-of-war bytes.
+			continue
+		var total: int = _harvest_layer_counts.get(layer_name, 0)
+		for i in total:
+			if _bit_get(raw, i):
+				harvest_permanently(layer_name, i)
+
+
+## The reverse of `restore_from_game()` — called by `GameState.save_game`
+## right before it writes, mirroring `build_placer.gd::sync_state_to_game`.
+func sync_state_to_game(game: Object) -> void:
+	if game == null:
+		return
+	var out: Dictionary = {}
+	for layer_name: String in _harvested.keys():
+		out[layer_name] = Marshalls.raw_to_base64(_harvested[layer_name])
+	game.set("harvested_vegetation", out)
+
+
+## For tests and NOTES.md-style reporting: how many placements, across every
+## harvestable layer, are permanently gone right now.
+func harvested_count() -> int:
+	var total := 0
+	for layer_name: String in _harvested.keys():
+		var bytes: PackedByteArray = _harvested[layer_name]
+		var layer_total: int = _harvest_layer_counts.get(layer_name, 0)
+		for i in layer_total:
+			if _bit_get(bytes, i):
+				total += 1
+	return total
+
+
 ## For the survey's cost readout. Not a budget and not a gate — software
 ## rendering cannot measure frame time honestly (D06) — but "how much did we
 ## just put in the world" is worth being able to say out loud.
@@ -885,4 +1153,5 @@ func stats() -> Dictionary:
 		"harvest_points": _harvest_points,
 		"drained_out": drained_count(),
 		"regrown": _regrown,
+		"harvested_permanently": harvested_count(),
 	}
