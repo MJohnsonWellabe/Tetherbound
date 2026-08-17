@@ -9,6 +9,22 @@ extends "res://tests/test_case.gd"
 ## to the WRONG sign — the body leaned away from a climb instead of into
 ## it) and nothing but a render caught it. This test is the regression
 ## guard a render pass cannot be, every push, in milliseconds.
+##
+## Every rotation-touching call below resets rotation.x/z to zero first,
+## the same way trainer_model.gd's own per-frame call order does: this
+## method's own header says plainly that it ADDS to whatever
+## apply_momentum_tilt just ASSIGNED that frame, not to whatever was left
+## over from the call before. A first version of this test skipped that
+## reset and called the method in a bare loop, which is not the real
+## calling contract — it made rotation.x accumulate without bound, an
+## artefact of the test's own loop shape, not of the method. A "fix" that
+## made the method track and subtract its own prior contribution (so a
+## bare loop would behave) was tried and measured WRONG against a real
+## render (tools/capture_slope_test.gd's own debug print) — it converged to
+## ~0deg of lean instead of the ~9deg a real climb produces, because it
+## silently assumed rotation.x carries the previous frame's terrain lean
+## forward, which momentum tilt's own per-frame reset makes false. The
+## method stays a plain `+=`; the test emulates the real contract instead.
 
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 
@@ -32,6 +48,8 @@ func after_each() -> void:
 ## NEGATIVE rotation.x on this +Z-facing model.
 func test_climbing_a_rise_pitches_the_body_forward() -> void:
 	for i in 30:
+		_model.rotation.x = 0.0
+		_model.rotation.z = 0.0
 		_model.call("apply_terrain_adaptation",
 			0.0, 1.0, 1.0, 1.2, 1.0,   # centre_delta, h_left, h_right, h_forward, h_back
 			0.18, 0.22, 1.0 / 60.0, {})
@@ -44,6 +62,8 @@ func test_climbing_a_rise_pitches_the_body_forward() -> void:
 ## not forward into empty air.
 func test_descending_pitches_the_body_backward() -> void:
 	for i in 30:
+		_model.rotation.x = 0.0
+		_model.rotation.z = 0.0
 		_model.call("apply_terrain_adaptation",
 			0.0, 1.0, 1.0, 0.8, 1.0,
 			0.18, 0.22, 1.0 / 60.0, {})
@@ -55,6 +75,8 @@ func test_descending_pitches_the_body_backward() -> void:
 ## stay neutral, not drift from floating-point noise or a stray default.
 func test_flat_ground_produces_no_lean() -> void:
 	for i in 30:
+		_model.rotation.x = 0.0
+		_model.rotation.z = 0.0
 		_model.call("apply_terrain_adaptation",
 			0.0, 1.0, 1.0, 1.0, 1.0,
 			0.18, 0.22, 1.0 / 60.0, {})
@@ -77,6 +99,8 @@ func test_nan_probe_is_a_no_op() -> void:
 ## onto its face.
 func test_pitch_never_exceeds_the_configured_limit() -> void:
 	for i in 60:
+		_model.rotation.x = 0.0
+		_model.rotation.z = 0.0
 		_model.call("apply_terrain_adaptation",
 			0.0, 1.0, 1.0, 50.0, 1.0,   # an absurd, cliff-edge probe delta
 			0.18, 0.22, 1.0 / 60.0, {"terrain_pitch_limit_deg": 18.0, "terrain_lean_scale": 1.0})
@@ -86,7 +110,9 @@ func test_pitch_never_exceeds_the_configured_limit() -> void:
 
 ## Root height settles toward the ground under the model's own feet, and
 ## never past its own clamp (a kerb-sized bump, not a floor detaching from
-## the capsule that carries it).
+## the capsule that carries it). Unlike rotation.x/z, `position.y` IS a
+## plain assignment inside the method (`position.y = _terrain_height`), so
+## it needs no per-call reset to behave correctly under a bare loop.
 func test_height_settles_toward_ground_and_stays_clamped() -> void:
 	for i in 30:
 		_model.call("apply_terrain_adaptation",
