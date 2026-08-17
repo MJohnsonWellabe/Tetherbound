@@ -79,6 +79,22 @@ var _spoke_carves: Array = []
 var _crossing_carves_ready := false
 var _crossing_carves: Array = []
 
+## PERF1. Same lesson as `_flats`/`_stream_points` above, applied to
+## `road_polylines()`: a pure function of `_config` alone, rebuilt from
+## scratch (three JSON walks, a fresh `PackedVector2Array` per route) on
+## EVERY call. `path_factor()` calls it once per `scatter_rules` candidate --
+## 23,707 placements on today's world, each doing its own three-JSON-walk
+## rebuild for an answer that cannot have changed since the last call.
+## Measured before caching: 56.7us per `road_polylines()` call against
+## `drain_factor`'s 6.5us for the same shape of query. Caches the PARSE, not
+## a jittered result -- `scatter_rules._consider` still applies its own
+## per-instance jitter on top of whatever `path_factor` returns, so returning
+## the identical `PackedVector2Array` set on every call changes nothing about
+## which placements land where, only how many times the JSON gets re-walked
+## to answer the same question.
+var _road_polylines_ready := false
+var _road_polylines: Array = []
+
 var _outlet_ready := false
 var _outlet_sill: Dictionary = {}
 var _outlet_channel: Dictionary = {}
@@ -1249,6 +1265,9 @@ func path_polylines() -> Array:
 ## with no blocker standing yet should not paint a road across the meadow to
 ## nowhere.
 func road_polylines() -> Array:
+	if _road_polylines_ready:
+		return _road_polylines
+	_road_polylines_ready = true
 	var out: Array = []
 	for entry: Variant in _config.get("paths", {}).get("routes", []):
 		if entry is Dictionary:
@@ -1263,6 +1282,7 @@ func road_polylines() -> Array:
 	for entry: Variant in _config.get("crossings", []):
 		if entry is Dictionary:
 			_append_line(out, (entry as Dictionary).get("road", []))
+	_road_polylines = out
 	return out
 
 
