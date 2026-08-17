@@ -56,7 +56,19 @@ MAPPING = [
 
     # The catch arc. `.s-aim` fell through to a frame with no visible arc for
     # months; this is the slot that finally shows what the caption promises.
-    ("shots/catch/03-aiming.png",              "site/img/aim-arc.jpg",                 960),
+    # OF18-found: the old source name, "shots/catch/03-aiming.png", is not
+    # written by any capture tool in this repo any more -- grepped for it
+    # across tools/*.gd and tools/*.py and found nothing. tools/
+    # capture_catch_sequence.gd (OF1) writes "catch_low.png"/"catch_high.png"
+    # from `_capture_chance_frames()`, spec section10.2/D31's own aim-state
+    # stills with the reticle and a real percentage on screen -- exactly what
+    # the page's caption promises, and unlike the sequence frames these two
+    # are captured unconditionally, before either dice-dependent sequence
+    # runs, so they are never missing from a completed capture run.
+    # catch_high (a near-certain catch) reads better as a promotional shot
+    # than catch_low (a near-miss) for the same reason a store page leads
+    # with success rather than failure.
+    ("shots/catch/catch_high.png",             "site/img/aim-arc.jpg",                 960),
 
     # The roster grid — tools/capture_shiny_pairs.gd (OF28, all 17 species).
     ("shots/_shiny_pairs.png",                 "site/img/roster.jpg",                 1280),
