@@ -748,6 +748,19 @@ func _check_the_river(world: Node, player: CharacterBody3D, failures: Array[Stri
 			failures.append("fell out of the world at the river at %.0f, %.0f" % [here.x, here.y])
 
 
+## How far a candidate station's own course point must sit inside
+## `WORLD_X_WEST/EAST` (the same bounds `_check_perimeter` walks against) to be
+## usable. OW5E: `terrain_playground.json`'s own `_comment_ow5c_rederive`
+## states the river's course is AUTHORED to run ~100m past both world edges on
+## purpose — the same "runs past the ring, no walking around either end"
+## design `spokes.routes` already uses — so a candidate near either end is not
+## a world defect to fix; it is this test trying to stand a player outside the
+## playable world. `RIVER_START_BACK` (the near-bank offset every station
+## backs off by) plus a river's own half-width (10-13m away from the narrows)
+## is comfortably covered by a round 40m margin.
+const RIVER_EDGE_MARGIN := 40.0
+
+
 ## Picks up to `RIVER_STATION_COUNT` indices, spread across whatever course
 ## points sit at least `RIVER_NARROWS_CLEARANCE` from the Old Mill Crossing,
 ## rather than trusting fixed indices to still mean "mid-river" once the
@@ -759,8 +772,12 @@ func _pick_river_stations(course: Array) -> Array[int]:
 	var candidates: Array[int] = []
 	for i in range(1, course.size() - 1):
 		var pt := _course_point(course, i)
-		if pt.distance_to(RIVER_NARROWS) >= RIVER_NARROWS_CLEARANCE:
-			candidates.append(i)
+		if pt.distance_to(RIVER_NARROWS) < RIVER_NARROWS_CLEARANCE:
+			continue
+		if pt.x < WORLD_X_WEST + RIVER_EDGE_MARGIN or pt.x > WORLD_X_EAST - RIVER_EDGE_MARGIN \
+				or pt.y < WORLD_Z_NORTH + RIVER_EDGE_MARGIN or pt.y > WORLD_Z_SOUTH - RIVER_EDGE_MARGIN:
+			continue
+		candidates.append(i)
 
 	var stations: Array[int] = []
 	if candidates.is_empty():

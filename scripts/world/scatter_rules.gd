@@ -529,11 +529,37 @@ static func _lattice_value(cell_x: int, cell_y: int, salt: int) -> float:
 	return float(mixed & 0xffff) / 65535.0
 
 
+## OW5E. `half` is `world_size * 0.5` — the OLD world's symmetric, origin-
+## centred square, still the right bound for a clump/stray candidate (their
+## own sampling never draws outside it; see `placements_for`). It is the
+## WRONG bound for an authored `anchor`, whose `at` is an absolute world
+## coordinate with no relationship to `half` at all: every anchor placed
+## anywhere in the corridor beyond the old +-256m square (the quarry's own
+## `deadfall` anchor at (403,1803) included) was silently rejected on every
+## single attempt, which is why `tests/smoke_boss.gd`'s D41 regrowth check
+## found nothing had ever been drained -- the one authored placement inside
+## any drain station's radius could never exist in the first place. Checked
+## against `field.world_bounds()` (the corridor's real, non-square,
+## non-origin-centred extent) when the field has one; falls back to the old
+## square for a bare/legacy config. This widens what an ANCHOR may pass, not
+## what a clump/stray may sample — `half` itself, and every clump/stray call
+## site, is untouched, so the already-tuned Band 0 density is unaffected.
+static func _out_of_bounds(field: RefCounted, spot: Vector2, half: float) -> bool:
+	if field.has_method("world_bounds"):
+		var bounds: Dictionary = field.world_bounds()
+		if not bounds.is_empty():
+			return spot.x < float(bounds.get("min_x", -half)) \
+				or spot.x > float(bounds.get("max_x", half)) \
+				or spot.y < float(bounds.get("min_z", -half)) \
+				or spot.y > float(bounds.get("max_z", half))
+	return absf(spot.x) > half or absf(spot.y) > half
+
+
 static func _consider(
 	out: Array[Dictionary], layer: Dictionary, field: RefCounted,
 	models: Array, spot: Vector2, half: float, rng: RandomNumberGenerator
 ) -> void:
-	if absf(spot.x) > half or absf(spot.y) > half:
+	if _out_of_bounds(field, spot, half):
 		return
 	var height: float = field.height_at(spot.x, spot.y)
 	if is_nan(height):

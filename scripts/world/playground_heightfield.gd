@@ -255,6 +255,14 @@ static func load_config() -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+## The corridor's authored extent, `{min_x, max_x, min_z, max_z}` from
+## `terrain_playground.json`'s own `world_bounds` -- empty if the config has
+## none (a bare/legacy config), which callers should treat as "no rectangle
+## to check against" rather than a zero-sized world.
+func world_bounds() -> Dictionary:
+	return _config.get("world_bounds", {})
+
+
 ## Ground height in metres at a world XZ position.
 func height_at(x: float, z: float) -> float:
 	var hills: Dictionary = _config.get("hills", {})

@@ -79,7 +79,7 @@
     "pier_height": 7.2,
     "lintel_height": 1.5
   },
-  "_comment_decks": "The traversal. The apparatus pad stands 2.3m clear of the yard on solid legs, so the console is NOT reachable by walking at it \u2014 the player takes the ramp off the yard's west side, crosses the gantry, and steps onto the pad. That is the whole 'compact traversal challenge' the item asks for, and it is deliberately small: a mini-stronghold, not a dungeon (SD17 owns the dungeon). Deck heights are ABSOLUTE world Y, not heights above ground, because a walkway whose pieces each floated over their own sampled ground would step up and down along its length. The numbers come from the probe: yard ground runs about -4.6 at the gate to -2.2 at the pad, so a deck at +0.1 stands 2.3-4.7m over it.",
+  "_comment_decks": "The traversal. The apparatus pad stands clear of the yard on solid legs, so the console is NOT reachable by walking at it \u2014 the player takes the ramp off the yard's west side, crosses the gantry, and steps onto the pad. That is the whole 'compact traversal challenge' the item asks for, and it is deliberately small: a mini-stronghold, not a dungeon (SD17 owns the dungeon). Deck heights are ABSOLUTE world Y, not heights above ground, because a walkway whose pieces each floated over their own sampled ground would step up and down along its length. OW5E: re-probed against the real corridor terrain (tools probe, not committed) after OW5D's own relay_site.json admitted ground truth at the new (350,3760) centre was never re-checked -- the old numbers (yard -4.6 to -2.2, deck at +0.1) described the PRE-corridor site at (108,34) and left the deck sitting 2-8m UNDER the new site's actual ground (which runs roughly 2.3m at the pad's south flank up to 8.0m at the yard's NW corner, a gentle south-east-facing shoulder, not a flat pad). `tests/smoke_relay_station.gd` caught it directly: the player could walk onto the 'raised' pad from the yard because the yard was higher than the platform. Deck now at +10.0 -- comfortably above every sampled point within 15m of the pad (max 6.92) and still only a ~20-degree climb from the ramp foot's own ground (~6.7), well inside the 45-degree floor_max_angle this file's own ramp comment already budgets for.",
   "decks": [
     {
       "id": "gantry",
@@ -91,7 +91,7 @@
         8.0,
         3.2
       ],
-      "deck_y": 0.1,
+      "deck_y": 10.0,
       "legs": [
         [
           1,
@@ -115,11 +115,11 @@
         10.0,
         10.0
       ],
-      "deck_y": 0.1,
+      "deck_y": 10.0,
       "_why": "the apparatus pad itself \u2014 the grounding base of the hero object, and the floor the console stands on. Abuts the gantry's east end at s=+2, so the two decks read as one raised level."
     }
   ],
-  "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for 4.3m of rise is about 24 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
+  "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for ~3.3m of rise (OW5E: re-probed against the real corridor terrain, foot ground ~6.7) is about 20 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
   "ramps": [
     {
       "id": "yard_stair",
@@ -132,7 +132,7 @@
         -11.5
       ],
       "width": 3.2,
-      "deck_y": 0.1
+      "deck_y": 10.0
     }
   ],
   "_comment_apparatus": "*** THE SEAM FOR THE HERO ASSET. READ THIS BEFORE TOUCHING THE MASSING BELOW. ***\n\n`docs/art/reference/14_Relay_Apparatus.png` is the owner-supplied board for this object (2026-08-11, labelled Band 3, drawn for exactly this item). It is one of the THREE hero objects D24 reserves Meshy for, alongside the Tether Energy Pylon (already generated, SF33) and the Legendary Tether Machine. The generation itself is a separate, OWNER-GATED task in the `art` lane and was NOT done here: this build had no Meshy access, and CLAUDE.md's rule is that a hero object is not improvised from scratch as if it were the final asset.\n\nWhat stands here instead is a PLACEHOLDER MASSING, built from primitives wearing the materials severed_spokes.gd already defines (the medieval stone sheet, the oxblood faction accent, the reserved tether teal). It is laid out as the board's own five labelled subassemblies, in the board's own order, so that when the GLB lands the swap is one-for-one and each generated part has exactly one thing here to replace:\n\n  grounding_base    the plinth and its splayed feet\n  tether_core       the central column\n  conductor_ring    the rings around it (the board's 'core and rings serviceable')\n  conductor_arms    the arms out to the manifolds ('conductor arms ... replaceable')\n  output_manifolds  the boxes the conduit runs land on\n  console           the control console \u2014 the thing the player disables\n\nHOW TO DO THE SWAP. tether_relay.gd::_build_apparatus is the only reader of this block; every subassembly it builds is a child of the `ApparatusSeam` node and nothing outside that node depends on any of them EXCEPT the console, which is found by name (`Console`) and carries the interactable. Drop the generated scene in as `ApparatusSeam`'s single child, keep a node named `Console` on it at roughly the console's authored position, delete the `massing` block below, and nothing else in the codebase has to change.",
@@ -141,7 +141,7 @@
       7.0,
       -9.0
     ],
-    "deck_y": 0.1,
+    "deck_y": 10.0,
     "massing": {
       "grounding_base": {
         "radius": 3.4,

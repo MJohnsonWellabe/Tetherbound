@@ -81,6 +81,15 @@
         ],
         "radius": 24.0,
         "height": 19.0
+      },
+      {
+        "centre": [
+          -380.0,
+          2488.0
+        ],
+        "radius": 30.0,
+        "height": 8.0,
+        "_why": "OW5E. The Burrow Warrens (burrow_warrens.json site.at (-420,2470), yaw 54.5) relocated per docs/MEADOWS_MACRO_LAYOUT.md section 10.2, and section 10.2's own note that a new coordinate is the layout's intent, not surveyed ground, was right about this one: the corridor pass moved the site onto ground with no relief at all -- tests/smoke_warrens.gd caught `den` sitting ABOVE the terrain that was supposed to be overhead (terrain -4.2 vs floor -3.8), a dungeon poking out of a flat field. Centred and radiused to probe clean against `scripts/world/playground_heightfield.gd::height_at`: 38.0m from the mouth (outside this radius, zero contribution -- the entrance apron stays at grade, exactly as `_build_approach_apron`'s doc comment assumes) but only 7-9m from `den`/`vault` (well inside, strong contribution), giving den clearance ~3.1m over the 2.0m floor the test asks for and leaving the `warren_undertrail` loop road (nearest authored point (-380,2540), 52m away) untouched. NOT a relocation of `rises.peaks[1..4]` -- those four are still sitting at their pre-corridor coordinates despite section 10.2 calling for them to move to 'Band 2 scarp and Band 4 wind ridge'; that is a real, separate gap, flagged in ralph/NOTES.md rather than solved here, since nothing in this CI run's six failures needs it fixed and picking real sites for four landform-scale hills is its own task."
       }
     ],
     "_comment_high_pass": "SA4 stage 2: peaks[3] and peaks[4] are the High Pass's two shoulders, not scenery. The ice spoke's road ends at [49.7,-185.4] and spec 1E calls that a PASS, which needs a saddle to be one. They sit +-28m either side of the blocker along its own axis (15 degrees) with radius 24, so the 22m saddle between them stays open ground the road climbs through, and the scree pile is what closes it. Kept small and kept inside 225m from the origin so world_perimeter.gd's 235m ring never has to climb them. TUNABLE."

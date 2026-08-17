@@ -595,8 +595,6 @@ func _dress_the_meadow() -> void:
 	_vegetation.name = "Vegetation"
 	add_child(_vegetation)
 	_vegetation.call("build", float(config.get("world_size", 512)), _terrain)
-
-	_vegetation.call("build", float(config.get("world_size", 512)))
 	# COLL1 / §8.3: build() only streamed collision in around the world
 	# ORIGIN (see vegetation.gd::_add_collision), so any prop near the actual
 	# spawn point that is not also near (0,0,0) would otherwise be a hologram

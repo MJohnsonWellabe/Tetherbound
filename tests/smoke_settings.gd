@@ -304,14 +304,23 @@ func _check_a_gamepad_button_can_be_rebound() -> void:
 
 ## A duplicate is allowed and SAID. Refusing silently is the one thing this
 ## screen may not do; the shipped defaults themselves share four buttons.
+##
+## OW5E: was asserting `contains("backpack")`, the tab's PRE-OW1-remainder
+## name. `menu.json`'s own `_comment_ow1_remainder_label` renamed the label the
+## clash message reads (`_label_of("inventory")`) from "Backpack" to
+## "Open the satchel" — `tab_backpack.gd`'s own vocabulary, which the tab row
+## label was changed to MATCH, not the other way around. The clash detection
+## itself is correct (`inventory` really is bound to I and really does fire
+## alongside a `map` rebound onto I); only this assertion still named the
+## pre-rename tab.
 func _check_a_clash_is_named_out_loud() -> void:
 	await _open_capture("map", "keyboard")
 	await _tap_key(KEY_I)
 	if _code("map", "keyboard") != "key:%d" % KEY_I:
 		_fail("the clashing binding was refused instead of taken")
 	var said := _status()
-	if not said.to_lower().contains("backpack"):
-		_fail("the clash with the backpack was not named: '%s'" % said)
+	if not said.to_lower().contains("satchel"):
+		_fail("the clash with the satchel was not named: '%s'" % said)
 	var flagged: Color = _row("map")["name_label"].get_theme_color("font_color")
 	if flagged == Color(0.87, 0.89, 0.84):
 		_fail("the clashing row is not marked, so the clash vanishes with the status line")
@@ -448,17 +457,27 @@ func _check_debug_teleport() -> void:
 
 	# One region + one spoke end, checked exactly, synchronously, while the
 	# menu (and so the world) is still paused.
+	#
+	# OW5E: expectations are DERIVED from the same config the corridor's own
+	# relocation table (docs/MEADOWS_MACRO_LAYOUT.md section 10) moves — the
+	# `the_pond` region's centre and the `river_gorge` spoke's own road-end —
+	# rather than a pasted-in coordinate. A pasted literal is exactly what went
+	# stale here once already (the pre-corridor (-92,100)/(-90.1,169.5) this
+	# replaced); deriving it means the next re-siting (OW6 or later) cannot
+	# break this assertion just by moving a place, the way `test_map_state.gd`
+	# derives its fog-count expectation from `map.reveal_radius` instead of a
+	# magic number.
 	var pond := _teleport_entry("The Pond")
 	if pond.is_empty():
 		_fail("'The Pond' is not in the teleport list")
 	else:
-		_check_teleport_math(pond.get("position", Vector2.ZERO), Vector2(-92.0, 100.0), "The Pond")
+		_check_teleport_math(pond.get("position", Vector2.ZERO), _expected_region_centre("the_pond"), "The Pond")
 
 	var river := _teleport_entry("River Road")
 	if river.is_empty():
 		_fail("'River Road' is not in the teleport list")
 	else:
-		_check_teleport_math(river.get("position", Vector2.ZERO), Vector2(-90.1, 169.5), "River Road")
+		_check_teleport_math(river.get("position", Vector2.ZERO), _expected_spoke_end("River Road"), "River Road")
 
 	if not bool(_menu.call("is_open")):
 		_fail("the direct teleport calls above closed the menu; they should only move the player")
@@ -473,7 +492,7 @@ func _check_debug_teleport() -> void:
 	if mountain.is_empty():
 		_fail("'Mountain Road' is not in the teleport list")
 	else:
-		await _check_teleport_button(mountain, Vector2(-118.9, -107.0), "Mountain Road")
+		await _check_teleport_button(mountain, _expected_spoke_end("Mountain Road"), "Mountain Road")
 	await _ensure_on_settings()
 
 	var toggle_off: Button = _tab.get("_debug_teleport_button")
@@ -490,6 +509,58 @@ func _check_debug_teleport() -> void:
 		_fail("the teleport list stayed visible after the toggle turned off")
 	else:
 		print("debug teleport toggles off and its list hides")
+
+
+## A region's authored centre, read straight off the live `MapState` (the same
+## object `debug_teleport_destinations()` itself reads regions from) rather
+## than a coordinate pasted into this file. `data/config/map_landmarks.json`
+## is the one source of truth for where a region sits; this reads it back
+## through `map.regions()` instead of duplicating it, so re-siting a region
+## only ever means editing that JSON.
+func _expected_region_centre(region_id: String) -> Vector2:
+	var map: RefCounted = _game.get("map") if _game != null else null
+	if map == null:
+		return Vector2.ZERO
+	for region: Dictionary in (map.call("regions") as Array):
+		if str(region.get("id", "")) == region_id:
+			return region.get("centre", Vector2.ZERO)
+	return Vector2.ZERO
+
+
+## A severed spoke's own road-end, read straight from
+## `data/config/terrain_playground.json` — the same file and the same
+## "road[].back(), labelled from its own sign" rule
+## `GameState._debug_teleport_spokes()` uses, kept independent of that private
+## method rather than calling it, so this is still checking the destination
+## list against the source data and not just against itself.
+func _expected_spoke_end(sign_label: String) -> Vector2:
+	var file := FileAccess.open(GAME_STATE.TERRAIN_PLAYGROUND_PATH, FileAccess.READ)
+	if file == null:
+		return Vector2.ZERO
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return Vector2.ZERO
+	var spokes: Variant = (parsed as Dictionary).get("spokes", {})
+	if typeof(spokes) != TYPE_DICTIONARY:
+		return Vector2.ZERO
+	var routes: Variant = (spokes as Dictionary).get("routes", [])
+	if typeof(routes) != TYPE_ARRAY:
+		return Vector2.ZERO
+	for entry: Variant in routes as Array:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var route := entry as Dictionary
+		var sign: Dictionary = route.get("sign", {}) as Dictionary
+		if str(sign.get("label", route.get("id", ""))) != sign_label:
+			continue
+		var road: Variant = route.get("road", [])
+		if typeof(road) != TYPE_ARRAY or (road as Array).is_empty():
+			continue
+		var end: Variant = (road as Array).back()
+		if typeof(end) != TYPE_ARRAY or (end as Array).size() < 2:
+			continue
+		return Vector2(float((end as Array)[0]), float((end as Array)[1]))
+	return Vector2.ZERO
 
 
 ## `_teleport_rows` is torn down and rebuilt every time the Settings tab's
