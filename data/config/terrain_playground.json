@@ -195,24 +195,26 @@
     {
       "_comment_sc14": "SC14: the South Bridge's NORTH (village-side) abutment. The corridor south of the square falls steadily -- roughly -1.2m at z=67 against -4.5m at z=93, measured with tools/_probe_south.gd -- so an un-levelled crossing would need a deck tilted ~3m end to end, which the kit's flat floor modules cannot express. Both abutment pads carry the SAME explicit height (their natural mean), so the two rims of the gully meet at one level and the bridge deck is honestly flat. Radius is sized so the flatness test's own 0.7r samples (tests/test_playground_heightfield.gd) stay OUTSIDE the gully's zero-depth contour at z=73: 0.7*7.5 = 5.25m, reaching z=72.25. The pad's outer ring does extend into the cut, which is intended and is exactly the mill-crossing pad's precedent -- carves are subtracted AFTER flats, so a pad can promise level BANKS either side of a real channel. TUNABLE.",
       "centre": [
-        5.0,
-        67.0
+        8.0,
+        1317.0
       ],
       "radius": 7.5,
       "height": -2.9,
       "skirt": 9.0,
-      "_why": "the South Bridge's village-side abutment and approach"
+      "_why": "the South Bridge's village-side abutment and approach",
+      "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250)."
     },
     {
       "_comment_skirt": "Skirt 9, not the 16 the first cut used. The two pads are only 26m apart and share one authored height, so wide skirts made them merge: a probe (tools/_probe_south.gd) read -2.90m dead flat for 41 continuous metres of z and 47 of x -- a terrace, not a crossing. At 9 each pad keeps its own 15m of level approach, the merge happens inside the gully where nothing can see it, and the blend back to natural ground is ~21 degrees, ordinary meadow bank.",
       "centre": [
-        5.0,
-        93.0
+        8.0,
+        1343.0
       ],
       "radius": 7.5,
       "height": -2.9,
       "skirt": 9.0,
-      "_why": "the South Bridge's deeper-side abutment -- same authored height as the north pad, which is the whole point"
+      "_why": "the South Bridge's deeper-side abutment -- same authored height as the north pad, which is the whole point",
+      "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250)."
     },
     {
       "_comment_sd16": "SD16: the Old Quarry's working floor. Sited by probe, not by eye -- the first candidate (centred [30,156], out on the rise's own flank) measured 45-67 degree slopes across most of its footprint, because `rock_form`'s ribs and bedding planes live there and a 10m sample grid cannot see them. This is the gentle bench WEST of that flank (measured 4-10 degrees over x 14-26, z 148-168), which puts the crag at the quarry's back where a quarry's high wall belongs instead of underneath its floor. The pad's east edge does cut into the rising ground, and its skirt is steep there on purpose: that ramp IS the cut face, and above 42 degrees the bake's own band rule paints it as rock. Height is EXPLICIT (natural at this centre is about -0.3) so a later noise change cannot quietly tilt the floor the foundations stand on. TUNABLE.",
@@ -228,23 +230,25 @@
     {
       "_comment_se22": "SE22: the Old Mill Crossing's two abutments and the mill yard, levelled to ONE authored height for the reason SC14's pads carry one -- the kit has no tilted deck, so both banks have to meet at the same level or the span is a lie. Height is the probed mean of natural ground across the narrows (tools/_probe_river.gd). The river carve is subtracted AFTER the flats (playground_heightfield.gd), so the channel still cuts through what these pads promise and what they promise is level BANKS either side of a real gap -- the mill-crossing pad at [-133,109] is the same trick and said so first. GEOMETRY, not taste: centre 13.5m out with radius 6 is sized so tests/test_playground_heightfield.gd's own 0.7r rim samples all land at least 9.5m from the centreline, outside the channel's 7.0m zero-depth contour, while the span's landing (8.0m out) still sits inside the pad's fully-flattened disc. The first cut was radius 8 at 9.5m and its nearest rim sample landed 4.1m from the centreline -- 14m down a river. TUNABLE, but not independently of the narrows' half_width + rim.",
       "centre": [
-        175.2,
-        46.4
+        -151.98,
+        4189.5
       ],
       "radius": 6.0,
       "height": -2.0,
       "skirt": 9.0,
-      "_why": "the Old Mill Crossing's far-bank abutment (gated_crossing.gd resolves which bank is which from the road; it is the +x side here)"
+      "_why": "the Old Mill Crossing's far-bank abutment (gated_crossing.gd resolves which bank is which from the road; it is the +x side here)",
+      "_comment_ow5c": "OW5C: rotated+translated with old_mill_crossing (crossings[1]) -- MISSED in the first pass, found once smoke_traversal showed the crossing physically unwalkable in both lock states, because ground_height_at at the new site was sampling raw unlevelled riverbank rather than this pad."
     },
     {
       "centre": [
-        149.6,
-        37.8
+        -152.02,
+        4216.5
       ],
       "radius": 6.0,
       "height": -2.0,
       "skirt": 9.0,
-      "_why": "the Old Mill Crossing's village-side abutment, its landing, and the mill's own yard"
+      "_why": "the Old Mill Crossing's village-side abutment, its landing, and the mill's own yard",
+      "_comment_ow5c": "OW5C: rotated+translated with old_mill_crossing (crossings[1]) -- MISSED in the first pass, found once smoke_traversal showed the crossing physically unwalkable in both lock states, because ground_height_at at the new site was sampling raw unlevelled riverbank rather than this pad."
     }
   ],
   "building_aprons": {
@@ -451,22 +455,330 @@
       {
         "_why": "SC14: where the south road leaves the square, pointing at the crossing. The bridge is NOT a fifth entry in `routes` above on purpose -- signpost.gd draws one arm per route on the junction fingerpost by the well, and its post is only tall enough for four (ARM_START_HEIGHT 2.05 stepping down by ARM_SPACING 0.44 puts a fifth arm at 0.29m, in the grass). A trailhead is the same object with one arm, which is what OF10-remainder built it for. The plank names the destination and never its condition -- the same hard rule the seven spokes' signs carry.",
         "at": [
-          8.6,
-          6.0
+          11.6,
+          1256.0
         ],
         "label": "South Bridge",
         "points": [
           [
-            8.6,
-            6.0
+            11.6,
+            1256.0
           ],
           [
-            6.0,
-            50.0
+            9.0,
+            1300.0
+          ]
+        ],
+        "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250)."
+      },
+      {
+        "at": [
+          -360,
+          400
+        ],
+        "label": "Pond Circuit",
+        "points": [
+          [
+            -360,
+            400
+          ],
+          [
+            -390,
+            460
+          ]
+        ]
+      },
+      {
+        "at": [
+          230,
+          830
+        ],
+        "label": "Oak Grove Ring",
+        "points": [
+          [
+            230,
+            830
+          ],
+          [
+            300,
+            880
+          ]
+        ]
+      },
+      {
+        "at": [
+          310,
+          1660
+        ],
+        "label": "Quarry Rim Overlook",
+        "points": [
+          [
+            310,
+            1660
+          ],
+          [
+            370,
+            1710
+          ]
+        ]
+      },
+      {
+        "at": [
+          -150,
+          2210
+        ],
+        "label": "Ranger Camp Spur",
+        "points": [
+          [
+            -150,
+            2210
+          ],
+          [
+            -210,
+            2230
+          ]
+        ]
+      },
+      {
+        "at": [
+          -420,
+          2470
+        ],
+        "label": "Warren Undertrail",
+        "points": [
+          [
+            -420,
+            2470
+          ],
+          [
+            -380,
+            2540
+          ]
+        ]
+      },
+      {
+        "at": [
+          230,
+          3670
+        ],
+        "label": "Relay Approach Loop",
+        "points": [
+          [
+            230,
+            3670
+          ],
+          [
+            300,
+            3730
+          ]
+        ]
+      },
+      {
+        "at": [
+          -30,
+          4060
+        ],
+        "label": "Near Bank River Walk",
+        "points": [
+          [
+            -30,
+            4060
+          ],
+          [
+            -70,
+            4130
+          ]
+        ]
+      },
+      {
+        "at": [
+          330,
+          5700
+        ],
+        "label": "Wind Ridge Traverse",
+        "points": [
+          [
+            330,
+            5700
+          ],
+          [
+            400,
+            5780
+          ]
+        ]
+      },
+      {
+        "at": [
+          60,
+          6230
+        ],
+        "label": "High Pasture Loop",
+        "points": [
+          [
+            60,
+            6230
+          ],
+          [
+            30,
+            6270
+          ]
+        ]
+      },
+      {
+        "at": [
+          -280,
+          6460
+        ],
+        "label": "Watchtower Spur",
+        "points": [
+          [
+            -280,
+            6460
+          ],
+          [
+            -320,
+            6510
+          ]
+        ]
+      },
+      {
+        "at": [
+          400,
+          1800
+        ],
+        "label": "Quarry Haul Road",
+        "points": [
+          [
+            400,
+            1800
+          ],
+          [
+            340,
+            1600
+          ]
+        ]
+      },
+      {
+        "at": [
+          -360.0,
+          400.0
+        ],
+        "label": "River Gorge Spoke",
+        "points": [
+          [
+            -360.0,
+            400.0
+          ],
+          [
+            -416.66,
+            409.88
+          ]
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          7000.0
+        ],
+        "label": "Storm Road Spoke",
+        "points": [
+          [
+            0.0,
+            7000.0
+          ],
+          [
+            -5.21,
+            7130.72
+          ]
+        ]
+      },
+      {
+        "at": [
+          400.0,
+          1800.0
+        ],
+        "label": "Mountain Trail Spoke",
+        "points": [
+          [
+            400.0,
+            1800.0
+          ],
+          [
+            465.79,
+            1809.03
+          ]
+        ]
+      },
+      {
+        "at": [
+          -420.0,
+          2470.0
+        ],
+        "label": "Stone Gate Spoke",
+        "points": [
+          [
+            -420.0,
+            2470.0
+          ],
+          [
+            -471.7,
+            2479.32
+          ]
+        ]
+      },
+      {
+        "at": [
+          450.0,
+          5860.0
+        ],
+        "label": "High Pass Spoke",
+        "points": [
+          [
+            450.0,
+            5860.0
+          ],
+          [
+            511.33,
+            5881.07
+          ]
+        ]
+      },
+      {
+        "at": [
+          430.0,
+          1020.0
+        ],
+        "label": "Cliff Road Spoke",
+        "points": [
+          [
+            430.0,
+            1020.0
+          ],
+          [
+            516.8,
+            1049.57
+          ]
+        ]
+      },
+      {
+        "at": [
+          -150.0,
+          4150.0
+        ],
+        "label": "Blighted Road Spoke",
+        "points": [
+          [
+            -150.0,
+            4150.0
+          ],
+          [
+            -240.32,
+            4161.1
           ]
         ]
       }
-    ]
+    ],
+    "_comment_ow5c_trailheads": "OW5C: 18 new trailheads appended, one per regional-loop leave point, shortcut origin, and spoke leave point (section 11's wayfinding answer: signpost.gd's junction post only fits four arms, so the 12km trail's forks are marked by one-arm trailhead fingerposts instead of a fifth+ arm on the post)."
   },
   "_comment_crossings": "SC14. Roads that stay INSIDE the Meadows and cross something, as opposed to `spokes` (roads that leave it and are severed) and `paths.routes` (the village's own four dirt tracks, one signpost arm each). A crossing owns three things at once and they have to agree, which is why they are one entry rather than three: the `road` polyline (unioned into playground_heightfield.road_polylines(), so the bake paints the same trodden soil along it and the scatter keeps grass and trees off it, exactly as a spoke road gets), the `carve` that interrupts it (the same straight-trench profile `_carve_depth` evaluates for every spoke gorge and the pond outlet -- one falloff evaluator on this map), and the `bridge` that is the only way over. Spec 3's Gate 1: the deeper Meadows is visible across an old bridge, and the bridge is a mechanism, not a message -- nothing here or in scripts/world/south_bridge.gd ever explains itself with UI text.",
   "_comment_crossings_reach": "HONEST LIMIT, recorded here rather than discovered later. The south gully seals the ROAD, not the region: its ends fade to zero at x=-40 and x=+50, which is where the river-gorge spoke road (x~-42 at this z) and the blighted-road spoke (x~+51) run. Those two are the only ways around, they cost a real detour, and they are roads that visibly go somewhere else. Extending the cut across either of them was rejected outright: the gorge road is how a player reaches The Pond (a Band 0/1 destination and a named region), and walling that off behind Gate 1 would be a regression, not a gate. Sealing the whole southern half instead needs a ~360m chord across world_perimeter's 235m disc, through the pond basin and both spoke roads -- the deeper-Meadows footprint that makes a real division cheap is R7.3's job, and SE21's river is the feature the spec actually intends for it.",
@@ -477,44 +789,32 @@
       "_why": "spec 3 Gate 1. The gully runs east-west across the corridor between the river-gorge and blighted-road spokes, at the one bearing out of the village that had no road on it. Its centre sits 90m south of the square with clear line of sight from the well (measured, tools/_probe_south.gd: the sight line clears the intervening ground by 1.3m to a 4m-tall parapet head).",
       "road": [
         [
-          10.0,
-          -10.0
+          13.0,
+          1240.0
+        ],
+        [
+          11.0,
+          1270.0
+        ],
+        [
+          9.0,
+          1300.0
         ],
         [
           8.0,
-          20.0
+          1322.0
         ],
         [
-          6.0,
-          50.0
-        ],
-        [
-          5.0,
-          72.0
-        ],
-        [
-          5.0,
-          88.0
-        ],
-        [
-          10.0,
-          112.0
-        ],
-        [
-          16.0,
-          136.0
-        ],
-        [
-          21.0,
-          152.0
+          8.0,
+          1338.0
         ]
       ],
       "_comment_road_sd16": "The last three points are SD16's: the same road carries on from the far landing to the Old Quarry's floor, because it is the same road -- the reason the crossing exists is the ground past it. Kept in this one entry rather than opened as a second route so `road_polylines()` sees one continuous polyline and the bake paints one continuous track.",
       "_comment_carve": "Depth 11m against a 3.4m rim is ~72 degrees of wall, well past the player's own 45-degree floor_max_angle (player.tscn) -- the same arithmetic every spoke gorge is sized by. half_width 3.6 + rim 3.4 puts the zero-depth contour 7.0m either side of the centreline, so the crossing is a 14m clear span the bridge prefab is built to match. `failsafe` hangs SA4's own recovery volume in the trench; scripts/world/south_bridge.gd hands it a VILLAGE-SIDE recovery road on purpose -- recovering to the far lip would turn falling in into a free crossing. TUNABLE.",
       "carve": {
         "centre": [
-          5.0,
-          80.0
+          8.0,
+          1330.0
         ],
         "axis_deg": 0.0,
         "half_length": 33.0,
@@ -529,7 +829,9 @@
         "gate_prefab": "south_bridge_gate",
         "_comment_gate_offset": "Metres from the carve centre, back along the bridge's own run toward the village, where the locked leaf stands: at the outer lip of the near landing, level with the end of the span's own rails, so the player is stopped at the mouth of the crossing with the whole thing in front of them. It has to be AT the rails' end rather than inboard of it -- the deck sits only 0.12m above the levelled abutment, so any deck the rails do not cover can be stepped onto from the side, and a gate inboard of that gap gates nothing. TUNABLE, but not independently of the rail colliders in building_prefabs.json.",
         "gate_offset": 8.5
-      }
+      },
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: translated by (-5,+1250) so the carve centre lands on the tables explicit (0,1330). Dropped the old SD16 quarry-continuation tail (road[5:8]) -- the quarry moved independently (400,1800) and is now reached via the spine plus the quarry_rim_overlook loop and quarry_haul_road shortcut (OW5C trail.loops/shortcuts), not by extending this crossings own road toward it.",
+      "_comment_ow5c_seam": "OW5C follow-up: nudged x by +8 (0 -> 8) after smoke_traversal found the gate physically unwalkable in BOTH locked and unlocked states -- the walk got stuck ~1.4m in regardless of gate state, at a point sitting EXACTLY on x=0, which is on the current (unfixed, main-branch) 16m collision-shape-tile seam (WALL1, ralph/BACKLOG.md Phase -1.40, COLL1). The whole near_point-to-far_point walk ran along a fixed x (axis_deg 0 means the crossing direction is pure +Z), so it stayed glued to that seam the entire distance instead of briefly crossing it. x=8 sits at the seam-to-seam midpoint (8m from both 0 and 16), the least seam-exposed position available without moving the crossing off its own spine waypoint by more than a few metres. This is a workaround, not a fix -- the underlying defect is COLL1s."
     },
     {
       "id": "old_mill_crossing",
@@ -537,26 +839,26 @@
       "_why": "SE22, spec 3 Band 3's main gate. Sited where the river's narrows meet the storm road -- the one old road that already ran out this way (spokes.routes[1], village -> [185.5,49.7]) -- because a mill and a bridge stand where a road meets a water, not where a designer wants a gate.",
       "road": [
         [
-          150.0,
-          38.0
+          -152.0,
+          4170.0
         ],
         [
-          162.4,
-          42.1
+          -152.0,
+          4203.0
         ],
         [
-          176.0,
-          46.4
+          -152.0,
+          4235.0
         ]
       ],
       "_comment_road": "A short stub, not a second copy of the storm road: road_polylines() unions it with the spoke's own road, so this only has to cover the mill yard and both landings for the bake's trodden soil and the scatter's keep-off.",
       "_comment_channel": "`channel`, not `carve`: the river cut this gap, so _crossing_carve must NOT cut a second one here (it reads `carve` and skips an entry without one). Everything else about the shape is the river's own narrows point -- same centre, the course's axis through it, the half_width/rim it pinches to -- restated here so gated_crossing.gd can place a span and a gate from ONE dictionary the way it does for the South Bridge.",
       "channel": {
         "centre": [
-          162.4,
-          42.1
+          -152.0,
+          4203.0
         ],
-        "axis_deg": 108.5,
+        "axis_deg": 0.0,
         "half_length": 6.0,
         "end_fade": 6.0,
         "half_width": 3.6,
@@ -567,19 +869,20 @@
       "bridge": {
         "prefab": "south_bridge",
         "gate_prefab": "south_bridge_gate",
-        "gate_offset": 7.4,
-        "_comment_gate_offset": "Metres back along the bridge's own run toward the village, at the outer lip of the near landing where the span's rails end -- SC14 measured this the hard way (the deck sits 0.12m above its own levelled abutment, so a gate inboard of the rails can be stepped around). Same prefab, same span, same number."
+        "gate_offset": 7.4
       },
       "mill": {
         "prefab": "mill",
         "offset": [
-          -12.0,
-          4.0
+          7.6,
+          10.11
         ],
-        "_comment": "Metres in the crossing's own frame: local x runs along the bridge (negative = the village side), local z along the river. Sited on the village-side abutment pad so the mill stands on level ground, and 12.6m out from the centreline so the tower clears the channel's rim where the course widens again north of the narrows (measured against the course, not eyed). `yaw_deg` 180 turns the prefab so its wheel -- local -4.0 on its own x, the same wheel the village mill hangs over the stream (village.json, EV6-remainder) -- faces the water instead of the meadow. Same prefab, same kit: D24's one village family, no new architecture for a second mill.",
-        "yaw_deg": 180.0
+        "yaw_deg": 71.5,
+        "_comment_ow5c_rotate": "OW5C: offset and yaw_deg rotated by the same delta (-108.5deg) axis_deg itself rotated by (108.5 -> 0.0), since offset is defined in the crossings own local frame -- changing axis_deg without this left the mill (and its collision) sitting in the wrong place in world space relative to the new crossing, almost certainly overlapping the walk-test approach path near BRIDGE_START_BACK."
       },
-      "_comment_reach": "HONEST LIMIT, recorded here the way SC14 recorded its own. A chord long enough to actually divide this map cannot avoid every spoke: the Meadows disc is full, and a search over every bearing and offset that keeps the village, the pond, the South Bridge, the Old Quarry, The Rise and all seven blockers clear left a far side only 17m deep -- not a region, a verge. This course takes the one cost that buys a 70m-deep, 334m-long far side: the storm road's collapsed bridge and its `Storm Country` fingerpost end up 25-40m PAST the river, visible across the water from the near bank but not reachable until the crossing opens. Every other spoke, and every named place a Band 0-2 player is sent to, stays on the near side."
+      "_comment_reach": "HONEST LIMIT, recorded here the way SC14 recorded its own. A chord long enough to actually divide this map cannot avoid every spoke: the Meadows disc is full, and a search over every bearing and offset that keeps the village, the pond, the South Bridge, the Old Quarry, The Rise and all seven blockers clear left a far side only 17m deep -- not a region, a verge. This course takes the one cost that buys a 70m-deep, 334m-long far side: the storm road's collapsed bridge and its `Storm Country` fingerpost end up 25-40m PAST the river, visible across the water from the near bank but not reachable until the crossing opens. Every other spoke, and every named place a Band 0-2 player is sent to, stays on the near side.",
+      "_comment_ow5c": "OW5C: relocated with the river to (-150,4203), matching the spine's own Band 3 waypoints (-150,4170)/(-150,4235) which straddle it. channel dimensions copied verbatim from the river course's own narrows point at this location (half_width 3.6/rim 3.4/depth 15) -- same convention the original entry used.",
+      "_comment_ow5c_seam": "OW5C follow-up: nudged x by -2 (-150 -> -152) for the same reason south_bridge moved off x=0 -- -150 sits only 6m from the 16m collision-shape-tile seam at -144 (WALL1), and the crossing failed identically to south_bridge before its own fix. -152 is the true seam-to-seam midpoint (8m from both -160 and -144), the same maximal separation that fixed south_bridge."
     }
   ],
   "_comment_drains": "D41, debuted by SD16 at the Old Quarry. Team Tether's hardware is pulling something out of the ground and the ground shows it: discoloured, desaturated earth and suppressed vegetation in a radius around every station, thinning toward the machine and healthy meadow resuming past it. This block is the ONE authored source for where that happens. `playground_heightfield.drain_factor()` reads it and returns 0..1, and all three consumers ask that one function -- the bake's colour map (a tint lerp), the bake's control map (a blend toward the dead-soil texture) and `scatter_rules.gd` (which thins each layer's placements by its own `drain_suppression`). Same contract shape as `path_factor`/`stream_factor`/`building_apron_factor`, and the same reason for it: three systems agreeing about one edge because they read one function. D41 says mild at this rung of 32's reveal ladder -- the quarry's own head station is 0.85 and the run out of it falls away to 0.5, against the relay (SE23), which is meant to be the worst thing the player has seen. Widening these radii is how a later station gets worse; a new grammar is not. ALL TUNABLE.",
@@ -637,7 +940,10 @@
       },
       {
         "id": "relay_core",
-        "centre": [104.5, 23.1],
+        "centre": [
+          104.5,
+          23.1
+        ],
         "radius": 46.0,
         "inner": 20.0,
         "strength": 1.0,
@@ -645,7 +951,10 @@
       },
       {
         "id": "relay_yard",
-        "centre": [108.0, 34.0],
+        "centre": [
+          108.0,
+          34.0
+        ],
         "radius": 34.0,
         "inner": 12.0,
         "strength": 0.92,
@@ -653,7 +962,10 @@
       },
       {
         "id": "relay_approach",
-        "centre": [99.0, 45.0],
+        "centre": [
+          99.0,
+          45.0
+        ],
         "radius": 28.0,
         "inner": 8.0,
         "strength": 0.72,
@@ -673,48 +985,48 @@
         "id": "river_gorge",
         "type": "water",
         "_why": "The valley's own outflow. The pond at [-145,138] is the map's global minimum and the stream already runs into it; a river leaving that basin to the south-east and cutting a gorge on its way out is the one severed crossing the existing geography was already asking for. Spec 1E: 'Water: river gorge / broken bridge'.",
-        "bearing_deg": 118.0,
+        "bearing_deg": 168.4,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            -360.0,
+            400.0
           ],
           [
-            -10.0,
-            25.0
+            -416.66,
+            409.88
           ],
           [
-            -35.0,
-            70.0
+            -488.86,
+            423.36
           ],
           [
-            -60.0,
-            115.0
+            -561.07,
+            436.85
           ],
           [
-            -78.0,
-            145.0
+            -610.42,
+            444.37
           ],
           [
-            -90.1,
-            169.5
+            -648.35,
+            453.37
           ]
         ],
         "sign": {
           "at": [
-            -84.5,
-            166.0
+            -639.41,
+            456.34
           ],
           "label": "River Road",
           "points": [
             [
-              -90.1,
-              169.5
+              -648.35,
+              453.37
             ],
             [
-              -105.0,
-              205.0
+              -700.92,
+              469.31
             ]
           ]
         },
@@ -722,10 +1034,10 @@
           "kind": "gorge",
           "carve": {
             "centre": [
-              -93.9,
-              176.6
+              -659.61,
+              455.66
             ],
-            "axis_deg": 26.3,
+            "axis_deg": 76.7,
             "half_length": 26.0,
             "end_fade": 14.0,
             "half_width": 9.0,
@@ -746,76 +1058,76 @@
           "list": [
             {
               "at": [
-                -57.3,
-                100.9
+                -543.12,
+                426.98
               ],
               "lit": true
             },
             {
               "at": [
-                -68.1,
-                119.8
+                -573.71,
+                432.32
               ],
               "lit": true
             },
             {
               "at": [
-                -79.5,
-                138.7
+                -604.86,
+                436.99
               ],
               "lit": true
             },
             {
               "at": [
-                -89.3,
-                157.6
+                -634.55,
+                443.42
               ],
               "lean_deg": 7.0,
               "lean_toward": [
-                -105.1,
-                193.6
+                -688.48,
+                458.83
               ],
               "dangle_toward": [
-                -105.1,
-                193.6
+                -688.48,
+                458.83
               ],
               "break_after": true
             },
             {
               "at": [
-                -105.1,
-                193.6
+                -688.48,
+                458.83
               ],
               "lit": true,
               "dangle_toward": [
-                -89.3,
-                157.6
+                -634.55,
+                443.42
               ]
             }
           ]
         },
         "far_road": {
           "from": [
-            -99.8,
-            192.6
+            -682.56,
+            463.74
           ],
           "to": [
-            -104.8,
-            204.5
+            -700.19,
+            469.08
           ],
           "width": 4.6,
           "kerbs": 20,
           "gateposts": true,
           "near_posts": [
-            -86.1,
-            161.4
+            -635.81,
+            450.4
           ]
         },
         "abandoned": [
           {
             "at": [
-              -92.5,
-              163.5
+              -643.94,
+              445.28
             ],
             "crates": 2,
             "barrels": 1,
@@ -823,8 +1135,8 @@
           },
           {
             "at": [
-              -103.0,
-              197.2
+              -690.53,
+              464.41
             ],
             "crates": 2,
             "barrels": 1
@@ -835,44 +1147,44 @@
         "id": "storm_road",
         "type": "electric",
         "_why": "East, across open meadow -- the only long clear bearing on that side once `rises.peaks[0]` is respected. Spec 1E: 'Electric: old road toward storm country'; 29's blocker: collapsed bridge.",
-        "bearing_deg": 15.0,
+        "bearing_deg": 90.0,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            0.0,
+            7000.0
           ],
           [
-            55.0,
-            4.0
+            -5.21,
+            7130.72
           ],
           [
-            105.0,
-            22.0
+            -17.55,
+            7277.71
           ],
           [
-            150.0,
-            38.0
+            -28.12,
+            7409.87
           ],
           [
-            185.5,
-            49.7
+            -33.99,
+            7513.46
           ]
         ],
         "sign": {
           "at": [
-            182.0,
-            54.8
+            -50.17,
+            7507.74
           ],
           "label": "Storm Country",
           "points": [
             [
-              185.5,
-              49.7
+              -33.99,
+              7513.46
             ],
             [
-              220.0,
-              60.0
+              -36.82,
+              7613.37
             ]
           ]
         },
@@ -880,10 +1192,10 @@
           "kind": "collapsed_bridge",
           "carve": {
             "centre": [
-              193.2,
-              51.8
+              -34.08,
+              7535.62
             ],
-            "axis_deg": 108.2,
+            "axis_deg": 183.2,
             "half_length": 55.0,
             "end_fade": 18.0,
             "half_width": 6.0,
@@ -908,76 +1220,76 @@
           "list": [
             {
               "at": [
-                118.9,
-                22.2
+                -8.1,
+                7315.13
               ],
               "lit": true
             },
             {
               "at": [
-                139.6,
-                29.5
+                -12.8,
+                7375.88
               ],
               "lit": true
             },
             {
               "at": [
-                160.3,
-                36.7
+                -17.23,
+                7436.55
               ],
               "lit": true
             },
             {
               "at": [
-                180.3,
-                43.2
+                -20.29,
+                7494.85
               ],
               "lean_deg": 7.0,
               "lean_toward": [
-                209.8,
-                52.3
+                -23.5,
+                7580.48
               ],
               "dangle_toward": [
-                209.8,
-                52.3
+                -23.5,
+                7580.48
               ],
               "break_after": true
             },
             {
               "at": [
-                209.8,
-                52.3
+                -23.5,
+                7580.48
               ],
               "lit": true,
               "dangle_toward": [
-                180.3,
-                43.2
+                -20.29,
+                7494.85
               ]
             }
           ]
         },
         "far_road": {
           "from": [
-            204.7,
-            55.4
+            -35.47,
+            7569.04
           ],
           "to": [
-            221.9,
-            60.6
+            -37.06,
+            7618.89
           ],
           "width": 4.6,
           "kerbs": 24,
           "gateposts": true,
           "near_posts": [
-            181.7,
-            48.4
+            -33.23,
+            7502.34
           ]
         },
         "abandoned": [
           {
             "at": [
-              176.5,
-              57.5
+              -61.37,
+              7494.93
             ],
             "crates": 3,
             "barrels": 2,
@@ -985,8 +1297,8 @@
           },
           {
             "at": [
-              212.3,
-              55.2
+              -29.48,
+              7589.27
             ],
             "crates": 2,
             "barrels": 1
@@ -997,52 +1309,52 @@
         "id": "mountain_trail",
         "type": "fire",
         "_why": "North-west, at the foot of `rises.peaks[1]` (centre [-165,-150], radius 58). The trail runs out to where the ground starts to climb and a slide off the mountain has buried it. Spec 1E: 'Fire: mountain trail'; 29's blocker: rockslide. No carve -- this one is props and collision only, so it costs no terrain re-bake.",
-        "bearing_deg": 222.0,
+        "bearing_deg": 10.0,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            400.0,
+            1800.0
           ],
           [
-            -20.0,
-            -35.0
+            465.79,
+            1809.03
           ],
           [
-            -52.0,
-            -58.0
+            532.66,
+            1813.37
           ],
           [
-            -86.0,
-            -83.0
+            604.21,
+            1818.79
           ],
           [
-            -118.9,
-            -107.0
+            673.28,
+            1823.77
           ]
         ],
         "sign": {
           "at": [
-            -113.8,
-            -110.8
+            669.35,
+            1833.84
           ],
           "label": "Mountain Road",
           "points": [
             [
-              -118.9,
-              -107.0
+              673.28,
+              1823.77
             ],
             [
-              -150.0,
-              -135.0
+              743.36,
+              1836.13
             ]
           ]
         },
         "blocker": {
           "kind": "rockslide",
           "centre": [
-            -123.3,
-            -111.1
+            683.32,
+            1825.71
           ],
           "axis_deg": -53.9,
           "span": 24.0,
@@ -1063,38 +1375,38 @@
           "list": [
             {
               "at": [
-                -72.4,
-                -67.4
+                570.55,
+                1808.55
               ],
               "lit": true
             },
             {
               "at": [
-                -92.7,
-                -82.4
+                613.34,
+                1811.89
               ],
               "lit": true
             },
             {
               "at": [
-                -109.7,
-                -94.7
+                648.93,
+                1814.32
               ],
               "lit": true
             },
             {
               "at": [
-                -122.8,
-                -104.3
+                676.47,
+                1816.36
               ],
               "lean_deg": 12.0,
               "lean_toward": [
-                -114.7,
-                -98.4
+                659.48,
+                1815.15
               ],
               "dangle_toward": [
-                -150.0,
-                -135.0
+                743.36,
+                1836.13
               ]
             }
           ]
@@ -1102,8 +1414,8 @@
         "abandoned": [
           {
             "at": [
-              -118.3,
-              -97.8
+              664.13,
+              1811.04
             ],
             "crates": 1,
             "barrels": 1,
@@ -1115,52 +1427,52 @@
         "id": "stone_gate",
         "type": "psychic",
         "_why": "Due west, level open ground -- an ancient gate wants to be seen head-on from a distance, which needs a straight approach and no landform behind it. Spec 1E: 'Psychic: ancient stone gate/road'. NOT YET BUILT: needs a gate-arch composition out of the medieval kit that does not exist yet as a prefab.",
-        "bearing_deg": 180.0,
+        "bearing_deg": 172.6,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            -420.0,
+            2470.0
           ],
           [
-            -30.0,
-            -8.0
+            -471.7,
+            2479.32
           ],
           [
-            -80.0,
-            -4.0
+            -536.07,
+            2492.91
           ],
           [
-            -140.0,
-            -2.0
+            -613.79,
+            2505.59
           ],
           [
-            -192.0,
-            0.0
+            -681.1,
+            2516.92
           ]
         ],
         "sign": {
           "at": [
-            -187.0,
-            4.4
+            -673.85,
+            2521.8
           ],
           "label": "Gate Road",
           "points": [
             [
-              -192.0,
-              0.0
+              -681.1,
+              2516.92
             ],
             [
-              -228.0,
-              2.0
+              -727.59,
+              2525.56
             ]
           ]
         },
         "blocker": {
           "kind": "sealed_gate",
           "centre": [
-            -198.0,
-            0.0
+            -688.9,
+            2517.92
           ],
           "axis_deg": 90.0,
           "_comment_gate": "SA4 stage 2. A gate, not a wall: the road runs THROUGH the arch and the leaf does not open. Two piers on world_perimeter.gd's own PIER_* proportions carry a lintel; the opening between them is filled by a pair of closed leaves. Flanking wall stubs run out to `span` either side so the arch is a gate in something rather than a free-standing frame you walk around at three paces. All T_UnevenBrick, no new asset.",
@@ -1179,34 +1491,34 @@
           "list": [
             {
               "at": [
-                -125.1,
-                -7.0
+                -595.24,
+                2496.58
               ],
               "lit": true
             },
             {
               "at": [
-                -148.2,
-                -6.2
+                -625.16,
+                2501.5
               ],
               "lit": true
             },
             {
               "at": [
-                -169.2,
-                -5.4
+                -652.34,
+                2506.06
               ],
               "lit": true
             },
             {
               "at": [
-                -190.2,
-                -4.6
+                -679.53,
+                2510.63
               ],
               "lit": true,
               "dangle_toward": [
-                -198.0,
-                0.0
+                -688.9,
+                2517.92
               ]
             }
           ]
@@ -1214,8 +1526,8 @@
         "abandoned": [
           {
             "at": [
-              -186.0,
-              -3.4
+              -673.86,
+              2511.49
             ],
             "crates": 2,
             "barrels": 1,
@@ -1227,52 +1539,52 @@
         "id": "high_pass",
         "type": "ice",
         "_why": "North, the last long clear bearing. Spec 1E: 'Ice: high pass'. NOT YET BUILT, and this one needs terrain work before props: a pass needs a saddle to be a pass, and there is no relief on this bearing today -- see the handoff.",
-        "bearing_deg": 285.0,
+        "bearing_deg": 19.0,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            450.0,
+            5860.0
           ],
           [
-            22.0,
-            -55.0
+            511.33,
+            5881.07
           ],
           [
-            34.0,
-            -105.0
+            579.61,
+            5902.62
           ],
           [
-            43.0,
-            -150.0
+            641.24,
+            5919.52
           ],
           [
-            49.7,
-            -185.4
+            689.76,
+            5932.29
           ]
         ],
         "sign": {
           "at": [
-            45.0,
-            -181.0
+            684.11,
+            5925.33
           ],
           "label": "The High Pass",
           "points": [
             [
-              49.7,
-              -185.4
+              689.76,
+              5932.29
             ],
             [
-              58.0,
-              -225.0
+              743.96,
+              5947.69
             ]
           ]
         },
         "blocker": {
           "kind": "rockslide",
           "centre": [
-            51.4,
-            -191.5
+            698.07,
+            5935.25
           ],
           "axis_deg": 15.0,
           "_comment_pass": "SA4 stage 2. A pass needs a saddle, and this bearing had no relief at all, so `rises.peaks` gained two small shoulders either side of the road end (see their own _comment) and the road now climbs between them. The blocker itself is the same collapsed scree the mountain trail uses -- the pass has fallen in. It reuses `rockslide` deliberately: one mechanism, two sites, and the two read differently because one lies at a mountain's foot and this one fills a gap between two shoulders. Snow dressing is NOT here; the ice reading currently rests on altitude and bare rock alone. Honest limit.",
@@ -1293,34 +1605,34 @@
           "list": [
             {
               "at": [
-                41.1,
-                -117.8
+                596.7,
+                5913.74
               ],
               "lit": true
             },
             {
               "at": [
-                45.3,
-                -138.4
+                624.9,
+                5921.59
               ],
               "lit": true
             },
             {
               "at": [
-                49.3,
-                -159.0
+                653.13,
+                5929.16
               ],
               "lit": true
             },
             {
               "at": [
-                52.6,
-                -176.6
+                677.25,
+                5935.46
               ],
               "lit": true,
               "dangle_toward": [
-                56.5,
-                -197.0
+                705.21,
+                5942.87
               ]
             }
           ]
@@ -1328,8 +1640,8 @@
         "abandoned": [
           {
             "at": [
-              51.5,
-              -174.9
+              675.0,
+              5933.77
             ],
             "bags": 3,
             "barrels": 1
@@ -1340,57 +1652,57 @@
         "id": "cliff_road",
         "type": "air",
         "_why": "Onto `rises.peaks[0]`'s north-west flank -- the only real relief in the game and therefore the only place a cliff road can honestly be. Short by design: the flank's 46-degree collar (see paths.routes 'The Rise') is where the roadbed has fallen away. Spec 1E: 'Air: cliff/highland road'. NOT YET BUILT. Note it ends ~25m from the Rise road's own trailhead; two old roads meeting at a hill's foot is plausible but the pair need to be looked at together in one frame before this is dressed.",
-        "bearing_deg": 340.0,
+        "bearing_deg": 11.7,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            430.0,
+            1020.0
           ],
           [
-            45.0,
-            -18.0
+            516.8,
+            1049.57
           ],
           [
-            75.0,
-            -27.0
+            594.08,
+            1070.27
           ],
           [
-            98.7,
-            -35.9
+            657.53,
+            1082.72
           ]
         ],
         "sign": {
           "at": [
-            95.0,
-            -31.0
+            642.91,
+            1088.41
           ],
           "label": "Cliff Road",
           "points": [
             [
-              98.7,
-              -35.9
+              657.53,
+              1082.72
             ],
             [
-              135.0,
-              -48.0
+              752.66,
+              1105.13
             ]
           ]
         },
         "blocker": {
           "kind": "fallen_roadbed",
           "centre": [
-            102.0,
-            -37.2
+            666.44,
+            1084.32
           ],
           "axis_deg": 70.0,
           "_comment_fallen": "SA4 stage 2. The road was a shelf cut into rises.peaks[0]'s north-west flank and the shelf is gone. The blocker is a carve like the gorge's, but short and narrow -- a 9m notch with 66-degree walls where the roadbed used to be -- because a fallen roadbed is a GAP, not a pile, and three piles out of seven would be one mechanism wearing three hats. Dressing: the uphill retaining wall runs up to the break and stops with a broken end, its kerbstones tipped over the edge, and its own masonry lies as scree below the notch. Checked clear of the Rise road's trailhead at [75.4,-38.9] (carve-local v=24.4m, well outside half_width+rim=9m).",
           "carve": {
             "centre": [
-              102.0,
-              -37.2
+              666.44,
+              1084.32
             ],
-            "axis_deg": 70.0,
+            "axis_deg": 101.7,
             "half_length": 22.0,
             "end_fade": 12.0,
             "half_width": 5.0,
@@ -1413,55 +1725,55 @@
           "list": [
             {
               "at": [
-                58.7,
-                -26.6
+                558.12,
+                1049.26
               ],
               "lit": true
             },
             {
               "at": [
-                75.9,
-                -32.4
+                603.28,
+                1059.74
               ],
               "lit": true
             },
             {
               "at": [
-                90.6,
-                -39.2
+                644.35,
+                1064.68
               ],
               "lean_deg": 7.0,
               "lean_toward": [
-                113.7,
-                -45.8
+                703.41,
+                1081.33
               ],
               "dangle_toward": [
-                113.7,
-                -45.8
+                703.41,
+                1081.33
               ],
               "break_after": true
             },
             {
               "at": [
-                113.7,
-                -45.8
+                703.41,
+                1081.33
               ],
               "lit": true,
               "dangle_toward": [
-                90.6,
-                -39.2
+                644.35,
+                1064.68
               ]
             }
           ]
         },
         "far_road": {
           "from": [
-            111.5,
-            -40.4
+            691.38,
+            1090.12
           ],
           "to": [
-            121.0,
-            -43.5
+            716.19,
+            1096.13
           ],
           "width": 4.6,
           "kerbs": 9,
@@ -1470,8 +1782,8 @@
         "abandoned": [
           {
             "at": [
-              87.1,
-              -44.6
+              643.99,
+              1048.25
             ],
             "crates": 1,
             "barrels": 1,
@@ -1479,8 +1791,8 @@
           },
           {
             "at": [
-              118.5,
-              -47.0
+              715.45,
+              1085.16
             ],
             "crates": 1,
             "bags": 1
@@ -1491,52 +1803,52 @@
         "id": "blighted_road",
         "type": "dark",
         "_why": "South-south-east, skirting `rises.peaks[2]`. Spec 1E: 'Dark: sealed blighted road'. NOT YET BUILT -- the seal is the one blocker with no existing vocabulary at all (it is Team Tether's own work, not weather or rock), so it wants a decision about what a Team Tether seal looks like before anything is placed.",
-        "bearing_deg": 65.0,
+        "bearing_deg": 180.0,
         "built": true,
         "road": [
           [
-            10.0,
-            -10.0
+            -150.0,
+            4150.0
           ],
           [
-            30.0,
-            22.0
+            -240.32,
+            4161.1
           ],
           [
-            50.0,
-            76.0
+            -378.72,
+            4149.78
           ],
           [
-            67.0,
-            128.0
+            -509.69,
+            4133.94
           ],
           [
-            81.2,
-            174.0
+            -624.69,
+            4118.09
           ]
         ],
         "sign": {
           "at": [
-            76.5,
-            176.5
+            -625.37,
+            4105.27
           ],
           "label": "Blighted Road",
           "points": [
             [
-              81.2,
-              174.0
+              -624.69,
+              4118.09
             ],
             [
-              95.0,
-              215.0
+              -728.36,
+              4106.47
             ]
           ]
         },
         "blocker": {
           "kind": "sealed_road",
           "centre": [
-            83.7,
-            180.0
+            -640.36,
+            4117.44
           ],
           "axis_deg": -25.0,
           "_comment_seal": "SA4 stage 2. The one blocker that is Team Tether's own work rather than weather or rock, so it is the one that may not be stone or slide. It is built from the vocabulary the boundary already owns -- T_UnevenBrick pier stubs, exactly world_perimeter's _build_stonework -- with the road walled shut between them and every upright capped in palette.json's `tether_oxblood` (#332228), the reserved faction colour that appears on nothing friendly or neutral. No new asset family (D24), no new texture, no generation. The seal says WHO without a single word.",
@@ -1553,51 +1865,51 @@
           "list": [
             {
               "at": [
-                66.7,
-                112.6
+                -475.73,
+                4148.97
               ],
               "lit": true
             },
             {
               "at": [
-                74.8,
-                138.2
+                -539.93,
+                4140.59
               ],
               "lit": true
             },
             {
               "at": [
-                80.2,
-                155.3
+                -582.81,
+                4134.96
               ],
               "lit": true
             },
             {
               "at": [
-                87.1,
-                175.3
+                -633.55,
+                4129.66
               ],
               "lit": true,
               "dangle_toward": [
-                88.2,
-                177.9
+                -640.35,
+                4129.41
               ],
               "break_after": true
             },
             {
               "at": [
-                91.2,
-                188.7
+                -667.01,
+                4124.96
               ],
               "dangle_toward": [
-                87.1,
-                175.3
+                -633.55,
+                4129.66
               ]
             },
             {
               "at": [
-                96.5,
-                205.9
+                -710.0,
+                4119.02
               ]
             }
           ]
@@ -1605,8 +1917,8 @@
         "abandoned": [
           {
             "at": [
-              82.5,
-              177.4
+              -633.45,
+              4117.47
             ],
             "crates": 4,
             "barrels": 3,
@@ -1614,7 +1926,8 @@
           }
         ]
       }
-    ]
+    ],
+    "_comment_ow5c_resite": "OW5C, docs/MEADOWS_MACRO_LAYOUT.md section 7: every spoke re-sited by a verified rotate+scale+translate transform (rotation around the old shared village hub road[0]=(10,-10), scale so each spoke's own far reach matches section 7's leave/end distance, translation landing road[0] exactly on the new leave point) -- not a fresh hand-authoring, so every carve's D50-analysed wall dimensions (rim/depth/half_width/half_length/end_fade) are untouched scalars; only positions and axis_deg rotate/scale. Confirmed: no spoke's farthest point exceeds |x|=752.66 or z=7618.89 (this world's edges are at x=+-1024/z=7680), so none of the seven reach either edge polyline -- the edge grammar (section 6/D51) needs no gap/opening cut into it, resolving D51's own open question. blighted_road confirmed north of the river (closest approach z=4161.1 vs the river's z~4200-4204 there, 38.9m clearance, over the required 30m)."
   },
   "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') \u2014 re-derive through a spline rather than hand-editing 25 points if the course ever moves.",
   "water": {
@@ -1909,62 +2222,71 @@
     "course": [
       {
         "at": [
-          211.0,
-          -87.0
+          -1150.0,
+          4080.0
         ],
-        "depth": 18.0,
+        "depth": 11.0,
         "half_width": 13.0,
-        "rim": 7.0
+        "rim": 6.0
       },
       {
         "at": [
-          199.0,
-          -60.0
+          -980.0,
+          4110.0
         ],
-        "depth": 18.0,
+        "depth": 12.0,
         "half_width": 13.0,
-        "rim": 7.0
+        "rim": 6.0
       },
       {
         "at": [
-          190.0,
-          -33.0
+          -800.0,
+          4145.0
         ],
-        "depth": 18.0,
+        "depth": 12.0,
         "half_width": 12.0,
         "rim": 6.0
       },
       {
         "at": [
-          178.0,
-          -7.0
+          -620.0,
+          4170.0
         ],
-        "depth": 18.0,
-        "half_width": 11.0,
+        "depth": 12.5,
+        "half_width": 12.0,
         "rim": 5.5
       },
       {
         "at": [
-          171.0,
-          20.0
+          -440.0,
+          4185.0
         ],
-        "depth": 18.0,
-        "half_width": 11.0,
+        "depth": 13.0,
+        "half_width": 12.0,
+        "rim": 5.5
+      },
+      {
+        "at": [
+          -280.0,
+          4195.0
+        ],
+        "depth": 13.0,
+        "half_width": 10.0,
         "rim": 5.0
       },
       {
         "at": [
-          166.0,
-          32.0
+          -190.0,
+          4200.0
         ],
-        "depth": 15.5,
+        "depth": 14.0,
         "half_width": 7.0,
         "rim": 4.0
       },
       {
         "at": [
-          163.6,
-          38.4
+          -164.0,
+          4202.0
         ],
         "depth": 15.0,
         "half_width": 4.2,
@@ -1972,8 +2294,8 @@
       },
       {
         "at": [
-          162.4,
-          42.1
+          -152.0,
+          4203.0
         ],
         "depth": 15.0,
         "half_width": 3.6,
@@ -1981,8 +2303,8 @@
       },
       {
         "at": [
-          161.2,
-          45.8
+          -140.0,
+          4204.0
         ],
         "depth": 15.0,
         "half_width": 4.2,
@@ -1990,84 +2312,896 @@
       },
       {
         "at": [
-          158.6,
-          52.2
+          -110.0,
+          4206.0
         ],
-        "depth": 15.5,
+        "depth": 14.0,
         "half_width": 7.0,
         "rim": 4.0
       },
       {
         "at": [
-          152.0,
-          68.0
+          -20.0,
+          4212.0
         ],
-        "depth": 10.0,
-        "half_width": 11.0,
+        "depth": 13.0,
+        "half_width": 10.0,
         "rim": 5.0
       },
       {
         "at": [
           140.0,
-          96.0
+          4222.0
         ],
-        "depth": 10.0,
+        "depth": 13.0,
         "half_width": 12.0,
         "rim": 5.5
       },
       {
         "at": [
-          133.0,
-          124.0
+          320.0,
+          4210.0
         ],
-        "depth": 10.0,
+        "depth": 12.5,
         "half_width": 12.0,
         "rim": 5.5
       },
       {
         "at": [
-          121.0,
-          150.0
-        ],
-        "depth": 10.0,
-        "half_width": 12.0,
-        "rim": 5.5
-      },
-      {
-        "at": [
-          110.0,
-          176.0
-        ],
-        "depth": 10.5,
-        "half_width": 11.0,
-        "rim": 5.0
-      },
-      {
-        "at": [
-          97.0,
-          202.0
+          500.0,
+          4195.0
         ],
         "depth": 12.0,
-        "half_width": 11.0,
-        "rim": 5.0
+        "half_width": 12.0,
+        "rim": 6.0
       },
       {
         "at": [
-          84.0,
-          228.0
+          680.0,
+          4175.0
         ],
-        "depth": 10.0,
-        "half_width": 11.0,
-        "rim": 5.0
+        "depth": 12.0,
+        "half_width": 13.0,
+        "rim": 6.0
       },
       {
         "at": [
-          75.0,
-          246.0
+          860.0,
+          4150.0
+        ],
+        "depth": 11.0,
+        "half_width": 13.0,
+        "rim": 6.0
+      },
+      {
+        "at": [
+          1030.0,
+          4115.0
+        ],
+        "depth": 10.5,
+        "half_width": 13.0,
+        "rim": 6.0
+      },
+      {
+        "at": [
+          1150.0,
+          4085.0
         ],
         "depth": 10.0,
-        "half_width": 11.0,
-        "rim": 5.0
+        "half_width": 13.0,
+        "rim": 6.0
+      }
+    ],
+    "_comment_ow5c_rederive": "OW5C, docs/MEADOWS_MACRO_LAYOUT.md section 9: re-derived per D46's supersession. Crosses the corridor's full width (x -1150..+1150, ~2321m of course including ~100m overrun past both x=+-1024 edges) at z~4080-4222, narrowing to the Old Mill Crossing's channel dimensions (half_width 3.6, rim 3.4, depth 15) at (-150,4203). Same order-of-magnitude depth/width as the old 18-point course (10-18 depth, 11-13 half_width away from the crossing) -- what divides the map is the course spanning the whole width with no gap, not extra depth. water_level/end_fade/failsafe unchanged.",
+    "_comment_ow5c_seam": "OW5C follow-up: the three narrows points shifted -2 in x with the Old Mill Crossing (WALL1 seam workaround)."
+  },
+  "trail": {
+    "_comment": "OW5C. MEADOWS_MACRO_LAYOUT.md section 3/3.1/3.2. `bands[]` is the authored spine from South Bridge to the stronghold gate -- Band 0 stays in `paths.routes` (section 10.1, unmoved). `loops[]` are the ten regional loops of section 3.2 plus the two shortcuts, each leaving the spine and rejoining it (or, for the two shortcuts, running one-way between two spine points). Both are unioned into `road_polylines()` alongside `paths.routes`, `spokes.routes[].road` and `crossings[].road` -- section 11's proposal, because `signpost.gd` draws one arm per `paths.routes` entry and the post only fits four; a 12km trail cannot live there. Coordinates are the layout's own authored intent (section 3.1), not yet surveyed against `height_at` -- OW5C's own job, before content, is to probe every metre of this for slope beyond the player's floor_max_angle before it is treated as final.",
+    "bands": [
+      {
+        "id": "band1_lower_meadows",
+        "label": "Lower Meadows",
+        "points": [
+          [
+            27.5,
+            -16
+          ],
+          [
+            14,
+            20
+          ],
+          [
+            8,
+            90
+          ],
+          [
+            -40,
+            180
+          ],
+          [
+            -120,
+            270
+          ],
+          [
+            -230,
+            330
+          ],
+          [
+            -360,
+            400
+          ],
+          [
+            -430,
+            510
+          ],
+          [
+            -330,
+            590
+          ],
+          [
+            -190,
+            650
+          ],
+          [
+            -50,
+            700
+          ],
+          [
+            90,
+            760
+          ],
+          [
+            230,
+            830
+          ],
+          [
+            360,
+            910
+          ],
+          [
+            430,
+            1020
+          ],
+          [
+            330,
+            1130
+          ],
+          [
+            180,
+            1200
+          ],
+          [
+            30,
+            1250
+          ],
+          [
+            -40,
+            1310
+          ],
+          [
+            8.0,
+            1330
+          ],
+          [
+            0,
+            1360
+          ]
+        ],
+        "_comment_ow5c_bridge_fix": "Inserted (0,1330) before the Band 2 handoff: the spine crosses South Bridge (crossings[0], carve centre (0,1330)) AT the bridge, not to the side of it -- the straight line from (-40,1310) to (0,1360) alone passed through the carve trench near x=-24 at z=1330, cutting an unbridged second gap in the gully."
+      },
+      {
+        "id": "band2_stone_and_root",
+        "label": "Stone & Root",
+        "points": [
+          [
+            0,
+            1360
+          ],
+          [
+            70,
+            1450
+          ],
+          [
+            190,
+            1540
+          ],
+          [
+            310,
+            1660
+          ],
+          [
+            400,
+            1800
+          ],
+          [
+            330,
+            1950
+          ],
+          [
+            180,
+            2050
+          ],
+          [
+            20,
+            2130
+          ],
+          [
+            -150,
+            2210
+          ],
+          [
+            -310,
+            2320
+          ],
+          [
+            -420,
+            2470
+          ],
+          [
+            -330,
+            2630
+          ],
+          [
+            -180,
+            2730
+          ],
+          [
+            -40,
+            2840
+          ],
+          [
+            90,
+            2960
+          ],
+          [
+            60,
+            3090
+          ],
+          [
+            0,
+            3180
+          ]
+        ]
+      },
+      {
+        "id": "band3_the_river_lock",
+        "label": "The River Lock",
+        "points": [
+          [
+            0,
+            3180
+          ],
+          [
+            -110,
+            3290
+          ],
+          [
+            -160,
+            3420
+          ],
+          [
+            -60,
+            3520
+          ],
+          [
+            90,
+            3600
+          ],
+          [
+            230,
+            3670
+          ],
+          [
+            350,
+            3760
+          ],
+          [
+            280,
+            3900
+          ],
+          [
+            130,
+            3980
+          ],
+          [
+            -30,
+            4060
+          ],
+          [
+            -150,
+            4170
+          ],
+          [
+            -150,
+            4235
+          ],
+          [
+            -100,
+            4350
+          ],
+          [
+            30,
+            4460
+          ],
+          [
+            160,
+            4570
+          ],
+          [
+            110,
+            4690
+          ],
+          [
+            0,
+            4760
+          ]
+        ]
+      },
+      {
+        "id": "band4_upper_meadows_ironwood",
+        "label": "Upper Meadows / Ironwood",
+        "points": [
+          [
+            0,
+            4760
+          ],
+          [
+            -140,
+            4870
+          ],
+          [
+            -300,
+            4990
+          ],
+          [
+            -420,
+            5140
+          ],
+          [
+            -330,
+            5310
+          ],
+          [
+            -170,
+            5410
+          ],
+          [
+            0,
+            5490
+          ],
+          [
+            170,
+            5590
+          ],
+          [
+            330,
+            5700
+          ],
+          [
+            450,
+            5860
+          ],
+          [
+            390,
+            6040
+          ],
+          [
+            230,
+            6140
+          ],
+          [
+            60,
+            6230
+          ],
+          [
+            -110,
+            6340
+          ],
+          [
+            -280,
+            6460
+          ],
+          [
+            -210,
+            6620
+          ],
+          [
+            -70,
+            6720
+          ],
+          [
+            80,
+            6820
+          ],
+          [
+            40,
+            6930
+          ],
+          [
+            0,
+            7000
+          ]
+        ]
+      },
+      {
+        "id": "band5_stronghold_approach",
+        "label": "Stronghold approach",
+        "points": [
+          [
+            0,
+            7000
+          ],
+          [
+            -80,
+            7120
+          ],
+          [
+            -20,
+            7250
+          ],
+          [
+            80,
+            7370
+          ],
+          [
+            20,
+            7480
+          ],
+          [
+            0,
+            7560
+          ]
+        ]
+      }
+    ],
+    "loops": [
+      {
+        "id": "pond_circuit",
+        "band": 1,
+        "leaves": [
+          -360,
+          400
+        ],
+        "rejoins": [
+          -190,
+          650
+        ],
+        "_why": "the mill, the ranger station, the water species, and the first place you would choose to camp",
+        "points": [
+          [
+            -360,
+            400
+          ],
+          [
+            -390,
+            460
+          ],
+          [
+            -395,
+            545
+          ],
+          [
+            -382,
+            514
+          ],
+          [
+            -350,
+            507
+          ],
+          [
+            -330,
+            590
+          ],
+          [
+            -260,
+            630
+          ],
+          [
+            -190,
+            650
+          ]
+        ]
+      },
+      {
+        "id": "oak_grove_ring",
+        "band": 1,
+        "leaves": [
+          230,
+          830
+        ],
+        "rejoins": [
+          330,
+          1130
+        ],
+        "_why": "Duskhush at night, the trainer circuit's second fight, wood at scale",
+        "points": [
+          [
+            230,
+            830
+          ],
+          [
+            300,
+            880
+          ],
+          [
+            370,
+            950
+          ],
+          [
+            400,
+            1040
+          ],
+          [
+            370,
+            1100
+          ],
+          [
+            330,
+            1130
+          ]
+        ]
+      },
+      {
+        "id": "quarry_rim_overlook",
+        "band": 2,
+        "leaves": [
+          310,
+          1660
+        ],
+        "rejoins": [
+          330,
+          1950
+        ],
+        "_why": "the whole quarry floor read from above before you walk into it; the drained ground is visible as a shape",
+        "points": [
+          [
+            310,
+            1660
+          ],
+          [
+            370,
+            1710
+          ],
+          [
+            420,
+            1770
+          ],
+          [
+            430,
+            1850
+          ],
+          [
+            400,
+            1910
+          ],
+          [
+            330,
+            1950
+          ]
+        ]
+      },
+      {
+        "id": "ranger_camp_spur",
+        "band": 2,
+        "leaves": [
+          -150,
+          2210
+        ],
+        "rejoins": [
+          -310,
+          2320
+        ],
+        "_why": "the abandoned camp, and the first evidence Team Tether has been moving material",
+        "points": [
+          [
+            -150,
+            2210
+          ],
+          [
+            -210,
+            2230
+          ],
+          [
+            -260,
+            2260
+          ],
+          [
+            -300,
+            2290
+          ],
+          [
+            -310,
+            2320
+          ]
+        ]
+      },
+      {
+        "id": "warren_undertrail",
+        "band": 2,
+        "leaves": [
+          -420,
+          2470
+        ],
+        "rejoins": [
+          -180,
+          2730
+        ],
+        "_why": "the dungeon's second mouth, so the Warrens are a through-route once cleared, not a cul-de-sac",
+        "points": [
+          [
+            -420,
+            2470
+          ],
+          [
+            -380,
+            2540
+          ],
+          [
+            -320,
+            2610
+          ],
+          [
+            -260,
+            2660
+          ],
+          [
+            -210,
+            2700
+          ],
+          [
+            -180,
+            2730
+          ]
+        ]
+      },
+      {
+        "id": "relay_approach_loop",
+        "band": 3,
+        "leaves": [
+          230,
+          3670
+        ],
+        "rejoins": [
+          130,
+          3980
+        ],
+        "_why": "the compound seen from its own picket line before you are inside it",
+        "points": [
+          [
+            230,
+            3670
+          ],
+          [
+            300,
+            3730
+          ],
+          [
+            340,
+            3810
+          ],
+          [
+            320,
+            3890
+          ],
+          [
+            230,
+            3940
+          ],
+          [
+            130,
+            3980
+          ]
+        ]
+      },
+      {
+        "id": "near_bank_river_walk",
+        "band": 3,
+        "leaves": [
+          -30,
+          4060
+        ],
+        "rejoins": [
+          -100,
+          4350
+        ],
+        "gated": true,
+        "_why": "walks the near bank downstream, shows the far side you cannot reach yet, and dead-ends at the crossing you have to earn",
+        "points": [
+          [
+            -30,
+            4060
+          ],
+          [
+            -70,
+            4130
+          ],
+          [
+            -90,
+            4200
+          ],
+          [
+            -100,
+            4270
+          ],
+          [
+            -100,
+            4350
+          ]
+        ]
+      },
+      {
+        "id": "wind_ridge_traverse",
+        "band": 4,
+        "leaves": [
+          330,
+          5700
+        ],
+        "rejoins": [
+          230,
+          6140
+        ],
+        "_why": "the highest ground in the Meadows and the vista that shows the whole journey behind you",
+        "points": [
+          [
+            330,
+            5700
+          ],
+          [
+            400,
+            5780
+          ],
+          [
+            440,
+            5870
+          ],
+          [
+            420,
+            5960
+          ],
+          [
+            370,
+            6050
+          ],
+          [
+            300,
+            6110
+          ],
+          [
+            230,
+            6140
+          ]
+        ]
+      },
+      {
+        "id": "high_pasture_loop",
+        "band": 4,
+        "leaves": [
+          60,
+          6230
+        ],
+        "rejoins": [
+          -110,
+          6340
+        ],
+        "_why": "Meadowhart herd, the riding payoff, open ground after the old-growth",
+        "points": [
+          [
+            60,
+            6230
+          ],
+          [
+            30,
+            6270
+          ],
+          [
+            -30,
+            6300
+          ],
+          [
+            -80,
+            6320
+          ],
+          [
+            -110,
+            6340
+          ]
+        ]
+      },
+      {
+        "id": "watchtower_spur",
+        "band": 4,
+        "leaves": [
+          -280,
+          6460
+        ],
+        "rejoins": [
+          -210,
+          6620
+        ],
+        "_why": "the ruin, the Ridge Captain, and the first clear sight of the stronghold",
+        "points": [
+          [
+            -280,
+            6460
+          ],
+          [
+            -320,
+            6510
+          ],
+          [
+            -330,
+            6570
+          ],
+          [
+            -290,
+            6600
+          ],
+          [
+            -210,
+            6620
+          ]
+        ]
+      }
+    ],
+    "shortcuts": [
+      {
+        "id": "quarry_haul_road",
+        "one_way": true,
+        "type": "road",
+        "from": [
+          400,
+          1800
+        ],
+        "to": [
+          8,
+          90
+        ],
+        "_why": "the old cart road the quarry's stone left on. Opens when the quarry is cleared. Turns a 2.4km return into 600m.",
+        "points": [
+          [
+            400,
+            1800
+          ],
+          [
+            340,
+            1600
+          ],
+          [
+            260,
+            1380
+          ],
+          [
+            190,
+            1130
+          ],
+          [
+            130,
+            870
+          ],
+          [
+            70,
+            500
+          ],
+          [
+            8,
+            90
+          ]
+        ]
+      },
+      {
+        "id": "river_ferry_landing",
+        "one_way": true,
+        "type": "ferry",
+        "from": [
+          -100,
+          4350
+        ],
+        "to": [
+          90,
+          760
+        ],
+        "_why": "not a fast-travel menu; a boat that exists at one place and goes to one other place, unlocked with the crossing.",
+        "_comment_type": "NOT a road -- no polyline is painted or walked between these two points; a boat covers the water/distance between them. Deliberately excluded from road_polylines() by its own `type`. The endpoints are game-logic (where the boat is boarded and where it lands), not a route."
       }
     ]
   }

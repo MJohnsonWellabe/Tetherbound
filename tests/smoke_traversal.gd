@@ -30,16 +30,58 @@ const SETTLE_FRAMES := 240
 const LEG_FRAMES := 1700
 ## Below this the player is definitionally through the floor: the whole
 ## playground's lowest point is about -26m.
+##
+## UNVERIFIED against the corridor's own bake (D50/OW5B): -26m was measured
+## on the old 512m world, which had no river gorge, no quarry pit, and no
+## gully carve anywhere near this deep. The corridor's river alone is
+## documented at 10-18m deep (`data/config/terrain_playground.json`'s
+## `river.course`, and the relocated course is the same order of magnitude —
+## see `_check_the_river` below), which is still comfortably above -80m, but
+## nobody has re-measured the corridor's actual lowest point the way this
+## constant claims to know it. Left unchanged because -80m is still a wide
+## margin over every documented depth; revisit if a carve turns out deeper.
 const THROUGH_THE_FLOOR := -80.0
 const COLLISION_FULL_GAME := 3
-## The baked world spans ±256m (terrain_playground.json world_size 512, centred
-## on the origin). A leg that reaches this line stops early: past the rim there
-## is legitimately no ground, and walking off it reads as "fell through the
-## world" when nothing is wrong. CI hit exactly that — the forward leg from the
+## D50 grew the baked world from a ±256m square (`terrain_playground.json`
+## `world_size` 512, centred on the origin) to an 8192 x 2048m corridor: x in
+## [-1024, 1024], z in [-512, 7680] — `docs/MEADOWS_MACRO_LAYOUT.md` §2, the
+## same bounds `world_perimeter.gd`'s own `WORLD_X_WEST`/`WORLD_X_EAST`/
+## `WORLD_Z_NORTH`/`WORLD_Z_SOUTH` use. A single `WORLD_EDGE` scalar checked
+## against `absf(x)`/`absf(z)` assumed a square centred on the origin; the
+## corridor is neither square nor centred — x is symmetric but z runs only
+## 512m north of the origin against 7680m south. Four independent limits,
+## one per direction, keep the same margin philosophy the old scalar used:
+## stop a leg comfortably inside the real edge, before whatever ground
+## exists there runs out and reads as "fell through the world" when nothing
+## is wrong. `EDGE_MARGIN` keeps the same ~16m the old constant used (240 vs
+## the old square's real 256).
+const EDGE_MARGIN := 16.0
+const WORLD_X_WEST_LIMIT := -1024.0 + EDGE_MARGIN
+const WORLD_X_EAST_LIMIT := 1024.0 - EDGE_MARGIN
+const WORLD_Z_NORTH_LIMIT := -512.0 + EDGE_MARGIN
+const WORLD_Z_SOUTH_LIMIT := 7680.0 - EDGE_MARGIN
+## CI hit this for real once, under the old square: the forward leg from the
 ## (60, -60) start crossed z = -256 unobstructed and fell off the north rim,
 ## while the same leg on a local run happened to snag on the rocky rise and
-## never got there. The margin keeps the player clear of edge interpolation.
-const WORLD_EDGE := 240.0
+## never got there. That failure needed the north limit to be reachable —
+## the old square's north edge was 196m from spawn, inside what a leg could
+## then walk unobstructed (`LEG_FRAMES` was 2700 at the time, ~190m).
+##
+## Judgement call: none of the four corridor limits above are reachable by a
+## single leg at today's `LEG_FRAMES` (1700, ~120-140m unobstructed) even
+## from this same spawn point. The closest is the north limit at 436m away
+## (spawn z=-60 to z=-496); east is 948m, west is 1068m, south is 7724m —
+## all far past what one leg can cover. Legs also chain (forward, then right
+## from wherever forward ended, then back, then left), which traces a box
+## roughly `LEG_FRAMES`-wide around spawn — nowhere near any of these four
+## limits, and nowhere near any relocated place either (South Bridge z=1330,
+## Old Quarry z=1800, the river z=4080-4222 are all hundreds of metres
+## further south than this walk ever reaches). Left in per-axis form anyway,
+## for the same reason the scalar existed at all: this is a safety net for
+## whatever a leg's actual travel distance turns out to be, not a check
+## expected to fire under today's `LEG_FRAMES`. A wrong single-scalar
+## version would silently do nothing, or break early for the wrong reason,
+## the moment that changes.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
@@ -64,7 +106,11 @@ func _run() -> void:
 	# Out of the farmhouse. The opening's staging wakes the player in
 	# Grandpa's bed, and this test is about the TERRAIN — four long walks that
 	# start inside a building end at its walls and prove nothing. Open meadow,
-	# clear of the village, the rises and the pond.
+	# clear of the village, the rises and the pond. Unchanged from the old
+	# square: `MEADOWS_MACRO_LAYOUT.md` §3 is explicit that Band 0 and the
+	# whole shipped village keep their exact current coordinates, so this
+	# point is exactly as clear of everything in the corridor as it was
+	# before — nothing about D50 moved it or anything near it.
 	var start := Vector3(60.0, 0.0, -60.0)
 	start.y = float(world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
@@ -136,7 +182,8 @@ func _run() -> void:
 				quit(1)
 				return
 
-			if absf(pos.x) > WORLD_EDGE or absf(pos.z) > WORLD_EDGE:
+			if pos.x < WORLD_X_WEST_LIMIT or pos.x > WORLD_X_EAST_LIMIT \
+					or pos.z < WORLD_Z_NORTH_LIMIT or pos.z > WORLD_Z_SOUTH_LIMIT:
 				print("  %-14s reached the world edge at %.0f, %.0f — leg ends here" % [
 					direction, pos.x, pos.z
 				])
@@ -205,34 +252,83 @@ func _run() -> void:
 		quit(1)
 
 
-## SA3: eight compass bearings, each walked from just inside the ring toward
-## it, each expected to be stopped by something the player can see — not
-## walked from the true centre, which would also have to clear the village
-## and the rises this test's own header already avoids for the same reason.
-const PERIMETER_RADIUS := 235.0
-const PERIMETER_START_RADIUS := 200.0
-const PERIMETER_BEARINGS := 8
-## OF6: the eight evenly-spaced bearings above never land on a rise, and a
-## real leak reproduced specifically where one does — `world_perimeter.gd`'s
-## `COLLISION_MARGIN_UP` header has the full measurement. Three of
-## `terrain_playground.json`'s `rises.peaks` reach far enough out to overlap
-## this ring's own 235m radius; two of these bearings sit inside the worst
-## overlap (peak centred -165,-150, up to 46m past the ring — 227° is the
-## bearing that leaked furthest, to 278m) and the third inside the next-
-## largest overlap (peak centred 140,-90, up to 9m past the ring, at 327°).
-## Evenly-spaced sampling alone missed this for as long as `OF6` sat open in
-## `BACKLOG.md`; these are added explicitly rather than trusted to come up
-## by chance.
-const EXTRA_RISE_BEARINGS_DEG: PackedFloat32Array = [215.0, 227.0, 327.3]
-## ~35m of gap between the start radius and the ring at this playground's
-## walk speed (5.0 m/s, data/config/movement.json) is ~7s / 420 frames;
-## this leaves comfortable room to actually reach and settle against
-## whatever stops the player without paying for 900+ unused frames eight
-## times over.
+## SA3, corridor version. D51/`MEADOWS_MACRO_LAYOUT.md` §6 replaced the 235m
+## ring with two long edges (x = -1024/+1024, z: -512..7680) and two short
+## end-caps (z = -512/+7680, x: -1024..1024) — see `docs/decisions/D51` and
+## the macro layout doc for the shape; do not re-derive it here. Compass
+## bearings toward a ring cannot express a rectangle — there is no single
+## "outward from the centre" a corridor has one of — so this walks straight
+## at each of the four edges instead, from a handful of representative
+## points, same invariant as before: start just inside the true line, walk
+## at it, expect to be stopped by whatever that edge's own style puts in the
+## way (D51/§6's per-band table), well short of the true line plus a leak
+## margin.
+const WORLD_X_WEST := -1024.0
+const WORLD_X_EAST := 1024.0
+const WORLD_Z_NORTH := -512.0
+const WORLD_Z_SOUTH := 7680.0
+## Same ~35m-of-gap-at-walk-speed reasoning the ring used (5.0 m/s,
+## `data/config/movement.json`): ~7s to close, comfortable room to actually
+## reach and settle against whatever stops the walk. Independent of the
+## boundary's shape — this is about how far a leg covers in a walk-frames
+## budget, not about a radius, so it did not need to change with the shape.
+const PERIMETER_APPROACH_MARGIN := 35.0
 const PERIMETER_WALK_FRAMES := 600
 ## Wall/fence/hedge/rock thickness plus the player capsule's own radius plus
-## a little settle slack — comfortably outside this and the ring leaked.
+## a little settle slack — unchanged from the ring. This is a property of
+## the props and the capsule, not of the boundary's shape, so it did not
+## need to change either.
 const PERIMETER_LEAK_MARGIN := 25.0
+
+## One station per test: `edge` says which of the four true lines it is
+## walking at (west/east/north/south) and which coordinate check applies;
+## `other` is the coordinate along that edge that does NOT move during the
+## walk (the z for west/east, the x for north/south).
+##
+## Three z-values for west/east — near the village (z=200, Band 1's
+## hedgerow-and-fence / fieldstone-wall pair), partway through the journey
+## (z=2270, the midpoint of Band 2 "Stone & Root" — quarried scarp / dense
+## growth ridge — chosen as "mid-corridor" in the sense of partway through
+## the spine's own 11.6km, NOT the geometric midpoint of the z range, which
+## falls in Band 3's marsh instead; see the dedicated marsh station below
+## for that), and near the stronghold (z=7200, the approach band's authored
+## Team Tether barrier on both edges) — plus one north-cap walk near spawn
+## and one south-cap walk near the stronghold approach, the four-ish
+## representative points the prep brief asked for rather than a walk per
+## band.
+##
+## OF6's own lesson on the old ring (see its own header, preserved in
+## `docs/decisions/D51`'s history) was that evenly-spaced sampling alone
+## missed a rise that specifically overlapped the ring's own radius, and the
+## fix was aiming a bearing AT that named landform rather than trusting it
+## to come up by chance. The corridor's nearest equivalent — a spoke blocker
+## close enough to the true edge to interact with it — does not exist:
+## `MEADOWS_MACRO_LAYOUT.md` §7 is explicit that all six lateral spoke
+## blockers sit 284-324m INSIDE the ±1024 edge, comfortably clear of this
+## file's own 35m approach margin, and that the doc calls that margin "the
+## design's floor, not slack" — i.e. it is not expected to erode. No known
+## leak to aim at, so none is added; recorded here rather than left for
+## someone to wonder whether it was considered.
+##
+## What IS flagged, by `world_perimeter.gd`'s own header (the corridor
+## rewrite this test is walking against), is Band 3's west edge: "water —
+## the broad marsh the river drains into" is "the one edge style with no
+## existing implementation." Real collision exists there (the same box
+## every style uses), but nothing about it is actually water, which is
+## exactly the kind of specific, already-named risk OF6's extra bearings
+## existed to aim at rather than average over. One station below is aimed
+## at it directly (z=4000, inside Band 3).
+const PERIMETER_STATIONS := [
+	{"label": "west @ village (Band 1, hedge/fence)", "edge": "west", "other": 200.0},
+	{"label": "east @ village (Band 1, fieldstone wall)", "edge": "east", "other": 200.0},
+	{"label": "west @ Band 2 midpoint (rock scarp)", "edge": "west", "other": 2270.0},
+	{"label": "east @ Band 2 midpoint (growth ridge)", "edge": "east", "other": 2270.0},
+	{"label": "west @ the marsh (Band 3, unimplemented style)", "edge": "west", "other": 4000.0},
+	{"label": "west @ stronghold approach (barrier)", "edge": "west", "other": 7200.0},
+	{"label": "east @ stronghold approach (barrier)", "edge": "east", "other": 7200.0},
+	{"label": "north cap, near spawn (gentle)", "edge": "north", "other": 60.0},
+	{"label": "south cap, near stronghold approach (barrier)", "edge": "south", "other": 500.0},
+]
 
 
 func _check_perimeter(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
@@ -241,23 +337,39 @@ func _check_perimeter(world: Node, player: CharacterBody3D, failures: Array[Stri
 		failures.append("no CameraRig in the scene; cannot aim the walk to test the perimeter")
 		return
 
-	var bearings_deg: PackedFloat32Array = []
-	for i in PERIMETER_BEARINGS:
-		bearings_deg.append(rad_to_deg(i * TAU / PERIMETER_BEARINGS))
-	bearings_deg.append_array(EXTRA_RISE_BEARINGS_DEG)
+	for entry in PERIMETER_STATIONS:
+		var station: Dictionary = entry
+		var label: String = str(station["label"])
+		var edge: String = str(station["edge"])
+		var other: float = float(station["other"])
 
-	for bearing_deg in bearings_deg:
-		var angle := deg_to_rad(bearing_deg)
-		var outward := Vector3(cos(angle), 0.0, sin(angle))
-		var start_xz := outward * PERIMETER_START_RADIUS
-		var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.z))
+		var start_xz := Vector2.ZERO
+		var outward := Vector3.ZERO
+		match edge:
+			"west":
+				start_xz = Vector2(WORLD_X_WEST + PERIMETER_APPROACH_MARGIN, other)
+				outward = Vector3(-1.0, 0.0, 0.0)
+			"east":
+				start_xz = Vector2(WORLD_X_EAST - PERIMETER_APPROACH_MARGIN, other)
+				outward = Vector3(1.0, 0.0, 0.0)
+			"north":
+				start_xz = Vector2(other, WORLD_Z_NORTH + PERIMETER_APPROACH_MARGIN)
+				outward = Vector3(0.0, 0.0, -1.0)
+			"south":
+				start_xz = Vector2(other, WORLD_Z_SOUTH - PERIMETER_APPROACH_MARGIN)
+				outward = Vector3(0.0, 0.0, 1.0)
+			_:
+				failures.append("perimeter station '%s' has an unknown edge '%s'" % [label, edge])
+				continue
+
+		var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.y))
 		if is_nan(ground):
-			failures.append("bearing %.0f°: no ground at the test start point %.0f, %.0f" % [
-				bearing_deg, start_xz.x, start_xz.z
+			failures.append("%s: no ground at the test start point %.0f, %.0f" % [
+				label, start_xz.x, start_xz.y
 			])
 			continue
 
-		player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.z)
+		player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.y)
 		player.velocity = Vector3.ZERO
 		# Vector3(0,0,-1) is player_controller.gd's own "forward" input
 		# direction before the camera's planar_basis rotates it — see
@@ -276,23 +388,47 @@ func _check_perimeter(world: Node, player: CharacterBody3D, failures: Array[Stri
 			await physics_frame
 
 		var final_pos := player.global_position
-		var distance := Vector2(final_pos.x, final_pos.z).length()
-		print("  bearing %3.0f°: walked to %6.1f, %6.1f  (%.0fm from centre)" % [
-			rad_to_deg(angle), final_pos.x, final_pos.z, distance
-		])
-		if distance > PERIMETER_RADIUS + PERIMETER_LEAK_MARGIN:
-			failures.append("bearing %.0f°: reached %.0fm from centre, past the %.0fm ring with margin — the perimeter leaked" % [
-				rad_to_deg(angle), distance, PERIMETER_RADIUS
+		print("  %-40s walked to %7.1f, %7.1f" % [label, final_pos.x, final_pos.z])
+
+		var leaked := false
+		match edge:
+			"west":
+				leaked = final_pos.x < WORLD_X_WEST - PERIMETER_LEAK_MARGIN
+			"east":
+				leaked = final_pos.x > WORLD_X_EAST + PERIMETER_LEAK_MARGIN
+			"north":
+				leaked = final_pos.z < WORLD_Z_NORTH - PERIMETER_LEAK_MARGIN
+			"south":
+				leaked = final_pos.z > WORLD_Z_SOUTH + PERIMETER_LEAK_MARGIN
+		if leaked:
+			failures.append("%s: reached %.0f, %.0f — past the true edge with margin, the perimeter leaked" % [
+				label, final_pos.x, final_pos.z
 			])
 		if final_pos.y < THROUGH_THE_FLOOR:
-			failures.append("bearing %.0f°: fell through the world while testing the perimeter (y=%.0f)" % [
-				rad_to_deg(angle), final_pos.y
+			failures.append("%s: fell through the world while testing the perimeter (y=%.0f)" % [
+				label, final_pos.y
 			])
 
 
 ## SA3's failsafe: a player placed inside the below-world kill band should be
 ## returned to spawn, not left to fall forever.
 const KILL_SETTLE_FRAMES := 30
+## Must sit inside `world_perimeter.gd`'s own kill band (`KILL_PLANE_Y` ±
+## half of `KILL_PLANE_THICKNESS`). The corridor moved this: the pre-corridor
+## `world_perimeter.gd` centred its kill band at y=-120; the corridor version
+## centres its own at y=-150, because the whole kill volume grew to cover
+## the corridor's much larger x/z footprint and was re-derived from the
+## corridor's own bounds (`WORLD_X_WEST`/`EAST`/`WORLD_Z_NORTH`/`SOUTH`
+## above) rather than kept as a fixed square centred on the origin — see
+## that file's own `KILL_PLANE_Y`/`KILL_PLANE_THICKNESS`/`KILL_PLANE_MARGIN`.
+## y=-120 sits entirely OUTSIDE the corridor's own band (which spans
+## [-170,-130] at 40m thick); this constant exists so that fact gets
+## asserted once, here, rather than discovered as a check that silently
+## never tested what it claimed to. x=0, z=0 are unchanged from before and
+## still land inside the corridor kill volume's much larger x/z footprint
+## (it is centred at the corridor's own midpoint, x=0/z=3584, with margin
+## added on top — the origin is comfortably inside it either way).
+const KILL_TEST_Y := -150.0
 
 
 func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
@@ -302,7 +438,7 @@ func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[St
 		return
 
 	player.velocity = Vector3.ZERO
-	player.global_position = Vector3(0.0, -120.0, 0.0) # inside the kill band, see world_perimeter.gd
+	player.global_position = Vector3(0.0, KILL_TEST_Y, 0.0) # inside the kill band, see world_perimeter.gd
 	for i in KILL_SETTLE_FRAMES:
 		await physics_frame
 
@@ -330,6 +466,15 @@ func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[St
 ## appreciate: which way "deeper" points is resolved at build time from the
 ## road, and a test that hardcodes it stops testing the thing when the
 ## geography moves.
+##
+## The South Bridge and Old Mill Crossing both moved for the corridor (carve
+## centre (0,1330), abutments (0,1317)/(0,1343) for the bridge; channel
+## centre (-150,4203) for the crossing — this prep brief's own numbers). This
+## function and `_check_gated_crossing` below do not reference either
+## location: `near_point`/`far_point`/`depth_past_crossing` all come from the
+## bridge/crossing NODE itself at test time, so the relocation is transparent
+## to this test — the only coordinate that would need to change if the span
+## width or gully depth changed is inside those nodes' own scripts, not here.
 const BRIDGE_START_BACK := 11.0
 const BRIDGE_WALK_FRAMES := 420
 ## The player has crossed when they are this far past the gully's centre —
@@ -426,21 +571,47 @@ func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array
 ## SC14 cut was deep enough too, and what its own probe caught was a player
 ## stepping onto the deck from the side, which no config check can see.
 ##
-## Three stations, spread down the course, none of them near the narrows.
-const RIVER_STATIONS: Array[int] = [11, 13, 15]
+## The old course ran diagonally near the village (18 points, roughly
+## (211,-87) to (75,246), narrows at index 7 / (162.4,42.1) — verified
+## directly against `data/config/terrain_playground.json` while writing this)
+## and named three fixed indices, `[11,13,15]`, chosen once by inspecting
+## that specific array. The corridor's course is a different shape entirely —
+## an 18-19 point crossing of the whole 8192m-wide corridor at z ~4080-4222,
+## narrowing to a channel at the Old Mill Crossing near (-150,4203) — and per
+## this task's brief, the sibling task authoring its real values has not
+## landed them in `terrain_playground.json` yet; this file only knows the
+## shape and the crossing's location. Fixed indices into an array whose exact
+## point count and station spacing are not yet known would be a guess dressed
+## as a measurement, so stations are chosen by DISTANCE FROM THE CROSSING
+## instead of by index — the same intent the old `RIVER_STATIONS` had
+## ("three stations, spread down the course, none of them near the
+## narrows"), expressed as a property of the course's own shape rather than
+## three numbers that happened to be true of one specific array. See
+## `_pick_river_stations` below.
+const RIVER_NARROWS := Vector2(-152.0, 4203.0)
+## Stay at least this far from the crossing — well outside the ~3.6m
+## half-width the channel narrows to there (this task's brief; the old
+## course's own narrows shrank to the same 3.6m half-width at its index 7),
+## so a "mid-river" station cannot land in the one place the river is meant
+## to be crossable.
+const RIVER_NARROWS_CLEARANCE := 120.0
+const RIVER_STATION_COUNT := 3
 const RIVER_START_BACK := 14.0
 const RIVER_WALK_FRAMES := 420
 ## The player has crossed the river when they are this far past the
 ## centreline. Deliberately NOT a small number, and the reason is the shape of
-## the thing: the channel is 22-26m wide, so a player who slides down the near
-## wall and comes to rest on the bed is legitimately within a few metres of the
-## centreline without having crossed anything. 12m puts them up the FAR wall.
-## The stricter half of this check is the settled position below — whatever
-## happened mid-walk, a player who did not cross ends up back on the near bank,
-## because that is where river.gd's recovery volumes put them.
+## the thing: away from the narrows the channel is 22-26m wide (~10-13m
+## half-width — this task's brief gives the same figures the old course's own
+## non-narrows stations used, e.g. index 11-15 above), so a player who slides
+## down the near wall and comes to rest on the bed is legitimately within a
+## few metres of the centreline without having crossed anything. 12m puts
+## them up the FAR wall. Unchanged from the old course: verified against the
+## new course's own dimensions above rather than assumed, and they are the
+## same order of magnitude.
 const RIVER_CROSSED_M := 12.0
 ## And where they must have ended up: still on the near side, or at worst on
-## the bed. Anything past this is standing on the far bank.
+## the bed. Anything past this is standing on the far bank. Unchanged for the
+## same reason as `RIVER_CROSSED_M` above.
 const RIVER_SETTLED_M := 4.0
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
@@ -460,9 +631,12 @@ func _check_the_river(world: Node, player: CharacterBody3D, failures: Array[Stri
 	if world.get_node_or_null(^"River") == null:
 		failures.append("no River node in the scene; nothing would recover a player who walks in")
 
-	for index in RIVER_STATIONS:
-		if index >= course.size() - 1:
-			continue
+	var stations := _pick_river_stations(course)
+	if stations.is_empty():
+		failures.append("could not find any river course station %.0fm clear of the Old Mill Crossing narrows; SE21's river may be authored entirely inside the narrows" % RIVER_NARROWS_CLEARANCE)
+		return
+
+	for index in stations:
 		var here := _course_point(course, index)
 		var next := _course_point(course, index + 1)
 		var previous := _course_point(course, maxi(index - 1, 0))
@@ -470,6 +644,12 @@ func _check_the_river(world: Node, player: CharacterBody3D, failures: Array[Stri
 		var across := Vector2(-along.y, along.x)
 		# Toward the far bank, whichever side that is here: the course bends,
 		# and a hardcoded +X would stop testing the thing the moment it moves.
+		# The reference point below is the village — `MEADOWS_MACRO_LAYOUT.md`
+		# §3: "Band 0 and the whole of the shipped village do not move at
+		# all" — which was already far north of the old course near the
+		# village and is now ~4,100m north of the relocated one. It is an
+		# even safer "near/village side" anchor than it was before, not a
+		# value that needed to move with the river.
 		if (here - Vector2(10.0, -10.0)).dot(across) < 0.0:
 			across = -across
 
@@ -511,6 +691,31 @@ func _check_the_river(world: Node, player: CharacterBody3D, failures: Array[Stri
 			failures.append("fell out of the world at the river at %.0f, %.0f" % [here.x, here.y])
 
 
+## Picks up to `RIVER_STATION_COUNT` indices, spread across whatever course
+## points sit at least `RIVER_NARROWS_CLEARANCE` from the Old Mill Crossing,
+## rather than trusting fixed indices to still mean "mid-river" once the
+## corridor course's real values land in `terrain_playground.json`. Excludes
+## the array's own first and last point too — those are the course's own
+## bank ends, not a mid-river station, the same exclusion the old
+## `[11,13,15]` implicitly had by never naming index 0 or the last index.
+func _pick_river_stations(course: Array) -> Array[int]:
+	var candidates: Array[int] = []
+	for i in range(1, course.size() - 1):
+		var pt := _course_point(course, i)
+		if pt.distance_to(RIVER_NARROWS) >= RIVER_NARROWS_CLEARANCE:
+			candidates.append(i)
+
+	var stations: Array[int] = []
+	if candidates.is_empty():
+		return stations
+	for k in RIVER_STATION_COUNT:
+		var f := float(k) / float(maxi(RIVER_STATION_COUNT - 1, 1))
+		var idx: int = candidates[int(round(f * float(candidates.size() - 1)))]
+		if not stations.has(idx):
+			stations.append(idx)
+	return stations
+
+
 func _course_point(course: Array, index: int) -> Vector2:
 	var at: Array = (course[index] as Dictionary).get("at", [])
 	return Vector2(float(at[0]), float(at[1]))
@@ -524,6 +729,14 @@ func _course_point(course: Array, index: int) -> Vector2:
 ## `_place_harvest_nodes()` drops any node whose ground sample is NaN without
 ## a word, which is exactly how a deposit authored into a hole disappears; the
 ## count check is what catches that.
+##
+## The quarry itself moved for the corridor (floor/site now at (400,1800),
+## was (23,158) — this task's own brief) but this function never references
+## either location: it finds `OldQuarry` and every `rootstone`-tagged node by
+## NAME, not by position, and asks the quarry node itself for its own stats
+## and the first deposit's own `global_position`. The relocation is
+## transparent to this test for the same reason it is to `_check_south_bridge`
+## above.
 const QUARRY_SETTLE_FRAMES := 90
 
 
@@ -613,6 +826,10 @@ func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: No
 ## touching collision. Rather than trust the fix was exercised, this samples
 ## the SAME heightfield the render/placement path used and checks every
 ## sloped rock's real collider basis against it directly.
+##
+## Scans the `Vegetation` node's own children by name prefix and samples the
+## heightfield at each rock's own position — nothing here references a
+## world-size-specific coordinate, so this needed no change for the corridor.
 const ROCK_SLOPE_CHECK_MIN_DEG := 10.0
 ## Dot-product slack between the collider's up and the terrain normal, loose
 ## enough for float noise but tight enough that "still world-up" (dot ~=

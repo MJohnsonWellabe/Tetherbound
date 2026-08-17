@@ -1,104 +1,221 @@
 extends Node3D
 
-## SA3 — a believable physical perimeter around the playground, and a
-## below-world failsafe under it.
+## OW5C — the ring becomes a corridor. Same job as the file this replaces
+## (`scripts/world/world_perimeter.gd`): spec §1E's "believable physical
+## perimeter ... invisible collision only supporting a visible boundary,
+## never being the boundary", plus the below-world kill-volume failsafe.
+## What changes is the SHAPE, per `docs/decisions/D51` and
+## `docs/MEADOWS_MACRO_LAYOUT.md` §6 — read both before touching this file.
 ##
-## Spec §1E: "the Meadows must not read as a floating level." The bake's own
-## terrain stops at world_size/2 (±256m, terrain_playground.json) and turns
-## into Terrain3D's `world_background` past that — drawn, never collided. A
-## player who reaches that line today just walks off the edge of the world.
+## D50 grew the Meadows from a 512m square to an 8192 x 2048m corridor,
+## `x` in [-1024, 1024], `z` in [-512, 7680]. A 235m-radius ring cannot
+## enclose that; D51's own "why the ring cannot be adapted" section is blunt
+## about why this could not be done by feeding the old generator different
+## points — `RADIUS` is a scalar, the ring is walked as one closed loop of
+## angles, and the style cycle, the collision boxes and the merged meshes
+## all derive from that same angular walk. There is no polyline input to
+## hand a corridor to. This is a rewrite of the SHAPE, not of the idea.
 ##
-## OF7 REBUILD — why this file no longer looks like SA3's. The owner played
-## the shipped build and said the perimeter "looks awful and isn't
-## continuous", which outranks every in-file note below it. Root cause, and
-## it is one cause with two symptoms:
+## THE SHAPE: two long edges, each an open, ground-sampled polyline running
+## the corridor's full 8192m length —
+##   west edge   x = -1024, z: -512 -> 7680
+##   east edge   x = +1024, z: -512 -> 7680
+## — plus two short end-caps, each 2048m —
+##   north cap   z = -512,  x: -1024 -> 1024  (behind Grandpa's farm)
+##   south cap   z = +7680, x: -1024 -> 1024  (past the stronghold)
+## The four share their corner vertices exactly (see WOBBLE_TAPER below), so
+## together they close into one continuous boundary around the corridor —
+## still a closed line, just a rectangle instead of a circle. Total length
+## ~20.5km against the ring's 1.48km, a cost D51 already accepts.
 ##
-##   SA3 built each of the forty ~37m segments as RIGID GEOMETRY AT A SINGLE
-##   Y — every stone block, fence post, rail, bush and boulder was placed at
-##   `mid.y`, the average of the segment's two endpoint ground heights. OF6
-##   measured real ground climbing ~22m across one segment on the steepest
-##   rise. A rigid horizontal 37m wall on ground like that is buried at one
-##   end and hanging eleven metres in the air at the other. And because each
-##   segment used its OWN `mid.y`, two neighbouring segments sharing a vertex
-##   did not share a height there: every one of the forty joins was a
-##   vertical step. That is "isn't continuous", literally, and it is also
-##   most of "looks awful".
+## WHAT SURVIVES UNCHANGED, because it is what actually made the old file
+## work and neither doc asks for it to change: ONE ground-sampled polyline
+## per edge/cap (not per style); a continuous earth bank and fieldstone kerb
+## running that polyline's WHOLE length under every dressing, with a stone
+## pier at every ~37m join, so at any distance the boundary reads as one
+## built line whose dressing changes — never as scattered props; collision
+## boxes derived from the SAME sampled points that draw the bank, never
+## preceding the visible line (spec §1E, and D51 repeats it by name).
 ##
-## The rebuild replaces per-segment rigid props with ONE ground-sampled
-## polyline shared by every style (`_ring`, 720 points at ~2m spacing).
-## Neighbouring styles share their vertices by construction, so a step at a
-## join is no longer expressible. Everything — bank, kerb, wall, fence,
-## hedge, boulders — is generated along that polyline and follows the terrain.
+## WHAT CHANGES BEYOND THE SHAPE: the style is no longer a per-segment CYCLE
+## (stone wall / fence / hedge / rock, repeating every 4 of 40 segments). It
+## is a per-band SEQUENCE, looked up from which of the spine's five z-bands
+## (`MEADOWS_MACRO_LAYOUT.md` §3) a given point falls in, crossed with which
+## edge (west/east) it is on — the table in D51 / §6, reproduced in
+## `_style_for()` below. The two short ends get their own fixed styles
+## (`_segment_style()`): north is fieldstone-and-hedge, "the gentlest
+## boundary on the map"; south is the same authored Team Tether barrier the
+## approach bands end in, plus the stronghold's own outer works (those outer
+## works are the stronghold scene's own content, not this file's — see the
+## honest remainder below).
 ##
-## Second, the styles are no longer four unrelated prop runs standing near
-## each other. A continuous earth bank and a continuous fieldstone kerb run
-## the WHOLE ring under all four styles, and a stone pier stands at each of
-## the forty joins. That is the through-line: at any distance the boundary
-## reads as one built line whose dressing changes, not as scattered props.
-## Real field boundaries work exactly this way, and the key art board's own
-## walls, fences and hedges all sit on banks with growth at their feet.
+## WOBBLE, reconsidered for a straight line. The old ring pulled itself
+## inward by up to WOBBLE metres on two low harmonics so a perfect 235m
+## circle didn't read as a compass construction. An 8192m dead-straight line
+## is a WORSE version of that same tell — a ruled edge is more obviously
+## artificial than a slightly imperfect circle, because there is nothing
+## else in the world that long and that straight to confuse it with. So the
+## wobble survives, but the mechanism changed: two fixed sine harmonics
+## repeating for 8km would themselves read as a visible period (the same
+## few metres of drift, over and over, is as mechanical as no drift at all).
+## `_wobble_noise` is a single low-frequency FastNoiseLite instead — the same
+## tool `playground_heightfield.gd` already uses for the hills/detail layers
+## — sampled once per edge along its own arc length, which meanders without
+## ever repeating over a run this long. It is switched OFF entirely on
+## BARRIER-styled stretches (the approach bands and the south cap): an
+## authored Team Tether wall should read as built and true, not as a hedge
+## line that wandered. And it is tapered to exactly zero over the last
+## WOBBLE_TAPER metres of every edge/cap, which is what makes the four
+## pieces' corners land on the same world-space point without any explicit
+## vertex-sharing between separately-generated polylines.
 ##
-## Materials: the stonework is textured with `T_UnevenBrick` from the
-## Quaternius medieval kit — the same kit `grandpa_house.gd`,
-## `building_prefabs.gd` and `buildables.json` already build the village and
-## the player's own walls from, so this is D24's one village family, not a
-## new one. Ranch fencing is that kit's own `Prop_WoodenFence_*` modules
-## (already a shipped buildable) instead of hand-cut boxes. Hedgerow and rock
-## formation keep the vegetation layer's `Bush_Common`/`Rock_Medium_*`. No
-## new asset, no generation.
+## THE HONEST REMAINDER — three things this item does not close, on purpose:
 ##
-## Cost: the old file spawned ~630 individual MeshInstance3D nodes around the
-## ring. This one draws the bank and every piece of stonework as two merged
-## meshes and batches bushes, boulders and fence panels through MultiMesh the
-## way `vegetation.gd` already does — about a dozen draw calls for the whole
-## boundary.
+##   1. Band 3's west edge is "water — the broad marsh the river drains
+##      into, reed-choked and unwadeable" (D51/§6). D51 flags this AS THE ONE
+##      EDGE STYLE WITH NO EXISTING IMPLEMENTATION: real impassable water
+##      needs either depth the player will not enter or reed density enough
+##      to collide, and there is no swimming system to make the first of
+##      those legible. This file does not invent one. `_dress_marsh()` below
+##      dresses that stretch's bank with the SAME reed vocabulary
+##      `scripts/world/water.gd` already uses at the pond/river shoreline
+##      (`Grass_Wispy_Tall/Short`, the same marsh-green tint), so it at
+##      least reads as wetland rather than an unexplained bare kerb — but
+##      there is no water plane, no depth, and the collision doing the actual
+##      blocking is the same box every other style uses, not a marsh
+##      mechanic. See the TODO on `_dress_marsh()`.
+##   2. Band 2 west ("quarried rock face ... run as a scarp") and Band 4
+##      east ("terrain ridge climbing to the wind ridge's own shoulder") are
+##      LANDFORM descriptions. This file samples the ground
+##      (`world.call("ground_height_at", ...)`); it does not shape it — that
+##      is `playground_heightfield.gd`'s job, driven by `terrain_playground.json`,
+##      at BAKE time, which is `OW5B`'s work, not this file's. What this file
+##      can and does do is dress whatever ground the bake produces: a denser,
+##      taller rock-formation run for the scarp (`_dress_rock(..., true)`,
+##      Style.ROCK_SCARP) and a deliberately light dressing for the ridge
+##      climb (Style.RIDGE_CLIMB, no per-band props beyond the shared
+##      through-line) because that band's identity is meant to come from the
+##      terrain rising under the player, not from props standing on it. If
+##      `OW5B`'s bake does not actually carve a scarp/ridge there, this
+##      dressing alone will not read as one — that is a real dependency
+##      between the two items, not a defect in either.
+##   3. The seven severed spokes still need openings cut into this edge.
+##      D51's own "honest remainder" raises exactly this and says `OW5C`
+##      (this item) should confirm an authored polyline can simply be
+##      authored WITH the openings in it, rather than assuming they are
+##      free. This file's `_sample_edge()` walks a straight two-point
+##      corridor bound with no spoke openings cut in yet — that confirmation
+##      is NOT done here. Whoever wires the spokes in will need to either
+##      break each long edge into multiple `_sample_edge()` calls around a
+##      gap, or add a "skip this stretch" predicate to the sampling walk.
+##      Flagged, not solved.
 ##
-## `SA4` (the seven severed spokes) is later, separate work: it will cut
-## openings into this ring at specific bearings. This item's job is a closed
-## boundary that stops a player walking outward in any direction; leaving no
-## gaps is correct here, not a gap in scope.
+## Materials and asset families are unchanged from the ring's own choices,
+## per D24 (one village family, one nature family) and this task's own
+## constraint (no new asset, no generation): `T_UnevenBrick` from the
+## Quaternius medieval kit for every piece of stonework (`grandpa_house.gd`,
+## `building_prefabs.gd`, `buildables.json` already build from the same
+## kit); `Prop_WoodenFence_*` for ranch fencing (an already-shipped
+## buildable); `Bush_Common`/`Rock_Medium_*` for hedgerow and rock, exactly
+## as `vegetation.gd` already uses them. Two additions this file needed that
+## the ring genuinely never did, both pulled from asset families the game
+## ALREADY scatters rather than invented fresh: `CommonTree_1/2/3` (the same
+## three `vegetation.json`'s own `trees` layer already uses, with the same
+## `Leaves_NormalTree` magenta-canopy fix that layer's own comments record)
+## for the dense/impassable growth styles, and `Grass_Wispy_Tall/Short` (the
+## same reed models `water.gd` already scatters at the pond and river banks)
+## for the marsh placeholder above.
+##
+## Also unbuilt here, recorded so nobody re-discovers it by surprise:
+## `OW5B`'s cost note in D51/§6 — build the edge PER REGION so it streams
+## with the terrain instead of loading 20.5km of merged mesh and MultiMesh
+## at once — is a residency change, not a shape change, and this file still
+## builds the whole boundary in one `build()` call the way the ring did.
+## `tools/capture_perimeter.gd` (the survey tool) still hard-codes `RADIUS`/
+## `SEGMENTS` and orbits a circle that no longer exists; D51 already says it
+## needs rewriting as a traverse. Neither is done in this file.
 
-const RADIUS := 235.0
-## Comfortably inside `tests/smoke_traversal.gd`'s own `WORLD_EDGE` (240.0) —
-## the line past which that test already knows there is no real ground — and
-## inside the ±256m bake itself, so every segment sits on real terrain, not
-## the unloaded `world_background` past it.
-const SEGMENTS := 40
-## ~37m per segment at this radius. Segments are still the unit COLLISION and
-## the style cycle work in; they are no longer the unit geometry is built in.
+# ---------------------------------------------------------------------------
+# The corridor's shape — D51 / MEADOWS_MACRO_LAYOUT.md §2, §3, §6
+# ---------------------------------------------------------------------------
 
+## Authored world bounds (`MEADOWS_MACRO_LAYOUT.md` §1.3(c), §2). Both x
+## bounds and both z bounds sit on the 512m region lattice; that is a bake
+## concern, not this file's, but it is also exactly where these four numbers
+## come from and why they are not round in the "512, 2048" sense a
+## corridor's own dimensions might suggest.
+const WORLD_X_WEST := -1024.0
+const WORLD_X_EAST := 1024.0
+const WORLD_Z_NORTH := -512.0
+const WORLD_Z_SOUTH := 7680.0
+
+## The unit the old `SEGMENTS` was: the spacing between style joins and
+## piers. ~37m, unchanged from the ring — it is not a property of a circle,
+## it is a property of how far apart a rhythm of stone piers reads as
+## "posts" rather than either "one continuous wall" or "no rhythm at all".
+const JOIN_SPACING := 37.0
+
+## Visual/collision resolution within one join-to-join segment. Unchanged
+## from the ring for the same two reasons the old file gave: fine enough to
+## follow real ground undulation, and fine enough to size the collision box
+## from (see `_segment_ground_heights`).
 const SPANS_PER_SEGMENT := 18
-## Visual resolution along the ring: 18 spans of ~2.05m per segment, 720
-## points in all. Two jobs at once. It is fine enough that the wall, bank and
-## kerb track the terrain's real undulation instead of hovering over it, and
-## it is fine enough to REPLACE `COLLISION_SEGMENT_SUBSAMPLES` — OF6 sized
-## the collision box from 16 interior samples at ~2.2m spacing, and each
-## segment's 19 ring points here are the same measurement at ~2.05m, denser
-## rather than coarser. See `_segment_ground_heights`.
-const RING_POINTS := SEGMENTS * SPANS_PER_SEGMENT
 
-## A perfect 235m circle reads as a compass construction from the air and, in
-## a wide shot, as a suspiciously even arc. Two low harmonics pull the ring
-## INWARD by up to `WOBBLE` metres — never outward, so nothing crosses
-## `smoke_traversal.gd`'s 240m line — which is enough to read as a field
-## boundary following a landscape rather than a radius. Deterministic, not
-## random: the collision boxes are built from the same points. Kept small on
-## purpose: `capture_perimeter.gd`'s wide shot stands at RADIUS - 9m, and a
-## wobble large enough to eat that standoff would turn the establishing frame
-## into a close-up of one wall face.
+## See the header's WOBBLE section. Same magnitude as the ring's own
+## WOBBLE — this is a "reads as imperfect" amount, not a "reads as a
+## different road" amount, and that job has not changed with the shape.
 const WOBBLE := 3.0
+const WOBBLE_FREQUENCY := 1.0 / 180.0
+const WOBBLE_SEED := 90210
+## How many metres of taper to zero wobble at each end of EVERY edge/cap
+## polyline. Not a style choice — a CORRECTNESS one. Two polylines meeting
+## at a shared corner (e.g. the west edge's z=-512 end and the north cap's
+## x=-1024 end) only land on the exact same world point if both have
+## decayed their own independent wobble to nothing by the time they get
+## there. 30m is comfortably more than one period of `WOBBLE_FREQUENCY`.
+const WOBBLE_TAPER := 30.0
 
-## Every style stands on these two. The earth bank is the soft, natural half
-## of the through-line; the fieldstone kerb on top of it is the hard, light-
-## valued half that still reads at distance when the bank has gone to
-## silhouette. Together they are what makes the boundary one line.
+## The spine's own five z-bands (`MEADOWS_MACRO_LAYOUT.md` §3's table,
+## z FROM column). A point at z < BAND1_Z1 is band 1 — which, deliberately,
+## also swallows the unauthored north fringe (z in [-512, -16), behind
+## Grandpa's farm, before the spine's own Band 0 starts) into band 1's
+## style rather than leaving it styleless. Symmetrically, z >= APPROACH_Z1
+## swallows the unauthored south fringe (z in [7560, 7680], up to the south
+## cap) into the approach's own Team Tether barrier style. Both fringes are
+## exactly the ranges this task's own brief calls out as reasonable to
+## extend from their nearest band rather than inventing a sixth style for.
+const BAND1_Z1 := 1360.0
+const BAND2_Z1 := 3180.0
+const BAND3_Z1 := 4760.0
+const BAND4_Z1 := 7000.0
+const APPROACH_Z1 := 7560.0
+
+enum EdgeId { WEST, EAST, NORTH_CAP, SOUTH_CAP }
+
+## One entry per row of D51/§6's style table, plus GENTLE and BARRIER for
+## the two end-caps. See `_style_for()` and `_segment_style()`.
+enum Style {
+	FIELD_WALL,    ## band 1 east — fieldstone wall, the village's own boundary continued
+	HEDGE_FENCE,   ## band 1 west — hedgerow on bank, ranch fence at gaps
+	ROCK_SCARP,    ## band 2 west — quarried rock face, run as a scarp
+	GROWTH_RIDGE,  ## band 2 east — dense impassable growth over a terrain ridge
+	MARSH,         ## band 3 west — the marsh; see the header's honest remainder
+	ROCK_SCREE,    ## band 3 east — rock formation and scree
+	IRONWOOD,      ## band 4 west — old-growth, impassable by density alone
+	RIDGE_CLIMB,   ## band 4 east — terrain ridge; landform-carried, see header
+	BARRIER,       ## approach (both edges) + south cap — authored Team Tether barrier
+	GENTLE,        ## north cap — fieldstone and hedge, the gentlest boundary
+}
+
+# ---------------------------------------------------------------------------
+# Through-line dimensions — unchanged from the ring. A bank is a bank and a
+# kerb is a kerb regardless of whether the line it follows is a circle or a
+# rectangle; nothing about the corridor shape asks these numbers to move.
+# ---------------------------------------------------------------------------
+
 const BANK_HEIGHT := 0.46
 const BANK_HALF_BASE := 1.9
 const BANK_HALF_TOP := 1.35
-## How far the bank's skirt is buried. The ring polyline is lightly smoothed
-## (see `_sample_ring`) so the stonework does not ripple with every 20cm of
-## terrain detail noise; burying the skirt is what keeps that smoothing from
-## opening daylight under the bank on a dip.
 const BANK_SINK := 1.3
 
 const KERB_HEIGHT := 0.34
@@ -110,86 +227,13 @@ const WALL_HALF_BASE := 0.62
 const WALL_HALF_TOP := 0.5
 const CAP_HEIGHT := 0.26
 const CAP_HALF := 0.80
-## Round 7: the coping is drawn from the same masonry sheet as the wall under
-## it, so with no value break at the joint the two read as one lump of stone
-## and the wall has no "top course" language at all — which is part of why the
-## top edge was read as a rippling silhouette instead of as a coping line.
-## Darkening the coping's own underside paints the shadow its overhang would
-## cast, in vertex colour, at no draw-call cost (this project ships without
-## SSAO — D01/D06 — so nothing supplies it for free).
 const CAP_UNDER := Color(0.66, 0.68, 0.66)
-## The coping gets its OWN, much finer texture repeat than the wall.
-##
-## Round 8: with the silhouette finally straight, the reviewer's eye moved to
-## the surface and found "a visibly repeating block pattern at regular
-## intervals — same bevel, same spacing, same size ... tiled geometry, not
-## masonry". That is literally true and it was a UV bug, not a placement one.
-## The coping's outer face is 0.26m tall drawn at `STONE_TILE` (3.2m), so it
-## samples an 8%-tall horizontal SLIVER of the brick sheet and repeats that
-## sliver every 3.2m — the same three smeared stones, over and over, the whole
-## length of the wall. A coping course is made of small stones, so it needs a
-## small repeat: at 1.2m the sheet's ~7 stones land at about 0.17m each, which
-## is coping-sized, and the face samples a fifth of the sheet's height instead
-## of a twelfth.
 const CAP_TILE := 1.2
-## Wall top ends up ~3.0m over real ground, comfortably over the 1.80m
-## trainer — this is a world boundary, not a field wall to be stepped over.
 
-## OF7 round 6 — the wall top is COURSED, not wavy.
-##
-## A blind reviewer read the top of the stone wall as "a wavy/rippling
-## capstone line ... a mesh-instance-height artifact following the ground
-## rather than a coursed wall top", and the render backs that up: the cap sags
-## roughly a metre through the middle of the 37m run and humps up again at the
-## end. Two independent wobbles were stacked on top of each other:
-##
-##   1. the cap sat at a FIXED offset above the smoothed ground polyline, so
-##      every metre of the terrain's own broad undulation went straight into
-##      the top edge — the whole reason the wall's BASE follows the ground, and
-##      exactly the reason its top must not;
-##   2. on top of that, `WALL_HEIGHT * randf_range(0.93, 1.05)` reseeded per
-##      ring point added ±12cm of WHITE NOISE resampled every 2.05m. Random
-##      per-vertex height is the literal definition of "mesh-instance-height
-##      artifact"; no mason has ever built that.
-##
-## A real dry-stone wall on a hill keeps its base on the ground and takes up
-## the slope in level courses, stepping where it has to. `_course_line` does
-## that: it holds one absolute height for as long as the wall stays within a
-## course of its nominal height, then steps by whole courses. Flat ground gets
-## a dead-level top; a slope gets a staircase with long flat treads. Both read
-## as deliberate. The wall's weathered, non-uniform read now comes entirely
-## from vertex colour and the masonry texture, which vary without moving a
-## single vertex.
 const COURSE_HEIGHT := 0.27
-## How much ground a run climbs before it is allowed ONE more tread. This is
-## the number that decides whether the top reads as coursed or as rippling,
-## and round 7's blind reviewer is why it exists in this form.
-##
-## Round 6 tracked the ground with a deadband: hold the level until the wall
-## is a full course off nominal, then step. Measured afterwards
-## (`tools/_probe_perimeter_shapes.gd`), that produced 3 to 15 risers per 37m
-## run on gentle ground — one small up-or-down every few metres, which is a
-## ripple with square corners. The reviewer read it as exactly that: "small,
-## regular up-and-down waves running its whole visible length".
-##
-## The tread count now comes from the run's TOTAL climb instead: one tread per
-## 1.1m of rise, so a run over gentle ground is a single dead-level top with no
-## riser at all, and only genuinely steep ground gets a staircase — with risers
-## big enough (>= ~1.1m) to read as a mason's decision. The wall's height then
-## varies with the ground under it, which is what a level-topped wall on a
-## hillside actually does, and is a feature rather than the defect the fixed
-## offset was.
 const RISER_RISE := 1.1
-## The wall may never be shorter than this above the kerb, whatever the tread
-## maths wants. A level tread over ground that humps in the middle would
-## otherwise let the bank swallow the wall at the hump.
 const WALL_FLOOR := 1.35
 
-## Ranch fencing: `Prop_WoodenFence_Extension1/2` are 2.065m long and 0.838m
-## tall as authored. Scaled to stand `FENCE_HEIGHT` above the kerb, then
-## stretched along its own length only as far as it takes to make a whole
-## number of panels fit a segment exactly — a run with no gaps and no
-## overlapping posts.
 const FENCE_HEIGHT := 1.62
 const FENCE_MODEL_LENGTH := 2.065
 const FENCE_MODEL_HEIGHT := 0.838
@@ -197,36 +241,25 @@ const FENCE_PANEL_TARGET := 4.1
 
 const HEDGE_HEIGHT := 2.25
 const HEDGE_SPACING := 1.5
-## Measured with `tools/measure_models.gd`, not guessed: `Bush_Common` is
-## 1.91 x 1.58 x 1.97m as imported, so its HEIGHT is 1.58m even though its
-## footprint is nearly two metres across. Spacing tighter than the scaled
-## footprint is what makes a row of bushes read as one hedge.
 const HEDGE_MODEL_HEIGHT := 1.58
 
 const ROCK_SPACING := 4.2
-## How deep a formation boulder sits. Negative: the pack's boulders have a
-## flat modelled underside, and a flat underside resting exactly on the bank
-## top is a visible straight seam. Buried, the silhouette above ground is all
-## rock.
 const ROCK_SEAT := -0.45
-## `Rock_Medium_1/2/3` measure 2.26 / 1.90 / 2.32m tall and up to 3.4m across.
 const ROCK_MODEL_HEIGHT := 2.2
 const ROCK_HEIGHT := 2.6
 
-## A stone pier at each of the forty joins. Two jobs: it gives the eye a
-## repeating vertical accent so the ring reads as one rhythm at distance
-## rather than as a flat band, and it turns the style change from an abrupt
-## seam into the thing a field boundary actually does — change at the
-## gatepost.
 const PIER_HALF := 0.56
 const PIER_HEIGHT := 3.3
 const PIER_CAP_HEIGHT := 0.26
 const PIER_CAP_HALF := 0.7
 
-## Low growth and loose stone along the WHOLE ring's outer foot, regardless of
-## which style that stretch is. The cheapest thing that makes four different
-## dressings read as one feature is a common base note under all of them.
 const DRESSING_SPACING := 2.4
+
+# ---------------------------------------------------------------------------
+# Assets — same families the ring used, plus the two additions the new
+# styles need (see header). No new asset, no generation (D24, and this
+# task's own constraint).
+# ---------------------------------------------------------------------------
 
 const ROCK_MESHES := [
 	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
@@ -241,216 +274,373 @@ const FENCE_MESHES := [
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension1.gltf"),
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf"),
 ]
-## The pack ships this material as a crimson autumn leaf (`Leaves_TwistedTree`,
-## see vegetation.json's own comment on the same models) — swapping its
-## texture for the pack's own green leaf is the identical fix vegetation.gd
-## already applies to the "bushes" ground-cover layer.
 const BUSH_LEAF_MATERIAL_NAME := "Leaves_TwistedTree"
 const BUSH_GREEN_TEXTURE := preload("res://assets/environment/stylized_nature/Leaves_NormalTree_C.png")
 
-## Untinted, `Rock_Medium_*` renders a pale mint-white under this lighting —
-## and every OTHER rock in the meadow does not, because vegetation.json's
-## `rocks` layer already retints the pack's `Rocks` material to this warm tan.
-## The perimeter's boulders were the only stone in the world skipping that
-## step, which read in round 1 as two unrelated kinds of rock in one frame
-## (cold boulders against the warm fieldstone kerb they sit on). Same value,
-## same file, no new asset.
+## The three widest-canopy `CommonTree` forms — the same subset
+## `vegetation.json`'s `trees` layer keeps (its own comment: "kept the 3
+## forms with the widest canopy footprint"). `_tree_mesh()` below applies the
+## identical magenta-canopy fix that layer documents at length: the pack's
+## `Leaves_NormalTree` material samples nearly the whole of a multi-species
+## leaf atlas per card unless pointed at `Leaves_NormalTree_C.png`, the same
+## single-hue sheet the bush fix already uses.
+const TREE_MESHES := [
+	preload("res://assets/environment/stylized_nature/CommonTree_1.gltf"),
+	preload("res://assets/environment/stylized_nature/CommonTree_2.gltf"),
+	preload("res://assets/environment/stylized_nature/CommonTree_3.gltf"),
+]
+const TREE_LEAF_MATERIAL_NAME := "Leaves_NormalTree"
+## One of `vegetation.json`'s own three `variant_retint` values for this
+## material ("deep") rather than a new colour — a dense/impassable growth
+## wall reads correctly a shade darker than the everyday copse trees use.
+const TREE_TINT := Color("#325f3c")
+
+## `water.gd`'s own reed vocabulary (`data/config/water.json`'s `reeds`
+## layer): the SAME wispy-grass models the drygrass layer already owns, at
+## the same marsh-green tint, so a player who has already seen reeds at the
+## pond reads this stretch as the same kind of ground rather than a fourth
+## unrelated plant.
+const REED_MESHES := [
+	preload("res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"),
+	preload("res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf"),
+]
+const REED_TINT := Color("#7a9460")
+
 const ROCK_MATERIAL_NAME := "Rocks"
 const ROCK_TINT := Color("#c5ac9e")
 
-## The kit's `MI_WoodTrim` renders a bright orange-tan out of the box, and in
-## round 2's fence frame it was the most saturated thing in the picture — a
-## brand-new fence in a meadow whose whole palette is muted. A plain darkening
-## multiply (no hue rotation, so the kit's own wood grain survives) takes it to
-## weathered field timber without moving it out of the village's material
-## family.
 const FENCE_MATERIAL_NAME := "MI_WoodTrim"
 const FENCE_TINT := Color("#a2988f")
 
-## Quaternius medieval kit, the same one the village and the player's own
-## buildables are made of. `T_UnevenBrick` is the one genuinely TILEABLE
-## masonry sheet in that kit — `T_RockTrim` and `T_WoodTrim` are trim
-## ATLASES and stretch into nonsense across a long run, which is the defect
-## `grandpa_house.gd`'s own header already records paying for once.
 const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
-## Metres per texture repeat. The sheet is roughly seven stones across, so
-## 3.2m puts a single stone at ~0.45m — field masonry, not cobbles and not
-## megaliths.
 const STONE_TILE := 3.2
 
-## The bank is TURF, and takes the same grass photo the terrain itself is
-## painted with (`terrain_playground.json`'s own `grass` layer) so it reads as
-## a swell of the meadow rather than as a separate object standing on it.
-##
-## Round 1 used Ground030, the dirt/pebble path photo, on the theory that the
-## scuffed foot of a boundary is worn earth. Rendered, that was the single
-## worst thing in all four close-ups: a pale cream ramp running the entire
-## ring, reading as poured concrete kerbing or a retaining wall — the exact
-## "not a natural boundary" defect this item exists to remove. Grass, and a
-## lower, narrower profile, put the only hard edge back where it belongs: the
-## stone kerb.
 const EARTH_ALBEDO := preload("res://assets/environment/terrain/Grass008_Color.jpg")
 const EARTH_NORMAL := preload("res://assets/environment/terrain/Grass008_NormalGL.jpg")
 const EARTH_TILE := 3.0
 
-## How far below/above the visible geometry the collision box extends, so a
-## slope crossing one segment's length doesn't punch a gap at the low end —
-## the visible mesh is the boundary; this is the invisible support spec §1E
-## asks for, not a substitute for it.
-const COLLISION_MARGIN_DOWN := 6.0
-## OF6: raised from 2.0. The old value assumed a segment's real terrain never
-## strays far from the straight line between its two 9°-apart endpoints —
-## true almost everywhere, false on the steepest of the three `rises`
-## (`terrain_playground.json`, peak centred -165,-150, radius 58, which
-## overlaps this ring's own radius by up to 46m). Measured directly: real
-## ground climbs ~22m across one 37m segment there (bearing 207° at 1.7m to
-## bearing 216° at 24.0m, both sampled with the game's own
-## `ground_height_at()`), so the old two-endpoint average plus a 2m margin
-## left the collision box's top roughly 8m below the real slope mid-segment
-## — the ground simply rose up and over it. `_segment_ground_heights` below
-## is the real fix (the box now tracks the segment's actual sampled terrain,
-## not a straight line between its ends); this margin is a modest, measured
-## cushion on top of that, not a substitute for it.
-const COLLISION_MARGIN_UP := 3.0
+const FOOT_TINT := Color(0.62, 0.68, 0.55)
 
-## Below `tests/smoke_traversal.gd`'s own `THROUGH_THE_FLOOR` (-80.0, "the
-## whole playground's lowest point is about -26m") but well above the old
-## uncollided fall depth (-49950) — a generous net, not a hair-trigger.
-const KILL_PLANE_Y := -120.0
-const KILL_PLANE_HALF_EXTENT := 600.0
-## A thick band, not a thin plane — a body already at terminal velocity can
-## cross a one-frame gap several metres wide, and a plane no thicker than
-## that gap is a real way to tunnel straight through a "failsafe".
+## `palette.json`'s reserved danger accent, read live the same way
+## `severed_spokes.gd::_palette_colour()` already does for the sealed-road
+## blocker — so the boundary's own Team Tether marks and the spokes' cannot
+## silently drift apart. See `_build_stonework()`'s pier-cap tinting and
+## `_stone_material` is NOT retinted; only the piers carry the faction mark,
+## matching `severed_spokes.gd`'s own "fieldstone wall, oxblood uprights"
+## precedent exactly.
+const PALETTE_CONFIG := "res://data/config/palette.json"
+
+# ---------------------------------------------------------------------------
+# Collision / failsafe dimensions
+# ---------------------------------------------------------------------------
+
+const COLLISION_MARGIN_DOWN := 6.0
+const COLLISION_MARGIN_UP := 3.0
+const COLLISION_OVERLAP := 3.0
+
+## UNVERIFIED against the corridor's own terrain — carried forward from the
+## ring's measured figures, which were measured against the OLD 512m bake's
+## specific slopes (see the equivalent constants in `world_perimeter.gd`'s
+## own history). The corridor's bands span very different ground (an 18m
+## river gorge, a marsh, a wind-ridge climb) that has not been baked or
+## measured yet. `OW5B` should re-probe `_add_collision`'s margins once the
+## corridor bake exists, the same way it must re-probe the spoke carves
+## (`MEADOWS_MACRO_LAYOUT.md` §1.2's own rule: re-measure after the origin
+## is fixed, not before).
+const KILL_PLANE_Y := -150.0
+const KILL_PLANE_MARGIN := 120.0
 const KILL_PLANE_THICKNESS := 40.0
 
 var _player: CharacterBody3D = null
 var _spawn: Vector3 = Vector3.ZERO
-
-## The one shared ground-sampled polyline. `_ring` carries the lightly
-## smoothed heights everything visible is built on; `_ring_raw_y` carries the
-## unsmoothed terrain samples, which is what collision is sized from — a
-## smoothed height is a good place to put a wall and a bad place to decide
-## how tall a collision box has to be.
-var _ring: PackedVector3Array = PackedVector3Array()
-var _ring_raw_y: PackedFloat32Array = PackedFloat32Array()
-var _ring_out: PackedVector3Array = PackedVector3Array()
-var _ring_arc: PackedFloat32Array = PackedFloat32Array()
-var _ring_total: float = 0.0
+var _wobble_noise: FastNoiseLite = null
+var _tether_tint: Color = Color(0.2, 0.133, 0.157)
+var _edges: Array = []
 
 
-## `world` supplies `ground_height_at(x, z)`. `player`/`spawn_position` are
-## needed for the kill-volume failsafe — reachable through `world.call()`
-## the way `grandpa_house.build()` already takes the player, but this also
-## needs the ORIGINAL spawn point, not the player's current position, which
-## has moved by the time anything falls through.
+## One ground-sampled, style-tagged open polyline: a long edge or an end
+## cap. Plays the role the single global `_ring`/`_ring_out`/`_ring_arc`
+## arrays played in the ring file, just one instance per boundary piece
+## instead of one array for the whole (closed) boundary.
+class EdgeSample:
+	extends RefCounted
+	var id: int = EdgeId.WEST
+	var nominal_out: Vector2 = Vector2.ZERO
+	var points: PackedVector3Array = PackedVector3Array()   ## smoothed, what everything visible is built on
+	var raw_y: PackedFloat32Array = PackedFloat32Array()    ## unsmoothed, what collision is sized from
+	var out: PackedVector3Array = PackedVector3Array()      ## outward unit normal per point
+	var arc: PackedFloat32Array = PackedFloat32Array()      ## cumulative arc length per point
+	var total: float = 0.0
+	var point_count: int = 0
+	var segment_count: int = 0
+
+
 func build(world: Node, player: CharacterBody3D, spawn_position: Vector3) -> void:
 	_player = player
 	_spawn = spawn_position
+	_tether_tint = _palette_colour("tether_oxblood", _tether_tint)
 
-	var ring := Node3D.new()
-	ring.name = "Ring"
-	add_child(ring)
+	var boundary := Node3D.new()
+	boundary.name = "Boundary"
+	add_child(boundary)
 
-	_sample_ring(world)
-	_build_bank(ring)
-	_build_stonework(ring)
-	_build_planting(world, ring)
-	_build_collision(ring)
+	_sample_edges(world)
+	for edge in _edges:
+		var group := Node3D.new()
+		group.name = _edge_name(edge.id)
+		boundary.add_child(group)
+		_build_bank(group, edge)
+		_build_stonework(group, edge)
+		_build_planting(world, group, edge)
+		_build_collision(group, edge)
 
 	_build_kill_volume()
 
 
+func _edge_name(id: int) -> String:
+	match id:
+		EdgeId.WEST:
+			return "West"
+		EdgeId.EAST:
+			return "East"
+		EdgeId.NORTH_CAP:
+			return "NorthCap"
+		EdgeId.SOUTH_CAP:
+			return "SouthCap"
+	return "Edge"
+
+
 # ---------------------------------------------------------------------------
-# The shared polyline
+# Style lookup — replaces the ring's per-segment-index cycle
 # ---------------------------------------------------------------------------
 
-## Segment endpoints sit on the wobbled circle; every point between two
-## endpoints is a straight LERP along that segment's chord, not a point on
-## the circle. That is deliberate: `_add_collision` puts one straight box per
-## segment, and geometry that bows off the chord is geometry the box does not
-## sit under. The ring is a slightly irregular 40-gon in plan, and the piers
-## at the joins are what make the corners read as intent.
-func _sample_ring(world: Node) -> void:
-	var corners: Array[Vector2] = []
-	for s in SEGMENTS + 1:
-		var t := float(s) / float(SEGMENTS)
-		var angle := t * TAU
-		var r := _radius_at(t)
-		corners.append(Vector2(cos(angle) * r, sin(angle) * r))
+## Which of the spine's five z-bands a world z falls in, per
+## `MEADOWS_MACRO_LAYOUT.md` §3. See the BAND*_Z1 constants' own comment for
+## how the two unauthored fringes fold into band 1 / approach.
+func _band_for(z: float) -> String:
+	if z < BAND1_Z1:
+		return "band1"
+	elif z < BAND2_Z1:
+		return "band2"
+	elif z < BAND3_Z1:
+		return "band3"
+	elif z < BAND4_Z1:
+		return "band4"
+	return "approach"
 
-	_ring.resize(RING_POINTS)
-	_ring_raw_y.resize(RING_POINTS)
-	_ring_out.resize(RING_POINTS)
-	_ring_arc.resize(RING_POINTS)
+
+## D51 / MEADOWS_MACRO_LAYOUT.md §6's style table, verbatim. Only meaningful
+## for WEST/EAST — the two caps have a single fixed style each, handled in
+## `_segment_style()`.
+func _style_for(edge_id: int, z: float) -> Style:
+	var band := _band_for(z)
+	if edge_id == EdgeId.WEST:
+		match band:
+			"band1":
+				return Style.HEDGE_FENCE
+			"band2":
+				return Style.ROCK_SCARP
+			"band3":
+				return Style.MARSH
+			"band4":
+				return Style.IRONWOOD
+			_:
+				return Style.BARRIER
+	match band:
+		"band1":
+			return Style.FIELD_WALL
+		"band2":
+			return Style.GROWTH_RIDGE
+		"band3":
+			return Style.ROCK_SCREE
+		"band4":
+			return Style.RIDGE_CLIMB
+		_:
+			return Style.BARRIER
+
+
+## The style a whole JOIN_SPACING segment builds in. West/east edges look up
+## the band at the segment's own MIDPOINT z (the nominal, pre-wobble z —
+## looking up style from a wobbled sample would let the wobble noise flip a
+## segment's style back and forth near a band boundary, which is exactly the
+## kind of jitter the through-line's whole job is to not have). The two caps
+## are unconditional.
+func _segment_style(edge: EdgeSample, s: int) -> Style:
+	match edge.id:
+		EdgeId.WEST, EdgeId.EAST:
+			var t := (float(s) + 0.5) / float(edge.segment_count)
+			var z := lerpf(WORLD_Z_NORTH, WORLD_Z_SOUTH, t)
+			return _style_for(edge.id, z)
+		EdgeId.NORTH_CAP:
+			return Style.GENTLE
+		EdgeId.SOUTH_CAP:
+			return Style.BARRIER
+	return Style.BARRIER
+
+
+## Same lookup, but at one sampled POINT rather than a segment — used by the
+## common dressing pass, which walks arc length rather than segment index.
+func _style_at_point(edge: EdgeSample, i: int) -> Style:
+	match edge.id:
+		EdgeId.WEST, EdgeId.EAST:
+			return _style_for(edge.id, edge.points[i].z)
+		EdgeId.NORTH_CAP:
+			return Style.GENTLE
+		EdgeId.SOUTH_CAP:
+			return Style.BARRIER
+	return Style.BARRIER
+
+
+func _has_wall(style: Style) -> bool:
+	return style == Style.FIELD_WALL or style == Style.BARRIER or style == Style.GENTLE
+
+
+# ---------------------------------------------------------------------------
+# Sampling — replaces `_sample_ring`. Four calls instead of one closed walk.
+# ---------------------------------------------------------------------------
+
+func _sample_edges(world: Node) -> void:
+	_wobble_noise = FastNoiseLite.new()
+	_wobble_noise.seed = WOBBLE_SEED
+	_wobble_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_wobble_noise.frequency = WOBBLE_FREQUENCY
+
+	_edges.clear()
+	_edges.append(_sample_edge(world, EdgeId.WEST,
+		Vector2(WORLD_X_WEST, WORLD_Z_NORTH), Vector2(WORLD_X_WEST, WORLD_Z_SOUTH), Vector2(-1.0, 0.0)))
+	_edges.append(_sample_edge(world, EdgeId.EAST,
+		Vector2(WORLD_X_EAST, WORLD_Z_NORTH), Vector2(WORLD_X_EAST, WORLD_Z_SOUTH), Vector2(1.0, 0.0)))
+	_edges.append(_sample_edge(world, EdgeId.NORTH_CAP,
+		Vector2(WORLD_X_WEST, WORLD_Z_NORTH), Vector2(WORLD_X_EAST, WORLD_Z_NORTH), Vector2(0.0, -1.0)))
+	_edges.append(_sample_edge(world, EdgeId.SOUTH_CAP,
+		Vector2(WORLD_X_WEST, WORLD_Z_SOUTH), Vector2(WORLD_X_EAST, WORLD_Z_SOUTH), Vector2(0.0, 1.0)))
+
+
+## `from2`/`to2` are the polyline's nominal (un-wobbled) endpoints in the XZ
+## plane; `nominal_out` is the fixed direction "away from the playable
+## corridor" for this whole piece (e.g. -X for the west edge). Ground-sampled
+## at ~2m spacing (`SPANS_PER_SEGMENT` per `JOIN_SPACING`-metre segment),
+## smoothed exactly the way the ring was (two passes of a [0.25,0.5,0.25]
+## blur, floored against the raw sample so smoothing only ever raises the
+## line, never drops it below real ground on a crest) — just without the
+## wraparound a closed ring needed and an open edge must not have.
+func _sample_edge(world: Node, id: int, from2: Vector2, to2: Vector2, nominal_out: Vector2) -> EdgeSample:
+	var e := EdgeSample.new()
+	e.id = id
+	e.nominal_out = nominal_out
+
+	var length := (to2 - from2).length()
+	e.segment_count = maxi(1, int(round(length / JOIN_SPACING)))
+	e.point_count = e.segment_count * SPANS_PER_SEGMENT + 1
+
+	e.points.resize(e.point_count)
+	e.raw_y.resize(e.point_count)
+	e.out.resize(e.point_count)
+	e.arc.resize(e.point_count)
 
 	var last_valid := 0.0
-	for s in SEGMENTS:
-		for k in SPANS_PER_SEGMENT:
-			var i := s * SPANS_PER_SEGMENT + k
-			var xz: Vector2 = corners[s].lerp(corners[s + 1], float(k) / float(SPANS_PER_SEGMENT))
-			var ground: float = float(world.call("ground_height_at", xz.x, xz.y))
-			if is_nan(ground):
-				# The bake's own edge is not perfectly circular (four square
-				# regions), so a sample this close to it can legitimately land
-				# past the last written texel. Carrying the previous valid
-				# height forward keeps the ring closed there without dropping
-				# a fake 0.0 spike into the middle of a -20m stretch, which is
-				# what the old code did.
-				ground = last_valid
-			else:
-				last_valid = ground
-			_ring[i] = Vector3(xz.x, ground, xz.y)
-			_ring_raw_y[i] = ground
-			_ring_out[i] = Vector3(xz.x, 0.0, xz.y).normalized()
+	for i in e.point_count:
+		var t := float(i) / float(e.point_count - 1)
+		var base := from2.lerp(to2, t)
+		var wobble := _wobble_at(id, base, t, length)
+		var xz := base - nominal_out * wobble
+		var ground: float = float(world.call("ground_height_at", xz.x, xz.y))
+		if is_nan(ground):
+			# Off the edge of whatever is baked (today: nothing this far out
+			# is baked at all — the corridor bake is `OW5B`'s job). Carrying
+			# the previous valid height forward is the same defensive choice
+			# the ring made: it keeps the line continuous instead of
+			# dropping a fake 0.0 spike into it.
+			ground = last_valid
+		else:
+			last_valid = ground
+		e.points[i] = Vector3(xz.x, ground, xz.y)
+		e.raw_y[i] = ground
 
-	# Two passes of a [0.25, 0.5, 0.25] smooth. The bake's `detail` layer is
-	# 2.2m of high-frequency noise; a dry-stone wall that ripples with every
-	# metre of it reads as a bug, and a wall that ignores the hills entirely
-	# is the defect this rebuild exists to remove. Smooth the noise, keep the
-	# hills. `maxf` against the raw sample keeps the line from ever dropping
-	# BELOW real ground on a sharp crest — smoothing may only ever raise it.
 	for _pass_index in 2:
 		var smoothed := PackedFloat32Array()
-		smoothed.resize(RING_POINTS)
-		for i in RING_POINTS:
-			var prev := _ring[_wrap(i - 1)].y
-			var next := _ring[_wrap(i + 1)].y
-			smoothed[i] = maxf(prev * 0.25 + _ring[i].y * 0.5 + next * 0.25, _ring_raw_y[i])
-		for i in RING_POINTS:
-			var p := _ring[i]
-			_ring[i] = Vector3(p.x, smoothed[i], p.z)
+		smoothed.resize(e.point_count)
+		for i in e.point_count:
+			var prev_y: float = e.points[maxi(i - 1, 0)].y
+			var next_y: float = e.points[mini(i + 1, e.point_count - 1)].y
+			smoothed[i] = maxf(prev_y * 0.25 + e.points[i].y * 0.5 + next_y * 0.25, e.raw_y[i])
+		for i in e.point_count:
+			var p: Vector3 = e.points[i]
+			e.points[i] = Vector3(p.x, smoothed[i], p.z)
 
 	var arc := 0.0
-	for i in RING_POINTS:
-		_ring_arc[i] = arc
-		arc += Vector2(_ring[_wrap(i + 1)].x - _ring[i].x, _ring[_wrap(i + 1)].z - _ring[i].z).length()
-	_ring_total = arc
+	for i in e.point_count:
+		e.arc[i] = arc
+		if i + 1 < e.point_count:
+			var a: Vector3 = e.points[i]
+			var b: Vector3 = e.points[i + 1]
+			arc += Vector2(b.x - a.x, b.z - a.z).length()
+	e.total = arc
+
+	# The outward normal, per point, from the local tangent — the general
+	# version of what the ring got for free from `position.normalized()`
+	# (which only works because a circle's outward normal IS its own
+	# position vector). `nominal_out` breaks the sign ambiguity a bare
+	# perpendicular has.
+	for i in e.point_count:
+		var prev: Vector3 = e.points[maxi(i - 1, 0)]
+		var next: Vector3 = e.points[mini(i + 1, e.point_count - 1)]
+		var tangent := Vector2(next.x - prev.x, next.z - prev.z)
+		if tangent.length_squared() < 0.000001:
+			tangent = to2 - from2
+		tangent = tangent.normalized()
+		var perp := Vector2(tangent.y, -tangent.x)
+		if perp.dot(nominal_out) < 0.0:
+			perp = -perp
+		e.out[i] = Vector3(perp.x, 0.0, perp.y)
+
+	return e
 
 
-## The coursed wall top, in ABSOLUTE world height, for `count` spans starting
-## at ring index `i0`. See `COURSE_HEIGHT` and `RISER_RISE` for why this
-## exists and why it is shaped this way.
-##
-## Measure the run's total climb, buy one tread per `RISER_RISE` of it, and lay
-## those treads out as equal blocks. Each tread is DEAD LEVEL and quantised to
-## a whole course. Gentle ground therefore gets one level top across the whole
-## 37m; steep ground gets a staircase whose risers are large enough to read as
-## steps rather than as noise. Nothing here can produce a small wobble, which
-## is the point.
-func _course_line(i0: int, count: int) -> PackedFloat32Array:
+## Inward pull-in in metres, never outward — same rule the ring's own
+## `_radius_at` kept, for the same reason: nothing here may cross this
+## piece's own nominal boundary line. Zero on BARRIER-styled stretches
+## (see header) and smoothstep-tapered to zero over the last WOBBLE_TAPER
+## metres of every piece so the four pieces' corners coincide exactly.
+func _wobble_at(id: int, base: Vector2, t: float, length: float) -> float:
+	var style_scale := _wobble_style_scale(id, base)
+	if style_scale <= 0.0:
+		return 0.0
+	var d := minf(t * length, (1.0 - t) * length)
+	var taper := clampf(d / WOBBLE_TAPER, 0.0, 1.0)
+	if taper <= 0.0:
+		return 0.0
+	var coord := t * length + float(id) * 200000.0  # offset per piece so they don't share one noise run
+	var n := _wobble_noise.get_noise_1d(coord)
+	return WOBBLE * style_scale * taper * (0.5 + 0.5 * n)
+
+
+func _wobble_style_scale(id: int, base: Vector2) -> float:
+	match id:
+		EdgeId.WEST, EdgeId.EAST:
+			return 0.0 if _style_for(id, base.y) == Style.BARRIER else 1.0
+		EdgeId.NORTH_CAP:
+			return 1.0   # "the gentlest boundary" can still be gently uneven
+		EdgeId.SOUTH_CAP:
+			return 0.0   # built, and should read as built
+	return 1.0
+
+
+# ---------------------------------------------------------------------------
+# Coursed wall top — unchanged mechanism from the ring, parameterised per
+# edge instead of assuming one global `_ring`. See the ring file's own
+# comments on `_course_line`/`_tread_spread` for why the top is coursed
+# rather than following the ground: the base rides the terrain because it
+# has to meet the bank; the top holds level in treads because a wavy
+# capstone reads as a mesh-height artifact, not weather.
+# ---------------------------------------------------------------------------
+
+func _course_line(edge: EdgeSample, i0: int, count: int) -> PackedFloat32Array:
 	var kerb := BANK_HEIGHT + KERB_HEIGHT
-	# Add treads until no single tread has more than `RISER_RISE` of ground
-	# movement under it. Sizing them from the run's TOTAL rise instead was the
-	# first attempt and it is wrong: a run that climbs 7m in two short pitches
-	# and then flattens gets seven treads either way, but the pitches land
-	# inside two of them, and a level tread over a 5m pitch is a 6.4m wall at
-	# one end (measured, `tools/_probe_perimeter_shapes.gd`). Bounding the
-	# spread WITHIN a tread bounds the wall's height directly, which is the
-	# thing that actually has to stay believable.
 	var treads := 1
-	while treads < count and _tread_spread(i0, count, treads) > RISER_RISE:
+	while treads < count and _tread_spread(edge, i0, count, treads) > RISER_RISE:
 		treads += 1
 
 	var out := PackedFloat32Array()
@@ -461,12 +651,10 @@ func _course_line(i0: int, count: int) -> PackedFloat32Array:
 		var mean := 0.0
 		var highest := -INF
 		for k in range(k0, k1):
-			var y := _ring[_wrap(i0 + k)].y
+			var y: float = edge.points[i0 + k].y
 			mean += y
 			highest = maxf(highest, y)
 		mean /= float(k1 - k0)
-		# Nominal height over the tread's MEAN ground, floored so the tread's
-		# own highest point still carries a real wall.
 		var level := maxf(mean + kerb + WALL_HEIGHT, highest + kerb + WALL_FLOOR)
 		level = round(level / COURSE_HEIGHT) * COURSE_HEIGHT
 		for k in range(k0, k1):
@@ -474,9 +662,7 @@ func _course_line(i0: int, count: int) -> PackedFloat32Array:
 	return out
 
 
-## The worst ground movement under any one tread, if this run were split into
-## `treads` equal blocks. See `_course_line`.
-func _tread_spread(i0: int, count: int, treads: int) -> float:
+func _tread_spread(edge: EdgeSample, i0: int, count: int, treads: int) -> float:
 	var worst := 0.0
 	for t in treads:
 		var k0 := int(floor(float(t) * float(count + 1) / float(treads)))
@@ -484,45 +670,39 @@ func _tread_spread(i0: int, count: int, treads: int) -> float:
 		var lo := INF
 		var hi := -INF
 		for k in range(k0, k1):
-			var y := _ring[_wrap(i0 + k)].y
+			var y: float = edge.points[i0 + k].y
 			lo = minf(lo, y)
 			hi = maxf(hi, y)
 		worst = maxf(worst, hi - lo)
 	return worst
 
 
-func _radius_at(t: float) -> float:
-	var w := 0.55 * sin(t * TAU * 3.0 + 1.1) + 0.45 * sin(t * TAU * 7.0 + 2.7)
-	return RADIUS - WOBBLE * (0.5 + 0.5 * w)
-
-
-func _wrap(i: int) -> int:
-	return posmod(i, RING_POINTS)
-
-
-## A strip that goes all the way round meets itself. Nudging the tile size so
-## a whole number of repeats fits the ring's own length is the difference
-## between a seamless boundary and one visible texture jump somewhere on it.
-func _closed_tile(nominal: float) -> float:
-	var repeats := maxf(round(_ring_total / nominal), 1.0)
-	return _ring_total / repeats
+## Fit a whole number of texture repeats to this piece's own total length.
+## The ring's `_closed_tile` did this to hide a seam where a closed loop met
+## itself; an open edge has no such seam, but the same trick still avoids one
+## partial repeat sitting against the pier at the piece's own far end, so it
+## is kept under a name that no longer claims to be "closing" anything.
+func _edge_tile(edge: EdgeSample, nominal: float) -> float:
+	var repeats := maxf(round(edge.total / nominal), 1.0)
+	return edge.total / repeats
 
 
 # ---------------------------------------------------------------------------
 # The continuous bank
 # ---------------------------------------------------------------------------
 
-func _build_bank(parent: Node3D) -> void:
+func _build_bank(parent: Node3D, edge: EdgeSample) -> void:
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var low := PackedFloat32Array()
 	var high := PackedFloat32Array()
-	low.resize(RING_POINTS + 1)
-	high.resize(RING_POINTS + 1)
-	for k in RING_POINTS + 1:
+	low.resize(edge.point_count)
+	high.resize(edge.point_count)
+	for k in edge.point_count:
 		low[k] = -BANK_SINK
 		high[k] = BANK_HEIGHT
-	_strip(st, 0, RING_POINTS, low, high, BANK_HALF_BASE, BANK_HALF_TOP, _closed_tile(EARTH_TILE), Color(1.0, 1.0, 1.0))
+	_strip(st, edge, 0, edge.point_count - 1, low, high, BANK_HALF_BASE, BANK_HALF_TOP,
+		_edge_tile(edge, EARTH_TILE), Color(1.0, 1.0, 1.0))
 
 	st.generate_tangents()
 	var mesh := MeshInstance3D.new()
@@ -533,43 +713,37 @@ func _build_bank(parent: Node3D) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Every piece of stone in one mesh
+# Every piece of stone in one mesh, per edge/cap
 # ---------------------------------------------------------------------------
 
-## Kerb, wall runs, capstones and piers are all the same material, so they are
-## all the same surface. Per-piece value is carried in VERTEX COLOUR rather
-## than in a material per piece — that is what buys the coursed, weathered
-## read the old file spent thirteen separate MeshInstance3D nodes per segment
-## on, at one draw call for the whole ring.
-func _build_stonework(parent: Node3D) -> void:
+func _build_stonework(parent: Node3D, edge: EdgeSample) -> void:
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
-	# The kerb: unbroken, all forty segments, under every style.
+	# The kerb: unbroken, the whole piece, under every style. This is the
+	# half of the through-line D51 names by name as the property that must
+	# survive the rewrite.
 	var kerb_low := PackedFloat32Array()
 	var kerb_high := PackedFloat32Array()
-	kerb_low.resize(RING_POINTS + 1)
-	kerb_high.resize(RING_POINTS + 1)
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 90210
-	for k in RING_POINTS + 1:
+	kerb_low.resize(edge.point_count)
+	kerb_high.resize(edge.point_count)
+	for k in edge.point_count:
 		kerb_low[k] = BANK_HEIGHT - 0.5
 		kerb_high[k] = BANK_HEIGHT + KERB_HEIGHT
-	_strip(st, 0, RING_POINTS, kerb_low, kerb_high, KERB_HALF_BASE, KERB_HALF_TOP, _closed_tile(STONE_TILE), Color(0.78, 0.78, 0.72), FOOT_TINT)
+	_strip(st, edge, 0, edge.point_count - 1, kerb_low, kerb_high, KERB_HALF_BASE, KERB_HALF_TOP,
+		_edge_tile(edge, STONE_TILE), Color(0.78, 0.78, 0.72), FOOT_TINT)
 
-	# The wall runs. Every fourth segment. The BASE rides the ground polyline
-	# (it has to meet the bank it stands on); the TOP is a coursed line that
-	# steps instead of following it — see `COURSE_HEIGHT`. An earlier blind
-	# critic read a taut top edge with even seams as "glass panels"; the answer
-	# to that is weathering, which the per-point vertex colour below supplies
-	# without moving a vertex, not random per-vertex height, which round 6's
-	# critic correctly read as an artifact.
+	# Masonry wall runs — only where `_has_wall()` says this segment's style
+	# carries one (FIELD_WALL, GENTLE, BARRIER). Every other style dresses
+	# the bare kerb with its own props in `_build_planting` instead.
+	var rng := RandomNumberGenerator.new()
 	var top := BANK_HEIGHT + KERB_HEIGHT
-	for s in SEGMENTS:
-		if s % 4 != 0:
+	for s in edge.segment_count:
+		var style := _segment_style(edge, s)
+		if not _has_wall(style):
 			continue
 		var i0 := s * SPANS_PER_SEGMENT
-		var course := _course_line(i0, SPANS_PER_SEGMENT)
+		var course := _course_line(edge, i0, SPANS_PER_SEGMENT)
 		var low := PackedFloat32Array()
 		var high := PackedFloat32Array()
 		var cap_low := PackedFloat32Array()
@@ -581,31 +755,40 @@ func _build_stonework(parent: Node3D) -> void:
 		cap_low.resize(SPANS_PER_SEGMENT + 1)
 		cap_high.resize(SPANS_PER_SEGMENT + 1)
 		for k in SPANS_PER_SEGMENT + 1:
-			rng.seed = hash(i0 + k)
-			# `course` is an ABSOLUTE world height; `_strip_shaded` wants an
-			# offset from each ring point's own height, so subtract it back
-			# out. That subtraction IS the fix: it is what lets the top hold
-			# level while the base keeps following the hill.
-			var h := course[k] - _ring[_wrap(i0 + k)].y
+			rng.seed = hash(edge.id * 1000000 + i0 + k)
+			var h := course[k] - edge.points[i0 + k].y
 			low[k] = top - 0.12
 			high[k] = h
 			cap_low[k] = h
 			cap_high[k] = h + CAP_HEIGHT
 			colours.append(Color(0.93, 0.92, 0.88).darkened(rng.randf_range(0.0, 0.30)))
-			# The coping weathers too, and along its own length rather than
-			# uniformly — a coping course whose every stone is the same value
-			# is half of why the whole band read as one tiled strip.
-			cap_colours.append(Color(1.0, 0.99, 0.95).darkened(rng.randf_range(0.0, 0.26)))
-		_strip_shaded(st, i0, SPANS_PER_SEGMENT, low, high, WALL_HALF_BASE, WALL_HALF_TOP, STONE_TILE, colours, FOOT_TINT)
-		_strip_shaded(st, i0, SPANS_PER_SEGMENT, cap_low, cap_high, CAP_HALF, CAP_HALF, CAP_TILE, cap_colours, CAP_UNDER)
+			var cap_nominal := Color(1.0, 0.99, 0.95).darkened(rng.randf_range(0.0, 0.26))
+			# Team Tether's own build carries its reserved accent on the
+			# coping, not the wall face — the same split
+			# `severed_spokes.gd::_build_sealed_road` uses ("a fieldstone
+			# wall ... with uprights standing proud of it in tether_oxblood")
+			# so the two read as the same faction's work without duplicating
+			# a whole new material.
+			cap_colours.append(_tether_tint.lerp(cap_nominal, 0.4) if style == Style.BARRIER else cap_nominal)
+		_strip_shaded(st, edge, i0, SPANS_PER_SEGMENT, low, high, WALL_HALF_BASE, WALL_HALF_TOP, STONE_TILE, colours, FOOT_TINT)
+		_strip_shaded(st, edge, i0, SPANS_PER_SEGMENT, cap_low, cap_high, CAP_HALF, CAP_HALF, CAP_TILE, cap_colours, CAP_UNDER)
 
-	# A pier at every join.
-	for s in SEGMENTS:
-		var i := s * SPANS_PER_SEGMENT
-		var p := _ring[i]
-		var yaw := _yaw_at(i)
+	# A pier at every join, INCLUDING the piece's own far end. The ring's
+	# loop only visited SEGMENTS joins because join `SEGMENTS` and join `0`
+	# were the same closed-loop vertex; an open edge has no such vertex, so
+	# its own last join needs an explicit pier or the piece's far corner
+	# stands bare. (Each of the four corners therefore gets a pier built
+	# TWICE — once by each of the two pieces that meet there. Harmless and
+	# cheap; not worth the bookkeeping to dedupe for a whole-world, one-shot
+	# build like this one.)
+	for s in edge.segment_count + 1:
+		var i := mini(s * SPANS_PER_SEGMENT, edge.point_count - 1)
+		var p: Vector3 = edge.points[i]
+		var yaw := _yaw_at(edge, i)
+		var join_style := _segment_style(edge, mini(s, edge.segment_count - 1))
+		var cap_colour := _tether_tint.lerp(Color(1.0, 0.99, 0.95), 0.25) if join_style == Style.BARRIER else Color(1.0, 0.99, 0.95)
 		_box(st, Vector3(p.x, p.y - 0.6, p.z), Vector3(PIER_HALF * 2.0, PIER_HEIGHT + 0.6, PIER_HALF * 2.0), yaw, Color(0.92, 0.91, 0.88))
-		_box(st, Vector3(p.x, p.y + PIER_HEIGHT, p.z), Vector3(PIER_CAP_HALF * 2.0, PIER_CAP_HEIGHT, PIER_CAP_HALF * 2.0), yaw, Color(1.0, 0.99, 0.95))
+		_box(st, Vector3(p.x, p.y + PIER_HEIGHT, p.z), Vector3(PIER_CAP_HALF * 2.0, PIER_CAP_HEIGHT, PIER_CAP_HALF * 2.0), yaw, cap_colour)
 
 	st.generate_tangents()
 	var mesh := MeshInstance3D.new()
@@ -616,299 +799,57 @@ func _build_stonework(parent: Node3D) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Hedgerow, rock formation, ranch fence, and the dressing common to all
+# Dressing — one function per style, dispatched from `_build_planting`.
+# The techniques (thickets that wander and clump, fence runs that lose a
+# panel, boulder knots with a dominant piece) are kept from the ring's own
+# `_build_planting` because they are what stops the dressing reading as
+# generated, not because they are shape-specific.
 # ---------------------------------------------------------------------------
 
-func _build_planting(world: Node, parent: Node3D) -> void:
+func _build_planting(world: Node, parent: Node3D, edge: EdgeSample) -> void:
 	var bush_transforms: Array[Array] = [[], []]
 	var rock_transforms: Array[Array] = [[], [], []]
 	var fence_transforms: Array[Array] = [[], []]
+	var tree_transforms: Array[Array] = [[], [], []]
+	var reed_transforms: Array[Array] = [[], []]
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 4242
-
+	rng.seed = 4242 + edge.id * 977
 	var kerb_top := BANK_HEIGHT + KERB_HEIGHT
 
-	for s in SEGMENTS:
-		var length := _segment_length(s)
-		match s % 4:
-			0:
-				# Growth hard against the wall's inner face. A dry-stone wall
-				# that meets mown grass in one unbroken line for thirty-seven
-				# metres is the giveaway that nothing has ever grown there —
-				# and the stone-wall frame is the one segment style with no
-				# planting of its own, so it was the only stretch of the ring
-				# showing a clean hard edge along its whole length.
-				var tufts: int = maxi(int(round(length / 3.0)), 6)
-				for j in tufts:
-					var f := (float(j) + 0.5 + rng.randf_range(-0.45, 0.45)) / float(tufts)
-					var at := _point_along(s, f)
-					var out := _out_along(s, f)
-					var origin := at - out * rng.randf_range(0.65, 1.5) + Vector3(0.0, -0.1, 0.0)
-					var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
-						Vector3.ONE * rng.randf_range(0.4, 0.95))
-					(bush_transforms[rng.randi() % 2] as Array).append(Transform3D(basis, origin))
-			1:
-				# Ranch fencing. Panel count is chosen so a whole number of
-				# panels fits the segment exactly and the run has neither a
-				# gap nor a doubled post.
-				#
-				# ROUND 6: it also had no VARIATION. Every panel sat at exactly
-				# `(j + 0.5) / panels`, at exactly `FENCE_HEIGHT`, bolt upright,
-				# every one parallel to the last — a textbook spline-array, and
-				# the blind reviewer named it as such ("dead-even intervals, no
-				# variation, no gap, no lean ... generated rather than
-				# designed"). The rebuild's own header records that per-segment
-				# RNG jitter existed before the move to a shared polyline and
-				# did not survive it; this is that jitter, put back seeded so
-				# the run is still deterministic, and sized so it can never
-				# reopen the daylight the overlap below exists to close.
-				var panels: int = maxi(int(round(length / FENCE_PANEL_TARGET)), 4)
-				var panel_length := length / float(panels)
-				var scale_y := FENCE_HEIGHT / FENCE_MODEL_HEIGHT
-				# 12% over the exact fit. Each panel is rigid, so on a slope
-				# consecutive panels stair-step; at an exact fit their ends
-				# then part company and daylight shows through the run.
-				# Overlapping them means the step stays (which real ranch
-				# fencing does) without the gap (which it does not). Raised
-				# from 8% to pay for the along-run jitter below: at ±5.5% of a
-				# panel each, two neighbours can drift 11% apart, so the
-				# overlap has to exceed that or the jitter buys variation by
-				# reintroducing the exact defect the overlap fixed.
-				var scale_x := panel_length / FENCE_MODEL_LENGTH * 1.16
-				var tangent := _tangent_along(s)
-				var side := tangent.cross(Vector3.UP)
-				# Round 7: one panel per run is DOWN — rolled right over and
-				# dropped into the grass. Round 6's lean of about three degrees
-				# and six percent of height was measurable in the source and
-				# invisible in the frame; the reviewer still read "identical
-				# length, identical plank angle ... no sagging panel, no post
-				# leaning". A boundary reads as maintained-and-failing rather
-				# than as extruded when one thing in it has visibly given way,
-				# and one collapsed panel does more of that than a degree of
-				# lean on all of them. The collision box is per SEGMENT, not
-				# per panel, so nothing here can open a hole a player fits
-				# through.
-				var fallen: int = rng.randi_range(1, panels - 2) if rng.randf() < 0.4 else -1
-				# One run in two loses a panel to a bush clump. A field fence
-				# with a hedge patch let into it is what an actual repaired
-				# boundary looks like, and it is the "no gap" half of the
-				# reviewer's complaint answered without ever showing bare
-				# daylight through a boundary whose whole job is to stop you.
-				# Never the first or last panel: a break at the pier would read
-				# as the run failing to reach its own gatepost.
-				var breach: int = rng.randi_range(1, panels - 2) if rng.randf() < 0.5 else -1
-				for j in panels:
-					var f := (float(j) + 0.5 + rng.randf_range(-0.05, 0.05)) / float(panels)
-					var at := _point_along(s, f)
-					if j == fallen:
-						var down := Basis(tangent, Vector3.UP, side)
-						down = down.rotated(tangent, rng.randf_range(1.15, 1.45))
-						down = down.rotated(Vector3.UP, rng.randf_range(-0.35, 0.35))
-						var down_y := scale_y * rng.randf_range(0.92, 1.02)
-						(fence_transforms[j % 2] as Array).append(Transform3D(
-							Basis(down.x * scale_x, down.y * down_y, down.z * down_y),
-							at + _out_along(s, f) * rng.randf_range(-0.9, -0.3)
-								+ Vector3(0.0, kerb_top - 0.95, 0.0)))
-						continue
-					if j == breach:
-						var bush_out := _out_along(s, f)
-						for _b in rng.randi_range(3, 4):
-							var bush_at := at + bush_out * rng.randf_range(-0.7, 0.7) \
-								+ tangent * rng.randf_range(-0.9, 0.9)
-							var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
-								Vector3.ONE * (HEDGE_HEIGHT / HEDGE_MODEL_HEIGHT) * rng.randf_range(0.55, 0.9))
-							(bush_transforms[rng.randi() % 2] as Array).append(
-								Transform3D(bush_basis, bush_at + Vector3(0.0, kerb_top - 0.5, 0.0)))
-						continue
-					# Lean and skew, then scale. Built by rotating an orthonormal
-					# frame and scaling its COLUMNS, because `Basis.scaled()`
-					# scales rows — a global scale, which would shear a rotated
-					# panel instead of stretching it along its own length.
-					var rot := Basis(tangent, Vector3.UP, side)
-					rot = rot.rotated(tangent, rng.randf_range(-0.11, 0.11))
-					rot = rot.rotated(Vector3.UP, rng.randf_range(-0.09, 0.09))
-					var sy := scale_y * rng.randf_range(0.88, 1.08)
-					var basis := Basis(rot.x * scale_x, rot.y * sy, rot.z * sy)
-					var origin := at + Vector3(0.0, kerb_top - 0.16 + rng.randf_range(-0.14, 0.05), 0.0)
-					(fence_transforms[j % 2] as Array).append(Transform3D(basis, origin))
-			2:
-				# Hedgerow: bushes packed tighter than a bush's own footprint,
-				# so the canopies overlap into one mass instead of reading as
-				# shrubs in a queue.
-				#
-				# ROUND 6: WALKED, not divided. The old loop put bush `j` at
-				# `(j + 0.5) / count` plus a jitter smaller than the interval
-				# itself, which cannot produce a thin patch or a thick knot —
-				# only a slightly untidy queue, which is what the reviewer read
-				# ("dead-even intervals ... no gap"). Advancing by a variable
-				# step instead lets the row genuinely clump and genuinely thin,
-				# and one step in eight is a long one, so the hedge is patchy
-				# the way a hedge that has been grazed and cut back for years
-				# is patchy. Same seeded RNG, so still deterministic.
-				#
-				# The FLOWERING is clumped too, by the same reasoning. Choosing
-				# `Bush_Common_Flowers` with an independent coin flip per bush
-				# puts blossom on every other bush at a near-constant interval —
-				# in the render, an evenly beaded purple line. Real blossom
-				# comes in patches, so flowering here is a two-state run: once a
-				# stretch is in flower it tends to stay in flower, and once it
-				# isn't it tends to stay out.
-				# Round 7: KNOTS, not a walk. Round 6's variable-step walk did
-				# clump and thin in the data, and the reviewer still called the
-				# hedge "uniform in size and spaced at near-identical intervals
-				# ... the clearest procedural tell in the set" — because a step
-				# drawn from 0.5x to 1.35x of one spacing, bush after bush,
-				# averages back out to that spacing over any stretch big enough
-				# to look at. Variety per ITEM is not variety per GROUP.
-				#
-				# So the unit of placement is a thicket of three to seven
-				# bushes, and the thicket is what varies: how many, how big,
-				# how far past the next one, and whether the whole thicket is
-				# in blossom. That is the same structure the rock formation
-				# below already uses, and it is what puts real thick, thin and
-				# bare stretches into a 37m run.
-				var wander_phase := rng.randf_range(0.0, TAU)
-				var travelled := HEDGE_SPACING * rng.randf_range(0.2, 0.7)
-				while travelled < length:
-					var thicket: int = rng.randi_range(3, 7)
-					# One thicket in five stands taller and broader — a bush
-					# that was never cut back. Uniform prop scale is named in
-					# the rubric as a readable signature of generator output.
-					var thicket_scale := rng.randf_range(1.15, 1.55) if rng.randf() < 0.2 else rng.randf_range(0.62, 1.05)
-					var flowering := rng.randf() < 0.42
-					var thicket_wander := 0.7 * sin(travelled / length * 6.1 + wander_phase)
-					for _n in thicket:
-						var f := (travelled + HEDGE_SPACING * rng.randf_range(-0.45, 0.45)) / length
-						travelled += HEDGE_SPACING * rng.randf_range(0.45, 0.8)
-						# Clear of the piers. A hedge growing straight through
-						# its own gatepost is what made the round-6 frame's
-						# pier read as a stray block hovering in foliage rather
-						# than as part of the boundary line; leaving the last
-						# ~1.7m at each end open lets the kerb and the pier's
-						# own base show, which is what connects them.
-						if f < 0.046 or f > 0.954:
-							continue
-						var at := _point_along(s, f)
-						var out := _out_along(s, f)
-						var across := thicket_wander + rng.randf_range(-0.55, 0.55)
-						var scale := HEDGE_HEIGHT / HEDGE_MODEL_HEIGHT * thicket_scale * rng.randf_range(0.78, 1.22)
-						var origin := at + out * across + Vector3(0.0, kerb_top - 0.25, 0.0)
-						var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
-						basis = basis.rotated(Vector3.RIGHT, rng.randf_range(-0.12, 0.12))
-						basis = basis.rotated(Vector3.FORWARD, rng.randf_range(-0.12, 0.12))
-						(bush_transforms[1 if flowering else 0] as Array).append(
-							Transform3D(basis.scaled(Vector3.ONE * scale), origin))
-					# The gap to the next thicket. One in four is a real
-					# clearing where the kerb runs bare — a hedge with no
-					# clearings is a wall made of leaves.
-					travelled += HEDGE_SPACING * (rng.randf_range(2.6, 4.4) if rng.randf() < 0.25
-						else rng.randf_range(0.7, 1.6))
-			3:
-				# Rock formation: boulders clustered along and across the
-				# kerb, some straddling it, so an outcrop reads as breaking
-				# THROUGH the boundary line rather than sitting on a shelf.
-				# Clusters, not a queue. Round 2 still spaced boulders evenly
-				# enough along the kerb that the run read as placed rather than
-				# as outcrop — the rubric names regular intervals and uniform
-				# prop scale as the readable signature of generator output. A
-				# few knots of three to five, each with one clearly dominant
-				# boulder, is what a real outcrop looks like.
-				#
-				# ROUND 7: FEWER, LOOSER knots, and a smaller top end. The
-				# reviewer read this run as "lined up at roughly even spacing
-				# along the wall like beads on a string, all similar in scale —
-				# no big/small grouping, no gaps". Four knots evenly divided
-				# across a 37m run, each only ±2m wide, IS a bead string; the
-				# clustering was real in the code and invisible at the spacing
-				# it ran at. Two or three knots, each spread over ~6m, with the
-				# gaps between them left bare, is an outcrop.
-				#
-				# The dominant boulder also came down. `Rock_Medium_3` is 3.42m
-				# across as authored, so the old 1.45 multiplier on top of the
-				# ROCK_HEIGHT fit was putting 5.9m, 4m-tall monoliths on the
-				# boundary — twice the height of the wall three segments away,
-				# and (the reviewer's other complaint) big enough that one
-				# unlit facet becomes the largest dark shape in the frame. The
-				# kit's own colour and geometry are a known limit that needs
-				# art this project does not have; how BIG they are is not, and
-				# is the half of that complaint this file can answer.
-				var knots: int = clampi(int(round(length / (ROCK_SPACING * 4.0))), 2, 3)
-				for knot in knots:
-					var centre := (float(knot) + rng.randf_range(0.25, 0.75)) / float(knots)
-					var in_knot: int = rng.randi_range(4, 7)
-					for n in in_knot:
-						var f := centre + rng.randf_range(-0.085, 0.085)
-						var at := _point_along(s, f)
-						var out := _out_along(s, f)
-						var across := rng.randf_range(-1.3, 1.3)
-						# Round 8: a wider span between the knot's biggest and
-						# its smallest. Round 7 cut the top end (right: 4m
-						# monoliths were the loudest thing in the frame) but
-						# pulled the whole knot toward one middling size, and
-						# the reviewer read the result as "one soft, blobby,
-						# uniform dark mass ... no individual rock definition".
-						# A boulder pile reads as a pile because of the size
-						# STEP between its parts, not because of any one part.
-						var scale := ROCK_HEIGHT / ROCK_MODEL_HEIGHT * (rng.randf_range(1.0, 1.32) if n == 0 else rng.randf_range(0.22, 0.72))
-						var origin := at + out * across + Vector3(0.0, ROCK_SEAT, 0.0)
-						var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
-						# The kit's boulders have a flat modelled underside, so
-						# tilting a BIG one swings that base into view as a
-						# near-black facet (see `_stone_basis`). Under about
-						# 0.6 of the nominal fit the base stays buried and the
-						# tilt just breaks the domed silhouette that made the
-						# knot read as one lump.
-						if scale < ROCK_HEIGHT / ROCK_MODEL_HEIGHT * 0.6:
-							basis = basis.rotated(Vector3.RIGHT, rng.randf_range(-0.17, 0.17))
-							basis = basis.rotated(Vector3.FORWARD, rng.randf_range(-0.17, 0.17))
-						(rock_transforms[rng.randi() % 3] as Array).append(
-							Transform3D(basis.scaled(Vector3.ONE * scale), origin))
+	for s in edge.segment_count:
+		var style := _segment_style(edge, s)
+		match style:
+			Style.FIELD_WALL:
+				_dress_wall_growth(edge, s, rng, bush_transforms)
+			Style.GENTLE:
+				# Fieldstone AND hedge, unconditionally — "the gentlest
+				# boundary on the map" gets no fence gaps, just a soft foot.
+				_dress_wall_growth(edge, s, rng, bush_transforms)
+				_dress_hedgerow(edge, s, rng, kerb_top, bush_transforms)
+			Style.HEDGE_FENCE:
+				# "Hedgerow on bank, ranch fence at gaps" — hedge is the
+				# default cover; a minority of segments are the gap a fence
+				# panel run fills instead, not the other way round.
+				if rng.randf() < 0.28:
+					_dress_fence(edge, s, rng, kerb_top, fence_transforms, bush_transforms)
+				else:
+					_dress_hedgerow(edge, s, rng, kerb_top, bush_transforms)
+			Style.ROCK_SCARP:
+				_dress_rock(edge, s, rng, rock_transforms, true)
+			Style.ROCK_SCREE:
+				_dress_rock(edge, s, rng, rock_transforms, false)
+			Style.GROWTH_RIDGE:
+				_dress_forest_wall(edge, s, rng, false, tree_transforms, bush_transforms)
+			Style.IRONWOOD:
+				_dress_forest_wall(edge, s, rng, true, tree_transforms, bush_transforms)
+			Style.MARSH:
+				_dress_marsh(edge, s, rng, reed_transforms)
+			Style.RIDGE_CLIMB:
+				pass  # landform-carried; see header's honest remainder #2
+			Style.BARRIER:
+				pass  # authored and stark on purpose; no naturalised dressing
 
-	# The base note, all the way round, under every style: low growth and
-	# loose stone at the bank's outer foot. Four dressings that share a base
-	# read as one feature; four that do not read as four.
-	var dressing_count := int(_ring_total / DRESSING_SPACING)
-	for j in dressing_count:
-		var f := (float(j) + 0.5 + rng.randf_range(-0.45, 0.45)) / float(dressing_count)
-		var i := posmod(int(f * float(RING_POINTS)), RING_POINTS)
-		var p := _ring[i]
-		var out := _ring_out[i]
-		# INWARD, mostly. The player is inside the ring and never sees the
-		# outer face; round 1 put 72% of this growth on the far side, which is
-		# why the wall close-up came back with a bare, hard-edged foot and
-		# nothing softening the kerb line.
-		var side := -1.0 if rng.randf() < 0.7 else 1.0
-		var is_stone := rng.randf() >= 0.82
-		# A loose stone dropped INSIDE the bank's own footprint is a stone
-		# sliced by the bank mesh, and a sliced boulder reads as a flat grey
-		# plate lying on the turf — round 4's wide and hedgerow frames both
-		# had one in the near foreground. Stone stands clear of the bank;
-		# foliage may still grow up against it, because overlapping leaves
-		# read as growth rather than as a cut.
-		var across := side * (rng.randf_range(BANK_HALF_BASE * 1.05, BANK_HALF_BASE * 1.35) if is_stone
-			else rng.randf_range(BANK_HALF_BASE * 0.5, BANK_HALF_BASE * 1.4))
-		# Sampled at the dressing's OWN position, not taken from the ring
-		# point it was offset from. Up to 2.8m off the centreline is far
-		# enough that real ground has moved, and round 2's frames showed the
-		# cost directly: half-buried boulders reading as grey shards sticking
-		# out of the turf at an angle nothing else in the world does.
-		var here := p + out * across
-		var ground: float = float(world.call("ground_height_at", here.x, here.z))
-		if is_nan(ground):
-			ground = p.y
-		var origin := Vector3(here.x, ground - 0.18, here.z)
-		if is_stone:
-			# Round 5 made these full-size enough, and frequent enough, that
-			# the near foreground of the wide frame read as three dark
-			# boulders lined up in the grass beside the wall. They are meant
-			# to be loose stone shed from the bank, not a second rock
-			# formation.
-			(rock_transforms[rng.randi() % 3] as Array).append(
-				Transform3D(_stone_basis(rng, rng.randf_range(0.14, 0.34)), origin))
-		else:
-			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
-			(bush_transforms[rng.randi() % 2] as Array).append(
-				Transform3D(basis.scaled(Vector3.ONE * rng.randf_range(0.35, 0.95)), origin))
+	_dress_common(world, edge, rng, bush_transforms, rock_transforms)
 
 	for m in BUSH_MESHES.size():
 		_batch(parent, "Hedge%d" % m, _bush_mesh(BUSH_MESHES[m]), bush_transforms[m])
@@ -916,15 +857,239 @@ func _build_planting(world: Node, parent: Node3D) -> void:
 		_batch(parent, "Boulder%d" % m, _tinted_mesh(ROCK_MESHES[m], ROCK_MATERIAL_NAME, ROCK_TINT), rock_transforms[m])
 	for m in FENCE_MESHES.size():
 		_batch(parent, "Fence%d" % m, _tinted_mesh(FENCE_MESHES[m], FENCE_MATERIAL_NAME, FENCE_TINT), fence_transforms[m])
+	for m in TREE_MESHES.size():
+		_batch(parent, "Tree%d" % m, _tree_mesh(TREE_MESHES[m]), tree_transforms[m])
+	for m in REED_MESHES.size():
+		_batch(parent, "Reed%d" % m, _reed_mesh(REED_MESHES[m]), reed_transforms[m])
 
 
-## Tilt, for SMALL loose stones only. `Rock_Medium_*` are modelled with a
-## flat underside meant to be set level on the ground: round 5 tilted the big
-## formation boulders too, and the result was that flat base swinging into
-## view as a near-black facet, plus hard right-angled notches where two
-## tilted boulders interpenetrated. At dressing scale (under half a metre)
-## the same tilt just reads as a stone that has settled. The formation's own
-## boulders get yaw and a deeper seat instead — see `ROCK_SEAT`.
+## FIELD_WALL/GENTLE only: low growth hard against the wall's own inner
+## face, so a dry-stone wall does not meet mown grass in one hard, obviously
+## generated line for the whole segment.
+func _dress_wall_growth(edge: EdgeSample, s: int, rng: RandomNumberGenerator, bush_transforms: Array[Array]) -> void:
+	var length := _segment_length(edge, s)
+	var tufts: int = maxi(int(round(length / 3.0)), 6)
+	for j in tufts:
+		var f := (float(j) + 0.5 + rng.randf_range(-0.45, 0.45)) / float(tufts)
+		var at := _point_along(edge, s, f)
+		var out := _out_along(edge, s, f)
+		var origin := at - out * rng.randf_range(0.65, 1.5) + Vector3(0.0, -0.1, 0.0)
+		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3.ONE * rng.randf_range(0.4, 0.95))
+		(bush_transforms[rng.randi() % 2] as Array).append(Transform3D(basis, origin))
+
+
+## HEDGE_FENCE's "ranch fence" half. Panel count fits the segment exactly
+## (no gap, no doubled post); one run in five loses a panel to the ground
+## (fallen), one run in two loses a panel to a bush clump grown through it
+## (breach) — both kept from the ring's own fence logic, which existed
+## specifically to answer a blind reviewer's "generated, not designed"
+## verdict on a perfectly even fence line.
+func _dress_fence(edge: EdgeSample, s: int, rng: RandomNumberGenerator, kerb_top: float,
+		fence_transforms: Array[Array], bush_transforms: Array[Array]) -> void:
+	var length := _segment_length(edge, s)
+	var panels: int = maxi(int(round(length / FENCE_PANEL_TARGET)), 4)
+	var panel_length := length / float(panels)
+	var scale_y := FENCE_HEIGHT / FENCE_MODEL_HEIGHT
+	var scale_x := panel_length / FENCE_MODEL_LENGTH * 1.16
+	var tangent := _tangent_along(edge, s)
+	var side := tangent.cross(Vector3.UP)
+	var fallen: int = rng.randi_range(1, panels - 2) if rng.randf() < 0.4 else -1
+	var breach: int = rng.randi_range(1, panels - 2) if rng.randf() < 0.5 else -1
+	for j in panels:
+		var f := (float(j) + 0.5 + rng.randf_range(-0.05, 0.05)) / float(panels)
+		var at := _point_along(edge, s, f)
+		if j == fallen:
+			var down := Basis(tangent, Vector3.UP, side)
+			down = down.rotated(tangent, rng.randf_range(1.15, 1.45))
+			down = down.rotated(Vector3.UP, rng.randf_range(-0.35, 0.35))
+			var down_y := scale_y * rng.randf_range(0.92, 1.02)
+			(fence_transforms[j % 2] as Array).append(Transform3D(
+				Basis(down.x * scale_x, down.y * down_y, down.z * down_y),
+				at + _out_along(edge, s, f) * rng.randf_range(-0.9, -0.3) + Vector3(0.0, kerb_top - 0.95, 0.0)))
+			continue
+		if j == breach:
+			var bush_out := _out_along(edge, s, f)
+			for _b in rng.randi_range(3, 4):
+				var bush_at := at + bush_out * rng.randf_range(-0.7, 0.7) + tangent * rng.randf_range(-0.9, 0.9)
+				var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+					Vector3.ONE * (HEDGE_HEIGHT / HEDGE_MODEL_HEIGHT) * rng.randf_range(0.55, 0.9))
+				(bush_transforms[rng.randi() % 2] as Array).append(
+					Transform3D(bush_basis, bush_at + Vector3(0.0, kerb_top - 0.5, 0.0)))
+			continue
+		var rot := Basis(tangent, Vector3.UP, side)
+		rot = rot.rotated(tangent, rng.randf_range(-0.11, 0.11))
+		rot = rot.rotated(Vector3.UP, rng.randf_range(-0.09, 0.09))
+		var sy := scale_y * rng.randf_range(0.88, 1.08)
+		var basis := Basis(rot.x * scale_x, rot.y * sy, rot.z * sy)
+		var origin := at + Vector3(0.0, kerb_top - 0.16 + rng.randf_range(-0.14, 0.05), 0.0)
+		(fence_transforms[j % 2] as Array).append(Transform3D(basis, origin))
+
+
+## HEDGE_FENCE's default cover and GENTLE's own dressing: bushes packed into
+## thickets (3-7) that wander and thin along the segment rather than a
+## divided, evenly-stepped row — the ring's own "knots, not a walk" fix.
+func _dress_hedgerow(edge: EdgeSample, s: int, rng: RandomNumberGenerator, kerb_top: float, bush_transforms: Array[Array]) -> void:
+	var length := _segment_length(edge, s)
+	var wander_phase := rng.randf_range(0.0, TAU)
+	var travelled := HEDGE_SPACING * rng.randf_range(0.2, 0.7)
+	while travelled < length:
+		var thicket: int = rng.randi_range(3, 7)
+		var thicket_scale := rng.randf_range(1.15, 1.55) if rng.randf() < 0.2 else rng.randf_range(0.62, 1.05)
+		var flowering := rng.randf() < 0.42
+		var thicket_wander := 0.7 * sin(travelled / length * 6.1 + wander_phase)
+		for _n in thicket:
+			var f := (travelled + HEDGE_SPACING * rng.randf_range(-0.45, 0.45)) / length
+			travelled += HEDGE_SPACING * rng.randf_range(0.45, 0.8)
+			if f < 0.046 or f > 0.954:
+				continue  # clear of the piers at each end
+			var at := _point_along(edge, s, f)
+			var out := _out_along(edge, s, f)
+			var across := thicket_wander + rng.randf_range(-0.55, 0.55)
+			var scale := HEDGE_HEIGHT / HEDGE_MODEL_HEIGHT * thicket_scale * rng.randf_range(0.78, 1.22)
+			var origin := at + out * across + Vector3(0.0, kerb_top - 0.25, 0.0)
+			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
+			basis = basis.rotated(Vector3.RIGHT, rng.randf_range(-0.12, 0.12))
+			basis = basis.rotated(Vector3.FORWARD, rng.randf_range(-0.12, 0.12))
+			(bush_transforms[1 if flowering else 0] as Array).append(
+				Transform3D(basis.scaled(Vector3.ONE * scale), origin))
+		travelled += HEDGE_SPACING * (rng.randf_range(2.6, 4.4) if rng.randf() < 0.25 else rng.randf_range(0.7, 1.6))
+
+
+## ROCK_SCARP (band 2 west) and ROCK_SCREE (band 3 east). Both are boulder
+## knots straddling the kerb, kept from the ring's own rock-formation logic;
+## `dense` is the one thing the two styles change. A "quarried rock face run
+## as a scarp" needs to read as closer to continuous than a loose scree
+## field does, so `dense` shortens the gap between knots, adds a knot, and
+## raises the nominal scale — it does NOT change technique, because the
+## technique (a dominant piece plus a size step down from it, not a uniform
+## pile) is what kept these from reading as generator output in the first
+## place.
+func _dress_rock(edge: EdgeSample, s: int, rng: RandomNumberGenerator, rock_transforms: Array[Array], dense: bool) -> void:
+	var length := _segment_length(edge, s)
+	var spacing := ROCK_SPACING * (2.6 if dense else 4.0)
+	var knots: int = clampi(int(round(length / spacing)), 2 if not dense else 3, 4 if dense else 3)
+	var height_mul := 1.2 if dense else 1.0
+	for knot in knots:
+		var centre := (float(knot) + rng.randf_range(0.25, 0.75)) / float(knots)
+		var in_knot: int = rng.randi_range(5, 9) if dense else rng.randi_range(4, 7)
+		for n in in_knot:
+			var f := centre + rng.randf_range(-0.09, 0.09)
+			var at := _point_along(edge, s, f)
+			var out := _out_along(edge, s, f)
+			var across := rng.randf_range(-1.3, 1.3)
+			var scale := ROCK_HEIGHT * height_mul / ROCK_MODEL_HEIGHT * (
+				rng.randf_range(1.0, 1.32) if n == 0 else rng.randf_range(0.22, 0.72))
+			var origin := at + out * across + Vector3(0.0, ROCK_SEAT, 0.0)
+			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
+			if scale < ROCK_HEIGHT * height_mul / ROCK_MODEL_HEIGHT * 0.6:
+				basis = basis.rotated(Vector3.RIGHT, rng.randf_range(-0.17, 0.17))
+				basis = basis.rotated(Vector3.FORWARD, rng.randf_range(-0.17, 0.17))
+			(rock_transforms[rng.randi() % 3] as Array).append(
+				Transform3D(basis.scaled(Vector3.ONE * scale), origin))
+
+
+## GROWTH_RIDGE (band 2 east) and IRONWOOD (band 4 west): "dense impassable
+## growth" / "old-growth, impassable by density alone". New relative to the
+## ring — reuses `CommonTree_*` (already the game's forest family, see
+## header) at tight, gapless spacing, with a bush understory closing the gap
+## between trunks at eye height. Deliberately NO clearings, unlike
+## `_dress_hedgerow` — a hedge earns its gaps because it is a maintained
+## field boundary; a wall of impassable growth should never show daylight
+## through it, or it reads as a place to squeeze past rather than a
+## boundary. `old_growth` (IRONWOOD) runs two rows instead of one and skews
+## both spacing and scale larger.
+func _dress_forest_wall(edge: EdgeSample, s: int, rng: RandomNumberGenerator, old_growth: bool,
+		tree_transforms: Array[Array], bush_transforms: Array[Array]) -> void:
+	var length := _segment_length(edge, s)
+	var kerb_top := BANK_HEIGHT + KERB_HEIGHT
+	var spacing := 3.4 if old_growth else 4.1
+	var rows := 2 if old_growth else 1
+	var count: int = maxi(int(round(length / spacing)), 4)
+	for row in rows:
+		for j in count:
+			var f := (float(j) + 0.5 + rng.randf_range(-0.4, 0.4)) / float(count)
+			var at := _point_along(edge, s, f)
+			var out := _out_along(edge, s, f)
+			var row_out := 1.6 + float(row) * 2.8 + rng.randf_range(-0.5, 0.5)
+			var origin := at + out * row_out + Vector3(0.0, kerb_top - 0.3, 0.0)
+			var scale_base := 1.15 if old_growth else 0.85
+			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+				Vector3.ONE * scale_base * rng.randf_range(0.85, 1.25))
+			(tree_transforms[rng.randi() % TREE_MESHES.size()] as Array).append(Transform3D(basis, origin))
+			# Understory bush at the same station, offset only slightly
+			# inward — this is what closes the sightline BETWEEN trunks;
+			# without it the "wall" is a colonnade a player can see through
+			# and might expect to walk between.
+			var bush_out := row_out * 0.55
+			var bush_origin := at + out * bush_out + Vector3(0.0, kerb_top - 0.25, 0.0)
+			var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+				Vector3.ONE * (HEDGE_HEIGHT / HEDGE_MODEL_HEIGHT) * rng.randf_range(0.55, 0.95))
+			(bush_transforms[rng.randi() % 2] as Array).append(Transform3D(bush_basis, bush_origin))
+
+
+## MARSH (band 3 west). See the header's honest remainder #1 before changing
+## this function — it is BANK DRESSING, not a water feature.
+##
+## TODO(D51 honest remainder, unresolved by design): D51 names Band 3's west
+## edge as "the one edge style with no existing implementation" — real
+## impassable water needs either depth the player will not enter or reed
+## density enough to collide, and there is no swimming system to make the
+## first of those legible. This function does not invent either. It places
+## the same reed clumps `water.gd` already scatters at the pond/river shore
+## (same models, same tint) along the bank, so the stretch reads as wetland
+## rather than an unexplained bare kerb — but there is no water plane, no
+## depth, and the actual blocking collision is the same box every other
+## style gets from `_build_collision`, not a marsh mechanic. Do not remove
+## this TODO until a real water/depth/reed-collision answer exists.
+func _dress_marsh(edge: EdgeSample, s: int, rng: RandomNumberGenerator, reed_transforms: Array[Array]) -> void:
+	var length := _segment_length(edge, s)
+	var kerb_top := BANK_HEIGHT + KERB_HEIGHT
+	var tangent := _tangent_along(edge, s)
+	var clumps: int = maxi(int(round(length / 3.4)), 5)
+	for j in clumps:
+		var f := (float(j) + 0.5 + rng.randf_range(-0.4, 0.4)) / float(clumps)
+		var at := _point_along(edge, s, f)
+		var out := _out_along(edge, s, f)
+		for _n in rng.randi_range(3, 6):
+			var origin := at + out * rng.randf_range(-0.6, 1.6) + tangent * rng.randf_range(-1.0, 1.0) \
+				+ Vector3(0.0, kerb_top - 0.3, 0.0)
+			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3.ONE * rng.randf_range(0.7, 1.3))
+			(reed_transforms[rng.randi() % REED_MESHES.size()] as Array).append(Transform3D(basis, origin))
+
+
+## Low growth and loose stone along the whole piece's outer foot, regardless
+## of style — the base note that reads several different dressings as one
+## feature. Skipped on BARRIER stretches: an authored, maintained Team
+## Tether wall should not have casual litter growing at its foot the way a
+## field boundary does.
+func _dress_common(world: Node, edge: EdgeSample, rng: RandomNumberGenerator,
+		bush_transforms: Array[Array], rock_transforms: Array[Array]) -> void:
+	var dressing_count := int(edge.total / DRESSING_SPACING)
+	for j in dressing_count:
+		var f := (float(j) + 0.5 + rng.randf_range(-0.45, 0.45)) / float(dressing_count)
+		var i := clampi(int(f * float(edge.point_count)), 0, edge.point_count - 1)
+		if _style_at_point(edge, i) == Style.BARRIER:
+			continue
+		var p: Vector3 = edge.points[i]
+		var out: Vector3 = edge.out[i]
+		var side := -1.0 if rng.randf() < 0.7 else 1.0
+		var is_stone := rng.randf() >= 0.82
+		var across := side * (rng.randf_range(BANK_HALF_BASE * 1.05, BANK_HALF_BASE * 1.35) if is_stone
+			else rng.randf_range(BANK_HALF_BASE * 0.5, BANK_HALF_BASE * 1.4))
+		var here := p + out * across
+		var ground: float = float(world.call("ground_height_at", here.x, here.z))
+		if is_nan(ground):
+			ground = p.y
+		var origin := Vector3(here.x, ground - 0.18, here.z)
+		if is_stone:
+			(rock_transforms[rng.randi() % 3] as Array).append(
+				Transform3D(_stone_basis(rng, rng.randf_range(0.14, 0.34)), origin))
+		else:
+			var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
+			(bush_transforms[rng.randi() % 2] as Array).append(
+				Transform3D(basis.scaled(Vector3.ONE * rng.randf_range(0.35, 0.95)), origin))
+
+
 func _stone_basis(rng: RandomNumberGenerator, scale: float) -> Basis:
 	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
 	basis = basis.rotated(Vector3.RIGHT, rng.randf_range(-0.16, 0.16))
@@ -948,36 +1113,44 @@ func _batch(parent: Node3D, node_name: String, mesh: Mesh, transforms: Array) ->
 
 
 # ---------------------------------------------------------------------------
-# Collision — OF6's fix, unchanged in substance
+# Collision — same derivation rule as the ring (spec §1E: never precede the
+# visible line), adapted to open per-edge segments instead of a closed
+# per-ring one.
 # ---------------------------------------------------------------------------
 
-func _build_collision(parent: Node3D) -> void:
-	for s in SEGMENTS:
-		var from := _corner(s)
-		var to := _corner(s + 1)
-		var heights := _segment_ground_heights(s)
+func _build_collision(parent: Node3D, edge: EdgeSample) -> void:
+	for s in edge.segment_count:
+		var from := _corner(edge, s)
+		var to := _corner(edge, s + 1)
+		var heights := _segment_ground_heights(edge, s)
 		var basis := _segment_basis(from, to)
-		var thickness := 3.4 if s % 4 == 3 else 2.4
+		var style := _segment_style(edge, s)
+		var thickness := _collision_thickness(style)
 		_add_collision(parent, basis["mid"], basis["yaw"], basis["length"],
 			BANK_HEIGHT + KERB_HEIGHT + WALL_HEIGHT, thickness, heights)
 
 
-func _corner(s: int) -> Vector3:
-	var i := (s % SEGMENTS) * SPANS_PER_SEGMENT
-	var p := _ring[i]
-	return Vector3(p.x, _ring_raw_y[i], p.z)
+## Thicker where the visible dressing juts further past the kerb line
+## (boulders, trunks) than a flush wall or fence face does — same reasoning
+## the ring applied per style, generalised to the new style set.
+func _collision_thickness(style: Style) -> float:
+	match style:
+		Style.ROCK_SCARP, Style.ROCK_SCREE, Style.IRONWOOD, Style.GROWTH_RIDGE:
+			return 3.4
+		_:
+			return 2.4
 
 
-## OF6: real ground sampled along the segment's actual path, not just its two
-## endpoints. These are the segment's own 19 ring points — the same
-## measurement OF6 introduced (its 2 endpoints plus 16 interior samples),
-## taken at ~2.05m spacing rather than ~2.2m, and taken from the RAW terrain
-## samples rather than the smoothed line the wall is drawn on. Denser and
-## unsmoothed, so the box can only be at least as safe as OF6 made it.
-func _segment_ground_heights(s: int) -> PackedFloat32Array:
+func _corner(edge: EdgeSample, s: int) -> Vector3:
+	var i := mini(s * SPANS_PER_SEGMENT, edge.point_count - 1)
+	var p: Vector3 = edge.points[i]
+	return Vector3(p.x, edge.raw_y[i], p.z)
+
+
+func _segment_ground_heights(edge: EdgeSample, s: int) -> PackedFloat32Array:
 	var heights := PackedFloat32Array()
 	for k in SPANS_PER_SEGMENT + 1:
-		heights.append(_ring_raw_y[_wrap(s * SPANS_PER_SEGMENT + k)])
+		heights.append(edge.raw_y[s * SPANS_PER_SEGMENT + k])
 	return heights
 
 
@@ -989,30 +1162,6 @@ func _segment_basis(from: Vector3, to: Vector3) -> Dictionary:
 	return {"length": maxf(length, 0.01), "mid": mid, "yaw": yaw}
 
 
-## A small safety overlap into each neighbour, cheap insurance against the
-## exact-length boxes leaving a hairline seam at a vertex where two segments
-## meet at an angle.
-const COLLISION_OVERLAP := 3.0
-
-## Confirmed by direct reproduction (a player walked clean through segment 32
-## on a slide, well before reaching either end): this box's vertical centring
-## was wrong. `mid.y + (height - MARGIN_DOWN) * 0.5 + MARGIN_DOWN` does not
-## place the box `MARGIN_DOWN` below `mid.y` and `height + MARGIN_UP` above it
-## — it centres the box roughly `height` too high, so on a segment whose two
-## endpoints differ in ground height by more than a couple of metres (real
-## undulation the ring's own header comment says to expect), the box's true
-## floor sat above the actual terrain at the segment's lower end and a player
-## walking that stretch dropped straight under it. The box has to span
-## exactly `[mid.y - MARGIN_DOWN, mid.y + height + MARGIN_UP]` — solving for
-## the centre that makes that true:
-## OF6: the box's vertical span now comes from the segment's actual sampled
-## ground (`heights`, `_segment_ground_heights()`), not the straight line
-## between the segment's two endpoints — a real 22m mid-segment climb on the
-## steepest `rises` peak defeated the old two-point average (see
-## `COLLISION_MARGIN_UP`'s header for the measured numbers). `bottom` clears
-## the lowest sample, `top` clears both the highest sample AND the style's
-## own nominal wall height, so a flat segment still gets exactly the old
-## box and only a genuinely undulating one grows.
 func _add_collision(parent: Node3D, mid: Vector3, yaw: float, length: float, height: float, thickness: float, heights: PackedFloat32Array) -> void:
 	var bottom := mid.y - COLLISION_MARGIN_DOWN
 	var top := mid.y + height + COLLISION_MARGIN_UP
@@ -1032,75 +1181,70 @@ func _add_collision(parent: Node3D, mid: Vector3, yaw: float, length: float, hei
 
 
 # ---------------------------------------------------------------------------
-# Geometry helpers
+# Geometry helpers — same role as the ring's, indexed against one edge's own
+# arrays instead of a global closed ring, and clamped at open ends instead
+# of wrapped.
 # ---------------------------------------------------------------------------
 
-func _segment_length(s: int) -> float:
+func _segment_length(edge: EdgeSample, s: int) -> float:
 	var total := 0.0
 	for k in SPANS_PER_SEGMENT:
-		var a := _ring[_wrap(s * SPANS_PER_SEGMENT + k)]
-		var b := _ring[_wrap(s * SPANS_PER_SEGMENT + k + 1)]
+		var a: Vector3 = edge.points[s * SPANS_PER_SEGMENT + k]
+		var b: Vector3 = edge.points[s * SPANS_PER_SEGMENT + k + 1]
 		total += Vector2(b.x - a.x, b.z - a.z).length()
 	return total
 
 
-## A point `f` of the way along segment `s`, interpolated between the ring's
-## own sampled points so it sits on the terrain-following line rather than on
-## a flat chord.
-func _point_along(s: int, f: float) -> Vector3:
+func _point_along(edge: EdgeSample, s: int, f: float) -> Vector3:
 	var x := clampf(f, 0.0, 0.9999) * float(SPANS_PER_SEGMENT)
 	var k := int(x)
 	var frac := x - float(k)
-	var a := _ring[_wrap(s * SPANS_PER_SEGMENT + k)]
-	var b := _ring[_wrap(s * SPANS_PER_SEGMENT + k + 1)]
+	var a: Vector3 = edge.points[s * SPANS_PER_SEGMENT + k]
+	var b: Vector3 = edge.points[s * SPANS_PER_SEGMENT + k + 1]
 	return a.lerp(b, frac)
 
 
-func _out_along(s: int, f: float) -> Vector3:
-	var i := _wrap(s * SPANS_PER_SEGMENT + int(clampf(f, 0.0, 0.9999) * float(SPANS_PER_SEGMENT)))
-	return _ring_out[i]
+func _out_along(edge: EdgeSample, s: int, f: float) -> Vector3:
+	var i := s * SPANS_PER_SEGMENT + int(clampf(f, 0.0, 0.9999) * float(SPANS_PER_SEGMENT))
+	return edge.out[i]
 
 
-func _tangent_along(s: int) -> Vector3:
-	var a := _ring[s * SPANS_PER_SEGMENT]
-	var b := _ring[_wrap((s + 1) * SPANS_PER_SEGMENT)]
+func _tangent_along(edge: EdgeSample, s: int) -> Vector3:
+	var a: Vector3 = edge.points[s * SPANS_PER_SEGMENT]
+	var b: Vector3 = edge.points[mini((s + 1) * SPANS_PER_SEGMENT, edge.point_count - 1)]
 	return Vector3(b.x - a.x, 0.0, b.z - a.z).normalized()
 
 
-func _yaw_at(i: int) -> float:
-	var a := _ring[_wrap(i - 1)]
-	var b := _ring[_wrap(i + 1)]
+func _yaw_at(edge: EdgeSample, i: int) -> float:
+	var a: Vector3 = edge.points[maxi(i - 1, 0)]
+	var b: Vector3 = edge.points[mini(i + 1, edge.point_count - 1)]
 	return atan2(-(b.z - a.z), b.x - a.x)
 
 
-## Damp, mossy shade where stone meets the ground. A dry-stone wall with the
-## same value top to bottom is the flattest a wall can look, and this project
-## has no SSAO in its shipped pipeline (D01/D06) to supply the darkening for
-## free — so it is painted in, in vertex colour, at no draw-call cost.
-const FOOT_TINT := Color(0.62, 0.68, 0.55)
-
-
-func _strip(st: SurfaceTool, i0: int, count: int, low: PackedFloat32Array, high: PackedFloat32Array, half_low: float, half_high: float, tile: float, colour: Color, foot: Color = Color.WHITE) -> void:
+func _strip(st: SurfaceTool, edge: EdgeSample, i0: int, count: int, low: PackedFloat32Array, high: PackedFloat32Array,
+		half_low: float, half_high: float, tile: float, colour: Color, foot: Color = Color.WHITE) -> void:
 	var colours: Array[Color] = []
 	for k in count + 1:
 		colours.append(colour)
-	_strip_shaded(st, i0, count, low, high, half_low, half_high, tile, colours, foot)
+	_strip_shaded(st, edge, i0, count, low, high, half_low, half_high, tile, colours, foot)
 
 
-## A terrain-following prism along `count` spans of the ring starting at ring
-## index `i0`. `low`/`high` are offsets from each ring point's own height, so
-## the prism rides the ground rather than sitting at one Y — the whole point
-## of the rebuild. UVs are in metres over `tile`, so the masonry keeps a
-## constant real-world stone size no matter how long the run is.
-func _strip_shaded(st: SurfaceTool, i0: int, count: int, low: PackedFloat32Array, high: PackedFloat32Array, half_low: float, half_high: float, tile: float, colours: Array[Color], foot: Color = Color.WHITE) -> void:
-	var u := _ring_arc[_wrap(i0)] / tile
+## A terrain-following prism along `count` spans of `edge` starting at point
+## index `i0`. Identical mechanism to the ring's own `_strip_shaded` — the
+## only change is reading `edge.points`/`edge.out`/`edge.arc` instead of a
+## global `_ring`/`_ring_out`/`_ring_arc`, and no `_wrap()`: an open edge
+## never indexes past its own ends because every caller sizes `count` to
+## fit inside `edge.point_count`.
+func _strip_shaded(st: SurfaceTool, edge: EdgeSample, i0: int, count: int, low: PackedFloat32Array, high: PackedFloat32Array,
+		half_low: float, half_high: float, tile: float, colours: Array[Color], foot: Color = Color.WHITE) -> void:
+	var u := edge.arc[i0] / tile
 	for k in count:
-		var ia := _wrap(i0 + k)
-		var ib := _wrap(i0 + k + 1)
-		var a := _ring[ia]
-		var b := _ring[ib]
-		var na := _ring_out[ia]
-		var nb := _ring_out[ib]
+		var ia := i0 + k
+		var ib := i0 + k + 1
+		var a: Vector3 = edge.points[ia]
+		var b: Vector3 = edge.points[ib]
+		var na: Vector3 = edge.out[ia]
+		var nb: Vector3 = edge.out[ib]
 		var span := Vector2(b.x - a.x, b.z - a.z).length()
 		var u2 := u + span / tile
 
@@ -1134,8 +1278,6 @@ func _strip_shaded(st: SurfaceTool, i0: int, count: int, low: PackedFloat32Array
 		u = u2
 
 
-## An upright box with a metre-based UV, so a pier is made of the same size
-## stones as the wall beside it rather than one stone stretched over it.
 func _box(st: SurfaceTool, base: Vector3, size: Vector3, yaw: float, colour: Color) -> void:
 	var right := Vector3(cos(yaw), 0.0, -sin(yaw)) * size.x * 0.5
 	var fwd := Vector3(sin(yaw), 0.0, cos(yaw)) * size.z * 0.5
@@ -1158,9 +1300,6 @@ func _box(st: SurfaceTool, base: Vector3, size: Vector3, yaw: float, colour: Col
 		cols, Vector3.UP)
 
 
-## Flat-shaded, explicitly-normalled quad. The normal is computed from the
-## geometry and then flipped to agree with `outward`, so a winding mistake
-## costs nothing — every material here draws double-sided.
 func _quad(st: SurfaceTool, p0: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, uv0: Vector2, uv1: Vector2, uv2: Vector2, uv3: Vector2, corner_colours: Array, outward: Vector3) -> void:
 	var n := (p1 - p0).cross(p3 - p0)
 	if n.length_squared() < 0.000001:
@@ -1190,7 +1329,6 @@ func _stone_material() -> StandardMaterial3D:
 	m.normal_scale = 0.7
 	m.roughness_texture = STONE_ROUGHNESS
 	m.roughness = 1.0
-	# Per-piece value lives in vertex colour; see `_build_stonework`.
 	m.vertex_color_use_as_albedo = true
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return m
@@ -1203,15 +1341,6 @@ func _earth_material() -> StandardMaterial3D:
 	m.normal_texture = EARTH_NORMAL
 	m.normal_scale = 0.5
 	m.roughness = 1.0
-	# Solved, not eyeballed, the same way terrain_playground.json's own grass
-	# tint was. `albedo_color` MULTIPLIES; Grass008_Color.jpg's mean is
-	# RGB(0.393, 0.516, 0.168), and this tint lands the product at roughly
-	# (0.26, 0.30, 0.12) — hue ~73, saturation ~0.61, a shade DARKER than the
-	# terrain's own rendered grass. That is deliberate: a bank reads as a bank
-	# because it is turned away from the light, not because it is a different
-	# plant. It looks like lavender in a picker for the reason
-	# terrain_playground.json already documents at length — to desaturate a
-	# green by multiplying you must raise blue relative to green.
 	m.albedo_color = Color("#a892b0")
 	m.vertex_color_use_as_albedo = true
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED
@@ -1227,13 +1356,6 @@ func _mesh_of(scene: PackedScene) -> Mesh:
 	return found[0].mesh
 
 
-## The pack ships `Bush_Common`/`Bush_Common_Flowers` with a crimson autumn
-## leaf texture on the `Leaves_TwistedTree` material (vegetation.json's own
-## comment on the same models) — swap it for the pack's own green leaf, same
-## fix the vegetation "bushes" layer already applies at scatter time. Baked
-## into the mesh's own surface here rather than set as a surface override,
-## because a MultiMesh draws a Mesh and never sees a MeshInstance3D's
-## overrides.
 func _bush_mesh(scene: PackedScene) -> Mesh:
 	var instance: Node = scene.instantiate()
 	var found := _find_mesh_instances(instance)
@@ -1243,9 +1365,6 @@ func _bush_mesh(scene: PackedScene) -> Mesh:
 	var source: Mesh = found[0].mesh
 	if source == null:
 		return null
-	# `duplicate(false)` keeps the importer's generated LOD chain and shadow
-	# mesh, which rebuilding through surface_get_arrays() silently drops —
-	# vegetation.gd paid for that once already.
 	var out: ArrayMesh = source.duplicate(false)
 	for surface in out.get_surface_count():
 		var material: Material = out.surface_get_material(surface)
@@ -1258,10 +1377,57 @@ func _bush_mesh(scene: PackedScene) -> Mesh:
 	return out
 
 
-## A pack material multiplied by a palette colour, baked into the mesh's own
-## surface so a MultiMesh can carry it — a MultiMesh draws a Mesh and never
-## sees a MeshInstance3D's surface overrides. `duplicate(false)` keeps the
-## importer's LOD chain, which rebuilding through surface_get_arrays() drops.
+## Same mechanism as `_bush_mesh`, for `CommonTree_*`'s `Leaves_NormalTree`
+## material — see the TREE_MESHES const comment for why this fix exists.
+## Also applies TREE_TINT so the boundary's forest reads a shade darker than
+## the everyday copse trees `vegetation.gd` scatters elsewhere.
+func _tree_mesh(scene: PackedScene) -> Mesh:
+	var instance: Node = scene.instantiate()
+	var found := _find_mesh_instances(instance)
+	instance.queue_free()
+	if found.is_empty():
+		return null
+	var source: Mesh = found[0].mesh
+	if source == null:
+		return null
+	var out: ArrayMesh = source.duplicate(false)
+	for surface in out.get_surface_count():
+		var material: Material = out.surface_get_material(surface)
+		var standard := material as StandardMaterial3D
+		if standard == null or standard.resource_name != TREE_LEAF_MATERIAL_NAME:
+			continue
+		var greened: StandardMaterial3D = standard.duplicate()
+		greened.albedo_texture = BUSH_GREEN_TEXTURE
+		greened.albedo_color = TREE_TINT
+		out.surface_set_material(surface, greened)
+	return out
+
+
+## Marsh-green modulate over whatever texture the source mesh already
+## carries — the same treatment `water.gd::_reed_material` applies to the
+## identical models, kept local for the same reason that function's own
+## comment gives: a MultiMesh batch cannot see a MeshInstance3D's per-node
+## material override, only a bake into the mesh's own surface.
+func _reed_mesh(scene: PackedScene) -> Mesh:
+	var source: Mesh = _mesh_of(scene)
+	if source == null:
+		return null
+	var out: ArrayMesh = source.duplicate(false)
+	for surface in out.get_surface_count():
+		var standard := out.surface_get_material(surface) as StandardMaterial3D
+		var tinted := StandardMaterial3D.new()
+		tinted.albedo_color = REED_TINT
+		tinted.vertex_color_use_as_albedo = true
+		if standard != null:
+			if standard.albedo_texture != null:
+				tinted.albedo_texture = standard.albedo_texture
+			tinted.transparency = standard.transparency
+			tinted.alpha_scissor_threshold = standard.alpha_scissor_threshold
+			tinted.cull_mode = standard.cull_mode
+		out.surface_set_material(surface, tinted)
+	return out
+
+
 func _tinted_mesh(scene: PackedScene, material_name: String, tint: Color) -> Mesh:
 	var source: Mesh = _mesh_of(scene)
 	if source == null:
@@ -1286,20 +1452,46 @@ func _find_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	return out
 
 
+## Read live from `palette.json` rather than typed in here, the same reason
+## `severed_spokes.gd::_palette_colour` does it: the faction colour must not
+## be able to drift between the boundary's own Team Tether marks, the
+## spokes' sealed road/gate, and the Warden's badge.
+func _palette_colour(key: String, fallback: Color) -> Color:
+	var file := FileAccess.open(PALETTE_CONFIG, FileAccess.READ)
+	if file == null:
+		push_warning("cannot read %s; '%s' falls back to a hard-coded value" % [PALETTE_CONFIG, key])
+		return fallback
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		for section: Variant in (parsed as Dictionary).values():
+			if section is Dictionary and (section as Dictionary).has(key):
+				return Color(str((section as Dictionary)[key]))
+	return fallback
+
+
 # ---------------------------------------------------------------------------
 # Failsafe
 # ---------------------------------------------------------------------------
 
 ## Spec §1E: "add a backup kill/respawn volume below the world only as a
 ## failsafe" — the boundary above is the design; this exists only for
-## whatever the boundary doesn't catch (a jump that clears it, a bug).
+## whatever it doesn't catch. Sized from the corridor's own authored bounds
+## rather than a fixed square half-extent, since the corridor (unlike the
+## old 512m world) is not centred on the origin — its z range runs
+## -512..7680, so the kill volume's own centre has to move with it or half
+## the corridor's length would sit outside a plane still centred at z=0.
+const KILL_PLANE_HALF_X := (WORLD_X_EAST - WORLD_X_WEST) * 0.5 + KILL_PLANE_MARGIN
+const KILL_PLANE_HALF_Z := (WORLD_Z_SOUTH - WORLD_Z_NORTH) * 0.5 + KILL_PLANE_MARGIN
+
 func _build_kill_volume() -> void:
 	var area := Area3D.new()
 	area.name = "KillVolume"
-	area.position = Vector3(0.0, KILL_PLANE_Y, 0.0)
+	var centre_x := (WORLD_X_WEST + WORLD_X_EAST) * 0.5
+	var centre_z := (WORLD_Z_NORTH + WORLD_Z_SOUTH) * 0.5
+	area.position = Vector3(centre_x, KILL_PLANE_Y, centre_z)
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(KILL_PLANE_HALF_EXTENT * 2.0, KILL_PLANE_THICKNESS, KILL_PLANE_HALF_EXTENT * 2.0)
+	box.size = Vector3(KILL_PLANE_HALF_X * 2.0, KILL_PLANE_THICKNESS, KILL_PLANE_HALF_Z * 2.0)
 	shape.shape = box
 	area.add_child(shape)
 	area.body_entered.connect(_on_kill_volume_entered)
@@ -1309,7 +1501,7 @@ func _build_kill_volume() -> void:
 func _on_kill_volume_entered(body: Node3D) -> void:
 	if body != _player:
 		return
-	print("[world_perimeter] player fell below the world at %.0f, %.0f, %.0f -- returning to spawn" % [
+	print("[world_perimeter_corridor] player fell below the world at %.0f, %.0f, %.0f -- returning to spawn" % [
 		body.global_position.x, body.global_position.y, body.global_position.z
 	])
 	body.global_position = _spawn

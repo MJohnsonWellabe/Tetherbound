@@ -221,7 +221,10 @@
       "drain_suppression": 0.0,
       "anchors": [
         {
-          "at": [26.0, 161.0],
+          "at": [
+            26.0,
+            161.0
+          ],
           "radius": 15.0,
           "count": 6,
           "models": [
@@ -670,7 +673,10 @@
         },
         {
           "_why": "OF10-remainder: a cairn at the Rise road's own end (74,-41) -- approach-distance mass for the levelled apron that's there already (`flats._comment_of10_r3`) but reads as too subtle to see from a distance. This layer's own `min_slope_deg` (6.0) exists to keep the meadow scatter off flat grass, which is exactly the ground the apron levels for -- overridden to 0 for these draws only so a deliberately built pile can stand on deliberately flat ground. Offset ~2.5m off the road's own centreline, the opposite shoulder from the trailhead signpost (see paths.trailheads in terrain_playground.json), so the two flank the endpoint rather than sitting on top of each other. The block: two or three stones large enough to read as stacked, not scattered.",
-          "at": [72.6, -43.1],
+          "at": [
+            72.6,
+            -43.1
+          ],
           "radius": 1.1,
           "count": 3,
           "min_slope_deg": 0.0,
@@ -681,7 +687,10 @@
         },
         {
           "_why": "OF10-remainder: the cairn's skirt of smaller stones, same centre, wider radius",
-          "at": [72.6, -43.1],
+          "at": [
+            72.6,
+            -43.1
+          ],
           "radius": 2.3,
           "count": 6,
           "min_slope_deg": 0.0,
@@ -777,10 +786,12 @@
       "_why": "EV6-remainder: the ranger station and its yard on the pond route"
     },
     {
-      "x": 5.0,
-      "z": 80.0,
+      "x": 8.0,
+      "z": 1330.0,
       "radius": 20.0,
-      "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them"
+      "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them",
+      "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250).",
+      "_comment_ow5c_seam": "OW5C follow-up: shifted +8 in x with south_bridge crossings[0] (WALL1 seam workaround)."
     },
     {
       "x": 23.0,

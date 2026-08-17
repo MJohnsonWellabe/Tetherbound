@@ -176,11 +176,16 @@ func test_the_paths_reach_where_they_promise() -> void:
 		for point: Variant in points:
 			var on: float = _field.path_factor(float(point[0]), float(point[1]))
 			assert_almost_eq(on, 1.0, 0.01, "a route's own waypoint should be fully on the path")
-	var width := float(paths.get("width", 3.0))
-	var shoulder := float(paths.get("shoulder", 1.5))
-	var first: Array = (routes[0] as Dictionary).get("points", [])
-	var far: float = _field.path_factor(float(first[0][0]) + width + shoulder + 5.0,
-		float(first[0][1]) + width + shoulder + 5.0)
+	# OW5C: this used to be a fixed offset from routes[0]'s own first point
+	# (width + shoulder + 5m out). That stopped being "well off the road" once
+	# `road_polylines()` started unioning the corridor's own spine and loops
+	# (section 11) alongside `paths.routes`/spokes/crossings -- Band 1's spine
+	# starts right at the road gate the village routes already end at, so a
+	# fixed nearby offset landed within the new spine's own shoulder fade
+	# (measured ~2m off it, well inside width+shoulder). A point genuinely far
+	# from every road this config can produce is the honest fix, not shrinking
+	# the offset back to fit around whatever roads happen to exist today.
+	var far: float = _field.path_factor(500.0, -500.0)
 	assert_almost_eq(far, 0.0, 0.01, "well off the road should be untouched meadow")
 
 
