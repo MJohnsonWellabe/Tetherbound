@@ -564,7 +564,7 @@ func _dress_the_meadow() -> void:
 	_vegetation = VEGETATION.new()
 	_vegetation.name = "Vegetation"
 	add_child(_vegetation)
-	_vegetation.call("build", float(config.get("world_size", 512)))
+	_vegetation.call("build", float(config.get("world_size", 512)), _terrain)
 	var stats: Dictionary = _vegetation.call("stats")
 	print("[playground] scattered %d props in %d batches (%d harvestable)" % [
 		stats["instances"], stats["batches"], stats.get("harvest_points", 0)
