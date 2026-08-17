@@ -332,6 +332,12 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 		var to_target := Vector2(target.x - pos.x, target.y - pos.z)
 
 		if to_target.length() <= ARRIVE_M:
+			# One line per waypoint reached, carrying the running total. This is
+			# what lets the summary say WHERE the corridor is short rather than
+			# only that it is: the 6000-frame progress lines resolve to ~500m,
+			# which is wider than a whole band's shortfall.
+			print("  [%s] wp %d/%d (%.0f, %.0f) reached  walked=%.1fm  frames=%d" % [
+				tag, idx, points.size() - 1, target.x, target.y, walked, frames])
 			idx += 1
 			if idx >= points.size():
 				break
