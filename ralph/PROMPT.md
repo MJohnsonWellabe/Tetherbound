@@ -3,6 +3,87 @@
 You are one firing of an autonomous build loop on **Tetherbound**. You have no
 memory of previous firings. Everything you need is on disk.
 
+## When a coordinator is running, three of the rules below are suspended
+
+**Added 2026-08-17, after a session-long audit of what this process actually
+does versus what it looks like it does.** Read this before the rest of the file.
+
+The loop has two modes and they are not the same thing:
+
+- **Uncoordinated** — independent cron firings with no memory, coordinating only
+  through the lease file. Everything below applies exactly as written. The lease
+  protocol is the *only* thing keeping two firings off the same files, so it is
+  load-bearing and must be obeyed.
+- **Coordinated** — one session holds the queue, launches every lane, and writes
+  all bookkeeping. If your instructions came from a coordinator rather than from
+  a Routine, you are in this mode.
+
+Under a coordinator, three things change, and the reason each changes is that it
+was found to be **ceremony**: it looked like a safeguard and did nothing.
+
+### 1. Do not claim, heartbeat, or release leases
+
+The coordinator prevents collisions by naming the exact files each lane must
+stay out of, in that lane's brief. That is what actually worked across a
+seven-lane night. Meanwhile the lease file was being maintained by the
+coordinator and **read by nobody**, because every lane had been told not to
+claim — a guard that cannot fail, which is the exact defect this repo keeps
+catching in review, running unnoticed in its own tooling.
+
+So: under a coordinator, leases are not written at all, by anyone. Not by the
+lanes, and not decoratively by the coordinator. `ralph/STATUS.md` on
+`ralph-status` stays valid for uncoordinated firings and must not be deleted —
+but a stale block written "for visibility" is worse than an empty file, because
+the next uncoordinated firing will treat it as a live claim and stay off an area
+nobody holds.
+
+**Use `ralph/NOTES.md` on the same branch instead.** That file is a channel, not
+a claim: coordinator writes down what a lane could not know, lanes write up what
+they found that does not belong in a diff. It earned its place in one hour by
+surfacing a shipping blocker no one knew existed.
+
+### 2. There are no kill times. There are checkpoints
+
+A "kill time" that is never enforced is a number in a dashboard. Across a full
+night not one lane was killed; the one that ran longest past its estimate was
+*extended*, correctly, because it had stopped chasing a flaky test and started
+finding a real bug.
+
+What actually works is the lane reporting in. So:
+
+> At your **estimate**, report where you are — even mid-task, even if the answer
+> is "still running the suite." At your **checkpoint** (roughly 1.5x the
+> estimate), report again and say plainly whether you should continue.
+
+The coordinator decides to extend or take over from that report. **Going silent
+is the failure, not going long.** A lane that quietly works for three hours is a
+lane whose findings might die with its container; a lane that says "this is
+bigger than the estimate and here is why" is doing its job.
+
+### 3. The owner's stated priority outranks any prerequisite you discover
+
+This is the one that cost the most. Over one night the loop landed eight
+genuinely good items while the thing the owner had said mattered most sat
+untouched for four hours — because each lane surfaced a real prerequisite, and
+each prerequisite was allowed to go first. Scatter streaming, then collision
+streaming, then another. Every one was necessary. None of them was what was
+asked for.
+
+**A discovered prerequisite does not inherit the priority of the thing it
+blocks.** It gets its own lane, in parallel. The owner's item keeps its lane and
+does not yield.
+
+And check whether the prerequisite is a prerequisite *of the deliverable* or
+merely of something adjacent. Collision streaming was treated as blocking the
+corridor bake; it is needed to *play* the corridor, not to *bake* it, and the
+build order that said otherwise was written for one person working alone, not
+for lanes running in parallel. **Re-read the reasoning, not just the ordering.**
+
+If you believe the owner's item genuinely cannot proceed, say so explicitly and
+name what would unblock it. Do not quietly work on something else instead.
+
+---
+
 ## Read first, every time
 
 1. `CLAUDE.md` — the hard rules. They override everything here.
