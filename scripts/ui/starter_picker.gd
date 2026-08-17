@@ -263,15 +263,42 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	# problem, not a sculpt problem — the same creatures under brighter, warmer
 	# light read as considerably more alive than under the original cool,
 	# museum-neutral 0.85/0.86/0.90 at 1.6.
+	#
+	# PT-15: that fix overcorrected for Galewisp specifically. It is a pale,
+	# high-albedo species (measured: brightness/saturation statistically
+	# identical between its base and OF28 "vivid" variants, so this is not a
+	# bad repaint) and 2.2 of near-white ambient — a flat, uniform fill that
+	# hits every surface regardless of angle — pushed it into ACES tonemap
+	# whiteout at every rotation while Terrapup and Ripplet's darker, more
+	# saturated surfaces had headroom to absorb the same light. The KEY/RIM
+	# lights below are unchanged throughout, so the directional shading and
+	# warm read that fixed "flat, low-key" for the other two survives at any
+	# of these ambient values -- only the uniform fill term that has the most
+	# direct effect on a pale material's flat baseline brightness moves.
+	# Round 1 (1.7): real improvement (Galewisp's face/feather detail became
+	# visible where it had been a blown-out blob) but a blind pass still
+	# ranked it the flat outlier -- no shadow side, no dark anchor point,
+	# against Terrapup/Ripplet's own visible light-to-shadow range. Round 2
+	# (1.3, below even the pre-warm 1.5 the ambient started at): more real
+	# movement, but the SPECIFIC follow-up finding -- wingtip feathers show
+	# shading, the torso between them does not -- points at the key light's
+	# own directionality reaching the torso weakly relative to the fill, not
+	# at raw ambient level by itself. Round 3: ambient down again to 1.0 and
+	# `key` (below) up from 2.0 to 2.4, shifting the RATIO of directional to
+	# fill light rather than just continuing to subtract fill -- the lever
+	# the round 2 finding actually points at.
 	env.ambient_light_color = Color(0.97, 0.93, 0.84)
-	env.ambient_light_energy = 2.2
+	env.ambient_light_energy = 1.0
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env_node.environment = env
 	world.add_child(env_node)
 
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(35.0), 0.0)
-	key.light_energy = 2.0
+	# PT-15 round 3: up from 2.0, alongside ambient's drop to 1.0 above -- see
+	# that comment for why (shifting the directional:fill ratio, not just
+	# reducing fill in isolation).
+	key.light_energy = 2.4
 	world.add_child(key)
 
 	# Rim/kicker, from behind and cool-tinted against the warm key — the
