@@ -1,13 +1,21 @@
 {
-  "_comment": "Shape of the M1 movement playground. This is a TEST AREA, not the Meadows. Its only job is to give walking, sprinting, jumping, camera orbit, stamina and fall damage something honest to work against; a flat field proves none of them. The real Meadows is authored later against docs/reference/tetherbound-meadows-keyart.png and replaces this wholesale.",
+  "_comment": "OW5B: this is now the Meadows corridor, not the M1 test square -- docs/MEADOWS_MACRO_LAYOUT.md section 2, docs/decisions/D50/D51. 8192m long (+Z, south, away from home) x 2048m wide, 64 Terrain3D regions. Grown and baked here; the trail (OW5C) and the relocation of everything in the macro layout's section 10 (OW5D) are separate, later work -- this bake is landform only, no content beyond Band 1 (the unmoved, shipped Lower Meadows).",
   "_authored_not_procedural": "Per the owner's direction, terrain is authored macro geography. The noise here is a deterministic recipe for one specific test area, seeded and fixed, not a world generator. Nothing at runtime generates terrain; this is baked to disk once and loaded as data.",
   "_regenerate": "godot --headless --path . --script scripts/world/build_playground_terrain.gd",
   "seed": 20260803,
+  "world_bounds": {
+    "min_x": -1024.0,
+    "max_x": 1024.0,
+    "min_z": -512.0,
+    "max_z": 7680.0
+  },
+  "_comment_world_bounds": "OW5B, MEADOWS_MACRO_LAYOUT.md section 1.3(c)/2: the authored corridor bounds, region-aligned on BOTH sides of both axes at the 512m lattice pitch (region_size 256 * vertex_spacing 2.0) -- see terrain_region_alignment.gd. Both x bounds are +-2*512; z is -1*512 to +15*512. 16 region columns x 4 rows = 64 regions, every one fully written. Read in preference to world_size below by build_playground_terrain.gd.",
   "world_size": 512,
-  "_comment_world": "Playground edge in metres. A few minutes of walking end to end: large enough that the horizon is not always in view, small enough that it stays a playground rather than a map.",
+  "_comment_world": "LEGACY / STILL LOAD-BEARING ELSEWHERE. world_bounds above is what the terrain bake actually uses now (see _comment_world_bounds). This field is kept at its old value on purpose: vegetation.gd's scatter, world_perimeter.gd's ring, scatter_rules.gd, minimap.gd and map_baker.gd all still read world_size directly and assume the old +-256m square (ralph/MAP-EXTENT partially fixed the map side of this on its own branch but has not landed on main as of this bake). Bumping this number would silently break all of those before OW5C/OW5D and MAP-EXTENT land -- deliberately out of OW5B's scope (terrain + world-layout only). See ralph/NOTES.md on ralph-status for the live warning.",
   "region_size": 256,
-  "_comment_region": "Terrain3D's storage granularity, NOT the world size. world_size must be an exact multiple of it, or the baked image straddles region boundaries and leaves flat unfilled gaps inside partially-written regions. 512 over 256 fills exactly four regions.",
-  "vertex_spacing": 1.0,
+  "_comment_region": "Terrain3D's storage granularity, NOT the world size. Region boundaries fall on a region_size*vertex_spacing lattice (512m at region_size 256 / vertex_spacing 2.0); world_bounds above must land on it on every side, checked by terrain_region_alignment.gd, not by a simple world_size % region_size test (that test passes extents that are not region-aligned when off-centre -- MEADOWS_MACRO_LAYOUT.md section 1.3(b)).",
+  "vertex_spacing": 2.0,
+  "_comment_vertex_spacing": "OW5B: 1.0 -> 2.0. Required to make a 64-region bake affordable (halves the heightfield sample count per side). MEADOWS_MACRO_LAYOUT.md section 1.2: this costs 1-2deg of peak wall angle on the steepest spoke carves, leaving single-digit-degree margins over the ridden 60deg limit on the shallowest ones (storm_road). Re-probed at this corridor's actual origin by tools/_probe_corridor_footprint.gd before relying on any carve's margin.",
   "hills": {
     "_comment": "The base rolling ground. Low frequency, gentle. This is what most of the walking happens on.",
     "frequency": 0.0035,

@@ -135,3 +135,42 @@ with a 24m radius and the run out of it falls to 0.5 at 15m, which is `D41`'s
 and strengthening its stations, not by inventing a second grammar; if a later
 station genuinely needs something this cannot express, that is a new decision
 and it should say so out loud.
+
+## Re-evaluated at `OW5B`, 2026-08-17 — kept as is, by explicit choice
+
+This is the re-bake the postscript above named: the terrain is being re-baked
+for a reason (`docs/MEADOWS_MACRO_LAYOUT.md`, growing the world to the
+Meadows corridor) that has nothing to do with the healing system, and the
+postscript is explicit that inheriting the old behaviour silently is not
+acceptable here — it has to be chosen.
+
+**Decision: bake the quarry's `quarry_*` drain stations exactly as
+`terrain_playground.json`'s `drains.stations` already authors them.** The
+quarry floor keeps its sun-killed cast permanently, unhealed by
+`legendary_freed`, exactly as it has since `SG46`. Not switched to a
+runtime-only skin (`tether_relay.json`'s `dead_ground` pattern).
+
+Why, stated the way the postscript asked for:
+
+- The two options on the table were "baked healthy, with the drain carried
+  entirely by runtime skins (switchable)" or "left as is, by explicit
+  choice." Making the quarry switchable is a healing-system change — it
+  would mean pulling the `quarry_*` entries out of the baked-texture path
+  entirely and replacing them with a `tether_relay.json`-style overlay, which
+  changes what `legendary_freed` actually does at the quarry. `OW5B`'s job is
+  the corridor's landform (`terrain, world-layout`); a healing-mechanic
+  change is not this task's to make silently, and `CLAUDE.md`'s "do not
+  silently invent major design decisions" applies squarely here.
+- The scar was already turned into intentional fiction, in the game's own
+  voice: the Quarry Foreman's `village_quarry_foreman_freed` line already
+  tells the player the ground stays scarred. Baking it healthy now would
+  retroactively make that dialogue wrong.
+- Nothing about growing the world from 512m to the corridor changes the
+  quarry's own footprint, station data or radius — it is baked at the same
+  authored intensity as before, just onto the new 2.0m-spacing heightfield
+  instead of the old 1.0m one. There is no new information here that would
+  argue for revisiting the mechanism, only an opportunity to.
+
+If the quarry's permanent scar is ever wanted to be switchable (e.g. a later
+story beat that fully restores the Meadows), that is a new decision, on its
+own terms, not a side effect of a footprint bake.
