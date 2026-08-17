@@ -440,6 +440,141 @@ controls screen sitting in an inventory footer.
 
 ---
 
+## Phase -1.40 — the phantom wall, and three diagnoses that were wrong
+
+Filed 2026-08-17. **Every item in this phase corrects an earlier confident
+answer, including two of the coordinator's own.** Recorded that way on purpose:
+the sequence of wrong diagnoses is the most useful thing here, because each was
+plausible and each cost work.
+
+### WALL1 — bodies wedge on ground that measures walkable by every means except the physics engine
+`model: sonnet` · `tests: smoke_traversal, smoke_aggression` · `area: terrain, collision`
+**Supersedes the prop-spacing and the slope explanations. Both were wrong, and
+both had work built on them.**
+
+The history, because it is the point: `OF15` reported the player getting stuck.
+A lane blamed clumped tree colliders; a cross-layer spacing filter was built,
+measured working (23,707 placements → 23,650, rocks 345→300) — **and the wedge
+survived.** The coordinator then read the remaining evidence as terrain slope
+past the player's 45° `floor_max_angle`, wrote that into `OW5` as a trail
+constraint, and told a lane to probe the spine for steepness. **That was also
+wrong**, and the `CI-AGGRESSION` lane measured it out of existence.
+
+The measurement, at a creature's frozen chase position `(52.97, 0.58, −122.28)`
+— bit-identical to four decimals across two independent failing runs, 600+
+physics frames of zero net displacement while movement was still being
+requested:
+
+- `ground_height_at()` reads an ordinary **5–11° grade** there.
+- `move_and_slide()` reports **`is_on_wall() == true`** regardless.
+- A direct physics-shape query at the frozen point found **only the `Terrain3D`
+  node** overlapping. No prop, no rock, no other collider.
+- The wedged body is a creature, and `scenes/creatures/creature.tscn` sets
+  `floor_max_angle` **55°** — *more* permissive than the player's 45°
+  (`player.tscn`, 0.7854 rad). It wedged at the more forgiving angle.
+
+**Three known points, and they are not the same point.** `(52.97, −122.28)`
+against `OF15`'s `(60, −106)` and `(65, −108)`: 17.7 m and 18.7 m apart. But all
+three sit in one ~20 m stretch of the southern foot of the rocky rise, found by
+**two different bodies following two different scripted paths**. Three
+independent freezes in one stretch is not one bad triangle — it is a property of
+that ground, or of how collision is generated over it.
+
+**The open hypothesis, untested at filing:** terrain collision is generated as
+tiled shapes, and `collision_shape_size` is silently clamped to 8–64 step 8
+while `collision_radius` is clamped 16–256 step 16. A silently-altered parameter
+is exactly the kind of thing that produces geometry nobody authored. Checking
+whether those three coordinates fall near shape boundaries is arithmetic, not a
+bake, and it is the first thing to do.
+
+**Do not sample `ground_height_at()` to investigate this.** That scalar is what
+lied to two separate investigations. Query the collision normal and shape the
+physics engine actually reports.
+
+**This gates the corridor.** `OW5B` is laying 64 regions across 8192 × 2048 m.
+An unexplained collision defect multiplied by 64, discovered after a
+153-minute bake and a trail authored on top of it, is the expensive version of
+this. `OF15` and the `verify-aggression` failure are **one investigation**, not
+two.
+
+### UI-PAD3 — `ui_accept` cannot replace a poll on a screen with no Button to press
+`model: sonnet` · `tests: test_controls` · `area: ui`
+**Corrects `UI-PAD1` as filed by the coordinator**, which said: add the joypad
+binding, then remove each now-redundant `menu_confirm` poll in the same change.
+The lane checked before deleting and found **four of the five polls must stay** —
+removing them would have broken three working screens:
+
+| screen | why |
+|---|---|
+| `starter_picker.gd` | 0 Buttons — the orbs are custom-drawn. The poll is the only input it has. |
+| `combat_hud.gd` | 0 Buttons — the switch selector is custom-drawn. Same. |
+| `name_prompt.gd` | 0 Buttons — on-screen keyboard, already device-guarded. |
+| `tab_creatures.gd` | Has Buttons, but `_begin_evolution` sets `_list.visible = false`, so nothing is focusable during the ceremony. `_end_evolution` re-grabbing focus is the tell. |
+| `tab_backpack.gd` | Has Buttons **and** the rows are focused. The only genuinely redundant one. Removed. |
+
+**The rule:** `ui_accept` can only replace a poll on a screen that has a
+focusable `Button` for it to press. Check for `Button.new()` before deleting
+anything.
+
+**And the double-confirm everyone braced for does not arise**, for a reason
+worth keeping: **Enter has always been both `ui_accept` and `menu_confirm` on
+the keyboard.** Any screen with a focused Button beside a `menu_confirm` poll
+would already have been firing twice for every keyboard player — and none was.
+Adding JOY:0 makes the pad behave exactly as the keyboard already did. *When
+weighing whether a new pad binding will double-fire, ask what the keyboard
+already does first; it is usually already the answer.*
+
+**One trap, now pinned by a test:** listing a built-in `ui_*` action in
+`project.godot` **replaces** the engine defaults rather than adding to them.
+`ui_accept`'s Enter / KP-Enter / Space survive only because `UI-PAD1` restated
+them by hand; dropping one would quietly take Enter away from every menu in the
+game. `tests/test_controls.gd::test_ui_accept_still_answers_the_keyboard` holds
+that line.
+
+### PT-15 — refiled: it is not "unfocused", it is the starter orb's lighting rig
+`model: sonnet` · `tests: none (visual)` · `area: visual`
+**The original framing is disproved, not merely unconfirmed.** A lane rendered
+Galewisp selected and unselected at matching rotation angles: identical.
+`_refresh_selection()` has no path to the body's material. Galewisp renders pale
+at **every** angle, always, and it is not a bad `OF28` "vivid" repaint —
+brightness and saturation were measured on base vs vivid for all three species
+and Galewisp's are statistically identical between them, both already pale.
+
+**The lead, with numbers:** the starter orb's lighting rig is measurably hotter
+than the survey tool's proven one — **3 lights against 2, ambient 2.2 vs 1.5,
+key 2.0 vs 1.6, plus a rim light the survey tool does not have.** That would
+overexpose a high-albedo creature like Galewisp under ACES tonemapping while a
+dark one like Terrapup has headroom to absorb it. Not verified and not fixed:
+it is a lighting change, which is visual-affecting work requiring the blind
+judge pass, and the finding lane said honestly it did not have the budget to do
+that properly.
+
+### PT-04 — CLOSE: does not reproduce
+`model: none` · `area: ui`
+"Naming field reportedly ignores typing." Driven with real `InputEventKey` and
+real `InputEventJoypadButton`; **both real-input surfaces work.** The lane that
+checked recommends closing outright. Kept here rather than deleted so the next
+person reading the playtest report finds the answer instead of re-testing it.
+
+### PT-17-test — the rename flow has no test for its own trigger path
+`model: sonnet` · `tests: new` · `area: ui`
+Flagged by the lane that rebased `PT-17`, about work it did not write: the
+original commit added no dedicated test for the `tab_creatures.gd` rename flow
+itself — H-key → prefilled `name_prompt` → `set_nickname`. Existing tests cover
+the nickname mechanism generically, not that trigger path. The gap predates the
+rebase and was correctly judged outside "make it landable".
+
+### OPS3 — the unit suite takes nine minutes under load, and looks hung
+`model: none (note)` · `area: ops`
+`tests/run_tests.gd` took **over 500 s** on a loaded container and was killed
+once by a lane that believed a global input change had deadlocked it. It had
+not: it completed in ~9 minutes reporting 959 tests / 80,924 assertions / 0
+failed. Companion to `OPS2` (concurrent headless runs corrupting each other's
+script loading). **Give the suite room before concluding it hung**, and
+serialise runs.
+
+---
+
 ## Phase -1.41 — what the UI lane found on its way out
 
 The four owner-reported UI items shipped in one lane on 2026-08-16 (`OW11`,
@@ -837,6 +972,26 @@ still says it is *a test area, not the Meadows*, and the bake, the Terrain3D
 region count and the cost on the Ally were never budgeted. Measure what a trail
 long enough to need several days of camping actually requires, grow the footprint
 underneath it, rebake. **Do not decide the layout here — that is `OW5`.**
+
+**The bake cost is now MEASURED, 2026-08-17, and must not be re-guessed:
+143.5 s per region, so 64 regions ≈ 153 minutes.** Timed on a single region by
+the `BAKE-GUARDS` lane, and close to `MEADOWS_MACRO_LAYOUT` §1.1's own 181-min
+projection, which means the design arithmetic holds. This replaces the three
+conflicting whole-world figures (5.5 / 12 / 15 min) the repo carried because
+nobody re-measured after the river landed.
+
+**And that 153 minutes should be a one-time cost.** `build_playground_terrain.gd`'s
+pixel loop computes every pixel from its own `(world_x, world_z)` and nothing
+else — `height_at`, `slope_degrees_at`, `rock_bias_deg`, `building_apron_factor`
+and `drain_factor` are all analytic in the config and a coordinate. No pixel
+reads a neighbour; there is no blur, erosion or flow pass. So any sub-rectangle
+can be baked in isolation and must come out bit-identical, and adjacent regions
+baked independently agree exactly at the boundary because both evaluate the same
+continuous function at the same coordinates — which is normally the thing that
+makes incremental terrain baking unsafe. `OW5B` is factoring the bake to take a
+region set, with a bit-identity test as the load-bearing check. §8.5's claim
+that a per-band bake "would be a new system" is answered: it is the same loop
+with bounds passed in, and a full bake is simply "every region is dirty".
 
 ### R7.4 — Map reveal rule · `model: sonnet` · `tests: smoke_menu` · §23
 **Re-scoped 2026-08-16.** The old text said the `map` action was "read by
