@@ -443,6 +443,20 @@ report calls the highest-value remaining fix for a first-time player.
 ## Phase 7 — the village lives, the meadow reads
 
 ### R7.4 — Map reveal rule · `model: sonnet` · `tests: smoke_menu` · §23
+**CLOSED 2026-08-17 (OPS7), on this item's own terms.** Its last line says to
+close it if the fog already behaves, and it does: `5cb90968` ("OW3: the map
+hides what you have not walked, and walking reveals more of it") is an ancestor
+of `main`.
+
+**The check below sends you to the wrong file, which is worth keeping rather
+than quietly deleting.** `map_baker.gd` still contains no fog, reveal or
+explored logic — grepping it, exactly as instructed, returns nothing and would
+have you conclude the feature was never built. `OW3` put the reveal in
+`tab_map.gd` and `minimap.gd` instead, which is the right place: the baker
+renders the world once, and what the *player* has seen is view state, not
+terrain. A closing check that names a file rather than a behaviour will keep
+doing this.
+
 **Re-scoped 2026-08-16.** The old text said the `map` action was "read by
 nobody" — false since the map button was wired. The map, the minimap and the
 player's heading arrow all exist and work.
@@ -508,7 +522,80 @@ recorded on `OW5` rather than here: **no trail segment may cross ground steeper
 than `floor_max_angle`, and a probe must assert it before the trail is committed.**
 Re-open this item only if the wedge survives the rebake.
 
-## Phase 6.5 — locomotion quality rebuild (owner's quality plan)
+## Phase 6.5 — the quality plan's own items (owner's quality plan)
+
+**Filed as backlog entries 2026-08-17 (OPS7), after a fresh coordinator found
+they were missing.** `MQ1A` and `MQ1B` shipped and were closed out of this
+phase, which left the header empty — and `MQ2B`, `MQ3` and `PW2` had never been
+transcribed here at all. They existed only in
+`ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md`.
+
+**That made this file wrong about the thing it claims to be.** Its first line
+says it is the state of the project. A session reading it top to bottom today
+would count fifteen open items, most of them small, and conclude the game is
+nearly done — while the largest block of remaining work on the project sat in a
+planning document with no entry anywhere in the queue. The previous
+coordinator's own handover named `MQ2B` and the `MQ3` umbrella as the work after
+`OW6`, citing IDs this file did not contain.
+
+The plan stays authoritative for what these mean and what "done" is; these
+entries exist so the queue stops omitting them. Do not duplicate the plan's
+prose here — read §6, §7 and §8 there.
+
+### MQ2B — prove one region at finished quality before scaling
+`model: fable` · `tests: none (playtest gate)` · `area: terrain, world-layout, content`
+Plan §6. **Starts with fable — it is ceiling-setting authorship.** Take the first
+appropriate Meadows region and finish it to production standard: terrain
+composition, vegetation structure, readable paths, a major landmark, an
+exploration loop, a reconnect or shortcut, meaningful gatherable placement,
+creature habitat, an optional discovery, a memorable encounter, day and night
+readability, and no empty filler stretches.
+
+This is the production recipe, not one region's decoration. The plan's expansion
+rule is explicit: only after this region passes may its principles be used to
+author the remaining bands, and what gets copied is the quality bar, never the
+layout.
+
+**Sequence it after `OW5-walk`.** Finishing a region to production standard
+along a route whose real length nobody has measured is how content gets placed
+twice — the same reason `OW6` waits.
+
+**Done when** a blind playtest spends meaningful time exploring the region
+voluntarily rather than following the critical path through it, and can say what
+made it visually distinct, what made it mechanically interesting, where they
+chose to leave the path, and what landmark they navigated by.
+
+### MQ3 — the Meadows content umbrella
+`model: fable` per major content beat · `tests: per unit` · `area: content, quests`
+Plan §7. **This is not one task and must not be taken as one.** It is the
+creative umbrella over the existing progression-sized units; break implementation
+into those units and author them in unlock order, so each section can be played
+and judged before later content depends on it. Build progression plumbing first
+where still unbuilt — state tracking, keys and gates, quest log, objective
+transitions — without over-generalising for a second biome that is forbidden
+until the Meadows passes its exit gate.
+
+**The corridor is what makes this large.** The world went from a 512 m square to
+8192 x 2048 m yesterday, and `OW5D` relocated the already-approved content into
+it rather than adding any. So bands beyond the first are, today, mostly empty
+ground. Each region owes a clear entry, a clear purpose, recognisable geography,
+one meaningful critical-path objective, an optional discovery, a memorable
+encounter, working navigation, day/night usability, a real reason to explore,
+and a clear transition to the next.
+
+Side content may be authored before the XP economy exists; reward wiring can land
+later, and per the plan the design must not be hardcoded around XP per hour
+before `R4.1` provides levels.
+
+### PW2 — alpha / elder wild variants
+`model: fable` · `tests: per encounter` · `area: creatures, content`
+Plan §8. Folds into `MQ3`'s regional content rather than running as its own pass.
+Rare landmark encounters that give optional paths a reason to exist. **No new
+Meadows creature meshes** (`CLAUDE.md`, D23) — and explicitly not "normal
+creature, larger scale, more HP": each needs at least one real behavioural or
+encounter difference, such as a different aggression pattern, altered cadence,
+group behaviour, unique habitat, environmental advantage, a move variant, a
+special arena, or unusual time-of-day presence.
 
 ## Phase -0.6 remainder — the look
 
