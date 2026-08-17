@@ -136,8 +136,8 @@ named trainers stand on the trail for the same reason — the marker is placed a
 the coordinate that is also the waypoint.
 
 That is a trail-routing problem, it is `SPINE-LAYOUT`'s, and a CI test that
-asserted "no authored route touches anything" would be red on ~40 pairs on the
-day it landed. So the split is:
+asserted "no authored route touches anything" would be red on 66
+route/collider pairs on the day it landed. So the split is:
 
 **Asserted in `tests/smoke_traversal.gd`, absolutely, with no exceptions:**
 a severed spoke's blocker carve may not touch any authored route. A blocker
@@ -151,7 +151,7 @@ seg75`.
 `crossings[]` carves are deliberately not asserted. A crossing exists to be
 crossed, on its bridge, so a route through one is right when it is on the deck
 and wrong when it is not; the one place that is currently wrong is printed as a
-NOTE naming the offset (the spine enters the South Bridge gully 8.7 m west of
+NOTE naming the offset (the spine enters the South Bridge gully 8.4 m off
 the crossing's own road) rather than failed.
 
 **Two tools, for authoring, not for CI:**
