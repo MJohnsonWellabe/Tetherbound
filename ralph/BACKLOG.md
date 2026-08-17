@@ -21,6 +21,22 @@ that reaches a `model: fable` item must not do the creative work in its own
 session, regardless of which lane it is** — see `ralph/PROMPT.md`'s
 "Fable-tagged items" section for the dispatch rule.
 
+**MODEL FLOOR SUSPENDED, owner directive 2026-08-17: "drop to sonnet for
+everything."** Taken to protect the account's seven-day rate limit, which was at
+`allowed_warning` with a reset of 2026-08-22 03:00 UTC while the owner asked for
+the first two bands of content finished before it hits. **The newer word wins**
+over the `model: fable` floor above, the same way `D23` lets the owner's later
+word win over the spec — so `model:` lines in this file now read as a *ceiling*,
+not a floor, and a `fable` tag means "this is ceiling-setting work, be
+conservative" rather than "dispatch fable".
+
+What that costs is real and is recorded rather than papered over: the fable
+floor exists because a weaker first pass becomes a ceiling a later pass cannot
+rescue, and `MQ2B` is exactly that kind of item. A lane working a `fable`-tagged
+item under this directive should prefer arranging and connecting what exists
+over inventing new fiction, keep new named things few and small, and write down
+in `ralph/NOTES.md` anything that genuinely wanted a stronger pass.
+
 **Standing task, every visual milestone:** re-shoot the website's screenshots
 after any milestone that changes how the game looks. `model: haiku` when it is
 just screenshots.
@@ -825,6 +841,37 @@ than sharding them into five copies that can drift. `vegetation.json` is scatter
 **Done when** five disjoint file sets exist, one per band, an identity test holds
 the merge honest, and the next coordinator can hand five agents five bands
 without a shared file between them.
+
+### CI-BOSS — `verify-boss` is intermittent, and it has now cost two innocent branches
+`model: sonnet` · `tests: smoke_boss.gd itself` · `area: tests, ops`
+Filed 2026-08-17 (OPS13). **This is `TEST1`'s question answered by a second
+example, and it is no longer a suspicion.**
+
+| branch | its own diff | run | outcome |
+|---|---|---|---|
+| `ralph/TEST2` | two test files, `project.godot` untouched | dispatch failed, **green on re-run** | not its diff |
+| `ralph/PT-17-test` | one new rename test | dispatch failed, re-run requested | not its diff |
+
+Both were green on all 19 jobs on their own push and red only on the
+`ralph-merge` dispatch of the same tree. The root failure is a single line —
+**"the boss fight never resolved inside 9000 frames"** — and the six `FAIL`s
+after it are all consequences of that one, not six independent failures.
+
+**"Never resolved inside N frames" is a timing-dependent assertion**, which is
+exactly the shape `TEST1` asks about: which smoke tests depend on a position, a
+spawn, a timing window or an RNG draw they do not control? `verify-aggression`
+was the first (fixed by `CI-AGGRESSION`); `verify-boss` is the second.
+
+**Why this is worth a lane rather than a shrug:** `ralph-merge.yml` only
+fast-forwards fully-green branches, so an intermittent job does not annoy
+anyone — it silently stops healthy work from shipping and leaves no trace
+saying so. It has now delayed two landings in one evening, and the next lane to
+hit it may "fix" its own innocent diff to make the red go away.
+
+**Do not just raise the frame budget.** Find what the fight is actually waiting
+on — whether the boss can fail to engage from a given start position, or a
+timing window depends on load. The container was under four concurrent lanes
+both times, which is itself a clue.
 
 ### BAND-SPLIT-2 — the rest of what still makes five band agents collide
 `model: sonnet` · `tests: run_tests, an identity test per split` · `area: data, world`
