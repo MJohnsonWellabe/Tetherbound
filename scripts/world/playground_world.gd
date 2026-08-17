@@ -604,6 +604,16 @@ func _dress_the_meadow() -> void:
 	# for one frame. _place_player() already ran, so the real spawn is known.
 	if _player != null and _vegetation.has_method("update_collision_streaming"):
 		_vegetation.call("update_collision_streaming", _player.global_position)
+	# HARVEST-ALL: build() always draws the fresh, nothing-chopped scatter --
+	# this reconciles it against whatever `Game.harvested_vegetation` already
+	# remembers (a "Continue" boot that resumed a save before this scene
+	# even existed), the same "build fresh, then restore on top" pattern
+	# `build_placer.gd`'s own `_ready()` uses for placed buildings.
+	# `GameState.load_game`'s own group loop covers the mid-session "Load"
+	# case separately.
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and _vegetation.has_method("restore_from_game"):
+		_vegetation.call("restore_from_game", game)
 	var stats: Dictionary = _vegetation.call("stats")
 	print("[playground] scattered %d props in %d batches (%d harvestable, %d/%d collision resident)" % [
 		stats["instances"], stats["batches"], stats.get("harvest_points", 0),

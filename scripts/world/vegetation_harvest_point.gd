@@ -41,12 +41,16 @@ extends Node3D
 ## cut logs now stands at the point and the glint sits on top of it, so the
 ## thing a player recognises is the resource and the glow only says which one.
 ##
-## Respawn is a prompt-and-glint cooldown, not a hide/show like
-## `harvest_node.gd`'s resource piles. A pile vanishing after one gather reads
-## as "spent, come back later"; a living tree vanishing reads as a bug — real
-## trees don't disappear because you took a few logs off them. The glint
-## dimming instead says "nothing to gather here right now" without erasing
-## the tree.
+## HARVEST-ALL/D60, owner directive: "once it's chopped it should disappear
+## and not regrow." This used to be a prompt-and-glint cooldown rather than a
+## hide/show — a living tree vanishing read as a bug where a pile vanishing
+## reads as "spent, come back later". That reasoning no longer applies: every
+## tree and stone in the meadow is now harvestable, so what actually
+## disappears is the WHOLE placement (the tree/rock's own render instance and
+## collider, via `vegetation.gd::harvest_permanently`) alongside this node —
+## not a dim-and-wait marker on a tree that stays standing. See that
+## function's own header for the removal mechanism and D60 for why
+## permanent, unbounded removal is the owner's explicit call.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
@@ -93,17 +97,23 @@ const CUT_COLOUR := Color("#c2a172")
 
 var _item_id: String = ""
 var _amount: int = 0
-var _respawn_seconds: float = 90.0
 var _prompt: Node3D = null
 var _glint: Node3D = null
 var _prop: Node3D = null
-var _respawn_left: float = 0.0
+## HARVEST-ALL. Which placement this node belongs to, so `_on_gathered()` can
+## tell `vegetation.gd::harvest_permanently()` exactly which render instance
+## and collider to remove. "" / -1 (the defaults) for a caller that predates
+## HARVEST-ALL or a standalone test — `_on_gathered()` falls back to freeing
+## just this node in that case, see its own comment.
+var _harvest_layer: String = ""
+var _harvest_index: int = -1
 
 
 func setup(spec: Dictionary) -> void:
 	_item_id = str(spec.get("item", "wood"))
 	_amount = int(spec.get("amount", 2))
-	_respawn_seconds = float(spec.get("respawn_seconds", 90.0))
+	_harvest_layer = str(spec.get("harvest_layer", ""))
+	_harvest_index = int(spec.get("harvest_index", -1))
 	var prompt_height := float(spec.get("prompt_height", 1.4))
 
 	_prompt = INTERACTABLE.new()
@@ -400,33 +410,22 @@ func _on_gathered() -> void:
 	var required_slot: int = int(gathered["required_slot"])
 	if required_slot >= 0:
 		inventory.call("damage_tool", required_slot)
-	_prompt.call("set_enabled", false)
-	_glint.visible = false
-	# The pile goes with it. A living tree vanishing reads as a bug, which is
-	# why this node dims a marker instead of hiding the tree — but the pile is
-	# the wood itself, and wood you have just picked up and put in your satchel
-	# should not still be lying there. Same "spent, come back later" the
-	# authored resource piles use, with the tree left standing behind it.
-	if _prop != null:
-		_prop.visible = false
-	_respawn_left = _respawn_seconds
-	set_process(true)
 
-
-func _process(delta: float) -> void:
-	if _respawn_left <= 0.0:
-		set_process(false)
-		return
-	_respawn_left -= delta
-	if _respawn_left <= 0.0:
-		_prompt.call("set_enabled", true)
-		_glint.visible = true
-		if _prop != null:
-			_prop.visible = true
+	# HARVEST-ALL/D60: chopped stays chopped. The tree/rock's own render
+	# instance and collider go with it (vegetation.gd::harvest_permanently),
+	# not just this marker -- there is no respawn any more. The parent IS
+	# the Vegetation node (vegetation.gd::_spawn_harvest_point add_child()s
+	# this directly), so no separate reference has to be threaded in.
+	var vegetation := get_parent()
+	if vegetation != null and vegetation.has_method("harvest_permanently") and not _harvest_layer.is_empty():
+		vegetation.call("harvest_permanently", _harvest_layer, _harvest_index)
+	else:
+		# A standalone test, or a caller that predates HARVEST-ALL: nothing
+		# to tell the world about, so just remove this node's own marker.
+		queue_free()
 
 
 func _ready() -> void:
-	set_process(false)
 	# So a tool swing can find this without knowing which of the two gather
 	# scripts drew it (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)

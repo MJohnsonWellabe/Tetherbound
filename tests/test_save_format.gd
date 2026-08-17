@@ -44,6 +44,8 @@ class FakeGame:
 	## R7.6 / VERSION 9. The berry farm's beds.
 	var farm_plots: Array = []
 	var death_satchels: Array = []
+	## HARVEST-ALL / VERSION 10. Permanently-chopped vegetation.
+	var harvested_vegetation: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
@@ -199,6 +201,50 @@ func test_save_then_load_round_trips_farm_plots() -> void:
 	assert_eq(str((read.farm_plots[0] as Dictionary).get("state")), "sown")
 	assert_eq(int((read.farm_plots[0] as Dictionary).get("ripe_on_day")), 4)
 	assert_eq(str((read.farm_plots[1] as Dictionary).get("state")), "tilled")
+
+
+## HARVEST-ALL / VERSION 10. A chopped tree that comes back after a quit has
+## not been chopped — this is the property the whole feature depends on.
+func test_save_then_load_round_trips_permanently_harvested_vegetation() -> void:
+	var written := _game()
+	written.harvested_vegetation = {
+		"trees": Marshalls.raw_to_base64(PackedByteArray([0b00000101])),
+		"rocks": Marshalls.raw_to_base64(PackedByteArray([0b00000010, 0b00000000])),
+	}
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.harvested_vegetation.get("trees"), Marshalls.raw_to_base64(PackedByteArray([0b00000101])))
+	assert_eq(read.harvested_vegetation.get("rocks"), Marshalls.raw_to_base64(PackedByteArray([0b00000010, 0b00000000])))
+
+
+func test_v9_save_migrates_with_nothing_harvested() -> void:
+	var v9_data := {
+		"version": 9,
+		"day": 11,
+		"party": [],
+		"inventory": [],
+		"placed_buildings": [],
+		"farm_plots": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v9_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+
+	assert_eq(read.day, 11)
+	assert_eq(read.harvested_vegetation, {}, "a save predating HARVEST-ALL has nothing chopped yet")
 
 
 ## The gap this file did not have a test for, and which shipped: `load_slot`
