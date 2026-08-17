@@ -691,9 +691,10 @@
         ]
       },
       {
+        "_why": "OW5-walk found Post_Collision colliding with a walking body at (0.2, 6999.5) -- `at` used to be the spine's own wp71 (0,7000), the same 'placed at the coordinate that is also the waypoint' pattern RIVER-GATE's audit named across all 18 OW5C-appended trailheads. Moved 5m off the spine's own tangent at this point (perpendicular to the (40,6930)->(0,7000)->(-80,7120) bearing), the same off-centreline convention entry 0 (The Rise) and entry 1 (South Bridge) already use -- `points` (the arm's own bearing) is untouched, matching entry 0's proof that `at` and `points[0]` need not coincide.",
         "at": [
-          0.0,
-          7000.0
+          -4.25,
+          6997.37
         ],
         "label": "Storm Road Spoke",
         "points": [
