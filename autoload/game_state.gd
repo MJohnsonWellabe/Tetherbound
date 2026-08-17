@@ -198,6 +198,19 @@ var equipped_tool: String = ""
 ## answer VERSION 1 -> 2 gave `map`.
 var death_satchels: Array = []
 
+## HARVEST-ALL / D60. Every vegetation harvest point (a scattered tree or
+## rock, `scripts/world/vegetation_harvest_point.gd`) the player has
+## permanently chopped, as data — `{layer_name: bitset_b64}`, one entry per
+## harvestable layer in `data/config/vegetation.json`. Same "registry, not
+## the scene node, is what a save persists" split `placed_buildings`/
+## `death_satchels` draw above. `vegetation.gd::sync_state_to_game` fills it
+## in right before every write; a freshly-registered world starts with an
+## empty dictionary (nothing chopped). Joined the save format at VERSION 10
+## (see `scripts/save/save_game.gd`) — a save written before this has none,
+## and migrates to `{}`, the same "no fog trail predates the map" answer
+## VERSION 1 -> 2 gave `map`.
+var harvested_vegetation: Dictionary = {}
+
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
 ## tree. See that file's header for the format and versioning rule.
@@ -624,6 +637,7 @@ func autofill_hotbar() -> void:
 func save_game(slot: int) -> bool:
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
+	_sync_harvest_state()
 	return bool(save_system.call("save", self, slot))
 
 
@@ -659,6 +673,18 @@ func _sync_death_satchel_state() -> void:
 			node.call("sync_state_to_game", self)
 
 
+## HARVEST-ALL. Same seam as the two syncs above, for permanently-chopped
+## vegetation — `vegetation.gd` is the group's owner (`"harvest_state"`,
+## registered in its own `build()`).
+func _sync_harvest_state() -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("harvest_state"):
+		if node.has_method("sync_state_to_game"):
+			node.call("sync_state_to_game", self)
+
+
 ## Load `slot` onto this live state and tell the world to rebuild whatever it
 ## placed. Returns whether a save was actually applied.
 ##
@@ -673,6 +699,9 @@ func load_game(slot: int) -> bool:
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
 	for node in get_tree().get_nodes_in_group("player_death"):
+		if node.has_method("restore_from_game"):
+			node.call("restore_from_game", self)
+	for node in get_tree().get_nodes_in_group("harvest_state"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
 	return true

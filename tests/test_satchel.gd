@@ -39,6 +39,8 @@ class FakeGame:
 	## own subject.
 	var farm_plots: Array = []
 	var death_satchels: Array = []
+	## HARVEST-ALL / VERSION 10 — save_game.gd reads it on every write too.
+	var harvested_vegetation: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	var satiety: float = 100.0
