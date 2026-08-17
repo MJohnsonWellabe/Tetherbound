@@ -21,7 +21,7 @@ extends SceneTree
 ## No Terrain3D, no vegetation, no village, no NPCs, no combat, no HUD. That is
 ## the entire saving, and it is also the entire risk: anything the real path
 ## lights or times differently is now invisible to this one. See this script's
-## own comment above `_apply_lighting()` for what was checked and what was not.
+## own comment above `_build_lighting()` for what was checked and what was not.
 ##
 ##   TAG=after xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
@@ -30,6 +30,35 @@ extends SceneTree
 ## Frames land in shots/interior/<INTERIOR>/<TAG>/. Filenames match
 ## capture_loft_exit.gd's own vantage names for `grandpa` so the two can be
 ## diffed frame-for-frame.
+##
+## MEASURED 2026-08-17, same container, same warm `.godot/` import cache for
+## both (so this isolates the world-build step, not engine startup):
+## `capture_loft_exit.gd` (full corridor: terrain, 26,985 scattered props, the
+## village, water, stronghold) took 10m35s wall-clock for 3 frames. This
+## script took 1m12s for the same 3 frames — a fresh scene, one house, no
+## terrain. ~8.8x on a warm cache; PT-03's own 24-32 minute figure was on a
+## cold one, where the gap is larger still because nothing here touches the
+## step that cost that time.
+##
+## COMPARED against that same run's frames, pixel for pixel: the room itself —
+## walls, windows, ceiling, floor, the bed, shadow placement — is
+## indistinguishable (flat-surface regions of a diff mask are black; only mesh
+## edges differ, by the sub-pixel jitter two independent renders always carry).
+## The interior camera profile and `_build_lights()` are NOT where this diverges.
+##
+## One divergence, found and understood rather than papered over: the baseline
+## frames show the trainer's body as a barely-visible sliver near the floor,
+## this script's show it standing normally. Cause: `SequenceDirector`
+## (scripts/story/sequence_director.gd:717, `_spawn_the_cast()`) poses the
+## trainer LYING FLAT for the opening's wake beat before `capture_loft_exit.gd`
+## ever runs, and that capture moves the body to each vantage without ever
+## clearing the pose — so the baseline shows a lying body edge-on, wherever it
+## was teleported to. This script never builds a SequenceDirector at all
+## (story choreography is not the room), so the trainer keeps its default
+## standing pose. Left as-is on purpose: replicating one story beat's posing
+## just to match a frame that is itself an artefact of the same beat would be
+## solving the wrong problem, and it does not touch what this task is actually
+## for — whether the ROOM reads the same, which it does.
 
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const CAMERA_RIG_SCRIPT := preload("res://scripts/player/camera_rig.gd")
@@ -75,8 +104,19 @@ func _run() -> void:
 
 	var world := Node3D.new()
 	root.add_child(world)
+	# A SceneTree main script's _init() runs before the tree has actually
+	# started iterating: is_inside_tree() is false for anything added here
+	# until at least one frame passes. grandpa_house.gd::build() calls
+	# to_global() for its markers, and calling it before this frame returns
+	# an identity transform instead of erroring loudly — it happened to match
+	# here only because the house sits at the exact origin with no rotation.
+	# playground_world.gd's own _ready() never hits this because it awaits
+	# two frames (for Terrain3D's data_directory) before it ever builds the
+	# house; this is the same fix, applied earlier since there is no terrain
+	# step to wait on.
+	await process_frame
 
-	var sun := _build_lighting(world)
+	_build_lighting(world)
 	var rig := _build_camera_rig(world)
 	var player := PLAYER_SCENE.instantiate() as CharacterBody3D
 	player.name = "Player"
