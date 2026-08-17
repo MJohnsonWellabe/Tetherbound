@@ -236,6 +236,44 @@ Also surfaced by the same run and worth its own commit: `verify-settings`
 reports *"Map is now I — so is Open the satchel. Both will fire."*
 
 ### OW5-walk — walk the corridor and prove the forty minutes
+**CLOSED 2026-08-17 (OPS11).** Landed on `main` (`86ed571f`..`ee811226`).
+The corridor has now been walked with a real `CharacterBody3D` driven through
+the shipped `player_controller.gd` — real capsule, real `floor_max_angle`, real
+`_try_step_up`, real `move_and_slide()`, steering by writing `camera_rig.yaw`
+and holding `move_forward`. `ground_height_at` was used only to place the body
+and never consulted about progress.
+
+**The three numbers, measured:**
+
+| | measured | at `walk_speed` 5.0 |
+|---|---|---|
+| end-to-end spine, WALKED | **11,316.6 m** | **37.7 min** |
+| config polyline, for comparison | 11,516.4 m | 38.4 min |
+| in-game days end to end | | **3.77** at `day_length_seconds` 600 |
+| width at z 910 / 3600 / 6340 | ~2,041.9 m each | **6.81 min** |
+
+**Length passes: 37.7 against the owner's 40**, 6% short, and the walk tracks
+the authored polyline at 0.983 walked/config — so the arithmetic was never wrong
+about distance. **Width misses: 6.8 min against "maybe five minutes", 36% too
+wide**, uniformly at all three stations. See `OW5-width`.
+
+**Two probe traps worth keeping**, both of which produced a wrong number before
+the lane caught them: the world *moves* the body (`CarveFailsafe` writes
+`global_position`) and a naive displacement sum credits every recovery to the
+corridor's length — steps above 2 m in one tick are now counted separately, and
+that count is what named the river defect. And an escape that must be repeated
+is not an escape: the unstick routine reported success 653 times at one spot,
+frame-by-frame honest and completely useless.
+
+**Runtime, for whoever walks it next:** headless throughput measured at 56–73
+physics frames/sec, so 11.5 km at the real walk speed costs ~30 minutes of wall
+clock. No speed scaling or teleporting was needed. Keep it a `tools/_probe_*`;
+do not extend `smoke_traversal.gd` to do it.
+
+**What it did not cover:** the spine only — not the 10 loops or 2 shortcuts —
+and the spine starts at z −16 while the world runs 496 m further north.
+
+### OW5-walk — the original entry
 **START HERE (OPS4, 2026-08-17).** `OW5E` has landed, so this is unblocked and
 it is the corridor's exit gate: the whole 8192x2048 m world is now on `main` and
 **nobody has walked it end to end.** Every number behind it is still arithmetic.
@@ -253,12 +291,137 @@ Do not measure the design document. `OW5A` computed an 11,594 m spine and a
 computes correctly can still fail to be walkable — which is exactly what the
 phantom wall turned out to be, three wrong diagnoses deep.
 
+### RIVER-GATE — the river is a one-way wall, and the authored crossing cannot be crossed
+`model: opus` · `tests: smoke_traversal, new` · `area: terrain, world`
+**NEEDS AN OWNER DECISION BEFORE THE FIX. Filed 2026-08-17 (OPS11) from
+`OW5-walk`, and it closes `OW5C`'s three-failed-fixes entry — it was never a
+seam.**
+
+At Old Mill Crossing `(-145.5, 4195.7)` the first end-to-end run logged **712
+recovery teleports at one spot** and would have looped until timeout.
+`get_slide_collision()` returns **zero colliders** — nothing is touching the
+body — because the thing stopping it is not a collider. `river.gd:60-101` builds
+a chain of abutting `CarveFailsafe` **Area3D** volumes along the *entire* river
+course via `severed_spokes.gd::_add_carve_failsafe`, each writing
+`global_position` on `body_entered` to put the player back on the village bank.
+The spine's crossing walks straight into that chain, and recovery always aims at
+`VILLAGE`, so **the river cannot be crossed southward here in either lock
+state.**
+
+**This reframes `OW5C`'s other river finding rather than contradicting it.**
+"The river divides nothing" at the open-water stations and "the river is
+absolute at the crossing" are both true: the failsafe chain spans the channel
+between the rims, so a body on the open bank never enters it and a body that
+descends at the authored crossing always does. Section 9's premise is not
+un-built — it is **inverted**. The barrier works where it should not, and the
+crossing does not work at all.
+
+**The decision, which a lane correctly refused to make:** either the failsafe
+chain gets an opening at each authored crossing, or the crossing's deck sits
+above the volumes' ceiling (`lip_y - LIP_CLEARANCE`). That is gated-crossing
+design and picking one silently would be inventing a game behaviour. **Ask
+before building.**
+
+### SPINE-WEDGE — bodies stop on walkable ground at four places on the spine
+`model: sonnet` · `tests: smoke_traversal, new probe run` · `area: terrain, collision`
+Filed 2026-08-17 (OPS11) from `OW5-walk`. **This is the `WALL1` class of defect
+again, and this time there are coordinates and normals for every instance.** All
+four are terrain, all at angles well inside the player's 45° `floor_max_angle`,
+and the worst ends with `on_floor=false` and **zero colliders**:
+
+| where | surface | normal from up | trail lost |
+|---|---|---|---|
+| stronghold gate approach, six wedges at (−30..−34, 7513..7519) | `Terrain` | 12–17° | **57.6 m — the last 57 m to the gate** |
+| South Bridge (5.5, **−13.0**, 1333.7) — the body is down *in* the gully | `Terrain` | 16° | 26.9 m |
+| (336.3, 5.7, 3749.8) | `Terrain` | **4.6°, nearly flat** | 17.0 m |
+| (−417.0, −3.1, 2465.9) | `Terrain` | 11.6° | 5.1 m |
+
+South Bridge is not a regression of `OW5C`'s lock fix — that fix measured a real
+before/after and is not in question; walking end-to-end simply arrives
+differently, falls into the gully and cannot climb out.
+
+**Do not sample `ground_height_at()` to investigate this** — that scalar misled
+three separate investigations of the phantom wall. Re-run
+`tools/_probe_ow5_walk.gd` (`--mode=spine --z_from/--z_to` walks a window, ~30
+min for the whole spine, far less for one window) and read what the physics
+engine reports.
+
+**The stronghold one is the most urgent** because `OW6` places the captain along
+that route, and today the final approach to the gate is not walkable.
+
+### SPINE-LAYOUT — the trail runs through a building and past a post standing on it
+`model: fable` · `tests: smoke_traversal` · `area: terrain, village`
+Filed 2026-08-17 (OPS11) from `OW5-walk`. Both are authored placement, i.e.
+layout questions rather than bugs, which is why the walking lane correctly left
+them alone:
+
+- **The spine runs into the Burrow Warrens' own structure.** Between wp30
+  `(-420, 2470)` and wp31 `(-330, 2630)`, collider
+  `BurrowWarrens/@StaticBody3D@3458`, contact normal 90° from up — a vertical
+  wall. **173.4 m skipped, the single largest gap on the spine.** Not terrain,
+  not scatter: the building. Either the trail routes around the Warrens or the
+  Warrens gains a way through.
+- **A signpost stands on the trail it labels.** `TrailheadSignpost_14/Post_Collision`
+  collides at `(0.2, 6999.5)`; spine waypoint 71 is `(0, 7000)`. The body got
+  around it, so it is an annoyance rather than a blockage — but it is a post on
+  the centreline of its own road.
+
+### RIVER-OVERHANG — the river is authored past the edge of the baked world
+`model: sonnet` · `tests: none` · `area: terrain`
+Filed 2026-08-17 (OPS11) from `OW5-walk`. `river.course` runs to x ±1150 while
+the baked region grid is valid to ~±1022, so three course points sit outside the
+world and every boot prints `carve failsafe at (1090.0, 4100.0) has no ground to
+measure; skipped`.
+
+**This fully explains `OW5C`'s "a third station reports no ground at all
+(1027,4101)"** — that reading is the authoring overhang, not a hole in the
+world. Nothing is red today because `smoke_traversal.gd::_pick_river_stations`
+excludes it via `RIVER_EDGE_MARGIN` 40. Clamp the course to the baked extent and
+the boot noise goes with it.
+
+### OW5-width — the corridor is 36% wider than the owner asked for
+`model: fable` · `tests: smoke_traversal` · `area: terrain`
+**NEEDS AN OWNER DECISION. Filed 2026-08-17 (OPS11) from `OW5-walk`'s
+measurement.** Owner's words: *"maybe it's five minutes of walking from side to
+side."* Walked: **2,041.9 m, 6.81 min**, at all three stations, agreeing to
+0.1 m — the body walked a dead straight line across the corridor everywhere and
+nothing blocked it, so this is the authored width, not an obstacle artefact.
+
+**Nobody ever chose 2,048 m.** `world_bounds` x [−1024, 1024] is simply where
+the perimeter went when the footprint was made region-aligned, and nothing
+measured it against the five minutes until now. The owner's figure implies
+~1,500 m.
+
+It misses in the direction that costs most: **1.4 extra minutes of empty walking
+per crossing, in a corridor whose length is already right** — and the flanks are
+currently bare (`VEG-CORRIDOR`), so that width is 500 m of nothing on each side.
+
+**Three options, and the choice is the owner's:** narrow the world (a re-bake,
+and 2,048 → 1,536 is not region-aligned — 1,024 is, so this is not a free dial);
+keep the width and fill the flanks so the crossing earns its time; or accept
+6.8 min and treat the five-minute figure as superseded. **Do not re-author the
+world to make a number come out right without asking.**
+
 ### OW6 — The captain you can challenge is too close to the start
 `model: sonnet` · `tests: none` · `area: village`
 Owner: *"The captain to challenge is way too close to where you start. You need
 to work to find him."* Positions are data (`data/config/trainers.json`), so this
 is a placement change once `OW5` establishes the trail — sequence it after, or
 it gets moved twice.
+
+**UNBLOCKED but constrained, 2026-08-17 (OPS11).** `OW5-walk` has measured the
+route: 11,316.6 m walked, 37.7 min, so there is a real trail to place against
+and the distance is trustworthy (walked/config 0.983). Two things it found bear
+directly on where the captain can go:
+
+- **The last 57.6 m to the stronghold gate is not walkable** (`SPINE-WEDGE`, six
+  wedges at (−30..−34, 7513..7519)). Do not place him past that until it clears.
+- **The spine cannot be walked south past Old Mill Crossing at all**
+  (`RIVER-GATE`). A captain placed beyond z 4196 is currently unreachable on
+  foot, however far along the trail he looks in the config.
+
+`trainers.json` is also now band-split (`BAND-SPLIT`) — edit the band file, and
+take an `order` from that band's reserved range.
 
 ## Phase -1.45 — measured performance, and what three blind reviews found
 
@@ -614,6 +777,44 @@ than sharding them into five copies that can drift. `vegetation.json` is scatter
 **Done when** five disjoint file sets exist, one per band, an identity test holds
 the merge honest, and the next coordinator can hand five agents five bands
 without a shared file between them.
+
+### BAND-SPLIT-2 — the rest of what still makes five band agents collide
+`model: sonnet` · `tests: run_tests, an identity test per split` · `area: data, world`
+Filed 2026-08-17 (OPS11) from the `BAND-SPLIT` lane's own answer to "will five
+agents authoring five bands actually work now?" — *"for the four configs I
+split: yes, today. For 'and then combine them into a finished world': not yet."*
+**A band author who can add a creature, a prop, a harvest node and a trainer but
+cannot add a clearing, a footprint or a landmark can only populate terrain that
+already exists.** In the lane's own fix order:
+
+1. **`vegetation.json`'s `clearings` (9) and `footprints` (7)** are positional
+   arrays in a monolith — exactly the shape just split — and all sit near the
+   origin. Every building, camp or structure a band places needs a footprint or
+   grass grows through its floor. A guaranteed five-way collision on one file,
+   ~an hour, mechanical: same `order` + per-band treatment, leaving the scatter
+   *rules* alone. **Distinct from `VEG-CORRIDOR`** — same file, different
+   problem, neither blocks the other.
+2. **`data/dialogue/` is already multi-file and already uses this pattern** (an
+   explicit const path list merged in `dialogue_runner.gd:32-45`) but is split
+   by chapter beat, not band. Every new trainer's conversation lands in one
+   `trainers.json` and Band 2 has no file at all. Adding
+   `data/dialogue/bands/<band>.json` to that list is small. Do it with (1).
+3. **`terrain_playground.json` is the real gate** and is harder: the spine is
+   genuinely global — Band N's first point is Band N−1's last — so
+   `trail.bands[]` cannot be partitioned. The lane's *guess*, explicitly flagged
+   as a guess, is that the derived/decorative arrays (anchors, landmarks, rises)
+   are band-local and could be cut the same way while the spine stays whole and
+   coordinator-owned. **Measure which arrays are actually band-local before
+   committing to it.**
+4. **`docs/decisions/` is already colliding on `main` today** with no fan-out at
+   all: two `D50-` files and two `D53-` files exist. Five agents each writing a
+   decision doc will keep minting duplicates. Cheapest fix is **the coordinator
+   assigning the number in the brief**.
+5. **The `order` reserved ranges (Band N → `N000`–`N999`) are documented, not
+   enforced at author time.** The uniqueness test catches a collision at CI
+   time on whichever branch merges second — loud rather than silent, which is
+   the right failure mode. **Put each band's range in its brief** rather than
+   relying on the author reading a comment.
 
 ### VEG-CORRIDOR — the scatter still only dresses a 512 m square at the origin
 `model: opus` · `tests: smoke_playground, run_tests, a placement-extent test` · `area: vegetation, terrain, perf`
