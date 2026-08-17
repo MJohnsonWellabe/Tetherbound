@@ -116,7 +116,8 @@ func _place(spec: Dictionary) -> void:
 	add_child(building)
 
 	_collide(building, prefab_name)
-	_interior(building, spec)
+	_door(building, prefab_name)
+	_interior(building, prefab_name, spec)
 	_placed += 1
 
 
@@ -134,9 +135,10 @@ func _place(spec: Dictionary) -> void:
 ## never a silent brick.
 const INTERIORS := {
 	"shop": preload("res://scripts/world/shop_interior.gd"),
+	"cottage": preload("res://scripts/world/cottage_interior.gd"),
 }
 
-func _interior(building: Node3D, spec: Dictionary) -> void:
+func _interior(building: Node3D, prefab_name: String, spec: Dictionary) -> void:
 	var kind := str(spec.get("interior", ""))
 	if kind.is_empty():
 		return
@@ -148,7 +150,35 @@ func _interior(building: Node3D, spec: Dictionary) -> void:
 	var interior: Node3D = (INTERIORS[kind] as GDScript).new()
 	interior.name = "Interior"
 	building.add_child(interior)
-	interior.call("build")
+	var room: Dictionary = _prefabs.call("room_spec", prefab_name)
+	interior.call("build", room)
+
+
+## R7.8: the door verb, attached wherever the recipe declares one
+## (building_prefabs.json's own `door` key — `leaf_module`, `at`, and
+## optionally `width`/`height`/`open_yaw_deg`). A house with no `door` key
+## stays exactly as it was (the workshop's open arch bay, the mill).
+const DOOR := preload("res://scripts/world/village_door.gd")
+
+func _door(building: Node3D, prefab_name: String) -> void:
+	var spec: Dictionary = _prefabs.call("door_spec", prefab_name)
+	if spec.is_empty():
+		return
+	var index: int = _prefabs.call("door_leaf_index", prefab_name)
+	if index < 0 or index >= building.get_child_count():
+		push_error("building_prefabs.json: '%s' names a door leaf module not in its own modules list" % prefab_name)
+		return
+	var leaf := building.get_child(index) as Node3D
+	if leaf == null:
+		return
+	var at: Array = spec.get("at", [0.0, 0.0, 0.0])
+	var door: Node3D = DOOR.new()
+	door.name = "Door"
+	building.add_child(door)
+	door.call("setup", leaf, Vector3(float(at[0]), float(at[1]), float(at[2])),
+		"Door",
+		float(spec.get("width", 1.6)), float(spec.get("height", 2.3)),
+		float(spec.get("open_yaw_deg", -100.0)))
 
 
 func _collide(building: Node3D, prefab_name: String) -> void:

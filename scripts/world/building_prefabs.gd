@@ -121,6 +121,43 @@ func colliders(prefab_name: String) -> Array:
 	return recipe.get("colliders", [])
 
 
+## R7.8. The recipe's own `door` dict — `leaf_module`, `at` (doorway centre,
+## same local space as `colliders`), and optionally `width`/`height`/
+## `open_yaw_deg` — or `{}` when the prefab has no player-openable door.
+func door_spec(prefab_name: String) -> Dictionary:
+	var recipe: Dictionary = _recipes.get(prefab_name, {})
+	return recipe.get("door", {})
+
+
+## R7.8. The child index of the door leaf module inside a placed duplicate of
+## this prefab, or -1. `_build_template`/`instantiate` preserve the recipe's
+## own module order 1:1 into scene-tree child order (glTF root node names
+## vary with how each piece was exported, so an index into the SAME list the
+## recipe already declares is the one lookup that cannot go stale with it).
+func door_leaf_index(prefab_name: String) -> int:
+	var spec := door_spec(prefab_name)
+	var leaf_module := str(spec.get("leaf_module", ""))
+	if leaf_module.is_empty():
+		return -1
+	var recipe: Dictionary = _recipes.get(prefab_name, {})
+	var i := 0
+	for entry: Variant in recipe.get("modules", []):
+		if entry is Dictionary and str((entry as Dictionary).get("module", "")) == leaf_module:
+			return i
+		i += 1
+	return -1
+
+
+## R7.8. The recipe's own `room` dict for a generic interior template
+## (`cottage_interior.gd`) — inner half-extents and door lane, read from the
+## kit rather than chosen, the same way `shop_interior.gd`'s own constants
+## were derived from cottage_a. `{}` when the prefab authors no room (the
+## interior script then falls back to its own defaults).
+func room_spec(prefab_name: String) -> Dictionary:
+	var recipe: Dictionary = _recipes.get(prefab_name, {})
+	return recipe.get("room", {})
+
+
 ## A ready-to-place duplicate of the prefab's template. Built on first
 ## request, cached after.
 func instantiate(prefab_name: String) -> Node3D:

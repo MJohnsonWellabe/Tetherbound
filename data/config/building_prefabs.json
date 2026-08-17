@@ -563,8 +563,8 @@
             0.0,
             3.0
           ],
-          "yaw_deg": -100.0,
-          "_why": "OF31: the leaf stands OPEN, swung out against the facade. The hinge is the module's own origin at x=0.45, so -100 deg carries the free edge out to +z and a little back along -x, clear of the wall it hangs on. It was a shut leaf at yaw 0 while this cottage was one solid AABB brick; now that the doorway is a real gap in the colliders below, a visibly closed door standing in an opening the player walks straight through would be village.gd's hologram warning from the other side."
+          "yaw_deg": 0.0,
+          "_why": "R7.8: shut by default again. OF31 swung this leaf open at -100 deg because a closed door standing in a walkable opening with no player verb would have been village.gd's own hologram warning; now the door key below gives it a real openable gate (scripts/world/village_door.gd), so a shut leaf is honest again rather than a decoration nobody can act on."
         },
         {
           "module": "Wall_Plaster_Window_Wide_Flat",
@@ -932,6 +932,11 @@
           "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on"
         }
       ],
+      "door": {
+        "leaf_module": "Door_1_Flat",
+        "at": [1.0, 0.0, 3.0],
+        "_why": "R7.8. Doorway centre matches the DoorFrame/Wall_..Door_Flat modules' own `at`, not the leaf's hinge point -- village.gd finds the leaf itself by its module name in this same recipe (building_prefabs.gd::door_leaf_index)."
+      },
       "retint": {
         "MI_WindowGlass": {
           "color": "#f0c684",
@@ -1206,6 +1211,28 @@
           "yaw_deg": 90.0
         }
       ],
+      "_why_colliders": "R7.8: was a solid AABB brick (this prefab authored no colliders at all). Same shape as cottage_a's own doorway hole, scaled to this cottage's smaller 4m x 4m footprint (wall lines x=+-2 / z=+-2) and its own door at x=1 with a 1.6m clear opening, so the front wall is two pieces and a lintel around x in [0.2, 1.8].",
+      "colliders": [
+        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 4.4], "_why": "west wall (local -x)" },
+        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 4.4], "_why": "east wall (local +x)" },
+        { "at": [0.0, 1.56, -2.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
+        { "at": [-1.0, 1.56, 2.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
+        { "at": [2.0, 1.56, 2.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
+        { "at": [1.0, 2.71, 2.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
+        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 4.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
+      ],
+      "door": {
+        "leaf_module": "Door_1_Flat",
+        "at": [1.0, 0.0, 2.0],
+        "_why": "R7.8. Doorway centre matches the Wall_UnevenBrick_Door_Flat/DoorFrame modules' own `at`."
+      },
+      "room": {
+        "inner_half_w": 1.69,
+        "inner_half_d": 1.69,
+        "door_x": 1.0,
+        "door_w": 1.6,
+        "_why": "R7.8: cottage_interior.gd's room, read from the kit the same way shop_interior.gd's own constants were -- wall lines at x=+-2/z=+-2, modules bring their inner face ~0.31 inside that."
+      },
       "retint": {
         "MI_WindowGlass": {
           "color": "#f0c684",
@@ -5099,6 +5126,28 @@
           "yaw_deg": 90.0
         }
       ],
+      "_why_colliders": "R7.8: was a solid AABB brick. Same footprint as cottage_a (wall lines x=+-2/z=+-3) and the same door position (x=1, front wall z=3), so the collider set is cottage_a's own, unchanged.",
+      "colliders": [
+        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "west wall (local -x)" },
+        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "east wall (local +x)" },
+        { "at": [0.0, 1.56, -3.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
+        { "at": [-1.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
+        { "at": [2.0, 1.56, 3.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
+        { "at": [1.0, 2.71, 3.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
+        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 6.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
+      ],
+      "door": {
+        "leaf_module": "Door_1_Flat",
+        "at": [1.0, 0.0, 3.0],
+        "_why": "R7.8. Doorway centre matches the Wall_UnevenBrick_Door_Flat/DoorFrame modules' own `at`."
+      },
+      "room": {
+        "inner_half_w": 1.69,
+        "inner_half_d": 2.69,
+        "door_x": 1.0,
+        "door_w": 1.6,
+        "_why": "R7.8: cottage_interior.gd's room -- same footprint as cottage_a/shop_interior.gd's own constants."
+      },
       "retint": {
         "MI_WindowGlass": {
           "color": "#f0c684",

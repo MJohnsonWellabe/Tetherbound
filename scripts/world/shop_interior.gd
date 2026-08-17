@@ -46,7 +46,10 @@ const COL_COUNTER := Color("#8a6a3f")
 const COL_SHELF := Color("#5a4030")
 
 
-func build() -> void:
+## `_room` unused: this interior is Mira-specific and keeps its own hardcoded
+## footprint. Signature matches `cottage_interior.gd`'s so village.gd can
+## dispatch either template through the same `interior.call("build", room)`.
+func build(_room: Dictionary = {}) -> void:
 	_build_floor()
 	_build_counter()
 	_build_shelf()
