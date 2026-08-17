@@ -194,10 +194,11 @@ func _run() -> void:
 	await _check_the_quarry(world, player, failures)
 	await _check_the_river(world, player, failures)
 	await _check_mill_crossing(world, player, failures)
+	await _check_village_doors(world, failures)
 
 	print("")
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, and the Old Mill Crossing is shut without its gear and open with it.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, and every village house door starts shut, blocks the doorway, and opens on interact into a real room.")
 		quit(0)
 	else:
 		for line in failures:
@@ -671,3 +672,75 @@ func _check_rock_collision_alignment(world: Node, failures: Array[String]) -> vo
 		failures.append("%d of %d sloped rock colliders are not tilted to match their visual mesh -- a player can clip through the gap (OF14)" % [
 			mismatched, checked
 		])
+
+
+## R7.8: every house door starts shut, physically blocks the doorway, and
+## opens into a real room on interact -- checked against every prefab that
+## authored a `door` in building_prefabs.json, not just one, since the bug
+## this catches (a doorway hole with no matching gate, or a gate that never
+## clears) is per-prefab data, not shared code.
+const VILLAGE_DOOR_PREFABS: Array[String] = ["cottage_a", "cottage_b", "ranger_station"]
+
+func _check_village_doors(world: Node, failures: Array[String]) -> void:
+	var village: Node = world.get_node_or_null(^"Village")
+	if village == null:
+		failures.append("no Village in the scene; village.gd did not build")
+		return
+
+	for prefab_name in VILLAGE_DOOR_PREFABS:
+		var building: Node3D = null
+		for child in village.get_children():
+			if (child as Node).name.begins_with(prefab_name + "_"):
+				building = child as Node3D
+				break
+		if building == null:
+			failures.append("no placed '%s' in the Village; cannot check its door" % prefab_name)
+			continue
+
+		var door: Node3D = building.get_node_or_null(^"Door") as Node3D
+		if door == null:
+			failures.append("%s has no Door -- it is a solid brick with a painted-on door" % prefab_name)
+			continue
+		var prompt: Node3D = door.get_node_or_null(^"Prompt") as Node3D
+		if prompt == null:
+			failures.append("%s's Door has no interact prompt" % prefab_name)
+			continue
+		var interior: Node3D = building.get_node_or_null(^"Interior") as Node3D
+		if interior == null or interior.get_child_count() == 0:
+			failures.append("%s has a door but no furnished room behind it" % prefab_name)
+			continue
+
+		if bool(door.call("is_open")):
+			failures.append("%s's door started open on a fresh world" % prefab_name)
+			continue
+
+		var gate := _door_gate_shape(door)
+		if gate == null:
+			failures.append("%s's door has no gate collider; a shut door blocks nothing" % prefab_name)
+			continue
+		if gate.disabled:
+			failures.append("%s's gate starts disabled; a shut door blocks nothing" % prefab_name)
+			continue
+
+		prompt.call("interaction_activate")
+		await physics_frame
+		if not bool(door.call("is_open")):
+			failures.append("%s's door did not open on interact" % prefab_name)
+			continue
+		if not gate.disabled:
+			failures.append("%s's gate stayed enabled after the door opened; the doorway is still blocked" % prefab_name)
+			continue
+
+		print("  %-16s door: shut and blocking -> interact -> open and clear, room behind it (%d pieces)" % [
+			prefab_name, interior.get_child_count()
+		])
+
+
+func _door_gate_shape(door: Node3D) -> CollisionShape3D:
+	var gate := door.get_node_or_null(^"Gate")
+	if gate == null:
+		return null
+	for child in gate.get_children():
+		if child is CollisionShape3D:
+			return child as CollisionShape3D
+	return null
