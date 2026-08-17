@@ -13,6 +13,7 @@ extends SceneTree
 ## is not — the same config always bakes the same playground.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
 const DATA_DIR := "res://data/terrain/playground"
 
 # Terrain3DData.MapType. The enum is not reachable through ClassDB on this
@@ -37,22 +38,33 @@ func _run() -> void:
 		return
 
 	var field: RefCounted = HEIGHTFIELD.new(config)
-	var world_size := int(config.get("world_size", 512))
 	var region_size := int(config.get("region_size", 256))
 	var spacing := float(config.get("vertex_spacing", 1.0))
-	var size := int(world_size / spacing)
 
-	if world_size % region_size != 0:
-		push_error("world_size %d is not a multiple of region_size %d; the bake would straddle region boundaries and leave unfilled flat gaps" % [world_size, region_size])
+	# §1.3(a)/(b): a region's origin is region_location * region_size *
+	# vertex_spacing, so the lattice pitch is that product in METRES and both
+	# bounds of every axis must land on it -- extent alone (the old
+	# `world_size % region_size` check) is not enough. See
+	# terrain_region_alignment.gd for why.
+	var bounds := ALIGNMENT.world_bounds(config)
+	var alignment_error := ALIGNMENT.check_alignment(bounds, region_size, spacing)
+	if not alignment_error.is_empty():
+		push_error(alignment_error)
 		quit(1)
 		return
 
-	print("baking %dm playground, %dx%d samples at %.2fm spacing, %d regions of %d" %
-		[world_size, size, size, spacing, (world_size / region_size) ** 2, region_size])
+	var origin_x: float = bounds["min_x"]
+	var origin_z: float = bounds["min_z"]
+	var size_x := int(round((bounds["max_x"] - bounds["min_x"]) / spacing))
+	var size_z := int(round((bounds["max_z"] - bounds["min_z"]) / spacing))
+	var region_counts := ALIGNMENT.region_counts(bounds, region_size, spacing)
 
-	var origin := -0.5 * size * spacing
-	var height_image := Image.create_empty(size, size, false, Image.FORMAT_RF)
-	var colour_image := Image.create_empty(size, size, false, Image.FORMAT_RGBA8)
+	print("baking x[%.1f, %.1f] z[%.1f, %.1f], %dx%d samples at %.2fm spacing, %d regions (%dx%d) of %d" %
+		[bounds["min_x"], bounds["max_x"], bounds["min_z"], bounds["max_z"],
+		size_x, size_z, spacing, region_counts.x * region_counts.y, region_counts.x, region_counts.y, region_size])
+
+	var height_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RF)
+	var colour_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RGBA8)
 
 	var colour_cfg: Dictionary = config.get("colour", {})
 	# EV4-hillside-seam: texture-band decisions are deliberately sampled at a
@@ -70,10 +82,10 @@ func _run() -> void:
 	var steep_samples := 0
 	var water_level: float = field.water_level()
 
-	for pixel_z in size:
-		var world_z := origin + pixel_z * spacing
-		for pixel_x in size:
-			var world_x := origin + pixel_x * spacing
+	for pixel_z in size_z:
+		var world_z := origin_z + pixel_z * spacing
+		for pixel_x in size_x:
+			var world_x := origin_x + pixel_x * spacing
 			var height: float = field.height_at(world_x, world_z)
 			height_image.set_pixel(pixel_x, pixel_z, Color(height, 0.0, 0.0, 1.0))
 
@@ -124,7 +136,7 @@ func _run() -> void:
 				steep_samples += 1
 
 	print("  height range %.1fm .. %.1fm (relief %.1fm)" % [lowest, highest, highest - lowest])
-	print("  %.1f%% of the surface is steeper than 30 degrees" % (100.0 * steep_samples / float(size * size)))
+	print("  %.1f%% of the surface is steeper than 30 degrees" % (100.0 * steep_samples / float(size_x * size_z)))
 
 	var terrain: Node = ClassDB.instantiate("Terrain3D")
 	terrain.set("region_size", region_size)
@@ -139,17 +151,22 @@ func _run() -> void:
 		quit(1)
 		return
 
-	# import_images places the maps with their CENTRE at global_position, so the
-	# region lands centred on the world origin and the player spawns in the
-	# middle of the playground rather than at its corner.
+	# import_images' position places pixel (0,0) of the image at that world
+	# coordinate -- i.e. the MIN corner, not a centre point, despite the name
+	# this file used to give the variable. For the shipped symmetric config
+	# `origin_x`/`origin_z` are `-half_extent`, which is exactly why the
+	# imported block ends up spanning a symmetric range around the world
+	# origin and the player spawns in the middle rather than at a corner. An
+	# off-centre corridor (§1.3c) passes an off-centre `min_x`/`min_z` here
+	# the same way.
 	var images: Array[Image] = [null, null, null]
 	images[MAP_HEIGHT] = height_image
 	images[MAP_CONTROL] = null
 	images[MAP_COLOR] = colour_image
-	data.call("import_images", images, Vector3(origin, 0.0, origin), 0.0, 1.0)
+	data.call("import_images", images, Vector3(origin_x, 0.0, origin_z), 0.0, 1.0)
 	await process_frame
 
-	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing, texture_step, rock_step)
+	_paint_control_map(data, field, config, colour_cfg, origin_x, origin_z, size_x, size_z, spacing, texture_step, rock_step)
 
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DATA_DIR))
@@ -186,7 +203,8 @@ func _run() -> void:
 ## unreachable auto-shader tier.
 func _paint_control_map(
 	data: Object, field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
-	origin: float, size: int, spacing: float, texture_step: float, rock_step: float
+	origin_x: float, origin_z: float, size_x: int, size_z: int, spacing: float,
+	texture_step: float, rock_step: float
 ) -> void:
 	var ids := _texture_ids(config.get("textures", []))
 	if ids.is_empty():
@@ -199,10 +217,10 @@ func _paint_control_map(
 	var painted_apron_pixels := 0
 	var painted_drain_pixels := 0
 	var water_level: float = field.water_level()
-	for pixel_z in size:
-		var world_z := origin + pixel_z * spacing
-		for pixel_x in size:
-			var world_x := origin + pixel_x * spacing
+	for pixel_z in size_z:
+		var world_z := origin_z + pixel_z * spacing
+		for pixel_x in size_x:
+			var world_x := origin_x + pixel_x * spacing
 			# Same smoothed, rock-biased slope as the colour map
 			# (EV4-hillside-seam, OF11) so the control map's base/overlay/blend
 			# pick matches what got painted into the colour map, band for band

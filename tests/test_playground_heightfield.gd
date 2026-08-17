@@ -9,6 +9,7 @@ extends "res://tests/test_case.gd"
 ## is a checkable property.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
 
 var _field: RefCounted
 var _config: Dictionary
@@ -24,14 +25,46 @@ func test_config_loads() -> void:
 	assert_true(_config.has("hills"), "config should describe the base hills")
 
 
-func test_world_size_divides_by_region_size() -> void:
-	# If it does not, the bake straddles Terrain3D region boundaries and leaves
-	# unfilled flat gaps inside partially written regions. Caught the hard way.
-	var world_size: int = int(_config.get("world_size", 0))
-	var region_size: int = int(_config.get("region_size", 1))
-	assert_true(world_size > 0 and region_size > 0, "both sizes must be set")
-	assert_eq(world_size % region_size, 0,
-		"world_size %d must be a multiple of region_size %d" % [world_size, region_size])
+func test_world_bounds_land_on_the_region_lattice() -> void:
+	# §1.3(a)/(b): a region's world origin is
+	# region_location * region_size * vertex_spacing, so the lattice pitch is
+	# that product in METRES, not region_size alone. Extent divisibility
+	# (the old `world_size % region_size` check) is not sufficient -- see
+	# test_off_centre_extent_that_divides_region_size_still_fails below for the
+	# case it missed. Every bound of the actual configured world must land on
+	# the lattice, or the outermost regions bake as partly-flat gaps.
+	var region_size: int = int(_config.get("region_size", 0))
+	var spacing: float = float(_config.get("vertex_spacing", 0.0))
+	assert_true(region_size > 0 and spacing > 0.0, "region_size and vertex_spacing must both be set")
+
+	var bounds := ALIGNMENT.world_bounds(_config)
+	var error := ALIGNMENT.check_alignment(bounds, region_size, spacing)
+	assert_eq(error, "", "configured world bounds must land on the %.1fm region lattice" % (region_size * spacing))
+
+
+func test_off_centre_extent_that_divides_region_size_still_fails() -> void:
+	# This is the exact defect the guard has to catch, restated as a test that
+	# can fail. Revision 1 of MEADOWS_MACRO_LAYOUT.md specified x in
+	# [-768, +768] -- a 1536m extent, and 1536 % 512 == 0, so an extent-only
+	# check (including the "obvious" fix `world_size % (region_size *
+	# vertex_spacing)`) passes it. But at region_size 256 / vertex_spacing 2.0
+	# the lattice pitch is 512m and neither -768 nor +768 is a multiple of it,
+	# so the outermost regions would be only half-written. A guard that cannot
+	# fail on this input is not testing the property it claims to.
+	var bounds := {"min_x": -768.0, "max_x": 768.0, "min_z": -768.0, "max_z": 768.0}
+	var error := ALIGNMENT.check_alignment(bounds, 256, 2.0)
+	assert_false(error.is_empty(),
+		"a -768..+768 world must be REJECTED: 1536 is a multiple of 512, but neither bound is")
+
+
+func test_a_genuinely_aligned_off_centre_extent_passes() -> void:
+	# The companion positive case: -1024..+1024 has the same 2048m extent as
+	# the previous test's 1536m rejection would need to avoid a false-negative
+	# guard (one that rejects everything). Both bounds are multiples of the
+	# 512m pitch, so this must pass.
+	var bounds := {"min_x": -1024.0, "max_x": 1024.0, "min_z": -1024.0, "max_z": 1024.0}
+	var error := ALIGNMENT.check_alignment(bounds, 256, 2.0)
+	assert_eq(error, "", "-1024..+1024 at a 512m pitch should be accepted: %s" % error)
 
 
 func test_is_deterministic() -> void:
