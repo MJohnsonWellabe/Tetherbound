@@ -111,9 +111,17 @@ func _run() -> void:
 			"target": bar_global + Vector3(0, 1.2, 0),
 		},
 		{
+			# R7.9 round 3: the first two passes of this viewpoint shifted eye
+			# AND target by the same side offset, which is a parallel slide,
+			# not a turn -- the camera kept looking straight down the
+			# bar-to-door axis and never actually turned toward the guest
+			# tables sitting off that axis at local x=+-1.5. Framed here in
+			# the room's own local space (inn.to_global(), the same seam
+			# bar_position()/door_global already use) from near the door,
+			# looking back across both tables toward the bar.
 			"name": "05-inn-interior-tables",
-			"eye": bar_global.lerp(door_global, 0.5) + Vector3(0, 1.6, 0) + side_offset * 1.5,
-			"target": door_global.lerp(bar_global, 0.6) + Vector3(0, 1.0, 0) + side_offset * 1.5,
+			"eye": inn.to_global(Vector3(0.0, 1.8, 3.7)),
+			"target": inn.to_global(Vector3(0.0, 0.9, 0.3)),
 		},
 	]
 
