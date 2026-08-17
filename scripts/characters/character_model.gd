@@ -729,18 +729,25 @@ func apply_terrain_adaptation(
 	var roll_limit := float(feel.get("terrain_roll_limit_deg", 18.0))
 	var rate := float(feel.get("terrain_smoothing_rate", 6.0))
 
-	# Same sign convention apply_momentum_tilt's own comment records for this
-	# rig (+Z-facing model, negative X pitches the top forward): cresting a
-	# rise (ground ahead higher, pitch_deg positive) must pitch the body
-	# forward into the climb, i.e. rotation.x more negative, so the target
-	# carries the same negated sign momentum tilt already established.
+	# Un-negated target, exactly matching apply_momentum_tilt's own shape
+	# (that method's own target.x is `accel.dot(forward) * lean_per`, no
+	# pre-negation) — the single negation lives ONLY at the `rotation.x +=`
+	# line below, the same one place momentum tilt puts it. A first version
+	# of this method negated here AND at that line, which is not "extra
+	# caution", it is two negatives making a positive: render evidence
+	# (tools/capture_slope_test.gd's own debug print) caught the body
+	# leaning AWAY from a climb instead of into it before this fix.
 	var target := Vector2(
-		clampf(-pitch_deg * lean_scale, -pitch_limit, pitch_limit),
-		clampf(-roll_deg * lean_scale, -roll_limit, roll_limit)
+		clampf(pitch_deg * lean_scale, -pitch_limit, pitch_limit),
+		clampf(roll_deg * lean_scale, -roll_limit, roll_limit)
 	)
 	var blend := 1.0 - exp(-rate * delta)
 	_terrain_tilt = _terrain_tilt.lerp(target, blend)
 
+	# Forward lean is negative X for a +Z-facing model, same convention
+	# apply_momentum_tilt's own comment records; cresting a rise (ground
+	# ahead higher, pitch_deg/target.x positive) must pitch the body forward
+	# into the climb, i.e. rotation.x more negative.
 	rotation.x += deg_to_rad(-_terrain_tilt.x)
 	rotation.z += deg_to_rad(-_terrain_tilt.y)
 
