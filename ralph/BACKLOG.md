@@ -577,6 +577,44 @@ The plan stays authoritative for what these mean and what "done" is; these
 entries exist so the queue stops omitting them. Do not duplicate the plan's
 prose here — read §6, §7 and §8 there.
 
+### BAND-SPLIT — one content file per band, so bands can be authored concurrently
+`model: opus` · `tests: run_tests, smoke_playground, smoke_traversal, a new identity test` · `area: data, world`
+**Owner-requested, 2026-08-17:** *"can you fan out agents to do the corridor
+design work concurrently. so each agent builds a separate band then they all
+come back and we have the full corridor?"*
+
+That is the right end state and the bake already supports its terrain half —
+`OW5B` factored the bake to take a region set with a bit-identity test, because
+every pixel is computed from its own coordinate and nothing else, so adjacent
+regions baked independently agree exactly at the boundary.
+
+**What blocks it is data layout, not agents.** All Meadows content lives in four
+monolithic top-level arrays — `spawns.json` (`spawns`), `props.json`
+(`clusters`), `harvest.json` (`nodes`), `trainers.json` (`trainers`). Every
+band's content goes in the same arrays in the same files, so five band agents
+would edit all four files continuously and conflict on every one. **File
+exclusions are the mechanism that actually keeps this project's lanes off each
+other, and they cannot help when the unit of exclusion is a file and the unit of
+work is a band.** This item makes the unit of ownership match the unit of work.
+
+**The load-bearing requirement is identity, not tidiness.** The merged result
+must load identically to today — same entries, same values, **same order**.
+Order is not cosmetic here: `spawns.json` resolves creature homes through a
+seeded RNG, and `WALL1` was ultimately a spawn landing 3.15 m from a hand-placed
+trainer. A merge that changes iteration order moves seeded placement, and the
+world changes with nobody editing content. Prove it with a test that is
+demonstrated failing, not by reading the diff.
+
+**Scope guards.** Author no content — not one spawn, prop, node or trainer; that
+is `MQ2B`/`MQ3` and it is fable work. Keep genuinely global keys (`trainers.json`'s
+`flow`/`prompts`, `spawns.json`'s `respawn_seconds`/`roles`) in one place rather
+than sharding them into five copies that can drift. `vegetation.json` is scatter
+*rules*, not placements — leave it alone; its problem is `VEG-CORRIDOR`.
+
+**Done when** five disjoint file sets exist, one per band, an identity test holds
+the merge honest, and the next coordinator can hand five agents five bands
+without a shared file between them.
+
 ### VEG-CORRIDOR — the scatter still only dresses a 512 m square at the origin
 `model: opus` · `tests: smoke_playground, run_tests, a placement-extent test` · `area: vegetation, terrain, perf`
 **Blocks `MQ2B`, and was found by asking what the corridor actually looks like
