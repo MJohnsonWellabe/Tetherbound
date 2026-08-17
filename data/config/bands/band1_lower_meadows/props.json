@@ -1,0 +1,202 @@
+{
+  "_comment": "BAND-SPLIT. Band-local clusters for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "clusters": [
+    {
+      "order": 0,
+      "name": "work_area",
+      "props": [
+        {
+          "model": "Anvil_Log",
+          "at": [
+            -5.0,
+            -3.0
+          ],
+          "yaw_deg": 30.0,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- an anvil mounted on its own stump"
+        },
+        {
+          "model": "Workbench",
+          "at": [
+            -6.0,
+            -2.0
+          ],
+          "yaw_deg": 110.0,
+          "scale": 1.0,
+          "_why": "faces the anvil across the nook -- pulled in 0.7m (round 1 blind critic: the anvil/whetstone and crate/workbench read as two separate groups, not one station)"
+        },
+        {
+          "model": "Whetstone",
+          "at": [
+            -4.2,
+            -1.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "_why": "a sharpening stone within reach of the bench -- pulled in 0.4m, same reason"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -6.0,
+            -3.6
+          ],
+          "yaw_deg": 200.0,
+          "scale": 1.0,
+          "_why": "stock crate behind the anvil -- pulled in 0.9m, same reason"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [
+            -3.8,
+            -3.6
+          ],
+          "yaw_deg": -40.0,
+          "scale": 1.0,
+          "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"
+        }
+      ]
+    },
+    {
+      "order": 1,
+      "name": "farmhouse_yard",
+      "props": [
+        {
+          "model": "Barrel_Apples",
+          "at": [
+            -24.0,
+            -25.0
+          ],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- overflow from the last harvest"
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "at": [
+            -24.9,
+            -24.6
+          ],
+          "yaw_deg": -20.0,
+          "scale": 1.0,
+          "_why": "set right against the barrel's side, not just nearby -- round 2 blind critic: a loose arc of props near a wall reads as dumped, not a task. This is meant to read as one pile: a load just carried out and set down together."
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [
+            -23.3,
+            -24.7
+          ],
+          "yaw_deg": 50.0,
+          "scale": 1.0,
+          "_why": "touching the barrel's other side, tipped at an angle rather than square -- just set down, not arranged. FarmCrate_Carrot swapped out earlier (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -24.3,
+            -26.0
+          ],
+          "yaw_deg": 190.0,
+          "scale": 1.0,
+          "_why": "in front of the pile, facing back toward it -- the tool that did the carrying, set down after"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -23.2,
+            -26.1
+          ],
+          "yaw_deg": -30.0,
+          "scale": 1.0,
+          "_why": "the big piece of the same load, closing the pile from the front"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "name": "trainer_camp",
+      "props": [
+        {
+          "model": "Bag",
+          "at": [
+            24.9,
+            -27.3
+          ],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the cluster's anchor -- a travelling trainer's pack, dropped beside the practice-meadow path, kept as its own separate stop rather than crammed against the supply pile (a genuine blind critic on the shipped state: 'reads as three container props at even spacing... scatter-list output, not a place'). Sited off route 2 ([18,-24]->[30,-40], terrain_playground.json), inside the practice-meadow clearing (vegetation.json, centre [30,-40] r16) but well short of the arena itself."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            26.4,
+            -28.9
+          ],
+          "yaw_deg": 165.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the pile's anchor. This meadow slopes here for real -- a corner-height probe against the crate's own exact footprint (tools/_probe_ev7fix.gd) measures 0.137-0.172m of spread across the headings tried, barely moved by yaw alone (165deg: 0.137m vs the old -25deg heading's 0.145m -- yaw was never going to fix this on its own). `sink_m` 0.08 is what actually settles it: added to the model's own ~0.05m embed, the crate's rigid bottom sits ~0.13m below the sampled centre height, which is deeper than half this footprint's worst-case corner spread, so every corner ends up buried in the terrain mesh rather than floating above it, regardless of which way it's turned. `Bench` (a trestle table) is DROPPED entirely -- the critic's own offered alternative ('drop the table and commit to a supply cache at a waypoint composition'): props.gd places every prop flush to the ground with no way to rest one ON another, so the table's flat top could never actually hold the crate/sack/barrel it was meant to -- they always passed clean through its legs. A cache of things set down together, not a furnished stop, is what this system can honestly build."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            26.62,
+            -28.1
+          ],
+          "yaw_deg": 80.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: touching the crate's side (0.83m centre-to-centre, matching the two footprints' combined radius) so the pair reads as one pile someone set down together, not a scatter -- distinct spacing from the pack 1.9m away, breaking the old even 3-way spacing the critic named as 'placed by script.' Still the plain supply barrel, not the farmhouse's apple-branded one."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "name": "bridge_repair_site",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -391.7,
+            520.93
+          ],
+          "yaw_deg": 20.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the cluster's anchor, moved to hug the footbridge's own west landing (tools/_probe_ev7fix.gd -- bridge local frame x=-5.3, z=1.4, just outside the deck/rail collider's z=+/-1.05 half-extent and past the stone abutment tile at local x=-3.9..-5.9) instead of sitting marooned in open lawn ~3m further out (a genuine blind critic on the shipped state: 'marooned ~6m from the house and ~4m off the bridge head in open lawn'). `sink_m` buries the crate's own shallow 0.05m embed a little further so grass doesn't show lit up under its skirt -- this spot is flat (0.000-0.006m corner spread, real terrain data, not sloped), so the old 'floating crate' complaint here was the shallow embed, not a slope."
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [
+            -390.9,
+            521.0
+          ],
+          "yaw_deg": -90.0,
+          "pitch_deg": 38.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: actually leaning against the crate's near face now, not standing bolt upright ('the axe LEVITATES: bolt upright, unsupported, haft ending mid-air'). This model is authored vertical in its own glTF (a baked -90deg node rotation puts its long axis on Y regardless of yaw -- confirmed with tools/_probe_ev7fix.gd, not guessed), so no yaw value could ever lay it down; `pitch_deg` is new on scripts/world/props.gd for exactly this. Anchor and pitch picked from the same probe's world-space AABB check so the tilted mesh's low end sits in the grass and its body actually overlaps the crate's east face (~0.05m real contact, not just visually adjacent), clear of the crate's own footprint so it doesn't clip through a corner."
+        },
+        {
+          "model": "Rope_1",
+          "at": [
+            -391.0,
+            521.34
+          ],
+          "yaw_deg": 30.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: moved to the crate's own east/bridge-facing side, in front rather than tucked behind it ('the rope coil -- the most purpose-carrying prop -- is 90% hidden behind the crate'). This is the side a player sees first walking off the bridge, so the repair stock reads immediately instead of needing to walk around the crate to find it."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -392.13,
+            521.25
+          ],
+          "yaw_deg": 160.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: water bucket at the pile's far (west) side, foot of the pile -- kept off the deck/rail collider the same way the rest of the cluster is now (local z 1.75, not 0.89 like the position this replaced, which was inside the walkway's own collider footprint)."
+        }
+      ]
+    }
+  ]
+}

@@ -579,11 +579,10 @@ func test_the_ironwood_haft_refuses_without_owning_the_tool() -> void:
 ## craft screen full of rows nobody can fill.
 func test_ironwood_is_gathered_with_the_axe_and_really_grows_somewhere() -> void:
 	assert_eq(str(db.definition("ironwood").get("gathered_with", "")), "axe")
-	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
-	assert_true(file != null, "harvest.json is missing")
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var nodes: Array = _harvest_nodes()
+	assert_false(nodes.is_empty(), "harvest.json merged to nothing; the band split lost every node")
 	var stands := 0
-	for raw: Variant in ((parsed as Dictionary).get("nodes", []) as Array):
+	for raw: Variant in nodes:
 		if str((raw as Dictionary).get("item", "")) == "ironwood":
 			stands += 1
 	assert_true(stands >= 3, "only %d ironwood nodes stand in the world" % stands)
@@ -619,6 +618,17 @@ func _load_json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+## BAND-SPLIT. `harvest.json`'s `nodes` are per-band now, so this cannot go
+## through `_load_json` the way the warrens still do — that would count zero
+## nodes and quietly report the chapter as supply-starved (or, worse for the
+## ironwood check above, as having no deposits at all).
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
+
+func _harvest_nodes() -> Array:
+	return BAND_CONTENT.load_config(HARVEST_PATH, "nodes").get("nodes", []) as Array
+
+
 ## Everything one pass over the chapter's authored nodes and rewards yields of
 ## `item` — harvest.json's own nodes, the warrens' deposits, and the warrens'
 ## clear reward. Deliberately counts each node ONCE: `harvest_node.gd` respawns
@@ -626,7 +636,7 @@ func _load_json(path: String) -> Dictionary:
 ## to stand and wait, which is the cost this test exists to prevent.
 func _one_pass_supply(item: String) -> int:
 	var total := 0
-	for node: Variant in _load_json(HARVEST_PATH).get("nodes", []):
+	for node: Variant in _harvest_nodes():
 		if str((node as Dictionary).get("item", "")) == item:
 			total += int((node as Dictionary).get("amount", 0))
 	var warrens: Dictionary = _load_json(WARRENS_PATH)

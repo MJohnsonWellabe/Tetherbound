@@ -62,6 +62,12 @@ signal prompt_changed(text: String)
 ## an edit to this file rather than to code.
 const SPAWNS_CONFIG := "res://data/config/spawns.json"
 
+## BAND-SPLIT. The `spawns` array itself is cut per corridor band under
+## `data/config/bands/<band>/spawns.json`; `SPAWNS_CONFIG` now holds only
+## `respawn_seconds` and `roles`. `band_content.gd` merges them back, and the
+## merged array is identical to the pre-split one.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
 ## Fallback if spawns.json is missing or does not give respawn_seconds. Matches
 ## the file's own value rather than M2's old 6.0: with a whole meadow of
 ## creatures there is always another fight to walk to, so a beaten one staying
@@ -201,10 +207,21 @@ func _spawn_creatures() -> void:
 		# smoke test walking to a spot that moves between CI runs is a flake
 		# factory, and 'the world is deterministic' is the same promise the
 		# terrain bake and the vegetation scatter already make (their seeds are
-		# fixed in data too). The seed is derived from the entry's index so each
-		# cluster gets its own scatter rather than every cluster sharing one.
+		# fixed in data too). The seed is derived from the entry's own `order`
+		# so each cluster gets its own scatter rather than every cluster
+		# sharing one.
+		#
+		# BAND-SPLIT changed this from the array index to `order`, and the two
+		# are equal for every entry that existed at the split, so the meadow is
+		# unchanged. The reason to change it at all is that the index stopped
+		# being a safe identity the moment five agents could author five bands
+		# at once: with the index, a Band 1 author appending one spawn shifts
+		# every entry after it and silently moves, relevels and rerolls Band 3's
+		# creatures -- a world change with no edit to Band 3 anywhere in the
+		# diff. `order` is authored, reserved per band (see the band files' own
+		# comment), and nobody else's edit can move it.
 		var rng := RandomNumberGenerator.new()
-		rng.seed = hash("wild_spawn_%d" % index)
+		rng.seed = hash("wild_spawn_%d" % int(spawn.get("order", index)))
 
 		for n in count:
 			var wild: Node3D = CREATURE_SCENE.instantiate()
@@ -483,13 +500,7 @@ var _spawns_cfg: Dictionary = {}
 func spawns_config() -> Dictionary:
 	if not _spawns_cfg.is_empty():
 		return _spawns_cfg
-	var file := FileAccess.open(SPAWNS_CONFIG, FileAccess.READ)
-	if file == null:
-		push_error("spawns.json missing at %s" % SPAWNS_CONFIG)
-		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		_spawns_cfg = parsed
+	_spawns_cfg = BAND_CONTENT.load_config(SPAWNS_CONFIG, "spawns")
 	return _spawns_cfg
 
 

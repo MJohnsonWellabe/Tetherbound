@@ -202,14 +202,14 @@ static func _world_bounds() -> Dictionary:
 const MIN_SPOT_SEPARATION := 4.5
 
 
+## BAND-SPLIT. Through the merge, not a raw read of `harvest.json` — the `nodes`
+## array is per-band now, and reading the head file would silently return an
+## empty list and pass every check below.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
+
 func _authored_nodes() -> Array:
-	var file := FileAccess.open(HARVEST_CONFIG, FileAccess.READ)
-	if file == null:
-		return []
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		return []
-	return (parsed as Dictionary).get("nodes", []) as Array
+	return BAND_CONTENT.load_config(HARVEST_CONFIG, "nodes").get("nodes", []) as Array
 
 
 func test_every_authored_harvest_spot_is_real_and_reachable() -> void:

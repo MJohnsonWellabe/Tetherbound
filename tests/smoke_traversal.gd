@@ -125,6 +125,7 @@ const WORLD_Z_SOUTH_LIMIT := 7680.0 - EDGE_MARGIN
 ## the moment that changes.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 ## OF15: the owner reported movement getting WEDGED against geometry rather
 ## than passing through -- a different shape of bug than falling through the
@@ -962,13 +963,12 @@ func _check_the_quarry(world: Node, player: CharacterBody3D, failures: Array[Str
 
 	# Every authored rootstone deposit, standing where it was authored.
 	var wanted := 0
-	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
-	if file != null:
-		var parsed: Variant = JSON.parse_string(file.get_as_text())
-		if parsed is Dictionary:
-			for entry: Variant in (parsed as Dictionary).get("nodes", []):
-				if entry is Dictionary and str((entry as Dictionary).get("item", "")) == "rootstone":
-					wanted += 1
+	# BAND-SPLIT: the `nodes` array is per-band now (bands/<band>/harvest.json).
+	# Counted through the same merge the world places from, so `wanted` cannot
+	# drift to 0 and turn the check below into a no-op.
+	for entry: Variant in BAND_CONTENT.load_config("res://data/config/harvest.json", "nodes").get("nodes", []):
+		if entry is Dictionary and str((entry as Dictionary).get("item", "")) == "rootstone":
+			wanted += 1
 	var standing := 0
 	var first := Vector3.ZERO
 	for node in world.get_children():

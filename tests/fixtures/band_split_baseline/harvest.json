@@ -1,0 +1,254 @@
+{
+  "_comment": "The first day's gathering: hand-placed harvest spots along the tutorial path, read by scripts/world/harvest_node.gd. NOT the real M8 harvesting loop (tools, durability, the vegetation itself) — a dozen legible spots so 'gather enough to make camp' is playable today. Positions are world metres, stood on the ground per D09. ALL TUNABLE.",
+  "_comment_amounts": "A camp costs 12 wood / 8 stone / 10 fiber (data/items/buildables.json), so one full walk down the practice path and back covers it with a little over: 4 wood spots x 4, 3 stone x 3, 3 fiber x 4, 2 berry x 3.",
+  "nodes": [
+    {
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        16.0,
+        -28.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        26.0,
+        -44.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        44.0,
+        -24.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -8.0,
+        8.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        22.0,
+        -34.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        52.0,
+        -30.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -18.0,
+        6.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        12.0,
+        -22.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        34.0,
+        -46.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -2.0,
+        -20.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        20.0,
+        -16.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    },
+    {
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        38.0,
+        -36.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    },
+    {
+      "_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        394.0,
+        1797.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.15
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        399.0,
+        1792.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        406.0,
+        1800.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.25,
+      "_why": "hard against the quarry's own cut face, where the working stopped"
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        401.0,
+        1809.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.1
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        393.0,
+        1802.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly.",
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -430.0,
+        2474.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -424.0,
+        2458.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.3
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -414.0,
+        2464.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -410.0,
+        2458.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.32
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -398.0,
+        2452.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.28
+    }
+  ],
+  "_comment_ironwood_sf31": "SF31, spec §3 Band 4: the old-growth stands on the Rise's south-west flank, up the trainer road past the Burrow Warrens' mouth ([70,-140]) -- the upper Meadows, and the only place ironwood grows. Nodes here rather than in a new `ironwood_grove.json` because this file already IS where a gathered material lives: SD16's quarry made exactly this call for rootstone (`old_quarry.gd`'s own header: 'the Rootstone deposits are harvest.json, placed by playground_world.gd like every other harvest node') and a second config would be the drift that comment exists to prevent. Every position is MEASURED, not guessed -- `tools/_probe_upper_meadows.gd` (heights -3.3m to +0.5m, worst local slope 2.3-11.3 degrees over a 3m pad, all inside world_perimeter.gd's 235m ring at 149-183m out); the eastern quadrant beyond them is the Rise's own 45-75 degree rock and will not hold a node a player can stand at. `TwistedTree` rather than `DeadTree_2` (which `wood` already uses): the gnarled trunk is the read, and a second dead tree would say 'wood' at a glance. Amounts and scales TUNABLE.",
+  "_comment_models_r9_4": "R9.4. Every node here had no `model`, and harvest_node.gd's fallback for that is a BoxMesh tinted by the item's colour -- so all twelve harvest spots rendered as coloured boxes. The blind critic found two of them sitting a couple of metres from the player in the spawn framing and noted they were 'MORE legible than the player', being the only hard-edged geometric shapes in frame; it listed them among the three assets doing the most damage. These are the vegetation's own Quaternius pack, deliberately: assets/environment/nature is the Kenney kit, which ships flat untextured vertex colours including a teal-green rock material, and mixing it in would trade one cohesion problem for another (CLAUDE.md, visual cohesion). The box fallback stays in the code -- it is the right behaviour for a node whose model is missing. TUNABLE (scales especially)."
+}

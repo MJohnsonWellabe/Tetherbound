@@ -1,0 +1,163 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 0,
+      "id": "practice_trainer",
+      "name": "Bryn",
+      "_placeholder": "SC12/SC13 replaced R8.1's placeholder role with Mira, Oskar and Tam below (villager-greeting trainers, `placed_by: \"village_npcs\"`) -- but this entry stays. tests/smoke_trainer_battle.gd is the ONE test that drives a trainer through trainer_npc.gd's OWN placement-and-prompt system end to end (a real Terrain3D body, a real 'Challenge Bryn' prompt, a real interact-button press) rather than through a villager's greeting_when/battle: route, and there is no other standalone trainer in the game yet for it to stand up. Deleting Bryn would delete that coverage, not just a placeholder -- so it is kept, and noted here rather than silently left behind. A future standalone trainer (the relay station's, a captain's) can take over this exact role later.",
+      "config_key": "villager_farmer",
+      "hair": {
+        "visible": true,
+        "color": "#c9a86a",
+        "_comment": "Spec §21 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
+      },
+      "position": [
+        13.0,
+        9.0
+      ],
+      "facing_deg": -171.1,
+      "_why_here": "The open north field behind the village square -- inside the square's own 22m vegetation clearing (extended in data/config/vegetation.json so the 11m arena is not fought through a tree), 12m clear of every structure, villager, harvest node and prop, and well outside the bramblebun cluster at [30,-40] so a wild engage prompt never contests the challenge prompt.",
+      "challenge": "trainer_practice_challenge",
+      "defeated": "trainer_practice_defeated",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 2
+        },
+        {
+          "species": "mudsnout",
+          "level": 3
+        }
+      ],
+      "reward": {
+        "coins": 20,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "trainer_defeated_practice",
+      "rechallenge": false
+    },
+    {
+      "order": 1,
+      "id": "trainer_mira",
+      "name": "Mira",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Mira -- Meadow Keeper -- introductory trainer battle, reward: XP + useful early item/TM/recipe.' The introduction -- one creature, low level, a coin purse and a potion. Team level is TUNABLE and this task's to set; SC15 owns the payout table's final numbers.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_farmer",
+      "position": [
+        18.99,
+        -1.01
+      ],
+      "facing_deg": -135.0,
+      "challenge": "village_mira_challenge",
+      "defeated": "village_mira_beaten",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 4
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 10
+          },
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_mira",
+      "rechallenge": false
+    },
+    {
+      "order": 2,
+      "id": "trainer_oskar",
+      "name": "Oskar",
+      "_comment": "SC12/SC13/SC14. Spec sec3 Band 1: 'Oskar -- Bridgehand -- moderate trainer battle, controls or possesses the old bridge mechanism, reward: South Bridge Key.' The gate -- a real two-creature team, sturdier than Mira's. `south_bridge_key` is SC14's Gate 1 mechanism; this entry hands it over the moment it is defeated so the bridge task has a real item to read rather than a stub.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_keeper",
+      "position": [
+        22.0,
+        -6.0
+      ],
+      "facing_deg": -108.4,
+      "challenge": "village_oskar_challenge",
+      "defeated": "village_oskar_beaten",
+      "team": [
+        {
+          "species": "terrapup",
+          "level": 6
+        },
+        {
+          "species": "mosshell",
+          "level": 7
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 15
+          },
+          {
+            "id": "south_bridge_key",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_oskar",
+      "rechallenge": false
+    },
+    {
+      "order": 3,
+      "id": "trainer_tam",
+      "name": "Tam",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Tam -- Field Scout -- battle emphasizing switching/type awareness, reward: TM, Orb-related item, or map hint.' The switching lesson -- two creatures of different types, so a one-note team cannot answer both.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_smith",
+      "position": [
+        8.0,
+        -16.0
+      ],
+      "facing_deg": 18.4,
+      "challenge": "village_tam_challenge",
+      "defeated": "village_tam_beaten",
+      "team": [
+        {
+          "species": "pipwing",
+          "level": 5
+        },
+        {
+          "species": "mudsnout",
+          "level": 6
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 12
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_tam",
+      "rechallenge": false
+    }
+  ]
+}

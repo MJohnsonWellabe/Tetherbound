@@ -23,6 +23,9 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+## BAND-SPLIT. `harvest.json`'s `nodes` array is cut per corridor band under
+## `data/config/bands/<band>/harvest.json` and merged back at load.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const FARM_PLOT := preload("res://scripts/world/farm_plot.gd")
 const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
@@ -916,15 +919,12 @@ func _build_stronghold_climax() -> void:
 
 ## The first day's gathering spots, from data/config/harvest.json.
 func _place_harvest_nodes() -> void:
-	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
-	if file == null:
+	var parsed: Dictionary = BAND_CONTENT.load_config("res://data/config/harvest.json", "nodes")
+	if parsed.is_empty():
 		push_warning("harvest.json missing; the first day has nothing to gather")
 		return
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		return
 	var placed := 0
-	for entry: Variant in (parsed as Dictionary).get("nodes", []):
+	for entry: Variant in parsed.get("nodes", []):
 		if not entry is Dictionary:
 			continue
 		var spec: Dictionary = entry
