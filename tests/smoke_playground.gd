@@ -115,6 +115,14 @@ func _run() -> void:
 
 	failures.append_array(await _the_perf_overlay_reports_numbers(world))
 	failures.append_array(await _the_hotbar_heals_a_creature(world))
+	# Automatic-lighting check FIRST, and deliberately: the prop check right
+	# after this one ends by toggling the torch off, which sets torch.gd's
+	# own `_manual_override` -- once that latches, `_is_on()` takes the
+	# manual branch forever after (by design; see torch.gd's own header on
+	# manual "winning over the automatic behaviour until toggled again"),
+	# and a night check running after it would see a manually-forced state
+	# rather than the automatic one it exists to prove.
+	failures.append_array(await _the_torch_lights_itself_automatically_at_night(world))
 	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
@@ -339,6 +347,45 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 		Input.action_release(&"torch_toggle")
 		for i in 4:
 			await physics_frame
+	return found
+
+
+## OF18: torch.gd's `_world_look` used to be looked up exactly once, in
+## `_ready()` -- the same call frame `player_controller.gd::_ready()` builds
+## this node from. `Player` sits before `WorldLook` in every
+## playground scene's own node order (meadows_playground.tscn), so that
+## one-shot lookup always ran before `world_look.gd::_ready()` had added
+## itself to the "day_cycle" group it is found through -- `_world_look`
+## cached null forever, and the owner's own requested "torch already there
+## at night, no crafting required" fix silently never fired, for the entire
+## life of the feature. Found by `tools/capture_torch_night.gd` printing
+## identical near-zero luminance for "day", "night, auto" and "night, after
+## two manual toggles" alike. This is the smoke check that would have
+## caught it at the time: set night, touch NOTHING else, and the torch must
+## already be lit -- no toggle input anywhere in this function.
+func _the_torch_lights_itself_automatically_at_night(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player: Node = world.get_node_or_null(^"Player")
+	if player == null:
+		return ["no Player node; cannot check the automatic torch"] as Array[String]
+	var torch: Node = player.get("torch")
+	if torch == null:
+		return ["Player has no torch (scripts/player/torch.gd did not attach)"] as Array[String]
+	var look: Node = world.get_node_or_null(^"WorldLook")
+	if look == null:
+		return ["no WorldLook node; cannot check the automatic torch"] as Array[String]
+
+	look.call("apply_time", "night")
+	for i in 10:
+		await physics_frame
+	if not bool(torch.call("is_on")):
+		found.append("the torch did not light itself at night with no toggle pressed " +
+			"(_world_look likely cached null again -- see torch.gd's _is_on() comment)")
+
+	# Restore day so nothing else in this run inherits a night scene.
+	look.call("apply_time", "day")
+	for i in 4:
+		await physics_frame
 	return found
 
 

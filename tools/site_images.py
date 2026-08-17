@@ -75,7 +75,17 @@ MAPPING = [
 
     # Weather and night, neither of which the page covered before.
     ("shots/weather/rain.png",                 "site/img/weather-rain.jpg",            960),
-    ("shots/_diag/torch_night_on.png",         "site/img/night-torch.jpg",             960),
+    # OF18-found: "torch_night_on.png" is not a name tools/capture_torch_
+    # night.gd writes (it writes torch-00/01/02/03-*.png) and never has been
+    # since that tool's own header was written -- another dead source name,
+    # same class of bug as aim-arc.jpg above. Worse, the frame this SHOULD
+    # have been showing was dark regardless of which name it pointed at: the
+    # torch's own auto-at-night feature was silently broken (see torch.gd's
+    # _is_on() comment) until this same pass fixed it, so every nightly
+    # capture before this one was of a torch that was never actually lit.
+    # "01-night-auto" is the cleanest proof of the fix -- no manual toggle
+    # involved, just the feature the owner asked for working on its own.
+    ("shots/_diag/torch-01-night-auto.png",    "site/img/night-torch.jpg",             960),
 ]
 
 
