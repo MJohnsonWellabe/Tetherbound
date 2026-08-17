@@ -74,6 +74,7 @@ func _run() -> void:
 	await _check_it_can_be_switched_off_again()
 	await _check_the_first_day_arc(world)
 	await _check_bg1_grid_rotation_and_snap(world)
+	await _check_a_specific_piece_is_chosen_through_real_pad_navigation(world)
 	await _check_build_actions_are_gated_behind_a_reopened_menu(world)
 	await _check_interact_is_gated_behind_an_open_build_menu()
 	await _check_an_unaffordable_pick_shows_the_shortfall_and_refuses()
@@ -380,6 +381,188 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		_fail("two walls were planted and spent no wood")
 
 	_game.set("pending_build", "")
+
+
+## TEST2. Nothing in this suite had ever chosen a SPECIFIC build piece by
+## navigating the menu the way a controller does. `smoke_build_menu_pad_pick.gd`
+## (UI-PAD1) proved a pad can press a focused cell -- real progress, but it
+## confirms whatever the menu already opened on, which cannot tell "the press
+## works" apart from "the player chose this one on purpose". And
+## `smoke_build_menu_footprint.gd` calls `_select_category` directly;
+## `_check_the_first_day_arc` above arms `pending_build` directly too.
+## Neither drives a category switch or grid navigation through input at all.
+##
+## So this presses real `InputEventJoypadButton` events for `tool_cycle`
+## (switch category), `ui_right`/`ui_left` (move focus across the grid) and
+## `ui_accept` (confirm) -- reading every button index from the live InputMap,
+## same discipline as `smoke_backpack_pad_target.gd` -- to land on Structures'
+## Doorway specifically (index 2 of 5, category index 2 of 4): neither the
+## first category nor the first cell in it, so a test that only proves
+## "pressing confirm arms whatever was already focused" cannot pass this by
+## accident. Then it places the ghost for real and checks a Doorway, not
+## some other piece, is what is standing in the world afterward -- closing
+## the loop from stick input to world state.
+func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) -> void:
+	const TARGET_CATEGORY := "structures"
+	const TARGET_PIECE := "door"
+
+	var inventory: RefCounted = _game.get("inventory")
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null or inventory == null:
+		_fail("no player to place from")
+		return
+
+	# Clear of the two walls the rotation/snap check above planted.
+	player.global_position += _forward(world, player) * 25.0
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+
+	# Free build so this check is about whether real navigation reaches the
+	# right cell, not about affordability -- already proven elsewhere in this
+	# file.
+	_game.set("free_build", true)
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		_game.set("free_build", false)
+		return
+
+	var tool_cycle_button := _pad_button_for("tool_cycle")
+	var right_button := _pad_button_for("ui_right")
+	var left_button := _pad_button_for("ui_left")
+	var accept_button := _pad_button_for("ui_accept")
+	if tool_cycle_button < 0 or right_button < 0 or left_button < 0 or accept_button < 0:
+		_fail("tool_cycle, ui_right, ui_left or ui_accept has no joypad binding -- a controller cannot navigate this menu")
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+
+	# --- switch category with real tool_cycle presses, not `_select_category` --
+	var categories: Array = menu.get("_categories")
+	var target_category_index := categories.find(TARGET_CATEGORY)
+	if target_category_index < 0:
+		_fail("no '%s' category to navigate to" % TARGET_CATEGORY)
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+	var steps := posmod(target_category_index - int(menu.get("_category_index")), categories.size())
+	for i in steps:
+		await _tap_pad(tool_cycle_button)
+	if int(menu.get("_category_index")) != target_category_index:
+		_fail("%d real tool_cycle presses landed on category %d, not %s (%d)" % [
+			steps, int(menu.get("_category_index")), TARGET_CATEGORY, target_category_index,
+		])
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+	print("  ok    %d real tool_cycle presses switched to the %s category" % [steps, TARGET_CATEGORY])
+
+	# --- navigate the grid with real ui_right/ui_left presses to a SPECIFIC, --
+	# --- non-default piece -----------------------------------------------------
+	var pieces: Array = menu.call("_current_pieces")
+	var cells: Array = menu.get("_cell_buttons")
+	var target_piece_index := -1
+	for i in pieces.size():
+		if str((pieces[i] as Dictionary).get("id", "")) == TARGET_PIECE:
+			target_piece_index = i
+	if target_piece_index < 0 or cells.size() != pieces.size():
+		_fail("could not find '%s' among the %s cells" % [TARGET_PIECE, TARGET_CATEGORY])
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+
+	var focused := root.gui_get_focus_owner()
+	var focused_index: int = cells.find(focused)
+	if focused_index < 0:
+		_fail("nothing has focus after switching category -- a stick would drive nothing")
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+	if focused_index == target_piece_index:
+		_fail("the menu opened with focus already on the Doorway cell -- this run proves nothing about navigation, pick a different TARGET_PIECE")
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+
+	var nav_steps := target_piece_index - focused_index
+	var nav_button := right_button if nav_steps > 0 else left_button
+	for i in absi(nav_steps):
+		await _tap_pad(nav_button)
+
+	focused = root.gui_get_focus_owner()
+	var landed_index: int = cells.find(focused)
+	if landed_index != target_piece_index:
+		_fail("%d real %s presses landed focus on cell %d, not the Doorway cell (%d)" % [
+			absi(nav_steps), "ui_right" if nav_steps > 0 else "ui_left", landed_index, target_piece_index,
+		])
+		await _close_build_menu_and_restore_pause(menu)
+		_game.set("free_build", false)
+		return
+	print("  ok    %d real d-pad presses moved focus from cell %d to the Doorway cell" % [absi(nav_steps), focused_index])
+
+	# --- confirm with a real A press, and check it armed the RIGHT piece ------
+	_game.set("pending_build", "")
+	await _tap_pad(accept_button)
+
+	var armed := str(_game.get("pending_build"))
+	if armed != TARGET_PIECE:
+		_fail("navigating to and pressing A on the Doorway cell armed '%s', not '%s'" % [armed, TARGET_PIECE])
+		_game.set("free_build", false)
+		return
+	if bool(menu.call("is_open")):
+		_fail("the menu stayed open after a real pad pick")
+	else:
+		print("  ok    real navigation plus a real A press armed exactly '%s'" % armed)
+
+	# --- and it is what actually lands in the world ----------------------------
+	Input.action_press(BUILD_PLACER.PLACE_ACTION)
+	await physics_frame
+	await physics_frame
+	Input.action_release(BUILD_PLACER.PLACE_ACTION)
+	for i in 20:
+		await physics_frame
+
+	var placed: Node3D = null
+	for node: Node in world.get_tree().get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == TARGET_PIECE:
+			placed = node
+	if placed == null:
+		_fail("pressing build_place did not plant a %s after it was chosen through real navigation" % TARGET_PIECE)
+	else:
+		print("  ok    the piece chosen through real category-switch and grid navigation is what landed in the world: %s" % placed.name)
+
+	_game.set("free_build", false)
+	_game.set("pending_build", "")
+
+	# `_category_index` is a `static var` on build_menu.gd -- a within-session
+	# "land back on what I last used" convenience -- so leaving it on Structures
+	# would silently change which category `_check_an_unaffordable_pick_shows_
+	# the_shortfall_and_refuses` below opens on; that check assumes Survival/Camp
+	# by name in its own comment. The menu is already closed by the pick above
+	# (asserted a few lines up), so there is no grid left to navigate with real
+	# input; this sets the remembered index back directly rather than reopening
+	# the menu solely to drive four more throwaway button presses that assert
+	# nothing. `open()` itself always calls `_select_category` on whatever index
+	# it finds, real player or not, so this is restoring state, not faking a pick.
+	menu.set("_category_index", 0)
+
+
+## The joypad button an action is actually bound to, or -1. Read from the live
+## InputMap so this test describes the shipped bindings rather than a copy of
+## them, same discipline `smoke_backpack_pad_target.gd` established.
+func _pad_button_for(action: String) -> int:
+	if not InputMap.has_action(action):
+		return -1
+	for event in InputMap.action_get_events(action):
+		var button := event as InputEventJoypadButton
+		if button != null:
+			return button.button_index
+	return -1
 
 
 ## UI-PAD2. `build_placer.gd` is `PROCESS_MODE_PAUSABLE` like everything

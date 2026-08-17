@@ -126,6 +126,41 @@ func _send(action: String, pressed: bool) -> void:
 	Input.parse_input_event(event)
 
 
+## TEST2. `_press` above proves the CODE reacts once an action fires; it
+## cannot prove a real press reaches that code at all, because
+## `InputEventAction` names the action directly and never travels the
+## InputMap — the exact blind spot `smoke_backpack_pad_target.gd` (OW4) found
+## in this same target picker. Used by `_check_backpack_target_picker` below,
+## which drives the one path through this menu that heals a creature and
+## spends an item, so an "it works" result there should mean a controller can
+## actually do it.
+func _pad_button_for(action: String) -> int:
+	if not InputMap.has_action(action):
+		return -1
+	for event in InputMap.action_get_events(action):
+		var button := event as InputEventJoypadButton
+		if button != null:
+			return button.button_index
+	return -1
+
+
+## A real controller button, the way hardware delivers it. Deliberately NOT an
+## `InputEventAction` — see `_pad_button_for`'s comment.
+func _pad(button_index: int) -> void:
+	var down := InputEventJoypadButton.new()
+	down.button_index = button_index
+	down.pressed = true
+	Input.parse_input_event(down)
+	await process_frame
+	await process_frame
+	var up := InputEventJoypadButton.new()
+	up.button_index = button_index
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 4:
+		await process_frame
+
+
 # --- opening ----------------------------------------------------------------
 
 
@@ -428,7 +463,21 @@ func _check_party_reorder_button() -> void:
 ## picker, cancel it (nothing spent), reopen it, confirm a specific target
 ## with the SAME button the grid's pick-up-then-place uses, and check the
 ## item was spent and the CHOSEN creature (not just "the worst one") was healed.
+## TEST2: driven with real `InputEventJoypadButton` presses (via `_pad`), not
+## `_press`'s `InputEventAction` — an action event names the action directly
+## and never travels the InputMap, so this used to prove the code heals a
+## creature once an action fires without proving a real controller press ever
+## reaches it. Button indices come from the live InputMap, same discipline
+## `smoke_backpack_pad_target.gd` established when it found the confirm half
+## of this exact picker unreachable from a pad (OW4).
 func _check_backpack_target_picker() -> void:
+	var use_button := _pad_button_for("interact")
+	var cancel_button := _pad_button_for("menu_cancel")
+	var accept_button := _pad_button_for("ui_accept")
+	if use_button < 0 or cancel_button < 0 or accept_button < 0:
+		_fail("interact, menu_cancel or ui_accept has no joypad binding — a controller cannot drive this picker")
+		return
+
 	_menu.call("select", 0)  # Backpack
 	for i in 4:
 		await process_frame
@@ -456,10 +505,10 @@ func _check_backpack_target_picker() -> void:
 
 	(body.get("_buttons")[slot] as Button).grab_focus()
 	await process_frame
-	await _press("interact")
+	await _pad(use_button)
 
 	if int(body.get("_targeting")) != slot:
-		_fail("pressing Use on a heal item did not open the target picker")
+		_fail("a real pad press of Use (joypad %d) did not open the target picker" % use_button)
 		return
 	if int(inventory.call("count", "potion_small")) != count_before:
 		_fail("opening the target picker already spent the item, before any target was chosen")
@@ -477,18 +526,18 @@ func _check_backpack_target_picker() -> void:
 	if _focused_control() != target_rows[1]:
 		_fail("opening the target picker did not focus the first eligible row (slot 1, the only injured creature) on its own")
 		return
-	print("target picker opens on Use instead of applying immediately, and focuses the first eligible row unassisted")
+	print("target picker opens on a real pad Use press instead of applying immediately, and focuses the first eligible row unassisted")
 
-	await _press("menu_cancel")
+	await _pad(cancel_button)
 	if int(body.get("_targeting")) != -1:
-		_fail("`menu_cancel` did not back out of the target picker")
+		_fail("a real pad press of Cancel (joypad %d) did not back out of the target picker" % cancel_button)
 	if int(inventory.call("count", "potion_small")) != count_before:
 		_fail("cancelling the target picker spent the item anyway")
-	print("target picker cancels on `menu_cancel` without spending the item")
+	print("target picker cancels on a real pad Cancel press without spending the item")
 
 	(body.get("_buttons")[slot] as Button).grab_focus()
 	await process_frame
-	await _press("interact")
+	await _pad(use_button)
 	if int(body.get("_targeting")) != slot:
 		_fail("could not reopen the target picker for the confirm half of the check")
 		return
@@ -496,16 +545,16 @@ func _check_backpack_target_picker() -> void:
 		_fail("reopening the target picker did not refocus the first eligible row on its own")
 		return
 
-	await _press("ui_accept")
+	await _pad(accept_button)
 
 	if int(body.get("_targeting")) != -1:
-		_fail("confirming a target did not close the picker")
+		_fail("a real pad press of Confirm (joypad %d) did not close the picker" % accept_button)
 	if int(inventory.call("count", "potion_small")) != count_before - 1:
-		_fail("confirming a target did not spend the item")
+		_fail("a real pad Confirm press did not spend the item")
 	if float(target.get("hp")) <= hp_before:
-		_fail("confirming slot 1 as the target did not heal the creature in slot 1")
+		_fail("a real pad Confirm press on slot 1 as the target did not heal the creature in slot 1")
 	else:
-		print("target picker heals the CHOSEN creature (slot 1) and spends the item on confirm")
+		print("target picker heals the CHOSEN creature (slot 1) and spends the item on a real pad Confirm press (joypad %d)" % accept_button)
 
 
 ## OF22 owner report: "you choose the creature to use it on but it doesn't do
