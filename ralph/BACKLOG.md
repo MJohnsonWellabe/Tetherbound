@@ -316,11 +316,53 @@ descends at the authored crossing always does. Section 9's premise is not
 un-built — it is **inverted**. The barrier works where it should not, and the
 crossing does not work at all.
 
-**The decision, which a lane correctly refused to make:** either the failsafe
-chain gets an opening at each authored crossing, or the crossing's deck sits
-above the volumes' ceiling (`lip_y - LIP_CLEARANCE`). That is gated-crossing
-design and picking one silently would be inventing a game behaviour. **Ask
-before building.**
+**NO OWNER DECISION IS NEEDED — corrected 2026-08-17 (OPS12), after actually
+reading the docs.** This entry and the coordinator's report both said the fix
+needed a design call. That was wrong: the design is fully specified and almost
+entirely built, and what is missing is one hole in one volume chain.
+
+**The plan, from the documents:**
+
+- `docs/decisions/D46` — *"The only ground link between the near Meadows and the
+  far bank is the Old Mill Crossing (`SE22`), which is shut until the Mill
+  Bridge Gear is in the satchel."* The river dividing absolutely is the whole
+  point of D46; it deliberately cost one severed spoke (the storm road) to
+  achieve, chosen by searching every bearing at 1° and every offset at 2.5 m.
+- Spec §Band 3 (The River Lock) — Team Tether holds the crossing, the bridge
+  keeper is captured; clearing the **Tether Relay Station** frees the captive,
+  who *"restores or provides the Upper Crossing Key / Mill Bridge Gear"* and
+  **the crossing opens**.
+- Spec Gate 1 — the earlier **South Bridge** is the same grammar: *"a physical
+  key/mechanism, not a UI level lock"*, its key from Oskar the Bridgehand.
+
+**And the machinery already exists.** `scripts/world/gated_crossing.gd` is the
+shared base with `key_item_id` and an open flag; `south_bridge.gd` passes
+`("south_bridge", "south_bridge_key", "south_bridge_open")`; `mill_crossing.gd`
+declares `MILL_KEY_ITEM := "mill_bridge_gear"`; and `data/dialogue/relay.json:26`
+grants it — `give:mill_bridge_gear:1` — on the rescue line, gated on the relay
+captain's defeat flag (`relay_site.json:42` explains that wiring in full). The
+whole intended chain is built.
+
+**So the defect is narrow and mechanical.** `river.gd:60-101` adds one
+`CarveFailsafe` volume per course segment with `end_fade: 0.0` so consecutive
+volumes **abut** — deliberately gapless, *"or a player lands in the gap between
+two boxes and the failsafe that exists for exactly that never fires."* Nothing
+excepts the authored crossing. `old_mill_crossing`'s `channel.failsafe: false`
+only stops `_crossing_carve` adding a **second** failsafe; it does not subtract
+the river's. So the river's chain spans the one gap the crossing exists to
+provide, and recovery always aims at `VILLAGE`.
+
+The file's own header states the intent it then fails to honour: *"Fall in, wake
+up on the side you started from, walk to the Old Mill Crossing like everyone
+else."* Today there is no walking to it.
+
+**The fix: punch a hole in the chain at each authored crossing, and let the
+existing gate do the gating.** Two mechanical questions for the implementer, not
+for the owner — exclude the crossing's deck footprint from the chain, or cap the
+volume ceiling below the deck (`lip_y - LIP_CLEARANCE`); and keep catching a
+player who falls in *beside* the deck, so the hole is the deck's footprint and
+not the whole segment. Acceptance is both lock states: locked stops the player,
+unlocked lets them across.
 
 ### SPINE-WEDGE — bodies stop on walkable ground at four places on the spine
 `model: sonnet` · `tests: smoke_traversal, new probe run` · `area: terrain, collision`
@@ -380,9 +422,15 @@ excludes it via `RIVER_EDGE_MARGIN` 40. Clamp the course to the baked extent and
 the boot noise goes with it.
 
 ### OW5-width — the corridor is 36% wider than the owner asked for
+**CLOSED 2026-08-17 (OPS12) by the owner: "the width is fine as is."** The
+measurement stands — 2,041.9 m, 6.81 min, at all three stations — and the
+five-minute figure is superseded rather than missed. **Do not narrow the world
+or re-bake for width.** What the measurement still buys is the flanks: 500 m of
+currently-bare ground either side of the trail is `VEG-CORRIDOR`'s and `MQ3`'s
+problem now, not a reason to change the footprint.
+
 `model: fable` · `tests: smoke_traversal` · `area: terrain`
-**NEEDS AN OWNER DECISION. Filed 2026-08-17 (OPS11) from `OW5-walk`'s
-measurement.** Owner's words: *"maybe it's five minutes of walking from side to
+**Filed 2026-08-17 (OPS11) from `OW5-walk`'s measurement.** Owner's words: *"maybe it's five minutes of walking from side to
 side."* Walked: **2,041.9 m, 6.81 min**, at all three stations, agreeing to
 0.1 m — the body walked a dead straight line across the corridor everywhere and
 nothing blocked it, so this is the authored width, not an obstacle artefact.
