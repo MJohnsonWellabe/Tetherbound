@@ -24,6 +24,7 @@ extends Node
 ## between Grandpa and a starter fires both.
 
 const ARBITER := preload("res://scripts/world/prompt_arbiter.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Interactables find their arbiter through this rather than through an exported
 ## path, so a body can be spawned in code and dropped anywhere in the tree.
@@ -111,8 +112,21 @@ func _process(_delta: float) -> void:
 ## encounter_director._physics_process: `is_action_just_pressed` is scoped to
 ## the frame the press landed in, and this and the combat manager must agree
 ## about which frame that was.
+##
+## UI-PAD2: `_enabled` only ever goes false for a conversation, a naming
+## prompt or a fade (`sequence_director.gd::_refresh_lockout`) -- none of
+## which is `build_menu.gd`, the one panel in this game that deliberately
+## does not pause the tree. Without the `input_owner.gd` check too, pressing
+## `interact` while browsing the build catalog could still fire whatever
+## real-world interactable the player happened to be standing near (a door,
+## an NPC, a wild creature) — invisible to the player, since their attention
+## and the screen are both on the menu. This node is otherwise `PAUSABLE`
+## (the default, unset here), so the six tree-pausing panels already stop it
+## for free; this is the same non-pausing-panel gap `build_placer.gd` closed.
 func _physics_process(_delta: float) -> void:
 	if not _enabled:
+		return
+	if INPUT_OWNER.current(get_tree()) != null:
 		return
 	if not Input.is_action_just_pressed("interact"):
 		return

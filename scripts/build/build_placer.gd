@@ -33,6 +33,7 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Ids placed by their own hand-authored script rather than build_piece.gd's
 ## generic path — kept as one list so the "is this a special id" question is
@@ -199,6 +200,21 @@ func _physics_process(_delta: float) -> void:
 		_place_blocked = armed != ""
 	if armed == "":
 		_drop_ghost()
+		return
+
+	# UI-PAD2: this node is `PROCESS_MODE_PAUSABLE` (the default), which stops
+	# it for every panel that pauses the tree -- but `build_menu.gd`
+	# deliberately does NOT pause (its own header explains why: the world
+	# stays live behind it, the whole point of the Valheim feel), so an armed
+	# ghost kept reading `build_place`/rotate/cancel/snap out from under a
+	# REOPENED menu. Exactly the shape of leak `input_owner.gd` exists to
+	# close, for a poller that had never asked it
+	# (`grep -n "input_owner" scripts/build/build_placer.gd` used to return
+	# nothing). The ghost still tracks the aim point below regardless, so the
+	# world does not visibly freeze while a menu happens to be open on top of
+	# it -- only the actions that would change or spend the ghost are gated.
+	if INPUT_OWNER.current(get_tree()) != null:
+		_show_ghost(game, armed)
 		return
 
 	if Input.is_action_just_pressed(CANCEL_ACTION):

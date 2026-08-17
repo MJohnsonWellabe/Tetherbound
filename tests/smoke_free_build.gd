@@ -74,6 +74,8 @@ func _run() -> void:
 	await _check_it_can_be_switched_off_again()
 	await _check_the_first_day_arc(world)
 	await _check_bg1_grid_rotation_and_snap(world)
+	await _check_build_actions_are_gated_behind_a_reopened_menu(world)
+	await _check_interact_is_gated_behind_an_open_build_menu()
 	await _check_an_unaffordable_pick_shows_the_shortfall_and_refuses()
 	await _check_b_closes_only_the_build_menu()
 
@@ -378,6 +380,175 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		_fail("two walls were planted and spent no wood")
 
 	_game.set("pending_build", "")
+
+
+## UI-PAD2. `build_placer.gd` is `PROCESS_MODE_PAUSABLE` like everything
+## else, but `build_menu.gd` deliberately does not pause the tree -- so an
+## armed ghost kept reading `build_place` out from under a REOPENED menu
+## (`grep -n "input_owner" scripts/build/build_placer.gd` used to return
+## nothing). Arms a wall directly (the arming path itself is proven above),
+## reopens the build menu the real way a player would (the pause menu's
+## Build tab), and presses `build_place` for real while the menu sits on top
+## of the still-armed ghost: nothing should happen. Then closes the menu,
+## moves off the two walls the earlier check in this file planted (so a
+## legal, unoccupied spot is not left to chance), and presses `build_place`
+## again -- proving this is a gate that releases, not a break that ate the
+## feature.
+##
+## Deliberately does NOT drive this with `build_cancel`: that action is
+## ALSO how `build_menu.gd::_process` itself closes on a shared button (OF23,
+## "menu_cancel and build_cancel share gamepad B") -- a real ambiguity this
+## check has no reason to referee, and doing so only couples this test to
+## `_process`/`_physics_process` ordering that has nothing to do with the
+## `input_owner.gd` gate it exists to prove.
+func _check_build_actions_are_gated_behind_a_reopened_menu(world: Node) -> void:
+	var inventory: RefCounted = _game.get("inventory")
+	inventory.call("add", "wood", 100)
+	inventory.call("add", "stone", 100)
+	var walls_before := _wall_nodes(world).size()
+
+	# `menu_cancel` is both `open_action` and `close_action` (menu.json) --
+	# opens the pause menu when it is shut, same idiom every other check in
+	# this file uses before calling `_open_build_menu_from_pause()`.
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+
+	_game.set("pending_build", "wall")
+	for i in 15:
+		await physics_frame
+
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		return
+	if not bool(menu.call("is_open")):
+		_fail("reopening the build tab with a piece already armed did not open the build menu")
+		return
+	if str(_game.get("pending_build")) != "wall":
+		_fail("reopening the build menu disarmed the piece that was already up -- this check proves nothing")
+		return
+
+	Input.action_press(BUILD_PLACER.PLACE_ACTION)
+	await physics_frame
+	await physics_frame
+	Input.action_release(BUILD_PLACER.PLACE_ACTION)
+	for i in 10:
+		await physics_frame
+	if _wall_nodes(world).size() != walls_before:
+		_fail("build_place planted a wall while the build menu was open on top of the armed ghost")
+	elif str(_game.get("pending_build")) != "wall":
+		_fail("build_place behind an open menu changed pending_build instead of doing nothing")
+	else:
+		print("build_place did nothing while the build menu was reopened over an armed ghost")
+
+	# `_close_build_menu_and_restore_pause` reopens the PAUSE menu on purpose
+	# (its own comment: other checks in this file assume it stays open) --
+	# which pauses the tree and would stop `build_placer.gd` running at all,
+	# a false "the gate never releases" if left that way. Close it too.
+	await _close_build_menu_and_restore_pause(menu)
+	if bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+	for i in 10:
+		await physics_frame
+
+	# Off the two walls the rotation/snap check above planted, onto open
+	# meadow, so a legal spot for the ghost is not left to chance.
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player != null:
+		player.global_position += _forward(world, player) * 15.0
+		player.velocity = Vector3.ZERO
+		for i in 20:
+			await physics_frame
+
+	Input.action_press(BUILD_PLACER.PLACE_ACTION)
+	await physics_frame
+	await physics_frame
+	Input.action_release(BUILD_PLACER.PLACE_ACTION)
+	for i in 20:
+		await physics_frame
+	if _wall_nodes(world).size() != walls_before + 1:
+		_fail("build_place still did nothing once the build menu closed -- the gate never releases")
+	else:
+		print("build_place works again once the build menu is closed")
+	_game.set("pending_build", "")
+
+
+## Minimal stand-in for the duck-typed provider contract
+## `interaction_arbiter.gd`'s own header documents (`interaction_offer`/
+## `interaction_activate`), used below instead of a real harvest node so that
+## check does not depend on how much an earlier check in this same run has
+## already gathered/depleted. Priority 999 guarantees it wins arbitration
+## over anything else genuinely nearby.
+class _FakeInteractable:
+	var activated_count := 0
+	func interaction_offer(_from: Vector3) -> Dictionary:
+		return {"label": "Test", "distance": 0.1, "priority": 999, "actionable": true}
+	func interaction_activate() -> void:
+		activated_count += 1
+
+
+## UI-PAD2. `interaction_arbiter.gd` already refuses `interact` during a
+## conversation/naming/fade (`_enabled`, set by `sequence_director.gd`), but
+## that flag has nothing to do with `build_menu.gd` -- the one panel that
+## deliberately does not pause the tree. Without the same `input_owner.gd`
+## gate `build_placer.gd` above needed, pressing interact while browsing the
+## build catalog could still activate whatever real-world interactable the
+## player happened to be standing near, invisibly, since the player's
+## attention and the screen are both on the menu.
+func _check_interact_is_gated_behind_an_open_build_menu() -> void:
+	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		_fail("no interaction arbiter in the world; cannot test the gate")
+		return
+	var provider := _FakeInteractable.new()
+	arbiter.call("register", provider)
+
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		arbiter.call("unregister", provider)
+		return
+	for i in 10:
+		await physics_frame
+
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 10:
+		await physics_frame
+	if provider.activated_count != 0:
+		_fail("pressing interact activated a world interactable while the build menu was open")
+	else:
+		print("interact did nothing while the build menu was open")
+
+	# Same caveat as the build-actions check above: this reopens the PAUSE
+	# menu on purpose (other checks in this file assume it stays open), which
+	# would stop `interaction_arbiter.gd` running at all and read as a false
+	# "gate never releases". Close it too.
+	await _close_build_menu_and_restore_pause(menu)
+	if bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+	for i in 10:
+		await physics_frame
+
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 10:
+		await physics_frame
+	if provider.activated_count != 1:
+		_fail("interact still did nothing once the build menu closed (count %d) -- the gate never releases"
+			% provider.activated_count)
+	else:
+		print("interact works again once the build menu is closed")
+
+	arbiter.call("unregister", provider)
 
 
 ## The same forward-direction math `build_placer.gd::_show_ghost` uses, so
