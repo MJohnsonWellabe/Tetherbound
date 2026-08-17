@@ -131,6 +131,12 @@ func _shoot(camera: Camera3D, player: Node3D, name: String, written: Array[Strin
 	var side := Vector3(1, 0, 0)
 	camera.global_position = player.global_position + side * 3.5 + Vector3(0, 1.3, 0)
 	camera.look_at(player.global_position + Vector3(0, 1.0, 0), Vector3.UP)
+	var model: Node3D = player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		print("    [%s] model rotation deg=(%.2f, %.2f, %.2f) position.y=%.4f" % [
+			name, rad_to_deg(model.rotation.x), rad_to_deg(model.rotation.y),
+			rad_to_deg(model.rotation.z), model.position.y
+		])
 	for i in 10:
 		await physics_frame
 	for i in 4:
