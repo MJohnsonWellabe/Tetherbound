@@ -1212,8 +1212,9 @@
               7535.62
             ],
             "axis_deg": 183.2,
-            "half_length": 55.0,
-            "end_fade": 18.0,
+            "half_length": 20.0,
+            "end_fade": 10.0,
+            "_comment_length_spine_wedge": "SPINE-WEDGE. Was 55/18 -- a 73m reach each way, i.e. a 146m trench laid across the corridor to sever a 3m road (`paths.width`). The spine's own last leg, wp75 (20,7480) -> wp76 (0,7560), crosses it at |u| 37.6-41.8m at FULL 11m depth, so the authored route to the stronghold gate ran through this trench and the failsafe below returned every body that fell in to `road[4]` at (-33.99,7513.46). Measured, not reasoned: `tools/_probe_ow5_walk.gd --mode=spine --z_from=7350 --z_to=7600` logged six recoveries and 57.6m -- the last 57m to the gate -- unwalkable. 20/10 gives a 30m reach: the road is still cut at u~=0 at full depth and D50's 65.6deg walls (depth/rim, untouched here), and the spine now passes 7.6m clear of the zero-depth contour at its closest. Exactly the edit `river_gorge` above already took for the same reason -- see its own `_comment_length`, where 70/22 was cut to 26/14 because the trench was gouging the pond. Shortening the reach changes what this blocker CUTS, never how steep it is; `smoke_riding.gd` asserts the wall angle and D50 sections 4-5 analyse depth/rim, and neither reads these two scalars. Re-baked regions -1:14 and 0:14 only, which is the whole of this carve's footprint. TUNABLE.",
             "half_width": 6.0,
             "rim": 5.0,
             "depth": 11.0,

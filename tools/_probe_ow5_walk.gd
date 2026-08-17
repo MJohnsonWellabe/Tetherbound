@@ -112,6 +112,19 @@ const WEDGE_REPEAT_LIMIT := 6
 ## Two wedges closer together than this are the same wedge.
 const WEDGE_SAME_SITE_M := 8.0
 
+## SPINE-WEDGE. How many frames of history to dump when a wedge fires.
+##
+## `--trace=N`. Off by default because the whole-spine run prints enough
+## already; a single-window run into one wedge site wants every frame.
+##
+## The reason this exists: `OW5-walk` could say a wedge ended with `on_floor=
+## false` and ZERO slide colliders, and could not say what the body was doing
+## for the second and a half before that. "Zero colliders" is four different
+## defects wearing one face -- falling through absent collision, embedded in
+## collision and being depenetrated, standing still with locomotion suspended,
+## or oscillating on/off the floor -- and the trace is what tells them apart.
+var _trace := 0
+
 var _mode := "spine"
 var _speed := 0.0          ## 0 = leave walk_speed alone
 var _max_frames := 0       ## 0 = no cap
@@ -121,6 +134,15 @@ var _label := ""
 
 var _walk_speed_cfg := 5.0
 var _day_length := 600.0
+
+## Set once in `_run` so `_describe_wedge` can reach the world without the
+## driving loop threading three more arguments through every call.
+var _world: Node = null
+var _terrain: Node = null
+var _camera: Node3D = null
+var _player_shape: CollisionShape3D = null
+## Ring buffer of per-frame state, `_trace` deep. Dumped at each wedge.
+var _ring: Array = []
 
 
 func _init() -> void:
@@ -138,6 +160,7 @@ func _parse_args() -> void:
 			"max_frames": _max_frames = int(val)
 			"z_from": _z_from = float(val)
 			"z_to": _z_to = float(val)
+			"trace": _trace = int(val)
 			"label": _label = val
 
 
@@ -202,6 +225,17 @@ func _run() -> void:
 		int(terrain.get("collision_radius")),
 		int(terrain.get("collision_shape_size"))])
 
+	# SPINE-WEDGE. Held for `_describe_wedge`'s deep probe. The camera matters
+	# because Terrain3D builds dynamic collision around IT, not around the body:
+	# a wedge whose camera is far from the body is a streaming question, and a
+	# wedge whose camera is 5m behind it is not.
+	_world = world
+	_terrain = terrain
+	_camera = world.get_node_or_null(^"CameraRig/Camera3D") as Node3D
+	_player_shape = player.get_node_or_null(^"Collision") as CollisionShape3D
+	if _player_shape == null:
+		print("PROBE WARN: Player has no `Collision` child; overlap diagnosis disabled")
+
 	if _speed > 0.0:
 		player.set("_walk_speed", _speed)
 		print("walk_speed overridden to %.2f m/s (distance is measured, not wall-clock)" % _speed)
@@ -211,6 +245,8 @@ func _run() -> void:
 			await _walk_spine(world, player, rig)
 		"cross":
 			await _walk_cross(world, player, rig)
+		"clear":
+			_sweep_routes(world, player)
 		_:
 			print("PROBE FAIL: unknown mode %s" % _mode)
 			quit(1)
@@ -300,6 +336,117 @@ func _spine_point_near_z(spine: Array[Vector2], z: float) -> Vector2:
 		if absf(p.y - z) < absf(best.y - z):
 			best = p
 	return best
+
+
+## ------------------------------------------------- does a body FIT along it
+
+## How far apart to test the body's own capsule along an authored route.
+##
+## The capsule is 0.8m across, so 2m samples cannot miss anything a body would
+## have to walk through -- a wall thin enough to fall between two samples is a
+## wall thin enough that the samples either side of it overlap it.
+const CLEAR_STEP_M := 2.0
+## Ground clearance for the test capsule, matching where `_drive` drops the
+## body to start a walk.
+const CLEAR_LIFT_M := 1.0
+
+
+## SPINE-WEDGE. Stand the player's own capsule at every point along every
+## authored route and name everything solid it is standing inside.
+##
+##   godot --headless --path . --script tools/_probe_ow5_walk.gd -- --mode=clear
+##
+## WHY THIS IS SEPARATE FROM WALKING IT, and why walking it was not enough.
+##
+## `OW5-walk` walked the spine and reported four of its six blockages as
+## "Terrain" at 4.6-17 degrees -- walkable angles, which made them read as a
+## terrain defect. Three of the four were not terrain. `get_slide_collision()`
+## reports what `move_and_slide` collided with DURING ITS MOTION, and a body
+## that has already come fully to rest against a wall has no motion left: the
+## wall drops out of the list and the floor it is standing on is all that
+## remains. The technique that solved WALL1 -- name the collider -- is right,
+## and on a STOPPED body it names the wrong one.
+##
+## A sweep does not have that problem, and neither does this: it asks the
+## physics server what a body-shaped volume overlaps, at rest, everywhere the
+## trail goes, in about a minute for 13 km. What a half-hour walk found four
+## of, this finds all of, and names.
+func _sweep_routes(world: Node, player: CharacterBody3D) -> void:
+	var shape: CollisionShape3D = _player_shape
+	if shape == null or shape.shape == null:
+		print("PROBE FAIL: Player has no `Collision` child to sweep with")
+		return
+	var space := player.get_world_3d().direct_space_state
+	var terrain_path := str(_terrain.get_path()) if _terrain != null else ""
+
+	# Park the real body somewhere it cannot be its own answer.
+	player.global_position = Vector3(0.0, 5000.0, 0.0)
+
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = shape.shape
+	q.collision_mask = player.collision_mask
+	q.exclude = [player.get_rid()]
+
+	var total := 0
+	for route: Dictionary in _authored_routes():
+		var points: Array = route["points"]
+		if points.size() < 2:
+			continue
+		var hits := {}
+		var samples := 0
+		for i in range(points.size() - 1):
+			var a: Vector2 = points[i]
+			var b: Vector2 = points[i + 1]
+			var n := maxi(1, int(ceil(a.distance_to(b) / CLEAR_STEP_M)))
+			for k in range(n + 1):
+				var at: Vector2 = a.lerp(b, float(k) / float(n))
+				var ground := float(world.call("ground_height_at", at.x, at.y))
+				if is_nan(ground):
+					continue
+				samples += 1
+				q.transform = Transform3D(Basis.IDENTITY,
+					Vector3(at.x, ground + CLEAR_LIFT_M, at.y) + shape.position)
+				for h in space.intersect_shape(q, 8):
+					var o: Object = h.get("collider")
+					if not o is Node:
+						continue
+					var path := str((o as Node).get_path())
+					# The ground is not an obstruction; standing on it is the
+					# point. Everything else along a road is.
+					if path == terrain_path:
+						continue
+					if not hits.has(path):
+						hits[path] = {"n": 0, "first": at, "last": at}
+					hits[path]["n"] += 1
+					hits[path]["last"] = at
+
+		print("\n--- %s: %d samples every %.0f m ---" % [route["name"], samples, CLEAR_STEP_M])
+		if hits.is_empty():
+			print("  clear: a body-sized capsule fits the whole way")
+			continue
+		for path: String in hits:
+			var e: Dictionary = hits[path]
+			print("  %4d sample(s) INSIDE %s  from (%.1f, %.1f) to (%.1f, %.1f)" % [
+				e["n"], path, e["first"].x, e["first"].y, e["last"].x, e["last"].y])
+			total += 1
+	print("\n=== %d route/collider pair(s) where a body does not fit ===" % total)
+
+
+## Every route the game asks a player to walk: the spine, the ten regional
+## loops and the two shortcuts. All authored the same way in the same file, so
+## all of them get looked at the same way.
+func _authored_routes() -> Array:
+	var cfg := _load_json(CONFIG)
+	var trail: Dictionary = cfg.get("trail", {})
+	var out: Array = [{"name": "spine", "points": _spine_points()}]
+	for key in ["loops", "shortcuts"]:
+		for entry in trail.get(key, []):
+			var pts: Array[Vector2] = []
+			for p in (entry as Dictionary).get("points", []):
+				pts.append(Vector2(float(p[0]), float(p[1])))
+			out.append({"name": "%s:%s" % [key, str((entry as Dictionary).get("id", "?"))],
+				"points": pts})
+	return out
 
 
 ## ------------------------------------------------------------- the driving
@@ -393,6 +540,16 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 			walked_3d += now.distance_to(prev)
 		prev = now
 		lowest = minf(lowest, now.y)
+
+		if _trace > 0:
+			_ring.append({
+				"f": frames, "pos": now, "vel": player.velocity, "step": step,
+				"floor": player.is_on_floor(), "wall": player.is_on_wall(),
+				"n": player.get_slide_collision_count(),
+				"first": _first_collider(player),
+			})
+			if _ring.size() > _trace:
+				_ring.pop_front()
 
 		var vitals: Object = player.get("vitals")
 		if vitals != null and vitals.has_method("move_speed_scale"):
@@ -516,6 +673,9 @@ func _describe_wedge(player: CharacterBody3D, pos: Vector3, target: Vector2, tag
 	for c in colliders:
 		print("       hit: %s" % c)
 
+	_deep_probe(player, target)
+	_dump_ring(tag)
+
 	return {
 		"pos": pos,
 		"target": target,
@@ -524,6 +684,184 @@ func _describe_wedge(player: CharacterBody3D, pos: Vector3, target: Vector2, tag
 		"on_wall": player.is_on_wall(),
 		"tag": tag,
 	}
+
+
+## SPINE-WEDGE. Everything a slide-collision list cannot say.
+##
+## `OW5-walk` proved the technique that names the collider, and then hit four
+## sites where the answer was "no collider at all". That answer is not a dead
+## end and it is not one defect: a body reporting zero slide collisions and
+## `on_floor=false` is EITHER falling through collision that does not exist,
+## OR embedded in collision that does and being depenetrated back out every
+## tick, OR standing still because something suspended its locomotion, OR
+## simply airborne for one frame of a hop. Those want four different fixes and
+## the printout could not tell them apart. Each query below separates one pair:
+##
+## 1. `intersect_shape` with the body's OWN capsule at its OWN transform names
+##    every body it currently overlaps. Overlap with zero slide collisions is
+##    the embedded case, and it is invisible to `get_slide_collision()` because
+##    depenetration recovery is not reported as a slide.
+## 2. `body_test_motion` with `recovery_as_collision = true` gives the DEPTH of
+##    that overlap in metres -- the number that says how far inside.
+## 3. A ray straight down says whether there is any ground under the body at
+##    all, and how far. Used as identity and distance only, never to decide
+##    whether the body can walk (D09/WALL1: rays and shape casts disagree, and
+##    three investigations died believing the ray).
+## 4. Camera-to-body distance, against the GRANTED collision radius. Terrain3D
+##    streams collision around the camera; a body that has outrun its own
+##    camera is standing over ground that has not been built.
+## 5. `locomotion_enabled` and `is_carried` -- a body held still by a cutscene,
+##    a fight or a mount looks exactly like a body held still by terrain.
+func _deep_probe(player: CharacterBody3D, target: Vector2) -> void:
+	print("       velocity=(%.2f, %.2f, %.2f) speed_h=%.2f" % [
+		player.velocity.x, player.velocity.y, player.velocity.z,
+		Vector3(player.velocity.x, 0.0, player.velocity.z).length()])
+
+	var loco := "?"
+	if player.has_method("locomotion_enabled"):
+		loco = str(bool(player.call("locomotion_enabled")))
+	var carried := "?"
+	if player.has_method("is_carried"):
+		carried = str(bool(player.call("is_carried")))
+	print("       locomotion_enabled=%s  is_carried=%s  layer=%d mask=%d" % [
+		loco, carried, player.collision_layer, player.collision_mask])
+
+	var space := player.get_world_3d().direct_space_state
+
+	if _player_shape != null and _player_shape.shape != null:
+		var q := PhysicsShapeQueryParameters3D.new()
+		q.shape = _player_shape.shape
+		q.transform = _player_shape.global_transform
+		q.collision_mask = player.collision_mask
+		q.exclude = [player.get_rid()]
+		var hits := space.intersect_shape(q, 16)
+		if hits.is_empty():
+			print("       capsule overlaps NOTHING -- the body is in free space, not embedded.")
+		else:
+			print("       capsule OVERLAPS %d body(ies) -- embedded, not blocked:" % hits.size())
+			for h in hits:
+				var o: Object = h.get("collider")
+				print("         overlap: %s" % (str((o as Node).get_path()) if o is Node else str(o)))
+			var rest := space.get_rest_info(q)
+			if not rest.is_empty():
+				var rn: Vector3 = rest.get("normal", Vector3.UP)
+				print("         deepest contact at (%.2f, %.2f, %.2f) normal angle_from_up=%.1f deg" % [
+					rest["point"].x, rest["point"].y, rest["point"].z,
+					rad_to_deg(rn.angle_to(Vector3.UP))])
+
+		# And every AREA the body is standing in. `OW5-walk` found that the
+		# thing stopping a body can be an `Area3D` writing `global_position`
+		# rather than anything solid -- and the inverse is just as useful:
+		# a body stuck in a trench that HAS a recovery volume, and is not
+		# inside it, says the volume is mis-sized rather than missing.
+		q.collide_with_bodies = false
+		q.collide_with_areas = true
+		var areas := space.intersect_shape(q, 16)
+		if areas.is_empty():
+			print("       inside NO Area3D.")
+		else:
+			for h in areas:
+				var a: Object = h.get("collider")
+				print("       inside area: %s" % (str((a as Node).get_path()) if a is Node else str(a)))
+
+	# Depth of penetration, in metres, through the same server call
+	# `move_and_slide` uses -- so this agrees with the physics rather than
+	# describing it from outside.
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = player.global_transform
+	params.motion = Vector3.DOWN * 0.001
+	params.recovery_as_collision = true
+	var res := PhysicsTestMotionResult3D.new()
+	if PhysicsServer3D.body_test_motion(player.get_rid(), params, res):
+		print("       penetration depth %.4f m, recovery normal angle_from_up=%.1f deg" % [
+			res.get_collision_depth(), rad_to_deg(res.get_collision_normal().angle_to(Vector3.UP))])
+	else:
+		print("       no penetration: a 1mm downward sweep hits nothing.")
+
+	var origin := player.global_position + Vector3.UP * 0.9
+	var down := PhysicsRayQueryParameters3D.create(origin, origin + Vector3.DOWN * 200.0)
+	down.exclude = [player.get_rid()]
+	down.collision_mask = player.collision_mask
+	var hit_down := space.intersect_ray(down)
+	if hit_down.is_empty():
+		print("       ray DOWN 200m from the body hits NOTHING -- there is no ground here at all.")
+	else:
+		var o: Object = hit_down.get("collider")
+		print("       ray down: %s at %.3f m below the capsule centre, normal angle_from_up=%.1f deg" % [
+			(str((o as Node).get_path()) if o is Node else str(o)),
+			origin.y - float(hit_down["position"].y),
+			rad_to_deg((hit_down["normal"] as Vector3).angle_to(Vector3.UP))])
+
+	if _camera != null:
+		var d := _camera.global_position.distance_to(player.global_position)
+		var granted := int(_terrain.get("collision_radius")) if _terrain != null else -1
+		print("       camera is %.1f m from the body (granted collision radius %d m)" % [d, granted])
+
+	# Is the body still being ASKED to walk? A body that has stopped because
+	# nothing is telling it to move looks identical, from outside, to a body
+	# that has stopped because something is in the way -- and this probe drives
+	# the real input path, so the input is a thing that can go wrong.
+	var stick := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	print("       input vector=(%.2f, %.2f)  fwd=%s back=%s left=%s right=%s" % [
+		stick.x, stick.y,
+		Input.is_action_pressed("move_forward"), Input.is_action_pressed("move_back"),
+		Input.is_action_pressed("move_left"), Input.is_action_pressed("move_right")])
+
+	# And finally: sweep the capsule the way it is trying to go, and name what
+	# it hits. This is the query that had no equivalent in `OW5-walk`. Its four
+	# blockages that reported only floor-angle normals were not a mystery about
+	# terrain -- they were a body pressed against something `move_and_slide`
+	# had already stopped reporting, and a half-metre sweep names it outright.
+	var heading := Vector3(target.x - player.global_position.x, 0.0,
+		target.y - player.global_position.z)
+	if heading.length() > 0.001:
+		heading = heading.normalized()
+		var sweep := PhysicsTestMotionParameters3D.new()
+		sweep.from = player.global_transform
+		sweep.motion = heading * 0.5
+		sweep.max_collisions = 4
+		var out := PhysicsTestMotionResult3D.new()
+		if PhysicsServer3D.body_test_motion(player.get_rid(), sweep, out):
+			print("       0.5 m sweep toward the target is BLOCKED after %.3f m, %d contact(s):" % [
+				out.get_travel().length(), out.get_collision_count()])
+			for i in out.get_collision_count():
+				var who: Object = out.get_collider(i)
+				var n := out.get_collision_normal(i)
+				print("         blocker: %s  normal=(%.2f, %.2f, %.2f) angle_from_up=%.1f deg" % [
+					(str((who as Node).get_path()) if who is Node else str(who)),
+					n.x, n.y, n.z, rad_to_deg(n.angle_to(Vector3.UP))])
+		else:
+			print("       0.5 m sweep toward the target is CLEAR -- nothing is in the way at all.")
+
+
+## The one-line identity of whatever the body hit hardest this frame, for the
+## per-frame trace. Full detail belongs in `_describe_wedge`; this has to be
+## cheap enough to build every physics tick.
+func _first_collider(player: CharacterBody3D) -> String:
+	if player.get_slide_collision_count() == 0:
+		return "-"
+	var col := player.get_slide_collision(0)
+	var obj := col.get_collider()
+	var nm: String = (obj as Node).name if obj is Node else "<obj>"
+	return "%s@%.0f" % [nm, rad_to_deg(col.get_normal().angle_to(Vector3.UP))]
+
+
+## Dump the trace. A wedge is the END of a story and the interesting part is
+## the second before it: whether the body decelerated into something, dropped,
+## or was simply switched off.
+func _dump_ring(tag: String) -> void:
+	if _ring.is_empty():
+		return
+	print("       --- last %d frames [%s] ---" % [_ring.size(), tag])
+	print("       %6s %9s %9s %9s %7s %6s %5s %5s %2s %s" % [
+		"frame", "x", "y", "z", "step", "vy", "floor", "wall", "n", "hit"])
+	for r in _ring:
+		var p: Vector3 = r["pos"]
+		print("       %6d %9.2f %9.2f %9.2f %7.3f %6.2f %5s %5s %2d %s" % [
+			r["f"], p.x, p.y, p.z, r["step"], r["vel"].y,
+			("Y" if r["floor"] else "."), ("Y" if r["wall"] else "."),
+			r["n"], r["first"]])
+	_ring.clear()
 
 
 ## What a player does at a wedge: sidestep and hop. If this clears it the trail
