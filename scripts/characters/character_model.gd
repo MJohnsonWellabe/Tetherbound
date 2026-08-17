@@ -742,14 +742,25 @@ func apply_terrain_adaptation(
 		clampf(roll_deg * lean_scale, -roll_limit, roll_limit)
 	)
 	var blend := 1.0 - exp(-rate * delta)
+	# Subtract the PREVIOUS frame's own contribution before adding the new
+	# one, rather than a bare `+=` on top of whatever rotation.x already
+	# holds. `+=` alone works only under an implicit contract — the caller
+	# resets rotation.x/z (apply_momentum_tilt's own assignment) every
+	# single frame this method also runs — and quietly accumulates without
+	# bound the moment that contract is violated even once: caught by
+	# tests/test_terrain_adaptation.gd calling this method in a bare loop,
+	# the exact shape a future caller could reproduce by accident. Tracking
+	# and replacing this method's own prior delta makes it correct on its
+	# own terms, independent of what else touches rotation.x/z that frame.
+	var previous := _terrain_tilt
 	_terrain_tilt = _terrain_tilt.lerp(target, blend)
 
 	# Forward lean is negative X for a +Z-facing model, same convention
 	# apply_momentum_tilt's own comment records; cresting a rise (ground
 	# ahead higher, pitch_deg/target.x positive) must pitch the body forward
 	# into the climb, i.e. rotation.x more negative.
-	rotation.x += deg_to_rad(-_terrain_tilt.x)
-	rotation.z += deg_to_rad(-_terrain_tilt.y)
+	rotation.x += deg_to_rad(-(_terrain_tilt.x - previous.x))
+	rotation.z += deg_to_rad(-(_terrain_tilt.y - previous.y))
 
 	# Settle the model's own visual height to the ground centred under its
 	# stance -- never the capsule's own position, which the controller
