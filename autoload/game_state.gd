@@ -27,6 +27,7 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -43,6 +44,13 @@ const DEMO_FLAG := "--menu-demo"
 var items: RefCounted = null
 var inventory: RefCounted = null
 var party: RefCounted = null
+
+## R7.7. The trainer's five armour slots (scripts/player/player_equipment.gd)
+## -- reachable the same way `equipped_tool` is (a plain autoload field), and
+## deliberately NOT persisted through save_game.gd, matching `equipped_tool`'s
+## own precedent: it resets each session and the player re-equips, the same
+## as re-picking a tool off the hotbar.
+var player_equipment: RefCounted = null
 
 ## D33's one map database — fog-of-war, landmark discovery, dynamic markers.
 ## See `autoload/map_state.gd`'s own header for why there is exactly one of
@@ -283,6 +291,8 @@ func _ready() -> void:
 	items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
 	party = PARTY.new()
+	player_equipment = PLAYER_EQUIPMENT.new()
+	player_equipment.call("configure", items)
 	map = MAP_STATE.new()
 	map.configure(_map_landmarks_config())
 	progression = PROGRESSION_STATE.new()

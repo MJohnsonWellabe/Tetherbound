@@ -161,10 +161,13 @@ func fall_damage_for(impact_speed: float) -> float:
 	return pow(t, _fall_curve) * _fall_max_damage
 
 
-## Apply a landing. Returns the damage dealt, so the caller can react (screen
-## shake, a sound) without recomputing it.
-func apply_landing(impact_speed: float) -> float:
-	var damage := fall_damage_for(impact_speed)
+## Apply a landing. `defense` is R7.7's armour fraction (0..1,
+## player_equipment.gd::total_defense()) — 0.0 (the default) is the pre-R7.7
+## behaviour, unchanged for every existing caller. Returns the damage
+## actually dealt (post-armour), so the caller can react (screen shake, a
+## sound) without recomputing it.
+func apply_landing(impact_speed: float, defense: float = 0.0) -> float:
+	var damage := fall_damage_for(impact_speed) * (1.0 - clampf(defense, 0.0, 1.0))
 	if damage > 0.0:
 		health = maxf(0.0, health - damage)
 	return damage

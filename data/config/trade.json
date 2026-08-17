@@ -113,6 +113,33 @@
           "stock": 4
         }
       }
+    },
+    "bram": {
+      "title": "Bram's Inn",
+      "keeper": "Bram",
+      "_why": "R7.9. The inn's own trade branch, D39's dual-role pattern's vendor half. Berries plus the three tonic/brew items, at Mira's own prices -- no new items invented, and no materials/orbs/TMs duplicated onto a second seller (Mira stays the one place to sell gathered goods and buy orbs, per D39's 'no wallet, no second store' economy note above).",
+      "goods": {
+        "berries": {
+          "buy": 6,
+          "sell": 2,
+          "stock": 0
+        },
+        "swift_tonic": {
+          "buy": 35,
+          "sell": 11,
+          "stock": 4
+        },
+        "attack_tonic": {
+          "buy": 45,
+          "sell": 15,
+          "stock": 4
+        },
+        "stoneguard_brew": {
+          "buy": 45,
+          "sell": 15,
+          "stock": 4
+        }
+      }
     }
   },
   "_comment_creature_traders": "The owner asked to trade 'Creatures and materials'. D39 settled creature trades as SWAPS, not purchases: Oskar offers one of his for one of yours, no coins involved. That keeps CLAUDE.md's two hard rules intact without special-casing either -- the party never exceeds five because the swap is remove-then-add in one transaction, and nothing is CAUGHT (a trainer-owned creature is handed over, orbs never enter it).",

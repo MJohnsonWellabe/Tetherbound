@@ -316,12 +316,24 @@ func _try_jump() -> void:
 func _resolve_landing(falling_speed: float) -> void:
 	var on_floor := is_on_floor()
 	if on_floor and not _was_on_floor:
-		var damage: float = vitals.apply_landing(maxf(falling_speed, 0.0))
+		var damage: float = vitals.apply_landing(maxf(falling_speed, 0.0), _armor_defense())
 		landed.emit(falling_speed, damage)
 		if vitals.is_dead():
 			died.emit()
 	_was_on_floor = on_floor
 	_fall_speed = falling_speed
+
+
+## R7.7. `player_equipment.gd`'s own total_defense(), same lookup pattern
+## tool_hold.gd already uses for `equipped_tool` -- a headless caller (a test,
+## a capture tool with no Game autoload) reads 0.0, unarmoured, same as
+## every fall-damage call before this task.
+func _armor_defense() -> float:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return 0.0
+	var equipment: Variant = game.get("player_equipment")
+	return float(equipment.call("total_defense")) if equipment is RefCounted else 0.0
 
 
 ## Horizontal speed, read by the HUD and by trainer_model.gd's

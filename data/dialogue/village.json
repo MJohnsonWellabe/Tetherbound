@@ -9,6 +9,7 @@
   "_comment_of31_coins": "D39 chose the friendlier of the two starts the brief offered: Mira's first conversation hands over a float so the first visit to the shop can buy something, rather than a zero-start that has to be bootstrapped by selling. The count here and `starting_coins` in data/config/trade.json are checked against each other by tests/test_trade.gd -- a line that says thirty while the config says ten is a lie the player can count.",
   "_comment_ow9_foreman": "OW9 (owner: \"Someone at the beginning needs to tell you to go gather materials to build things like orbs. Someone else will need to tell you to get wood and build a base camp. They should probably give you a hammer and recipe.\"). The gather half is Tam's already (OF30/`village_tam_orbs`); this is the build half, spoken by the Quarry Foreman -- the one villager with a trade that touches building and nothing yet to hand over. Second use of OF30's route exactly: one `give:`+`flag:` line, gated in data/config/village_npcs.json's `greeting_when` so it can never repeat. `hammer` is not a new item -- R2.1 shipped it as a real tool with nothing that gave it out yet (its own `_comment_tools`); this is that gift. There is no separate 'recipe' flag or item: `camp` (data/items/buildables.json) has never been locked behind an unlock flag the way `orb_basic` is -- GAME_DESIGN.md 20's mandatory tutorial shelter is meant reachable from minute one -- so gating the BUILDABLE would be inventing a system the design does not call for. The 'recipe' the owner asked for is spoken, the same way OF30 handed the torch over in words with no torch item: the Foreman names the materials a camp actually costs on the same line he hands over the hammer.",
   "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam each gain a `_challenge` and a `_beaten` conversation, chosen by data/config/village_npcs.json's `greeting_when` once their vendor/gift branch is spent (spec sec3 Band 1, D39's dual-role rule). Every challenge's LAST line carries `battle:<trainer_id>` -- scripts/story/sequence_director.gd's fourth dialogue effect, read the moment the dialogue box closes, the same deferred-start contract scripts/world/trainer_npc.gd already uses for a standalone trainer. Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their standing vendor branch always has, so the store/swap stay reachable forever once they are beaten (D39's rule made real); Tam's is flavour only -- he has no vendor effect left to carry.",
+  "_comment_r7_9": "R7.9, owner-requested: an inn where the villagers can stay. Bram is its innkeeper, a THIRD vendor branch in the same additive shape OF31 gave Mira -- `village_bram_shop_intro` opens the store (`shop:goods:bram`, data/config/trade.json's own `bram` vendor: berries plus the three tonic/brew items, Mira's own prices) and `village_bram_shop` is the standing branch, chosen the same way in data/config/village_npcs.json's `greeting_when`. No starting-coin gift on his intro line -- Mira's `village_mira_shop_intro` already bootstraps the player's first purchase and a second float would be an unexplained windfall, not a kindness. D39's dual-role pattern also names a later trainer branch; this ships only the vendor half (see village_npcs.json's own `_why_vendor` on Bram's entry for the scope call and why).",
   "_comment_hall_approach": "SF34. The Meadows Hall approach gate (scripts/world/playground_world.gd::_build_sigil_gate). Nobody stands at this gate, so the words are a Team Tether notice bolted to the leaf — the same trick road_gate_locked plays with Grandpa's voice, but diegetic here rather than remote narration. The PORTRAIT IS A STAND-IN: the project has exactly two portraits on disk (grandpa, trainer) and neither is a faction notice; tests/test_dialogue_runner.gd requires a real one, so this uses the trainer plate under CLAUDE.md's Prototyping rule and should be replaced when the faction has art of its own. The sealed line never names how many Sigils are missing — the objective tracker counts (data/progression/objectives.json), and saying it twice in two voices is how a count drifts.",
   "conversations": {
     "village_mira": {
@@ -66,6 +67,35 @@
         {
           "text": "That was honest fighting. Stall's open whenever you need it.",
           "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_bram": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Innkeeper's the whole of it. Bed, board and a fire that stays lit -- that's the trade.",
+        "Half the square eats here on a cold night. The other half just likes complaining about my stew where it's warm."
+      ]
+    },
+    "village_bram_shop_intro": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "First one through the door gets the tour. Bar's here, beds are through the back, and I keep a bit of stock behind the counter same as Mira does.",
+        {
+          "text": "Berries, and the tonics and brews she doesn't always have spare. Have a look.",
+          "effect": "shop:goods:bram"
+        }
+      ]
+    },
+    "village_bram_shop": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Back again. Shelf's the same as you left it.",
+          "effect": "shop:goods:bram"
         }
       ]
     },

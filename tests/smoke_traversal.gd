@@ -713,7 +713,7 @@ func _check_rock_collision_alignment(world: Node, failures: Array[String]) -> vo
 ## authored a `door` in building_prefabs.json, not just one, since the bug
 ## this catches (a doorway hole with no matching gate, or a gate that never
 ## clears) is per-prefab data, not shared code.
-const VILLAGE_DOOR_PREFABS: Array[String] = ["cottage_a", "cottage_b", "ranger_station"]
+const VILLAGE_DOOR_PREFABS: Array[String] = ["cottage_a", "cottage_b", "ranger_station", "inn"]
 
 func _check_village_doors(world: Node, failures: Array[String]) -> void:
 	var village: Node = world.get_node_or_null(^"Village")

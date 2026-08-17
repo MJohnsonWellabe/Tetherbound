@@ -198,6 +198,30 @@
         }
       ],
       "_comment_config_key": "CLAUDE.md/§21: no new human generation and no new model. `villager_keeper` is the NP4 villager_male base already standing in the square (Oskar's), reused as-is -- she is a villager who walked twenty minutes out of town to look at a horizon, not a new archetype. art.json's own note records that this base has no separable hair mesh, so there is no per-material differentiator to give her; CLAUDE.md's stated fallback for exactly that case is that identical NPCs beat an ugly whole-body hue shift."
+    },
+    {
+      "name": "Bram",
+      "config_key": "villager_keeper",
+      "position": [
+        -5.89,
+        -9.0
+      ],
+      "facing_deg": 90.0,
+      "greeting": "village_bram",
+      "greeting_when": [
+        {
+          "unless_flag": "bram_shop_open",
+          "conversation": "village_bram_shop_intro",
+          "_why": "R7.9/D39, same shape as OF31's Mira: the inn's own shop opening, told once, ending by opening the store. Sets `bram_shop_open`, so this entry stops matching after the first visit."
+        },
+        {
+          "if_flag": "bram_shop_open",
+          "conversation": "village_bram_shop",
+          "_why": "R7.9/D39. The standing vendor branch, same pattern as `village_mira_shop`."
+        }
+      ],
+      "_why": "R7.9, owner-requested: an inn where the villagers can stay, with an innkeeper who trades. `villager_keeper` is a THIRD use of the same rig already standing twice in this file (Oskar, Kell) -- CLAUDE.md/§21's reuse rule and this file's own Kell comment call that the accepted call rather than a new archetype. Position is `inn_interior.gd::bar_position()` (the gap behind the counter, local [0,0,-4.39]) carried through the inn's own placement in data/config/village.json (`at: [-1.5,-9.0]`, `yaw_deg: 90.0`) by the same rotation formula this file's own Mira position was derived from and verified against (world_x = building_x + local_x*cos(yaw) + local_z*sin(yaw); world_z = building_z - local_x*sin(yaw) + local_z*cos(yaw)) -- not eyeballed. `facing_deg` matches the inn's own `yaw_deg` for the same reason Mira's matches cottage_a's: it points the local +z (front-door) direction the counter faces, exactly as `village_mira`'s entry above already establishes the convention.",
+      "_why_vendor": "D39's dual-role pattern is a vendor branch AND a later trainer branch; this ships only the vendor half, matching the design ralph/NOTES.md's own R7.9 entry recorded and the same scope call OF31 made for Mira before SC12 later added her challenge. A trainer branch needs a balanced team, a level, a reward and a `trainers.json` entry under `placed_by: \"village_npcs\"`, which risks the balance assertions `test_trainers_data.gd` runs across the whole roster -- real, separate scope, left open rather than guessed at."
     }
   ]
 }

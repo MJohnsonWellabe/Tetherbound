@@ -389,6 +389,79 @@ def icon_knife() -> Image.Image:
     return img
 
 
+def icon_armor_helmet() -> Image.Image:
+    """An open-face helm: a rounded dome over a brim, with a vertical
+    nose-guard cutout -- the one silhouette that reads as headwear rather
+    than a plain dome (a bowl) at 64px."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    d.pieslice((60, 40, 196, 176), 180, 360, fill=FG)  # dome, flat side down
+    d.rounded_rectangle((52, 150, 204, 178), radius=10, fill=FG)  # brim
+    cutout_line(d, [(cx, 60), (cx, 150)], width=STROKE)  # nose-guard gap
+    return img
+
+
+def icon_armor_vest() -> Image.Image:
+    """A sleeveless torso vest: a body panel with two shoulder straps and a
+    V neckline cutout -- shoulders wider than the waist is what reads as
+    worn-on-a-body rather than a plain sign board."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    body = [
+        (66, 70), (190, 70), (206, 110), (176, 226), (80, 226), (50, 110),
+    ]
+    d.polygon(body, fill=FG)
+    d.rectangle((78, 34, 104, 84), fill=FG)  # left strap
+    d.rectangle((152, 34, 178, 84), fill=FG)  # right strap
+    cutout_line(d, [(cx, 70), (cx - 30, 118), (cx, 150), (cx + 30, 118), (cx, 70)], width=max(3, STROKE // 2))
+    return img
+
+
+def icon_armor_leggings() -> Image.Image:
+    """A waistband over two separate legs -- the fork between them is the
+    one cutout that keeps this from reading as a single boot or a robe."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    d.rounded_rectangle((66, 40, 190, 90), radius=14, fill=FG)  # waistband
+    d.polygon([(70, 82), (122, 82), (118, 224), (86, 224)], fill=FG)  # left leg
+    d.polygon([(134, 82), (186, 82), (170, 224), (138, 224)], fill=FG)  # right leg
+    return img
+
+
+def icon_armor_boots() -> Image.Image:
+    """A single boot in profile: a vertical shaft over an L-shaped foot with
+    a heel, the plainest unambiguous boot silhouette at 64px."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((84, 36, 156, 158), radius=14, fill=FG)  # shaft
+    foot = [
+        (84, 140), (170, 140), (222, 176), (222, 200), (84, 200),
+    ]
+    d.polygon(foot, fill=FG)
+    d.rectangle((84, 158, 120, 200), fill=FG)  # heel block
+    cutout_line(d, [(96, 90), (96, 140)], width=max(3, STROKE // 2))  # lace line
+    return img
+
+
+def icon_armor_backpack() -> Image.Image:
+    """A rounded pack body with a top flap and two shoulder straps -- the
+    flap's own separate silhouette (not just a cutout line) is what reads as
+    a pack rather than a plain sack."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    d.rounded_rectangle((72, 92, 184, 224), radius=22, fill=FG)  # body
+    d.rounded_rectangle((78, 60, 178, 116), radius=18, fill=FG)  # flap
+    d.rectangle((84, 30, 104, 96), fill=FG)  # left strap
+    d.rectangle((152, 30, 172, 96), fill=FG)  # right strap
+    cutout_line(d, [(cx, 150), (cx, 200)], width=max(3, STROKE // 2))  # centre seam
+    d.ellipse((118, 118, 138, 138), fill=CLEAR)  # buckle hole
+    return img
+
+
 def icon_fishing_rod() -> Image.Image:
     """A tapered rod (wide grip to a fine tip), a taut line, and a hook."""
     img = new_canvas()
@@ -743,6 +816,11 @@ ITEM_ICONS = {
     "pickaxe.png": icon_pickaxe,
     "hammer.png": icon_hammer,
     "knife.png": icon_knife,
+    "armor_helmet.png": icon_armor_helmet,
+    "armor_vest.png": icon_armor_vest,
+    "armor_leggings.png": icon_armor_leggings,
+    "armor_boots.png": icon_armor_boots,
+    "armor_backpack.png": icon_armor_backpack,
     "fishing_rod.png": icon_fishing_rod,
     "castle_gate_key.png": icon_castle_gate_key,
     "south_bridge_key.png": icon_south_bridge_key,

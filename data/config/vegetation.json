@@ -826,6 +826,12 @@
       "z": 80.0,
       "radius": 10.5,
       "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
+    },
+    {
+      "x": -1.5,
+      "z": -9.0,
+      "radius": 6.5,
+      "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on."
     }
   ]
 }

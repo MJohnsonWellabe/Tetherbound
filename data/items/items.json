@@ -15,6 +15,7 @@
   "_comment_rootstone": "SD18. MEADOWS_PROGRESSION_SPEC.md 10: the first of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries. `gathered_with: pickaxe` matches the existing stone convention -- Rootstone is a harder seam, not a different gathering verb. SD16 (a sibling item, quarry harvest nodes) owns where it is actually found in the world; this entry only makes it a real, nameable satchel item so SD18's recipes have something to spend. `kind: resource` (same as wood/stone/fiber) rather than a new kind -- nothing branches on kind besides `tool`, so a fourth resource-shaped id needs no new code path.",
   "_comment_ironwood": "SF31. MEADOWS_PROGRESSION_SPEC.md §3 Band 4 and §10: the SECOND and LAST of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries and alongside Rootstone. `gathered_with: axe` because it is wood -- the spec's own note that it 'does not need to literally be iron' cuts both ways, and giving a hardwood a new gathering verb would be a mechanic where the spec asked for a tier. `kind: resource`, same as Rootstone, so no new code path. Where it grows is `data/config/harvest.json`'s `ironwood` nodes (the old-growth stands on the Rise's south-west flank, spec Band 4's 'old-growth forest'); what it buys is `data/recipes/recipes_ironwood.json`, and that file's own header holds the rule this tier is judged by: nothing the stronghold needs may require a THIRD new material.",
   "_comment_sigils": "SF34, spec §3 Band 4. Three physical items, one per regional captain, each granted through that captain's `reward` block in data/config/trainers.json. `kind: key` and `stack: 1`, exactly like `south_bridge_key` -- they are gate items, and the gate is SB10's `item_gate.gd` requiring all three at once, not a level check and not a UI lock. There is no fourth sigil and no way to buy, craft or find one: beating the captain IS the acquisition.",
+  "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
     "coin": {
@@ -578,6 +579,61 @@
         "scale": 1.2,
         "duration_s": 90
       }
+    },
+    "hide_helm": {
+      "name": "Hide Helm",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#7a5a35",
+      "armor_slot": "helmet",
+      "defense": 0.08,
+      "icon": "res://assets/ui/icons/items/armor_helmet.png",
+      "blurb": "Boiled hide over the crown. Takes the edge off a bad fall.",
+      "description": "Stiffened hide, shaped over a form and left to dry hard. It will not stop a real blow -- nothing here is meant to, the trainer never fights -- but a knock on the head from a bad landing lands softer wearing it."
+    },
+    "hide_vest": {
+      "name": "Hide Vest",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#8a6a3f",
+      "armor_slot": "upper_body",
+      "defense": 0.14,
+      "icon": "res://assets/ui/icons/items/armor_vest.png",
+      "blurb": "Layered hide over the chest and back. The biggest piece of the set.",
+      "description": "Two layers of hide laced over the ribs and shoulder blades, the largest single piece a trainer can wear and the one that does the most against a fall's own jolt."
+    },
+    "hide_leggings": {
+      "name": "Hide Leggings",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#6b4f30",
+      "armor_slot": "lower_body",
+      "defense": 0.12,
+      "icon": "res://assets/ui/icons/items/armor_leggings.png",
+      "blurb": "Hide wrapped over the thighs and knees.",
+      "description": "Wrapped and buckled over the thighs and knees, the joints that take the worst of a hard landing on uneven ground."
+    },
+    "hide_boots": {
+      "name": "Hide Boots",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#5a4030",
+      "armor_slot": "boots",
+      "defense": 0.08,
+      "icon": "res://assets/ui/icons/items/armor_boots.png",
+      "blurb": "Thick-soled hide boots. Softer on the ankles than bare feet.",
+      "description": "Thick-soled and double-stitched at the ankle. Not built for speed -- built so the ground stops being the first thing you feel when you land wrong."
+    },
+    "travel_pack": {
+      "name": "Travel Pack",
+      "kind": "armor",
+      "stack": 1,
+      "colour": "#5c6b47",
+      "armor_slot": "backpack",
+      "defense": 0.06,
+      "icon": "res://assets/ui/icons/items/armor_backpack.png",
+      "blurb": "A padded frame pack. Takes a little sting out of landing on your back.",
+      "description": "A padded frame worn high on the back. It carries nothing the satchel does not already hold -- CLAUDE.md's own rule against a carry-weight system stands -- but the padding softens a landing taken square on the spine."
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

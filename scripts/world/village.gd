@@ -136,6 +136,7 @@ func _place(spec: Dictionary) -> void:
 const INTERIORS := {
 	"shop": preload("res://scripts/world/shop_interior.gd"),
 	"cottage": preload("res://scripts/world/cottage_interior.gd"),
+	"inn": preload("res://scripts/world/inn_interior.gd"),
 }
 
 func _interior(building: Node3D, prefab_name: String, spec: Dictionary) -> void:
