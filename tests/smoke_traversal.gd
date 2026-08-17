@@ -424,6 +424,7 @@ func _run() -> void:
 	await _check_the_river(world, player, failures)
 	await _check_mill_crossing(world, player, failures)
 	await _check_village_doors(world, failures)
+	_check_no_severed_spoke_blocks_a_route(failures)
 
 	print("")
 	if not stuck_positions.is_empty():
@@ -435,12 +436,197 @@ func _run() -> void:
 			STUCK_MIN_PROGRESS, STUCK_CHECK_INTERVAL * STUCK_SUSTAIN_WINDOWS / 60.0, stuck_positions.size(), ", ".join(coords)
 		])
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, and every village house door starts shut, blocks the doorway, and opens on interact into a real room.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, every village house door starts shut, blocks the doorway, and opens on interact into a real room, and no severed spoke's blocker lies across a route the player is asked to walk.")
 		quit(0)
 	else:
 		for line in failures:
 			print("traversal FAIL: %s" % line)
 		quit(1)
+
+
+
+## SPINE-WEDGE. A severed spoke's blocker may never touch a route the game
+## asks the player to walk.
+##
+## THE DEFECT THIS EXISTS FOR, because it is not the obvious one.
+##
+## `storm_road`'s `collapsed_bridge` carve was 55 half_length + 18 end_fade --
+## a 73m reach each way, i.e. a 146m trench across the corridor, to sever a 3m
+## road. The spine's own last leg to the stronghold gate crossed it at full 11m
+## depth. The trench carries a `CarveFailsafe`, so a body walking the authored
+## trail fell in and was teleported back to the storm road's end, walked back,
+## fell in again -- six times, and the last 57.6m of the corridor's 11.3km were
+## not walkable at all. A half-hour walk with a real body found it and reported
+## it as "Terrain, 12-17 degrees", which are walkable angles: the trail's
+## problem was never the ground's steepness, and no amount of looking at the
+## terrain would have found the spoke.
+##
+## WHY THIS SHAPE OF CHECK AND NOT A SLOPE SURVEY. Both spokes and the trail
+## are authored polylines in one config, and `OW5C` re-sited all seven spokes
+## by a rotate+scale+translate transform while `trail.bands[]` was authored
+## separately -- so the two were never compared, and nothing anywhere compares
+## them. That is an arithmetic question about two arrays, answerable exactly, in
+## milliseconds, with no world and no heightfield: a carve's footprint is a
+## rotated rectangle (half_length+end_fade along its axis, half_width+rim
+## across) and a route is a polyline. This clips each segment against each
+## rectangle. It is deliberately EXACT rather than sampled -- a 1m sample walk
+## can step over a corner clip, and a guard that can miss is a guard nobody can
+## rely on.
+##
+## The wider survey does not fit in CI and lives in two tools instead:
+## `tools/_probe_spine_slope.gd` (every authored route against the analytic
+## landform, no bake needed) and `tools/_probe_ow5_walk.gd --mode=clear` (the
+## player's own capsule stood at every point of every route, naming every
+## structure it does not fit past). Run those when authoring a route. This
+## asserts the one invariant that is absolute, is true today, and has no
+## legitimate exception: a blocker built to sever ONE road must not lie across
+## another.
+##
+## `crossings[]` carves are deliberately NOT asserted here -- a crossing exists
+## to be crossed, on the bridge that spans it, so a route passing through one is
+## right when it is on the deck and wrong when it is not. That distinction needs
+## the deck, and the one place it is currently wrong (the spine enters the South
+## Bridge gully 8.7m west of the crossing's own road) is a trail-routing fix
+## owned by `SPINE-LAYOUT`. Reported below as a NOTE so it is visible in CI
+## without being a failure this branch cannot fix.
+func _check_no_severed_spoke_blocks_a_route(failures: Array[String]) -> void:
+	var cfg := _terrain_config()
+	if cfg.is_empty():
+		failures.append("could not read terrain_playground.json; spoke/route clearance is unchecked")
+		return
+	var routes := _authored_routes(cfg)
+
+	for entry in (cfg.get("spokes", {}) as Dictionary).get("routes", []):
+		var blocker: Dictionary = (entry as Dictionary).get("blocker", {})
+		var carve: Dictionary = blocker.get("carve", {})
+		if carve.is_empty():
+			continue
+		for route: Dictionary in routes:
+			var hit := _route_enters_carve(route["points"], carve)
+			if hit == Vector2.INF:
+				continue
+			failures.append(("severed spoke '%s' (%s, %.0fm deep) lies across the authored route '%s' " +
+				"near (%.0f, %.0f) -- a blocker sized to sever its own road is cutting a road " +
+				"the player is asked to walk") % [
+				str((entry as Dictionary).get("id", "?")), str(blocker.get("kind", "?")),
+				float(carve.get("depth", 0.0)), str(route["name"]), hit.x, hit.y])
+
+	for entry in cfg.get("crossings", []):
+		var carve: Dictionary = (entry as Dictionary).get("carve", {})
+		if carve.is_empty():
+			continue
+		for route: Dictionary in routes:
+			var hit := _route_enters_carve(route["points"], carve)
+			if hit == Vector2.INF:
+				continue
+			var off := _distance_to_polyline(hit, (entry as Dictionary).get("road", []))
+			if off <= CROSSING_ON_ROAD_M:
+				continue
+			print("  NOTE: route '%s' enters the %s gully at (%.0f, %.0f), %.1fm off that crossing's own road" % [
+				str(route["name"]), str((entry as Dictionary).get("id", "?")), hit.x, hit.y, off])
+			print("        -- the bridge is on the road; SPINE-LAYOUT owns re-aiming the trail at it.")
+
+
+## How close a route has to pass to a crossing's own road to count as being on
+## the bridge. `paths.width` is 3.0 with a 1.5m shoulder, so 3m either side of
+## the road's centreline is generous rather than tight.
+const CROSSING_ON_ROAD_M := 3.0
+
+
+func _terrain_config() -> Dictionary:
+	var f := FileAccess.open("res://data/config/terrain_playground.json", FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+## Every route the game asks a player to walk: the spine, the regional loops
+## and the shortcuts. `river_ferry_landing` carries no `points` (it is a
+## from/to pair), which is why the size guard is here and not assumed away.
+func _authored_routes(cfg: Dictionary) -> Array:
+	var trail: Dictionary = cfg.get("trail", {})
+	var out: Array = []
+	var spine: Array[Vector2] = []
+	for band in trail.get("bands", []):
+		for p in (band as Dictionary).get("points", []):
+			var v := Vector2(float(p[0]), float(p[1]))
+			if spine.is_empty() or spine[spine.size() - 1].distance_to(v) > 0.01:
+				spine.append(v)
+	if spine.size() >= 2:
+		out.append({"name": "spine", "points": spine})
+	for key in ["loops", "shortcuts"]:
+		for entry in trail.get(key, []):
+			var pts: Array[Vector2] = []
+			for p in (entry as Dictionary).get("points", []):
+				pts.append(Vector2(float(p[0]), float(p[1])))
+			if pts.size() >= 2:
+				out.append({"name": "%s:%s" % [key, str((entry as Dictionary).get("id", "?"))],
+					"points": pts})
+	return out
+
+
+## Where a polyline first enters a carve's footprint, or `Vector2.INF`.
+##
+## The footprint is the rectangle outside which `playground_heightfield.gd::
+## _prepared_carve_depth` returns exactly zero: |u| < half_length + end_fade
+## along the carve's axis, |v| < half_width + rim across it. Clipping is
+## Liang-Barsky in the carve's own frame -- exact, and cheap enough that every
+## route against every carve is a few hundred microseconds.
+func _route_enters_carve(points: Array, carve: Dictionary) -> Vector2:
+	var raw: Array = carve.get("centre", [])
+	if raw.size() < 2:
+		return Vector2.INF
+	var centre := Vector2(float(raw[0]), float(raw[1]))
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var across := Vector2(-axis.y, axis.x)
+	var half_u: float = float(carve.get("half_length", 0.0)) + float(carve.get("end_fade", 0.0))
+	var half_v: float = float(carve.get("half_width", 0.0)) + float(carve.get("rim", 0.0))
+	if half_u <= 0.0 or half_v <= 0.0:
+		return Vector2.INF
+
+	for i in range(points.size() - 1):
+		var a: Vector2 = points[i]
+		var b: Vector2 = points[i + 1]
+		var pa := Vector2((a - centre).dot(axis), (a - centre).dot(across))
+		var pb := Vector2((b - centre).dot(axis), (b - centre).dot(across))
+		var d := pb - pa
+		var t0 := 0.0
+		var t1 := 1.0
+		var clipped := true
+		for k in 2:
+			var dk: float = d.x if k == 0 else d.y
+			var pk: float = pa.x if k == 0 else pa.y
+			var limit: float = half_u if k == 0 else half_v
+			if absf(dk) < 0.000001:
+				if pk < -limit or pk > limit:
+					clipped = false
+					break
+				continue
+			var lo := (-limit - pk) / dk
+			var hi := (limit - pk) / dk
+			if lo > hi:
+				var swap := lo
+				lo = hi
+				hi = swap
+			t0 = maxf(t0, lo)
+			t1 = minf(t1, hi)
+			if t0 > t1:
+				clipped = false
+				break
+		if clipped:
+			return a.lerp(b, (t0 + t1) * 0.5)
+	return Vector2.INF
+
+
+## Shortest distance from a point to a polyline, for the crossing note above.
+func _distance_to_polyline(at: Vector2, raw: Array) -> float:
+	var best := INF
+	for i in range(raw.size() - 1):
+		var a := Vector2(float(raw[i][0]), float(raw[i][1]))
+		var b := Vector2(float(raw[i + 1][0]), float(raw[i + 1][1]))
+		best = minf(best, at.distance_to(Geometry2D.get_closest_point_to_segment(at, a, b)))
+	return best
 
 
 ## SA3, corridor version. D51/`MEADOWS_MACRO_LAYOUT.md` §6 replaced the 235m
