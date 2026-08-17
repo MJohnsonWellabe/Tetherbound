@@ -87,6 +87,25 @@ var _data: Object = null
 var _mesh_ids: Dictionary = {}
 var _next_mesh_id: int = 0
 
+## COLL1 / §8.3: how close a collidable placement must be to the last point
+## passed to `update_collision_streaming()` to keep a real `CollisionShape3D`.
+## MultiMesh keeps drawing every instance in the world regardless -- this
+## file's own header already argues that is cheap enough unstreamed -- only
+## the physics body is gated. TUNABLE: chosen well inside the ~45m the
+## player can already see coming (SpringArm3D camera collision, sprint stops
+## being a surprise-corner problem long before this), not derived from a
+## measurement.
+const COLLISION_STREAM_RADIUS := 100.0
+
+## One entry per `_add_collision()` call: `body` (the StaticBody3D that holds
+## whatever is currently resident), `radius` (the layer's shape radius,
+## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (every
+## collidable instance in this batch, streamed or not) and `resident` (a
+## parallel Array, one `CollisionShape3D` or `null` per placement) --
+## `update_collision_streaming()` reads and writes this without ever
+## scanning `get_children()`.
+var _collision_batches: Array[Dictionary] = []
+
 
 ## Build the whole scatter. `world_size` should match the terrain's.
 ## `terrain` is the live Terrain3D node — its instancer, assets and data are
@@ -112,6 +131,8 @@ func build(world_size: float, terrain: Node) -> void:
 	if _instancer == null or _assets == null:
 		push_error("Terrain3D produced no instancer/assets object; scatter will not render")
 		return
+
+	_collision_batches.clear()
 
 	var cfg: Dictionary = RULES.config()
 	if cfg.is_empty():
@@ -573,6 +594,14 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 ## a way to find "every collider in region R" that doesn't depend on name
 ## prefixes, and should change this function and
 ## `_check_rock_collision_alignment` together, in the same change.
+
+## COLL1 / §8.3: registers the batch and streams in whatever is already
+## within COLLISION_STREAM_RADIUS of the world origin, rather than building
+## every shape immediately. `update_collision_streaming()` is what actually
+## keeps this current as the player moves; the caller (playground_world.gd)
+## re-centres it on the real spawn point right after `build()` returns, so
+## the origin-based pass here just avoids a single frame with zero collision
+## on batches near (0,0,0).
 func _add_collision(model_path: String, placements: Array) -> void:
 	var layer := _layer_for(model_path)
 	if layer.is_empty() or not bool(layer.get("collides", false)):
@@ -582,31 +611,141 @@ func _add_collision(model_path: String, placements: Array) -> void:
 	var body := StaticBody3D.new()
 	body.name = "%s_Collision" % model_path.get_file().get_basename()
 	add_child(body)
-	for entry: Variant in placements:
-		var placement: Dictionary = entry
-		var scale := float(placement["scale"])
-		var shape := CylinderShape3D.new()
-		shape.radius = radius * scale
-		# Tall enough to stop a camera at head height, short enough that it is a
-		# trunk rather than an invisible wall.
-		shape.height = 4.0 * scale
-		var node := CollisionShape3D.new()
-		node.shape = shape
-		# OF14: the render path (above, `_build_batch`) tilts a rock's VISUAL
-		# mesh to the slope normal when its layer opts into `align_to_slope`
-		# (rocks only), but this collider stayed world-up regardless — on a
-		# steep anchor site (up to 52 degrees) a scaled-up boulder leans its
-		# silhouette out past a vertical cylinder's footprint, letting the
-		# player walk into visible rock before touching collision. Give the
-		# shape the same tilt the mesh gets, so the collider bounds what is
-		# actually on screen instead of an upright approximation of it.
-		var up := Vector3.UP
-		if placement.has("normal"):
-			up = placement["normal"]
-			node.basis = Basis(Quaternion(Vector3.UP, up))
-		node.position = (placement["position"] as Vector3) + up * (shape.height * 0.5)
-		body.add_child(node)
+
+	var resident: Array = []
+	resident.resize(placements.size())
+	_collision_batches.append({
+		"body": body,
+		"radius": radius,
+		"placements": placements,
+		"resident": resident,
+	})
 	_solid += placements.size()
+	_stream_batch(_collision_batches[-1], Vector3.ZERO)
+
+
+## Ensures every collidable placement within `COLLISION_STREAM_RADIUS` of
+## `center` has a real `CollisionShape3D`, and every one outside does not.
+##
+## No Terrain3DRegion involved on purpose: `tools/_probe_terrain_streaming.gd`
+## dumped this build's full `Terrain3DRegion`/`Terrain3DInstancer` method
+## surface and there is no activate/deactivate signal for hand-placed nodes
+## to hook -- an earlier attempt at grouping these bodies per region hit
+## exactly that wall and was reverted. This drives its own distance bubble
+## from the camera/player position instead, the same mechanism Terrain3D's
+## own `collision_mode` 1 / `collision_radius` already uses, rather than
+## inventing a second, region-shaped residency system that could disagree
+## with the first about which patch of the world is "loaded".
+##
+## Called once (from `_add_collision`, centred on the origin) so a batch is
+## never built with zero collision, then again with the real spawn point
+## right after `build()` returns, then periodically as the player moves
+## (`playground_world.gd`, throttled -- cheap at today's few-thousand-
+## instance scale, but there is no reason to pay for it every physics tick
+## when the bubble only has to be right within a fraction of a second of the
+## player actually approaching).
+func update_collision_streaming(center: Vector3) -> void:
+	for batch: Dictionary in _collision_batches:
+		_stream_batch(batch, center)
+
+
+func _stream_batch(batch: Dictionary, center: Vector3) -> void:
+	var body: StaticBody3D = batch["body"]
+	var placements: Array = batch["placements"]
+	var resident: Array = batch["resident"]
+	var shape_radius: float = batch["radius"]
+	var radius_sq := COLLISION_STREAM_RADIUS * COLLISION_STREAM_RADIUS
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var spot: Vector3 = placement["position"]
+		var within := spot.distance_squared_to(center) <= radius_sq
+		var has_shape: bool = resident[i] != null
+		if within and not has_shape:
+			var node := _make_collision_shape(placement, shape_radius)
+			resident[i] = node
+			body.add_child(node)
+		elif not within and has_shape:
+			(resident[i] as CollisionShape3D).queue_free()
+			resident[i] = null
+
+
+## One prop's collider, split out of `_add_collision` unchanged -- COLL1 did
+## not touch the shape itself, only when it exists.
+func _make_collision_shape(placement: Dictionary, radius: float) -> CollisionShape3D:
+	var scale := float(placement["scale"])
+	var shape := CylinderShape3D.new()
+	shape.radius = radius * scale
+	# Tall enough to stop a camera at head height, short enough that it is a
+	# trunk rather than an invisible wall.
+	shape.height = 4.0 * scale
+	var node := CollisionShape3D.new()
+	node.shape = shape
+	# OF14: the render path (`_build_batch`) tilts a rock's VISUAL mesh to the
+	# slope normal when its layer opts into `align_to_slope` (rocks only), but
+	# this collider stayed world-up regardless — on a steep anchor site (up to
+	# 52 degrees) a scaled-up boulder leans its silhouette out past a vertical
+	# cylinder's footprint, letting the player walk into visible rock before
+	# touching collision. Give the shape the same tilt the mesh gets, so the
+	# collider bounds what is actually on screen instead of an upright
+	# approximation of it.
+	var up := Vector3.UP
+	if placement.has("normal"):
+		up = placement["normal"]
+		node.basis = Basis(Quaternion(Vector3.UP, up))
+	node.position = (placement["position"] as Vector3) + up * (shape.height * 0.5)
+	return node
+
+
+## Every collidable placement currently holding a real `CollisionShape3D`,
+## across every batch -- what `_solid` counts is the world total; this is
+## what is actually resident right now. For tests and for the survey's cost
+## readout, not gameplay.
+func collision_resident_count() -> int:
+	var n := 0
+	for batch: Dictionary in _collision_batches:
+		for shape: Variant in (batch["resident"] as Array):
+			if shape != null:
+				n += 1
+	return n
+
+
+## How many collidable placements exist in total, world-wide, in every batch
+## whose StaticBody3D name starts with `prefix` -- e.g. "Rock_" or "Pebble_".
+## Independent of streaming state; see `force_collision_resident()` below.
+func collidable_count(prefix: String = "") -> int:
+	var n := 0
+	for batch: Dictionary in _collision_batches:
+		var body: StaticBody3D = batch["body"]
+		if prefix != "" and not body.name.begins_with(prefix):
+			continue
+		n += (batch["placements"] as Array).size()
+	return n
+
+
+## Forces every placement in every batch whose StaticBody3D name starts with
+## `prefix` to have a real `CollisionShape3D`, ignoring
+## `COLLISION_STREAM_RADIUS` entirely -- for tests that need to check every
+## instance of one specific layer (e.g. every sloped rock's collider
+## alignment, OF14/`tests/smoke_traversal.gd`) regardless of where the
+## player's own path happened to go, instead of trusting that incidental
+## foot traffic streamed all of them in already.
+##
+## Gameplay code never calls this. It exists so a test can assert the
+## property it actually cares about ("every rock's collider is aligned")
+## without either disabling streaming or silently checking a subset and
+## calling it complete.
+func force_collision_resident(prefix: String) -> void:
+	for batch: Dictionary in _collision_batches:
+		var body: StaticBody3D = batch["body"]
+		if not body.name.begins_with(prefix):
+			continue
+		var placements: Array = batch["placements"]
+		var resident: Array = batch["resident"]
+		for i in placements.size():
+			if resident[i] == null:
+				var node := _make_collision_shape(placements[i], batch["radius"])
+				resident[i] = node
+				body.add_child(node)
 
 
 ## Which layer a model belongs to. Models are grouped by mesh for drawing, so the
@@ -724,6 +863,7 @@ func stats() -> Dictionary:
 		"instances": _placed,
 		"batches": _draw_calls,
 		"solid": _solid,
+		"solid_resident": collision_resident_count(),
 		"harvest_points": _harvest_points,
 		"drained_out": drained_count(),
 		"regrown": _regrown,

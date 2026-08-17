@@ -894,11 +894,26 @@ const ROCK_SLOPE_CHECK_MIN_DEG := 10.0
 const ROCK_ALIGNMENT_MIN_DOT := 0.98
 
 
+## COLL1 / §8.3: collision now streams (see `vegetation.gd`'s
+## `update_collision_streaming`), so a rock's `CollisionShape3D` only exists
+## when something has recentred the streaming bubble near it. This check's
+## whole point is to look at EVERY sloped rock, not whichever ones the
+## traversal walk's own four legs happened to pass within
+## `COLLISION_STREAM_RADIUS` of -- so it force-streams every rock/pebble
+## resident first (`force_collision_resident`, a test-only escape hatch that
+## ignores the streaming radius; gameplay never calls it) rather than either
+## disabling streaming or silently checking a subset and calling it
+## complete. The StaticBody3D naming this check keys off (`Rock_`/`Pebble_`)
+## is unchanged by streaming -- only which CollisionShape3D children exist
+## underneath it varies now, never the body itself.
 func _check_rock_collision_alignment(world: Node, failures: Array[String]) -> void:
 	var vegetation: Node = world.get_node_or_null(^"Vegetation")
 	if vegetation == null:
 		failures.append("no Vegetation node in the scene; cannot check rock collision alignment")
 		return
+	if vegetation.has_method("force_collision_resident"):
+		vegetation.call("force_collision_resident", "Rock_")
+		vegetation.call("force_collision_resident", "Pebble_")
 
 	var field := HEIGHTFIELD.new()
 	var checked := 0

@@ -237,6 +237,25 @@ func _apply_dynamic_collision() -> void:
 	if shape_size <= 0:
 		push_error("terrain collision_shape_size read back as %d; Terrain3D exposed no usable collision shapes" % shape_size)
 
+## COLL1 / §8.3: re-centres the scatter's collision streaming bubble on the
+## player, throttled rather than every physics tick -- see
+## `COLLISION_STREAM_INTERVAL`'s own comment for why a periodic sweep is
+## enough. `_place_player()`/`_dress_the_meadow()` cover frame one; this
+## covers every frame after the player actually moves.
+const COLLISION_STREAM_INTERVAL := 0.5
+var _collision_stream_elapsed: float = 0.0
+
+
+func _process(delta: float) -> void:
+	if _vegetation == null or _player == null:
+		return
+	_collision_stream_elapsed += delta
+	if _collision_stream_elapsed < COLLISION_STREAM_INTERVAL:
+		return
+	_collision_stream_elapsed = 0.0
+	if _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", _player.global_position)
+
 
 ## Capture the mouse for camera look — unless a menu, dialogue box or the
 ## naming panel currently owns it, which would trap an unclickable cursor
@@ -576,9 +595,18 @@ func _dress_the_meadow() -> void:
 	_vegetation.name = "Vegetation"
 	add_child(_vegetation)
 	_vegetation.call("build", float(config.get("world_size", 512)), _terrain)
+
+	_vegetation.call("build", float(config.get("world_size", 512)))
+	# COLL1 / §8.3: build() only streamed collision in around the world
+	# ORIGIN (see vegetation.gd::_add_collision), so any prop near the actual
+	# spawn point that is not also near (0,0,0) would otherwise be a hologram
+	# for one frame. _place_player() already ran, so the real spawn is known.
+	if _player != null and _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", _player.global_position)
 	var stats: Dictionary = _vegetation.call("stats")
-	print("[playground] scattered %d props in %d batches (%d harvestable)" % [
-		stats["instances"], stats["batches"], stats.get("harvest_points", 0)
+	print("[playground] scattered %d props in %d batches (%d harvestable, %d/%d collision resident)" % [
+		stats["instances"], stats["batches"], stats.get("harvest_points", 0),
+		stats.get("solid_resident", 0), stats.get("solid", 0)
 	])
 
 
