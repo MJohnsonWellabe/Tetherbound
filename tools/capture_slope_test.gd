@@ -75,7 +75,7 @@ func _run() -> void:
 	# running in this scene and would fight any velocity set here by hand.
 	for i in PHYSICS_SETTLE:
 		await physics_frame
-	_shoot(camera, player, "01-slope-idle-uphill", written, failures)
+	await _shoot(camera, player, "01-slope-idle-uphill", written, failures)
 
 	# Frame 2: the same spot, player turned to face DOWNHILL (yaw 180) --
 	# pitch sign must flip (leaning the other way into the same physical
@@ -84,7 +84,7 @@ func _run() -> void:
 	player.rotation.y = deg_to_rad(180.0)
 	for i in PHYSICS_SETTLE:
 		await physics_frame
-	_shoot(camera, player, "02-slope-idle-downhill-facing", written, failures)
+	await _shoot(camera, player, "02-slope-idle-downhill-facing", written, failures)
 
 	# Frame 3: a flat-ground control shot, same character, for comparison —
 	# the model must read as neutral (no residual lean) once the slope
@@ -97,7 +97,7 @@ func _run() -> void:
 	player.velocity = Vector3.ZERO
 	for i in PHYSICS_SETTLE:
 		await physics_frame
-	_shoot(camera, player, "03-flat-control", written, failures)
+	await _shoot(camera, player, "03-flat-control", written, failures)
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
