@@ -252,15 +252,18 @@ func build() -> void:
 	# usability pass on the holding frame found the extra row pushed the whole
 	# panel down far enough to clip the descenders off the menu's footer legend
 	# -- an inventory screen that cuts its own button legend in half the moment
-	# you pick something up. Side by side costs three pixels of row height (26px
-	# banner against a 23px label) instead of a whole line.
+	# you pick something up. Side by side costs no extra row height: the summary
+	# now shares the banner's own FONT_BODY (26px) rather than the smaller
+	# FONT_LABEL it used to sit at, which read as unreadable at 40% scale
+	# (OW1-remainder) -- matching the banner's size was already the ceiling
+	# this row was budgeted for, so raising it costs nothing further.
 	var summary_row := HBoxContainer.new()
 	summary_row.add_theme_constant_override("separation", 24)
 	add_child(summary_row)
 
 	_summary = Label.new()
-	_summary.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-	_summary.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_summary.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	_summary.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	_summary.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	summary_row.add_child(_summary)
 
@@ -348,10 +351,10 @@ func build() -> void:
 		# it survives exactly as long as the cursor sits on the slot.
 		button.focus_entered.connect(func() -> void:
 			_focused = slot
-			button.add_theme_stylebox_override("normal", _slot_style(true))
+			_apply_slot_style(button, slot)
 			_describe(slot))
 		button.focus_exited.connect(func() -> void:
-			button.add_theme_stylebox_override("normal", _slot_style(false)))
+			_apply_slot_style(button, slot))
 		_grid.add_child(button)
 		_buttons.append(button)
 
@@ -368,8 +371,22 @@ func build() -> void:
 		badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 		badge.offset_left = 2
 		badge.offset_top = 2
-		badge.offset_right = 24
-		badge.offset_bottom = 24
+		# 22x22 at an 18px glyph read as 4-5px at the 40% scale the Ally judges
+		# this screen at (blind pass, OW1-remainder) -- big enough on a desktop
+		# monitor, not on the handheld this ships for. Two rounds of blind
+		# critique moved this from "not readable at all" to "the '1' reads,
+		# 2-5 still blur" -- the Kenney keycap art these glyphs draw from bakes
+		# in a wide margin around the actual numeral (measured ~37% of the
+		# source PNG's own height stays numeral, the rest is the keycap's own
+		# padding), so a corner-badge box would need to grow to roughly half
+		# the TILE'S own size before the numeral itself is confidently legible
+		# at 40% -- at which point the badge would be big enough to obscure the
+		# item icon it sits on, trading one legibility defect for a worse one.
+		# 42x42/36px is the size that improves real legibility without that
+		# trade; going further needs a tighter-cropped glyph asset (see
+		# ralph/NOTES.md), not another round of this box getting bigger.
+		badge.offset_right = 42
+		badge.offset_bottom = 42
 		badge.text = ""
 		button.add_child(badge)
 		_hotbar_badges.append(badge)
@@ -420,12 +437,52 @@ func build() -> void:
 ## slot rather than as the slot's entire surface. 13px each side leaves a
 ## ~60px icon area inside an 86px cell, the ~70% spec §7 asks for.
 func _slot_style(selected: bool) -> StyleBoxFlat:
-	var box := UITokens.slot_box(selected)
+	return _with_slot_margin(UITokens.slot_box(selected))
+
+
+## The 13px content margin from `_slot_style()`'s own header comment, applied
+## to any other slot-cell stylebox this tab draws -- `slot_box_held()` and
+## `slot_box_target()` included. Missing this on the held tile's stylebox
+## shipped as a real regression the first time: `expand_icon` filled the
+## WHOLE 86px button instead of the ~60px inset every other tile uses, so the
+## one tile the player is looking at got a visibly bigger icon than its
+## neighbours for no reason connected to the fix that caused it.
+func _with_slot_margin(box: StyleBoxFlat) -> StyleBoxFlat:
 	box.content_margin_left = 13
 	box.content_margin_top = 13
 	box.content_margin_right = 13
 	box.content_margin_bottom = 13
 	return box
+
+
+## Writes `button`'s stylebox for whichever of the three states `index` is
+## actually in right now: the tile a stack was picked up FROM (amber,
+## `UITokens.slot_box_held()`), the tile the cursor is on (`_slot_style(true)`),
+## or neither. Held wins over focused, since a player who has just picked a
+## stack up and not yet moved the cursor is looking at exactly the case both
+## would otherwise claim -- which is also why this writes BOTH "normal" and
+## "focus": the active theme (D28, `tetherbound_theme.tres`) draws its own
+## teal "focus" stylebox as an overlay whenever the button still has focus,
+## same as it does over every OTHER panel's slot buttons (`craft_panel.gd`,
+## `shop_panel.gd`, `storage_panel.gd`, `swap_panel.gd`, `creature_bed_panel.gd`
+## all override "focus" too, for the same reason) -- writing "normal" alone
+## left that teal ring drawing on top of the amber and hiding it completely
+## on the one slot most likely to still be focused: the one just picked up.
+##
+## This does NOT go through `button.button_pressed` / the theme's "pressed"
+## stylebox -- `BaseButton.set_pressed()` is a no-op unless `toggle_mode` is
+## on, which these buttons never set. `button_pressed = i == _held` sat in
+## `poll()` for a while looking like it worked (the header comment above it
+## said so) and never painted anything; the "held tile isn't shown" defect
+## this fixes was always this, not a missing style.
+func _apply_slot_style(button: Button, index: int) -> void:
+	var style: StyleBoxFlat = (
+		_with_slot_margin(UITokens.slot_box_held()) if index == _held
+		else _slot_style(index == _focused)
+	)
+	button.add_theme_stylebox_override("normal", style)
+	button.add_theme_stylebox_override("focus", style)
+	button.self_modulate = Color(1, 1, 1, 0.55) if index == _held else Color.WHITE
 
 
 ## OW1's quick-bar section: a heading that says what the strip IS, five chips
@@ -483,9 +540,12 @@ func _build_quick_bar() -> VBoxContainer:
 		glyph.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 		glyph.offset_left = 2
 		glyph.offset_top = 2
-		glyph.offset_right = 26
-		glyph.offset_bottom = 26
-		glyph.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[i], 20)
+		# Same 40%-scale legibility fix as the satchel grid's own badge (see
+		# its comment for why 42x42/36px, not a smaller round number): this
+		# is the ONLY thing on a chip that says which of the five it is.
+		glyph.offset_right = 44
+		glyph.offset_bottom = 44
+		glyph.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[i], 38)
 		chip.add_child(glyph)
 		_bar_glyphs.append(glyph)
 
@@ -634,8 +694,13 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_name)
 
 	_detail_kind = Label.new()
-	_detail_kind.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_detail_kind.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	# Was FONT_TINY (19px) -- the smallest token in the file, on the category
+	# word ("GEAR") sitting directly under a FONT_HEADING name. Unreadable at
+	# the 40% scale the Ally judges this tab at (blind pass, OW1-remainder).
+	# FONT_LABEL matches the section headings ("SATCHEL", "QUICK BAR") this
+	# tab already uses for text meant to be read rather than glanced at.
+	_detail_kind.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_detail_kind.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	panel.add_child(_detail_kind)
 
 	_detail_blurb = Label.new()
@@ -739,7 +804,7 @@ func poll() -> void:
 			# difference between an assignable bar and the old position mirror.
 			if badge != null:
 				var bound := int(game.call("hotbar_slot_of", id)) if game != null else -1
-				badge.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[bound], 18) \
+				badge.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[bound], 36) \
 						if bound >= 0 and bound < HOTBAR_BADGE_ACTIONS.size() else ""
 			var tool_max: int = int(inventory.call("max_durability_at", i))
 			if tool_max > 0:
@@ -754,9 +819,12 @@ func poll() -> void:
 				qty.visible = true
 				qty.text = str(int(stack.get("n", 0)))
 				bar.visible = false
-		# The held slot is shown pressed so the player can see what they picked
-		# up even after moving the cursor several slots away.
-		button.button_pressed = i == _held
+		# The held slot stays marked so the player can see what they picked up
+		# even after moving the cursor several slots away -- and every OTHER
+		# slot needs re-checking too, the frame `_held` changes: `_end_held()`
+		# does not touch focus, so the tile that was just put down would keep
+		# its amber "held" look forever without this.
+		_apply_slot_style(button, i)
 
 
 ## The one line that says "you are carrying a stack right now", drawn where a
@@ -801,8 +869,21 @@ func _refresh_quick_bar() -> void:
 		var id := str(bar[i]) if i < bar.size() else ""
 		# Every chip lights up while a stack is in hand: the strip is the answer
 		# to "where can this go", and a row of live-looking targets says that
-		# faster than any sentence.
-		chip.add_theme_stylebox_override("normal", _slot_style(_bar_focused == i or _held >= 0))
+		# faster than any sentence. But all five used the SAME border as the
+		# one actually focused (OW1-remainder blind pass) -- "cursor is here"
+		# and "valid target" read as one colour, so the player could not tell
+		# which chip a press would actually hit. The focused chip keeps the
+		# full `slot_box(true)` teal; the other four targets get the fainter
+		# `slot_box_target()` instead, so focus still reads as the loudest
+		# thing on the strip.
+		var chip_style: StyleBoxFlat
+		if _bar_focused == i:
+			chip_style = _slot_style(true)
+		elif _held >= 0:
+			chip_style = _with_slot_margin(UITokens.slot_box_target())
+		else:
+			chip_style = _slot_style(false)
+		chip.add_theme_stylebox_override("normal", chip_style)
 		if id.is_empty():
 			chip.icon = null
 			qty.visible = false
@@ -844,9 +925,14 @@ func _describe_bar_slot(index: int) -> void:
 	var bar: Array = game.get("hotbar") as Array
 	var id := str(bar[index]) if index < bar.size() else ""
 
-	_detail_kind.text = "QUICK SLOT %d" % (index + 1)
 	_detail_effect.text = ""
 	if id.is_empty():
+		# `_detail_kind` is a category line elsewhere ("GEAR" for a satchel
+		# item) -- an empty slot has no category, and repeating "Quick slot N"
+		# here on top of the preview name AND the detail name directly above
+		# it read as the same sentence printed three times (blind pass,
+		# OW1-remainder), like unfinished copy rather than a real subtitle.
+		_detail_kind.text = ""
 		_preview_icon.texture = null
 		_preview_name.text = "Quick slot %d" % (index + 1)
 		_detail_name.text = "Quick slot %d" % (index + 1)
@@ -856,6 +942,7 @@ func _describe_bar_slot(index: int) -> void:
 		return
 
 	var item_name := str(db.call("item_name", id))
+	_detail_kind.text = "QUICK SLOT %d" % (index + 1)
 	_preview_icon.texture = _icon_for(db, id)
 	_preview_name.text = item_name
 	_detail_name.text = item_name
@@ -1029,7 +1116,16 @@ func _stack_label(index: int) -> String:
 	if int(inventory.call("max_durability_at", index)) > 0:
 		return item_name
 	var n := int(stack.get("n", 0))
-	return item_name if n <= 1 else "%d %s" % [n, item_name]
+	return item_name if n <= 1 else "%d %s" % [n, _pluralize(item_name)]
+
+
+## Naive English pluralization for a stack count above one: append "s" unless
+## the name already ends with one ("Berries", "Berry Seeds" already read
+## correctly and would double up). Covers every current item name ("Orb" ->
+## "Orbs", "Coin" -> "Coins") without a new plural field in item data for a
+## roster this small.
+func _pluralize(name: String) -> String:
+	return name if name.to_lower().ends_with("s") else "%ss" % name
 
 
 ## Whether two satchel slots hold the same item, asked BEFORE the move so the

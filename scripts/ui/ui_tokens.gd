@@ -172,6 +172,43 @@ static func slot_box(selected: bool = false) -> StyleBoxFlat:
 	return box
 
 
+## The tile a stack was picked up FROM, while it is in hand. Amber rather than
+## `slot_box(true)`'s teal — the same warning color `_held_banner` already
+## uses for "HOLDING" — so the source tile reads as a distinct state from an
+## ordinary focused tile, not as "also selected".
+static func slot_box_held() -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = BG_PANEL_ALT
+	box.corner_radius_top_left = RADIUS_SLOT
+	box.corner_radius_top_right = RADIUS_SLOT
+	box.corner_radius_bottom_left = RADIUS_SLOT
+	box.corner_radius_bottom_right = RADIUS_SLOT
+	box.border_color = WARNING
+	box.border_width_left = EDGE
+	box.border_width_right = EDGE
+	box.border_width_top = EDGE
+	box.border_width_bottom = EDGE
+	return box
+
+
+## A valid drop target while something is in hand, but not the one the cursor
+## is actually on — a fainter border than `slot_box(true)`'s so the one tile
+## that IS focused still reads as the loudest thing on screen.
+static func slot_box_target() -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = BG_PANEL_ALT
+	box.corner_radius_top_left = RADIUS_SLOT
+	box.corner_radius_top_right = RADIUS_SLOT
+	box.corner_radius_bottom_left = RADIUS_SLOT
+	box.corner_radius_bottom_right = RADIUS_SLOT
+	box.border_color = TEAL_SOFT
+	box.border_width_left = 1
+	box.border_width_right = 1
+	box.border_width_top = 1
+	box.border_width_bottom = 1
+	return box
+
+
 ## The warm/brass panel shape for build and craft surfaces.
 static func build_panel_box() -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
