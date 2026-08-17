@@ -615,9 +615,9 @@ func _dress_the_meadow() -> void:
 	if game != null and _vegetation.has_method("restore_from_game"):
 		_vegetation.call("restore_from_game", game)
 	var stats: Dictionary = _vegetation.call("stats")
-	print("[playground] scattered %d props in %d batches (%d harvestable, %d/%d collision resident)" % [
+	print("[playground] scattered %d props in %d batches (%d harvestable, %d already chopped, %d/%d collision resident)" % [
 		stats["instances"], stats["batches"], stats.get("harvest_points", 0),
-		stats.get("solid_resident", 0), stats.get("solid", 0)
+		stats.get("harvested_permanently", 0), stats.get("solid_resident", 0), stats.get("solid", 0)
 	])
 
 
