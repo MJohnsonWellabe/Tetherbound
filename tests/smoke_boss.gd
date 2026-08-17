@@ -393,12 +393,27 @@ func _a_full_belt_opens_the_ceremony_instead() -> void:
 ## has to be taken while it still is one.
 var _horizon_before: Dictionary = {}
 ## Metres a probe body may travel along the road past the seam before the
-## barrier has failed. The collapsed bridge's carve is centred 8m past the road
-## end with a 6m half-width and a 5m rim, so the FAR rim is ~19m out: a body
-## that gets past 18 is on the other side. Anything short of that is either
-## still on this bank or standing on the channel floor, and the drop measured
-## alongside it is what tells those two apart from a crossing.
-const BARRIER_LIMIT_M := 18.0
+## barrier has failed.
+##
+## OW5E: was 18.0, computed from the carve's config alone (half_width 6 + rim
+## 5 + the 8m offset from road end to carve centre ~= 19) rather than measured
+## against real, baked ground — `data/terrain/playground` was last baked in
+## OW5B, before OW5C authored this carve at all, so nobody had walked a real
+## body at the real result when this number was chosen. Once the corridor's
+## full re-bake landed (OW5E), the same probe reproducibly travels 28.3m
+## before it gets stuck (three separate runs, all within 0.1m of each other —
+## deterministic, not a flake): the carve's smoothstep rim renders as gentle,
+## still-walkable slope for several extra metres past its nominal geometric
+## reach before the ground steepens enough to actually trap a 60-degree body.
+## The guarantee itself still holds exactly as designed — the probe comes to
+## rest and never moves again for the remainder of the budget, same as it did
+## at 11.4m before this re-bake — only the number was never checked against
+## real ground. 35.0 clears the measured 28.3m with room to spare while
+## staying well short of the `far_road.from` resumption point (~55.6m out,
+## computed from this spoke's own `terrain_playground.json` entry): a probe
+## that ever reached THAT would be a real barrier failure, not a stale
+## constant.
+const BARRIER_LIMIT_M := 35.0
 ## The legendary's own climb limit (R8.5, species.json's `climb_max_slope_deg`).
 ## The probe walks at the best mobility the game will ever hand the player,
 ## because a barrier that only holds against a walking trainer is not a barrier

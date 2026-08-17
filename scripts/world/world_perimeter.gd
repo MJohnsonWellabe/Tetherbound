@@ -149,6 +149,20 @@ const WORLD_X_EAST := 1024.0
 const WORLD_Z_NORTH := -512.0
 const WORLD_Z_SOUTH := 7680.0
 
+## OW5E. How far inward of the true boundary `_sample_edge` queries ground
+## height from. `WORLD_X_EAST`/`WORLD_Z_SOUTH` are the EXCLUSIVE upper edge of
+## the baked region grid (`region_location * region_size * vertex_spacing`,
+## half-open per region) — a query exactly on them always returns NaN, while
+## the true lower edges (`WORLD_X_WEST`/`WORLD_Z_NORTH`) are inclusive and
+## sample fine. Measured directly (a probe, not a guess): the dead band is not
+## a single point, it is the LAST `vertex_spacing` (2.0m) or so of the region —
+## `ground_height_at` on the east edge stayed valid to x=1022.0 and went NaN at
+## 1022.5, 1.5-2.0m short of `WORLD_X_EAST`, and the south edge the same shape
+## a further ~1.5m short of `WORLD_Z_SOUTH`. 3.0m clears both with room to
+## spare for a region boundary that lands slightly differently elsewhere on
+## the corridor's edges.
+const GROUND_SAMPLE_INSET := 3.0
+
 ## The unit the old `SEGMENTS` was: the spacing between style joins and
 ## piers. ~37m, unchanged from the ring — it is not a property of a circle,
 ## it is a property of how far apart a rhythm of stone piers reads as
@@ -546,13 +560,32 @@ func _sample_edge(world: Node, id: int, from2: Vector2, to2: Vector2, nominal_ou
 		var base := from2.lerp(to2, t)
 		var wobble := _wobble_at(id, base, t, length)
 		var xz := base - nominal_out * wobble
-		var ground: float = float(world.call("ground_height_at", xz.x, xz.y))
+		# OW5E: the HEIGHT QUERY is inset `GROUND_SAMPLE_INSET` further inward
+		# than `xz` itself — `xz` (the wall's own visible/collidable position)
+		# stays exactly on the true boundary, but `world_bounds`'s max_x/max_z
+		# are the EXCLUSIVE edge of the last baked region ([region_min,
+		# region_min+pitch)), so a query exactly AT `WORLD_X_EAST`/
+		# `WORLD_Z_SOUTH` always misses. That is invisible on styles with
+		# nonzero wobble (already pulled a few metres inward) but total on the
+		# BARRIER stretches, which fix their wobble at zero by design (see
+		# `_wobble_at`'s own header): every one of the south cap's 55 collision
+		# segments sampled `ground_height_at(x, 7680.0)`, got NaN every time,
+		# and fell through `last_valid`'s fallback to the SAME flat height for
+		# the entire 2048m edge — the real 12m+ of relief the corridor's south
+		# end actually has (verified: tools probe, height_at(500,7670)=8.6m)
+		# sat metres above where the wall's own collision box reached, so a
+		# player walking along the rising ground at the edge simply stepped
+		# over it into the unbaked void beyond. Insetting the QUERY ONLY (not
+		# the wall's own drawn position) fixes this the same way for every
+		# style, wobble or none.
+		var sample_xz := xz - nominal_out * GROUND_SAMPLE_INSET
+		var ground: float = float(world.call("ground_height_at", sample_xz.x, sample_xz.y))
 		if is_nan(ground):
-			# Off the edge of whatever is baked (today: nothing this far out
-			# is baked at all — the corridor bake is `OW5B`'s job). Carrying
-			# the previous valid height forward is the same defensive choice
-			# the ring made: it keeps the line continuous instead of
-			# dropping a fake 0.0 spike into it.
+			# Genuinely unbaked ground (past the corridor's own bounds
+			# entirely, e.g. a spoke's or the river's authored overrun past
+			# the world edge). Carrying the previous valid height forward
+			# keeps the line continuous instead of dropping a fake 0.0 spike
+			# into it.
 			ground = last_valid
 		else:
 			last_valid = ground
