@@ -40,6 +40,12 @@ extends Node3D
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd")
+const BAKE := preload("res://scripts/world/scatter_bake.gd")
+
+## SCAT1: which bake this world's placements load from, in `data/scatter/<name>/`.
+## The playground is the only world with a bake; anything else falls back to
+## computing, same as a missing or stale bake does.
+const BAKE_WORLD_NAME := "playground"
 
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
@@ -145,7 +151,19 @@ func build(world_size: float, terrain: Node) -> void:
 	# `restore_drained()` for what puts them back and when.
 	_drained.clear()
 	_regrown = 0
-	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)), _drained)
+	# SCAT1: the placement pass is pure and offline-bakeable. A fresh bake turns
+	# load into a file read; a missing or stale one (older config, different
+	# seed) falls back to computing exactly as `all_placements` always has, so
+	# nothing depends on the bake existing. `is_fresh` compares a fingerprint of
+	# the live config, which is why the corridor re-bake (OW5B-E) does not need
+	# a matching scatter bake landed alongside it — an out-of-date bake is
+	# ignored, never used.
+	var base_seed := int(cfg.get("seed", 1))
+	var by_layer: Dictionary
+	if BAKE.is_fresh(BAKE_WORLD_NAME, base_seed):
+		by_layer = BAKE.load_all(BAKE_WORLD_NAME, _drained)
+	else:
+		by_layer = RULES.all_placements(field, world_size, base_seed, _drained)
 	_mark_harvestable(by_layer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should

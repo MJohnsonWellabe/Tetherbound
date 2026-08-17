@@ -126,6 +126,123 @@ const WORLD_Z_SOUTH_LIMIT := 7680.0 - EDGE_MARGIN
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
+## OF15: the owner reported movement getting WEDGED against geometry rather
+## than passing through -- a different shape of bug than falling through the
+## floor, which is everything above. Falling-through shows up as height loss;
+## a wedge shows up as the player holding an input, still grounded, and simply
+## not going anywhere -- snagged on a prop collider or a seam. Checked every
+## `STUCK_CHECK_INTERVAL` frames as distance moved since the last checkpoint;
+## `STUCK_MIN_PROGRESS` is well under the ~1.65m a clear 20-frame window covers
+## at the 5.0 m/s walk speed (data/config/movement.json), so a real climb or a
+## glancing brush off a rock will not trip it -- only a dead stop.
+## `STUCK_SUSTAIN_WINDOWS` requires three such windows running (~1s) before
+## logging, so a single frame of physics settling at a leg's start does not
+## count.
+##
+## This rides along the legs the sweep already walks and adds no frames of its
+## own, which is why it is worth having even though the wedge OF15 was filed
+## for turned out to be Captain Halder's capsule collider rather than terrain:
+## the next one will be found by something watching every leg, not by a
+## check aimed at the last cause.
+const STUCK_CHECK_INTERVAL := 20
+const STUCK_MIN_PROGRESS := 0.5
+const STUCK_SUSTAIN_WINDOWS := 3
+## Do not flag stalls within this far of a world edge: the perimeter stops the
+## player there ON PURPOSE, and `_check_perimeter` already proves it does.
+## OF15 wrote this as a 200m RADIUS, because the world was then a disc with a
+## ring fence at ~235m. The corridor has no centre and no ring -- distance from
+## the origin means nothing across 8192x2048m -- so the same intent is a margin
+## measured from whichever edge is nearest.
+const STUCK_EDGE_MARGIN := 60.0
+## Nor flag a stall against ground the player is not ALLOWED to climb. A face
+## steeper than the controller's `floor_max_angle` (45 degrees) stops a walk on
+## purpose, and from inside the walk loop that is indistinguishable from a
+## wedge: input held, still grounded, going nowhere.
+##
+## OF15 did not need this — under the old 512m disc its interior was gentle and
+## the only deliberate stop was the ring fence, which its radius exclusion
+## covered. The corridor is built out of authored rises, gorge rims and spoke
+## carves whose whole job is to be unclimbable, so without this the check fires
+## on correct terrain. Verified at the first place it fired, ~(62, -105): the
+## ground climbs 0.0 -> 2.6 -> 7.1m over 8m eastward (~48 degrees), a shape
+## query there finds Terrain3D and no prop at all, and the player walks away
+## west unobstructed. That is the meadow working.
+##
+## Sampled at two radii, not one. `slope_degrees_at` on the exact spot reads the
+## gentle ground the player is STANDING on (8.8 degrees where this fired), and a
+## single 4m ring still misses a face that begins just past it — measured at the
+## same spot, the ground runs 0.22 -> 0.15m out to 4m east and only then climbs
+## to 4.50m by 8m (~47 degrees). Both rings are needed; either alone lets a real
+## rise through as a false wedge.
+const STUCK_SLOPE_PROBE_M: Array[float] = [4.0, 8.0]
+const STUCK_MAX_WALKABLE_DEG := 45.0
+
+
+## True when any ground near `pos` is too steep for the player to climb, i.e.
+## something is legitimately in the way rather than snagging them.
+func _blocked_by_unclimbable_ground(field: RefCounted, pos: Vector3) -> bool:
+	for radius: float in STUCK_SLOPE_PROBE_M:
+		for offset in [
+			Vector2(radius, 0.0), Vector2(-radius, 0.0),
+			Vector2(0.0, radius), Vector2(0.0, -radius),
+		]:
+			var slope: float = field.slope_degrees_at(pos.x + offset.x, pos.z + offset.y)
+			if not is_nan(slope) and slope > STUCK_MAX_WALKABLE_DEG:
+				return true
+	return false
+
+
+## One tracker per concurrent walk. Returned as a Dictionary rather than a
+## class because SceneTree test scripts here do not otherwise define inner
+## classes (see `_check_gated_crossing` etc.) and this is the smallest
+## consistent addition.
+func _new_stuck_tracker() -> Dictionary:
+	return {
+		"checkpoint": Vector3.ZERO,
+		"window_frames": 0,
+		"stalled_windows": 0,
+		"stuck": false,
+	}
+
+
+## True when this position is close enough to a world edge that the perimeter,
+## not a wedge, is the likely reason a walk stopped.
+func _near_world_edge(pos: Vector3) -> bool:
+	return pos.x - WORLD_X_WEST < STUCK_EDGE_MARGIN \
+		or WORLD_X_EAST - pos.x < STUCK_EDGE_MARGIN \
+		or pos.z - WORLD_Z_NORTH < STUCK_EDGE_MARGIN \
+		or WORLD_Z_SOUTH - pos.z < STUCK_EDGE_MARGIN
+
+
+## Call once per physics frame from inside a walk loop. Appends to
+## `stuck_log` the first time a stall crosses the sustain threshold; prints
+## when it releases so the log reads as episodes, not a spam of frames.
+func _stuck_tick(tracker: Dictionary, field: RefCounted, pos: Vector3, grounded: bool, label: String, stuck_log: Array) -> void:
+	if tracker["window_frames"] == 0:
+		tracker["checkpoint"] = pos
+	tracker["window_frames"] = int(tracker["window_frames"]) + 1
+	if int(tracker["window_frames"]) < STUCK_CHECK_INTERVAL:
+		return
+	tracker["window_frames"] = 0
+
+	var checkpoint: Vector3 = tracker["checkpoint"]
+	var moved := Vector2(pos.x, pos.z).distance_to(Vector2(checkpoint.x, checkpoint.z))
+
+	if grounded and moved < STUCK_MIN_PROGRESS and not _near_world_edge(pos) \
+			and not _blocked_by_unclimbable_ground(field, pos):
+		tracker["stalled_windows"] = int(tracker["stalled_windows"]) + 1
+		if int(tracker["stalled_windows"]) >= STUCK_SUSTAIN_WINDOWS and not bool(tracker["stuck"]):
+			tracker["stuck"] = true
+			print("  STUCK: %-14s wedged near %.1f, %.1f, %.1f (moved %.2fm over the last %.1fs)" % [
+				label, pos.x, pos.y, pos.z, moved, STUCK_CHECK_INTERVAL * STUCK_SUSTAIN_WINDOWS / 60.0
+			])
+			stuck_log.append({"label": label, "pos": pos})
+	else:
+		if bool(tracker["stuck"]):
+			print("  ...%-14s freed near %.1f, %.1f, %.1f" % [label, pos.x, pos.y, pos.z])
+		tracker["stalled_windows"] = 0
+		tracker["stuck"] = false
+
 
 func _init() -> void:
 	_run()
@@ -201,12 +318,21 @@ func _run() -> void:
 	var worst_drop := 0.0
 	## Deepest the player ever got BELOW the terrain surface under them.
 	var below := 0.0
+	## OF15: every place a leg below logged a sustained wedge. Reported in
+	## full at the end regardless of pass/fail so a location survives even
+	## when nothing else about the run looks wrong.
+	var stuck_positions: Array = []
+	## OF15's slope exclusion reads the same analytic heightfield the bake was
+	## made from, so it costs no physics query per frame.
+	var stuck_field: RefCounted = HEIGHTFIELD.new()
 
 	for direction in ["move_forward", "move_right", "move_back", "move_left"]:
 		Input.action_press(direction)
+		var stuck_tracker := _new_stuck_tracker()
 		for i in LEG_FRAMES:
 			await physics_frame
 			var pos := player.global_position
+			_stuck_tick(stuck_tracker, stuck_field, pos, player.is_on_floor(), direction, stuck_positions)
 			furthest = maxf(furthest, Vector2(pos.x, pos.z).length())
 			lowest = minf(lowest, pos.y)
 
@@ -300,6 +426,14 @@ func _run() -> void:
 	await _check_village_doors(world, failures)
 
 	print("")
+	if not stuck_positions.is_empty():
+		var coords: Array[String] = []
+		for entry: Dictionary in stuck_positions:
+			var pos: Vector3 = entry["pos"]
+			coords.append("%s at (%.0f, %.0f)" % [entry["label"], pos.x, pos.z])
+		failures.append("player got wedged (held an input, stayed grounded, moved under %.1fm for %.1fs+) at %d spot(s): %s" % [
+			STUCK_MIN_PROGRESS, STUCK_CHECK_INTERVAL * STUCK_SUSTAIN_WINDOWS / 60.0, stuck_positions.size(), ", ".join(coords)
+		])
 	if failures.is_empty():
 		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, and every village house door starts shut, blocks the doorway, and opens on interact into a real room.")
 		quit(0)

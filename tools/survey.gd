@@ -188,6 +188,25 @@ func _run() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
+	# Terrain3D has to be told about this camera too. `make_current()` only
+	# changes what the viewport renders from; Terrain3D streams its regions —
+	# and, since OW5, builds its COLLISION — around whichever camera it was
+	# handed, which is still the frozen gameplay rig near spawn.
+	#
+	# Left unsaid, this survey moves its viewpoint and teleports the trainer far
+	# away while the collision bubble stays pinned where the player spawned. It
+	# worked while the world was 512m and a 256m radius happened to cover most
+	# of it — the exact "it passed because nothing left the bubble" condition
+	# that made the original fall-through bug invisible. The corridor is
+	# 8192x2048m (OW5B-E), so that coincidence is gone and this is now load
+	# bearing for every survey frame.
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
+	else:
+		failures.append("no Terrain node with set_camera; region streaming and " +
+			"collision are following the frozen gameplay rig, not these viewpoints")
+
 	for entry: Variant in VIEWPOINTS:
 		var view: Dictionary = entry
 		var name: String = str(view["name"])
