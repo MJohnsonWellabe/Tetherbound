@@ -138,6 +138,24 @@ var _stuck_check_pos: Vector3 = Vector3.ZERO
 const UNSTICK_AFTER_FRAMES := 20  # ~0.33s at 60Hz — long enough not to trigger on normal accel ramp-up
 const UNSTICK_STEER_RAD := 1.3  # ~75 degrees off the direct line, enough to clear most single-prop snags
 
+## `verify-aggression`, 2026-08-17: the steer-only escape above does not clear
+## every snag. Caught directly with `velocity`/`is_on_wall()` on a live failing
+## run: `is_on_wall() == true`, `velocity == (0,0,0)`, `stuck_frames` climbing
+## past 800 while the steer alternated sides every 30 frames the whole time —
+## the collision response was cancelling ALL horizontal movement regardless of
+## the requested angle, at ordinary walkable ground (same shape of false
+## `Terrain3D` wall this test's own header documents for the PLAYER's walk near
+## this same slope). Steering direction cannot fix a block that is not
+## direction-dependent. After a full steer cycle has had a real chance (both
+## sides, several times over) and still made zero net progress, nudge the body
+## directly past the false contact — bypassing `move_and_slide`'s collision
+## response for one frame — rather than let it sit dead for the rest of the
+## chase. Small enough not to skip past the player or through real geometry;
+## only fires this rarely, so a slight visual pop on the very rare stuck frame
+## is a fair trade against a chase that silently never arrives.
+const HARD_UNSTICK_AFTER_FRAMES := 140  # ~2.3s of steering tried and failed
+const HARD_UNSTICK_NUDGE := 0.35  # metres
+
 func _tick_aggression(delta: float) -> bool:
 	if _player == null or not is_alive():
 		_stuck_frames = 0
@@ -206,6 +224,11 @@ func _tick_aggression(delta: float) -> bool:
 			var phase := int((_stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
 			var side := _side_sign if phase == 0 else -_side_sign
 			chase_dir = chase_dir.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
+
+			if _stuck_frames > HARD_UNSTICK_AFTER_FRAMES:
+				global_position += chase_dir * HARD_UNSTICK_NUDGE
+				_stuck_frames = 0
+				_stuck_check_pos = global_position
 
 		request_move(chase_dir, float(_aggro_cfg.get("chase_speed", 3.4)))
 		return true
