@@ -2584,6 +2584,7 @@
       {
         "id": "band3_the_river_lock",
         "label": "The River Lock",
+        "_comment_spine_route": "SPINE-ROUTE. The two Old Mill Crossing waypoints were at x=-150; OW5C's WALL1 seam workaround nudged the crossing's own deck centreline to x=-152 (crossings[old_mill_crossing].road/channel) but never moved the spine that crosses it, leaving 11m of this leg ((-150,4198)-(-150,4208)) inside the river's CarveFailsafe recovery volume 2m east of the deck -- RIVER-GATE measured it, this closes it. Both waypoints moved to x=-152 to sit on the deck's real centreline. Do NOT re-nudge the crossing itself; -152 is a measured seam-avoidance position pinned by tests/test_river_crossings_stay_open.gd.",
         "points": [
           [
             0,
@@ -2626,11 +2627,11 @@
             4060
           ],
           [
-            -150,
+            -152,
             4170
           ],
           [
-            -150,
+            -152,
             4235
           ],
           [
