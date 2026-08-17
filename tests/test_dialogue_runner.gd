@@ -277,18 +277,26 @@ func test_the_follow_up_conversation_writes_the_orb_recipe_flag() -> void:
 		"'%s' should set '%s'" % [ORBS_CONVERSATION, RECIPE_FLAG])
 
 
-## OF24 owns the visible carried torch; OF30 owns the words that hand it over.
-## There is deliberately no torch ITEM, so a `give:torch` here would name
-## something items.json does not define and vanish.
-func test_the_torch_is_handed_over_in_words_and_not_as_an_item() -> void:
+## OF30 wrote the words that hand a torch over here, at a time when there was
+## no torch ITEM to actually give -- OF24's torch was an always-on kit
+## fixture, not satchel inventory, so a `give:torch` would have named
+## something items.json did not define and vanished. OW12 (2026-08-16) made
+## the torch a real item (items.json's `torch`, `kind: "tool"`) and, in the
+## same shipping pass (docs/decisions/D53's own "gap that got closed"
+## section), wired `give:torch:1` onto this very line -- a torch that could
+## never actually reach the satchel would have made the whole feature
+## unreachable, since nothing else in the game hands one out and
+## `playground_hud.gd::_arm_torch_placement` refuses to equip one that is not
+## there. This test now asserts the opposite of what it used to: the words
+## AND the item both, on the same line.
+func test_the_torch_is_handed_over_in_words_and_as_an_item() -> void:
 	var joined := ""
 	for raw: Variant in ((RUNNER.table().get(TOOLS_CONVERSATION, {}) as Dictionary).get("lines", []) as Array):
 		joined += str(raw) if not raw is Dictionary else str((raw as Dictionary).get("text", ""))
 	assert_true(joined.to_lower().contains("torch"),
 		"Tam's handover never mentions the torch the owner asked for")
-	for effect: String in _effects_of(TOOLS_CONVERSATION):
-		assert_false(effect.begins_with("give:torch"),
-			"there is no torch item; OF24 owns the carried torch itself")
+	assert_true(_effects_of(TOOLS_CONVERSATION).has("give:torch:1"),
+		"Tam speaks of a torch but never hands one over; it would be permanently unreachable")
 
 
 ## Every `flag:` effect anywhere in the dialogue table has to be a usable flag

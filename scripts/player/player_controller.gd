@@ -21,8 +21,9 @@ signal landed(impact_speed: float, damage: float)
 signal died()
 
 var vitals: RefCounted = VITALS.new()
-## Carried from the first frame (scripts/player/torch.gd's own header
-## explains why this is not an inventory item). Exposed the same way
+## The torch's light (scripts/player/torch.gd) -- built here from the first
+## frame like `tool_hold` below, but only actually lit while `torch` is the
+## equipped tool (OW12; see that file's own header). Exposed the same way
 ## `vitals` is, so the HUD can read `torch.is_on()` without reaching past
 ## this node.
 var torch: Node3D = null

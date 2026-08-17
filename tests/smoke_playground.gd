@@ -300,11 +300,17 @@ func _the_hotbar_heals_a_creature(world: Node) -> Array[String]:
 ## carry around to light the way" -- `scripts/player/torch.gd` had been an
 ## invisible SpotLight since R0.11, and no test ever would have caught that
 ## a lit torch drew nothing, because none checked for a visible PROP, only
-## the light's own boolean state. Toggles the real torch action (at most
-## twice: once to flip it on if it happened to spawn unlit, once more is
-## never reached once `is_on()` reads true) and asserts the prop node this
-## pass added (`torch.prop_node()`) actually exists and is visible -- a light
-## with no prop behind it would pass every check that came before this one.
+## the light's own boolean state. OW12 (2026-08-16) made the torch a real
+## satchel item, `kind: "tool"`, and the light now stays dark unless it is
+## the equipped tool -- see torch.gd's own header -- so this granted one and
+## equipped it directly (the same shortcut `_the_hotbar_heals_a_creature`
+## above takes for its potion) rather than routing through a village
+## conversation nothing hands one over from yet. Toggles the real torch
+## action (at most twice: once to flip it on if it happened to spawn unlit,
+## once more is never reached once `is_on()` reads true) and asserts the
+## prop node this pass added (`torch.prop_node()`) actually exists and is
+## visible -- a light with no prop behind it would pass every check that
+## came before this one.
 func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 	var found: Array[String] = []
 	var player: Node = world.get_node_or_null(^"Player")
@@ -313,6 +319,15 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 	var torch: Node = player.get("torch")
 	if torch == null:
 		return ["Player has no torch (scripts/player/torch.gd did not attach)"] as Array[String]
+
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot equip the torch to check it"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory; cannot equip the torch to check it"] as Array[String]
+	inventory.call("add", "torch", 1)
+	game.set("equipped_tool", "torch")
 
 	for attempt in 2:
 		if bool(torch.call("is_on")):
@@ -338,8 +353,8 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 	else:
 		print("torch lit: visible prop '%s' present" % prop.name)
 
-	# Leave the torch off so nothing after this in the run (or a future check
-	# added after this one) inherits a torch this check lit.
+	# Leave the torch off and unequipped so nothing after this in the run (or a
+	# future check added after this one) inherits a torch this check lit.
 	if bool(torch.call("is_on")):
 		Input.action_press(&"torch_toggle")
 		await physics_frame
@@ -347,6 +362,7 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 		Input.action_release(&"torch_toggle")
 		for i in 4:
 			await physics_frame
+	game.set("equipped_tool", "")
 	return found
 
 

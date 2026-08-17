@@ -144,9 +144,12 @@ const GLYPHS := {
 	## OF21 input groundwork, wired for real by OF24: `playground_hud.gd`'s
 	## `_read_world_hotkeys()` reads both straight from the world -- `build_open`
 	## opens the build menu without a trip through the pause menu first, and
-	## `torch_place` arms the free ground torch directly, the same "wired
-	## ahead of a caller" pattern `build_place`/`build_cancel` used above,
-	## finally given its caller.
+	## `torch_place` drew or stowed a free ground torch directly, the same
+	## "wired ahead of a caller" pattern `build_place`/`build_cancel` used
+	## above, finally given its caller. OW12 retired the ground torch;
+	## `torch_place` now equips/stows the carried torch tool instead
+	## (`playground_hud.gd::_arm_torch_placement`), same button, same
+	## everything below.
 	##
 	## `build_open` sits on gamepad Start/Menu (button 6), freed up by
 	## `torch_toggle`'s move off it above -- Start's only other reader,

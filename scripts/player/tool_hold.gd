@@ -25,15 +25,17 @@ extends Node3D
 ## second way to ask, alongside the interact prompt, which stays exactly as it
 ## was for players who prefer it.
 ##
-## ## Why the props are bone-attached the way the torch is
+## ## Why the props are bone-attached the way they are
 ##
-## `scripts/player/torch.gd::_build_visible_prop()` already solved "put a thing
-## in the trainer's hand" -- find `Model`'s `Skeleton3D`, hang a
-## `BoneAttachment3D` off the named bone, parent the prop to it, and fall back
-## to a plain offset from the body when the rig has no such bone (a capsule
-## stand-in, a bare test scene). This follows that pattern rather than
-## inventing a second one, down to the fallback, because the fallback is what
-## keeps the headless smoke tests able to run this at all.
+## Find `Model`'s `Skeleton3D`, hang a `BoneAttachment3D` off the named bone,
+## parent the prop to it, and fall back to a plain offset from the body when
+## the rig has no such bone (a capsule stand-in, a bare test scene). Kept as
+## the ONE hand-attachment system in the game, deliberately -- OW12
+## (2026-08-16) retired `scripts/player/torch.gd`'s own earlier copy of this
+## same code so the torch's mesh reaches the hand through here too, rather
+## than maintaining two versions of "put a thing in the trainer's hand".
+## `torch.gd` now only owns the light, synced each frame to wherever this
+## node's own `prop_node()` says the mesh actually is.
 ##
 ## The meshes are the ones already vendored for the village work area
 ## (`Axe_Bronze`, `Pickaxe_Bronze`, `Knife`) -- D24's "one prop family", no new
@@ -43,9 +45,8 @@ extends Node3D
 
 const HAND_BONE := "Hand.R"
 ## Bones to try, in order, for the hand the prop hangs off. Rigs in this project
-## have come from more than one source and do not agree on a name; the torch
-## settled for "Hips" precisely because it never needed a hand. Falls through to
-## the body offset if none of these exist.
+## have come from more than one source and do not agree on a name. Falls
+## through to the body offset if none of these exist.
 const HAND_BONE_CANDIDATES := ["Hand.R", "hand.R", "RightHand", "mixamorig:RightHand", "Hips"]
 
 ## How far in front of the trainer a swing reaches, and how wide the arc is.
@@ -91,6 +92,17 @@ func is_swinging() -> bool:
 
 func equipped() -> String:
 	return _equipped
+
+
+## The prop currently bone-attached to the trainer's hand, or null when
+## nothing is equipped or the equipped item carries no `held_model` (the
+## fishing rod). Public so a sibling system that needs to know "what mesh is
+## actually in the hand right now" -- `scripts/player/torch.gd`, whose own
+## light has to find the torch prop without a second hand-attachment system
+## of its own -- and a smoke test can both ask without reaching past this
+## node into a private field.
+func prop_node() -> Node3D:
+	return _prop
 
 
 ## Begin a swing. Refused (returns false) with nothing in hand or with one

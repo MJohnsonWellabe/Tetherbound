@@ -1334,20 +1334,23 @@ func _use_hotbar_slot(slot_index: int) -> void:
 	_show_hotbar_message("%s recovers %d." % [str(heal_target.call("label")), int(restored)])
 
 
-## OF24: the hammer and torch-place hotkeys, read straight from the world --
-## `build_open` (gamepad Start / keyboard B) opens the build menu without a
-## trip through the pause menu's Build tab first; `torch_place` (RT /
-## keyboard P) arms the free ground torch directly, the same hand-off
-## `build_menu.gd::_pick` does for anything chosen off its grid. Gated the
-## same way `_read_hotbar_input` gates the hotbar: silent during a fight, and
-## (new here) silent while the interaction arbiter is asleep -- a
-## conversation, a naming prompt or a fade owns the screen exactly when that
-## flag goes false (`sequence_director.gd::_refresh_lockout`), and a hammer
-## opening over a dialogue box is the same class of bug OF23 fixed for a
-## refused build pick. Neither reads while the build menu is already open --
-## `build_open` because a second press should not fight the first one's
-## `open()`, `torch_place` because arming a placement UNDER an open menu
-## makes no sense to the player.
+## OF24 originally gave `build_open` (gamepad Start / keyboard B, opens the
+## build menu without a trip through the pause menu's Build tab first) and
+## `torch_place` (RT / keyboard P) the same job: read straight from the
+## world and hand off to `build_menu.gd::_pick`'s own arming, `torch_place`
+## planting a free ground torch directly. OW12 retired that ground torch
+## (data/items/buildables.json), so `torch_place` now does the OTHER thing
+## the owner asked for -- a fast draw/stow for the carried torch tool without
+## hunting the hotbar for whichever slot it landed on (`_arm_torch_placement`
+## below, despite the name it kept). Gated the same way `_read_hotbar_input`
+## gates the hotbar: silent during a fight, and (new here) silent while the
+## interaction arbiter is asleep -- a conversation, a naming prompt or a fade
+## owns the screen exactly when that flag goes false
+## (`sequence_director.gd::_refresh_lockout`), and a hammer opening over a
+## dialogue box is the same class of bug OF23 fixed for a refused build pick.
+## Neither reads while the build menu is already open -- `build_open` because
+## a second press should not fight the first one's `open()`, `torch_place`
+## because equipping UNDER an open menu makes no sense to the player either.
 func _read_world_hotkeys() -> void:
 	if not _world_input_allowed():
 		return
@@ -1432,12 +1435,6 @@ func _build_menu_is_open() -> bool:
 	return false
 
 
-## Arms `pending_build = "torch"` the same way `build_menu.gd::_pick` arms
-## whatever the player picked off its grid (~L477-478) -- `can_afford` is
-## checked for the same reason `_pick` checks it (OF23: a refused arm needs
-## to SAY so, not just do nothing), even though the torch's own `cost: []`
-## means this refusal path is dead today; free build or a future costed
-## torch both still go through the same one check.
 ## Swing the equipped tool at whatever is in front of the trainer.
 ##
 ## The refusal is deliberately spoken rather than silent. The 2026-08-15 blind
@@ -1458,15 +1455,29 @@ func _swing_equipped_tool() -> void:
 	hold.call("swing")
 
 
+## OW12: the torch is a satchel item now (items.json's `torch`, `kind:
+## "tool"`), equipped exactly the way `_use_hotbar_slot()` equips any other
+## tool -- toggle off if it is already in hand, otherwise on. This function
+## kept its old name and its old input (RT / keyboard P) rather than gaining
+## a new hotkey action, since the button's whole point (a fast reach for the
+## torch without hunting the hotbar) survives the swap from "arm a ground
+## placement" to "equip the carried one" unchanged.
 func _arm_torch_placement() -> void:
 	if _game == null:
 		return
-	if not bool(_game.call("can_afford", "torch")):
+	var inventory: RefCounted = _game.get("inventory")
+	if inventory == null or int(inventory.call("find_slot", "torch")) < 0:
 		AUDIO_CUES.play(&"ui_error")
-		_show_hotbar_message("Can't place a torch right now.")
+		_show_hotbar_message("No torch in the satchel.")
 		return
+	if str(_game.get("equipped_tool")) == "torch":
+		_game.set("equipped_tool", "")
+		AUDIO_CUES.play(&"ui_accept")
+		_show_hotbar_message("Put the torch away.")
+		return
+	_game.set("equipped_tool", "torch")
 	AUDIO_CUES.play(&"ui_accept")
-	_game.set("pending_build", "torch")
+	_show_hotbar_message("Torch in hand.")
 
 
 ## OF20. Polls `Game`'s one-shot toast queue (`take_pending_world_message()`)

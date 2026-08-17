@@ -128,13 +128,16 @@ func test_the_menu_scene_loads_and_is_a_canvas_layer() -> void:
 	assert_eq(state.get_node_type(0), "CanvasLayer")
 
 
-## OF24: `torch` is DELIBERATELY free -- explicit owner directive ("Torch
-## building should be free"), recorded with its own `_comment_free` right in
-## data/items/buildables.json next to the empty `cost: []` this guard would
-## otherwise flag. Every other id still has to cost something; an empty cost
-## array anywhere else is still almost certainly a typo, which is the whole
-## reason this guard exists.
-const INTENTIONALLY_FREE_IDS := ["torch"]
+## OF24 made `torch` DELIBERATELY free -- explicit owner directive ("Torch
+## building should be free"). OW12 retired the buildable entirely (the torch
+## is now a carried inventory item, not a build-menu piece -- see
+## data/items/buildables.json's own `_comment_free` retirement note), so there
+## is nothing left in `buildables.json` for this list to name. Kept as an
+## empty, typed list rather than deleted so a future free buildable has a
+## documented place to go, and every id still has to cost something in the
+## meantime -- an empty cost array is still almost certainly a typo, which is
+## the whole reason this guard exists.
+const INTENTIONALLY_FREE_IDS: Array[String] = []
 
 
 func test_every_buildable_costs_items_that_exist() -> void:
