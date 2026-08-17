@@ -13,9 +13,11 @@ extends RefCounted
 ##
 ## Discovery is permanent: fog cells and landmarks only ever move from
 ## hidden to revealed, never back. A `PackedByteArray` rather than a
-## `Dictionary` of cells because the grid is fixed-size and dense enough
-## (128x128 = 16384 cells) that a byte array is both the cheaper storage and
-## the format the eventual fog texture wants anyway.
+## `Dictionary` of cells because the grid is fixed-size (today 128x128 =
+## 16384 cells, derived from `terrain_playground.json` — see `grid_x()`/
+## `grid_z()` below, `docs/MEADOWS_MACRO_LAYOUT.md` §8.6) and dense enough
+## that a byte array is both the cheaper storage and the format the eventual
+## fog texture wants anyway.
 ##
 ## `revision` is the same polling idiom as autoload/party.gd and
 ## autoload/inventory.gd: the minimap and full map UI read this once a
@@ -25,9 +27,57 @@ extends RefCounted
 ## Pure logic, no `Node`, no transform — testable headlessly the same way
 ## party.gd and inventory.gd are (tests/test_map_state.gd).
 
-const GRID := 128
+## Tunable. `docs/MEADOWS_MACRO_LAYOUT.md` §8.6a recommends 16.0 for the
+## corridor world (§8.6a's own math: 1 MB/save at CELL 4.0 over 8192x2048m vs
+## 65 KB at 16.0, for a reveal radius that is already 3 cells wide either
+## way) — that is a recommendation for whoever lands the corridor config, not
+## a measurement, so this stays 4.0 until then.
 const CELL := 4.0
-const ORIGIN := Vector2(-256.0, -256.0)
+const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
+
+## `GRID`/`ORIGIN` used to be hard-coded consts assuming a ±256m square world
+## (`docs/decisions/D33` said so explicitly). `docs/MEADOWS_MACRO_LAYOUT.md`
+## §8.6 names this file as the one place that hard-coded assumption gets
+## WRITTEN TO THE SAVE FILE — `save_data()`'s `visited_b64` below — so it is
+## the one map-system file where a silent constant edit is a save-format
+## change, not just a code change (§8.6a). `grid_x()`/`grid_z()`/`origin()`
+## derive the grid from `terrain_playground.json` instead, lazily and cached
+## (same pattern as `scripts/combat/catch_math.gd`'s `_config`), so today's
+## still-512m world produces the exact same 128x128 grid over ±256m these
+## consts used to hard-code, byte for byte — and the day the corridor config
+## lands, this is a data change, not another hunt through this file.
+static var _grid_x := -1
+static var _grid_z := -1
+static var _origin := Vector2.ZERO
+
+
+static func _ensure_extent() -> void:
+	if _grid_x > 0:
+		return
+	var bounds: Dictionary = WORLD_EXTENT.bounds()
+	var min_x: float = float(bounds.get("min_x", 0.0))
+	var min_z: float = float(bounds.get("min_z", 0.0))
+	_origin = Vector2(min_x, min_z)
+	# ceil, not round/floor: a world extent that is not an exact multiple of
+	# CELL must still be fully covered, never clipped short at the far edge.
+	_grid_x = maxi(1, int(ceil((float(bounds.get("max_x", 0.0)) - min_x) / CELL)))
+	_grid_z = maxi(1, int(ceil((float(bounds.get("max_z", 0.0)) - min_z) / CELL)))
+
+
+static func grid_x() -> int:
+	_ensure_extent()
+	return _grid_x
+
+
+static func grid_z() -> int:
+	_ensure_extent()
+	return _grid_z
+
+
+static func origin() -> Vector2:
+	_ensure_extent()
+	return _origin
+
 
 ## Polled by the minimap and full map. Bumped on any visible change: a newly
 ## revealed cell, a landmark discovery, or a dynamic marker add/remove.
@@ -86,7 +136,7 @@ func configure(config: Dictionary) -> void:
 	minimap_span_m = float(config.get("minimap_span_m", 90.0))
 
 	_visited = PackedByteArray()
-	_visited.resize(GRID * GRID)
+	_visited.resize(grid_x() * grid_z())
 	_visited.fill(0)
 	_visited_count = 0
 
@@ -230,25 +280,36 @@ func regions() -> Array[Dictionary]:
 
 
 func discovered_fraction() -> float:
-	var total := GRID * GRID
+	var total := grid_x() * grid_z()
 	if total <= 0:
 		return 0.0
 	return float(_visited_count) / float(total)
 
 
-func cell_grid_size() -> int:
-	return GRID
+## Rectangular, not square, per §8.6a — a caller building a fog texture
+## (`minimap.gd`, `tab_map.gd`) needs both dimensions, not one shared side.
+func cell_grid_x() -> int:
+	return grid_x()
+
+
+func cell_grid_z() -> int:
+	return grid_z()
+
+
+func cell_size() -> float:
+	return CELL
 
 
 func cell_at(ix: int, iz: int) -> bool:
-	if ix < 0 or iz < 0 or ix >= GRID or iz >= GRID:
+	if ix < 0 or iz < 0 or ix >= grid_x() or iz >= grid_z():
 		return false
-	return _visited[iz * GRID + ix] == 1
+	return _visited[iz * grid_x() + ix] == 1
 
 
 func world_to_cell(world_pos: Vector3) -> Vector2i:
-	var ix := int(floor((world_pos.x - ORIGIN.x) / CELL))
-	var iz := int(floor((world_pos.z - ORIGIN.y) / CELL))
+	var o := origin()
+	var ix := int(floor((world_pos.x - o.x) / CELL))
+	var iz := int(floor((world_pos.z - o.y) / CELL))
 	return Vector2i(ix, iz)
 
 
@@ -337,14 +398,29 @@ func objective_marker() -> Dictionary:
 ## Compact and versionless — the save system wraps this in its own slot
 ## format and version number, the same way it already owns party/inventory
 ## serialization; this class only knows how to describe its own state.
+##
+## `grid_x`/`grid_z`/`cell`/`origin_x`/`origin_z` are new — §8.6a's EXPLICIT
+## GRID DESCRIPTOR, added because the byte-length check alone cannot catch
+## the dangerous case: `CELL` or the world's bounds changing while
+## `GRID_X * GRID_Z` happens to stay the same length, which would otherwise
+## load, pass the length check, and silently reveal an arbitrary pattern of
+## the WRONG ground as already-explored. A save written by a build old
+## enough to predate this field carries none of it; `load_data()` below
+## falls back to the pre-existing length-only check for exactly that case.
 func save_data() -> Dictionary:
 	var markers: Array = []
 	for id: String in _dynamic.keys():
 		var marker: Dictionary = _dynamic[id]
 		var pos: Vector2 = marker.get("position", Vector2.ZERO)
 		markers.append({"id": id, "icon": marker.get("icon", ""), "position": [pos.x, pos.y]})
+	var o := origin()
 	return {
 		"visited_b64": Marshalls.raw_to_base64(_visited),
+		"grid_x": grid_x(),
+		"grid_z": grid_z(),
+		"cell": CELL,
+		"origin_x": o.x,
+		"origin_z": o.y,
 		"landmarks": _discovered.keys(),
 		"dynamic_markers": markers,
 		"regions": _discovered_regions.keys(),
@@ -353,10 +429,22 @@ func save_data() -> Dictionary:
 
 ## Tolerant of missing keys — `load_data({})` is a working fresh state, the
 ## same contract save_game.gd already relies on for parties and satchels
-## that predate a field. A `visited_b64` of the wrong length (corrupted save,
-## grid dimensions changed under it) is not trusted: it is discarded with a
-## warning and the fresh, fully-hidden grid is kept rather than reading
-## garbage cells or crashing on an out-of-range index.
+## that predate a field. A `visited_b64` that fails validation (corrupted
+## save, or — see below — grid geometry changed under it) is not trusted: it
+## is discarded with a warning and the fresh, fully-hidden grid is kept
+## rather than reading garbage cells, crashing on an out-of-range index, or
+## silently revealing the wrong part of the world.
+##
+## TWO VALIDATION PATHS, per §8.6a. A save carrying the grid descriptor
+## (`grid_x`/`grid_z`/`cell`/`origin_x`/`origin_z`, added alongside this
+## check) is trusted only if EVERY one of those matches this build's current
+## grid — not just the byte length, which is the check that cannot tell "the
+## world resized to a length that happens to match" from "nothing changed".
+## A save with no descriptor at all predates this change; for that one case
+## only, the old length-only check is still the right answer, because on an
+## unresized world (today) the current grid IS 128x128 over ±256m, the exact
+## shape every such save already assumes — the benign case §8.6a describes,
+## not the dangerous one.
 func load_data(data: Dictionary) -> void:
 	_visited.fill(0)
 	_visited_count = 0
@@ -369,7 +457,21 @@ func load_data(data: Dictionary) -> void:
 	var b64 := str(data.get("visited_b64", ""))
 	if not b64.is_empty():
 		var raw := Marshalls.base64_to_raw(b64)
-		if raw.size() == _visited.size():
+		var has_descriptor := data.has("grid_x") and data.has("grid_z") and data.has("cell") \
+			and data.has("origin_x") and data.has("origin_z")
+		if has_descriptor:
+			var o := origin()
+			var geometry_matches := int(data.get("grid_x", -1)) == grid_x() \
+				and int(data.get("grid_z", -1)) == grid_z() \
+				and is_equal_approx(float(data.get("cell", -1.0)), CELL) \
+				and is_equal_approx(float(data.get("origin_x", INF)), o.x) \
+				and is_equal_approx(float(data.get("origin_z", INF)), o.y)
+			if geometry_matches and raw.size() == _visited.size():
+				_visited = raw
+				_visited_count = _count_set(_visited)
+			else:
+				push_warning("MapState.load_data: saved grid geometry does not match this world; keeping a fresh grid")
+		elif raw.size() == _visited.size():
 			_visited = raw
 			_visited_count = _count_set(_visited)
 		else:
@@ -407,10 +509,11 @@ func load_data(data: Dictionary) -> void:
 ## call this; a "reveal whole map" item or cheat is a design decision, not
 ## something this file decides on its own.
 func reveal_all() -> void:
-	if _visited_count == GRID * GRID:
+	var total := grid_x() * grid_z()
+	if _visited_count == total:
 		return
 	_visited.fill(1)
-	_visited_count = GRID * GRID
+	_visited_count = total
 	revision += 1
 
 
@@ -432,29 +535,32 @@ func _reveal_cells(world_pos: Vector3, radius: float) -> bool:
 		return false
 	var cx := world_pos.x
 	var cz := world_pos.z
+	var o := origin()
+	var gx := grid_x()
+	var gz := grid_z()
 
-	var min_ix := int(floor((cx - radius - ORIGIN.x) / CELL))
-	var max_ix := int(floor((cx + radius - ORIGIN.x) / CELL))
-	var min_iz := int(floor((cz - radius - ORIGIN.y) / CELL))
-	var max_iz := int(floor((cz + radius - ORIGIN.y) / CELL))
+	var min_ix := int(floor((cx - radius - o.x) / CELL))
+	var max_ix := int(floor((cx + radius - o.x) / CELL))
+	var min_iz := int(floor((cz - radius - o.y) / CELL))
+	var max_iz := int(floor((cz + radius - o.y) / CELL))
 
-	min_ix = clampi(min_ix, 0, GRID - 1)
-	max_ix = clampi(max_ix, 0, GRID - 1)
-	min_iz = clampi(min_iz, 0, GRID - 1)
-	max_iz = clampi(max_iz, 0, GRID - 1)
+	min_ix = clampi(min_ix, 0, gx - 1)
+	max_ix = clampi(max_ix, 0, gx - 1)
+	min_iz = clampi(min_iz, 0, gz - 1)
+	max_iz = clampi(max_iz, 0, gz - 1)
 
 	var changed := false
 	var radius_sq := radius * radius
 	for iz in range(min_iz, max_iz + 1):
-		var center_z := ORIGIN.y + (float(iz) + 0.5) * CELL
+		var center_z := o.y + (float(iz) + 0.5) * CELL
 		var dz := center_z - cz
 		var dz_sq := dz * dz
 		for ix in range(min_ix, max_ix + 1):
-			var center_x := ORIGIN.x + (float(ix) + 0.5) * CELL
+			var center_x := o.x + (float(ix) + 0.5) * CELL
 			var dx := center_x - cx
 			if dx * dx + dz_sq > radius_sq:
 				continue
-			var idx := iz * GRID + ix
+			var idx := iz * gx + ix
 			if _visited[idx] == 0:
 				_visited[idx] = 1
 				_visited_count += 1

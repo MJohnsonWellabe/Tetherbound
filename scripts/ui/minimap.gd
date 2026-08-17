@@ -42,11 +42,12 @@ extends Control
 ##
 ## FOG TEXTURE. Rebuilt only when `Game.map`'s `revision` changes
 ## (`_last_fog_revision`), and reuses one `ImageTexture` via `update()`
-## rather than allocating a new one every reveal — the grid is only 128×128,
-## but there is no reason to churn GPU texture objects every time the player
-## takes one more step into fogged ground.
+## rather than allocating a new one every reveal — the grid is small (today
+## 128×128, `autoload/map_state.gd`'s `grid_x()`/`grid_z()`), but there is no
+## reason to churn GPU texture objects every time the player takes one more
+## step into fogged ground.
 
-const WORLD_HALF := 256.0 ## `terrain_playground.json`'s `world_size` 512, halved.
+const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 const MOVE_EPSILON := 0.05
 const YAW_EPSILON := 0.01
 const CREATURE_SHOW_DISTANCE := 15.0
@@ -62,6 +63,11 @@ const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 var _map_state: RefCounted = null
 var _terrain_texture: Texture2D = null
 var _span_m: float = 90.0
+
+## Cached once at construction, not re-read per draw call — `_draw()` runs
+## every frame the minimap redraws and the world's bounds do not change
+## mid-session.
+var _world_min := Vector2.ZERO
 
 var _player_pos: Vector3 = Vector3.ZERO
 var _player_yaw: float = 0.0
@@ -79,6 +85,8 @@ func _init() -> void:
 	custom_minimum_size = Vector2(240, 240)
 	clip_contents = true
 	_font = load(UITokens.FONT_PATH)
+	var bounds: Dictionary = WORLD_EXTENT.bounds()
+	_world_min = Vector2(float(bounds.get("min_x", 0.0)), float(bounds.get("min_z", 0.0)))
 
 
 ## `map_state` is `Game.map` (a `MapState`, see `autoload/map_state.gd`);
@@ -186,17 +194,21 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 
 	draw_set_transform(centre, rotation, Vector2.ONE * scale_px_per_m)
 
-	# The terrain texture is baked 1px/metre over the full ±256m world
-	# (`map_baker.gd`), so the source region in texture pixels is the same
-	# size in world metres as `_span_m`.
-	var cx := _player_pos.x + WORLD_HALF
-	var cz := _player_pos.z + WORLD_HALF
+	# The terrain texture is baked 1px/metre over the whole world, from the
+	# same `world_extent.gd` bounds this file reads (`map_baker.gd`), so the
+	# source region in texture pixels is the same size in world metres as
+	# `_span_m`.
+	var cx := _player_pos.x - _world_min.x
+	var cz := _player_pos.z - _world_min.y
 	var terrain_src := Rect2(cx - half_span, cz - half_span, _span_m, _span_m)
 	draw_texture_rect_region(_terrain_texture, dest, terrain_src)
 
 	if _fog_texture != null and _map_state != null:
-		var grid := float(_map_state.cell_grid_size())
-		var cell_m := (WORLD_HALF * 2.0) / maxf(grid, 1.0)
+		# `cell_m` is the fog grid's actual cell size, read from `MapState`
+		# directly rather than re-derived from a world span and cell count —
+		# that derivation only happened to work while the grid was square and
+		# `CELL` was never anything but "world span / grid count".
+		var cell_m := maxf(float(_map_state.cell_size()), 0.001)
 		var fog_src := Rect2((cx - half_span) / cell_m, (cz - half_span) / cell_m, _span_m / cell_m, _span_m / cell_m)
 		draw_texture_rect_region(_fog_texture, dest, fog_src)
 
@@ -206,12 +218,13 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 func _rebuild_fog() -> void:
 	if _map_state == null:
 		return
-	var grid: int = int(_map_state.cell_grid_size())
-	if _fog_image == null or _fog_image.get_width() != grid:
-		_fog_image = Image.create(grid, grid, false, Image.FORMAT_RGBA8)
+	var grid_x: int = int(_map_state.cell_grid_x())
+	var grid_z: int = int(_map_state.cell_grid_z())
+	if _fog_image == null or _fog_image.get_width() != grid_x or _fog_image.get_height() != grid_z:
+		_fog_image = Image.create(grid_x, grid_z, false, Image.FORMAT_RGBA8)
 
-	for iz in grid:
-		for ix in grid:
+	for iz in grid_z:
+		for ix in grid_x:
 			var discovered: bool = bool(_map_state.cell_at(ix, iz))
 			_fog_image.set_pixel(ix, iz, FOG_DISCOVERED if discovered else FOG_UNDISCOVERED)
 
