@@ -69,7 +69,7 @@ func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 	# without being pinned to the exact discretisation.
 	var cell_area := MAP_STATE.CELL * MAP_STATE.CELL
 	var ideal: float = PI * map.reveal_radius * map.reveal_radius / cell_area
-	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.GRID * MAP_STATE.GRID)))
+	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.grid_x() * MAP_STATE.grid_z())))
 	assert_between(float(revealed), ideal * 0.85, ideal * 1.15,
 		"revealed cell count %d is not plausible for a %.0fm radius (expected ~%.0f)" % [revealed, map.reveal_radius, ideal])
 
@@ -229,7 +229,7 @@ func test_load_data_with_an_empty_dictionary_is_a_working_fresh_state() -> void:
 func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
 	var data: Dictionary = map.save_data()
-	# Wrong length -- three bytes instead of GRID*GRID.
+	# Wrong length -- three bytes instead of grid_x() * grid_z().
 	data["visited_b64"] = Marshalls.raw_to_base64(PackedByteArray([1, 2, 3]))
 
 	map.load_data(data)

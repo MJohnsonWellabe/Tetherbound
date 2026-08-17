@@ -104,12 +104,25 @@ func test_every_layer_places_something() -> void:
 
 
 func test_nothing_is_placed_outside_the_world() -> void:
+	# `world_size` is the CLUMP/STRAY sampling side, not the world's extent —
+	# since the corridor landed those are two different numbers (512 vs an
+	# 8192x2048m, non-square, non-origin-centred rectangle). The verge fringe
+	# follows the trail the whole length of the corridor and authored anchors
+	# carry absolute coordinates, so both legitimately place thousands of
+	# instances past +-256m. Asserting the old square here failed on real,
+	# correct output; the property worth pinning is that nothing lands outside
+	# the world the config actually describes, which is `world_bounds`.
 	var half := world_size * 0.5
+	var bounds: Dictionary = field.world_bounds() if field.has_method("world_bounds") else {}
+	var min_x: float = float(bounds.get("min_x", -half))
+	var max_x: float = float(bounds.get("max_x", half))
+	var min_z: float = float(bounds.get("min_z", -half))
+	var max_z: float = float(bounds.get("max_z", half))
 	for name in ["trees", "grass", "rocks"]:
 		for placement in RULES.placements_for(_layer(name), field, world_size, 7):
 			var spot: Vector3 = placement["position"]
-			assert_between(spot.x, -half, half, "%s x out of bounds" % name)
-			assert_between(spot.z, -half, half, "%s z out of bounds" % name)
+			assert_between(spot.x, min_x, max_x, "%s x out of bounds" % name)
+			assert_between(spot.z, min_z, max_z, "%s z out of bounds" % name)
 
 
 func test_placements_actually_sit_on_the_terrain() -> void:
