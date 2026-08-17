@@ -79,7 +79,6 @@ func _ready() -> void:
 	position = Vector3(0.0, float(cfg.get("height", 1.3)), float(cfg.get("forward_offset", 0.35)))
 	rotation = Vector3(deg_to_rad(float(cfg.get("pitch_deg", -35.0))), 0.0, 0.0)
 
-	_world_look = get_tree().get_first_node_in_group(&"day_cycle")
 	_build_visible_prop(cfg)
 
 
@@ -215,6 +214,21 @@ func _is_on() -> bool:
 		return _manual_on
 	if not _auto_at_night:
 		return false
+	# OF18-found: this used to be looked up once in `_ready()`, the same
+	# frame `player_controller.gd::_ready()` builds this node -- and the
+	# Player node sits BEFORE WorldLook in every playground scene's own
+	# tree (meadows_playground.tscn), so `_ready()` here always ran before
+	# `world_look.gd::_ready()` had added itself to the "day_cycle" group.
+	# `_world_look` cached null permanently, every run, and the auto-at-
+	# night feature this whole file exists for (see the header: "the fix
+	# must not be... it has to already be there") silently never fired --
+	# caught by tools/capture_torch_night.gd printing `is_on() == false`
+	# at night with zero difference in frame luminance across every shot.
+	# `_world_input_suppressed()` right below already lazy-looks-up
+	# `_arbiter` for exactly this class of ordering race; this now does
+	# the same instead of trusting a one-shot `_ready()`-time lookup.
+	if _world_look == null or not is_instance_valid(_world_look):
+		_world_look = get_tree().get_first_node_in_group(&"day_cycle")
 	return _world_look != null and _world_look.has_method("is_dark") and bool(_world_look.call("is_dark"))
 
 
