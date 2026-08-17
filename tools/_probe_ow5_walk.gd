@@ -87,6 +87,31 @@ const ESCAPE_FRAMES := 240
 ## same reasoning as `tests/smoke_traversal.gd`.
 const THROUGH_THE_FLOOR := -80.0
 
+## A single physics tick that moves the body further than this did not walk.
+##
+## At walk_speed 5.0 a tick covers 0.083m and nothing in `player_controller.gd`
+## can produce 2m in one step. What CAN is a script writing `global_position`
+## directly, and the world does exactly that: `severed_spokes.gd`'s
+## `CarveFailsafe` Area3D teleports the Player back to the near bank on
+## `body_entered`, and `river.gd` builds a chain of them along the ENTIRE river
+## course. Summing those jumps into the path length would have credited the
+## corridor with metres nobody walked -- the first end-to-end run took 712 of
+## them at one spot. Counted separately instead, because the count is itself a
+## finding.
+const TELEPORT_STEP_M := 2.0
+
+## How many times the same spot may be re-attempted before the escape is
+## declared a failure regardless of what it reports.
+##
+## `_escape` returns true when it gains ground toward the target, which is
+## honest as far as it goes -- but at a `CarveFailsafe` the body gains that
+## ground, gets teleported back, and gains it again forever. The first run
+## logged 653 "escapes" at ONE crossing and would have run until its timeout.
+## An escape that has to be repeated at the same place is not an escape.
+const WEDGE_REPEAT_LIMIT := 6
+## Two wedges closer together than this are the same wedge.
+const WEDGE_SAME_SITE_M := 8.0
+
 var _mode := "spine"
 var _speed := 0.0          ## 0 = leave walk_speed alone
 var _max_frames := 0       ## 0 = no cap
@@ -307,6 +332,10 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 	var walked := 0.0          ## planar path length, summed per physics frame
 	var walked_3d := 0.0
 	var skipped := 0.0         ## metres handed over by an unrecoverable wedge
+	var teleported := 0.0      ## metres the WORLD moved the body, never walked
+	var teleports := 0
+	var repeat_at := Vector3.INF
+	var repeat_count := 0
 	var frames := 0
 	var idx := 1
 	var prev := player.global_position
@@ -354,8 +383,12 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 		var step := Vector2(now.x - prev.x, now.z - prev.z).length()
 		# 1mm floor: a body standing still against a wall jitters, and summing
 		# that jitter would inflate the corridor's length with metres nobody
-		# walked.
-		if step > 0.001:
+		# walked. The ceiling is the same argument at the other end -- see
+		# TELEPORT_STEP_M; a `CarveFailsafe` recovery is not a stride.
+		if step > TELEPORT_STEP_M:
+			teleported += step
+			teleports += 1
+		elif step > 0.001:
 			walked += step
 			walked_3d += now.distance_to(prev)
 		prev = now
@@ -374,8 +407,21 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 		if window_frames >= WEDGE_WINDOW:
 			var dist_now := Vector2(now.x, now.z).distance_to(points[idx])
 			if window_target_dist - dist_now < WEDGE_PROGRESS_M:
+				if repeat_at != Vector3.INF and now.distance_to(repeat_at) < WEDGE_SAME_SITE_M:
+					repeat_count += 1
+				else:
+					repeat_at = now
+					repeat_count = 1
+
 				var wedge := _describe_wedge(player, now, points[idx], tag)
 				var freed := await _escape(player, rig, points[idx])
+				if freed and repeat_count >= WEDGE_REPEAT_LIMIT:
+					print("       ...but this is attempt %d at the same spot. Treating it as blocked: "
+						% repeat_count
+						+ "an escape that has to be repeated is not an escape.")
+					freed = false
+					repeat_at = Vector3.INF
+					repeat_count = 0
 				# `_escape` leaves every input released so its strafe cannot
 				# bleed into the next frame's heading. Without this re-press the
 				# body stands still after the first wedge it escapes, redetects
@@ -426,6 +472,8 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 		"walked": walked,
 		"walked_3d": walked_3d,
 		"skipped": skipped,
+		"teleported": teleported,
+		"teleports": teleports,
 		"frames": frames,
 		"wedges": wedges,
 		"end": player.global_position,
@@ -523,6 +571,8 @@ func _report(r: Dictionary, config_length: float) -> void:
 	print("walked path length (3D)    : %.1f m" % r["walked_3d"])
 	print("skipped past wedges        : %.1f m  (%d unrecoverable)" % [
 		skipped, _unrecovered(r["wedges"])])
+	print("moved BY THE WORLD         : %.1f m over %d teleports  (CarveFailsafe recoveries; never counted as walked)" % [
+		r["teleported"], r["teleports"]])
 	print("waypoints reached          : %d / %d" % [r["reached_index"], r["total_points"]])
 	print("end position               : (%.1f, %.1f, %.1f)" % [
 		r["end"].x, r["end"].y, r["end"].z])
