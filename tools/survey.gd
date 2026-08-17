@@ -103,8 +103,24 @@ const VIEWPOINTS := [
 		# rise-overlook), ~60m from the cluster now instead of ~20m -- safer
 		# to move the eye than the towers, which R7.1-visual-remainder-2 (a
 		# separate, still-open item) may reshape again.
+		# EV10-found: the (190,-60)/h11 eye above had since drifted onto the
+		# BASE of the ridge, not its flank -- a height-grid probe (tools/
+		# _diag_probe_rise.gd, not committed) found ground at that exact XZ
+		# is 5.6m while the slope 10-20m further along the same sightline
+		# rises to 35-49m, i.e. the lens sat under a wall almost 30-40m
+		# tall. The blind judge's round-1 report named it plainly: "a huge
+		# unblended cliff face with a hard seam dominates the frame... the
+		# camera reads as caught in the terrain." A sightline probe (tools/
+		# _diag_sightline.gd) along the full eye-to-target ray confirmed
+		# (172,-88)/h15 clears the whole ridge -- nothing between eye and
+		# target reads above the eye-target ray line except the ray meeting
+		# the valley floor right at the target, which is the composition
+		# wanted -- and sits ~38m from the tower cluster: closer than the
+		# ~60m the note above records wanting, but the cluster occupies a
+		# small fraction of a 70deg-vertical/16:9 frame at that range, not
+		# the point-blank fill the original R7.1 fix was escaping.
 		"name": "03-rise-overlook",
-		"eye": Vector2(190.0, -60.0), "eye_h": 11.0,
+		"eye": Vector2(172.0, -88.0), "eye_h": 15.0,
 		"target": Vector2(-60.0, 60.0), "target_h": 0.0,
 		"time": "day", "horizon": 0.24,
 	},
