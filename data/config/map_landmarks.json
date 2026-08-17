@@ -1,6 +1,7 @@
 {
   "_comment": "The map database of D33: reveal tuning and every landmark the map may ever show. Data-driven so Band 1-4 landmarks (quarry, warrens, river, mill, relay) join by editing this file, not code. Tunable.",
-  "reveal_radius": 45.0,
+  "_comment_reveal_radius_ow3": "OW3 raised this 45 -> 80. TUNABLE. With fog fully opaque again (tab_map.gd/minimap.gd), 45m revealed a ribbon barely wider than the road, which is what made an honest fog read as \"nothing but black\" the last time it was opaque. Widening the reveal is the lever that keeps the fog truthful without the map being a void; darkening or lightening the fog itself is the lever that has now been swung three times.",
+  "reveal_radius": 80.0,
   "minimap_span_m": 90.0,
   "landmarks": [
     {

@@ -530,23 +530,27 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 ## two screens to read as one fog treatment and matching the colour costs
 ## nothing.
 ##
-## OWNER PLAYTEST REPORT: "the larger map in the menus shows nothing but
-## black." Root cause: this is genuinely correct fog-of-war behaviour, just
-## tuned for the wrong SCREEN. The world is 512x512m; a day-1 player has
-## typically explored a couple hundred metres around the house/village --
-## under 10% of the grid -- and the minimap this alpha was copied from only
-## ever shows a ~90m window centred on the player (mostly already-revealed
-## ground by definition), so 95% opacity read as reasonable there. Stretched
-## over the FULL map's whole-world view, that same 95% opacity black is
-## correct at covering >90% of the panel in solid near-black, which is
-## exactly what "shows nothing but black" describes -- not a rendering bug,
-## a fog treatment that never got re-judged at the full map's own scale.
-## Dropped to 55%: still clearly reads as unexplored/fogged (a real
-## incentive to go look), but the terrain's own colour and shape now show
-## through dimly everywhere, so a player opening the map for the first time
-## sees the whole Meadows' silhouette immediately instead of a blob of
-## colour in a black void.
-const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 0.55)
+## OW3 / owner playtest: "the full map is rendered before I explore
+## anything." A previous pass (see git blame) tuned this to 55% opacity so
+## the terrain's colour/shape would show through dimly everywhere on the
+## full map — but that IS "reveals everything automatically," just at
+## reduced contrast instead of full brightness: spec §16 says the map "does
+## not reveal everything automatically," not "reveals everything faintly."
+## A player who has taken zero steps could already read the whole Meadows'
+## shoreline, hills and road network off the menu. FULLY OPAQUE (alpha 1.0)
+## now: unexplored cells hide the terrain underneath completely, so what
+## shows on open is exactly what `MapState`'s fog grid says has been
+## visited — nothing more. Kept the same near-black hue rather than
+## switching to a parchment-style unexplored fill: this project's whole menu
+## chrome is the dark blue-gray/teal panel language (`UITokens`, D28,
+## `menu_tab.gd`'s own header), and introducing a second, warmer "unknown
+## territory" material would be a new visual language for one screen, not a
+## fog fix. Edges read soft, not blocky, for free: `ImageTexture` samples
+## with linear filtering by default, and the grid is drawn scaled up from
+## 128px to the panel's ~400+px side, so cell boundaries blend across a few
+## screen pixels exactly the way `reveal_radius`'s circular reveal already
+## implies they should.
+const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 
