@@ -290,6 +290,38 @@ backpack_assign={
 , Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
 ]
 }
+; UI-PAD1. `ui_accept` is a Godot built-in and was NOT listed here, so the
+; engine defaults applied -- and those defaults, in this project, carried no
+; joypad event at all. Dumped from the live InputMap before this change:
+;
+;   ui_accept     -> key, key, key      <- nothing a controller can press
+;   ui_left       -> key, JOY:13, axis:0
+;   menu_confirm  -> key, JOY:0
+;
+; A Godot `Button` activates on `ui_accept`. So focus NAVIGATION worked on a
+; pad and focus ACCEPT did not: every Button-driven screen in a controller-first
+; game could be walked around and never pressed. Verified on the build menu with
+; real InputEventJoypadButton presses -- focus sat on a grid cell and neither A
+; nor X armed a piece.
+;
+; Listing the action here REPLACES the engine defaults rather than adding to
+; them, so the three keyboard events are restated deliberately. Dropping any of
+; them would silently take Enter or Space away from every menu in the game;
+; `tests/test_controls.gd::test_ui_accept_still_answers_the_keyboard` exists to
+; catch exactly that.
+;
+; Sharing joypad A with `menu_confirm` is intentional, not a collision. Enter
+; has always been both on the keyboard, so every screen that polls
+; `menu_confirm` has already been living with this pairing -- see that test
+; file's own note, and `ralph/NOTES.md`.
+ui_accept={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"keycode":4194309,"pressed":false,"script":null)
+, Object(InputEventKey,"device":-1,"keycode":4194310,"pressed":false,"script":null)
+, Object(InputEventKey,"device":-1,"keycode":32,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
 menu_confirm={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194309,"pressed":false,"script":null)
