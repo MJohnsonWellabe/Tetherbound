@@ -127,6 +127,7 @@
       "_comment": "SE25. The relay captain, and the fight SE27 is waiting on. `rank: captain` puts him a full step above Dell's bronze and a full step below the Warden's crimson on NP2's badge ladder -- spec sec36's rank read, made at a glance rather than in a title card. Three creatures, the highest levels in the chapter so far (11-12, TUNABLE), and the only reward in the table carrying an xp_bonus: this is the end of a four-battle site, not a roadside challenge.",
       "_authority_not_menace": "See data/dialogue/trainers.json for the lines. He is the most articulate of the four; Tether personnel believe the barriers are necessary work and that the player is interfering with it.",
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "_comment_ow6": "OW6 (owner: 'the captain to challenge is way too close to where you start'). Verified rather than moved: this site's own position is a fixed 3.6m offset past `relay_site.json`'s console (see `_why_here` below) and gates SE27's rescue conversation, so it is not free to relocate without moving the whole relay station. Distance was the open question, and it is now answerable for the first time with real data -- OW5-walk's measured spine (11,316.6m walked, 37.7min, walked/config ratio 0.983) puts this site's own waypoint (wp42, (350,3760)) at 5969m of authored polyline / 51.8% in, ~19.5 walked minutes, behind three prior fights (Hess, Orrin, Dell) at the same site. Not 'right next to the village' by any measure -- OW6's premise (the captain_field stand-in that WAS at (52,-122), effectively at the village, per OW5D's own note on that entry) does not describe this trainer. Left in place.",
       "rank": "captain",
       "position": [
         352.0,
@@ -179,6 +180,7 @@
         "*": "#8f9a86"
       },
       "_comment_palette": "Captain base, accented toward the wet slate of the draw. Same per-material rule as the other two.",
+      "_comment_ow6": "OW6. Measured against OW5-walk's real spine (see relay_captain's own `_comment_ow6` for the method): nearest spine point is 6830m of authored polyline / 59.3% in, ~22.4 walked minutes -- second of the four field/relay captains. Left in place.",
       "_comment_ow5d": "OW5D relocation to (-100,4350), section 3.1's own text: 'Riverwatch Captain sits off-spine on the Band 3/4 seam.' `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note. This captain's whole `_why_here` below describes a posting that watches for a river that, per this same macro-layout document (section 5), now actually exists nearby (the river crosses the corridor at z~4200, per section 10.2's Old Mill Crossing row) -- the 'no actual watercourse here yet' caveat is arguably resolved by the new geography, but confirming that is OW5C's river work, not this pass's.",
       "position": [
         -100.0,
