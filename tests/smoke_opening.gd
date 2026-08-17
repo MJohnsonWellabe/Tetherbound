@@ -440,19 +440,20 @@ func _grandpa_says_his_piece() -> void:
 	# test that called the method would never notice that guard going wrong in
 	# either direction.
 	#
-	# `_press_polled`, not `_press` — LP2. `dialogue_panel.gd` reads `interact`
-	# by polling `Input.is_action_just_pressed` in `_physics_process`, exactly
-	# the class of reader `_press_polled`'s own comment already names for
-	# `menu_confirm` ("under a heavy scene the two can land in DIFFERENT
-	# physics frames, which a polling reader counts as two presses"). Beat 3
-	# was the one caller of `_press("interact")` still sending the belt-and-
-	# braces parsed event nothing here needs — `interact` never drives Control
-	# focus, so there is no focus-navigation reason for it, unlike `ui_*`.
+	# `_press_pad`, not `_press_polled` — OW2. The owner's report ("the initial
+	# scene didn't move every time I hit x") is about this exact loop, and
+	# `_press_polled`'s `Input.action_press` sets the action state directly —
+	# it never travels the InputMap, so it cannot tell a real binding from a
+	# broken one (the same gap `UI-PAD1`/`TEST2` named for `smoke_menu.gd`).
+	# `_press_pad` sends a genuine `InputEventJoypadButton` on `interact`'s own
+	# live-InputMap button index, the way the owner's X actually reaches this
+	# code, across every line of a real multi-line conversation rather than one
+	# isolated press.
 	var lines := 0
 	for i in 40:
 		if not bool(_dialogue.call("is_open")):
 			break
-		await _press_polled("interact")
+		await _press_pad("interact")
 		lines += 1
 	if bool(_dialogue.call("is_open")):
 		_fail("the conversation would not end after %d presses of `interact`; the panel is not advancing" % lines)
@@ -555,14 +556,28 @@ func _the_creature_is_named_on_the_grid() -> void:
 	# press first, exactly what a controller player's first button does, so
 	# the prompt shows the grid this smoke exists to prove. The keyboard
 	# surface has its own smoke (tests/smoke_name_prompt_keyboard.gd).
-	var pad := InputEventJoypadButton.new()
-	pad.button_index = JOY_BUTTON_A
-	pad.pressed = true
-	Input.parse_input_event(pad)
-	var pad_up := InputEventJoypadButton.new()
-	pad_up.button_index = JOY_BUTTON_A
-	pad_up.pressed = false
-	Input.parse_input_event(pad_up)
+	#
+	# OW2: guarded on the tracker's CURRENT state, not fired unconditionally.
+	# This press's button (A / `menu_confirm`) is only safe because the panel's
+	# own device-switch detection sets `_mode_guard` and swallows it for two
+	# frames — that guard fires only on an actual keyboard-to-gamepad
+	# transition. Beat 3 now drives `interact` with real `InputEventJoypadButton`
+	# presses too (OW2, `_press_pad`), so by the time this beat runs the
+	# tracker is ALREADY in gamepad mode; sending this "priming" press again
+	# then finds no transition to guard, and lands as a genuine, unguarded
+	# `menu_confirm` on whatever cell the cursor already sits on ('A', the
+	# grid's first cell) — a stray letter typed before the test types anything
+	# itself. Skipping the press when already in gamepad mode removes the
+	# only thing it was ever for.
+	if not bool(_name_prompt.get("_using_gamepad")):
+		var pad := InputEventJoypadButton.new()
+		pad.button_index = JOY_BUTTON_A
+		pad.pressed = true
+		Input.parse_input_event(pad)
+		var pad_up := InputEventJoypadButton.new()
+		pad_up.button_index = JOY_BUTTON_A
+		pad_up.pressed = false
+		Input.parse_input_event(pad_up)
 	# One frame for the tracker to see it, plus the prompt's own mode-switch
 	# guard frames before the grid answers ui_* polling.
 	for i in 8:
@@ -809,6 +824,47 @@ func _send(action: String, pressed: bool) -> void:
 	event.action = action
 	event.pressed = pressed
 	Input.parse_input_event(event)
+
+
+## A REAL joypad button, the way hardware delivers it — deliberately not
+## `Input.action_press` or an `InputEventAction`, both of which set the action
+## state directly and never travel the InputMap at all. `smoke_backpack_pad_target.gd`
+## is where this pattern was written first (OW4/UI-PAD1): a test that only ever
+## presses the action can pass on a binding a real pad cannot reach. Button index
+## is read from the live InputMap rather than hardcoded, so a rebind moves this
+## test with it instead of leaving it testing a button nobody presses.
+##
+## OW2: the owner's "the initial scene didn't move every time I hit x" report
+## is exactly the gap this closes for `interact` — `_press_polled` above proves
+## the CODE advances correctly when the action fires, not that a real X press
+## reaches that code at all.
+func _press_pad(action: String) -> void:
+	var button_index := _pad_button_for(action)
+	if button_index < 0:
+		_fail("'%s' has no joypad binding at all — a controller cannot press it" % action)
+		return
+	var down := InputEventJoypadButton.new()
+	down.button_index = button_index
+	down.pressed = true
+	Input.parse_input_event(down)
+	for i in 3:
+		await physics_frame
+	var up := InputEventJoypadButton.new()
+	up.button_index = button_index
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 4:
+		await physics_frame
+
+
+func _pad_button_for(action: String) -> int:
+	if not InputMap.has_action(action):
+		return -1
+	for event in InputMap.action_get_events(action):
+		var button := event as InputEventJoypadButton
+		if button != null:
+			return button.button_index
+	return -1
 
 
 ## Put the naming cursor on a given cell by pressing the same directions a thumb
