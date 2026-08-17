@@ -85,3 +85,30 @@ static func region_counts(bounds: Dictionary, region_size: int, vertex_spacing: 
 	var columns := int(round((bounds.get("max_x", 0.0) - bounds.get("min_x", 0.0)) / pitch))
 	var rows := int(round((bounds.get("max_z", 0.0) - bounds.get("min_z", 0.0)) / pitch))
 	return Vector2i(columns, rows)
+
+
+## Every `region_location` (Terrain3D's own Vector2i convention: a region's
+## world origin is `region_location * region_size * vertex_spacing`) covering
+## `bounds` at this lattice pitch. This is "every region is dirty" -- the
+## default, whole-world region set a plain (non-incremental) bake asks for.
+## Only meaningful once `check_alignment` has returned "" for the same bounds.
+static func region_locations(bounds: Dictionary, region_size: int, vertex_spacing: float) -> Array[Vector2i]:
+	var pitch := float(region_size) * vertex_spacing
+	var col0 := int(round(bounds.get("min_x", 0.0) / pitch))
+	var row0 := int(round(bounds.get("min_z", 0.0) / pitch))
+	var counts := region_counts(bounds, region_size, vertex_spacing)
+	var out: Array[Vector2i] = []
+	for row in counts.y:
+		for col in counts.x:
+			out.append(Vector2i(col0 + col, row0 + row))
+	return out
+
+
+## The world-space rectangle one `region_location` covers, at this lattice
+## pitch: {min_x, max_x, min_z, max_z}. Inverse of the arithmetic
+## `region_locations` uses to enumerate locations from bounds.
+static func region_world_rect(location: Vector2i, region_size: int, vertex_spacing: float) -> Dictionary:
+	var pitch := float(region_size) * vertex_spacing
+	var min_x := float(location.x) * pitch
+	var min_z := float(location.y) * pitch
+	return {"min_x": min_x, "max_x": min_x + pitch, "min_z": min_z, "max_z": min_z + pitch}

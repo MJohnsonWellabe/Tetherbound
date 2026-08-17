@@ -83,7 +83,18 @@ const GATE_KEY_AT := Vector2(24.0, -10.0)
 ## 4.2m) never contest. `SIGIL_GATE_YAW_DEG` puts the leaf across the bearing
 ## to the Hall (72.4 degrees from here) and is TUNABLE by eye, exactly like
 ## `GATE_YAW_DEG` above and for the same reason.
-const SIGIL_GATE_AT := Vector2(130.0, -176.0)
+## OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
+## (130,-176) to the table's explicit new coordinate (0,7400), alongside
+## stronghold.json's `site.at` moving to (0,7560). `SIGIL_GATE_YAW_DEG` is
+## left UNCHANGED below and is almost certainly wrong for the new site: the
+## old -17.6 deg was tuned so the gate leaf sits across the OLD bearing to
+## the Hall (72.4 deg from the old gate position, per the comment above,
+## which itself is now stale prose describing geometry that no longer
+## exists). The new corridor's Stronghold-approach spine runs roughly
+## north-south, a completely different bearing, so this yaw needs fresh
+## tuning against the real approach once it is built -- flagged rather than
+## guessed at. Ground truth at (0,7400) was NOT re-probed by this pass.
+const SIGIL_GATE_AT := Vector2(0.0, 7400.0)
 const SIGIL_GATE_YAW_DEG := -17.6
 const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const SIGIL_GATE_FLAG := "hall_approach_open"

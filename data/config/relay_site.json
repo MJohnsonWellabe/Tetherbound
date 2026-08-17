@@ -3,8 +3,9 @@
 
   "_comment_se23": "SE23 (the relay station itself: the industrialised site, its traversal challenge, its apparatus and the console the player disables) IS NOT BUILT YET AND IS NOT THIS FILE'S WORK. What is here is the site's agreed position and the cast that occupies it, so that SE25's four battles and SE27's rescue could be built and played before the buildings exist. When SE23 builds the station it should ADOPT `site.centre` below rather than choose a second one, and if it needs to move the site it should move this value and the four `data/config/trainers.json` positions derived from it together. Nothing else in the codebase hard-codes a relay coordinate.",
 
+  "_comment_ow5d_relocation": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: `site.centre` moves from (108,34) to (350,3760), a uniform (+242,+3726) offset. The same offset is applied below to `people[0].position` (Sela) so she stays exactly where she was relative to the site. `approach_bearing_deg` is UNCHANGED (-34.4) -- this is a pure translation, no rotation, so the bearing the four trainers.json positions and tether_relay.json's local (s,t) frame are built on stays valid without re-deriving anything. Ground truth at the new centre was NOT re-probed by this pass (see the OW5D report); `_ground` below still describes the OLD site.",
   "site": {
-    "centre": [108.0, 34.0],
+    "centre": [350.0, 3760.0],
     "radius": 26.0,
     "approach_bearing_deg": -34.4,
     "_why_here": "On the Old Quarry's own conduit bearing toward the stronghold. old_quarry.json states that bearing exactly — the stronghold is at [229.8,-144.4], and the quarry floor at [23,158] gives the unit vector (0.565,-0.826) which the quarry's lit pylon run already walks. This site is 150m further along that same line, which is the whole §32 argument made as geography: the quarry showed conduits leaving on a bearing, and this is the next thing standing on that bearing. r=113m from the world origin, comfortably inside world_perimeter.gd's 235m ring; 107m from the village square; 128m from `rises.peaks[0]` centre against its 78m radius, so the site is on open ground rather than a flank.",
@@ -23,7 +24,7 @@
         "*": "#8d8778",
         "_comment": "The one variant, and it is a state rather than a costume: this rig carries a single fused material (see data/config/npc_ranks.json's own note on why every human here does), so a `palette` map is the per-material mechanism available, the same one NP2's rank palettes use. Dulled and greyed against the ranger's ordinary warm tan — weeks of being held, outdoors, in the same clothes. She loses it when she gets home: her village_npcs.json entry names no palette, so the rescued villager is the clean original tan. TUNABLE."
       },
-      "position": [114.0, 27.0],
+      "position": [356.0, 3753.0],
       "facing_deg": 145.6,
       "_why_here": "7.3m past the captain on the site's own bearing, facing back down it — so she is looking at the player the whole way up the road, and the captain is physically between the two of them. The rescue cannot be walked around. Ground -2.04m, 0.53m spread over an 8m box: the flattest of the five.",
       "place_when": [

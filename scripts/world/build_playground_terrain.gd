@@ -30,6 +30,45 @@ func _init() -> void:
 	_run()
 
 
+## Region-set support. Every per-pixel function this bake calls (`height_at`,
+## `slope_degrees_at`, `rock_bias_deg`, `building_apron_factor`,
+## `drain_factor`, ...) is a pure function of `(config, world_x, world_z)` and
+## nothing else -- no pixel reads a neighbour, there is no blur/erosion/flow
+## pass, and nothing needs the whole map resident. That means a sub-rectangle
+## can be baked in complete isolation and must come out byte-for-byte
+## identical to what a full bake would have written there: two regions baked
+## independently agree exactly at the boundary because both evaluate the same
+## continuous function at the same coordinates
+## (`tools/verify_incremental_bake_identity.sh` is the test that this holds,
+## not just an assertion that it should).
+##
+## So a "full bake" is not a separate code path from a partial one -- it is
+## the SAME per-region bake, called once per region in the world's bounds
+## instead of once for a caller-supplied subset. `_requested_region_locations`
+## below is the only place that distinction lives.
+##
+## Region set on the command line: `-- --regions=col:row,col:row,...` (region
+## LOCATIONS, Terrain3D's own convention -- a region's world origin is
+## `location * region_size * vertex_spacing`, see terrain_region_alignment.gd).
+## Absent or empty: every region in the configured world bounds, i.e. a full
+## bake. Dirty-region detection from a config diff is deliberately NOT built
+## here -- that is a further, separate decision and guessing at it now would
+## produce something wrong; this only takes an explicit set.
+func _requested_region_locations(bounds: Dictionary, region_size: int, spacing: float) -> Array[Vector2i]:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--regions="):
+			var raw := arg.substr("--regions=".length())
+			var out: Array[Vector2i] = []
+			for pair: String in raw.split(",", false):
+				var parts := pair.split(":")
+				if parts.size() != 2:
+					push_error("--regions entry %s is not COL:ROW" % pair)
+					return []
+				out.append(Vector2i(int(parts[0]), int(parts[1])))
+			return out
+	return ALIGNMENT.region_locations(bounds, region_size, spacing)
+
+
 func _run() -> void:
 	var config := HEIGHTFIELD.load_config()
 	if config.is_empty():
@@ -53,18 +92,31 @@ func _run() -> void:
 		quit(1)
 		return
 
-	var origin_x: float = bounds["min_x"]
-	var origin_z: float = bounds["min_z"]
-	var size_x := int(round((bounds["max_x"] - bounds["min_x"]) / spacing))
-	var size_z := int(round((bounds["max_z"] - bounds["min_z"]) / spacing))
 	var region_counts := ALIGNMENT.region_counts(bounds, region_size, spacing)
+	var locations := _requested_region_locations(bounds, region_size, spacing)
+	if locations.is_empty():
+		push_error("no regions requested; nothing baked")
+		quit(1)
+		return
 
-	print("baking x[%.1f, %.1f] z[%.1f, %.1f], %dx%d samples at %.2fm spacing, %d regions (%dx%d) of %d" %
+	var full_bake := locations.size() == region_counts.x * region_counts.y
+	print("baking x[%.1f, %.1f] z[%.1f, %.1f], %d of %d regions (%dx%d full-world grid) at %.2fm spacing, %d of %d" %
 		[bounds["min_x"], bounds["max_x"], bounds["min_z"], bounds["max_z"],
-		size_x, size_z, spacing, region_counts.x * region_counts.y, region_counts.x, region_counts.y, region_size])
+		locations.size(), region_counts.x * region_counts.y, region_counts.x, region_counts.y,
+		spacing, region_size, region_size])
+	if not full_bake:
+		print("  PARTIAL bake -- %d region(s): %s" % [locations.size(), str(locations)])
 
-	var height_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RF)
-	var colour_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RGBA8)
+	# Overridable ONLY for the bit-identity test
+	# (`tools/verify_incremental_bake_identity.sh`), which has to write
+	# two independent runs of THIS SAME script to two scratch directories
+	# without touching the real shipped `data/terrain/playground`. Absent:
+	# the real, committed output path, exactly as before this file took a
+	# region set at all.
+	var data_dir := DATA_DIR
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--data-dir="):
+			data_dir = arg.substr("--data-dir=".length())
 
 	var colour_cfg: Dictionary = config.get("colour", {})
 	# EV4-hillside-seam: texture-band decisions are deliberately sampled at a
@@ -77,6 +129,68 @@ func _run() -> void:
 	# short, the coarse step exists to low-pass the `detail` noise out on the
 	# meadow, and on a rise it low-passes away the rock form itself.
 	var rock_step := float(colour_cfg.get("slope_sample_step_rock", texture_step))
+
+	var terrain: Node = ClassDB.instantiate("Terrain3D")
+	terrain.set("region_size", region_size)
+	terrain.set("vertex_spacing", spacing)
+	terrain.set("data_directory", data_dir)
+	root.add_child(terrain)
+	await process_frame
+
+	var data: Object = terrain.get("data")
+	if data == null:
+		push_error("Terrain3D exposed no data object even after a frame")
+		quit(1)
+		return
+
+	# Whole-run stats ACCUMULATE across regions rather than being computed
+	# per-region: one summary line at the end, matching what a full bake
+	# printed before this was split into a region loop, regardless of whether
+	# this run covers 1 region or all 64.
+	var lowest := INF
+	var highest := -INF
+	var steep_samples := 0
+	var total_pixels := 0
+
+	for location: Vector2i in locations:
+		var rect := ALIGNMENT.region_world_rect(location, region_size, spacing)
+		var stats: Dictionary = await _bake_region(field, config, colour_cfg, texture_step, rock_step, spacing, rect, data)
+		lowest = minf(lowest, stats["lowest"])
+		highest = maxf(highest, stats["highest"])
+		steep_samples += int(stats["steep_samples"])
+		total_pixels += int(stats["pixel_count"])
+		print("  region %s x[%.1f,%.1f] z[%.1f,%.1f] baked" % [
+			str(location), rect["min_x"], rect["max_x"], rect["min_z"], rect["max_z"]])
+
+	print("  height range %.1fm .. %.1fm (relief %.1fm)" % [lowest, highest, highest - lowest])
+	print("  %.1f%% of the surface is steeper than 30 degrees" % (100.0 * steep_samples / float(total_pixels)))
+
+	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(data_dir)):
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(data_dir))
+	data.call("save_directory", data_dir)
+
+	print("baked -> %s (%d region(s))" % [data_dir, locations.size()])
+	quit(0)
+
+
+## Bake exactly one region's worth of world (`rect`, one lattice cell at this
+## `region_size`/`spacing`) into `data`: colour pass, import_images, control
+## pass. Returns this region's own height range / steep-pixel stats so the
+## caller can fold them into a whole-run total. Identical work per pixel
+## whether this is called once for the whole world or once per region — see
+## this file's region-set header comment for why that is safe.
+func _bake_region(
+	field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
+	texture_step: float, rock_step: float, spacing: float, rect: Dictionary, data: Object
+) -> Dictionary:
+	var origin_x: float = rect["min_x"]
+	var origin_z: float = rect["min_z"]
+	var size_x := int(round((rect["max_x"] - rect["min_x"]) / spacing))
+	var size_z := int(round((rect["max_z"] - rect["min_z"]) / spacing))
+
+	var height_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RF)
+	var colour_image := Image.create_empty(size_x, size_z, false, Image.FORMAT_RGBA8)
+
 	var lowest := INF
 	var highest := -INF
 	var steep_samples := 0
@@ -135,22 +249,6 @@ func _run() -> void:
 			if slope >= 30.0:
 				steep_samples += 1
 
-	print("  height range %.1fm .. %.1fm (relief %.1fm)" % [lowest, highest, highest - lowest])
-	print("  %.1f%% of the surface is steeper than 30 degrees" % (100.0 * steep_samples / float(size_x * size_z)))
-
-	var terrain: Node = ClassDB.instantiate("Terrain3D")
-	terrain.set("region_size", region_size)
-	terrain.set("vertex_spacing", spacing)
-	terrain.set("data_directory", DATA_DIR)
-	root.add_child(terrain)
-	await process_frame
-
-	var data: Object = terrain.get("data")
-	if data == null:
-		push_error("Terrain3D exposed no data object even after a frame")
-		quit(1)
-		return
-
 	# import_images' position places pixel (0,0) of the image at that world
 	# coordinate -- i.e. the MIN corner, not a centre point, despite the name
 	# this file used to give the variable. For the shipped symmetric config
@@ -158,7 +256,9 @@ func _run() -> void:
 	# imported block ends up spanning a symmetric range around the world
 	# origin and the player spawns in the middle rather than at a corner. An
 	# off-centre corridor (§1.3c) passes an off-centre `min_x`/`min_z` here
-	# the same way.
+	# the same way. Sized to exactly one region (`size_x`/`size_z` are
+	# `region_size` samples), so this call touches only the one
+	# `Terrain3DRegion` this rect covers, never its neighbours.
 	var images: Array[Image] = [null, null, null]
 	images[MAP_HEIGHT] = height_image
 	images[MAP_CONTROL] = null
@@ -168,12 +268,7 @@ func _run() -> void:
 
 	_paint_control_map(data, field, config, colour_cfg, origin_x, origin_z, size_x, size_z, spacing, texture_step, rock_step)
 
-	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DATA_DIR))
-	data.call("save_directory", DATA_DIR)
-
-	print("baked -> %s" % DATA_DIR)
-	quit(0)
+	return {"lowest": lowest, "highest": highest, "steep_samples": steep_samples, "pixel_count": size_x * size_z}
 
 
 ## Paint the REAL control map with the same slope thresholds as the baked

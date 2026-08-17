@@ -3,8 +3,8 @@
   "_comment_site": "The site coordinate is ADOPTED, not chosen. data/config/relay_site.json (SE25/SE27) picked [108,34] on the Old Quarry's own conduit bearing toward the stronghold and asked SE23 in writing to adopt it rather than name a second one. If the site ever moves, it moves THERE and here together, along with the four trainer positions derived from it.",
   "site": {
     "centre": [
-      108.0,
-      34.0
+      350.0,
+      3760.0
     ],
     "approach_bearing_deg": -34.4,
     "_frame": "Everything below is authored in the site's OWN frame: `s` runs along the approach bearing (positive = deeper in, the direction the conduits already walk toward the stronghold), `t` runs across it, both in metres. tether_relay.gd converts with u = (0.565,-0.826) and p = (-u.z, u.x). Authoring in world XZ instead would make every tuning nudge a two-number trigonometry problem, and the five people SE25/SE27 stood up here are all within 1m of t=0 \u2014 the road IS the axis, so the axis is the frame.",
@@ -293,7 +293,7 @@
       }
     ]
   },
-  "_comment_dead_ground": "D41, at full strength, and an HONEST PARTIAL. The authored source for the drain is terrain_playground.json's `drains.stations` (this branch adds three entries there, the strongest 1.0 against the quarry head station's 0.85), and `playground_heightfield.drain_factor()` is what every consumer asks. Two of its three consumers work immediately from that edit: `scatter_rules.gd` thins the vegetation at run time, so the ground around the relay is genuinely bald. The third does NOT \u2014 the bake's colour and control maps are offline artefacts (build_playground_terrain.gd) and a sibling agent holds the terrain lease, so the DISCOLOURED earth is not yet in the baked textures. `apron` below stands in for it in the meantime: a ground-hugging skin whose alpha is driven by the very same drain_factor(), so it ends on exactly the same contour the bake will. SET `enabled` TO FALSE the moment the terrain is re-baked with these stations in it, or the site will be tinted twice.",
+  "_comment_dead_ground": "D41, at full strength, and an HONEST PARTIAL, UPDATED AT OW5B. The authored source for the drain is terrain_playground.json's `drains.stations`, and `playground_heightfield.drain_factor()` is what every consumer asks. `scatter_rules.gd` thins vegetation at run time from that data directly, no bake dependency. The bake's colour/control maps are a THIRD consumer and were, as of OW5B (2026-08-17), re-baked with `drains.stations[4..6]` (the relay's three stations) in them -- but at the relay's PRE-relocation coordinates (108,34), because OW5B bakes landform only and does not move content. OW5D moves the relay's `site.centre` to (350,3760) in the SAME sitting, which strands that bake: the discoloured texture stays behind at the old, now-empty coordinates, and nothing paints the new site. So `enabled` STAYS TRUE here through OW5B and OW5C -- flipping it now would leave the relocated relay with no discolouration at all, on this bake or the runtime skin either. OW5D's own job, once it updates `drains.stations[4..6]`'s centres to (350,3760)-relative positions, is to re-bake ONLY the one region the new site falls in (region (0,7) at the 512m corridor pitch -- `build_playground_terrain.gd -- --regions=0:7`, seconds not hours, per OW5B's own per-region bake) and set `enabled` to false AS THE LAST STEP of that re-bake, once the baked texture actually agrees with the relay's shipped position. Same reasoning and same fix applies to the Old Quarry's `drains.stations[0..3]` at its own new region (0,3).",
   "dead_ground": {
     "enabled": true,
     "radius": 46.0,
@@ -304,5 +304,6 @@
     "_comment_tint": "Deliberately close to terrain_playground.json's own `drains.tint` (#bfb6a0), a shade further down because this skin ADDS over an untinted bake where the bake's own tint MULTIPLIES the albedo. Desaturated warm grey: sun-killed ground, not ash. TUNABLE.",
     "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through."
   },
-  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands."
+  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands.",
+  "_comment_ow5d_relocation": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved together with relay_site.json's `site.centre`, from (108,34) to (350,3760) -- see that file's own OW5D note. Everything below `site` (walls, gate, decks, ramps, apparatus, conduits) is authored in the site's OWN (s,t) frame per `_frame` below and needs no changes -- a pure translation of the centre carries the whole compound with it."
 }

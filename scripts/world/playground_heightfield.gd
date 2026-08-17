@@ -1282,6 +1282,25 @@ func road_polylines() -> Array:
 	for entry: Variant in _config.get("crossings", []):
 		if entry is Dictionary:
 			_append_line(out, (entry as Dictionary).get("road", []))
+	# OW5C, section 11: the 12km corridor spine and its ten regional loops
+	# join here for the identical reason the spokes and crossings do -- one
+	# signpost arm per `paths.routes` entry, four-arm post -- never as
+	# `paths.routes` entries themselves. `trail.bands[]` is the spine
+	# (Band 0 stays in `paths.routes`, unmoved); `trail.loops[]` are the
+	# regional loops, each its own real road, painted soil and all, not a
+	# suggestion. `trail.shortcuts[]` mixes one real road (the quarry haul
+	# road) with one non-road (the river ferry, `type: "ferry"` -- a boat
+	# trip has no polyline to paint) -- only `type: "road"` entries count.
+	var trail: Dictionary = _config.get("trail", {})
+	for entry: Variant in trail.get("bands", []):
+		if entry is Dictionary:
+			_append_line(out, (entry as Dictionary).get("points", []))
+	for entry: Variant in trail.get("loops", []):
+		if entry is Dictionary:
+			_append_line(out, (entry as Dictionary).get("points", []))
+	for entry: Variant in trail.get("shortcuts", []):
+		if entry is Dictionary and str((entry as Dictionary).get("type", "")) == "road":
+			_append_line(out, (entry as Dictionary).get("points", []))
 	_road_polylines = out
 	return out
 

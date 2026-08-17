@@ -10,7 +10,28 @@ extends "res://tests/test_case.gd"
 ## landmarks silently colliding.
 
 const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
+## Still ±256m on purpose: the MAP SYSTEM (map_baker.gd/minimap.gd) has not
+## been made corridor-aware yet (OW5B's own documented, deliberate gap --
+## world_size stays 512 so the map/minimap keep behaving as they always did
+## rather than doing something undefined with a stale assumption), so
+## reveal_radius/minimap_span sanity checks against the map's real, current
+## extent still belong here.
 const WORLD_HALF := 256.0
+const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
+const TERRAIN_CONFIG_FOR_BOUNDS := "res://data/config/terrain_playground.json"
+## The LANDMARKS/REGIONS themselves are not bound by the map system's own
+## limitation -- they mark where places actually are, in the full corridor,
+## even though the map can't draw that correctly yet (a separate, already-
+## flagged gap). So position/centre checks use the real authored world
+## bounds, not WORLD_HALF.
+static func _world_bounds() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_CONFIG_FOR_BOUNDS, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	return ALIGNMENT.world_bounds(parsed as Dictionary)
 
 var _valid_categories: Array[String] = ["major", "minor"]
 
@@ -85,10 +106,11 @@ func test_every_position_is_a_2d_point_inside_the_playground() -> void:
 				"'%s' position has a non-numeric coordinate" % id)
 		var x := float(arr[0])
 		var z := float(arr[1])
-		assert_true(absf(x) <= WORLD_HALF,
-			"'%s' x=%.1f is outside the ±%.0fm playground" % [id, x, WORLD_HALF])
-		assert_true(absf(z) <= WORLD_HALF,
-			"'%s' z=%.1f is outside the ±%.0fm playground" % [id, z, WORLD_HALF])
+		var bounds := _world_bounds()
+		assert_true(x >= float(bounds.get("min_x", -256.0)) and x <= float(bounds.get("max_x", 256.0)),
+			"'%s' x=%.1f is outside the authored world bounds %s" % [id, x, str(bounds)])
+		assert_true(z >= float(bounds.get("min_z", -256.0)) and z <= float(bounds.get("max_z", 256.0)),
+			"'%s' z=%.1f is outside the authored world bounds %s" % [id, z, str(bounds)])
 
 
 func test_every_discover_radius_is_positive() -> void:
@@ -154,8 +176,10 @@ func test_every_region_centre_is_inside_the_playground() -> void:
 			continue
 		var x := float((centre as Array)[0])
 		var z := float((centre as Array)[1])
-		assert_true(absf(x) <= WORLD_HALF and absf(z) <= WORLD_HALF,
-			"region '%s' is centred at %.1f, %.1f, outside the ±%.0fm playground" % [id, x, z, WORLD_HALF])
+		var bounds := _world_bounds()
+		assert_true(x >= float(bounds.get("min_x", -256.0)) and x <= float(bounds.get("max_x", 256.0))
+			and z >= float(bounds.get("min_z", -256.0)) and z <= float(bounds.get("max_z", 256.0)),
+			"region '%s' is centred at %.1f, %.1f, outside the authored world bounds %s" % [id, x, z, str(bounds)])
 
 
 func test_every_region_is_large_enough_to_be_a_region() -> void:
