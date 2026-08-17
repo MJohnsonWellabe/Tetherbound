@@ -266,6 +266,13 @@ Filed 2026-08-16 by the coordinating session. Everything here is measured, not
 suspected; the numbers are in each item.
 
 ### CAP1 — a capture scene for interiors, so a room does not cost a world
+**CLOSED 2026-08-17 (OPS8).** Landed on `main` in `cab638ae`.
+`tools/capture_interior.gd` builds only what an interior needs — the sky/sun/fog
+rig, the camera rig and its `set_target(target, profile)` seam, a bare player
+body, and `grandpa_house.gd` at the origin. Measured warm, same import cache
+both paths so only the world-build step differs: **10m35s → 1m12s for three
+frames, 8.8x.** `PT-03`'s 24–32 min figure was cold, where the gap is larger.
+
 `model: sonnet` · `tests: none` · `area: perf`
 `PT-03` spent **24–32 minutes booting the whole Meadows** — terrain, 23,707
 scatter instances, the village — to photograph the inside of one room. Every
@@ -541,6 +548,51 @@ coordinator's own handover named `MQ2B` and the `MQ3` umbrella as the work after
 The plan stays authoritative for what these mean and what "done" is; these
 entries exist so the queue stops omitting them. Do not duplicate the plan's
 prose here — read §6, §7 and §8 there.
+
+### VEG-CORRIDOR — the scatter still only dresses a 512 m square at the origin
+`model: opus` · `tests: smoke_playground, run_tests, a placement-extent test` · `area: vegetation, terrain, perf`
+**Blocks `MQ2B`, and was found by asking what the corridor actually looks like
+today rather than what the bake produced.** Verified in code, not inferred:
+
+`playground_world.gd:597` passes `config.get("world_size", 512)` into
+`vegetation.build()`, and `scatter_rules.all_placements` → `placements_for`
+samples every clump and stray inside `[-half, +half]` on **both** axes, where
+`half = world_size * 0.5 = 256`. `world_size` is still 512 on purpose —
+`terrain_playground.json`'s own `_comment_world` records `OW5B` keeping it there
+because vegetation, the minimap and the map baker all assumed the old square.
+
+The map half of that has since been fixed: `map_baker.gd` and `minimap.gd` now
+go through `world_extent.gd`, which reads the corridor's real asymmetric bounds.
+**Vegetation is what is left.**
+
+`OW5E` widened exactly one part of this and said so in its own comment
+(`scatter_rules.gd:531-546`): an authored **anchor** may now be placed anywhere
+in the corridor, checked against `field.world_bounds()` — which is what fixed
+the quarry `deadfall` at (403,1803) being silently rejected on every attempt and
+`smoke_boss.gd`'s D41 regrowth check finding nothing drained. That comment ends
+"This widens what an ANCHOR may pass, not what a clump/stray may sample."
+
+So today: the corridor runs z −512 to 7680, and **all ~23.7k scattered instances
+sit in z −256 to +256** — roughly the first 3% of a 7,560 m trail. Everything
+past it is correctly-shaped, correctly-baked bare landform with a handful of
+authored anchors on it. That is not a quality problem to be tuned; it is a
+bound.
+
+**This is why it cannot simply be widened to the corridor and shipped.** Density
+that reads well over 512 m becomes ~30x the instance count over 8192 x 2048 m if
+naively scaled, and boot already cost 3m08s before the corridor existed
+(`PERF2`), with scatter alone at 45 s. The answers interact with the streaming
+work already on `main`. Expect this to need per-band density that is authored,
+not uniform, and to be measured on the Ally rather than assumed.
+
+**Sequence it after `OW5-walk`.** That lane is measuring real traversal over the
+whole corridor right now, and what it reports about distance, collision and
+streaming is the input to how this should be bounded. Do not start it blind.
+
+**Done when** the trail is dressed for its whole length, per-band, with the
+instance count and boot cost measured before and after and stated as numbers —
+and when a placement-extent test fails if the scatter ever silently reverts to a
+square again.
 
 ### MQ2B — prove one region at finished quality before scaling
 `model: fable` · `tests: none (playtest gate)` · `area: terrain, world-layout, content`
