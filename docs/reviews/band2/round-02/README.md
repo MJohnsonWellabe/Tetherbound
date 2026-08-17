@@ -25,4 +25,35 @@ Deliberately **not** touched: `vegetation.json` density (still
 not-Band-2-specific question). Both are still visibly true in this round's
 frames (05 is still mostly bare; 06/07 are still close to black even at 10m).
 
-**Critic's verdict:** pending — filling in once the blind pass returns.
+**Critic's verdict, in its own words.** Bar A: still **No**. Bar B: still
+**No**. But this round shows real movement, not a flat repeat — the stopping
+rule (`ralph/conventions.md`) counts a round as improvement if the critic
+names something new OR a previously-named defect resolves, and both happened:
+
+- **A previously-named defect resolved, and the critic said so unprompted**:
+  round 1 called the trainer "a 4-5px blur... not readable as a person";
+  round 2 says frame 01 is "the one frame where the character-as-ruler trick
+  actually works." Direct result of moving that eye from ~86m to ~39m.
+- **02b (the new close quarry shot) is called out as the strongest frame in
+  the set** — "best-reading frame... at 40%," "the one frame that reads as
+  composed rather than scattered," "the closest thing to authored in the
+  set."
+- **New defects only visible at close range, impossible to name in round 1's
+  distant shots**: the quarry's own rootstone deposits read as "a pale mint/
+  seafoam... hatch-patterned surface" that "doesn't read as stone at all";
+  the Warrens' wall geometry is "completely flat-shaded... no texture... it
+  looks like unfinished blockout geometry"; the ranger camp's props read as
+  "three props dropped at a way-point, not a camp anyone lives in" (a sharper
+  version of round 1's "no camp objects," now that the objects are actually
+  visible to judge).
+
+Top three gaps this round: (1) night frames "essentially solid black... does
+not read as night, it reads as unlit"; (2) 01/03/05 still "80-95% flat,
+undetailed grass with one small isolated point of interest"; (3) material/
+palette breaks at the two close landmark shots — the mint-coloured boulders
+and the untextured Warrens wall.
+
+Full text on `ralph-status`/`ralph/NOTES.md`. Round 3: one small, in-scope
+attempt (bulking the ranger camp cluster with more of the same prop family)
+before stepping back to assess how much of what's left is actually outside
+this band's own file ownership.
