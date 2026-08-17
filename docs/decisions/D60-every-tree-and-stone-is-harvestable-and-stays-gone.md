@@ -159,10 +159,18 @@ methodology `D57` used):
 Trees and rocks alone were a small fraction of the corridor's total
 instance count (dominated by grass/flowers/drygrass), so a 3-4x increase in
 the two harvestable layers moves the WORLD total by only ~5% and compute
-by ~3%. There is no boot-budget concern here — this is well inside the
-headroom `D57` already measured (real end-to-end boot 68.4s→117.4s against
-`EXP1`'s 420s allowance), and this change adds a few percent of scatter
-compute on top of that, not a multiple.
+by ~3%. Real end-to-end boot, measured the same way `D57` measured it
+(`tests/smoke_playground.gd`, `user://boot_log.txt`, this container):
+vegetation-scatter phase 63s→74s, ready-phase (terrain data assigned→first
+frame) 103s→115s, full wall clock (engine start, 240-frame settle, every
+driven check) **117.4s→132.6s** — using 31.6% of `EXP1`'s 420s export boot
+allowance, up from 27.9%. The scatter-phase increase (11s) is larger than
+the ~3% raw placement-compute increase alone accounts for; the difference
+is the added cost of `_build_batch`/`_spawn_harvest_point` actually doing
+more work per boot now that harvest points number 7,175 rather than ~49
+(measured separately: ~3.0s of that, extrapolated from 500 real harvest
+points built in 211ms). Either way, there is no boot-budget concern — this
+change spends real but small headroom, not the budget itself.
 
 This did NOT preserve `VEG-CORRIDOR`'s "old square placements are
 bit-identical" invariant for `trees`/`rocks` specifically —
@@ -235,4 +243,11 @@ behaviour re-verified green (harvest points still stand a real woodpile,
 the tool-gating/durability rules are untouched — only the post-gather
 outcome changed, from dim-and-respawn to permanent removal).
 
-Full suite: run before push, see `ralph/NOTES.md` for the count.
+`tests/smoke_playground.gd`: real end-to-end boot, green — "smoke: OK",
+`[playground] scattered 107254 props in 42 batches (7175 harvestable,
+134/7454 collision resident)" confirms the density numbers above landed in
+the actual scatter, not just in `all_placements()` isolation.
+
+Full suite: 1,058 tests, 537,903 assertions, 0 failed, run locally before
+push. See `ralph/NOTES.md` for the same count alongside what this item
+found about exhaustion.
