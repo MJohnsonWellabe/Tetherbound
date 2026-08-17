@@ -240,24 +240,33 @@ func _walk_cross(world: Node, player: CharacterBody3D, rig: Node3D) -> void:
 		if st.y < _z_from or st.y > _z_to:
 			continue
 		print("\n--- cross station (%.0f, %.0f) ---" % [st.x, st.y])
-		var legs := {}
+		var reach := {}
+		var path := {}
 		for dir_name in ["east", "west"]:
 			var target_x := 1024.0 if dir_name == "east" else -1024.0
 			var lane: Array[Vector2] = [st, Vector2(target_x, st.y)]
-			var r := await _drive(world, player, rig, lane, "cross-%s@z%.0f" % [dir_name, st.y])
-			legs[dir_name] = r
-			print("  %s: walked %.1fm, reached x=%.1f, %s" % [
-				dir_name, r["walked"], r["end"].x,
-				("hit the edge" if r["blocked"] else "ran out of lane")])
-		var width: float = float(legs["east"]["walked"]) + float(legs["west"]["walked"])
-		totals.append({"z": st.y, "width": width})
-		print("  WIDTH at z=%.0f: %.1fm  = %.1f min at %.1f m/s" % [
-			st.y, width, width / _walk_speed_cfg / 60.0, _walk_speed_cfg])
+			var r := await _drive(world, player, rig, lane, "cross-%s@z%.0f" % [dir_name, st.y], true)
+			# WIDTH is measured as x REACHED, not as path walked. A body that
+			# strafes around a rock covers path length going nowhere across,
+			# and the owner's "five minutes from side to side" is about how far
+			# across the corridor is, not how far a wandering route is.
+			reach[dir_name] = r["end"].x
+			path[dir_name] = r["walked"]
+			print("  %s: reached x=%.1f (%.1fm of x from the station), path walked %.1fm, %s" % [
+				dir_name, r["end"].x, absf(r["end"].x - st.x), r["walked"],
+				("stopped short of the lane end" if r["blocked"] else "walked the whole lane")])
+		var width: float = float(reach["east"]) - float(reach["west"])
+		totals.append({"z": st.y, "width": width, "east": reach["east"], "west": reach["west"],
+			"path": float(path["east"]) + float(path["west"])})
+		print("  WIDTH at z=%.0f: %.1fm (x %.1f to %.1f) = %.1f min at %.1f m/s" % [
+			st.y, width, reach["west"], reach["east"],
+			width / _walk_speed_cfg / 60.0, _walk_speed_cfg])
 
 	print("\n=== WIDTH SUMMARY ===")
 	for t in totals:
-		print("  z=%-6.0f  %8.1fm   %5.2f min at walk_speed %.1f" % [
-			t["z"], t["width"], float(t["width"]) / _walk_speed_cfg / 60.0, _walk_speed_cfg])
+		print("  z=%-6.0f  x %8.1f .. %-8.1f  width %8.1fm   %5.2f min at walk_speed %.1f   (path walked %.1fm)" % [
+			t["z"], t["west"], t["east"], t["width"],
+			float(t["width"]) / _walk_speed_cfg / 60.0, _walk_speed_cfg, t["path"]])
 
 
 func _spine_point_near_z(spine: Array[Vector2], z: float) -> Vector2:
@@ -276,8 +285,17 @@ func _spine_point_near_z(spine: Array[Vector2], z: float) -> Vector2:
 ## height query is used to decide anything about progress; `ground_height_at`
 ## appears only to place the body at the very start and to re-place it after an
 ## unrecoverable wedge, both of which are announced in the output.
+## `stop_on_wedge` exists because the two modes want opposite things from a
+## wedge. The spine wants the whole length and the whole list of sites, so an
+## unrecoverable wedge hands the body forward to the next waypoint and the gap
+## is booked as skipped. The cross-walk wants the opposite: its target is
+## x = +/-1024, the world's authored bound, which is OUTSIDE the baked region
+## grid (`ground_height_at` returns NaN from x=1022.5 on -- OW5E measured it).
+## Teleporting there would drop the body into unbaked void and report a width
+## that is an artefact of the probe. For a cross-walk, being stopped IS the
+## measurement.
 func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
-		points: Array[Vector2], tag: String) -> Dictionary:
+		points: Array[Vector2], tag: String, stop_on_wedge: bool = false) -> Dictionary:
 	var start := Vector3(points[0].x, 0.0, points[0].y)
 	start.y = float(world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
@@ -352,8 +370,18 @@ func _drive(world: Node, player: CharacterBody3D, rig: Node3D,
 			if window_target_dist - dist_now < WEDGE_PROGRESS_M:
 				var wedge := _describe_wedge(player, now, points[idx], tag)
 				var freed := await _escape(player, rig, points[idx])
+				# `_escape` leaves every input released so its strafe cannot
+				# bleed into the next frame's heading. Without this re-press the
+				# body stands still after the first wedge it escapes, redetects
+				# a wedge 90 frames later, and the walk quietly stops measuring
+				# a corridor and starts measuring a probe bug.
+				Input.action_press("move_forward")
 				wedge["escaped"] = freed
 				wedges.append(wedge)
+				if not freed and stop_on_wedge:
+					print("  [%s] stopped here -- this is the measurement, not a failure" % tag)
+					prev = player.global_position
+					break
 				if not freed:
 					# Hand the body forward rather than end the run: the item
 					# wants the whole length AND the whole list of wedge sites,
