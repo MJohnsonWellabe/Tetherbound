@@ -330,7 +330,35 @@ answer, including two of the coordinator's own.** Recorded that way on purpose:
 the sequence of wrong diagnoses is the most useful thing here, because each was
 plausible and each cost work.
 
+> **CHECK THE TREE BEFORE WORKING ANY ITEM IN PHASES −1.40 THROUGH −1.45.**
+> Added 2026-08-17 (OPS9), after it caught two lanes in one hour. These phases
+> were filed in a burst on 2026-08-16/17 during a run that was landing a commit
+> every few minutes, and **several items were fixed by commits that landed
+> within the hour while the entry still read as open.** `TEST2` was filed at
+> `bbc6b850` and `UI-PAD1` — the very next commit, 40 minutes later — closed
+> two of its four named gaps; the `TEST2` lane found this only because it
+> checked each one against `main` first. `UI-PAD3` then turned out to be
+> shipped in full. Neither is a bookkeeping slip to tidy: an item that reads
+> open and is done sends a lane to write code that already exists, and the
+> lane will usually write it rather than argue with the queue.
+>
+> So the first step on any item here is `git log`/`git grep` against `main` for
+> the thing the item says is missing. **Reporting "already shipped, here is the
+> SHA" is a complete and valued outcome**, and is faster than the work.
+
 ### UI-PAD3 — `ui_accept` cannot replace a poll on a screen with no Button to press
+**CLOSED 2026-08-17 (OPS9). It was already shipped when it was filed** — verified
+in the tree, four checks, not by a branch ref:
+
+- `tab_backpack.gd`'s `menu_confirm` **poll is gone**; the only two remaining
+  mentions are footer label strings (`:1083`, `:1319`), which is exactly the one
+  removal this item prescribed.
+- `starter_picker.gd`, `combat_hud.gd`, `name_prompt.gd` and `tab_creatures.gd`
+  all still carry their polls, which is what the item says must happen.
+- `test_controls.gd` carries both `test_no_two_menu_context_actions_share_a_button`
+  (widened past keyboard, :308) and `test_ui_accept_still_answers_the_keyboard`
+  (:362) — the trap-guard this item named.
+
 `model: sonnet` · `tests: test_controls` · `area: ui`
 **Corrects `UI-PAD1` as filed by the coordinator**, which said: add the joypad
 binding, then remove each now-redundant `menu_confirm` poll in the same change.
