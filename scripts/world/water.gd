@@ -43,6 +43,16 @@ const REED_SINK := 0.14
 var _field: RefCounted = null
 var _water_cfg: Dictionary = {}
 var _level: float = NAN
+
+## PERF2. `_region()` is a ~2100-sample scan of the heightfield, and it was run
+## twice — once for the material and again inside `_build_pond` — for an answer
+## that cannot change between them. `terrain_playground.json` was likewise
+## re-opened and re-parsed from disk four times in one build. Neither is a
+## result cache with a staleness question: the config is read-only for the
+## lifetime of a build, and the region is a pure function of it.
+var _terrain_cfg: Dictionary = {}
+var _region_cache := Rect2()
+var _region_ready := false
 var _stats := {
 	"pond_quads": 0, "stream_points": 0, "reeds": 0,
 	# EV5-remainder — the waterside dressing the blind rounds asked for.
@@ -60,7 +70,7 @@ func build() -> void:
 		push_warning("terrain_playground.json has no water block; the meadow stays dry")
 		return
 
-	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var terrain_cfg: Dictionary = _terrain_config()
 	var stream: Dictionary = terrain_cfg.get("water", {}).get("stream", {})
 	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 
@@ -113,10 +123,12 @@ func stats() -> Dictionary:
 ## the data rather than configured, so retuning the level or the course can
 ## never silently crop the map that the shader reads depth from.
 func _region() -> Rect2:
+	if _region_ready:
+		return _region_cache
+	_region_ready = true
 	var lo := Vector2(INF, INF)
 	var hi := Vector2(-INF, -INF)
-	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
-	var water: Dictionary = terrain_cfg.get("water", {})
+	var water: Dictionary = _terrain_config().get("water", {})
 	var centre: Array = water.get("pond_centre", [0.0, 0.0])
 	var c := Vector2(float(centre[0]), float(centre[1]))
 	# Coarse scan around the pond centre for terrain below the waterline.
@@ -138,7 +150,15 @@ func _region() -> Rect2:
 	var margin := float(_water_cfg.get("pond", {}).get("margin", 6.0))
 	lo -= Vector2(margin, margin)
 	hi += Vector2(margin, margin)
-	return Rect2(lo, hi - lo)
+	_region_cache = Rect2(lo, hi - lo)
+	return _region_cache
+
+
+## `terrain_playground.json`, parsed once per composer.
+func _terrain_config() -> Dictionary:
+	if _terrain_cfg.is_empty():
+		_terrain_cfg = HEIGHTFIELD.load_config()
+	return _terrain_cfg
 
 
 ## The shared water material, baked over ONE world rect. Taken as an argument
@@ -281,7 +301,7 @@ func _build_pond(material: ShaderMaterial) -> void:
 					wet_cells[Vector2i(col, row)] = true
 					break
 
-	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var terrain_cfg: Dictionary = _terrain_config()
 	var centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 	var seed_cell := Vector2i(
 		int((float(centre[0]) - region.position.x) / step),
@@ -348,7 +368,7 @@ func _build_pond(material: ShaderMaterial) -> void:
 ## course and finding the waterline outward from the centreline can only ever
 ## produce water that is in the river.
 func _build_river() -> void:
-	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var terrain_cfg: Dictionary = _terrain_config()
 	var river: Dictionary = terrain_cfg.get("river", {})
 	var course: Array = river.get("course", [])
 	if course.size() < 2 or not river.has("water_level"):
