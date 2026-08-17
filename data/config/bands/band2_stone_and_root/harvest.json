@@ -176,6 +176,45 @@
       "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
       "model_scale": 0.24,
       "_why": "second of the pair, between the undertrail rejoin and the band's own end at (0,3180) so the last kilometre before the River Lock is not empty ground"
+    },
+    {
+      "order": 2005,
+      "_comment_mq2b_round4": "MQ2B, OPS15 blind-critic round 3->4. Two rounds of critique named the same thing from two different angles: 'no secondary ground dressing' and '85-95% flat, undetailed grass' in the stretches BETWEEN named landmarks. `harvest.json`'s own coordinator guidance is to spend entries on 'named nodes, ore, berries' rather than wood/stone (that's the scatter's job now). Berries, band1's own model/scale convention (Bush_Common_Flowers.gltf @ 1.2), placed in the trailpup/meadowhart stretch that had nothing between the South Bridge and the quarry.",
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        135.0,
+        1538.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    },
+    {
+      "order": 2006,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        145.0,
+        1543.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.1,
+      "_why": "second of the pair, close enough to the first to read as one thicket rather than two coincidences -- EV7-clusters-fix's own finding about touching vs scattered reads"
+    },
+    {
+      "order": 2007,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        68.0,
+        2965.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.15,
+      "_why": "the late-ridge stretch past the Warrens, beside the deadwood node (order 2004) and the night-gated duskhush spawn -- same reasoning as the pair above, ported to the band's other bare stretch"
     }
   ]
 }
