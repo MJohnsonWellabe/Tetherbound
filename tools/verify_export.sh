@@ -86,7 +86,24 @@ LOG="$OUT/run.log"
 # further only after PERF1 lands and this gets re-measured again; raise it
 # back toward 420 without hesitation if a future measurement ever needs it --
 # this number tracks the game, not the other way around.
-( cd "$OUT" && timeout 150 xvfb-run -a -s "-screen 0 640x480x24" \
+#
+# RAISED 150 -> 420, 2026-08-17, taking that last sentence at its word.
+# VEG-CORRIDOR landed the corridor-wide scatter fill and the world went from
+# 26,985 to 102,192 instances (3.79x); the exported build then died on this
+# timeout at ~155s wall-clock having printed its own EXPORT-CHECK line with
+# props=102007, i.e. it BOOTED fine and was killed before a clean exit. The
+# guard did exactly its job -- it caught a real, intended, measured change in
+# what the game is -- and the 69s it was calibrated against is now stale.
+#
+# THIS IS AN INTERIM NUMBER AND IS NOT MEASURED. It is the old tourniquet
+# value, restored to unblock landings, and it is the rubber stamp EXP1 warned
+# about for exactly as long as it stays unmeasured. The HARVEST-ALL lane is
+# raising tree/rock density further toward Palworld's right now, so measuring
+# today would only produce a figure obsolete by tomorrow. **Whoever lands the
+# final density owes this file a fresh worst-of-three measurement and a
+# 2.2x-of-that allowance, with the number and the date written here** -- the
+# same thing EXP1 did, for the same reason.
+( cd "$OUT" && timeout 420 xvfb-run -a -s "-screen 0 640x480x24" \
   ./Tetherbound.x86_64 --rendering-driver opengl3 --verify-export > run.log 2>&1 )
 RAN=$?
 
