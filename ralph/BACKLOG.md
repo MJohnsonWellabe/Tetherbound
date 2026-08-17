@@ -957,6 +957,46 @@ and when a placement-extent test fails if the scatter ever silently reverts to a
 square again.
 
 ### MQ2B — prove one region at finished quality before scaling
+**STOPPING RULE CHANGED BY THE OWNER, 2026-08-17 (OPS15).** Verbatim:
+
+> *"the current band we are working on should work until a blind review agent
+> determines there's nothing else we can do to make it work more like palworld
+> with our current terrain system and assets."*
+
+**So a band is not one authoring pass. It is a loop that a blind critic ends.**
+Author, render real frames of the band (day *and* night, real eye height), run
+`.claude/skills/visual-judge` told nothing about what changed or what answer is
+wanted, fix the defects it names, re-render, repeat.
+
+**The instrument already existed and already does exactly this.** `visual-judge`
+compares frames against `docs/reference/palworld-0*.jpg` — five real Palworld
+screenshots — and its Bar B is *"Shown these frames beside
+`docs/reference/palworld-0*.jpg`, would…"*. Nothing new needed building for this
+directive; it named the bar the skill was already using.
+
+**Stop on convergence, not on a round count** (`ralph/conventions.md`): a round
+counts as improvement only if the critic names a **new** defect or
+`tools/frame_stats.py` shows measured movement on an axis the critique is about.
+**Stop after two consecutive rounds with neither** — two, not one, because a
+single flat round is often a fix that has not landed yet. Reordered defects,
+reworded defects and "still not fixed" are not improvement.
+
+**"With our current terrain system and assets" is the owner's own bound, and it
+is the load-bearing half.** It makes *"this needs art that is not in the build"*
+a legitimate stopping point rather than a failure. `R9.4` is the precedent: four
+uncapped rounds, four blind critics, every measurable axis moved, and both
+critics still ranked "needs art that is not in the build" first. It had not
+stopped early — it had run out of what tuning could reach. A defect needing a new
+mesh, a Meshy generation or a terrain-system change **is the wall**; record it
+(`BLOCKED.md` or a labelled remainder) with the round count and what the last two
+rounds failed to move, and do not chase past the bound. `CLAUDE.md`'s no-new-
+Meadows-meshes and no-generation-without-owner-reference-art rules still bind.
+
+**This rule applies to whichever band is current**, not only Band 2 — it is how a
+band is finished from now on.
+
+### MQ2B — the original entry
+
 `model: fable` · `tests: none (playtest gate)` · `area: terrain, world-layout, content`
 Plan §6. **Starts with fable — it is ceiling-setting authorship.** Take the first
 appropriate Meadows region and finish it to production standard: terrain
