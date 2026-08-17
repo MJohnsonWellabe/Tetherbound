@@ -168,6 +168,14 @@ static func placements_for(
 		if entry is Dictionary:
 			_place_anchor(out, layer, field, models, entry as Dictionary, half, rng)
 
+	# VEG-CORRIDOR: the corridor fill, dead last and for the same append-only
+	# reason as the verge and anchors above -- every draw made before this
+	# point (clumps, strays, verge, anchors) must stay bit-identical to the
+	# meadow already tuned and shipped inside the old +-256m square, whether
+	# or not a layer opts into this at all. See `_place_corridor_fill`'s own
+	# comment for why it is opt-in per layer rather than automatic.
+	_place_corridor_fill(out, layer, field, models, half, rng)
+
 	# D41 (SD16): the drained ground around a Tether station, applied LAST and
 	# as a filter. See `_thin_by_drain` for why it cannot be a gate inside
 	# `_consider` like every other rule here.
@@ -373,6 +381,120 @@ static func _place_verge(
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var spot := along + Vector2(-tangent.y, tangent.x) * side * (inner + band * rng.randf())
 		_consider(out, layer, field, models, spot, half, rng)
+
+
+## VEG-CORRIDOR. `half`/`world_size` is still the old +-256m square everything
+## above this samples — see `placements_for`'s own header. The corridor
+## (`field.world_bounds()`) runs to x +-1024, z -512..7680, roughly 64x that
+## square's area, and naively drawing the square's own density everywhere in
+## it was measured to cost ~64x the instance count and, by extension, ~64x
+## `scatter_rules.all_placements()`'s own share of boot time — the ~45s of a
+## 3m08s boot (`PERF2`) that was already the single largest phase becomes
+## something like 45 minutes. That is not a tuning question, it is a "the
+## game does not boot" one, so this does not do that.
+##
+## Opt-in PER LAYER (`layer.corridor_fill`, absent/empty is a no-op, same
+## contract as `verge`/`anchors`/`path_standoff`) rather than automatic: a
+## hand-built layer Dictionary in a test (no `corridor_fill` key) must keep
+## placing exactly what it always has, and layers this scatter has never
+## tuned outside the square (the smallest ground-cover strays, mostly) should
+## not silently start appearing 8km down the corridor because a global switch
+## flipped.
+##
+## Candidates are drawn proportional to the CORRIDOR's area at the layer's own
+## origin-square density (`clumps`/`strays` per m²) — not `world_size`'s old
+## count — so a wide, sparse layer and a tight, dense one both fill at the
+## rate they were already tuned to, rather than every layer getting the same
+## flat instance budget. Each candidate is then kept or dropped by
+## `_band_scale_at(z)`, the top-level `corridor_bands` table in
+## vegetation.json — a z-ranged list of `density_scale` (0..1) that content
+## lanes can tune per band without touching this file, which is what lets the
+## corridor read as five different reaches instead of one uniform density
+## rubber-stamped 64x wider. `layer.corridor_fill.density_scale` is a second,
+## layer-wide multiplier on top of that (default 1.0) for a layer that should
+## fill lighter (or not at all) than the band table alone would give it.
+##
+## The reject roll happens BEFORE the per-clump instances are drawn, so a
+## dropped candidate costs one rng call and one dictionary lookup, not a
+## wasted pass through `_consider`'s heightfield/slope/path sampling — the
+## actual cost `all_placements` pays per candidate.
+##
+## Candidates whose CENTRE lands inside the old square are dropped outright,
+## never merely thinned — the square's density was tuned across five visual
+## passes and this must add to the corridor, never to ground already spoken
+## for. A clump's spread can still nudge a few of its own instances back
+## across that line; that is the same boundary softness `_place_anchor` and
+## `_place_verge` already accept and is harmless, since nothing here can ever
+## remove or move an instance the square already had.
+static func _place_corridor_fill(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted, models: Array,
+	half: float, rng: RandomNumberGenerator
+) -> void:
+	var fill: Dictionary = layer.get("corridor_fill", {})
+	if fill.is_empty():
+		return
+	if not field.has_method("world_bounds"):
+		return
+	var bounds: Dictionary = field.world_bounds()
+	if bounds.is_empty():
+		return
+	var min_x := float(bounds.get("min_x", -half))
+	var max_x := float(bounds.get("max_x", half))
+	var min_z := float(bounds.get("min_z", -half))
+	var max_z := float(bounds.get("max_z", half))
+	var corridor_area := (max_x - min_x) * (max_z - min_z)
+	var origin_side := half * 2.0
+	var origin_area := origin_side * origin_side
+	if corridor_area <= origin_area or origin_area <= 0.0:
+		return
+
+	var layer_scale := clampf(float(fill.get("density_scale", 1.0)), 0.0, 1.0)
+	if layer_scale <= 0.0:
+		return
+	var bands: Array = config().get("corridor_bands", [])
+
+	var clumps := int(layer.get("clumps", 0))
+	var per_clump := int(layer.get("per_clump", 0))
+	var strays := int(layer.get("strays", 0))
+	var spread := float(layer.get("clump_radius", 14.0))
+
+	var candidate_clumps := int(round(float(clumps) / origin_area * corridor_area))
+	var candidate_strays := int(round(float(strays) / origin_area * corridor_area))
+
+	for c in candidate_clumps:
+		var centre := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+		var keep_chance := layer_scale * _band_scale_at(centre.y, bands)
+		if rng.randf() > keep_chance:
+			continue
+		if absf(centre.x) <= half and absf(centre.y) <= half:
+			continue
+		for i in per_clump:
+			var angle := rng.randf_range(0.0, TAU)
+			var radius := sqrt(rng.randf()) * spread
+			var spot := centre + Vector2(sin(angle), cos(angle)) * radius
+			_consider(out, layer, field, models, spot, half, rng)
+
+	for s in candidate_strays:
+		var spot := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+		var keep_chance := layer_scale * _band_scale_at(spot.y, bands)
+		if rng.randf() > keep_chance:
+			continue
+		if absf(spot.x) <= half and absf(spot.y) <= half:
+			continue
+		_consider(out, layer, field, models, spot, half, rng)
+
+
+## The `density_scale` (0..1, TUNABLE) of the first band in `corridor_bands`
+## (vegetation.json, top-level) whose `[z_min, z_max)` contains `z`. 1.0 (full
+## origin-square density) if `bands` is empty or `z` matches none of them, so
+## an unconfigured corridor fills at the same rate the old square was tuned
+## to rather than silently going bald outside every authored band.
+static func _band_scale_at(z: float, bands: Array) -> float:
+	for entry: Variant in bands:
+		var band: Dictionary = entry
+		if z >= float(band.get("z_min", -INF)) and z < float(band.get("z_max", INF)):
+			return clampf(float(band.get("density_scale", 1.0)), 0.0, 1.0)
+	return 1.0
 
 
 ## How far a ridge-biased clump is allowed to wander from its own unbiased

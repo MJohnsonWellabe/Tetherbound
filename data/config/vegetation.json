@@ -6,6 +6,39 @@
   "_comment_scale": "These models are authored in METRES, unlike Kenney's which were about one unit tall and needed a 3.4x per-layer correction. So `base_scale` is near 1.0 here and mostly trims rather than multiplies. Measured with tools/measure_models.gd rather than guessed \u2014 guessing produced a meadow of knee-high trees once already.",
   "_comment_ev2": "EV2 (bible sec10): an APPROVED SUBSET, not all 116 models in the fuller pack. `trees` (standard canopy) and `grove` (hero trees) are each cut to the bible's counts and given controlled spring/deep/yellow-green variants per model instead of one flat colour; `saplings` is new. Two of the bible's asks are NOT done here and are recorded rather than faked: 'wetland forms near river' was blocked on there being no water at all; EV5 has since shipped the pond/stream and reed stands at the banks, but a dedicated wetland MESH still does not exist; and the rock family's '2-3 large' tier has no distinct large-format mesh in the imported subset (the fuller Stylized Nature MegaKit is itch.io-blocked, see EV1-remainder in BLOCKED.md) \u2014 reusing the existing Rock_Medium meshes in a second layer would silently break their tint/collision via vegetation.gd's known models-shared-across-layers failure mode, so the existing single `rocks` layer's 0.28-2.1 scale span (already producing large-boulder reads from the same 3 medium meshes) stands as the honest ceiling until more geometry is unblocked.",
   "seed": 20260803,
+  "_comment_corridor_bands": "VEG-CORRIDOR. The scatter's clumps/strays only ever sampled inside the old +-256m square (world_size below) -- everything past it, out to the corridor's real x+-1024/z-512..7680 (docs/decisions/D50/D51), was correctly-shaped baked ground with nothing growing on it. `density_scale` here (0..1, per band, TUNABLE) is the knob a content lane tunes to bring one band up as it gets authored -- NOT a single global figure, because a uniform full-density fill was measured to multiply the whole scatter's instance count and its ~45s share of boot by roughly the corridor:square area ratio (~64x), which is not affordable (see scatter_rules.gd::_place_corridor_fill's own header for the arithmetic). z ranges mirror terrain_playground.json's trail.bands (read, not imported -- this file owns scatter rules, not the spine) so a band's own reach matches the trail through it; z_max is exclusive, and the final band's max is the corridor's own z bound so nothing past band 5 is unaccounted for. A layer only fills the corridor at all if it opts in with its own `corridor_fill` key (see e.g. the `trees` layer below) -- absent is a no-op, same contract as verge/anchors.",
+  "corridor_bands": [
+    {
+      "id": "band1_lower_meadows",
+      "z_min": -512.0,
+      "z_max": 1360.0,
+      "density_scale": 0.07
+    },
+    {
+      "id": "band2_stone_and_root",
+      "z_min": 1360.0,
+      "z_max": 3180.0,
+      "density_scale": 0.05
+    },
+    {
+      "id": "band3_the_river_lock",
+      "z_min": 3180.0,
+      "z_max": 4760.0,
+      "density_scale": 0.03
+    },
+    {
+      "id": "band4_upper_meadows_ironwood",
+      "z_min": 4760.0,
+      "z_max": 7000.0,
+      "density_scale": 0.03
+    },
+    {
+      "id": "band5_stronghold_approach",
+      "z_min": 7000.0,
+      "z_max": 7680.0,
+      "density_scale": 0.03
+    }
+  ],
   "layers": {
     "trees": {
       "_comment": "The common broadleaf, 7-9m. The everyday tree of the meadow, in copses.",
@@ -22,6 +55,10 @@
       "per_clump": 16,
       "clump_radius": 20.0,
       "strays": 22,
+      "_comment_corridor_fill": "VEG-CORRIDOR: the main canopy fills the corridor at the band table's own rate -- see corridor_bands above.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_ridge_bias": "R7.1-remainder: specific sightlines toward the true horizon (the last real hilltops before Terrain3D's own procedural background takes over past the 512m bake) could still land on a gap between clumps, even though far clumps exist elsewhere. ridge_bias makes half this layer's clumps sample several candidate centres and keep the highest, biasing toward hilltops/ridge crests without hand-picked coordinates (scatter_rules.gd). Not a density increase \u2014 same clump count, biased placement. Tune by rendering, not by feel.",
       "ridge_bias": 0.75,
       "_comment_slope": "Trees stop well before the rocky rises. A tree growing out of a cliff face is the cheapest way to destroy the sense that a place was authored.",
@@ -109,6 +146,10 @@
       "per_clump": 4,
       "clump_radius": 26.0,
       "strays": 4,
+      "_comment_corridor_fill": "VEG-CORRIDOR: hero trees stay rare outside the square too, so this layer's own multiplier trims the band table's rate further rather than matching it -- a landmark that repeats every few hundred metres stops being one.",
+      "corridor_fill": {
+        "density_scale": 0.4
+      },
       "max_slope_deg": 19.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Same shoreline standoff as the standard canopy. TUNABLE.",
       "min_height": -21.6,
@@ -180,6 +221,10 @@
       "per_clump": 5,
       "clump_radius": 10.0,
       "strays": 8,
+      "_comment_corridor_fill": "VEG-CORRIDOR: fills alongside the standard canopy at the band table's own rate.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "max_slope_deg": 21.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Same shoreline standoff as the standard canopy. TUNABLE.",
       "min_height": -21.6,
@@ -217,6 +262,10 @@
       "per_clump": 2,
       "clump_radius": 12.0,
       "strays": 6,
+      "_comment_corridor_fill": "VEG-CORRIDOR: dead trees break up the corridor's own treeline the same way they do the square's.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_drain_sd16": "D41: a dead tree does not die twice. This layer is the one thing that should INCREASE around a Tether station, so it opts out of the suppression entirely and the quarry gets an authored stand instead (below). `models` on that anchor narrows this layer's list to the three dead trees -- the mushrooms belong under a living canopy, not on drained ground.",
       "drain_suppression": 0.0,
       "anchors": [
@@ -268,6 +317,10 @@
       "per_clump": 15,
       "clump_radius": 13.0,
       "strays": 180,
+      "_comment_corridor_fill": "VEG-CORRIDOR: the understory fills at the band table's own rate.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment. Every ground-cover layer shares one path-exclusion isoline, and terrain_playground.json's four routes all meet at the village well -- their combined exclusion wedges read as a converging fan across every layer at once, not a per-layer defect. OF12 widened 0.15 -> 0.35 on the walkthrough ground-cover layers (bushes stay at 0.25 -- a shrub standing in the worn shoulder reads as blocking the road, a tuft reads as encroachment): a blind critic named the dirt/grass boundary 'a clean cut with no interpenetration', and a wider per-instance threshold spread lets the occasional plant stand visibly INTO the fade band. TUNABLE.",
       "path_edge_jitter": 0.25,
       "_comment_path_standoff_of12": "OF12 round 2: bushes gain the same noise-varying standoff as grass so their new verge fringe below is culled stretch-by-stretch too, not strung uniformly. Distinct wavelength/salt from every other layer. TUNABLE.",
@@ -311,6 +364,10 @@
       "clump_radius": 10.0,
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
       "strays": 900,
+      "_comment_corridor_fill": "VEG-CORRIDOR: the primary ground cover, so this is the layer the band table's density is most visibly tuned against.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment and bushes' matching entry above -- the village well is where four routes converge, and every ground-cover layer's exclusion edge fans out from it together. TUNABLE.",
       "path_edge_jitter": 0.5,
       "_comment_path_standoff_of12": "OF12: replaces path_avoid_radius 6.0, the constant exclusion circle. Holding every tuft exactly 6m off the centreline gave the meadow a ruler-straight inner edge at the same offset on BOTH sides of every path -- which is the 'two nearly straight bands flanking the path' read itself, not a cure for it; five tuning rounds of constant distances (EV3-remainder..-6) never moved that verdict. The standoff now drifts 0.3-7m with ~17m-wavelength position noise, per side of the path independently (scatter_rules.gd::path_standoff_at), so grass crowds the worn edge in one stretch and stands back in the next. min stays near zero on purpose: the path_factor gate already keeps the worn dirt itself clear. TUNABLE.",
@@ -362,6 +419,10 @@
       "_comment_clump_radius_ev3": "EV3: same tighter-packing lever as `grass` above, same reasoning -- 19.0 -> 12.0 keeps the instance count fixed and concentrates it. TUNABLE.",
       "clump_radius": 12.0,
       "strays": 380,
+      "_comment_corridor_fill": "VEG-CORRIDOR: the warm-toned ground cover fills at the band table's own rate, same as grass.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment and bushes' matching entry above -- the village well is where four routes converge, and every ground-cover layer's exclusion edge fans out from it together. TUNABLE.",
       "path_edge_jitter": 0.35,
       "_comment_path_standoff_of12": "OF12: replaces path_avoid_radius 7.0 -- see grass's matching entry for why a constant radius was itself the flanking-border mechanism. Different wavelength and salt from grass, so the two ground-cover layers do not advance and retreat from the path in lockstep. TUNABLE.",
@@ -406,6 +467,10 @@
       "per_clump": 78,
       "clump_radius": 9.0,
       "strays": 620,
+      "_comment_corridor_fill": "VEG-CORRIDOR: colour accents fill at the band table's own rate, same as the other ground cover.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_path_of12": "OF12: this layer's whole path-anchoring stack -- path_bias 0.35, path_bias_per_clump 26, path_bias_side_offset 6.0, path_bias_jitter 4.0, grown one knob per round across EV3-remainder through -4 (the full history is in DONE.md, kept there rather than here) -- is REMOVED, not retuned. Every round treated 'the flowers read as a planted border' as a parameter problem on a mechanism whose only job was to anchor flower clumps to the road, and the owner's verdict never moved: deliberately snapping a garden-accent layer to a path centreline IS planting a border, however jittered. Wildflowers are now ordinary meadow accents that reach a path only when an unbiased clump happens to land near one, gated by the same noise-varying path_standoff as grass (scatter_rules.gd::path_standoff_at) so a chance near-path clump keeps a ragged, per-side-independent edge instead of a matched pair of crescents. max is lower than grass's -- verge wildflowers genuinely hug a worn edge -- and the salt differs so flower gaps do not mirror grass gaps. TUNABLE.",
       "path_standoff": {
         "min": 0.0,
@@ -447,6 +512,10 @@
       "per_clump": 9,
       "clump_radius": 11.0,
       "strays": 130,
+      "_comment_corridor_fill": "VEG-CORRIDOR: the layer that makes steep corridor ground read as stone rather than grass at an angle, same job as it does inside the square.",
+      "corridor_fill": {
+        "density_scale": 1.0
+      },
       "_comment_slope": "The only layer with a MINIMUM slope as well as a maximum, so boulders gather on the shoulders and rises where they belong instead of sitting on flat grass like dropped props.",
       "_comment_drain_sd16": "D41: stone does not wither. The drained radius takes the ground cover, not the boulders standing in it -- and a quarry with no rock in it would be a strange quarry.",
       "drain_suppression": 0.0,
