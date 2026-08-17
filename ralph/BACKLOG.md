@@ -308,6 +308,38 @@ computes correctly can still fail to be walkable — which is exactly what the
 phantom wall turned out to be, three wrong diagnoses deep.
 
 ### RIVER-GATE — the river is a one-way wall, and the authored crossing cannot be crossed
+**CLOSED 2026-08-17 (OPS14) — and the premise was wrong.** Landed `7c5dc6d3`.
+**Both crossings work, in both lock states, with zero world teleports**, walked
+with the real Player on unmodified `main`:
+
+| | locked | unlocked | teleports |
+|---|---|---|---|
+| South Bridge | −9.1 m | +22.9 m | 0 |
+| Old Mill Crossing | −8.0 m | +23.7 m | 0 |
+
+South Bridge reproduces `OW5C`'s own −9.1/+23.3 and `smoke_traversal`
+independently agrees at the mill. **No opening was punched, because none was
+needed.** The chain *does* overlap the deck in plan — the middle 11.0 m of the
+18.4 m span — but a volume's ceiling is `lip_y - LIP_CLEARANCE` and the deck
+stands **5.10 m above it**, so a body on the span never enters one.
+
+**Nothing asserted that, and the two heights come from different places** — the
+deck from the crossing's `flats` pads, the ceiling from the river's own
+depth/rim. So the lane shipped the assertion instead of a geometry change:
+`tests/test_river_crossings_stay_open.gd` (chain covers the whole 2,300 m course
+with no gap; the deck run stands clear of every volume under it; the channel
+under the deck is still covered), verified failable both ways. An opening was
+built and measured before being rejected — it changed the walk by nothing and
+cost the coverage under the bridge. `D56` records it. **That is what
+`tether_relay`'s `deck_y` and `smoke_boss`'s `BARRIER_LIMIT_M` cost when two
+independently-derived heights drift.**
+
+**Where the 712 teleports actually came from — the SPINE, not the crossing.**
+See `SPINE-ROUTE` below. `OW5-walk`'s reading was a reasonable inference from a
+real symptom and it was wrong; the coordinator relayed it to the owner as fact,
+which it was not.
+
+### RIVER-GATE — the original entry, superseded above
 `model: opus` · `tests: smoke_traversal, new` · `area: terrain, world`
 **NEEDS AN OWNER DECISION BEFORE THE FIX. Filed 2026-08-17 (OPS11) from
 `OW5-walk`, and it closes `OW5C`'s three-failed-fixes entry — it was never a
@@ -380,7 +412,58 @@ player who falls in *beside* the deck, so the hole is the deck's footprint and
 not the whole segment. Acceptance is both lock states: locked stops the player,
 unlocked lets them across.
 
+### SPINE-ROUTE — 11 m of Band 3's trail runs two metres to the side of its own bridge
+`model: sonnet` · `tests: smoke_traversal, the walk probe over a z-window` · `area: terrain`
+**Filed 2026-08-17 (OPS14). This is the real cause of `OW5-walk`'s 712 recovery
+teleports, and it is a two-metre data error.**
+
+`OW5C` nudged Old Mill Crossing from x −150 to −152 to clear a collision-shape
+seam — **and moved the crossing without moving the spine.** Band 3's trail still
+crosses at x = −150 while the deck's centreline is at −152, so **11 m of
+authored trail lies inside a river recovery volume two metres east of the
+bridge.** A body walking the authored route falls in beside the deck, is
+returned to the village bank, walks back, and repeats — which is exactly the 712
+teleports, and why three separate fixes to the *crossing* never helped: the
+crossing was never the problem.
+
+**Fix the spine, not the world.** The bridge is correct and now has a test
+holding it correct (`RIVER-GATE`). Move Band 3's waypoints onto the deck's real
+centreline, then re-walk that window to prove it — `tools/_probe_ow5_walk.gd
+--mode=spine --z_from --z_to` walks a window in a fraction of the ~30 min the
+full spine costs.
+
+`trail.bands[]` was out of scope for both lanes that found this, which is why it
+is still open. **It is in scope for you, and only these waypoints are** — the
+spine's overall shape is settled and was measured at 11,316.6 m / 37.7 min.
+
+**Do not re-nudge the crossing.** It sits at −152 for a measured reason and is
+now pinned by a test.
+
 ### SPINE-WEDGE — bodies stop on walkable ground at four places on the spine
+**CLOSED 2026-08-17 (OPS14), in the `integrate-4` bundle. Not terrain — a
+spoke's own trench.** `storm_road`'s `collapsed_bridge` carve was `half_length`
+55 + `end_fade` 18: **a 73 m reach each way, a 146 m trench laid across the
+corridor to sever a 3 m road.** The spine's last leg to the stronghold gate
+crossed it at full 11 m depth, the trench carries a `CarveFailsafe`, and every
+body that fell in was returned to `road[4]` at (−33.99, 7513.46) —
+character-for-character `OW5-walk`'s "stronghold gate approach" wedge, which it
+had reported as *"Terrain, 12–17 degrees"*, i.e. walkable angles. **No amount of
+looking at the terrain would have found the spoke.**
+
+Cut to 20/10, a 30 m reach: the road is still severed at full depth and D50's
+65.6° walls are untouched, and the spine now passes 7.6 m clear of the
+zero-depth contour. **Exactly the edit `river_gorge` already took for the same
+reason** (70/22 → 26/14, because its trench was gouging the pond). Re-baked
+regions −1:14 and 0:14 only — the whole of that carve's footprint. `D55` records
+the rule: *a spoke may not block the road it is not severing.*
+
+**Two lanes converged on this independently** — `RIVER-GATE`'s volume scan found
+the same site from the other direction and confirmed that **exactly two stretches
+of spine on the whole map lie inside any recovery volume.** One was this; the
+other is `SPINE-ROUTE` above. `OW5-walk`'s other three wedge sites are cleared by
+that same scan.
+
+### SPINE-WEDGE — the original entry, superseded above
 `model: sonnet` · `tests: smoke_traversal, new probe run` · `area: terrain, collision`
 Filed 2026-08-17 (OPS11) from `OW5-walk`. **This is the `WALL1` class of defect
 again, and this time there are coordinates and normals for every instance.** All
