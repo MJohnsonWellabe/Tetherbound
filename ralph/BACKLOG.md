@@ -480,12 +480,48 @@ three sit in one ~20 m stretch of the southern foot of the rocky rise, found by
 independent freezes in one stretch is not one bad triangle — it is a property of
 that ground, or of how collision is generated over it.
 
-**The open hypothesis, untested at filing:** terrain collision is generated as
-tiled shapes, and `collision_shape_size` is silently clamped to 8–64 step 8
-while `collision_radius` is clamped 16–256 step 16. A silently-altered parameter
-is exactly the kind of thing that produces geometry nobody authored. Checking
-whether those three coordinates fall near shape boundaries is arithmetic, not a
-bake, and it is the first thing to do.
+**CONFIRMED, 2026-08-17 01:30Z, by the `COLL1` lane — and the cause is a trap
+this project has now been bitten by three times.**
+
+`collision_shape_size` has been **silently stuck at Terrain3D's default of 16**,
+never the 256 `playground_world.gd`'s own comment believes it set.
+`_build_terrain()` calls `terrain.set("collision_shape_size", ...)` **before**
+`add_child()`, and that setter is a no-op out of the tree. The comment sitting
+next to it even names "the 16m default" as the thing it believes it avoided.
+
+Consequence: today's 512 m world tiles its collision into **~1024 independent
+16 m `HeightMapShape3D` pieces instead of 4 — 256× more shape seams than anyone
+knew existed.**
+
+Measured at the freeze coordinate, walking a `CharacterBody3D` straight across
+(52.97, −122.28) at the creature's own 55° limit:
+
+| `collision_shape_size` | spurious `is_on_wall()` frames |
+|---|---|
+| 16 (the live, stuck value) | **47 / 180 — 26%** |
+| 64 (what `BAKE-GUARDS` produces) | 23 / 180 — 13% |
+
+**`ralph/BAKE-GUARDS` already halves it**, as a side effect of moving the set
+into `_ready()` and reading the value back. That is not a fix anyone designed
+for this bug; it fell out of fixing the setter.
+
+Two honest limits the finding lane stated itself, and they matter:
+- **23/180 is still nonzero.** Shape size alone does not eliminate the spurious
+  wall detection, so this is a contributing cause, not necessarily the whole one.
+- **It is not a full reproduction.** The probe walks a straight line at constant
+  velocity; it does not run the real steering and unstick AI, so it does not
+  reproduce the reported 600+-frame total freeze.
+- Static sampling at all three coordinates — raycast against live physics, not
+  `ground_height_at()` — showed **no** discrepancy: real surface height and
+  normal track the analytic heightfield within millimetres, including four 0.5 m
+  offsets around each point. **The static geometry is not wrong. The moving
+  contact is.** `OF15`'s point B is separately a legitimately steep −47° local
+  feature, consistent with "southern foot of the rocky rise".
+
+**Why this gated the corridor, concretely:** baking 64 regions across
+8192 × 2048 m while collision silently tiles at 16 m would have laid tens of
+thousands of these seams under 12 km of trail, and the defect would have been
+discovered after a 153-minute bake with a trail authored on top of it.
 
 **Do not sample `ground_height_at()` to investigate this.** That scalar is what
 lied to two separate investigations. Query the collision normal and shape the
