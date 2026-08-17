@@ -52,11 +52,22 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# player_controller.gd's own _face() smoothly rotates the MODEL toward
+	# the movement direction each frame -- it does not read player.rotation.y
+	# at all, so a stationary capsule's own rotation.y is not what the model
+	# (and apply_terrain_adaptation, which reads the model's OWN rotation.y)
+	# actually faces. Set the model directly for a controlled test.
+	var model: Node3D = player.get_node_or_null(^"Model") as Node3D
+	if model == null:
+		push_error("no Model under Player")
+		quit(1)
+		return
+
 	var field: RefCounted = HEIGHTFIELD.new()
 	var ground := float(field.call("height_at", SLOPE_X, SLOPE_Z))
 	player.global_position = Vector3(SLOPE_X, ground + 1.0, SLOPE_Z)
 	player.velocity = Vector3.ZERO
-	player.rotation.y = 0.0  # faces +z, the uphill direction at this spot
+	model.rotation.y = 0.0  # faces +z, the uphill direction at this spot
 
 	var camera := Camera3D.new()
 	camera.fov = 55.0
@@ -81,7 +92,7 @@ func _run() -> void:
 	# pitch sign must flip (leaning the other way into the same physical
 	# slope), which is the clearest single check that pitch tracks facing
 	# rather than a fixed world direction.
-	player.rotation.y = deg_to_rad(180.0)
+	model.rotation.y = deg_to_rad(180.0)
 	for i in PHYSICS_SETTLE:
 		await physics_frame
 	await _shoot(camera, player, "02-slope-idle-downhill-facing", written, failures)
