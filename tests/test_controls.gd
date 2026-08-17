@@ -294,22 +294,82 @@ func test_no_two_world_context_actions_share_a_gamepad_button() -> void:
 const BACKPACK_VERB_ACTIONS := ["backpack_drop", "backpack_split", "backpack_assign"]
 
 
-func test_no_two_menu_context_actions_share_a_keyboard_key() -> void:
+## UI-PAD1 widened this from keyboard-only to keyboard AND joypad. It used to
+## do `var key := event as InputEventKey` and `continue` on everything else, so
+## a pair of verbs sharing a controller button was invisible to it -- and a
+## missing/duplicated pad binding is precisely the class of bug that shipped a
+## game whose menus no controller could press.
+##
+## Honest about what this half currently bites on: all three backpack verbs are
+## keyboard-only today (G / H / J, no joypad events at all), so the joypad
+## branch finds nothing to compare. It is a guard for the day one of them gains
+## a pad binding, not a claim that anything is being checked right now. The two
+## tests below it are the ones with a live failure mode.
+func test_no_two_menu_context_actions_share_a_button() -> void:
 	var claimed: Dictionary = {}
 	for action in BACKPACK_VERB_ACTIONS:
 		assert_true(InputMap.has_action(str(action)), "%s is not a real action" % action)
 		for event in InputMap.action_get_events(str(action)):
+			var code := ""
+			var human := ""
 			var key := event as InputEventKey
-			if key == null:
+			var pad := event as InputEventJoypadButton
+			if key != null:
+				code = "key:%d" % key.physical_keycode
+				human = "keyboard %s" % key.as_text()
+			elif pad != null:
+				code = "joy:%d" % pad.button_index
+				human = "joypad button %d" % pad.button_index
+			else:
 				continue
-			var code := "key:%d" % key.physical_keycode
 			assert_false(
 				claimed.has(code),
-				"%s and %s both claim keyboard %s -- tab_backpack.gd reads both from one poll(), so the first one read wins and the other verb is dead" % [
-					claimed.get(code), action, key.as_text()
+				"%s and %s both claim %s -- tab_backpack.gd reads both from one poll(), so the first one read wins and the other verb is dead" % [
+					claimed.get(code), action, human
 				]
 			)
 			claimed[code] = action
+
+
+## The regression guard for UI-PAD1 itself, and the one assertion here that
+## fails on the code as it shipped.
+##
+## `ui_accept` is what a focused `Button` activates on. It is a Godot built-in,
+## it was not listed in project.godot, and the engine defaults it fell back to
+## carried no joypad event -- so on a controller every menu in the game could be
+## navigated and nothing in it could be pressed. Measured, not inferred: the
+## build menu's grid took focus correctly and neither A nor X armed a piece.
+##
+## This is a project-wide property, so it belongs here rather than in any one
+## screen's smoke test.
+func test_ui_accept_can_be_pressed_with_a_controller() -> void:
+	assert_true(InputMap.has_action("ui_accept"), "ui_accept is not a real action")
+	var pad_buttons: Array[int] = []
+	for event in InputMap.action_get_events("ui_accept"):
+		var pad := event as InputEventJoypadButton
+		if pad != null:
+			pad_buttons.append(pad.button_index)
+	assert_false(
+		pad_buttons.is_empty(),
+		"ui_accept has no joypad event, so no focused Button anywhere in this controller-first game can be pressed with a pad -- see ralph/NOTES.md and project.godot's own note on this action"
+	)
+
+
+## Listing `ui_accept` in project.godot REPLACES the engine defaults instead of
+## adding to them, so the keyboard events only exist because UI-PAD1 restated
+## them by hand. Dropping one would quietly take Enter or Space away from every
+## menu in the game, and no other test would notice.
+func test_ui_accept_still_answers_the_keyboard() -> void:
+	var keycodes: Array[int] = []
+	for event in InputMap.action_get_events("ui_accept"):
+		var key := event as InputEventKey
+		if key != null:
+			keycodes.append(key.keycode if key.keycode != 0 else key.physical_keycode)
+	for wanted in [KEY_ENTER, KEY_SPACE]:
+		assert_true(
+			keycodes.has(wanted),
+			"ui_accept lost %s -- defining the action in project.godot replaces the engine defaults, so every keyboard event has to be restated there" % OS.get_keycode_string(wanted)
+		)
 
 
 func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
