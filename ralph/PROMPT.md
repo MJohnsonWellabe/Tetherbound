@@ -89,6 +89,19 @@ for lanes running in parallel. **Re-read the reasoning, not just the ordering.**
 If you believe the owner's item genuinely cannot proceed, say so explicitly and
 name what would unblock it. Do not quietly work on something else instead.
 
+### One thing that does NOT change under a coordinator: the `DONE.md` half
+
+Added 2026-08-17, after `DONE.md` went stale for two straight days under a
+coordinator that kept `BACKLOG.md` current the entire time. A coordinator
+closing an item — marking it `CLOSED`, deleting its heading, moving it to a
+one-line "done" list — is real bookkeeping, and it is not `DONE.md`'s half.
+`DONE.md` needs its own entry, with the commit SHA and what shipped, in the
+*same* pass that closes the item in `BACKLOG.md`, whether a lane writes it
+for its own item or the coordinator writes it while closing on a lane's
+behalf. See "Record" (step 7, below) for the entry itself. Unlike the three
+things above, this one is not ceremony to drop — it is the thing that
+actually went missing.
+
 ---
 
 ## Read first, every time
@@ -499,6 +512,18 @@ luck, not the protocol working as intended.
 7. **Record**: move the item from `BACKLOG.md` to `DONE.md` with its commit SHA
    and one line on what shipped. Commit that too — and read the bookkeeping
    warning below first, because these three files are where lanes collide.
+
+   **Marking `BACKLOG.md` closed is not this step. Both halves are owed, in
+   the same pass, for every item that lands — not one now and the other
+   "later."** `DONE.md` went stale twice in one day (2026-08-16/17) while
+   `BACKLOG.md` was kept current throughout: a coordinator was annotating
+   items `CLOSED` or deleting their headings on every landing, which is real
+   and valuable work, but it satisfies `BACKLOG.md`'s half of the contract
+   and does nothing for `DONE.md`'s — an item can be fully reconciled out of
+   the backlog and still have no entry anywhere saying what it did. Whoever
+   closes an item — the lane that shipped it, or a coordinator closing on a
+   lane's behalf — owes `DONE.md` an entry in the *same* pass, not a sweep
+   to catch up later. "I closed the backlog" is half the job.
 8. **Release your leases and end.** Release your area lease and lane
    heartbeat (see "One live firing per lane" above), say what you shipped
    and that it's confirmed on `main`, and stop. **Do not schedule a

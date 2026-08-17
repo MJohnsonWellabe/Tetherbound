@@ -3,6 +3,973 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OPS8 — close CAP1, and file the scatter bound that blocks MQ2B
+
+`model: haiku` · `tests: none` · `area: ops` · `3af85030`
+
+Closed `CAP1` (measured 10m35s -> 1m12s warm, see below). Filed `VEG-CORRIDOR`:
+`playground_world.gd`'s vegetation build still passes the old `world_size`
+(512) into `vegetation.build()`, so all ~23.7k scattered instances sit in the
+first ~3% of the corridor's 7,560m trail and the rest is bare landform. Filed
+rather than started — naive widening is ~30x the instance count against an
+already-3m08s boot, and `OW5-walk`'s real-traversal measurement is the input
+this bound needs.
+
+## OPS7 — close R7.4, and file the three quality-plan items the backlog never had
+
+`model: haiku` · `tests: none` · `area: ops` · `89902c3b`
+
+`R7.4` closed on its own terms (its check names `map_baker.gd`, which
+correctly has no reveal logic — `OW3` put the reveal in `tab_map.gd`/
+`minimap.gd` instead, so what the player has seen is view state, not
+terrain). Filed `MQ2B`, `MQ3` and `PW2` into `BACKLOG.md` proper — they
+existed only in `MEADOWS_QUALITY_REBUILD_PLAN.md` and the backlog's own
+"state of the project" claim was false without them, since they are the
+largest remaining block of work. Phase 6.5's empty header backfilled with
+`MQ1A`/`MQ1B`.
+
+## CAP1 — fast interior-only capture scene, verified and measured
+
+`model: sonnet` · `tests: none` (visual tooling) · `area: tooling` · `1f1355d2`, `cab638ae`
+
+`tools/capture_interior.gd` builds only the sky/sun/fog rig, camera rig and
+`grandpa_house.gd` interior at the origin, instead of booting the whole
+Meadows corridor to photograph one room. Measured warm on the same import
+cache: full-corridor capture 10m35s for 3 frames vs this script's 1m12s
+(~8.8x). Frame-for-frame identical to the corridor path apart from
+anti-aliasing jitter and one understood, documented divergence (the trainer
+keeps its default standing pose here because no `SequenceDirector` is built).
+
+## OPS6 — tell the check-in to close what it lands, not just land it
+
+`model: haiku` · `tests: none` · `area: ops` (docs only) · `267f13f0`
+
+`BACKLOG.md` drifted twice in one day, the second time eight hours after
+`OPS1` had reconciled it from scratch (`OW12`, `OW3`, `OW5E`, `OW5C`, `OW5D`,
+`OF15` all shipped and still carried open headings). `COORDINATED_RUN.md`
+already said to reconcile continuously and gave the ancestor test; its
+check-in checklist told the loop to *land* green branches and never told it
+to *close* what it landed. Added that step.
+
+## OPS5 — record where the blind-playtest screenshots live, and why not on main
+
+`model: haiku` · `tests: none` · `area: ops` (docs only) · `d61944ce`
+
+The 2026-08-15 blind playtest's four written docs are on `main`; its 267
+screenshots (223 MB) exist only on `claude/blind-playtest-planning-g371qr`,
+which now looks indistinguishable from the retired scratch branches. Recorded
+the reasoning (main's tree is already ~1384 MB, CI checks it out 19x per run)
+so the branch isn't deleted by accident and the decision can be re-argued
+rather than rediscovered.
+
+## OPS4 — reconcile the backlog against main, and record two porting lessons
+
+`model: haiku` · `tests: none` · `area: ops` (docs only) · `4c6825a4`
+
+Closed `OW12`, `OW3`, `OW5E`, `OW5C`, `OW5D`, `OF15` — all shipped in the
+eight hours since `OPS1`'s own reconciliation and all still open in
+`BACKLOG.md`. Marked `OW5-walk` START HERE (the corridor is on `main`,
+nobody has walked it end to end, and `OW6`/`MQ2B` build on that route).
+Recorded two traps for `COORDINATED_RUN.md`: a keep-both merge needs a
+duplicate *call-site* check, not just a duplicate-declaration grep (a stray
+second `vegetation.build()` call shipped this way and errored every boot);
+and porting a stale branch means re-deriving its constants against today's
+world, not copying them (the class of bug `OF15`'s detector and
+`smoke_boss.gd`'s `BARRIER_LIMIT_M` both hit).
+
+## Land the last three branches: OF15, SCAT1 and OW5-stream
+
+`model: sonnet` · `tests: full unit suite (1025/94944/0 failed), smoke_traversal` · `area: world` · `05264fda`
+
+Three branches authored against the pre-corridor 512m world, landed after
+being re-derived against the corridor rather than cherry-picked:
+
+- **OF15** — the wedge detector. Rides the same four legs `smoke_traversal.gd`
+  already walks; every `STUCK_CHECK_INTERVAL` it asks whether a grounded
+  player holding an input has actually moved. Its 200m-from-origin exclusion
+  (built for the old disc world) is replaced with an edge margin, and it
+  gained a slope exclusion it never needed on the old gentle terrain — sampled
+  at both 4m and 8m, because one ring missed a wedge whose face begins just
+  past 4m. (OF15's *original* filing blamed terrain; the real cause was
+  Captain Halder's capsule collider — see `WALL1` below. The detector is kept
+  anyway, because it watches every leg rather than aiming at one known cause.)
+- **SCAT1** — the offline scatter bake (`scatter_bake.gd`,
+  `bake_playground_scatter.gd`), adapted to today's `build(world_size,
+  terrain)` signature. Its four baked `region_*.bin` files were NOT landed —
+  they were baked for the old 512m world and `is_fresh()` would reject them on
+  every boot, so committing 860KB of binaries the code is guaranteed to ignore
+  would help nobody. Inert until someone bakes a corridor scatter.
+- **OW5-stream** — mostly superseded by `COLL1`/`BAKE-GUARDS`/`STREAM-SCATTER`
+  already on `main`; only `tools/survey.gd` handing its camera to Terrain3D
+  (so streamed regions build around the survey rig, not the frozen spawn
+  camera) and two cost-probe scripts came across.
+
+## OW5E — fix verify-settings/warrens/relay/boss/unit-tests/traversal; full corridor re-bake
+
+`model: sonnet` · `tests: full unit suite (1025/94944/0 failed), smoke_traversal, smoke_boss, smoke_aggression` · `area: world` · `e44ebaa9`, `de883e8c`, `64fd1ad5`, `9ec515d2`
+
+Six real CI failures left by the corridor landing (`OW5B`/`OW5C`/`OW5D`),
+fixed in order:
+
+- `verify-settings` — the debug-teleport smoke test hardcoded pre-corridor
+  coordinates; now derives from `map.regions()`/the spoke road-ends.
+- `verify-warrens` — the Burrow Warrens relocated onto flat ground with no
+  hill over it; added a `rises.peaks` entry sized against a real height
+  probe and baked its one affected region.
+- `verify-relay` — the apparatus's `deck_y` was calibrated against the old
+  site's ground height; the new site sits 2-8m *above* it, so the "raised"
+  platform was under yard level. Retuned to restore the ramp-only gate.
+- `verify-boss` — the D41 regrowth out-of-bounds check still used the old
+  symmetric world-size square, rejecting the quarry's own authored `deadfall`
+  anchor on every boot. Added a proper rectangle check against the corridor's
+  real bounds.
+- `verify-traversal` — root cause: the committed terrain bake was `OW5B`'s
+  alone, from *before* `OW5C` authored the river/trail/spoke carves and
+  before `OW5D` relocated everything, so none of that content had ever
+  reached collision. A full 64-region re-bake fixed it, and walking the
+  freshly-baked ground surfaced two more real bugs: `world_perimeter.gd`
+  sampled ground height exactly at the exclusive upper edge (always NaN,
+  so ~2048m of the south cap's collision fell back to one flat height and a
+  player could step into the unbaked void beyond); and `smoke_boss.gd`'s
+  `BARRIER_LIMIT_M` was computed from config alone before anyone had walked
+  the real carved result, so it read 18.0 against a measured 28.3m.
+- `verify-unit-tests` — two tests, not the game: `test_map_state.gd` failed
+  to *parse* (it still referenced the removed `MAP_STATE.GRID` const, which
+  silently skipped all 21 map-state tests including the save-format ones);
+  `test_scatter_rules.gd` asserted the old ±256m square instead of the
+  corridor's real, non-square `world_bounds()`.
+
+Also fixed a duplicate `vegetation.build()` call (one correct, one stale
+one-argument leftover from a merge) that errored every boot.
+
+## OW5D — relocate everything, section 10.2's table applied
+
+`model: sonnet` · `tests: full unit suite (959/85285/0 failed)` · `area: world` · `c1d162bd`
+
+Every already-shipped place/NPC/structure moved to its corridor coordinate:
+the pond/basin/stream/outlet, mill, ranger station, Old Quarry, Burrow
+Warrens, Tether Relay, the three regional captains, the Stronghold, and
+every `spawns.json` cluster from section 5's ecology map (galecrest and
+`SH47`'s early meadowhart cluster deliberately left in place, for reasons
+recorded in the commit). Two things fixed that neither prep pass caught: the
+pond's stream/outlet weren't moving with the pond, and two `props.json`
+clusters would have stranded at their structures' old, now-empty coordinates.
+Left open and carried forward honestly: Old Mill Crossing unwalkable in both
+lock states, the river not blocking two tested crossing stations, one
+perimeter fall-through near the east edge — none of them fixed by this
+branch, all fixed later by `OW5E`'s re-bake.
+
+## OW5C — lay the trail: spine, loops, spokes, edges, river
+
+`model: sonnet` · `tests: unit suite (959/83406, 3 pre-existing failures cleared by OW5D)` · `area: world` · `4751b590`
+
+The Band 1 spine and ten regional loops, authored per section 11 and unioned
+into `road_polylines()`. All seven spokes re-sited by a verified
+rotate+scale+translate transform around the old shared hub — none reach
+either long edge, closing `D51`'s open question. River re-derived crossing
+the corridor's full width; South Bridge and Old Mill Crossing relocated with
+their abutments. The 235m ring perimeter replaced by two long edges plus
+end-caps per `D51`. Validated by walking a real physics body, not just
+`ground_height_at` — which caught South Bridge sitting exactly on a 16m
+collision-shape-tile seam (`WALL1`'s open defect at the time) and the
+Band 1/2 spine transition missing the bridge by ~24m; both fixed. Old Mill
+Crossing's unwalkability and the river's non-blocking were found here and
+left open (see `OW5D`/`OW5E`).
+
+## EXP1 — re-measure the export boot guard, and fix a real pipefail bug it hid
+
+`model: sonnet` · `tests: tools/verify_export.sh (3 clean runs)` · `area: perf/ci` · `61087d8a` (interim), `3b77949b` (final)
+
+The export verify's 180s timeout was 8 seconds inside a wall nobody knew was
+there (measured world-build 188s via `user://boot_log.txt`); raised to 420s
+as an explicit tourniquet pending `PERF2`. Once `PERF2` landed, re-measured:
+world-build down to 45-52s, worst-of-three total wall-clock 69s. Set to 150s
+(~2.2x, the same margin ratio the original tourniquet used). Also found and
+fixed a real bug while re-measuring: the `.pck` content check piped `strings
+-a` into `grep -qF` under `set -o pipefail`, so `grep`'s early exit on a
+match SIGPIPEd the still-running `strings` and reported the pipeline's status
+as `strings`' killed exit code instead of `grep`'s — reproduced
+deterministically 3-for-3. Could have been silently failing `verify-export`
+in CI the same way `verify-aggression` was silently failing branches all
+night; fixed by scanning into a file once and grepping that.
+
+## EV10 — fix 03-rise-overlook camera embedded in cliff face
+
+`model: sonnet` · `tests: none named (visual)` · `area: visual` · `4f247404`
+
+The `03-rise-overlook` survey camera sat at the foot of a 30-40m ridge wall
+rather than on its flank, matching round-1 blind-judge feedback ("camera
+reads as caught in the terrain"). Height-grid and sightline probes found a
+new eye position with a clear sightline to the target; committed as WIP
+pending a round-2 blind-judge pass that is not recorded as having run
+separately. Confirmed picked up and used downstream by `OF18`'s later
+site re-shoot ("01/03/06 pick up EV10's 03-rise-overlook camera fix").
+
+## OW5B — grow the Meadows to the 8192x2048m corridor, and bake it
+
+`model: fable` (ran at opus) · `tests: unit suite (959/80919/0 failed), smoke_traversal` · `area: world` · `1f61db19`
+
+`terrain_playground.json` now carries the corridor's `world_bounds`
+(x[-1024,1024] z[-512,7680]) and `vertex_spacing` 2.0. `world_size` left
+unchanged on purpose — vegetation/perimeter/minimap/map weren't corridor-aware
+yet and bumping it would have silently broken them before `OW5C`/`OW5D`
+landed. Full-footprint pre-bake slope sweep (263k points): new territory
+outside the old authored box tops out at 27.9°, clean against the player's
+45°. `build_playground_terrain.gd` gained region-set baking
+(`--regions=col:row,...`, defaulting to everything in bounds), verified
+bit-identical to a full bake at the *decoded* content level (Terrain3D's
+on-disk serialization isn't byte-reproducible run to run, even unchanged).
+64 regions baked in 16 row-batches, ~146s/region.
+
+## MQ1B — root-level terrain adaptation: slope lean and height settle
+
+`model: sonnet` · `tests: test_terrain_adaptation.gd (new)` · `area: player/animation` · `667af8b2` ... `c03edab6` (WIP chain)
+
+Landed as a chain of WIP checkpoint commits rather than one clean push. The
+lean-sign convention was found double-negated (leaning away from slopes
+instead of into them) and fixed; a follow-up fixed tilt *accumulation* to
+track and replace the prior contribution instead of a blind `+=`, then had
+to revert that in favour of fixing the test to emulate the real per-frame
+reset contract instead. `test_terrain_adaptation.gd` pins the sign
+convention so it cannot silently flip again. A parallel WIP thread fixed
+`capture_slope_test.gd` itself (missing `await`, driving the Model node's
+yaw instead of the physics body's, and moving the test location off a
+cliff-base trough onto an actual hillside) before the sign bug could even be
+observed.
+
+## R7.9 + R7.7 (WIP) — the inn, and player HP/armour architecture
+
+`model: sonnet` · `tests: test_player_hp (fixed)` · `area: village/combat` · `9598309b`, `6be6cd69`, `176c2069`
+
+Committed as local WIP checkpoints per the stop-hook convention while a
+visual-judge pass was still running (not pushed mid-pass, per
+`conventions.md`). Round 1: the inn interior plus `R7.7`'s player HP/armour
+architecture. Round 2: furniture and ceiling for the inn, plus a real
+`test_player_hp` bug fix found along the way. Round 3: fixed
+`capture_inn.gd`'s table viewpoint (a parallel shift, not a turn). No
+separate "converged" writeup is recorded in this range; treat the visual
+state as last reported rather than confirmed final.
+
+## PT-15 — pull the starter orb's ambient fill back, shift toward directional for Galewisp
+
+`model: sonnet` · `tests: none named (visual); smoke_starter_picker passed every round` · `area: visual` · `80554c4a`
+
+Galewisp read as a near-featureless white blob at every angle in the starter
+picker because the picker's 3-light rig (ambient 2.2) ran far hotter than
+the survey tool's proven 2-light rig, and Galewisp's high albedo gave it
+less ACES headroom than Terrapup/Ripplet's darker surfaces. Three rounds of
+blind visual-judge against `docs/reference/palworld-*.jpg`: ambient
+2.2→1.7→1.3→1.0, key 2.0→2.4 in round 3 once the finding pointed at
+directionality rather than raw ambient level. Stopped short of the full
+two-dry-rounds bar because round 3's finding was specific enough to name the
+wall directly: what's missing is a dark eye/beak/feet material accent and
+torso surface detail, not more light-energy tuning. Genuine improvement
+landed (blown-out blob → visible face/wing/partial-torso definition);
+Terrapup/Ripplet's own fix from the same rig change is unaffected across all
+three rounds. Material work flagged, not done here.
+
+## UI-PAD2 — build_placer.gd and interaction_arbiter.gd join input_owner.gd
+
+`model: sonnet` · `tests: full suite (1004/81197/0 failed), smoke_free_build` · `area: ui` · `b6d38486`
+
+`build_menu.gd` is the one panel that deliberately does not pause the tree,
+so any world-verb poller that never asks `input_owner.gd`'s group keeps
+reading input out from under it. Closed the gap for the two pollers where
+reopening the build menu over live state is actually reachable: an armed
+build ghost's place/rotate/snap/cancel actions, and `interact` (which could
+otherwise activate a real-world door or NPC while the player's attention was
+on the build catalog). `player_controller.gd`, `torch.gd` and `throw_aim.gd`
+checked and deliberately left out, with reasoning recorded per-script rather
+than by omission.
+
+## PERF1 — cache road_polylines()'s parse, same pattern as PERF2's flats/stream
+
+`model: sonnet` · `tests: full suite (1004/81197/0 failed), smoke_playground` · `area: perf` · `52c3e527`
+
+`road_polylines()` rebuilt the entire road set from config on every call —
+three JSON walks per scatter candidate, 23,707 times on today's world.
+`_config` is set once in `_init()` and never mutated, so the parse is a pure
+function of it; cached the parse, not a jittered result. Matched-pair A/B on
+this container: vegetation-scatter boot window ~14-15s unpatched, ~11s
+patched — real but smaller than the item's own filed estimate, because this
+container was already running faster across the board than the session that
+recorded the original figure.
+
+## OW1-remainder — held-tile ghost, quick-bar cyan collision, tab rename, legibility
+
+`model: sonnet` · `tests: full suite (1004/81197/0 failed), smoke_menu` · `area: ui` · `a328ec5a`, `a80eb83d`, `5965f91d`
+
+Follow-up to `OW1`. Renamed the pause-menu tab label and Settings > Controls
+strings from "Backpack" to "Satchel" to match the vocabulary the tab's own
+code already used everywhere else. Fixed a real silent no-op:
+`button.button_pressed = i == _held` never did anything because these
+buttons never set `toggle_mode`, so nothing showed what tile was currently
+held — replaced with a direct stylebox write plus a dim, matching every
+other panel's own focus-override pattern. Fixed the quick bar giving all
+five chips the same cyan while holding (now the focused chip keeps full
+teal, the other four get a fainter target colour). Smaller legibility fixes
+(GEAR/slot-count font size and colour, quick-bar/grid badge contrast, "N
+Orb" → "N Orbs" pluralization). Two rounds of blind visual-judge against
+idle/holding/quickbar-target/bound frames; round 2 confirmed round 1's fixes
+landed and narrowed the remainder to an asset ceiling (the keycap art's own
+padding ratio), noted for whoever next touches `assets/ui/input_prompts`.
+
+## WALL1 — the phantom wall was Captain Halder, not terrain
+
+`model: sonnet` · `tests: smoke_aggression (10/10), smoke_traversal` · `area: world/combat` · `ef92e816`, `75b74cdf`, `8261d552`, `5cb6ffb1`
+
+Closes `OF15`'s real cause after three wrong diagnoses, kept in the record
+because the sequence is the lesson: props were blamed first (a spacing
+filter was built and measured working; the wedge survived it); then slope
+past `floor_max_angle` (written into `OW5` as a trail constraint); then a
+real, independent, but *insufficient* defect — `collision_shape_size` had
+been silently stuck at Terrain3D's default of 16m instead of the intended
+256m, because `terrain.set(...)` was called before `add_child()` where the
+setter is a no-op out of the tree (same trap already known for
+`collision_radius`). Fixing that (`BAKE-GUARDS`) roughly halved spurious
+`is_on_wall()` frames at the freeze coordinate (47/180 → 23/180) but did not
+zero them. The real cause: `spawns.json`'s galecrest spawn resolved, via its
+own seeded RNG, to a home 3.15m from Captain Halder — a stronghold captain
+with his own real capsule collider. A live `smoke_aggression.gd` run
+oscillating around Halder's exact position, and a probe dumping the actual
+collider identity on every `is_on_wall()` frame, confirmed it. Fixed by
+moving the galecrest spawn centre to a location probed clear of every
+trainer and spawn cluster. This also closes `TEST1` (the intermittent
+`verify-aggression` CI job), since the same collision was its cause.
+
+## COLL1 — stream scatter collision instead of keeping every prop resident
+
+`model: sonnet` · `tests: smoke_traversal (245/245 aligned), smoke_collision_streaming (new)` · `area: world/perf` · `9cbf3232`
+
+`vegetation.gd` built a real `CollisionShape3D` for every collidable prop in
+the world at once — cheap at today's ~543 shapes, unworkable at the
+corridor's ~1.5M instances. A prior per-`Terrain3DRegion` grouping attempt
+had been reverted (no region activate/deactivate signal for hand-placed
+nodes, and it broke `smoke_traversal.gd`'s name-based rock lookup). This
+instead drives its own distance bubble from the player position — the same
+mechanism terrain's own `collision_radius` already uses — rather than a
+second, region-shaped residency system. `smoke_collision_streaming.gd` is
+new and asserts something only true under real streaming (resident count
+below world total at boot, and the resident set changing between two
+corners the streaming radius can't bridge), confirmed red against unmodified
+`main` and green here.
+
+## UI-PAD1 — give ui_accept a pad button, so a controller can press things
+
+`model: sonnet` · `tests: full suite (959/80924/0 failed), 10 named smoke tests` · `area: ui` · `34b8af95`
+
+`ui_accept` — what a Godot `Button` activates on — had no joypad event at
+all in `project.godot`, so on a controller focus could move but nothing
+could ever be pressed; most visibly `OW11`'s just-fixed build menu remained
+unusable. Listed the action explicitly (replacing engine defaults, so Enter/
+KP Enter/Space had to be restated by hand and are now pinned by a test).
+Audited the five hand-written `menu_confirm` polls this repo relied on
+before this fix existed: four of five had to stay (their screens have no
+focusable `Button` at all — `ui_accept` cannot replace a poll with nothing to
+press); only `tab_backpack.gd`'s `_read_targeting_confirm` (added by `OW4`
+hours earlier as the workaround for this exact gap) was genuinely redundant
+and removed. The double-confirm this was scoped to avoid does not arise:
+Enter has always been both `ui_accept` and `menu_confirm` on keyboard, so any
+screen pairing them would already have double-fired.
+
+## STREAM-SCATTER — swap vegetation scatter to Terrain3DInstancer
+
+`model: sonnet` · `tests: smoke_playground, smoke_traversal, smoke_boss` · `area: world/perf` · `6fcf9385`
+
+`vegetation.gd::build()` rendered the whole meadow's scatter through one
+`MultiMeshInstance3D` per model, built entirely at boot — a hard blocker at
+the corridor's ~1.5M-instance scale, since MultiMesh has no per-region
+storage or streaming. Swapped to `Terrain3DInstancer`, which stores instance
+data on `Terrain3DRegion` — the terrain's own residency mechanism, reused
+instead of hand-rolling a second one. `scatter_rules.gd` untouched (still
+pure). Verified `SG46`'s drain/regrow healing still resolves the right
+region automatically, and that collision (still eager StaticBody3D, not
+streamed by this change) still aligns. Measured: the scatter-build phase's
+own render cost went from ~113ms to ~160ms at today's 4-region scale (a
+wash, not a regression) but no longer explodes 64x at the corridor.
+
+## R7.6 — the berry farm beside Grandpa's house, and the hoe
+
+`model: sonnet` · `tests: test_farming.gd (new, 23 cases), test_inventory, test_save_format, smoke_playground` · `area: village/gameplay` · `9062ddbf`, `2edf621b`, `c4a4aa87`
+
+Six beds south of the farmhouse: till with a hoe, sow with berry seeds,
+harvest on a later day. Scope held exactly to `GAME_DESIGN.md` §21 ("plant,
+wait, harvest", berries only, no watering/irrigation/fertiliser/soil
+quality). `farm_logic.gd` is pure and holds every rule; the crop clock is
+`Game.day`. `docs/decisions/D50` records the one new shape: the hoe gates
+*tilling* only, not harvesting, so a farmed berry is picked bare-handed like
+a wild one. Found and fixed along the way: `save_game.gd`'s migration
+dispatch was an if/elif ladder with no branches for versions 6 or 7 (a save
+written between the hotbar change and the elixir one was refused outright
+despite both migrations existing), replaced with a loop. Two-round visual
+pass: round 1 found the ripe bush overflowing its own bed (six merged into
+one hedge), beds too shallow to show a side, and no worked-vs-fallow
+distinction — all fixed. Round 2 (recorded honestly, not silently called
+done) found three more real defects — fallow bed washes out near-white,
+sown sprout invisible at distance, furrows don't resolve — left open because
+this firing had a second backlog item queued and the context-budget guard in
+`conventions.md` applied. The mechanics are complete and tested end to end;
+the visual pass is not fully converged.
+
+## R7.8 — doors that open on interact, and houses you can walk into
+
+`model: sonnet` · `tests: full suite (957/80917/0 failed), smoke_traversal (3 new door checks)` · `area: village` · `eed123a6`
+
+`village_door.gd` composes `interactable.gd` (the same route `riding_
+controller.gd` took) to swing a door leaf and toggle a doorway collision
+gate. `cottage_a`'s leaf — hard open since `OF31` as a hologram warning about
+a walkable opening with no verb blocking it — goes back to shut, now
+honestly. `cottage_b` and `ranger_station`, previously solid AABB bricks with
+painted-on doors, gained real doorway colliders and a `door` key.
+`cottage_interior.gd` is the second reusable interior template
+(`shop_interior.gd` was the first), used by both. A blind visual-judge pass
+ran on 6 in-game frames; findings recorded in `ralph/NOTES.md` rather than
+chased further (mostly pre-existing vegetation/terrain, out of scope).
+
+## OW2 — audit the opening's pollers for the starter-picker bug shape
+
+`model: sonnet` · `tests: smoke_opening (strengthened), smoke_name_prompt_keyboard` · `area: ui` · `25398c13`
+
+Owner: "the initial scene didn't move every time I hit x." Audited every
+polled input reader in the opening path for the starter picker's known
+elif-chain-drops-confirm shape; found no second instance (`dialogue_panel.gd`
+and `interaction_arbiter.gd` each check exactly one action;
+`name_prompt.gd`'s confirm/cancel only ever races against itself). Proved
+interact-advance reliable by driving `smoke_opening.gd`'s beat-3 loop with
+real `InputEventJoypadButton` presses (11 across the whole conversation, no
+drops, no double-advances) instead of `Input.action_press`, matching the
+pattern established for `OW4`/`UI-PAD1`. Confirms `PT-04`'s separate finding
+that the naming field does not reproduce its reported typing bug on real
+input.
+
+## LANE1 — the silence went both ways, and the worse direction was upward
+
+`model: sonnet` · `tests: none` · `area: loop` (docs/process) · `f8bfa5de`
+
+A lane finishing work has nowhere to put what it learned that doesn't belong
+in a diff — the UI lane shipped four owner-reported fixes in one session and
+reported "flagged gamepad & test issues" in twelve words; everything else
+died with the container. `ralph/NOTES.md` on `ralph-status` now exists as a
+two-way channel: the coordinator writes what a lane could not know, lanes
+write up what they found. It surfaced real findings (UI-PAD1/2, TEST2, OPS2)
+within the hour.
+
+## MAP-EXTENT — the map system reads world extent from config, not hard-coded ±256m
+
+`model: sonnet` · `tests: full suite (960/80926/0 failed), smoke_playground` · `area: ui/world` · `9518e619`
+
+`map_baker.gd`'s `HALF_SPAN`, `minimap.gd`'s `WORLD_HALF`, `map_state.gd`'s
+`GRID`/`CELL`/`ORIGIN` and `tab_map.gd`'s letterbox/canvas mapping all
+assumed a 512m square centred on the origin. All four now derive from
+`terrain_playground.json` via a new `scripts/world/world_extent.gd`, ahead
+of the corridor landing. Save-format change: `map_state.gd`'s persisted fog
+grid now carries an explicit grid descriptor so a future geometry change can
+be detected and reset cleanly rather than silently misread; an old save with
+no descriptor still loads via the existing length check. Nothing changes on
+the still-512m world at the time this landed — only the source of the
+numbers.
+
+## PT-23 — fallback autosave cadence independent of camp
+
+`model: sonnet` · `tests: none named` · `area: gameplay` · `7e811553`
+
+`camp.gd` was the only caller of `autosave_slot()`, so a new player who
+hadn't built a camp yet had no autosave for their entire first session.
+`GameState._tick_autosave()` now ticks a plain 180s real-time cadence from
+`_process()`, independent of what the player has built or rested at.
+
+## PT-17 — rename a creature from the Team tab
+
+`model: sonnet` · `tests: none named` · `area: ui` · `c78757fd`
+
+A creature's name was settable exactly once, in the opening — one
+mis-navigated press named it forever with no way back. `tab_creatures.gd`
+reads a rename verb (H / gamepad R3) that reuses `name_prompt.gd` verbatim,
+prefilled with the creature's current name so an unedited confirm is a
+harmless no-op.
+
+## PERF2 — the water build was eleven redundant noise stacks per sample
+
+`model: opus` · `tests: test_heightfield_cost.gd (new)` · `area: perf` · `e7c0376c`
+
+Measured from `user://boot_log.txt`: booting the Meadows cost 233s to first
+frame, 167s of it water. The real cost was `_bake_height_texture`'s two
+512x512 depth textures (524,288 `height_at` calls), and 71% of a `height_at`
+call was `_apply_flats`'s `flat.get("height", _raw_height(...))` — a
+`Dictionary.get` default that evaluates *eagerly*, so every query ran a full
+noise-stack `_raw_height` even for the ten of eleven building pads that carry
+an explicit height and discard the result. `height_at` 323us → 34.2us; water
+build 164.5s → 23.2s. All other outputs (heightfield, slope, stream-carve
+depth, all 23,707 vegetation transforms) confirmed byte-identical, not just
+asserted.
+
+## OW5B prep / BAKE-GUARDS — region-alignment guard, per-axis bake, dynamic collision
+
+`model: sonnet` · `tests: full suite (959/80919/0 failed), smoke_traversal` · `area: world` · `472e8699`
+
+Three engineering defects fixed ahead of the corridor bake per `MEADOWS_
+MACRO_LAYOUT.md` §1.3/§8.2: the region-alignment guard checked `world_size %
+region_size` (the wrong property — a region's origin lattice pitch is
+`region_size * vertex_spacing`), replaced with a real per-bound `fposmod`
+check; the bake was square-only, now takes an explicit per-axis extent;
+terrain collision moved from `FULL_GAME` (real shapes across every loaded
+region at once) to dynamic collision with a probed, not assumed, radius/
+shape-size readback — `collision_radius` and `collision_shape_size` both
+silently clamp on the vendored Terrain3D build ([16,256] and [8,64]), so
+`D53` corrects the §8.2 reasoning that assumed the request was granted in
+full. A real timed single-region bake (143.5s/region) anchors the
+previously-unvalidated ~2584us/px estimate.
+
+## MERGE1 — stop killing healthy branches, make a stuck sweep say so
+
+`model: sonnet` · `tests: none` · `area: loop` (process) · `82aaa42a`
+
+`MAX_REBASES=3` counted every rebase *attempt*, conflict or not — under ~7
+concurrent lanes, main moving under a waiting branch is the ordinary case,
+and `PERF2`/`OW9`/`R7.6` were all green and permanently refused by this cap
+despite never once conflicting (all three rebased cleanly by hand on the
+first try). Split the two cases: a real conflict still stops immediately
+every time; a clean rebase (main simply moved) is budget-limited only by a
+much more generous runaway-loop backstop (10 rounds, not 3). Also:
+`ralph-sweep.yml` reported plain `success` while skipping branches that
+needed a human, with the only sign buried in a `::warning::` inside an
+all-green check — the run's conclusion now reflects the real outcome.
+
+## OW9 — the opening tells you to gather, then to build
+
+`model: sonnet` · `tests: none named` · `area: story` · `b2035699`
+
+Two handovers, both in the village square. Tam's existing `OF30` orb-recipe
+beat is the gather instruction and needed no change. The Quarry Foreman
+gets a new one-time `give:hammer:1` + flag branch, gated on Tam's own
+`recipe_orb_basic` flag rather than his own, so gather-before-build holds
+regardless of which villager the player greets first.
+
+## OW12 — torches are carried, not placed
+
+`model: sonnet` · `tests: none named` · `area: ui/gameplay` · `3a8f9ee5`, `832eb927`
+
+Owner: "torches need to be a carry able item not placeable one." The torch
+is now `items.json`'s own `torch` entry (kind: tool), equipped off the
+hotbar/backpack through `tool_hold.gd`'s existing generic held-model pattern.
+`torch.gd` now owns only the light and stays dark unless equipped. The
+free-standing buildable is retired. This supersedes `OF24`'s "torch building
+should be free" directive — recorded as a reversal, not a quiet undo
+(`buildables.json`'s `_comment_free` keeps `OF24`'s words with a pointer to
+`D50`/`D53`). Closed a real gap the preserved WIP had explicitly left open:
+nothing gave the player a torch item, which would have made the whole
+feature unreachable — Tam's existing "take the spare torch off the wall"
+line now actually gives one. (Second commit renumbers the branch's own new
+decision doc from a colliding `D50` to `D53`.)
+
+## OW8 — the prompt and the hotbar share one container, so neither can be laid into the other
+
+`model: sonnet` · `tests: smoke_prompt_hotbar_dock (new), smoke_playground, smoke_combat` · `area: ui` · `515c8a7c`
+
+Owner's third report of the recall/"put away" prompt sitting on top of the
+hotbar. The first two fixes were hand-measured pixel offsets and both came
+back, because neither control is a fixed-height box (the hotbar's message
+row and the prompt's wrapped text both grow independently). `HotbarPanel`
+and `Prompt` are now both children of one bottom-anchored `VBoxContainer`,
+which cannot be positioned into itself at any height — the arithmetic that
+kept getting it wrong is deleted, not re-tuned a third time.
+
+## OW4 — the target picker could not be answered with a controller
+
+`model: sonnet` · `tests: smoke_backpack_pad_target.gd (new), smoke_menu` · `area: ui` · `679d2271`
+
+Owner, second report: using a potion opens the target picker and then it
+can't be confirmed. `OF22` fixed focus landing on nothing; the half left
+behind was gamepad-only, because the existing test drove it with
+`Input.action_press`, which never travels the InputMap the way a real pad
+event does. Measured live: `ui_accept` had no pad binding at all
+(game-wide), so on a controller focus moved between rows and nothing could
+ever press one. Added a `menu_confirm` poll (the same pattern every other
+pad-driven screen already used), deliberately not a global `ui_accept` pad
+binding — that would double-fire every existing `menu_confirm` poll
+game-wide, the exact cost `name_prompt.gd` already recorded paying once.
+
+## OW10 — one answer to who owns input, instead of a gate per caller
+
+`model: sonnet` · `tests: smoke_menu_owns_dpad.gd (new), smoke_menu, smoke_modal_stacking, smoke_free_build` · `area: ui` · `8659aea0` (fix), `b7a72bc0` (correction of an earlier wrong diagnosis)
+
+Owner: opening a menu and pressing d-pad still fires the hotbar underneath
+it. First filed as "the pause shell leaks" — measured and found wrong
+(`game_menu.gd::open()` pauses the tree and the HUD is PAUSABLE, so it
+genuinely cannot leak; a real probe showed the potion count unchanged under
+the backpack tab). The real cause: `build_menu.gd` is the one panel that
+deliberately does *not* pause the tree, and the HUD's hotbar poll had no
+gate for it — hotbar_2/3/4 share physical d-pad buttons with Godot's own
+`ui_left/right/up/down` grid-focus actions, so one press moved the selection
+*and* spent a slot. Fixed with `scripts/ui/input_owner.gd`, a single group a
+panel joins to own input, replacing ad-hoc per-caller gates that had already
+missed one poll once.
+
+## OW11 — the build selector was the thing you could not see past
+
+`model: sonnet` · `tests: smoke_build_menu_footprint.gd (new), smoke_free_build, test_build_grid` · `area: ui` · `25a95b82`
+
+Owner: building should work like Valheim's arm-then-place, "right now... you
+can't see shit." The arm-then-place mechanism already worked; the panel's
+footprint while choosing did not — a fixed 1200x680 slab covering 39.4% of a
+1920x1080 screen, centred on the ground the ghost was about to stand on.
+Docked to the bottom and sized to contents: 17.0% of screen, grids of 10
+columns for 1/2/5 pieces now render as 1/2/5. Three defects found by
+measuring rather than reading (a `TextureRect` minimum-size trap, a
+`queue_free`-without-unparent double-height bug, and the panel not hiding
+the hotbar/prompt underneath it, so their chips read straight through).
+
+## OW7 — the wood you pick up is now wood, not a light over grass
+
+`model: sonnet` · `tests: test_gather_point_props.gd (new), smoke_playground` · `area: world` · `c32ad994`
+
+Owner: "wood to pick up doesn't look like wood. It's just random yellow
+glowing spots." Structural cause: a wood gather point was bolted onto a
+scattered *living tree* as only a glint, 1.3m off the trunk in open air —
+there was no wood-shaped object anywhere near the marker. A pile of three
+`log.glb` logs (the Kenney nature mesh already used for jetty pilings, so no
+new asset/family) now stands at the point with the glint on top. Bark and
+sawn-end colour painted per-surface by reading the pack's own albedo
+luminance rather than a flattening material override. Not done: a blind
+visual-judge pass — frames were rendered but the pass could not be run this
+session.
+
+## PT-03 — the opening stair announces itself with a handrail
+
+`model: fable` (ran at opus) · `tests: smoke_opening.gd (new assertions)` · `area: world` · `b09c46a7`, `585ba210`
+
+Two testers, one of them the owner twice, could not leave the first room.
+Measured, not guessed: the whole flight of stairs sits *below* the loft's
+walking-surface sightline for its full 3.4m run, so no amount of light on a
+tread could ever have made them visible — what a standing player actually
+sees is a floor edge with a shallow ledge under it, reading as a parapet.
+The fix is geometry, the one part of a staircase that rises above the
+occluding edge: a handrail raked to the flight's own pitch, head/foot
+newels, five balusters, all BoxMesh in the loft's own existing material (no
+new assets). A coordinator follow-up corrected the accompanying stair-head
+light, which had inherited a 9.0 range meant for a much bigger room and was
+lifting the whole room uniformly (a uniform lift cannot function as a
+wayfinding cue) — given its own shorter range instead. The affordance
+itself is recorded as the owner's call to make (`docs/decisions/D52`); this
+session picked one so overruling costs a paragraph, not a re-investigation.
+
+## OW3 — the map hides what you have not walked, and walking reveals more of it
+
+`model: sonnet` · `tests: test_map_fog.gd (new), test_map_state.gd` · `area: ui` · `5cb90968`
+
+Owner: "the full map is rendered before I explore anything." The fog grid
+already existed and was persisted; what didn't hold was opacity — a previous
+pass had tuned unexplored ground to 55%/95% dim rather than opaque, so a
+player who had taken zero steps could still read the whole map faintly.
+Both are fully opaque now. Because this is the third swing of this exact
+pendulum (55% came from an earlier complaint that the map "shows nothing but
+black"), the fog alpha was deliberately not the only lever moved:
+`reveal_radius` also went 45→80m, since at 45m a walk from the house to the
+village revealed a ribbon barely wider than the road — honest fog with too
+small a reveal radius reads as a void.
+
+## OW1 — the backpack shows its quick bar, and says out loud when you pick a stack up
+
+`model: sonnet` · `tests: smoke_menu.gd (extended)` · `area: ui` · `3c15caca`
+
+Owner: "I can't move things in my inventory. There's no separate hot bar
+section." Neither half was a missing mechanism — moving a stack always
+worked, silently, and the hotbar had been moved off satchel slots 0-4 onto
+five item-id bindings months earlier, leaving only a per-tile badge that
+stays blank until an item is already bound. The tab now draws the actual
+quick bar (five live chips, read off `Game.hotbar`, never copied) above the
+satchel grid; every move now says what it did (picked up/moved/merged/
+swapped/put back); the verb legend became a real per-verb list including the
+move verb, which it had never named. Also found and fixed: on keyboard, the
+assign verb (G) had never once fired, because the drop-confirm poll ran
+first on the same key and ate it every time — moved to J.
+
+## OW5A — the Meadows macro layout, measured
+
+`model: fable` (ran at opus — the owner had no Fable usage left) · `tests: none (docs/probes only)` · `area: world` · `bcc20cd3`, `4fd803f5`, `8244ddb0`
+
+Docs and probes only, no terrain moved. `docs/MEADOWS_MACRO_LAYOUT.md`
+authors the corridor plan `MQ2A` §5 asks for before production: an
+8192x2048m footprint (revised from an initial, non-region-aligned
+-768..+768 that a blind review caught before it became terrain — Terrain3D
+regions live on an integer lattice and the first draft would have baked
+256m of unfilled flat terrain along both long edges), 64 regions, an
+11,594m spine, five bands, ten regional loops, and a relocation table for
+every duplicated coordinate. A real single-region bake timing (2584us/px
+range, later re-anchored by `OW5B prep`'s timed bake) and a real carve-safety
+recheck (the true margin over the ridden legendary's 60° climb limit is
+5.6°, not the 15° first claimed — using the shallowest sustained line rather
+than the single steepest sample) both replaced earlier estimates. The
+"forty minutes end to end" question was put to the owner directly (38.6 min
+walking vs 27.6 min sprint-cycling) rather than assumed; he chose to ship
+the layout as authored, so 27 minutes for a stamina-cycling player is the
+intended outcome, not a shortfall — recorded in the plan document itself
+this time, not left in a chat thread (the same failure mode the vendored
+colour boards fixed for the creature repaint).
+
+## The stronghold castle: re-massed, given colliders, and made walkable
+
+`model: fable` (ran at opus) · `tests: none named (visual)` · `area: visual/world` · `af0a70ee`
+
+Owner, after playing: "the castle looks horrible." It measured 23x17m with
+3.9m curtain walls against a 1.8m player (barely twice head height) and had
+*no colliders at all* — the endgame landmark was scenery you walked through.
+Re-massed in place (the south curtain keeps the already-shipped stronghold
+gate line; growth goes north/east/west) to 121 modules, 41.5x46.0m, 29.9m
+tall, with 19 collision shapes across 3 bodies where there were none. The
+gate's dark closing slab (`OF4-gate-arch`) is retired and a real ramp added,
+since the courtyard behind it is walkable plinth now, not an empty box that
+needed hiding.
+
+## The balls in the sky were rank badges, 100x too big — and the stronghold stops being one flat grey
+
+`model: fable` (ran at opus) · `tests: none named (visual)` · `area: visual` · `1c4408a1`
+
+Owner, twice: "what are those balls on the stronghold?" Team Tether rank
+badges (`npc_ranks.json`) had been authored with a chest-primitive size of
+7.0-16.0 and an offset of [0,30,25] — a hundred times too large, floating
+30m above eleven NPCs' heads. Divided by 100 (7cm-16cm, on the chest).
+Separately, the owner also called the stronghold interior "too sterile...
+not a plain grey all the way through" — caused structurally, every wall/
+floor/ceiling across the 116m complex asked for the same single stone
+colour. Now draws from the same retint palette the neighbouring Quaternius
+castle already uses, so the two structures share a palette rather than
+merely coexisting.
+
+## The workbench becomes a station, and tools become craftable
+
+`model: fable` (ran at opus) — no backlog item; recorded per `OPS1`'s own
+instruction to capture unlisted shipped work · `tests: smoke_free_build
+(extended)` · `area: gameplay` · `0bf516c2`
+
+The workbench was placeable geometry with no interaction — crafting lived
+only at the campfire, whose panel had claimed "at the campfire or workbench"
+since `R2.4` without the workbench half existing. The placed workbench now
+carries the same Craft prompt the campfire does, opening the same panel.
+Tool recipes (axe, pickaxe, knife) join the base tier, ungated by flag —
+material cost is the gate, matching `recipes_rootstone.json`'s own reasoning
+against gating the same door twice.
+
+## Tonics — the potions board's temporary half, on the creature this time
+
+`model: fable` (ran at opus) — no backlog item · `tests: test_creature_buffs.gd (new)` · `area: creatures` · `894949e2`
+
+`D47`'s elixirs shipped the permanent half; this is the timed half, on a
+creature rather than the player. `creature_instance` gains `active_buffs`/
+`apply_buff`/`tick_buffs`/`buff_scale`; re-drinking refreshes the clock
+rather than stacking (stacking would make tonics a mandatory pre-fight
+ritual, which the owner's brief forbade). Deliberately not saved — a timed
+buff dying on quit is the honest reading of "temporary". Three items (Swift
+Tonic, Attack Tonic, Stoneguard Brew), sold by Mira; `D47`'s elixirs stay
+unsold and rare by contrast.
+
+## The trainer can step up a kerb without stopping dead
+
+`model: fable` (ran at opus) — no backlog item, part of the traversal audit
+(owner brief §10) · `tests: smoke_step_up.gd (new)` · `area: player` · `e187ba20`
+
+`CharacterBody3D` has no step offset in Godot 4, which had been a documented
+constraint since the loft rather than a fix (`grandpa_house.gd` shortened a
+beam and built ten stacked boxes for stairs rather than solve it). Three
+swept physics probes (headroom, forward-at-height, down-onto-step) let a
+body climb a walkable step up to 0.35m without teleporting into unchecked
+space. `smoke_step_up.gd` proves both halves: a 0.3m ledge climbs, a 2m wall
+still holds.
+
+## The roster repainted to the owner's boards, not past them
+
+`model: fable` (ran at opus) — no backlog item, colour/art pass ·
+`tests: full unit suite` (unspecified count in this range) · `area: art` ·
+`75603e67`
+
+Owner, second session running: "the other agent didn't have our art that we
+had as reference." The first "vivid" colour pass had gone jewel-toned
+(amethyst Tuskroot, emerald Paddlenewt, canary Pipwing) against boards it
+had never seen, now vendored into `docs/reference/`. Every named conflict
+resolved against the boards for all seventeen species, plus matching shiny
+recolours so a rare is never just a shade of its own ordinary variant.
+Judged with three render rounds and a blind critic between rounds against
+the vendored boards.
+
+## Grandpa's briefing: the owner's five beats, said with urgency
+
+`model: fable` (ran at opus) — no backlog item, implementation-brief §7 ·
+`tests: none named` · `area: story` · `bd7198f2`
+
+Replaced the long opening lecture with a shorter, urgent sequence on the
+owner's own supplied beats: 299 words become 208. Two beats the old text
+never carried, both the owner's own additions rather than inventions —
+Elias's generation stopped Team Tether once, and "it's in your blood."
+Gift-per-line rule preserved so the satchel still fills as he speaks
+(unchanged floors, per `smoke_opening`).
+
+## Meshy: Relay Apparatus and Tether Machine — the last two Team Tether hero objects
+
+`model: opus` · `tests: smoke_stronghold (extended)` · `area: art/world` · `d9f0affb` (prompts written, blocked on the key), `3f04dfc6` (generated and installed)
+
+`D24` reserves three Meshy generations for Team Tether hero *objects*; the
+pylon shipped in `SF33`, these two had been placeholder massing since `R8.3`.
+Prompts were written first, length-checked against the 800-character
+ceiling, while `MESHY_API_KEY` was unavailable; generated once the owner
+authorised it and the key reached the container via the art-lane Routine.
+The hard part was not the generation: board 15 draws the machine *with* the
+bound legendary inside the cage, which `D23` §20 forbids as a new creature
+mesh at any credit balance. `crop_prop_views.py::lift_occupant` erases the
+creature from the source crops with a colour-key + morphological close
+before upload, rather than relying on a negative prompt (image-to-3D follows
+its pictures far more than its words — the first machine attempt, using only
+two clean but insufficient views, came back unreconstructable). Uncovered
+and fixed three real bugs that could only appear once these placeholders
+stopped being watched: `stronghold.gd` skipped the base collider/light/
+marker on the model path entirely; neither seam scaled the raw 1.7m export
+to its authored height; and `smoke_stronghold`'s own AABB check ignored
+scale and failed honest work as a result. 300 credits spent of 4720; `D49`
+records the method and cost.
+
+## The Warden is rebuilt from board 16, and his face is modelled
+
+`model: opus` · `tests: full suite (953 tests), smoke_art, smoke_boss` · `area: art` · `401e3cbc` (face generated, not yet installed), `f5ef64ed` (two dead ends recorded), `5458d520` (rebuilt and installed)
+
+The owner's character sheet (board 16) superseded board 06 outright — a bare
+bearded face with a green marking, not a masked soldier. Two routes were
+tried and rejected before the one that worked, and both are recorded rather
+than silently abandoned: retexturing the shipped body against board 16 made
+him worse (colour drained, gold trim gone); grafting the new head onto the
+shipped body got further, but the voxel remesh needed to weld the graft
+holes the body's thin-walled cape and collar (structural, not a tuning
+miss — the graft path assumes a freshly generated pre-rig body). The route
+that worked: regenerate the *body* from board 16, graft the already-good
+head, remesh with `--skip-voxel` (a new flag, earned by this exact defect),
+retexture, re-rig, re-animate, reinstall. `graft_head.py` also gained
+`--drop` after the first install had a neck the owner called "comically
+long." Recipe for whoever rebuilds a character this way again is written
+into the commit and into `D49`/`ASSET_LEDGER.md`.
+
+## SH47 — the chapter fits in its 3-4 hours, and the grind wall is gone
+
+`model: opus` · `tests: test_trainers_data.gd (6 new assertions), test_recipes.gd` · `area: progression` · `ac035035`
+
+`tools/_probe_pacing.py` walked the shipped critical path and measured the
+chapter at 6.22 hours of floor, 12.45 projected — 4.76 hours of it forced
+wild grinding (381 fights against level-2-to-6 field creatures), which
+`MEADOWS_PROGRESSION_SPEC.md` §11 names as "bad grind" verbatim and which
+was not a side effect of the pacing but *was* the pacing. Four tunable
+levers, all documented in place with the measurement that justified them:
+`progression.json`'s XP curve exponent 1.6→1.15 and award formula, the
+stronghold gauntlet's levels lowered so the elite no longer out-levels the
+Warden it guards, the Burrow Warrens' guardian and residents lowered, and a
+second Meadowhart cluster added so the only rideable creature isn't a 624m
+round trip off every route. Result: 1.51 hours floor, 3.02 projected, 0.07
+hours of grinding — no fight, reward, room, item or route added or removed.
+Six new regression assertions fail the build if the curve, the gauntlet or
+the warrens ever re-open this gap.
+
+## CI restored: two invalid-workflow jobs, and two real regressions they were hiding
+
+`model: opus` · `tests: verify-warrens, verify-riding (reproduced clean 3x after fix)` · `area: ci` · `31882cbf`, `a301d0b1`
+
+`verify-riding` and `verify-relay` had been left as bare job headers (no
+`steps:`) during an integration merge — an invalid *workflow*, not a failing
+job, which GitHub completes as `failure` in zero seconds with `total_jobs:
+0`. Every push since a named commit five hours earlier had looked like a red
+tick that was actually silence; four commits reported green were never
+verified. Split the steps back into their own named jobs (byte-identical
+test invocations, confirmed by diff). Once CI actually ran again it
+immediately caught two real bugs: `verify-warrens`'s `level < 15` assertion
+had been written against warren residents that `SH47` had just retuned, so
+it was failing for getting the shape right rather than wrong, and was
+rewritten to measure the guardian against the warrens' own population;
+`verify-riding`'s `_refuses_mid_fight` teleported to a stale position and
+then waited a fixed frame count against a wild creature that roams, fixed to
+re-aim on each of up to four attempts and poll rather than count frames.
+
+## Vendor the owner's 2026-08-15 colour/systems boards into docs/reference
+
+`model: fable` (ran at opus) — no backlog item, reference material ·
+`tests: none` · `area: art` (docs) · `0d89ac77`
+
+The first vivid colour pass had been authored blind to boards that existed
+only in a chat thread. Vendored `docs/reference/` so that failure mode can't
+happen again — the roster repaint above, Grandpa's briefing, the Meadows
+castle concept, the move/TM tables and the potions set are all judged
+against these files from this point forward.
+
+## A capture tool for SG44's before/after horizon (committed unrun)
+
+`model: fable` — tooling addendum to the already-shipped `SG44` (see the
+`SG44 + SG46 + R8.5 + R8.6` entry above) · `tests: none` · `area: tooling` ·
+`02d02ee0`
+
+Renders both the storm-wall and far-country frames from one camera on the
+storm road seam, firing the real collapse flag rather than calling into the
+effect directly. Committed without having been run to completion — booting
+the full world under this container's software-GL xvfb exceeded any timeout
+available, and got slower again once the quarry and river joined the bake.
+`SG44`'s own "two visibly different horizons" claim is still proven only by
+covered-area numbers, not by a rendered frame — this tool exists for
+whoever next has a faster box, and is not itself a visual verification.
+
+## Owner-authored Biome 2 planning documents landed directly, outside the loop
+
+No task id, no `Co-Authored-By` footer — these three commits are the
+owner's own, not a Ralph firing's, landed the same day as everything else in
+this backfill · `d16217a5`, `767bc028`, `be28d277`
+
+`docs/BIOME_DESIGN_WORKFLOW.md`, `docs/biomes/BIOME_02_DESIGN.md` and
+`docs/biomes/BIOME_02_PROGRESS.md` — a design bible and progress tracker for
+an external ChatGPT/GitHub picker process the owner is running for Biome 2.
+Docs only, no code, no content. Noted here rather than silently absorbed
+into another entry because `CLAUDE.md` and `conventions.md` both say **no
+Biome 2 work until the Meadows exit gate** — this is the owner's own
+out-of-band planning, not the loop starting Biome 2 build work, and nothing
+here should be read as license for a firing to touch `docs/biomes/` or begin
+building against it. If that reading is wrong, it needs the owner to say so,
+not a firing to assume it.
+
+## OPS1 (first reconciliation pass) — reconcile the backlog against main, and close OF15 with its real cause
+
+`model: sonnet` (raised from the item's own `haiku`) · `tests: none` ·
+`area: ops` (docs only) · `819670033f`
+
+The first of what turned out to be two same-day `BACKLOG.md` reconciliation
+passes under this same task id (see `OPS4` above for the second, eight hours
+later, and this session's own backfill for why `DONE.md` itself was still
+not caught up afterward). Closed 35 items against the ancestor test rather
+than a lane's report or a branch ref — the whole owner-reported ROG list
+(`OW1`, `OW2`, `OW4`, `OW7`-`OW11`), `PERF1`, `PERF2`, `WALL1`, `TEST1`,
+`EXP1`, `MERGE1`, `LANE1`, `UI-PAD1`, `UI-PAD2`, `PT-03/04/15/17/18/19/23`,
+`OF18`, `EV10`, `MQ1B`, `R7.3`, `R7.6`-`R7.9`, `OW5A-rework`. Four more
+marked shipped-in-flight rather than closed (`OW3`, `OW12`, `OW1-remainder`,
+collision streaming), because a branch that has not landed is not done
+however green it is. This pass reconciled `BACKLOG.md`; it did not touch
+`DONE.md`, which is the gap this session's own item exists to close.
+
+## PT-18 / PT-19 — closed on measured evidence, no code fix
+
+`model: sonnet`/`haiku` · `tests: none` · `area: perf/ci` · no branch (recorded in `ralph/NOTES.md` on `ralph-status`, `6ae26c8f`)
+
+`PT-18` ("scene load went from ~2 minutes to materially longer") was never
+the shiny colourway textures its own filing suspected — `EXP1`'s and
+`PERF2`'s own boot-log breakdowns (water + vegetation scatter = the entire
+boot cost, ~6s left over for everything else) rule texture loading out
+without needing to chase it further, and the measured exported boot (45-52s
+world-build, 65-69s total) is now faster than PT-18's own cited ~2-minute
+baseline. `PT-19` ("one silent engine death at boot") did not recur across
+roughly 30 boots spanning two sessions' worth of probe scripts,
+`smoke_aggression` runs and real exported-binary boots. Recorded as
+evidence for the coordinator to close rather than closed by the lane that
+found it, since `BACKLOG.md` wasn't its file to edit.
+
+## R7.9 — closed per OPS1(old)'s reconciliation; R7.7 not separately confirmed
+
+No further commit in this range confirms `R7.9`/`R7.7` beyond the WIP chain
+recorded above (`9598309b`, `6be6cd69`, `176c2069`). `OPS1`'s first
+reconciliation pass listed `R7.6`-`R7.9` as closed together; this entry
+exists so that claim is visible next to the actual evidence for it rather
+than asserted a second time without a source. If a later firing finds a
+closing commit this backfill missed, this entry should be merged into the
+`R7.9 + R7.7 (WIP)` entry above rather than kept separate.
+
 ## SG44 + SG46 + R8.5 + R8.6 — the Rift collapses, the Meadows answers, the legendary carries you, and the chapter points somewhere
 
 `model: opus` · `tests: smoke_boss` (extended), `test_progression_state`
