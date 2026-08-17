@@ -78,6 +78,50 @@ func _physics_process(delta: float) -> void:
 	var planar := Vector3(_player.velocity.x, 0.0, _player.velocity.z) \
 		if _player.is_on_floor() else Vector3.ZERO
 	apply_momentum_tilt(planar, delta, _gait_feel)
+	# MQ1B: terrain adaptation ADDS to the momentum tilt just applied above,
+	# so a launch on a slope both leans into the acceleration and banks into
+	# the hill — see character_model.gd::apply_terrain_adaptation's own
+	# header for why this runs second. Grounded only, same reasoning as the
+	# momentum tilt: mid-air the jump clip owns the silhouette.
+	if _player.is_on_floor():
+		_apply_terrain_adaptation(delta)
+
+
+## MQ1B. Samples the world's own `ground_height_at()` (found by walking up
+## the tree the same way village.gd::_ground_height() does — a component
+## should not be handed a world reference it can then hold stale) at four
+## points around the trainer's own feet plus the feet themselves, and hands
+## the raw numbers to character_model.gd::apply_terrain_adaptation(), which
+## stays free of any Node-tree lookup itself (matches apply_momentum_tilt's
+## own "read state rather than being told about it" split: this is the
+## reading, that is the reacting).
+func _apply_terrain_adaptation(delta: float) -> void:
+	var world: Node = get_parent()
+	while world != null and not world.has_method("ground_height_at"):
+		world = world.get_parent()
+	if world == null:
+		return
+
+	var stance: float = float(_gait_feel.get("terrain_stance_width", 0.18))
+	var stride: float = float(_gait_feel.get("terrain_probe_ahead", 0.22))
+	var origin := _player.global_position
+	var yaw := rotation.y
+	var forward := Vector3(sin(yaw), 0.0, cos(yaw))
+	var right := Vector3(cos(yaw), 0.0, -sin(yaw))
+
+	var h_centre: float = world.call("ground_height_at", origin.x, origin.z)
+	var h_left: float = world.call(
+		"ground_height_at", origin.x - right.x * stance, origin.z - right.z * stance)
+	var h_right: float = world.call(
+		"ground_height_at", origin.x + right.x * stance, origin.z + right.z * stance)
+	var h_forward: float = world.call(
+		"ground_height_at", origin.x + forward.x * stride, origin.z + forward.z * stride)
+	var h_back: float = world.call(
+		"ground_height_at", origin.x - forward.x * stride, origin.z - forward.z * stride)
+
+	apply_terrain_adaptation(
+		h_centre - origin.y, h_left, h_right, h_forward, h_back,
+		stance, stride, delta, _gait_feel)
 
 
 ## What the trainer's body should be doing, from what the trainer is doing.

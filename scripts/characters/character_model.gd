@@ -673,3 +673,82 @@ func apply_momentum_tilt(planar_velocity: Vector3, delta: float, feel: Dictionar
 	# capture rather than derived on paper.
 	rotation.x = deg_to_rad(-_tilt.x)
 	rotation.z = deg_to_rad(-_tilt.y)
+
+
+## MQ1B. Terrain adaptation: leans the body toward the ground's own slope
+## and settles the model's visual height to the ground under its stance,
+## ADDING to (never overwriting) apply_momentum_tilt's rotation.x/z above --
+## call this AFTER apply_momentum_tilt each frame so a sprint launch on a
+## slope both leans into the acceleration and banks into the hill.
+##
+## Root-level only: no bone pose is ever touched, so this can never produce
+## a knee inversion or a broken pelvis, and there is no discrete IK blend to
+## snap -- the entire correction is the same exponential smoothing
+## apply_momentum_tilt already uses. The trade CLAUDE.md's "do not add
+## complexity for its own sake" line asks for: a single foot catching a
+## sharp local bump can still show a small gap, which true per-foot IK would
+## close and this does not attempt to.
+##
+## `centre_delta` is (ground height under the capsule's own feet) minus
+## (the capsule's current Y) — a small relative offset, not an absolute
+## world height, since `position.y` below is local to this node and the
+## capsule already carries the model to its own correct world height.
+## `h_left`/`h_right`/`h_forward`/`h_back` are absolute ground heights
+## already sampled by the caller (trainer_model.gd, which has the world's
+## `ground_height_at` reachable) at the model's own stance width/stride
+## ahead — only their DIFFERENCE across each pair feeds the slope angle, so
+## they need no such relative conversion. This method stays free of any
+## Node-tree lookup itself, the same reasoning apply_momentum_tilt already
+## gives for taking `feel` as a plain Dictionary rather than reading
+## movement.json directly. Any NAN sample (no ground under a probe point,
+## e.g. a doorway or a cliff edge) skips the update for that frame rather
+## than lurching toward a garbage angle.
+var _terrain_tilt := Vector2.ZERO   # x = pitch degrees, y = roll degrees
+var _terrain_height := 0.0          # smoothed local Y offset, metres
+
+
+func apply_terrain_adaptation(
+	centre_delta: float, h_left: float, h_right: float, h_forward: float, h_back: float,
+	stance_width: float, stride_ahead: float, delta: float, feel: Dictionary
+) -> void:
+	if delta <= 0.0:
+		return
+	if is_nan(centre_delta) or is_nan(h_left) or is_nan(h_right) or is_nan(h_forward) or is_nan(h_back):
+		return
+	if stance_width <= 0.0 or stride_ahead <= 0.0:
+		return
+
+	# Slope angle each axis carries, from the height difference across the
+	# probe pair over the known distance between them -- same atan2(rise,
+	# run) shape terrain_playground.json's own slope math uses elsewhere.
+	var roll_deg := rad_to_deg(atan2(h_right - h_left, stance_width * 2.0))
+	var pitch_deg := rad_to_deg(atan2(h_forward - h_back, stride_ahead * 2.0))
+
+	var lean_scale := float(feel.get("terrain_lean_scale", 0.5))
+	var pitch_limit := float(feel.get("terrain_pitch_limit_deg", 18.0))
+	var roll_limit := float(feel.get("terrain_roll_limit_deg", 18.0))
+	var rate := float(feel.get("terrain_smoothing_rate", 6.0))
+
+	# Same sign convention apply_momentum_tilt's own comment records for this
+	# rig (+Z-facing model, negative X pitches the top forward): cresting a
+	# rise (ground ahead higher, pitch_deg positive) must pitch the body
+	# forward into the climb, i.e. rotation.x more negative, so the target
+	# carries the same negated sign momentum tilt already established.
+	var target := Vector2(
+		clampf(-pitch_deg * lean_scale, -pitch_limit, pitch_limit),
+		clampf(-roll_deg * lean_scale, -roll_limit, roll_limit)
+	)
+	var blend := 1.0 - exp(-rate * delta)
+	_terrain_tilt = _terrain_tilt.lerp(target, blend)
+
+	rotation.x += deg_to_rad(-_terrain_tilt.x)
+	rotation.z += deg_to_rad(-_terrain_tilt.y)
+
+	# Settle the model's own visual height to the ground centred under its
+	# stance -- never the capsule's own position, which the controller
+	# already keeps physically correct. Clamped well under a step height so
+	# this can only ever read as the feet finding the ground, never as the
+	# body detaching from the capsule that carries it.
+	var height_target := clampf(centre_delta, -0.12, 0.12)
+	_terrain_height = lerpf(_terrain_height, height_target, blend)
+	position.y = _terrain_height

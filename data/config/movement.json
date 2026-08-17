@@ -17,7 +17,14 @@
     "lean_deg_per_accel": 0.18,
     "pitch_limit_deg": 7.0,
     "roll_limit_deg": 8.0,
-    "smoothing_rate": 9.0
+    "smoothing_rate": 9.0,
+    "_comment_terrain": "MQ1B, TUNABLE. Root-level terrain adaptation (character_model.gd::apply_terrain_adaptation, driven from trainer_model.gd) -- ADDS to the momentum tilt above rather than replacing it, so a sprint launch on a slope still both leans forward AND banks into the hill. terrain_stance_width/terrain_probe_ahead are the four ground samples (left/right/front/back of the model's own root) the pitch/roll angle is measured from -- half the trainer's own natural stance and stride, not a tuned guess. terrain_lean_scale is how much of the MEASURED slope angle the body actually adopts (1.0 would stand perfectly perpendicular to the ground, which reads wrong for a biped past a shallow slope; a fraction reads as leaning into it). Height offset is separately clamped in code to +-0.12m -- large enough for a kerb-sized bump, small enough that it can never read as the model detaching from the capsule.",
+    "terrain_stance_width": 0.18,
+    "terrain_probe_ahead": 0.22,
+    "terrain_lean_scale": 0.5,
+    "terrain_pitch_limit_deg": 18.0,
+    "terrain_roll_limit_deg": 18.0,
+    "terrain_smoothing_rate": 6.0
   },
 
   "jump": {
