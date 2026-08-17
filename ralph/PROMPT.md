@@ -3,6 +3,13 @@
 You are one firing of an autonomous build loop on **Tetherbound**. You have no
 memory of previous firings. Everything you need is on disk.
 
+**If you ARE the coordinator, read `ralph/COORDINATED_RUN.md` instead of this
+file.** It is the operating manual for running the backlog from one session —
+lane sizing against the real CI job cap, the brief template, bundling branches to
+land, reading which job failed rather than the run's conclusion, and the
+priority rule that keeps the owner's item from yielding to every prerequisite a
+lane discovers. This file is what you hand to the lanes.
+
 ## When a coordinator is running, three of the rules below are suspended
 
 **Added 2026-08-17, after a session-long audit of what this process actually

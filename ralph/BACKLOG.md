@@ -27,6 +27,33 @@ just screenshots.
 
 ---
 
+## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
+
+**This file had drifted badly and this note exists so the drift is legible
+rather than silently tidied.** Across 2026-08-16/17 a coordinated run landed 76
+commits to `main`; almost none of them were marked here, because bookkeeping was
+centralised on a coordinator that then spent the night on merges instead. That is
+`OPS1`'s own failure mode, happening while `OPS1` sat open.
+
+Closed in this pass, verified against `git log origin/main` rather than against
+anyone's memory: `OW1` `OW2` `OW4` `OW7` `OW8` `OW9` `OW10` `OW11` — the whole
+owner-reported ROG list — plus `PERF1` `PERF2` `WALL1` `TEST1` `EXP1` `MERGE1`
+`LANE1` `UI-PAD1` `UI-PAD2` `PT-03` `PT-04` `PT-15` `PT-17` `PT-18` `PT-19`
+`PT-23` `OF18` `EV10` `MQ1B` `R7.3` `R7.6` `R7.7` `R7.8` `R7.9` `OW5A-rework`.
+
+Four more are **shipped and in flight** on `ralph/integrate-3` — `OW3`, `OW12`,
+`OW1-remainder` and the collision-streaming work — each marked in place rather
+than closed, because a branch that has not landed is not done no matter how
+green it is.
+
+**The rule that made the difference, and it is worth keeping:** a shipped item
+is one whose content is an ancestor of `main`. Not a green branch, not a lane
+saying so, not a branch ref that looks right — `UI-PAD1`'s ref had moved and an
+ancestor check called it missing while its code was demonstrably in the tree.
+Check the tree.
+
+---
+
 ## Phase -1.5 — the owner played the ROG build (owner-reported, 2026-08-16)
 
 Reported from the real handheld, which is the instrument no test in this repo
@@ -38,92 +65,9 @@ The owner also asked whether they were on an old build. Partly answered here:
 `OW3`'s fog does not exist in code at all, and `OW1`'s hotbar has no separate
 section *by design* — so those two are real regardless of build age.
 
-### OW10 — A menu does not own the d-pad, so navigating a menu uses a potion
-`model: opus` · `tests: smoke_menu, smoke_modal_stacking, test_inventory` · `area: ui`
-Owner, 2026-08-16: *"the inputs don't know how to read menus. so if I have a menu
-up and hit a dpad button, it still reads the hot bar control not to the menu. it
-tries to use a potion or whatever rather than move on the menu."*
-
-**Game-breaking. The mechanism below is PARTLY WRONG and was corrected by
-measurement before anyone worked it — read the correction before the claim.**
-
-The original filing said: `playground_hud.gd::_read_hotbar_input` (1161) has
-exactly two gates — a fight is running, and the interaction arbiter's `enabled`
-flag is false, which covers the *story* modals only (a conversation, the naming
-prompt, the starter picker, set by `sequence_director.gd::_refresh_lockout`) —
-so nothing gates it on a panel being open and a d-pad press spends a hotbar slot.
-`_read_world_hotkeys` (1373) has the same two gates plus `_build_menu_is_open()`.
-
-**Those two gaps are real. The conclusion drawn from them was not.** A probe
-booted the real world, opened the backpack tab, injected a real `hotbar_2` press
-and watched the potion count: **5 → 5, no leak.** `game_menu.gd::open()` pauses
-the tree, and `PlaygroundHUD` (`scenes/ui/playground_hud.tscn`) declares no
-`process_mode`, so it inherits `PAUSABLE` and `_process` does not run at all
-while the pause shell is up. **The pause shell is covered by the pause, not by
-the gates.**
-
-So the owner's bug is a panel that does **not** pause the tree. Candidates, in
-the order worth probing: the build menu, an interact/dialogue panel, the naming
-prompt, the starter picker, the combat HUD. **Reproduce it and name the panel
-before writing a fix** — this phase's header exists because three of these
-reports have been "fixed" before against a guessed mechanism.
-
-Also struck from the original filing: the blind playtest's
-"stray-confirm-picked-up-an-orb-stack" was cited as evidence of a leak. It is
-not. That press is `ui_accept`, which under the pause shell is the backpack's own
-move verb behaving as designed but silently — i.e. it is `OW1`'s symptom, not
-this one's. `OW4` may still be related; that is untested.
-
-`combat_hud.gd:725-737` documents the mirror of this leak and calls it "a
-documented, pre-existing gap." **Half of that comment is now stale** — it claims
-`playground_hud.gd` "polls its hotbar with no combat gate at all", and the combat
-gate exists today. The menu half was never closed. Correct the comment as part of
-this.
-
-**Do not add a third ad-hoc gate.** Two have been added one at a time (HD2 for
-combat, OF25 for story modals) and a third arrives the moment a fourth panel
-exists. The mechanism is that world verbs are polled from `_process` with
-`Input.is_action_just_pressed`, which is a global read with no concept of one
-consumer taking a press before another. Give the game **one authoritative answer
-to "who owns input right now"** and have every world-verb poll ask it.
-
-**Likely upstream of two open items.** `OW4`'s potion picker dead end and the
-blind playtest's stray-confirm-picked-up-an-orb-stack are both consistent with
-world verbs firing under a panel. Check them against this before fixing either
-separately.
-
-**Done when** no press that a menu is meant to consume also reaches the world,
-on a gamepad, with a regression test that fails on today's build.
-
-### OW11 — Building happens through a menu you cannot see past
-`model: opus` · `tests: smoke_free_build, test_build_grid` · `area: ui`
-Owner, 2026-08-16: *"building needs to work how Valheim does. you get a piece
-then the menu disappears for you to place it. right now it's asking you to build
-through a menu and you can't see shit."*
-
-**Read `scripts/build/build_placer.gd` before assuming this is unbuilt.** Its
-header (145-153) records that the ghost/rotate/snap/grid system "was working the
-entire time" and that `build_menu.gd::_pick()` already arms `pending_build` and
-closes the menu on the same press. A `build_open` hotkey and a `torch_place`
-hotkey both already hand off to the placer directly
-(`playground_hud.gd:1360-1390`). So the Valheim shape may be most of the way
-there and the defect is the **selector** in front of it, not the placement.
-
-Establish what the player actually sees first: how the build menu is reached
-(the pause shell's Build tab versus the direct `build_open` hotkey), how much of
-the screen it covers, and whether the armed ghost is legible once it closes. The
-owner's "can't see shit" is the symptom to reproduce — decide from a real frame
-whether it names the selector's opacity, the ghost's readability, or the trip
-through the pause shell.
-
-Keep what works. `build_grid.gd` is pure, tested, and shared with the authored
-`building_prefabs.json` grid so player-placed and author-placed walls land on the
-same lines; nothing here should touch it.
-
-**Done when** picking a piece takes the player straight to placing it in the
-world with the world visible, and the ghost reads at a glance.
-
 ### OW12 — The torch should be a carried item, not a thing you build
+**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+
 `model: sonnet` · `tests: smoke_playground, test_inventory` · `area: ui`
 Owner, 2026-08-16: *"torches need to be a carry able item not placeable one."*
 
@@ -147,47 +91,9 @@ strands camp lighting at night, say so instead of inventing a replacement.
 **Done when** a player can take a torch out of the backpack and carry it lit,
 and is not offered a torch to build.
 
-### OW1 — Inventory items cannot be moved, and the hotbar has no home in the UI
-`model: opus` · `tests: smoke_menu, test_inventory` · `area: ui`
-Owner: *"I can't move things in my inventory. There's no separate hot bar
-section. I can't move anything into it."*
-
-Both halves are real and they are one problem. The move verb **does** exist —
-`tab_backpack.gd:487` renders "holding slot N — choose where it goes" — so items
-can be picked up and placed. The owner could not operate it. The blind playtest
-hit the same wall from the other side: a stray confirm press picked up an orb
-stack with no way to tell what had happened.
-
-The hotbar has no section because slots 0–4 of the backpack **are** the hotbar
-(`tab_backpack.gd:46-56`, `playground_hud.gd::_update_hotbar`). That is a
-deliberate design, and the mitigation shipped for it was a badge on those five
-slots. The badge is not landing: the owner looked for a hotbar, did not find
-one, and concluded he could not put anything in it.
-
-Note `d21f32ce` shipped "an assignable hotbar" after most of that reasoning was
-written — establish what the current behaviour actually is before changing it.
-
-**Done when** a player can move a stack to a chosen slot and can tell, without
-being told, which slots are the hotbar and that they just changed one.
-
-### OW2 — The opening does not advance reliably, and text entry is bad
-`model: opus` · `tests: smoke_opening, smoke_name_prompt_keyboard` · `area: ui`
-Owner: *"The initial scene didn't move every time I hit x. The initial keyboard
-sucks."*
-
-The unreliable advance is the more serious half and matches a defect already
-root-caused during the blind playtest: `starter_picker.gd` polled its inputs in
-an `elif` chain, so a confirm landing on the same physics frame as a direction
-press was dropped permanently. That specific chain is fixed (`6be2ce87`), but
-the owner is describing the same *class* of failure on the dialogue advance —
-audit the other polled `_physics_process` input readers in the opening path for
-the same shape rather than assuming the one fix covered it.
-
-The keyboard is the naming grid. Related: `PT-04`, which is unconfirmed and
-needs exactly this — a real-window check on hardware. This report may be that
-confirmation; treat the two together.
-
 ### OW3 — The whole map is revealed before you explore anything
+**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+
 `model: sonnet` · `tests: smoke_menu` · `area: ui`
 Owner: *"The full map is rendered before I explore anything."*
 
@@ -196,20 +102,6 @@ no fog, reveal, explored or discovery logic of any kind. Spec §16's rule — th
 map reveals explored areas and landmarks and *never reveals everything
 automatically* — was never built. This is the surviving half of `R7.4` and the
 owner has now hit it; do that item's remainder here.
-
-### OW4 — Choosing which creature to use a potion on is a dead end
-`model: opus` · `tests: test_inventory, smoke_menu` · `area: ui`
-Owner: *"When I use a potion I get to the screen to choose the creature then you
-can't choose."*
-
-**Second report of this exact dead end.** `OF22` (`6026fc60`) shipped as "fix the
-full-menu potion picker dead end and lost focus" and it is back, or never left on
-hardware. The picker's focus path is `tab_backpack.gd`'s `_targeting` block
-(`:115-131`, `_first_eligible_target_row`, `_on_target_row`).
-
-Given it has already been fixed once, do not re-fix the focus placement blind:
-reproduce it first, on a build, with the same inputs the owner used. If it only
-fails on a gamepad, that is the finding.
 
 ### OW5 — The Meadows should be a long journey from home, not a compact square
 `model: fable` · `tests: smoke_traversal` · `area: terrain`
@@ -275,6 +167,73 @@ the whole spine can be sampled without baking anything, and at hours per bake th
 is not optional. A trail that is 12 km long has 12 km of chances to make this
 mistake once.
 
+
+**STATUS, 2026-08-17. The corridor is BUILT and does not yet land.**
+
+- `OW5A` — the macro layout, measured and region-aligned. **Landed.**
+- `OW5B` — the footprint and the bake. **Built.** 8192 x 2048 m, `world_bounds`
+  x [-1024,1024] z [-512,7680], **64 baked region files committed** against
+  main's 4. The bake was also factored to take a region set, with a bit-identity
+  test, so a future edit costs ~143 s a region instead of 153 minutes.
+- `OW5C` — the trail, the loops, the edges. **Built.** `trail.bands[]` is the
+  spine, `trail.loops[]` the regional loops, `trail.shortcuts[]` the quarry haul
+  road and the river ferry; they join the road set through
+  `playground_heightfield.road_polylines()`, never as `paths.routes` entries,
+  because `signpost.gd` fits four arms.
+- `OW5D` — the §10 relocation. **Built**, and honest about its own gap: its
+  `spawns.json` comment records that *"Ground truth at every new site was NOT
+  re-probed by this pass"* and that test files were out of scope.
+- `OW5E` — **OPEN, and the only thing between the corridor and `main`.** See its
+  own entry below.
+- **The end-to-end check is still owed** and is the thing that proves this
+  worked: walk the trail in-engine with a probe measuring real path length,
+  side-to-side width and elapsed in-game days, and confirm 40 minutes end to end
+  and about 5 side to side **against the actual route**, not the design document.
+  Filed as `OW5-walk`.
+
+
+### OW5E — make the relocated world pass its own tests
+`model: sonnet` · `tests: the six failing jobs` · `area: terrain, tests`
+**The corridor cannot reach `main` until this closes.** `ralph/integrate-3` is 24
+commits ahead and 6 of 19 CI jobs fail (run 32023204240). They are not the
+`verify-aggression` intermittency; they are real, and they split three ways:
+
+**Tests still asserting the pre-corridor world.** `verify-settings`: *"The Pond
+is listed at (-342.0,507.0), expected (-92.0,100.0)"*, same for River Road and
+Mountain Road. The landmarks moved correctly; the test hardcodes old
+coordinates. Derive the expectation from config the way `OW3` just taught
+`test_map_state.gd` to, or this breaks again at `OW6`.
+
+**The world genuinely wrong at a new site.** `verify-warrens`: *"the deepest
+chamber is not under the hill (terrain y=-4.2 vs floor y=-3.8)"* — a dungeon
+poking out of a hillside. `verify-relay`: *"the player climbed onto the
+apparatus pad from the yard; the traversal is not the route"*. `verify-boss`:
+D41's regrowth clause unpaid. `verify-traversal`: fell through the world at the
+south cap; the river divides nothing at two stations; the Old Mill Crossing
+cannot be crossed. **Fix the world, not the assertion** — `verify-relay`'s check
+is a real design guarantee.
+
+**Probably a test bug — check before touching either side.** `verify-traversal`
+probes the river's near bank at **x=1027**, which is outside `world_bounds`
+max_x of 1024. And `verify-unit-tests` exits 1 on *"31 resources still in use at
+exit"* with RID leaks, which may be shutdown noise (`D06`) rather than a failed
+test.
+
+Also surfaced by the same run and worth its own commit: `verify-settings`
+reports *"Map is now I — so is Open the satchel. Both will fire."*
+
+### OW5-walk — walk the corridor and prove the forty minutes
+`model: sonnet` · `tests: new probe` · `area: terrain`
+The owner's original ask, in his own words, and still unverified against
+anything but arithmetic. Once `OW5E` lands: drive a body along the real trail
+and measure **actual path length, actual side-to-side width, and elapsed
+in-game days**, then compare against 40 minutes end to end and ~5 minutes across.
+
+Do not measure the design document. `OW5A` computed an 11,594 m spine and a
+27.9-degree worst slope from the config; this item exists because a route that
+computes correctly can still fail to be walkable — which is exactly what the
+phantom wall turned out to be, three wrong diagnoses deep.
+
 ### OW6 — The captain you can challenge is too close to the start
 `model: sonnet` · `tests: none` · `area: village`
 Owner: *"The captain to challenge is way too close to where you start. You need
@@ -282,86 +241,10 @@ to work to find him."* Positions are data (`data/config/trainers.json`), so this
 is a placement change once `OW5` establishes the trail — sequence it after, or
 it gets moved twice.
 
-### OW7 — Gatherable wood does not look like wood
-`model: sonnet` · `tests: smoke_playground` · `area: vegetation`
-Owner: *"Wood to pick up doesn't look like wood. It's just random yellow glowing
-spots."*
-
-The glow is the interact affordance reading louder than the object under it —
-so either the node has no real mesh at this distance, or the highlight is
-swamping it. Note `OF20` (`f868aa95`) fixed harvest nodes that were *invisible*
-because of a dead `PackedScene` assignment; this may be the same area healing
-badly. A player should be able to name what they are about to pick up before the
-prompt tells them.
-
-### OW8 — The "put away" prompt still sits on top of the hotbar
-`model: opus` · `tests: smoke_playground` · `area: ui`
-Owner: *"The put pup away text still lays over the hot bar."*
-
-**Third report. Two fixes have already shipped** — `OF17` (`cee57f0c`, "the
-recall/put-away prompt still overlapped the hotbar") and `80860c46` ("place the
-context prompt from the hotbar's real edge, not a magic number") — and it is
-still there on hardware.
-
-Stop nudging offsets. Two fixes have moved numbers and it has come back both
-times; the third attempt should make the collision structurally impossible (one
-bottom-anchored container that owns both, so neither can be positioned into the
-other) and add a test that fails when their rects intersect at a realistic
-prompt length, on a handheld-width viewport rather than a desktop one.
-
-### OW9 — Nobody tells you to gather, to craft orbs, or to build a camp
-`model: fable` · `tests: test_dialogue_runner, test_progression_state` · `area: npc`
-Owner: *"Someone at the beginning needs to tell you to go gather materials to
-build things like orbs. Someone else will need to tell you to get wood and build
-a base camp. They should probably give you a hammer and recipe."*
-
-Two handovers, two different speakers, both in the opening band. The precedent
-is `OF30` (Tam gives the axe, the pickaxe and the basic-orb recipe) — the
-machinery for a one-time gift plus a recipe unlock already exists and is tested;
-this is a second use of it, plus the dialogue that makes the player *want* the
-materials before they are handed the means.
-
-The hammer is the build tool and already exists as an item. Sequence the two
-beats so the player is told to gather *before* they are told to build, and so
-neither instruction arrives while they are still indoors.
-
----
-
 ## Phase -1.45 — measured performance, and what three blind reviews found
 
 Filed 2026-08-16 by the coordinating session. Everything here is measured, not
 suspected; the numbers are in each item.
-
-### PERF1 — `road_polylines()` is rebuilt on every call and nothing caches it
-`model: sonnet` · `tests: run_tests, smoke_playground` · `area: terrain`
-**In flight.** `playground_heightfield.gd::road_polylines()` (~1116) rebuilds the
-entire road set from `_config` every call — iterating `paths.routes`,
-`spokes.routes` and `crossings`, allocating a fresh `PackedVector2Array` per
-route. `path_factor()` calls it every time, and measured **56.7 µs against
-`drain_factor`'s 6.5 µs** for the same shape of query. `_river_segments` a few
-lines above **is** cached, with a header saying re-reading the dict inside the
-bake loop "is the difference between a bake that takes minutes and one that does
-not finish." The lesson was learned for the river and never applied to the roads.
-
-Hit by: the water build, all 23,707 scatter placements, the terrain bake twice
-per pixel, and `map_baker` across 262,144 pixels **on the player's first launch**.
-
-**Cache the parse, not the result.** `scatter_rules._consider` gates on
-`path_factor` with per-instance jitter, so a returned value that differs in the
-last bits moves placements near roads. Acceptance is a placement-identity check:
-same count, same positions, same order.
-
-### PERF2 — the water build is 137 s of a 3 m 08 s boot
-`model: sonnet` · `tests: smoke_playground, run_tests` · `area: terrain`
-Measured from `user://boot_log.txt`, which timestamps every startup phase and
-which nobody had read: water **137 s**, vegetation scatter **45 s**, everything
-else ~6 s. `water.gd` grid-scans for the shoreline at 4 m steps calling
-`height_at` per cell, twice over (`:122-124` and `:169-170`), and `height_at`
-costs **230 µs**.
-
-**This is very likely `PT-18`'s answer** ("boot cost rose sharply"), which has
-been open and uninvestigated. Do PERF1 first — it may take a large bite out of
-this one for free. Re-measure from the boot log before and after; do not guess.
 
 ### CAP1 — a capture scene for interiors, so a room does not cost a world
 `model: sonnet` · `tests: none` · `area: perf`
@@ -372,34 +255,6 @@ people taking frames at all. A scene that instantiates only the interior under
 test plus its camera profile would boot in seconds. `grandpa_house.gd`'s
 kit-owns-the-exterior/script-owns-everything-else split is what makes this
 possible; `tools/capture_loft_exit.gd` is the worked example to generalise.
-
-### OW5A-rework — the corridor layout, against five review findings
-`model: opus` · `tests: none` · `area: terrain`
-`ralph/OW5A` is committed and **held unpushed**. Its band table recomputes exact
-and the trail geometry is sound; five findings must be answered first.
-
-1. **The footprint is not region-aligned.** Terrain3D places regions on an
-   integer lattice, so at 512 m per region the boundaries fall at −1024, −512, 0,
-   +512. A 1536 m width centred on origin straddles four columns — **64 regions,
-   not 48**, with 256 m of unfilled ground at each edge. The proposed validator
-   fix (`% (region_size * vertex_spacing)`) does **not** catch it: 1536 % 512 == 0.
-   It tests extent, not origin alignment. Aligned widths are 1024, 2048, or 1536
-   offset off-centre.
-2. **The bake unit cost validates against a figure not in the repo.** It claims
-   three recorded times (5.5 / 12 / 15) and confirms "the 12". Only 5.5 and 15
-   exist. Every bake projection rests on it.
-3. **"Cost scales with pixel count and nothing else" is false** — see `PERF1`.
-   Both probe tiles paid the full uncached road scan, so the experiment cannot
-   detect content scaling, and the layout then proposes adding 81+ trail segments
-   to that same inner loop.
-4. **Carve safety used the steepest 0.1 m difference, not the sustained wall.**
-   The repo already records those spoke walls at 57–66° (`severed_spokes.gd:24`,
-   `smoke_riding.gd:163`); the probe reported 79–81° for the same carve. Real
-   margin over the 60° ridden limit is nearer 5° than 15°.
-5. **The map system is absent from all three documents.** `map_baker.gd`
-   `HALF_SPAN 256`, `minimap.gd` `WORLD_HALF 256`, and `map_state.gd`'s
-   `GRID`/`CELL`/`ORIGIN` — the last **persisted to the save file**, so changing
-   the world extent is a save-format change requiring the full suite.
 
 ### PT-03-remainder — the stair affordance failed its blind pass
 `model: fable` · `tests: smoke_opening` · `area: village`
@@ -422,6 +277,8 @@ the bottom half of frame on empty floor with the player's head at the very
 bottom edge. Predates this item.
 
 ### OW1-remainder — the backpack's remaining legibility defects
+**SHIPPED, in flight.** Verified green and riding on `ralph/integrate-3` with the corridor; not on `main` yet. Close it when that bundle lands.
+
 `model: sonnet` · `tests: smoke_menu` · `area: ui`
 From the blind usability pass, judged at 40% scale as a seven-inch proxy. Two
 are genuine defects rather than opinions: **nothing shows *what* you are
@@ -446,92 +303,6 @@ Filed 2026-08-17. **Every item in this phase corrects an earlier confident
 answer, including two of the coordinator's own.** Recorded that way on purpose:
 the sequence of wrong diagnoses is the most useful thing here, because each was
 plausible and each cost work.
-
-### WALL1 — bodies wedge on ground that measures walkable by every means except the physics engine
-`model: sonnet` · `tests: smoke_traversal, smoke_aggression` · `area: terrain, collision`
-**Supersedes the prop-spacing and the slope explanations. Both were wrong, and
-both had work built on them.**
-
-The history, because it is the point: `OF15` reported the player getting stuck.
-A lane blamed clumped tree colliders; a cross-layer spacing filter was built,
-measured working (23,707 placements → 23,650, rocks 345→300) — **and the wedge
-survived.** The coordinator then read the remaining evidence as terrain slope
-past the player's 45° `floor_max_angle`, wrote that into `OW5` as a trail
-constraint, and told a lane to probe the spine for steepness. **That was also
-wrong**, and the `CI-AGGRESSION` lane measured it out of existence.
-
-The measurement, at a creature's frozen chase position `(52.97, 0.58, −122.28)`
-— bit-identical to four decimals across two independent failing runs, 600+
-physics frames of zero net displacement while movement was still being
-requested:
-
-- `ground_height_at()` reads an ordinary **5–11° grade** there.
-- `move_and_slide()` reports **`is_on_wall() == true`** regardless.
-- A direct physics-shape query at the frozen point found **only the `Terrain3D`
-  node** overlapping. No prop, no rock, no other collider.
-- The wedged body is a creature, and `scenes/creatures/creature.tscn` sets
-  `floor_max_angle` **55°** — *more* permissive than the player's 45°
-  (`player.tscn`, 0.7854 rad). It wedged at the more forgiving angle.
-
-**Three known points, and they are not the same point.** `(52.97, −122.28)`
-against `OF15`'s `(60, −106)` and `(65, −108)`: 17.7 m and 18.7 m apart. But all
-three sit in one ~20 m stretch of the southern foot of the rocky rise, found by
-**two different bodies following two different scripted paths**. Three
-independent freezes in one stretch is not one bad triangle — it is a property of
-that ground, or of how collision is generated over it.
-
-**CONFIRMED, 2026-08-17 01:30Z, by the `COLL1` lane — and the cause is a trap
-this project has now been bitten by three times.**
-
-`collision_shape_size` has been **silently stuck at Terrain3D's default of 16**,
-never the 256 `playground_world.gd`'s own comment believes it set.
-`_build_terrain()` calls `terrain.set("collision_shape_size", ...)` **before**
-`add_child()`, and that setter is a no-op out of the tree. The comment sitting
-next to it even names "the 16m default" as the thing it believes it avoided.
-
-Consequence: today's 512 m world tiles its collision into **~1024 independent
-16 m `HeightMapShape3D` pieces instead of 4 — 256× more shape seams than anyone
-knew existed.**
-
-Measured at the freeze coordinate, walking a `CharacterBody3D` straight across
-(52.97, −122.28) at the creature's own 55° limit:
-
-| `collision_shape_size` | spurious `is_on_wall()` frames |
-|---|---|
-| 16 (the live, stuck value) | **47 / 180 — 26%** |
-| 64 (what `BAKE-GUARDS` produces) | 23 / 180 — 13% |
-
-**`ralph/BAKE-GUARDS` already halves it**, as a side effect of moving the set
-into `_ready()` and reading the value back. That is not a fix anyone designed
-for this bug; it fell out of fixing the setter.
-
-Two honest limits the finding lane stated itself, and they matter:
-- **23/180 is still nonzero.** Shape size alone does not eliminate the spurious
-  wall detection, so this is a contributing cause, not necessarily the whole one.
-- **It is not a full reproduction.** The probe walks a straight line at constant
-  velocity; it does not run the real steering and unstick AI, so it does not
-  reproduce the reported 600+-frame total freeze.
-- Static sampling at all three coordinates — raycast against live physics, not
-  `ground_height_at()` — showed **no** discrepancy: real surface height and
-  normal track the analytic heightfield within millimetres, including four 0.5 m
-  offsets around each point. **The static geometry is not wrong. The moving
-  contact is.** `OF15`'s point B is separately a legitimately steep −47° local
-  feature, consistent with "southern foot of the rocky rise".
-
-**Why this gated the corridor, concretely:** baking 64 regions across
-8192 × 2048 m while collision silently tiles at 16 m would have laid tens of
-thousands of these seams under 12 km of trail, and the defect would have been
-discovered after a 153-minute bake with a trail authored on top of it.
-
-**Do not sample `ground_height_at()` to investigate this.** That scalar is what
-lied to two separate investigations. Query the collision normal and shape the
-physics engine actually reports.
-
-**This gates the corridor.** `OW5B` is laying 64 regions across 8192 × 2048 m.
-An unexplained collision defect multiplied by 64, discovered after a
-153-minute bake and a trail authored on top of it, is the expensive version of
-this. `OF15` and the `verify-aggression` failure are **one investigation**, not
-two.
 
 ### UI-PAD3 — `ui_accept` cannot replace a poll on a screen with no Button to press
 `model: sonnet` · `tests: test_controls` · `area: ui`
@@ -567,31 +338,6 @@ them by hand; dropping one would quietly take Enter away from every menu in the
 game. `tests/test_controls.gd::test_ui_accept_still_answers_the_keyboard` holds
 that line.
 
-### PT-15 — refiled: it is not "unfocused", it is the starter orb's lighting rig
-`model: sonnet` · `tests: none (visual)` · `area: visual`
-**The original framing is disproved, not merely unconfirmed.** A lane rendered
-Galewisp selected and unselected at matching rotation angles: identical.
-`_refresh_selection()` has no path to the body's material. Galewisp renders pale
-at **every** angle, always, and it is not a bad `OF28` "vivid" repaint —
-brightness and saturation were measured on base vs vivid for all three species
-and Galewisp's are statistically identical between them, both already pale.
-
-**The lead, with numbers:** the starter orb's lighting rig is measurably hotter
-than the survey tool's proven one — **3 lights against 2, ambient 2.2 vs 1.5,
-key 2.0 vs 1.6, plus a rim light the survey tool does not have.** That would
-overexpose a high-albedo creature like Galewisp under ACES tonemapping while a
-dark one like Terrapup has headroom to absorb it. Not verified and not fixed:
-it is a lighting change, which is visual-affecting work requiring the blind
-judge pass, and the finding lane said honestly it did not have the budget to do
-that properly.
-
-### PT-04 — CLOSE: does not reproduce
-`model: none` · `area: ui`
-"Naming field reportedly ignores typing." Driven with real `InputEventKey` and
-real `InputEventJoypadButton`; **both real-input surfaces work.** The lane that
-checked recommends closing outright. Kept here rather than deleted so the next
-person reading the playtest report finds the answer instead of re-testing it.
-
 ### PT-17-test — the rename flow has no test for its own trigger path
 `model: sonnet` · `tests: new` · `area: ui`
 Flagged by the lane that rebased `PT-17`, about work it did not write: the
@@ -619,70 +365,6 @@ had learned that did not belong in a diff. **What came back was larger than the
 four items it had just closed**, and none of it would have survived otherwise —
 which is the whole argument for `LANE1`'s notepad. Verbatim record in
 `ralph/NOTES.md` on `ralph-status`.
-
-### UI-PAD1 — `ui_accept` has no joypad binding, so no focused Button can be pressed with a pad
-`model: sonnet` · `tests: test_controls, run_tests, a new pad test` · `area: ui`
-**This is a controller-first game in which the player cannot choose a build
-piece.** Dumped from the live `InputMap` at runtime, not read off `project.godot`:
-
-```
-ui_accept     -> key, key, key       <- no joypad event at all
-ui_left       -> key, JOY:13, axis:0
-ui_right      -> key, JOY:14, axis:0
-menu_confirm  -> key, JOY:0
-```
-
-A Godot `Button` activates on `ui_accept`. Focus *navigation* has pad bindings
-and works; *accept* has none. So on a pad, focus moves between controls and
-nothing can ever be pressed. Every screen that works today works through a
-hand-written `menu_confirm` poll — `starter_picker.gd`, `tab_creatures.gd`,
-`combat_hud.gd` each carry their own, each with its own comment about why.
-`OW4`'s target picker was the one that never got the workaround.
-
-**`OW11` shipped without catching that the build menu has the same defect.**
-Verified after the fact with real `InputEventJoypadButton` events, free build on,
-focus confirmed on a grid cell: pad A leaves `pending_build` empty and the menu
-open; pad X likewise. `build_menu.gd`'s cells are plain `Button`s wired to
-`_pick` via `pressed`, with no confirm poll anywhere. `OW11` made that menu
-readable and correctly sized. It did not make it operable, and it was not
-operable before either. This sits directly under the owner's report that
-building must work the way Valheim's does.
-
-**Do not fix this by adding `JOY:0` to `ui_accept` and stopping.** `menu_confirm`
-is already JOY:0, so every screen currently polling it would fire twice from one
-press — the double-confirm `name_prompt.gd`'s header records this repo having
-already paid for once. The fix is an audit: add the binding, then remove each
-now-redundant poll **in the same change**.
-
-### UI-PAD2 — `OW10`'s input owner is real but partial; `build_placer.gd` is outside it
-`model: sonnet` · `tests: smoke_free_build, run_tests` · `area: ui, build`
-`OW10` landed `scripts/ui/input_owner.gd` — a panel that owns input joins a
-group, and world-verb polls ask `current()`. That replaced two divergent gate
-sets in `playground_hud.gd` and fixed the reported bug. It converted **that
-file's** pollers and no others.
-`grep -n "input_owner" scripts/build/build_placer.gd` returns nothing.
-
-`build_placer.gd::_physics_process` polls `build_place`, `build_rotate`,
-`build_rotate_left/right`, `build_snap_cycle` and `build_cancel` directly. It is
-`PAUSABLE`, so the six tree-pausing panels stop it. **The build menu is the one
-panel that deliberately does not pause** — that is its whole point — so the
-placer keeps polling underneath it, exactly as the hotbar used to. Path: arm a
-piece (menu closes, ghost live), reopen the build menu; `_read_world_hotkeys`
-refuses `build_open` while the menu is open but not while a ghost is armed, and
-the pause shell's Build tab is a second door. Now `build_place` is live behind
-an open menu.
-
-**Reported honestly by the finding lane as structural, not observed** — the
-missing gate is grep-verified and the pause semantics read off
-`PROCESS_MODE_PAUSABLE` and `build_menu.gd::open()`, but the end-to-end exploit
-was not driven, because a real player node needs a ~9-minute world boot under
-software GL. Treat it as very likely live.
-
-Other pollers outside the gate, for whoever takes this:
-`scripts/player/player_controller.gd`, `scripts/player/torch.gd`,
-`scripts/combat/throw_aim.gd`, `scripts/world/interaction_arbiter.gd`. Most are
-plausibly fine via `PAUSABLE`; none asks `input_owner.gd`. **The group exists and
-joining it is one line — the work is deciding which of these should.**
 
 ### TEST2 — four tests that passed while the thing they name was broken
 `model: sonnet` · `tests: the ones named here` · `area: tests`
@@ -733,301 +415,13 @@ new work discovered. Every item here exists because a fix that shipped today
 was a *workaround*, and the thing it worked around is still standing. They are
 filed so the workarounds cannot quietly become the design.
 
-### EXP1 — put `verify_export.sh` back to being a guard
-`model: sonnet` · `tests: verify_export` · `area: ops`
-**Depends on `PERF2` and `STREAM-SCATTER` landing.** `tools/verify_export.sh`
-allowed the exported build 180 s to boot. On 2026-08-16 the world build reached
-188 s and every branch going through `ralph-merge`'s rebase-and-dispatch path
-started failing — on a tree that had passed CI minutes earlier, because the
-`export` job runs only on `main` or a `workflow_dispatch` and is skipped on a
-branch push. It was raised to **420 s**, and its own comment says plainly that
-this is a tourniquet.
-
-The reason this is an item and not a footnote: 420 s against a boot that
-`PERF2` and scatter streaming should take well under 60 s is **not a margin, it
-is a rubber stamp**. The next time boot cost triples, nothing will notice —
-which is precisely the failure that produced this item in the first place.
-
-Once the perf work lands: re-measure the exported boot from `user://boot_log.txt`,
-set the allowance to roughly 2x the measured figure, and say in the comment what
-it was measured against and when. A timeout with no recorded basis is how this
-one drifted.
-
-### TEST1 — audit the smoke suite for the defect `verify-aggression` has
-`model: sonnet` · `tests: the smoke suite itself` · `area: tests`
-`verify-aggression` failed on five unrelated branches on 2026-08-16, including
-one whose only change was a shell script, and killed a six-branch integration
-run where the other 18 jobs were green. The signature — *"stood 9.6m from
-Galecrest for 900 frames without pressing anything and it never attacked"*,
-retrying at 9.5 m — points at a test that positions itself relative to wherever
-a creature happened to spawn, and fails when that lands outside aggro range
-while the creature behaves correctly.
-
-`CI-AGGRESSION` fixes that one test. **This item asks the question that one
-test cannot answer: which of the other sixteen smoke tests depend on a position,
-a spawn, a timing window or an RNG draw they do not control?** Read them for the
-pattern rather than waiting for each to fail on an innocent branch. In this repo
-that failure mode is expensive out of proportion to its size, because
-`ralph-merge.yml` only fast-forwards fully-green branches — so an intermittent
-job does not annoy anyone, it silently stops healthy work from shipping and
-leaves no trace saying so.
-
-Record what you find even where you do not fix it. A list of "these four are
-position-dependent, here is which" is worth more than one more repair.
-
-### MERGE1 — the ship path serialises, and it is about to be asked to carry seven lanes
-`model: sonnet` · `tests: none (CI config)` · `area: ops`
-`ralph-merge.yml` fast-forwards one branch at a time and rebases the rest, with
-`MAX_REBASES=3` and `MAX_BEHIND=20`. With six branches ready at once on
-2026-08-16 the sweeps shipped nothing for a stretch: every landing invalidated
-the other five. The coordinator's answer that day was to hand-merge six branches
-into one `ralph/integrate-1` bundle so a single CI run and a single fast-forward
-would land all of them — and that bundle then died on the `TEST1` flake, while
-the sweep quietly shipped the same branches serially anyway once the export
-timeout was fixed.
-
-So the bundle was solving a problem that had already been fixed elsewhere, and
-this item exists so the next person does not reinvent it. **The real question is
-whether the serialisation has a genuine ceiling or only had one while a
-20-minute job was failing.** Measure it: how many branches can be queued before
-throughput collapses, and is `MAX_REBASES=3` or CI duration the binding
-constraint? If the ceiling is real, batching belongs *in* `ralph-merge.yml`
-where it can be tested, not in a coordinator's hands where it is a one-off.
-
-### LANE1 — lanes and the coordinator could not talk, in either direction
-`model: sonnet` · `tests: none (process)` · `area: ops`
-**Built the same day it was filed — `ralph/NOTES.md` on `ralph-status`. This
-entry stays open for the half that is process rather than file.**
-
-Two failures, and the second is the worse one.
-
-**Downward.** The coordinator learned mid-run that `verify-aggression` was
-rejecting healthy branches, and that two live lanes were each about to duplicate
-work already sitting on `ralph/OW5-stream` and `ralph/SCAT1` — and could not tell
-them. The expensive outcome that prevents is not duplicated effort; it is a lane
-chasing a CI failure into its own diff, finding nothing, and weakening its own
-work until the red goes away.
-
-**Upward, and this was invisible until the owner asked.** The UI lane finished
-four owner-reported items and reported `flagged gamepad & test issues` — twelve
-words, and nothing else survived. That lane had spent four consecutive tasks
-inside this game's input handling and knew more about it than anyone alive, and
-all of that went into a closed container. Every lane before it did the same. The
-loop has been discarding its own best observations at the exact moment they were
-most informed, and calling it a completed task.
-
-**What exists now.** `ralph/NOTES.md` on `ralph-status` — a shared notepad that
-goes both ways, on a branch that merges into nothing and runs no CI, so writing
-to it is free and cannot conflict with anyone's work. Coordinator writes down
-what a lane could not know; lanes write up what they found that is worth knowing
-and does not belong in a diff, **especially the things they noticed and ruled
-out of scope.**
-
-**And the channel does exist after all**, which the first version of this entry
-got wrong: `create_trigger` with `persistent_session_id` delivers a prompt into a
-named live session as an ordinary turn, keeping its context. Interrupting or
-respawning a lane was never the only lever.
-
-**What is left here:** make it habit rather than instruction. Every lane brief
-must say read the notes before you push and write the notes before you finish,
-and `ralph/PROMPT.md` should carry it so it survives this coordinator. A file
-nobody is required to read is a file nobody reads.
-
----
-
 ## Phase -1.4 — the blind playtest's open findings (2026-08-15/16)
 
 Full record in `docs/reviews/2026-08-15-full-blind-playtest/`. The six repairs
 that pass already shipped; these are §7's leftovers. `PT-03` is the one the
 report calls the highest-value remaining fix for a first-time player.
 
-### PT-03 — Make the opening staircase readable
-`model: fable` · `tests: smoke_opening` · `area: village`
-Two testers (one of them the owner, twice) could not find the way out of the
-opening loft. The flight is a narrow slot behind a parapet in the room's NW
-corner, entered from the north, descending south; from every vantage a player
-naturally occupies it reads as more parapet. `grandpa_house.gd::_build_stairs()`
-(272-282) builds it; the `stairs_top`/`stairs_bottom` markers already exist
-(132-133) and `_build_lights()` (438-447) puts no light near either. The loft
-beam deliberately stops short of the opening (252-258), so nothing frames it.
-**Owner picks the affordance** — a warm light at the stair head, geometry that
-frames rather than avoids the opening, or a look-toward bias on the interior
-camera profile the house already swaps to on entry (57, 464-470). Done when a
-player who has never seen the room finds the stairs without being told.
-
-### PT-15 — Unfocused starter portraits render ghost-white
-`model: sonnet` · `tests: smoke_starter_picker` · `area: ui`
-On `7547f386` all three portraits rendered in full colour; on `9e4a90a1` the two
-unfocused ones are pale silhouettes. Suspected regression from the shiny repaint
-(`OF27`/`OF28`). Verify against both builds before changing anything.
-
-### PT-17 — No way to rename a creature
-`model: sonnet` · `tests: test_party` · `area: ui`
-A name is settable exactly once, in the opening. `name_prompt.gd`'s only caller
-is `sequence_director.gd`; `tab_creatures.gd` only ever reads `nickname`. One
-mis-navigated press in the opening names a creature forever.
-
-### PT-23 — Autosave only ever fires at camp rest
-`model: sonnet` · `tests: test_save_format` · `area: ui`
-`camp.gd:184-187` is the sole caller of `autosave_slot()` in the whole codebase.
-Building a camp is a mid-session action, so a new player has no autosave at all
-for their entire first session. Add a fallback cadence (day rollover, or a
-timer) that does not depend on having built anything.
-
-### PT-04 — Naming field reportedly ignored typing
-`model: haiku` · `tests: none` · `area: ui`
-**Unconfirmed.** `name_prompt.gd:232-247` does call `grab_focus()`, and headless
-verification shows the field focused. The playtest saw a caret and a focus ring
-in a field that received nothing — consistent with the test container's X input
-focus rather than a game bug. Needs one check in a real window; close it if it
-does not reproduce.
-
-### PT-18 — Boot cost rose sharply across the mid-test build change
-`model: sonnet` · `tests: none` · `area: perf`
-Scene load went from ~2 minutes to materially longer across 20 commits, measured
-under software rendering (which exaggerates absolutes, not the relative jump).
-Suspects include the 17 shiny colourway textures. Measure on target hardware
-before optimising anything.
-
-### PT-19 — One silent engine death at boot
-`model: haiku` · `tests: none` · `area: perf`
-One of two launches on `7547f386` died at boot with no error output. Insufficient
-evidence to characterise. Watch for recurrence; close if it does not return.
-
----
-
 ## Phase 7 — the village lives, the meadow reads
-
-### R7.6 — The berry farm beside Grandpa's house, and the hoe
-`model: opus` · `tests: test_farming (new), test_inventory, smoke_playground` · `area: village`
-Owner-requested, 2026-08-16: a berry farm next to Grandpa's house, and a hoe
-that preps ground for berry seeds. Replaces this item's old two-line stub
-(which also mentioned fishing — the rod exists as an item and gates nothing;
-leave it).
-
-In bounds, not a design invention: `GAME_DESIGN.md` lists "berry farming" and
-"simple farm plots" as **expected** build categories, and §32 excludes only
-*deep* farming. Keep it shallow — till, sow, wait, harvest. No irrigation,
-fertiliser, soil quality or crop varieties.
-
-Build on what exists rather than inventing:
-- `scripts/world/harvest_logic.gd` is the shared tool/yield/durability body and
-  gained a public `gather()` so a swing and a prompt-press run one path. A crop
-  is its **fourth caller**, alongside `harvest_node.gd` and
-  `vegetation_harvest_point.gd` — do not copy it.
-- The hoe follows the five existing tools in `data/items/items.json`
-  (axe/pickaxe/knife/hammer/fishing_rod) plus `scripts/player/tool_hold.gd`.
-  Which mesh a tool uses and how it sits in the hand is **data on the item**, so
-  a hoe is an items.json entry and a swing target, not new player code.
-  Craftable at the workbench station, or handed over by Tam (the OF30
-  precedent).
-- Berries are already a real item (`items.json:59`, with `satiety` and the
-  `berry_verve` buff), already harvested from two nodes in
-  `data/config/harvest.json`, already sold to Mira, and
-  `recipes_ironwood.json:58` already keeps them in the Ridge Tonic cost "so the
-  berry plots stay worth walking to at Band 4" — a forward reference to a plot
-  that does not exist yet. This item is what that line was waiting for.
-
-One genuinely new shape, worth naming: `items.json:9` records that berries are
-the one resource with no `gathered_with`, i.e. never tool-gated. A hoe would be
-the first tool gating a **planting** verb rather than a gathering one — decide
-that deliberately rather than by accident.
-
-Placement: Grandpa's house is at `[-22,-16]` (`village.json:3`); the plot must
-clear the square flat at `[10,-10]` r18 and the fence run at `[3,-18]`. Answers
-"Found along the way"'s spec §14 bullet directly — the farmhouse should not
-become a room you never re-enter.
-
-**Done when** a player can craft or receive a hoe, till a patch beside the
-farmhouse, sow berry seeds, and harvest berries from it on a later day.
-
-### R7.8 — Doors that open on interact, and houses you can walk into
-`model: opus` · `tests: smoke_traversal, test_prompt_arbiter` · `area: village`
-Owner-requested, 2026-08-16: every house enterable, doors opening on interact.
-**Owner-scoped: build the door verb once, plus one or two reusable interior
-templates every house draws from — not a bespoke interior per building.**
-
-No door-open mechanic exists today, and the codebase already admits the gap:
-`building_prefabs.json:567` poses `cottage_a`'s leaf statically open at -100°
-with the reasoning that "a visibly closed door standing in an opening the player
-walks straight through would be village.gd's hologram warning from the other
-side." That is exactly the tension this item resolves. Grandpa's door is not a
-precedent — it is an invisible story gate (`set_door_open()`, polled by
-`sequence_director.gd`), not a player verb.
-
-Three pieces of work:
-1. **The verb.** A new provider on the existing `interactable.gd` /
-   `prompt_arbiter.gd` arbiter — the same route `riding_controller.gd` took.
-   One door script, animating the existing leaf, reused by every prefab.
-2. **The openings.** `building_prefabs.json:4`: a prefab with no `colliders`
-   gets one combined-AABB brick. Only `workshop` and `cottage_a` have authored
-   openings; `cottage_b`, `ranger_station`, `mill` and the rest are solid bricks
-   with painted-on doors. Each needs a doorway hole and lintel — this is the
-   bulk of the cost.
-3. **The interiors.** One or two reusable templates following
-   `grandpa_house.gd`'s documented split (the kit owns the exterior; the script
-   owns floor, furniture, lights, markers and all collision).
-   `scripts/world/shop_interior.gd` already states it copies that worked example
-   rather than inventing, so it is the second data point for the pattern.
-   Register each in `village.gd:135`'s `INTERIORS` whitelist — deliberately a
-   whitelist, because "naming a res:// script is data that can load code".
-   Reuse the interior camera profile seam (`grandpa_house.gd:57`, an `Area3D`
-   plus `set_target`).
-
-**Done when** every house in the village has a door that opens on interact and
-a room behind it the player can stand in, and none of them is a solid brick.
-
-### R7.9 — An inn in the village
-`model: opus` · `tests: smoke_traversal` · `area: village`
-Owner-requested, 2026-08-16: an inn in the main village where the villagers can
-stay.
-
-There is no inn or tavern prefab — it must be composed from the same Medieval
-Village MegaKit family per D24. `village.json:3` records why the TowerWindmill
-was **removed rather than replaced** ("a mismatched second-family landmark is
-exactly the split-the-difference failure D24 closed"); an off-family inn repeats
-that mistake. `farmhouse_shell` (two storeys) is the closest existing massing to
-work from. Data goes in `data/config/village.json`'s `structures[]` with its
-`_why`, built by `village.gd`, grounded via D09 ("ask the world, never
-raycast"). Its interior comes from R7.8's templates.
-
-An innkeeper follows D39's dual-role pattern (a vendor branch and a later
-trainer branch coexisting through ordered `greeting_when`), with `SE30`'s
-`place_when` available if presence should be conditional. If the inn carries
-rest or quest-board function, reconcile against spec §6 ("6–10 optional
-activities, not forty shallow quests") rather than inventing a quest list.
-
-### R7.3 — The footprint and the bake underneath `OW5` · `model: opus` · `tests: smoke_traversal` · M7, §30
-**Re-scoped twice on 2026-08-16 — the second time by the owner.** This item used
-to gate on `MQ1A`/`MQ1B` and claim the areas belonged to `SD16`, `SD17`, `SE21`,
-`SE23` and `SF31`; all five shipped. Then `OW5` took the world's *shape* as an
-owner directive.
-
-What remains here is only the engineering half of `OW5`: `terrain_playground.json`
-still says it is *a test area, not the Meadows*, and the bake, the Terrain3D
-region count and the cost on the Ally were never budgeted. Measure what a trail
-long enough to need several days of camping actually requires, grow the footprint
-underneath it, rebake. **Do not decide the layout here — that is `OW5`.**
-
-**The bake cost is now MEASURED, 2026-08-17, and must not be re-guessed:
-143.5 s per region, so 64 regions ≈ 153 minutes.** Timed on a single region by
-the `BAKE-GUARDS` lane, and close to `MEADOWS_MACRO_LAYOUT` §1.1's own 181-min
-projection, which means the design arithmetic holds. This replaces the three
-conflicting whole-world figures (5.5 / 12 / 15 min) the repo carried because
-nobody re-measured after the river landed.
-
-**And that 153 minutes should be a one-time cost.** `build_playground_terrain.gd`'s
-pixel loop computes every pixel from its own `(world_x, world_z)` and nothing
-else — `height_at`, `slope_degrees_at`, `rock_bias_deg`, `building_apron_factor`
-and `drain_factor` are all analytic in the config and a coordinate. No pixel
-reads a neighbour; there is no blur, erosion or flow pass. So any sub-rectangle
-can be baked in isolation and must come out bit-identical, and adjacent regions
-baked independently agree exactly at the boundary because both evaluate the same
-continuous function at the same coordinates — which is normally the thing that
-makes incremental terrain baking unsafe. `OW5B` is factoring the bake to take a
-region set, with a bit-identity test as the load-bearing check. §8.5's claim
-that a per-band bake "would be a new system" is answered: it is the same loop
-with bounds passed in, and a full bake is simply "every region is dirty".
 
 ### R7.4 — Map reveal rule · `model: sonnet` · `tests: smoke_menu` · §23
 **Re-scoped 2026-08-16.** The old text said the `map` action was "read by
@@ -1045,7 +439,29 @@ Owner-reported, 2026-08-15. Movement getting wedged/blocked rather than passing
 through. Needs locations logged from a fresh playthrough before a fix can be
 scoped.
 
-**Located, mis-diagnosed, and PARKED on purpose — 2026-08-16.** A lane confirmed
+**SOLVED 2026-08-17 — it was Captain Halder, and it took four diagnoses.**
+`WALL1` found it: `spawns.json`'s seeded rng resolved Galecrest's home to 3.15 m
+from a captain `trainers.json` hand-places at `[52.0,-122.0]` with a real
+0.36 m capsule collider. The chase ran through his body. `is_on_wall()` was
+true because there really was a wall — just not a terrain one, which is why
+every terrain-side investigation came back clean. A frame-by-frame slide dump
+named `Captain Halder/Body` on every residual frame.
+
+The three wrong answers before it, kept because the sequence is the lesson:
+props (a spacing filter was built and measured working, and the wedge survived
+it); terrain slope (disproved — the ground reads 5-11 degrees and the wedged
+body ran a MORE permissive 55-degree limit than the player's 45); collision
+shape seams (a real and independent defect — `collision_shape_size` had been
+silently stuck at 16 m, never the 256 the code believed, because the setter is
+a no-op out of the tree — worth fixing on its own and it halved the residual,
+but not the cause).
+
+Closing this item. What survives it is a rule now in `OW5`: **a route is not
+proven walkable by sampling the heightfield.** `ground_height_at()` lied to
+three separate investigations. Walk a body and read what the physics engine
+reports.
+
+Superseded detail from 2026-08-16, kept for the record: A lane confirmed
 the wedge at **(60, -106)** and **(65, -108)** and blamed clumped tree colliders.
 A cross-layer spacing filter was built against that diagnosis, measured working
 (23,707 placements to 23,650; rocks 345 to 300, trees 129 to 118) — **and the
@@ -1063,65 +479,7 @@ recorded on `OW5` rather than here: **no trail segment may cross ground steeper
 than `floor_max_angle`, and a probe must assert it before the trail is committed.**
 Re-open this item only if the wedge survives the rebake.
 
-### OF18 — Re-shoot the website's screenshots · **partly done 2026-08-16**
-`model: sonnet` · `tests: none` · `area: visual`
-**Done already:** all the copy (seventeen species — it said fifteen, twice;
-credits corrected — two shipped kits were uncredited and a retired one was still
-listed; "vertical slice" → the 3–4 hour chapter D23/D42 describe; download
-instructions that no longer tell people to keep three files out of a 477 MB
-folder). A wordmark set in live type per the game's own display-lettering board.
-`tools/site_images.py` now owns the capture→slot mapping so `site/README.md`
-cannot drift out of sync with it again — it had named a combat frame the tool
-stopped writing, so the documented recipe failed outright. And the hero, village
-and camp frames are current, which gets the demolished Farm Buildings village
-off the page and out of the `og:image`.
-
-**Still to do, and the reason this item stays open:**
-1. `godot --headless --path . --import` **first** — a capture run before an
-   import renders missing textures and the frames come out plausible and wrong.
-   This cost a full run in the session that filed this note.
-2. Re-shoot the rest: `tools/survey.sh` (the exploration frames and the
-   `.band` parallax, which still has no stronghold on the rise) and
-   `tools/survey_combat.sh` (the combat frames still show a placeholder
-   blob-headed trainer, Kenney foliage, the dead names "Meadow Hopper" and
-   "Bramblit", and `[A] Quick / [X] Charged` — D35 moved those to RT/LT).
-3. Capture the three images the two removed sections need:
-   `capture_shiny_pairs.gd` (roster), `capture_weather.gd` (rain),
-   `capture_torch_night.gd` (night). Then `python3 tools/site_images.py` and
-   restore the two `<section>` blocks from `site/index.html`'s git history —
-   the comment where they were removed carries the recipe.
-4. `capture_catch_sequence.gd` gives `aim-arc.jpg`, a slot that has fallen
-   through to a frame with **no arc and no orb** since the page was built,
-   under a caption promising the arc shows exactly where the orb will land.
-5. Blind visual pass before shipping (`conventions.md`: visual work needs a
-   pass, not a look), then close.
-
-Do not commit `site/img/*.jpg.import` — Godot sidecars, no purpose on a website.
-
-### R7.7 — Player HP and armour slot architecture · `model: sonnet` · `tests: test_player_hp` (new)
-
----
-
 ## Phase 6.5 — locomotion quality rebuild (owner's quality plan)
-
-### MQ1B — Terrain adaptation and foot placement · `model: fable` · `tests: none` · quality plan §3
-**START WITH FABLE.** `MQ1A` is closed — the base cycles are key-pose authored
-on render-verified axes, with planted-skate numbers a foot-IK pass can
-regression-check against. Don't build terrain IK on top of a base cycle that
-hasn't passed its own blind critique.
-
-Evaluate and implement the minimum robust solution for uphill, downhill,
-cross-slope and uneven-ground walking, small terrain height variation, and idle
-stance on slopes (foot planting/IK, orientation to ground normal, pelvis
-compensation, stance-phase locking as needed — don't add complexity for its own
-sake).
-
-**Done when** blind rendered/play inspection on flat and sloped test terrain
-shows no gross foot penetration, no obvious hovering, no sustained slope
-skating, no knee inversion, no broken pelvis motion, no visible IK snapping, and
-walk/run still reads as natural.
-
----
 
 ## Phase -0.6 remainder — the look
 
@@ -1141,16 +499,6 @@ Genuinely still open:
   anywhere. Needs a title screen to exist first, or a different mount point.
 - Compass — the bible says "if it exists"; it doesn't, and inventing one is not
   this item's job.
-
-### EV10 — Cohesion pass
-`model: fable` · `tests: none` · `area: visual`
-Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge
-against both reference sets, fix the three biggest gaps, repeat until further
-improvement is asset-quality-limited rather than composition-limited. Record
-plainly that EV9's remainder above is out of reach for documented reasons rather
-than treating it as a failure to converge.
-
----
 
 ## Phase 8.5 — the chapter's own audit
 
@@ -1209,6 +557,40 @@ tool-in-hand + assignable hotbar + the map button (save format 6→7).
 Ids only. `git log` and `DONE.md` are the record; this list exists so a firing
 can tell at a glance that an id is spent.
 
+- OF15 — done
+- EV10 — done
+- EXP1 — done
+- LANE1 — done
+- MERGE1 — done
+- MQ1B — done
+- OF18 — done
+- OW1 — done
+- OW10 — done
+- OW11 — done
+- OW2 — done
+- OW4 — done
+- OW5A-rework — done
+- OW7 — done
+- OW8 — done
+- OW9 — done
+- PERF1 — done
+- PERF2 — done
+- PT-03 — done
+- PT-04 — done
+- PT-15 — done
+- PT-17 — done
+- PT-18 — done
+- PT-19 — done
+- PT-23 — done
+- R7.3 — done
+- R7.6 — done
+- R7.7 — done
+- R7.8 — done
+- R7.9 — done
+- TEST1 — done
+- UI-PAD1 — done
+- UI-PAD2 — done
+- WALL1 — done
 - BG1 — done
 - BG2 — done
 - CO1 — done
