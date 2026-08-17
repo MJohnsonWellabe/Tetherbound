@@ -168,7 +168,8 @@ jobs:
             echo "::warning::Needs a human, and was skipped:$STUCK"
           fi
 
-          # A sweep that could not run is not a sweep that found nothing.
+          # A sweep that could not run is not a sweep that found nothing, and
+          # neither is a sweep that quietly left green work behind.
           #
           # The first real sweep skipped four branches with "No such file or
           # directory" and still reported success, which is the worst possible
@@ -176,5 +177,28 @@ jobs:
           # success, so an unexpected exit code fails the job.
           if [ -n "$BROKEN" ]; then
             echo "::error::The ship script failed to run for:$BROKEN"
+            exit 1
+          fi
+
+          # MERGE1, 2026-08-17: this is the same failure in a quieter shape.
+          # `PERF2`, `OW9` and `R7.6` sat green and refused for over an hour
+          # while this job reported `success` every ten minutes. Correctly
+          # skipping a branch that needs a human (STUCK, rc=1) IS the sweep
+          # working as designed -- but the run's own conclusion said the
+          # opposite of "a branch needs attention", because success meant
+          # only "the script ran," never "nothing was left behind." The only
+          # place anyone would have seen otherwise was a `::warning::` line
+          # buried inside an all-green check.
+          #
+          # This does NOT touch the workflow_run chain ralph-merge.yml relies
+          # on: that trigger watches the `CI` workflow only (see its own
+          # `on:` block), never this one, so nothing downstream reads this
+          # job's conclusion -- unlike ci.yml's `changes` job, where the
+          # conclusion IS load-bearing and this fix would be the wrong one.
+          # Here it is purely what a human (or the next firing) sees in the
+          # Actions tab and in any run-failure notification, which is exactly
+          # who needs to know a branch is stuck.
+          if [ -n "$STUCK" ]; then
+            echo "::error::Swept, but branches needed a human and were left unshipped:$STUCK -- see the ::warning:: above for why. This run is not a clean sweep."
             exit 1
           fi

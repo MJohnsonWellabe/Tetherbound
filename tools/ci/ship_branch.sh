@@ -43,14 +43,38 @@ set -uo pipefail
 BRANCH="${1:?usage: ship_branch.sh <branch> [<verified-sha>]}"
 SHA="${2:-}"
 
-# How many times one branch may be rebased before we stop and say so.
+# How many times one branch may be CLEANLY rebased (main moved, no conflict)
+# before we stop and say so, even though nothing is actually wrong with it.
 #
-# `ralph-merge.yml` shipped with no cap and a comment predicting this: "If a
-# branch is ever seen rebasing more than two or three times, that assumption is
-# wrong and this needs a cap." `LP3` reached six. The prediction was right, so
-# here is the cap. Each rebase costs a full CI run, so an uncapped ping-pong
-# burns the runner budget silently.
-MAX_REBASES="${MAX_REBASES:-3}"
+# MERGE1, 2026-08-17: this cap used to count every rebase ATTEMPT, conflict or
+# not, at MAX_REBASES=3. Under ~7 concurrent lanes that is not a safety net,
+# it is a coin flip against healthy work -- `PERF2`, `OW9` and `R7.6` were all
+# green, all wanted, and all PERMANENTLY refused: main simply moved under each
+# of them three times while other lanes landed, they burned their three
+# "attempts" on that alone, and all three then rebased CLEANLY BY HAND on the
+# first try. None had ever had a real conflict. With CI at ~17 minutes
+# (measured in ci.yml) and the rebase path only rechecked by the 10-minute
+# sweep (its dispatch cannot raise the event that would let ralph-merge.yml
+# catch it sooner -- see this file's own header), main moving three times
+# around a waiting branch is the ORDINARY case under this much concurrency,
+# not bad luck, and should never by itself cost a branch its landing.
+#
+# So this cap no longer means what LP3's comment (below, historically) meant
+# by "rebase": a branch that hits an actual `git rebase` CONFLICT is refused
+# immediately, every time, a few lines down -- retrying a deterministic
+# conflict against an unchanged diff would not resolve it, so that path never
+# needs a budget; one strike is correct and always was. What still needs a
+# cap is the pathological case LP3 itself was: a branch that keeps needing a
+# CLEAN rebase over and over without ever landing, for some reason other than
+# "main moved" (LP3 reached six dispatches chasing the bug this whole file
+# exists to fix). 10 is deliberately generous -- MERGE1's own measurement put
+# one ordinary contested-night round (clean rebase, dispatch, wait for CI,
+# wait for the next sweep poll) at roughly 20-25 minutes, so 10 rounds is
+# most of a working night before this fires, and PERF2/OW9/R7.6 never got
+# past round 3. Hitting it is real evidence of something wrong (a branch
+# whose own CI is chronically slower than main's advance rate, or a dispatch
+# that silently stopped landing) -- never proof of it by itself the way 3 was.
+MAX_REBASES="${MAX_REBASES:-10}"
 
 note()  { echo "::notice::$*"; }
 warn()  { echo "::warning::$*"; }
@@ -147,11 +171,11 @@ if ! git merge-base --is-ancestor origin/main "$SHA"; then
                      and ($last == null or .createdAt > $last))] | length
                ' 2>/dev/null || echo 0)"
   if [ "${rebases:-0}" -ge "$MAX_REBASES" ]; then
-    fail "$BRANCH has already been rebased ${rebases} times and still cannot fast-forward. Stopping rather than burning another CI run. A human or a firing has to land it. Nothing was pushed."
+    fail "$BRANCH has been CLEANLY rebased ${rebases} times (main kept moving under it, not a conflict) and still has not landed. That is past the ${MAX_REBASES}-round runaway-loop backstop -- ordinary contention does not reach this. A human should look at why this branch specifically keeps losing the race, not just rebase it again. Nothing was pushed."
     exit 1
   fi
 
-  note "main moved under $BRANCH. Rebasing it (attempt $((rebases + 1))/${MAX_REBASES})."
+  note "main moved under $BRANCH (no conflict). Rebasing it -- this is expected under concurrency and does not by itself mean anything is wrong (clean-rebase round $((rebases + 1))/${MAX_REBASES})."
 
   git checkout --quiet -B "$BRANCH" "$SHA"
   if ! git rebase origin/main; then
@@ -171,7 +195,14 @@ if ! git merge-base --is-ancestor origin/main "$SHA"; then
     # this one -- so a failure here costs only this branch, never the rest of
     # the loop.
     git checkout --quiet -B __ship origin/main
-    fail "$BRANCH conflicts with main and cannot be rebased automatically. A human or a firing has to resolve it. Nothing was pushed."
+    # A REAL conflict, distinct from the clean-rebase case above: the content
+    # itself disagrees with current main, not just the base commit. Retrying
+    # this against an unchanged conflict would fail the same way every time,
+    # so it is refused on the spot rather than counted against MAX_REBASES --
+    # there is no "budget" to consume, this needs a human (or another branch
+    # touching the same file to resolve it first) no matter how soon it is
+    # retried.
+    fail "$BRANCH conflicts with main and cannot be rebased automatically -- this is a genuine content conflict, not main having moved. A human or a firing has to resolve it. Nothing was pushed."
     exit 1
   fi
 
