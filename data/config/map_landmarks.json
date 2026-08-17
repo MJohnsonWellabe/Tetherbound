@@ -141,6 +141,16 @@
       "radius": 48.0
     },
     {
+      "id": "the_burrow_warrens",
+      "display_name": "The Burrow Warrens",
+      "_comment_mq2b": "MQ2B, spec Sec3 Band 2. The chapter's required dungeon had a `site.at` in burrow_warrens.json and no map entry anywhere -- the Old Quarry (evidence, optional) had a named region and the required dungeon next to it did not. Centre is the site's own entrance point, the one part of the complex that is actually above ground and approachable; the chambers run in from there rather than around it, so naming the mouth names the place. Separation is comfortable and was checked: ~1065m to The Old Quarry, ~1498m to The Tether Relay, both bands away -- no overlap possible at this range. TUNABLE.",
+      "centre": [
+        -420.0,
+        2470.0
+      ],
+      "radius": 45.0
+    },
+    {
       "id": "the_long_water",
       "display_name": "The Long Water",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: the task explicitly asked BOTH `old_mill_crossing` and `the_long_water` to reference (-150,4200) -- the river/crossing geometry itself is OW5C's job and was not touched. This region's old centre (150,70) sat downstream of the old crossing on the river's own course; re-deriving an equivalent downstream offset on the NEW river course is OW5C's job too, so this was pinned to the same explicit reference point rather than guessed at.",

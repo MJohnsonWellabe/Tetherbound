@@ -124,6 +124,58 @@
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
       "model_scale": 0.28
+    },
+    {
+      "order": 2001,
+      "_comment_mq2b_spoil": "MQ2B. The ridge between the quarry (400,1800) and the ranger camp spur (-150,2210) had no gatherable at all -- 410m of spine with nothing to reach for, the longest uncovered stretch on the band's western half. docs/MEADOWS_MACRO_LAYOUT.md section 5's own words for this band are 'quarried faces, spoil heaps'; ordinary stone read through that phrase rather than inventing a new material. Near the quarry_rim_overlook loop's own rejoin (330,1950), just off the spine.",
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        168.0,
+        2038.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 2002,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        28.0,
+        2118.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.9,
+      "_why": "second of the pair, short of the ranger camp spur's own fork at (-150,2210) -- a beat every 150-250m per the macro-layout's own density budget, not one lonely rock in the middle of 410m"
+    },
+    {
+      "order": 2003,
+      "_comment_mq2b_ridge": "MQ2B. Past the Warrens (-420,2470) the spine runs another ~710m to the band's own end (0,3180) with only the warren_undertrail loop's rejoin (-180,2730) on it -- the 'deeper oak forest' section 5 names for this band, read as gatherable wood the same way the spoil heaps above read as stone. Near the spine's own (-40,2840).",
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -52.0,
+        2852.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 2004,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        76.0,
+        2972.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "model_scale": 0.24,
+      "_why": "second of the pair, between the undertrail rejoin and the band's own end at (0,3180) so the last kilometre before the River Lock is not empty ground"
     }
   ]
 }

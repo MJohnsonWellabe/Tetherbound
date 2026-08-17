@@ -1,4 +1,5 @@
 {
   "_comment": "BAND-SPLIT. Band-local trainers for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_mq2b": "MQ2B checked this deliberately rather than leaving it empty by omission. Neither `docs/MEADOWS_PROGRESSION_SPEC.md` section 3 nor `docs/MEADOWS_MACRO_LAYOUT.md` names a Band 2 trainer, and the macro-layout doc calls this band's human occupation 'abandoned' -- the ranger camp is empty, the quarry has nobody in it. The band's required fight is the Burrow Warrens guardian (burrow_warrens.json), not a trainer battle. If a future pass wants a Band 2 trainer, that is new named-character authorship (CLAUDE.md's ask-before-inventing list), not a gap this file forgot to fill.",
   "trainers": []
 }

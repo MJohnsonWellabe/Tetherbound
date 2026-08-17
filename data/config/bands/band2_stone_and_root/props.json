@@ -74,6 +74,92 @@
           "_why": "somebody's pack, still here -- the detail that makes the site abandoned rather than merely disused"
         }
       ]
+    },
+    {
+      "order": 2001,
+      "name": "ranger_camp",
+      "_why": "MQ2B, docs/MEADOWS_MACRO_LAYOUT.md section 5 camp table: 'a ring of stones, a collapsed lean-to, and someone's kit. Salvage, not shelter' -- the ranger_camp_spur loop's own destination (terrain_playground.json trail.loops, leaves the spine at [-150,2210], rejoins at [-310,2320]), authored bare until now. Placed a few metres off the loop's own painted road, at its midpoint, so the road passes beside the camp rather than through it -- something you notice on the spur, not something you walk over. NOTE ON SUBSTITUTION: the shipped prop family (assets/props/quaternius_fantasy, the only pack props.gd's loader reads) has no stone or tent/frame mesh, so the fire ring and lean-to described above are read through what the family actually has -- a toppled cot standing in for the collapsed shelter, an open cabinet for the ring of stones' absence, same reasoning old_quarry.gd's own cluster already leans on for 'somebody's pack, still here'. D24's one-prop-family rule holds: nothing here is new.",
+      "props": [
+        {
+          "model": "Bed_Twin1",
+          "at": [
+            -259.0,
+            2256.5
+          ],
+          "yaw_deg": 40.0,
+          "pitch_deg": 78.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the shelter's own collapse -- the cot pitched over rather than standing, the cluster's anchor"
+        },
+        {
+          "model": "Cabinet",
+          "at": [
+            -257.3,
+            2258.4
+          ],
+          "yaw_deg": -25.0,
+          "pitch_deg": 82.0,
+          "sink_m": 0.05,
+          "scale": 0.9,
+          "_why": "toppled beside the cot, door-side down -- whatever it held is long gone or scattered"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [
+            -260.6,
+            2259.6
+          ],
+          "yaw_deg": 15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "supply crate, emptied out -- nobody restocked it before leaving"
+        },
+        {
+          "model": "Bag",
+          "at": [
+            -258.6,
+            2260.4
+          ],
+          "yaw_deg": 160.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "someone's kit, still here -- the same detail that makes the quarry site read abandoned rather than merely disused, told again in a different place"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -256.1,
+            2257.2
+          ],
+          "yaw_deg": -60.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "tipped a couple of paces from the cot, dry long before the camp was left"
+        },
+        {
+          "model": "Whetstone",
+          "at": [
+            -259.4,
+            2258.9
+          ],
+          "yaw_deg": 10.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "a ranger's own tool, set down and never picked back up"
+        },
+        {
+          "model": "Rope_1",
+          "at": [
+            -257.0,
+            2259.9
+          ],
+          "yaw_deg": 100.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "what lashed the lean-to together, come loose with it"
+        }
+      ]
     }
   ]
 }
