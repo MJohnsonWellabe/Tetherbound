@@ -60,17 +60,33 @@ LOG="$OUT/run.log"
 # the 180s wall, killing every branch that went through ralph-merge's
 # rebase-and-dispatch path -- the export job only runs on `main` or a dispatch,
 # so a branch could pass CI on push and fail on the identical tree minutes
-# later. Measured from user://boot_log.txt, a world build is 188s: water 137s,
-# vegetation scatter 45s, everything else ~6s. It had been sitting eight
-# seconds under the limit.
+# later. Measured from user://boot_log.txt at the time, a world build was
+# 188s: water 137s, vegetation scatter 45s, everything else ~6s. 420 was the
+# tourniquet raised against that number (EXP1, 2026-08-16): not a fix, just
+# enough margin to stop the bleeding while the real fix (PERF2, water.gd's
+# redundant noise stacks) landed.
 #
-# 420 is not the fix, it is the tourniquet. The fix is the boot cost, and it is
-# being worked -- water.gd grid-scans the shoreline at 4m steps calling
-# height_at (230us/call) twice over, and playground_heightfield's path_factor
-# rebuilds the whole road set from JSON on every one of those calls with no
-# cache. When that lands, drop this back and let it be a real margin again
-# rather than a number chosen to outrun a regression.
-( cd "$OUT" && timeout 420 xvfb-run -a -s "-screen 0 640x480x24" \
+# EXP1, re-measured 2026-08-17 after confirming PERF2 is on `main`: three
+# back-to-back runs of THIS SCRIPT, this exact exported binary, this box.
+# user://boot_log.txt world-build time (the same metric the 188s figure
+# above used): 52s, 46s, 45s -- water is now ~20s (was 137s) and vegetation
+# scatter ~12s (was 45s), matching PERF2's own fix plus, apparently, real
+# margin against `road_polylines()`'s uncached per-candidate rebuild (PERF1,
+# still unlanded) that a release export's optimizer absorbs better than the
+# `--headless --script` debug-editor runs this project's other timing notes
+# are usually measured with -- **the two are not comparable numbers.** The
+# figure that actually matters here is the one `timeout` below wraps: total
+# wall-clock of the xvfb+opengl3 process, `time`-measured directly, worst of
+# three runs 69s (the other two: 65s, and the first run wasn't isolated).
+# ~20s of that is engine/window/xvfb startup and teardown outside boot_log's
+# own window, which the 188s-vs-180s figures above never separated out either.
+#
+# 150 is ~2.2x the measured 69s -- the same margin ratio the original 420-vs-
+# 188 tourniquet used, on today's real number instead of a stale one. Drop it
+# further only after PERF1 lands and this gets re-measured again; raise it
+# back toward 420 without hesitation if a future measurement ever needs it --
+# this number tracks the game, not the other way around.
+( cd "$OUT" && timeout 150 xvfb-run -a -s "-screen 0 640x480x24" \
   ./Tetherbound.x86_64 --rendering-driver opengl3 --verify-export > run.log 2>&1 )
 RAN=$?
 
@@ -100,8 +116,21 @@ fi
 
 # 2. Data loaded by string path at run time is in the pack. None of it is
 #    traceable by the exporter's dependency scan, so none of it is guaranteed.
+#
+# EXP1, 2026-08-17: this used to pipe `strings` straight into `grep -qF` per
+# path, three times, and under this script's own `set -o pipefail` that is a
+# real bug, not a flake -- `grep -q` exits the instant it finds a match,
+# SIGPIPEs the still-running `strings`, and pipefail then reports the
+# pipeline's status as `strings`' 141 (killed by SIGPIPE) instead of grep's 0,
+# even though the match WAS found. Reproduced deterministically on this file
+# (552MB pck, three-for-three) with `bash -c 'set -o pipefail; strings -a
+# FILE | grep -qF PATTERN; echo "${PIPESTATUS[@]}"'` printing `141 0`. Scan
+# once into a file instead of piping into a short-circuiting consumer three
+# times -- correct AND faster (one full scan of the pck instead of three).
+STRINGS_OUT="$OUT/pck_strings.txt"
+strings -a "$OUT/Tetherbound.pck" > "$STRINGS_OUT"
 for path in "data/terrain/playground" "data/config/art.json" "data/creatures/species.json"; do
-  if ! strings -a "$OUT/Tetherbound.pck" | grep -qF "$path"; then
+  if ! grep -qF "$path" "$STRINGS_OUT"; then
     echo "verify FAILED: '$path' is not in the .pck."
     FAIL=1
   fi
