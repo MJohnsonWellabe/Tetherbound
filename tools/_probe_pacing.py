@@ -56,6 +56,13 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# BAND-SPLIT: trainers/harvest/spawns are cut per corridor band under
+# data/config/bands/. Merged back through the shared helper rather than
+# read raw, or this probe would print a number based on an empty table.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import band_content
+
 VERBOSE = "--verbose" in sys.argv
 
 
@@ -68,10 +75,10 @@ PROG = load("data/config/progression.json")
 MOVE = load("data/config/movement.json")
 COMBAT = load("data/config/combat.json")
 SPECIES = load("data/creatures/species.json")["species"]
-TRAINERS = load("data/config/trainers.json")
+TRAINERS = band_content.load_config("data/config/trainers.json", "trainers")
 WARRENS = load("data/config/burrow_warrens.json")
-HARVEST = load("data/config/harvest.json")
-SPAWNS = load("data/config/spawns.json")
+HARVEST = band_content.load_config("data/config/harvest.json", "nodes")
+SPAWNS = band_content.load_config("data/config/spawns.json", "spawns")
 CATCHING = load("data/config/catching.json")
 RECIPES_ROOT = load("data/recipes/recipes_rootstone.json")["recipes"]
 RECIPES_IRON = load("data/recipes/recipes_ironwood.json")["recipes"]

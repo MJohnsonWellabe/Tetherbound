@@ -1,0 +1,4 @@
+{
+  "_comment": "BAND-SPLIT. Band-local clusters for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
+  "clusters": []
+}

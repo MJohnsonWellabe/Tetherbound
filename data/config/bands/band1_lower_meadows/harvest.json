@@ -1,0 +1,149 @@
+{
+  "_comment": "BAND-SPLIT. Band-local nodes for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "nodes": [
+    {
+      "order": 0,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        16.0,
+        -28.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 1,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        26.0,
+        -44.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 2,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        44.0,
+        -24.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 3,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -8.0,
+        8.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 4,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        22.0,
+        -34.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 5,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        52.0,
+        -30.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 6,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -18.0,
+        6.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 7,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        12.0,
+        -22.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 8,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        34.0,
+        -46.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 9,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -2.0,
+        -20.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 10,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        20.0,
+        -16.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    },
+    {
+      "order": 11,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        38.0,
+        -36.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    }
+  ]
+}

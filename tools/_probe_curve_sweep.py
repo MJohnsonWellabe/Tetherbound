@@ -16,8 +16,15 @@ Prints, for each candidate (base, exponent, award_base, award_per_level):
 
 import json
 import os
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# BAND-SPLIT: the trainer table is cut per corridor band under
+# data/config/bands/. Merged back through the shared helper rather than read
+# raw, or every candidate curve below would be scored against no fights at all.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import band_content
 
 
 def load(rel):
@@ -26,7 +33,7 @@ def load(rel):
 
 
 PROG = load("data/config/progression.json")
-TR = load("data/config/trainers.json")
+TR = band_content.load_config("data/config/trainers.json", "trainers")
 WA = load("data/config/burrow_warrens.json")
 T = {t["id"]: t for t in TR["trainers"]}
 

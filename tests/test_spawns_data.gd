@@ -21,12 +21,17 @@ const WEATHER_PATH := "res://data/config/weather.json"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 
+## BAND-SPLIT. Through the same merge the game uses, not a raw file read: the
+## `spawns` array now lives in `data/config/bands/<band>/spawns.json` and the
+## head file carries only `respawn_seconds` and `roles`. Reading the head file
+## directly here would have left every assertion below testing an empty table,
+## which is the "a test that passes because the feature is absent" failure this
+## repo already paid for once.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
+
 func _config() -> Dictionary:
-	var file := FileAccess.open(SPAWNS_PATH, FileAccess.READ)
-	if file == null:
-		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	return parsed if parsed is Dictionary else {}
+	return BAND_CONTENT.load_config(SPAWNS_PATH, "spawns")
 
 
 func _weather_presets() -> Dictionary:

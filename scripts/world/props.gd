@@ -15,20 +15,20 @@ extends Node3D
 const PROPS_DIR := "res://assets/props/quaternius_fantasy"
 const CONFIG_PATH := "res://data/config/props.json"
 
+## BAND-SPLIT. The `clusters` array is cut per corridor band under
+## `data/config/bands/<band>/props.json` and merged back here.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
 var _placed := 0
 
 
 func build() -> void:
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
-	if file == null:
+	var parsed: Dictionary = BAND_CONTENT.load_config(CONFIG_PATH, "clusters")
+	if parsed.is_empty():
 		push_error("props.json missing; the settlement has no prop clusters")
 		return
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		push_error("props.json is not valid JSON")
-		return
 
-	for cluster: Variant in (parsed as Dictionary).get("clusters", []):
+	for cluster: Variant in parsed.get("clusters", []):
 		if not cluster is Dictionary:
 			continue
 		var cluster_name := str((cluster as Dictionary).get("name", "cluster"))
@@ -38,7 +38,7 @@ func build() -> void:
 		for entry: Variant in (cluster as Dictionary).get("props", []):
 			if entry is Dictionary:
 				_place(group, entry as Dictionary)
-	print("[props] placed %d props in %d clusters" % [_placed, (parsed as Dictionary).get("clusters", []).size()])
+	print("[props] placed %d props in %d clusters" % [_placed, parsed.get("clusters", []).size()])
 
 
 func placed() -> int:

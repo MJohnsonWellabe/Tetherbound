@@ -1,0 +1,224 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 4,
+      "id": "relay_picket_hess",
+      "name": "Hess",
+      "_comment": "SE25. Spec sec3 Band 3 / sec12: 'two or three Team Tether trainers and a relay captain' at the relay station. The OUTER picket -- the first Team Tether personnel the player is ever stopped by, met on the approach road well before the site itself. Levels are Band 3 (~8-12) and ALL TUNABLE; never player-scaled (spec sec11/D30: a level is a real level, and the world does not move to meet you).",
+      "_site": "SE23 IS NOT BUILT YET. These four stand at the relay SITE, whose one authored coordinate is data/config/relay_site.json's `site.centre` [108, 34] -- on the quarry's own conduit bearing toward the stronghold (old_quarry.json's [229.8,-144.4]), 150m out from the quarry floor. Every position below is derived from that centre. When SE23 builds the station it should ADOPT relay_site.json's centre rather than pick another, and move these four with it if it needs to.",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760). Pure translation, so `facing_deg` (-34.4, == `approach_bearing_deg`) is still correct without re-deriving it.",
+      "rank": "grunt",
+      "position": [
+        338.5,
+        3775.0
+      ],
+      "facing_deg": -34.4,
+      "_why_here": "On the approach, 22m short of the site centre, facing back down the conduit road the player walks up. Ground here measures -5.55m with 1.84m of spread over an 8m box (tools/_probe_relay.gd) -- gentle enough for an 11m arena.",
+      "challenge": "relay_hess_challenge",
+      "defeated": "relay_hess_defeated",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 8
+        },
+        {
+          "species": "mudsnout",
+          "level": 8
+        }
+      ],
+      "reward": {
+        "coins": 25,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_relay_hess",
+      "rechallenge": false
+    },
+    {
+      "order": 5,
+      "id": "relay_picket_orrin",
+      "name": "Orrin",
+      "_comment": "SE25. The INNER picket -- the second stop on the same road, a little stronger and a little further in. Two grunts before an officer before the captain is the rank ladder NP2's palettes exist to make readable at gameplay distance.",
+      "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "rank": "grunt",
+      "position": [
+        344.0,
+        3768.0
+      ],
+      "facing_deg": -34.4,
+      "_why_here": "13m short of the site centre on the same bearing. Ground -4.31m, 1.95m spread over an 8m box.",
+      "challenge": "relay_orrin_challenge",
+      "defeated": "relay_orrin_defeated",
+      "team": [
+        {
+          "species": "terrapup",
+          "level": 9
+        },
+        {
+          "species": "pipwing",
+          "level": 9
+        }
+      ],
+      "reward": {
+        "coins": 28,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_relay_orrin",
+      "rechallenge": false
+    },
+    {
+      "order": 6,
+      "id": "relay_officer_dell",
+      "name": "Officer Dell",
+      "_comment": "SE25. The relay's own duty officer, standing on the site itself rather than out on the road -- three creatures where the pickets field two, and the first of the four whose badge is bronze rather than grey.",
+      "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "rank": "officer",
+      "position": [
+        347.5,
+        3763.5
+      ],
+      "facing_deg": -34.4,
+      "_why_here": "On the site's south-west edge, 4m out from centre. Ground -3.37m, 1.53m spread.",
+      "challenge": "relay_dell_challenge",
+      "defeated": "relay_dell_defeated",
+      "team": [
+        {
+          "species": "mosshell",
+          "level": 10
+        },
+        {
+          "species": "burrowback",
+          "level": 10
+        },
+        {
+          "species": "galewisp",
+          "level": 10
+        }
+      ],
+      "reward": {
+        "coins": 35,
+        "items": [
+          {
+            "id": "orb_greater",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_relay_dell",
+      "rechallenge": false
+    },
+    {
+      "order": 7,
+      "id": "relay_captain",
+      "name": "Captain Vance",
+      "_comment": "SE25. The relay captain, and the fight SE27 is waiting on. `rank: captain` puts him a full step above Dell's bronze and a full step below the Warden's crimson on NP2's badge ladder -- spec sec36's rank read, made at a glance rather than in a title card. Three creatures, the highest levels in the chapter so far (11-12, TUNABLE), and the only reward in the table carrying an xp_bonus: this is the end of a four-battle site, not a roadside challenge.",
+      "_authority_not_menace": "See data/dialogue/trainers.json for the lines. He is the most articulate of the four; Tether personnel believe the barriers are necessary work and that the player is interfering with it.",
+      "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "rank": "captain",
+      "position": [
+        352.0,
+        3757.0
+      ],
+      "facing_deg": -34.4,
+      "_why_here": "At the console end of the site, 3.6m past centre on the bearing, so he is between the player and the captive -- the fight cannot be walked around. Ground -2.31m, 1.05m spread.",
+      "challenge": "relay_captain_challenge",
+      "defeated": "relay_captain_defeated_greeting",
+      "team": [
+        {
+          "species": "tuskroot",
+          "level": 11
+        },
+        {
+          "species": "galecrest",
+          "level": 11
+        },
+        {
+          "species": "duskhush",
+          "level": 12
+        }
+      ],
+      "reward": {
+        "coins": 60,
+        "items": [
+          {
+            "id": "orb_greater",
+            "count": 3
+          },
+          {
+            "id": "revive",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 120
+      },
+      "_comment_defeat_flag": "SE27 waits on exactly this id. data/config/relay_site.json gates the captive's rescue conversation on it, and nothing else in the chapter sets it.",
+      "defeat_flag": "relay_captain_defeated",
+      "rechallenge": false
+    },
+    {
+      "order": 13,
+      "id": "captain_riverwatch",
+      "name": "Captain Oreth",
+      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec §3 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
+      "rank": "captain",
+      "palette": {
+        "*": "#8f9a86"
+      },
+      "_comment_palette": "Captain base, accented toward the wet slate of the draw. Same per-material rule as the other two.",
+      "_comment_ow5d": "OW5D relocation to (-100,4350), section 3.1's own text: 'Riverwatch Captain sits off-spine on the Band 3/4 seam.' `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note. This captain's whole `_why_here` below describes a posting that watches for a river that, per this same macro-layout document (section 5), now actually exists nearby (the river crosses the corridor at z~4200, per section 10.2's Old Mill Crossing row) -- the 'no actual watercourse here yet' caveat is arguably resolved by the new geography, but confirming that is OW5C's river work, not this pass's.",
+      "position": [
+        -100.0,
+        4350.0
+      ],
+      "facing_deg": -31.4,
+      "_why_here": "The low draw at the foot of the Rise's south-east flank -- the lowest ground in the upper Meadows (h=-6.54m, 6.9m below the Field Captain's pasture), which is where the ridge's runoff would collect and what a Riverwatch posting is watching. MEASURED: 1.48m spread, worst slope 10.5 degrees over an 8m pad, 209m out. HONEST LIMIT, recorded rather than papered over: there is no actual watercourse here yet -- the Meadows' only running water is the west stream and the pond (terrain_playground.json `water`), and Band 3's river geography is SE22's, not this item's. This is the right SHAPE of ground for the posting and the terrain lease is held elsewhere, so no bake was run to put water in it. If SE22 ever cuts an upper draw, it belongs on this spot. STALE after OW5D's move -- see `_comment_ow5d` above.",
+      "challenge": "captain_riverwatch_challenge",
+      "defeated": "captain_riverwatch_defeated",
+      "team": [
+        {
+          "species": "mosshell",
+          "level": 13
+        },
+        {
+          "species": "trailpup",
+          "level": 14
+        },
+        {
+          "species": "brooktail",
+          "level": 16
+        }
+      ],
+      "reward": {
+        "coins": 50,
+        "items": [
+          {
+            "id": "river_sigil",
+            "count": 1
+          },
+          {
+            "id": "orb_greater",
+            "count": 2
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 80
+      },
+      "defeat_flag": "defeated_captain_riverwatch",
+      "rechallenge": false
+    }
+  ]
+}

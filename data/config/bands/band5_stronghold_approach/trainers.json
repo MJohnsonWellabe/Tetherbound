@@ -1,0 +1,198 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 8,
+      "id": "stronghold_patrol",
+      "name": "Patrolman Verrick",
+      "_comment": "SG38, spec Sec8 'Outer Works: patrol trainer'. The first Team Tether body the player meets inside the stronghold's own works, and the lowest rank on Sec36's ladder -- a grunt on a walk, not a gatekeeper. Two creatures, both a little above the captains' band: this fight's job is to tell an under-levelled party to turn around while turning around is still cheap.",
+      "_comment_ow5d": "OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: same (-141.8,+7775.4) offset as stronghold.json's `site.at` (141.8,-215.4)->(0,7560), since this fallback mirrors the room's own (translation-only) position.",
+      "rank": "grunt",
+      "placed_by": "stronghold",
+      "position": [
+        6.0,
+        7560.0
+      ],
+      "_position_note": "FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block, because the coordinates of a spot inside a room belong to the room. This is the same point, written out so the row still stands somewhere sane if the building ever fails to build.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_patrol_challenge",
+      "defeated": "stronghold_patrol_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 15
+        },
+        {
+          "species": "burrowback",
+          "level": 16
+        }
+      ],
+      "reward": {
+        "coins": 60,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_patrol",
+      "rechallenge": false
+    },
+    {
+      "order": 9,
+      "id": "stronghold_courtyard",
+      "name": "Warder Solene",
+      "_comment": "SG38, spec Sec8 'Courtyard / Hall Approach: trainer fight'. An officer on Sec36's ladder, and the first three-creature team in the building -- the step up from the patrol is a whole extra creature, not just levels, because that is what actually punishes a party of two.",
+      "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
+      "rank": "officer",
+      "placed_by": "stronghold",
+      "position": [
+        36.0,
+        7564.0
+      ],
+      "_position_note": "FALLBACK ONLY -- see stronghold_patrol above.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_courtyard_challenge",
+      "defeated": "stronghold_courtyard_defeated",
+      "team": [
+        {
+          "species": "mosshell",
+          "level": 16
+        },
+        {
+          "species": "reedwing",
+          "level": 17
+        },
+        {
+          "species": "mudsnout",
+          "level": 17
+        }
+      ],
+      "reward": {
+        "coins": 90,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_courtyard",
+      "rechallenge": false
+    },
+    {
+      "order": 10,
+      "id": "stronghold_elite",
+      "name": "Keeper Hald",
+      "_comment": "SG38, spec Sec8 'Tether Chamber Approach: elite trainer'. Captain rank, three creatures of three different types, and the hardest fight before the Warden. His defeat flag is also the ONE door in the complex: data/config/stronghold.json's tether_approach->warden_arena passage is `gated_by_flag: defeated_stronghold_elite`, so he is not a fight the player can walk around. The recovery point sits behind him, which is the order Sec8 asks for -- elite, then rest, then the Warden.",
+      "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
+      "rank": "captain",
+      "placed_by": "stronghold",
+      "position": [
+        69.0,
+        7557.0
+      ],
+      "_position_note": "FALLBACK ONLY -- see stronghold_patrol above.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_elite_challenge",
+      "defeated": "stronghold_elite_defeated",
+      "team": [
+        {
+          "species": "galecrest",
+          "level": 18
+        },
+        {
+          "species": "burrowback",
+          "level": 19
+        },
+        {
+          "species": "duskhush",
+          "level": 19
+        }
+      ],
+      "reward": {
+        "coins": 150,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 3
+          },
+          {
+            "id": "revive",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_elite",
+      "rechallenge": false
+    },
+    {
+      "order": 14,
+      "id": "warden_aldis",
+      "name": "Warden Aldis",
+      "_comment": "R8.3, spec Act VI step 35 and M14 -- the chapter's last fight. THERE IS NO BOSS MODE AND NO BOSS SCRIPT. He is an ordinary row of this same table: the same team schema, the same reward schema, the same defeat flag, the same encounter_director.begin_trainer_battle(), the same sequential send-out, and catching refused exactly as it is refused for every other trainer in the game (a trainer's creatures are theirs -- CLAUDE.md's hard rule). What makes him the boss is the ONLY thing spec sec12 says makes a boss: a full team of five and the highest levels in the chapter.",
+      "_comment_character": "Spec sec33 gives him a worldview rather than a motive, and the lines are in data/dialogue/stronghold.json. He is not a moustache-twirler: he believes separation prevents chaos and that ordinary people do not understand the risks, he confirms the readout rather than denying it, and he does not recant when he loses. His face is still PAINTED rather than modelled (HANDOFF sec6) -- flagged, not faked. Sec20 covers creatures, so a Warden face sheet is legal under sec22's budget, but it is owner-gated art and no generation was spent here.",
+      "rank": "warden",
+      "_comment_rank": "data/config/npc_ranks.json's top tier -- the crimson badge at its largest, on the Warden's own rig. He is the rig every other Team Tether rank in the chapter has been a variant of, met last and unmodified.",
+      "_comment_ow5d": "OW5D relocation, same (-141.8,+7775.4) offset as stronghold.json's `site.at`, since this fallback mirrors the room's own (translation-only) position.",
+      "placed_by": "stronghold_climax",
+      "position": [
+        90.2,
+        7569.4
+      ],
+      "_position_note": "FALLBACK ONLY, and it mirrors the Warden Arena's own centre-ish point. scripts/world/stronghold_climax.gd places him from the `warden_stand` mark that R8.2's data/config/stronghold.json registers, because a room's coordinates belong to the room. Written out so the row still stands somewhere sane if the building ever fails to build.",
+      "facing_deg": 180.0,
+      "challenge": "stronghold_warden_challenge",
+      "defeated": "stronghold_warden_defeated",
+      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Levels 16-20 sit above SF34's captains (10-16) with the ace a clear step above the rest. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 16
+        },
+        {
+          "species": "brooktail",
+          "level": 17
+        },
+        {
+          "species": "galecrest",
+          "level": 17
+        },
+        {
+          "species": "meadowhart",
+          "level": 18
+        },
+        {
+          "species": "tuskroot",
+          "level": 20
+        }
+      ],
+      "reward": {
+        "coins": 150,
+        "items": [
+          {
+            "id": "revive",
+            "count": 2
+          },
+          {
+            "id": "potion_small",
+            "count": 4
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 400
+      },
+      "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",
+      "defeat_flag": "defeated_warden",
+      "rechallenge": false
+    }
+  ]
+}

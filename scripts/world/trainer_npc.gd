@@ -41,6 +41,11 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const CONFIG_PATH := "res://data/config/trainers.json"
 
+## BAND-SPLIT. The `trainers` array is cut per corridor band under
+## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
+## and stay in the head file. `band_content.gd` merges them back.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+
 ## How far from the trainer the challenge prompt is offered. A little wider
 ## than a villager's greeting (3.8m): a challenge is a thing you walk up to
 ## on purpose, and standing close enough to touch someone before the game
@@ -220,13 +225,7 @@ static var _config: Dictionary = {}
 static func config() -> Dictionary:
 	if not _config.is_empty():
 		return _config
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
-	if file == null:
-		push_error("trainers.json missing at %s" % CONFIG_PATH)
-		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		_config = parsed
+	_config = BAND_CONTENT.load_config(CONFIG_PATH, "trainers")
 	return _config
 
 

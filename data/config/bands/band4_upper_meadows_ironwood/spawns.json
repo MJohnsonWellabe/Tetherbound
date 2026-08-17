@@ -1,0 +1,6 @@
+{
+  "_comment": "BAND-SPLIT. Band-local spawns for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
+  "spawns": [
+    {"order": 4, "species": "meadowhart", "count": 2, "centre": [60.0, 0.0, 6230.0], "radius": 20.0, "_why_ow5d": "upper ridge species (section 5: Galecrest/Meadowhart/stronger Trailpup -> Band 4). This is the ORIGINAL, far-flung cluster this file's own `_comment_meadowhart_sh47` already names as badly placed (250m off every route). Moved to (60,6230) -- section 3.2's own 'High pasture loop', explicitly described there as 'Meadowhart herd, the riding payoff, open ground after the old-growth'. See the SH47-added cluster below for why the OTHER Meadowhart cluster was NOT sent here too."}
+  ]
+}
