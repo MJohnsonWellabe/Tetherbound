@@ -1039,6 +1039,76 @@ instance count and boot cost measured before and after and stated as numbers —
 and when a placement-extent test fails if the scatter ever silently reverts to a
 square again.
 
+### NIGHT-LIGHT — night renders as near-total black, and a blind critic has named it three rounds running
+`model: sonnet` · `tests: smoke_playground, a night luminance check` · `area: visual, world`
+**Filed 2026-08-17 (OPS16) from `MQ2B`'s convergence loop.** Three consecutive
+independent blind passes ranked this in their top three, and round 1 put it
+plainly: the night frames are *"crushed to near-total black... failing the
+keyart's explicit 'day and night create different moods' direction by simply
+not rendering a scene."*
+
+**It is not a framing problem, which is the thing worth knowing.** Round 2
+moved the night camera from ~85 m to ~10 m of its subject specifically to test
+that, and recorded that 06/07 *"are still close to black even at 10m."* So the
+subject is lit the same either way — this is the lighting preset, not the shot.
+
+Evidence in the tree: `docs/reviews/band2/round-0*/` — the night JPEGs are
+~2 KB against ~22 KB for the day frames at the same resolution, which is the
+compressor telling you there is almost nothing in the image.
+
+**Why the content lane could not fix it:** it is a global preset
+(`data/config/art.json`'s night entry), not a Band 2 question, and `MQ2B`
+correctly refused to edit a world-level setting from inside a band. It is now
+one of the two gaps holding that band's convergence.
+
+**Related and probably interacting:** `torch.gd` auto-lights at night (`OF18`
+fixed a real race where `_world_look` cached null and the feature never fired
+for the whole life of the feature). Check whether the torch is actually lit in
+these frames before tuning exposure — a correctly-dark night with a broken
+torch is a different bug from a night that is too dark with a working one.
+
+**This is visual-affecting work**, so it needs the blind pass per
+`ralph/conventions.md`, and the same convergence rule applies. Do not simply
+raise ambient until frames look nice on a desktop monitor — judge at 40%
+downscale as the seven-inch handheld proxy, which is where the owner plays.
+
+### MAT-BLOCKOUT — two landmark assets read as untextured blockout at close range
+`model: sonnet` · `tests: none (visual)` · `area: visual, assets`
+**Filed 2026-08-17 (OPS16) from `MQ2B`'s convergence loop.** Named by the blind
+critic in rounds 2, 3 and 4, in the same rank each time, and **only visible once
+round 2 moved the cameras close** — round 1's 85–110 m shots could not see it:
+
+- **The Old Quarry's rootstone deposits** read as *"a pale mint/seafoam...
+  hatch-patterned surface"* that *"doesn't read as stone at all."*
+- **The Burrow Warrens' wall** is *"completely flat-shaded... no texture... it
+  looks like unfinished blockout geometry."* The round-1 frame set shows it as a
+  flat grey box against grass.
+
+Both are shared assets rather than Band 2's own content, which is why the band
+lane left them alone — correctly, since fixing a material in one band fixes or
+breaks it everywhere.
+
+**Decide first whether this is a material bug or an asset ceiling**, because the
+two have very different answers and this project has been caught by the
+difference before. `EV2-landmark-oak` in `BLOCKED.md` records a case where a
+config bug made `CherryBlossom_3` render in its native pink instead of the
+intended green — *a real bug that looked like an asset limitation* — and
+`vegetation.json`'s `grove` layer never keying `Leaves_CherryBlossom` was the
+cause. A mint-green hatch pattern on stone has exactly that smell: a material or
+UV that was never assigned, not a model that cannot look like rock.
+
+**If it turns out to be a genuine asset ceiling**, that is a `BLOCKED.md` entry
+for the owner under `CLAUDE.md`'s no-new-Meadows-meshes rule, not something to
+work around — and it is the "needs art that is not in the build" outcome the
+owner's own stopping rule anticipates.
+
+**Also unresolved from the same rounds, and cheaper**, listed here so it is not
+lost: an unexplained *"kite-shaped shadow"* intruding bottom-centre in three
+round-1 frames. Round 2 tested the obvious hypothesis — a parked out-of-shot
+trainer body — by moving it further away, **and the shape survived**, so that
+explanation is disproved rather than untested. Round 1 also named a floating
+icon in frame 01 and a cyan sparkle in frame 03 with no visible source.
+
 ### MQ2B — prove one region at finished quality before scaling
 **STOPPING RULE CHANGED BY THE OWNER, 2026-08-17 (OPS15).** Verbatim:
 
