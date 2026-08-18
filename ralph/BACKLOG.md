@@ -1735,6 +1735,56 @@ trainer body — by moving it further away, **and the shape survived**, so that
 explanation is disproved rather than untested. Round 1 also named a floating
 icon in frame 01 and a cyan sparkle in frame 03 with no visible source.
 
+**ROUND 6 STATUS, 2026-08-18.** `docs/reviews/band2/round-06/`, landed
+`335a6dc7`/`6136d4b7`. Not flat — real measured movement AND a new defect, so
+per `OPS15` this does not count toward the two-consecutive-flat stop and
+`MQ2B` stays open.
+
+- **Night converges.** `NIGHT-LIGHT`'s round-4 fix (`e250a2f7`) measured:
+  `near_luma` 0.000→0.083/0.020 on both night frames (was literal flat
+  black), chroma% 5.5x/24x, well past the 0.03 noise floor. Clears the bar.
+- **Bare-ground gap closes at the two measured stretches.** `VEG-SITING`
+  (`5645a20`, landed after round 5) sites corridor clumps along the trail
+  instead of uniformly across the 2048 m box; chroma% moved 13x and 2.4x at
+  the two spots round 4's berries sit at.
+- **New defect, not previously reported in any round-1..5 README:** flat
+  blank-white cross-quad billboard cards, planted in ground or floating, in
+  4 of 8 day frames. Filed below as `VEG-WHITECARD`. **This is the
+  remaining thing standing between `MQ2B` and closing** — the zero-creature
+  finding (Bar A/B) is unchanged since round 1 and not this band's to fix
+  (no spawn sits on any of these 8 viewpoints' paths).
+- **Not a regression, not worth re-opening:** the critic also flagged the
+  Warrens wall in frame 04 as flat-shaded blockout. Cropped 2x — the
+  `MAT-BLOCKOUT` stone texture (`7fa9735e`) is genuinely there, it just
+  doesn't read at the 640x360 judging resolution from that viewpoint's
+  distance. Legibility-at-distance note, not a `MAT-BLOCKOUT` reopen.
+
+**Next round should be scoped, not full**: land `VEG-WHITECARD`'s fix, then
+a round 7 that only re-checks those 4 frames rather than re-surveying all 8
+from scratch — everything else round 6 measured is solid.
+
+### VEG-WHITECARD — blank white billboard cards planted in the ground or floating, 4 of 8 Band-2 day frames
+`model: sonnet` · `tests: none yet — needs a repro` · `area: visual, world`
+**Filed 2026-08-18 from `MQ2B` round 6.** Flat, blank white cross-quad
+billboard cards in `docs/reviews/band2/round-06/01-early-forest-day.jpg`
+(one large, foreground), `02a`, `02b`, and `04` (several small, strung along
+tree lines at range). New to round 6 — grepped every prior round's README
+for white/billboard/impostor/blank, no hits.
+
+**Already ruled out** by the round-6 lane: a missing texture on
+`Grass_Wide_Short`/`Wide_Tall.gltf` (the newest grass species, added under
+`OF12-remainder`) — both correctly reference `Grass.png`, file exists,
+`.import` present. **Not yet investigated:** runtime material binding.
+`vegetation.gd`'s `_warn_about_shared_models` describes a *tint*
+last-writer-wins bug, not a blank-white one, so probably not the same
+mechanism — could be a Godot auto-LOD dropping the alpha-cutout material on
+a `MultiMesh` instance. This needs in-engine node inspection, which is out
+of scope for a content-survey round; give it its own lane before round 7.
+
+**Done when:** the white cards are gone from a re-render of the same 4
+frames, and the fix is understood well enough to say why (not just that
+re-rendering happens to look different).
+
 ### MQ2B — prove one region at finished quality before scaling
 **STOPPING RULE CHANGED BY THE OWNER, 2026-08-17 (OPS15).** Verbatim:
 
