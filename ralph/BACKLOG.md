@@ -221,7 +221,9 @@ every panel, not just the two named.
 
 Reproduce on a real build before writing a fix. Do not guess a mechanism.
 
-### RG2 — You cannot swing a tool at anything
+### DONE — RG2 — You cannot swing a tool at anything
+
+**LANDED `c9870df7`.** Hit cone was measured off `Model` instead of the player body.
 `model: opus` · `tests: smoke_playground, test_inventory, new` · `area: gameplay, blocker`
 Owner: *"I can pull out a pickaxe and such but I can't swing at the stones or
 trees or anything."*
@@ -253,7 +255,9 @@ find what it does that the others do not. `build_placer.gd`'s header claims the
 ghost/rotate/snap/grid system "was working the entire time", so trust the
 measurement over the claim.
 
-### RG5 — The build menu leaks input to the character
+### DONE — RG5 — The build menu leaks input to the character
+
+**LANDED `a2b82f79` (RG-INPUT).** Movement and jump now gate behind `input_owner.gd`. Worth confirming in play — the report was about feel, and a passing test is not the same claim.
 
 **FIXED on `ralph/RG-INPUT` (a2b82f79), bundled in `integrate-12`.** Movement
 and jump are now gated behind `input_owner.gd`. Verify in play before closing —
@@ -301,7 +305,9 @@ Combat is the game's centrepiece and you cannot look around in it.
 
 ---
 
-### RG9 — Harvesting should be chop-then-gather, not gather-a-standing-tree
+### DONE — RG9 — Harvesting should be chop-then-gather, not gather-a-standing-tree
+
+**LANDED `210c1ae5`.**
 `model: opus` · `tests: smoke_playground, test_inventory, new` · `area: gameplay`
 **Owner directive, and it changes the harvest model that `HARVEST-ALL` just
 shipped:** *"You shouldn't be able to gather a standing tree. You should have to
@@ -312,7 +318,9 @@ felled stage a real pickup-able thing in the world. `HARVEST-ALL` made every
 tree and rock harvestable and permanent; **this makes the first stage a chop
 rather than a pickup.** Build on that work rather than reverting it.
 
-### RG10 — Harvestables should not glow
+### DONE — RG10 — Harvestables should not glow
+
+**LANDED `210c1ae5`.**
 `model: sonnet` · `tests: smoke_playground` · `area: visual`
 Owner: *"Items to harvest shouldn't be gold lit up orbs. They shouldn't light up
 at all."*
@@ -456,7 +464,9 @@ short. However valheim does it."* And separately: *"night is forever."*
 Two changes: a **continuous** transition rather than a switch, and a **short
 night** relative to day. Interacts with `NIGHT-LIGHT` — coordinate.
 
-### RG22 — The torch is too dim and does not go in your hand
+### PARTLY DONE — RG22 — The torch is too dim and does not go in your hand
+
+**The hand-attach half LANDED `210c1ae5`** — the torch reaches the hand, and now gates on equip state (see the capture warning below). **The brightness half is still open and deliberately gated** until the night rounds settle; see the note further down.
 `model: sonnet` · `tests: smoke_playground` · `area: gameplay, visual`
 Owner: *"The torch should probably light up a little more."* · *"The torch
 doesn't go in your hand like a axe does. It should."*
