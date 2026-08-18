@@ -141,7 +141,16 @@ jobs:
 
   verify-unit-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # BAND-SPLIT-2, 2026-08-18: cancelled twice at ~10m13s/10m16s on an
+    # otherwise-green run (1066/1066 passing locally, headless, three times) --
+    # the suite itself has grown to the point where 10 minutes is no longer
+    # enough margin, not a defect in the diff that tripped it. The cancelled
+    # run had reached the last test file alphabetically (test_veg_corridor.gd,
+    # 2 of 6 methods left) both times, so the real overrun is on the order of
+    # seconds, not minutes -- 12 is a modest margin, not a rewrite of the
+    # budget. If this starts clipping again, the fix is splitting run_tests.gd
+    # into two jobs, not raising this further.
+    timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
