@@ -102,13 +102,45 @@ evidence" is a complete and valued outcome and it is faster than the work.**
 | `RG21` progressive day/night, short night | **`NIGHT-LIGHT`** is inside `art.json`'s presets | adjacent, not the same: that lane is fixing *legibility*, this item is *transition and length*. Coordinate rather than both editing `art.json` |
 | `RG20` no creatures anywhere | **`VEG-SITING`** was asked to investigate and report, not fix | read its finding first — it may already name whether this is spawn siting, density, or where the cameras point |
 | `RG23` invisible blockers | **`SPINE-WEDGE` + `RIVER-GATE` landed**; `CORRIDOR-FIX` in `integrate-9` | the *invisible blocker* half is a known family — `CarveFailsafe` `Area3D` volumes and a spoke's 146 m severing trench, both fixed. Re-walk before assuming it survived. **The missing-collision-on-rocks half is genuinely new** |
-| `RG24` the pointless gorge | **`SPINE-WEDGE` shortened `storm_road`'s carve** from a 73 m reach each way to 30 m | **check this is not that same carve seen from the other side.** If it is, the two items pull in opposite directions and the owner has to settle it. Identify the feature before changing anything |
+| `RG24` the pointless gorge | **`SPINE-WEDGE` shortened `storm_road`'s carve** from a 73 m reach each way to 30 m | **See the owner's own description below — it very likely IS that carve, and the two items pull in opposite directions.** Measure before changing anything |
 | `RG25` long load | `PERF2` (boot 233s→48s), `VEG-CORRIDOR` (68→117s), `EXP1`'s allowance | boot cost has moved three times today. **Re-measure from `user://boot_log.txt` on current `main`** before treating the owner's figure as current |
 | `RG15` minimap | `world_extent.gd` landed — the map baker and minimap now read the corridor's real bounds | the *extent* half may be done. **Rotate-to-heading, full-screen and zoom are untouched** |
 | `RG25` title screen | unblocks `EV9`, which has been parked for weeks | `EV9`'s wordmark and orb-count panel have had nowhere to mount because `D18` boots straight into the world. Do them together |
 
 
 ---
+
+### RG24 — The gorge that is not worth walking around
+`model: sonnet` · `tests: smoke_traversal` · `area: terrain`
+
+**Owner, 2026-08-18, asked to identify which gorge he meant:** *"don't know
+where the gorge was. it was along a path. it was small. like took fifteen
+seconds to walk around."*
+
+He could not name the location, so **identify it by measurement, not by
+memory.** `movement.json` gives `walk_speed` 5.0 m/s, so fifteen seconds of
+detour is **roughly 60-75 m of walking** — meaning the feature itself is on the
+order of **20-40 m across**, sitting **on or beside an authored path**.
+
+That measurement rules the candidates in and out:
+
+- **`storm_road`'s carve — the strong match.** `SPINE-WEDGE` cut it to a 30 m
+  reach each way, and walking around a 30 m reach is ~60-75 m, i.e. about
+  fifteen seconds. It is on a road, which matches "along a path". **Check this
+  first.**
+- **`D46`'s dry-gorge reach at the river's north end — ruled out.** That is
+  part of a 340 m channel and is nothing like "small" or fifteen seconds.
+- **`SC14`'s south gully** — measure it; it was cut to seal a road, so it is on
+  a path by construction.
+
+**If it is `storm_road`'s carve, this item and `SPINE-WEDGE` are in direct
+conflict and the owner must settle it before anyone digs or fills.** `SPINE-WEDGE`
+shortened that carve deliberately; `RG24` says the result is pointless. Both
+cannot be satisfied by tuning the same number. Bring him a screenshot of the
+identified feature and the two options — remove it entirely, or give it a
+reason to exist (something on the far side, or a crossing) — rather than a
+description. He could not place it from memory, which is itself evidence that
+it reads as nothing: a feature nobody can locate afterwards is not landmarking.
 
 ### RG1 — The game freezes after coming out of an interaction or a menu
 
@@ -314,6 +346,28 @@ A guided opening chain. `OW9` shipped two handover beats (gather, then build);
 this asks for the whole ladder, surfaced on screen rather than only in dialogue.
 
 ### RG19 — A village tournament as the early goal
+
+**OWNER APPROVED, 2026-08-18: "yes we should spec out creature condition."**
+The tournament is confirmed, and the owner named the part to build first: the
+**creature condition system** (rested / fed / happy) that gates entry. Spec that
+before any tournament bracket, arena or reward code — it is the load-bearing
+half and the half that does not yet exist. The bracket is comparatively
+ordinary work that can follow.
+
+Why this ordering is the right one and not just the owner's preference:
+condition is the mechanic that finally gives the **five-creature limit** and
+**satiety (`D29`)** a reason to matter early. Both currently exist without
+pressure — you can ignore satiety and never feel the cap. An entry gate on
+condition converts two dormant systems into a reason to care, which is worth
+more than the tournament itself.
+
+Deliverable for the spec: what "rested", "fed" and "happy" each mean as state,
+where they are stored, how the player *sees* them (they must be legible before
+they can be a gate), how they decay and recover, and which existing systems
+already half-implement them. Take a `docs/decisions/` number. **Do not invent
+the numeric thresholds as permanent** — pick tunables per `CLAUDE.md` and label
+them.
+
 `model: fable` · `tests: new` · `area: content, progression`
 **Owner design proposal, recorded verbatim rather than interpreted:** *"Maybe
 there should be a tournament near the beginning in grandpas village that we
@@ -839,6 +893,22 @@ engine reports.
 that route, and today the final approach to the gate is not walkable.
 
 ### SPINE-LAYOUT — the trail runs through a building and past a post standing on it
+
+**OWNER DECIDED, 2026-08-18: "route around the warrens but going through is a
+shortcut."** Both, and in that order of priority:
+
+1. **The spine routes AROUND the Burrow Warrens.** That is the default path and
+   the one the 173.4 m gap between wp30 `(-420, 2470)` and wp31 `(-330, 2630)`
+   must stop being. A player following the trail never walks into a wall.
+2. **Going through stays possible, as a shortcut.** The Warrens gains a way
+   through that is faster than the detour. That makes the building a piece of
+   optional routing knowledge rather than an obstacle — a player who learns it
+   is rewarded, a player who does not is never blocked.
+
+This is strictly more work than either option alone, so build (1) first and
+land it: a routed-around spine is shippable on its own, and the shortcut is
+additive. Do not hold (1) waiting for (2).
+
 `model: fable` · `tests: smoke_traversal` · `area: terrain, village`
 Filed 2026-08-17 (OPS11) from `OW5-walk`. Both are authored placement, i.e.
 layout questions rather than bugs, which is why the walking lane correctly left
@@ -944,7 +1014,18 @@ test plus its camera profile would boot in seconds. `grandpa_house.gd`'s
 kit-owns-the-exterior/script-owns-everything-else split is what makes this
 possible; `tools/capture_loft_exit.gd` is the worked example to generalise.
 
-### PT-03-remainder — the stair affordance failed its blind pass
+### DONE (owner call) — PT-03-remainder — the stair affordance failed its blind pass
+
+**CLOSED BY THE OWNER, 2026-08-18: "loft stairs are fine."** No work. He has
+played it; the blind critic has not. A critic scoring the affordance 2/10 is
+evidence, but it is evidence about a rendered frame, and the owner reporting
+that he can find and use the stairs in play outranks it. **Do not reopen this
+on the strength of another blind pass** — reopen it only if a real player, or
+the owner, actually fails to find the stairs.
+
+This also means the open question it carried — whether the loft slab's edge had
+to change shape — is answered "no", and the geometry stays as built.
+
 `model: fable` · `tests: smoke_opening` · `area: village`
 `PT-03`'s root cause is correct and settled — the loft slab occludes every tread
 from a standing eye, so no light could ever have worked, and `D52` records the
@@ -1563,6 +1644,22 @@ special arena, or unusual time-of-day presence.
 ## Phase -0.6 remainder — the look
 
 ### EV9 — Rebuild the HUD, remainder
+
+**OWNER APPROVED A TITLE SCREEN, 2026-08-18: "yes title screen."** This
+unblocks both of EV9's remaining pieces at once — they were never two problems,
+they were one missing mount point:
+
+- the branded display font / `ev9_display_lettering_style_guide.png` finally has
+  a wordmark to be applied to;
+- the `orb_capture` icon still needs an orb-count panel, but a title screen is
+  where the game's own presentation gets settled, so decide the panel there.
+
+Note `D18` boots straight into the world **by decision**, not by omission. A
+title screen supersedes that for the boot path, so **write the new decision
+doc rather than silently contradicting `D18`** — say what changed and why the
+owner asked for it. Build the screen first, then EV9's two pieces on top; they
+are cheap once something exists to mount them on.
+
 `model: opus` · `tests: smoke_menu` · `area: ui`
 Bible §16–§18. Most of this item shipped across four slices. **Tested at
 physical 7-inch scale, not on a desktop monitor** — §17 is explicit.
