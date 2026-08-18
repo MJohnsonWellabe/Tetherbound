@@ -159,9 +159,54 @@ repo enforces `.uid` presence**, and **two** files under `tools/` lack one on
 regenerates them on import, so the cost is a dirty tree after opening the
 editor, not breakage.
 
-`tools/**` is a code path, so landing them costs a full CI run for two
-generated lines. **Do both at once in the next code bundle**, rather than
-either alone.
+**RESOLVED 2026-08-18.** Installing Godot 4.7 in the coordinator container and
+running a project import generated every missing sidecar, and there were **six,
+not two** — the earlier count only checked `tools/*.gd`. The others were
+`scripts/world/felled_resource.gd`, `tests/smoke_post_modal_control.gd`,
+`tests/test_band_dialogue.gd` and `tests/test_felled_resource.gd`. All six land
+with this branch. Lesson worth keeping: the way to find missing `.uid` files is
+to run the import, not to grep one directory.
+
+### RG24-CONFIRMED — it is the storm road's collapsed-bridge trench
+**Rendered in-engine 2026-08-18** with `tools/_probe_storm_pass.gd`, six
+viewpoints at `shots/storm_pass/`. The identification the entry below reasoned
+out from arithmetic is now **confirmed by eye**: the dirt path runs straight
+past the trench's east end and continues north, and from the stronghold
+approach the cut simply stops with open meadow beside it. It does not read as
+a blocker because it is not one.
+
+Owner's five decisions of 2026-08-18 answered everything except this one, and
+this is the frame to show him: `shots/storm_pass/03-the-way-round-east-end.png`.
+
+### STRONGHOLD-MAT — the stronghold renders untextured, and it is the biggest
+### thing in the game
+`model: sonnet` · `tests: smoke_stronghold` · `area: visual`
+Found incidentally while shooting `RG24`, not looked for. In
+`shots/storm_pass/03-the-way-round-east-end.png` the stronghold is a flat black
+slab; in `06-oblique-whole-blocker.png` it is a group of untextured grey boxes.
+
+This is the same class of defect `RG11`/`MAT-BLOCKOUT` fixed for quarry stone
+and the Warrens wall (`D63`: shared-model material drift is a bug, not a
+ceiling, until checked) — but on the largest structure in the Meadows, legible
+from hundreds of metres. **Check `D63`'s exact failure first**: one model
+reaching the world down two code paths, only one of which warms its material.
+
+### SKY-PLANES — large translucent quads hang in the air over the stronghold
+`model: sonnet` · `tests: smoke_stronghold` · `area: visual`
+Visible in both `shots/storm_pass/01-road-approach.png` and
+`06-oblique-whole-blocker.png`: several big flat translucent rectangles
+standing in the sky above and behind the stronghold, at a scale that reads from
+the whole approach. Not a subtle artefact and not previously reported.
+Unknown cause — candidates are an LOD/impostor plane, a shadow-catcher, or a
+wall mesh with a broken transform.
+
+### BILLBOARD-WHITE — untextured white cards standing among the trees
+`model: sonnet` · `tests: smoke_playground` · `area: visual`
+`shots/storm_pass/01-road-approach.png`, right of frame: several plain white
+rectangles standing upright in the grass among the copse. Reads as a billboard
+or card with a missing/unassigned texture. `BLOCKED.md`'s `EV2-landmark-oak`
+records the precedent — a config bug that made `CherryBlossom_3` render in its
+native pink looked like an asset limitation and was not one.
 
 ### RG24 — The gorge that is not worth walking around
 `model: sonnet` · `tests: smoke_traversal` · `area: terrain`
