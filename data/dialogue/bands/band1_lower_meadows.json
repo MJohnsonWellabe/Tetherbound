@@ -1,0 +1,4 @@
+{
+  "_comment": "BAND-SPLIT-2. This band's own dialogue container. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Unlike the four content configs BAND-SPLIT cut, this is a dictionary keyed by conversation id, not a positional array -- there is no `order` to preserve, because lookup is always by id and never by position. A trainer or NPC placed in band1_lower_meadows gets its dialogue written here instead of appended to trainers.json, so a band author never has to touch a file another band is also writing to. Empty until this band has a conversation of its own; an empty file is a correct, additive no-op (dialogue_runner.gd's own merge loop skips an empty table silently).",
+  "conversations": {}
+}

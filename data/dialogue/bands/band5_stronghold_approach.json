@@ -1,0 +1,4 @@
+{
+  "_comment": "BAND-SPLIT-2. This band's own dialogue container -- see band1_lower_meadows.json in this same directory for the full reasoning. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS).",
+  "conversations": {}
+}

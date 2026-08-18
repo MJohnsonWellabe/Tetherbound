@@ -19,6 +19,7 @@ extends RefCounted
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const CONFIG_PATH := "res://data/config/vegetation.json"
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 ## How many candidate clump centres a ridge-biased layer samples before
 ## keeping the highest. Small enough to stay cheap (at most a few dozen
@@ -46,13 +47,19 @@ static var _config: Dictionary = {}
 static func config() -> Dictionary:
 	if not _config.is_empty():
 		return _config
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
-	if file == null:
+	# BAND-SPLIT-2: `clearings` and `footprints` are cut per band under
+	# data/config/bands/<band>/vegetation.json and merged back here, the same
+	# way band_content.gd already merges spawns/props/harvest/trainers. The
+	# scatter rules (layers, corridor_bands, retint, seed) are not split and
+	# come straight off the head file's own keys, which `load_config` returns
+	# untouched aside from filling in the one array key it was asked for.
+	var merged := BAND_CONTENT.load_config(CONFIG_PATH, "clearings")
+	if merged.is_empty():
 		push_error("vegetation.json missing at %s" % CONFIG_PATH)
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		_config = parsed
+	var footprints := BAND_CONTENT.load_config(CONFIG_PATH, "footprints")
+	merged["footprints"] = footprints.get("footprints", [])
+	_config = merged
 	return _config
 
 
