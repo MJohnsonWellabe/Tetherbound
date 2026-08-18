@@ -12,6 +12,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const RULES := preload("res://scripts/world/scatter_rules.gd")
 
 const RESPAWN_SECONDS := 60.0
 
@@ -59,6 +60,7 @@ func _build_visual() -> void:
 			var wrapper := Node3D.new()
 			wrapper.add_child((resource as PackedScene).instantiate())
 			wrapper.scale = Vector3.ONE * _model_scale
+			_apply_material_fixups(wrapper, _model_path)
 			_visual = wrapper
 		elif resource is Mesh:
 			var mesh := MeshInstance3D.new()
@@ -71,6 +73,98 @@ func _build_visual() -> void:
 	else:
 		_visual = _box_visual()
 	add_child(_visual)
+
+
+## MAT-BLOCKOUT. The Old Quarry's rootstone deposits (`Rock_Medium_1/3.gltf`,
+## data/config/bands/band2_stone_and_root/harvest.json) instance the SAME
+## models `vegetation.json`'s `rocks` layer scatters across the meadow --
+## and that layer warms them from the pack's native cool grey (measured
+## value 0.46, saturation 0.09 -- "a pale mint/seafoam... hatch-patterned
+## surface" is that native texture, unmodified, not a broken one) toward
+## stone tones (vegetation.gd::_tint_for). This file's own `load()` +
+## `instantiate()` never went through that treatment, because it is a
+## different code path entirely (a single hand-placed node, not a
+## MultiMesh layer) -- so a shared model carried two looks depending on
+## which system placed it. `vegetation.gd::_warn_about_shared_models`
+## exists for exactly this shape of bug.
+##
+## Fixed by reading the identical retint/retexture data every OTHER
+## consumer of these models already uses, rather than inventing a second
+## set of colours here: one source of truth for what a shared model looks
+## like, keyed by its own model path in data/config/vegetation.json's
+## `layers`. A model no vegetation layer claims (most harvest nodes: wood,
+## berries) gets an empty map back and renders exactly as before.
+func _apply_material_fixups(root: Node, model_path: String) -> void:
+	var fixups := _material_fixups_for_model(model_path)
+	if fixups.is_empty():
+		return
+	var retint: Dictionary = fixups.get("retint", {})
+	var retexture: Dictionary = fixups.get("retexture", {})
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := node as MeshInstance3D
+		var mesh: Mesh = mesh_instance.mesh
+		if mesh == null:
+			continue
+		for surface in mesh.get_surface_count():
+			var source: Material = mesh.surface_get_material(surface)
+			var material_name := "" if source == null else source.resource_name
+			if not retint.has(material_name) and not retexture.has(material_name):
+				continue
+			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
+				source, str(retint.get(material_name, "")), str(retexture.get(material_name, ""))))
+
+
+## The first vegetation layer that claims `model_path` in its own `models`
+## list, its `retexture` (texture swaps, layer-wide) merged with its
+## `retint` overridden per-model by `variant_retint` -- the exact precedence
+## `vegetation.gd::_tint_for` applies to the same data. Empty when no layer
+## claims the model, which is the common case for this file's other
+## harvest nodes.
+func _material_fixups_for_model(model_path: String) -> Dictionary:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for layer_name: String in layers.keys():
+		if layer_name.begins_with("_"):
+			continue
+		var layer: Dictionary = layers[layer_name]
+		var models: Array = layer.get("models", [])
+		if not models.has(model_path):
+			continue
+		var retint: Dictionary = (layer.get("retint", {}) as Dictionary).duplicate()
+		var per_model: Dictionary = (layer.get("variant_retint", {}) as Dictionary).get(model_path, {})
+		for material_name: String in per_model.keys():
+			retint[material_name] = per_model[material_name]
+		return {"retint": retint, "retexture": layer.get("retexture", {})}
+	return {}
+
+
+## Mirrors `vegetation.gd::_tint_for`'s textured branch (same pack, same
+## rule: `albedo_color` MULTIPLIES the texture, so the source art stays and
+## the colour rides over it) without that function's MultiMesh-only concerns
+## (per-instance colour, LOD-preserving mesh duplication) -- this retints one
+## scene-tree instance via `set_surface_override_material`, which touches
+## neither the shared Mesh resource nor any other instance of it.
+func _fixed_up_material(source: Material, colour_hex: String, swap_path: String) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	var standard := source as StandardMaterial3D
+	if standard != null and standard.albedo_texture != null:
+		material.albedo_texture = standard.albedo_texture
+		if swap_path != "":
+			if ResourceLoader.exists(swap_path):
+				material.albedo_texture = load(swap_path) as Texture2D
+			else:
+				push_warning("harvest node asks to swap material to '%s', which does not exist" % swap_path)
+		material.normal_texture = standard.normal_texture
+		material.normal_enabled = standard.normal_enabled
+		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo
+		material.transparency = standard.transparency
+		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
+		material.cull_mode = standard.cull_mode
+		if standard.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
+			material.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
+	material.roughness = 0.94
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	return material
 
 
 ## A low mound in the item's own slot colour: legible from a distance without
