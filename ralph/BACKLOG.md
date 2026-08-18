@@ -345,6 +345,25 @@ doesn't go in your hand like a axe does. It should."*
 `tool_hold.gd` copied for tools — so the hand-attach exists and is not working
 in play. `OW12` made the torch a carried item; this is its remainder.
 
+**ROOT-CAUSED, 2026-08-18, by the `NIGHT-LIGHT` lane while investigating
+something else — read this before re-deriving anything.** The hand-attach is
+not broken, it is *absent*: `scripts/player/torch.gd` was reverted to its
+pre-`OW12` form by a merge-conflict resolution in `31ca353`. The real `OW12`
+implementation — gate on `GameState.equipped_tool`, mesh via `tool_hold.gd` —
+still exists in the tree's history at `3a8f9ee:scripts/player/torch.gd` and
+can most likely be **restored directly** rather than rewritten. Start by
+diffing those two revisions. `NIGHT-LIGHT` investigated `torch.gd` but
+deliberately did **not** edit it, so the file is unheld.
+
+Also from `NIGHT-LIGHT`, and load-bearing for the *brightness* half: night's
+own ambient floor moved a long way in this same session (`near_luma` from
+0.000–0.015 up to 0.028–0.107, depending which round ships). The torch's
+relative contribution has **not** been re-checked against the new floor and
+may now read as weak or redundant for a reason that has nothing to do with the
+torch. Do not tune torch brightness until the night rounds are judged and
+settled — tuning against a moving target is wasted work. The hand-attach half
+has no such dependency and can proceed immediately.
+
 ### RG23 — Rocks with no collision, and invisible things you get stuck on
 `model: opus` · `tests: smoke_traversal` · `area: collision`
 Owner: *"Some rocks I can walk straight through with no collision. Then I get
