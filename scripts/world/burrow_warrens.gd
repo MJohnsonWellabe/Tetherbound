@@ -183,9 +183,19 @@ func _material(colour: Color, emissive := 0.0, textured := false) -> StandardMat
 	m.roughness = 0.95
 	if textured:
 		m.albedo_texture = ROCK_ALBEDO
-		m.albedo_color = ROCK_TINT
+		# MAT-BLOCKOUT round 2: the terrain's own near-white #fff2e0 tint (tuned
+		# for a photo lit by strong exterior sun) read as too flat/washed once a
+		# blind critic saw it at normal frame size inside the dimmer cave --
+		# "completely flat... almost no texture variation" persisted even though
+		# the texture and normal map were both genuinely present (confirmed by
+		# a direct pixel crop). Pulled 25% toward this element's own configured
+		# colour for more contrast, and normal_scale raised past the terrain's
+		# default 1.0 to buy back relief the cave's flatter, less grazing light
+		# doesn't supply on its own. TUNABLE.
+		m.albedo_color = colour.lerp(ROCK_TINT, 0.75)
 		m.normal_enabled = true
 		m.normal_texture = ROCK_NORMAL
+		m.normal_scale = 2.2
 		m.uv1_triplanar = true
 		m.uv1_scale = Vector3.ONE * ROCK_UV_SCALE
 	else:

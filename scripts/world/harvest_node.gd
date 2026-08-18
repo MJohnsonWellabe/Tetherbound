@@ -14,6 +14,28 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 
+## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
+## retint, still flagged the rootstone deposits: no longer "mint/seafoam"
+## (that defect is gone), but a NEW one -- "a strange faceted 'carved face'
+## ridge pattern and a repeating light/dark checker-like texture... reads as
+## broken or mismatched material, not a rock." That pattern is baked INTO
+## `Rocks_Diffuse.png` itself (a low-poly-to-highpoly bake artefact), and
+## every one of the pack's three Rock_Medium variants shares that exact same
+## file -- checked directly against each glTF's own material JSON. No tint
+## or swap-to-a-sibling-model reaches a defect baked into the one texture
+## all three share; that is a real ceiling in this specific installed file,
+## not a config bug. `terrain_playground.json`'s `rock` material
+## (Rock030_Color/NormalGL.jpg) does not carry this artefact -- it is a real
+## photograph, already used and tuned elsewhere in this project (the Old
+## Quarry's foundations use a sibling stone texture the same critic called
+## "the more naturalistic boulder"; the Burrow Warrens wall uses this exact
+## pair, `burrow_warrens.gd::_material`) -- so the "Rocks" material gets a
+## full texture swap here, not a multiply-tint over the broken one.
+const ROCK_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
+const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
+const ROCK_UV_SCALE := 0.46
+const ROCK_CEILING_MATERIAL := "Rocks"
+
 const RESPAWN_SECONDS := 60.0
 
 var _item_id: String = ""
@@ -96,8 +118,6 @@ func _build_visual() -> void:
 ## berries) gets an empty map back and renders exactly as before.
 func _apply_material_fixups(root: Node, model_path: String) -> void:
 	var fixups := _material_fixups_for_model(model_path)
-	if fixups.is_empty():
-		return
 	var retint: Dictionary = fixups.get("retint", {})
 	var retexture: Dictionary = fixups.get("retexture", {})
 	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
@@ -108,6 +128,10 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 		for surface in mesh.get_surface_count():
 			var source: Material = mesh.surface_get_material(surface)
 			var material_name := "" if source == null else source.resource_name
+			if material_name == ROCK_CEILING_MATERIAL:
+				mesh_instance.set_surface_override_material(surface,
+					_rock_ceiling_material(str(retint.get(material_name, ""))))
+				continue
 			if not retint.has(material_name) and not retexture.has(material_name):
 				continue
 			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
@@ -163,6 +187,30 @@ func _fixed_up_material(source: Material, colour_hex: String, swap_path: String)
 			material.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
 	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
 	material.roughness = 0.94
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	return material
+
+
+## MAT-BLOCKOUT round 2, see the header comment on `ROCK_ALBEDO` above: the
+## "Rocks" material's OWN texture carries a baked hatch/facet artefact no
+## tint can remove, so this replaces the texture outright rather than
+## multiplying over it. `uv1_triplanar` needs no authored UVs, so it works on
+## the pack's rock geometry exactly as it does on `burrow_warrens.gd`'s
+## primitive boxes. `colour_hex` (from vegetation.json's existing per-model
+## `variant_retint`, e.g. Rock_Medium_1 vs. _3's tan/brown split) is kept as
+## a multiply over the new photo, so the hue-variety work that round already
+## did survives the texture swap instead of every deposit going one flat
+## colour.
+func _rock_ceiling_material(colour_hex: String) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = ROCK_ALBEDO
+	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
+	material.normal_enabled = true
+	material.normal_texture = ROCK_NORMAL
+	material.normal_scale = 1.6
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * ROCK_UV_SCALE
+	material.roughness = 0.92
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	return material
 

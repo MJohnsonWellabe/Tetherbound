@@ -70,6 +70,320 @@ Check the tree.
 
 ---
 
+## Phase -1.6 — the owner played the mid-build (owner-reported, 2026-08-18)
+
+**Reported from a real ROG session mid-build, verbatim notes.** This is the
+instrument no test in this repo substitutes for, and it outranks the visual
+convergence work that was running when it arrived: **several of these make the
+game unplayable, not ugly.**
+
+Ordered blockers first. Where an item repeats an earlier report the earlier one
+is named, because the symptom coming back means the mechanism was never fixed —
+this project's own header rule from Phase -1.5.
+
+### Already in flight — VERIFY BEFORE YOU BUILD
+
+**Added 2026-08-18 (OPS18) at the owner's instruction:** *"if some of these, like
+the torch fix, is already in flight you can take it off the list or tell it to
+just verify if it's still a problem when we get to that item."*
+
+Nothing is deleted, because **in flight is not the same as fixed** and this
+project has twice sent a lane to rewrite code that already existed. Instead each
+overlapping item carries what is already running against it. **When you reach one
+of these, reproduce it on current `main` first. "Already fixed by X, here is the
+evidence" is a complete and valued outcome and it is faster than the work.**
+
+| item | already running / landed | what to verify |
+|---|---|---|
+| `RG1` `RG4` `RG5` `RG6` | **`RG-INPUT` lane, launched** | it owns all four; do not open a second lane on them |
+| `RG2` `RG9` `RG10` `RG22`(hand) | **`RG-GATHER` lane, launched** | same — one lane owns the gathering queue |
+| `RG11` stones like white paper | **`MAT-BLOCKOUT`, root-caused, on `ralph/MAT-BLOCKOUT`** | **very likely already fixed.** Its diagnosis: `harvest_node.gd` loaded `Rock_Medium_1/3.gltf` via `load()+instantiate()` with **no material treatment at all**, so the picked-up rocks kept their native cool grey (value 0.46, saturation 0.09) while `vegetation.gd`'s scatter warms the *same models* toward stone tones. One model, two looks, depending on which system placed it. Re-shoot before doing anything |
+| `RG22` torch brightness | **`NIGHT-LIGHT` lane** owns `torch.gd`'s light path | it is separately establishing whether the torch is lit **at all** at night — `OF18` found the auto-torch silently never fired for the feature's whole life. Do not tune brightness until that answer exists |
+| `RG21` progressive day/night, short night | **`NIGHT-LIGHT`** is inside `art.json`'s presets | adjacent, not the same: that lane is fixing *legibility*, this item is *transition and length*. Coordinate rather than both editing `art.json` |
+| `RG20` no creatures anywhere | **`VEG-SITING`** was asked to investigate and report, not fix | read its finding first — it may already name whether this is spawn siting, density, or where the cameras point |
+| `RG23` invisible blockers | **`SPINE-WEDGE` + `RIVER-GATE` landed**; `CORRIDOR-FIX` in `integrate-9` | the *invisible blocker* half is a known family — `CarveFailsafe` `Area3D` volumes and a spoke's 146 m severing trench, both fixed. Re-walk before assuming it survived. **The missing-collision-on-rocks half is genuinely new** |
+| `RG24` the pointless gorge | **`SPINE-WEDGE` shortened `storm_road`'s carve** from a 73 m reach each way to 30 m | **check this is not that same carve seen from the other side.** If it is, the two items pull in opposite directions and the owner has to settle it. Identify the feature before changing anything |
+| `RG25` long load | `PERF2` (boot 233s→48s), `VEG-CORRIDOR` (68→117s), `EXP1`'s allowance | boot cost has moved three times today. **Re-measure from `user://boot_log.txt` on current `main`** before treating the owner's figure as current |
+| `RG15` minimap | `world_extent.gd` landed — the map baker and minimap now read the corridor's real bounds | the *extent* half may be done. **Rotate-to-heading, full-screen and zoom are untouched** |
+| `RG25` title screen | unblocks `EV9`, which has been parked for weeks | `EV9`'s wordmark and orb-count panel have had nowhere to mount because `D18` boots straight into the world. Do them together |
+
+
+---
+
+### RG1 — The game freezes after coming out of an interaction or a menu
+`model: opus` · `tests: smoke_menu, smoke_modal_stacking, new` · `area: ui, blocker`
+Owner: *"The game seems to freeze a lot after coming out of an interaction or
+menu. Like interacting with the trader at the beginning then it freezes. Doing a
+build, then it freezes."*
+
+**Highest priority item in the phase. A freeze ends the session.** Two named
+reproductions: the opening trader conversation, and completing a build. Both are
+"a modal closed and control did not come back", which points at the pause shell
+or the interaction arbiter failing to release rather than at either feature.
+
+`game_menu.gd::open()` pauses the tree and `PlaygroundHUD` inherits `PAUSABLE`;
+`OW10` built `scripts/ui/input_owner.gd` so a panel that owns input joins a
+group and world verbs ask `current()`. **A panel that registers as owner and
+never deregisters would look exactly like this.** Check the release path on
+every panel, not just the two named.
+
+Reproduce on a real build before writing a fix. Do not guess a mechanism.
+
+### RG2 — You cannot swing a tool at anything
+`model: opus` · `tests: smoke_playground, test_inventory, new` · `area: gameplay, blocker`
+Owner: *"I can pull out a pickaxe and such but I can't swing at the stones or
+trees or anything."*
+
+**Gathering is the core loop and it is inoperable.** The tool reaches the hand
+(`tool_hold.gd` works) but the swing verb does not connect to anything.
+`harvest_logic.gd` has a public `gather()` that a swing and a prompt-press are
+both meant to run. Find which half is missing: the input binding, the swing
+animation's hit window, or the target query.
+
+Related and probably the same root: `RG3`'s "no prompt tells me what button".
+
+### RG3 — Nothing on screen tells you what any button does
+`model: opus` · `tests: smoke_playground, smoke_menu` · `area: ui, blocker`
+Owner: *"There's a button that brings up the build menu even though nothing on
+screen tells me that... something on screen should say b-build, x-map,
+y-inventory, rb change pal. Not necessarily those buttons but the idea."* And:
+*"I can pull out a torch even without a prompt to tell me what button to hit."*
+
+A controller-first game with no button legend. **This is the cheapest large win
+in the phase** — the verbs exist and work; the player cannot discover them.
+
+### RG4 — Builds will not place, except the workbench
+`model: opus` · `tests: smoke_free_build, test_build_grid` · `area: build, blocker`
+Owner: *"The builds even with free build on won't place. Except a workbench."*
+
+Free build on, ghost armed, nothing lands. The workbench working is the clue —
+find what it does that the others do not. `build_placer.gd`'s header claims the
+ghost/rotate/snap/grid system "was working the entire time", so trust the
+measurement over the claim.
+
+### RG5 — The build menu leaks input to the character
+`model: opus` · `tests: smoke_free_build, smoke_menu` · `area: ui, blocker`
+Owner: *"When the building menu is up, pressing directions and pressing a still
+controls the character too and the menu."*
+
+**This is `OW10` returning, and `UI-PAD2` predicted exactly it.** `OW10` built
+the input-owner gate and converted `playground_hud.gd`'s pollers only;
+`UI-PAD2` recorded that `build_placer.gd` polls `build_place`, `build_rotate`,
+`build_snap_cycle` and `build_cancel` directly and **asks `input_owner.gd`
+nothing** — and that the build menu is the one panel that deliberately does not
+pause the tree. It was filed as "structural, not observed." It is now observed.
+
+### RG6 — Menus still do not read every input
+`model: opus` · `tests: test_controls, smoke_menu` · `area: ui, blocker`
+Owner: *"Menus don't read every input still."*
+
+Third report of this class (`OW10`, `UI-PAD1`, now this). Needs the owner's
+exact screen and button to be actionable — **ask before guessing**, or
+instrument every menu to log which action it saw and reproduce from that.
+
+### RG7 — Reloading a save does not restore your game
+`model: opus` · `tests: test_save_format, smoke_opening, new` · `area: save, blocker`
+Owner: *"When you reload a game you don't go back to where you were. So I
+reloaded with a creature already then had to go back through grandpas dialogue.
+I was able to get a second creature and second things from the villagers... I
+also can pick up the tms again but I don't get a second one. You shouldn't be
+allowed to pick it up a second time. It should be gone."*
+
+**A save that does not restore position or story flags is a save that does not
+work**, and it lets a player duplicate one-time gifts. The workbench persisting
+is the one thing that did survive, which narrows it: placed builds save, player
+transform and progression flags do not.
+
+One-time pickups must be consumed permanently — the same "it should be gone"
+rule `HARVEST-ALL` just applied to chopped trees.
+
+### RG8 — You lose camera control during a creature fight
+`model: opus` · `tests: smoke_combat, new` · `area: combat, blocker`
+Owner: *"You no longer control the camera when you're in a creature fight."*
+
+Combat is the game's centrepiece and you cannot look around in it.
+
+---
+
+### RG9 — Harvesting should be chop-then-gather, not gather-a-standing-tree
+`model: opus` · `tests: smoke_playground, test_inventory, new` · `area: gameplay`
+**Owner directive, and it changes the harvest model that `HARVEST-ALL` just
+shipped:** *"You shouldn't be able to gather a standing tree. You should have to
+chop it. Then it becomes downed wood. Then you gather that. Same for stone."*
+
+So a resource is a two-stage object: standing → felled → gathered, with the
+felled stage a real pickup-able thing in the world. `HARVEST-ALL` made every
+tree and rock harvestable and permanent; **this makes the first stage a chop
+rather than a pickup.** Build on that work rather than reverting it.
+
+### RG10 — Harvestables should not glow
+`model: sonnet` · `tests: smoke_playground` · `area: visual`
+Owner: *"Items to harvest shouldn't be gold lit up orbs. They shouldn't light up
+at all."*
+
+**Supersedes `R2.3` and its remainder**, which built the glint deliberately to
+answer an earlier owner report that gathering "seems to randomly pop up". The
+newer word wins. Note the glint is now on *every* tree and rock after
+`HARVEST-ALL`, so removing it also removes tens of thousands of billboards —
+report the frame-time change.
+
+Leave `R2.3`'s reasoning in place with a note naming this item, so the reversal
+is legible.
+
+### RG11 — Stones look like white paper
+`model: sonnet` · `tests: none (visual)` · `area: visual`
+Owner: *"Stones look like white paper."* Wood on the ground is *"okay"*.
+
+Almost certainly the same class as `MAT-BLOCKOUT`'s quarry rootstone reading as
+"pale mint/seafoam hatching" — check whether one fix covers both before treating
+them separately.
+
+### RG12 — TMs should read as orbs on the ground, in their own colour
+`model: sonnet` · `tests: none (visual)` · `area: visual, items`
+Owner: *"Tms should look like orbs on the ground but w different color than
+normal orbs."*
+
+### RG13 — Too many recipes are available at the start
+`model: sonnet` · `tests: test_recipes` · `area: progression`
+Owner: *"You have too many recipes available at the beginning."* A gate, not a
+deletion — most should unlock through play.
+
+### RG14 — Once a piece is chosen you cannot read how to place or rotate it
+`model: opus` · `tests: smoke_free_build` · `area: ui`
+Owner: *"Once I choose what I wanted to build the build menu went away and I
+actually couldn't read how to place or rotate the piece anymore."*
+
+`OW11` deliberately made the menu close on pick so the world is visible — that
+is right and stays. What is missing is the placement control legend surviving
+the menu. Same family as `RG3`.
+
+---
+
+### RG15 — The minimap does not work for this world
+`model: opus` · `tests: smoke_menu, test_map_state` · `area: ui, map`
+Owner: *"On the mini map up should be the way I'm moving. Always."* · *"The
+minimap isn't built for this world. It also needs to be full screenable with
+zoom in and out."* · *"I can't navigate using the map at all."*
+
+Three things: **rotate to heading**, **a full-screen map with zoom**, and a
+world-scale fit — the minimap's span was authored for a 512 m square and the
+world is 8192 x 2048 m.
+
+### RG16 — The player has no idea which way to go
+`model: fable` · `tests: test_dialogue_runner, test_progression_state` · `area: npc, progression`
+Owner: *"Maybe you should also have grandpa say head east to the bridge and have
+our overall objective be head east to the bridge or something then have the game
+tell us if we're going east by looking at the minimap. I have no idea if I'm
+going the right way."*
+
+An objective the player can hold in their head, spoken by an NPC, reflected on
+the map. Pairs with `RG15` and `RG17`.
+
+### RG17 — The tether pylons should be the navigation line, with an NPC at the first
+`model: fable` · `tests: none` · `area: world, npc`
+Owner: *"Where the first tether pillars starts there should be an NPC telling
+you that they're draining the land and whatever. These should go in a continuous
+line to the stronghold. That will help navigation."*
+
+**This is a strong idea and it is cheap**: the pylons already exist as Team
+Tether hero objects, and a continuous line of them from the first pylon to the
+stronghold turns the story's own fiction into the map's spine. It also gives the
+drained-ground grammar (`D45`) something to follow.
+
+### RG18 — Onboarding: the player is never told what the game is
+`model: fable` · `tests: test_progression_state` · `area: ui, progression`
+Owner: *"I don't understand what to do as a player... I should understand that I
+need to gather, build, level up my pals, get stronger, build a home, build pal
+beds, level up more, etc. There should be on screen prompts working you through
+these like in palworld."*
+
+A guided opening chain. `OW9` shipped two handover beats (gather, then build);
+this asks for the whole ladder, surfaced on screen rather than only in dialogue.
+
+### RG19 — A village tournament as the early goal
+`model: fable` · `tests: new` · `area: content, progression`
+**Owner design proposal, recorded verbatim rather than interpreted:** *"Maybe
+there should be a tournament near the beginning in grandpas village that we
+enter. In order to enter you have to go catch five pals and get them to level 3
+or something. They have to be well rested, well fed, and happy. Then they allow
+you to enter. Winning gives you coins and sets you on your way to fight team
+tether."*
+
+**This is a new content beat and it needs the owner's confirmation before
+building** — it introduces an entry gate on creature condition (rested, fed,
+happy) and a tournament format the spec does not currently describe. It also
+gives the five-creature limit and the satiety system a reason to matter early,
+which is the strongest argument for it.
+
+---
+
+### RG20 — There are no creatures anywhere
+`model: opus` · `tests: test_spawns_data, smoke_playground` · `area: creatures, blocker`
+Owner: *"There are no creatures anywhere which is a problem for a game that's
+featuring creatures as the key thing."*
+
+**Independently confirmed by the blind critic**, which noted across all five
+Band 2 rounds that no creature ever appears in frame. Two reports from
+completely different methods agreeing makes this real and not a sampling
+accident. Spawn siting, spawn density, or spawn activation — measure which.
+
+### RG21 — Day and night should be progressive and unequal
+`model: sonnet` · `tests: smoke_playground` · `area: world, visual`
+Owner: *"day shouldn't just switch to night. It should progressively do it like
+real life. However night shouldn't be equal length to day. It should be pretty
+short. However valheim does it."* And separately: *"night is forever."*
+
+Two changes: a **continuous** transition rather than a switch, and a **short
+night** relative to day. Interacts with `NIGHT-LIGHT` — coordinate.
+
+### RG22 — The torch is too dim and does not go in your hand
+`model: sonnet` · `tests: smoke_playground` · `area: gameplay, visual`
+Owner: *"The torch should probably light up a little more."* · *"The torch
+doesn't go in your hand like a axe does. It should."*
+
+`torch.gd` bone-attaches and `items.json:550` records it as the pattern
+`tool_hold.gd` copied for tools — so the hand-attach exists and is not working
+in play. `OW12` made the torch a carried item; this is its remainder.
+
+### RG23 — Rocks with no collision, and invisible things you get stuck on
+`model: opus` · `tests: smoke_traversal` · `area: collision`
+Owner: *"Some rocks I can walk straight through with no collision. Then I get
+stuck on something I can't even see. It makes no sense."*
+
+**Both halves in one sentence, and the second half is the `WALL1`/`SPINE-WEDGE`
+family** — invisible blockers there turned out to be `CarveFailsafe` `Area3D`
+volumes and a spoke's severing trench, never terrain. Use
+`get_slide_collision()`'s collider identity; do not sample `ground_height_at()`.
+
+The missing-collision half is new: scattered rocks are `MultiMesh` instances and
+only some carry colliders. Establish which.
+
+### RG24 — The gorge in the middle of the map stops nothing
+`model: sonnet` · `tests: smoke_traversal` · `area: terrain`
+Owner: *"There's a giant gorge/hole in the middle of the map that I just walked
+around. Seemed pretty pointless. It didn't keep me from anything. It needs to
+extend if it's supposed to keep anyone out."*
+
+Identify which feature this is before changing it — a spoke carve, the river, or
+the south gully. `SPINE-WEDGE` just **shortened** `storm_road`'s carve from a
+146 m reach to 30 m on the grounds that it was blocking the road it was not
+severing; check this is not that same carve seen from the other side, or the two
+items will fight.
+
+### RG25 — Long load on the ROG, and there is no title or save screen
+`model: opus` · `tests: verify_export, smoke_menu` · `area: perf, ui`
+Owner: *"The game takes a long time on a rog to load. There needs to be a load
+screen when your start the game to choose your saved game. There also needs to
+be an exit when you go to the menus to quit the game."*
+
+Three things: **boot cost on target hardware**, a **title/save-select screen**,
+and **quit from the menu**. The title screen also answers `EV9`'s long-open
+question — the branded wordmark and the orb-count panel have had nowhere to
+mount because the game boots straight into the world by `D18`. **`D18` is now
+superseded by this directive**; record that rather than quietly reversing it.
+
+---
+
 ## Phase -1.5 — the owner played the ROG build (owner-reported, 2026-08-16)
 
 Reported from the real handheld, which is the instrument no test in this repo
