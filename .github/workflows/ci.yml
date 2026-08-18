@@ -141,15 +141,30 @@ jobs:
 
   verify-unit-tests:
     runs-on: ubuntu-latest
-    # BAND-SPLIT-2, 2026-08-18: cancelled twice at ~10m13s/10m16s on an
-    # otherwise-green run (1066/1066 passing locally, headless, three times) --
-    # the suite itself has grown to the point where 10 minutes is no longer
-    # enough margin, not a defect in the diff that tripped it. The cancelled
-    # run had reached the last test file alphabetically (test_veg_corridor.gd,
-    # 2 of 6 methods left) both times, so the real overrun is on the order of
-    # seconds, not minutes -- 12 is a modest margin, not a rewrite of the
-    # budget. If this starts clipping again, the fix is splitting run_tests.gd
-    # into two jobs, not raising this further.
+    # SPLIT 2026-08-18, doing what the note below said to do rather than
+    # raising the number a third time.
+    #
+    # History, because the shape of this failure is worth recognising: this job
+    # was raised 10 -> 12 minutes earlier the same day after being cancelled
+    # twice at ~10m13s/10m16s on an otherwise-green run (1066/1066 passing
+    # locally, headless, three times). That note ended "if this starts clipping
+    # again, the fix is splitting run_tests.gd into two jobs, not raising this
+    # further." It clipped again that evening at 13m14s and took a bundle with
+    # 13 green jobs down with it.
+    #
+    # The reason an overrun of seconds is expensive out of all proportion:
+    # GitHub reports a `timeout-minutes` kill as **cancelled**, not failed. A
+    # cancelled run reads like a human aborted the build, and `ralph-merge`
+    # refuses it forever -- so the bundle cannot land and the whole ~8 minutes
+    # is spent again. Raising the ceiling only moves that cliff; each shard now
+    # does about half the work, so the margin is real rather than nominal.
+    #
+    # The shard is round-robin, not contiguous -- see tests/run_tests.gd for
+    # why the alphabetical tail must not be allowed to stack into one job.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -239,7 +254,9 @@ jobs:
         # (measured 2026-08-15: ~3m25s) — worth its own job now that jobs run
         # in parallel instead of piggybacking on a smoke-test job "because it's
         # cheap".
-        run: godot --headless --path . --script tests/run_tests.gd
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --shard=${{ matrix.shard }}/2
 
   verify-playground:
     runs-on: ubuntu-latest
