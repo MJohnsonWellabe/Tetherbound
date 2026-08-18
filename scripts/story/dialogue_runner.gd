@@ -43,6 +43,16 @@ const EXTRA_DIALOGUE_PATHS := [
 	# it is still scanned for §32's words, because the villagers who say these
 	# lines never learned what was inside that building.
 	"res://data/dialogue/meadows_freed.json",
+	# BAND-SPLIT-2. One container per corridor band, so a trainer or NPC a
+	# band author places does not have to land in the shared trainers.json --
+	# see scripts/data/band_content.gd's BANDS list, which these five paths
+	# are hand-written to match (a literal for the same reason that list is
+	# one: silently loading nothing on a stray name is worse than five lines).
+	"res://data/dialogue/bands/band1_lower_meadows.json",
+	"res://data/dialogue/bands/band2_stone_and_root.json",
+	"res://data/dialogue/bands/band3_the_river_lock.json",
+	"res://data/dialogue/bands/band4_upper_meadows_ironwood.json",
+	"res://data/dialogue/bands/band5_stronghold_approach.json",
 ]
 
 signal finished(conversation_id: String)

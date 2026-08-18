@@ -810,6 +810,114 @@
     "Bark_TwistedTree": "#918178"
   },
   "_comment_collision": "Layers marked `collides` get real static collision. Two reasons, and the second is the urgent one: a tree you can walk through reads as a hologram, and \u2014 because the camera's SpringArm3D only stops at things with collision \u2014 a bush with none lets the camera end up INSIDE it. Two survey frames came back showing nothing but green because the camera was inside a bush during a fight. Grass and flowers must never collide; you walk through those.",
-  "_comment_clearings": "BAND-SPLIT-2. `clearings` and `footprints` used to live here, both positional and both monolithic near the origin, which meant a band author who could add a creature, a prop, a harvest node or a trainer still could not add a clearing around their own structure without editing this shared file. They are now cut per corridor band, under data/config/bands/<band>/vegetation.json, and merged back at load by scripts/data/band_content.gd -- same treatment BAND-SPLIT gave spawns/props/harvest/trainers. Every entry carries an `order`; the merge sorts by it, so the merged arrays are identical to the pre-split file (tests/test_band_vegetation.gd pins that against tests/fixtures/band_split_baseline/vegetation.json). The scatter *rules* below (layers, corridor_bands, retint) are unrelated and stayed put -- see D54's own 'vegetation is deliberately not split' note, which was true for rules and was never about these two positional arrays.",
-  "_comment_footprints": "See `_comment_clearings` above -- footprints moved the same way, for the same reason."
+  "_comment_clearings": "Open ground kept clear of every layer that can BLOCK. These match the wild creature spawn points in scripts/combat/encounter_director.gd, because a fight starts where a creature is standing and the arena is 11m across: without this, the trees are inside the arena and stand between the camera and the fight. The radius is arena radius plus margin.",
+  "clearings": [
+    {
+      "x": 0.0,
+      "z": 0.0,
+      "radius": 16.0,
+      "_why": "spawn"
+    },
+    {
+      "x": 10.0,
+      "z": -10.0,
+      "radius": 22.0,
+      "_why": "the village square and its structures"
+    },
+    {
+      "x": -22.0,
+      "z": -16.0,
+      "radius": 16.0,
+      "_why": "Grandpa's house and its yard"
+    },
+    {
+      "x": 30.0,
+      "z": -40.0,
+      "radius": 16.0,
+      "_why": "the practice meadow: the opening's bramblebun and the arena around it"
+    },
+    {
+      "x": 13.0,
+      "z": 9.0,
+      "radius": 14.0,
+      "_why": "R8.1: the practice trainer's ground north of the square (data/config/trainers.json). Same reason as the entries above -- a trainer battle's arena is 11m across and forms between the player and the creature their opponent just sent out, so without this the fight is watched through a tree. Most of it already falls inside the village square's own 22m clearing; this covers the northern edge that does not."
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (clearings[5]). NOT explicitly named in the macro-layout doc's table (which lists `vegetation.footprints[2,3]` for the mill group but not this clearing), moved anyway to avoid leaving a stale tree-free clearing at the old (-133.5,110) once the mill/footbridge move to (-383.5,517).",
+      "x": -383.5,
+      "z": 517.0,
+      "radius": 15.0,
+      "_why": "EV6-remainder: the mill and its crossing -- keeps trees/rocks off the pad and the bridge approaches"
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (clearings[6]), same reasoning as clearings[5] above: not named explicitly in the table but moved to track the ranger station.",
+      "x": -350.0,
+      "z": 507.0,
+      "radius": 10.0,
+      "_why": "EV6-remainder: the ranger station and its yard on the pond route"
+    },
+    {
+      "x": 8.0,
+      "z": 1330.0,
+      "radius": 20.0,
+      "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them",
+      "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250).",
+      "_comment_ow5c_seam": "OW5C follow-up: shifted +8 in x with south_bridge crossings[0] (WALL1 seam workaround)."
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (clearings[8], named explicitly in docs/MEADOWS_MACRO_LAYOUT.md section 10.2 as `vegetation.clearings[8]`): (23,158) -> (400,1800), same offset as the quarry floor.",
+      "x": 400.0,
+      "z": 1800.0,
+      "radius": 17.0,
+      "_why": "SD16: the Old Quarry's worked floor -- foundations, the conduit head and five rootstone deposits stand on it, and a copse growing through the middle of a working face would undo the read before the drained ground ever got a chance. The `deadfall` anchor above sets `cleared_by_clearings: false` so this does not throw its authored stand away -- see its own note"
+    }
+  ],
+  "_comment_footprints": "R9.4-remainder-8: unlike clearings above, EVERY layer respects these, including grass/drygrass/flowers -- a footprint is the literal extent of a solid structure, not the wider 'keep the arena/yard readable' radius clearings exist for, so the grass/flowers exemption that avoids a bald ring around the yard has no reason to apply here. Found by real grass tufts standing on Grandpa's own interior floor and rug in a tools/capture_buildings.gd render. Radius is the building's half-diagonal plus a small margin, not a repeat of the wider yard clearing above.",
+  "footprints": [
+    {
+      "x": -22.0,
+      "z": -16.0,
+      "radius": 6.5,
+      "_why": "Grandpa's house, 9x7m inside plus walls -- grass was standing on the floor and the rug"
+    },
+    {
+      "x": 28.0,
+      "z": 4.0,
+      "radius": 5.0,
+      "_why": "the windmill -- at distance sqrt(18^2+14^2)=22.8m from the village-square clearing's own centre, just outside its 22m radius, so the rocks layer (which DOES respect clearings, unlike grass) could still land a boulder against its base. R9.4-remainder-8's survey found one doing exactly that, obscuring village.json's own stated landmark from the meadow view."
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (footprints[2], docs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same offset as the mill.",
+      "x": -382.0,
+      "z": 514.0,
+      "radius": 5.5,
+      "_why": "the mill -- grass out of the tower and from under the wheel"
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (footprints[3]): (-136.3,113) -> (-386.3,520), same offset as the footbridge.",
+      "x": -386.3,
+      "z": 520.0,
+      "radius": 6.5,
+      "_why": "the footbridge -- grass off the deck and both stone landings"
+    },
+    {
+      "_comment_ow5d": "OW5D relocation (footprints[4]): (-100,100) -> (-350,507), same offset as the ranger station.",
+      "x": -350.0,
+      "z": 507.0,
+      "radius": 4.5,
+      "_why": "the ranger station"
+    },
+    {
+      "x": 5.0,
+      "z": 80.0,
+      "radius": 10.5,
+      "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
+    },
+    {
+      "x": -1.5,
+      "z": -9.0,
+      "radius": 6.5,
+      "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on."
+    }
+  ]
 }
