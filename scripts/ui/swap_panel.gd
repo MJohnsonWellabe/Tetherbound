@@ -25,6 +25,7 @@ extends CanvasLayer
 ## walk them.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
 const CREATURE_TRADE := preload("res://scripts/trade/creature_trade.gd")
 const PARTY := preload("res://autoload/party.gd")
@@ -54,6 +55,10 @@ func _ready() -> void:
 	_trade = TRADE_DB.new()
 	_build_shell()
 	visible = false
+	# RG4: see craft_panel.gd's own comment on this line -- `input_owner.gd`
+	# has claimed since OW10 that this panel already joins its GROUP; it
+	# never did.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func is_open() -> bool:
@@ -321,6 +326,17 @@ func _draw_party() -> void:
 		_party_column.add_child(_text_line(
 			CREATURE_TRADE.refusal_text(CREATURE_TRADE.REFUSED_LAST_CREATURE), UITokens.WARNING
 		))
+
+	# RG6 (owner: "Menus don't read every input still."). `open()` grabs
+	# focus once, right after its own first `_refresh()` -- but backing out
+	# of a pending confirm (`_process`'s `menu_cancel` handler above) calls
+	# `_refresh()` again on its own, straight into this function, with no
+	# grab_focus after it. That rebuilds every party row fresh and leaves
+	# nothing focused: a controller player who picked a creature, changed
+	# their mind, and backed out landed on a screen where the stick and
+	# d-pad did nothing at all.
+	if not _rows.is_empty():
+		_rows[0].grab_focus()
 
 
 func _draw_confirm() -> void:

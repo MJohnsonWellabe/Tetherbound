@@ -22,6 +22,7 @@ extends CanvasLayer
 ## the same reason `craft_panel.gd` grabs focus on its first row when it opens.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
 const ROW_ICON_PX := 24
 
@@ -46,6 +47,19 @@ func _ready() -> void:
 	_trade = TRADE_DB.new()
 	_build_shell()
 	visible = false
+	# RG4 (owner: "The builds even with free build on won't place. Except a
+	# workbench."). `input_owner.gd`'s own header has claimed since OW10 that
+	# this panel already joins its GROUP alongside craft/storage/swap/
+	# creature_bed; it never did. This panel pausing the tree hid the gap for
+	# any poller that only runs in-tree, but left `INPUT_OWNER.current()`
+	# blind to it -- nothing generic could tell it was open, or recover if
+	# this panel's own close() was ever skipped, which is exactly the failure
+	# shape a real RG4-style report -- "nothing works, no explanation" --
+	# takes: the trader's shop screen (auto-opened at the end of a greeting,
+	# not something the player deliberately chose to enter) is the one modal
+	# in the whole panel family invisible to the shared "who owns input"
+	# answer every other gate in the game already trusts.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func is_open() -> bool:

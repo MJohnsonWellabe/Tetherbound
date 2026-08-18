@@ -28,6 +28,7 @@ const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 ## or "placed_building" string could.
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SETTLE_FRAMES := 240
 
 ## How far up from where the settings screen starts the toggle may be. Three
@@ -80,6 +81,7 @@ func _run() -> void:
 	await _check_movement_and_jump_are_gated_behind_an_open_build_menu(world)
 	await _check_an_unaffordable_pick_shows_the_shortfall_and_refuses()
 	await _check_b_closes_only_the_build_menu()
+	await _check_build_place_is_gated_behind_a_story_dialogue_and_recovers(world)
 
 	_cleanup()
 	_report()
@@ -655,6 +657,161 @@ func _check_build_actions_are_gated_behind_a_reopened_menu(world: Node) -> void:
 		_fail("build_place still did nothing once the build menu closed -- the gate never releases")
 	else:
 		print("build_place works again once the build menu is closed")
+	_game.set("pending_build", "")
+
+
+## RG4 (owner: "The builds even with free build on won't place. Except a
+## workbench."). Real placement (grid/slope/cost/mesh) turned out to be fine
+## end to end -- proven at nine different points in the world, every
+## `buildables.json` id, all landing clean, in the investigation this check
+## comes from. The one way `build_place` silently does nothing with a fully
+## legal (green) ghost and zero explanation is exactly the shape the check
+## above already covers for a REOPENED build menu -- but `input_owner.gd`'s
+## group holds more than that one panel. A real story conversation (nothing
+## to do with building at all) owns input the same way, and until this fix
+## a press swallowed there gave no signal whatsoever: no cue, no message,
+## nothing -- which is indistinguishable from "the build system is broken",
+## the owner's exact words. This proves both halves: the press is genuinely
+## refused while ANY input-owning panel is up, not just the build menu, and
+## placement recovers completely once it closes -- nothing about this class
+## of gate is one-way.
+func _check_build_place_is_gated_behind_a_story_dialogue_and_recovers(world: Node) -> void:
+	var inventory: RefCounted = _game.get("inventory")
+	inventory.call("add", "wood", 100)
+	inventory.call("add", "stone", 100)
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		_fail("no player to place from")
+		return
+
+	if bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+
+	var placer := world.get_node_or_null(^"BuildPlacer")
+	var walls_before := _wall_nodes(world).size()
+	_game.set("pending_build", "wall")
+	for i in 15:
+		await physics_frame
+	if str(_game.get("pending_build")) != "wall":
+		_fail("arming a wall failed before the dialogue was even involved")
+		return
+
+	# Every earlier check in this file has already littered camp/walls/door/
+	# workbench around spawn, and `world_perimeter_corridor` can reset the
+	# player back to spawn if a previous check's own movement carried them
+	# off the corridor -- so "clear ground" is not a fixed offset here. Walk
+	# forward until the ghost itself says the spot is legal, the same signal
+	# the player has (green vs red), rather than assuming any one distance
+	# is clear.
+	var found_clear := false
+	for step in 12:
+		player.velocity = Vector3.ZERO
+		for i in 10:
+			await physics_frame
+		if placer != null and bool(placer.get("_ghost_ok")):
+			found_clear = true
+			break
+		player.global_position += _forward(world, player) * 8.0
+		for i in 10:
+			await physics_frame
+	if not found_clear:
+		_fail("story dialogue: could not find clear ground to place a wall on after 12 steps outward")
+		_game.set("pending_build", "")
+		return
+
+	var panel: Node = world.get_tree().get_first_node_in_group("dialogue_panel")
+	if panel == null:
+		_fail("story dialogue: no dialogue_panel in the world; cannot reproduce RG4 this way")
+		_game.set("pending_build", "")
+		return
+	if not bool(panel.call("start", "village_mira_shop_intro")):
+		_fail("story dialogue: 'village_mira_shop_intro' would not start; data/dialogue/village.json may have moved")
+		_game.set("pending_build", "")
+		return
+	for i in 5:
+		await physics_frame
+	if not bool(panel.call("is_open")):
+		_fail("story dialogue: starting a real conversation did not open the dialogue panel")
+		_game.set("pending_build", "")
+		return
+
+	# The ghost still tracks the aim point (build_placer.gd's own contract --
+	# the world must not visibly freeze just because a panel sits on top of
+	# it), so this reads the SAME legal ghost the owner would have seen: green,
+	# no refusal reason, and yet the press below plants nothing.
+	if placer != null and not bool(placer.get("_ghost_ok")):
+		_fail("story dialogue: the ghost reads illegal on clear, affordable ground -- this check proves nothing about the gate")
+
+	Input.action_press(BUILD_PLACER.PLACE_ACTION)
+	await physics_frame
+	await physics_frame
+	Input.action_release(BUILD_PLACER.PLACE_ACTION)
+	for i in 10:
+		await physics_frame
+	if _wall_nodes(world).size() != walls_before:
+		_fail("build_place planted a wall while a real story conversation owned input")
+	elif str(_game.get("pending_build")) != "wall":
+		_fail("build_place behind an open story dialogue changed pending_build instead of doing nothing")
+	else:
+		print("build_place did nothing while a real story conversation owned input, ghost stayed legal throughout")
+
+	# Advance through every line with a real `interact` press, same as a
+	# player would, until the box closes on its own.
+	var guard := 0
+	while bool(panel.call("is_open")) and guard < 20:
+		Input.action_press("interact")
+		await physics_frame
+		await physics_frame
+		Input.action_release("interact")
+		for i in 6:
+			await physics_frame
+		guard += 1
+	if bool(panel.call("is_open")):
+		_fail("story dialogue: pressing interact %d times never closed it" % guard)
+		_game.set("pending_build", "")
+		return
+	for i in 10:
+		await physics_frame
+
+	# `village_mira_shop_intro`'s last line carries a real `shop:goods:mira`
+	# effect (data/dialogue/village.json) -- closing the dialogue box hands
+	# straight off to her shop panel, `sequence_director.gd::_maybe_open_shop`.
+	# That is correct, ordinary game behaviour, not a second bug, but this
+	# check is about the GATE, not about Mira's shop specifically -- so close
+	# whatever `input_owner.gd` says owns input now, the same way a player
+	# would leave the shop before going back to building.
+	var chained: Node = INPUT_OWNER.current(world.get_tree())
+	if chained != null and chained.has_method("close"):
+		chained.call("close")
+		for i in 10:
+			await physics_frame
+	if INPUT_OWNER.current(world.get_tree()) != null:
+		_fail("story dialogue: '%s' still owns input after closing the dialogue and the panel it chained into"
+			% INPUT_OWNER.current(world.get_tree()).name)
+		_game.set("pending_build", "")
+		return
+	if world.get_tree().paused:
+		_fail("story dialogue: the tree is still paused after closing the dialogue and the panel it chained into")
+		_game.set("pending_build", "")
+		return
+	if placer != null and not bool(placer.get("_ghost_ok")):
+		_fail("story dialogue: ghost reads illegal for the retry ('%s') -- not the gate, the spot moved under it"
+			% str(placer.get("_ghost_reason")))
+		_game.set("pending_build", "")
+		return
+
+	Input.action_press(BUILD_PLACER.PLACE_ACTION)
+	await physics_frame
+	await physics_frame
+	Input.action_release(BUILD_PLACER.PLACE_ACTION)
+	for i in 20:
+		await physics_frame
+	if _wall_nodes(world).size() != walls_before + 1:
+		_fail("build_place still did nothing once the story dialogue closed -- the gate never releases")
+	else:
+		print("build_place works again once the story dialogue closed -- the gate is not one-way")
 	_game.set("pending_build", "")
 
 

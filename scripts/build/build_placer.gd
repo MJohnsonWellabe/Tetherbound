@@ -215,6 +215,15 @@ func _physics_process(_delta: float) -> void:
 	# it -- only the actions that would change or spend the ghost are gated.
 	if INPUT_OWNER.current(get_tree()) != null:
 		_show_ghost(game, armed)
+		# RG4: a build_place press swallowed here used to give no signal at
+		# all -- the ghost stays green (legal), nothing lands, and nothing
+		# says why, which reads as "builds don't work" rather than "something
+		# else has your input right now" (a story dialogue, the starter
+		# picker -- anything `input_owner.gd`'s group holds). Every OTHER
+		# refusal in this file (occupied/steep/can't afford) already gets
+		# this same cue; a press eaten here is not different from those.
+		if Input.is_action_just_pressed(PLACE_ACTION):
+			AUDIO_CUES.play(&"ui_error")
 		return
 
 	if Input.is_action_just_pressed(CANCEL_ACTION):

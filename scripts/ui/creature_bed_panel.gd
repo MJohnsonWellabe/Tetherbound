@@ -19,6 +19,7 @@ extends CanvasLayer
 ## clear on-screen text feedback, not a placeholder.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PARTY := preload("res://autoload/party.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
@@ -39,6 +40,10 @@ func _ready() -> void:
 	game = get_node_or_null(^"/root/Game")
 	_build_shell()
 	visible = false
+	# RG4: see craft_panel.gd's own comment on this line -- `input_owner.gd`
+	# has claimed since OW10 that this panel already joins its GROUP; it
+	# never did.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func is_open() -> bool:
@@ -84,7 +89,12 @@ func _process(_delta: float) -> void:
 	if _bed == null or not is_instance_valid(_bed):
 		close()
 		return
-	_refresh()
+	# RG6 (owner: "Menus don't read every input still."). See
+	# `storage_panel.gd::_process()`'s own comment on this exact line -- same
+	# bug, same fix. The tree is paused the entire time this screen is open,
+	# so the only thing that can ever change the party list shown here is
+	# this screen's own `_on_rest_row` (below), not anything running every
+	# frame. `_refresh()` now runs from `open()` and reactively from there.
 
 
 func _build_shell() -> void:
@@ -154,6 +164,18 @@ func _refresh() -> void:
 	if party == null:
 		return
 
+	# RG6 (owner: "Menus don't read every input still."). `_process` calls
+	# this every frame unconditionally (below), and it has always freed and
+	# rebuilt every row from scratch on every single call -- so any focus a
+	# controller press had just set was destroyed the very next frame, before
+	# `ui_up`/`ui_down` could ever move it a second time. Nothing here ever
+	# called `grab_focus()` either, so the FIRST frame had no focus to lose in
+	# the first place: a controller player opening this screen could not
+	# navigate it at all. Fixed by remembering which row (by index, not by
+	# node -- the node is about to be freed) held focus and putting focus
+	# back on the same index once the row exists again.
+	var focused_index := _rows.find(get_viewport().gui_get_focus_owner()) if get_viewport() != null else -1
+
 	for child in _column.get_children():
 		child.queue_free()
 	_rows.clear()
@@ -184,6 +206,19 @@ func _refresh() -> void:
 
 		_column.add_child(button)
 		_rows.append(button)
+
+	# Restore focus to the same row index the rebuild just destroyed, or --
+	# the first open, or a party slot that just emptied under the cursor --
+	# fall back to the first row that can actually act. See the comment atop
+	# `_refresh()` for why this has to happen on every rebuild, not just once.
+	var restore_index := focused_index if focused_index >= 0 and focused_index < _rows.size() else -1
+	if restore_index >= 0 and not _rows[restore_index].disabled:
+		_rows[restore_index].grab_focus()
+	else:
+		for row in _rows:
+			if not row.disabled:
+				row.grab_focus()
+				break
 
 	UITokens.make_text_legible(_root)
 

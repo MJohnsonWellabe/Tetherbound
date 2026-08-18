@@ -26,6 +26,7 @@ extends CanvasLayer
 ## `_describe` reads off of.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const STATUS_SECONDS := 2.4
 const ROW_ICON_PX := 40
@@ -57,6 +58,13 @@ func _ready() -> void:
 	game = get_node_or_null(^"/root/Game")
 	_build()
 	visible = false
+	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
+	# panel already joins its GROUP alongside storage/swap/creature_bed/shop
+	# -- it never did. Pausing the tree hid the gap for every poller that
+	# only runs in-tree (build_placer.gd among them), but it left
+	# `INPUT_OWNER.current()` blind to this panel: nothing generic can tell
+	# it is open, or recover cleanly if its own close() is ever skipped.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func is_open() -> bool:

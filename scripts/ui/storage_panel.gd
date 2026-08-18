@@ -17,6 +17,7 @@ extends CanvasLayer
 ## and the shared font/colour tokens instead of bare `Label`/`Button` defaults.
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const ROW_ICON_PX := 24
 
 var game: Node = null
@@ -36,6 +37,10 @@ func _ready() -> void:
 	game = get_node_or_null(^"/root/Game")
 	_build_shell()
 	visible = false
+	# RG4: see craft_panel.gd's own comment on this line -- `input_owner.gd`
+	# has claimed since OW10 that this panel already joins its GROUP; it
+	# never did.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func is_open() -> bool:
@@ -78,7 +83,20 @@ func _process(_delta: float) -> void:
 	if _chest == null or not is_instance_valid(_chest):
 		close()
 		return
-	_refresh()
+	# RG6 (owner: "Menus don't read every input still."). This used to call
+	# `_refresh()` unconditionally, every frame, whether or not a deposit or
+	# withdraw had actually happened -- the only thing that CAN change the
+	# two lists while this screen is open (the tree is paused the whole
+	# time, so nothing else in the game is running). Every row was freed and
+	# rebuilt from scratch dozens of times a second for no reason, and worse
+	# than the waste: a `ui_accept` press held across a rebuild could land on
+	# a button that did not exist yet when the press edge fired, and Godot's
+	# default `Button` only fires `pressed` on the RELEASE half of a press it
+	# itself saw the start of -- so the press was silently dropped, focus and
+	# all, on a screen this rebuild-happy. `_refresh()` now runs only from
+	# `open()` and from a real deposit/withdraw (see the `on_press` calls
+	# below), the same reactive shape `craft_panel.gd`/`shop_panel.gd`
+	# already use for their own per-frame `_process`.
 
 
 func _build_shell() -> void:
@@ -171,10 +189,46 @@ func _refresh() -> void:
 		return
 	var chest_inventory: RefCounted = state.get("inventory")
 
+	# RG6 (owner: "Menus don't read every input still."). `_process` calls
+	# this every frame unconditionally, and it has always freed and rebuilt
+	# every row on both sides from scratch on every call -- so any focus a
+	# controller press had just set was destroyed the very next frame, before
+	# `ui_up`/`ui_down` could move it a second time, and nothing ever called
+	# `grab_focus()` in the first place either. Capture which side/index held
+	# focus before the rebuild below destroys it, so it can go back to the
+	# same spot once the row exists again.
+	var focus_owner: Control = get_viewport().gui_get_focus_owner() if get_viewport() != null else null
+	var focus_side := ""
+	var focus_index := -1
+	if focus_owner != null:
+		var deposit_at := _deposit_rows.find(focus_owner)
+		var withdraw_at := _withdraw_rows.find(focus_owner)
+		if deposit_at >= 0:
+			focus_side = "deposit"
+			focus_index = deposit_at
+		elif withdraw_at >= 0:
+			focus_side = "withdraw"
+			focus_index = withdraw_at
+
 	_rebuild_side(_deposit_column, _deposit_rows, db, player_inventory, func(id: String, n: int) -> void:
-		state.call("deposit", player_inventory, id, n))
+		state.call("deposit", player_inventory, id, n)
+		_refresh())
 	_rebuild_side(_withdraw_column, _withdraw_rows, db, chest_inventory, func(id: String, n: int) -> void:
-		state.call("withdraw", player_inventory, id, n))
+		state.call("withdraw", player_inventory, id, n)
+		_refresh())
+
+	var restored := false
+	if focus_side == "deposit" and focus_index < _deposit_rows.size():
+		_deposit_rows[focus_index].grab_focus()
+		restored = true
+	elif focus_side == "withdraw" and focus_index < _withdraw_rows.size():
+		_withdraw_rows[focus_index].grab_focus()
+		restored = true
+	if not restored:
+		if not _deposit_rows.is_empty():
+			_deposit_rows[0].grab_focus()
+		elif not _withdraw_rows.is_empty():
+			_withdraw_rows[0].grab_focus()
 
 	UITokens.make_text_legible(_root)
 
@@ -183,8 +237,8 @@ func _refresh() -> void:
 ## currently holds, each moving its whole stack when pressed. Rebuilt every
 ## refresh rather than diffed — this screen only exists while paused at a
 ## chest, so a handful of button rebuilds a frame is not a cost worth
-## optimising away, the same call craft_panel.gd already made for its own
-## per-frame `_poll()`.
+## optimising away. Focus is restored by `_refresh()` above, once, after both
+## sides have finished rebuilding — not here, which runs twice per refresh.
 func _rebuild_side(
 	column: VBoxContainer,
 	rows: Array[Button],
