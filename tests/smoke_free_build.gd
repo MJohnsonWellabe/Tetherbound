@@ -77,6 +77,7 @@ func _run() -> void:
 	await _check_a_specific_piece_is_chosen_through_real_pad_navigation(world)
 	await _check_build_actions_are_gated_behind_a_reopened_menu(world)
 	await _check_interact_is_gated_behind_an_open_build_menu()
+	await _check_movement_and_jump_are_gated_behind_an_open_build_menu(world)
 	await _check_an_unaffordable_pick_shows_the_shortfall_and_refuses()
 	await _check_b_closes_only_the_build_menu()
 
@@ -732,6 +733,80 @@ func _check_interact_is_gated_behind_an_open_build_menu() -> void:
 		print("interact works again once the build menu is closed")
 
 	arbiter.call("unregister", provider)
+
+
+## RG5 (owner playtest, 2026-08-18): "when the building menu is up, pressing
+## directions and pressing a still controls the character too as the menu."
+## `player_controller.gd` polled movement and jump unconditionally -- the one
+## world-verb poll that had never asked `input_owner.gd` this question, even
+## though `jump` and the build menu's own `ui_accept` (picking a piece) are
+## bound to the SAME physical button (project.godot: joypad button 0), so
+## confirming a pick also jumped the trainer. Proven with a real jump-height
+## measurement (`tests/smoke_input.gd`'s own pattern: hold, then track the
+## peak Y over the next several frames), not just a one-frame velocity read,
+## since a residual velocity is not what the owner described.
+func _check_movement_and_jump_are_gated_behind_an_open_build_menu(world: Node) -> void:
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		_fail("no player in the world; cannot test the movement/jump gate")
+		return
+	_game.set("pending_build", "")
+	# Open ground, clear of anything an earlier check in this file planted.
+	player.global_position += _forward(world, player) * 15.0
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		return
+
+	var start := player.global_position
+	var height_before := player.global_position.y
+	var peak := height_before
+	Input.action_press("move_forward")
+	Input.action_press("jump")
+	for i in 40:
+		await physics_frame
+		peak = maxf(peak, player.global_position.y)
+	Input.action_release("move_forward")
+	Input.action_release("jump")
+	for i in 5:
+		await physics_frame
+
+	var drifted := Vector2(player.global_position.x - start.x, player.global_position.z - start.z).length()
+	if drifted > 0.2:
+		_fail("holding move_forward moved the player %.2fm while the build menu was open" % drifted)
+	else:
+		print("movement did nothing while the build menu was open (%.2fm drift)" % drifted)
+	if peak - height_before > 0.15:
+		_fail("holding jump rose the player %.2fm while the build menu was open" % (peak - height_before))
+	else:
+		print("jump did nothing while the build menu was open (%.2fm rise)" % (peak - height_before))
+
+	await _close_build_menu_and_restore_pause(menu)
+	if bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+	for i in 10:
+		await physics_frame
+
+	start = player.global_position
+	player.velocity = Vector3.ZERO
+	Input.action_press("move_forward")
+	for i in 20:
+		await physics_frame
+	Input.action_release("move_forward")
+	for i in 5:
+		await physics_frame
+	drifted = Vector2(player.global_position.x - start.x, player.global_position.z - start.z).length()
+	if drifted < 0.3:
+		_fail("movement still does nothing once the build menu closed (%.2fm drift) -- the gate never releases" % drifted)
+	else:
+		print("movement works again once the build menu is closed (%.2fm drift)" % drifted)
 
 
 ## The same forward-direction math `build_placer.gd::_show_ghost` uses, so
