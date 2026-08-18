@@ -323,3 +323,16 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# out of a white void.
 	env.fog_sky_affect = float(cfg.get("fog_sky_affect", 0.0))
 	env.fog_aerial_perspective = float(cfg.get("aerial_perspective", 0.4))
+
+	# NIGHT-LIGHT. Colour-grade adjustment, off (no-op defaults) unless a
+	# preset asks for it. Exists because raising a night preset's own light
+	# energies enough to make the ground legible also reveals the terrain's
+	# true daytime-green albedo -- light x albedo has no separate "this is
+	# night" filter the way a human eye's scotopic vision does, so a bright
+	# enough moon reads as a dim DAY, not a distinct night mood, exactly the
+	# failure a blind critic named after the first legibility fix landed.
+	# `adjustment_saturation` is Godot's equivalent of that missing filter.
+	env.adjustment_enabled = bool(cfg.get("adjustment_enabled", false))
+	env.adjustment_brightness = float(cfg.get("adjustment_brightness", 1.0))
+	env.adjustment_contrast = float(cfg.get("adjustment_contrast", 1.0))
+	env.adjustment_saturation = float(cfg.get("adjustment_saturation", 1.0))
