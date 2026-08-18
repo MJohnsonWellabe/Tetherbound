@@ -120,12 +120,12 @@
     },
     "night": {
       "_comment": "No panorama exists for this yet (only day.hdr/golden.hdr were generated), so it falls back to the procedural gradient on purpose -- a missing texture degrading to the old sky beats a black void. The sun stands in for moonlight: low energy, cool, low in the sky rather than below the horizon so there is still one soft shadow direction to read.",
-      "_comment_night_light": "NIGHT-LIGHT. Was ambient_energy 0.35 / ambient_sky_contribution 0.6 / sun.energy 0.12 -- measured (tools/frame_stats.py on tools/capture_night_light.gd's output) at near_luma 0.000 and value_spread 0.00 across two survey_band2.gd viewpoints: a literal flat black frame, matching three consecutive blind-critic rounds calling night 'crushed to near-total black' and confirming (round 2, camera moved to ~10m) that it was not a framing problem. Root cause traced to world_look.gd::_apply_environment()'s own comment: sky-sourced ambient measures as contributing ZERO under the Compatibility renderer every judged capture on this project uses (D06), so only the (1 - ambient_sky_contribution) fraction of ambient_energy * ambient_colour ever actually reaches the terrain in a frame anyone judges. Night's old sky_contribution of 0.6 threw away more of that budget than day/golden's own 0.45-0.5, ON TOP of already having the lowest ambient_energy and the darkest ambient_colour of the three presets -- three multipliers compounding toward zero, not one. Fixed by cutting sky_contribution to the same order of magnitude waste day/golden already accept, raising ambient_energy and lightening ambient_colour enough that the WORKING (post-multiply) ambient lands at roughly 30% of day's, and giving the moon a small real energy bump so there is a directional highlight to read at all. TUNABLE, and the first thing to revisit if night looks flat rather than merely dim.",
+      "_comment_night_light": "NIGHT-LIGHT. Was ambient_energy 0.35 / ambient_sky_contribution 0.6 / sun.energy 0.12 / exposure 0.85 -- measured (tools/frame_stats.py on tools/capture_night_light.gd's output) at near_luma 0.000 and value_spread 0.00 across two survey_band2.gd viewpoints: a literal flat black frame, matching three consecutive blind-critic rounds calling night 'crushed to near-total black' and confirming (round 2, camera moved to ~10m) that it was not a framing problem. First fix attempt only cut ambient_sky_contribution and raised ambient_energy/sun.energy by 2-3x, reasoning from world_look.gd's own comment that sky-sourced ambient contributes ZERO under the Compatibility renderer every judged capture uses (D06) -- that IS real, but re-measuring after landing it found near_luma still 0.000, unmoved. A scratch diagnostic (mutated the live Environment directly, not committed) isolated why: shadow_enabled and sun pitch made no difference, but a ~20x ambient_energy jump and, separately, a ~36x sun.energy jump each independently produced a big jump in near_luma from a small one doing nothing -- the signature of ACES's toe (env.tonemap_mode = TONE_MAPPER_ACES in world_look.gd::_apply_environment), which maps a wide range of low linear input to near-zero output by design, so a 2-3x nudge near the bottom of that range is invisible and it takes an order-of-magnitude change to cross it. exposure multiplies the same linear value before the ACES curve and reproduces the same effect without needing absurd raw energies that wash out colour variety (a bare 20x-ambient test read 88% one hue family). Landed on a split between ambient_energy, sun.energy and exposure, each raised well short of day's own values, that crosses the toe without flattening night into a dim day -- confirmed by eye, not just by near_luma, on tools/_probe_night_ambient.gd's ranger-camp-close viewpoint (scratch, not committed): dark navy sky, a legible lit camp cluster, real ground value variation, still clearly darker and cooler than the day frame at the same spot. TUNABLE, and the first thing to revisit if night looks flat/washed rather than merely dim -- exposure past roughly 3x here starts pulling the terrain's own daytime-green albedo through and eroding the night-blue cast.",
       "hour": 0.0,
       "sun": {
         "pitch_deg": -8.0,
         "yaw_deg": 25.0,
-        "energy": 0.22,
+        "energy": 0.55,
         "colour": "#b7c6ea",
         "shadow_normal_bias": 1.4
       },
@@ -144,10 +144,10 @@
         "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#1c2740) above, same reasoning as the day and golden presets.",
         "fog_colour": "#1c2740",
         "fog_density": 0.0011,
-        "ambient_energy": 0.9,
+        "ambient_energy": 2.0,
         "ambient_colour": "#34456b",
         "ambient_sky_contribution": 0.2,
-        "exposure": 1.05
+        "exposure": 2.2
       }
     }
   },
