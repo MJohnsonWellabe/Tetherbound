@@ -204,7 +204,7 @@ func _resolve_swing() -> void:
 	if body == null:
 		return
 	var origin := body.global_position
-	var facing := -body.global_transform.basis.z
+	var facing := _facing_direction(body)
 
 	var best: Node = null
 	var best_distance := INF
@@ -227,6 +227,32 @@ func _resolve_swing() -> void:
 	if best.has_method("gather"):
 		best.call("gather")
 		swing_connected.emit(best)
+
+
+## RG2. `body` (the `CharacterBody3D` this node is a child of) never rotates
+## on its own -- `player_controller.gd::_apply_movement()` writes `velocity`
+## directly in world space and turns only `Model`, the child that actually
+## animates (`_face()`; `combat_manager.gd`'s own placement code says so in
+## so many words: "the controller owns the model's yaw during exploration").
+## So a cone test against `body`'s own basis was checking the direction the
+## trainer spawned facing, forever, not the direction they walked up facing --
+## which is why a swing connected only by accident and the owner's ROG report
+## was "I can't swing at the stones or trees or anything."
+##
+## `Model`'s own forward is `+basis.z`, not Godot's usual `-basis.z` -- the
+## rig is authored facing the opposite way from the engine default, and
+## `_face()`'s `rotation.y = atan2(direction.x, direction.z)` was tuned
+## against that real mesh, not against the convention. Verified directly
+## (a smoke repro that walks the player up to a harvestable, turns ONLY
+## `Model` toward it via that exact formula, and swings): `-basis.z` pointed
+## the cone backward and the swing whiffed every time; `+basis.z` connects.
+## Falls back to `body` itself with the engine's ordinary `-basis.z` when
+## there is no `Model` child to ask (a capsule stand-in, a stripped-down test
+## rig) -- that fallback body was never turned by anything with an opinion
+## either way, so there is no measured convention to match, only the default.
+func _facing_direction(body: Node3D) -> Vector3:
+	var model := body.get_node_or_null(^"Model") as Node3D
+	return model.global_transform.basis.z if model != null else -body.global_transform.basis.z
 
 
 func _vector3_from(value: Variant) -> Vector3:
