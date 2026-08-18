@@ -211,6 +211,18 @@ var death_satchels: Array = []
 ## VERSION 1 -> 2 gave `map`.
 var harvested_vegetation: Dictionary = {}
 
+## RG9. Every chopped placement whose felled pickup has NOT yet been gathered
+## -- `{"<layer>#<index>": {"item": String, "amount": int, "position":
+## [x,y,z]}}`. A tree/rock present in `harvested_vegetation` but ABSENT here
+## has already paid out; present in both means a real pile is still sitting
+## on the ground waiting for the player, and `vegetation.gd::restore_from_game`
+## stands it back up on load so the wood/stone it owes is never silently
+## lost. `vegetation.gd::sync_state_to_game` fills it in right before every
+## write, the same split `harvested_vegetation` above uses. Joined the save
+## format at VERSION 11 (see `scripts/save/save_game.gd`) — a save written
+## before this has none, and migrates to `{}`.
+var felled_vegetation: Dictionary = {}
+
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
 ## tree. See that file's header for the format and versioning rule.

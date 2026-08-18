@@ -40,6 +40,8 @@ extends Node3D
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd")
+## RG9: the felled/downed pickup a chop stands where a tree or rock stood.
+const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 
 ## SCAT1: which bake this world's placements load from, in `data/scatter/<name>/`.
@@ -88,6 +90,14 @@ var _harvest_points: int = 0
 ## chops things, never the bitset itself, which is the bound the owner asked
 ## for explicitly rather than an ever-growing id list.
 var _harvested: Dictionary = {}
+## RG9. "<layer>#<index>" -> {"item": String, "amount": int, "position":
+## Array[3]} for every chopped placement whose felled pickup has NOT yet been
+## gathered. Sparse and bounded by `_harvest_layer_counts`' own total the same
+## way `_harvested`'s bitset is -- a placement can be chopped at most once, so
+## this can never exceed the world's own harvestable count. Erased by
+## `clear_felled()` once the pickup actually pays out, so a save never carries
+## an entry for a pile that is gone.
+var _felled: Dictionary = {}
 ## layer name -> that layer's total placement count, for `restore_from_game`'s
 ## loop bound (a save's own bitset size already gives this too, but a layer
 ## can be ABSENT from `_harvested` entirely on this build, e.g. a config edit
@@ -689,17 +699,30 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		"item": placement["harvest_item"],
 		"amount": placement["harvest_amount"],
 		"prompt_height": 1.0 + float(placement["scale"]),
-		"label": "Gather",
-		"prop_offset": Vector3(away.x, drop - SINK, away.y),
-		"prop_yaw": bearing,
+		# RG9: this is the STANDING stage now -- "Chop", not "Gather". The
+		# felled pickup `fell()` stands afterward carries its own "Pick up"
+		# prompt (`felled_resource.gd::setup()`).
+		"label": "Chop",
 		"harvest_layer": layer_name,
 		"harvest_index": index,
 	})
 	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
 	# render mesh id/position and this node again, without scanning every
 	# child every time a resource is chopped.
+	#
+	# RG9: also carries what `fell()` needs to stand a felled pickup where the
+	# standing placement stood -- `item`/`amount` (what it pays out) and the
+	# same `prop_offset` the woodpile/glint used to stand on, so the felled
+	# object lands beside the stump on ground `_field` already sampled, not
+	# at the trunk's own centre.
 	var key := "%s#%d" % [layer_name, index]
-	_harvest_lookup[key] = {"mesh_id": _mesh_id_for(str(placement["model"])), "position": spot}
+	_harvest_lookup[key] = {
+		"mesh_id": _mesh_id_for(str(placement["model"])),
+		"position": spot,
+		"item": str(placement["harvest_item"]),
+		"amount": int(placement["harvest_amount"]),
+		"prop_offset": Vector3(away.x, drop - SINK, away.y),
+	}
 	_harvest_nodes[key] = point
 	_harvest_points += 1
 
@@ -1010,9 +1033,10 @@ func regrown_count() -> int:
 ## Permanently remove one harvestable placement — the render instance, its
 ## collider (if the layer has one) and this gather point's own node — and
 ## mark it in `_harvested` so it never comes back, including on the next
-## boot. Called by `vegetation_harvest_point.gd::_on_gathered()` once the
-## resource has actually been granted (never speculatively — a refused
-## gather, wrong tool or a full satchel, must leave the tree standing).
+## boot. Called by `fell()` below once the standing placement's tool check
+## has actually passed (never speculatively — a refused chop, wrong tool or
+## no tool at all, must leave the tree standing), and by
+## `restore_from_game()` to replay a save's own chops.
 ##
 ## Idempotent by construction: the bit-already-set guard below means calling
 ## this twice for the same placement (a double interact-press race, or
@@ -1040,6 +1064,67 @@ func harvest_permanently(layer_name: String, index: int) -> void:
 
 	_placed = maxi(0, _placed - 1)
 	_harvest_points = maxi(0, _harvest_points - 1)
+
+
+## RG9, owner directive: "You shouldn't be able to gather a standing tree.
+## You should have to chop it. Then it becomes downed wood. Then you gather
+## that. Same for stone." The standing placement's own removal is unchanged
+## -- `harvest_permanently()` above is HARVEST-ALL's already-solved, already-
+## tested mechanism for that half, and this builds on it rather than
+## touching it. What is new is that chopping no longer pays out the resource
+## directly: it stands a real, separately-gatherable `felled_resource.gd`
+## pickup where the tree/rock stood, and picking THAT up is what actually
+## pays out.
+##
+## Called by `vegetation_harvest_point.gd::_on_gathered()` (the STANDING
+## point's own gather -- conceptually "chop" now, not renamed in code) once
+## its own tool check has passed and the tool has taken its wear.
+## `actual_amount` is whatever `harvest_logic.gather()` already computed for
+## THIS chop (full yield with the right tool, a reduced bare-handed amount,
+## or a refusal caught by the caller before this is ever reached) -- the
+## felled pile pays out exactly what the chop earned, not a second,
+## independent lookup of the layer's configured default.
+##
+## Reads `_harvest_lookup` for the standing placement's position/offset
+## BEFORE calling `harvest_permanently()`, which erases that entry.
+func fell(layer_name: String, index: int, actual_amount: int) -> void:
+	var key := "%s#%d" % [layer_name, index]
+	var info: Dictionary = _harvest_lookup.get(key, {})
+	var item := str(info.get("item", ""))
+	var spot: Vector3 = info.get("position", Vector3.ZERO)
+	var offset: Vector3 = info.get("prop_offset", Vector3.ZERO)
+
+	harvest_permanently(layer_name, index)
+
+	if item.is_empty() or actual_amount <= 0:
+		# An unknown key (a stale replay, a caller that predates RG9) or a
+		# zero-yield chop -- the standing placement is still gone above,
+		# which is the part that must never be skipped, but there is nothing
+		# to stand a felled pickup FOR.
+		return
+	_spawn_felled(key, item, actual_amount, spot + offset)
+
+
+## Stands one `felled_resource.gd` pickup and tracks it in `_felled`, so
+## `sync_state_to_game()` can persist "chopped but not yet gathered" --
+## without this, a player who chops a tree, saves before picking up the log,
+## and reloads would find the tree gone and nothing in its place, the wood
+## lost for good. Shared between a live chop (`fell()` above) and
+## `restore_from_game()` replaying a save that still owes the player a pile.
+func _spawn_felled(key: String, item: String, amount: int, at: Vector3) -> void:
+	var felled := FELLED_RESOURCE.new()
+	felled.position = at
+	add_child(felled)
+	felled.call("setup", {"item": item, "amount": amount, "felled_key": key})
+	_felled[key] = {"item": item, "amount": amount, "position": [at.x, at.y, at.z]}
+
+
+## `felled_resource.gd::_on_gathered()` calls this once the pickup has
+## actually paid out, so the save no longer carries an entry for a pile that
+## is gone -- the same "only after it actually happened" rule `harvest_
+## permanently()` follows for the standing half.
+func clear_felled(key: String) -> void:
+	_felled.erase(key)
 
 
 ## See `HARVEST_REMOVE_RADIUS`'s own comment for why this is safe: called only
@@ -1099,6 +1184,15 @@ func restore_from_game(game: Object) -> void:
 	var saved: Variant = game.get("harvested_vegetation")
 	if typeof(saved) != TYPE_DICTIONARY:
 		return
+	# RG9: which chopped indices still owe the player a felled pickup, so the
+	# loop below can tell "chopped and already gathered" (plain
+	# `harvest_permanently`) from "chopped but not yet gathered" (also stand
+	# the pickup back up, from the SAVED item/amount/position -- not `fell()`,
+	# which would need `_harvest_lookup` to still hold this placement's data,
+	# and re-deriving a fresh amount would ignore whatever tool the player
+	# actually chopped with).
+	var felled_saved: Variant = game.get("felled_vegetation")
+	var felled: Dictionary = felled_saved if typeof(felled_saved) == TYPE_DICTIONARY else {}
 	for layer_name: String in (saved as Dictionary).keys():
 		if not _harvested.has(layer_name):
 			continue  # this build's config has no such harvestable layer
@@ -1113,8 +1207,18 @@ func restore_from_game(game: Object) -> void:
 			continue
 		var total: int = _harvest_layer_counts.get(layer_name, 0)
 		for i in total:
-			if _bit_get(raw, i):
-				harvest_permanently(layer_name, i)
+			if not _bit_get(raw, i):
+				continue
+			var key := "%s#%d" % [layer_name, i]
+			harvest_permanently(layer_name, i)
+			if not felled.has(key):
+				continue
+			var record: Dictionary = felled[key]
+			var pos: Array = record.get("position", [])
+			if pos.size() != 3:
+				continue
+			_spawn_felled(key, str(record.get("item", "")), int(record.get("amount", 0)),
+				Vector3(float(pos[0]), float(pos[1]), float(pos[2])))
 
 
 ## The reverse of `restore_from_game()` — called by `GameState.save_game`
@@ -1126,6 +1230,7 @@ func sync_state_to_game(game: Object) -> void:
 	for layer_name: String in _harvested.keys():
 		out[layer_name] = Marshalls.raw_to_base64(_harvested[layer_name])
 	game.set("harvested_vegetation", out)
+	game.set("felled_vegetation", _felled.duplicate(true))
 
 
 ## For tests and NOTES.md-style reporting: how many placements, across every

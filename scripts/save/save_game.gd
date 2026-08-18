@@ -109,6 +109,14 @@ extends RefCounted
 ## shipped predates permanent harvesting entirely, so every tree and rock it
 ## remembers comes back exactly as it was, not retroactively cleared.
 ##
+## ## VERSION 11 — felled-but-ungathered piles (RG9)
+##
+## `game_state.gd::felled_vegetation` did not exist before this. A VERSION 10
+## save has nothing chopped-but-not-yet-picked-up to remember by construction
+## — chop-then-gather did not exist yet, every chop paid out immediately — so
+## `_migrate_v10` hands back `{}`, the identical "nothing to migrate FROM"
+## answer every step above gives its own new field.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -145,7 +153,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 10
+const VERSION := 11
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -200,6 +208,7 @@ func save(game: Object, slot: int) -> bool:
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
+		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
 	}
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
@@ -238,6 +247,8 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
+	var felled_raw: Variant = data.get("felled_vegetation", {})
+	game.set("felled_vegetation", (felled_raw as Dictionary).duplicate(true) if typeof(felled_raw) == TYPE_DICTIONARY else {})
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -454,6 +465,16 @@ func _migrate_v9(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 10
 	migrated["harvested_vegetation"] = {}
+	return migrated
+
+
+## VERSION 10 -> 11: RG9's felled-but-ungathered piles. An empty dictionary —
+## a VERSION 10 save predates chop-then-gather entirely, so every chop it
+## remembers already paid out immediately; there is no pile left owed.
+func _migrate_v10(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 11
+	migrated["felled_vegetation"] = {}
 	return migrated
 
 

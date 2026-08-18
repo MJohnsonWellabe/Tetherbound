@@ -11,6 +11,7 @@ extends "res://tests/test_case.gd"
 ## fast and still prove the bookkeeping half is correct).
 
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 
 
 func _veg() -> Node3D:
@@ -113,6 +114,7 @@ func test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density() ->
 class FakeHarvestGame:
 	extends RefCounted
 	var harvested_vegetation: Dictionary = {}
+	var felled_vegetation: Dictionary = {}
 
 
 ## Manually wires the private state `harvest_permanently()`/`restore_from_game()`
@@ -252,3 +254,180 @@ func test_harvested_count_reports_only_what_is_actually_chopped() -> void:
 	veg.call("harvest_permanently", "rocks", 5)
 	assert_eq(int(veg.call("harvested_count")), 2)
 	veg.free()
+
+
+# --- RG9: fell() / _felled / clear_felled -- the chop-then-gather split ---
+#
+# "You shouldn't be able to gather a standing tree. You should have to chop
+# it. Then it becomes downed wood. Then you gather that." `fell()` wraps
+# `harvest_permanently()` (unchanged, tested above) and additionally stands a
+# `felled_resource.gd` pickup, tracked in `_felled` so a save can remember
+# "chopped but not yet gathered" and restand the pile on load. `_rigged_veg`
+# above wires bare `{"mesh_id": -1, "position": Vector3.ZERO}` lookup entries
+# with no item -- these tests need `item`/`prop_offset` too, so they extend
+# the rig directly rather than widening `_rigged_veg` for every OTHER test
+# in this file that does not need it.
+
+
+func _rig_lookup_for_fell(veg: Node3D, key: String, item: String, at: Vector3) -> void:
+	var lookup: Dictionary = veg.get("_harvest_lookup")
+	var entry: Dictionary = lookup.get(key, {}).duplicate()
+	entry["item"] = item
+	entry["position"] = at
+	entry["prop_offset"] = Vector3.ZERO
+	lookup[key] = entry
+	veg.set("_harvest_lookup", lookup)
+
+
+## `_rigged_veg` also parents one plain `Node.new()` per placement as its own
+## `_harvest_nodes` stand-in, and `harvest_permanently()`'s `queue_free()` on
+## a chopped one does not remove it from `get_children()` SYNCHRONOUSLY (no
+## scene tree is stepping frames in this file) -- so a raw child count right
+## after `fell()` is not the standing-vs-felled placeholders. Filtering by
+## script is what actually finds "the felled pickup fell() stood", the same
+## script-identity check `tests/smoke_playground.gd` uses live.
+func _felled_children(veg: Node3D) -> Array[Node]:
+	var out: Array[Node] = []
+	for child in veg.get_children():
+		if (child.get_script() as Script) == FELLED_RESOURCE:
+			out.append(child)
+	return out
+
+
+func test_fell_removes_the_standing_placement_and_stands_a_felled_pickup() -> void:
+	var veg := _rigged_veg("trees", 3)
+	_rig_lookup_for_fell(veg, "trees#1", "wood", Vector3(5.0, 0.0, 5.0))
+	veg.call("fell", "trees", 1, 3)
+
+	assert_true(bool(veg.call("_bit_get", (veg.get("_harvested") as Dictionary)["trees"], 1)),
+		"fell() must chop the standing placement the same way harvest_permanently() does")
+	var felled := _felled_children(veg)
+	assert_eq(felled.size(), 1, "fell() should stand exactly one felled_resource.gd child")
+	if felled.size() == 1:
+		assert_eq(str(felled[0].get("_item_id")), "wood")
+		assert_eq(int(felled[0].get("_amount")), 3)
+	veg.free()
+
+
+func test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default() -> void:
+	# The whole point of taking `actual_amount` as a parameter: a bare-handed
+	# chop (a reduced yield) must stand a SMALLER pile, not the layer's own
+	# full configured amount re-derived from scratch.
+	var veg := _rigged_veg("trees", 1)
+	_rig_lookup_for_fell(veg, "trees#0", "wood", Vector3.ZERO)
+	veg.call("fell", "trees", 0, 1)
+	var felled := _felled_children(veg)
+	assert_eq(felled.size(), 1)
+	if felled.size() == 1:
+		assert_eq(int(felled[0].get("_amount")), 1, "the felled pile must carry the chop's own reduced amount")
+	veg.free()
+
+
+func test_fell_tracks_the_placement_in_felled_for_persistence() -> void:
+	var veg := _rigged_veg("rocks", 2)
+	_rig_lookup_for_fell(veg, "rocks#0", "stone", Vector3(1.0, 2.0, 3.0))
+	veg.call("fell", "rocks", 0, 2)
+	var felled: Dictionary = veg.get("_felled")
+	assert_true(felled.has("rocks#0"), "a chopped-but-not-yet-gathered placement must be tracked")
+	var record: Dictionary = felled["rocks#0"]
+	assert_eq(str(record.get("item")), "stone")
+	assert_eq(int(record.get("amount")), 2)
+	assert_eq(record.get("position"), [1.0, 2.0, 3.0])
+	veg.free()
+
+
+func test_fell_on_an_unknown_key_still_chops_but_stands_nothing() -> void:
+	# `_harvest_lookup` for this key predates RG9 (no item/amount wired) or is
+	# simply missing -- `harvest_permanently()`'s own half must still run
+	# (the standing placement disappearing is never optional), but there is
+	# nothing to stand a pile FOR.
+	var veg := _rigged_veg("trees", 1)
+	veg.call("fell", "trees", 0, 5)
+	assert_true(bool(veg.call("_bit_get", (veg.get("_harvested") as Dictionary)["trees"], 0)))
+	assert_eq(_felled_children(veg).size(), 0, "an unknown key must stand no felled pickup")
+	assert_false((veg.get("_felled") as Dictionary).has("trees#0"))
+	veg.free()
+
+
+func test_clear_felled_forgets_the_tracking_entry() -> void:
+	var veg := _rigged_veg("trees", 1)
+	_rig_lookup_for_fell(veg, "trees#0", "wood", Vector3.ZERO)
+	veg.call("fell", "trees", 0, 3)
+	assert_true((veg.get("_felled") as Dictionary).has("trees#0"))
+	veg.call("clear_felled", "trees#0")
+	assert_false((veg.get("_felled") as Dictionary).has("trees#0"),
+		"clear_felled must remove the tracking entry once the pile is actually gathered")
+	veg.free()
+
+
+func test_sync_state_to_game_writes_felled_vegetation_alongside_harvested() -> void:
+	var veg := _rigged_veg("trees", 1)
+	_rig_lookup_for_fell(veg, "trees#0", "wood", Vector3(4.0, 0.0, 0.0))
+	veg.call("fell", "trees", 0, 3)
+	var game := FakeHarvestGame.new()
+	veg.call("sync_state_to_game", game)
+	assert_true(game.felled_vegetation.has("trees#0"))
+	assert_eq(str((game.felled_vegetation["trees#0"] as Dictionary).get("item")), "wood")
+	veg.free()
+
+
+## The save round trip a player would actually hit: chop a tree, never pick
+## up the log, save, reload. Without `felled_vegetation`, the standing tree
+## would come back gone (the bitset alone already proves that much, tested
+## above) but the wood it owed would simply vanish -- nothing stands the pile
+## back up. This is the test that proves it does.
+func test_restore_from_game_restands_a_felled_pickup_the_save_still_owes() -> void:
+	var chopper := _rigged_veg("trees", 1)
+	_rig_lookup_for_fell(chopper, "trees#0", "wood", Vector3(7.0, 0.0, 2.0))
+	chopper.call("fell", "trees", 0, 3)
+	var game := FakeHarvestGame.new()
+	chopper.call("sync_state_to_game", game)
+	chopper.free()
+
+	# A FRESH `vegetation.gd`, the way a real boot builds one before
+	# `restore_from_game()` ever runs -- nothing chopped yet, no felled
+	# pickup standing, `_harvest_lookup` populated exactly like a real
+	# `_mark_harvestable()` pass would leave it (this placement never having
+	# been touched this session).
+	var fresh := _rigged_veg("trees", 1)
+	fresh.call("restore_from_game", game)
+
+	var bytes: PackedByteArray = (fresh.get("_harvested") as Dictionary)["trees"]
+	assert_true(bool(fresh.call("_bit_get", bytes, 0)), "the loaded save's chop must be replayed")
+	var felled := _felled_children(fresh)
+	assert_eq(felled.size(), 1, "the loaded save's un-gathered pile must be restood")
+	if felled.size() == 1:
+		assert_eq(str(felled[0].get("_item_id")), "wood")
+		assert_eq(int(felled[0].get("_amount")), 3)
+		# `.position` (local), not `global_position`: `fresh` here is never
+		# added to a live SceneTree (the same "no live Terrain3D node" shape
+		# every other test in this file uses), and `fresh` itself never moves
+		# from the origin, so local and global coincide for a correctly
+		# behaving engine -- but `global_position`'s transform cache is only
+		# reliably fresh for a node chain that has actually entered the tree,
+		# and asserting against it here was measured flaky for exactly that
+		# reason. `_spawn_felled()` sets `.position` directly; that is the
+		# value actually under test.
+		assert_almost_eq((felled[0] as Node3D).position.x, 7.0, 0.001)
+	fresh.free()
+
+
+## The other half of the same round trip: chop AND gather (the pile is
+## already picked up) must NOT come back on load -- `felled_vegetation` no
+## longer carries that key once `clear_felled()` ran, so `restore_from_game`
+## has nothing telling it to restand anything, only `harvest_permanently()`'s
+## ordinary "stays chopped" bit.
+func test_restore_from_game_does_not_restand_an_already_gathered_chop() -> void:
+	var chopper := _rigged_veg("trees", 1)
+	_rig_lookup_for_fell(chopper, "trees#0", "wood", Vector3.ZERO)
+	chopper.call("fell", "trees", 0, 3)
+	chopper.call("clear_felled", "trees#0")
+	var game := FakeHarvestGame.new()
+	chopper.call("sync_state_to_game", game)
+	chopper.free()
+
+	assert_false(game.felled_vegetation.has("trees#0"))
+	var fresh := _rigged_veg("trees", 1)
+	fresh.call("restore_from_game", game)
+	assert_eq(_felled_children(fresh).size(), 0, "an already-gathered chop must not restand a pickup")
+	fresh.free()

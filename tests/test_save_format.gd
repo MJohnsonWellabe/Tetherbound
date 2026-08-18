@@ -46,6 +46,8 @@ class FakeGame:
 	var death_satchels: Array = []
 	## HARVEST-ALL / VERSION 10. Permanently-chopped vegetation.
 	var harvested_vegetation: Dictionary = {}
+	## RG9 / VERSION 11. Chopped-but-not-yet-gathered felled pickups.
+	var felled_vegetation: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
@@ -245,6 +247,56 @@ func test_v9_save_migrates_with_nothing_harvested() -> void:
 
 	assert_eq(read.day, 11)
 	assert_eq(read.harvested_vegetation, {}, "a save predating HARVEST-ALL has nothing chopped yet")
+
+
+## RG9 / VERSION 11. A tree chopped but never picked up must come back on
+## reload with its felled pile still standing -- the wood the chop already
+## earned must not silently vanish just because the player saved before
+## walking over to collect it.
+func test_save_then_load_round_trips_felled_vegetation() -> void:
+	var written := _game()
+	written.harvested_vegetation = {"trees": Marshalls.raw_to_base64(PackedByteArray([0b00000001]))}
+	written.felled_vegetation = {
+		"trees#0": {"item": "wood", "amount": 3, "position": [4.0, 1.0, -2.0]},
+	}
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_true(read.felled_vegetation.has("trees#0"))
+	var record: Dictionary = read.felled_vegetation["trees#0"]
+	assert_eq(str(record.get("item")), "wood")
+	assert_eq(int(record.get("amount")), 3)
+	assert_eq(record.get("position"), [4.0, 1.0, -2.0])
+
+
+func test_v10_save_migrates_with_nothing_felled() -> void:
+	var v10_data := {
+		"version": 10,
+		"day": 11,
+		"party": [],
+		"inventory": [],
+		"placed_buildings": [],
+		"farm_plots": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+		"harvested_vegetation": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v10_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+
+	assert_eq(read.day, 11)
+	assert_eq(read.felled_vegetation, {}, "a save predating RG9 has nothing felled-but-ungathered yet")
 
 
 ## The gap this file did not have a test for, and which shipped: `load_slot`

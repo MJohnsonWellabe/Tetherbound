@@ -20,6 +20,9 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
 const MAX_DROP := 60.0
+const HARVEST_POINT_SCRIPT := preload("res://scripts/world/vegetation_harvest_point.gd")
+const HARVEST_NODE_SCRIPT := preload("res://scripts/world/harvest_node.gd")
+const FELLED_RESOURCE_SCRIPT := preload("res://scripts/world/felled_resource.gd")
 
 
 func _init() -> void:
@@ -124,6 +127,8 @@ func _run() -> void:
 	# rather than the automatic one it exists to prove.
 	failures.append_array(await _the_torch_lights_itself_automatically_at_night(world))
 	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
+	failures.append_array(await _swinging_the_tool_connects_after_walking_up_to_a_tree(world))
+	failures.append_array(await _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
 	failures.append_array(await _the_berry_farm_can_be_worked(world))
@@ -353,6 +358,20 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 	else:
 		print("torch lit: visible prop '%s' present" % prop.name)
 
+	# RG22, owner directive: "The torch doesn't go in your hand like a axe
+	# does. It should." `torch.gd` used to build its OWN separate copy of
+	# this prop, bone-attached to Hips, alongside `tool_hold.gd`'s real
+	# in-hand one -- both named "TorchProp", so the check above passed
+	# against either one without noticing the duplicate. This is the
+	# regression guard: `torch.prop_node()` must be the SAME node
+	# `tool_hold.gd` put in the hand, not a second one of its own.
+	var hold: Node = player.get("tool_hold")
+	if hold != null and hold.has_method("prop_node"):
+		var hand_prop: Node = hold.call("prop_node")
+		if hand_prop == null or prop != hand_prop:
+			found.append("torch.prop_node() (%s) is not the same node tool_hold.gd put in the hand (%s) -- " %
+				[prop, hand_prop] + "the torch is building its own separate prop again instead of reaching into the hand")
+
 	# Leave the torch off and unequipped so nothing after this in the run (or a
 	# future check added after this one) inherits a torch this check lit.
 	if bool(torch.call("is_on")):
@@ -366,6 +385,263 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 	return found
 
 
+## RG2, owner-reported ROG playtest: "I can pull out a pickaxe and such but I
+## can't swing at the stones or trees or anything."
+##
+## `tool_hold.gd::_resolve_swing()` tests the cone against
+## `get_parent().global_transform.basis` -- the Player `CharacterBody3D`
+## itself. But the player's rotation lives on `Model`, not on that root:
+## `player_controller.gd::_face()` only ever writes `_model.rotation.y`, and
+## `combat_manager.gd`'s own placement code says so directly ("the controller
+## owns the model's yaw during exploration"). The `CharacterBody3D` never
+## rotates from however it spawned, so the swing's hit cone was checking the
+## direction the trainer was born facing, not the direction they walked up
+## facing -- exactly the "point-blank swings whiff" shape the owner reported.
+## `interact` never had this bug because `interaction_arbiter.gd` is pure
+## proximity, no facing check at all, which is why the interact prompt kept
+## working while the swing silently never did.
+##
+## Reproduces the real case: the player walks up to a harvestable placement
+## the way `_face()` actually leaves them (Model turned to face it, body
+## untouched), then swings. Equips an axe and pre-owns a pickaxe too, so
+## whichever resource is nearest is never refused on tool-gating grounds --
+## this check is about the cone connecting, not about yield math already
+## covered by test_inventory.gd.
+func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player: CharacterBody3D = world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		return ["no Player node; cannot check the swing"] as Array[String]
+	var hold: Node = player.get("tool_hold")
+	if hold == null:
+		return ["Player has no tool_hold (scripts/player/tool_hold.gd did not attach)"] as Array[String]
+	var model: Node3D = player.get_node_or_null(^"Model") as Node3D
+	if model == null:
+		return ["Player has no Model child; cannot check facing"] as Array[String]
+
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot equip a tool to check the swing"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory; cannot equip a tool to check the swing"] as Array[String]
+
+	# "harvestable" (harvest_logic.gd::GROUP) is shared with farm_plot.gd,
+	# whose own `gather()` tills/sows/picks a bed and needs a hoe -- a real
+	# collision with this check's own tool setup below, which owns an axe and
+	# a pickaxe but no hoe. Restricted to the two scripts that actually cover
+	# "stones or trees" (the owner's own words): vegetation's own scattered
+	# points and harvest_node.gd's authored tutorial spots.
+	var best: Node3D = null
+	var best_distance := INF
+	for node: Node in world.get_tree().get_nodes_in_group("harvestable"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		var script: Script = node.get_script() as Script
+		if script != HARVEST_POINT_SCRIPT and script != HARVEST_NODE_SCRIPT:
+			continue
+		var distance := player.global_position.distance_to((node as Node3D).global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = node
+	if best == null:
+		return ["no tree/rock harvest point anywhere in the loaded world; cannot check the swing"] as Array[String]
+
+	# Walk the player up to it: 1.5m out, the way a real approach would stop
+	# short of the trunk rather than inside it. Only the XZ line to the target
+	# moves -- Y is resampled from the terrain so this does not embed the
+	# player underground on a slope.
+	var target_pos: Vector3 = best.global_position
+	var to_target := target_pos - player.global_position
+	to_target.y = 0.0
+	var approach := to_target.normalized() if to_target.length() > 0.01 else Vector3.FORWARD
+	var stand_at: Vector3 = target_pos - approach * 1.5
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null:
+		var data: Object = terrain.get("data")
+		if data != null:
+			var ground: float = data.call("get_height", Vector3(stand_at.x, 0.0, stand_at.z))
+			if not is_nan(ground):
+				stand_at.y = ground + 1.0
+	player.global_position = stand_at
+	player.velocity = Vector3.ZERO
+	# The real turn `_face()` performs while walking -- Model only, body left
+	# exactly as it spawned. This is the faithful repro of the live bug.
+	var facing := approach
+	model.rotation.y = atan2(facing.x, facing.z)
+	for i in 6:
+		await physics_frame
+
+	inventory.call("add", "axe", 1)
+	inventory.call("add", "pickaxe", 1)
+	game.set("equipped_tool", "axe")
+	for i in 4:
+		await process_frame
+
+	# Both tools already owned (not necessarily equipped -- harvest_logic.gd
+	# gates yield on ownership, not on which is in hand), so whichever
+	# resource `best` actually is, the gather is never refused for the wrong
+	# tool -- this check is only about the cone connecting.
+	#
+	# The total item count across every slot, not `used_slots()`: a fresh
+	# game already starts holding wood (62) and stone (18)
+	# (`game_state.gd::_starter_kit` or equivalent), so a successful gather of
+	# either just tops up an EXISTING stack rather than opening a new slot --
+	# `used_slots()` would silently read "no change" on a swing that actually
+	# connected and false-failed this check on a build with nothing wrong.
+	var total_before := _inventory_item_total(inventory)
+
+	if not bool(hold.call("swing")):
+		found.append("tool_hold.swing() refused to start with a tool equipped and nothing else swinging")
+		return found
+
+	# The swing resolves at its own midpoint (tool_hold.gd::SWING_SECONDS), so
+	# give it real _process frames, not physics frames -- _resolve_swing() runs
+	# from _process(), same as the input poll that starts it in real play.
+	for i in 30:
+		await process_frame
+		if not bool(hold.call("is_swinging")):
+			break
+
+	var total_after := _inventory_item_total(inventory)
+	# A connected gather always changes something observable: the satchel's
+	# total item count goes up (a gather never removes anything), or the
+	# target is gone outright (HARVEST-ALL's permanent removal). Neither
+	# happens on a whiff.
+	var gathered := total_after > total_before or not is_instance_valid(best)
+	if not gathered:
+		found.append("swinging at a harvestable node found %.2fm from the original spawn, " % best_distance +
+			"after walking up to face it (Model turned, body untouched -- the real _face() shape), " +
+			"connected to nothing -- the cone test is not using the player's real facing")
+	else:
+		print("swing connected: satchel total %d -> %d, target valid=%s" %
+			[total_before, total_after, is_instance_valid(best)])
+
+	return found
+
+
+## RG9, owner directive: "You shouldn't be able to gather a standing tree.
+## You should have to chop it. Then it becomes downed wood. Then you gather
+## that. Same for stone." Chops a real standing point exactly like the check
+## above, then confirms two things the unit-level tests cannot: a real
+## `felled_resource.gd` pickup actually appears in the live world where the
+## tree/rock stood (not just that `vegetation.gd::_felled` gained an entry),
+## and a SECOND swing on that pickup is what actually pays the resource into
+## the satchel -- the chop itself must not.
+func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player: CharacterBody3D = world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		return ["no Player node; cannot check chop-then-gather"] as Array[String]
+	var hold: Node = player.get("tool_hold")
+	var model: Node3D = player.get_node_or_null(^"Model") as Node3D
+	if hold == null or model == null:
+		return ["Player is missing tool_hold or Model; cannot check chop-then-gather"] as Array[String]
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot check chop-then-gather"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory; cannot check chop-then-gather"] as Array[String]
+
+	var standing: Node3D = null
+	var best_distance := INF
+	for node: Node in world.get_tree().get_nodes_in_group("harvestable"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if (node.get_script() as Script) != HARVEST_POINT_SCRIPT:
+			continue
+		var distance := player.global_position.distance_to((node as Node3D).global_position)
+		if distance < best_distance:
+			best_distance = distance
+			standing = node
+	if standing == null:
+		return ["no standing tree/rock chop point anywhere in the loaded world"] as Array[String]
+
+	var chop_pos: Vector3 = standing.global_position
+	_face_and_stand_near(player, model, chop_pos, world)
+
+	inventory.call("add", "axe", 1)
+	inventory.call("add", "pickaxe", 1)
+	game.set("equipped_tool", "axe")
+	for i in 4:
+		await process_frame
+
+	if not bool(hold.call("swing")):
+		return ["tool_hold.swing() refused the chop with a tool equipped"] as Array[String]
+	for i in 30:
+		await process_frame
+		if not bool(hold.call("is_swinging")):
+			break
+
+	if is_instance_valid(standing):
+		return ["chopping the standing point did not remove it -- fell() did not run"] as Array[String]
+
+	var felled: Node3D = null
+	for node: Node in world.get_tree().get_nodes_in_group("harvestable"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if (node.get_script() as Script) != FELLED_RESOURCE_SCRIPT:
+			continue
+		if (node as Node3D).global_position.distance_to(chop_pos) < 3.0:
+			felled = node
+			break
+	if felled == null:
+		return ["chopping stood no felled_resource.gd pickup near the chop -- the tree/rock just vanished"] as Array[String]
+
+	var total_before := _inventory_item_total(inventory)
+	_face_and_stand_near(player, model, felled.global_position, world)
+	for i in 4:
+		await process_frame
+	if not bool(hold.call("swing")):
+		return ["tool_hold.swing() refused to swing at the felled pickup"] as Array[String]
+	for i in 30:
+		await process_frame
+		if not bool(hold.call("is_swinging")):
+			break
+
+	var total_after := _inventory_item_total(inventory)
+	if total_after <= total_before:
+		found.append("swinging at the felled pickup %.2fm from the chop connected to nothing -- " %
+			felled.global_position.distance_to(chop_pos) +
+			"chop-then-gather stands a pickup but never pays out")
+	else:
+		print("chop-then-gather: satchel total %d -> %d after gathering the felled pickup" %
+			[total_before, total_after])
+	return found
+
+
+## Shared by both chop-then-gather checks above: teleport 1.5m out from
+## `target_pos` along the line from the player's current position, resample
+## the ground under the new spot, and turn `Model` (not `body`) to face it --
+## the exact `_face()` shape a real walk-up leaves the player in.
+func _face_and_stand_near(player: CharacterBody3D, model: Node3D, target_pos: Vector3, world: Node) -> void:
+	var to_target := target_pos - player.global_position
+	to_target.y = 0.0
+	var approach := to_target.normalized() if to_target.length() > 0.01 else Vector3.FORWARD
+	var stand_at: Vector3 = target_pos - approach * 1.5
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null:
+		var data: Object = terrain.get("data")
+		if data != null:
+			var ground: float = data.call("get_height", Vector3(stand_at.x, 0.0, stand_at.z))
+			if not is_nan(ground):
+				stand_at.y = ground + 1.0
+	player.global_position = stand_at
+	player.velocity = Vector3.ZERO
+	model.rotation.y = atan2(approach.x, approach.z)
+
+
+## Sum of every slot's `n` -- see the call site's own comment for why a raw
+## total, not `used_slots()`, is what actually detects "did a gather happen".
+func _inventory_item_total(inventory: RefCounted) -> int:
+	var total := 0
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		total += int(stack.get("n", 0))
+	return total
+
+
 ## OF18: torch.gd's `_world_look` used to be looked up exactly once, in
 ## `_ready()` -- the same call frame `player_controller.gd::_ready()` builds
 ## this node from. `Player` sits before `WorldLook` in every
@@ -377,8 +653,19 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 ## life of the feature. Found by `tools/capture_torch_night.gd` printing
 ## identical near-zero luminance for "day", "night, auto" and "night, after
 ## two manual toggles" alike. This is the smoke check that would have
-## caught it at the time: set night, touch NOTHING else, and the torch must
-## already be lit -- no toggle input anywhere in this function.
+## caught it at the time: set night, touch NOTHING else BUT equip the torch,
+## and the torch must already be lit -- no toggle input anywhere in this
+## function.
+##
+## RG22 added the "BUT equip the torch" half. Owner design (OW12's own
+## header, restated by RG22's fix): an unequipped torch is an inert satchel
+## row, same as an unequipped axe -- "no crafting required" was never "no
+## equip step required". Before RG22, `torch.gd` never actually checked
+## equip state at all (a real bug this file's own header names), so this
+## check originally passed by accident, against a torch that would light
+## itself whether or not it was ever drawn. Equipping first is what makes
+## this check test the CORRECT design rather than the old, unintentionally
+## permissive one.
 func _the_torch_lights_itself_automatically_at_night(world: Node) -> Array[String]:
 	var found: Array[String] = []
 	var player: Node = world.get_node_or_null(^"Player")
@@ -390,13 +677,23 @@ func _the_torch_lights_itself_automatically_at_night(world: Node) -> Array[Strin
 	var look: Node = world.get_node_or_null(^"WorldLook")
 	if look == null:
 		return ["no WorldLook node; cannot check the automatic torch"] as Array[String]
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot equip the torch to check it"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory; cannot equip the torch to check it"] as Array[String]
+	inventory.call("add", "torch", 1)
+	game.set("equipped_tool", "torch")
 
 	look.call("apply_time", "night")
 	for i in 10:
 		await physics_frame
 	if not bool(torch.call("is_on")):
-		found.append("the torch did not light itself at night with no toggle pressed " +
+		found.append("the equipped torch did not light itself at night with no toggle pressed " +
 			"(_world_look likely cached null again -- see torch.gd's _is_on() comment)")
+
+	game.set("equipped_tool", "")
 
 	# Restore day so nothing else in this run inherits a night scene.
 	look.call("apply_time", "day")

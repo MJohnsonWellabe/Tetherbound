@@ -18,25 +18,40 @@ extends Node3D
 ##     explicit override that wins over the automatic behaviour until toggled
 ##     again, for a player who wants it on before dusk or off at night.
 ##
+## Both are gated on the torch actually being the EQUIPPED tool (RG22 below) --
+## an unequipped torch is an inert satchel row, same as an unequipped axe.
+##
 ## The SpotLight3D throw stays a SpotLight3D: a torch lights the ground ahead
 ## of you, not a sphere around your whole body, and D06's own renderer caveat
 ## (Compatibility, not Forward+) is exactly why this stays unshadowed and
 ## modest in energy -- a shadow-casting light glued to the player at all times
 ## is the wrong place to spend a handheld's frame budget.
 ##
-## OF24, owner clarification after seeing this SpotLight and nothing else:
-## "what I was really talking about is one you carry around to light the
-## way" -- the owner had never actually SEEN a torch, because nothing here
-## drew one. `_build_visible_prop()` below adds the actual prop
-## (scripts/world/torch_prop.gd -- D24: built from primitives, no vendored
-## torch mesh exists anywhere in assets/) bone-attached to the trainer rig,
-## plus a warm, flickering OmniLight3D that reads as the light genuinely
-## coming FROM that prop. The SpotLight above stays exactly as it was, "the
-## forward throw" this file's own history already argued for.
+## RG22, owner directive: "The torch doesn't go in your hand like a axe does.
+## It should." OW12 (2026-08-16) made the torch a satchel item, `kind: "tool"`
+## like axe/pickaxe/knife, meant to reach the hand through `tool_hold.gd`'s
+## generic hand-attachment (`items.json`'s `held_model`/`held_offset`/
+## `held_rotation_deg` on the `torch` entry) the exact way a tool does -- and
+## `tool_hold.gd`'s own header already claimed this file had been "retired" in
+## favour of that. It had not: `_build_visible_prop()` below still built and
+## bone-attached its OWN SEPARATE copy of the torch prop to the rig's `Hips`,
+## unconditionally, whether or not the torch was ever equipped -- a torch
+## permanently strapped to the belt, invisible only because `_process()`
+## toggled `.visible` on the WRONG object while `equipped_tool` was never even
+## read. `tool_hold.gd` was quietly building a second, correct, in-hand copy
+## the whole time (its own smoke check found a prop named "TorchProp" and
+## passed -- against the hip one, since both instance the same scene under the
+## same name). This file now owns only the light: a flame position synced
+## every frame to wherever `tool_hold.gd::prop_node()` says the in-hand mesh
+## actually is, and nothing lights at all unless the torch is truly equipped
+## -- see `_is_equipped()`.
+##
+## RG22 also asked the torch to "light up a little more" -- brightness values
+## are `NIGHT-LIGHT`'s lane (coordinating on `ralph/NOTES.md`), not touched
+## here.
 
 const CONFIG_PATH := "res://data/config/movement.json"
 const ARBITER_NODE := preload("res://scripts/world/interaction_arbiter.gd")
-const TORCH_PROP_SCENE := "res://assets/props/built/torch_prop.tscn"
 
 var _light: SpotLight3D = null
 var _auto_at_night: bool = true
@@ -44,16 +59,11 @@ var _manual_override: bool = false
 var _manual_on: bool = false
 var _world_look: Node = null
 var _arbiter: Node = null
+var _tool_hold: Node = null
 
-## The visible prop (scripts/world/torch_prop.gd) and its own point light --
-## see `_build_visible_prop()`. `_prop_root` is whatever the prop actually
-## got parented under (a `BoneAttachment3D` on the rig, or a plain fallback
-## node) so both the prop and the light can be positioned there without
-## re-deriving that choice twice.
-var _prop_root: Node3D = null
-var _prop: Node3D = null
+## The flicker, still owned here -- see the header on why the PROP moved to
+## `tool_hold.gd` but the light stayed.
 var _omni: OmniLight3D = null
-var _prop_bone: String = "Hips"
 var _flicker_base_energy: float = 0.0
 var _flicker_amount: float = 0.0
 var _flicker_speed: float = 0.0
@@ -63,7 +73,6 @@ var _flicker_time: float = 0.0
 func _ready() -> void:
 	var cfg := _load_config()
 	_auto_at_night = bool(cfg.get("auto_at_night", true))
-	_prop_bone = str(cfg.get("prop_bone", "Hips"))
 
 	_light = SpotLight3D.new()
 	_light.name = "TorchLight"
@@ -79,7 +88,22 @@ func _ready() -> void:
 	position = Vector3(0.0, float(cfg.get("height", 1.3)), float(cfg.get("forward_offset", 0.35)))
 	rotation = Vector3(deg_to_rad(float(cfg.get("pitch_deg", -35.0))), 0.0, 0.0)
 
-	_build_visible_prop(cfg)
+	_omni = OmniLight3D.new()
+	_omni.name = "TorchOmni"
+	_omni.light_color = Color(str(cfg.get("colour", "#ffb366")))
+	_flicker_base_energy = float(cfg.get("omni_energy", 1.6))
+	_omni.light_energy = _flicker_base_energy
+	_omni.omni_range = float(cfg.get("omni_range", 6.0))
+	_omni.shadow_enabled = false
+	_omni.visible = false
+	_flicker_amount = clampf(float(cfg.get("flicker_amount", 0.35)), 0.0, 1.0)
+	_flicker_speed = float(cfg.get("flicker_speed", 9.0))
+	# A child of THIS node so it travels with the scene tree normally, but
+	# positioned in global space every frame (`_sync_flame_position`) rather
+	# than at a fixed local offset -- there is no fixed offset that makes
+	# sense any more, since the thing it has to track (`tool_hold.gd`'s prop)
+	# is rebuilt from scratch by a different system on every equip change.
+	add_child(_omni)
 
 
 func _load_config() -> Dictionary:
@@ -107,82 +131,49 @@ func _world_input_suppressed() -> bool:
 	return _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled"))
 
 
-## Bone-attaches the visible prop to the trainer rig's `Hips` (TUNABLE via
-## `prop_bone`) rather than a hand: `RightHand` is where the `throw` clip
-## lives (creature-catching), and a torch riding the hand doing the throwing
-## would swing through that pose every time. Hips stays a fixed offset from
-## the pelvis across idle/walk/sprint/jump/throw alike -- reads as a torch
-## carried at the belt, the "hip-mounted" option OF24's own brief offered as
-## the fallback the rig actually supports cleanly.
-##
-## Falls back to a fixed offset off the player root (no bone, no swing to
-## avoid, so a plain upright pose near chest height) when no `Model`/skeleton
-## is reachable -- an isolated test rig or a stripped-down capture scene --
-## so the prop is never silently absent for want of a rig to hang it on.
-func _build_visible_prop(cfg: Dictionary) -> void:
-	if not ResourceLoader.exists(TORCH_PROP_SCENE):
-		push_warning("torch prop scene missing: %s" % TORCH_PROP_SCENE)
-		return
-	var scene: PackedScene = load(TORCH_PROP_SCENE)
-	_prop = scene.instantiate() as Node3D
-	if _prop == null:
-		return
-
-	var skeleton := _find_player_skeleton()
-	var offset: Vector3
-	var rot_deg: Vector3
-	if skeleton != null and skeleton.find_bone(_prop_bone) >= 0:
-		var attachment := BoneAttachment3D.new()
-		attachment.name = "TorchAttachment"
-		attachment.bone_name = _prop_bone
-		skeleton.add_child(attachment)
-		_prop_root = attachment
-		offset = _vector3_from(cfg.get("prop_offset", [0.14, -0.05, 0.06]))
-		rot_deg = _vector3_from(cfg.get("prop_rotation_deg", [0.0, 20.0, 26.0]))
-	else:
-		_prop_root = get_parent() if get_parent() != null else self
-		offset = Vector3(0.30, -0.35, 0.10)
-		rot_deg = Vector3(0.0, 20.0, 16.0)
-
-	_prop_root.add_child(_prop)
-	_prop.position = offset
-	_prop.rotation_degrees = rot_deg
-	_prop.visible = false
-
-	_omni = OmniLight3D.new()
-	_omni.name = "TorchOmni"
-	_omni.light_color = Color(str(cfg.get("colour", "#ffb366")))
-	_flicker_base_energy = float(cfg.get("omni_energy", 1.6))
-	_omni.light_energy = _flicker_base_energy
-	_omni.omni_range = float(cfg.get("omni_range", 6.0))
-	_omni.shadow_enabled = false
-	_omni.visible = false
-	_flicker_amount = clampf(float(cfg.get("flicker_amount", 0.35)), 0.0, 1.0)
-	_flicker_speed = float(cfg.get("flicker_speed", 9.0))
-
-	var flame_local: Vector3 = _prop.call("flame_local_position") if _prop.has_method("flame_local_position") else Vector3.ZERO
-	_prop_root.add_child(_omni)
-	_omni.position = offset + flame_local
+## `player_controller.gd`'s own `tool_hold` child -- looked up lazily and
+## re-checked with `is_instance_valid`, the same OF25-established pattern
+## `_world_input_suppressed()` above uses for `_arbiter`, for the identical
+## reason: this node can run before a sibling's own `_ready()` if node order
+## ever shifts, and a one-shot `_ready()`-time lookup has already cost this
+## file one silently-dead feature (OF18).
+func _tool_hold_node() -> Node:
+	if _tool_hold == null or not is_instance_valid(_tool_hold):
+		var parent := get_parent()
+		_tool_hold = parent.get("tool_hold") if parent != null else null
+	return _tool_hold
 
 
-## `character_model.gd::skeleton()` off the player's own `Model` child --
-## null for anything that has no such rig (see `_build_visible_prop`'s own
-## fallback for what happens then).
-func _find_player_skeleton() -> Skeleton3D:
-	var parent := get_parent()
-	if parent == null:
+## RG22: nothing lights, manual or automatic, unless the torch is genuinely
+## the equipped tool -- OW12's own design ("an unequipped torch is an inert
+## satchel row, same as an unequipped axe"), which this file never actually
+## enforced until now.
+func _is_equipped() -> bool:
+	var hold := _tool_hold_node()
+	return hold != null and str(hold.call("equipped")) == "torch"
+
+
+## The in-hand torch prop `tool_hold.gd` built for the equipped torch, or
+## null when the torch is not equipped (nothing there to point a light at)
+## or carries no `held_model` at all.
+func _hand_prop() -> Node3D:
+	if not _is_equipped():
 		return null
-	var model := parent.get_node_or_null(^"Model")
-	if model == null or not model.has_method("skeleton"):
-		return null
-	return model.call("skeleton") as Skeleton3D
+	var hold := _tool_hold_node()
+	return hold.call("prop_node") as Node3D
 
 
-func _vector3_from(raw: Variant) -> Vector3:
-	if raw is Array and (raw as Array).size() == 3:
-		var a: Array = raw
-		return Vector3(float(a[0]), float(a[1]), float(a[2]))
-	return Vector3.ZERO
+## Keeps the flame-light glued to wherever the in-hand prop actually is, every
+## frame -- the prop itself is rebuilt by `tool_hold.gd` on every equip
+## change (queue_free + a fresh instance), so there is no fixed local offset
+## to parent under any more. `global_position`, not `position`: this node's
+## own transform is a fixed chest-height offset for the SpotLight above, and
+## the two lights no longer share a common local space.
+func _sync_flame_position(prop: Node3D) -> void:
+	if prop == null:
+		return
+	var flame_local: Vector3 = prop.call("flame_local_position") if prop.has_method("flame_local_position") else Vector3.ZERO
+	_omni.global_position = prop.global_transform * flame_local
 
 
 func _process(delta: float) -> void:
@@ -192,24 +183,27 @@ func _process(delta: float) -> void:
 	var on := _is_on()
 	if _light != null:
 		_light.visible = on
-	if _prop != null:
-		_prop.visible = on
+	var prop := _hand_prop() if on else null
 	if _omni != null:
-		_omni.visible = on
-		if on and _flicker_amount > 0.0:
-			# Two out-of-phase sine terms rather than one -- a single sine
-			# flicker reads as a strobe/pulse (mechanical, regular); summing a
-			# slow and a fast term with an odd phase offset is the same cheap
-			# trick a real flame's irregularity gets approximated with
-			# without reaching for actual noise sampling for a light this
-			# minor.
-			_flicker_time += delta
-			var noise := sin(_flicker_time * _flicker_speed) * 0.6 \
-				+ sin(_flicker_time * _flicker_speed * 2.7 + 1.3) * 0.4
-			_omni.light_energy = _flicker_base_energy * (1.0 + noise * _flicker_amount)
+		_omni.visible = on and prop != null
+		if on and prop != null:
+			_sync_flame_position(prop)
+			if _flicker_amount > 0.0:
+				# Two out-of-phase sine terms rather than one -- a single sine
+				# flicker reads as a strobe/pulse (mechanical, regular); summing a
+				# slow and a fast term with an odd phase offset is the same cheap
+				# trick a real flame's irregularity gets approximated with
+				# without reaching for actual noise sampling for a light this
+				# minor.
+				_flicker_time += delta
+				var noise := sin(_flicker_time * _flicker_speed) * 0.6 \
+					+ sin(_flicker_time * _flicker_speed * 2.7 + 1.3) * 0.4
+				_omni.light_energy = _flicker_base_energy * (1.0 + noise * _flicker_amount)
 
 
 func _is_on() -> bool:
+	if not _is_equipped():
+		return false
 	if _manual_override:
 		return _manual_on
 	if not _auto_at_night:
@@ -238,9 +232,11 @@ func is_on() -> bool:
 	return _is_on()
 
 
-## The visible prop node, or null if none was built (see
-## `_build_visible_prop`'s own early-return on a missing scene). Public so a
-## smoke test can assert "a lit torch is a visible PROP, not just a light"
-## without reaching past this node into a private field.
+## The visible prop node, or null if the torch is not currently equipped (see
+## `_hand_prop()`). Public so a smoke test can assert "a lit torch is a
+## visible PROP, not just a light" without reaching past this node into a
+## private field -- unchanged contract from before RG22, only the node it
+## actually returns changed (the real in-hand prop, not a hip-mounted
+## duplicate).
 func prop_node() -> Node3D:
-	return _prop
+	return _hand_prop()
