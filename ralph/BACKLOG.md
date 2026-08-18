@@ -178,6 +178,85 @@ a blocker because it is not one.
 Owner's five decisions of 2026-08-18 answered everything except this one, and
 this is the frame to show him: `shots/storm_pass/03-the-way-round-east-end.png`.
 
+**Shown to the owner. His answer, verbatim:** *"the hole seems like it should
+be impassable other than by bridge. if I can walk around it in 15 seconds,
+what's the point. maybe a bridge that is protected by two team tether grunts.
+you beat them then go across."* He also placed his own earlier memory of this
+spot: he played before `OW5D` relocated the stronghold here, so what he saw
+then was the same trench with open ground behind it — same gorge, different
+neighbour, not a different bug.
+
+### STORM-GATE — two Team Tether grunts guard the storm road crossing
+`model: sonnet` · `tests: smoke_traversal, smoke_trainer_battle` · `area: content, combat, terrain`
+
+**This works, and unusually cleanly — every piece it needs already exists in
+some form:**
+
+- **The bridge mechanism is not new.** `scripts/world/gated_crossing.gd` is
+  exactly this — "one authored crossing over one authored gap, shut until the
+  player has the thing that opens it" — already built twice (`south_bridge.gd`,
+  `mill_crossing.gd`). A third subclass here follows an established pattern,
+  not a new one.
+- **Gating on a defeat instead of an item needs almost no new mechanism.**
+  `item_gate.gd::is_open()` is `progression.has(flag_id)`. `trainer_npc.gd`
+  already writes a `defeat_flag` into that same progression store on winning a
+  battle (`already_beaten()` reads it back the same way). A crossing gated on
+  "beat this trainer" reads a flag a battle already writes — the two systems
+  already share one store. `item_gate.gd`'s existing multi-key support (`SF34`
+  — a gate may require more than one id at once, all-or-nothing) is exactly
+  the shape "beat both grunts" needs.
+- **A trainer-gated path already exists as a shipped pattern**: `OW6` (closed)
+  puts a challengeable captain on the trail with the same gate-the-path
+  grammar, one trainer instead of two guarding a specific span.
+- **Two Team Tether grunts do not need a new asset.** `docs/
+  MEADOWS_PROGRESSION_SPEC.md` §36 already specifies a rank/colour system for
+  reused NPC geometry — Grunt: charcoal, muted forest green, minimal gold —
+  so "the same base model communicates hierarchy" with no unique geometry.
+  Build from the trainer rig with §36's grunt palette, the same move `R7.2`'s
+  three villagers already made. A Team Tether grunt base is *licensed* as a
+  possible second human generation (`D23` §22) but explicitly not required —
+  §37: "must not block Meadows implementation waiting for unique 3D assets for
+  every NPC." `D23` separately warns that a bare `tint` key destroys material
+  separation past a couple of NPCs — check `R7.2`'s own result before assuming
+  tint alone is enough here.
+- **It is thematically exact, not just convenient.** `severed_spokes.gd`'s own
+  header: *"Team Tether did not build seven random dead-end roads. They
+  severed existing connections."* This blocker's `kind` is already
+  `collapsed_bridge`, and `_build_sealed_road`'s oxblood palette is reserved
+  for "Team Tether banners, equipment and uniforms" — the road is already
+  authored as their own work. Two of their grunts holding the span they
+  collapsed is the payoff it has been quietly set up for.
+
+**The one real caveat, and it is a decision, not a detail.** The far side leads
+nowhere yet. `far_road` ends at `z 7618.89`; the world boundary is `z 7680` —
+about 61 m of margin, no content. `D46` picked this exact spoke to sever
+*because* "nothing in Bands 0-2 sends a player there... the storm road leads to
+a severed end and nothing else." Beating two grunts to reach 61 m of empty
+field just moves "walked around it to nothing" behind a fight instead of
+removing it. Two honest paths:
+
+1. **Build a small payoff on the far side now** — not Storm Country itself
+   (Biome 2, stays out per `CLAUDE.md`), but something proportionate to 61 m: a
+   ruined outpost, a vista, one beat that rewards the fight symbolically.
+   `RIVER-OVERHANG` already clamps authored geometry to this exact boundary, so
+   there is a working pattern for building right up against it.
+2. **Gate it anyway, with nothing beyond.** The fight and the crossing are the
+   content; the payoff is narrative (you have beaten Team Tether at their own
+   severed road), not a place. Cheaper, and it can grow a far-side beat later
+   without touching the gate — `gated_crossing.gd` does not care what is on the
+   other side of the span it opens.
+
+**Recommendation, not a decision: option 2 first.** It is buildable today, it
+directly answers "what's the point", and nothing about it forecloses adding a
+far-side beat later.
+
+**Done when:** two Team Tether grunts stand at the storm road crossing;
+defeating both opens a real bridge over the carve (`building_prefabs.gd`, one
+village family per `D24`); the crossing persists open across a reload
+(`item_gate.gd`'s existing flag-backed persistence — no bespoke save state);
+and `smoke_traversal` proves the trench is impassable everywhere except the
+bridge until it opens.
+
 ### STRONGHOLD-MAT — the stronghold renders untextured, and it is the biggest
 ### thing in the game
 `model: sonnet` · `tests: smoke_stronghold` · `area: visual`
@@ -239,6 +318,11 @@ identified feature and the two options — remove it entirely, or give it a
 reason to exist (something on the far side, or a crossing) — rather than a
 description. He could not place it from memory, which is itself evidence that
 it reads as nothing: a feature nobody can locate afterwards is not landmarking.
+
+**DONE — the screenshot went to the owner and he answered.** He wants the
+crossing gated, not removed: *"maybe a bridge that is protected by two team
+tether grunts. you beat them then go across."* Turned into a build task —
+`STORM-GATE`, filed with `RG24-CONFIRMED` above.
 
 ### RG1 — The game freezes after coming out of an interaction or a menu
 
@@ -552,17 +636,14 @@ volumes and a spoke's severing trench, never terrain. Use
 The missing-collision half is new: scattered rocks are `MultiMesh` instances and
 only some carry colliders. Establish which.
 
-### RG24 — The gorge in the middle of the map stops nothing
+### DONE (superseded by STORM-GATE) — RG24 — The gorge in the middle of the map stops nothing
 `model: sonnet` · `tests: smoke_traversal` · `area: terrain`
 Owner: *"There's a giant gorge/hole in the middle of the map that I just walked
 around. Seemed pretty pointless. It didn't keep me from anything. It needs to
 extend if it's supposed to keep anyone out."*
 
-Identify which feature this is before changing it — a spoke carve, the river, or
-the south gully. `SPINE-WEDGE` just **shortened** `storm_road`'s carve from a
-146 m reach to 30 m on the grounds that it was blocking the road it was not
-severing; check this is not that same carve seen from the other side, or the two
-items will fight.
+Kept as the original report. Identified as `storm_road`'s carve and turned into
+a build task at `STORM-GATE` — see that entry for the fix.
 
 ### RG25 — Long load on the ROG, and there is no title or save screen
 `model: opus` · `tests: verify_export, smoke_menu` · `area: perf, ui`
