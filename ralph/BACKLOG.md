@@ -110,6 +110,52 @@ evidence" is a complete and valued outcome and it is faster than the work.**
 
 ---
 
+### DONE — RG2, RG9, RG10, RG22 (the RG-GATHER group)
+**LANDED on `main`: `c9870df7` (RG2) and `210c1ae5` (RG9+RG10+RG22).**
+
+- `RG2` the swing that would not connect — the hit cone was measured off
+  `Model` rather than the player's body.
+- `RG9`/`RG10` chop-then-gather split.
+- `RG22` **the torch now reaches the hand** — the diff-and-restore that `OPS19`
+  root-caused from `31ca353`. The root cause note was used rather than merely
+  filed, which is the whole point of writing findings down.
+
+**Two things the lane could not know, settled here.**
+
+**1. Its "mysterious cancelled run" was the unit-test timeout, and it is fixed.**
+`RG-GATHER` flagged a `verify-unit-tests` run cancelled ~9 minutes in, called
+it "not a failure, not a timeout shape", and asked whether *something external
+was cancelling runs on this branch*. Nothing external was. **GitHub reports a
+`timeout-minutes` kill as `cancelled`,** which is the single most misleading
+signal in this repo's CI — see the handover. Better still, the lane
+independently measured the thing that proves it: its own note records the full
+local suite taking **13–15 minutes per run**. The CI ceiling at the time was
+**12**. The suite could not have passed. That is strong outside confirmation
+that raising 10 → 12 was never going to be enough, and that splitting it
+(`44a0a226`, two round-robin shards) was the right call rather than a lucky
+one. **No one needs to investigate this.**
+
+**2. The torch now requires being equipped, and that changes how night is
+judged.** Before `RG22`, `torch.gd::_is_on()` had **no equip-state gate at
+all** — it reported "on" at night whether or not the torch had ever been drawn.
+It now stays dark, at any hour, unless it is genuinely the equipped tool, which
+matches `OW12`'s "an unequipped torch is an inert satchel row".
+
+**Consequence for whoever re-judges `NIGHT-LIGHT`'s unjudged round 4: any
+capture that samples luminance without equipping the torch first will now read
+as permanently dark, and that is CORRECT, not a regression.** `tools/
+capture_night_light.gd` was written before this landed — check it equips before
+sampling, or the night work will be judged against a torch that was never lit.
+The lane hit exactly this itself: `OF18`'s existing smoke regression started
+failing the moment the gate went in, because it tested auto-lighting with the
+torch never equipped.
+
+**Tiny remainder, deliberately not landed:** `ralph/RG-GATHER` still carries
+`f0113faf`, a one-line `.uid` sidecar for `tools/capture_mat_blockout.gd`. It
+sits behind `main` and `tools/**` is a code path, so landing it costs a full
+~7-minute CI run for one generated line. Not worth a run during a wind-down —
+fold it into the next code bundle instead.
+
 ### RG24 — The gorge that is not worth walking around
 `model: sonnet` · `tests: smoke_traversal` · `area: terrain`
 
