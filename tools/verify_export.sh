@@ -95,15 +95,20 @@ LOG="$OUT/run.log"
 # guard did exactly its job -- it caught a real, intended, measured change in
 # what the game is -- and the 69s it was calibrated against is now stale.
 #
-# THIS IS AN INTERIM NUMBER AND IS NOT MEASURED. It is the old tourniquet
-# value, restored to unblock landings, and it is the rubber stamp EXP1 warned
-# about for exactly as long as it stays unmeasured. The HARVEST-ALL lane is
-# raising tree/rock density further toward Palworld's right now, so measuring
-# today would only produce a figure obsolete by tomorrow. **Whoever lands the
-# final density owes this file a fresh worst-of-three measurement and a
-# 2.2x-of-that allowance, with the number and the date written here** -- the
-# same thing EXP1 did, for the same reason.
-( cd "$OUT" && timeout 420 xvfb-run -a -s "-screen 0 640x480x24" \
+# VEG-SITING, 2026-08-18. Paying the debt the paragraph above left open.
+# `HARVEST-ALL` and `VEG-CORRIDOR` together had already taken the corridor's
+# instance count to 102,192; VEG-SITING's own trail-biased canopy siting (see
+# scatter_rules.gd::_place_corridor_fill) adds another ~29k on top of that,
+# to 131,515 -- the corridor-wide density this file's 420s was always an
+# interim stand-in for. Worst of three runs of THIS EXACT COMMAND (the
+# already-exported binary, this box, no re-export between runs -- same
+# methodology EXP1 used): 191.7s, 192.8s, 194.4s. 420 was already only 2.16x
+# the worst of those, thinner margin than EXP1's own 2.2x target and the
+# reason this needed re-measuring rather than being left alone. 430 is
+# 2.2x-of-194.4s (427.7s), rounded up. Re-measure again, the same way, if a
+# future lane raises corridor density further -- do not assume 420-vs-430's
+# old headroom still holds after another multiplier.
+( cd "$OUT" && timeout 430 xvfb-run -a -s "-screen 0 640x480x24" \
   ./Tetherbound.x86_64 --rendering-driver opengl3 --verify-export > run.log 2>&1 )
 RAN=$?
 

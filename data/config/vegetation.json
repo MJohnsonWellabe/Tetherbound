@@ -56,9 +56,12 @@
       "per_clump": 64,
       "clump_radius": 20.0,
       "strays": 88,
-      "_comment_corridor_fill": "VEG-CORRIDOR: the main canopy fills the corridor at the band table's own rate -- see corridor_bands above.",
+      "_comment_corridor_fill": "VEG-CORRIDOR: the main canopy fills the corridor at the band table's own rate -- see corridor_bands above. VEG-SITING: `trail_bias` sites most of that fill beside the authored routes instead of anywhere in the corridor's 2048m-wide box -- docs/reviews/band2/round-05 measured that a uniform box draw put zero kept clumps near any of Band 2's own eight survey viewpoints, all of which stand ON or beside the trail, so a 4x density multiplier moved nothing there. `trail_offset_min/max` keeps the copse off the worn path itself (path_standoff/path_factor still gate individual instances) while staying inside the ~20m clump_radius plus walking-distance that reads as 'forest beside the trail' rather than a treeline on the horizon. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 6.0,
+        "trail_bias": 0.85,
+        "trail_offset_min": 15.0,
+        "trail_offset_max": 65.0
       },
       "_comment_ridge_bias": "R7.1-remainder: specific sightlines toward the true horizon (the last real hilltops before Terrain3D's own procedural background takes over past the 512m bake) could still land on a gap between clumps, even though far clumps exist elsewhere. ridge_bias makes half this layer's clumps sample several candidate centres and keep the highest, biasing toward hilltops/ridge crests without hand-picked coordinates (scatter_rules.gd). Not a density increase \u2014 same clump count, biased placement. Tune by rendering, not by feel.",
       "ridge_bias": 0.75,
@@ -146,9 +149,12 @@
       "per_clump": 4,
       "clump_radius": 26.0,
       "strays": 4,
-      "_comment_corridor_fill": "VEG-CORRIDOR: hero trees stay rare outside the square too, so this layer's own multiplier trims the band table's rate further rather than matching it -- a landmark that repeats every few hundred metres stops being one.",
+      "_comment_corridor_fill": "VEG-CORRIDOR: hero trees stay rare outside the square too, so this layer's own multiplier trims the band table's rate further rather than matching it -- a landmark that repeats every few hundred metres stops being one. VEG-SITING: a lower `trail_bias` than the standard canopy -- still mostly trailside (a hero tree is most a landmark when the player actually walks near it) but a genuine landmark also reads from open ground, so a larger minority stay wherever the unbiased box draw puts them.",
       "corridor_fill": {
-        "density_scale": 0.4
+        "density_scale": 1.8,
+        "trail_bias": 0.6,
+        "trail_offset_min": 20.0,
+        "trail_offset_max": 80.0
       },
       "max_slope_deg": 19.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Same shoreline standoff as the standard canopy. TUNABLE.",
@@ -221,9 +227,12 @@
       "per_clump": 5,
       "clump_radius": 10.0,
       "strays": 8,
-      "_comment_corridor_fill": "VEG-CORRIDOR: fills alongside the standard canopy at the band table's own rate.",
+      "_comment_corridor_fill": "VEG-CORRIDOR: fills alongside the standard canopy at the band table's own rate. VEG-SITING: same `trail_bias` as `trees` above, same reasoning -- the understory belongs at the edge of the trailside copses this layer's own comment already describes, not spread independently across the whole box.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 6.0,
+        "trail_bias": 0.85,
+        "trail_offset_min": 12.0,
+        "trail_offset_max": 55.0
       },
       "max_slope_deg": 21.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Same shoreline standoff as the standard canopy. TUNABLE.",
@@ -262,9 +271,12 @@
       "per_clump": 2,
       "clump_radius": 12.0,
       "strays": 6,
-      "_comment_corridor_fill": "VEG-CORRIDOR: dead trees break up the corridor's own treeline the same way they do the square's.",
+      "_comment_corridor_fill": "VEG-CORRIDOR: dead trees break up the corridor's own treeline the same way they do the square's. VEG-SITING: trailside like the living canopy, but MUCH milder than the living layers. Round 1 tried density_scale 4.0/trail_bias 0.7 to match `trees` -- the early-forest viewpoint rendered a horizon of five bare skeletal trunks against one living tree, the exact 'ugliest and most out-of-palette' read R9.4 already fixed once inside the square. Round 2 (1.5/0.4) still drew an independent blind critic's fire: 'the leafless dead-tree asset dominates 01, 02a, 04, and 05, while a much better leafy oak-type tree exists and is used only in 02b... the good asset exists in the build, it's simply not being scattered everywhere.' Pulled back again so a dead tree is a rare grey accent near the trail, not competing with the living canopy trail_bias is now sending far more of for the same ground. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 0.6,
+        "trail_bias": 0.2,
+        "trail_offset_min": 15.0,
+        "trail_offset_max": 65.0
       },
       "_comment_drain_sd16": "D41: a dead tree does not die twice. This layer is the one thing that should INCREASE around a Tether station, so it opts out of the suppression entirely and the quarry gets an authored stand instead (below). `models` on that anchor narrows this layer's list to the three dead trees -- the mushrooms belong under a living canopy, not on drained ground.",
       "drain_suppression": 0.0,
@@ -317,9 +329,12 @@
       "per_clump": 15,
       "clump_radius": 13.0,
       "strays": 180,
-      "_comment_corridor_fill": "VEG-CORRIDOR: the understory fills at the band table's own rate.",
+      "_comment_corridor_fill": "VEG-CORRIDOR: the understory fills at the band table's own rate. VEG-SITING: trailside, same reasoning as `trees` -- undergrowth banked at a copse's base is what makes trailside canopy read as a wood rather than trees standing on a lawn (this layer's own top comment), so it has to land where the canopy fill now concentrates, not independently across the whole box.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 6.0,
+        "trail_bias": 0.85,
+        "trail_offset_min": 10.0,
+        "trail_offset_max": 50.0
       },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment. Every ground-cover layer shares one path-exclusion isoline, and terrain_playground.json's four routes all meet at the village well -- their combined exclusion wedges read as a converging fan across every layer at once, not a per-layer defect. OF12 widened 0.15 -> 0.35 on the walkthrough ground-cover layers (bushes stay at 0.25 -- a shrub standing in the worn shoulder reads as blocking the road, a tuft reads as encroachment): a blind critic named the dirt/grass boundary 'a clean cut with no interpenetration', and a wider per-instance threshold spread lets the occasional plant stand visibly INTO the fade band. TUNABLE.",
       "path_edge_jitter": 0.25,
