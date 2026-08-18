@@ -455,7 +455,18 @@ static func _place_corridor_fill(
 	if corridor_area <= origin_area or origin_area <= 0.0:
 		return
 
-	var layer_scale := clampf(float(fill.get("density_scale", 1.0)), 0.0, 1.0)
+	# VEG-SITING: ceiling raised 1.0 -> 8.0. This multiplier was previously
+	# capped at "the origin square's own per-area clump rate", which made
+	# sense while every corridor layer matched the square's density exactly.
+	# Trail-biased siting (below) means a layer can now afford to run
+	# RICHER than the square per area actually covered, because the
+	# candidates that would have landed on ground nobody walks near are the
+	# ones being concentrated onto the trail instead -- the total instance
+	# count this multiplies is still gated by `_band_scale_at`'s own
+	# corridor_bands table, which is what actually protects the boot-time
+	# budget (see corridor_bands' own comment in vegetation.json). TUNABLE
+	# per layer; still defaults to 1.0 for any layer that never asks for more.
+	var layer_scale := clampf(float(fill.get("density_scale", 1.0)), 0.0, 8.0)
 	if layer_scale <= 0.0:
 		return
 	var bands: Array = config().get("corridor_bands", [])
@@ -468,8 +479,33 @@ static func _place_corridor_fill(
 	var candidate_clumps := int(round(float(clumps) / origin_area * corridor_area))
 	var candidate_strays := int(round(float(strays) / origin_area * corridor_area))
 
+	# VEG-SITING: see this function's own header for the area-proportional
+	# candidate math above -- that part is unchanged. What changes is WHERE a
+	# kept candidate's centre lands. `trail_bias` (0..1, TUNABLE per layer's
+	# corridor_fill, default 0.0 -- no behaviour change for a layer that
+	# doesn't opt in) draws that fraction of candidates from beside the
+	# corridor's own authored routes instead of uniformly across the whole
+	# min_x..max_x / min_z..max_z rectangle. See `_sample_near_trail`'s own
+	# header for why: a uniform draw over a corridor 2048m wide spreads
+	# copses across ground the player's own route never approaches, so a
+	# viewpoint standing ON the trail can render bare no matter how the
+	# per-clump/per-stray counts are tuned -- confirmed, not guessed:
+	# docs/reviews/band2/round-05 measured HARVEST-ALL's 4x thickening as
+	# byte-identical `spread` and pixel-identical frames on these same eight
+	# viewpoints, because none of them happened to sit near a kept clump.
+	var trail_bias := clampf(float(fill.get("trail_bias", 0.0)), 0.0, 1.0)
+	var trail_offset_min := float(fill.get("trail_offset_min", 15.0))
+	var trail_offset_max := float(fill.get("trail_offset_max", 65.0))
+	var trail_segments: Dictionary = {}
+	if trail_bias > 0.0:
+		trail_segments = _trail_segments(field)
+
 	for c in candidate_clumps:
 		var centre := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+		if trail_bias > 0.0 and rng.randf() < trail_bias:
+			var near_trail := _sample_near_trail(rng, trail_segments, trail_offset_min, trail_offset_max)
+			if near_trail != Vector2.INF:
+				centre = near_trail
 		var keep_chance := layer_scale * _band_scale_at(centre.y, bands)
 		if rng.randf() > keep_chance:
 			continue
@@ -489,6 +525,64 @@ static func _place_corridor_fill(
 		if absf(spot.x) <= half and absf(spot.y) <= half:
 			continue
 		_consider(out, layer, field, models, spot, half, rng)
+
+
+## VEG-SITING. Every authored route (`field.path_polylines()`) as arc-length
+## segments, for `_sample_near_trail` below. Built once per corridor_fill
+## call -- a few hundred points at most across the whole 12km trail network
+## -- not once per candidate; `path_polylines()` is itself cached
+## (`playground_heightfield.gd::road_polylines`'s own `_road_polylines_ready`
+## flag), so this is a cheap array walk, not a re-parse of the config.
+static func _trail_segments(field: RefCounted) -> Dictionary:
+	var seg_a := PackedVector2Array()
+	var seg_b := PackedVector2Array()
+	var seg_length := PackedFloat32Array()
+	var total := 0.0
+	if field.has_method("path_polylines"):
+		var polylines: Array = field.path_polylines()
+		for entry: Variant in polylines:
+			var line: PackedVector2Array = entry
+			for i in line.size() - 1:
+				var length := line[i].distance_to(line[i + 1])
+				if length <= 0.001:
+					continue
+				seg_a.append(line[i])
+				seg_b.append(line[i + 1])
+				seg_length.append(length)
+				total += length
+	return {"a": seg_a, "b": seg_b, "length": seg_length, "total": total}
+
+
+## A point beside the trail rather than anywhere in the corridor's box: a
+## random point along the authored routes by arc length (the same mechanism
+## `_place_verge` already uses for the ground-cover fringe), stepped
+## sideways by a random offset in `[offset_min, offset_max]`, mirrored to
+## either shoulder so copses do not all favour one side of every leg.
+## `Vector2.INF` if there is nothing to sample against (no routes
+## configured), the same "no answer" contract `nearest_point_on_paths`
+## already uses elsewhere in this file, so the caller falls back to its own
+## uniform draw instead of collapsing every candidate to the map origin.
+static func _sample_near_trail(
+	rng: RandomNumberGenerator, segments: Dictionary, offset_min: float, offset_max: float
+) -> Vector2:
+	var total: float = segments.get("total", 0.0)
+	if total <= 0.0:
+		return Vector2.INF
+	var seg_a: PackedVector2Array = segments["a"]
+	var seg_b: PackedVector2Array = segments["b"]
+	var seg_length: PackedFloat32Array = segments["length"]
+	var u := rng.randf() * total
+	var segment := seg_length.size() - 1
+	for s in seg_length.size():
+		if u <= seg_length[s]:
+			segment = s
+			break
+		u -= seg_length[s]
+	var tangent := (seg_b[segment] - seg_a[segment]).normalized()
+	var along := seg_a[segment] + tangent * u
+	var side := -1.0 if rng.randf() < 0.5 else 1.0
+	var offset := lerpf(offset_min, offset_max, rng.randf())
+	return along + Vector2(-tangent.y, tangent.x) * side * offset
 
 
 ## The `density_scale` (0..1, TUNABLE) of the first band in `corridor_bands`
