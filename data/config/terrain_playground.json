@@ -691,9 +691,10 @@
         ]
       },
       {
+        "_why": "OW5-walk found Post_Collision colliding with a walking body at (0.2, 6999.5) -- `at` used to be the spine's own wp71 (0,7000), the same 'placed at the coordinate that is also the waypoint' pattern RIVER-GATE's audit named across all 18 OW5C-appended trailheads. Moved 5m off the spine's own tangent at this point (perpendicular to the (40,6930)->(0,7000)->(-80,7120) bearing), the same off-centreline convention entry 0 (The Rise) and entry 1 (South Bridge) already use -- `points` (the arm's own bearing) is untouched, matching entry 0's proof that `at` and `points[0]` need not coincide.",
         "at": [
-          0.0,
-          7000.0
+          -4.25,
+          6997.37
         ],
         "label": "Storm Road Spoke",
         "points": [
@@ -2237,10 +2238,11 @@
     "end_fade": 14.0,
     "failsafe": true,
     "_comment_failsafe": "The channel is 10-18m deep with walls past the slope limit and there is no swimming system, so a player who walks in is stuck exactly the way SA4's probe found a body stuck in the storm ravine. river.gd hangs severed_spokes._add_carve_failsafe over each course segment with a VILLAGE-SIDE recovery point -- the same call and the same reasoning south_bridge.gd uses for its gully: recovering to the far bank would turn falling in into a free crossing.",
+    "_comment_river_overhang": "RIVER-OVERHANG. The course used to run to x=+-1150 while the baked region grid (world_bounds above: x in [-1024,1024]) is only valid to +-1024, and the last ~2m inside that is itself NaN on ground queries (world_perimeter.gd's own measured GROUND_SAMPLE_INSET, 3.0m, empirically clears both edges) -- three points sat past the world entirely and every boot logged 'carve failsafe ... has no ground to measure; skipped' for the worst of them. Clamped the three offending x values to the baked extent (west edge is inclusive and safe at exactly -1024 per world_perimeter.gd's own finding; east edge needs the same 3.0m inset, landing at 1021). Everything else about the course -- z, depth, half_width, rim -- is untouched; this is an authoring-overhang fix, not a re-route. scripts/world/world_extent.gd was NOT used as the source here despite being the nominal 'one mechanism' for world bounds -- it still derives a stale +-256 square from legacy `world_size` and does not read the `world_bounds` object at all, so it currently returns the WRONG extent for this corridor. terrain_region_alignment.gd::world_bounds() already reads `world_bounds` correctly (it is what the bake itself uses) and is the actual source of truth used here. Flagged on ralph-status rather than silently fixed -- minimap.gd and map_baker.gd both still read world_extent.gd's bounds() too, so fixing it has a blast radius (visible minimap footprint) beyond this item's scope.",
     "course": [
       {
         "at": [
-          -1150.0,
+          -1024.0,
           4080.0
         ],
         "depth": 11.0,
@@ -2393,7 +2395,7 @@
       },
       {
         "at": [
-          1030.0,
+          1021.0,
           4115.0
         ],
         "depth": 10.5,
@@ -2402,7 +2404,7 @@
       },
       {
         "at": [
-          1150.0,
+          1021.0,
           4085.0
         ],
         "depth": 10.0,
@@ -2584,6 +2586,7 @@
       {
         "id": "band3_the_river_lock",
         "label": "The River Lock",
+        "_comment_spine_route": "SPINE-ROUTE. The two Old Mill Crossing waypoints were at x=-150; OW5C's WALL1 seam workaround nudged the crossing's own deck centreline to x=-152 (crossings[old_mill_crossing].road/channel) but never moved the spine that crosses it, leaving 11m of this leg ((-150,4198)-(-150,4208)) inside the river's CarveFailsafe recovery volume 2m east of the deck -- RIVER-GATE measured it, this closes it. Both waypoints moved to x=-152 to sit on the deck's real centreline. Do NOT re-nudge the crossing itself; -152 is a measured seam-avoidance position pinned by tests/test_river_crossings_stay_open.gd.",
         "points": [
           [
             0,
@@ -2626,11 +2629,11 @@
             4060
           ],
           [
-            -150,
+            -152,
             4170
           ],
           [
-            -150,
+            -152,
             4235
           ],
           [

@@ -11,6 +11,7 @@
         "*": "#a89a6b"
       },
       "_comment_palette": "NP2's CAPTAIN rank palette (#b0a271, data/config/npc_ranks.json) with ONE regional accent -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec §21 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting.",
+      "_comment_ow6": "OW6 (owner: 'the captain to challenge is way too close to where you start'). THIS is the trainer the complaint describes -- OW5D's own note below records the pre-corridor stand-in position (52,-122), effectively at the village. It already moved before this item ran. Verified with OW5-walk's real spine (11,316.6m walked, 37.7min, walked/config 0.983): current site is 8767m of polyline / 76.1% in, ~28.7 walked minutes -- third of the four field/relay captains and well past the corridor's midpoint. No further move made; a fourth relocation of the same trainer without a fresh measured problem would be exactly the kind of un-asked-for redesign this project's own conventions warn against.",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: this captain was 'unplaced/near village' (the (52,-122) below was a Band-4-shaped stand-in on the OLD map, not a real Band 4 site -- the old map had no Band 4). Moved to (170,5590), the position section 3.1's Band 4 waypoint list names explicitly for the Field Captain. `facing_deg` (-20.6) is UNCHANGED and is almost certainly wrong for the new site -- it was derived by atan2 back to the OLD village at roughly the origin, and the new corridor's Band 4 geometry is a different shape entirely. Left as a flag rather than invented: re-deriving a correct facing needs the reviewer to pick which way 'back down the road' points on the new spine, which is authoring judgement past a coordinate relocation.",
       "position": [
         170.0,
@@ -62,6 +63,7 @@
         "*": "#a3a79c"
       },
       "_comment_palette": "Captain base, accented toward the pale grey-green of the wind ridge -- see captain_field's own note for why this is a per-material accent rather than a tint or a new body.",
+      "_comment_ow6": "OW6. Measured against OW5-walk's real spine: nearest spine point is 10143m of polyline / 88.1% in, ~33.2 walked minutes -- the furthest of the four, and already sited at the last patch of walkable ground on the ridge (see `_why_here` below, which measured 43-76 degrees of rock past it). Left in place; there is no further walkable ground to move him onto without a fresh terrain probe this item did not run.",
       "_comment_ow5d": "OW5D relocation to (-280,6460), section 3.1's named 'Ridge Captain' position (watchtower spur). `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note; the same reasoning applies here.",
       "position": [
         -280.0,
