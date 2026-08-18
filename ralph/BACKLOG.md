@@ -81,6 +81,33 @@ Ordered blockers first. Where an item repeats an earlier report the earlier one
 is named, because the symptom coming back means the mechanism was never fixed —
 this project's own header rule from Phase -1.5.
 
+### Already in flight — VERIFY BEFORE YOU BUILD
+
+**Added 2026-08-18 (OPS18) at the owner's instruction:** *"if some of these, like
+the torch fix, is already in flight you can take it off the list or tell it to
+just verify if it's still a problem when we get to that item."*
+
+Nothing is deleted, because **in flight is not the same as fixed** and this
+project has twice sent a lane to rewrite code that already existed. Instead each
+overlapping item carries what is already running against it. **When you reach one
+of these, reproduce it on current `main` first. "Already fixed by X, here is the
+evidence" is a complete and valued outcome and it is faster than the work.**
+
+| item | already running / landed | what to verify |
+|---|---|---|
+| `RG1` `RG4` `RG5` `RG6` | **`RG-INPUT` lane, launched** | it owns all four; do not open a second lane on them |
+| `RG2` `RG9` `RG10` `RG22`(hand) | **`RG-GATHER` lane, launched** | same — one lane owns the gathering queue |
+| `RG11` stones like white paper | **`MAT-BLOCKOUT`, root-caused, on `ralph/MAT-BLOCKOUT`** | **very likely already fixed.** Its diagnosis: `harvest_node.gd` loaded `Rock_Medium_1/3.gltf` via `load()+instantiate()` with **no material treatment at all**, so the picked-up rocks kept their native cool grey (value 0.46, saturation 0.09) while `vegetation.gd`'s scatter warms the *same models* toward stone tones. One model, two looks, depending on which system placed it. Re-shoot before doing anything |
+| `RG22` torch brightness | **`NIGHT-LIGHT` lane** owns `torch.gd`'s light path | it is separately establishing whether the torch is lit **at all** at night — `OF18` found the auto-torch silently never fired for the feature's whole life. Do not tune brightness until that answer exists |
+| `RG21` progressive day/night, short night | **`NIGHT-LIGHT`** is inside `art.json`'s presets | adjacent, not the same: that lane is fixing *legibility*, this item is *transition and length*. Coordinate rather than both editing `art.json` |
+| `RG20` no creatures anywhere | **`VEG-SITING`** was asked to investigate and report, not fix | read its finding first — it may already name whether this is spawn siting, density, or where the cameras point |
+| `RG23` invisible blockers | **`SPINE-WEDGE` + `RIVER-GATE` landed**; `CORRIDOR-FIX` in `integrate-9` | the *invisible blocker* half is a known family — `CarveFailsafe` `Area3D` volumes and a spoke's 146 m severing trench, both fixed. Re-walk before assuming it survived. **The missing-collision-on-rocks half is genuinely new** |
+| `RG24` the pointless gorge | **`SPINE-WEDGE` shortened `storm_road`'s carve** from a 73 m reach each way to 30 m | **check this is not that same carve seen from the other side.** If it is, the two items pull in opposite directions and the owner has to settle it. Identify the feature before changing anything |
+| `RG25` long load | `PERF2` (boot 233s→48s), `VEG-CORRIDOR` (68→117s), `EXP1`'s allowance | boot cost has moved three times today. **Re-measure from `user://boot_log.txt` on current `main`** before treating the owner's figure as current |
+| `RG15` minimap | `world_extent.gd` landed — the map baker and minimap now read the corridor's real bounds | the *extent* half may be done. **Rotate-to-heading, full-screen and zoom are untouched** |
+| `RG25` title screen | unblocks `EV9`, which has been parked for weeks | `EV9`'s wordmark and orb-count panel have had nowhere to mount because `D18` boots straight into the world. Do them together |
+
+
 ---
 
 ### RG1 — The game freezes after coming out of an interaction or a menu
