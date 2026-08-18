@@ -202,8 +202,23 @@ func _first_difference(got: Variant, want: Variant, path: String) -> String:
 			if nested != "":
 				return nested
 		for key: Variant in got_dict:
-			if not want_dict.has(key):
-				return "%s.%s was added" % [path, str(key)]
+			if want_dict.has(key):
+				continue
+			# A NEW `_comment*` key is documentation, not data, and must not fail
+			# this test. The point of the identity check is that SPLITTING the
+			# configs changed no gameplay value -- not that the split files are
+			# frozen against every later edit. `OW6` annotated four existing
+			# `trainers` entries with `_comment_ow6` explaining why each captain
+			# sits where it does, which is exactly the kind of `_why` this repo
+			# asks authors to write, and it turned the whole bundle red.
+			#
+			# A new key that is NOT a comment still fails, because that would be
+			# real data appearing from nowhere. Missing keys and changed values
+			# fail either way, comment or not -- the loop above sees those, and
+			# it is the one that catches a split dropping something.
+			if str(key).begins_with("_comment"):
+				continue
+			return "%s.%s was added" % [path, str(key)]
 		return ""
 	if got is Array:
 		var got_array: Array = got
