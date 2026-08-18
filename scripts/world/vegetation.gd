@@ -520,20 +520,101 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 ## `_mesh_ids`, which only happens when `restore_drained()` ran before a
 ## second `build()` — not the normal boot path) are skipped.
 func _register_mesh_assets(models: Array) -> void:
-	var list: Array = []
+	var pending: Dictionary = {}
 	for model_path: String in models:
 		if _mesh_ids.has(model_path):
 			continue
 		var asset := _make_mesh_asset(str(model_path))
 		if asset == null:
 			continue
-		var id := _next_mesh_id
+		# VEG-WHITECARD: give every new asset a unique, explicit id before it
+		# ever reaches Terrain3D. A run that left this at its class default
+		# (every fresh Terrain3DMeshAsset defaults to the same id) put two
+		# different assets at id 0 at once, and whichever one the instancer
+		# picked for that id rendered the OTHER one's real, scattered
+		# transforms with no mesh/material bound at all -- see this
+		# function's own comment below for the full mechanism.
+		asset.set("id", _next_mesh_id)
 		_next_mesh_id += 1
-		asset.set("id", id)
-		_mesh_ids[model_path] = id
-		list.append(asset)
-	if not list.is_empty():
-		_assets.call("set_mesh_list", list)
+		pending[model_path] = asset
+	if pending.is_empty():
+		return
+
+	# VEG-WHITECARD: a live, terrain-bound Terrain3DAssets does NOT treat
+	# set_mesh_list() as "store this array verbatim at these ids" the way a
+	# bare, unattached Terrain3DAssets.new() does (confirmed directly, in a
+	# throwaway probe, run and deleted rather than committed). Submitting
+	# ~42 new assets in one call
+	# measurably comes back with a reserved, unnamed, unmaterialed "New
+	# Mesh" placeholder inserted at id 0, every other id shifted +1, and the
+	# LAST item in the batch silently absent -- confirmed by instrumenting
+	# this exact function during a full boot. Terrain3D then happily draws
+	# that placeholder's real, scattered transforms with no mesh/material
+	# at all: flat, blank-white cross-quad cards, which is the round-6 MQ2B
+	# defect this fixes. Our own `_next_mesh_id` bookkeeping was never
+	# wrong about WHICH transforms belong to WHICH model -- it was wrong to
+	# assume the id we handed Terrain3D is the id it actually kept, so this
+	# always reads the real id back afterward, by NAME (the one property
+	# Terrain3D actually preserves through the shift), rather than trusting
+	# what we asked for.
+	var list: Array = pending.values()
+	_assets.call("set_mesh_list", list)
+
+	var missing: Dictionary = pending.duplicate()
+	for a: Object in (_assets.call("get_mesh_list") as Array):
+		var name := str(a.get("name"))
+		for model_path: String in missing.keys():
+			if str((missing[model_path] as Object).get("name")) != name:
+				continue
+			var real_id := int(a.get("id"))
+			_mesh_ids[model_path] = real_id
+			_next_mesh_id = maxi(_next_mesh_id, real_id + 1)
+			missing.erase(model_path)
+			break
+
+	# Whatever the bulk call dropped (observed: exactly the last item),
+	# top up with individual appends -- same read-current/append/set/
+	# read-back-by-name pattern `_mesh_id_for()` below already used for a
+	# single lazily-registered model, just for however many are left. This
+	# is the ONLY path that calls set_mesh_list() more than once per
+	# build(), and only for the handful of stragglers the bulk call drops.
+	# Doing EVERY registration one at a time instead of this bulk-then-
+	# top-up split was tried and made things categorically worse -- every
+	# single asset came back textureless, not just the dropped one, which
+	# means repeated set_mesh_list() calls on a live-attached Assets object
+	# cost more than an extra reserved slot (a thumbnail regen or similar
+	# side effect running on every call, not just the first).
+	for model_path: String in missing.keys():
+		var asset: Object = missing[model_path]
+		# Re-assign a fresh id, clear of every real id already confirmed
+		# above -- a stray leftover id (e.g. still 0, unchanged since this
+		# asset never made it into the list Terrain3D actually processed)
+		# is exactly the "two assets both claim id 0" collision that sent
+		# a second, unrelated model's transforms to the same blank slot on
+		# the very first version of this fix.
+		asset.set("id", _next_mesh_id)
+		_next_mesh_id += 1
+		var solo: Array = _assets.call("get_mesh_list")
+		solo.append(asset)
+		_assets.call("set_mesh_list", solo)
+		var real_id := _real_mesh_id(str(asset.get("name")))
+		if real_id < 0:
+			push_error("scatter model %s vanished from Terrain3DAssets after registration; that layer will be missing" % model_path)
+			continue
+		_mesh_ids[model_path] = real_id
+		_next_mesh_id = maxi(_next_mesh_id, real_id + 1)
+
+
+## Ground truth for "which real Terrain3DMeshAsset id did this name end up
+## at" -- see `_register_mesh_assets()`'s own comment for why this is never
+## the id we asked for. Names are unique (`model_path.get_file().
+## get_basename()`, and every scatter model file is uniquely named), so a
+## name lookup is unambiguous.
+func _real_mesh_id(asset_name: String) -> int:
+	for a: Object in (_assets.call("get_mesh_list") as Array):
+		if str(a.get("name")) == asset_name:
+			return int(a.get("id"))
+	return -1
 
 
 ## `restore_drained()`'s path: a model that was drained in its entirety never
@@ -547,14 +628,26 @@ func _mesh_id_for(model_path: String) -> int:
 	var asset := _make_mesh_asset(model_path)
 	if asset == null:
 		return -1
-	var id := _next_mesh_id
+	# VEG-WHITECARD: an explicit, unique id BEFORE this reaches Terrain3D --
+	# left at the class default (shared by every fresh Terrain3DMeshAsset),
+	# this collided with another asset already sitting at that same default
+	# and sent ITS transforms to a blank, unmaterialed slot. See
+	# `_register_mesh_assets()`'s own comment for the full mechanism.
+	asset.set("id", _next_mesh_id)
 	_next_mesh_id += 1
-	asset.set("id", id)
 	var list: Array = _assets.call("get_mesh_list")
 	list.append(asset)
 	_assets.call("set_mesh_list", list)
-	_mesh_ids[model_path] = id
-	return id
+	# Read back the real id Terrain3D actually kept rather than trusting
+	# the one we just set -- see `_register_mesh_assets()`'s comment for
+	# why the id we hand it is not reliably the id that sticks.
+	var real_id := _real_mesh_id(str(asset.get("name")))
+	if real_id < 0:
+		push_error("scatter model %s vanished from Terrain3DAssets after registration; that layer will be missing" % model_path)
+		return -1
+	_mesh_ids[model_path] = real_id
+	_next_mesh_id = maxi(_next_mesh_id, real_id + 1)
+	return real_id
 
 
 ## Build one `Terrain3DMeshAsset` for a model, retinted exactly the way the
