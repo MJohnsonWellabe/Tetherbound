@@ -150,11 +150,18 @@ The lane hit exactly this itself: `OF18`'s existing smoke regression started
 failing the moment the gate went in, because it tested auto-lighting with the
 torch never equipped.
 
-**Tiny remainder, deliberately not landed:** `ralph/RG-GATHER` still carries
-`f0113faf`, a one-line `.uid` sidecar for `tools/capture_mat_blockout.gd`. It
-sits behind `main` and `tools/**` is a code path, so landing it costs a full
-~7-minute CI run for one generated line. Not worth a run during a wind-down —
-fold it into the next code bundle instead.
+**Tiny remainder, deliberately not landed, and smaller than it looks.**
+`ralph/RG-GATHER` still carries `f0113faf`, a one-line `.uid` sidecar for
+`tools/capture_mat_blockout.gd`. Checked rather than assumed: **no test in this
+repo enforces `.uid` presence**, and **two** files under `tools/` lack one on
+`main`, not one — `capture_mat_blockout.gd` and `capture_night_light.gd`
+(NIGHT-LIGHT's own capture tool, which that lane also never generated). Godot
+regenerates them on import, so the cost is a dirty tree after opening the
+editor, not breakage.
+
+`tools/**` is a code path, so landing them costs a full CI run for two
+generated lines. **Do both at once in the next code bundle**, rather than
+either alone.
 
 ### RG24 — The gorge that is not worth walking around
 `model: sonnet` · `tests: smoke_traversal` · `area: terrain`
