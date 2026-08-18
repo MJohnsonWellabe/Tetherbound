@@ -13,9 +13,11 @@ extends Node3D
 ## walk through), named markers so anything that has to navigate the place
 ## asks the place rather than hard-coding metres, an Area3D that swaps the
 ## camera profile on entry, and one gate that can be disabled. Nothing here
-## is final art -- the cave is grey rock geometry, and the thing that makes it
-## legible today is that it is DARK (see `_build_lights`) and the player is
-## carrying OF24's torch.
+## is final art -- the layout, chamber shapes and lighting are still
+## blockout, and the thing that makes it legible today is that it is DARK
+## (see `_build_lights`) and the player is carrying OF24's torch. The rock
+## itself carries a real texture (MAT-BLOCKOUT, `_material`) rather than a
+## flat colour, so it does not read as unfinished geometry up close.
 ##
 ## Three deliberate non-inventions:
 ##
@@ -43,6 +45,25 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+
+## MAT-BLOCKOUT. The wall/ceiling boxes below carried a flat StandardMaterial3D
+## colour and nothing else, by design (see this file's header) -- a blind
+## critic named the result correctly: "completely flat-shaded... no texture...
+## unfinished blockout geometry." Textured with `terrain_playground.json`'s own
+## `rock` material (data/config/terrain_playground.json, the `rock` entry under
+## `materials`) rather than a new asset: it is the SAME stone the hillside this
+## cave is dug into is textured with, already tuned against this project's own
+## lighting across several OF11/EV4 rounds (uv_scale, normal_depth, tint below
+## are its vetted values, not new numbers), so the cave reads as continuous
+## with the cliff the player just walked past, not a second, unrelated rock.
+## `uv1_triplanar` avoids authoring UVs for primitive boxes of varying size --
+## the same technique `severed_spokes.gd::_stone_material` and
+## `grandpa_house.gd::_material` already use for procedurally-sized geometry
+## in this exact codebase.
+const ROCK_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
+const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
+const ROCK_UV_SCALE := 0.46
+const ROCK_TINT := Color("#fff2e0")
 
 ## The cave is a narrow, low place; the village's default third-person arm
 ## puts the camera through the rock. Same seam grandpa_house.gd uses.
@@ -154,13 +175,21 @@ func _size_of(raw: Variant) -> Vector2:
 
 ## --- geometry --------------------------------------------------------------
 
-func _material(colour: Color, emissive := 0.0) -> StandardMaterial3D:
-	var key := "%s_%.2f" % [colour.to_html(), emissive]
+func _material(colour: Color, emissive := 0.0, textured := false) -> StandardMaterial3D:
+	var key := "%s_%.2f_%s" % [colour.to_html(), emissive, textured]
 	if _materials.has(key):
 		return _materials[key]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = colour
 	m.roughness = 0.95
+	if textured:
+		m.albedo_texture = ROCK_ALBEDO
+		m.albedo_color = ROCK_TINT
+		m.normal_enabled = true
+		m.normal_texture = ROCK_NORMAL
+		m.uv1_triplanar = true
+		m.uv1_scale = Vector3.ONE * ROCK_UV_SCALE
+	else:
+		m.albedo_color = colour
 	if emissive > 0.0:
 		m.emission_enabled = true
 		m.emission = colour
@@ -170,12 +199,12 @@ func _material(colour: Color, emissive := 0.0) -> StandardMaterial3D:
 
 
 ## A box with matching collision, positioned by its centre in cave-local space.
-func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> MeshInstance3D:
+func _box(size: Vector3, at: Vector3, colour: Color, solid := true, textured := false) -> MeshInstance3D:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
 	mesh.mesh = box
-	mesh.material_override = _material(colour)
+	mesh.material_override = _material(colour, 0.0, textured)
 	mesh.position = at
 	add_child(mesh)
 	if solid:
@@ -212,7 +241,7 @@ func _build_chambers() -> void:
 		_box(Vector3(outer.x, _skirt, outer.y),
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_colour())
 		_box(Vector3(outer.x, 0.8, outer.y),
-			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock())
+			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(id, centre, size, height, side, _opening_on(id, side))
@@ -302,7 +331,7 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	# reads as rock meeting the hillside rather than as a floating box.
 	var extra := 0.0 if base > 0.0 else _skirt
 	size.y += extra
-	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z), _rock())
+	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z), _rock(), true, true)
 
 
 ## The tunnels between chambers: floor, ceiling and two side walls each. The
@@ -336,7 +365,7 @@ func _build_passages() -> void:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 0.8, length)
 		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_colour())
-		_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock())
+		_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
@@ -346,7 +375,7 @@ func _build_passages() -> void:
 			else:
 				wall_at.x += s * (width * 0.5 + _wall_t * 0.5)
 				wall_size = Vector3(_wall_t, height + _skirt, length)
-			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z), _rock())
+			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z), _rock(), true, true)
 
 		if bool(passage.get("gated", false)):
 			_build_vault_door(centre, along_x, width, height)
