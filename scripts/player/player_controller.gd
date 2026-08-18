@@ -16,6 +16,7 @@ const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
 const TORCH := preload("res://scripts/player/torch.gd")
 const TOOL_HOLD := preload("res://scripts/player/tool_hold.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 signal landed(impact_speed: float, damage: float)
 signal died()
@@ -159,10 +160,21 @@ func _physics_process(delta: float) -> void:
 	if _carried:
 		_ride(delta)
 		return
-	_track_airborne(delta)
+	# RG5 (owner playtest, 2026-08-18): "when the building menu is up, pressing
+	# directions and pressing a still controls the character too as the menu."
+	# `build_menu.gd` is the one panel that deliberately does not pause the
+	# tree (its own header explains why), so this node kept polling movement
+	# and jump underneath it -- and `jump` and the menu's own `ui_accept`
+	# (picking a piece) are bound to the SAME physical button (project.godot:
+	# joypad button 0), so confirming a piece also jumped the trainer. Every
+	# other world-verb poll already asks `input_owner.gd` this same question
+	# (`build_placer.gd`, `interaction_arbiter.gd`); this was the one that
+	# never had, despite being the most obviously affected by a leak.
+	var input_owned := INPUT_OWNER.current(get_tree()) != null
+	_track_airborne(delta, input_owned)
 	_apply_gravity(delta)
-	_apply_movement(delta)
-	_try_jump()
+	_apply_movement(delta, input_owned)
+	_try_jump(input_owned)
 
 	var falling_speed := -velocity.y
 	# Captured BEFORE move_and_slide: sliding against a wall zeroes the
@@ -239,13 +251,16 @@ func _try_step_up(motion: Vector3) -> void:
 	velocity.y = minf(velocity.y, 0.0)
 
 
-func _track_airborne(delta: float) -> void:
+func _track_airborne(delta: float, input_owned: bool) -> void:
 	if is_on_floor():
 		_airborne_for = 0.0
 	else:
 		_airborne_for += delta
 
-	if Input.is_action_just_pressed("jump"):
+	# A jump press swallowed while a panel owns input must not sit BUFFERED
+	# either -- the buffer window (`_buffer_time`) would otherwise fire the
+	# jump the instant the panel closed, the same leak one frame later.
+	if not input_owned and Input.is_action_just_pressed("jump"):
 		_jump_buffered_for = 0.0
 	else:
 		_jump_buffered_for += delta
@@ -261,9 +276,9 @@ func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * scale * delta
 
 
-func _apply_movement(delta: float) -> void:
+func _apply_movement(delta: float, input_owned: bool) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	if not _locomotion_enabled:
+	if not _locomotion_enabled or input_owned:
 		# Read as no input rather than skipped entirely, so the existing friction
 		# brings the trainer to a stop instead of freezing them mid-stride.
 		input = Vector2.ZERO
@@ -300,8 +315,8 @@ func _face(direction: Vector3, delta: float) -> void:
 	_model.rotation.y = rotate_toward(_model.rotation.y, target_yaw, _turn_speed * delta)
 
 
-func _try_jump() -> void:
-	if not _locomotion_enabled:
+func _try_jump(input_owned: bool) -> void:
+	if not _locomotion_enabled or input_owned:
 		return
 	var grounded_enough := is_on_floor() or _airborne_for <= _coyote_time
 	var asked_recently := _jump_buffered_for <= _buffer_time
