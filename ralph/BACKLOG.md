@@ -111,6 +111,13 @@ evidence" is a complete and valued outcome and it is faster than the work.**
 ---
 
 ### RG1 — The game freezes after coming out of an interaction or a menu
+
+**MEASURED 2026-08-18 by `RG-INPUT` — neither named freeze reproduces on
+current `main`.** The lane built a real repro rather than eyeballing it and
+shipped it as `tests/smoke_post_modal_control.gd`, so a regression is caught
+rather than re-reported. **Do not re-chase these two freezes.** Ask the owner
+whether he still sees them on a current build; if he does, it is a third case
+and the existing test is the place to add it.
 `model: opus` · `tests: smoke_menu, smoke_modal_stacking, new` · `area: ui, blocker`
 Owner: *"The game seems to freeze a lot after coming out of an interaction or
 menu. Like interacting with the trader at the beginning then it freezes. Doing a
@@ -162,6 +169,10 @@ ghost/rotate/snap/grid system "was working the entire time", so trust the
 measurement over the claim.
 
 ### RG5 — The build menu leaks input to the character
+
+**FIXED on `ralph/RG-INPUT` (a2b82f79), bundled in `integrate-12`.** Movement
+and jump are now gated behind `input_owner.gd`. Verify in play before closing —
+the owner's report was about feel, and a passing test is not the same claim.
 `model: opus` · `tests: smoke_free_build, smoke_menu` · `area: ui, blocker`
 Owner: *"When the building menu is up, pressing directions and pressing a still
 controls the character too and the menu."*
@@ -230,7 +241,9 @@ report the frame-time change.
 Leave `R2.3`'s reasoning in place with a note naming this item, so the reversal
 is legible.
 
-### RG11 — Stones look like white paper
+### DONE — RG11 — Stones look like white paper
+
+**LANDED main (7fa9735e), via MAT-BLOCKOUT.** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: none (visual)` · `area: visual`
 Owner: *"Stones look like white paper."* Wood on the ground is *"okay"*.
 
@@ -745,7 +758,9 @@ player who falls in *beside* the deck, so the hole is the deck's footprint and
 not the whole segment. Acceptance is both lock states: locked stops the player,
 unlocked lets them across.
 
-### SPINE-ROUTE — 11 m of Band 3's trail runs two metres to the side of its own bridge
+### DONE — SPINE-ROUTE — 11 m of Band 3's trail runs two metres to the side of its own bridge
+
+**LANDED integrate-11 (d926d679).** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: smoke_traversal, the walk probe over a z-window` · `area: terrain`
 **Filed 2026-08-17 (OPS14). This is the real cause of `OW5-walk`'s 712 recovery
 teleports, and it is a two-metre data error.**
@@ -840,7 +855,9 @@ them alone:
   around it, so it is an annoyance rather than a blockage — but it is a post on
   the centreline of its own road.
 
-### RIVER-OVERHANG — the river is authored past the edge of the baked world
+### DONE — RIVER-OVERHANG — the river is authored past the edge of the baked world
+
+**LANDED integrate-11 (d926d679).** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: none` · `area: terrain`
 Filed 2026-08-17 (OPS11) from `OW5-walk`. `river.course` runs to x ±1150 while
 the baked region grid is valid to ~±1022, so three course points sit outside the
@@ -882,7 +899,9 @@ keep the width and fill the flanks so the crossing earns its time; or accept
 6.8 min and treat the five-minute figure as superseded. **Do not re-author the
 world to make a number come out right without asking.**
 
-### OW6 — The captain you can challenge is too close to the start
+### DONE — OW6 — The captain you can challenge is too close to the start
+
+**LANDED integrate-11 (d926d679).** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: none` · `area: village`
 Owner: *"The captain to challenge is way too close to where you start. You need
 to work to find him."* Positions are data (`data/config/trainers.json`), so this
@@ -1289,7 +1308,9 @@ on — whether the boss can fail to engage from a given start position, or a
 timing window depends on load. The container was under four concurrent lanes
 both times, which is itself a clue.
 
-### BAND-SPLIT-2 — the rest of what still makes five band agents collide
+### DONE — BAND-SPLIT-2 — the rest of what still makes five band agents collide
+
+**LANDED integrate-11 (d926d679).** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: run_tests, an identity test per split` · `area: data, world`
 Filed 2026-08-17 (OPS11) from the `BAND-SPLIT` lane's own answer to "will five
 agents authoring five bands actually work now?" — *"for the four configs I
@@ -1405,7 +1426,9 @@ torch is a different bug from a night that is too dark with a working one.
 raise ambient until frames look nice on a desktop monitor — judge at 40%
 downscale as the seven-inch handheld proxy, which is where the owner plays.
 
-### MAT-BLOCKOUT — two landmark assets read as untextured blockout at close range
+### DONE — MAT-BLOCKOUT — two landmark assets read as untextured blockout at close range
+
+**LANDED main (7fa9735e).** Closed by the coordinator in the same pass that landed it.
 `model: sonnet` · `tests: none (visual)` · `area: visual, assets`
 **Filed 2026-08-17 (OPS16) from `MQ2B`'s convergence loop.** Named by the blind
 critic in rounds 2, 3 and 4, in the same rank each time, and **only visible once
