@@ -2,7 +2,26 @@
 
 You are implementing **Tetherbound**, a Godot-based Windows-first third-person survival/crafting creature-training game.
 
-Before coding, read:
+## ACTIVE MEADOWS EXECUTION — READ THIS BEFORE PICKING WORK
+
+The owner has restructured the Meadows execution around **finished gameplay experiences rather than a flat feature/bug queue**.
+
+Before selecting any current Meadows task, read:
+
+1. `docs/TETHERBOUND_GAME_VISION.md` — what the finished game is supposed to be and feel like.
+2. `ralph/ACTIVE_GAME_PLAN.md` — the active execution order, gameplay gates, regional packages, and mapping of the existing prompt library into those packages.
+3. `ralph/OWNER_PLAYTEST_2026-08-18.md` — newest concrete owner-play evidence; it supersedes older assumptions where it conflicts.
+4. the relevant detailed prompt(s) under `docs/ralph-prompts/`.
+
+**For current Meadows work, `ralph/ACTIVE_GAME_PLAN.md` controls task selection order even where older Ralph instructions say simply to work top-down through `ralph/BACKLOG.md`.** `BACKLOG.md` remains the complete project ledger: do not delete, forget, or silently close old tasks. The active plan groups and reorders them so they contribute to a finished game.
+
+The gameplay gates in the active plan are **not owner-blocking approval gates**. Old owner-only play gates remain retired. Ralph/Claude should execute the segment, gather gameplay/render/test evidence, fix it until it meets the written criteria, and continue automatically. Ask the owner only when a genuinely unresolved design decision is required.
+
+The active plan’s principle is binding:
+
+> **A region/system is not done because code/data exists. It is done when the complete player path produces the intended Tetherbound experience.**
+
+Before coding, also read the canonical technical/design sources relevant to the task:
 1. `docs/GAME_DESIGN.md`
 2. `docs/MEADOWS_VERTICAL_SLICE.md`
 3. `docs/MEADOWS_PROGRESSION_SPEC.md`
@@ -24,6 +43,8 @@ carve-outs where an older rule still governs.
 ## Mission
 
 Build the Meadows vertical slice quickly and iteratively. The goal is not maximum feature count. The goal is a game the owner voluntarily wants to keep playing.
+
+For the current project state, this means finishing the full Meadows chapter described in `docs/TETHERBOUND_GAME_VISION.md`: reliable core verbs, a strong opening-to-tournament first session, coherent team/reward progression, finished regional gameplay loops, meaningful five-creature pressure, a strong Warden/legendary finale, and a 3–4 hour focused end-to-end experience.
 
 ## Hard Rules
 
@@ -75,6 +96,12 @@ For each milestone:
 5. Record meaningful technical/design decisions in `docs/decisions/`.
 6. Keep data out of gameplay code when it will clearly vary by species/move/item.
 7. Do not over-generalize speculative future systems.
+
+For gameplay-package work, add:
+8. Play the full evidence segment named in `ralph/ACTIVE_GAME_PLAN.md` rather than only testing the edited subsystem.
+9. Record player purpose, team progression, meaningful choices, dead-travel intervals, reliability failures and regional presentation.
+10. Fix the highest-impact player-facing failure before polishing lower-impact issues.
+11. Continue to the next gate automatically when the evidence criteria pass.
 
 ## Asset Work
 
@@ -140,17 +167,10 @@ them past what `docs/MEADOWS_PROGRESSION_SPEC.md` actually says still belongs
 on this list. This paragraph exists because a firing reading "major story
 rewrite" above would otherwise be right to park the whole chapter.
 
-## First Objective
+## Current Objective
 
-Start with **M0 and M1** from `MEADOWS_VERTICAL_SLICE.md`:
-- clean Godot project
-- Windows export preset
-- controller input
-- third-person movement playground
-- walk/sprint/jump
-- stamina
-- fall damage
-- camera orbit
-- representative rolling meadow test terrain
+The old repository-start instruction to begin with M0/M1 movement playground work is historical; those milestones have long since been built. **Do not restart them.**
 
-Do not start creature content until movement is comfortable.
+Current Meadows execution starts at the first incomplete work in `ralph/ACTIVE_GAME_PLAN.md`, beginning with Gate A reliability/core verbs and then proceeding through the finished gameplay packages to the full-chapter integration pass.
+
+Inspect current `main` before changing anything. A child task already fixed on current `main` should be verified and preserved, not rebuilt from stale prose.
