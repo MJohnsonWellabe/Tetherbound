@@ -10,8 +10,9 @@ Before selecting any current Meadows task, read:
 
 1. `docs/TETHERBOUND_GAME_VISION.md` — what the finished game is supposed to be and feel like.
 2. `ralph/ACTIVE_GAME_PLAN.md` — the active execution order, gameplay gates, regional packages, and mapping of the existing prompt library into those packages.
-3. `ralph/OWNER_PLAYTEST_2026-08-18.md` — newest concrete owner-play evidence; it supersedes older assumptions where it conflicts.
-4. the relevant detailed prompt(s) under `docs/ralph-prompts/`.
+3. `ralph/PROMPT_COMPATIBILITY_MAP.md` — preserves older overlapping owner-play prompts without executing duplicate implementations.
+4. `ralph/OWNER_PLAYTEST_2026-08-18.md` — newest concrete owner-play evidence; it supersedes older assumptions where it conflicts.
+5. the relevant detailed prompt(s) under `docs/ralph-prompts/`.
 
 **For current Meadows work, `ralph/ACTIVE_GAME_PLAN.md` controls task selection order even where older Ralph instructions say simply to work top-down through `ralph/BACKLOG.md`.** `BACKLOG.md` remains the complete project ledger: do not delete, forget, or silently close old tasks. The active plan groups and reorders them so they contribute to a finished game.
 
