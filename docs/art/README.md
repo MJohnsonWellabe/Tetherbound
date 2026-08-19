@@ -1,49 +1,64 @@
 # Tetherbound — Meadows Art Pack
 
-This pack is intended to give Claude/Codex and any 3D-generation/modeling workflow a concrete visual target for the Meadows vertical slice.
+This pack gives Claude/Ralph and the 3D pipeline concrete visual targets for the Meadows.
 
-## Authoritative game-design facts
-The repository's Meadows vertical-slice spec requires:
-- 3 starters: Ground / Water / Air
-- 12 wild species
-- 1 evolved form
-- 1 Ground legendary
-- Grandpa
-- first regional Warden
-- cozy stylized natural-world presentation
-- strong silhouettes and readable materials
-- Godot / Windows / ROG Ally as the target
+## Current authority map
 
-The repository's wild-roster skeleton, as it stood when this pack was written:
-Ground: rabbit; boar-like; canine -> wolf evolution; rideable deer/horse; badger-like
-Water: frog/newt; turtle; otter/beaver; Water/Air waterfowl
-Air: small bird; owl; hawk/eagle
+Use the most specific current source:
 
-**The canine no longer evolves; the pig does.** The owner's later Meadows Wild
-Canon Pack — `docs/art/wild/`, sheets in `docs/art/reference/wild/` — is the
-source of truth for the wild roster, and it makes `Mudsnout -> Tuskroot` the
-biome's only evolution and retires the evolved canine. This pack is unaffected
-in every other respect: it never covered the wild roster's individual designs,
-and its starter sheets, style rules and precedence rule all still stand. See
-`docs/decisions/D13`.
+- **Installed/reusable human NPC assets + current Warden state:** `HUMANOID_ASSET_INVENTORY.md`
+- **Current wild roster/species art:** `docs/art/wild/` and `docs/art/reference/wild/`
+- **Character/reference precedence:** `REFERENCE_CANON.md`
+- **Whole Meadows roster list:** `ROSTER_MANIFEST.md`
+- **3D production pipeline:** `TETHERBOUND_3D_ART_PIPELINE.md`
+- **Asset provenance/license:** `docs/ASSET_LEDGER.md`
+
+Older production reports are valuable for pipeline history, but current asset availability comes from the inventory above and current files on `main`.
+
+## Current humanoid production state
+
+Do **not** assume the Meadows has only the trainer, Grandpa, and Warden.
+
+Current `main` has six production humanoid rigs/models:
+
+- trainer/player base;
+- Grandpa;
+- rebuilt Warden;
+- villager male;
+- villager female;
+- Team Tether grunt.
+
+Claude should reuse these existing families and their material/rank/config variants before considering a new human generation. See `HUMANOID_ASSET_INVENTORY.md` for exact paths and rules.
+
+The Warden is already rebuilt from the owner-supplied `reference/16_Warden_Aldis_Character.png`; historical notes saying he still has a painted/unmodelled face or needs a better reference sheet are obsolete.
+
+## Current creature art state
+
+The three starter sheets remain the direct visual source of truth for:
+
+- Terrapup — Ground starter;
+- Ripplet — Water starter;
+- Galewisp — Air starter.
+
+The owner's later Meadows Wild Canon Pack in `docs/art/wild/`, with sheets in `docs/art/reference/wild/`, is authoritative for the twelve wild species and Tuskroot. It makes `Mudsnout -> Tuskroot` the Meadows' only normal evolution and retires the older evolved-canine assumption.
 
 ## Important use rule
-The PNG concept boards establish the VISUAL LANGUAGE, proportions, materials, rendering style, silhouette quality, and general creature appeal.
 
-Where a board label or type conflicts with `CLAUDE_BUILD_PROMPTS.md`, the markdown specification wins. The image generator occasionally invented labels while rendering the boards; those labels are not game-design authority.
+Reference images establish visual language, proportions, materials, silhouette quality and character identity. Markdown/current decisions win on mechanics, names/types where explicitly settled, and production status.
 
-The three starter sheets are stronger individual references and should be treated as the visual source of truth for:
-- Terrapup — Ground starter
-- Ripplet — Water starter
-- Galewisp — Air starter
+Do not infer a new species, type, mechanic, or required asset merely because an older concept board depicts it.
 
-## Files
-01-03: Starter production-reference sheets
-04: Main trainer style reference, included to keep human/Pal art cohesive
-05-07: Full-biome style / roster exploration boards
-08: cropped Meadows creature-roster visual reference
-09: Grandpa visual reference
-10: Warden visual reference
-11: Ground legendary visual reference
-CLAUDE_BUILD_PROMPTS.md: authoritative per-character modeling / generation prompts
-ROSTER_MANIFEST.md: concise roster map and production priorities
+## Key reference files
+
+- `reference/01_Ground_Starter_Terrapup.png`
+- `reference/02_Water_Starter_Ripplet.png`
+- `reference/03_Air_Starter_Galewisp.png`
+- `reference/04_Main_Character_Style_Reference.png`
+- `reference/12_NPC_Bases_Reusable.png`
+- `reference/13_Tether_Energy_Pylon.png`
+- `reference/14_Relay_Apparatus.png`
+- `reference/15_Legendary_Tether_Machine.png`
+- `reference/16_Warden_Aldis_Character.png`
+- `reference/wild/` — production sheets for the current wild roster
+
+Boards `05`–`11` remain useful historical exploration/donor references where a current source explicitly still points to them, but they do not override newer production sheets, current installed assets, or settled markdown canon.
