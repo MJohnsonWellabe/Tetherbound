@@ -1,5 +1,13 @@
 # Meadows Ralph Prompt Library — execution index
 
+## Latest owner playtest overrides — read first
+
+Before executing any prompt below, read `ralph/OWNER_PLAYTEST_2026-08-18.md`.
+
+That file records the owner's newest live ROG play feedback and **supersedes older prompt assumptions where they conflict**. In particular it reopens/expands modal freezes and torch reliability, changes creature-bed recovery to gradual overnight physical rest, changes building to persistent Valheim-style placement plus dismantling/modular snapping, makes catching aim a concrete near-term problem, confirms the title screen is still absent, records minimap movement-up as verify-first while trail coverage remains broken, and locks Meadows world composition to a mix of lush dense pockets and broad open fields.
+
+P0 items in that playtest overlay take priority over lower-priority content/polish work in this index.
+
 This folder contains one implementation/scoping prompt for every one of the 38 items on the owner's Meadows review board.
 
 **Important:** numeric filename prefixes record the order these prompts were authored in ChatGPT, not the original review-board priority. Execute/reference them using the board-order index below.
