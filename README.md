@@ -1,51 +1,73 @@
 # Tetherbound
 
-A third-person survival/crafting creature-training game. Godot 4, Windows-first,
-built for handheld PCs and the ROG Ally. Controller first, single player.
+Tetherbound is a third-person open-world creature-training adventure built in Godot 4 for Windows/handheld PCs, with controller-first play, gathering, crafting, building, exploration, care, and real-time creature combat.
 
-You may own **five creatures, total.** There is no box and no reserve team. Catching a
-sixth forces a permanent release. Everything else in the design follows from that
-one rule.
+The defining rule is:
+
+> **You may own five creatures, total.**
+
+There is no reserve box and no hidden storage team. Catching beyond five forces a real keep/release choice. The game is built around making those five increasingly capable and personally meaningful.
 
 ## Play it
 
-Windows builds are published on every push to `main`:
+Windows builds are published from `main`:
 
 **[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)**
 
-**On ROG Ally, the built-in controller needs Gamepad Mode.** Command Center's
-default is Desktop Mode, which sends the sticks and buttons to Windows as a
-mouse and keyboard — the game will boot fine and look completely unresponsive
-because there is no controller for it to see. Command Center → Gamepad Mode
-before launching. The in-game HUD's input readout (M1) will say so directly if
-a pad is detected but never reports a moving stick.
+On ROG Ally, use **Gamepad Mode**. Desktop Mode sends controls as mouse/keyboard and can make an otherwise running build appear unresponsive.
 
-## Run it from source
+## Run from source
 
-Install Godot 4.7, then `Import` this folder's `project.godot`. `F5` runs the
-game. `GODOT_AND_CLAUDE_START_HERE.md` is the longer version of that, written for
-someone who has not used Godot before.
+1. Install Godot 4.7.
+2. Clone this repository.
+3. Import `project.godot` in Godot.
+4. Press F5 to run the project.
 
-## The documents
+`GODOT_AND_CLAUDE_START_HERE.md` is the human setup guide.
 
-These are authoritative, in this order:
+## Autonomous Claude / Ralph work
 
-| Document | What it settles |
+For any coding-agent or Ralph session:
+
+**Start with `CLAUDE.md`, then `ralph/START_HERE.md`.**
+
+Do not start from the old milestone sequence or read the giant backlog top-down.
+
+Current Meadows execution is organized around **finished gameplay gates**, not a flat feature queue:
+
+- trustworthy core verbs;
+- fresh start through the village tournament;
+- progression/reward/trainer/wild/rest backbone;
+- finished Lower Meadows;
+- finished Quarry / Burrow Warrens;
+- finished River / Tether Relay;
+- finished Upper Meadows;
+- finished Stronghold Approach;
+- Warden / legendary finale;
+- full 3–4 hour Meadows integration playthrough.
+
+The complete routing and execution order is in `ralph/START_HERE.md` and `ralph/ACTIVE_GAME_PLAN.md`.
+
+## Current authoritative documents
+
+| Document | Purpose |
 |---|---|
-| `docs/GAME_DESIGN.md` | The whole design. Pillars, systems, roster scope, difficulty. |
-| `docs/MEADOWS_VERTICAL_SLICE.md` | The milestone list currently being built, M0–M15. |
-| `docs/TECHNICAL_START.md` | Project layout, data/code separation, conventions. |
-| `CLAUDE.md` | The rules a coding agent may not break. |
+| `CLAUDE.md` | Hard rules and coding-agent contract. |
+| `ralph/START_HERE.md` | Single current autonomous-work entry point. |
+| `docs/TETHERBOUND_GAME_VISION.md` | Experience-level definition of the finished Meadows game. |
+| `ralph/ACTIVE_GAME_PLAN.md` | Current gameplay-gate execution order. |
+| `ralph/ACTIVE_TASKS.md` | Compact current-gate task manifest. |
+| `docs/MEADOWS_PROGRESSION_SPEC.md` | Canonical Meadows chapter/progression detail. |
+| `docs/GAME_DESIGN.md` | Broader game design where not superseded by later Meadows decisions. |
+| `docs/TECHNICAL_START.md` | Project/data/code structure. |
+| `ralph/conventions.md` | Branch, CI, testing, visual-judge, and shipping conventions. |
 
-Supporting material:
+## History/reference
 
-- `docs/art/` — the Meadows reference-art pack, and which parts of it are canon
-  (`REFERENCE_CANON.md`).
-- `docs/decisions/` — numbered records of technical and design calls, and why.
-- `docs/reviews/` — blind visual critiques of the build, including the failures.
-- `docs/ASSET_LEDGER.md` — provenance and licence for every non-original asset.
+The repository intentionally retains extensive design and Ralph history. Files such as `ralph/BACKLOG.md`, `ralph/DONE.md`, `ralph/BLOCKED.md`, dated handovers, and older prompt/manual files are references, not startup documents.
+
+Search them for a specific task or decision when needed; do not load them wholesale into a fresh agent session.
 
 ## Scope
 
-Meadows only. No second biome until the Meadows vertical slice passes its exit
-gate.
+Meadows is the current game. No second biome implementation until the Meadows chapter passes its full exit/integration gate.
