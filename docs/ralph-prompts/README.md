@@ -6,11 +6,66 @@ Before executing any prompt below, read `ralph/OWNER_PLAYTEST_2026-08-18.md`.
 
 That file records the owner's newest live ROG play feedback and **supersedes older prompt assumptions where they conflict**. In particular it reopens/expands modal freezes and torch reliability, changes creature-bed recovery to gradual overnight physical rest, changes building to persistent Valheim-style placement plus dismantling/modular snapping, makes catching aim a concrete near-term problem, confirms the title screen is still absent, records minimap movement-up as verify-first while trail coverage remains broken, and locks Meadows world composition to a mix of lush dense pockets and broad open fields.
 
-P0 items in that playtest overlay take priority over lower-priority content/polish work in this index.
+P0 items in that playtest overlay take priority over lower-priority content/polish work in the original board index.
 
-This folder contains one implementation/scoping prompt for every one of the 38 items on the owner's Meadows review board.
+## Phase -1.7 owner-play prompts — execute by priority
 
-**Important:** numeric filename prefixes record the order these prompts were authored in ChatGPT, not the original review-board priority. Execute/reference them using the board-order index below.
+These are newer owner-play items/addenda written after the original 38-item review board. They are detailed implementation prompts, not notes-only reminders.
+
+### P0 — correctness / blockers
+
+| Owner item | Prompt |
+|---|---|
+| RG1 modal freeze reopened: innkeeper, creature bed, Build-from-main-menu | `39-RG1-owner-playtest-modal-freeze-reopen.md` |
+| Build modular geometry/snap contract | `42-BUILD-modular-snap-contract.md` |
+| Equipped tool + visible swing + pickup feedback | `44-GATHER-equipped-tool-swing-and-pickup-feedback.md` |
+| Torch upright hand + repeated re-equip lighting | `51-TORCH-upright-hand-and-re-equip-light.md` |
+| RG25/EV9 title/front door confirmed missing | `54-RG25-owner-confirmed-title-screen-missing.md` |
+
+### P1 — build/care/catch/team experience
+
+| Owner item | Prompt |
+|---|---|
+| Persistent Valheim-style repeat placement for every buildable | `40-BUILD-valheim-repeat-placement.md` |
+| Dismantle player builds, full refund | `41-BUILD-dismantle-full-refund.md` |
+| Creature bed: visible, gradual overnight rest, unavailable for combat | `43-CREATURE-BED-gradual-overnight-rest.md` |
+| Palworld-like over-shoulder catch aiming/throw | `45-CATCH-over-shoulder-aim-and-throw.md` |
+| Creature release ceremony | `46-CREATURE-release-ceremony.md` |
+| Creature level-up feedback | `47-CREATURE-level-up-feedback.md` |
+| In-world previous/next pal cycling | `48-PARTY-cycle-pals-in-world.md` |
+
+### P2 — world/navigation/content purpose
+
+| Owner item | Prompt |
+|---|---|
+| Pond gets real water; preserve approved lush vegetation | `49-POND-real-water.md` |
+| Normal-looking Meadows building doors must work | `50-WORLD-usable-building-doors.md` |
+| Preserve movement-up minimap; show all meaningful authored trails | `52-MAP-all-authored-trails-visible.md` |
+| Pokémon-first Meadows core-loop/encounter/resource/camp density | `53-MEADOWS-pokemon-first-core-loop-density.md` |
+
+### Positive findings to protect
+
+- **Basic structure placement now works** in the owner's current play. Do not reintroduce the old `place does nothing` defect while adding repeat placement/snapping.
+- **Minimap movement-up appears to work.** Verify before touching that orientation math.
+- **The dense pond-side trees/plants look great.** Preserve that lush pocket. Meadows should deliberately alternate such dense areas with broad open Valheim/Palworld-like fields and long sightlines; do not apply one global vegetation density.
+
+### Explicit supersessions of older prompts
+
+- `02-RG4-build-placement-confirmation.md`: base placement is now positive evidence; `40` + `42` define the remaining owner build ask.
+- `08-RG22-verify-current-torch-lighting.md`: verify-only assumption is superseded by `51`'s concrete current defects.
+- `14-RG15-minimap-movement-up-and-full-map-navigation.md`: movement-up is verify-first; `52` owns current missing-trails defect.
+- `25-RG19-spec-creature-condition-model.md`: `43` adds physical bed occupancy, gradual HP recovery, combat ineligibility and overnight completion to rested condition.
+- `27-RG25-title-save-select-quit-and-boot-measurement.md`: `54` records that the title screen is currently missing in owner play and must actually be implemented.
+- `36-R9.1-scope-input-combat-catch-camera-polish.md`: catch aim is no longer vague polish; `45` is concrete implementation work.
+- `06`, `28`, `29`, `30`, `31`: coordinate through `53` so wilds, bands, alphas, activities and home/camp systems create one purposeful team-progression cadence rather than isolated content islands.
+
+---
+
+## Original 38-item Meadows review board
+
+This folder also contains one implementation/scoping prompt for every one of the 38 items on the owner's earlier Meadows review board.
+
+**Important:** numeric filename prefixes record the order these prompts were authored in ChatGPT, not the original review-board priority. Execute/reference them using the board-order index below, subject to the newer Phase -1.7 overrides above.
 
 | Board # | Board item | Prompt file |
 |---:|---|---|
@@ -55,14 +110,14 @@ This folder contains one implementation/scoping prompt for every one of the 38 i
 
 ## Important dependency/order notes
 
-- **RG19-spec must precede RG19-build.** The build prompt deliberately refuses to invent rested/fed/happy semantics.
-- **EV9 and RG25 share the title/save-select front door.** Reuse one implementation; EV9 owns branded presentation/HUD remainder, RG25 owns current performance measurement and exit/session behavior.
-- **NIGHT-REJUDGE is verification.** RG21 owns continuous cycle/timing; RG22 owns torch verification after final night.
+- **RG19-spec must precede RG19-build.** The build prompt deliberately refuses to invent rested/fed/happy semantics. Phase -1.7 prompt `43` is part of that condition implementation and must be reconciled before tournament eligibility is considered complete.
+- **EV9 and RG25 share the title/save-select front door.** Reuse one implementation; EV9 owns branded presentation/HUD remainder, RG25 owns current performance measurement and exit/session behavior. Phase -1.7 `54` confirms this is still missing.
+- **NIGHT-REJUDGE is verification.** RG21 owns continuous cycle/timing. Torch brightness verification comes only after `51` fixes current equip/orientation reliability.
 - **STRONGHOLD-MAT, SKY-PLANES and BILLBOARD-WHITE are reproduce-first.** Current `main` may already contain partial/full fixes; evidence of an already-correct build is a valid result.
-- **MQ3 is an umbrella/decomposition prompt.** It should create/execute concrete Band 3–5 work rather than land one giant content blob.
-- **PW2 and CONTENT-ACTIVITIES should be sited as MQ3 fills later bands**, without duplicating band work.
-- **R9.1/R9.2/R9.3 are deliberately scoping/measurement passes.** The original board entries are placeholders, so these prompts turn them into evidence-based final polish queues rather than inventing unspecified features.
+- **MQ3 is an umbrella/decomposition prompt.** It should create/execute concrete Band 3–5 work rather than land one giant content blob. Use `53` as the cross-band motivational/density bar.
+- **PW2 and CONTENT-ACTIVITIES should be sited as MQ3 fills later bands**, without duplicating band work and while supporting `53`'s team-progression cadence.
+- **R9.1/R9.2/R9.3 were deliberately scoping/measurement passes.** New concrete Phase -1.7 observations should be implemented through their dedicated prompts rather than deferred back into vague polish.
 
 ## Execution rule
 
-For every prompt, inspect current `main` before changing code. Where the prompt says verify-first, an evidence-backed "already fixed" is a successful outcome. Preserve newer owner decisions over older backlog wording, and follow `CLAUDE.md`, `ralph/conventions.md`, and current canonical decision/spec docs.
+For every prompt, inspect current `main` before changing code. Where the prompt says verify-first, an evidence-backed `already fixed` is a successful outcome. Preserve newer owner decisions over older backlog wording, and follow `CLAUDE.md`, `ralph/conventions.md`, `ralph/OWNER_PLAYTEST_2026-08-18.md`, and current canonical decision/spec docs.
