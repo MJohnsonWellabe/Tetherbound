@@ -1,16 +1,63 @@
 # Meadows Ralph Prompt Library — execution index
 
-## Latest owner playtest overrides — read first
+## ACTIVE EXECUTION — start here
 
-Before executing any prompt below, read `ralph/OWNER_PLAYTEST_2026-08-18.md`.
+The Meadows prompt library is no longer a flat queue.
 
-That file records the owner's newest live ROG play feedback and **supersedes older prompt assumptions where they conflict**. In particular it reopens/expands modal freezes and torch reliability, changes creature-bed recovery to gradual overnight physical rest, changes building to persistent Valheim-style placement plus dismantling/modular snapping, makes catching aim a concrete near-term problem, confirms the title screen is still absent, records minimap movement-up as verify-first while trail coverage remains broken, and locks Meadows world composition to a mix of lush dense pockets and broad open fields.
+Before selecting or executing current Meadows work, read:
 
-P0 items in that playtest overlay take priority over lower-priority content/polish work in the original board index.
+1. `../TETHERBOUND_GAME_VISION.md`
+2. `../../ralph/ACTIVE_GAME_PLAN.md`
+3. `../../ralph/PROMPT_COMPATIBILITY_MAP.md`
+4. `../../ralph/OWNER_PLAYTEST_2026-08-18.md`
+5. the detailed prompt(s) for the active gate/package.
 
-## Phase -1.7 owner-play prompts — execute by priority
+`ralph/ACTIVE_GAME_PLAN.md` controls current Meadows execution order. `ralph/BACKLOG.md` remains the complete task ledger, so no historical or current task is discarded merely because the active plan groups it under a gameplay package.
 
-These are newer owner-play items/addenda written after the original 38-item review board. They are detailed implementation prompts, not notes-only reminders.
+Prompts `55`–`70` are the new **owning gameplay-package prompts**. They do not replace prompts `01`–`54`; they assemble those child tasks into finished player experiences and require continuous evidence runs before a gameplay gate passes.
+
+### New owning prompts
+
+| Prompt | Ownership |
+|---|---|
+| `55-MEADOWS-gameplay-assembly-master.md` | Full chapter experience/integration contract |
+| `56-OPENING-first-session-to-tournament.md` | Fresh launch through village tournament |
+| `57-TEAM-progression-curve.md` | XP/levels/moves/traits/bond/evolution readiness curve |
+| `58-REWARD-resource-economy.md` | Rewards, materials, coins, TMs, Orb/build economy |
+| `59-TRAINER-journey.md` | Local trainer → Team Tether → Warden escalation ladder |
+| `60-WILD-ecology-journey.md` | Wild habitats/populations/team-choice ecology across all bands |
+| `61-EXPEDITION-rest-rhythm.md` | Injury, creature beds, sleep, camps and expedition pacing |
+| `62-BAND1-finished-lower-meadows.md` | Tournament → South Bridge finished regional loop |
+| `63-BAND2-finished-quarry-warrens.md` | Quarry/Rootstone/Warrens finished regional loop |
+| `64-BAND3-finished-river-relay.md` | River/Relay/Vance/rescue finished regional loop |
+| `65-BAND4-finished-upper-meadows.md` | Ironwood/riding/three captains finished regional loop |
+| `66-BAND5-finished-stronghold-approach.md` | Final approach/occupation/preparation finished regional loop |
+| `67-FIVE-creature-pressure-and-bond.md` | Make five total slots emotionally/mechanically real |
+| `68-CHAPTER-complete-objective-chain.md` | Complete concise main objective chain + selective local requests |
+| `69-STRONGHOLD-chapter-finale.md` | Hall → Warden → legendary → release → healing finale |
+| `70-MEADOWS-full-chapter-integration-playthrough.md` | Final 3–4 hour end-to-end pacing/quality pass |
+
+### Duplicate-prefix compatibility
+
+Seven earlier `OP-*` owner-play briefs also remain in this folder with prefixes `39`–`45`. They are **preserved, not deleted**, but overlap newer canonical Phase -1.7 prompts. Use `ralph/PROMPT_COMPATIBILITY_MAP.md` to consume their unique acceptance details without executing duplicate branches/systems. Always identify these files by full filename, not number alone.
+
+### Evidence gates, not owner waits
+
+The gameplay gates in `ralph/ACTIVE_GAME_PLAN.md` are not the retired owner-only play gates. Ralph/Claude should run the segment itself, gather gameplay/render/test evidence, fix failures, and continue automatically when the written criteria pass. Ask the owner only for a genuinely unresolved design decision.
+
+---
+
+## Latest owner playtest overrides
+
+Before executing any relevant child prompt, read `ralph/OWNER_PLAYTEST_2026-08-18.md`.
+
+That file records the owner's newest live ROG play feedback and **supersedes older prompt assumptions where they conflict**. In particular it reopens/expands modal freezes and torch reliability, changes creature-bed recovery to gradual overnight physical rest, changes building to persistent repeat placement plus dismantling/modular snapping, makes catching aim a concrete near-term problem, confirms the title screen is still absent, records minimap movement-up as verify-first while trail coverage remains broken, and locks Meadows world composition to a mix of lush dense pockets and broad open fields.
+
+Gate A items in the active plan take priority over lower-priority content/polish because additional content cannot compensate for broken core verbs.
+
+## Phase -1.7 owner-play prompts
+
+These are newer owner-play items/addenda written after the original 38-item review board. They are detailed child implementation prompts consumed by the active gameplay gates.
 
 ### P0 — correctness / blockers
 
@@ -26,13 +73,13 @@ These are newer owner-play items/addenda written after the original 38-item revi
 
 | Owner item | Prompt |
 |---|---|
-| Persistent Valheim-style repeat placement for every buildable | `40-BUILD-valheim-repeat-placement.md` |
+| Persistent repeat placement for every buildable | `40-BUILD-valheim-repeat-placement.md` |
 | Dismantle player builds, full refund | `41-BUILD-dismantle-full-refund.md` |
 | Creature bed: visible, gradual overnight rest, unavailable for combat | `43-CREATURE-BED-gradual-overnight-rest.md` |
-| Palworld-like over-shoulder catch aiming/throw | `45-CATCH-over-shoulder-aim-and-throw.md` |
+| Over-shoulder physical catch aiming/throw | `45-CATCH-over-shoulder-aim-and-throw.md` |
 | Creature release ceremony | `46-CREATURE-release-ceremony.md` |
 | Creature level-up feedback | `47-CREATURE-level-up-feedback.md` |
-| In-world previous/next pal cycling | `48-PARTY-cycle-pals-in-world.md` |
+| In-world previous/next creature cycling | `48-PARTY-cycle-pals-in-world.md` |
 
 ### P2 — world/navigation/content purpose
 
@@ -41,13 +88,13 @@ These are newer owner-play items/addenda written after the original 38-item revi
 | Pond gets real water; preserve approved lush vegetation | `49-POND-real-water.md` |
 | Normal-looking Meadows building doors must work | `50-WORLD-usable-building-doors.md` |
 | Preserve movement-up minimap; show all meaningful authored trails | `52-MAP-all-authored-trails-visible.md` |
-| Pokémon-first Meadows core-loop/encounter/resource/camp density | `53-MEADOWS-pokemon-first-core-loop-density.md` |
+| Five-creature-team-first Meadows core-loop/encounter/resource/camp density | `53-MEADOWS-pokemon-first-core-loop-density.md` |
 
 ### Positive findings to protect
 
 - **Basic structure placement now works** in the owner's current play. Do not reintroduce the old `place does nothing` defect while adding repeat placement/snapping.
 - **Minimap movement-up appears to work.** Verify before touching that orientation math.
-- **The dense pond-side trees/plants look great.** Preserve that lush pocket. Meadows should deliberately alternate such dense areas with broad open Valheim/Palworld-like fields and long sightlines; do not apply one global vegetation density.
+- **The dense pond-side trees/plants look great.** Preserve that lush pocket. Meadows should deliberately alternate such dense areas with broad open fields and long sightlines; do not apply one global vegetation density.
 
 ### Explicit supersessions of older prompts
 
@@ -57,7 +104,7 @@ These are newer owner-play items/addenda written after the original 38-item revi
 - `25-RG19-spec-creature-condition-model.md`: `43` adds physical bed occupancy, gradual HP recovery, combat ineligibility and overnight completion to rested condition.
 - `27-RG25-title-save-select-quit-and-boot-measurement.md`: `54` records that the title screen is currently missing in owner play and must actually be implemented.
 - `36-R9.1-scope-input-combat-catch-camera-polish.md`: catch aim is no longer vague polish; `45` is concrete implementation work.
-- `06`, `28`, `29`, `30`, `31`: coordinate through `53` so wilds, bands, alphas, activities and home/camp systems create one purposeful team-progression cadence rather than isolated content islands.
+- `06`, `28`, `29`, `30`, `31`: coordinate through `55`–`66` so wilds, bands, alphas, activities and home/camp systems create one purposeful team-progression cadence rather than isolated content islands.
 
 ---
 
@@ -65,7 +112,7 @@ These are newer owner-play items/addenda written after the original 38-item revi
 
 This folder also contains one implementation/scoping prompt for every one of the 38 items on the owner's earlier Meadows review board.
 
-**Important:** numeric filename prefixes record the order these prompts were authored in ChatGPT, not the original review-board priority. Execute/reference them using the board-order index below, subject to the newer Phase -1.7 overrides above.
+**Important:** numeric filename prefixes record the order these prompts were authored in ChatGPT, not current gameplay priority. Current execution priority comes from `ralph/ACTIVE_GAME_PLAN.md`.
 
 | Board # | Board item | Prompt file |
 |---:|---|---|
@@ -114,10 +161,10 @@ This folder also contains one implementation/scoping prompt for every one of the
 - **EV9 and RG25 share the title/save-select front door.** Reuse one implementation; EV9 owns branded presentation/HUD remainder, RG25 owns current performance measurement and exit/session behavior. Phase -1.7 `54` confirms this is still missing.
 - **NIGHT-REJUDGE is verification.** RG21 owns continuous cycle/timing. Torch brightness verification comes only after `51` fixes current equip/orientation reliability.
 - **STRONGHOLD-MAT, SKY-PLANES and BILLBOARD-WHITE are reproduce-first.** Current `main` may already contain partial/full fixes; evidence of an already-correct build is a valid result.
-- **MQ3 is an umbrella/decomposition prompt.** It should create/execute concrete Band 3–5 work rather than land one giant content blob. Use `53` as the cross-band motivational/density bar.
-- **PW2 and CONTENT-ACTIVITIES should be sited as MQ3 fills later bands**, without duplicating band work and while supporting `53`'s team-progression cadence.
-- **R9.1/R9.2/R9.3 were deliberately scoping/measurement passes.** New concrete Phase -1.7 observations should be implemented through their dedicated prompts rather than deferred back into vague polish.
+- **MQ3 is an umbrella/decomposition prompt.** It should create/execute concrete Band 3–5 child work within the new regional packages rather than land one giant content blob.
+- **PW2 and CONTENT-ACTIVITIES are consumed by regional packages**, without duplicating band work.
+- **R9.1/R9.2/R9.3 remain evidence-based final polish/measurement**, with concrete current failures handled earlier by their dedicated prompts.
 
 ## Execution rule
 
-For every prompt, inspect current `main` before changing code. Where the prompt says verify-first, an evidence-backed `already fixed` is a successful outcome. Preserve newer owner decisions over older backlog wording, and follow `CLAUDE.md`, `ralph/conventions.md`, `ralph/OWNER_PLAYTEST_2026-08-18.md`, and current canonical decision/spec docs.
+For every prompt, inspect current `main` before changing code. Where a child prompt says verify-first, an evidence-backed `already fixed` is a successful child outcome. A gameplay package passes only when its complete evidence segment passes. Preserve newer owner decisions over older backlog wording, and follow `CLAUDE.md`, `ralph/ACTIVE_GAME_PLAN.md`, `ralph/PROMPT_COMPATIBILITY_MAP.md`, `ralph/OWNER_PLAYTEST_2026-08-18.md`, `ralph/conventions.md`, and current canonical decision/spec docs.
