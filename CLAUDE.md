@@ -44,7 +44,8 @@ These override lower-level prompts and implementation convenience:
 - **No new creature meshes or Meshy generations for Meadows.** Use installed creature meshes; differentiate with materials, textures, modest scale, animation, VFX, habitat, behavior, traits, and encounter context.
 - **Never spend a Meshy generation without owner-supplied reference art.**
 - One nature family, one village family, one prop family. Meshy is reserved for Team Tether hero objects such as pylons, relay apparatus, and the tether machine.
-- Human NPCs reuse the trainer, Grandpa, and Warden rigs with per-material variants. Do not invent a new human cast pipeline.
+- **Reuse the installed humanoid cast before generating anything new.** Current `main` has six production humanoid rigs: trainer, Grandpa, Warden, villager male, villager female, and Team Tether grunt. `docs/art/HUMANOID_ASSET_INVENTORY.md` is authoritative for current humanoid availability and reuse. Use existing per-material variants/rank presentation/configuration rather than making every NPC a unique mesh. A new humanoid mesh is exceptional, must solve a real unmet player-facing need, and still requires owner-supplied reference art.
+- **The Warden is already rebuilt from the owner-supplied board-16 character sheet.** Do not reopen historical notes claiming his face is painted/unmodelled or that he still needs a production sheet; inspect the current installed `assets/characters/warden/warden_lod0.glb` instead.
 - Do not silently invent a major gameplay/story decision.
 
 ## Canon / precedence
@@ -57,6 +58,8 @@ For current work, use this precedence:
 4. `docs/GAME_DESIGN.md` / `docs/MEADOWS_VERTICAL_SLICE.md` where not superseded;
 5. task-specific detailed prompts;
 6. historical backlog wording.
+
+For humanoid asset availability/current Warden production state, `docs/art/HUMANOID_ASSET_INVENTORY.md` supersedes older historical statements in `docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `docs/art/REFERENCE_CANON.md`.
 
 `docs/decisions/D23-the-meadows-is-the-first-game.md` remains the canon record for why the later Meadows spec wins over older conflicting design prose. Preserve its named carve-outs.
 
@@ -128,6 +131,7 @@ Candidate assets may be sourced for this private project when needed, but:
 - record provenance/license in `docs/ASSET_LEDGER.md`;
 - never assume redistributability;
 - test scale/materials in-engine;
+- inspect `docs/art/HUMANOID_ASSET_INVENTORY.md` before any human/NPC asset work;
 - do not use placeholder ugliness as evidence that final biome/creature/combat/release/stronghold presentation is good enough.
 
 ## Current objective
