@@ -40,6 +40,12 @@ These are the package-level layer that assembles child systems into the complete
 - `69-STRONGHOLD-chapter-finale.md` — Hall/Warden/legendary/world-healing payoff.
 - `70-MEADOWS-full-chapter-integration-playthrough.md` — final 3–4 hour acceptance/tuning pass.
 
+## Current Gate A environment baseline
+
+- `71-GATEA-opening-environment-baseline.md` — make the opening/village/pond area representative enough to judge the real game during Gate A: naturally available creatures/resources, approved lush pond pocket, nearby broad open sightlines, readable trails, and no global density sweep.
+
+This is deliberately a **minimum test environment**, not the final ecology/world-composition pass. `60-WILD-ecology-journey.md` and regional prompts `62`–`66` still own chapter-wide habitat, creature density, trainer/resource cadence, and regional composition.
+
 ## Current owner-play child prompts
 
 The newest detailed owner-play implementation pass includes:
