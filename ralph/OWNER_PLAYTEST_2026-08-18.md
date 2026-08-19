@@ -34,6 +34,8 @@ Fresh owner reproductions:
 
 RG1's older assumption that the pause menu always remains usable is no longer universally true. Treat this as a systemic modal/input-ownership lifecycle defect. Regression coverage must include trader, innkeeper, creature bed, standalone Build flow, and Build opened from the main menu.
 
+Detailed prompt: `docs/ralph-prompts/39-RG1-owner-playtest-modal-freeze-reopen.md`
+
 ### OP2 — Build snapping/grid correctness
 Owner can place structures now, but construction geometry is not coherent:
 - roof cannot reliably snap/build on top of an existing wall;
@@ -42,11 +44,15 @@ Owner can place structures now, but construction geometry is not coherent:
 
 A basic test house must be possible: 2x2 floors, aligned walls, doorway, roof. Fix shared dimensions/snap anchors, not individual-piece hacks.
 
+Detailed prompt: `docs/ralph-prompts/42-BUILD-modular-snap-contract.md`
+
 ### OP3 — Tool use / harvesting feedback
 - Chopping must require the axe actually equipped and visibly in the trainer's hand.
 - Pressing chop/use must visibly swing the axe and produce the hit through that action.
 - Current prompt-only behavior where the game says to chop but no meaningful swing/result occurs is unacceptable.
 - Picking up harvested resources must show concise gain feedback such as `+3 Wood`.
+
+Detailed prompt: `docs/ralph-prompts/44-GATHER-equipped-tool-swing-and-pickup-feedback.md`
 
 ### OP4 — Torch hand + repeat-equip reliability — REOPEN RG22 hand path
 Two fresh defects:
@@ -54,6 +60,8 @@ Two fresh defects:
 - torch may illuminate correctly the first time it is drawn, then fail to light the world after being put away and drawn again.
 
 This is not a brightness-tuning request. Fix equip/orientation/state lifecycle first.
+
+Detailed prompt: `docs/ralph-prompts/51-TORCH-upright-hand-and-re-equip-light.md`
 
 ### OP5 — Front door/title screen — RG25/EV9 remains open
 Current shipped play still launches without the expected front screen. Required front door remains:
@@ -64,15 +72,21 @@ Current shipped play still launches without the expected front screen. Required 
 
 Do not close RG25/EV9 until this is visible and usable in the actual launched build.
 
+Detailed prompt: `docs/ralph-prompts/54-RG25-owner-confirmed-title-screen-missing.md`
+
 ## P1 — core loop and build/care experience
 
 ### OP6 — Valheim-style persistent build selection
 Placement itself works now. The remaining Build-menu UX is wrong.
 
-After selecting a buildable, successful placement must **keep that same piece selected** and immediately present the next ghost. The player may place repeatedly until cancel/back or deliberate selection of another piece. This applies to ordinary structural pieces and other player-placeable buildables unless a specific item has a proven reason not to support repeat placement.
+After selecting a buildable, successful placement must **keep that same piece selected** and immediately present the next ghost. The player may place repeatedly until cancel/back or deliberate selection of another piece. This applies to all player-placeable buildables.
+
+Detailed prompt: `docs/ralph-prompts/40-BUILD-valheim-repeat-placement.md`
 
 ### OP7 — Dismantle/delete player-built structures
-Add a controller-friendly dismantle action while building. Highlight/target the intended placed structure before destruction. Default design: return the full material cost so experimentation with snapping/building is not punished. Never delete authored world structures through this tool.
+Add a controller-friendly dismantle action while building. Highlight/target the intended placed structure before destruction. **Full material refund is locked** so experimentation with snapping/building is not punished. Never delete authored world structures through this tool.
+
+Detailed prompt: `docs/ralph-prompts/41-BUILD-dismantle-full-refund.md`
 
 ### OP8 — Creature bed becomes real overnight recovery
 Current immediate-heal button behavior is superseded.
@@ -83,9 +97,12 @@ When a creature is assigned to a creature bed:
 - health restores **gradually while it remains in bed**;
 - the intended full-rest cycle is overnight;
 - taking it out early stops the rest and retains only recovery actually earned so far;
+- taking it out early does **not** grant the completed overnight/rested benefit;
 - full overnight rest should leave it appropriately recovered/rested for the next day.
 
-This should create an actual reason to build creature beds and camp rather than treating the bed as a menu potion.
+This should create an actual reason to build creature beds and camp rather than treating the bed as a menu potion. It must integrate with RG19's rested/fed/happy condition model.
+
+Detailed prompt: `docs/ralph-prompts/43-CREATURE-BED-gradual-overnight-rest.md`
 
 ### OP9 — Palworld-like aim/throw interaction
 Current throw aiming feels bad. Desired interaction:
@@ -100,8 +117,12 @@ Current throw aiming feels bad. Desired interaction:
 
 Do not copy Palworld assets/UI; match the usability/readability of that interaction using Tetherbound's own presentation.
 
+Detailed prompt: `docs/ralph-prompts/45-CATCH-over-shoulder-aim-and-throw.md`
+
 ### OP10 — Creature release ceremony
 Functional removal alone is incomplete. Releasing a creature must run the intended ceremony/presentation so breaking the five-creature bond feels consequential. Do not call release complete because the array slot was cleared.
+
+Detailed prompt: `docs/ralph-prompts/46-CREATURE-release-ceremony.md`
 
 ### OP11 — Creature level-up feedback
 Whenever a creature levels up, immediately communicate:
@@ -111,26 +132,36 @@ Whenever a creature levels up, immediately communicate:
 
 The player must feel team progression because it is a central motivation.
 
+Detailed prompt: `docs/ralph-prompts/47-CREATURE-level-up-feedback.md`
+
 ### OP12 — Cycle creatures in exploration
-Player must be able to cycle/select party creatures during ordinary exploration without opening the Creatures menu. Use controller-first previous/next controls and update the visible control legend. If a creature is active, changing selection should perform the appropriate swap/recall/summon flow without menu friction.
+Player must be able to cycle/select party creatures during ordinary exploration without opening the Creatures menu. Use controller-first previous/next controls and update the visible control legend. If a creature is active, changing selection should perform the appropriate swap/recall/summon flow without menu friction. Resting/unavailable creatures cannot be selected for combat use.
+
+Detailed prompt: `docs/ralph-prompts/48-PARTY-cycle-pals-in-world.md`
 
 ## P2 — world completeness / navigation
 
 ### OP13 — Pond needs actual water
 The pond is currently terrain with no convincing water. Add the real water surface/presentation and appropriate existing traversal/collision behavior. Preserve the owner-approved dense pond vegetation composition.
 
+Detailed prompt: `docs/ralph-prompts/49-POND-real-water.md`
+
 ### OP14 — Readable doors should work
 Buildings around the pond have doors that visually read as usable but cannot be opened. General rule: if an accessible Meadows building has an ordinary door that looks usable, it must open/interact unless deliberately locked; deliberate locks need visible/gameplay explanation.
+
+Detailed prompt: `docs/ralph-prompts/50-WORLD-usable-building-doors.md`
 
 ### OP15 — Map/minimap trails
 Owner reports the minimap's movement-up behavior now seems to be working. Treat movement-up as **verify-first**, not rewrite-first.
 
 Fresh remaining defect: the minimap/map does not show all meaningful authored trails. The map bake/data path should consistently represent the routes a player can visibly follow in the world.
 
+Detailed prompt: `docs/ralph-prompts/52-MAP-all-authored-trails-visible.md`
+
 ## P1/P2 — Meadows purpose and encounter density
 
 ### OP16 — Meadows core-loop density
-This is distinct from merely 'add 6-10 side quests.' During ordinary route progression, the player should frequently encounter useful reasons to engage with the world:
+This is distinct from merely `add 6-10 side quests.` During ordinary route progression, the player should frequently encounter useful reasons to engage with the world:
 - wild creatures to fight for XP and/or catch;
 - NPC trainers along the path;
 - occasional stronger/rare/alpha/elder encounters;
@@ -142,10 +173,24 @@ The primary progression question should repeatedly be: **is my five-creature tea
 
 Coordinate RG20, MQ3, PW2, CONTENT-ACTIVITIES, CONTENT-HOME, RG18 and RG19 around this spine instead of shipping each as isolated content islands.
 
+Detailed prompt: `docs/ralph-prompts/53-MEADOWS-pokemon-first-core-loop-density.md`
+
 ## Positive verification from this playtest
-- Structure placement itself is materially improved/working compared with the previous report. Do not reopen the old 'confirm does nothing' bug without current reproduction.
+- Structure placement itself is materially improved/working compared with the previous report. Do not reopen the old `confirm does nothing` bug without current reproduction.
 - Minimap movement-up behavior appears materially improved. Verify before changing orientation math.
 - Dense vegetation/plant composition around the pond is explicitly approved.
+- Meadows still needs deliberate contrast: preserve lush pond-like pockets **and** author broad open-field stretches with long sightlines rather than applying one global vegetation density.
+
+## Older prompt assumptions explicitly superseded
+- `02-RG4-build-placement-confirmation.md`: base placement now appears functional; preserve it. `40` and `42` own the remaining build-mode/snap experience.
+- `08-RG22-verify-current-torch-lighting.md`: verify-only status is superseded by current orientation + repeat-equip failure in `51`.
+- `14-RG15-minimap-movement-up-and-full-map-navigation.md`: movement-up now has positive owner evidence; trail completeness remains open through `52`.
+- `25-RG19-spec-creature-condition-model.md`: bed rest must now include physical occupancy, gradual HP recovery, combat ineligibility and overnight completion through `43`.
+- `27-RG25-title-save-select-quit-and-boot-measurement.md`: the title screen is currently missing in owner play; `54` is implementation, not speculative verification.
+- `36-R9.1-scope-input-combat-catch-camera-polish.md`: catching aim is now concrete implementation work through `45`.
+- `06`, `28`, `29`, `30`, `31`: coordinate their content through `53` so they collectively create the Pokémon-first team-progression cadence rather than isolated content islands.
 
 ## Execution order
 Do P0 correctness first. Then P1 build/care/catch/progression experience. Only then increase encounter/activity density, because additional content cannot compensate for broken build, gather, rest, menu and throw loops.
+
+**Ralph/coordinator rule:** when choosing work that overlaps this file, the Phase -1.7 owner evidence here is newer than Phase -1.6 and the original 38-prompt assumptions. Follow this file and the linked detailed prompt.
