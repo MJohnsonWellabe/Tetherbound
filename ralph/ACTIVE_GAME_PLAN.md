@@ -88,11 +88,28 @@ Finish/reconcile these before spending significant effort on distant content:
 - `18-NIGHT-REJUDGE-verify-current-night-lighting.md`
 - `49-POND-real-water.md`
 
+### Representative opening environment baseline
+- `71-GATEA-opening-environment-baseline.md`
+
+Gate A does **not** own final whole-Meadows ecology or vegetation tuning. It does require the opening/village/pond area to be representative enough to judge the real game without debug spawning, teleporting, or a sterile test environment.
+
+For Gate A:
+
+- preserve the dense pond-side vegetation as an approved lush reference;
+- preserve/create nearby broad open grassy stretches with long sightlines;
+- do not use one global vegetation density;
+- keep trails readable and ordinary traversal clear;
+- ensure multiple wild creatures and useful early gatherables are naturally available during normal opening-area travel;
+- do not carpet every field with creatures/resources merely to make testing convenient;
+- defer final habitat composition, chapter-wide creature density, trainer/resource cadence, and region-specific world composition to Gate C and regional packages D1–D5.
+
 ### Gate A evidence
 Run a continuous representative session that:
 
 - launches through the title/front door;
 - loads/starts correctly;
+- travels through both a representative broad/open meadow stretch and the approved lush pond-side pocket;
+- naturally encounters multiple wild creatures and useful early gatherables without debug spawning/teleporting;
 - talks to NPCs and exits menus repeatedly;
 - catches a wild creature;
 - cycles creatures;
@@ -103,7 +120,9 @@ Run a continuous representative session that:
 - travels using map/minimap;
 - saves/reloads and resumes correctly.
 
-Do not advance because every child has a commit. Advance when the session survives and the verbs are credible.
+For environment changes, capture both an open-field view and a lush pond-side view, run visual-judge, and verify no material target-performance regression from density changes.
+
+Do not advance because every child has a commit. Advance when the session survives, the verbs are credible, and the environment is representative enough to judge the actual game.
 
 ---
 
@@ -133,6 +152,7 @@ Children / dependencies:
 - `60-WILD-ecology-journey.md` for starting habitats
 - `61-EXPEDITION-rest-rhythm.md` for first care/rest proof
 - `67-FIVE-creature-pressure-and-bond.md` for attachment basics
+- `71-GATEA-opening-environment-baseline.md` as the minimum representative starting-world baseline inherited by the first-session pass
 
 ### Gate B evidence
 Fresh save, continuous play:
@@ -178,6 +198,7 @@ Existing children:
 - `46-CREATURE-release-ceremony.md`
 - `47-CREATURE-level-up-feedback.md`
 - `53-MEADOWS-pokemon-first-core-loop-density.md` — integration standard, not one giant implementation item
+- `71-GATEA-opening-environment-baseline.md` — minimum opening baseline only; Gate C owns the chapter-wide ecology expansion/tuning beyond it
 
 Gate C does not need to be a single long serial block. These can run in parallel with regional authoring once Gate B proves the base game, but the chapter-wide maps/curves must exist before late-region tuning is called final.
 
@@ -203,6 +224,7 @@ Children / related existing tasks:
 - `60-WILD-ecology-journey.md`
 - `61-EXPEDITION-rest-rhythm.md`
 - `68-CHAPTER-complete-objective-chain.md`
+- `71-GATEA-opening-environment-baseline.md` as the protected opening composition baseline; D1 owns final Lower Meadows tuning beyond it
 
 Evidence run:
 
@@ -344,7 +366,7 @@ Children / related existing tasks:
 - `36-R9.1-scope-input-combat-catch-camera-polish.md`
 - `37-R9.2-scope-ally-controller-ui-readability.md`
 - `38-R9.3-scope-target-hardware-performance.md`
-- all remaining verify-first visual/reliability remainders from 1–54
+- all remaining verify-first visual/reliability remainders from 1–54 and the Gate A baseline 71
 - chapter-wide tuning from 55–69
 - every still-open Meadows item in `ralph/BACKLOG.md`
 
@@ -390,11 +412,15 @@ The following prompts convert the vision into finished-game packages:
 
 `55` is the integration contract. `56`–`69` own concrete gameplay packages. `70` is the final end-to-end acceptance/tuning pass.
 
+Supporting current prompt:
+
+- `71-GATEA-opening-environment-baseline.md` — minimum representative opening-world baseline required before Gate A can be trusted; not a replacement for the later ecology/regional packages.
+
 ---
 
-# 3. COMPLETE MAPPING OF THE EXISTING 54 PROMPTS
+# 3. COMPLETE MAPPING OF CURRENT CHILD PROMPTS
 
-Nothing from the existing prompt library is lost. This table names the primary new gate/package that owns or consumes it.
+Nothing from the existing prompt library is lost. This table names the primary new gate/package that owns or consumes the original `01`–`54` set plus current supporting prompt `71`.
 
 | Existing prompt | Primary placement |
 |---|---|
@@ -452,8 +478,9 @@ Nothing from the existing prompt library is lost. This table names the primary n
 | 52 map trails | A + D regional navigation |
 | 53 Meadows core-loop density | master integration standard under 55, consumed by every region |
 | 54 title screen confirmed missing | A |
+| 71 opening environment baseline | A/B; protected baseline inherited by D1, with final ecology/composition owned later |
 
-Any legacy Meadows item in `ralph/BACKLOG.md` not represented in this 54-prompt library remains live in the ledger. When it touches one of the gameplay packages, execute it inside the relevant package; otherwise leave it in place for normal processing. **Never delete a task merely because this plan did not list its old ID.**
+Any legacy Meadows item in `ralph/BACKLOG.md` not represented in this table remains live in the ledger. When it touches one of the gameplay packages, execute it inside the relevant package; otherwise leave it in place for normal processing. **Never delete a task merely because this plan did not list its old ID.**
 
 ---
 
