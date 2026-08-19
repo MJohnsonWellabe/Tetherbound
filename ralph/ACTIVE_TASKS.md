@@ -32,10 +32,25 @@ On every coordinator restart, reconcile these entries against current `main`, cu
 | Day/night | `07-RG21-continuous-day-night-short-night.md` | VERIFY/FIX | Continuous 10-minute cycle with short real night remains correct |
 | Night readability | `18-NIGHT-REJUDGE-verify-current-night-lighting.md` + `08-RG22-verify-current-torch-lighting.md` | VERIFY | Night reads as night and remains playable with genuinely equipped torch |
 | Pond water | `49-POND-real-water.md` | RECONCILE | Pond is actual readable water; preserve approved lush vegetation pocket |
+| Opening environment baseline | `71-GATEA-opening-environment-baseline.md` | RECONCILE | Opening/village/pond area naturally supplies multiple wild encounters and early resources; preserves lush pond pocket plus broad open sightline areas without global densification |
 | Title/front door | `54-RG25-owner-confirmed-title-screen-missing.md` + `27-RG25-title-save-select-quit-and-boot-measurement.md` + `20-EV9-title-screen-and-orb-count-mounts.md` | RECONCILE | Launch presents New Game / Load / Quit and branded front door |
 | Rename regression | `32-PT17-test-rename-flow-trigger.md` | RECONCILE | Rename flow triggers and accepts input correctly |
 | False-positive tests | `33-TEST2-close-false-positive-test-gaps.md` | RECONCILE | Tests exercise real input/state paths |
 | Boss verification stability | `34-CI-BOSS-fix-intermittent-boss-verification.md` | RECONCILE | Boss verification is deterministic enough to trust |
+
+## Gate A environment baseline — scope guard
+
+Gate A does **not** own final whole-Meadows vegetation/ecology tuning. It only requires the real opening environment to be representative enough to judge the game honestly.
+
+Protect these rules:
+
+- preserve the dense pond-side vegetation as an approved lush reference;
+- preserve/create nearby broad open grassy stretches with long sightlines;
+- do not set one global vegetation density for the biome;
+- ensure meaningful trails remain visually readable and ordinary travel is not an obstacle course;
+- ensure multiple wild creatures and useful early gatherables are naturally available in the opening/village/pond area without developer spawning or unreasonable travel;
+- do not solve testability by carpeting every field with creatures/resources;
+- defer final habitat population, region-by-region creature density, trainer/resource cadence, and complete world composition to Gate C and regional packages D1–D5.
 
 ## Gate A evidence run
 
@@ -43,17 +58,21 @@ Do not advance because the table is green individually. Run one continuous repre
 
 1. launches through the title/front door;
 2. starts/loads correctly;
-3. talks to NPCs and exits menus repeatedly;
-4. catches a wild creature;
-5. cycles creatures;
-6. gathers with the equipped tool and visible action;
-7. opens Build, repeat-places pieces, builds a simple 2×2 roofed house with a door, dismantles a piece, exits Build and resumes play;
-8. uses creature and player rest interactions;
-9. draws/holsters/redraws the torch;
-10. navigates with minimap/full map;
-11. saves/reloads and resumes correctly.
+3. travels through both a representative open meadow stretch and the approved lush pond-side pocket, with readable trails and no vegetation obstacle-course behavior;
+4. naturally encounters multiple wild creatures and useful early gatherables without debug spawning/teleporting;
+5. talks to NPCs and exits menus repeatedly;
+6. catches a wild creature;
+7. cycles creatures;
+8. gathers with the equipped tool and visible action;
+9. opens Build, repeat-places pieces, builds a simple 2×2 roofed house with a door, dismantles a piece, exits Build and resumes play;
+10. uses creature and player rest interactions;
+11. draws/holsters/redraws the torch;
+12. navigates with minimap/full map;
+13. saves/reloads and resumes correctly.
 
-**Gate A passes only when that session is reliable and the verbs are credible.**
+For environment changes, capture at least one open-field view and one lush pond-side view and run the repo visual-judge workflow. Verify that any density changes do not materially regress target performance.
+
+**Gate A passes only when that session is reliable, the verbs are credible, and the tested environment is representative enough to judge the real game.**
 
 ## Next package after Gate A
 
