@@ -7,6 +7,7 @@ instead of guessing. The driver is idempotent and temporary; remove it after
 Gate A lands.
 """
 from pathlib import Path
+from gate_a_batch2 import apply as apply_batch2
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -134,6 +135,8 @@ func _find_button_with_text(node: Node, needle: String) -> Button:
         insert_anchor,
         new_test + insert_anchor,
     )
+
+    changed |= apply_batch2(ROOT)
 
     print("Gate A patch driver complete" + (" (changes applied)" if changed else " (already applied)"))
 
