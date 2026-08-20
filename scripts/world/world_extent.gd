@@ -1,23 +1,22 @@
 extends RefCounted
 
-## The playground's world bounds, read from `terrain_playground.json` instead
-## of hard-coded — `docs/MEADOWS_MACRO_LAYOUT.md` §8.6: `map_baker.gd`
-## `HALF_SPAN`, `minimap.gd` `WORLD_HALF` and `map_state.gd`'s
-## `GRID`/`CELL`/`ORIGIN` each independently hard-coded a ±256 m square, and
-## one of them (`map_state`) writes that assumption into the save file. D09 —
-## one mechanism answers "how big is the world" — so this is that one
-## mechanism, and the three map files (plus `tab_map.gd`) call it instead of
-## keeping their own copies of the number.
+## The Meadows' one world-bounds authority.
 ##
-## Exposed as an explicit rectangle (`min_x`/`max_x`/`min_z`/`max_z`), not a
-## single half-span, because the corridor world `docs/decisions/D50` commits
-## to is neither square nor centred on the origin (x ∈ [−1024, +1024],
-## z ∈ [−512, +7680]). Today `terrain_playground.json` only carries a square
-## `world_size`, so `bounds()` derives a square centred on the origin from it
-## — exactly today's ±256 m playground, byte-for-byte. Optional
-## `world_min_x`/`world_max_x`/`world_min_z`/`world_max_z` fields override
-## that derived square outright, so the day the corridor config lands, it is
-## a data change here, not another round of hunting down hard-coded halves.
+## The old playground was a square derived from `world_size`; the authored
+## corridor is not square and is not centred on the origin. Current
+## terrain_playground.json stores that real rectangle in `world_bounds`, while
+## several older consumers historically looked for flat `world_min_*` keys.
+## Every map/fog/minimap/world-extent consumer calls this helper so the two
+## representations are reconciled here rather than independently everywhere.
+##
+## Priority:
+##   1. current nested `world_bounds` {min_x,max_x,min_z,max_z};
+##   2. legacy flat world_min_x/world_max_x/world_min_z/world_max_z;
+##   3. legacy square `world_size` centred on zero.
+##
+## This is what makes the full Meadows corridor (today x -1024..1024,
+## z -512..7680) visible to the map baker and fog grid instead of silently
+## cropping both back to the original ±256 m playground.
 
 const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
@@ -32,16 +31,37 @@ static func load_config() -> Dictionary:
 
 
 ## {min_x, max_x, min_z, max_z}, in world metres. Pass an already-loaded
-## config Dictionary to avoid re-reading the file (`map_baker.bake()` is
-## called per-pixel-grid-sized elsewhere in this project and every avoidable
-## file read matters); omit it to load fresh.
+## config Dictionary to avoid re-reading the file; omit it to load fresh.
 static func bounds(config: Dictionary = {}) -> Dictionary:
 	var cfg := config if not config.is_empty() else load_config()
+
+	var authored: Variant = cfg.get("world_bounds", {})
+	if authored is Dictionary:
+		var d := authored as Dictionary
+		if d.has("min_x") and d.has("max_x") and d.has("min_z") and d.has("max_z"):
+			var nested := {
+				"min_x": float(d.get("min_x")),
+				"max_x": float(d.get("max_x")),
+				"min_z": float(d.get("min_z")),
+				"max_z": float(d.get("max_z")),
+			}
+			if _valid(nested):
+				return nested
+
 	var world_size := float(cfg.get("world_size", 512))
 	var half := world_size * 0.5
-	return {
+	var legacy := {
 		"min_x": float(cfg.get("world_min_x", -half)),
 		"max_x": float(cfg.get("world_max_x", half)),
 		"min_z": float(cfg.get("world_min_z", -half)),
 		"max_z": float(cfg.get("world_max_z", half)),
 	}
+	if not _valid(legacy):
+		push_error("terrain world bounds are invalid; falling back to the legacy %dm square" % int(world_size))
+		return {"min_x": -half, "max_x": half, "min_z": -half, "max_z": half}
+	return legacy
+
+
+static func _valid(rect: Dictionary) -> bool:
+	return float(rect.get("max_x", 0.0)) > float(rect.get("min_x", 0.0)) \
+		and float(rect.get("max_z", 0.0)) > float(rect.get("min_z", 0.0))
