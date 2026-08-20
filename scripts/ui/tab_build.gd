@@ -94,6 +94,12 @@ func _on_open_pressed() -> void:
 		return
 	if menu != null:
 		menu.call("close")
+	# RG1 (owner 2026-08-18): Build is a live-world surface. Never trust a
+	# cached pause snapshot from the shell during this handoff; if it was stale,
+	# the build menu opens visibly while the entire world/placer stays paused.
+	# Closing the shell is the transition authority and Build explicitly needs
+	# an unpaused tree before its deferred open.
+	get_tree().paused = false
 	var build_menu := BUILD_MENU.get_or_make(get_tree())
 	# Deferred: `game_menu.gd::close()` un-pauses the tree and hides its own
 	# root this same frame — opening the build menu one frame later keeps the

@@ -118,8 +118,13 @@ func close() -> void:
 		return
 	_open = false
 	visible = false
-	Input.mouse_mode = _mouse_before
-	get_tree().paused = _paused_before
+	# RG1: release is determined by the live ownership graph, not by the
+	# pause bit this panel happened to observe when it opened. A cached
+	# true value can come from a previous modal in the same handoff and
+	# restoring it after every visible panel is gone freezes the world.
+	if INPUT_OWNER.current(get_tree()) == null:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		get_tree().paused = false
 
 
 func _build() -> void:
