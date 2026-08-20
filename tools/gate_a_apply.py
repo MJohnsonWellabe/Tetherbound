@@ -27,30 +27,27 @@ def replace_once(rel: str, old: str, new: str) -> bool:
 def main() -> None:
     changed = False
 
-    # RG1: Pause -> Build is a live-world handoff. Never let a stale pause
-    # snapshot leave the build menu visible over a frozen SceneTree.
+    # RG1 batch already applied on the first run. Keep these exact target texts
+    # here so later runs recognize them as satisfied rather than trying to
+    # rewrite the comments themselves.
     changed |= replace_once(
         "scripts/ui/tab_build.gd",
         "\tif menu != null:\n\t\tmenu.call(\"close\")\n\tvar build_menu := BUILD_MENU.get_or_make(get_tree())\n",
-        "\tif menu != null:\n\t\tmenu.call(\"close\")\n\t# RG1 (owner 2026-08-18): Build is a live-world surface. Closing the\n\t# pause shell is the transition authority; Build must never inherit a\n\t# stale paused tree from another modal snapshot.\n\tget_tree().paused = false\n\tvar build_menu := BUILD_MENU.get_or_make(get_tree())\n",
+        "\tif menu != null:\n\t\tmenu.call(\"close\")\n\t# RG1 (owner 2026-08-18): Build is a live-world surface. Never trust a\n\t# cached pause snapshot from the shell during this handoff; if it was stale,\n\t# the build menu opens visibly while the entire world/placer stays paused.\n\t# Closing the shell is the transition authority and Build explicitly needs\n\t# an unpaused tree before its deferred open.\n\tget_tree().paused = false\n\tvar build_menu := BUILD_MENU.get_or_make(get_tree())\n",
     )
 
-    # GameMenu is only allowed to open from world ownership. Closing it means
-    # relinquishing pause, not restoring a historical true bit.
     changed |= replace_once(
         "scripts/ui/game_menu.gd",
         "\tInput.mouse_mode = _mouse_before\n\tget_tree().paused = _paused_before\n\t_set_world_hud_visible(true)\n",
-        "\tInput.mouse_mode = _mouse_before\n\t# RG1: release pause ownership. A cached true value can belong to an old\n\t# modal handoff and restoring it here produces a menu-free frozen world.\n\tget_tree().paused = false\n\t_set_world_hud_visible(true)\n",
+        "\tInput.mouse_mode = _mouse_before\n\t# RG1: the shell releases pause ownership; it must not resurrect a stale\n\t# paused snapshot captured during an earlier modal transition. All legal\n\t# open paths originate from the live world, so release means unpaused.\n\tget_tree().paused = false\n\t_set_world_hud_visible(true)\n",
     )
 
-    # Other paused panels all join input_owner. Once a panel marks itself
-    # closed, world control returns iff no other live owner remains. This makes
-    # ownership, not stale open-time snapshots, authoritative.
     old_release = "\tInput.mouse_mode = _mouse_before\n\tget_tree().paused = _paused_before\n"
     new_release = (
-        "\t# RG1: release from the live ownership graph, not a cached pause bit.\n"
-        "\t# If another modal still owns input it remains authoritative; if none\n"
-        "\t# does, the world must be live and mouse-captured again.\n"
+        "\t# RG1: release is determined by the live ownership graph, not by the\n"
+        "\t# pause bit this panel happened to observe when it opened. A cached\n"
+        "\t# true value can come from a previous modal in the same handoff and\n"
+        "\t# restoring it after every visible panel is gone freezes the world.\n"
         "\tif INPUT_OWNER.current(get_tree()) == null:\n"
         "\t\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n"
         "\t\tget_tree().paused = false\n"
@@ -64,18 +61,14 @@ def main() -> None:
     ]:
         changed |= replace_once(rel, old_release, new_release)
 
-    # Prompt 40: successful placement consumes/registers exactly one piece but
-    # keeps the selected buildable armed. Existing just_pressed/_place_blocked
-    # logic already guarantees a fresh edge for each copy; cancel remains the
-    # explicit path that clears pending_build and drops the ghost.
+    # BUILD-FLOW: keep the selected piece armed after every successful placement.
     changed |= replace_once(
         "scripts/build/build_placer.gd",
         "\tgame.call(\"register_building\", armed, placed.global_position, yaw_deg)\n\tgame.set(\"pending_build\", \"\")\n\tAUDIO_CUES.play(&\"build_place\")\n\t_drop_ghost()\n",
         "\tgame.call(\"register_building\", armed, placed.global_position, yaw_deg)\n\t# BUILD-FLOW (owner 2026-08-18): selection persists after a successful\n\t# placement. The next physics tick moves the same ghost to the next candidate\n\t# location; costs and registration still happen once per fresh Place edge.\n\t# Only explicit Cancel or choosing another catalogue entry clears/replaces it.\n\tAUDIO_CUES.play(&\"build_place\")\n",
     )
 
-    # Exact RG1 regression: exercise the production Pause -> Build tab button
-    # handoff, not merely a direct pending_build assignment.
+    # Exact RG1 regression: production Pause -> Build-tab button handoff.
     changed |= replace_once(
         "tests/smoke_post_modal_control.gd",
         "\tawait _check_control_survives_a_trader_conversation_and_shop()\n\tawait _check_control_survives_placing_a_build()\n",
