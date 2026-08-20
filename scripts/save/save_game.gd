@@ -153,7 +153,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 11
+const VERSION := 12
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -209,6 +209,8 @@ func save(game: Object, slot: int) -> bool:
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
+		"player_pose": (game.get("saved_player_pose") as Dictionary).duplicate(true)
+			if typeof(game.get("saved_player_pose")) == TYPE_DICTIONARY else {},
 	}
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
@@ -249,6 +251,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
 	var felled_raw: Variant = data.get("felled_vegetation", {})
 	game.set("felled_vegetation", (felled_raw as Dictionary).duplicate(true) if typeof(felled_raw) == TYPE_DICTIONARY else {})
+	if game.get("saved_player_pose") != null:
+		var pose_raw: Variant = data.get("player_pose", {})
+		game.set("saved_player_pose", (pose_raw as Dictionary).duplicate(true) if typeof(pose_raw) == TYPE_DICTIONARY else {})
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -478,6 +483,22 @@ func _migrate_v10(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 11 -> 12: exact player pose and creature-bed resting state. A v11
+## slot has neither; no pose means use the scene's authored spawn, and every
+## creature starts available rather than being stranded in a bed that was not
+## persisted by that format.
+func _migrate_v11(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 12
+	migrated["player_pose"] = {}
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) == TYPE_DICTIONARY:
+			(raw as Dictionary)["resting"] = false
+	migrated["party"] = party
+	return migrated
+
+
 func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary:
 	var entry_raw: Variant = species_table.get(species_id, {})
 	var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
@@ -557,6 +578,7 @@ func _party_to_array(party: Variant) -> Array:
 			"hp": float(instance.get("hp")),
 			"energy": float(instance.get("energy")),
 			"fainted": bool(instance.get("fainted")),
+			"resting": bool(instance.get("resting")),
 			"level": int(instance.get("level")),
 			"xp": int(instance.get("xp")),
 			"bond": int(instance.get("bond")),
@@ -599,6 +621,7 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.hp = float(d.get("hp", creature.max_hp))
 		creature.energy = float(d.get("energy", 0.0))
 		creature.fainted = bool(d.get("fainted", false))
+		creature.resting = bool(d.get("resting", false))
 		creature.level = int(d.get("level", 1))
 		creature.xp = int(d.get("xp", 0))
 		creature.bond = int(d.get("bond", 0))

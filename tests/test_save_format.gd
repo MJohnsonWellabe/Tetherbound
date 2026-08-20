@@ -48,6 +48,7 @@ class FakeGame:
 	var harvested_vegetation: Dictionary = {}
 	## RG9 / VERSION 11. Chopped-but-not-yet-gathered felled pickups.
 	var felled_vegetation: Dictionary = {}
+	var saved_player_pose: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
@@ -111,6 +112,23 @@ func test_a_fresh_slot_has_nothing_to_load() -> void:
 	assert_false(saver.has_slot(0))
 	assert_false(saver.load_slot(_game(), 0))
 	assert_eq(saver.slot_info(0), {})
+
+
+func test_save_then_load_round_trips_player_pose() -> void:
+	var written := _game()
+	written.saved_player_pose = {
+		"position": [123.25, 7.5, -88.0],
+		"model_yaw": 1.25,
+		"camera_yaw": -0.75,
+		"camera_pitch": -0.2,
+	}
+	assert_true(saver.save(written, 1))
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.saved_player_pose.get("position"), [123.25, 7.5, -88.0])
+	assert_almost_eq(float(read.saved_player_pose.get("model_yaw")), 1.25)
+	assert_almost_eq(float(read.saved_player_pose.get("camera_yaw")), -0.75)
+	assert_almost_eq(float(read.saved_player_pose.get("camera_pitch")), -0.2)
 
 
 func test_save_then_load_round_trips_the_day_counter() -> void:

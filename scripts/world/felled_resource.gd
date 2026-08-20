@@ -201,6 +201,12 @@ func _on_gathered() -> void:
 	if not bool(inventory.call("has_room_for", _item_id, _amount)):
 		return
 	inventory.call("add", _item_id, _amount)
+	# Owner feedback: the pickup must visibly say what entered the satchel. Use
+	# Game's existing one-shot world-message seam so gathering does not reach
+	# into a HUD node directly.
+	var items: RefCounted = game.get("items")
+	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+	game.call("push_world_message", "+%d %s" % [_amount, item_name])
 
 	var vegetation := get_parent()
 	if vegetation != null and vegetation.has_method("clear_felled") and not _felled_key.is_empty():
