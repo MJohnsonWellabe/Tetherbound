@@ -238,6 +238,19 @@ func _check_storage_panel_can_be_navigated() -> void:
 ## --- creature bed -----------------------------------------------------------
 
 func _check_creature_bed_panel_can_be_navigated() -> void:
+	# This harness does not play the opening, so SequenceDirector correctly
+	# leaves the party empty. A bed screen with no creatures has only disabled
+	# rows and therefore no legal focus target; seed the one real party member
+	# the player necessarily has before reaching creature-bed gameplay.
+	var party: RefCounted = _game.get("party")
+	if party != null and int(party.call("size")) == 0:
+		var creature: RefCounted = _game.call("make_creature", "terrapup")
+		if creature != null:
+			party.call("add", creature)
+	if party == null or int(party.call("size")) == 0:
+		_fail("creature bed: fixture could not seed a party creature")
+		return
+
 	_player.global_position += _forward(_player) * 20.0
 	_player.velocity = Vector3.ZERO
 	for i in 20:

@@ -122,6 +122,7 @@ func _process(_delta: float) -> void:
 			_pending_index = -1
 			_refresh()
 			return
+		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		close()
 
 

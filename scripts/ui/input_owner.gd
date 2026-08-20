@@ -60,6 +60,25 @@ static func current(tree: SceneTree) -> Node:
 	return null
 
 
+## A controller B press that closes one surface must not also open the pause
+## shell on the same input edge. Panels and live build placement call this
+## before releasing their state; centralising the lookup keeps every modal on
+## the same lifecycle contract and makes process order irrelevant.
+static func suppress_pause_reopen(tree: SceneTree) -> void:
+	if tree == null or tree.root == null:
+		return
+	var game := tree.root.get_node_or_null(^"Game")
+	var menu: Node = game.call("menu") if game != null and game.has_method("menu") else null
+	if menu != null and menu.has_method("suppress_reopen"):
+		# If the shell processed this physical edge first it may already have
+		# opened. That overlap is never legitimate: the caller still owns the
+		# close/cancel edge. Undo it before arming the guard for later process
+		# order, making the contract symmetric whichever node ran first.
+		if menu.has_method("is_open") and bool(menu.call("is_open")) and menu.has_method("close"):
+			menu.call("close")
+		menu.call("suppress_reopen")
+
+
 ## Does `node` own input at this moment?
 ##
 ## `is_open()` first because it is what the panels in this group actually mean —

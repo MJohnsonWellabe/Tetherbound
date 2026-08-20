@@ -189,9 +189,9 @@ func _check_the_first_day_arc(world: Node) -> void:
 		return
 	if int(inventory.call("count", "wood")) >= wood_before_build:
 		_fail("the camp was planted and cost no wood")
-	if str(_game.get("pending_build")) != "":
-		_fail("planting the camp left the build armed; every press would plant another")
-	print("camp planted, costs spent")
+	if str(_game.get("pending_build")) != "camp":
+		_fail("persistent placement lost the selected camp after one placement")
+	print("camp planted, costs spent, and a fresh camp ghost remains active")
 
 	# The workbench: place one, and CRAFT AT IT. Owner brief: "use the
 	# workbench to craft capture orbs, knives, axes, pickaxes" -- it used to be
@@ -239,6 +239,18 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("crafting a knife spent no wood")
 		return
 	print("workbench planted, Craft prompt present, knife crafted at the bench")
+
+	# Persistent mode must be left explicitly before the camp's Interactable
+	# can own X. Use the production cancel action and verify the ghost clears.
+	Input.action_press("build_cancel")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_cancel")
+	for i in 6:
+		await physics_frame
+	if not str(_game.get("pending_build")).is_empty():
+		_fail("build_cancel did not leave persistent workbench placement")
+		return
 
 	# Rest. The camp's own prompt, through the arbiter.
 	var day_before := int(_game.get("day"))
@@ -344,8 +356,8 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		return
 	var wall2: Node3D = walls[0] if walls[0] != wall1 else walls[1]
 
-	if not is_equal_approx(wall2.rotation.y, 0.0):
-		_fail("a freshly armed ghost should start unrotated, wall #2 sits at %.1f degrees"
+	if not is_equal_approx(wrapf(wall2.rotation.y, -PI, PI), wrapf(expected_yaw, -PI, PI)):
+		_fail("persistent placement should retain orientation; wall #2 sits at %.1f degrees"
 			% rad_to_deg(wall2.rotation.y))
 
 	var moved := Vector3(
@@ -375,10 +387,10 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		var yaws: Array = []
 		for record: Dictionary in last_two:
 			yaws.append(float(record.get("yaw_deg", -1.0)))
-		if not (yaws.has(180.0) and yaws.has(0.0)):
-			_fail("placed_buildings did not record both walls' yaw (got %s)" % [yaws])
+		if yaws.count(180.0) != 2:
+			_fail("placed_buildings did not retain both walls' 180-degree yaw (got %s)" % [yaws])
 		else:
-			print("GameState.placed_buildings recorded both walls' rotation: %s" % [yaws])
+			print("GameState.placed_buildings retained both walls' rotation: %s" % [yaws])
 
 	if int(inventory.call("count", "wood")) >= wood_before:
 		_fail("two walls were planted and spent no wood")
@@ -1178,7 +1190,7 @@ func _check_a_piece_can_be_built_out_of_an_empty_satchel() -> void:
 		return
 
 	_game.set("pending_build", "")
-	var menu := await _open_build_menu_and_pick_first()
+	var menu := await _open_build_menu_and_pick_first(false)
 	if menu == null:
 		return
 
@@ -1186,6 +1198,20 @@ func _check_a_piece_can_be_built_out_of_an_empty_satchel() -> void:
 		_fail("a piece could not be built with an empty satchel while free build was on")
 		return
 	print("'%s' was armed out of an empty satchel: '%s'" % [_game.get("pending_build"), _status()])
+	# The real handoff is now placement mode, where B belongs to build_cancel;
+	# the pause shell correctly yields until that ghost is cleared. The old
+	# helper tried to reopen pause while still armed, reproducing RG1's severe
+	# freeze by construction. Cancel through the shared physical B, then open a
+	# fresh pause edge for the following settings check.
+	await _tap_pad(_pad_button_for("build_cancel"))
+	for i in 8:
+		await process_frame
+	if not str(_game.get("pending_build")).is_empty() or bool(_menu.call("is_open")):
+		_fail("B did not leave placement cleanly before returning to Settings")
+		return
+	await _press("menu_cancel")
+	for i in 4:
+		await process_frame
 
 
 ## A cheat that cannot be turned off is not a toggle. Turning it off must put
@@ -1255,7 +1281,7 @@ func _open_build_menu_from_pause() -> Node:
 ## The arming path since the Valheim-style build menu replaced the flat tab
 ## list: picking a grid cell is what arms `pending_build` now. Returns the
 ## build menu node, or null after failing.
-func _open_build_menu_and_pick_first() -> Node:
+func _open_build_menu_and_pick_first(restore_pause: bool = true) -> Node:
 	var menu := await _open_build_menu_from_pause()
 	if menu == null:
 		return null
@@ -1268,7 +1294,8 @@ func _open_build_menu_and_pick_first() -> Node:
 	await _press("ui_accept")
 	for i in 3:
 		await process_frame
-	await _close_build_menu_and_restore_pause(menu)
+	if restore_pause:
+		await _close_build_menu_and_restore_pause(menu)
 	return menu
 
 

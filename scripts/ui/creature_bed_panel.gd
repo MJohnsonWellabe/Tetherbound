@@ -89,6 +89,7 @@ func _process(_delta: float) -> void:
 	if not _open:
 		return
 	if Input.is_action_just_pressed("menu_cancel"):
+		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		close()
 		return
 	if _bed == null or not is_instance_valid(_bed):

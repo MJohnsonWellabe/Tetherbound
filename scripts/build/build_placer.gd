@@ -227,6 +227,10 @@ func _physics_process(_delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed(CANCEL_ACTION):
+		# B is also the pause-menu action. Whichever node processes first, this
+		# cancellation owns the edge; the shell must not pause us before the
+		# armed ghost can be cleared or reopen later on the same press.
+		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		game.set("pending_build", "")
 		_drop_ghost()
 		return
