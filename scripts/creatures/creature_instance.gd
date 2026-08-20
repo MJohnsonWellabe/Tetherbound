@@ -49,6 +49,11 @@ var energy: float = 0.0
 ## once rather than every frame HP happens to be zero.
 var fainted: bool = false
 
+## Gate A creature-bed contract. While true this party member physically belongs
+## to a bed and cannot be selected/summoned for combat or exploration. The bed
+## system owns when the flag is set/cleared; party.gd only respects it.
+var resting: bool = false
+
 ## --- progression (D30) -----------------------------------------------------
 
 var level: int = 1

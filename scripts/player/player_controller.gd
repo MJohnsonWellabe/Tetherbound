@@ -108,6 +108,14 @@ func _ready() -> void:
 	tool_hold = TOOL_HOLD.new()
 	tool_hold.name = "ToolHold"
 	add_child(tool_hold)
+	if tool_hold.has_signal("swing_started"):
+		tool_hold.connect("swing_started", _on_tool_swing_started)
+
+	# RG7: if a slot was loaded before this scene existed (title -> Load), Game
+	# retained the pose and can finally apply it now that Player/CameraRig exist.
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("apply_loaded_player_pose"):
+		game.call_deferred("apply_loaded_player_pose")
 
 
 func _load_config() -> void:
@@ -327,6 +335,11 @@ func _try_jump(input_owned: bool) -> void:
 	velocity.y = _jump_velocity
 	_jump_buffered_for = INF
 	_airborne_for = _coyote_time + 1.0   # consume coyote so one press is one jump
+
+
+func _on_tool_swing_started() -> void:
+	if _model != null and _model.has_method("play_tool_swing"):
+		_model.call("play_tool_swing", 0.45)
 
 
 func _resolve_landing(falling_speed: float) -> void:

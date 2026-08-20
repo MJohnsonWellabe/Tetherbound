@@ -150,6 +150,27 @@ func test_out_of_range_reorders_are_ignored() -> void:
 	assert_eq(party.members(), order)
 
 
+func test_cycle_active_wraps_both_directions_and_skips_unavailable() -> void:
+	_fill(5)
+	assert_true(party.cycle_active(1))
+	assert_eq(party.active_index(), 1)
+	party.at(2).resting = true
+	party.at(3).take_damage(party.at(3).max_hp)
+	assert_true(party.cycle_active(1))
+	assert_eq(party.active_index(), 4, "resting and fainted slots must be skipped")
+	assert_true(party.cycle_active(1))
+	assert_eq(party.active_index(), 0, "forward cycle wraps")
+	assert_true(party.cycle_active(-1))
+	assert_eq(party.active_index(), 4, "reverse cycle wraps")
+
+
+func test_resting_creature_refuses_to_take_the_field() -> void:
+	_fill(2)
+	party.at(1).resting = true
+	assert_false(party.set_active(1))
+	assert_ne(party.active_index(), 1)
+
+
 func test_a_fainted_creature_refuses_to_take_the_field() -> void:
 	_fill(3)
 	var creature: RefCounted = party.at(1)

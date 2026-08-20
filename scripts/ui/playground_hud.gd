@@ -497,6 +497,7 @@ func _update_party_strip() -> void:
 			"hp_fraction": float(creature.call("hp_fraction")),
 			"tint": _species_tint(str(creature.get("species_id"))),
 			"fainted": bool(creature.get("fainted")),
+			"resting": bool(creature.get("resting")),
 		})
 	_party_strip.call("update_from_party", entries, index)
 	_party_strip.call("show_strip")

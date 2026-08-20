@@ -17,6 +17,12 @@ var _player: CharacterBody3D = null
 ## Set while the trainer is aiming a throw, so the body reads as throwing rather
 ## than as standing still watching its creature be hit.
 var _throwing_for: float = 0.0
+## Gate A gathering: a held axe/pick/knife must visibly move when used. The
+## current trainer asset has no dedicated chop clip; its authored throw one-shot
+## is the closest real arm/torso motion and, with the tool bone-attached, reads
+## as a swing instead of an invisible arithmetic event. A future authored swing
+## clip can replace the fallback without changing this contract.
+var _tool_swing_for: float = 0.0
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
@@ -53,6 +59,7 @@ func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
+	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
 	# OF8's other exit from the bed: `sequence_director.gd` clears lying on
 	# the "Get up" prompt, but its own soft-lock fallback (`smoke_wake_
 	# softlock.gd`) lets the player just walk off the mattress instead, and
@@ -126,7 +133,7 @@ func _apply_terrain_adaptation(delta: float) -> void:
 
 ## What the trainer's body should be doing, from what the trainer is doing.
 func _role_for_state() -> String:
-	if _throwing_for > 0.0:
+	if _throwing_for > 0.0 or _tool_swing_for > 0.0:
 		return "throw"
 	if not _player.is_on_floor():
 		return "jump"
@@ -153,3 +160,7 @@ func _clip_for_role(role: String) -> String:
 ## duration rather than for exactly one frame.
 func play_throw(seconds: float = 0.6) -> void:
 	_throwing_for = seconds
+
+
+func play_tool_swing(seconds: float = 0.45) -> void:
+	_tool_swing_for = maxf(_tool_swing_for, seconds)

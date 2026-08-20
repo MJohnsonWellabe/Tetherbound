@@ -654,6 +654,27 @@ func _read_creature_control_input() -> void:
 		return
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
 		return
+
+	# PARTY-CYCLE: the same shoulder/d-pad grammar used to switch in combat now
+	# changes the selected companion in exploration. Party.revision drives the
+	# existing _sync_active_creature() path, so a visible follower is recalled
+	# and replaced cleanly rather than a second body being spawned.
+	var cycle := 0
+	if Input.is_action_just_pressed("combat_switch_left"):
+		cycle = -1
+	elif Input.is_action_just_pressed("combat_switch_right"):
+		cycle = 1
+	if cycle != 0:
+		var party := _party()
+		var game := get_node_or_null(^"/root/Game")
+		if party != null and bool(party.call("cycle_active", cycle)):
+			var active: RefCounted = party.call("active")
+			if game != null and active != null:
+				game.call("push_world_message", "Active Pal: %s" % str(active.call("label")))
+		elif game != null:
+			game.call("push_world_message", "No other available Pal")
+		return
+
 	if not Input.is_action_just_pressed("creature_recall"):
 		return
 	if _ally_body != null and is_instance_valid(_ally_body):
