@@ -128,11 +128,31 @@ func set_active(index: int) -> bool:
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
-	if bool(creature.get("fainted")):
+	if bool(creature.get("fainted")) or bool(creature.get("resting")):
 		return false
 	_active = index
 	revision += 1
 	return true
+
+
+## Gate A: previous/next party cycling is a world verb, not a menu shortcut.
+## Search at most one full lap so wrapping is deterministic and an entirely
+## unavailable party returns false without moving the active slot.
+func cycle_active(direction: int) -> bool:
+	if _creatures.size() < 2 or direction == 0:
+		return false
+	var step := 1 if direction > 0 else -1
+	for offset in range(1, _creatures.size() + 1):
+		var candidate := posmod(_active + step * offset, _creatures.size())
+		if candidate == _active:
+			continue
+		var creature: RefCounted = at(candidate)
+		if creature == null or bool(creature.get("fainted")) or bool(creature.get("resting")):
+			continue
+		_active = candidate
+		revision += 1
+		return true
+	return false
 
 
 func best_index() -> int:

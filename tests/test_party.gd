@@ -159,6 +159,31 @@ func test_a_fainted_creature_refuses_to_take_the_field() -> void:
 	assert_ne(party.active_index(), 1)
 
 
+func test_world_cycle_wraps_in_both_directions() -> void:
+	_fill(3)
+	assert_true(party.cycle_active(-1))
+	assert_eq(party.active_index(), 2, "previous from slot zero should wrap to the end")
+	assert_true(party.cycle_active(1))
+	assert_eq(party.active_index(), 0, "next from the end should wrap to slot zero")
+
+
+func test_world_cycle_skips_fainted_and_resting_creatures() -> void:
+	_fill(4)
+	party.at(1).take_damage(party.at(1).max_hp)
+	party.at(2).resting = true
+	assert_true(party.cycle_active(1))
+	assert_eq(party.active_index(), 3)
+	party.at(0).resting = true
+	assert_false(party.cycle_active(1), "no other eligible Pal should leave the active slot unchanged")
+	assert_eq(party.active_index(), 3)
+
+
+func test_a_resting_creature_refuses_direct_activation() -> void:
+	_fill(2)
+	party.at(1).resting = true
+	assert_false(party.set_active(1))
+
+
 func test_all_fainted_is_false_for_an_empty_party() -> void:
 	# An empty party is not a defeated one. Reporting "all your creatures are down"
 	# before the player owns any would be a lie with a scary tone.

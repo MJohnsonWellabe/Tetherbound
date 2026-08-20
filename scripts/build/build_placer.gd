@@ -508,9 +508,12 @@ func _place(game: Node, armed: String) -> void:
 	# R3.1. The registry, not this node, is what a save actually persists —
 	# see GameState.placed_buildings.
 	game.call("register_building", armed, placed.global_position, yaw_deg)
-	game.set("pending_build", "")
 	AUDIO_CUES.play(&"build_place")
-	_drop_ghost()
+	# Gate A owner lock: successful placement never cancels the selection. The
+	# same ghost remains armed for a wall/floor run until explicit cancel or a
+	# different catalogue pick. Affordability is recomputed on the next physics
+	# tick, so an exhausted stack leaves a red ghost instead of silently exiting
+	# Build and making the player reopen the selector after every piece.
 
 
 ## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called

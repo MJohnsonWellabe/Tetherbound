@@ -189,9 +189,17 @@ func _check_the_first_day_arc(world: Node) -> void:
 		return
 	if int(inventory.call("count", "wood")) >= wood_before_build:
 		_fail("the camp was planted and cost no wood")
+	if str(_game.get("pending_build")) != "camp":
+		_fail("successful placement cancelled the selected piece; repeat placement must stay armed")
+	print("camp planted, costs spent, and selection remains armed for repeat placement")
+	# Explicit cancel, not successful placement, is what ends the run. The next
+	# workbench setup below must not inherit a camp ghost under its own pick.
+	Input.action_press("build_cancel")
+	await physics_frame
+	Input.action_release("build_cancel")
+	await physics_frame
 	if str(_game.get("pending_build")) != "":
-		_fail("planting the camp left the build armed; every press would plant another")
-	print("camp planted, costs spent")
+		_fail("explicit build cancel did not disarm the persistent selection")
 
 	# The workbench: place one, and CRAFT AT IT. Owner brief: "use the
 	# workbench to craft capture orbs, knives, axes, pickaxes" -- it used to be
@@ -239,6 +247,12 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("crafting a knife spent no wood")
 		return
 	print("workbench planted, Craft prompt present, knife crafted at the bench")
+	# Repeat placement intentionally leaves the workbench selected. Rest is a
+	# world interaction, so leave Build through its real explicit-cancel path.
+	Input.action_press("build_cancel")
+	await physics_frame
+	Input.action_release("build_cancel")
+	await physics_frame
 
 	# Rest. The camp's own prompt, through the arbiter.
 	var day_before := int(_game.get("day"))
@@ -328,7 +342,9 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 	for i in 20:
 		await physics_frame
 
-	_game.set("pending_build", "wall")
+	# The first successful placement deliberately kept this wall selected, with
+	# its rotation. Do not re-arm it through state: that would bypass the exact
+	# repeat-placement contract this second piece is meant to prove.
 	for i in 15:
 		await physics_frame
 	Input.action_press("build_place")
@@ -344,8 +360,8 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		return
 	var wall2: Node3D = walls[0] if walls[0] != wall1 else walls[1]
 
-	if not is_equal_approx(wall2.rotation.y, 0.0):
-		_fail("a freshly armed ghost should start unrotated, wall #2 sits at %.1f degrees"
+	if not is_equal_approx(wrapf(wall2.rotation.y, -PI, PI), wrapf(expected_yaw, -PI, PI)):
+		_fail("repeat placement should preserve the selected wall rotation, wall #2 sits at %.1f degrees"
 			% rad_to_deg(wall2.rotation.y))
 
 	var moved := Vector3(
@@ -375,10 +391,10 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		var yaws: Array = []
 		for record: Dictionary in last_two:
 			yaws.append(float(record.get("yaw_deg", -1.0)))
-		if not (yaws.has(180.0) and yaws.has(0.0)):
+		if yaws.count(180.0) != 2:
 			_fail("placed_buildings did not record both walls' yaw (got %s)" % [yaws])
 		else:
-			print("GameState.placed_buildings recorded both walls' rotation: %s" % [yaws])
+			print("GameState.placed_buildings recorded the persistent wall rotation: %s" % [yaws])
 
 	if int(inventory.call("count", "wood")) >= wood_before:
 		_fail("two walls were planted and spent no wood")

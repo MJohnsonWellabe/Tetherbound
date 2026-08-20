@@ -27,6 +27,7 @@ const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -653,6 +654,17 @@ func _read_creature_control_input() -> void:
 	if trainer_battle_active():
 		return
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+		return
+	if INPUT_OWNER.current(get_tree()) != null:
+		return
+	var party := _party()
+	if Input.is_action_just_pressed("combat_switch_left"):
+		if party != null:
+			party.call("cycle_active", -1)
+		return
+	if Input.is_action_just_pressed("combat_switch_right"):
+		if party != null:
+			party.call("cycle_active", 1)
 		return
 	if not Input.is_action_just_pressed("creature_recall"):
 		return

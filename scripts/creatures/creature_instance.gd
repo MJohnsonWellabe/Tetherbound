@@ -49,6 +49,12 @@ var energy: float = 0.0
 ## once rather than every frame HP happens to be zero.
 var fainted: bool = false
 
+## A physical creature bed owns this flag while the creature is assigned.
+## Keeping eligibility on the creature instance gives every deploy path one
+## answer: a resting creature cannot be selected in a menu, cycled to in the
+## world, or summoned by a stale active slot.
+var resting: bool = false
+
 ## --- progression (D30) -----------------------------------------------------
 
 var level: int = 1

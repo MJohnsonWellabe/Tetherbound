@@ -63,6 +63,7 @@ func _run() -> void:
 
 	await _dismiss_puts_the_body_away()
 	await _recall_brings_the_same_creature_back()
+	await _world_cycle_wraps_and_swaps_the_visible_body()
 	await _party_screen_reactivation_swaps_the_body()
 	await _dismiss_and_recall_refuse_mid_fight()
 	_report()
@@ -109,6 +110,40 @@ func _recall_brings_the_same_creature_back() -> void:
 		_fail("recall spawned a different creature than the party's own active slot")
 		return
 	print("recalled: %s is out and following again" % str(expected.call("label")))
+
+
+## Gate A's owner-facing path: D-pad previous/next works without opening the
+## party screen, wraps, skips unavailable members, and replaces the follower
+## body rather than leaving two visible creatures behind.
+func _world_cycle_wraps_and_swaps_the_visible_body() -> void:
+	var third: RefCounted = SPECIES.spawn("bramblebun")
+	if third == null or not bool(_party.call("add", third)):
+		_fail("could not add a third party member for unavailable-skip coverage")
+		return
+	var second: RefCounted = _party.call("at", 1)
+	second.set("resting", true)
+	var before: RefCounted = _director.call("ally_instance")
+	await _press_pad_action("combat_switch_left", JOY_BUTTON_DPAD_LEFT)
+	for i in 120:
+		await physics_frame
+		if _director.call("ally_instance") == third:
+			break
+	if int(_party.call("active_index")) != 2:
+		_fail("previous Pal did not wrap from slot 0 to slot 2 while skipping resting slot 1")
+		return
+	if _director.call("ally_instance") != third or _director.call("ally_instance") == before:
+		_fail("world cycle changed the party slot but did not swap the visible follower")
+		return
+	second.set("resting", false)
+	await _press_pad_action("combat_switch_right", JOY_BUTTON_DPAD_RIGHT)
+	for i in 120:
+		await physics_frame
+		if int(_party.call("active_index")) == 0 and _director.call("ally_instance") == before:
+			break
+	if int(_party.call("active_index")) != 0 or _director.call("ally_instance") != before:
+		_fail("next Pal did not wrap from the final slot back to slot 0")
+		return
+	print("world cycle: wrapped both ways, skipped resting, and swapped the visible follower")
 
 
 ## `tab_creatures.gd::_read_activate()`'s job, exercised directly rather than
@@ -201,6 +236,22 @@ func _press(action: String) -> void:
 	await physics_frame
 
 
+func _press_pad_action(action: String, button: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	event.pressed = true
+	Input.parse_input_event(event)
+	Input.action_press(action)
+	await physics_frame
+	await physics_frame
+	event = InputEventJoypadButton.new()
+	event.button_index = button
+	event.pressed = false
+	Input.parse_input_event(event)
+	Input.action_release(action)
+	await physics_frame
+
+
 func _fail(message: String) -> void:
 	_failures.append(message)
 
@@ -208,7 +259,7 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("creature control: OK — dismissed, recalled, swapped, and refused mid-fight.")
+		print("creature control: OK — dismissed, recalled, world-cycled, swapped, and refused mid-fight.")
 		quit(0)
 		return
 	for line in _failures:

@@ -189,9 +189,9 @@
         517.0
       ],
       "radius": 10.5,
-      "height": -20.7,
+      "height": -16.6,
       "skirt": 10.0,
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2 (flats[4]): moved from (-134.5,110) to (-384.5,517), the same (-250,+407) offset as the pond. `height` (-20.7) is UNCHANGED -- it was probed against the OLD site's natural ground and is now a stale placeholder, not a re-measurement of the new site. Flagged rather than silently kept: if the new site's natural ground differs meaningfully from -20.7, the mill/footbridge will sit at the wrong level relative to the (also-unverified) new pond water level. Ground truth was NOT re-probed by this pass -- see the OW5D report."
+      "_comment_ow5d": "Gate A reconciliation of the OW5D move: the inherited -20.7m pad sat 3.7m below the relocated pond's verified -17.0m surface and shore_step also made the promised flat vary by 0.5m. -16.6m keeps the mill/footbridge bank dry, 0.4m above water, while the skirt blends back into the measured basin. TUNABLE with the pond level."
     },
     {
       "_comment": "EV6-remainder: the ranger station pad on the pond route. Natural spread across the footprint was ~1.1m (probed) -- enough to bury a metre of wall under the lowest-corner rule. Far from every other flat, so no height-matching concern. TUNABLE.",
@@ -200,9 +200,9 @@
         507.0
       ],
       "radius": 5.5,
-      "height": -18.2,
+      "height": -16.2,
       "skirt": 8.0,
-      "_comment_ow5d": "OW5D relocation (flats[5]): (-100,100) -> (-350,507), same (-250,+407) offset as the pond. `height` (-18.2) UNCHANGED and unverified at the new site -- see the mill pad's own OW5D note just above; the same caveat applies."
+      "_comment_ow5d": "Gate A reconciliation of the OW5D move: the inherited -18.2m pad was submerged by the relocated pond. -16.2m keeps the ranger-station floor dry and above shore_step while preserving its pond overlook. TUNABLE with the pond level."
     },
     {
       "_comment_sc14": "SC14: the South Bridge's NORTH (village-side) abutment. The corridor south of the square falls steadily -- roughly -1.2m at z=67 against -4.5m at z=93, measured with tools/_probe_south.gd -- so an un-levelled crossing would need a deck tilted ~3m end to end, which the kit's flat floor modules cannot express. Both abutment pads carry the SAME explicit height (their natural mean), so the two rims of the gully meet at one level and the bridge deck is honestly flat. Radius is sized so the flatness test's own 0.7r samples (tests/test_playground_heightfield.gd) stay OUTSIDE the gully's zero-depth contour at z=73: 0.7*7.5 = 5.25m, reaching z=72.25. The pad's outer ring does extend into the cut, which is intended and is exactly the mill-crossing pad's precedent -- carves are subtracted AFTER flats, so a pad can promise level BANKS either side of a real channel. TUNABLE.",

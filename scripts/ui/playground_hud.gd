@@ -1155,6 +1155,12 @@ func _read_hotbar_input() -> void:
 	# menu and the hammer did not.
 	if not _world_input_allowed():
 		return
+	# D-pad left/right are the production previous/next Pal controls as well as
+	# legacy hotbar bindings. Exploration cycling owns those presses; otherwise
+	# swapping the visible Pal would also consume the item in slot two or three.
+	if Input.is_action_just_pressed("combat_switch_left") \
+			or Input.is_action_just_pressed("combat_switch_right"):
+		return
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
 			_use_hotbar_slot(i)
