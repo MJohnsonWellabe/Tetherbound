@@ -54,6 +54,37 @@ var fainted: bool = false
 ## answer: a resting creature cannot be selected in a menu, cycled to in the
 ## world, or summoned by a stale active slot.
 var resting: bool = false
+var rest_complete: bool = false
+
+
+func begin_bed_rest() -> bool:
+	if resting:
+		return false
+	resting = true
+	rest_complete = false
+	return true
+
+
+func tick_bed_rest(delta: float) -> void:
+	if not resting or delta <= 0.0 or hp >= max_hp:
+		return
+	# Two percent of maximum HP per world-second: visible and gradual, while
+	# preserving exactly the HP reached if the trainer wakes the Pal early.
+	heal(max_hp * 0.02 * delta)
+
+
+func wake_from_bed() -> void:
+	resting = false
+	# Deliberately do not heal or set rest_complete. Early removal preserves
+	# partial recovery but is not an overnight completion shortcut.
+
+
+func complete_bed_rest() -> void:
+	if not resting:
+		return
+	heal_fully()
+	resting = false
+	rest_complete = true
 
 ## --- progression (D30) -----------------------------------------------------
 

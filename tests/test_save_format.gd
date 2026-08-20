@@ -125,6 +125,8 @@ func test_save_then_load_round_trips_the_day_counter() -> void:
 
 func test_save_then_load_round_trips_the_party() -> void:
 	var written := _game()
+	written.party.at(0).begin_bed_rest()
+	written.party.at(0).rest_complete = false
 	assert_true(saver.save(written, 1))
 
 	var read := _game(false)
@@ -135,6 +137,8 @@ func test_save_then_load_round_trips_the_party() -> void:
 	assert_eq(str(creature.get("nickname")), "Biscuit")
 	assert_almost_eq(float(creature.get("hp")), 65.0)
 	assert_almost_eq(float(creature.get("max_hp")), 100.0)
+	assert_true(bool(creature.get("resting")), "an assigned bed rest must survive reload")
+	assert_false(bool(creature.get("rest_complete")), "reload must not turn partial rest into overnight completion")
 
 
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:

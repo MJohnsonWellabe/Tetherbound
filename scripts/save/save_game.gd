@@ -557,6 +557,8 @@ func _party_to_array(party: Variant) -> Array:
 			"hp": float(instance.get("hp")),
 			"energy": float(instance.get("energy")),
 			"fainted": bool(instance.get("fainted")),
+			"resting": bool(instance.get("resting")),
+			"rest_complete": bool(instance.get("rest_complete")),
 			"level": int(instance.get("level")),
 			"xp": int(instance.get("xp")),
 			"bond": int(instance.get("bond")),
@@ -599,6 +601,8 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.hp = float(d.get("hp", creature.max_hp))
 		creature.energy = float(d.get("energy", 0.0))
 		creature.fainted = bool(d.get("fainted", false))
+		creature.resting = bool(d.get("resting", false))
+		creature.rest_complete = bool(d.get("rest_complete", false))
 		creature.level = int(d.get("level", 1))
 		creature.xp = int(d.get("xp", 0))
 		creature.bond = int(d.get("bond", 0))

@@ -21,8 +21,6 @@ extends CanvasLayer
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PARTY := preload("res://autoload/party.gd")
-const PROGRESSION := preload("res://scripts/creatures/progression.gd")
-const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 
 var game: Node = null
 
@@ -202,9 +200,10 @@ func _refresh() -> void:
 			button.disabled = true
 		else:
 			var fainted := bool(creature.get("fainted"))
-			var status := "fainted" if fainted else "HP %d / %d" % [
+			var resting := bool(creature.get("resting"))
+			var status := "resting — wake" if resting else ("fainted" if fainted else "HP %d / %d" % [
 				int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp")))),
-			]
+			])
 			button.text = "  %d.  %-16s %s" % [i + 1, str(creature.call("label")), status]
 			var index := i
 			button.pressed.connect(func() -> void: _on_rest_row(index))
@@ -234,14 +233,16 @@ func _on_rest_row(index: int) -> void:
 	if creature == null:
 		return
 
-	var was_fainted := bool(creature.get("fainted"))
 	var label := str(creature.call("label"))
-	HOME_RECOVERY.rest(creature, PROGRESSION.config())
-
-	if _message != null:
-		_message.text = (
-			"%s wakes up, fully rested." % label if was_fainted
-			else "%s rests and wakes refreshed." % label
-		)
+	if bool(creature.get("resting")):
+		if _bed != null and _bed.has_method("occupant") and _bed.call("occupant") == creature:
+			_bed.call("wake")
+		else:
+			creature.call("wake_from_bed")
+		_message.text = "%s wakes with the HP already recovered." % label
+	elif _bed != null and bool(_bed.call("assign", creature)):
+		_message.text = "%s is resting. HP will recover over world time." % label
+	else:
+		_message.text = "This bed is already occupied."
 
 	_refresh()

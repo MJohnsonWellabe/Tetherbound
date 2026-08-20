@@ -428,6 +428,7 @@ func _process(delta: float) -> void:
 	# tonic time.
 	if party != null:
 		for member: Variant in (party.call("members") as Array):
+			(member as RefCounted).call("tick_bed_rest", delta)
 			(member as RefCounted).call("tick_buffs", delta)
 	var progression_revision: int = int(progression.get("revision"))
 	if progression_revision != _last_progression_revision:

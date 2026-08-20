@@ -157,7 +157,10 @@ func _pass_the_night(game: Node) -> void:
 		var rest_xp: int = PROGRESSION.rest_xp(cfg)
 		var rest_bond: int = PROGRESSION.rest_bond(cfg)
 		for member: Variant in (party.call("members") as Array):
-			(member as RefCounted).call("heal_fully")
+			if bool((member as RefCounted).get("resting")):
+				(member as RefCounted).call("complete_bed_rest")
+			else:
+				(member as RefCounted).call("heal_fully")
 			# R4.1-remainder (spec §11): a bonding XP source, separate from
 			# combat's. Every member gets it, fainted or not — see
 			# progression.gd::rest_xp()'s own comment for why.

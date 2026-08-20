@@ -14,6 +14,8 @@ extends SceneTree
 ##     --script tools/capture_creature_bed.gd
 
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const OUT_DIR := "res://shots/_diag"
 const SETTLE_FRAMES := 20
 
@@ -83,6 +85,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	await _alone()
 	await _with_workbench()
+	await _occupied()
 	quit(0)
 
 
@@ -108,4 +111,22 @@ func _with_workbench() -> void:
 	world.add_child(camera)
 	camera.look_at_from_position(Vector3(0.5, 2.2, 4.6), Vector3(0.0, 0.6, 0.0), Vector3.UP)
 	await _shoot("%s/creature_bed_scale_check.png" % OUT_DIR, camera)
+	world.queue_free()
+
+
+func _occupied() -> void:
+	var world := _stage()
+	var bed := CREATURE_BED.new()
+	world.add_child(bed)
+	bed.build_real()
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	if creature == null or not bed.assign(creature):
+		push_error("could not assign the visual-judge creature to its bed")
+		world.queue_free()
+		return
+	var camera := Camera3D.new()
+	camera.fov = 42.0
+	world.add_child(camera)
+	camera.look_at_from_position(Vector3(2.8, 1.8, 2.8), Vector3(0.0, 0.55, 0.0), Vector3.UP)
+	await _shoot("%s/creature_bed_occupied.png" % OUT_DIR, camera)
 	world.queue_free()

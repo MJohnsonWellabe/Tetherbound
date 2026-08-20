@@ -184,6 +184,32 @@ func test_a_resting_creature_refuses_direct_activation() -> void:
 	assert_false(party.set_active(1))
 
 
+func test_bed_rest_heals_gradually_and_early_wake_keeps_partial_hp() -> void:
+	var creature := _creature("Sleepy")
+	creature.take_damage(creature.max_hp * 0.8)
+	var hurt_hp: float = creature.hp
+	assert_true(creature.begin_bed_rest())
+	creature.tick_bed_rest(5.0)
+	assert_true(creature.hp > hurt_hp)
+	assert_true(creature.hp < creature.max_hp, "five seconds must not grant an instant full heal")
+	var partial_hp: float = creature.hp
+	creature.wake_from_bed()
+	assert_eq(creature.hp, partial_hp, "early wake must preserve exactly the recovery earned")
+	assert_false(creature.rest_complete, "early wake is not overnight completion")
+
+
+func test_overnight_completion_finishes_rest_and_makes_creature_available() -> void:
+	_fill(2)
+	var creature: RefCounted = party.at(1)
+	creature.take_damage(creature.max_hp)
+	assert_true(creature.begin_bed_rest())
+	creature.complete_bed_rest()
+	assert_eq(creature.hp, creature.max_hp)
+	assert_false(creature.resting)
+	assert_true(creature.rest_complete)
+	assert_true(party.set_active(1))
+
+
 func test_all_fainted_is_false_for_an_empty_party() -> void:
 	# An empty party is not a defeated one. Reporting "all your creatures are down"
 	# before the player owns any would be a lie with a scary tone.
