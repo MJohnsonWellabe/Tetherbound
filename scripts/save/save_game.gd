@@ -495,6 +495,8 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 	for raw: Variant in party:
 		if typeof(raw) == TYPE_DICTIONARY:
 			(raw as Dictionary)["resting"] = false
+			(raw as Dictionary)["rested"] = false
+			(raw as Dictionary)["rest_bed_index"] = -1
 	migrated["party"] = party
 	return migrated
 
@@ -579,6 +581,8 @@ func _party_to_array(party: Variant) -> Array:
 			"energy": float(instance.get("energy")),
 			"fainted": bool(instance.get("fainted")),
 			"resting": bool(instance.get("resting")),
+			"rested": bool(instance.get("rested")),
+			"rest_bed_index": int(instance.get("rest_bed_index")),
 			"level": int(instance.get("level")),
 			"xp": int(instance.get("xp")),
 			"bond": int(instance.get("bond")),
@@ -622,6 +626,8 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.energy = float(d.get("energy", 0.0))
 		creature.fainted = bool(d.get("fainted", false))
 		creature.resting = bool(d.get("resting", false))
+		creature.rested = bool(d.get("rested", false))
+		creature.rest_bed_index = int(d.get("rest_bed_index", -1))
 		creature.level = int(d.get("level", 1))
 		creature.xp = int(d.get("xp", 0))
 		creature.bond = int(d.get("bond", 0))

@@ -606,7 +606,7 @@ func summon_active_creature() -> bool:
 	if party == null:
 		return false
 	var creature: RefCounted = party.call("active")
-	if creature == null or bool(creature.get("fainted")):
+	if creature == null or bool(creature.get("fainted")) or bool(creature.get("resting")):
 		return false
 	return await _spawn_ally_body(creature)
 
@@ -632,6 +632,11 @@ func _sync_active_creature() -> void:
 	if trainer_battle_active():
 		return  # Nor between its rounds; the next round re-deploys the same body.
 	var active_creature: RefCounted = party.call("active")
+	if _ally != null and bool(_ally.get("resting")):
+		dismiss_active_creature()
+		if active_creature != null and not bool(active_creature.get("resting")):
+			summon_active_creature()
+		return
 	if active_creature == null or active_creature == _ally:
 		return  # The change wasn't to the creature that is actually out.
 	dismiss_active_creature()

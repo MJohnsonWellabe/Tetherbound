@@ -473,6 +473,8 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 	placed.set_meta(BUILDING_ID_META, id)
 	if index >= 0:
 		placed.set_meta(PLACED_INDEX_META, index)
+		if id == "creature_bed" and placed.has_method("set_build_index"):
+			placed.call("set_build_index", index)
 	placed.add_to_group(PLACED_GROUP)
 	return placed
 

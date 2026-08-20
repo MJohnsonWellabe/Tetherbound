@@ -202,10 +202,13 @@ func _refresh() -> void:
 			button.disabled = true
 		else:
 			var fainted := bool(creature.get("fainted"))
-			var status := "fainted" if fainted else "HP %d / %d" % [
-				int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp")))),
-			]
+			var resting := bool(creature.get("resting"))
+			var this_bed := resting and _bed != null and int(creature.get("rest_bed_index")) == int(_bed.call("build_index"))
+			var status := "Resting — HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))] \
+				if this_bed else ("Resting elsewhere" if resting else ("fainted" if fainted else "HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))]))
 			button.text = "  %d.  %-16s %s" % [i + 1, str(creature.call("label")), status]
+			var occupied := _bed != null and int(_bed.call("occupant_index")) >= 0
+			button.disabled = (occupied and not this_bed) or (resting and not this_bed)
 			var index := i
 			button.pressed.connect(func() -> void: _on_rest_row(index))
 
@@ -231,17 +234,17 @@ func _refresh() -> void:
 func _on_rest_row(index: int) -> void:
 	var party: RefCounted = game.get("party") if game != null else null
 	var creature: RefCounted = party.call("at", index) if party != null else null
-	if creature == null:
+	if creature == null or _bed == null or not is_instance_valid(_bed):
 		return
-
-	var was_fainted := bool(creature.get("fainted"))
 	var label := str(creature.call("label"))
-	HOME_RECOVERY.rest(creature, PROGRESSION.config())
-
-	if _message != null:
-		_message.text = (
-			"%s wakes up, fully rested." % label if was_fainted
-			else "%s rests and wakes refreshed." % label
-		)
-
+	var this_bed := bool(creature.get("resting")) and int(creature.get("rest_bed_index")) == int(_bed.call("build_index"))
+	if this_bed:
+		if bool(_bed.call("wake_creature_early")) and _message != null:
+			_message.text = "%s wakes early. Partial HP kept; no full-rest bonus." % label
+	elif bool(_bed.call("assign_creature", index)):
+		if _message != null:
+			_message.text = "%s is resting. HP will recover gradually; sleep overnight to complete the rest." % label
+	else:
+		if _message != null:
+			_message.text = "That bed or creature is not available."
 	_refresh()

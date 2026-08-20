@@ -21,6 +21,7 @@ const MENU_SCENE := "res://scenes/ui/game_menu.tscn"
 const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -223,6 +224,12 @@ var harvested_vegetation: Dictionary = {}
 ## before this has none, and migrates to `{}`.
 var felled_vegetation: Dictionary = {}
 
+## RG7. The last captured player/world pose. Transform data stays OUT of the
+## ordinary long-lived gameplay state; this dictionary is only the save/load
+## seam so a slot can return the trainer to the exact place and view it wrote.
+## Shape: {position:[x,y,z], model_yaw, camera_yaw, camera_pitch}.
+var saved_player_pose: Dictionary = {}
+
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
 ## tree. See that file's header for the format and versioning rule.
@@ -420,6 +427,7 @@ func _tick_autosave(delta: float) -> void:
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
 	_tick_autosave(delta)
+	_tick_creature_bed_recovery(delta)
 	_watch_pending_catch()
 	# Tonic clocks (creature_instance.gd::tick_buffs). Ticked here rather than
 	# from combat so a tonic runs down in and out of a fight alike -- "drink it
@@ -537,6 +545,57 @@ func take_pending_world_message() -> String:
 	return text
 
 
+# --- creature-bed recovery (Gate A) -----------------------------------------
+
+func _tick_creature_bed_recovery(delta: float) -> void:
+	if party == null or delta <= 0.0:
+		return
+	var cfg := CREATURE_PROGRESSION.config()
+	var seconds := maxf(float(cfg.get("creature_bed", {}).get("full_heal_seconds", 120.0)), 1.0)
+	for member: Variant in (party.call("members") as Array):
+		var creature := member as RefCounted
+		if creature == null or not bool(creature.get("resting")):
+			continue
+		var max_hp := float(creature.get("max_hp"))
+		if max_hp <= 0.0:
+			continue
+		var hp := minf(max_hp, float(creature.get("hp")) + max_hp / seconds * delta)
+		creature.set("hp", hp)
+		# A bed is explicitly allowed to recover a fainted pal; unlike a potion,
+		# it has paid the time/unavailability cost. Once it has real HP again the
+		# faint flag no longer describes its physical state.
+		if hp > 0.0:
+			creature.set("fainted", false)
+
+
+## Player sleep is the completion boundary. Only pals ACTUALLY assigned to a
+## creature bed receive the full overnight recovery/rest reward; otherwise the
+## bed would be optional decoration because ordinary sleep healed everyone.
+func complete_creature_bed_rests() -> int:
+	if party == null:
+		return 0
+	var cfg := CREATURE_PROGRESSION.config()
+	var rest_xp := CREATURE_PROGRESSION.rest_xp(cfg)
+	var rest_bond := CREATURE_PROGRESSION.rest_bond(cfg)
+	var completed := 0
+	for i in party.call("size"):
+		var creature: RefCounted = party.call("at", i)
+		if creature == null or not bool(creature.get("resting")):
+			continue
+		creature.call("heal_fully")
+		creature.set("rested", true)
+		creature.set("resting", false)
+		creature.set("rest_bed_index", -1)
+		if rest_xp > 0:
+			creature.call("gain_xp", rest_xp, cfg)
+		if rest_bond > 0:
+			creature.call("gain_bond", rest_bond, cfg)
+		completed += 1
+	if completed > 0:
+		party.set("revision", int(party.get("revision")) + 1)
+	return completed
+
+
 # --- save / load (R3.1) ------------------------------------------------------
 
 
@@ -647,6 +706,7 @@ func autofill_hotbar() -> void:
 
 ## Write `slot`. Returns whether it succeeded.
 func save_game(slot: int) -> bool:
+	_capture_player_pose()
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()
@@ -716,6 +776,56 @@ func load_game(slot: int) -> bool:
 	for node in get_tree().get_nodes_in_group("harvest_state"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
+	# Mid-session loads can apply immediately. A title-screen load has no Player
+	# yet; player_controller.gd calls apply_loaded_player_pose() from _ready(), so
+	# the same saved dictionary is applied once the world exists.
+	apply_loaded_player_pose()
+	return true
+
+
+## RG7. Capture exact trainer position/facing and camera view before each save.
+func _capture_player_pose() -> void:
+	var player := _find_player()
+	if player == null:
+		return
+	var model := player.get_node_or_null(^"Model") as Node3D
+	var rig: Node = null
+	var scene := get_tree().get_current_scene()
+	if scene != null:
+		rig = scene.get_node_or_null(^"CameraRig")
+	var facing := model.global_rotation.y if model != null else player.global_rotation.y
+	saved_player_pose = {
+		"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+		"model_yaw": facing,
+		"camera_yaw": float(rig.get("yaw")) if rig != null else facing,
+		"camera_pitch": float(rig.get("pitch")) if rig != null else 0.0,
+	}
+
+
+## Apply a loaded pose if both the data and Player exist. False is the normal
+## pre-world/title-screen case, not an error; Player._ready retries it.
+func apply_loaded_player_pose() -> bool:
+	if saved_player_pose.is_empty():
+		return false
+	var player := _find_player()
+	if player == null:
+		return false
+	var raw: Variant = saved_player_pose.get("position", [])
+	if raw is Array and (raw as Array).size() >= 3:
+		player.global_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
+	var model := player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		model.global_rotation.y = float(saved_player_pose.get("model_yaw", model.global_rotation.y))
+	var scene := get_tree().get_current_scene()
+	var rig: Node3D = scene.get_node_or_null(^"CameraRig") as Node3D if scene != null else null
+	if rig != null:
+		var yaw := float(saved_player_pose.get("camera_yaw", rig.get("yaw")))
+		var pitch := float(saved_player_pose.get("camera_pitch", rig.get("pitch")))
+		rig.set("yaw", yaw)
+		rig.set("pitch", pitch)
+		rig.rotation = Vector3(pitch, yaw, 0.0)
 	return true
 
 

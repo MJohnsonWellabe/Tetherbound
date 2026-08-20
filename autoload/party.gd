@@ -128,11 +128,46 @@ func set_active(index: int) -> bool:
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
-	if bool(creature.get("fainted")):
+	if bool(creature.get("fainted")) or bool(creature.get("resting")):
 		return false
 	_active = index
 	revision += 1
 	return true
+
+
+## Gate A / owner: one-second previous/next party selection in exploration.
+## Direction is -1 or +1; wraps and skips anything that cannot take the field.
+func set_resting(index: int, value: bool, bed_index: int = -1) -> bool:
+	var creature: RefCounted = at(index)
+	if creature == null:
+		return false
+	creature.set("resting", value)
+	creature.set("rest_bed_index", bed_index if value else -1)
+	if value:
+		creature.set("rested", false)
+		if index == _active:
+			cycle_active(1)
+	revision += 1
+	return true
+
+
+func cycle_active(direction: int) -> bool:
+	if _creatures.is_empty() or direction == 0:
+		return false
+	var step := -1 if direction < 0 else 1
+	for offset in range(1, _creatures.size() + 1):
+		var index := posmod(_active + step * offset, _creatures.size())
+		var creature: RefCounted = at(index)
+		if creature == null:
+			continue
+		if bool(creature.get("fainted")) or bool(creature.get("resting")):
+			continue
+		if index == _active:
+			return false
+		_active = index
+		revision += 1
+		return true
+	return false
 
 
 func best_index() -> int:

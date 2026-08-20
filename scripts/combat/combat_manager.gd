@@ -243,7 +243,7 @@ func begin(
 		return false
 
 	var creature := active_creature()
-	if creature == null or creature.fainted:
+	if creature == null or creature.fainted or bool(creature.get("resting")):
 		return false
 
 	_action = Action.READY
