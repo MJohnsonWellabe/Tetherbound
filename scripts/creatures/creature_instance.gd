@@ -53,6 +53,13 @@ var fainted: bool = false
 ## to a bed and cannot be selected/summoned for combat or exploration. The bed
 ## system owns when the flag is set/cleared; party.gd only respects it.
 var resting: bool = false
+## True only after the creature remained assigned through player sleep/night.
+## Waking early always clears this while preserving HP already regenerated.
+var rested: bool = false
+## Index into Game.placed_buildings for the creature_bed this instance occupies.
+## -1 when not assigned. Stored on the creature rather than by party slot so
+## reordering the five cannot silently put the wrong pal in a bed.
+var rest_bed_index: int = -1
 
 ## --- progression (D30) -----------------------------------------------------
 

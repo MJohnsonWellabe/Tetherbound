@@ -23,6 +23,10 @@
     "party_share": 0.5,
     "rest_bonus": 5
   },
+  "creature_bed": {
+    "_comment": "Gate A owner contract. TUNABLE. A creature in a physical bed heals continuously over ordinary world time and becomes unavailable. full_heal_seconds is the time 0->100% would take if the player never sleeps; sleeping through the night completes any occupied bed immediately and grants the rested state.",
+    "full_heal_seconds": 120.0
+  },
   "bond": {
     "max": 100,
     "thresholds": [
