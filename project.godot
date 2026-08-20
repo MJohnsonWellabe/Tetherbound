@@ -23,6 +23,12 @@ run/main_scene="res://scenes/world/meadows_playground.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[editor]
+
+; Parallel import races file hashing on Windows in this asset-heavy project.
+; Serial import is slower on a cold checkout, but deterministic on the primary platform.
+import/use_multiple_threads=false
+
 [autoload]
 
 ; The project's one singleton, and it is meant to stay the only one. It owns the

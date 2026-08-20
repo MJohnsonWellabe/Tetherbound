@@ -35,7 +35,7 @@ static func resolve(raw: Vector3, ground_y: float, armed: String, placed: Array)
 		var entry := raw_entry as Dictionary
 		if bool(entry.get("removed", false)) or str(entry.get("id", "")) != armed:
 			continue
-		var pos := _position(entry)
+		var pos: Variant = _position(entry)
 		if pos != null:
 			same.append(pos)
 	var old := GRID.resolve_position(raw, ground_y, same)
@@ -76,7 +76,7 @@ static func occupied(armed: String, spot: Vector3, placed: Array) -> bool:
 		var entry := raw_entry as Dictionary
 		if bool(entry.get("removed", false)) or not blocked_ids.has(str(entry.get("id", ""))):
 			continue
-		var p_raw := _position(entry)
+		var p_raw: Variant = _position(entry)
 		if p_raw == null:
 			continue
 		var p: Vector3 = p_raw
@@ -92,7 +92,7 @@ static func _add_floor_edges(out: Array, placed: Array) -> void:
 		var entry := raw_entry as Dictionary
 		if bool(entry.get("removed", false)) or str(entry.get("id", "")) != "floor":
 			continue
-		var p_raw := _position(entry)
+		var p_raw: Variant = _position(entry)
 		if p_raw == null:
 			continue
 		var p: Vector3 = p_raw
@@ -111,7 +111,7 @@ static func _add_wall_continuations(out: Array, placed: Array) -> void:
 		var entry := raw_entry as Dictionary
 		if bool(entry.get("removed", false)) or not WALL_IDS.has(str(entry.get("id", ""))):
 			continue
-		var p_raw := _position(entry)
+		var p_raw: Variant = _position(entry)
 		if p_raw == null:
 			continue
 		var p: Vector3 = p_raw
@@ -131,7 +131,7 @@ static func _add_supported_roofs(out: Array, placed: Array) -> void:
 		var floor := raw_floor as Dictionary
 		if bool(floor.get("removed", false)) or str(floor.get("id", "")) != "floor":
 			continue
-		var p_raw := _position(floor)
+		var p_raw: Variant = _position(floor)
 		if p_raw == null:
 			continue
 		var p: Vector3 = p_raw
@@ -142,7 +142,7 @@ static func _add_supported_roofs(out: Array, placed: Array) -> void:
 			var wall := raw_wall as Dictionary
 			if bool(wall.get("removed", false)) or not WALL_IDS.has(str(wall.get("id", ""))):
 				continue
-			var w_raw := _position(wall)
+			var w_raw: Variant = _position(wall)
 			if w_raw == null:
 				continue
 			var w: Vector3 = w_raw
