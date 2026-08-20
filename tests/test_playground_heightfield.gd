@@ -101,6 +101,25 @@ func test_there_is_somewhere_low() -> void:
 		"the valley centre (%.1fm) should sit below ground well outside it (%.1fm)" % [in_valley, outside])
 
 
+func test_relocated_pond_centre_is_below_its_water_surface() -> void:
+	# Gate A regression: OW5D moved the basin and pond centre while retaining
+	# the former site's absolute water level. The new centre was 1.8m ABOVE
+	# that surface, so water.gd built zero pond quads and the approved pond
+	# pocket contained no rendered pond. Assert the shared terrain/config
+	# contract directly; a visual smoke pass separately proves presentation.
+	var water: Dictionary = _config.get("water", {})
+	assert_true(water.has("level") and water.has("pond_centre"),
+		"the Meadows water contract needs a level and pond centre")
+	var centre: Array = water.get("pond_centre", [])
+	assert_eq(centre.size(), 2, "pond_centre must be an XZ pair")
+	if centre.size() != 2:
+		return
+	var ground: float = float(_field.height_at(float(centre[0]), float(centre[1])))
+	var level := float(water.get("level", ground))
+	assert_true(ground < level - 2.0,
+		"pond centre ground %.1fm must sit meaningfully below its %.1fm surface" % [ground, level])
+
+
 func test_there_is_somewhere_steep_enough_to_matter() -> void:
 	# Fall damage and the 45-degree slope limit are untestable on gentle ground.
 	var steep := 0

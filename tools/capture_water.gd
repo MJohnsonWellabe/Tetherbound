@@ -20,9 +20,13 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots"
 
-const SETTLE_FRAMES := 240
+# Runtime composition completes before the scene enters this loop. Thirty
+# rendered frames are enough for streaming/camera exposure to settle; 240 took
+# over ten minutes under the required llvmpipe visual-evidence environment and
+# timed out before producing a single frame.
+const SETTLE_FRAMES := 30
 const POSE_FRAMES := 4
-const SETTLE_AFTER_MOVE := 20
+const SETTLE_AFTER_MOVE := 2
 const FOV := 70.0
 
 ## The four questions bible §15's target list asks of this feature, one frame
@@ -36,18 +40,18 @@ const VIEWPOINTS := [
 		# near shore: waterline, feather, foam band and reeds all at close
 		# range, with the far bank behind them for depth.
 		"name": "water-01-bank-closeup",
-		"eye": Vector2(-108.0, 120.0), "eye_h": 1.8,
-		"target": Vector2(-140.0, 138.0), "target_h": -1.5,
+		"eye": Vector2(-325.0, 515.0), "eye_h": 1.8,
+		"target": Vector2(-390.0, 545.0), "target_h": -1.5,
 		"time": "day", "horizon": 0.25,
-		"actor": Vector2(-112.0, 124.0),
+		"actor": Vector2(-323.0, 513.0),
 	},
 	{
 		# From the south-west bank looking back across the whole pond toward
 		# the village side: overall readability of the surface against the
 		# meadow, deep-to-shallow gradient across the frame.
 		"name": "water-02-across-pond",
-		"eye": Vector2(-172.0, 158.0), "eye_h": 3.0,
-		"target": Vector2(-105.0, 112.0), "target_h": 2.0,
+		"eye": Vector2(-422.0, 565.0), "eye_h": 3.0,
+		"target": Vector2(-355.0, 519.0), "target_h": 2.0,
 		"time": "day", "horizon": 0.3,
 	},
 	{
@@ -62,10 +66,10 @@ const VIEWPOINTS := [
 		# The player's first sight of water: on the pond path where the valley
 		# opens, pond below, the frame the wayfinding pays off in.
 		"name": "water-04-approach",
-		"eye": Vector2(-80.0, 85.0), "eye_h": 3.5,
-		"target": Vector2(-145.0, 140.0), "target_h": 0.0,
+		"eye": Vector2(-330.0, 492.0), "eye_h": 3.5,
+		"target": Vector2(-395.0, 547.0), "target_h": 0.0,
 		"time": "day", "horizon": 0.24,
-		"actor": Vector2(-86.0, 92.0),
+		"actor": Vector2(-336.0, 499.0),
 	},
 ]
 
