@@ -1,0 +1,50 @@
+name: Gate A integrated patch apply
+
+on:
+  push:
+    branches: ['claude/gate-a-integrated']
+    paths:
+      - 'tools/gate_a_apply.py'
+      - '.github/workflows/gate-a-apply.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: gate-a-integrated-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message || '', '[gate-a-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/gate-a-integrated
+          fetch-depth: 0
+
+      - name: Apply asserted Gate A patch
+        run: python3 tools/gate_a_apply.py
+
+      - name: Commit generated code changes
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "Gate A Claude"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts tests scenes data project.godot tools 2>/dev/null || true
+          git commit -m "Gate A: apply integrated fixes [gate-a-applied]"
+          git push origin HEAD:claude/gate-a-integrated
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch full CI on patched branch
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run ci.yml --ref claude/gate-a-integrated
