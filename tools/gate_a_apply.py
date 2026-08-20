@@ -8,6 +8,7 @@ Gate A lands.
 """
 from pathlib import Path
 from gate_a_batch2 import apply as apply_batch2
+from gate_a_batch3_beds import apply as apply_batch3
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -137,6 +138,7 @@ func _find_button_with_text(node: Node, needle: String) -> Button:
     )
 
     changed |= apply_batch2(ROOT)
+    changed |= apply_batch3(ROOT)
 
     print("Gate A patch driver complete" + (" (changes applied)" if changed else " (already applied)"))
 
