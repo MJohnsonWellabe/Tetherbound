@@ -5,11 +5,13 @@ on:
     branches: ['claude/gate-a-integrated']
     paths:
       - 'tools/gate_a_apply.py'
+      - 'tools/gate_a_batch*.py'
       - '.github/workflows/gate-a-apply.yml'
   pull_request:
     branches: [main]
     paths:
       - 'tools/gate_a_apply.py'
+      - 'tools/gate_a_batch*.py'
       - '.github/workflows/gate-a-apply.yml'
   workflow_dispatch:
 
@@ -45,7 +47,7 @@ jobs:
           fi
           git config user.name "Gate A Claude"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts tests scenes data project.godot tools 2>/dev/null || true
+          git add autoload scripts tests scenes data project.godot tools 2>/dev/null || true
           git commit -m "Gate A: apply integrated fixes [gate-a-applied]"
           git push origin HEAD:claude/gate-a-integrated
           echo "changed=true" >> "$GITHUB_OUTPUT"
