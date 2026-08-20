@@ -508,9 +508,11 @@ func _place(game: Node, armed: String) -> void:
 	# R3.1. The registry, not this node, is what a save actually persists —
 	# see GameState.placed_buildings.
 	game.call("register_building", armed, placed.global_position, yaw_deg)
-	game.set("pending_build", "")
+	# BUILD-FLOW (owner 2026-08-18): selection persists after a successful
+	# placement. The next physics tick moves the same ghost to the next candidate
+	# location; costs and registration still happen once per fresh Place edge.
+	# Only explicit Cancel or choosing another catalogue entry clears/replaces it.
 	AUDIO_CUES.play(&"build_place")
-	_drop_ghost()
 
 
 ## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called
