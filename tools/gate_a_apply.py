@@ -6,6 +6,7 @@ from gate_a_batch3_beds import apply as apply_batch3
 from gate_a_batch4_title import apply as apply_batch4
 from gate_a_batch5_build import apply as apply_batch5
 from gate_a_batch6_catch import apply as apply_batch6
+from gate_a_batch7_world import apply as apply_batch7
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -17,6 +18,7 @@ def main() -> None:
     changed |= apply_batch4(ROOT)
     changed |= apply_batch5(ROOT)
     changed |= apply_batch6(ROOT)
+    changed |= apply_batch7(ROOT)
     print("Gate A active batches complete" + (" (changes applied)" if changed else " (already applied)"))
 
 
