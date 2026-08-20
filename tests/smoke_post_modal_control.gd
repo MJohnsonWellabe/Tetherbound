@@ -53,6 +53,7 @@ func _run() -> void:
 		return
 
 	await _check_control_survives_a_trader_conversation_and_shop()
+	await _check_pause_menu_to_build_handoff()
 	await _check_control_survives_placing_a_build()
 
 	_cleanup()
@@ -151,6 +152,58 @@ func _check_control_survives_a_trader_conversation_and_shop() -> void:
 		return
 
 	await _assert_control_returned("trader")
+
+
+## Owner's severe repro: Pause/Main menu -> Build -> Open Build Menu. This must
+## hand pause ownership back before the live-world build surface opens.
+func _check_pause_menu_to_build_handoff() -> void:
+	if not bool(_menu.call("open", "build")):
+		_fail("pause->build: pause menu refused to open on Build tab")
+		return
+	for i in 3:
+		await process_frame
+	if not paused:
+		_fail("pause->build: pause menu did not pause the tree")
+		return
+
+	var launch: Button = _find_button_with_text(_menu, "Open Build Menu")
+	if launch == null:
+		_fail("pause->build: Build tab has no Open Build Menu button")
+		_menu.call("close")
+		return
+	launch.emit_signal("pressed")
+	for i in 5:
+		await process_frame
+
+	if paused:
+		_fail("pause->build: tree stayed paused after handoff to live build menu")
+		return
+	if bool(_menu.call("is_open")):
+		_fail("pause->build: pause shell remained open after handoff")
+		return
+
+	var build_menu: Node = null
+	for node: Node in root.get_children():
+		if node.name == "BuildMenu" and node.has_method("is_open") and bool(node.call("is_open")):
+			build_menu = node
+			break
+	if build_menu == null:
+		_fail("pause->build: live BuildMenu never opened")
+		return
+	build_menu.call("close")
+	for i in 3:
+		await process_frame
+	await _assert_control_returned("pause->build")
+
+
+func _find_button_with_text(node: Node, needle: String) -> Button:
+	if node is Button and needle in (node as Button).text:
+		return node as Button
+	for child: Node in node.get_children():
+		var found := _find_button_with_text(child, needle)
+		if found != null:
+			return found
+	return null
 
 
 ## A build: arm a camp (free build, so cost is not the variable under test),
