@@ -162,6 +162,9 @@ var _spawn_position: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
+	# RG7. Mid-session Load restores persistent flags into an already-built
+	# Meadows scene; this world owns reconciling its authored one-shot props.
+	add_to_group("progression_restore")
 	BOOT_LOG.line("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
@@ -190,6 +193,13 @@ func _ready() -> void:
 	if _terrain.has_method("set_camera"):
 		_terrain.call("set_camera", _camera)
 	_place_player()
+	# A title-screen load happens before this world exists. Player._ready's
+	# deferred attempt can run before Terrain3D finishes and `_place_player()`
+	# then overwrites it, so the world retries only after its authored spawn has
+	# been established. A fresh game simply has no saved pose and is unchanged.
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("apply_loaded_player_pose"):
+		game.call("apply_loaded_player_pose")
 	BOOT_LOG.line("playground: player placed on terrain")
 	_dress_the_meadow()
 	BOOT_LOG.line("playground: vegetation scatter built (instance/batch count above)")
@@ -820,6 +830,15 @@ func _build_road_gate() -> void:
 	add_child(gate)
 	gate.call("build", self, GATE_AT, GATE_YAW_DEG)
 
+	var game := get_node_or_null(^"/root/Game")
+	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
+		return
+	_spawn_gate_key()
+
+
+func _spawn_gate_key() -> void:
+	if get_node_or_null(^"GateKey") != null:
+		return
 	var ground := ground_height_at(GATE_KEY_AT.x, GATE_KEY_AT.y)
 	if is_nan(ground):
 		push_error("no ground under the gate key at %.0f, %.0f" % [GATE_KEY_AT.x, GATE_KEY_AT.y])
@@ -862,20 +881,45 @@ func _build_sigil_gate() -> void:
 ## inventing a reward the old design never promised.
 func _place_tms() -> void:
 	var game := get_node_or_null(^"/root/Game")
-	var progression: RefCounted = game.get("progression") if game != null else null
 	for tm_id: String in TM_AT:
-		if progression != null and bool(progression.call("has", TM_PICKUP.FLAG_PREFIX + tm_id)):
+		if TM_PICKUP.was_taken(game, tm_id):
 			continue
-		var at: Vector2 = TM_AT[tm_id]
-		var ground := ground_height_at(at.x, at.y)
-		if is_nan(ground):
-			push_error("no ground under TM '%s' at %.0f, %.0f" % [tm_id, at.x, at.y])
-			continue
-		var pickup: Node3D = TM_PICKUP.new()
-		pickup.name = "TM_%s" % tm_id
-		pickup.position = Vector3(at.x, ground, at.y)
-		add_child(pickup)
-		pickup.call("setup", tm_id)
+		_spawn_tm(tm_id)
+
+
+func _spawn_tm(tm_id: String) -> void:
+	if get_node_or_null(NodePath("TM_%s" % tm_id)) != null:
+		return
+	var at: Vector2 = TM_AT[tm_id]
+	var ground := ground_height_at(at.x, at.y)
+	if is_nan(ground):
+		push_error("no ground under TM '%s' at %.0f, %.0f" % [tm_id, at.x, at.y])
+		return
+	var pickup: Node3D = TM_PICKUP.new()
+	pickup.name = "TM_%s" % tm_id
+	pickup.position = Vector3(at.x, ground, at.y)
+	add_child(pickup)
+	pickup.call("setup", tm_id)
+
+
+## RG7. Loading through the in-world Save tab does not rebuild the scene. Make
+## authored one-shot props match the newly loaded flags in both directions:
+## consumed props disappear immediately, and an earlier save can restore a prop
+## that was picked up after that save was written.
+func restore_progression_from_game(game: Node) -> void:
+	var key := get_node_or_null(^"GateKey") as Node3D
+	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
+		if key != null and key.has_method("restore_progression_from_game"):
+			key.call("restore_progression_from_game", game)
+	elif key == null:
+		_spawn_gate_key()
+	for tm_id: String in TM_AT:
+		var pickup := get_node_or_null(NodePath("TM_%s" % tm_id)) as Node3D
+		if TM_PICKUP.was_taken(game, tm_id):
+			if pickup != null and pickup.has_method("restore_progression_from_game"):
+				pickup.call("restore_progression_from_game", game)
+		elif pickup == null:
+			_spawn_tm(tm_id)
 
 
 ## SD17: the Burrow Warrens, dug into the flank of the rocky rise out in the

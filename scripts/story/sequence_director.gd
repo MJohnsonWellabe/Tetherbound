@@ -49,6 +49,14 @@ const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
 const SHOP_GOODS := "goods"
 const SHOP_CREATURES := "creatures"
 
+## RG7. Opening progress belongs in the existing flat progression store. One
+## stable flag per reached beat preserves an in-progress save without growing
+## ProgressionState into a story object; the latest flag in opening.json's
+## canonical order is the resumed beat. STARTER_GRANTED is a separate fact so
+## the grant is guarded even if old/corrupt beat flags are absent.
+const OPENING_BEAT_PREFIX := "opening:beat:"
+const STARTER_GRANTED_FLAG := "opening:starter_granted"
+
 ## SC12/SC13. The table `battle:<trainer_id>` reads from — the same reader
 ## `trainer_npc.gd` itself uses, so a villager's challenge and a standalone
 ## trainer's challenge look up the exact same data.
@@ -159,6 +167,7 @@ var _fade_total: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group("progression_restore")
 	_encounter = get_node_or_null(encounter_path)
 	# FIRST, before anything else in this function and before any await.
 	#
@@ -222,8 +231,9 @@ func _ready() -> void:
 	_name_prompt.connect("confirmed", _on_name_confirmed)
 	_starter_picker.connect("chosen", _on_starter_picker_chosen)
 
-	_build_fade()
-	_set_beat(BEATS.first())
+	_restore_opening_beat()
+	if _beat == BEATS.WAKE:
+		_build_fade()
 
 	# One frame, for the same reason encounter_director waits: add_child() is
 	# refused while the parent is still setting up its children, and the world's
@@ -274,6 +284,7 @@ func _set_beat(target: String) -> void:
 		push_warning("refused to move the opening back from '%s' to '%s'" % [_beat, target])
 		return
 	_beat = target
+	_persist_opening_fact(OPENING_BEAT_PREFIX + _beat)
 	beat_changed.emit(_beat)
 	if _beat == BEATS.CHOOSE:
 		# Not opened here directly: this fires while `_drain_effects` is still
@@ -281,6 +292,79 @@ func _set_beat(target: String) -> void:
 		# box is still on screen over it. `_maybe_open_picker` waits for that
 		# box to close.
 		_picker_pending = true
+
+
+## Restore the latest reached beat, including an older save written before RG7
+## had opening flags. A party member is definitive evidence that the starter
+## opportunity must not be offered again; two members additionally mean the
+## tutorial catch has already happened. This compatibility inference grants no
+## item or creature, it only refuses to replay an opportunity already consumed.
+func _restore_opening_beat() -> void:
+	var restored := ""
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		for candidate: String in BEATS.order():
+			if bool(progression.call("has", OPENING_BEAT_PREFIX + candidate)):
+				restored = candidate
+	var party: RefCounted = game.get("party") if game != null else null
+	var party_size := int(party.call("size")) if party != null else 0
+	var starter_recorded := progression != null and bool(progression.call("has", STARTER_GRANTED_FLAG))
+	if party_size > 1:
+		restored = BEATS.FREE_PLAY if restored == "" \
+				or BEATS.index_of(restored) < BEATS.index_of(BEATS.FREE_PLAY) else restored
+	elif party_size > 0 or starter_recorded:
+		restored = BEATS.WALK_OUT if restored == "" \
+				or BEATS.index_of(restored) < BEATS.index_of(BEATS.WALK_OUT) else restored
+	if party_size > 0:
+		_persist_opening_fact(STARTER_GRANTED_FLAG)
+	if restored == "":
+		restored = BEATS.first()
+	_force_restore_beat(restored)
+
+
+## Called through Game's progression_restore seam after a mid-session Load.
+## Unlike ordinary transitions, loading an earlier slot is allowed to move the
+## machine backwards because the slot—not the pre-load scene—is authoritative.
+func restore_progression_from_game(_game: Node) -> void:
+	_restore_opening_beat()
+	_picker_pending = _beat == BEATS.CHOOSE
+	_choice = -1
+	_adopting = false
+	if _beat == BEATS.WAKE:
+		_set_player_lying(true)
+	else:
+		_set_player_lying(false)
+		_clear_fade()
+	_refresh_prompts()
+	_refresh_door_gate()
+
+
+func _force_restore_beat(target: String) -> void:
+	if not BEATS.has(target):
+		target = BEATS.first()
+	var changed := target != _beat
+	_beat = target
+	_picker_pending = _beat == BEATS.CHOOSE
+	_persist_opening_fact(OPENING_BEAT_PREFIX + _beat)
+	if changed:
+		beat_changed.emit(_beat)
+
+
+func _persist_opening_fact(flag_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		progression.call("set_flag", flag_id)
+
+
+func _clear_fade() -> void:
+	if _fade_layer != null and is_instance_valid(_fade_layer):
+		_fade_layer.queue_free()
+	_fade_layer = null
+	_fade_rect = null
+	_fade_hold = 0.0
+	_fade_left = 0.0
 
 
 ## `_advance()` used to live here — `_set_beat(BEATS.next(_beat))`, with no
@@ -710,11 +794,14 @@ func _spawn_the_cast() -> void:
 		# height, so gravity and floor-snap settle the capsule there in the
 		# next physics tick rather than fighting a taller box.
 		var bed: Vector3 = house.call("marker", "bed")
-		_player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + BED_LIE_REACH)
-		_player.velocity = Vector3.ZERO
 		_bed_anchor = bed
 		_build_bed_prompt(house)
-		_set_player_lying(true)
+		# A loaded game has already earned its exact saved position. The cast
+		# still spawns, but only a genuine wake beat stages the trainer in bed.
+		if _beat == BEATS.WAKE:
+			_player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + BED_LIE_REACH)
+			_player.velocity = Vector3.ZERO
+			_set_player_lying(true)
 	else:
 		# NO HOUSE. The comment above used to claim "the old open-meadow staging
 		# still works" here. It did not, and could not: without a house there is
@@ -900,6 +987,10 @@ func _start_conversation(id: String) -> bool:
 func _on_starter_picker_chosen(index: int) -> void:
 	if _beat != BEATS.CHOOSE or _adopting:
 		return
+	if _starter_already_granted():
+		push_warning("refused to reopen starter selection after a starter was already granted")
+		_restore_opening_beat()
+		return
 	if index < 0 or index >= _starter_species.size():
 		return
 	_choice = index
@@ -931,6 +1022,8 @@ func _adopt(index: int, chosen: String) -> void:
 
 	if not _give_to_party(_encounter.call("ally_instance"), chosen):
 		push_error("the chosen %s is beside the trainer but not in the party" % species)
+		return
+	_persist_opening_fact(STARTER_GRANTED_FLAG)
 
 	# The first time this game says a word the player wrote.
 	_dialogue.call("set_value", NAME_KEY, chosen)
@@ -939,6 +1032,17 @@ func _adopt(index: int, chosen: String) -> void:
 	# the beat, and data/dialogue/opening.json says so ("Immediately after the
 	# name is entered"). Its last line carries `beat:first_encounter`.
 	_start_conversation(BEATS.named_conversation())
+
+
+func _starter_already_granted() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return false
+	var progression: RefCounted = game.get("progression")
+	if progression != null and bool(progression.call("has", STARTER_GRANTED_FLAG)):
+		return true
+	var party: RefCounted = game.get("party")
+	return party != null and int(party.call("size")) > 0
 
 
 ## --- beats 6, 7 and 8: the encounter, the fight and the catch ----------------------------

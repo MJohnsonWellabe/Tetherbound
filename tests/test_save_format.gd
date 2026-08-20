@@ -131,6 +131,60 @@ func test_save_then_load_round_trips_player_pose() -> void:
 	assert_almost_eq(float(read.saved_player_pose.get("camera_pitch")), -0.2)
 
 
+func test_malformed_player_pose_falls_back_as_one_unit() -> void:
+	var written := _game()
+	written.saved_player_pose = {
+		"position": [12.0, 4.0, -9.0],
+		"model_yaw": 0.4,
+		"camera_yaw": 1.2,
+		"camera_pitch": -0.3,
+	}
+	assert_true(saver.save(written, 1))
+	var path: String = saver.slot_path(1)
+	var file := FileAccess.open(path, FileAccess.READ)
+	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	file.close()
+	# A position that would float-convert to the origin was the dangerous case:
+	# the rest of an otherwise valid save must load, but no partial pose applies.
+	data["player_pose"] = {
+		"position": ["not-a-number", 4.0, -9.0],
+		"model_yaw": 0.4,
+		"camera_yaw": 1.2,
+		"camera_pitch": -0.3,
+	}
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	out.store_string(JSON.stringify(data, "\t"))
+	out.close()
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.saved_player_pose, {}, "a malformed pose should use the world's authored spawn")
+
+
+func test_version_11_save_loads_without_inventing_a_player_pose() -> void:
+	var written := _game()
+	written.saved_player_pose = {
+		"position": [50.0, 3.0, 25.0],
+		"model_yaw": 0.2,
+		"camera_yaw": 0.7,
+		"camera_pitch": -0.1,
+	}
+	assert_true(saver.save(written, 1))
+	var path: String = saver.slot_path(1)
+	var file := FileAccess.open(path, FileAccess.READ)
+	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	file.close()
+	data["version"] = 11
+	data.erase("player_pose")
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	out.store_string(JSON.stringify(data, "\t"))
+	out.close()
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1), "the pre-RG7 format should migrate")
+	assert_eq(read.saved_player_pose, {}, "an old save should retain normal authored-spawn fallback")
+
+
 func test_save_then_load_round_trips_the_day_counter() -> void:
 	var written := _game()
 	written.day = 7

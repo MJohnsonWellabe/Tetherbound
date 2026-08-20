@@ -9,6 +9,11 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 
+const FLAG_PREFIX := "pickup:"
+## Compatibility for saves written before physical pickups recorded their own
+## flags: consuming this key wrote the gate's durable flag instead.
+const ROAD_GATE_OPEN_FLAG := "road_gate_open"
+
 var _item_id: String = ""
 var _label: String = ""
 var _visual: Node3D = null
@@ -18,6 +23,7 @@ var _prompt: Node3D = null
 func setup(item_id: String, label: String) -> void:
 	_item_id = item_id
 	_label = label
+	add_to_group("progression_restore")
 	# The shaft lies along local +X with no yaw ever applied at the call
 	# site (`playground_world.gd` sets `position` only) — so on the road
 	# gate's own key, the player's actual approach looked almost straight
@@ -36,6 +42,40 @@ func setup(item_id: String, label: String) -> void:
 	_prompt.call("configure", _label, 2.4, true)
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
+	var game := get_node_or_null(^"/root/Game")
+	if was_taken(game, _item_id):
+		_deactivate()
+
+
+static func flag_id(item_id: String) -> String:
+	return FLAG_PREFIX + item_id
+
+
+## New saves use pickup:<id>. Inventory/gate state are conservative migration
+## evidence for the one Meadows key that existed before this flag was added.
+static func was_taken(game: Node, item_id: String) -> bool:
+	if game == null or item_id == "":
+		return false
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		if bool(progression.call("has", flag_id(item_id))):
+			return true
+		if item_id == "castle_gate_key" and bool(progression.call("has", ROAD_GATE_OPEN_FLAG)):
+			return true
+	var inventory: RefCounted = game.get("inventory")
+	return inventory != null and int(inventory.call("count", item_id)) > 0
+
+
+func restore_progression_from_game(game: Node) -> void:
+	if was_taken(game, _item_id):
+		_deactivate()
+
+
+func _deactivate() -> void:
+	if _prompt != null and is_instance_valid(_prompt):
+		_prompt.call("set_enabled", false)
+	visible = false
+	queue_free()
 
 
 func _build_visual() -> void:
@@ -137,4 +177,7 @@ func _on_picked_up() -> void:
 		# ground and keeps offering rather than vanishing into a full satchel.
 		return
 	inventory.call("add", _item_id, 1)
-	queue_free()
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		progression.call("set_flag", flag_id(_item_id))
+	_deactivate()

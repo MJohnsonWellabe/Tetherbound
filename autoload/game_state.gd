@@ -481,6 +481,8 @@ func _watch_pending_catch() -> void:
 ## first thing to need one, and adding a group for a single lookup site would
 ## be more machinery than the lookup itself.
 func _find_player() -> Node3D:
+	if not is_inside_tree():
+		return null
 	var tree := get_tree()
 	if tree == null:
 		return null
@@ -723,6 +725,8 @@ func _sync_placed_building_state() -> void:
 	# a `GameState` not in any tree (a headless test, PT-23's own
 	# `_tick_autosave` exercised in isolation) has no scene to sync FROM, so
 	# there is nothing to do rather than something to crash on.
+	if not is_inside_tree():
+		return
 	var tree := get_tree()
 	if tree == null:
 		return
@@ -737,6 +741,8 @@ func _sync_placed_building_state() -> void:
 func _sync_death_satchel_state() -> void:
 	# Same "nothing to sync from without a tree" guard as
 	# `_sync_placed_building_state()` above.
+	if not is_inside_tree():
+		return
 	var tree := get_tree()
 	if tree == null:
 		return
@@ -749,6 +755,8 @@ func _sync_death_satchel_state() -> void:
 ## vegetation — `vegetation.gd` is the group's owner (`"harvest_state"`,
 ## registered in its own `build()`).
 func _sync_harvest_state() -> void:
+	if not is_inside_tree():
+		return
 	var tree := get_tree()
 	if tree == null:
 		return
@@ -776,6 +784,14 @@ func load_game(slot: int) -> bool:
 	for node in get_tree().get_nodes_in_group("harvest_state"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
+	# RG7. Story directors and authored one-shot pickup owners have the same
+	# live-world problem as buildings and vegetation: load_slot() restores the
+	# durable data, then the already-running scene must reconcile what is active.
+	# Keep this a generic lifecycle seam rather than teaching Game about Grandpa,
+	# TMs, keys, or any future one-shot individually.
+	for node in get_tree().get_nodes_in_group("progression_restore"):
+		if node.has_method("restore_progression_from_game"):
+			node.call("restore_progression_from_game", self)
 	# Mid-session loads can apply immediately. A title-screen load has no Player
 	# yet; player_controller.gd calls apply_loaded_player_pose() from _ready(), so
 	# the same saved dictionary is applied once the world exists.
@@ -793,6 +809,8 @@ func _capture_player_pose() -> void:
 	var scene := get_tree().get_current_scene()
 	if scene != null:
 		rig = scene.get_node_or_null(^"CameraRig")
+	if rig == null and player.get_parent() != null:
+		rig = player.get_parent().get_node_or_null(^"CameraRig")
 	var facing := model.global_rotation.y if model != null else player.global_rotation.y
 	saved_player_pose = {
 		"position": [player.global_position.x, player.global_position.y, player.global_position.z],
@@ -811,22 +829,36 @@ func apply_loaded_player_pose() -> bool:
 	if player == null:
 		return false
 	var raw: Variant = saved_player_pose.get("position", [])
-	if raw is Array and (raw as Array).size() >= 3:
-		player.global_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
-		if player is CharacterBody3D:
-			(player as CharacterBody3D).velocity = Vector3.ZERO
+	if not raw is Array or (raw as Array).size() < 3 \
+			or not _finite_number(raw[0]) or not _finite_number(raw[1]) or not _finite_number(raw[2]):
+		return false
+	var model_yaw_raw: Variant = saved_player_pose.get("model_yaw")
+	var camera_yaw_raw: Variant = saved_player_pose.get("camera_yaw")
+	var camera_pitch_raw: Variant = saved_player_pose.get("camera_pitch")
+	if not _finite_number(model_yaw_raw) or not _finite_number(camera_yaw_raw) \
+			or not _finite_number(camera_pitch_raw):
+		return false
+	player.global_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
 	var model := player.get_node_or_null(^"Model") as Node3D
 	if model != null:
-		model.global_rotation.y = float(saved_player_pose.get("model_yaw", model.global_rotation.y))
+		model.global_rotation.y = float(model_yaw_raw)
 	var scene := get_tree().get_current_scene()
 	var rig: Node3D = scene.get_node_or_null(^"CameraRig") as Node3D if scene != null else null
+	if rig == null and player.get_parent() != null:
+		rig = player.get_parent().get_node_or_null(^"CameraRig") as Node3D
 	if rig != null:
-		var yaw := float(saved_player_pose.get("camera_yaw", rig.get("yaw")))
-		var pitch := float(saved_player_pose.get("camera_pitch", rig.get("pitch")))
+		var yaw := float(camera_yaw_raw)
+		var pitch := float(camera_pitch_raw)
 		rig.set("yaw", yaw)
 		rig.set("pitch", pitch)
 		rig.rotation = Vector3(pitch, yaw, 0.0)
 	return true
+
+
+func _finite_number(value: Variant) -> bool:
+	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(float(value))
 
 
 ## The slot `camp.gd` writes to on every rest. Exposed here rather than left

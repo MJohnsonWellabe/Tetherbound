@@ -209,8 +209,7 @@ func save(game: Object, slot: int) -> bool:
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
-		"player_pose": (game.get("saved_player_pose") as Dictionary).duplicate(true)
-			if typeof(game.get("saved_player_pose")) == TYPE_DICTIONARY else {},
+		"player_pose": _sanitise_player_pose(game.get("saved_player_pose")),
 	}
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
@@ -253,7 +252,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("felled_vegetation", (felled_raw as Dictionary).duplicate(true) if typeof(felled_raw) == TYPE_DICTIONARY else {})
 	if game.get("saved_player_pose") != null:
 		var pose_raw: Variant = data.get("player_pose", {})
-		game.set("saved_player_pose", (pose_raw as Dictionary).duplicate(true) if typeof(pose_raw) == TYPE_DICTIONARY else {})
+		game.set("saved_player_pose", _sanitise_player_pose(pose_raw))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -266,6 +265,34 @@ func load_slot(game: Object, slot: int) -> bool:
 		var progression_data: Variant = data.get("progression", {})
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
 	return true
+
+
+## RG7. A corrupt JSON pose must fall back to the authored spawn as one unit.
+## Applying a valid position with a NaN/invalid view (or vice versa) creates a
+## half-restored player that can be stranded or make the camera unusable.
+func _sanitise_player_pose(raw: Variant) -> Dictionary:
+	if typeof(raw) != TYPE_DICTIONARY:
+		return {}
+	var pose := raw as Dictionary
+	var position_raw: Variant = pose.get("position", [])
+	if typeof(position_raw) != TYPE_ARRAY or (position_raw as Array).size() < 3:
+		return {}
+	for i in 3:
+		if not _finite_number((position_raw as Array)[i]):
+			return {}
+	for key: String in ["model_yaw", "camera_yaw", "camera_pitch"]:
+		if not _finite_number(pose.get(key)):
+			return {}
+	return {
+		"position": [float(position_raw[0]), float(position_raw[1]), float(position_raw[2])],
+		"model_yaw": float(pose["model_yaw"]),
+		"camera_yaw": float(pose["camera_yaw"]),
+		"camera_pitch": float(pose["camera_pitch"]),
+	}
+
+
+func _finite_number(value: Variant) -> bool:
+	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(float(value))
 
 
 ## Run `data` through every migration step from its own version up to this

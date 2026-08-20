@@ -36,19 +36,44 @@ const FLAG_PREFIX := "tm:"
 
 var _tm_id: String = ""
 var _tms: RefCounted = null
+var _prompt: Node3D = null
 
 
 func setup(tm_id: String) -> void:
 	_tm_id = tm_id
+	add_to_group("progression_restore")
 	_tms = TM_DB.load_default()
 	_build_visual()
 
-	var prompt := INTERACTABLE.new()
-	prompt.name = "Interactable"
-	prompt.position = Vector3.UP * 0.5
-	prompt.call("configure", "Learn %s" % str(_tms.call("display_name", _tm_id)), 2.4, true)
-	prompt.connect("activated", _on_picked_up)
-	add_child(prompt)
+	_prompt = INTERACTABLE.new()
+	_prompt.name = "Interactable"
+	_prompt.position = Vector3.UP * 0.5
+	_prompt.call("configure", "Learn %s" % str(_tms.call("display_name", _tm_id)), 2.4, true)
+	_prompt.connect("activated", _on_picked_up)
+	add_child(_prompt)
+	var game := get_node_or_null(^"/root/Game")
+	if was_taken(game, _tm_id):
+		_deactivate()
+
+
+static func was_taken(game: Node, tm_id: String) -> bool:
+	if game == null or tm_id == "":
+		return false
+	var progression: RefCounted = game.get("progression")
+	return progression != null and bool(progression.call("has", FLAG_PREFIX + tm_id))
+
+
+func restore_progression_from_game(game: Node) -> void:
+	if was_taken(game, _tm_id):
+		_deactivate()
+
+
+func _deactivate() -> void:
+	# Disable immediately; queue_free alone leaves one actionable frame.
+	if _prompt != null and is_instance_valid(_prompt):
+		_prompt.call("set_enabled", false)
+	visible = false
+	queue_free()
 
 
 ## A flat standing tablet, not key_pickup.gd's dropped-key shaft-and-ring --
@@ -110,4 +135,4 @@ func _on_picked_up() -> void:
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
 		progression.call("set_flag", FLAG_PREFIX + _tm_id)
-	queue_free()
+	_deactivate()
