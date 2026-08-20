@@ -13,6 +13,11 @@ on:
       - 'tools/gate_a_apply.py'
       - 'tools/gate_a_batch*.py'
       - '.github/workflows/gate-a-apply.yml'
+  # GitHub App/content-API updates do not reliably emit recursive push/PR
+  # workflow events. Reconcile from the branch itself so an event dropped by
+  # GitHub costs a few minutes, never strands an activated Gate A batch.
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -25,9 +30,9 @@ concurrency:
 
 jobs:
   apply:
-    # Pushes made by this job carry the marker. PR events have no head_commit,
-    # so they naturally pass this guard and provide the bootstrap route.
-    if: ${{ github.event_name == 'pull_request' || !contains(github.event.head_commit.message || '', '[gate-a-applied]') }}
+    # Scheduled/dispatch/PR runs have no useful head_commit marker. Pushes made
+    # by this job do; ignore those to prevent recursion.
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message || '', '[gate-a-applied]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
