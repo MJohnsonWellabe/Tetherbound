@@ -73,6 +73,9 @@ var _capture_slot: String = ""
 var _settle: int = 0
 
 var _confirm_left: float = 0.0
+## Which visibility state the explicit controller focus graph currently
+## represents. -1 forces the first poll after build() to wire it.
+var _focus_graph_state: int = -1
 
 
 func build() -> void:
@@ -87,6 +90,7 @@ func build() -> void:
 	_debug_teleport_button = null
 	_teleport_section = null
 	_teleport_rows.clear()
+	_focus_graph_state = -1
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
 		var broken := Label.new()
@@ -220,6 +224,10 @@ func _poll_gameplay() -> void:
 	)
 	if _teleport_section != null:
 		_teleport_section.visible = teleport_on
+	var wanted_graph := 1 if teleport_on else 0
+	if _focus_graph_state != wanted_graph:
+		_focus_graph_state = wanted_graph
+		_wire_focus_graph(teleport_on)
 
 
 func _on_debug_teleport() -> void:
@@ -443,6 +451,81 @@ func _build_row(action: String, label_text: String) -> Control:
 func _keep_visible(control: Control) -> void:
 	if _scroll != null:
 		_scroll.ensure_control_visible(control)
+
+
+## Settings rows are separated by headings and variable-height notes. Leaving
+## their neighbours to Godot's geometric search made D-pad Down jump over the
+## first row after a section boundary (notably `interact` after Looking
+## around). Declare the controller contract directly: every column is a
+## continuous vertical lane and every row crosses keyboard -> gamepad ->
+## Default. The optional teleport rows join the same graph only while visible.
+func _wire_focus_graph(teleport_visible: bool) -> void:
+	if _rows.is_empty() or _free_build_button == null or _debug_teleport_button == null or _reset_all_button == null:
+		return
+
+	_link_vertical(_free_build_button, _free_build_button, _debug_teleport_button)
+	_link_horizontal_to_self(_free_build_button)
+	_link_vertical(_debug_teleport_button, _free_build_button, _reset_all_button)
+	_link_horizontal_to_self(_debug_teleport_button)
+
+	var above_reset: Control = _debug_teleport_button
+	if teleport_visible and not _teleport_rows.is_empty():
+		var previous: Control = _debug_teleport_button
+		for i in _teleport_rows.size():
+			var button: Button = (_teleport_rows[i] as Dictionary)["button"]
+			var below: Control = _reset_all_button
+			if i + 1 < _teleport_rows.size():
+				below = (_teleport_rows[i + 1] as Dictionary)["button"]
+			_link_vertical(button, previous, below)
+			_link_horizontal_to_self(button)
+			previous = button
+		above_reset = previous
+		_debug_teleport_button.focus_neighbor_bottom = _debug_teleport_button.get_path_to(
+			(_teleport_rows[0] as Dictionary)["button"]
+		)
+
+	_link_vertical(_reset_all_button, above_reset, (_rows[0] as Dictionary)["keyboard"])
+	_link_horizontal_to_self(_reset_all_button)
+
+	for i in _rows.size():
+		var record := _rows[i] as Dictionary
+		var keyboard: Button = record["keyboard"]
+		var gamepad: Button = record["gamepad"]
+		var reset: Button = record["reset"]
+		var above_record: Dictionary = _rows[maxi(0, i - 1)] as Dictionary
+		var below_record: Dictionary = _rows[mini(_rows.size() - 1, i + 1)] as Dictionary
+		_link_vertical(
+			keyboard,
+			_reset_all_button if i == 0 else above_record["keyboard"],
+			below_record["keyboard"]
+		)
+		_link_vertical(
+			gamepad,
+			_reset_all_button if i == 0 else above_record["gamepad"],
+			below_record["gamepad"]
+		)
+		_link_vertical(
+			reset,
+			_reset_all_button if i == 0 else above_record["reset"],
+			below_record["reset"]
+		)
+		keyboard.focus_neighbor_left = keyboard.get_path_to(keyboard)
+		keyboard.focus_neighbor_right = keyboard.get_path_to(gamepad)
+		gamepad.focus_neighbor_left = gamepad.get_path_to(keyboard)
+		gamepad.focus_neighbor_right = gamepad.get_path_to(reset)
+		reset.focus_neighbor_left = reset.get_path_to(gamepad)
+		reset.focus_neighbor_right = reset.get_path_to(reset)
+
+
+func _link_vertical(control: Control, above: Control, below: Control) -> void:
+	control.focus_neighbor_top = control.get_path_to(above)
+	control.focus_neighbor_bottom = control.get_path_to(below)
+
+
+func _link_horizontal_to_self(control: Control) -> void:
+	var self_path := control.get_path_to(control)
+	control.focus_neighbor_left = self_path
+	control.focus_neighbor_right = self_path
 
 
 # --- the frame loop ---------------------------------------------------------

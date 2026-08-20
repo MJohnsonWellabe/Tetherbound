@@ -134,22 +134,22 @@ func _check_the_arrows_still_move_on_their_own() -> void:
 		return
 
 	var before := int(_picker.get("_index"))
-	await _press("ui_right")
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
 	var after := int(_picker.get("_index"))
 	if after == before:
-		_fail("`ui_right` on its own moved the highlight from %d to %d; the orbs cannot be browsed" % [before, after])
+		_fail("physical D-pad Right did not move the highlight from %d; the orbs cannot be browsed" % before)
 	else:
-		print("`ui_right` alone: highlight moved %d -> %d" % [before, after])
+		print("physical D-pad Right: highlight moved %d -> %d" % [before, after])
 
-	await _press("ui_left")
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
 	if int(_picker.get("_index")) != before:
-		_fail("`ui_left` did not undo the `ui_right`; the highlight is at %d, not %d" % [
+		_fail("physical D-pad Left did not undo Right; the highlight is at %d, not %d" % [
 			int(_picker.get("_index")), before
 		])
 
-	await _press("menu_confirm")
+	await _tap_pad(JOY_BUTTON_A)
 	if bool(_picker.call("is_open")):
-		_fail("`menu_confirm` on its own did not close the picker")
+		_fail("physical A did not choose the highlighted starter")
 
 
 func _open_picker() -> bool:
@@ -175,16 +175,20 @@ func _on_chosen(index: int) -> void:
 	_chosen.append(index)
 
 
-## Action state only, no parsed event. The picker reads every one of its actions
-## by polling `Input.is_action_just_pressed` in `_physics_process` — it holds no
-## focus and has no `_gui_input` — and a parsed event can register a physics
-## frame later than the action state, which is one of the ways two presses meant
-## to be apart end up in the same frame (tests/smoke_opening.gd's own
-## `_press_polled` names the same race).
-func _press(action: String) -> void:
-	Input.action_press(action)
+## The ordinary picker route starts as hardware input and must pass through
+## the live InputMap. The same-frame collision above intentionally presses
+## action state directly because it targets a precise polling race; this is
+## the complementary proof that the shipped D-pad/A bindings reach it at all.
+func _tap_pad(button_index: int) -> void:
+	var down := InputEventJoypadButton.new()
+	down.button_index = button_index
+	down.pressed = true
+	Input.parse_input_event(down)
 	for i in 3:
 		await physics_frame
-	Input.action_release(action)
+	var up := InputEventJoypadButton.new()
+	up.button_index = button_index
+	up.pressed = false
+	Input.parse_input_event(up)
 	for i in 6:
 		await physics_frame

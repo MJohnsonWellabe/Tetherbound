@@ -79,6 +79,7 @@ func _run() -> void:
 		return
 
 	await _check_focus_can_be_driven()
+	await _check_all_enabled_controls_are_reachable()
 	await _check_a_key_can_be_rebound()
 	await _check_a_capture_can_be_cancelled()
 	await _check_a_gamepad_button_can_be_rebound()
@@ -175,6 +176,31 @@ func _tap_pad(index: int) -> void:
 		await process_frame
 
 
+func _tap_axis(axis: JoyAxis, value: float) -> void:
+	var down := InputEventJoypadMotion.new()
+	down.axis = axis
+	down.axis_value = value
+	Input.parse_input_event(down)
+	await process_frame
+	await process_frame
+	var up := InputEventJoypadMotion.new()
+	up.axis = axis
+	up.axis_value = 0.0
+	Input.parse_input_event(up)
+	for i in 3:
+		await process_frame
+
+
+func _pad_button_for(action: String) -> int:
+	if not InputMap.has_action(action):
+		return -1
+	for event in InputMap.action_get_events(action):
+		var button := event as InputEventJoypadButton
+		if button != null:
+			return button.button_index
+	return -1
+
+
 func _focused() -> Control:
 	var viewport := root.get_viewport()
 	return viewport.gui_get_focus_owner() if viewport != null else null
@@ -210,7 +236,7 @@ func _open_capture(action: String, slot: String) -> void:
 ## Reachable by pressing the same button that changes tab everywhere else. A
 ## settings screen you can only get to by calling `select(3)` is not a screen.
 func _check_the_tab_is_reachable_with_a_pad() -> void:
-	await _press("inventory")
+	await _tap_pad(_pad_button_for("inventory"))
 	if not bool(_menu.call("is_open")):
 		_fail("the menu did not open")
 		return
@@ -226,7 +252,7 @@ func _check_the_tab_is_reachable_with_a_pad() -> void:
 	for step in tabs.size() + 1:
 		if int(_menu.get("_index")) == wanted:
 			break
-		await _press("tool_cycle")
+		await _tap_pad(_pad_button_for("tool_cycle"))
 	if int(_menu.get("_index")) != wanted:
 		_fail("`tool_cycle` never reached the settings tab")
 		return
@@ -244,16 +270,99 @@ func _check_focus_can_be_driven() -> void:
 	if start == null:
 		_fail("nothing holds focus on the settings tab; a stick would move nothing")
 		return
-	await _press("ui_right")
+	# Raw d-pad events, not InputEventAction: these must travel through the
+	# shipped InputMap and Godot's Control focus machinery exactly as hardware.
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
 	var after_right := _focused()
 	if after_right == start:
-		_fail("ui_right moved nothing; the keyboard and gamepad columns cannot be reached")
-	await _press("ui_down")
-	if _focused() == after_right:
-		_fail("ui_down moved nothing; only one row could ever be rebound")
+		_fail("D-pad Right moved nothing; the keyboard and gamepad columns cannot be reached")
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	var after_dpad_down := _focused()
+	if after_dpad_down == after_right:
+		_fail("D-pad Down moved nothing; only one row could ever be rebound")
+	await _tap_pad(JOY_BUTTON_DPAD_UP)
+	if _focused() == after_dpad_down:
+		_fail("D-pad Up could not return through the settings rows")
+
+	# The left stick is a distinct physical path into the built-in ui_* map.
+	# Prove both directions, including neutral release so held-repeat state does
+	# not leak into the following capture tests.
+	var before_stick := _focused()
+	await _tap_axis(JOY_AXIS_LEFT_Y, 1.0)
+	var after_stick_down := _focused()
+	if after_stick_down == before_stick:
+		_fail("left-stick Down moved nothing in Settings")
+	await _tap_axis(JOY_AXIS_LEFT_Y, -1.0)
+	if _focused() == after_stick_down:
+		_fail("left-stick Up could not return through the settings rows")
 	if _focused() == null:
 		_fail("focus was lost while moving; the screen becomes undrivable")
-	print("focus moves across columns and down rows")
+	print("focus moves by raw D-pad and left-stick events across columns and rows")
+
+
+## Walk the complete live focus graph from the tab's natural entry focus. Each
+## binding row has three enabled actions (keyboard, gamepad, Default), plus the
+## three always-visible Settings actions above the scroll list. Comparing the
+## actual focused Control at every step catches a gap that a one-row movement
+## check cannot: a row may draw correctly yet be skipped by automatic focus.
+func _check_all_enabled_controls_are_reachable() -> void:
+	if _rows.is_empty():
+		return
+
+	# The preceding D-pad/stick check ends on row 0's gamepad cell.
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if _focused() != (_rows[0] as Dictionary)["keyboard"]:
+		_fail("could not return to the first keyboard binding from the natural Settings focus")
+		return
+
+	var scroll: ScrollContainer = _tab.get("_scroll")
+	var start_scroll := scroll.scroll_vertical
+	for i in range(1, _rows.size()):
+		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+		if _focused() != (_rows[i] as Dictionary)["keyboard"]:
+			_fail("D-pad skipped keyboard binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
+			return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if _focused() != (_rows[-1] as Dictionary)["gamepad"]:
+		_fail("D-pad could not cross to the gamepad binding column on the last row")
+		return
+	for i in range(_rows.size() - 2, -1, -1):
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+		if _focused() != (_rows[i] as Dictionary)["gamepad"]:
+			_fail("D-pad skipped gamepad binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
+			return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if _focused() != (_rows[0] as Dictionary)["reset"]:
+		_fail("D-pad could not cross to the per-action Default column")
+		return
+	for i in range(1, _rows.size()):
+		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+		if _focused() != (_rows[i] as Dictionary)["reset"]:
+			_fail("D-pad skipped Default on row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
+			return
+	if scroll.scroll_vertical <= start_scroll:
+		_fail("focus reached the bottom Settings row but the ScrollContainer never followed it")
+
+	# Return up the Default column, then continue through the three enabled
+	# non-row actions. Debug destination buttons are hidden while their toggle
+	# is off, so they are deliberately not part of this enabled-control count.
+	for i in range(_rows.size() - 2, -1, -1):
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+		if _focused() != (_rows[i] as Dictionary)["reset"]:
+			_fail("D-pad could not return through Default row %d" % i)
+			return
+	var settings_actions: Array[Button] = [
+		_tab.get("_reset_all_button") as Button,
+		_tab.get("_debug_teleport_button") as Button,
+		_tab.get("_free_build_button") as Button,
+	]
+	for expected: Button in settings_actions:
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+		if _focused() != expected:
+			_fail("D-pad could not reach Settings action '%s'" % expected.text.strip_edges())
+			return
+
+	print("physical D-pad reaches all %d binding actions plus all always-visible Settings actions; scrolling follows" % (_rows.size() * 3))
 
 
 func _check_a_key_can_be_rebound() -> void:
@@ -454,6 +563,20 @@ func _check_debug_teleport() -> void:
 		_fail("the teleport list stayed hidden after the toggle turned on")
 		return
 	print("debug teleport toggles on and its list appears")
+
+	# The toggle remains focused after activation. Every now-visible destination
+	# must join its D-pad Down chain in authored order; hidden controls are not
+	# allowed to appear between them or steal focus.
+	var visible_destinations: Array = _tab.get("_teleport_rows")
+	for i in visible_destinations.size():
+		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+		var expected: Button = (visible_destinations[i] as Dictionary)["button"]
+		if _focused() != expected:
+			_fail("D-pad could not reach visible debug destination %d ('%s')" % [
+				i, str((visible_destinations[i] as Dictionary).get("display_name", "?"))
+			])
+			return
+	print("physical D-pad reaches all %d enabled debug destinations" % visible_destinations.size())
 
 	# One region + one spoke end, checked exactly, synchronously, while the
 	# menu (and so the world) is still paused.

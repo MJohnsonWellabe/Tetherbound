@@ -31,6 +31,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
 const GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const CONTROLLER_SAVE_DIR := "user://controller_ui_smoke_saves/"
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
@@ -80,6 +82,7 @@ func _run() -> void:
 	await _check_backpack_drop_and_split()
 	await _check_backpack_move_and_quick_bar()
 	await _check_quest_log_tab()
+	await _check_save_tab_controller_actions()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_objective_line_updates_without_reload(world)
 	await _check_opens_on_the_menu_button()
@@ -99,41 +102,20 @@ func _fail(message: String) -> void:
 	_failures.append(message)
 
 
-## Press an action down both paths, because the menu uses both.
-##
-## `Input.action_press` sets the action state, which is what the menu's own
-## polling reads. It does NOT put an event through the tree, so on its own it
-## cannot move Control focus — and focus navigation is the half of a controller
-## menu that a poll cannot do. `parse_input_event` supplies that half.
-##
-## A test that only did the first would have reported a working menu while the
-## stick moved nothing, which is precisely the bug this file exists to catch.
+## Controller actions in this smoke start as their physical joypad binding.
+## Naming an action directly can make both polling and Control focus pass while
+## the live InputMap has no route from the button printed in the footer.
 func _press(action: String) -> void:
-	Input.action_press(action)
-	_send(action, true)
-	await process_frame
-	await process_frame
-	Input.action_release(action)
-	_send(action, false)
-	for i in 4:
-		await process_frame
+	var button_index := _pad_button_for(action)
+	if button_index < 0:
+		_fail("'%s' has no physical joypad button binding" % action)
+		return
+	await _pad(button_index)
 
 
-func _send(action: String, pressed: bool) -> void:
-	var event := InputEventAction.new()
-	event.action = action
-	event.pressed = pressed
-	Input.parse_input_event(event)
-
-
-## TEST2. `_press` above proves the CODE reacts once an action fires; it
-## cannot prove a real press reaches that code at all, because
-## `InputEventAction` names the action directly and never travels the
-## InputMap — the exact blind spot `smoke_backpack_pad_target.gd` (OW4) found
-## in this same target picker. Used by `_check_backpack_target_picker` below,
-## which drives the one path through this menu that heals a creature and
-## spends an item, so an "it works" result there should mean a controller can
-## actually do it.
+## Resolve the actual button from the live InputMap so rebinds move the test
+## with the game. `smoke_backpack_pad_target.gd` (OW4) first exposed why an
+## InputEventAction is insufficient for this contract.
 func _pad_button_for(action: String) -> int:
 	if not InputMap.has_action(action):
 		return -1
@@ -339,49 +321,61 @@ func _check_focus_can_be_driven() -> void:
 		return
 	print("focus starts on: %s" % focused.name)
 
-	# Move the cursor the way a d-pad does, through Godot's own ui_* actions.
-	# If focus neighbours are not resolvable this simply does not move, which is
-	# exactly the failure a screenshot cannot show.
-	await _press("ui_right")
+	# Physical d-pad events must reach Godot's ui_* map and then its Control
+	# focus machinery. Naming the action directly would skip both bindings.
+	await _pad(JOY_BUTTON_DPAD_RIGHT)
 	var after_right := _focused_control()
 	if after_right == focused:
-		_fail("ui_right moved nothing; the grid cannot be driven with a stick")
-	await _press("ui_down")
+		_fail("raw D-pad Right moved nothing; the grid cannot be driven with a controller")
+	await _pad(JOY_BUTTON_DPAD_DOWN)
 	if _focused_control() == after_right:
-		_fail("ui_down moved nothing; the grid cannot be driven with a stick")
-	print("focus moves on ui_right and ui_down")
+		_fail("raw D-pad Down moved nothing; the grid cannot be driven with a controller")
+	print("focus moves on physical D-pad Right and Down")
 
 
 func _check_tabs_can_be_cycled() -> void:
-	var before := str(_menu.get("_index"))
-	await _press("tool_cycle")
-	if str(_menu.get("_index")) == before:
-		_fail("`tool_cycle` did not change tab")
-		return
-	if _focused_control() == null:
-		_fail("changing tab left nothing focused; the menu becomes undrivable")
-	print("tab cycles on `tool_cycle`, focus follows")
-
 	# Owner playtest report: "LB = tab left, RB = tab right". `tool_cycle` (Q /
 	# LB) must step BACKWARD and `menu_tab_right` (Tab / RB) must step
-	# FORWARD -- opposite directions, checked directly against `_index`
-	# rather than just "changed", so a future regression that makes both
-	# buttons cycle the same way fails loudly instead of passing on "it moved".
+	# FORWARD. Drive the physical bindings and visit every registered tab; a
+	# two-tab spot check could leave a newly added tab unreachable or unfocused.
 	var tab_count := int(_menu.get("_tabs").size())
-	var mid := int(_menu.get("_index"))
+	var rb := _pad_button_for("menu_tab_right")
+	var lb := _pad_button_for("tool_cycle")
+	if rb < 0 or lb < 0:
+		_fail("LB/RB tab actions do not both have physical joypad bindings")
+		return
+	var start := int(_menu.get("_index"))
+	var visited: Dictionary = {start: true}
 	var both_ok := true
-	await _press("tool_cycle")
+	for step in tab_count:
+		var before := int(_menu.get("_index"))
+		await _pad(rb)
+		var after := int(_menu.get("_index"))
+		if after != posmod(before + 1, tab_count):
+			_fail("physical RB should step to the next tab; went from %d to %d" % [before, after])
+			both_ok = false
+			break
+		visited[after] = true
+		if _focused_control() == null:
+			_fail("physical RB reached tab %d but left it with no actionable focus" % after)
+			both_ok = false
+	if visited.size() != tab_count:
+		_fail("physical RB reached %d of %d pause tabs" % [visited.size(), tab_count])
+		both_ok = false
+
+	var mid := int(_menu.get("_index"))
+	await _pad(lb)
 	var after_lb := int(_menu.get("_index"))
 	if after_lb != posmod(mid - 1, tab_count):
-		_fail("`tool_cycle` (LB) should step to the PREVIOUS tab; went from %d to %d" % [mid, after_lb])
+		_fail("physical LB should step to the previous tab; went from %d to %d" % [mid, after_lb])
 		both_ok = false
-	await _press("menu_tab_right")
+	await _pad(rb)
 	var after_rb := int(_menu.get("_index"))
 	if after_rb != posmod(after_lb + 1, tab_count):
-		_fail("`menu_tab_right` (RB) should step to the NEXT tab; went from %d to %d" % [after_lb, after_rb])
+		_fail("physical RB should step to the next tab; went from %d to %d" % [after_lb, after_rb])
 		both_ok = false
 	if both_ok:
-		print("LB steps to the previous tab, RB steps to the next -- opposite directions, as reported")
+		print("physical RB reaches all %d tabs with focus; LB and RB move in opposite directions" % tab_count)
 
 
 ## The five-creature cap, seen from the screen rather than from the unit test.
@@ -1112,6 +1106,72 @@ func _check_quest_log_tab() -> void:
 		_fail("the road-gate objective reads done before its flag is set")
 	else:
 		print("quest log tab shows the road-gate objective, correctly open")
+
+
+## Save is the only tab whose advertised A action writes outside the running
+## state. Swap in a dedicated save-system directory so the physical-button
+## proof cannot overwrite a player's slot, then restore the real object and
+## remove only the isolated file this check created.
+func _check_save_tab_controller_actions() -> void:
+	var tabs: Array = _menu.get("_tabs")
+	var index := -1
+	for i in tabs.size():
+		if str((tabs[i] as Dictionary).get("id", "")) == "save":
+			index = i
+			break
+	if index < 0:
+		_fail("no Save tab is registered in menu.json")
+		return
+
+	_cleanup_controller_save_dir()
+	var original: RefCounted = _game.get("save_system")
+	var isolated: RefCounted = SAVE_GAME.new(CONTROLLER_SAVE_DIR)
+	_game.set("save_system", isolated)
+	_menu.call("select", index)
+	for i in 6:
+		await process_frame
+
+	var body: Node = _menu.get("_bodies")[index]
+	var rows: Array = body.get("_rows")
+	if rows.is_empty():
+		_fail("Save tab drew no slot rows")
+		_game.set("save_system", original)
+		_cleanup_controller_save_dir()
+		return
+	var save_button: Button = (rows[0] as Dictionary)["save"]
+	var load_button: Button = (rows[0] as Dictionary)["load"]
+	if _focused_control() != save_button:
+		_fail("Save tab did not focus slot 1 Save on entry")
+
+	var saved_day := int(_game.get("day"))
+	await _press("ui_accept")
+	if not bool(isolated.call("has_slot", 0)):
+		_fail("physical A on slot 1 Save wrote no isolated save")
+	if _focused_control() != save_button:
+		_fail("Save tab lost focus after writing the slot")
+
+	await _press("ui_right")
+	if _focused_control() != load_button or load_button.disabled:
+		_fail("physical D-pad Right could not reach the newly enabled Load action")
+	else:
+		_game.set("day", saved_day + 1)
+		await _press("ui_accept")
+		if int(_game.get("day")) != saved_day:
+			_fail("physical A on Load did not restore the isolated slot")
+
+	_game.set("save_system", original)
+	_cleanup_controller_save_dir()
+	print("Save tab: physical A saves, D-pad reaches Load, and physical A restores the isolated slot")
+
+
+func _cleanup_controller_save_dir() -> void:
+	for slot in 5:
+		var uri := "%sslot_%d.json" % [CONTROLLER_SAVE_DIR, slot]
+		if FileAccess.file_exists(uri):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(uri))
+	var absolute_dir := ProjectSettings.globalize_path(CONTROLLER_SAVE_DIR.trim_suffix("/"))
+	if DirAccess.dir_exists_absolute(absolute_dir):
+		DirAccess.remove_absolute(absolute_dir)
 
 
 ## SB11's own done-when: completing an objective changes the HUD line without

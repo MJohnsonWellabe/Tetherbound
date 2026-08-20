@@ -22,12 +22,9 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_menu_focus.gd
 ##
-## Input is injected the same way `smoke_menu.gd`/`smoke_free_build.gd`
-## drive Control focus navigation: `Input.action_press` plus a parsed
-## `InputEventAction`, which is what a Godot `Control`'s own focus-nav reads
-## regardless of device -- a raw `InputEventJoypadButton` is only needed
-## where the CODE reads the device event itself (build_menu.gd's shared-
-## button checks), not for stock focus navigation.
+## Primary assertions inject physical joypad buttons through InputMap. A named
+## InputEventAction can make stock Control focus look healthy even when no real
+## controller binding reaches it -- the exact false confidence RG6 forbids.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
@@ -87,23 +84,39 @@ func _cleanup() -> void:
 		_world.queue_free()
 
 
-## --- shared helpers, same shape as smoke_menu.gd / smoke_free_build.gd -------
+## --- shared helpers ---------------------------------------------------------
 
 func _press(action: String) -> void:
-	Input.action_press(action)
-	var down := InputEventAction.new()
-	down.action = action
+	var button_index := _pad_button_for(action)
+	if button_index < 0:
+		_fail("'%s' has no physical joypad button binding" % action)
+		return
+	await _tap_pad(button_index)
+
+
+func _tap_pad(button_index: int) -> void:
+	var down := InputEventJoypadButton.new()
+	down.button_index = button_index
 	down.pressed = true
 	Input.parse_input_event(down)
 	await physics_frame
 	await physics_frame
-	Input.action_release(action)
-	var up := InputEventAction.new()
-	up.action = action
+	var up := InputEventJoypadButton.new()
+	up.button_index = button_index
 	up.pressed = false
 	Input.parse_input_event(up)
 	for i in 6:
 		await physics_frame
+
+
+func _pad_button_for(action: String) -> int:
+	if not InputMap.has_action(action):
+		return -1
+	for event in InputMap.action_get_events(action):
+		var button := event as InputEventJoypadButton
+		if button != null:
+			return button.button_index
+	return -1
 
 
 func _focused() -> Control:
@@ -147,10 +160,7 @@ func _walk_and_interact(prompt: Node3D) -> void:
 	_player.velocity = Vector3.ZERO
 	for i in 20:
 		await physics_frame
-	Input.action_press("interact")
-	await physics_frame
-	await physics_frame
-	Input.action_release("interact")
+	await _press("interact")
 	for i in 15:
 		await physics_frame
 
