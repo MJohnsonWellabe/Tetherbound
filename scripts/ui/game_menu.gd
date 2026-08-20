@@ -351,7 +351,10 @@ func close() -> void:
 	# the mouse already visible, and slamming it back to CAPTURED would trap a
 	# cursor the player needs.
 	Input.mouse_mode = _mouse_before
-	get_tree().paused = _paused_before
+	# RG1: the shell releases pause ownership; it must not resurrect a stale
+	# paused snapshot captured during an earlier modal transition. All legal
+	# open paths originate from the live world, so release means unpaused.
+	get_tree().paused = false
 	_set_world_hud_visible(true)
 	if _index >= 0 and _index < _bodies.size():
 		_bodies[_index].call("say", "")
