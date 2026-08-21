@@ -321,6 +321,26 @@ const _MOTION_DEADZONE := 0.5
 func _ready() -> void:
 	BOOT_LOG.line("Game autoload: _ready start (first autoload, before any world scene)")
 	items = ITEM_DB.new()
+	save_system = SAVE_GAME.new()
+	reset_for_new_game()
+
+	if OS.get_cmdline_args().has(DEMO_FLAG):
+		_seed_demo()
+
+	_mount_menu()
+	# After the menu, never before: the menu shell owns the settings file and has
+	# only just read it (docs/decisions/D15).
+	_adopt_preferences()
+	BOOT_LOG.line("Game autoload: _ready done, menu mounted")
+
+
+## Replace every piece of live, save-derived play state with the same empty
+## state a process boot creates.  Save files are deliberately not touched:
+## Start New Game means start a new run, not delete the player's other slots.
+## Settings (`free_build`/`debug_teleport`) are preferences and likewise stay.
+func reset_for_new_game() -> void:
+	if items == null:
+		items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
 	party = PARTY.new()
 	player_equipment = PLAYER_EQUIPMENT.new()
@@ -331,16 +351,22 @@ func _ready() -> void:
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
 	_last_progression_revision = int(progression.get("revision"))
-	save_system = SAVE_GAME.new()
 
-	if OS.get_cmdline_args().has(DEMO_FLAG):
-		_seed_demo()
-
-	_mount_menu()
-	# After the menu, never before: the menu shell owns the settings file and has
-	# only just read it (docs/decisions/D15).
-	_adopt_preferences()
-	BOOT_LOG.line("Game autoload: _ready done, menu mounted")
+	day = 1
+	pending_build = ""
+	_pending_world_message = ""
+	pending_catch = null
+	placed_buildings = []
+	farm_plots = []
+	hotbar = ["", "", "", "", ""]
+	equipped_tool = ""
+	death_satchels = []
+	harvested_vegetation = {}
+	felled_vegetation = {}
+	saved_player_pose = {}
+	satiety = 100.0
+	_discovery_elapsed = 0.0
+	_autosave_elapsed = 0.0
 
 
 ## The menu, as a child of the autoload rather than of a world scene.
