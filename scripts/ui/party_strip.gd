@@ -34,7 +34,10 @@ extends Control
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 
 const SLOTS := 5
-const ROW_SIZE := Vector2(250.0, 56.0)
+# Fixed at the occupied row's real text-driven height. A 56px minimum let
+# occupied name/level stacks grow while vacant rows stayed short, invalidating
+# the mount's five-row height and putting slot 5 over ACTIVE COMPANION.
+const ROW_SIZE := Vector2(250.0, 76.0)
 const ROW_SEPARATION := 6
 const ROW_MARGIN := 6
 const HEADER_HEIGHT := 30.0

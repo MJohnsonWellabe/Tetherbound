@@ -122,6 +122,7 @@ const REGION_BANNER_SECONDS := 3.2
 
 const CREATURE_BLOCK_POS := Vector2(56.0, 830.0)
 const CREATURE_BLOCK_SIZE := Vector2(374.0, 110.0) ## x 56-430, y 830-940
+const PARTY_ACTIVE_GAP := UITokens.GAP
 
 const VITALS_POS := Vector2(56.0, 946.0) ## buff row starts here; satiety row ends ~1010
 const VITALS_WIDTH := 300.0
@@ -527,12 +528,18 @@ func _mount_party_strip() -> void:
 	_party_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	# Positioned to slide in ABOVE the active-creature block, sharing its left
-	# edge -- SLOTS/ROW_SIZE/ROW_SEPARATION are the widget's own consts, read
-	# rather than duplicated, so this position can never drift out of step
-	# with what party_strip.gd actually draws.
+	# edge. PartyStrip fixes all five rows to the occupied text-driven height,
+	# so its declared total remains true whether each slot is filled or vacant.
 	var height: float = float(script.TOTAL_HEIGHT)
-	_party_strip.position = Vector2(CREATURE_BLOCK_POS.x, CREATURE_BLOCK_POS.y - height - UITokens.GAP)
+	_party_strip.position = party_strip_position(height)
 	_root.add_child(_party_strip)
+
+
+static func party_strip_position(strip_height: float) -> Vector2:
+	return Vector2(
+		CREATURE_BLOCK_POS.x,
+		CREATURE_BLOCK_POS.y - strip_height - PARTY_ACTIVE_GAP
+	)
 
 
 ## Wired to `Game.party.active_index()` + `.revision`: rebuild entries and

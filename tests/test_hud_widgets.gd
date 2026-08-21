@@ -58,6 +58,32 @@ func test_build_is_idempotent() -> void:
 	strip.free()
 
 
+func test_full_roster_mount_clears_the_separate_active_panel() -> void:
+	var strip := _make_strip()
+	for row: Control in strip._rows:
+		assert_almost_eq(
+			row.custom_minimum_size.y,
+			PARTY_STRIP.ROW_SIZE.y,
+			0.001,
+			"occupied and vacant rows must reserve the same fixed vertical space"
+		)
+	var resting_position: Vector2 = PLAYGROUND_HUD.party_strip_position(PARTY_STRIP.TOTAL_HEIGHT)
+	var roster_bottom := resting_position.y + PARTY_STRIP.TOTAL_HEIGHT
+	var active_panel_top := PLAYGROUND_HUD.CREATURE_BLOCK_POS.y
+
+	assert_almost_eq(
+		active_panel_top - roster_bottom,
+		PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
+		0.001,
+		"all five text-driven rows need a fixed positive gap above ACTIVE COMPANION"
+	)
+	assert_true(
+		active_panel_top - roster_bottom >= 12.0,
+		"the roster must not touch or obscure the separately labelled active panel"
+	)
+	strip.free()
+
+
 func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash() -> void:
 	var strip := _make_strip()
 	var entries: Array = [
