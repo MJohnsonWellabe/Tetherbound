@@ -199,6 +199,8 @@ var _hotbar_message_until := 0.0
 ## --- active-creature block --------------------------------------------------------
 
 var _creature_block: Control = null
+var _creature_panel: Panel = null
+var _creature_header: Label = null
 var _creature_content: Control = null
 var _creature_chip: ColorRect = null
 var _creature_portrait: TextureRect = null
@@ -341,10 +343,28 @@ func _build_creature_block() -> void:
 	_creature_block.size = CREATURE_BLOCK_SIZE
 	_root.add_child(_creature_block)
 
+	_creature_panel = Panel.new()
+	_creature_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_panel.size = CREATURE_BLOCK_SIZE
+	_creature_panel.add_theme_stylebox_override(
+		"panel", UITokens.panel_box(UITokens.BG_DEEP, Color(UITokens.TEAL, 0.72))
+	)
+	_creature_block.add_child(_creature_panel)
+
+	_creature_header = Label.new()
+	_creature_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_header.text = "ACTIVE COMPANION"
+	_creature_header.position = Vector2(40.0, 3.0)
+	_creature_header.size = Vector2(280.0, 22.0)
+	_creature_header.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_header.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
+	_creature_panel.add_child(_creature_header)
+
 	_creature_content = Control.new()
 	_creature_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_content.size = CREATURE_BLOCK_SIZE
-	_creature_block.add_child(_creature_content)
+	_creature_content.position = Vector2(12.0, 24.0)
+	_creature_content.size = CREATURE_BLOCK_SIZE - Vector2(24.0, 24.0)
+	_creature_panel.add_child(_creature_content)
 
 	_creature_chip = ColorRect.new()
 	_creature_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -365,9 +385,9 @@ func _build_creature_block() -> void:
 	_creature_icon.texture = load(ICON_CREATURES)
 	_creature_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_creature_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_creature_icon.position = Vector2(-6.0, -14.0)
+	_creature_icon.position = Vector2(12.0, 4.0)
 	_creature_icon.size = Vector2(20.0, 20.0)
-	_creature_block.add_child(_creature_icon)
+	_creature_panel.add_child(_creature_icon)
 
 	_creature_name_label = Label.new()
 	_creature_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -415,12 +435,12 @@ func _build_creature_block() -> void:
 
 	_creature_no_creature_label = Label.new()
 	_creature_no_creature_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_no_creature_label.position = Vector2(0.0, 40.0)
+	_creature_no_creature_label.position = Vector2(52.0, 46.0)
 	_creature_no_creature_label.text = "No creature out"
 	_creature_no_creature_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_creature_no_creature_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_creature_no_creature_label.visible = false
-	_creature_block.add_child(_creature_no_creature_label)
+	_creature_panel.add_child(_creature_no_creature_label)
 
 
 func _update_creature_block() -> void:
@@ -510,10 +530,7 @@ func _mount_party_strip() -> void:
 	# edge -- SLOTS/ROW_SIZE/ROW_SEPARATION are the widget's own consts, read
 	# rather than duplicated, so this position can never drift out of step
 	# with what party_strip.gd actually draws.
-	var height: float = (
-		float(script.SLOTS) * script.ROW_SIZE.y
-		+ float(script.SLOTS - 1) * script.ROW_SEPARATION
-	)
+	var height: float = float(script.TOTAL_HEIGHT)
 	_party_strip.position = Vector2(CREATURE_BLOCK_POS.x, CREATURE_BLOCK_POS.y - height - UITokens.GAP)
 	_root.add_child(_party_strip)
 

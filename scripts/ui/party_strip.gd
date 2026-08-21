@@ -37,6 +37,9 @@ const SLOTS := 5
 const ROW_SIZE := Vector2(250.0, 56.0)
 const ROW_SEPARATION := 6
 const ROW_MARGIN := 6
+const HEADER_HEIGHT := 30.0
+const HEADER_GAP := 6.0
+const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 const CHIP_SIZE := Vector2(40.0, 40.0)
 const RAIL_WIDTH := 4.0
 const HP_BAR_SIZE := Vector2(72.0, 8.0)
@@ -45,8 +48,8 @@ const HP_BAR_SIZE := Vector2(72.0, 8.0)
 ## the (impossible, but not this file's job to assume) selected one.
 const FAINTED_MODULATE := 0.4
 const RESTING_MODULATE := 0.5
-const UNSELECTED_MODULATE := 0.6
-const VACANT_MODULATE := 0.35
+const UNSELECTED_MODULATE := 0.78
+const VACANT_MODULATE := 0.62
 const SELECTED_MODULATE := 1.0
 
 ## How far the strip slides while revealing, in local pixels. Small on
@@ -64,10 +67,13 @@ var _tween: Tween = null
 var _rest_position := Vector2.ZERO
 
 var _rows: Array[PanelContainer] = []
+var _count_label: Label = null
+var _list: VBoxContainer = null
 var _rails: Array[ColorRect] = []
 var _chips: Array[Panel] = []
 var _chip_boxes: Array[StyleBoxFlat] = []
 var _portraits: Array[TextureRect] = []
+var _slot_labels: Array[Label] = []
 var _name_labels: Array[Label] = []
 var _level_labels: Array[Label] = []
 var _ko_labels: Array[Label] = []
@@ -105,16 +111,41 @@ func _build() -> void:
 		return  # idempotent: a test calling this twice must not double the rows
 
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var list := VBoxContainer.new()
-	list.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	list.add_theme_constant_override("separation", ROW_SEPARATION)
-	add_child(list)
+	var stack := VBoxContainer.new()
+	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_theme_constant_override("separation", int(HEADER_GAP))
+	add_child(stack)
+
+	var header := PanelContainer.new()
+	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	header.custom_minimum_size = Vector2(ROW_SIZE.x, HEADER_HEIGHT)
+	var header_box := UI_TOKENS.panel_box(UI_TOKENS.BG_DEEP, Color(UI_TOKENS.TEAL, 0.72))
+	header_box.content_margin_left = 6.0
+	header_box.content_margin_top = 2.0
+	header_box.content_margin_right = 6.0
+	header_box.content_margin_bottom = 2.0
+	header.add_theme_stylebox_override("panel", header_box)
+	stack.add_child(header)
+
+	_count_label = Label.new()
+	_count_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_count_label.text = "TEAM  0 / 5"
+	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_count_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_count_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	_count_label.add_theme_color_override("font_color", UI_TOKENS.TEAL_SOFT)
+	header.add_child(_count_label)
+
+	_list = VBoxContainer.new()
+	_list.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_list.add_theme_constant_override("separation", ROW_SEPARATION)
+	stack.add_child(_list)
 
 	for i in SLOTS:
-		list.add_child(_build_row())
+		_list.add_child(_build_row(i))
 
 
-func _build_row() -> PanelContainer:
+func _build_row(slot_index: int) -> PanelContainer:
 	var row := PanelContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.custom_minimum_size = ROW_SIZE
@@ -169,6 +200,18 @@ func _build_row() -> PanelContainer:
 	portrait.visible = false
 	_portraits.append(portrait)
 	chip.add_child(portrait)
+
+	var slot_label := Label.new()
+	slot_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot_label.text = str(slot_index + 1)
+	slot_label.position = Vector2.ZERO
+	slot_label.size = CHIP_SIZE
+	slot_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	slot_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	slot_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_LABEL)
+	slot_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
+	_slot_labels.append(slot_label)
+	chip.add_child(slot_label)
 
 	var info := VBoxContainer.new()
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -265,6 +308,7 @@ func set_pinned(pinned: bool) -> void:
 ## `CreatureInstance.label()`/`hp_fraction()`; this widget never reaches for either
 ## itself (see this file's header).
 func update_from_party(entries: Array, active_index: int) -> void:
+	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
 		var entry: Dictionary = entries[i] if has_creature else {}
@@ -291,7 +335,8 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 	if vacant:
 		_chip_boxes[i].bg_color = Color(UI_TOKENS.TEXT_MUTED, 0.35)
 		_rows[i].modulate.a = VACANT_MODULATE
-		_set_label(_name_labels[i], i, "")
+		_set_label(_name_labels[i], i, "OPEN SLOT")
+		_name_labels[i].add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
 		_set_level(_level_labels[i], i, -1, "")
 		# Chip outline only — a vacant row's HP bar (an empty track over
 		# nothing) and level label are what blind visual review saw as "a
@@ -300,6 +345,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 		_ko_labels[i].visible = false
 		_rest_labels[i].visible = false
 		_set_portrait(i, "")
+		_slot_labels[i].visible = true
 		_hp_bars[i].visible = false
 		_hp_bars[i].value = 0.0
 		_hp_fills[i].bg_color = UI_TOKENS.HP_GREEN
@@ -307,6 +353,8 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 
 	_level_labels[i].visible = true
 	_hp_bars[i].visible = true
+	_slot_labels[i].visible = false
+	_name_labels[i].add_theme_color_override("font_color", UI_TOKENS.TEXT_PRIMARY)
 
 	var tint: Color = entry.get("tint", UI_TOKENS.TEXT_MUTED)
 	_chip_boxes[i].bg_color = tint

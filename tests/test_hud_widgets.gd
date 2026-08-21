@@ -41,10 +41,10 @@ func _make_strip() -> Control:
 
 func test_build_makes_five_fixed_rows() -> void:
 	var strip := _make_strip()
-	assert_eq(strip.get_child_count(), 1, "expected one list container directly under the widget")
-	var list: Node = strip.get_child(0)
-	assert_eq(list.get_child_count(), PARTY_STRIP.SLOTS, "the row list does not hold five children")
+	assert_eq(strip.get_child_count(), 1, "expected one roster stack directly under the widget")
+	assert_eq(strip._list.get_child_count(), PARTY_STRIP.SLOTS, "the row list does not hold five children")
 	assert_eq(strip._rows.size(), PARTY_STRIP.SLOTS)
+	assert_eq(strip._count_label.text, "TEAM  0 / 5")
 	strip.free()
 
 
@@ -72,6 +72,7 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	strip.update_from_party(entries, 1)
 
 	assert_eq(strip._rows.size(), PARTY_STRIP.SLOTS, "update_from_party must never change the row count")
+	assert_eq(strip._count_label.text, "TEAM  3 / 5", "the roster capacity must be explicit at a glance")
 	assert_eq(strip._name_labels[0].text, "Terrapup")
 	assert_eq(strip._name_labels[1].text, "Bramblebun")
 	assert_eq(strip._level_labels[1].text, "Lv 6")
@@ -80,14 +81,29 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	assert_ne(strip._portraits[0].texture, strip._portraits[1].texture,
 		"different species should not collapse to the same abstract swatch")
 
-	# The two slots beyond the three real entries read as vacant: no name, no
-	# level, an empty bar, and the dim vacant look — never leftover text from a
-	# previous call.
-	assert_eq(strip._name_labels[3].text, "")
-	assert_eq(strip._name_labels[4].text, "")
+	# The two slots beyond the three real entries read as deliberately open:
+	# fixed labels and numbered chips, no stale level/portrait/HP from a prior
+	# occupant.
+	assert_eq(strip._name_labels[3].text, "OPEN SLOT")
+	assert_eq(strip._name_labels[4].text, "OPEN SLOT")
+	assert_true(strip._slot_labels[3].visible, "a vacant row must remain visibly numbered")
+	assert_true(strip._slot_labels[4].visible, "all five slots must remain visible")
 	assert_almost_eq(strip._hp_bars[3].value, 0.0)
 	assert_almost_eq(strip._rows[3].modulate.a, PARTY_STRIP.VACANT_MODULATE)
 	assert_false(strip._portraits[3].visible, "a vacant slot must not retain a previous portrait")
+	strip.free()
+
+
+func test_occupied_rows_hide_slot_numbers_and_vacant_rows_remain_legible() -> void:
+	var strip := _make_strip()
+	strip.update_from_party([{
+		"label": "Terrapup", "level": 4, "hp_fraction": 1.0,
+		"tint": Color(0.55, 0.35, 0.15), "portrait": TERRAPUP_PORTRAIT,
+		"fainted": false,
+	}], 0)
+	assert_false(strip._slot_labels[0].visible, "a portrait replaces the occupied slot number")
+	assert_true(strip._slot_labels[1].visible)
+	assert_true(strip._rows[1].modulate.a >= 0.6, "open slots must not disappear into the world")
 	strip.free()
 
 
