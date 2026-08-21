@@ -76,15 +76,24 @@ func _run() -> void:
 		terrain.call("set_camera", camera)
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
+	# Evidence frames must be comparable across runs. WorldWeather randomises
+	# its later cycle, and a long software-rendered world build can consume a
+	# meaningful part of that clock before the first capture.
+	if weather != null and weather.has_method("set_weather"):
+		weather.call("set_weather", "clear")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
+	var water_level := float(terrain_config.get("water", {}).get("level", 0.0))
 
 	var failures: Array[String] = []
 	for entry: Variant in viewpoints:
 		var view: Dictionary = entry
 		var name: String = str(view["name"])
-		_pose(camera, field, view)
+		_pose(camera, field, view, water_level)
 		_place_actor(player, field, camera, view)
+		if weather != null and weather.has_method("set_weather"):
+			weather.call("set_weather", "clear")
 		if look != null:
 			look.call("apply_time", str(view.get("time", "day")))
 		for i in SETTLE_AFTER_MOVE:
@@ -220,10 +229,17 @@ func _clear_pngs(path: String) -> void:
 	dir.list_dir_end()
 
 
-func _pose(camera: Camera3D, field: RefCounted, view: Dictionary) -> void:
+func _pose(camera: Camera3D, field: RefCounted, view: Dictionary, water_level: float) -> void:
 	var eye_xz: Vector2 = view["eye"]
 	var target_xz: Vector2 = view["target"]
-	var eye := Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) + float(view["eye_h"]), eye_xz.y)
+	# The heightfield returns the pond BED inside the water footprint. The old
+	# across-pond view added eye height to that submerged bed, placing the
+	# camera at/below the surface (the resulting frame visibly bisected the
+	# image at the waterline and looked like a lighting failure). A pond survey
+	# camera is a standing player's eye and must never be submerged.
+	var sampled_eye_y: float = float(field.call("height_at", eye_xz.x, eye_xz.y)) + float(view["eye_h"])
+	var eye_y: float = maxf(sampled_eye_y, water_level + 1.7)
+	var eye := Vector3(eye_xz.x, eye_y, eye_xz.y)
 	var target := Vector3(target_xz.x, field.height_at(target_xz.x, target_xz.y) + float(view["target_h"]), target_xz.y)
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
