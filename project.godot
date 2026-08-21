@@ -152,6 +152,18 @@ map={
 , Object(InputEventJoypadButton,"device":-1,"button_index":4,"pressed":false,"script":null)
 ]
 }
+map_zoom_in={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":61,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+map_zoom_out={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":45,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
 tool_cycle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)

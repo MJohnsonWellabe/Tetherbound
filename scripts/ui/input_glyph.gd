@@ -43,6 +43,11 @@ const GLYPHS := {
 	## Input Prompts pack as every neighbouring entry.
 	"inventory": {"keyboard": "keyboard_i.png", "gamepad": "xbox_button_y.png"},
 	"map": {"keyboard": "keyboard_m.png", "gamepad": "xbox_button_view.png"},
+	# Full-map-only controls. Keyboard falls back to the live `=` / `-` key
+	# names because the vendored keycap subset has no plus/minus art; controller
+	# uses the exact trigger glyphs the dedicated actions bind.
+	"map_zoom_in": {"gamepad": "xbox_rt.png"},
+	"map_zoom_out": {"gamepad": "xbox_lt.png"},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.

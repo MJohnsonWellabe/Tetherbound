@@ -16,28 +16,11 @@ extends "res://scripts/ui/menu_tab.gd"
 ## is no documented in-fiction compass, so this is a naming convenience, not a
 ## rule anyone could get wrong.
 ##
-## FIXED VIEW, NO PAN/ZOOM (v1). `MapState`'s grid is today 128 cells at 4m —
-## 512x512m, derived from `terrain_playground.json` rather than hard-coded
-## (`docs/MEADOWS_MACRO_LAYOUT.md` §8.6) — and every landmark in
-## `data/config/map_landmarks.json` sits well inside that box: the whole
-## Meadows already fits one screen at a glance, so fitting the world to the
-## panel is not a corner cut, it is the actual right answer for a biome this
-## size. THIS STOPS BEING TRUE the day the corridor world lands (`D50`:
-## 8192x2048m) — an un-panned, un-zoomed view of a world that long reduces
-## every landmark to a sliver of pixels, which is exactly why pan/zoom is
-## real, not-yet-built future work rather than a permanently deferred one;
-## nothing here tries to solve that today. Free pan/zoom was considered and set aside
-## for a real reason, not laziness: every existing in-menu directional read
-## (`tab_backpack.gd`, `tab_creatures.gd`) rides Godot's `ui_*` focus-navigation
-## actions, which this canvas cannot also repurpose as a pan axis without
-## fighting the same stick the d-pad uses to move focus off the map entirely.
-## Gameplay's `move_*` actions are the wrong tool inside a paused menu (the
-## world tree is paused; nothing gameplay-side should be listening), and this
-## agent may not add a new input action to `project.godot` to invent a real
-## pan verb (CLAUDE.md: "do not silently invent major design decisions" reads
-## on adding input actions the same way it reads on adding a mechanic). A
-## zoomed, panned map is real future work with a real cost; it is deferred
-## here, not skipped.
+## CONTROLLER NAVIGATION. The whole world fits at zoom 1. RT/LT zoom through a
+## bounded range and the right stick pans only once zoomed, leaving the left
+## stick/d-pad exclusively to the menu's existing focus navigation. Pan is
+## stored in world metres and clamped from the visible span, so no aspect ratio
+## or zoom level can scroll the whole Meadows off-screen into empty space.
 ##
 ## `revision()` STAYS CONSTANT (0). Per `menu_tab.gd`'s contract, `revision()`
 ## gates `build()` — and `game_menu.gd::open()`/`select()` already force one
@@ -51,6 +34,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## `tab_creatures.gd` uses for HP bars that update without ever rebuilding rows.
 
 const MAP_STATE := preload("res://autoload/map_state.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## Not preloaded: `scripts/world/map_baker.gd` is `docs/decisions/D33`'s
 ## minimap/full-map terrain baker, owned and delivered by a concurrent agent
@@ -78,6 +62,10 @@ const PLAYER_FACING_BASE := 10.0
 const PLAYER_FACING_LENGTH := 10.0
 const PLAYER_FACING_HALF_WIDTH := 6.0
 const OBJECTIVE_RADIUS := 9.0
+const MIN_ZOOM := 1.0
+const MAX_ZOOM := 4.0
+const ZOOM_STEP := 0.5
+const PAN_SPEED_MPS := 1200.0
 
 ## How far the player has to move before a redraw is worth spending — the fog
 ## trail is drawn from whole grid cells (4m each), so anything smaller than a
@@ -100,6 +88,10 @@ class MapCanvas extends Control:
 var _canvas: MapCanvas = null
 var _surveyed_label: Label = null
 var _legend_row: HBoxContainer = null
+var _controls_label: RichTextLabel = null
+
+var _zoom: float = MIN_ZOOM
+var _pan_world: Vector2 = Vector2.ZERO
 
 var _last_map_revision: int = -1
 var _last_player_pos: Vector3 = Vector3.ZERO
@@ -137,6 +129,8 @@ const SETTLE_FRAMES := 6
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
+	_zoom = MIN_ZOOM
+	_pan_world = Vector2.ZERO
 	_terrain_attempted = false
 	_terrain_tex = null
 	_fog_tex = null
@@ -175,6 +169,18 @@ func build() -> void:
 	canvas_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(canvas_panel)
 
+	_controls_label = RichTextLabel.new()
+	_controls_label.bbcode_enabled = true
+	_controls_label.fit_content = true
+	_controls_label.scroll_active = false
+	_controls_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_controls_label.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_controls_label.text = "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
+		INPUT_GLYPH.icon("map_zoom_out", 24),
+		INPUT_GLYPH.icon("map_zoom_in", 24),
+	]
+	add_child(_controls_label)
+
 	_legend_row = HBoxContainer.new()
 	_legend_row.add_theme_constant_override("separation", 22)
 	add_child(_legend_row)
@@ -195,6 +201,7 @@ func revision() -> int:
 func poll() -> void:
 	if _canvas == null:
 		return
+	_read_navigation_input()
 
 	var map_state: RefCounted = _map_state()
 	var current_revision: int = int(map_state.get("revision")) if map_state != null else -1
@@ -220,6 +227,37 @@ func poll() -> void:
 		_update_legend(map_state)
 
 	_update_header(map_state)
+
+
+func _read_navigation_input() -> void:
+	var changed := false
+	if Input.is_action_just_pressed("map_zoom_in"):
+		_zoom = minf(MAX_ZOOM, _zoom + ZOOM_STEP)
+		changed = true
+	if Input.is_action_just_pressed("map_zoom_out"):
+		_zoom = maxf(MIN_ZOOM, _zoom - ZOOM_STEP)
+		changed = true
+
+	var pan_input := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	if _zoom > MIN_ZOOM and pan_input.length_squared() > 0.01:
+		_pan_world += pan_input * PAN_SPEED_MPS * get_process_delta_time() / _zoom
+		changed = true
+
+	if changed:
+		_clamp_pan()
+		_canvas.queue_redraw()
+
+
+func _clamp_pan() -> void:
+	if _zoom <= MIN_ZOOM:
+		_pan_world = Vector2.ZERO
+		return
+	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
+	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var visible_fraction := 1.0 / _zoom
+	var max_pan := Vector2(span_x, span_z) * (1.0 - visible_fraction) * 0.5
+	_pan_world.x = clampf(_pan_world.x, -max_pan.x, max_pan.x)
+	_pan_world.y = clampf(_pan_world.y, -max_pan.y, max_pan.y)
 
 
 func _update_header(map_state: RefCounted) -> void:
@@ -303,6 +341,7 @@ func _draw_map(canvas: Control) -> void:
 		map_size = Vector2(rect_size.x, rect_size.x / aspect) # panel taller than the world: width-constrained
 	var map_origin := Vector2((rect_size.x - map_size.x) * 0.5, (rect_size.y - map_size.y) * 0.5)
 	var map_rect := Rect2(map_origin, map_size)
+	var view_rect := _view_rect(map_rect)
 
 	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
 
@@ -312,11 +351,11 @@ func _draw_map(canvas: Control) -> void:
 
 	var terrain := _terrain_texture(world)
 	if terrain != null:
-		canvas.draw_texture_rect(terrain, map_rect, false)
+		canvas.draw_texture_rect(terrain, view_rect, false)
 	else:
 		# Defensive fallback (spec: NEVER crash) — headless tests and a menu
 		# opened before the world finishes standing up both land here.
-		canvas.draw_rect(map_rect, UITokens.BG_PANEL_ALT)
+		canvas.draw_rect(view_rect, UITokens.BG_PANEL_ALT)
 
 	var map_state: RefCounted = _map_state()
 	if map_state == null:
@@ -324,7 +363,7 @@ func _draw_map(canvas: Control) -> void:
 
 	var fog := _fog_texture(map_state)
 	if fog != null:
-		canvas.draw_texture_rect(fog, map_rect, false)
+		canvas.draw_texture_rect(fog, view_rect, false)
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -514,14 +553,33 @@ func _facing_yaw(world: Node, player: Node3D) -> float:
 ## drift apart. Separate spans per axis, not one shared square span — §8.6
 ## rejects the square assumption for the world itself, and `map_rect` is now
 ## letterboxed to the same non-square aspect (`_draw_map` above), so both
-## sides of this mapping already agree the world need not be square.
+## sides of this mapping already agree the world need not be square. Zoom and
+## pan are applied after that north-up fit, identically to the texture rect.
 func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	var span_x: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
 	var span_z: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
 	var origin: Vector2 = MAP_STATE.origin()
 	var nx: float = clampf((pos.x - origin.x) / span_x, 0.0, 1.0)
 	var nz: float = clampf((pos.y - origin.y) / span_z, 0.0, 1.0)
-	return map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
+	var fit_point := map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
+	var pan_pixels := Vector2(
+		_pan_world.x / span_x * map_rect.size.x,
+		_pan_world.y / span_z * map_rect.size.y,
+	) * _zoom
+	return map_rect.get_center() + (fit_point - map_rect.get_center()) * _zoom - pan_pixels
+
+
+func _view_rect(map_rect: Rect2) -> Rect2:
+	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
+	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var pan_pixels := Vector2(
+		_pan_world.x / span_x * map_rect.size.x,
+		_pan_world.y / span_z * map_rect.size.y,
+	) * _zoom
+	return Rect2(
+		map_rect.get_center() - map_rect.size * _zoom * 0.5 - pan_pixels,
+		map_rect.size * _zoom,
+	)
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/

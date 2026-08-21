@@ -126,6 +126,36 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if not paused:
 		_fail("full map opened without owning/pause-protecting world input")
 		return
+	var bodies: Array = _menu.get("_bodies")
+	var map_tab := bodies[int(_menu.get("_index"))] as Control
+	if map_tab == null or float(map_tab.get("_zoom")) != 1.0:
+		_fail("full map did not open at whole-world fit")
+		return
+	var controls := map_tab.get("_controls_label") as RichTextLabel
+	if controls == null or not controls.text.contains("Zoom") or not controls.text.contains("Pan"):
+		_fail("full-map controller zoom/pan controls are not discoverable on screen")
+		return
+
+	await _pulse_motion_action("map_zoom_in")
+	if float(map_tab.get("_zoom")) <= 1.0:
+		_fail("physical RT did not zoom the full map in")
+		return
+	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
+	if (map_tab.get("_pan_world") as Vector2).x <= 1.0:
+		_fail("physical right stick did not pan the zoomed full map")
+		return
+	# Drive to the boundary, then keep driving. A stable world-space centre on
+	# the second hold proves the clamp rather than merely proving movement.
+	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 300)
+	var clamped := map_tab.get("_pan_world") as Vector2
+	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 60)
+	if (map_tab.get("_pan_world") as Vector2).distance_to(clamped) > 1.0:
+		_fail("right-stick pan did not clamp at the world boundary")
+		return
+	await _pulse_motion_action("map_zoom_out")
+	if float(map_tab.get("_zoom")) != 1.0 or (map_tab.get("_pan_world") as Vector2).length() > 0.01:
+		_fail("physical LT did not restore whole-world fit and clear pan")
+		return
 
 	var active_before := int(_party.call("active_index"))
 	await _press_action("combat_switch_right")
@@ -137,11 +167,16 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		_fail("physical Back did not close the full map and release pause ownership")
 		return
 	var before := _player.global_position
-	await _hold_axis(JOY_AXIS_LEFT_Y, -1.0, 55)
+	# Try two resolved directions: the opening house can legitimately block one
+	# depending on the camera orbit used above, which is collision correctness,
+	# not lost controller ownership.
+	await _hold_axis(JOY_AXIS_LEFT_X, -1.0, 55)
+	if _player.global_position.distance_to(before) < 0.5:
+		await _hold_axis(JOY_AXIS_LEFT_Y, 1.0, 55)
 	if _player.global_position.distance_to(before) < 0.5:
 		_fail("world movement did not recover after closing the full map")
 	else:
-		print("  ok    physical Map/Back opens and closes the north-up full map; world control recovers cleanly")
+		print("  ok    physical Map/Back, RT/LT zoom, right-stick pan/clamp, and world recovery all work")
 
 
 func _press_action(action: String) -> void:
@@ -173,6 +208,30 @@ func _button_for(action: String) -> int:
 	return -1
 
 
+func _pulse_motion_action(action: String) -> void:
+	if not InputMap.has_action(action):
+		_fail("'%s' has no InputMap action" % action)
+		return
+	for event in InputMap.action_get_events(action):
+		var binding := event as InputEventJoypadMotion
+		if binding == null:
+			continue
+		var down := InputEventJoypadMotion.new()
+		down.axis = binding.axis
+		down.axis_value = binding.axis_value
+		Input.parse_input_event(down)
+		for i in 4:
+			await process_frame
+		var up := InputEventJoypadMotion.new()
+		up.axis = binding.axis
+		up.axis_value = 0.0
+		Input.parse_input_event(up)
+		for i in 5:
+			await process_frame
+		return
+	_fail("'%s' has no physical joypad motion binding" % action)
+
+
 func _hold_axis(axis: JoyAxis, value: float, frames: int) -> void:
 	var motion := InputEventJoypadMotion.new()
 	motion.axis = axis
@@ -195,7 +254,7 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("Gate A map/cycle: OK -- real pad cycling, movement-up minimap, full-map ownership, recovery.")
+		print("Gate A map/cycle: OK -- real pad cycling, movement-up minimap, full-map zoom/pan, recovery.")
 		quit(0)
 		return
 	for line in _failures:
