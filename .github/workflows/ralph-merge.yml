@@ -26,15 +26,10 @@ name: Ralph auto-merge
 # measurement. The shipping logic itself now lives in tools/ci/ship_branch.sh
 # so both callers run the same code.
 
+# Manual consolidation is now the sole path to main.  Keep this workflow
+# dispatchable for audit/recovery, but never start it from branch CI.
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    # Without this, every CI completion on main or a claude/** branch still
-    # starts a run here that immediately skips. Six of those appeared within
-    # five minutes of adding this workflow and read, at a glance, like six
-    # merges. Filtering at the trigger means no run is created at all.
-    branches: ['ralph/**']
+  workflow_dispatch:
 
 # Merges QUEUE. They must never run at once and must never be cancelled.
 #

@@ -163,7 +163,7 @@ func _preflight() -> bool:
 	# The caller must bring the real player to the Village Square through ordinary
 	# exploration first. Once there, this follows the authored road one leg at a
 	# time, rather than cutting a synthetic diagonal through settlement collision.
-	var route_entry := BUILD_ROUTE_XZ.front()
+	var route_entry: Vector2 = BUILD_ROUTE_XZ.front()
 	if _flat_distance(_player.global_position, Vector3(route_entry.x, 0.0, route_entry.y)) > BUILD_ROUTE_ENTRY_EPSILON:
 		_fail("build segment must begin at the Village Square route entry through ordinary exploration")
 		return false

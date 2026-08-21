@@ -27,13 +27,9 @@ name: Ralph sweep
 # `ralph-merge.yml` is deliberately KEPT. Immediate merges on the common green
 # path are worth having, and this runs on a timer.
 
+# Automatic reconciliation is disabled while Gate A is manually consolidated.
+# Retain an explicit manual entry point only for a future owner-approved use.
 on:
-  schedule:
-    # Every ten minutes. This is the worst-case latency for a branch whose merge
-    # event went missing; the event path still lands the ordinary case in
-    # seconds. GitHub treats cron as best-effort and may run it late under load,
-    # which is fine -- nothing here is time-critical, it is a backstop.
-    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 # Shares ONE queue with ralph-merge.yml, by name.
