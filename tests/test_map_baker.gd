@@ -79,9 +79,9 @@ func test_default_bake_uses_square_world_texels_over_a_rectangular_corridor() ->
 		"max_z": 768.0,
 	}
 	var image := MAP_BAKER.bake(FakeWorld.new(), 0, corridor).get_image()
-	assert_eq(image.get_width(), 64,
-		"the 512m corridor width should bake at one texel per 8m")
-	assert_eq(image.get_height(), 128,
+	assert_eq(image.get_width(), 128,
+		"production should output one route texel per 4m after its bounded 8m terrain sample")
+	assert_eq(image.get_height(), 256,
 		"a world twice as long must produce a texture twice as tall, not a stretched square")
 
 

@@ -70,14 +70,16 @@ const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 ## and a cooler worked-stone grey for building aprons, blended in that
 ## order so a path crossing a village square still reads as path -- the
 ## same "paths win" rule the terrain shader itself already follows.
-const PATH_COLOUR := Color(0.44, 0.30, 0.18)
+const PATH_COLOUR := Color(0.38, 0.23, 0.10)
 const BUILDING_APRON_COLOUR := Color(0.58, 0.56, 0.52)
 
-## Keep the historical ~262k-sample cost while giving the corridor square
-## world texels: 2,048x8,192m becomes 256x1,024px. The authored route overlay
-## below preserves narrow trails that an 8m centre sample can legitimately miss.
+## Keep the historical ~262k expensive terrain samples while giving the
+## corridor square world texels: sample 2,048x8,192m at 256x1,024, then upscale
+## the inexpensive image to 512x2,048 before rastering routes. That yields a
+## 4m route grid at HUD size without multiplying height/path queries.
 const DEFAULT_METRES_PER_PIXEL := 8.0
-const CACHE_SCHEMA := "corridor-aspect-8m-routes-v1"
+const PRODUCTION_OUTPUT_SCALE := 2
+const CACHE_SCHEMA := "corridor-aspect-8m-sample-4m-routes-v2"
 
 ## Set by `bake_cached()` on every call — true when the cached PNG was reused,
 ## false when a bake actually ran. Exists purely so `tests/test_map_baker.gd`
@@ -101,7 +103,8 @@ static var last_bake_was_cache_hit := false
 ## `resolution` keeps the historical square test/probe contract; production
 ## derives each axis from the rectangle so texels cover equal world distances.
 ## `resolution > 0` retains the square synthetic/test contract. Production
-## omits it, producing a rectangular texture with square 8m world texels; a
+## omits it, producing a rectangular texture from square 8m terrain samples
+## with a 4m route-output grid; a
 ## square texture over the 2,048x8,192m corridor destroys both aspect and the
 ## local trail signal the minimap needs.
 static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) -> ImageTexture:
@@ -181,6 +184,12 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 					colour = colour.lerp(PATH_COLOUR, path_t)
 
 			image.set_pixel(ix, iz, colour)
+
+	if resolution <= 0:
+		# Bilinear terrain enlargement is cheap and avoids block-stepped height
+		# bands. Routes are deliberately rastered AFTER this so their 4m line is
+		# crisp instead of an 8m brown texel blurred across the HUD.
+		image.resize(resolution_x * PRODUCTION_OUTPUT_SCALE, resolution_z * PRODUCTION_OUTPUT_SCALE, Image.INTERPOLATE_BILINEAR)
 
 	# A 3m road cannot be trusted to intersect the centre of every 8m terrain
 	# texel. Raster the SAME canonical polylines the heightfield/world consume,

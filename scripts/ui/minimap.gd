@@ -57,6 +57,8 @@ const CORNER_RADIUS := 28.0
 const RING_WIDTH := 8.0
 const CORNER_STEPS := 10
 const OBJECTIVE_LABEL_PUSH := 10.0 ## px the distance label sits past the clamped diamond, toward the rim.
+const PLAYER_MARKER_CLEAR_RADIUS := 30.0
+const MARKER_SEPARATION := 22.0
 
 ## OW3: was 0.95 — 5% show-through, which stacked with this widget's already
 ## tight ~90m span meant unexplored ground at the rim read as dim terrain
@@ -201,8 +203,9 @@ func _draw() -> void:
 		box.x * 0.5 - RING_WIDTH - 14.0,
 		corner_safe_radius - OBJECTIVE_LABEL_PUSH - 20.0 # 20px: label's own half-extent
 	)
-	_draw_landmarks(centre, scale_px_per_m)
-	_draw_creature_marker(centre, scale_px_per_m)
+	var objective_position: Variant = _objective_display_position(centre, scale_px_per_m, visible_radius)
+	_draw_landmarks(centre, scale_px_per_m, objective_position)
+	_draw_creature_marker(centre, scale_px_per_m, objective_position)
 	_draw_objective(centre, scale_px_per_m, visible_radius)
 
 	_draw_corner_masks(box)
@@ -212,8 +215,13 @@ func _draw() -> void:
 
 
 func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) -> void:
-	var half_span := _span_m * 0.5
-	var dest := Rect2(Vector2(-half_span, -half_span), Vector2(_span_m, _span_m))
+	# A rotated square only covers the widget at 0/90-degree headings; at every
+	# diagonal the old 90m layer exposed large black triangles in its corners.
+	# Draw the square's diagonal instead. Scale remains px/metre, so the visible
+	# inscribed 90m window and all marker math stay unchanged.
+	var draw_span := map_layer_draw_span(_span_m)
+	var half_draw_span := draw_span * 0.5
+	var dest := Rect2(Vector2(-half_draw_span, -half_draw_span), Vector2(draw_span, draw_span))
 
 	draw_set_transform(centre, rotation, Vector2.ONE * scale_px_per_m)
 
@@ -223,7 +231,7 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 	# sampled outside the 512px texture around the village and reduced a 90m
 	# north/south view to roughly six useful pixels.
 	var terrain_src := terrain_source_region(
-		Vector2(_player_pos.x, _player_pos.z), _span_m,
+		Vector2(_player_pos.x, _player_pos.z), draw_span,
 		Vector2(_terrain_texture.get_width(), _terrain_texture.get_height()),
 		{"min_x": _world_min.x, "min_z": _world_min.y, "max_x": _world_max.x, "max_z": _world_max.y})
 	draw_texture_rect_region(_terrain_texture, dest, terrain_src)
@@ -236,7 +244,7 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 		var cell_m := maxf(float(_map_state.cell_size()), 0.001)
 		var cx := _player_pos.x - _world_min.x
 		var cz := _player_pos.z - _world_min.y
-		var fog_src := Rect2((cx - half_span) / cell_m, (cz - half_span) / cell_m, _span_m / cell_m, _span_m / cell_m)
+		var fog_src := Rect2((cx - half_draw_span) / cell_m, (cz - half_draw_span) / cell_m, draw_span / cell_m, draw_span / cell_m)
 		draw_texture_rect_region(_fog_texture, dest, fog_src)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
@@ -291,9 +299,10 @@ func _world_to_local(world_pos: Vector3, centre: Vector2, scale_px_per_m: float)
 
 # --- markers -------------------------------------------------------------
 
-func _draw_landmarks(centre: Vector2, scale_px_per_m: float) -> void:
+func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position: Variant) -> void:
 	if _map_state == null:
 		return
+	var occupied: Array[Vector2] = []
 	for entry: Dictionary in _map_state.landmarks():
 		var discovered: bool = bool(entry.get("discovered", false))
 		var silhouette: bool = bool(entry.get("silhouette", false))
@@ -302,6 +311,21 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float) -> void:
 
 		var pos2: Vector2 = entry.get("position", Vector2.ZERO)
 		var local := _world_to_local(Vector3(pos2.x, 0.0, pos2.y), centre, scale_px_per_m)
+		# Player > objective > landmark. A location still exists in shared map
+		# data, but its lower-priority icon yields when the local view stacks it
+		# under the centred player or tracked objective.
+		if local.distance_to(centre) < PLAYER_MARKER_CLEAR_RADIUS:
+			continue
+		if objective_position is Vector2 and local.distance_to(objective_position as Vector2) < MARKER_SEPARATION:
+			continue
+		var overlaps_landmark := false
+		for used in occupied:
+			if local.distance_to(used) < MARKER_SEPARATION:
+				overlaps_landmark = true
+				break
+		if overlaps_landmark:
+			continue
+		occupied.append(local)
 		var is_dynamic: bool = bool(entry.get("dynamic", false))
 
 		if is_dynamic:
@@ -325,13 +349,15 @@ func _draw_landmark_icon(local: Vector2, category: String) -> void:
 		draw_circle(local, r, UITokens.TEXT_PRIMARY)
 
 
-func _draw_creature_marker(centre: Vector2, scale_px_per_m: float) -> void:
+func _draw_creature_marker(centre: Vector2, scale_px_per_m: float, objective_position: Variant) -> void:
 	if not (_creature_pos is Vector3):
 		return
 	var creature: Vector3 = _creature_pos
 	if Vector2(creature.x, creature.z).distance_to(Vector2(_player_pos.x, _player_pos.z)) <= CREATURE_SHOW_DISTANCE:
 		return # too close to the player to need its own marker
 	var local := _world_to_local(creature, centre, scale_px_per_m)
+	if objective_position is Vector2 and local.distance_to(objective_position as Vector2) < MARKER_SEPARATION:
+		return
 	_draw_dot(local, 3.0, UITokens.TEAL_SOFT)
 
 
@@ -344,13 +370,17 @@ func _draw_objective(centre: Vector2, scale_px_per_m: float, visible_radius: flo
 
 	var pos2: Vector2 = objective.get("position", Vector2.ZERO)
 	var world_pos := Vector3(pos2.x, 0.0, pos2.y)
-	var local := _world_to_local(world_pos, centre, scale_px_per_m)
+	var true_local := _world_to_local(world_pos, centre, scale_px_per_m)
+	var local := true_local
 	var offset := local - centre
 	var clamped := false
 	if offset.length() > visible_radius:
 		offset = offset.normalized() * visible_radius
 		local = centre + offset
 		clamped = true
+	elif offset.length() < PLAYER_MARKER_CLEAR_RADIUS:
+		local = player_clear_position(local, centre)
+		draw_line(true_local, local, Color(UITokens.WARNING, 0.45), 1.5)
 
 	_draw_diamond(local, 9.0, UITokens.WARNING)
 
@@ -358,6 +388,32 @@ func _draw_objective(centre: Vector2, scale_px_per_m: float, visible_radius: flo
 		var world_dist := Vector2(_player_pos.x, _player_pos.z).distance_to(pos2)
 		var label := "◇ %d m" % int(round(world_dist))
 		_draw_upright_text(local + offset.normalized() * OBJECTIVE_LABEL_PUSH, label, UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
+
+
+func _objective_display_position(centre: Vector2, scale_px_per_m: float, visible_radius: float) -> Variant:
+	if _map_state == null:
+		return null
+	var objective: Dictionary = _map_state.objective_marker()
+	if objective.is_empty():
+		return null
+	var pos2: Vector2 = objective.get("position", Vector2.ZERO)
+	var local := _world_to_local(Vector3(pos2.x, 0.0, pos2.y), centre, scale_px_per_m)
+	var offset := local - centre
+	if offset.length() > visible_radius:
+		return centre + offset.normalized() * visible_radius
+	if offset.length() < PLAYER_MARKER_CLEAR_RADIUS:
+		return player_clear_position(local, centre)
+	return local
+
+
+static func player_clear_position(local: Vector2, centre: Vector2) -> Vector2:
+	var offset := local - centre
+	var direction := offset.normalized() if offset.length_squared() > 0.001 else Vector2.UP
+	return centre + direction * PLAYER_MARKER_CLEAR_RADIUS
+
+
+static func map_layer_draw_span(visible_span: float) -> float:
+	return visible_span * sqrt(2.0)
 
 
 # --- frame -----------------------------------------------------------------
