@@ -25,6 +25,7 @@ var _rig: Node3D = null
 var _sequence: Node = null
 var _encounter: Node = null
 var _combat: Node = null
+var _arbiter: Node = null
 var _dialogue: CanvasLayer = null
 var _name_prompt: CanvasLayer = null
 var _starter_picker: CanvasLayer = null
@@ -161,7 +162,7 @@ func _run() -> void:
 		_fail("opening's natural tutorial creature is '%s', not Bramblebun" % str(_wild.get("species_id")))
 		_finish()
 		return
-	if not await _walk_to_and_activate(_wild, 2600):
+	if not await _walk_to_and_engage_wild(_wild, 2600):
 		_fail("natural travel did not reach and engage the tutorial Bramblebun")
 		_finish()
 		return
@@ -202,11 +203,13 @@ func _collect_world_nodes() -> bool:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_encounter = _world.get_node_or_null(^"EncounterDirector")
 	_combat = _world.get_node_or_null(^"CombatManager")
+	_arbiter = get_first_node_in_group(&"interaction_arbiter")
 	_sequence = _find_by_script(_world, DIRECTOR_SCRIPT)
 	_dialogue = _find_by_method(_world, "drain_effects") as CanvasLayer
 	_name_prompt = _find_by_method(_world, "current_text") as CanvasLayer
 	_starter_picker = _find_by_script(_world, STARTER_PICKER_SCRIPT) as CanvasLayer
 	if (_game == null or _player == null or _rig == null or _encounter == null
+			or _arbiter == null
 			or _combat == null or _sequence == null or _dialogue == null
 			or _name_prompt == null or _starter_picker == null):
 		_fail("production world is missing an opening/combat/UI dependency")
@@ -352,6 +355,51 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 		return false
 	await _tap_action("interact")
 	return true
+
+
+## Wild creatures wander while the trainer crosses the meadow. Following the
+## position captured at the farmhouse door can therefore stop at empty grass,
+## unlike a player who keeps the visible creature in view. Reach the live body
+## and wait until the production arbiter actually publishes EncounterDirector's
+## actionable offer before sending the same physical Interact press a player
+## uses. This observes readiness; it does not activate the arbiter directly.
+func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+	var closest := INF
+	for _i in budget:
+		if not is_instance_valid(target):
+			print("wild approach: target despawned")
+			_stop_left_stick()
+			return false
+		var distance := _player.global_position.distance_to(target.global_position)
+		closest = minf(closest, distance)
+		var winner: Object = _arbiter.call("winning_provider")
+		var offer := _arbiter.call("winner") as Dictionary
+		if winner == _encounter and bool(offer.get("actionable", false)):
+			_stop_left_stick()
+			for _j in 3:
+				await physics_frame
+			# Recheck after releasing movement: the target may have crossed the
+			# edge of the interaction radius during those settling frames.
+			winner = _arbiter.call("winning_provider")
+			offer = _arbiter.call("winner") as Dictionary
+			if winner == _encounter and bool(offer.get("actionable", false)):
+				print("wild approach: ready at %.2fm with '%s'" % [
+					_player.global_position.distance_to(target.global_position),
+					str(_arbiter.call("prompt")),
+				])
+				await _tap_action("interact")
+				return true
+		await _drive_body_toward(_player, target.global_position, 1)
+	_stop_left_stick()
+	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
+		closest,
+		_player.global_position.distance_to(target.global_position),
+		target.visible,
+		bool(target.call("is_alive")),
+		str(_arbiter.call("prompt")),
+		str(_arbiter.call("winning_provider")),
+	])
+	return false
 
 
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
