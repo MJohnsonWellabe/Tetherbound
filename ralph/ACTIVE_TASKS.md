@@ -2,6 +2,8 @@
 
 **Current gate:** Gate A — Trustworthy core verbs.
 
+**Active execution overlay:** `ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md` — full playable Meadows by Sunday night. This overlay changes priority/parallelization/checkpoint cadence only; it does not remove any requirement below.
+
 This is a compact manifest, not a replacement for `ralph/ACTIVE_GAME_PLAN.md` or `ralph/BACKLOG.md`.
 
 On every coordinator restart, reconcile these entries against current `main`, current owner evidence, `DONE.md`, and CI before launching work. `RECONCILE` means “determine whether this is already fixed, still broken, or partly complete.”
@@ -121,5 +123,7 @@ Fresh-save evidence path:
 Grandpa → starter → naming → first wild fight/catch → build team → train → gather → small home → creature bed → player bed/sleep → tournament readiness → tournament win → clear South Bridge objective.
 
 The pond-to-village route-content complaint from the 2026-08-21 owner playtest remains a required Gate B/C/D1 follow-through item: post-tournament travel must not be a long empty walk.
+
+During the weekend sprint, safe Gate B/C/D implementation may begin in parallel with remaining Gate A work when it does not consume the same files/worker/CI capacity needed for Gate A SHIP BLOCKERS. Gate completion still requires canonical evidence.
 
 Do not work distant region polish ahead of Gate A/B unless it can run safely in parallel without taking resources from higher-impact active work.
