@@ -335,20 +335,17 @@ func _show_ghost(game: Node, armed: String) -> void:
 	if _camera_rig != null and _camera_rig.has_method("planar_basis"):
 		forward = -(_camera_rig.call("planar_basis") as Basis).z
 	var raw_spot := _player.global_position + forward * PLACE_AHEAD
-
-	var ground := _ground_height(raw_spot)
-	if is_nan(ground):
+	var preview := preview_placement(game, armed, raw_spot)
+	if not bool(preview.get("has_ground", false)):
 		_ghost.visible = false
 		_ghost_ok = false
 		_ghost_reason = ""
 		_set_overlay_visible(false)
 		return
 
-	var buildings: Array = game.get("placed_buildings") as Array
-	var resolved := BUILD_SNAP.resolve(raw_spot, ground, armed, buildings)
-	var spot: Vector3 = resolved.position
-	var snapped_to_neighbour: bool = resolved.snapped_to_neighbour
-	var resolved_yaw := float(resolved.get("yaw_deg", NAN))
+	var spot: Vector3 = preview.position
+	var snapped_to_neighbour := bool(preview.get("snapped_to_neighbour", false))
+	var resolved_yaw := float(preview.get("yaw_deg", NAN))
 	if not is_nan(resolved_yaw):
 		# A structural edge chooses the wall AXIS, not which visually-equivalent
 		# face (0/180 or 90/270) the player selected. Repeat placement promises
@@ -361,33 +358,8 @@ func _show_ghost(game: Node, armed: String) -> void:
 		AUDIO_CUES.play(&"build_snap")
 	_was_snapped = snapped_to_neighbour
 
-	# Slope check by sampling the corners the bedroll would cover. Skipped
-	# when snapped to a neighbour: `spot.y` is already that neighbour's own
-	# ground-clamped height, and re-checking raw terrain slope under it would
-	# reject the very thing snapping exists for — continuing a wall run over
-	# ground that dips slightly from where the first piece sat.
-	var rise := 0.0
-	if not snapped_to_neighbour:
-		for corner: Vector3 in [Vector3(1.2, 0, 0), Vector3(-1.2, 0, 0), Vector3(0, 0, 1.2), Vector3(0, 0, -1.2)]:
-			var h := _ground_height(spot + corner)
-			if not is_nan(h):
-				rise = maxf(rise, absf(h - ground))
-
-	var occupied := BUILD_SNAP.occupied(armed, spot, buildings)
-	var too_steep := rise > MAX_SLOPE_RISE
-	var afford := _can_afford(game, armed)
-	_ghost_ok = not too_steep and not occupied and afford
-	# OF23: one reason, picked in the order a player would want to hear it —
-	# "something is already there" and "the ground won't take it" are about
-	# THIS spot and get fixed by moving; "can't afford it" is true everywhere
-	# and would drown the other two out if it went first.
-	_ghost_reason = ""
-	if occupied:
-		_ghost_reason = "Something is already here"
-	elif too_steep:
-		_ghost_reason = "Too steep to build here"
-	elif not afford:
-		_ghost_reason = "Can't afford this — check the build menu for what's short"
+	_ghost_ok = bool(preview.get("ok", false))
+	_ghost_reason = str(preview.get("reason", ""))
 	_ghost.visible = true
 	_ghost.global_position = spot
 	_ghost.rotation.y = deg_to_rad(_yaw_deg)
@@ -405,6 +377,7 @@ func _show_ghost(game: Node, armed: String) -> void:
 	else:
 		_ghost.call("tint_ghost", _ghost_ok)
 
+	var buildings: Array = game.get("placed_buildings") as Array
 	_snap_candidates = BUILD_GRID.neighbours_in_range(
 		raw_spot, BUILD_SNAP.candidate_positions(armed, buildings))
 	if _snap_candidates.is_empty():
@@ -440,8 +413,77 @@ func _cell_occupied(armed: String, spot: Vector3) -> bool:
 	return false
 
 
-func _can_afford(game: Node, armed: String) -> bool:
+static func _can_afford(game: Node, armed: String) -> bool:
 	return game != null and bool(game.call("can_afford", armed))
+
+
+## Read-only placement query for controller planning and UI-adjacent callers.
+##
+## `planned_records` are deliberately caller-owned temporary records: they are
+## appended only to this calculation, never to GameState or the world tree.
+## The live ghost calls this exact function, so a planner cannot promise a
+## different snap, slope, occupancy, or affordability result than the player
+## will see after arming the same piece at the same raw spot.
+func preview_placement(game: Node, armed: String, raw_spot: Vector3,
+		planned_records: Array = []) -> Dictionary:
+	var buildings: Array = []
+	if game != null:
+		var placed: Variant = game.get("placed_buildings")
+		if placed is Array:
+			buildings = (placed as Array).duplicate(true)
+	for record: Variant in planned_records:
+		if record is Dictionary:
+			buildings.append((record as Dictionary).duplicate(true))
+	return evaluate_placement(game, armed, raw_spot, buildings, Callable(self, "_ground_height"))
+
+
+## Pure legality core shared by the live ghost and `preview_placement`.
+## Tests use a flat callback here to prove every planner-facing result stays in
+## lockstep with the calculation that `_show_ghost` consumes.
+static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
+		buildings: Array, ground_height: Callable) -> Dictionary:
+	var ground := float(ground_height.call(raw_spot))
+	if is_nan(ground):
+		return {
+			"has_ground": false,
+			"ok": false,
+			"reason": "",
+			"position": Vector3.INF,
+			"snapped_to_neighbour": false,
+			"structural": false,
+			"yaw_deg": NAN,
+		}
+	var resolved := BUILD_SNAP.resolve(raw_spot, ground, armed, buildings)
+	var spot: Vector3 = resolved.position
+	var snapped_to_neighbour := bool(resolved.snapped_to_neighbour)
+
+	# Slope is skipped for a structural snap exactly as it is for the live
+	# ghost: the target inherits its placed neighbour's ground-clamped height.
+	var rise := 0.0
+	if not snapped_to_neighbour:
+		for corner: Vector3 in [Vector3(1.2, 0, 0), Vector3(-1.2, 0, 0), Vector3(0, 0, 1.2), Vector3(0, 0, -1.2)]:
+			var h := float(ground_height.call(spot + corner))
+			if not is_nan(h):
+				rise = maxf(rise, absf(h - ground))
+	var occupied := BUILD_SNAP.occupied(armed, spot, buildings)
+	var too_steep := rise > MAX_SLOPE_RISE
+	var afford := _can_afford(game, armed)
+	var reason := ""
+	if occupied:
+		reason = "Something is already here"
+	elif too_steep:
+		reason = "Too steep to build here"
+	elif not afford:
+		reason = "Can't afford this — check the build menu for what's short"
+	return {
+		"has_ground": true,
+		"ok": not too_steep and not occupied and afford,
+		"reason": reason,
+		"position": spot,
+		"snapped_to_neighbour": snapped_to_neighbour,
+		"structural": bool(resolved.get("structural", false)),
+		"yaw_deg": float(resolved.get("yaw_deg", NAN)),
+	}
 
 
 ## The plain node-creation half of placement, shared with `restore_from_game`

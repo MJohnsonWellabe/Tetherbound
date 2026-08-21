@@ -40,18 +40,30 @@ func test_reusable_segment_names_the_canonical_paid_house_contract() -> void:
 	assert_true(source.contains("stone_before + 2"), "dismantled wall must refund both stone")
 
 
-func test_reusable_segment_enters_and_checks_the_documented_patch_before_spending() -> void:
+func test_reusable_segment_enters_and_preflights_the_documented_patch_before_spending() -> void:
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
-	assert_true(source.contains("BUILD_PATCH_XZ := Vector2(14.0, 20.0)"),
-		"the southeast opening-meadow patch must stay documented in source")
-	assert_true(source.contains("walked by controller to the documented off-trail patch"),
+	assert_true(source.contains("BUILD_PATCH_XZ := Vector2(30.0, -40.0)"),
+		"the authored Practice Meadow clearing must be the documented patch")
+	assert_true(source.contains("Vector2(10.0, -10.0), # Village Square"),
+		"the reusable route must begin at the real-exploration Village Square entry")
+	assert_true(source.contains("Vector2(18.0, -24.0), # Practice Meadow road bend"),
+		"the route must follow the authored road bend instead of a settlement diagonal")
+	assert_true(source.contains("all twelve planned anchors were green/reachable before spending"),
 		"canonical evidence must walk to the patch rather than arrive by fixture warp")
-	assert_true(source.contains("await _walk_to(Vector3(BUILD_PATCH_XZ.x"),
-		"the player must approach the patch with parsed controller movement")
+	assert_true(source.contains("Practice Meadow road waypoint %d"),
+		"the player must approach the patch through named parsed-controller waypoints")
+	assert_false(source.contains("_walk_to(Vector3(BUILD_PATCH_XZ.x"),
+		"the old direct diagonal to the patch must not return")
+	assert_true(source.contains("build segment must begin at the Village Square route entry through ordinary exploration"),
+		"canonical evidence must enter from real exploration, never a helper-side warp")
 	assert_true(source.contains("the documented patch has no legal first Floor ghost"),
 		"a live green Floor ghost must prove clearance before paid placement")
-	assert_true(source.contains("get_first_node_in_group(&\"build_placer\")"),
-		"clearance may read only the live placer state, never a test-side placement")
+	assert_true(source.contains("_preflight_all_planned_anchors"),
+		"all planned anchors must be checked before the first paid Floor")
+	assert_true(source.contains("preview_placement"),
+		"future structural anchors must use BuildPlacer's public no-spend query")
+	assert_true(source.contains("planned: Array[Dictionary]"),
+		"planned support records must remain test-local")
 
 
 func test_mechanical_fixture_is_not_misrepresented_as_canonical_evidence() -> void:
@@ -60,28 +72,40 @@ func test_mechanical_fixture_is_not_misrepresented_as_canonical_evidence() -> vo
 		"the injected mechanical wrapper must stay honestly labelled")
 	assert_true(wrapper.contains("Wrapper-only fixture placement"),
 		"fixture positioning must remain visibly scoped outside the reusable controller segment")
+	assert_true(wrapper.contains("ROUTE_ENTRY_XZ := Vector2(10.0, -10.0)"),
+		"the mechanical wrapper must stage only at the named route entry")
+	assert_true(wrapper.contains("This is not canonical positioning"),
+		"the wrapper must disclose that its route-entry staging is noncanonical")
 
 
-func test_roof_stances_route_around_the_completed_lower_shell() -> void:
+func test_roof_stances_use_the_preflighted_open_exterior_ring() -> void:
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
-	assert_true(source.contains("_move_to_roof_stance"),
-		"roof placement must use the outside staging route")
-	assert_true(source.contains("_lower_shell_bounds"),
-		"the exterior route must derive its footprint from the pieces this segment placed")
-	assert_true(source.contains("position.x - BUILD_SNAP.HALF"),
-		"lower-shell bounds must use the authoritative module contract")
-	assert_true(source.contains("crossing_z = _player.global_position.z"),
-		"an already-safe exterior stance must remain the crossing lane instead of moving toward a guessed axis")
-	assert_true(source.contains("geometry-derived roof crossing lane"),
-		"each roof approach must cross outside the measured house")
-	assert_true(source.contains("geometry-derived roof approach lane"),
-		"each roof approach must close on its stance from the target's outside side")
-	assert_true(source.contains("await _turn_camera_toward(-outward)"),
-		"each roof must be aimed inward from an exterior controller stance")
+	assert_true(source.contains("_place_roof_from_exterior"),
+		"each roof must be placed from an explicitly staged exterior stance")
+	assert_true(source.contains("var door_target := floor_a + Vector3(0, 0, -1)"),
+		"the doorway must remain on the front edge")
+	assert_true(source.contains("floor_a + Vector3(2, 0, -1)"),
+		"the front-right roof must have a front wall support")
+	assert_true(source.contains("floor_a + Vector3(0, 0, 3)"),
+		"the rear-left roof must have a rear wall support")
+	assert_true(source.contains("floor_a + Vector3(2, 0, 3)"),
+		"the rear-right roof must have a rear wall support")
+	assert_true(source.contains("_assert_live_roof_ghost"),
+		"each exterior stance must prove its live Roof ghost before spending")
+	assert_true(source.contains("green live ghost"),
+		"a red or absent Roof ghost must fail before placement")
+	assert_true(source.contains("Roof ghost resolved to"),
+		"the live ghost must resolve to the exact supported anchor")
+	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"rear-exterior\""),
+		"rear roofs must use the preflighted exterior ring")
+	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"front-exterior\""),
+		"front roofs must use the same exterior ring")
 	assert_true(source.contains("look_right"),
 		"the exterior roof orientation must be supplied through the right stick")
-	assert_true(source.contains("remaining * direction <= 0.0"),
-		"clearance legs must accept crossing a coordinate instead of oscillating around a precision waypoint")
+	assert_false(source.contains("_move_round_open_right_side"),
+		"the known transfer blocker must not return")
+	assert_true(source.contains("all twelve planned anchors"),
+		"no paid roof route may begin without all-anchor preflight")
 
 
 func test_structural_travel_is_stowed_then_rearmed_through_the_catalogue() -> void:
@@ -90,9 +114,18 @@ func test_structural_travel_is_stowed_then_rearmed_through_the_catalogue() -> vo
 		"roof and dismantle travel must use the public Cancel path")
 	assert_true(source.contains("await _tap_action(&\"build_cancel\")"),
 		"stowing must be a parsed visible control, not direct pending_build mutation")
-	assert_true(source.contains("await _move_to_roof_stance"),
-		"the player must reach the exterior stance while placement is stowed")
+	assert_true(source.contains("await _walk_to(wanted_player, \"aimed dismantle stance\")"),
+		"the player must reach each exterior stance while placement is stowed")
 	assert_true(source.contains("await _select_piece(\"roof\")"),
 		"Roof must be rearmed through the controller catalogue at the destination")
 	assert_true(source.contains("await _select_piece(\"wall\")"),
 		"the placer must be rearmed publicly at the dismantle stance")
+
+
+func test_preflight_errors_do_not_claim_a_dismantle_attempt() -> void:
+	var source := FileAccess.get_file_as_string(SOURCE_PATH)
+	var preflight := source.substr(source.find("func _preflight()"), source.find("func _preflight_all_planned_anchors"))
+	assert_false(preflight.contains("aimed dismantle stance"),
+		"a pre-spend route failure must not be reported as dismantle movement")
+	assert_true(source.contains("func _walk_to(target: Vector3, purpose: String)"),
+		"shared controller walking must name each caller's actual purpose")

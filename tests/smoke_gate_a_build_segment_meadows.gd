@@ -11,7 +11,9 @@ extends SceneTree
 const SCENE := preload("res://scenes/world/meadows_playground.tscn")
 const SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const SETTLE_FRAMES := 300
-const PATCH_XZ := Vector2(14.0, 20.0)
+## Wrapper-only fixture entry. The reusable segment then walks the documented
+## Village Square -> Practice Meadow road by parsed controller input.
+const ROUTE_ENTRY_XZ := Vector2(10.0, -10.0)
 
 
 func _init() -> void:
@@ -38,10 +40,11 @@ func _run() -> void:
 		return
 
 	# Wrapper-only fixture placement, before the reusable player-action segment.
-	# (14,20) is inside the authored opening spawn pad and outside village
-	# footprints; ask the same live world height source the placer uses.
-	var ground := float(world.call("ground_height_at", PATCH_XZ.x, PATCH_XZ.y))
-	player.global_position = Vector3(PATCH_XZ.x, ground + 1.0, PATCH_XZ.y)
+	# This is not canonical positioning: the real chain reaches Village Square
+	# by ordinary exploration, then the helper walks the authored road. Ask the
+	# same live world height source the placer uses.
+	var ground := float(world.call("ground_height_at", ROUTE_ENTRY_XZ.x, ROUTE_ENTRY_XZ.y))
+	player.global_position = Vector3(ROUTE_ENTRY_XZ.x, ground + 1.0, ROUTE_ENTRY_XZ.y)
 	player.velocity = Vector3.ZERO
 	for i in 60:
 		await physics_frame

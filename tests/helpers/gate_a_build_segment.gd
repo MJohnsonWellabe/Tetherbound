@@ -16,16 +16,25 @@ const PLACE_AHEAD := 3.0
 const POSITION_EPSILON := 0.08
 const MOVE_EPSILON := 0.16
 const MOVE_FRAME_LIMIT := 360
-const ROOF_ROUTE_MARGIN := 1.25
 
-## The broad grassy shoulder southeast of the opening pad, centred at (14,20).
-## It is deliberately off the village trail and pond vegetation: a player can
-## walk here from the opening area without using a debug warp, and the 2x2
-## shell leaves a complete exterior circuit. The smoke wrapper may stage a
-## player here for mechanical placement regression only; canonical evidence
-## must enter this helper from ordinary traversal with naturally earned stock.
-const BUILD_PATCH_XZ := Vector2(14.0, 20.0)
+## The Practice Meadow's authored clearing, centred at (30,-40). It has a
+## 16m vegetation exclusion and the ordinary village route ends here via
+## (10,-10)->(18,-24)->(30,-40). This segment still walks to it; the smoke
+## wrapper may stage a player only for mechanical placement regression.
+## Canonical evidence must arrive through ordinary traversal with naturally
+## earned stock.
+const BUILD_PATCH_XZ := Vector2(30.0, -40.0)
 const BUILD_PATCH_APPROACH_EPSILON := 0.55
+## The reusable paid segment begins only after ordinary exploration has reached
+## the Village Square. From there it follows the authored Practice Meadow road,
+## never a fixture-only diagonal across settlement collision.
+const BUILD_ROUTE_XZ: Array[Vector2] = [
+	Vector2(10.0, -10.0), # Village Square
+	Vector2(18.0, -24.0), # Practice Meadow road bend
+	BUILD_PATCH_XZ, # Practice Meadow clearing
+]
+const BUILD_ROUTE_ENTRY_EPSILON := 0.75
+const HOUSE_AIM_DIRECTION := Vector3(0, 0, -1)
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -41,6 +50,7 @@ var _move_y_sign := 1.0
 var _look_x_axis: JoyAxis = JOY_AXIS_RIGHT_X
 var _look_x_sign := 1.0
 var _house_record_start := 0
+var _preflight_first_floor := Vector3.INF
 
 
 func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> Dictionary:
@@ -61,6 +71,9 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 	if first == null:
 		return _result()
 	var floor_a: Vector3 = first
+	if floor_a.distance_to(_preflight_first_floor) > POSITION_EPSILON:
+		_fail("first paid Floor drifted from the no-spend preflight anchor %s to %s" % [_preflight_first_floor, floor_a])
+		return _result()
 	var floor_targets: Array[Vector3] = [
 		floor_a + Vector3(2, 0, 0),
 		floor_a + Vector3(0, 0, 2),
@@ -73,58 +86,48 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 			return _result()
 	transcript.append("repeat-placed four paid floors from one Floor selection")
 
+	# Keep both side edges open. The roof stance route stays on this open exterior
+	# ring and was walked during no-spend preflight before the first Floor.
+	if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+		return _result()
 	var door_target := floor_a + Vector3(0, 0, -1)
 	if not await _select_piece("door"):
 		return _result()
-	if not await _move_ghost_to(door_target, Vector3(-1.3, 0, -1.0)):
+	if not await _move_ghost_to(door_target):
 		return _result()
 	if await _place_current("door") == null:
 		return _result()
 
-	var wall_targets: Array[Dictionary] = [
-		{"position": floor_a + Vector3(2, 0, -1), "aim_offset": Vector3(1.3, 0, -1.0)},
-		{"position": floor_a + Vector3(0, 0, 3), "aim_offset": Vector3(-1.3, 0, 1.0)},
-		{"position": floor_a + Vector3(2, 0, 3), "aim_offset": Vector3(1.3, 0, 1.0)},
+	var wall_targets: Array[Vector3] = [
+		floor_a + Vector3(2, 0, -1),
+		floor_a + Vector3(0, 0, 3),
+		floor_a + Vector3(2, 0, 3),
 	]
 	if not await _select_piece("wall"):
 		return _result()
-	for wall in wall_targets:
-		var wall_target: Vector3 = wall["position"]
-		var wall_aim_offset: Vector3 = wall["aim_offset"]
-		if not await _move_ghost_to(wall_target, wall_aim_offset):
+	for wall_target in wall_targets:
+		if not await _move_ghost_to(wall_target):
 			return _result()
 		if await _place_current("wall") == null:
 			return _result()
-	transcript.append("placed one doorway and three wall pieces through the catalogue and snap contract")
 
-	var roof_supports: Array[Dictionary] = [
-		{"floor": floor_a, "aim_offset": Vector3(-1.7, 0, 0)},
-		{"floor": floor_a + Vector3(2, 0, 0), "aim_offset": Vector3(1.7, 0, 0)},
-		{"floor": floor_a + Vector3(0, 0, 2), "aim_offset": Vector3(-1.7, 0, 0)},
-		{"floor": floor_a + Vector3(2, 0, 2), "aim_offset": Vector3(1.7, 0, 0)},
-	]
-	for support in roof_supports:
-		var target: Vector3 = support["floor"]
-		var aim_offset: Vector3 = support["aim_offset"]
-		var roof_target := Vector3(target.x, target.y + 3.05, target.z)
-		# Armed structural ghosts own enough of the construction interaction that
-		# long controller travel can stall even on a clear exterior lane. Stow the
-		# previous wall/roof with the visible Cancel control, walk normally, then
-		# reopen the catalogue and select Roof at the reachable stance.
-		if not await _stow_piece_for_travel():
+	# Work the exterior ring in the exact order proved by no-spend preflight:
+	# rear pair while already outside its edge, then the front pair. No transfer
+	# crosses the floor footprint or a wall/door line.
+	var rear_roofs: Array[Vector3] = [floor_a + Vector3(2, 0, 2), floor_a + Vector3(0, 0, 2)]
+	for floor_target in rear_roofs:
+		if not await _place_roof_from_exterior(floor_target, HOUSE_AIM_DIRECTION, "rear-exterior"):
 			return _result()
-		if not await _move_to_roof_stance(roof_target, aim_offset):
+	transcript.append("placed two supported rear roofs from short rear-exterior stances")
+
+	var front_roofs: Array[Vector3] = [floor_a + Vector3(2, 0, 0), floor_a]
+	for floor_target in front_roofs:
+		if not await _place_roof_from_exterior(floor_target, HOUSE_AIM_DIRECTION, "front-exterior"):
 			return _result()
-		if not await _select_piece("roof"):
-			return _result()
-		var placed_roof: Variant = await _place_current("roof")
-		if placed_roof == null:
-			return _result()
-		var placed_roof_position: Vector3 = placed_roof
-		if _flat_distance(placed_roof_position, roof_target) > POSITION_EPSILON:
-			_fail("controller Roof selection placed at %s instead of supported anchor %s" % [placed_roof, roof_target])
-			return _result()
-	transcript.append("stowed for travel and placed four supported roofs through four real Roof selections")
+	transcript.append("placed two supported front roofs from the same open exterior ring")
+
+	var wall_positions: Array[Vector3] = wall_targets.duplicate()
+	transcript.append("placed one doorway and three wall pieces through the catalogue and snap contract")
 
 	var built_records := (_game.get("placed_buildings") as Array).size() - before_records
 	if built_records != 12:
@@ -135,9 +138,6 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 			before_wood, _item_count("wood"), before_stone, _item_count("stone")])
 		return _result()
 
-	var wall_positions: Array[Vector3] = []
-	for wall in wall_targets:
-		wall_positions.append(wall["position"])
 	if not await _dismantle_aimed_wall(_outside_wall_for_camera(wall_positions, floor_a + Vector3(1, 0, 1))):
 		return _result()
 	if not await _cancel_and_resume():
@@ -160,12 +160,22 @@ func _preflight() -> bool:
 	if not failures.is_empty():
 		return false
 
-	# This is ordinary locomotion, not fixture positioning. The build patch is
-	# only a short walk from the opening pad, but the controller still has to
-	# reach it through the live collision world before a single material is spent.
-	if not await _walk_to(Vector3(BUILD_PATCH_XZ.x, _player.global_position.y, BUILD_PATCH_XZ.y)):
-		_fail("controller could not reach the documented off-trail Meadows build patch")
+	# The caller must bring the real player to the Village Square through ordinary
+	# exploration first. Once there, this follows the authored road one leg at a
+	# time, rather than cutting a synthetic diagonal through settlement collision.
+	var route_entry := BUILD_ROUTE_XZ.front()
+	if _flat_distance(_player.global_position, Vector3(route_entry.x, 0.0, route_entry.y)) > BUILD_ROUTE_ENTRY_EPSILON:
+		_fail("build segment must begin at the Village Square route entry through ordinary exploration")
 		return false
+	for i in range(1, BUILD_ROUTE_XZ.size()):
+		var waypoint := BUILD_ROUTE_XZ[i]
+		if not await _walk_to(Vector3(waypoint.x, _player.global_position.y, waypoint.y),
+				"Practice Meadow road waypoint %d" % i):
+			_fail("controller could not follow the documented Village Square-to-Practice Meadow road")
+			return false
+		if not _player.is_on_floor():
+			_fail("controller left the ground on Practice Meadow road waypoint %d" % i)
+			return false
 	if _flat_distance(_player.global_position, Vector3(BUILD_PATCH_XZ.x, 0.0, BUILD_PATCH_XZ.y)) > BUILD_PATCH_APPROACH_EPSILON:
 		_fail("controller stopped outside the documented build patch")
 		return false
@@ -173,18 +183,99 @@ func _preflight() -> bool:
 		_fail("controller arrival did not leave the player grounded on the documented Meadows patch")
 		return false
 
-	# The green, live Floor ghost is the placement-clearance proof. It is armed
-	# through the public catalogue, moved by parsed stick input and read only as
-	# the placer's rendered legality state; no test-side build transaction occurs.
+	# The green, live Floor ghost seeds the whole no-spend plan. It is armed
+	# through the public catalogue and read only as the placer's rendered legality
+	# state; no test-side build transaction occurs.
 	if not await _select_piece("floor"):
 		return false
 	await _settle(8)
 	var placer := _tree.get_first_node_in_group(&"build_placer")
-	if placer == null or not bool(placer.get("_ghost_ok")):
+	var ghost := placer.get("_ghost") as Node3D if placer != null else null
+	if placer == null or ghost == null or not bool(placer.get("_ghost_ok")):
 		_fail("the documented patch has no legal first Floor ghost; do not spend materials there")
 		return false
-	transcript.append("walked by controller to the documented off-trail patch; grounded green Floor ghost verified before spending")
+	_preflight_first_floor = ghost.global_position
+	if not await _preflight_all_planned_anchors(placer):
+		return false
+	transcript.append("walked by controller to the Practice Meadow patch; all twelve planned anchors were green/reachable before spending")
 	return true
+
+
+func _preflight_all_planned_anchors(placer: Node) -> bool:
+	# Future structural targets have no real supports until the paid sequence
+	# exists, so this asks BuildPlacer's public, side-effect-free preview against
+	# test-local planned records. The live ghost uses this same method every
+	# frame; records here never reach GameState or the scene tree.
+	if not placer.has_method("preview_placement"):
+		_fail("BuildPlacer exposes no public planned-placement preview")
+		return false
+	if not await _stow_piece_for_travel():
+		return false
+	var planned: Array[Dictionary] = []
+	for step: Dictionary in _planned_house_steps(_preflight_first_floor):
+		if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+			return false
+		var id := str(step.get("id", ""))
+		var target: Vector3 = step.get("position", Vector3.INF)
+		var require_structural := bool(step.get("require_structural", false))
+		var forward := -(_camera_rig.call("planar_basis") as Basis).z
+		var stance := target - forward * PLACE_AHEAD
+		if not await _walk_to(stance, "public %s preflight stance" % id):
+			_fail("controller could not reach the public %s preflight stance at %s" % [id, stance])
+			return false
+		await _settle(4)
+		var raw := _player.global_position + forward * PLACE_AHEAD
+		var preview: Dictionary = placer.call("preview_placement", _game, id, raw, planned)
+		if not bool(preview.get("has_ground", false)) or not bool(preview.get("ok", false)):
+			_fail("planned %s anchor at %s is not green before spending: %s" % [id, target, str(preview.get("reason", "no ground"))])
+			return false
+		var resolved: Vector3 = preview.position
+		if resolved.distance_to(target) > POSITION_EPSILON:
+			_fail("planned %s ghost resolves to %s instead of %s" % [id, resolved, target])
+			return false
+		if require_structural != bool(preview.get("structural", false)):
+			_fail("planned %s anchor structural=%s, expected %s" % [id, str(preview.get("structural", false)), str(require_structural)])
+			return false
+		planned.append({
+			"id": id,
+			"position": [resolved.x, resolved.y, resolved.z],
+			"yaw_deg": float(preview.get("yaw_deg", 0.0)),
+		})
+		transcript.append("preflight green/reachable %s at %s" % [id, resolved])
+	# Return to the original, legal Floor stance and rearm through the public
+	# catalogue. This is still before the first place press.
+	if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+		return false
+	var forward := -(_camera_rig.call("planar_basis") as Basis).z
+	if not await _walk_to(_preflight_first_floor - forward * PLACE_AHEAD, "return to the preflight Floor stance"):
+		_fail("controller could not return to the preflight Floor stance")
+		return false
+	if not await _select_piece("floor"):
+		return false
+	await _settle(8)
+	var live_ghost := placer.get("_ghost") as Node3D
+	if live_ghost == null or not bool(placer.get("_ghost_ok")) \
+			or live_ghost.global_position.distance_to(_preflight_first_floor) > POSITION_EPSILON:
+		_fail("returning to the preflight Floor stance did not restore the green live ghost")
+		return false
+	return true
+
+
+func _planned_house_steps(floor_a: Vector3) -> Array[Dictionary]:
+	return [
+		{"id": "floor", "position": floor_a, "require_structural": false},
+		{"id": "floor", "position": floor_a + Vector3(2, 0, 0), "require_structural": false},
+		{"id": "floor", "position": floor_a + Vector3(0, 0, 2), "require_structural": false},
+		{"id": "floor", "position": floor_a + Vector3(2, 0, 2), "require_structural": false},
+		{"id": "door", "position": floor_a + Vector3(0, 0, -1), "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(2, 0, -1), "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(0, 0, 3), "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(2, 0, 3), "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 2), "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 2), "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 0), "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 0), "require_structural": true},
+	]
 
 
 func _select_piece(id: String) -> bool:
@@ -263,50 +354,46 @@ func _move_ghost_to(target: Vector3, aim_offset: Vector3 = Vector3.ZERO) -> bool
 	return false
 
 
-func _move_to_roof_stance(target: Vector3, aim_offset: Vector3) -> bool:
-	# Each roof is aimed from the open X side of the shell. A right-stick turn
-	# makes the camera look inward before the left stick walks there, so the
-	# three-metre placement reach never asks the trainer to stand inside a wall.
-	# The left/right support order below therefore traces a complete exterior
-	# ring instead of relying on the camera's incidental original heading.
-	var outward := Vector3(signf(aim_offset.x), 0.0, 0.0)
-	if is_zero_approx(outward.x):
-		_fail("roof support lacks an exterior-side orientation")
+func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: String) -> bool:
+	# A roof's production snap candidate needs a floor plus any adjacent wall or
+	# doorway. Build one open row at a time: this lets the player aim from that
+	# row's exterior without walking around, through, or across a closed shell.
+	if not await _stow_piece_for_travel():
 		return false
-	if not await _turn_camera_toward(-outward):
+	if not await _turn_camera_toward(inward):
 		return false
+	var roof_target := Vector3(floor_target.x, floor_target.y + BUILD_SNAP.ROOF_Y, floor_target.z)
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
-	var wanted_player := target + aim_offset - forward * PLACE_AHEAD
-	var shell := _lower_shell_bounds()
-	if shell.size == Vector2.ZERO:
-		_fail("could not derive the completed lower-shell footprint for the roof route")
+	var wanted_player := roof_target - forward * PLACE_AHEAD
+	if not await _walk_to(wanted_player, "%s exterior Roof stance" % side):
+		_fail("controller could not reach the %s exterior Roof stance" % side)
 		return false
-	var left_x := shell.position.x - ROOF_ROUTE_MARGIN
-	var right_x := shell.end.x + ROOF_ROUTE_MARGIN
-	var front_z := shell.position.y - ROOF_ROUTE_MARGIN
-	var back_z := shell.end.y + ROOF_ROUTE_MARGIN
-	var centre := shell.get_center()
-	var current_lane_x := left_x if _player.global_position.x < centre.x else right_x
-	var wanted_lane_x := left_x if wanted_player.x < centre.x else right_x
-	# Step outside the actual placed floor/wall/door footprint, not a guessed
-	# world-space rectangle. The deliberately conservative half-module bounds
-	# also cover the wall collider's timber end caps.
-	if not await _walk_axis_to(current_lane_x, true, "geometry-derived roof side clearance"):
+	if not await _select_piece("roof"):
 		return false
-	# If the trainer already stands beyond the front/back bounds, cross at that
-	# exact Z instead of steering back toward a fixed lane. This is the live
-	# failure the first route exposed: its guessed +Z waypoint could put solid
-	# scenery between a perfectly safe current stance and the requested point.
-	var crossing_z := _player.global_position.z
-	if crossing_z >= front_z and crossing_z <= back_z:
-		crossing_z = front_z if absf(crossing_z - front_z) < absf(crossing_z - back_z) else back_z
-	if not await _walk_axis_to(crossing_z, false, "geometry-derived roof crossing clearance"):
+	if not await _assert_live_roof_ghost(roof_target, side):
 		return false
-	if not await _walk_axis_to(wanted_lane_x, true, "geometry-derived roof crossing lane"):
+	var placed_roof: Variant = await _place_current("roof")
+	if placed_roof == null:
 		return false
-	if not await _walk_axis_to(wanted_player.z, false, "geometry-derived roof approach lane"):
+	var placed_roof_position: Vector3 = placed_roof
+	if placed_roof_position.distance_to(roof_target) > POSITION_EPSILON:
+		_fail("controller %s Roof selection placed at %s instead of supported anchor %s" % [side, placed_roof, roof_target])
 		return false
-	return await _move_ghost_to(target, aim_offset)
+	return true
+
+
+func _assert_live_roof_ghost(roof_target: Vector3, side: String) -> bool:
+	await _settle(8)
+	var placer := _tree.get_first_node_in_group(&"build_placer")
+	var ghost := placer.get("_ghost") as Node3D if placer != null else null
+	if placer == null or ghost == null or not bool(placer.get("_ghost_ok")):
+		_fail("%s exterior Roof stance has no green live ghost" % side)
+		return false
+	if ghost.global_position.distance_to(roof_target) > POSITION_EPSILON:
+		_fail("%s exterior Roof ghost resolved to %s instead of supported anchor %s" % [side, ghost.global_position, roof_target])
+		return false
+	transcript.append("%s exterior Roof stance reached a green live ghost at %s" % [side, roof_target])
+	return true
 
 
 func _turn_camera_toward(world_direction: Vector3) -> bool:
@@ -345,51 +432,6 @@ func _stow_piece_for_travel() -> bool:
 	return true
 
 
-func _lower_shell_bounds() -> Rect2:
-	var bounds := Rect2()
-	var has_piece := false
-	var records: Array = _game.get("placed_buildings") as Array
-	for i in range(_house_record_start, records.size()):
-		var record := records[i] as Dictionary
-		if not ["floor", "wall", "door"].has(str(record.get("id", ""))):
-			continue
-		var position := _record_position(record)
-		if position == Vector3.INF:
-			continue
-		# A full half-module in both axes is conservative for walls/doors but
-		# exact for floors. Conservatism is intentional: controller routing must
-		# clear visible/collidable end caps, not skim their nominal thin axis.
-		var low := Vector2(position.x - BUILD_SNAP.HALF, position.z - BUILD_SNAP.HALF)
-		var high := Vector2(position.x + BUILD_SNAP.HALF, position.z + BUILD_SNAP.HALF)
-		if not has_piece:
-			bounds = Rect2(low, high - low)
-			has_piece = true
-		else:
-			bounds = bounds.expand(low).expand(high)
-	return bounds if has_piece else Rect2()
-
-
-func _walk_axis_to(coordinate: float, x_axis: bool, purpose: String) -> bool:
-	var current := _player.global_position.x if x_axis else _player.global_position.z
-	var direction := signf(coordinate - current)
-	if direction == 0.0:
-		return true
-	for frame in MOVE_FRAME_LIMIT:
-		current = _player.global_position.x if x_axis else _player.global_position.z
-		var remaining := coordinate - current
-		if remaining * direction <= 0.0:
-			_release_move_stick()
-			return true
-		var strength := clampf(absf(remaining) / 0.9, 0.32, 1.0)
-		var world_direction := Vector3(direction, 0.0, 0.0) if x_axis else Vector3(0.0, 0.0, direction)
-		var local := (_camera_rig.call("planar_basis") as Basis).inverse() * world_direction * strength
-		_parse_move_stick(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
-		await _tree.physics_frame
-	_release_move_stick()
-	_fail("controller could not cross the %s" % purpose)
-	return false
-
-
 func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 	var records_before: Array = (_game.get("placed_buildings") as Array).duplicate(true)
 	var neighbours_before := _record_fingerprints_except(records_before, "wall", target_position)
@@ -399,7 +441,7 @@ func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 	var wanted_player := target_position - forward * 2.0
 	if not await _stow_piece_for_travel():
 		return false
-	if not await _walk_to(wanted_player):
+	if not await _walk_to(wanted_player, "aimed dismantle stance"):
 		return false
 	# Dismantle highlighting belongs to the live placer and therefore requires
 	# Build to be armed. Re-enter through the public catalogue only after the
@@ -449,7 +491,7 @@ func _cancel_and_resume() -> bool:
 	return true
 
 
-func _walk_to(target: Vector3) -> bool:
+func _walk_to(target: Vector3, purpose: String) -> bool:
 	for frame in MOVE_FRAME_LIMIT:
 		var delta := Vector3(target.x - _player.global_position.x, 0, target.z - _player.global_position.z)
 		if delta.length() <= MOVE_EPSILON:
@@ -460,7 +502,7 @@ func _walk_to(target: Vector3) -> bool:
 		_parse_move_stick(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
 		await _tree.physics_frame
 	_release_move_stick()
-	_fail("controller could not walk to the aimed dismantle stance")
+	_fail("controller could not walk to the %s" % purpose)
 	return false
 
 
