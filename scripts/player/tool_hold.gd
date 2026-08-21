@@ -147,10 +147,16 @@ func _rebuild_prop() -> void:
 	if model_path.is_empty() or not ResourceLoader.exists(model_path):
 		return
 
-	var scene: PackedScene = load(model_path)
-	if scene == null:
-		return
-	_prop = scene.instantiate() as Node3D
+	var source: Resource = load(model_path)
+	if source is PackedScene:
+		_prop = (source as PackedScene).instantiate() as Node3D
+	elif source is Mesh:
+		# OBJ imports are Mesh resources rather than PackedScenes.  Tools are data
+		# driven, so a valid held mesh must be as visible in the trainer's hand as
+		# the GLTF-backed axe and pickaxe instead of silently equipping with no prop.
+		var mesh_instance := MeshInstance3D.new()
+		mesh_instance.mesh = source as Mesh
+		_prop = mesh_instance
 	if _prop == null:
 		return
 

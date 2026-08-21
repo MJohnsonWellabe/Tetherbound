@@ -14,7 +14,11 @@ const DIRECTOR_SCRIPT := "res://scripts/story/sequence_director.gd"
 const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const STARTER_PICKER_SCRIPT := "res://scripts/ui/starter_picker.gd"
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
+const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
+const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
+const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const CHOSEN_NAME := "Bud"
+const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
 var _failures: Array[String] = []
 var _started_ms := 0
@@ -602,9 +606,62 @@ func _fail(message: String) -> void:
 func _finish() -> void:
 	_stop_left_stick()
 	_stop_right_stick()
+	if _failures.is_empty() and OS.get_cmdline_user_args().has(CONTINUOUS_CORE_FLAG):
+		call_deferred("_run_continuous_core")
+		return
+	_finish_terminal()
+
+
+## Optional canonical-session continuation.  It deliberately shares the
+## already-running production world and does not seed state, load another scene,
+## or use fixture positioning.  The remaining rest/map/save and visual evidence
+## are intentionally not claimed here until they too have a comparable public
+## controller path.
+func _run_continuous_core() -> void:
+	_checkpoint("continuous core: beginning village, material, and paid-build segments")
+	var npc_gather := NPC_GATHER_SEGMENT.new()
+	var npc_failures: Array[String] = await npc_gather.run(self, _world, _game, _player, _rig)
+	if not npc_failures.is_empty():
+		for failure in npc_failures:
+			_fail("NPC/gather continuation: %s" % failure)
+		_finish_terminal()
+		return
+
+	var material_route := MATERIAL_ROUTE.new()
+	var material_result: Dictionary = await material_route.run(self, _world, _game, _player, _rig)
+	var material_failures: Array = material_result.get("failures", []) as Array
+	if not material_failures.is_empty():
+		for failure in material_failures:
+			_fail("natural material continuation: %s" % str(failure))
+		_finish_terminal()
+		return
+
+	# The build segment owns the authored Village Square -> Practice Meadow road,
+	# but deliberately requires its caller to have reached the square through
+	# ordinary exploration first.
+	if not await _walk_toward(Vector3(10.0, _player.global_position.y, -10.0), 2400, 0.75):
+		_fail("continuous core could not return to the Village Square build-route entry")
+		_finish_terminal()
+		return
+	var build_segment := BUILD_SEGMENT.new()
+	var build_result: Dictionary = await build_segment.run(self, _world, _player, _rig)
+	var build_failures: Array = build_result.get("failures", []) as Array
+	if not build_failures.is_empty():
+		for failure in build_failures:
+			_fail("paid-build continuation: %s" % str(failure))
+		_finish_terminal()
+		return
+	_checkpoint("continuous core: catch, NPC/tool gathers, natural stock, and paid house/dismantle complete")
+	_finish_terminal()
+
+
+func _finish_terminal() -> void:
 	print("")
 	if _failures.is_empty():
-		print("gate A opening segment: OK — title through natural catch passed continuously with parsed controller input")
+		if OS.get_cmdline_user_args().has(CONTINUOUS_CORE_FLAG):
+			print("gate A continuous core: OK — title through paid house/dismantle passed in one parsed-controller session")
+		else:
+			print("gate A opening segment: OK — title through natural catch passed continuously with parsed controller input")
 	else:
 		for message in _failures:
 			print("gate A opening segment FAIL: %s" % message)

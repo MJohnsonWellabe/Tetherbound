@@ -220,6 +220,11 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if not await _walk_toward(node.global_position, 1800, 1.55):
 		_fail("natural controller travel could not reach the authored %s node" % item_id)
 		return false
+	# A visible swing owns the held prop for its full production animation.  Do
+	# not overlap the next hotbar edge with it: the player cannot switch tools
+	# mid-swing, and a continuous controller route must respect that same rule.
+	if not await _wait_for_tool_idle():
+		return false
 	await _tap_action(hotbar_action)
 	var hold: Node = _player.get("tool_hold")
 	for _i in 30:
@@ -227,7 +232,15 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 			break
 		await _tree.process_frame
 	if str(_game.get("equipped_tool")) != tool_id or hold == null or hold.call("prop_node") == null:
-		_fail("%s quick slot did not put a visible %s in the trainer's hand" % [hotbar_action, tool_id])
+		var hotbar: Array = _game.get("hotbar") as Array
+		var action_text := str(hotbar_action)
+		var hotbar_index := action_text.trim_prefix("hotbar_").to_int() - 1 if action_text.begins_with("hotbar_") else -1
+		var assigned := str(hotbar[hotbar_index]) if hotbar_index >= 0 and hotbar_index < hotbar.size() else "<unavailable>"
+		_fail("%s quick slot did not put a visible %s in the trainer's hand (assigned=%s, game=%s, hold=%s, prop=%s, swinging=%s)" % [
+			hotbar_action, tool_id, assigned, str(_game.get("equipped_tool")),
+			str(hold.call("equipped")) if hold != null else "<missing>",
+			str(hold.call("prop_node")) if hold != null else "<missing>",
+			str(hold.call("is_swinging")) if hold != null else "<missing>"])
 		return false
 
 	var inventory: RefCounted = _game.get("inventory")
@@ -255,6 +268,19 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 		return false
 	_checkpoint("%s equipped, swung, gathered %s" % [tool_id, expected])
 	return true
+
+
+func _wait_for_tool_idle() -> bool:
+	var hold: Node = _player.get("tool_hold")
+	if hold == null:
+		_fail("trainer has no ToolHold while waiting to switch tools")
+		return false
+	for _i in 120:
+		if not bool(hold.call("is_swinging")):
+			return true
+		await _tree.physics_frame
+	_fail("previous tool swing did not finish before the next controller hotbar edge")
+	return false
 
 
 func _nearest_authored_node(item_id: String) -> Node3D:
