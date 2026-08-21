@@ -27,6 +27,8 @@ var _director: Node = null
 var _wild: Node3D = null
 var _ally: Node3D = null
 var _misses := 0
+var _strikes := 0
+var _assisted_launches := 0
 var _resolutions: Array[bool] = []
 const NATURAL_OPENING_ENGAGE_DISTANCE := 5.72
 
@@ -59,6 +61,8 @@ func _run() -> void:
 		return
 	_manager.connect("catch_refused", _on_catch_refused)
 	_manager.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _resolutions.append(success))
+	var throw: Node = _manager.call("throw_aim")
+	throw.connect("orb_struck", func(_target: Node3D, _offset: float) -> void: _strikes += 1)
 
 	if not await _walk_to_and_engage():
 		_finish()
@@ -82,17 +86,25 @@ func _run() -> void:
 			_fail("full right-stick deflection could not catch a naturally circling target")
 			break
 		var outcomes_before := _misses + _resolutions.size()
+		var assisted_before := _assisted_launches
 		await _tap_button(JOY_BUTTON_RIGHT_SHOULDER)
 		for _i in 900:
+			if _assisted_launches == assisted_before \
+					and throw_launch_used_assist(_manager.call("throw_aim")):
+				_assisted_launches += 1
+				print("controller catch: eligibility-gated assist launched on attempt %d" % (attempt + 1))
 			if _misses + _resolutions.size() > outcomes_before or not bool(_manager.call("is_fighting")):
 				break
 			await physics_frame
-		if _resolutions.size() > resolved_before and _resolutions[-1]:
+		if _resolutions.size() > resolved_before and _resolutions[-1] \
+				and _assisted_launches > assisted_before:
 			caught = true
 			print("controller catch: moving-target throw caught on attempt %d" % (attempt + 1))
 			break
 	if not caught:
 		_fail("physical right-stick throws did not complete a catch within eight attempts")
+	elif _assisted_launches < 1:
+		_fail("no true eligibility-gated assist launch completed")
 	elif _resolutions.size() - resolved_before < 1:
 		_fail("no moving-target physical strike/resolution completed")
 	_finish()
@@ -162,21 +174,70 @@ func _intentional_physical_miss() -> bool:
 	if not await _open_aim():
 		_fail("physical shoulder input did not open catch aim")
 		return false
-	# A full second turns well away from the creature through the same raw right
-	# stick path a player uses, without assigning the camera's angles.
-	_send_axis(JOY_AXIS_RIGHT_X, 1.0)
-	for _i in 70:
+	var throw: Node = _manager.call("throw_aim")
+	# A lateral clearance is not a miss guarantee: a circling target can cross a
+	# fixed ballistic path after launch. Turn through the same right-stick input
+	# until the target is geometrically BEHIND the screen ray, excluding soft
+	# pull, the orb's 0.60m forgiveness, and a moving-target interception alike.
+	var cleared := false
+	for _i in 360:
+		_send_axis(JOY_AXIS_RIGHT_X, 1.0)
 		await physics_frame
+		var report := throw.call("launch_assist_diagnostics") as Dictionary
+		if not bool(report.get("in_front", true)):
+			cleared = true
+			print("controller catch: deliberate miss put target behind the screen ray")
+			break
 	_stop_right_stick()
-	var outcomes_before := _misses + _resolutions.size()
+	if not cleared:
+		_fail("full right-stick turn never put the target behind the screen ray")
+		return false
+	var misses_before := _misses
+	var strikes_before := _strikes
+	var resolutions_before := _resolutions.size()
 	await _tap_button(JOY_BUTTON_RIGHT_SHOULDER)
 	for _i in 360:
-		if _misses + _resolutions.size() > outcomes_before:
-			print("controller catch: intentional physical miss resolved")
-			return true
+		if _misses > misses_before:
+			if await _await_throw_ready(throw, 120):
+				print("controller catch: intentional physical miss resolved")
+				return true
+			_fail("intentional miss did not return the throw to an idle state")
+			return false
+		if _strikes > strikes_before:
+			# Do not let an accidental strike leak its catch-resolution lock into
+			# the eligibility attempts below. It is a failed deliberate-miss check,
+			# never an interchangeable "throw outcome".
+			await _await_catch_resolution(resolutions_before, 900)
+			_fail("deliberate physical miss struck the wild instead")
+			return false
+		if _resolutions.size() > resolutions_before:
+			_fail("deliberate physical miss entered catch resolution without a strike signal")
+			return false
 		await physics_frame
 	_fail("intentional physical throw never resolved")
 	return false
+
+
+func _await_throw_ready(throw: Node, budget: int) -> bool:
+	for _i in budget:
+		if not bool(throw.call("is_busy")) and int(_manager.get("_catch_phase")) == 0:
+			print("controller catch: intentional physical miss resolved")
+			return true
+		await physics_frame
+	return false
+
+
+func _await_catch_resolution(resolutions_before: int, budget: int) -> bool:
+	for _i in budget:
+		if _resolutions.size() > resolutions_before or not bool(_manager.call("is_fighting")):
+			return true
+		await physics_frame
+	return false
+
+
+func throw_launch_used_assist(throw: Node) -> bool:
+	var point: Variant = throw.get("_released_assist_point")
+	return point is Vector3 and point != Vector3.INF
 
 
 func _open_aim() -> bool:
@@ -191,6 +252,7 @@ func _open_aim() -> bool:
 
 func _track_target_with_right_stick(budget: int) -> bool:
 	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	var throw: Node = _manager.call("throw_aim")
 	if camera == null:
 		return false
 	for _i in budget:
@@ -203,8 +265,15 @@ func _track_target_with_right_stick(budget: int) -> bool:
 		var yaw_error := wrapf(desired_yaw - float(_rig.get("yaw")), -PI, PI)
 		var pitch_error := desired_pitch - float(_rig.get("pitch"))
 		if absf(yaw_error) < deg_to_rad(3.0) and absf(pitch_error) < deg_to_rad(3.0):
-			_stop_right_stick()
-			return true
+			var report := throw.call("launch_assist_diagnostics") as Dictionary
+			print("controller catch: aimed yaw=%.2f pitch=%.2f eligible=%s reticle=%.3f/%.3f first_hit=%s los=%s" % [
+				rad_to_deg(yaw_error), rad_to_deg(pitch_error), bool(report.get("eligible", false)),
+				float(report.get("reticle_offset", -1.0)), float(report.get("reticle_radius", -1.0)),
+				str(report.get("first_hit", "unavailable")), bool(report.get("line_of_sight", false)),
+			])
+			if bool(report.get("eligible", false)):
+				_stop_right_stick()
+				return true
 		_send_axis(JOY_AXIS_RIGHT_X, -signf(yaw_error))
 		_send_axis(JOY_AXIS_RIGHT_Y, -signf(pitch_error))
 		await physics_frame

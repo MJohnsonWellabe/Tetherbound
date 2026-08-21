@@ -53,3 +53,24 @@ func test_launch_assist_clamps_pathological_target_velocity() -> void:
 		17.0, 14.0, 0.18, 0.85, 4.5, 2.6)
 	assert_true(predicted.distance_to(centre) <= 2.601,
 		"launch assist escaped its maximum lead distance")
+
+
+func test_launch_assist_checks_body_metres_not_camera_degrees() -> void:
+	var inside := THROW_AIM.reticle_body_geometry(
+		Vector3.ZERO, Vector3.FORWARD, Vector3(0.59, 0.0, -6.0), 0.60, 1.0)
+	var outside := THROW_AIM.reticle_body_geometry(
+		Vector3.ZERO, Vector3.FORWARD, Vector3(0.61, 0.0, -6.0), 0.60, 1.0)
+	assert_true(bool(inside["inside_body"]),
+		"0.59m screen-ray offset must be inside a 0.60m body")
+	assert_false(bool(outside["inside_body"]),
+		"0.61m screen-ray offset must remain ineligible despite a small angular error")
+
+
+func test_launch_assist_rejects_an_ally_as_the_first_los_hit() -> void:
+	var target := Node.new()
+	var target_child := Node.new()
+	target.add_child(target_child)
+	var ally := Node.new()
+	assert_true(THROW_AIM.first_hit_belongs_to_target(target_child, target))
+	assert_false(THROW_AIM.first_hit_belongs_to_target(ally, target),
+		"an ally body in front of the wild must deny launch assist")

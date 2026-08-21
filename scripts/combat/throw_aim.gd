@@ -57,6 +57,27 @@ var _launch_assist_max_seconds: float = 0.85
 var _launch_assist_max_target_speed: float = 4.5
 var _launch_assist_max_distance: float = 2.6
 
+
+## Pure screen-ray/body geometry, shared with the controller regression. A
+## yaw/pitch tolerance cannot prove that a distant reticle is inside a body.
+static func reticle_body_geometry(
+	eye: Vector3, forward: Vector3, centre: Vector3, radius: float, fraction: float
+) -> Dictionary:
+	var normal := forward.normalized()
+	var along := (centre - eye).dot(normal)
+	var offset := (eye + normal * along).distance_to(centre)
+	var allowed := maxf(0.0, radius * fraction)
+	return {
+		"in_front": along > 0.0,
+		"reticle_offset": offset,
+		"reticle_radius": allowed,
+		"inside_body": along > 0.0 and offset <= allowed,
+	}
+
+
+static func first_hit_belongs_to_target(collider: Node, target: Node) -> bool:
+	return collider == target or (collider != null and target != null and target.is_ancestor_of(collider))
+
 ## A launch-time assist is committed with the button press, not recomputed
 ## after the wind-up. Otherwise a circling creature can leave the reticle in
 ## those 0.18 seconds and turn a correctly lined-up controller throw into a
@@ -64,6 +85,7 @@ var _launch_assist_max_distance: float = 2.6
 ## was not genuinely on the visible target, so the physical wide throw stays
 ## completely unassisted.
 var _committed_assist_point := Vector3.INF
+var _released_assist_point := Vector3.INF
 
 
 func _ready() -> void:
@@ -357,6 +379,10 @@ func _release() -> void:
 	var origin := _player.global_position + Vector3.UP * _spawn_height
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
+	_released_assist_point = _committed_assist_point
+	print("catch launch: release assist=%s predicted=%s" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+	])
 
 	_despawn_orb()
 	_orb = ORB_SCENE.instantiate()
@@ -381,6 +407,8 @@ func _release() -> void:
 ## good aim, not a lock-on that rescues a wide or blocked throw.
 func _commit_launch_assist() -> void:
 	_committed_assist_point = Vector3.INF
+	var diagnostics := launch_assist_diagnostics()
+	_log_launch_assist("commit", diagnostics)
 	var camera := _aim_camera()
 	if camera == null or _target == null or not is_instance_valid(_target) \
 			or not _target.visible or not _target.has_method("centre"):
@@ -410,6 +438,68 @@ func _commit_launch_assist() -> void:
 		origin, centre, target_velocity, _speed, _gravity, _release_windup,
 		_launch_assist_max_seconds, _launch_assist_max_target_speed,
 		_launch_assist_max_distance)
+
+
+## Commit-time facts from the actual screen-centre ray and first physics hit.
+## This is deliberately read-only: it makes why a legal assist did or did not
+## apply observable without widening the visible-body/LOS eligibility rule.
+func launch_assist_diagnostics() -> Dictionary:
+	var report: Dictionary = {
+		"eligible": false,
+		"first_hit": "unavailable",
+		"line_of_sight": false,
+		"reason": "unavailable",
+	}
+	var camera := _aim_camera()
+	if camera == null or _player == null or _target == null or not is_instance_valid(_target) \
+			or not _target.visible or not _target.has_method("centre"):
+		return report
+	var eye := camera.global_position
+	var centre: Vector3 = _target.call("centre")
+	var radius := float(_target.call("body_radius")) if _target.has_method("body_radius") else 0.5
+	var geometry := reticle_body_geometry(
+		eye, -camera.global_transform.basis.z, centre, radius, _launch_assist_reticle_fraction)
+	report.merge(geometry, true)
+	if not bool(report["in_front"]):
+		report["reason"] = "behind"
+		return report
+	var world := _player.get_world_3d()
+	if world == null:
+		report["reason"] = "no_world"
+		return report
+	var query := PhysicsRayQueryParameters3D.create(eye, centre)
+	query.collide_with_areas = false
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
+	var collider := hit.get("collider") as Node
+	if collider != null:
+		report["first_hit"] = collider.name
+	report["line_of_sight"] = first_hit_belongs_to_target(collider, _target)
+	if not bool(report["inside_body"]):
+		report["reason"] = "reticle_outside_body"
+	elif not bool(report["line_of_sight"]):
+		report["reason"] = "line_of_sight_blocked"
+	else:
+		report["eligible"] = true
+		report["reason"] = "eligible"
+	return report
+
+
+func _log_launch_assist(stage: String, report: Dictionary) -> void:
+	print("catch launch: %s eligible=%s reticle=%.3f/%.3f first_hit=%s los=%s reason=%s" % [
+		stage,
+		bool(report.get("eligible", false)),
+		float(report.get("reticle_offset", -1.0)),
+		float(report.get("reticle_radius", -1.0)),
+		str(report.get("first_hit", "unavailable")),
+		bool(report.get("line_of_sight", false)),
+		str(report.get("reason", "unavailable")),
+	])
+
+
+func _format_assist_point(point: Vector3) -> String:
+	return "none" if point == Vector3.INF else "(%.2f, %.2f, %.2f)" % [point.x, point.y, point.z]
 
 
 func _target_is_visible(eye: Vector3, centre: Vector3) -> bool:
@@ -548,12 +638,18 @@ func _aim_camera() -> Camera3D:
 func _on_struck(target: Node3D, offset: float) -> void:
 	state = State.IDLE
 	_cooldown = _throw_cooldown
+	print("catch launch: strike assist=%s predicted=%s offset=%.3f" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point), offset,
+	])
 	orb_struck.emit(target, offset)
 
 
 func _on_missed() -> void:
 	state = State.IDLE
 	_cooldown = _throw_cooldown
+	print("catch launch: miss assist=%s predicted=%s" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+	])
 	_despawn_orb()
 	orb_missed.emit()
 
