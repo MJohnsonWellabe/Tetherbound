@@ -494,13 +494,12 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	if float(model.get("_tool_swing_for")) <= 0.0:
 		found.append("tool_hold.swing() did not trigger the trainer's visible tool-swing animation path")
 
-	# The swing resolves at its own midpoint (tool_hold.gd::SWING_SECONDS), so
-	# give it real _process frames, not physics frames -- _resolve_swing() runs
-	# from _process(), same as the input poll that starts it in real play.
-	for i in 30:
-		await process_frame
-		if not bool(hold.call("is_swinging")):
-			break
+	# The tool's cooldown is time-based, not frame-based. A fixed number of
+	# uncapped headless frames can be shorter than SWING_SECONDS, which leaves
+	# this wrong-tool swing active and makes the next, correct swing
+	# look falsely refused as an overlap. Wait through the real animation window.
+	if not (await _wait_for_tool_swing(hold)):
+		return ["the wrong-tool swing never completed; cannot verify the next tool swap"] as Array[String]
 
 	if _inventory_item_total(inventory) != total_before_wrong:
 		found.append("holding %s gathered %s even though %s was required" %
@@ -519,10 +518,8 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	var durability_before_correct := int(inventory.call("durability_at", required_slot))
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused the correct visibly equipped %s" % required_tool] as Array[String]
-	for i in 30:
-		await process_frame
-		if not bool(hold.call("is_swinging")):
-			break
+	if not (await _wait_for_tool_swing(hold)):
+		return ["the correct %s swing never completed" % required_tool] as Array[String]
 	if _inventory_item_total(inventory) <= total_before_correct:
 		found.append("the correctly held %s swing connected to authored %s but granted no reward" %
 			[required_tool, str(best.get("_item_id"))])
@@ -531,6 +528,17 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	print("equipped-tool gate: %s refused, %s rewarded and wore once" % [wrong_tool, required_tool])
 
 	return found
+
+
+## `tool_hold.gd` resolves its impact and ends its cooldown from `_process()`
+## using elapsed seconds. Smoke runs headless and uncapped in CI, so frame
+## counts are not a valid stand-in for that duration. The extra process frame
+## lets ToolHold consume the timer's final elapsed slice before the caller
+## asks whether the next action is legal.
+func _wait_for_tool_swing(hold: Node) -> bool:
+	await create_timer(0.60).timeout
+	await process_frame
+	return not bool(hold.call("is_swinging"))
 
 
 ## RG9, owner directive: "You shouldn't be able to gather a standing tree.
@@ -592,10 +600,8 @@ func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: No
 		return ["the wrong vegetation tool %s produced no visible held prop" % wrong_tool] as Array[String]
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused the wrong %s before the vegetation gate could be tested" % wrong_tool] as Array[String]
-	for i in 30:
-		await process_frame
-		if not bool(hold.call("is_swinging")):
-			break
+	if not (await _wait_for_tool_swing(hold)):
+		return ["the refused vegetation %s swing never completed" % wrong_tool] as Array[String]
 	if not is_instance_valid(standing):
 		return ["a visible %s swing felled vegetation that requires %s" % [wrong_tool, required_tool]] as Array[String]
 	if int(inventory.call("durability_at", required_slot)) != required_durability_before:
@@ -611,10 +617,8 @@ func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: No
 
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused the chop with the required %s equipped" % required_tool] as Array[String]
-	for i in 30:
-		await process_frame
-		if not bool(hold.call("is_swinging")):
-			break
+	if not (await _wait_for_tool_swing(hold)):
+		return ["the required vegetation %s swing never completed" % required_tool] as Array[String]
 
 	if is_instance_valid(standing):
 		return ["chopping the standing point did not remove it -- fell() did not run"] as Array[String]
@@ -637,10 +641,8 @@ func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: No
 		await process_frame
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused to swing at the felled pickup"] as Array[String]
-	for i in 30:
-		await process_frame
-		if not bool(hold.call("is_swinging")):
-			break
+	if not (await _wait_for_tool_swing(hold)):
+		return ["the felled pickup swing never completed"] as Array[String]
 
 	var total_after := _inventory_item_total(inventory)
 	if total_after <= total_before:
