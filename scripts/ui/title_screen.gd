@@ -9,6 +9,125 @@ const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const EXPORT_VERIFY_FLAG := "--verify-export"
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 
+
+## A lightweight Meadows vista for the front door.  The approved key-art board
+## lives under docs/ and is deliberately excluded from exports, while building
+## the real Terrain3D world here would recreate the long blank boot RG25 fixed.
+## These flat, layered silhouettes borrow the board's value structure and
+## landmark language without introducing a second world scene or a new asset.
+class MeadowsBackdrop extends Control:
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		resized.connect(queue_redraw)
+		queue_redraw()
+
+
+	func _draw() -> void:
+		var view := size
+		if view.x <= 0.0 or view.y <= 0.0:
+			return
+
+		# A deep upper sky and warm horizon give the screen an authored time of
+		# day while retaining enough darkness for the menu's pale lettering.
+		var sky_top := Color("#071820")
+		var sky_bottom := Color("#4f857f")
+		for band in 36:
+			var from := float(band) / 36.0
+			var to := float(band + 1) / 36.0
+			draw_rect(Rect2(0.0, view.y * from, view.x, view.y * (to - from) + 1.0),
+				sky_top.lerp(sky_bottom, pow(from, 0.78)))
+
+		var horizon := view.y * 0.49
+		var sun_at := Vector2(view.x * 0.76, view.y * 0.235)
+		draw_circle(sun_at, view.y * 0.075, Color(Color("#e9c978"), 0.16))
+		draw_circle(sun_at, view.y * 0.047, Color(Color("#f4d68a"), 0.72))
+
+		# Distant mountain, foothills and near meadow use separated values so the
+		# scene still reads at handheld scale instead of collapsing into one green.
+		_polygon([
+			Vector2(0.0, horizon + view.y * 0.06),
+			Vector2(view.x * 0.36, horizon + view.y * 0.02),
+			Vector2(view.x * 0.49, horizon - view.y * 0.08),
+			Vector2(view.x * 0.59, horizon - view.y * 0.19),
+			Vector2(view.x * 0.66, horizon - view.y * 0.04),
+			Vector2(view.x * 0.72, horizon - view.y * 0.12),
+			Vector2(view.x * 0.80, horizon + view.y * 0.01),
+			Vector2(view.x, horizon - view.y * 0.04),
+			Vector2(view.x, view.y), Vector2(0.0, view.y),
+		], Color("#385b5b"))
+		_polygon([
+			Vector2(0.0, horizon + view.y * 0.12),
+			Vector2(view.x * 0.18, horizon + view.y * 0.06),
+			Vector2(view.x * 0.38, horizon + view.y * 0.12),
+			Vector2(view.x * 0.58, horizon + view.y * 0.035),
+			Vector2(view.x * 0.77, horizon + view.y * 0.10),
+			Vector2(view.x, horizon + view.y * 0.02),
+			Vector2(view.x, view.y), Vector2(0.0, view.y),
+		], Color("#416d4d"))
+		_polygon([
+			Vector2(0.0, horizon + view.y * 0.26),
+			Vector2(view.x * 0.25, horizon + view.y * 0.16),
+			Vector2(view.x * 0.49, horizon + view.y * 0.21),
+			Vector2(view.x * 0.71, horizon + view.y * 0.105),
+			Vector2(view.x, horizon + view.y * 0.18),
+			Vector2(view.x, view.y), Vector2(0.0, view.y),
+		], Color("#315c3e"))
+		_polygon([
+			Vector2(0.0, view.y * 0.86), Vector2(view.x * 0.22, view.y * 0.78),
+			Vector2(view.x * 0.45, view.y * 0.86), Vector2(view.x * 0.65, view.y * 0.70),
+			Vector2(view.x * 0.82, view.y * 0.76), Vector2(view.x, view.y * 0.69),
+			Vector2(view.x, view.y), Vector2(0.0, view.y),
+		], Color("#1d3e2f"))
+
+		# A widening trail is the composition's pull into the Meadows, with the
+		# distant pylon marking the adventure beyond the welcoming foreground.
+		_polygon([
+			Vector2(view.x * 0.72, horizon + view.y * 0.10),
+			Vector2(view.x * 0.745, horizon + view.y * 0.105),
+			Vector2(view.x * 0.64, view.y), Vector2(view.x * 0.47, view.y),
+		], Color(Color("#b69b68"), 0.72))
+		_draw_pylon(Vector2(view.x * 0.79, horizon + view.y * 0.055), view.y * 0.17)
+		_draw_tree(Vector2(view.x * 0.91, view.y * 0.61), view.y * 0.30, Color("#142f25"))
+		_draw_tree(Vector2(view.x * 0.84, view.y * 0.70), view.y * 0.19, Color("#214632"))
+		_draw_tree(Vector2(view.x * 0.69, view.y * 0.68), view.y * 0.15, Color("#274d35"))
+
+		# Meadow flowers remain restrained highlights; they add scale and warmth
+		# without turning the lightweight screen into procedural confetti.
+		for flower in [
+			Vector2(0.70, 0.83), Vector2(0.75, 0.88), Vector2(0.82, 0.82),
+			Vector2(0.87, 0.91), Vector2(0.93, 0.84), Vector2(0.78, 0.94),
+		]:
+			var point := Vector2(view.x * flower.x, view.y * flower.y)
+			draw_line(point, point + Vector2(0.0, view.y * 0.018), Color("#5f8e55"), 3.0)
+			draw_circle(point, maxf(3.0, view.y * 0.0045), Color("#efd17d"))
+
+
+	func _polygon(points: Array[Vector2], color: Color) -> void:
+		draw_colored_polygon(PackedVector2Array(points), color)
+
+
+	func _draw_tree(at: Vector2, height: float, color: Color) -> void:
+		var trunk_w := height * 0.075
+		draw_rect(Rect2(at.x - trunk_w * 0.5, at.y - height * 0.52, trunk_w, height * 0.52), Color("#493a2b"))
+		draw_circle(at - Vector2(height * 0.13, height * 0.58), height * 0.23, color)
+		draw_circle(at + Vector2(height * 0.12, -height * 0.64), height * 0.27, color.lightened(0.04))
+		draw_circle(at + Vector2(0.0, -height * 0.82), height * 0.22, color.lightened(0.08))
+
+
+	func _draw_pylon(at: Vector2, height: float) -> void:
+		var iron := Color("#263943")
+		draw_line(at, at - Vector2(0.0, height * 0.70), iron, maxf(4.0, height * 0.045))
+		draw_line(at - Vector2(height * 0.18, height * 0.13), at - Vector2(0.0, height * 0.70), iron, maxf(3.0, height * 0.03))
+		draw_line(at + Vector2(height * 0.18, -height * 0.13), at - Vector2(0.0, height * 0.70), iron, maxf(3.0, height * 0.03))
+		var crystal := PackedVector2Array([
+			at - Vector2(0.0, height), at + Vector2(height * 0.09, -height * 0.82),
+			at - Vector2(0.0, height * 0.66), at - Vector2(height * 0.09, height * 0.82),
+		])
+		draw_colored_polygon(crystal, Color(Color("#55c9c8"), 0.84))
+		var crystal_outline := crystal.duplicate()
+		crystal_outline.append(crystal[0])
+		draw_polyline(crystal_outline, Color(Color("#a5f0df"), 0.70), 2.0)
+
 var _main_box: VBoxContainer
 var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
@@ -47,60 +166,70 @@ static func should_enter_export_verification(arguments: PackedStringArray) -> bo
 
 
 func _build() -> void:
-	var bg := ColorRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.color = Color("#152922")
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	var backdrop := MeadowsBackdrop.new()
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(backdrop)
 
-	# A broad meadow-like horizon made from simple UI blocks rather than loading
-	# world art. It gives the title a real visual identity while keeping boot cheap.
-	var horizon := ColorRect.new()
-	horizon.anchor_left = 0.0
-	horizon.anchor_right = 1.0
-	horizon.anchor_top = 0.58
-	horizon.anchor_bottom = 1.0
-	horizon.color = Color("#315b3f")
-	horizon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(horizon)
-
-	var centre := CenterContainer.new()
-	centre.set_anchors_preset(Control.PRESET_FULL_RECT)
-	centre.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(centre)
+	# The asymmetric layout leaves the Meadows vista visible as a destination,
+	# instead of covering the entire identity of the game with a centred modal.
+	var shade := ColorRect.new()
+	shade.anchor_right = 0.56
+	shade.anchor_bottom = 1.0
+	shade.color = Color(Color("#071510"), 0.38)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(650, 650)
-	panel.add_theme_stylebox_override("panel", UITokens.panel_box(Color("#17231f"), Color("#6ea58b")))
-	centre.add_child(panel)
+	panel.anchor_left = 0.055
+	panel.anchor_right = 0.445
+	panel.anchor_top = 0.085
+	panel.anchor_bottom = 0.915
+	panel.add_theme_stylebox_override("panel", UITokens.panel_box(Color(Color("#0d1c18"), 0.94), Color(Color("#7ba284"), 0.86)))
+	add_child(panel)
 
 	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 56)
-	margin.add_theme_constant_override("margin_right", 56)
-	margin.add_theme_constant_override("margin_top", 48)
-	margin.add_theme_constant_override("margin_bottom", 48)
+	margin.add_theme_constant_override("margin_left", 48)
+	margin.add_theme_constant_override("margin_right", 48)
+	margin.add_theme_constant_override("margin_top", 42)
+	margin.add_theme_constant_override("margin_bottom", 38)
 	panel.add_child(margin)
 
 	var root_box := VBoxContainer.new()
-	root_box.add_theme_constant_override("separation", 22)
+	root_box.add_theme_constant_override("separation", 16)
 	margin.add_child(root_box)
 
+	var region := Label.new()
+	region.text = "THE MEADOWS"
+	region.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	region.add_theme_font_size_override("font_size", 22)
+	region.add_theme_color_override("font_color", Color("#d4b96f"))
+	root_box.add_child(region)
+
 	var title := Label.new()
-	title.text = "T E T H E R B O U N D"
+	title.text = "TETHERBOUND"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 54)
+	title.add_theme_font_override("font", load(UITokens.FONT_PATH))
+	title.add_theme_font_size_override("font_size", 70)
 	title.add_theme_color_override("font_color", Color("#f2ead5"))
 	root_box.add_child(title)
 
+	var rule := ColorRect.new()
+	rule.custom_minimum_size.y = 2
+	rule.color = Color(Color("#d4b96f"), 0.72)
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root_box.add_child(rule)
+
 	var subtitle := Label.new()
-	subtitle.text = "Build your team. Choose your five. Push farther."
+	subtitle.text = "Build your team of five. Explore the Meadows."
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.add_theme_font_size_override("font_size", 22)
+	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	subtitle.add_theme_font_size_override("font_size", 23)
 	subtitle.add_theme_color_override("font_color", Color("#b8cbbf"))
 	root_box.add_child(subtitle)
 
 	var spacer := Control.new()
-	spacer.custom_minimum_size.y = 36
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	spacer.custom_minimum_size.y = 12
 	root_box.add_child(spacer)
 
 	_main_box = VBoxContainer.new()
@@ -132,6 +261,13 @@ func _build() -> void:
 	_status.add_theme_font_size_override("font_size", 18)
 	_status.add_theme_color_override("font_color", Color("#d2c392"))
 	root_box.add_child(_status)
+
+	var footer := Label.new()
+	footer.text = "A  SELECT     D-PAD  NAVIGATE"
+	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	footer.add_theme_font_size_override("font_size", 18)
+	footer.add_theme_color_override("font_color", Color("#8fa9a0"))
+	root_box.add_child(footer)
 
 	UITokens.make_text_legible(root_box)
 
