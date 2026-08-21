@@ -819,10 +819,11 @@ func _ensure_minimap_baked() -> void:
 	_minimap_baked = true
 
 
-## `player.global_position` and a yaw DERIVED from `CameraRig.planar_basis()`
-## rather than read off a private field -- see the task brief's own reasoning,
-## which mirrors `minimap.gd`'s own header derivation
-## (`forward(yaw) = (sin(yaw), 0, cos(yaw))`). `creature_pos` is the follower creature's
+## `player.global_position` and LOOK yaw derived from `CameraRig.planar_basis()`
+## rather than read off a private field. `minimap.gd` derives its separate
+## travel heading from successive real positions after movement resolution.
+## Both use the project convention `forward(yaw) = (sin(yaw), 0, cos(yaw))`.
+## `creature_pos` is the follower creature's
 ## position when `encounter_director.gd` has spawned one (named "AllyCreature" in
 ## the world, per that file), else null.
 func _update_minimap() -> void:

@@ -8,7 +8,7 @@ extends Control
 ## position, and the only positions this file ever draws are whatever
 ## `Game.map` itself exposes.
 ##
-## PLAYER-UP ROTATION — DERIVED, NOT GUESSED, per the task's own instruction.
+## MOVEMENT-UP ROTATION — DERIVED, NOT GUESSED, per the task's own instruction.
 ## This project's yaw convention (used everywhere a facing direction is built
 ## from a yaw angle: `player_controller.gd`'s `atan2(direction.x,
 ## direction.z)`, `world_perimeter.gd`, `wild_creature.gd`, `encounter_director.gd`)
@@ -18,16 +18,17 @@ extends Control
 ## world +X. Godot's `draw_set_transform(pos, rotation, scale)` rotates
 ## content using `Transform2D`'s own basis (`x_basis = (cos r, sin r)`,
 ## `y_basis = (-sin r, cos r)`); solving "what rotation `r` sends
-## `forward(yaw)` to screen-up `(0,-1)`" gives **`r = yaw + PI`**. Sanity
+## `forward(yaw)` to screen-up `(0,-1)`" gives **`r = yaw + PI`**. Here yaw
+## is the last meaningful ACTUAL horizontal displacement, not camera yaw. Sanity
 ## check by hand: at `yaw = 0`, `forward = (0,0,1)` = world south = screen-
 ## down pre-rotation; rotating the layer by `PI` (180°) brings it to
 ## screen-up, which is what a player facing south must show on a player-up
 ## map. At `yaw = PI/2`, `forward` = world +X = screen-right pre-rotation;
 ## rotating by `PI/2 + PI` also brings it to screen-up. The same `r` is used
-## to place every marker (`_world_to_local`) so the map layer and its
-## markers never disagree about where anything is. `tools/capture_minimap.gd`
-## is the visual check this reasoning still owes itself — read this comment
-## again before trusting a capture that looks wrong.
+## to place every marker (`_world_to_local`) so the map layer and its markers
+## never disagree about where anything is. The centred triangle rotates from
+## look yaw relative to movement yaw: travel stays up while its tip answers
+## where the camera is looking. Stationary orbit retains the last travel yaw.
 ##
 ## CLIP APPROACH. Godot's immediate `_draw()` has no native rounded-rect
 ## clip. `clip_contents = true` gives a free rectangular clip to the
@@ -77,7 +78,9 @@ var _span_m: float = 90.0
 var _world_min := Vector2.ZERO
 
 var _player_pos: Vector3 = Vector3.ZERO
-var _player_yaw: float = 0.0
+var _movement_yaw: float = 0.0
+var _look_yaw: float = 0.0
+var _has_player_sample: bool = false
 var _creature_pos: Variant = null
 
 var _fog_image: Image = null
@@ -110,17 +113,28 @@ func configure(map_state: RefCounted, terrain: Texture2D, span_m: float = 90.0) 
 ## only requested when the player actually moved/turned more than a tiny
 ## epsilon, the followed creature moved, or `map_state.revision` advanced — a
 ## stationary player standing still must not repaint every frame.
-func update_view(player_pos: Vector3, player_yaw_rad: float, creature_pos: Variant = null) -> void:
-	var moved := _player_pos.distance_to(player_pos) > MOVE_EPSILON
-	var turned := absf(angle_difference(_player_yaw, player_yaw_rad)) > YAW_EPSILON
+func update_view(player_pos: Vector3, look_yaw_rad: float, creature_pos: Variant = null) -> void:
+	var displacement := Vector2(player_pos.x - _player_pos.x, player_pos.z - _player_pos.z)
+	var moved := _has_player_sample and displacement.length() > MOVE_EPSILON
+	var movement_turned := false
+	if moved:
+		var next_movement_yaw := atan2(displacement.x, displacement.y)
+		movement_turned = absf(angle_difference(_movement_yaw, next_movement_yaw)) > YAW_EPSILON
+		_movement_yaw = next_movement_yaw
+	elif not _has_player_sample:
+		# There is no travel direction before the first step. Start from look so
+		# the map does not arbitrarily snap north, then let real motion own it.
+		_movement_yaw = look_yaw_rad
+	var look_turned := absf(angle_difference(_look_yaw, look_yaw_rad)) > YAW_EPSILON
 	var creature_changed := not _creature_equal(creature_pos)
 	var revision_changed := _map_state != null and int(_map_state.revision) != _last_fog_revision
 
 	_player_pos = player_pos
-	_player_yaw = player_yaw_rad
+	_look_yaw = look_yaw_rad
+	_has_player_sample = true
 	_creature_pos = creature_pos
 
-	if moved or turned or creature_changed or revision_changed:
+	if moved or movement_turned or look_turned or creature_changed or revision_changed:
 		queue_redraw()
 
 
@@ -149,7 +163,7 @@ func _draw() -> void:
 	var box := size
 	var centre := box * 0.5
 	var scale_px_per_m := box.x / maxf(_span_m, 0.001)
-	var rotation := _player_yaw + PI # see the header comment for the derivation
+	var rotation := _movement_yaw + PI # see the header comment for the derivation
 
 	draw_rect(Rect2(Vector2.ZERO, box), UITokens.BG_DEEP, true)
 
@@ -248,7 +262,7 @@ func _rebuild_fog() -> void:
 func _world_to_local(world_pos: Vector3, centre: Vector2, scale_px_per_m: float) -> Vector2:
 	var dx := world_pos.x - _player_pos.x
 	var dz := world_pos.z - _player_pos.z
-	var r := _player_yaw + PI
+	var r := _movement_yaw + PI
 	var cr := cos(r)
 	var sr := sin(r)
 	var local_x := dx * cr - dz * sr
@@ -387,27 +401,30 @@ func _draw_ticks_and_compass(centre: Vector2, box: Vector2) -> void:
 	# The "N" glyph tracks world north around the rim as the map rotates
 	# beneath it (header comment has the derivation of `north_dir`); the
 	# glyph itself is drawn upright — only its POSITION rotates.
-	var north_dir := Vector2(-sin(_player_yaw), cos(_player_yaw))
+	var north_dir := Vector2(-sin(_movement_yaw), cos(_movement_yaw))
 	var north_pos := centre + north_dir * (tick_radius - 2.0)
 	_draw_upright_text(north_pos, "N", UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
 
 
-## The player's own arrow, always pointing straight up — a player-up map
-## keeps the player centred and facing forward by definition, so this never
-## needs to rotate; only the world beneath it does.
+## The player's arrow is independent from the movement-up world layer. With
+## look == travel it points up. Orbiting while stationary turns only this
+## marker; strafing/backpedalling keep actual travel at the top of the map.
 func _draw_player_marker(centre: Vector2) -> void:
 	var size := 12.0 # ~22px tip-to-base triangle
+	var relative := angle_difference(_movement_yaw, _look_yaw)
+	var forward := Vector2(sin(relative), -cos(relative))
+	var side := Vector2(-forward.y, forward.x)
 	var points := PackedVector2Array([
-		centre + Vector2(0.0, -size),
-		centre + Vector2(size * 0.62, size * 0.75),
-		centre + Vector2(-size * 0.62, size * 0.75),
+		centre + forward * size,
+		centre - forward * size * 0.75 + side * size * 0.62,
+		centre - forward * size * 0.75 - side * size * 0.62,
 	])
 	draw_colored_polygon(points, UITokens.TEAL)
 	# a small cream tip so the arrow reads at a glance against dark ground
 	var tip := PackedVector2Array([
-		centre + Vector2(0.0, -size),
-		centre + Vector2(size * 0.28, -size * 0.15),
-		centre + Vector2(-size * 0.28, -size * 0.15),
+		centre + forward * size,
+		centre + forward * size * 0.15 + side * size * 0.28,
+		centre + forward * size * 0.15 - side * size * 0.28,
 	])
 	draw_colored_polygon(tip, UITokens.TEXT_PRIMARY)
 
