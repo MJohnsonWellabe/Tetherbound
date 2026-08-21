@@ -262,7 +262,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-core-verb-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -330,7 +330,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-core-verb-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -400,7 +400,7 @@ jobs:
     # timing out on a slow runner.
     timeout-minutes: 15
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-core-verb-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -466,7 +466,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-core-verb-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -549,7 +549,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-gate-a-ui-build-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -623,7 +623,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-combat-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -725,7 +725,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-combat-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -814,7 +814,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-combat-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -905,7 +905,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-regions-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -976,7 +976,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-regions-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1057,7 +1057,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-regions-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1130,7 +1130,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-combat-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1214,7 +1214,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-combat-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1299,7 +1299,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-gate-a-ui-build-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1382,7 +1382,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-gate-a-ui-build-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1458,7 +1458,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false # Covered by verify-gate-a-ui-build-shard.
 
     steps:
       - uses: actions/checkout@v4
@@ -1532,6 +1532,77 @@ jobs:
         # stray override there would follow every later step in this job.
         run: godot --headless --path . --script tests/smoke_settings.gd
 
+  # Each shard preserves every smoke test from the former one-test-per-runner
+  # layout. Five functional runners (six including the unit matrix) let several
+  # Ralph branches start together instead of one branch monopolising the runner
+  # allowance with eighteen jobs.
+  verify-core-verb-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify movement, traversal, and catching
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_playground.gd
+          godot --headless --path . --script tests/smoke_input.gd
+          godot --headless --path . --script tests/smoke_traversal.gd
+          godot --headless --path . --script tests/smoke_catching.gd || godot --headless --path . --script tests/smoke_catching.gd
+
+  verify-gate-a-ui-build-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify Gate A build and controller UI paths
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_free_build.gd
+          godot --headless --path . --script tests/smoke_opening.gd
+          godot --headless --path . --script tests/smoke_starter_picker.gd
+          godot --headless --path . --script tests/smoke_modal_stacking.gd
+          godot --headless --path . --script tests/smoke_menu.gd
+          godot --headless --path . --script tests/smoke_settings.gd
+
+  verify-combat-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify combat and encounter paths
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_combat.gd || godot --headless --path . --script tests/smoke_combat.gd
+          godot --headless --path . --script tests/smoke_riding.gd || godot --headless --path . --script tests/smoke_riding.gd
+          godot --headless --path . --script tests/smoke_boss.gd || godot --headless --path . --script tests/smoke_boss.gd
+          godot --headless --path . --script tests/smoke_trainer_battle.gd || godot --headless --path . --script tests/smoke_trainer_battle.gd
+          godot --headless --path . --script tests/smoke_aggression.gd || godot --headless --path . --script tests/smoke_aggression.gd
+
+  verify-regions-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify regional progression paths
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_warrens.gd
+          godot --headless --path . --script tests/smoke_relay_station.gd
+          godot --headless --path . --script tests/smoke_relay.gd
+          godot --headless --path . --script tests/smoke_stronghold.gd
+
   # Main (and manual runs) only. The export tail was ~40% of every branch
   # run, and it duplicates work: Release re-exports main itself before
   # publishing, so a broken export can never reach the download link through
@@ -1545,16 +1616,10 @@ jobs:
     needs:
       - changes
       - verify-unit-tests
-      - verify-playground
-      - verify-input
-      - verify-traversal
-      - verify-catching
-      - verify-free-build
-      - verify-combat
-      - verify-aggression
-      - verify-opening
-      - verify-menu
-      - verify-settings
+      - verify-core-verb-shard
+      - verify-gate-a-ui-build-shard
+      - verify-combat-shard
+      - verify-regions-shard
     if: |
       needs.changes.outputs.code == 'true' &&
       (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')

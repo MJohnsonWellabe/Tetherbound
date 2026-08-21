@@ -1,0 +1,44 @@
+name: Set up Godot verification
+description: Restore Godot and project imports, then reject import-time parse/resource errors.
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      id: cache-godot
+      with:
+        path: |
+          ~/godot-bin
+          ~/.local/share/godot/export_templates
+        key: godot-${{ env.GODOT_VERSION }}
+    - shell: bash
+      if: steps.cache-godot.outputs.cache-hit != 'true'
+      run: |
+        set -euo pipefail
+        base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+        mkdir -p ~/godot-bin
+        curl -sSL -o /tmp/godot.zip "${base}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+        unzip -q /tmp/godot.zip -d /tmp
+        mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+        chmod +x ~/godot-bin/godot
+        curl -sSL -o /tmp/templates.tpz "${base}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+        unzip -q /tmp/templates.tpz -d /tmp
+        template_dir=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+        mkdir -p "$(dirname "$template_dir")"
+        mv /tmp/templates "$template_dir"
+    - shell: bash
+      run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+    - uses: actions/cache@v4
+      with:
+        path: .godot
+        key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+        restore-keys: import-${{ env.GODOT_VERSION }}-
+    - shell: bash
+      run: godot --headless --path . --import || true
+    - shell: bash
+      run: |
+        set -euo pipefail
+        godot --headless --path . --import 2>&1 | tee /tmp/import.log
+        if grep -qiE 'SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open' /tmp/import.log; then
+          echo '::error::import produced script or resource errors'
+          exit 1
+        fi
