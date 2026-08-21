@@ -13,7 +13,7 @@ Read, in order:
 3. `docs/TETHERBOUND_GAME_VISION.md`
 4. `ralph/ACTIVE_GAME_PLAN.md`
 5. `ralph/ACTIVE_TASKS.md`
-6. `ralph/OWNER_PLAYTEST_2026-08-18.md`
+6. newest `ralph/OWNER_PLAYTEST_*.md` first, then older owner playtests only as needed
 7. `ralph/PROMPT_COMPATIBILITY_MAP.md`
 8. `ralph/conventions.md`
 9. targeted backlog/DONE history for the current gate only
@@ -180,6 +180,16 @@ If the segment fails:
 Then move automatically to the next gate.
 
 Do not advance because all child prompts have commits.
+
+### Integrated player-path evidence is mandatory
+
+A unit test, isolated smoke test, focused harness, or green CI job is **necessary evidence, not sufficient player-facing proof** for systems whose correctness depends on real input ownership, modal focus, camera handoff, UI navigation, overlapping controls, world presentation, or target-hardware performance.
+
+For controller, menus, camera, Build, maps, hotbar/satchel, party cycling, lighting/day-night, performance, and opening guidance, do not mark the owning gate requirement complete based only on isolated tests. Before the gate passes, exercise the feature in the representative continuous player path with the actual competing systems active. Where physical target hardware is unavailable, use the closest production/raw-controller harness that drives the real input-routing and scene stack rather than directly calling implementation methods.
+
+Treat **input ownership collisions** as a systemic defect class. When one physical control affects two contexts at once (for example menu + hotbar, Build + party cycling, settings + world input), investigate the shared input/focus architecture and add cross-context regression coverage instead of accumulating one-off button guards.
+
+Newest owner playtest evidence overrides older green tests or DONE records when they conflict. A fresh real-player reproduction reopens the requirement until the current production path is fixed and re-proven.
 
 ## 11. Active self-chain
 
