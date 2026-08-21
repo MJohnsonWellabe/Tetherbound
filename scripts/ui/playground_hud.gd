@@ -133,6 +133,14 @@ const MINIMAP_SIZE := Vector2(240.0, 240.0)
 const OBJECTIVE_MAX_WIDTH := 420.0
 const OBJECTIVE_BLOCK_HEIGHT := 90.0
 
+## RG3: one quiet line at the upper-left edge. The lower HUD is already shared
+## by the hotbar, contextual prompt and active creature; placing a persistent
+## legend there would recreate the overlap class BottomDock was introduced to
+## eliminate. The upper-left is otherwise reserved only for the opt-in F3
+## debug readout (which starts below this line).
+const EXPLORATION_LEGEND_POS := Vector2(56.0, 56.0)
+const EXPLORATION_LEGEND_SIZE := Vector2(682.0, 56.0)
+
 const MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 28.0
 
@@ -248,6 +256,14 @@ var _objective_last_text := ""
 var _region_banner: Label = null
 var _region_banner_until := 0.0
 
+## --- persistent exploration legend (RG3) ---------------------------------------
+
+var _exploration_legend: PanelContainer = null
+var _exploration_legend_label: RichTextLabel = null
+var _legend_last_gamepad := false
+var _legend_last_party_revision := -999
+var _legend_was_drawn := false
+
 
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
@@ -267,6 +283,7 @@ func _ready() -> void:
 	_mount_minimap()
 	_build_objective_block()
 	_build_region_banner()
+	_build_exploration_legend()
 	_style_hotbar()
 
 	# Placed FROM the hotbar rather than beside it. `resized` is the hook that
@@ -768,6 +785,7 @@ func _mount_minimap() -> void:
 		push_warning("HUD: minimap.gd did not produce a Control; minimap disabled")
 		return
 	_minimap = inst
+	_minimap.name = "Minimap"
 	_minimap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_minimap.position = Vector2(
 		1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x, UITokens.HUD_INSET
@@ -846,6 +864,7 @@ func _build_objective_block() -> void:
 	var right := 1920.0 - UITokens.HUD_INSET
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
 	var block := Control.new()
+	block.name = "ObjectiveBlock"
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
 	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
@@ -966,6 +985,7 @@ func _process(delta: float) -> void:
 	_update_party_strip()
 	_update_objective()
 	_update_region_banner()
+	_update_exploration_legend()
 	_ensure_minimap_baked()
 	_update_minimap()
 	_update_aim_fade(delta)
@@ -1052,6 +1072,106 @@ func _prompt_belongs_to_combat() -> bool:
 		return false
 	var winner: Object = _arbiter.call("winning_provider")
 	return winner != null and winner.has_method("owns_active_prompt")
+
+
+## RG3's small, always-present answer to "what can I do from the field?".
+## Situation-specific verbs remain exclusively in BottomDock/Prompt; this row
+## contains only persistent world shortcuts. A single RichTextLabel keeps the
+## relationship compact and makes device changes atomic -- there cannot be one
+## stale keyboard chip beside three updated controller chips for a frame.
+func _build_exploration_legend() -> void:
+	_exploration_legend = PanelContainer.new()
+	_exploration_legend.name = "ExplorationLegend"
+	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_exploration_legend.position = EXPLORATION_LEGEND_POS
+	_exploration_legend.custom_minimum_size = EXPLORATION_LEGEND_SIZE
+	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_box())
+	_root.add_child(_exploration_legend)
+
+	var margin := MarginContainer.new()
+	margin.name = "Margin"
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_theme_constant_override("margin_left", 14)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_right", 14)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	_exploration_legend.add_child(margin)
+
+	_exploration_legend_label = RichTextLabel.new()
+	_exploration_legend_label.name = "Label"
+	_exploration_legend_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_exploration_legend_label.bbcode_enabled = true
+	_exploration_legend_label.fit_content = false
+	_exploration_legend_label.scroll_active = false
+	_exploration_legend_label.shortcut_keys_enabled = false
+	_exploration_legend_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_exploration_legend_label.add_theme_font_size_override("normal_font_size", 17)
+	margin.add_child(_exploration_legend_label)
+	UITokens.make_text_legible(_exploration_legend_label)
+
+
+func _update_exploration_legend() -> void:
+	if _exploration_legend == null:
+		return
+	var should_show := _exploration_legend_should_show()
+	_exploration_legend.visible = should_show
+	if not should_show:
+		return
+	var gamepad := INPUT_GLYPH.using_gamepad()
+	var revision := int(_party.get("revision")) if _party != null else -1
+	if _legend_was_drawn and gamepad == _legend_last_gamepad \
+			and revision == _legend_last_party_revision:
+		return
+	_legend_was_drawn = true
+	_legend_last_gamepad = gamepad
+	_legend_last_party_revision = revision
+	_exploration_legend_label.text = _exploration_legend_text()
+
+
+func _exploration_legend_should_show() -> bool:
+	if _combat_is_running() or _build_menu_is_open():
+		return false
+	if _game != null and str(_game.get("pending_build")) != "":
+		return false
+	if _arbiter != null and is_instance_valid(_arbiter) \
+			and not bool(_arbiter.call("enabled")):
+		return false
+	return INPUT_OWNER.current(get_tree()) == null
+
+
+func _exploration_legend_text() -> String:
+	var normal := UITokens.TEXT_PRIMARY
+	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
+	var entries: Array[String] = [
+		_legend_entry("build_open", "Build", normal),
+		_legend_entry("map", "Map", normal),
+		_legend_entry("inventory", "Satchel", normal),
+		"%s%s  [color=#%s]Change Pal[/color]" % [
+			INPUT_GLYPH.icon("switch_left", 24, change_tint),
+			INPUT_GLYPH.icon("switch_right", 24, change_tint),
+			change_tint.to_html(true),
+		],
+		_legend_entry("torch_place", "Torch", normal),
+	]
+	return "     ".join(entries)
+
+
+func _legend_entry(action: String, label: String, tint: Color) -> String:
+	return "%s  [color=#%s]%s[/color]" % [
+		INPUT_GLYPH.icon(action, 24, tint), tint.to_html(true), label,
+	]
+
+
+func _cycleable_party_count() -> int:
+	if _party == null:
+		return 0
+	var count := 0
+	for member: Variant in _party.call("members"):
+		var creature := member as RefCounted
+		if creature != null and not bool(creature.get("fainted")) \
+				and not bool(creature.get("resting")):
+			count += 1
+	return count
 
 
 ## Caches the `Game` autoload lookup and the `party` RefCounted it exposes.

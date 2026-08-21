@@ -37,6 +37,12 @@ const GLYPHS := {
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
 	"creature_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
+	## RG3's persistent exploration legend. These are the existing live
+	## inventory/map actions (project.godot), not a second HUD-only binding
+	## table. The three keycaps below come from the same vendored CC0 Kenney
+	## Input Prompts pack as every neighbouring entry.
+	"inventory": {"keyboard": "keyboard_i.png", "gamepad": "xbox_button_y.png"},
+	"map": {"keyboard": "keyboard_m.png", "gamepad": "xbox_button_view.png"},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
