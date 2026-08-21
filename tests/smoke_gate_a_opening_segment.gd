@@ -31,6 +31,8 @@ var _name_prompt: CanvasLayer = null
 var _starter_picker: CanvasLayer = null
 var _wild: Node3D = null
 var _catch_results: Array[bool] = []
+var _throw_strikes := 0
+var _throw_misses := 0
 
 
 func _init() -> void:
@@ -215,6 +217,9 @@ func _collect_world_nodes() -> bool:
 		_fail("production world is missing an opening/combat/UI dependency")
 		return false
 	_combat.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _catch_results.append(success))
+	var throw: Node = _combat.call("throw_aim")
+	throw.connect("orb_struck", func(_target: Node3D, _offset: float) -> void: _throw_strikes += 1)
+	throw.connect("orb_missed", func() -> void: _throw_misses += 1)
 	return true
 
 
@@ -308,15 +313,37 @@ func _catch_with_real_throws() -> bool:
 			_fail("right-stick aim could not line up the real throw reticle")
 			return false
 		var results_before := _catch_results.size()
+		var strikes_before := _throw_strikes
+		var misses_before := _throw_misses
 		await _tap_action("combat_throw")
+		# A launch is not a landed throw. Wait first for the projectile's physical
+		# outcome, so a miss advances the retry immediately instead of spending the
+		# full catch-resolution budget waiting for a signal that only a strike can
+		# emit. This distinction exposed the old false inference: eight committed
+		# orbs were reported as eight catch attempts even when none had landed.
+		for _i in 360:
+			if (_throw_strikes > strikes_before or _throw_misses > misses_before
+					or not bool(_combat.call("is_fighting"))):
+				break
+			await physics_frame
+		if _throw_misses > misses_before:
+			print("physical throw %d went wide; retrying after a real miss" % (attempt + 1))
+			continue
+		if _throw_strikes <= strikes_before:
+			_fail("physical throw %d launched but produced no strike or miss outcome" % (attempt + 1))
+			return false
 		for _i in 900:
 			if _catch_results.size() > results_before or not bool(_combat.call("is_fighting")):
 				break
 			await physics_frame
 		if _catch_results.size() > results_before and _catch_results[-1]:
-			_checkpoint("physical throw caught Bramblebun on attempt %d" % (attempt + 1))
+			_checkpoint("physical landed throw caught Bramblebun on attempt %d (%d strike(s), %d miss(es))" % [
+				attempt + 1, _throw_strikes, _throw_misses,
+			])
 			return true
-	_fail("eight natural weakened-target throws did not catch the tutorial Bramblebun")
+	_fail("eight natural weakened-target launches produced %d strike(s), %d miss(es), and no catch" % [
+		_throw_strikes, _throw_misses,
+	])
 	return false
 
 
@@ -327,7 +354,16 @@ func _aim_camera_at(target: Node3D, budget: int) -> bool:
 	var last_yaw_error := 0.0
 	var last_pitch_error := 0.0
 	for _i in budget:
-		var to := (target.call("centre") as Vector3) - camera.global_position
+		# The opponent keeps circling while the trainer aims. Lead the visible
+		# body by one short throw flight, through the raw right-stick path, just as
+		# a player leads the moving creature using the production trajectory arc.
+		# Aiming at its current centre and then committing was the harness bug: the
+		# reticle converged truthfully, but the creature had moved before impact.
+		var velocity := Vector3.ZERO
+		if target is CharacterBody3D:
+			velocity = (target as CharacterBody3D).velocity
+		var predicted := (target.call("centre") as Vector3) + velocity * 0.30
+		var to := predicted - camera.global_position
 		var desired_yaw := atan2(-to.x, -to.z)
 		var desired_pitch := atan2(to.y, maxf(Vector2(to.x, to.z).length(), 0.01))
 		var yaw_error := wrapf(desired_yaw - float(_rig.get("yaw")), -PI, PI)
