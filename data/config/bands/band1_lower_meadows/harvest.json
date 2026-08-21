@@ -144,6 +144,32 @@
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 1.2
+    },
+    {
+      "order": 1000,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -5.0,
+        141.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE."
+    },
+    {
+      "order": 1001,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -168.0,
+        312.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_gate_a": "Gate A natural paid-build evidence: the second ordinary meadow-grass stop sits beside the authored spine as it turns toward the pond, so the player finds the final fiber in normal travel rather than by debug setup or an unreasonable search. It remains a short off-trail pull and does not densify the pond pocket itself. Position is ground-probed and TUNABLE."
     }
   ]
 }

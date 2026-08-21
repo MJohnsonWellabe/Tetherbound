@@ -179,6 +179,8 @@ func test_every_harvest_item_named_in_vegetation_json_is_a_real_tool_gated_resou
 # the game, and a position outside the baked world simply never appears.
 
 const HARVEST_CONFIG := "res://data/config/harvest.json"
+const BAND1_HARVEST_CONFIG := "res://data/config/bands/band1_lower_meadows/harvest.json"
+const BUILDABLES_CONFIG := "res://data/items/buildables.json"
 const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
 const TERRAIN_CONFIG_FOR_BOUNDS := "res://data/config/terrain_playground.json"
 ## OW5D: was a hardcoded WORLD_HALF := 256.0 (a symmetric square), which the
@@ -208,6 +210,14 @@ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 func _authored_nodes() -> Array:
 	return BAND_CONTENT.load_config(HARVEST_CONFIG, "nodes").get("nodes", []) as Array
+
+
+func _read_json(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 func test_every_authored_harvest_spot_is_real_and_reachable() -> void:
@@ -250,6 +260,85 @@ func test_no_two_authored_harvest_spots_contest_the_same_prompt() -> void:
 				"the '%s' spot at %s and the '%s' spot at %s are %.1fm apart; one prompt will always beat the other" % [
 					str((nodes[i] as Dictionary).get("item", "?")), str(a),
 					str((nodes[j] as Dictionary).get("item", "?")), str(b), gap])
+
+
+## Gate A's continuous evidence is one paid session, not three isolated smokes:
+## the player builds the simple house, then a camp and a creature bed without
+## a debug grant in between. The old opening authored only 12 fiber while the
+## camp and creature bed alone consume 18, so a perfectly thorough natural
+## gather still hit an artificial wall. Keep the requirement derived from the
+## real catalogue so a later tuning pass cannot recreate that failure silently.
+func test_band1_naturally_supplies_the_gate_a_paid_build_session() -> void:
+	var build_counts := {
+		"camp": 1,
+		"floor": 4,
+		"wall": 7,
+		"door": 1,
+		"roof": 4,
+		"creature_bed": 1,
+	}
+	var required_fiber := 0
+	for buildable: Variant in _read_json(BUILDABLES_CONFIG).get("buildables", []):
+		var spec := buildable as Dictionary
+		var copies := int(build_counts.get(str(spec.get("id", "")), 0))
+		if copies <= 0:
+			continue
+		for cost: Variant in spec.get("cost", []):
+			if str((cost as Dictionary).get("id", "")) == "fiber":
+				required_fiber += int((cost as Dictionary).get("n", 0)) * copies
+
+	assert_true(required_fiber >= 18,
+		"the canonical paid house + camp + creature-bed session unexpectedly costs only %d fiber; this regression no longer represents the Gate A shortfall" % required_fiber)
+	var natural_fiber := 0
+	for node: Variant in _read_json(BAND1_HARVEST_CONFIG).get("nodes", []):
+		var spec := node as Dictionary
+		if str(spec.get("item", "")) == "fiber":
+			natural_fiber += int(spec.get("amount", 0))
+	assert_true(natural_fiber >= required_fiber,
+		"Band 1 naturally supplies %d fiber, but the continuous paid build session needs %d" % [natural_fiber, required_fiber])
+
+
+## The two extra plants are intentionally discoverable from ordinary travel,
+## but are not placed ON the critical dirt route merely to make the count pass.
+## Heightfield probes also catch a future terrain edit leaving either plant on
+## a sharp lip where its interaction body or the player cannot stand reliably.
+func test_gate_a_fiber_supply_nodes_are_safe_short_route_detours() -> void:
+	var field := HEIGHTFIELD.new()
+	var supply_orders := {1000: true, 1001: true}
+	var found := {}
+	for node: Variant in _read_json(BAND1_HARVEST_CONFIG).get("nodes", []):
+		var spec := node as Dictionary
+		var order := int(spec.get("order", -1))
+		if not supply_orders.has(order):
+			continue
+		found[order] = true
+		assert_eq(str(spec.get("item", "")), "fiber")
+		assert_eq(int(spec.get("amount", 0)), 4)
+		var at: Array = spec.get("at", [])
+		assert_eq(at.size(), 2, "Gate A fiber order %d has no [x,z] position" % order)
+		if at.size() != 2:
+			continue
+		var point := Vector2(float(at[0]), float(at[1]))
+		var nearest: Vector2 = field.nearest_point_on_paths(point.x, point.y)
+		var detour := point.distance_to(nearest)
+		assert_true(detour >= 7.0,
+			"Gate A fiber order %d is only %.1fm off the route and can obstruct/read as part of the trail" % [order, detour])
+		assert_true(detour <= 18.0,
+			"Gate A fiber order %d is %.1fm off the route instead of a natural short gathering detour" % [order, detour])
+		assert_true(field.path_factor(point.x, point.y) <= 0.01,
+			"Gate A fiber order %d still lies inside the authored trail/shoulder" % order)
+
+		var low := field.height_at(point.x, point.y)
+		var high := low
+		for offset in [Vector2(1.5, 0.0), Vector2(-1.5, 0.0), Vector2(0.0, 1.5), Vector2(0.0, -1.5)]:
+			var sample := field.height_at(point.x + offset.x, point.y + offset.y)
+			low = minf(low, sample)
+			high = maxf(high, sample)
+		assert_true(high - low <= 0.75,
+			"Gate A fiber order %d spans %.2fm of ground over its 3m standing pad" % [order, high - low])
+
+	assert_eq(found.size(), supply_orders.size(),
+		"both reserved Gate A fiber nodes must remain authored; found orders %s" % str(found.keys()))
 
 
 # --- SD16: Rootstone, and where it may be taken from -----------------------
