@@ -158,7 +158,7 @@ func _interior(building: Node3D, prefab_name: String, spec: Dictionary) -> void:
 ## R7.8: the door verb, attached wherever the recipe declares one
 ## (building_prefabs.json's own `door` key — `leaf_module`, `at`, and
 ## optionally `width`/`height`/`open_yaw_deg`). A house with no `door` key
-## stays exactly as it was (the workshop's open arch bay, the mill).
+## stays exactly as it was (for example, the workshop's open arch bay).
 const DOOR := preload("res://scripts/world/village_door.gd")
 
 func _door(building: Node3D, prefab_name: String) -> void:

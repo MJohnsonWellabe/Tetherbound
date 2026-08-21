@@ -15,7 +15,7 @@ config_version=5
 
 config/name="Tetherbound"
 config/description="Third-person survival creature-training game. Meadows vertical slice."
-run/main_scene="res://scenes/world/meadows_playground.tscn"
+run/main_scene="res://scenes/ui/title_screen.tscn"
 ; "GL Compatibility", not "Forward Plus". RB4 switched the shipped renderer
 ; (see docs/decisions/D01) and left this tag reading the old value, so the file
 ; contradicted itself for two days: this line said Forward+ while
