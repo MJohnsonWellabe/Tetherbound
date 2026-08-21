@@ -341,7 +341,6 @@ func _draw_map(canvas: Control) -> void:
 		map_size = Vector2(rect_size.x, rect_size.x / aspect) # panel taller than the world: width-constrained
 	var map_origin := Vector2((rect_size.x - map_size.x) * 0.5, (rect_size.y - map_size.y) * 0.5)
 	var map_rect := Rect2(map_origin, map_size)
-	var view_rect := _view_rect(map_rect)
 
 	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
 
@@ -351,11 +350,11 @@ func _draw_map(canvas: Control) -> void:
 
 	var terrain := _terrain_texture(world)
 	if terrain != null:
-		canvas.draw_texture_rect(terrain, view_rect, false)
+		canvas.draw_texture_rect_region(terrain, map_rect, _view_source_rect(terrain))
 	else:
 		# Defensive fallback (spec: NEVER crash) — headless tests and a menu
 		# opened before the world finishes standing up both land here.
-		canvas.draw_rect(view_rect, UITokens.BG_PANEL_ALT)
+		canvas.draw_rect(map_rect, UITokens.BG_PANEL_ALT)
 
 	var map_state: RefCounted = _map_state()
 	if map_state == null:
@@ -363,7 +362,7 @@ func _draw_map(canvas: Control) -> void:
 
 	var fog := _fog_texture(map_state)
 	if fog != null:
-		canvas.draw_texture_rect(fog, view_rect, false)
+		canvas.draw_texture_rect_region(fog, map_rect, _view_source_rect(fog))
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -417,6 +416,8 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	var pos: Vector2 = entry.get("position", Vector2.ZERO)
 	var point := _world_to_canvas(pos, map_rect)
 	var size := Vector2(ICON_SIZE, ICON_SIZE)
+	if not map_rect.grow(-ICON_SIZE * 0.5).has_point(point):
+		return
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 
@@ -424,6 +425,8 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 	var pos: Vector2 = marker.get("position", Vector2.ZERO)
 	var point := _world_to_canvas(pos, map_rect)
 	var r := OBJECTIVE_RADIUS
+	if not map_rect.grow(-r).has_point(point):
+		return
 	var points := PackedVector2Array([
 		point + Vector2(0, -r), point + Vector2(r, 0), point + Vector2(0, r), point + Vector2(-r, 0),
 	])
@@ -485,6 +488,8 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 		if not collided:
 			break
 		attempts += 1
+	if not map_rect.encloses(rect):
+		return
 	placed.append(rect)
 
 	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
@@ -513,6 +518,8 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 ## is canvas-down, which on a north-up map is south.
 func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: float) -> void:
 	var point := _world_to_canvas(Vector2(world_pos.x, world_pos.z), map_rect)
+	if not map_rect.grow(-(PLAYER_FACING_BASE + PLAYER_FACING_LENGTH)).has_point(point):
+		return
 	var forward := Vector2(sin(yaw), cos(yaw))
 	var side := Vector2(-forward.y, forward.x)
 
@@ -569,17 +576,15 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	return map_rect.get_center() + (fit_point - map_rect.get_center()) * _zoom - pan_pixels
 
 
-func _view_rect(map_rect: Rect2) -> Rect2:
-	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
-	var pan_pixels := Vector2(
-		_pan_world.x / span_x * map_rect.size.x,
-		_pan_world.y / span_z * map_rect.size.y,
-	) * _zoom
-	return Rect2(
-		map_rect.get_center() - map_rect.size * _zoom * 0.5 - pan_pixels,
-		map_rect.size * _zoom,
+func _view_source_rect(texture: Texture2D) -> Rect2:
+	var span := Vector2(
+		float(MAP_STATE.CELL) * float(MAP_STATE.grid_x()),
+		float(MAP_STATE.CELL) * float(MAP_STATE.grid_z()),
 	)
+	var texture_size := texture.get_size()
+	var visible_size := texture_size / _zoom
+	var centre_normalized := Vector2(0.5, 0.5) + _pan_world / span
+	return Rect2(centre_normalized * texture_size - visible_size * 0.5, visible_size)
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/

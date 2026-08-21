@@ -119,7 +119,7 @@
         },
         {
           "name": "Menus",
-          "actions": ["menu_confirm", "menu_cancel"]
+          "actions": ["menu_confirm", "menu_cancel", "map_zoom_in", "map_zoom_out"]
         },
         {
           "name": "Satchel",
@@ -163,6 +163,8 @@
         "combat_switch_right": "Send out the next creature",
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",
+        "map_zoom_in": "Map: zoom in",
+        "map_zoom_out": "Map: zoom out",
         "backpack_drop": "Satchel: drop the focused item",
         "backpack_split": "Satchel: split the focused stack",
         "backpack_assign": "Satchel: put the focused item on the quick bar",
