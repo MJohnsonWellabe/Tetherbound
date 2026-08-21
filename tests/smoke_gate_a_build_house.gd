@@ -64,6 +64,11 @@ func _arm(id: String) -> void:
 	_game.set("pending_build", id)
 	for i in 3:
 		await process_frame
+	var hint := root.find_child("PlacementHints", true, false) as RichTextLabel
+	if hint == null:
+		_fail("armed build ghost created no persistent placement hint strip")
+	elif hint.text.is_empty() or hint.size.x < 1.0 or hint.size.y < 24.0:
+		_fail("placement hint strip is non-renderable: text=%s size=%s" % [not hint.text.is_empty(), hint.size])
 
 
 func _aim_candidate(position: Vector3) -> void:

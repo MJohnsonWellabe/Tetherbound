@@ -804,9 +804,14 @@ func _ensure_overlay() -> void:
 	_hint_label = RichTextLabel.new()
 	_hint_label.name = "PlacementHints"
 	_hint_label.bbcode_enabled = true
-	_hint_label.fit_content = true
+	# RichTextLabel's `fit_content` contributes a minimum size, but a free
+	# CanvasLayer child is not inside a Container that applies that minimum.
+	# Leaving its explicit size at (0, 0) made the promised placement strip
+	# exist, report visible/non-empty in tests, and draw no pixels at 1080p.
+	_hint_label.fit_content = false
 	_hint_label.scroll_active = false
 	_hint_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hint_label.text_direction = Control.TEXT_DIRECTION_AUTO
 	_hint_label.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
 	UITokens.make_text_legible(_hint_label)
 	_overlay.add_child(_hint_label)
@@ -917,8 +922,15 @@ func _hint_text() -> String:
 
 func _position_hint_label() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
-	var width: float = maxf(_hint_label.get_minimum_size().x, _hint_label.size.x)
-	_hint_label.position = Vector2((viewport_size.x - width) * 0.5, viewport_size.y - 96.0)
+	# This node is a direct CanvasLayer child, so no parent Container will ever
+	# turn its minimum size into a real draw rectangle. Give it a bounded strip
+	# across the lower safe area; the refusal prefix can wrap without replacing
+	# or clipping the controls that tell the player how to recover.
+	var margin := 32.0
+	var width := maxf(viewport_size.x - margin * 2.0, 1.0)
+	var height := 64.0
+	_hint_label.size = Vector2(width, height)
+	_hint_label.position = Vector2(margin, viewport_size.y - height - 24.0)
 
 
 ## D34/spec 13.2: 1-4 dots at the neighbour cell centers within snap range,
