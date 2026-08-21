@@ -1015,6 +1015,22 @@ func _fight_party() -> Array[RefCounted]:
 
 
 func _on_combat_exited(outcome: String) -> void:
+	# A voluntary combat switch reuses the same body but changes which live
+	# CreatureInstance it represents. Carry that choice back into exploration
+	# before any wild/trainer exit path runs; otherwise the body remains skinned
+	# as the incoming creature while this director and Game.party still call the
+	# old one active, and the next encounter silently pilots mismatched data.
+	var deployed: RefCounted = _manager.call("active_creature") as RefCounted
+	if deployed != null and deployed != _ally:
+		_ally = deployed
+		var party := _party()
+		if party != null and not bool(deployed.get("fainted")) \
+				and not bool(deployed.get("resting")):
+			var members: Array = party.call("members")
+			var party_index := members.find(deployed)
+			if party_index >= 0 and party.call("active") != deployed:
+				party.call("set_active", party_index)
+
 	# R8.1: a round of a trainer battle resolves on its own terms — the next
 	# creature may still be coming, and exploration must not come back if it
 	# is. Checked before anything else here so the wild path below never sees
@@ -1407,3 +1423,9 @@ func _set_exploration_active(active: bool) -> void:
 	# silently losing, and the one that loses is the one the player is piloting.
 	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_following"):
 		_ally_body.call("set_following", active)
+		# CombatManager hides the shared deployed body while it tears down the
+		# arena. A healthy creature must become the visible follower again when
+		# exploration resumes; begin() makes it visible on the other handoff.
+		if active and _ally != null and not bool(_ally.get("fainted")) \
+				and not bool(_ally.get("resting")):
+			_ally_body.visible = true
