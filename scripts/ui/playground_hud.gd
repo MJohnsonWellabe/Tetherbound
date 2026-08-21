@@ -1521,10 +1521,19 @@ func _use_hotbar_slot(slot_index: int) -> void:
 ## a second press should not fight the first one's `open()`, `torch_place`
 ## because equipping UNDER an open menu makes no sense to the player either.
 func _read_world_hotkeys() -> void:
-	if not _world_input_allowed():
-		return
 	if Input.is_action_just_pressed(&"build_open"):
+		# BUILD-FLOW promises that Start reopens the dedicated catalogue to
+		# change pieces while a ghost remains armed. SequenceDirector correctly
+		# disables InteractionArbiter during placement so X cannot both place and
+		# talk/harvest, but the shared world-input gate treated that build-owned
+		# lockout as a story modal and swallowed Start too. Allow only this one
+		# catalogue action through when pending_build is the reason; combat and
+		# an actual open input-owning panel still refuse it below.
+		if not _world_input_allowed(true):
+			return
 		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
+		return
+	if not _world_input_allowed():
 		return
 	if Input.is_action_just_pressed(&"torch_place"):
 		_arm_torch_placement()
@@ -1565,11 +1574,14 @@ func _read_world_hotkeys() -> void:
 ## already not running. No arbiter reachable (a stripped-down test or capture
 ## scene) reads as permissive, the same null-safe default `_combat_is_running()`
 ## already uses -- nothing there to be modal ABOUT.
-func _world_input_allowed() -> bool:
+func _world_input_allowed(allow_armed_build: bool = false) -> bool:
 	if _combat_is_running():
 		return false
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
-		return false
+		var armed_build := allow_armed_build and _game != null \
+				and str(_game.get("pending_build")) != ""
+		if not armed_build:
+			return false
 	if INPUT_OWNER.current(get_tree()) != null:
 		return false
 	return true
