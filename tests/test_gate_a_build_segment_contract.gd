@@ -9,7 +9,8 @@ const SOURCE_PATH := "res://tests/helpers/gate_a_build_segment.gd"
 
 
 func test_reusable_segment_parses() -> void:
-	assert_true(SEGMENT.can_instantiate(), "the continuous-evidence helper must remain loadable")
+	var segment: RefCounted = SEGMENT.new()
+	assert_true(segment != null, "the continuous-evidence helper must remain loadable")
 
 
 func test_reusable_segment_mutates_play_only_through_parsed_controller_events() -> void:
