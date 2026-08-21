@@ -1093,9 +1093,12 @@ func _build_exploration_legend() -> void:
 	margin.name = "Margin"
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin.add_theme_constant_override("margin_left", 14)
-	margin.add_theme_constant_override("margin_top", 8)
+	# The panel style already contributes 16 px vertically on each side. Adding
+	# another vertical inset here squeezed the 24 px glyph row into an 8 px
+	# label, clipping every persistent field control in the real HUD.
+	margin.add_theme_constant_override("margin_top", 0)
 	margin.add_theme_constant_override("margin_right", 14)
-	margin.add_theme_constant_override("margin_bottom", 8)
+	margin.add_theme_constant_override("margin_bottom", 0)
 	_exploration_legend.add_child(margin)
 
 	_exploration_legend_label = RichTextLabel.new()

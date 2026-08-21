@@ -148,6 +148,11 @@ func _check_modal_ownership() -> void:
 
 func _check_authored_layout() -> void:
 	var legend_rect := _legend.get_global_rect()
+	var content_height := _label.get_content_height()
+	if _label.size.y < content_height or _label.size.y < 24.0:
+		_fail("exploration legend clips its 24 px glyph row (label %.1f px, content %.1f px)" % [
+			_label.size.y, content_height,
+		])
 	for path in [^"Root/BottomDock", ^"Root/Minimap", ^"Root/ObjectiveBlock"]:
 		var control := _hud.get_node_or_null(path) as Control
 		if control != null and control.visible and legend_rect.intersects(control.get_global_rect()):
