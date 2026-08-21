@@ -15,10 +15,11 @@ extends SceneTree
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const CAPTURE_RUNTIME := preload("res://tools/capture_runtime.gd")
 const OUT_DIR := "res://shots/gate_a_capture"
 const WIDTH := 1920
 const HEIGHT := 1080
-const READY_TIMEOUT_MS := 180_000
+const READY_TIMEOUT_MS := 300_000
 const HUD_SETTLE_TIMEOUT_MS := 30_000
 
 var _failures: Array[String] = []
@@ -35,17 +36,32 @@ func _run() -> void:
 	DisplayServer.window_set_size(Vector2i(WIDTH, HEIGHT))
 	root.size = Vector2i(WIDTH, HEIGHT)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
-	await process_frame # autoloads finish joining /root after SceneTree._init
-
 	var user_args := OS.get_cmdline_user_args()
 	var hud_only := user_args.has("--hud-only")
 	var title_only := user_args.has("--title-only")
+	if hud_only and title_only:
+		_failures.append("--hud-only and --title-only cannot be combined")
+	var capture_targets: Array[String] = []
+	if not hud_only:
+		capture_targets.append("%s/title_boot.png" % OUT_DIR)
+	if not title_only:
+		capture_targets.append("%s/exploration_hud.png" % OUT_DIR)
+	_failures.append_array(CAPTURE_RUNTIME.clear_named_pngs(capture_targets))
+	if not _failures.is_empty():
+		_finish()
+		return
+	await process_frame # autoloads finish joining /root after SceneTree._init
+
 	if not hud_only:
 		await _capture_configured_title()
 	if _failures.is_empty() and not title_only:
 		await _capture_exploration_hud()
 
-	print("\n%d frame(s) -> %s" % [_written.size(), OUT_DIR])
+	_finish()
+
+
+func _finish() -> void:
+	print("\n%d fresh frame(s) -> %s" % [_written.size(), OUT_DIR])
 	print("Supplemental stills only; they do not replace the continuous Gate A evidence session.")
 	if not _failures.is_empty():
 		for failure in _failures:
@@ -67,28 +83,27 @@ func _capture_configured_title() -> void:
 	var title := packed.instantiate()
 	root.add_child(title)
 	current_scene = title
-	if not await _wait_until(
+	if not await CAPTURE_RUNTIME.wait_until(
+		self,
 		func() -> bool: return _title_ready(title),
 		"configured title screen",
+		func() -> String: return _title_readiness_details(title),
 		HUD_SETTLE_TIMEOUT_MS,
 	):
-		var focused := root.gui_get_focus_owner()
-		_failures.append(
-			"title state at timeout: size=%s ready=%s grouped=%s focus=%s visible=%s"
-			% [
-				root.size,
-				title.is_node_ready(),
-				title.is_in_group(&"title_screen"),
-				"<none>" if focused == null else str(focused.get_path()),
-				focused != null and focused.is_visible_in_tree(),
-			]
-		)
+		_failures.append("title state at timeout: %s" % _title_readiness_details(title))
 		return
 	await _shoot("title_boot")
 	var title_id := title.get_instance_id()
 	title.queue_free()
 	current_scene = null
-	await _wait_until(func() -> bool: return instance_from_id(title_id) == null, "title teardown")
+	if not await CAPTURE_RUNTIME.wait_until(
+		self,
+		func() -> bool: return instance_from_id(title_id) == null,
+		"title teardown",
+		Callable(),
+		HUD_SETTLE_TIMEOUT_MS,
+	):
+		_failures.append("title teardown timed out")
 
 
 func _title_ready(title: Node) -> bool:
@@ -98,6 +113,17 @@ func _title_ready(title: Node) -> bool:
 		return false
 	var focused := root.gui_get_focus_owner()
 	return focused is Button and focused.is_visible_in_tree() and (focused as Button).text == "Start New Game"
+
+
+func _title_readiness_details(title: Node) -> String:
+	var focused := root.gui_get_focus_owner()
+	return "size=%s ready=%s grouped=%s focus=%s visible=%s" % [
+		root.size,
+		is_instance_valid(title) and title.is_node_ready(),
+		is_instance_valid(title) and title.is_in_group(&"title_screen"),
+		"<none>" if focused == null else str(focused.get_path()),
+		focused != null and focused.is_visible_in_tree(),
+	]
 
 
 func _capture_exploration_hud() -> void:
@@ -115,7 +141,14 @@ func _capture_exploration_hud() -> void:
 	var world := packed.instantiate()
 	root.add_child(world)
 	current_scene = world
-	if not await _wait_until(func() -> bool: return _world_ready(world), "Meadows HUD and minimap"):
+	if not await CAPTURE_RUNTIME.wait_until(
+		self,
+		func() -> bool: return _world_ready(world),
+		"Meadows HUD and minimap",
+		func() -> String: return _world_readiness_details(world),
+		READY_TIMEOUT_MS,
+	):
+		_failures.append("Meadows startup timed out: %s" % _world_readiness_details(world))
 		return
 
 	var player := world.get_node(^"Player") as CharacterBody3D
@@ -163,6 +196,14 @@ func _capture_exploration_hud() -> void:
 func _world_ready(world: Node) -> bool:
 	if not is_instance_valid(world) or not world.is_node_ready():
 		return false
+	# The HUD and minimap can finish one frame before playground_world resumes
+	# its async _ready() and begins the expensive scatter. These nodes are all
+	# created at the end of _build_settlement(), after vegetation and water, so
+	# they distinguish a complete representative world from that premature UI-
+	# only state without exposing a production-only "capture ready" flag.
+	for path in [^"Village", ^"Props", ^"BuildPlacer"]:
+		if world.get_node_or_null(path) == null:
+			return false
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
 	if player == null or hud == null or not hud.is_node_ready() or not hud.visible:
@@ -173,6 +214,21 @@ func _world_ready(world: Node) -> bool:
 		return false
 	var height: float = float(world.call("ground_height_at", -15.0, -1.0))
 	return is_finite(height)
+
+
+func _world_readiness_details(world: Node) -> String:
+	if not is_instance_valid(world):
+		return "world freed"
+	var present: Array[String] = []
+	for path in [^"Terrain", ^"Vegetation", ^"Water", ^"Village", ^"Props", ^"BuildPlacer", ^"PlaygroundHUD"]:
+		if world.get_node_or_null(path) != null:
+			present.append(str(path))
+	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	return "nodes=%s world_ready=%s minimap_baked=%s" % [
+		str(present),
+		world.is_node_ready(),
+		hud != null and bool(hud.get("_minimap_baked")),
+	]
 
 
 func _seed_representative_game_state() -> void:
@@ -294,16 +350,6 @@ func _log_legend_rects(hud: CanvasLayer) -> void:
 func _pitch_for_horizon(fraction: float, fov: float) -> float:
 	var half := tan(deg_to_rad(fov) * 0.5)
 	return -atan((0.5 - clampf(fraction, 0.05, 0.95)) * 2.0 * half)
-
-
-func _wait_until(predicate: Callable, label: String, timeout_ms: int = READY_TIMEOUT_MS) -> bool:
-	var deadline := Time.get_ticks_msec() + timeout_ms
-	while Time.get_ticks_msec() < deadline:
-		if predicate.call():
-			return true
-		await process_frame
-	_failures.append("timed out after %.0fs waiting for %s" % [timeout_ms / 1000.0, label])
-	return false
 
 
 func _shoot(name: String) -> void:
