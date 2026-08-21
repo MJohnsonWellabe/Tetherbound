@@ -133,6 +133,7 @@ func _run() -> void:
 	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
 	failures.append_array(await _swinging_the_tool_connects_after_walking_up_to_a_tree(world))
 	failures.append_array(await _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world))
+	failures.append_array(await _an_authored_tool_gather_reports_the_exact_pickup(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
 	failures.append_array(await _the_berry_farm_can_be_worked(world))
@@ -428,6 +429,71 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 		for i in 4:
 			await physics_frame
 	game.set("equipped_tool", "")
+	return found
+
+
+## Gate A gathering feedback.  The authored first-day nodes are a separate
+## payout path from vegetation's felled_resource.gd pickups.  The latter
+## already queued `+X Wood`; the former silently changed the satchel and hid
+## their prop.  Exercise a real authored wood node through the live tool swing
+## and then read the HUD row that consumes Game's one-shot message queue.  A
+## direct queue read would false-pass if the HUD never surfaced it.
+func _an_authored_tool_gather_reports_the_exact_pickup(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var model := player.get_node_or_null(^"Model") as Node3D if player != null else null
+	var hold: Node = player.get("tool_hold") if player != null else null
+	var game := world.get_node_or_null(^"/root/Game")
+	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var message := hud.get_node_or_null(^"Root/BottomDock/HotbarPanel/Margin/Layout/Message") as Label \
+		if hud != null else null
+	if player == null or model == null or hold == null or game == null or message == null:
+		return ["authored gather feedback is missing Player/Model/ToolHold/Game/HUD message wiring"] as Array[String]
+
+	var authored: Node3D = null
+	for node: Node in get_nodes_in_group("harvestable"):
+		if node is Node3D and node.get_script() == HARVEST_NODE_SCRIPT \
+				and str(node.get("_item_id")) == "wood" \
+				and float(node.get("_respawn_left")) <= 0.0:
+			authored = node as Node3D
+			break
+	if authored == null:
+		return ["the live world has no authored wood node for pickup-feedback verification"] as Array[String]
+
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory for authored pickup-feedback verification"] as Array[String]
+	if int(inventory.call("find_slot", "axe")) < 0:
+		inventory.call("add", "axe", 1)
+	game.set("equipped_tool", "axe")
+	_face_and_stand_near(player, model, authored.global_position, world)
+	for i in 6:
+		await process_frame
+
+	# Remove a stale toast from an earlier smoke check.  The assertion below
+	# reads only what this swing makes the HUD show.
+	game.call("take_pending_world_message")
+	message.text = ""
+	message.visible = false
+	var before := int(inventory.call("count", "wood"))
+	if not bool(hold.call("swing")):
+		return ["the equipped axe refused to swing at an authored wood node"] as Array[String]
+	for i in 45:
+		await process_frame
+		if not bool(hold.call("is_swinging")) and message.visible:
+			break
+	var credited := int(inventory.call("count", "wood")) - before
+	if credited <= 0:
+		found.append("the authored wood swing credited no wood")
+	else:
+		var expected := "+%d Wood" % credited
+		if not message.visible:
+			found.append("authored wood credited %d but the HUD pickup row stayed hidden" % credited)
+		elif message.text != expected:
+			found.append("authored wood credited %d but HUD said '%s' instead of '%s'" % [
+				credited, message.text, expected])
+		else:
+			print("authored gather feedback: %s" % message.text)
 	return found
 
 

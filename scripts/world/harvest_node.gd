@@ -285,6 +285,14 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 		# is the honest version of "your satchel is full".
 		return
 	inventory.call("add", _item_id, actual_amount)
+	# Keep the hand-authored first-day nodes on the same player-facing pickup
+	# contract as felled_resource.gd.  These nodes used to credit the satchel
+	# silently, so the Gate A tool swing visibly happened and the prop vanished
+	# but the player never saw what they received.  Report the amount that was
+	# actually accepted after harvest-yield and capacity rules, never the raw
+	# authored amount.
+	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+	game.call("push_world_message", "+%d %s" % [actual_amount, item_name])
 	# R2.2: only a full-yield gather with the right tool wears it down --
 	# a bare-handed or wrong-tool gather has no tool in play to damage.
 	if required_slot >= 0:
