@@ -2,9 +2,19 @@
 
 **Status: ACTIVE temporary execution overlay.**
 
-This file changes **priority, parallelization, and checkpoint cadence only**. It does **not** delete, weaken, or supersede the acceptance criteria in `ralph/ACTIVE_GAME_PLAN.md`, `ralph/ACTIVE_TASKS.md`, the newest owner playtests, detailed prompts, or `ralph/BACKLOG.md`.
+This file changes **priority, parallelization, model routing, and checkpoint cadence only**. It does **not** delete, weaken, or supersede the acceptance criteria in `ralph/ACTIVE_GAME_PLAN.md`, `ralph/ACTIVE_TASKS.md`, the newest owner playtests, detailed prompts, or `ralph/BACKLOG.md`.
 
 The weekend objective is to turn the current Meadows build into a **continuously playable full chapter**, not merely to accumulate green child tasks.
+
+## 0. Weekend model-routing policy — owner directive 2026-08-21
+
+This directive supersedes older model-floor/model-suspension wording for the active weekend sprint where it conflicts.
+
+- **Opus is the coordinator/orchestrator.** Use Opus for prioritization, decomposition, dependency/file-ownership decisions, integration judgment, gate/evidence decisions, and deciding when a simpler implementation is appropriate. Opus may also take unusually difficult architecture/integration work when Sonnet is not sufficient, but should not become the default implementation lane and disappear into routine coding.
+- **Sonnet is the default implementation worker.** Use Sonnet for bounded engineering/authoring tasks with clear acceptance criteria, normally sized for roughly 30–90 minutes.
+- **Fable is reserved for independent blind visual review only.** Use Fable only for the actual visual judgment/review step when a milestone requires visual-judge evidence. Fable must not produce, stage, render, capture, select, edit, or modify the screenshots/images/evidence it is judging. Production/capture belongs to Sonnet/Opus lanes or deterministic tooling; Fable receives the resulting evidence plus the relevant art/acceptance criteria and returns an independent pass/fail/revision judgment.
+- Do not use Fable for coordination, routine implementation, screenshot production, camera staging, or visual fixes during this sprint.
+- Do not let the same Fable review context author the evidence and grade it. Preserve reviewer independence.
 
 ## 1. Sunday-night definition of success
 
@@ -72,22 +82,23 @@ Do not spend an hour perfecting POLISH while a SHIP BLOCKER is waiting.
 
 ## 4. Coordinator operating model
 
-Use **one coordinator plus 4–5 bounded implementation lanes** when enough independent work exists.
+Use **one Opus coordinator plus 4–5 bounded Sonnet implementation lanes** when enough independent work exists.
 
-The coordinator should primarily:
+The Opus coordinator should primarily:
 
 - inspect `main`, CI, owner evidence, and active package state;
 - maintain the chapter critical path;
 - classify issues SHIP BLOCKER / QUALITY BLOCKER / POLISH;
 - define shared contracts before parallel implementation;
-- dispatch bounded workers;
+- dispatch bounded Sonnet workers;
 - keep file ownership non-overlapping;
 - integrate frequently;
 - run representative player-path evidence;
+- dispatch Fable only for independent blind visual review after visual evidence has already been produced;
 - refill worker capacity as soon as a lane completes;
 - prevent one lane from expanding into an entire gate.
 
-A worker should usually own a 30–90 minute coherent task. If it exceeds ~90 minutes without a clear finish, checkpoint useful work, report the blocker, and let the coordinator decompose it.
+A Sonnet worker should usually own a 30–90 minute coherent task. If it exceeds ~90 minutes without a clear finish, checkpoint useful work, report the blocker, and let the Opus coordinator decompose it.
 
 ## 5. Recommended initial lanes
 
@@ -188,6 +199,8 @@ For controller, menus, camera, Build, maps, hotbar/Satchel, party cycling, light
 Fresh owner reproduction outranks old green tests.
 
 Treat input ownership collisions as systemic architecture defects, not a collection of button-specific exceptions.
+
+For visual milestones, Sonnet/Opus/tooling produces the capture. Only after the evidence is fixed and complete should Fable receive it for blind judgment. If Fable requests revisions, return the revision work to Sonnet/Opus; then give Fable newly produced evidence for another independent review.
 
 ## 9. Checkpoint cadence
 
