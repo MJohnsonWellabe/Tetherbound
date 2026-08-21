@@ -576,8 +576,13 @@ func _exploration_is_restored() -> void:
 
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("the trainer cannot walk after the fight ended")
-	if _ally != null and _ally.visible:
-		_fail("the player's creature is still standing in the world after the fight")
+	# The deployed body returns to being the visible exploration follower. This
+	# used to assert the opposite, so restoring the intended post-fight follower
+	# lifecycle in c34bd6f9 made a healthy teardown fail CI.
+	if _ally == null or not is_instance_valid(_ally) or not _ally.visible:
+		_fail("the player's creature was not restored as the visible follower after the fight")
+	elif not bool(_ally.call("is_following")):
+		_fail("the player's creature is visible after the fight but is not following the trainer")
 	if _manager.call("arena") != null:
 		_fail("the arena was never cleaned up")
 	if _world.get_node_or_null(^"CombatArena") != null:
