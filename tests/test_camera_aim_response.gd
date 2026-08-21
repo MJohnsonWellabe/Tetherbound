@@ -54,6 +54,20 @@ func test_launch_assist_ignores_grounded_body_floor_bias() -> void:
 	assert_almost_eq(planar.z, -1.2, 0.001)
 
 
+func test_launch_assist_release_refresh_removes_elapsed_windup() -> void:
+	var origin := Vector3.ZERO
+	var centre := Vector3(0.0, 1.0, -7.0)
+	var velocity := Vector3(3.4, 0.0, 0.0)
+	var committed: Vector3 = THROW_AIM.predict_launch_point(
+		origin, centre, velocity, 17.0, 14.0, 0.18, 0.85, 4.5, 2.6)
+	var released: Vector3 = THROW_AIM.predict_launch_point(
+		origin, centre, velocity, 17.0, 14.0, 0.0, 0.85, 4.5, 2.6)
+	assert_true(released.x < committed.x,
+		"the release snapshot must not lead the target through a second wind-up")
+	assert_true(released.x > centre.x,
+		"the release snapshot must still lead current lateral motion")
+
+
 func test_launch_assist_clamps_pathological_target_velocity() -> void:
 	var centre := Vector3(0.0, 1.0, -7.0)
 	var predicted: Vector3 = THROW_AIM.predict_launch_point(

@@ -317,6 +317,7 @@ func _update_preview() -> void:
 		_player.get_parent().add_child(_preview)
 	var camera := _aim_camera()
 	var origin := _player.global_position + Vector3.UP * _spawn_height
+	_refresh_committed_assist_point(origin)
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 	_preview.call("update_arc", origin, forward, _speed, _target)
@@ -436,6 +437,24 @@ func _commit_launch_assist() -> void:
 		target_velocity = launch_target_velocity((_target as CharacterBody3D).velocity)
 	_committed_assist_point = predict_launch_point(
 		origin, centre, target_velocity, _speed, _gravity, _release_windup,
+		_launch_assist_max_seconds, _launch_assist_max_target_speed,
+		_launch_assist_max_distance)
+
+
+## Eligibility belongs to the player's release press, but the target can change
+## direction during the deliberate wind-up. Refreshing its *one fixed launch
+## point* immediately before the orb exists avoids aiming at a stale future
+## position. This never re-checks or widens the commit-time reticle/LOS gate and
+## never changes an orb after launch.
+func _refresh_committed_assist_point(origin: Vector3) -> void:
+	if _committed_assist_point == Vector3.INF or _target == null \
+			or not is_instance_valid(_target) or not _target.has_method("centre"):
+		return
+	var target_velocity := Vector3.ZERO
+	if _target is CharacterBody3D:
+		target_velocity = launch_target_velocity((_target as CharacterBody3D).velocity)
+	_committed_assist_point = predict_launch_point(
+		origin, _target.call("centre"), target_velocity, _speed, _gravity, 0.0,
 		_launch_assist_max_seconds, _launch_assist_max_target_speed,
 		_launch_assist_max_distance)
 
