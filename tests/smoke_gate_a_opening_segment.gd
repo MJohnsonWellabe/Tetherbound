@@ -373,16 +373,11 @@ func _aim_camera_at(target: Node3D, budget: int) -> bool:
 	var last_yaw_error := 0.0
 	var last_pitch_error := 0.0
 	for _i in budget:
-		# The opponent keeps circling while the trainer aims. Lead the visible
-		# body by one short throw flight, through the raw right-stick path, just as
-		# a player leads the moving creature using the production trajectory arc.
-		# Aiming at its current centre and then committing was the harness bug: the
-		# reticle converged truthfully, but the creature had moved before impact.
-		var velocity := Vector3.ZERO
-		if target is CharacterBody3D:
-			velocity = (target as CharacterBody3D).velocity
-		var predicted := (target.call("centre") as Vector3) + velocity * 0.30
-		var to := predicted - camera.global_position
+		# Put the reticle on the body visible now, through the raw right-stick
+		# path. Production owns the bounded wind-up/flight prediction; teaching
+		# this evidence harness to calculate its own lead both hid the controller
+		# burden and risks double-leading once launch assist is active.
+		var to := (target.call("centre") as Vector3) - camera.global_position
 		var desired_yaw := atan2(-to.x, -to.z)
 		var desired_pitch := atan2(to.y, maxf(Vector2(to.x, to.z).length(), 0.01))
 		var yaw_error := wrapf(desired_yaw - float(_rig.get("yaw")), -PI, PI)

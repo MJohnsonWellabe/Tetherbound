@@ -11,7 +11,7 @@ extends Node3D
 ## The arc must share `throw_aim.gd`'s own numbers or it becomes a second
 ## implementation that drifts — so `update_arc()` takes the origin, direction
 ## and speed that `_release()` would use, computed by the same code
-## (`_aim_direction`), and integrates the same closed-form parabola `orb.gd`
+## (`_launch_direction`), and integrates the same closed-form parabola `orb.gd`
 ## steps through. If the preview and the orb ever disagree, one of them
 ## changed alone.
 ##

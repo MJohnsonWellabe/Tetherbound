@@ -52,6 +52,18 @@ var _spawn_height: float = 1.5
 var _spawn_forward: float = 0.6
 var _release_windup: float = 0.18
 var _throw_cooldown: float = 0.9
+var _launch_assist_reticle_fraction: float = 1.0
+var _launch_assist_max_seconds: float = 0.85
+var _launch_assist_max_target_speed: float = 4.5
+var _launch_assist_max_distance: float = 2.6
+
+## A launch-time assist is committed with the button press, not recomputed
+## after the wind-up. Otherwise a circling creature can leave the reticle in
+## those 0.18 seconds and turn a correctly lined-up controller throw into a
+## miss before the orb even leaves the trainer's hand. INF means the reticle
+## was not genuinely on the visible target, so the physical wide throw stays
+## completely unassisted.
+var _committed_assist_point := Vector3.INF
 
 
 func _ready() -> void:
@@ -62,6 +74,14 @@ func _ready() -> void:
 	_spawn_forward = float(cfg.get("spawn_forward", _spawn_forward))
 	_release_windup = float(cfg.get("release_windup", _release_windup))
 	_throw_cooldown = float(cfg.get("cooldown", _throw_cooldown))
+	_launch_assist_reticle_fraction = float(cfg.get(
+		"launch_assist_reticle_fraction", _launch_assist_reticle_fraction))
+	_launch_assist_max_seconds = float(cfg.get(
+		"launch_assist_max_seconds", _launch_assist_max_seconds))
+	_launch_assist_max_target_speed = float(cfg.get(
+		"launch_assist_max_target_speed", _launch_assist_max_target_speed))
+	_launch_assist_max_distance = float(cfg.get(
+		"launch_assist_max_distance", _launch_assist_max_distance))
 	set_physics_process(false)
 
 
@@ -73,6 +93,7 @@ func arm(player: Node3D, target: Node3D, camera_rig: Node) -> void:
 	state = State.IDLE
 	_windup = 0.0
 	_cooldown = 0.0
+	_committed_assist_point = Vector3.INF
 	set_physics_process(true)
 
 
@@ -197,6 +218,7 @@ func _tick_aiming(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("combat_throw") or Input.is_action_just_pressed("combat_quick"):
+		_commit_launch_assist()
 		_windup = _release_windup
 
 
@@ -249,6 +271,7 @@ func _set_trainer_movable(movable: bool) -> void:
 func _leave_aim() -> void:
 	state = State.IDLE
 	_windup = 0.0
+	_committed_assist_point = Vector3.INF
 	_hide_preview()
 	_set_trainer_movable(false)
 	aim_exited.emit()
@@ -261,7 +284,7 @@ var _preview: Node3D = null
 
 
 ## Redraw the predicted arc from EXACTLY the numbers _release() would use this
-## frame — same origin, same _aim_direction, same speed. One code path, so the
+## frame — same origin, same _launch_direction, same speed. One code path, so the
 ## promise on screen and the flight of the orb cannot drift apart.
 func _update_preview() -> void:
 	if _player == null:
@@ -272,7 +295,7 @@ func _update_preview() -> void:
 		_player.get_parent().add_child(_preview)
 	var camera := _aim_camera()
 	var origin := _player.global_position + Vector3.UP * _spawn_height
-	var forward := _aim_direction(camera, origin)
+	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 	_preview.call("update_arc", origin, forward, _speed, _target)
 	_slow_the_stick_near_the_target(camera)
@@ -332,7 +355,7 @@ func _release() -> void:
 
 	var camera := _aim_camera()
 	var origin := _player.global_position + Vector3.UP * _spawn_height
-	var forward := _aim_direction(camera, origin)
+	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 
 	_despawn_orb()
@@ -348,6 +371,69 @@ func _release() -> void:
 		body.call("play_throw")
 
 	aim_exited.emit()
+	_committed_assist_point = Vector3.INF
+
+
+## Snapshot the assist at the instant the player commits. The eligibility
+## window is intentionally narrower than the existing soft magnetic pull: the
+## centre ray must be inside the target's inner half-body and the target must
+## have an unobstructed line from the camera. This is launch prediction for a
+## good aim, not a lock-on that rescues a wide or blocked throw.
+func _commit_launch_assist() -> void:
+	_committed_assist_point = Vector3.INF
+	var camera := _aim_camera()
+	if camera == null or _target == null or not is_instance_valid(_target) \
+			or not _target.visible or not _target.has_method("centre"):
+		return
+	var eye := camera.global_position
+	var camera_forward := -camera.global_transform.basis.z
+	var centre: Vector3 = _target.call("centre")
+	var along := (centre - eye).dot(camera_forward)
+	if along <= 0.0:
+		return
+	var radius := 0.5
+	if _target.has_method("body_radius"):
+		radius = float(_target.call("body_radius"))
+	var nearest := eye + camera_forward * along
+	if nearest.distance_to(centre) > radius * _launch_assist_reticle_fraction:
+		return
+	if not _target_is_visible(eye, centre):
+		return
+
+	var origin := _player.global_position + Vector3.UP * _spawn_height
+	var initial := (centre - origin).normalized()
+	origin += initial * _spawn_forward
+	var target_velocity := Vector3.ZERO
+	if _target is CharacterBody3D:
+		target_velocity = (_target as CharacterBody3D).velocity
+	_committed_assist_point = predict_launch_point(
+		origin, centre, target_velocity, _speed, _gravity, _release_windup,
+		_launch_assist_max_seconds, _launch_assist_max_target_speed,
+		_launch_assist_max_distance)
+
+
+func _target_is_visible(eye: Vector3, centre: Vector3) -> bool:
+	var world := _player.get_world_3d() if _player != null else null
+	if world == null:
+		return false
+	var query := PhysicsRayQueryParameters3D.create(eye, centre)
+	query.collide_with_areas = false
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return true
+	var collider := hit.get("collider") as Node
+	return collider == _target or (collider != null and _target.is_ancestor_of(collider))
+
+
+func _launch_direction(camera: Camera3D, origin: Vector3) -> Vector3:
+	if _committed_assist_point != Vector3.INF:
+		var fallback := -_player.global_transform.basis.z
+		if camera != null:
+			fallback = -camera.global_transform.basis.z
+		return _ballistic_direction(origin, _committed_assist_point, fallback)
+	return _aim_direction(camera, origin)
 
 
 ## Where the reticle is pointing, converted into a direction from the hand.
@@ -401,21 +487,56 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 ## `_gravity` on `point`. Falls back to the straight line when the point is
 ## unreachable at this speed.
 func _ballistic_direction(origin: Vector3, point: Vector3, fallback: Vector3) -> Vector3:
+	return ballistic_direction(origin, point, fallback, _speed, _gravity)
+
+
+static func ballistic_direction(
+	origin: Vector3, point: Vector3, fallback: Vector3, speed: float, gravity: float
+) -> Vector3:
 	var flat := Vector2(point.x - origin.x, point.z - origin.z)
 	var reach := flat.length()
 	if reach < 0.01:
 		return fallback
 	var rise := point.y - origin.y
-	var s2 := _speed * _speed
-	var disc := s2 * s2 - _gravity * (_gravity * reach * reach + 2.0 * rise * s2)
+	var s2 := speed * speed
+	var disc := s2 * s2 - gravity * (gravity * reach * reach + 2.0 * rise * s2)
 	var horizontal := Vector3(flat.x, 0.0, flat.y) / reach
 	if disc < 0.0:
 		var direct := point - origin
 		return direct.normalized() if direct.length() > 0.01 else fallback
 	# The smaller root is the low, fast arc; the high lob spends its flight
 	# time hanging in the air over a moving creature.
-	var pitch_tan := (s2 - sqrt(disc)) / (_gravity * reach)
+	var pitch_tan := (s2 - sqrt(disc)) / (gravity * reach)
 	return (horizontal + Vector3.UP * pitch_tan).normalized()
+
+
+## Constant-velocity launch prediction used only after the reticle/visibility
+## gate above. Two iterations are enough because the Meadows combatants move at
+## walking speed while the orb flies at 17m/s. Every input is bounded so a
+## pathological velocity can never turn this mild lead into a snap across the
+## arena.
+static func predict_launch_point(
+	origin: Vector3, centre: Vector3, target_velocity: Vector3,
+	speed: float, gravity: float, windup: float, max_seconds: float,
+	max_target_speed: float, max_distance: float
+) -> Vector3:
+	var velocity := target_velocity
+	if velocity.length() > max_target_speed:
+		velocity = velocity.normalized() * max_target_speed
+	var predicted := centre
+	for _iteration in 2:
+		var fallback := (predicted - origin).normalized()
+		var direction := ballistic_direction(origin, predicted, fallback, speed, gravity)
+		var horizontal_speed := Vector2(direction.x, direction.z).length() * speed
+		var horizontal_distance := Vector2(
+			predicted.x - origin.x, predicted.z - origin.z).length()
+		var flight := horizontal_distance / maxf(horizontal_speed, 0.01)
+		var horizon := clampf(maxf(0.0, windup) + flight, 0.0, max_seconds)
+		predicted = centre + velocity * horizon
+	var lead := predicted - centre
+	if lead.length() > max_distance:
+		lead = lead.normalized() * max_distance
+	return centre + lead
 
 
 func _aim_camera() -> Camera3D:

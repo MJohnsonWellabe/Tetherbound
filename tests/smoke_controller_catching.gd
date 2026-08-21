@@ -7,8 +7,10 @@ extends SceneTree
 ## the authored practice cluster. From there every combat action is a parsed
 ## physical controller event. The test never assigns combatant HP, camera yaw or
 ## camera pitch, and never calls catch resolution. It must naturally weaken the
-## wild creature, make an intentional physical miss, then track the moving target
-## with the right stick and complete a physical hit/catch outcome.
+## wild creature, make an intentional physical miss, then put the reticle on the
+## moving target's CURRENT body (no harness-authored lead) and complete a
+## physical strike/resolution. Repeated runs exercise additional trajectories;
+## launch-time prediction belongs to production rather than this harness.
 ##
 ##   godot --headless --path . --script tests/smoke_controller_catching.gd
 
@@ -91,8 +93,8 @@ func _run() -> void:
 			break
 	if not caught:
 		_fail("physical right-stick throws did not complete a catch within eight attempts")
-	elif _misses + _resolutions.size() < 2:
-		_fail("fewer than two physical throw outcomes completed")
+	elif _resolutions.size() - resolved_before < 1:
+		_fail("no moving-target physical strike/resolution completed")
 	_finish()
 
 
@@ -192,11 +194,10 @@ func _track_target_with_right_stick(budget: int) -> bool:
 	if camera == null:
 		return false
 	for _i in budget:
-		var velocity := Vector3.ZERO
-		if _wild is CharacterBody3D:
-			velocity = (_wild as CharacterBody3D).velocity
-		var predicted := (_wild.call("centre") as Vector3) + velocity * 0.30
-		var to := predicted - camera.global_position
+		# Deliberately aim at the body visible NOW. The old harness led by 0.30s,
+		# asking test code to solve the exact controller burden this regression
+		# exists to remove.
+		var to := (_wild.call("centre") as Vector3) - camera.global_position
 		var desired_yaw := atan2(-to.x, -to.z)
 		var desired_pitch := atan2(to.y, maxf(Vector2(to.x, to.z).length(), 0.01))
 		var yaw_error := wrapf(desired_yaw - float(_rig.get("yaw")), -PI, PI)

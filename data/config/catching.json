@@ -51,6 +51,11 @@
 
     "_comment_windup": "Seconds between committing to the throw and the orb leaving the trainer's hand. Short — the commitment already happened when you entered aim mode.",
     "release_windup": 0.18,
+    "_comment_launch_assist": "A reticle genuinely inside the visible target's inner body earns a bounded launch-time lead over the wind-up and physical flight. This is not homing: the direction is fixed when the orb launches, and a wide/blocked reticle gets no lead. Bounds keep fast or pathological body velocity from snapping a throw across the arena.",
+    "launch_assist_reticle_fraction": 1.0,
+    "launch_assist_max_seconds": 0.85,
+    "launch_assist_max_target_speed": 4.5,
+    "launch_assist_max_distance": 2.6,
     "_comment_lockout": "Seconds after a throw resolves before another can be started. Stops a failed catch from being instantly re-thrown while the wobble is still on screen.",
     "cooldown": 0.9
   },
