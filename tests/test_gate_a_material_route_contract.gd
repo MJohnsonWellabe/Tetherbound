@@ -1,4 +1,4 @@
-extends GutTest
+extends "res://tests/test_case.gd"
 
 ## Source-only guard for Gate A's natural paid-build itinerary.  The actual
 ## candidate run is still controller evidence; this protects the route's
