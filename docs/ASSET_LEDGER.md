@@ -1,5 +1,15 @@
 # Asset Ledger
 
+## Creature HUD portraits (2026-08-21)
+
+- `assets/ui/portraits/creatures/*.png` are curated runtime copies of the
+  existing owner-supplied creature renders under
+  `assets/creatures/tetherbound/*/reference/` (three-quarter view where
+  available; Veridian uses its existing front view). No new image generation
+  or third-party source was used. The copies exist because the canonical
+  reference directories are intentionally `.gdignore` and therefore cannot be
+  loaded by the shipped HUD.
+
 Provenance for every non-original asset in the project, per `CLAUDE.md` and
 `docs/TECHNICAL_START.md`.
 

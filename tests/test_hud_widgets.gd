@@ -22,8 +22,12 @@ extends "res://tests/test_case.gd"
 ## reserves for representative art and a real screen.
 
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
 const STAMINA_ARC := preload("res://scripts/ui/stamina_arc.gd")
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+const CREATURE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const TERRAPUP_PORTRAIT := "res://assets/ui/portraits/creatures/terrapup.png"
+const BRAMBLEBUN_PORTRAIT := "res://assets/ui/portraits/creatures/bramblebun.png"
 
 
 # --- party_strip.gd -----------------------------------------------------------
@@ -57,8 +61,12 @@ func test_build_is_idempotent() -> void:
 func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash() -> void:
 	var strip := _make_strip()
 	var entries: Array = [
-		{"label": "Terrapup", "level": 4, "hp_fraction": 0.8, "tint": Color(0.55, 0.35, 0.15), "fainted": false},
-		{"label": "Bramblebun", "level": 6, "hp_fraction": 0.5, "tint": Color(0.2, 0.5, 0.2), "fainted": false},
+		{"label": "Terrapup", "level": 4, "hp_fraction": 0.8,
+			"tint": Color(0.55, 0.35, 0.15), "portrait": TERRAPUP_PORTRAIT,
+			"fainted": false},
+		{"label": "Bramblebun", "level": 6, "hp_fraction": 0.5,
+			"tint": Color(0.2, 0.5, 0.2), "portrait": BRAMBLEBUN_PORTRAIT,
+			"fainted": false},
 		{"label": "Skitterling", "level": 2, "hp_fraction": 0.0, "tint": Color(0.4, 0.4, 0.45), "fainted": true},
 	]
 	strip.update_from_party(entries, 1)
@@ -68,6 +76,9 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	assert_eq(strip._name_labels[1].text, "Bramblebun")
 	assert_eq(strip._level_labels[1].text, "Lv 6")
 	assert_almost_eq(strip._hp_bars[0].value, 0.8)
+	assert_true(strip._portraits[0].visible, "an occupied slot should show its creature render")
+	assert_ne(strip._portraits[0].texture, strip._portraits[1].texture,
+		"different species should not collapse to the same abstract swatch")
 
 	# The two slots beyond the three real entries read as vacant: no name, no
 	# level, an empty bar, and the dim vacant look — never leftover text from a
@@ -76,6 +87,28 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	assert_eq(strip._name_labels[4].text, "")
 	assert_almost_eq(strip._hp_bars[3].value, 0.0)
 	assert_almost_eq(strip._rows[3].modulate.a, PARTY_STRIP.VACANT_MODULATE)
+	assert_false(strip._portraits[3].visible, "a vacant slot must not retain a previous portrait")
+	strip.free()
+
+
+func test_every_installed_species_has_the_hud_portrait_it_resolves() -> void:
+	var hud: CanvasLayer = PLAYGROUND_HUD.new()
+	for species_id: String in CREATURE_SPECIES.table().keys():
+		var path := str(hud.call("_species_portrait_path", species_id))
+		assert_true(ResourceLoader.exists(path), "%s portrait missing: %s" % [species_id, path])
+	hud.free()
+
+
+func test_resting_entry_has_an_explicit_unavailable_marker() -> void:
+	var strip := _make_strip()
+	strip.update_from_party([{
+		"label": "Terrapup", "level": 4, "hp_fraction": 0.8,
+		"tint": Color(0.55, 0.35, 0.15), "portrait": TERRAPUP_PORTRAIT,
+		"fainted": false, "resting": true,
+	}], 0)
+	assert_true(strip._rest_labels[0].visible, "resting must be readable without inferring it from dimming")
+	assert_false(strip._ko_labels[0].visible)
+	assert_true(strip._rows[0].modulate.a < PARTY_STRIP.SELECTED_MODULATE)
 	strip.free()
 
 
@@ -89,6 +122,8 @@ func test_selected_row_gets_the_teal_rail_and_full_modulate() -> void:
 
 	assert_true(strip._rails[1].visible, "the active row's rail should be showing")
 	assert_false(strip._rails[0].visible, "a non-active row's rail should be hidden")
+	assert_eq(strip._chip_boxes[1].border_color, UI_TOKENS.TEAL_SOFT,
+		"the active creature portrait should carry the same selected highlight")
 	assert_almost_eq(strip._rows[1].modulate.a, PARTY_STRIP.SELECTED_MODULATE)
 	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.UNSELECTED_MODULATE)
 	strip.free()

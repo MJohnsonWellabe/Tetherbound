@@ -44,6 +44,7 @@ const HP_BAR_SIZE := Vector2(72.0, 8.0)
 ## Fainted always reads as fainted, whether or not the slot happens to also be
 ## the (impossible, but not this file's job to assume) selected one.
 const FAINTED_MODULATE := 0.4
+const RESTING_MODULATE := 0.5
 const UNSELECTED_MODULATE := 0.6
 const VACANT_MODULATE := 0.35
 const SELECTED_MODULATE := 1.0
@@ -66,9 +67,11 @@ var _rows: Array[PanelContainer] = []
 var _rails: Array[ColorRect] = []
 var _chips: Array[Panel] = []
 var _chip_boxes: Array[StyleBoxFlat] = []
+var _portraits: Array[TextureRect] = []
 var _name_labels: Array[Label] = []
 var _level_labels: Array[Label] = []
 var _ko_labels: Array[Label] = []
+var _rest_labels: Array[Label] = []
 var _hp_bars: Array[ProgressBar] = []
 var _hp_fills: Array[StyleBoxFlat] = []
 
@@ -80,6 +83,7 @@ var _hp_fills: Array[StyleBoxFlat] = []
 ## frame, is wasted allocation for no visible difference.
 var _last_label: Array[String] = ["", "", "", "", ""]
 var _last_level: Array[int] = [-1, -1, -1, -1, -1]
+var _last_portrait: Array[String] = ["", "", "", "", ""]
 var _last_selected: Array[bool] = [false, false, false, false, false]
 var _last_vacant: Array[bool] = [true, true, true, true, true]
 
@@ -137,11 +141,9 @@ func _build_row() -> PanelContainer:
 	_rails.append(rail)
 	hbox.add_child(rail)
 
-	# A Panel with a 1px BORDER outline, not a bare ColorRect — blind visual
-	# review read the old flat-fill chip as an accidental blank square, not a
-	# deliberate portrait placeholder. Real portraits are future art (see this
-	# file's header); the outline is what makes the colour chip read as an
-	# intentional stand-in for one in the meantime.
+	# A species-tinted frame around an existing creature reference render. The
+	# frame preserves the old at-a-glance type colour while the actual creature
+	# silhouette makes adjacent party members identifiable without reading text.
 	var chip := Panel.new()
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.custom_minimum_size = CHIP_SIZE
@@ -157,6 +159,16 @@ func _build_row() -> PanelContainer:
 	_chip_boxes.append(chip_box)
 	_chips.append(chip)
 	hbox.add_child(chip)
+
+	var portrait := TextureRect.new()
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.position = Vector2(2.0, 2.0)
+	portrait.size = CHIP_SIZE - Vector2(4.0, 4.0)
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.visible = false
+	_portraits.append(portrait)
+	chip.add_child(portrait)
 
 	var info := VBoxContainer.new()
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -194,6 +206,15 @@ func _build_row() -> PanelContainer:
 	ko_label.visible = false
 	_ko_labels.append(ko_label)
 	level_row.add_child(ko_label)
+
+	var rest_label := Label.new()
+	rest_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rest_label.text = "REST"
+	rest_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	rest_label.add_theme_color_override("font_color", UI_TOKENS.WATER_BLUE)
+	rest_label.visible = false
+	_rest_labels.append(rest_label)
+	level_row.add_child(rest_label)
 
 	var hp_bar := ProgressBar.new()
 	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -236,7 +257,8 @@ func set_pinned(pinned: bool) -> void:
 
 
 ## `entries`: up to `SLOTS` Dictionaries of
-## `{label: String, level: int, hp_fraction: float, tint: Color, fainted: bool}`,
+## `{label: String, level: int, hp_fraction: float, tint: Color,
+## portrait: String, fainted: bool, resting: bool}`,
 ## in party order. Anything beyond `entries.size()` (and always, past
 ## `SLOTS`) reads as a vacant slot. The caller — `playground_hud.gd`, in the
 ## later integration pass — builds these from `Party.members()` and
@@ -251,11 +273,18 @@ func update_from_party(entries: Array, active_index: int) -> void:
 
 func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) -> void:
 	var fainted := has_creature and bool(entry.get("fainted", false))
+	var resting := has_creature and bool(entry.get("resting", false))
 	var vacant := not has_creature
 
 	if vacant != _last_vacant[i] or selected != _last_selected[i]:
 		_rows[i].add_theme_stylebox_override("panel", UI_TOKENS.slot_box(selected))
 		_rails[i].visible = selected
+		_chip_boxes[i].border_color = UI_TOKENS.TEAL_SOFT if selected else UI_TOKENS.BORDER
+		var border_width := 2 if selected else 1
+		_chip_boxes[i].border_width_left = border_width
+		_chip_boxes[i].border_width_top = border_width
+		_chip_boxes[i].border_width_right = border_width
+		_chip_boxes[i].border_width_bottom = border_width
 		_last_vacant[i] = vacant
 		_last_selected[i] = selected
 
@@ -269,6 +298,8 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 		# stray bar" between real entries. Hidden entirely, not just emptied.
 		_level_labels[i].visible = false
 		_ko_labels[i].visible = false
+		_rest_labels[i].visible = false
+		_set_portrait(i, "")
 		_hp_bars[i].visible = false
 		_hp_bars[i].value = 0.0
 		_hp_fills[i].bg_color = UI_TOKENS.HP_GREEN
@@ -279,18 +310,29 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 
 	var tint: Color = entry.get("tint", UI_TOKENS.TEXT_MUTED)
 	_chip_boxes[i].bg_color = tint
+	_set_portrait(i, str(entry.get("portrait", "")))
 	_rows[i].modulate.a = (
 		FAINTED_MODULATE if fainted
-		else (SELECTED_MODULATE if selected else UNSELECTED_MODULATE)
+		else (RESTING_MODULATE if resting else (SELECTED_MODULATE if selected else UNSELECTED_MODULATE))
 	)
 
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))
 	_set_level(_level_labels[i], i, level, "Lv %d" % level)
 	_ko_labels[i].visible = fainted
+	_rest_labels[i].visible = resting
 
 	_hp_bars[i].value = clampf(float(entry.get("hp_fraction", 0.0)), 0.0, 1.0)
 	_hp_fills[i].bg_color = UI_TOKENS.DANGER if fainted else UI_TOKENS.HP_GREEN
+
+
+func _set_portrait(i: int, path: String) -> void:
+	if _last_portrait[i] == path:
+		return
+	_last_portrait[i] = path
+	var texture := load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	_portraits[i].texture = texture
+	_portraits[i].visible = texture != null
 
 
 func _set_label(label: Label, i: int, text: String) -> void:

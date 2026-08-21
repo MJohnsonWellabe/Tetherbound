@@ -201,6 +201,8 @@ var _hotbar_message_until := 0.0
 var _creature_block: Control = null
 var _creature_content: Control = null
 var _creature_chip: ColorRect = null
+var _creature_portrait: TextureRect = null
+var _creature_portrait_path := ""
 var _creature_name_label: Label = null
 var _creature_level_label: Label = null
 var _creature_type_label: Label = null
@@ -350,6 +352,14 @@ func _build_creature_block() -> void:
 	_creature_chip.size = Vector2(40.0, 40.0)
 	_creature_content.add_child(_creature_chip)
 
+	_creature_portrait = TextureRect.new()
+	_creature_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_portrait.position = Vector2(2.0, 6.0)
+	_creature_portrait.size = Vector2(36.0, 36.0)
+	_creature_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_creature_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_creature_content.add_child(_creature_portrait)
+
 	_creature_icon = TextureRect.new()
 	_creature_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_icon.texture = load(ICON_CREATURES)
@@ -429,6 +439,13 @@ func _update_creature_block() -> void:
 
 	var species_id := str(creature.get("species_id"))
 	_creature_chip.color = _species_tint(species_id)
+	var portrait_path := _species_portrait_path(species_id)
+	if portrait_path != _creature_portrait_path:
+		_creature_portrait_path = portrait_path
+		var portrait_texture: Texture2D = null
+		if ResourceLoader.exists(portrait_path):
+			portrait_texture = load(portrait_path) as Texture2D
+		_creature_portrait.texture = portrait_texture
 	_creature_name_label.text = str(creature.call("label"))
 	_creature_level_label.text = "Lv %d" % int(creature.get("level"))
 
@@ -449,6 +466,15 @@ func _species_tint(species_id: String) -> Color:
 		return UITokens.TEXT_MUTED
 	var placeholder: Dictionary = CREATURE_SPECIES.placeholder(species_id)
 	return Color(str(placeholder.get("colour", "#cccccc")))
+
+
+## Meadows ships a curated runtime copy of the owner-supplied render for every
+## installed creature. Reusing it here gives the field HUD real species
+## identity without adding portrait art or coupling the strip to 3D spawning.
+func _species_portrait_path(species_id: String) -> String:
+	if species_id.is_empty():
+		return ""
+	return "res://assets/ui/portraits/creatures/%s.png" % species_id
 
 
 func _type_colour(creature_type: String) -> Color:
@@ -513,6 +539,7 @@ func _update_party_strip() -> void:
 			"level": int(creature.get("level")),
 			"hp_fraction": float(creature.call("hp_fraction")),
 			"tint": _species_tint(str(creature.get("species_id"))),
+			"portrait": _species_portrait_path(str(creature.get("species_id"))),
 			"fainted": bool(creature.get("fainted")),
 			"resting": bool(creature.get("resting")),
 		})
