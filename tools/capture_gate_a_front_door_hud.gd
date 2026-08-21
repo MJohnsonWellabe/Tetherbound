@@ -125,9 +125,11 @@ func _capture_exploration_hud() -> void:
 		rig.set_process(false)
 		rig.set_physics_process(false)
 	var field := HEIGHTFIELD.new()
-	# Repository-proven open village-square composition from capture_site_shots:
-	# the earlier over-shoulder offset landed inside Grandpa's timber wall.
-	var player_xz := Vector2(14.0, -8.0)
+	# The survey's spawn-outward viewpoint is already authored to clear every
+	# village structure and read along the pond-valley route. Its trainer and
+	# summoned active creature keep this recognisably third-person exploration,
+	# not a detached landscape camera or another roof-level site shot.
+	var player_xz := Vector2(-15.0, -1.0)
 	player.global_position = Vector3(player_xz.x, field.height_at(player_xz.x, player_xz.y) + 0.4, player_xz.y)
 	player.velocity = Vector3.ZERO
 	player.set_physics_process(false)
@@ -136,9 +138,17 @@ func _capture_exploration_hud() -> void:
 	camera.fov = 70.0
 	camera.far = 2000.0
 	world.add_child(camera)
-	camera.global_position = Vector3(-6.0, 6.5, 4.0)
-	camera.look_at(player.global_position + Vector3.UP, Vector3.UP)
+	var eye_xz := Vector2(-9.0, -7.0)
+	var target_xz := Vector2(-140.0, 145.0)
+	camera.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) + 2.2, eye_xz.y)
+	camera.look_at(Vector3(target_xz.x, field.height_at(target_xz.x, target_xz.y) + 8.0, target_xz.y), Vector3.UP)
+	camera.rotation = Vector3(_pitch_for_horizon(0.28, camera.fov), camera.rotation.y, 0.0)
+	var away := player.global_position - camera.global_position
+	player.rotation = Vector3(0.0, atan2(away.x, away.z) + 0.35, 0.0)
 	camera.make_current()
+	var terrain := world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
 
 	await _finish_representative_world_state(world)
 	if not _failures.is_empty():
@@ -279,6 +289,11 @@ func _log_legend_rects(hud: CanvasLayer) -> void:
 		"  legend rects: panel=%s margin=%s label=%s content_height=%.1f"
 		% [legend.get_global_rect(), margin.get_global_rect(), label.get_global_rect(), label.get_content_height()]
 	)
+
+
+func _pitch_for_horizon(fraction: float, fov: float) -> float:
+	var half := tan(deg_to_rad(fov) * 0.5)
+	return -atan((0.5 - clampf(fraction, 0.05, 0.95)) * 2.0 * half)
 
 
 func _wait_until(predicate: Callable, label: String, timeout_ms: int = READY_TIMEOUT_MS) -> bool:
