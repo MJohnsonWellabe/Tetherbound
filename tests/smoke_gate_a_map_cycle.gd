@@ -135,14 +135,45 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if controls == null or not controls.text.contains("Zoom") or not controls.text.contains("Pan"):
 		_fail("full-map controller zoom/pan controls are not discoverable on screen")
 		return
+	var canvas := map_tab.get("_canvas") as Control
+	if canvas == null or not canvas.clip_contents:
+		_fail("full-map canvas does not clip scaled map content inside its panel")
+		return
+	var fit_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
 
 	await _pulse_motion_action("map_zoom_in")
 	if float(map_tab.get("_zoom")) <= 1.0:
 		_fail("physical RT did not zoom the full map in")
 		return
+	var zoomed_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	if zoomed_rect.size.x < fit_rect.size.x * 3.5 or zoomed_rect.size.y < fit_rect.size.y * 3.5:
+		_fail("zoom changed state without visibly scaling the map presentation")
+		return
+	# The relay's named region and major destination intentionally share a
+	# centre. Their geometry is therefore the canonical regression case for
+	# label-vs-marker collision avoidance at local zoom.
+	var relay_centre := Vector2(348.0, 3756.0)
+	var relay_point: Vector2 = map_tab.call("_world_to_canvas", relay_centre, zoomed_rect)
+	var relay_marker_rect := Rect2(relay_point - Vector2(24.0, 24.0), Vector2(48.0, 48.0))
+	var relay_occupied: Array[Rect2] = [relay_marker_rect]
+	var relay_label_rect: Rect2 = map_tab.call(
+		"_resolved_region_label_rect",
+		canvas,
+		zoomed_rect,
+		{"display_name": "The Tether Relay", "centre": relay_centre},
+		relay_occupied,
+	)
+	if relay_label_rect.size == Vector2.ZERO or relay_label_rect.intersects(relay_marker_rect):
+		_fail("zoomed region label still overlaps its major destination marker")
+		return
+	var centre_before_pan := zoomed_rect.get_center()
 	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
 	if (map_tab.get("_pan_world") as Vector2).x <= 1.0:
 		_fail("physical right stick did not pan the zoomed full map")
+		return
+	var panned_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	if panned_rect.get_center().distance_to(centre_before_pan) < 2.0:
+		_fail("right-stick pan changed state without visibly relocating the map")
 		return
 	# Drive to the boundary, then keep driving. A stable world-space centre on
 	# the second hold proves the clamp rather than merely proving movement.

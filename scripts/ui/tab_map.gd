@@ -63,8 +63,11 @@ const PLAYER_FACING_LENGTH := 10.0
 const PLAYER_FACING_HALF_WIDTH := 6.0
 const OBJECTIVE_RADIUS := 9.0
 const MIN_ZOOM := 1.0
-const MAX_ZOOM := 4.0
-const ZOOM_STEP := 0.5
+const MAX_ZOOM := 16.0
+## Deliberate strategic scales: the 4:1 north/south Meadows corridor needs a
+## substantial step before a 16:9 panel reads as a local rather than overview
+## map. Every trigger press should make an unmistakable, useful change.
+const ZOOM_LEVELS := [1.0, 4.0, 8.0, 16.0]
 const PAN_SPEED_MPS := 1200.0
 
 ## How far the player has to move before a redraw is worth spending — the fog
@@ -165,6 +168,7 @@ func build() -> void:
 	_canvas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_canvas.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_canvas.focus_mode = Control.FOCUS_ALL
+	_canvas.clip_contents = true
 	var canvas_panel := _panel(_canvas)
 	canvas_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(canvas_panel)
@@ -232,10 +236,10 @@ func poll() -> void:
 func _read_navigation_input() -> void:
 	var changed := false
 	if Input.is_action_just_pressed("map_zoom_in"):
-		_zoom = minf(MAX_ZOOM, _zoom + ZOOM_STEP)
+		_zoom = _next_zoom_level(1)
 		changed = true
 	if Input.is_action_just_pressed("map_zoom_out"):
-		_zoom = maxf(MIN_ZOOM, _zoom - ZOOM_STEP)
+		_zoom = _next_zoom_level(-1)
 		changed = true
 
 	var pan_input := Input.get_vector("look_left", "look_right", "look_up", "look_down")
@@ -248,14 +252,35 @@ func _read_navigation_input() -> void:
 		_canvas.queue_redraw()
 
 
+func _next_zoom_level(direction: int) -> float:
+	var nearest := 0
+	for index in ZOOM_LEVELS.size():
+		if absf(ZOOM_LEVELS[index] - _zoom) < absf(ZOOM_LEVELS[nearest] - _zoom):
+			nearest = index
+	return ZOOM_LEVELS[clampi(nearest + direction, 0, ZOOM_LEVELS.size() - 1)]
+
+
 func _clamp_pan() -> void:
 	if _zoom <= MIN_ZOOM:
 		_pan_world = Vector2.ZERO
 		return
 	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
 	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
-	var visible_fraction := 1.0 / _zoom
-	var max_pan := Vector2(span_x, span_z) * (1.0 - visible_fraction) * 0.5
+	var canvas_size := _canvas.size if _canvas != null else Vector2(640.0, 440.0)
+	var fit_scale := minf(canvas_size.x / span_x, canvas_size.y / span_z)
+	var scale := fit_scale * _zoom
+	var visible_span := canvas_size / maxf(scale, 0.001)
+	# At low zoom the narrow X axis is wholly visible; allow the complete strip
+	# to move between the panel edges, but never beyond them. Once an axis is
+	# larger than the panel the same absolute difference is the normal cropped
+	# world clamp.
+	var max_pan_x := absf(span_x - visible_span.x) * 0.5
+	if visible_span.x >= span_x:
+		# Reposition the wholly visible strip enough to communicate panning,
+		# without making a 300-frame controller hold crawl through thousands of
+		# metres of empty side gutter before it reaches a stable clamp.
+		max_pan_x = minf(max_pan_x, span_x * 0.45)
+	var max_pan := Vector2(max_pan_x, absf(span_z - visible_span.y) * 0.5)
 	_pan_world.x = clampf(_pan_world.x, -max_pan.x, max_pan.x)
 	_pan_world.y = clampf(_pan_world.y, -max_pan.y, max_pan.y)
 
@@ -267,7 +292,8 @@ func _update_header(map_state: RefCounted) -> void:
 		_surveyed_label.text = "Surveyed: --"
 		return
 	var fraction: float = float(map_state.call("discovered_fraction"))
-	_surveyed_label.text = "Surveyed: %d%%" % int(round(fraction * 100.0))
+	var view_name := "Whole Meadows" if _zoom <= MIN_ZOOM else "%dx local view" % int(_zoom)
+	_surveyed_label.text = "Surveyed: %d%%   •   %s" % [int(round(fraction * 100.0)), view_name]
 
 
 func _update_legend(map_state: RefCounted) -> void:
@@ -300,6 +326,7 @@ func _legend_entry(icon_name: String, label_text: String) -> Control:
 	var icon := TextureRect.new()
 	icon.texture = _icon_texture(icon_name)
 	icon.custom_minimum_size = Vector2(18, 18)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(icon)
 
@@ -323,24 +350,11 @@ func _draw_map(canvas: Control) -> void:
 	if rect_size.x <= 0.0 or rect_size.y <= 0.0:
 		return
 
-	# Letterbox to a centered rect matching the WORLD's own aspect ratio, not
-	# a bare square — stretching x/y independently would visibly warp the
-	# landmark layout relative to the terrain bake beneath it, and that ratio
-	# is only 1:1 (a square) because today's world happens to be square. The
-	# aspect is read from `MapState`'s own derived grid (`docs/MEADOWS_MACRO_
-	# LAYOUT.md` §8.6), so this stops assuming a square the moment the world
-	# does.
-	var world_span_x: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
-	var world_span_z: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
-	var aspect: float = world_span_x / maxf(world_span_z, 0.001)
-
-	var map_size: Vector2
-	if rect_size.x / maxf(rect_size.y, 0.001) > aspect:
-		map_size = Vector2(rect_size.y * aspect, rect_size.y) # panel wider than the world: height-constrained
-	else:
-		map_size = Vector2(rect_size.x, rect_size.x / aspect) # panel taller than the world: width-constrained
-	var map_origin := Vector2((rect_size.x - map_size.x) * 0.5, (rect_size.y - map_size.y) * 0.5)
-	var map_rect := Rect2(map_origin, map_size)
+	# Fit is an honest aspect-preserving overview. Zoom scales that same
+	# north-up world rectangle and lets the canvas clip it into a local view.
+	# Previously only the sampled source changed while the destination stayed
+	# at its ~108px fit width, so even the "zoomed" frame was still a strip.
+	var map_rect := _map_rect_for_canvas(rect_size)
 
 	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
 
@@ -350,7 +364,7 @@ func _draw_map(canvas: Control) -> void:
 
 	var terrain := _terrain_texture(world)
 	if terrain != null:
-		canvas.draw_texture_rect_region(terrain, map_rect, _view_source_rect(terrain))
+		canvas.draw_texture_rect(terrain, map_rect, false)
 	else:
 		# Defensive fallback (spec: NEVER crash) — headless tests and a menu
 		# opened before the world finishes standing up both land here.
@@ -362,7 +376,7 @@ func _draw_map(canvas: Control) -> void:
 
 	var fog := _fog_texture(map_state)
 	if fog != null:
-		canvas.draw_texture_rect_region(fog, map_rect, _view_source_rect(fog))
+		canvas.draw_texture_rect(fog, map_rect, false)
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -391,10 +405,18 @@ func _draw_map(canvas: Control) -> void:
 	# authored later, not a fix for a design problem that still exists:
 	# `_draw_region_label` nudges a label down past anything it collides
 	# with rather than trusting that no two centres will ever land close.
-	var placed_label_rects: Array[Rect2] = []
-	for region: Dictionary in (map_state.call("regions") as Array):
-		if bool(region.get("discovered", false)):
-			_draw_region_label(canvas, map_rect, region, placed_label_rects)
+	if _zoom <= MIN_ZOOM:
+		_draw_overview_callouts(canvas, map_rect, map_state)
+	else:
+		# Labels share one occupied-rect list with visible markers. Previously
+		# this list contained only older labels, so a region centred on its own
+		# destination (notably The Tether Relay) printed directly through the
+		# icon. Seeding the same deterministic nudge-down layout with the real
+		# marker geometry resolves that overlap without special-casing a place.
+		var placed_label_rects := _map_marker_exclusion_rects(canvas, map_rect, map_state)
+		for region: Dictionary in (map_state.call("regions") as Array):
+			if bool(region.get("discovered", false)):
+				_draw_region_label(canvas, map_rect, region, placed_label_rects)
 
 	var objective: Dictionary = map_state.call("objective_marker")
 	if not objective.is_empty():
@@ -406,6 +428,146 @@ func _draw_map(canvas: Control) -> void:
 			_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
 
 
+## A 4:1 world cannot honestly fill a 16:9 panel at whole-world fit. The
+## corridor therefore remains an undistorted strip, while its otherwise-empty
+## side gutters carry spatial callouts connected to their true Z positions.
+## This is overview-only: local zoom returns labels and icons to the terrain.
+func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
+		return
+
+	var regions: Array[Dictionary] = []
+	for region: Dictionary in (map_state.call("regions") as Array):
+		if not bool(region.get("discovered", false)):
+			continue
+		var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
+		regions.append({"text": str(region.get("display_name", "")), "point": point, "desired_y": point.y})
+
+	var destinations: Array[Dictionary] = []
+	for entry: Dictionary in (map_state.call("landmarks") as Array):
+		if bool(entry.get("dynamic", false)) or str(entry.get("category", "")) != "major":
+			continue
+		if not bool(entry.get("discovered", false)):
+			continue
+		var point := _world_to_canvas(entry.get("position", Vector2.ZERO), map_rect)
+		destinations.append({
+			"text": str(entry.get("display_name", "")),
+			"icon": str(entry.get("icon", "")),
+			"point": point,
+			"desired_y": point.y,
+		})
+
+	_spread_callouts(regions, 42.0, canvas.size.y - 24.0)
+	_spread_callouts(destinations, 42.0, canvas.size.y - 24.0)
+	_draw_callout_heading(canvas, "DISCOVERED REGIONS", Rect2(18.0, 10.0, map_rect.position.x - 42.0, 24.0), HORIZONTAL_ALIGNMENT_RIGHT)
+	_draw_callout_heading(canvas, "DESTINATIONS", Rect2(map_rect.end.x + 24.0, 10.0, canvas.size.x - map_rect.end.x - 42.0, 24.0), HORIZONTAL_ALIGNMENT_LEFT)
+	for callout in regions:
+		_draw_region_callout(canvas, map_rect, callout)
+	for callout in destinations:
+		_draw_destination_callout(canvas, map_rect, callout)
+
+
+func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> void:
+	if entries.is_empty():
+		return
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.desired_y) < float(b.desired_y))
+	const GAP := 34.0
+	var cursor := top
+	for index in entries.size():
+		var entry := entries[index]
+		entry["label_y"] = maxf(float(entry.desired_y), cursor)
+		entries[index] = entry
+		cursor = float(entry.label_y) + GAP
+	cursor = bottom
+	for offset in entries.size():
+		var index := entries.size() - 1 - offset
+		var entry := entries[index]
+		entry["label_y"] = minf(float(entry.label_y), cursor)
+		entries[index] = entry
+		cursor = float(entry.label_y) - GAP
+
+
+func _draw_callout_heading(canvas: Control, text: String, rect: Rect2, alignment: HorizontalAlignment) -> void:
+	if rect.size.x <= 20.0:
+		return
+	var baseline := rect.position + Vector2(0.0, rect.size.y - _region_font.get_descent(UITokens.FONT_TINY))
+	canvas.draw_string(_region_font, baseline, text, alignment, rect.size.x, UITokens.FONT_TINY, UITokens.TEXT_MUTED)
+
+
+func _draw_region_callout(canvas: Control, map_rect: Rect2, callout: Dictionary) -> void:
+	var point: Vector2 = callout.point
+	var y := float(callout.label_y)
+	var line_end := Vector2(map_rect.position.x - 18.0, y)
+	var line_colour := UITokens.TEAL
+	line_colour.a = 0.45
+	canvas.draw_polyline(PackedVector2Array([point, Vector2(map_rect.position.x - 8.0, point.y), line_end]), line_colour, 1.5, true)
+	canvas.draw_circle(point, 3.0, UITokens.TEAL)
+	var label_rect := Rect2(18.0, y - 12.0, maxf(map_rect.position.x - 48.0, 20.0), 24.0)
+	var baseline := label_rect.position + Vector2(0.0, label_rect.size.y - _region_font.get_descent(UITokens.FONT_LABEL))
+	canvas.draw_string(_region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_RIGHT, label_rect.size.x, UITokens.FONT_LABEL, UITokens.TEXT_SECONDARY)
+
+
+func _draw_destination_callout(canvas: Control, map_rect: Rect2, callout: Dictionary) -> void:
+	var point: Vector2 = callout.point
+	var y := float(callout.label_y)
+	var line_end := Vector2(map_rect.end.x + 18.0, y)
+	var line_colour := UITokens.WARNING
+	line_colour.a = 0.45
+	canvas.draw_polyline(PackedVector2Array([point, Vector2(map_rect.end.x + 8.0, point.y), line_end]), line_colour, 1.5, true)
+	var icon := _icon_texture(str(callout.icon))
+	var text_x := line_end.x + 8.0
+	if icon != null:
+		canvas.draw_texture_rect(icon, Rect2(text_x, y - 11.0, 22.0, 22.0), false)
+		text_x += 30.0
+	var label_width := maxf(canvas.size.x - text_x - 18.0, 20.0)
+	var baseline := Vector2(text_x, y + 7.0)
+	canvas.draw_string(_region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_LEFT, label_width, UITokens.FONT_LABEL, UITokens.TEXT_PRIMARY)
+
+
+func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> Array[Rect2]:
+	var occupied: Array[Rect2] = []
+	var viewport := Rect2(Vector2.ZERO, canvas.size)
+	for entry: Dictionary in (map_state.call("landmarks") as Array):
+		var visible := false
+		if bool(entry.get("dynamic", false)):
+			visible = str(entry.get("id", "")) != "objective"
+		else:
+			visible = bool(entry.get("discovered", false)) or bool(entry.get("silhouette", false))
+		if not visible:
+			continue
+		var point := _world_to_canvas(entry.get("position", Vector2.ZERO), map_rect)
+		var radius := _marker_size(entry) * 0.5 + 8.0
+		var exclusion := Rect2(point - Vector2(radius, radius), Vector2(radius, radius) * 2.0)
+		if viewport.intersects(exclusion):
+			occupied.append(exclusion)
+
+	var objective: Dictionary = map_state.call("objective_marker")
+	if not objective.is_empty():
+		var point := _world_to_canvas(objective.get("position", Vector2.ZERO), map_rect)
+		var exclusion := Rect2(point - Vector2(17.0, 17.0), Vector2(34.0, 34.0))
+		if viewport.intersects(exclusion):
+			occupied.append(exclusion)
+
+	var player := _player_node()
+	if player != null:
+		var point := _world_to_canvas(Vector2(player.global_position.x, player.global_position.z), map_rect)
+		var exclusion := Rect2(point - Vector2(24.0, 24.0), Vector2(48.0, 48.0))
+		if viewport.intersects(exclusion):
+			occupied.append(exclusion)
+	return occupied
+
+
+func _marker_size(entry: Dictionary) -> float:
+	var category := str(entry.get("category", ""))
+	if category == "major":
+		return 32.0
+	if category == "minor":
+		return 22.0
+	return ICON_SIZE
+
+
 func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: float) -> void:
 	var icon_name := str(entry.get("icon", ""))
 	if icon_name.is_empty():
@@ -415,9 +577,14 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 		return
 	var pos: Vector2 = entry.get("position", Vector2.ZERO)
 	var point := _world_to_canvas(pos, map_rect)
-	var size := Vector2(ICON_SIZE, ICON_SIZE)
-	if not map_rect.grow(-ICON_SIZE * 0.5).has_point(point):
+	var category := str(entry.get("category", ""))
+	var marker_size := _marker_size(entry)
+	var size := Vector2(marker_size, marker_size)
+	var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-marker_size * 0.5)
+	if not viewport.has_point(point):
 		return
+	if category == "major":
+		canvas.draw_circle(point, marker_size * 0.58, Color(0.02, 0.03, 0.04, 0.72))
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 
@@ -425,7 +592,7 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 	var pos: Vector2 = marker.get("position", Vector2.ZERO)
 	var point := _world_to_canvas(pos, map_rect)
 	var r := OBJECTIVE_RADIUS
-	if not map_rect.grow(-r).has_point(point):
+	if not Rect2(Vector2.ZERO, canvas.size).grow(-r).has_point(point):
 		return
 	var points := PackedVector2Array([
 		point + Vector2(0, -r), point + Vector2(r, 0), point + Vector2(0, r), point + Vector2(-r, 0),
@@ -449,13 +616,28 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 ## bounded to a handful of tries so a pathological cluster degrades to
 ## "stacked but readable" rather than an infinite loop.
 func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, placed: Array[Rect2]) -> void:
+	var rect := _resolved_region_label_rect(canvas, map_rect, region, placed)
+	if rect.size == Vector2.ZERO:
+		return
+	placed.append(rect)
+	var text := str(region.get("display_name", ""))
+	var font_size := UITokens.FONT_LABEL
+	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
+	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
+
+
+## Returns the exact final text rect after collision avoidance. Kept separate
+## from drawing so the controller smoke can prove that an icon-centred region
+## cannot regress to printing through that icon again.
+func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dictionary, occupied: Array[Rect2]) -> Rect2:
 	if _region_font == null:
 		_region_font = load(UITokens.FONT_PATH)
 	if _region_font == null:
-		return
+		return Rect2()
 	var text := str(region.get("display_name", ""))
 	if text.is_empty():
-		return
+		return Rect2()
 	var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
 	var font_size := UITokens.FONT_LABEL
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
@@ -474,7 +656,7 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 	var attempts := 0
 	while attempts < 6:
 		var collided := false
-		for other in placed:
+		for other in occupied:
 			if rect.intersects(other):
 				# Drop straight to just under THIS collider's own bottom edge,
 				# not down by this label's own height -- two centres that are
@@ -488,12 +670,9 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 		if not collided:
 			break
 		attempts += 1
-	if not map_rect.encloses(rect):
-		return
-	placed.append(rect)
-
-	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
-	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
+	if not Rect2(Vector2.ZERO, canvas.size).encloses(rect):
+		return Rect2()
+	return rect
 
 
 ## The player's dot, and which way they are facing.
@@ -518,7 +697,7 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 ## is canvas-down, which on a north-up map is south.
 func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: float) -> void:
 	var point := _world_to_canvas(Vector2(world_pos.x, world_pos.z), map_rect)
-	if not map_rect.grow(-(PLAYER_FACING_BASE + PLAYER_FACING_LENGTH)).has_point(point):
+	if not Rect2(Vector2.ZERO, canvas.size).grow(-(PLAYER_FACING_BASE + PLAYER_FACING_LENGTH)).has_point(point):
 		return
 	var forward := Vector2(sin(yaw), cos(yaw))
 	var side := Vector2(-forward.y, forward.x)
@@ -568,23 +747,22 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	var origin: Vector2 = MAP_STATE.origin()
 	var nx: float = clampf((pos.x - origin.x) / span_x, 0.0, 1.0)
 	var nz: float = clampf((pos.y - origin.y) / span_z, 0.0, 1.0)
-	var fit_point := map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
-	var pan_pixels := Vector2(
-		_pan_world.x / span_x * map_rect.size.x,
-		_pan_world.y / span_z * map_rect.size.y,
-	) * _zoom
-	return map_rect.get_center() + (fit_point - map_rect.get_center()) * _zoom - pan_pixels
+	return map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
 
 
-func _view_source_rect(texture: Texture2D) -> Rect2:
+## The actual aspect-preserving world rectangle drawn by the canvas. At 1x
+## it is the complete corridor. At larger scales it grows around the panel
+## centre and `_pan_world` moves it under the fixed clipping viewport.
+func _map_rect_for_canvas(canvas_size: Vector2) -> Rect2:
 	var span := Vector2(
 		float(MAP_STATE.CELL) * float(MAP_STATE.grid_x()),
 		float(MAP_STATE.CELL) * float(MAP_STATE.grid_z()),
 	)
-	var texture_size := texture.get_size()
-	var visible_size := texture_size / _zoom
-	var centre_normalized := Vector2(0.5, 0.5) + _pan_world / span
-	return Rect2(centre_normalized * texture_size - visible_size * 0.5, visible_size)
+	var fit_scale := minf(canvas_size.x / span.x, canvas_size.y / span.y)
+	var scale := fit_scale * _zoom
+	var size := span * scale
+	var centre := canvas_size * 0.5 - _pan_world * scale
+	return Rect2(centre - size * 0.5, size)
 
 
 ## Same two colours `scripts/ui/minimap.gd` fogs with (its own `FOG_UNDISCOVERED`/
