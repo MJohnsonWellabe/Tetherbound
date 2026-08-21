@@ -6,6 +6,37 @@ This is a compact manifest, not a replacement for `ralph/ACTIVE_GAME_PLAN.md` or
 
 On every coordinator restart, reconcile these entries against current `main`, current owner evidence, `DONE.md`, and CI before launching work. `RECONCILE` means “determine whether this is already fixed, still broken, or partly complete.”
 
+## Newest owner playtest — 2026-08-21 ROG Ally
+
+**Read first:** `ralph/OWNER_PLAYTEST_2026-08-21.md`.
+
+This is newer than the 2026-08-18 owner playtest and reopens Gate A wherever current owner evidence conflicts with an older green test or prior completion claim. **Do not pass Gate A until every item in this owner playtest is fixed or explicitly re-verified on the real player/ROG path.**
+
+Fresh owner blockers include:
+
+- severe ROG Ally lag / target-hardware performance;
+- Satchel input leaking into hotbar actions;
+- Build shortcut failing to transfer controller ownership, causing creature cycling instead of Build navigation;
+- Settings and teleport-destination lists not scrolling by controller;
+- first village trainer battle losing camera control when combat starts;
+- overlapping controller bindings between companion cycling, hotbar and modal contexts;
+- map unreadability plus zoom not focusing usefully around the player;
+- major shortcut prompts (Build/Map/etc.) needing larger, clearer placement under the hotbar;
+- opening objective/direction clarity still insufficient for normal first-session play;
+- village layout/spatial logic needing correction;
+- building rotate not working;
+- door/build/roof modular sizing and usable doors still wrong;
+- free-build/free-crafting rule inconsistency;
+- confusing party-cycle presentation and remaining `Pal` terminology;
+- team count showing `2/5` after three creatures are caught;
+- roadside signs placed in travel lanes;
+- trees/houses/bushes/props incorrectly occupying pond water;
+- unsafe full submersion lacking intended damage/hazard behavior;
+- washed-out/grey lighting state appearing after several minutes of play;
+- website/story front door needing a Team Tether / draining-the-land / Grandpa-too-old / player-must-step-up rewrite.
+
+A current owner reproduction outranks an older smoke/unit result. If a regression still passes while the owner path fails, fix the false-positive coverage gap as part of the defect.
+
 ## Gate A — canonical current work
 
 | Area | Canonical prompt(s) | State on restart | Gate-A proof |
@@ -73,6 +104,8 @@ Do not advance because the table is green individually. Run one continuous repre
 For environment changes, capture at least one open-field view and one lush pond-side view and run the repo visual-judge workflow. Verify that any density changes do not materially regress target performance.
 
 **Gate A passes only when that session is reliable, the verbs are credible, and the tested environment is representative enough to judge the real game.**
+
+After the 2026-08-21 owner playtest, Gate A evidence must also include the target-hardware/controller/map/build/camera/party-count/village/pond/lighting/submersion checks defined in `ralph/OWNER_PLAYTEST_2026-08-21.md`.
 
 ## Next package after Gate A
 
