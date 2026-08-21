@@ -2,16 +2,16 @@ extends SceneTree
 
 ## Gate A environment evidence: the pond mill, footbridge and ranger station.
 ## Anchors come from village.json and vertical placement comes from the current
-## heightfield, so OW5D-style relocations cannot leave this harness rendering an
-## empty historical site. Same honesty rule as tools/survey.sh: real frames,
-## no touch-ups.
+## live playground terrain, so OW5D-style relocations cannot leave this harness
+## rendering an empty historical site or hide a stale Terrain3D bake behind the
+## analytic recipe. Same honesty rule as tools/survey.sh: real frames, no
+## touch-ups.
 ##
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_mill_crossing.gd
 ##
 ## Do not use --headless: the Dummy renderer does not produce evidence frames.
 
-const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const VILLAGE_CONFIG := "res://data/config/village.json"
 const OUT_DIR := "res://shots/gate_a/mill_crossing"
@@ -45,6 +45,10 @@ func _run() -> void:
 		return
 	var world: Node = packed.instantiate()
 	root.add_child(world)
+	if not world.has_method("ground_height_at"):
+		push_error("playground world must expose ground_height_at() for honest terrain evidence")
+		quit(1)
+		return
 	var door: Node3D = await _wait_for_door(world, _at(mill_spec))
 	if door == null or not door.has_method("force_open"):
 		push_error("current mill placement has no runtime Door; Gate A doorway evidence cannot be captured")
@@ -69,11 +73,10 @@ func _run() -> void:
 	if look != null:
 		look.call("apply_time", "day")
 
-	var field: RefCounted = HEIGHTFIELD.new()
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	if player != null:
 		var park := _at(mill_spec)
-		player.global_position = Vector3(park.x, field.height_at(park.x, park.y) - 500.0, park.y)
+		player.global_position = Vector3(park.x, _ground_height(world, park) - 500.0, park.y)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
@@ -103,9 +106,9 @@ func _run() -> void:
 			var eye_xz: Vector2 = view["eye"]
 			var target_xz: Vector2 = view["target"]
 			eye = Vector3(eye_xz.x,
-				field.height_at(eye_xz.x, eye_xz.y) + float(view["eye_h"]), eye_xz.y)
+				_ground_height(world, eye_xz) + float(view["eye_h"]), eye_xz.y)
 			target = Vector3(target_xz.x,
-				field.height_at(target_xz.x, target_xz.y) + float(view["target_h"]), target_xz.y)
+				_ground_height(world, target_xz) + float(view["target_h"]), target_xz.y)
 
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
@@ -210,6 +213,14 @@ func _placement(config: Dictionary, prefab: String) -> Dictionary:
 func _at(spec: Dictionary) -> Vector2:
 	var value: Array = spec.get("at", [0.0, 0.0])
 	return Vector2(float(value[0]), float(value[1]))
+
+
+func _ground_height(world: Node, at: Vector2) -> float:
+	var height := float(world.call("ground_height_at", at.x, at.y))
+	if is_nan(height) or is_inf(height):
+		push_error("live ground_height_at() failed at (%.2f, %.2f)" % [at.x, at.y])
+		return 0.0
+	return height
 
 
 func _find_door_near(node: Node, at: Vector2) -> Node3D:
