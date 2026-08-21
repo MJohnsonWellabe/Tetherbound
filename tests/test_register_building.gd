@@ -42,6 +42,15 @@ func test_register_building_stores_the_given_yaw() -> void:
 	assert_almost_eq(float(entry.get("yaw_deg", -1.0)), 270.0)
 
 
+func test_register_building_records_paid_status_for_safe_dismantle_refunds() -> void:
+	game.register_building("floor", Vector3.ZERO, 0.0, false)
+	assert_false(bool((game.placed_buildings[0] as Dictionary).get("paid", true)),
+		"a Free Build piece must never become a material faucet when dismantled")
+	game.register_building("wall", Vector3.RIGHT)
+	assert_true(bool((game.placed_buildings[1] as Dictionary).get("paid", false)),
+		"ordinary/legacy placement defaults to paid and earns its full refund")
+
+
 func test_register_building_still_stores_position_as_a_three_element_array() -> void:
 	# The pre-BG1 shape must not have shifted underneath everything else that
 	# reads placed_buildings (build_placer.gd::restore_from_game, save_game.gd).

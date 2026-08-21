@@ -642,13 +642,12 @@ func _read_actions() -> void:
 		return
 
 	if not _open:
-		# An armed ghost owns B as build_cancel. The shell processes on the idle
-		# tick while BuildPlacer cancels on physics; opening and pausing here can
-		# prevent the pausable placer from ever seeing that same edge. Yield while
-		# placement is armed. BuildPlacer also suppresses reopen as it clears the
-		# ghost, covering the reverse process order.
-		if game != null and str(game.get("pending_build")) != "" \
-				and Input.is_action_just_pressed(str(_config.get("open_action", "menu_cancel"))):
+		# An armed ghost owns the whole construction control strip, including Y
+		# for Dismantle and B for Cancel. Menu shortcuts share those physical
+		# buttons, so the shell must not open Backpack/Map and steal the action
+		# before the placer sees it. Changing piece still uses the dedicated live
+		# Build menu, not this pause shell.
+		if game != null and str(game.get("pending_build")) != "":
 			return
 		# OF23: `menu_cancel` and `build_cancel` share gamepad B
 		# (project.godot). `build_menu.gd` is added straight under

@@ -6,9 +6,10 @@ extends Node
 ## the menu shipped — the tab arms an id and nothing read it. This reads it:
 ## while a build is armed, a ghost of the piece hovers ahead of the player,
 ## snapped onto the world's 2m module grid (`build_grid.gd`, matching
-## `building_prefabs.json`'s own grid) or flush against a same-type neighbour
-## when one is close enough, rotatable, green where it can stand and red (or
-## amber, snapped-but-blocked) where it cannot. `build_place` plants it, per
+## `building_prefabs.json`'s own grid) or onto the structural floor-edge,
+## wall-run and wall-top anchors in `build_snap_contract.gd`, rotatable, green
+## where it can stand and red (or amber, snapped-but-blocked) where it cannot.
+## `build_place` plants it, per
 ## D34's own action, not `interact` — see that decision's "double-read"
 ## section for why the old binding was retired. Costs go through
 ## `GameState.build_cost_for` / `can_afford`, which is the one gate the
@@ -29,6 +30,7 @@ const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
+const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
@@ -81,6 +83,8 @@ const ROTATE_RIGHT_ACTION := "build_rotate_right"
 const SNAP_CYCLE_ACTION := "build_snap_cycle"
 const PLACE_ACTION := "build_place"
 const CANCEL_ACTION := "build_cancel"
+const DISMANTLE_ACTION := "build_dismantle"
+const DISMANTLE_RANGE := 8.0
 
 ## D34/spec 13.3: the local grid overlay's reach around the ghost and its
 ## two line weights. Metres.
@@ -174,6 +178,9 @@ var _grid_mesh: MeshInstance3D = null
 ## `build_grid.resolve_position` would actually choose) first. Read by
 ## `_on_snap_dots_draw`, written by `_show_ghost`.
 var _snap_candidates: Array = []
+var _dismantle_target: Node3D = null
+var _dismantle_pressed_last := false
+static var _dismantle_material: StandardMaterial3D = null
 
 
 func _ready() -> void:
@@ -199,6 +206,7 @@ func _physics_process(_delta: float) -> void:
 		_armed_last = armed
 		_place_blocked = armed != ""
 	if armed == "":
+		_dismantle_pressed_last = false
 		_drop_ghost()
 		return
 
@@ -214,6 +222,7 @@ func _physics_process(_delta: float) -> void:
 	# world does not visibly freeze while a menu happens to be open on top of
 	# it -- only the actions that would change or spend the ghost are gated.
 	if INPUT_OWNER.current(get_tree()) != null:
+		_dismantle_pressed_last = Input.is_action_pressed(DISMANTLE_ACTION)
 		_show_ghost(game, armed)
 		# RG4: a build_place press swallowed here used to give no signal at
 		# all -- the ghost stays green (legal), nothing lands, and nothing
@@ -243,6 +252,14 @@ func _physics_process(_delta: float) -> void:
 		_yaw_deg = fposmod(_yaw_deg + _rotation_step_deg, 360.0)
 	if Input.is_action_just_pressed(SNAP_CYCLE_ACTION):
 		_rotation_step_deg = BUILD_GRID.next_snap_step_deg(_rotation_step_deg)
+	_update_dismantle_target()
+	var dismantle_pressed := Input.is_action_pressed(DISMANTLE_ACTION)
+	if dismantle_pressed and not _dismantle_pressed_last:
+		_dismantle_pressed_last = true
+		if _dismantle_target == null or not dismantle_piece(game, _dismantle_target):
+			AUDIO_CUES.play(&"ui_error")
+		return
+	_dismantle_pressed_last = dismantle_pressed
 
 	_show_ghost(game, armed)
 	if _place_blocked:
@@ -327,9 +344,19 @@ func _show_ghost(game: Node, armed: String) -> void:
 		_set_overlay_visible(false)
 		return
 
-	var resolved := BUILD_GRID.resolve_position(raw_spot, ground, _neighbour_positions(armed))
+	var buildings: Array = game.get("placed_buildings") as Array
+	var resolved := BUILD_SNAP.resolve(raw_spot, ground, armed, buildings)
 	var spot: Vector3 = resolved.position
 	var snapped_to_neighbour: bool = resolved.snapped_to_neighbour
+	var resolved_yaw := float(resolved.get("yaw_deg", NAN))
+	if not is_nan(resolved_yaw):
+		# A structural edge chooses the wall AXIS, not which visually-equivalent
+		# face (0/180 or 90/270) the player selected. Repeat placement promises
+		# to retain that orientation, and save regression checks it exactly.
+		var same_wall_axis := BUILD_SNAP.WALL_IDS.has(armed) \
+			and absf(fposmod(_yaw_deg, 180.0) - fposmod(resolved_yaw, 180.0)) < 0.01
+		if not same_wall_axis:
+			_yaw_deg = resolved_yaw
 	if snapped_to_neighbour and not _was_snapped:
 		AUDIO_CUES.play(&"build_snap")
 	_was_snapped = snapped_to_neighbour
@@ -346,7 +373,7 @@ func _show_ghost(game: Node, armed: String) -> void:
 			if not is_nan(h):
 				rise = maxf(rise, absf(h - ground))
 
-	var occupied := _cell_occupied(armed, spot)
+	var occupied := BUILD_SNAP.occupied(armed, spot, buildings)
 	var too_steep := rise > MAX_SLOPE_RISE
 	var afford := _can_afford(game, armed)
 	_ghost_ok = not too_steep and not occupied and afford
@@ -378,7 +405,10 @@ func _show_ghost(game: Node, armed: String) -> void:
 	else:
 		_ghost.call("tint_ghost", _ghost_ok)
 
-	_snap_candidates = BUILD_GRID.neighbours_in_range(raw_spot, _neighbour_positions(armed))
+	_snap_candidates = BUILD_GRID.neighbours_in_range(
+		raw_spot, BUILD_SNAP.candidate_positions(armed, buildings))
+	if _snap_candidates.is_empty():
+		_snap_candidates = BUILD_GRID.neighbours_in_range(raw_spot, _neighbour_positions(armed))
 	_update_overlay(spot)
 
 
@@ -513,7 +543,7 @@ func _place(game: Node, armed: String) -> void:
 	placed.global_position = _ghost.global_position
 	# R3.1. The registry, not this node, is what a save actually persists —
 	# see GameState.placed_buildings.
-	game.call("register_building", armed, placed.global_position, yaw_deg)
+	game.call("register_building", armed, placed.global_position, yaw_deg, not bool(game.get("free_build")))
 	# BUILD-FLOW (owner 2026-08-18): selection persists after a successful
 	# placement. The next physics tick moves the same ghost to the next candidate
 	# location; costs and registration still happen once per fresh Place edge.
@@ -579,7 +609,152 @@ func sync_state_to_game(game: Node) -> void:
 		(buildings[index] as Dictionary)["state"] = state.call("save_data")
 
 
+## Controller-first removal transaction. The caller supplies an explicitly
+## targeted player-built root (the centre-screen ray does that in production),
+## which also makes the economic/save transaction independently testable.
+func dismantle_piece(game: Node, target: Node3D) -> bool:
+	if game == null or target == null or not is_instance_valid(target) \
+			or not target.is_in_group(PLACED_GROUP):
+		return false
+	var index := int(target.get_meta(PLACED_INDEX_META, -1))
+	var buildings: Array = game.get("placed_buildings") as Array
+	if index < 0 or index >= buildings.size():
+		return false
+	var record := buildings[index] as Dictionary
+	var id := str(record.get("id", ""))
+	if id.is_empty() or str(target.get_meta(BUILDING_ID_META, "")) != id:
+		return false
+	if id == "storage":
+		var storage_state: RefCounted = target.get("state")
+		if storage_state != null:
+			for stack: Variant in (storage_state.call("save_data") as Array):
+				if stack != null:
+					game.call("push_world_message", "Empty the storage chest before dismantling it")
+					return false
+	if id == "creature_bed" and target.has_method("is_occupied") and bool(target.call("is_occupied")):
+		game.call("push_world_message", "Wake the resting creature before dismantling its bed")
+		return false
+
+	var refund: Array = game.call("build_cost_for", id) as Array
+	# `build_cost_for` is empty while Free Build is enabled, but paid structures
+	# still refund when the preference is toggled later. Read catalogue cost then.
+	if bool(record.get("paid", true)) and refund.is_empty():
+		var entry: Dictionary = game.get("items").call("buildable", id)
+		refund = (entry.get("cost", []) as Array).duplicate(true)
+	if not bool(record.get("paid", true)):
+		refund = []
+	var inventory: RefCounted = game.get("inventory")
+	if not _refund_fits(game, inventory, refund):
+		game.call("push_world_message", "Make room in your satchel before dismantling")
+		return false
+
+	_clear_dismantle_target()
+	buildings.remove_at(index)
+	for requirement: Variant in refund:
+		var need := requirement as Dictionary
+		inventory.call("add", str(need.get("id", "")), int(need.get("n", 0)))
+	target.queue_free()
+	_reindex_placed_nodes(index, game)
+	game.call("push_world_message", "Dismantled %s — materials refunded" % id.capitalize())
+	AUDIO_CUES.play(&"build_place")
+	return true
+
+
+func _refund_fits(game: Node, inventory: RefCounted, refund: Array) -> bool:
+	if inventory == null:
+		return false
+	var empty := 0
+	var room_by_id := {}
+	for i in inventory.call("slot_count"):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if stack.is_empty():
+			empty += 1
+			continue
+		var id := str(stack.get("id", ""))
+		var cap := int(game.get("items").call("stack_size", id))
+		room_by_id[id] = int(room_by_id.get(id, 0)) + maxi(0, cap - int(stack.get("n", 0)))
+	for requirement: Variant in refund:
+		var need := requirement as Dictionary
+		var id := str(need.get("id", ""))
+		var left := maxi(0, int(need.get("n", 0)) - int(room_by_id.get(id, 0)))
+		var cap := maxi(1, int(game.get("items").call("stack_size", id)))
+		var slots := ceili(float(left) / float(cap))
+		empty -= slots
+		if empty < 0:
+			return false
+	return true
+
+
+func _reindex_placed_nodes(removed_index: int, game: Node) -> void:
+	for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		var index := int(node.get_meta(PLACED_INDEX_META, -1))
+		if index <= removed_index:
+			continue
+		index -= 1
+		node.set_meta(PLACED_INDEX_META, index)
+		if node.has_method("set_build_index"):
+			node.call("set_build_index", index)
+	var party: RefCounted = game.get("party")
+	if party == null:
+		return
+	for i in party.call("size"):
+		var creature: RefCounted = party.call("at", i)
+		if creature != null and bool(creature.get("resting")) \
+				and int(creature.get("rest_bed_index")) > removed_index:
+			creature.set("rest_bed_index", int(creature.get("rest_bed_index")) - 1)
+
+
+func _update_dismantle_target() -> void:
+	var next: Node3D = null
+	var camera := get_viewport().get_camera_3d()
+	if camera != null:
+		var centre := get_viewport().get_visible_rect().size * 0.5
+		var from := camera.project_ray_origin(centre)
+		var to := from + camera.project_ray_normal(centre) * DISMANTLE_RANGE
+		var query := PhysicsRayQueryParameters3D.create(from, to)
+		query.collide_with_areas = false
+		var world_root := get_parent() as Node3D
+		var hit: Dictionary = world_root.get_world_3d().direct_space_state.intersect_ray(query) \
+			if world_root != null else {}
+		var node: Node = hit.get("collider") as Node
+		while node != null:
+			if node.is_in_group(PLACED_GROUP):
+				next = node as Node3D
+				break
+			node = node.get_parent()
+	if next == _dismantle_target:
+		return
+	_clear_dismantle_target()
+	_dismantle_target = next
+	if _dismantle_target == null:
+		return
+	if _dismantle_material == null:
+		_dismantle_material = StandardMaterial3D.new()
+		_dismantle_material.albedo_color = Color(UITokens.WARNING, 0.45)
+		_dismantle_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_dismantle_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	for mesh: MeshInstance3D in _target_meshes(_dismantle_target):
+		mesh.material_overlay = _dismantle_material
+
+
+func _clear_dismantle_target() -> void:
+	if _dismantle_target != null and is_instance_valid(_dismantle_target):
+		for mesh: MeshInstance3D in _target_meshes(_dismantle_target):
+			mesh.material_overlay = null
+	_dismantle_target = null
+
+
+func _target_meshes(root: Node) -> Array[MeshInstance3D]:
+	var out: Array[MeshInstance3D] = []
+	if root is MeshInstance3D:
+		out.append(root as MeshInstance3D)
+	for child: Node in root.get_children():
+		out.append_array(_target_meshes(child))
+	return out
+
+
 func _drop_ghost() -> void:
+	_clear_dismantle_target()
 	if _ghost != null and is_instance_valid(_ghost):
 		_ghost.queue_free()
 	_ghost = null
@@ -728,10 +903,11 @@ func _set_overlay_visible(shown: bool) -> void:
 ## this reads correctly the instant the ghost turns red, not only after a
 ## failed press.
 func _hint_text() -> String:
-	var controls := "%s Rotate    %s Snap step    %s Place    %s Cancel" % [
+	var controls := "%s Rotate    %s Snap step    %s Place    %s Dismantle    %s Cancel" % [
 		"%s/%s" % [INPUT_GLYPH.icon(ROTATE_LEFT_ACTION, 28), INPUT_GLYPH.icon(ROTATE_RIGHT_ACTION, 28)],
 		INPUT_GLYPH.icon(SNAP_CYCLE_ACTION, 28),
 		INPUT_GLYPH.icon(PLACE_ACTION, 28),
+		INPUT_GLYPH.icon(DISMANTLE_ACTION, 28),
 		INPUT_GLYPH.icon(CANCEL_ACTION, 28),
 	]
 	if _ghost_reason.is_empty():

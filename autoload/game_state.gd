@@ -611,11 +611,14 @@ func complete_creature_bed_rests() -> int:
 ## carried by the save format's VERSION 2 (`scripts/save/save_game.gd`),
 ## whose v1 migration writes the same safe 0.0 default onto old entries —
 ## the read side (`build_placer.gd::restore_from_game`) tolerates both.
-func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> void:
+func register_building(id: String, position: Vector3, yaw_deg: float = 0.0, paid: bool = true) -> void:
 	placed_buildings.append({
 		"id": id,
 		"position": [position.x, position.y, position.z],
 		"yaw_deg": yaw_deg,
+		# BUILD-REMOVE: Free Build placements must not become a material faucet.
+		# Missing on legacy saves means paid (the only pre-Free-Build economy).
+		"paid": paid,
 	})
 
 
