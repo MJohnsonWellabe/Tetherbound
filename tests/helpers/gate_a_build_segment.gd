@@ -2,18 +2,30 @@ extends RefCounted
 
 ## Reusable controller-only construction segment for Gate A's continuous run.
 ##
-## The caller owns setup: a real Meadows world, a grounded player on a clear
-## patch, paid mode, and enough naturally gathered materials. This helper does
-## not grant inventory, teleport, arm pending_build, call a menu/placer private
-## method, or edit placed_buildings. Every change to play state comes from a
-## physical joypad event fed through the live InputMap.
+## The caller owns progression and naturally earned materials. This helper
+## walks the actual player from their current Meadows position to the documented
+## opening-meadow build patch before it opens Build. It does not grant inventory,
+## teleport, arm pending_build, call a menu/placer private method, or edit
+## placed_buildings. Every change to play state comes from a physical joypad
+## event fed through the live InputMap.
 
 const BUILD_MENU_GROUP := &"build_menu"
 const PLACED_GROUP := &"placed_building"
+const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const PLACE_AHEAD := 3.0
 const POSITION_EPSILON := 0.08
 const MOVE_EPSILON := 0.16
 const MOVE_FRAME_LIMIT := 360
+const ROOF_ROUTE_MARGIN := 1.25
+
+## The broad grassy shoulder southeast of the opening pad, centred at (14,20).
+## It is deliberately off the village trail and pond vegetation: a player can
+## walk here from the opening area without using a debug warp, and the 2x2
+## shell leaves a complete exterior circuit. The smoke wrapper may stage a
+## player here for mechanical placement regression only; canonical evidence
+## must enter this helper from ordinary traversal with naturally earned stock.
+const BUILD_PATCH_XZ := Vector2(14.0, 20.0)
+const BUILD_PATCH_APPROACH_EPSILON := 0.55
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -26,6 +38,9 @@ var _move_x_axis: JoyAxis = JOY_AXIS_LEFT_X
 var _move_y_axis: JoyAxis = JOY_AXIS_LEFT_Y
 var _move_x_sign := 1.0
 var _move_y_sign := 1.0
+var _look_x_axis: JoyAxis = JOY_AXIS_RIGHT_X
+var _look_x_sign := 1.0
+var _house_record_start := 0
 
 
 func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> Dictionary:
@@ -34,15 +49,14 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 	_player = player
 	_camera_rig = camera_rig
 	_game = tree.root.get_node_or_null(^"Game")
-	if not _preflight():
+	if not await _preflight():
 		return _result()
 
 	var before_records := (_game.get("placed_buildings") as Array).size()
+	_house_record_start = before_records
 	var before_wood := _item_count("wood")
 	var before_stone := _item_count("stone")
 
-	if not await _select_piece("floor"):
-		return _result()
 	var first: Variant = await _place_current("floor")
 	if first == null:
 		return _result()
@@ -83,8 +97,6 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 			return _result()
 	transcript.append("placed one doorway and three wall pieces through the catalogue and snap contract")
 
-	if not await _select_piece("roof"):
-		return _result()
 	var roof_supports: Array[Dictionary] = [
 		{"floor": floor_a, "aim_offset": Vector3(-1.7, 0, 0)},
 		{"floor": floor_a + Vector3(2, 0, 0), "aim_offset": Vector3(1.7, 0, 0)},
@@ -95,14 +107,24 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 		var target: Vector3 = support["floor"]
 		var aim_offset: Vector3 = support["aim_offset"]
 		var roof_target := Vector3(target.x, target.y + 3.05, target.z)
-		# Aim from beyond the open side rather than trying to walk through the
-		# back wall to stand exactly three metres from the roof centre. The raw
-		# point stays within the production snap radius of only this roof anchor.
-		if not await _move_ghost_to(roof_target, aim_offset):
+		# Armed structural ghosts own enough of the construction interaction that
+		# long controller travel can stall even on a clear exterior lane. Stow the
+		# previous wall/roof with the visible Cancel control, walk normally, then
+		# reopen the catalogue and select Roof at the reachable stance.
+		if not await _stow_piece_for_travel():
 			return _result()
-		if await _place_current("roof") == null:
+		if not await _move_to_roof_stance(roof_target, aim_offset):
 			return _result()
-	transcript.append("placed four supported roof pieces through the real Roof selection")
+		if not await _select_piece("roof"):
+			return _result()
+		var placed_roof: Variant = await _place_current("roof")
+		if placed_roof == null:
+			return _result()
+		var placed_roof_position: Vector3 = placed_roof
+		if _flat_distance(placed_roof_position, roof_target) > POSITION_EPSILON:
+			_fail("controller Roof selection placed at %s instead of supported anchor %s" % [placed_roof, roof_target])
+			return _result()
+	transcript.append("stowed for travel and placed four supported roofs through four real Roof selections")
 
 	var built_records := (_game.get("placed_buildings") as Array).size() - before_records
 	if built_records != 12:
@@ -134,10 +156,35 @@ func _preflight() -> bool:
 		_fail("segment must start in exploration with no armed build piece")
 	if _item_count("wood") < 39 or _item_count("stone") < 34:
 		_fail("caller has insufficient natural materials: need 39 wood and 34 stone")
-	if not _player.is_on_floor():
-		_fail("caller must stand the player on a clear grounded Meadows patch")
 	_resolve_move_bindings()
-	return failures.is_empty()
+	if not failures.is_empty():
+		return false
+
+	# This is ordinary locomotion, not fixture positioning. The build patch is
+	# only a short walk from the opening pad, but the controller still has to
+	# reach it through the live collision world before a single material is spent.
+	if not await _walk_to(Vector3(BUILD_PATCH_XZ.x, _player.global_position.y, BUILD_PATCH_XZ.y)):
+		_fail("controller could not reach the documented off-trail Meadows build patch")
+		return false
+	if _flat_distance(_player.global_position, Vector3(BUILD_PATCH_XZ.x, 0.0, BUILD_PATCH_XZ.y)) > BUILD_PATCH_APPROACH_EPSILON:
+		_fail("controller stopped outside the documented build patch")
+		return false
+	if not _player.is_on_floor():
+		_fail("controller arrival did not leave the player grounded on the documented Meadows patch")
+		return false
+
+	# The green, live Floor ghost is the placement-clearance proof. It is armed
+	# through the public catalogue, moved by parsed stick input and read only as
+	# the placer's rendered legality state; no test-side build transaction occurs.
+	if not await _select_piece("floor"):
+		return false
+	await _settle(8)
+	var placer := _tree.get_first_node_in_group(&"build_placer")
+	if placer == null or not bool(placer.get("_ghost_ok")):
+		_fail("the documented patch has no legal first Floor ghost; do not spend materials there")
+		return false
+	transcript.append("walked by controller to the documented off-trail patch; grounded green Floor ghost verified before spending")
+	return true
 
 
 func _select_piece(id: String) -> bool:
@@ -216,6 +263,133 @@ func _move_ghost_to(target: Vector3, aim_offset: Vector3 = Vector3.ZERO) -> bool
 	return false
 
 
+func _move_to_roof_stance(target: Vector3, aim_offset: Vector3) -> bool:
+	# Each roof is aimed from the open X side of the shell. A right-stick turn
+	# makes the camera look inward before the left stick walks there, so the
+	# three-metre placement reach never asks the trainer to stand inside a wall.
+	# The left/right support order below therefore traces a complete exterior
+	# ring instead of relying on the camera's incidental original heading.
+	var outward := Vector3(signf(aim_offset.x), 0.0, 0.0)
+	if is_zero_approx(outward.x):
+		_fail("roof support lacks an exterior-side orientation")
+		return false
+	if not await _turn_camera_toward(-outward):
+		return false
+	var forward := -(_camera_rig.call("planar_basis") as Basis).z
+	var wanted_player := target + aim_offset - forward * PLACE_AHEAD
+	var shell := _lower_shell_bounds()
+	if shell.size == Vector2.ZERO:
+		_fail("could not derive the completed lower-shell footprint for the roof route")
+		return false
+	var left_x := shell.position.x - ROOF_ROUTE_MARGIN
+	var right_x := shell.end.x + ROOF_ROUTE_MARGIN
+	var front_z := shell.position.y - ROOF_ROUTE_MARGIN
+	var back_z := shell.end.y + ROOF_ROUTE_MARGIN
+	var centre := shell.get_center()
+	var current_lane_x := left_x if _player.global_position.x < centre.x else right_x
+	var wanted_lane_x := left_x if wanted_player.x < centre.x else right_x
+	# Step outside the actual placed floor/wall/door footprint, not a guessed
+	# world-space rectangle. The deliberately conservative half-module bounds
+	# also cover the wall collider's timber end caps.
+	if not await _walk_axis_to(current_lane_x, true, "geometry-derived roof side clearance"):
+		return false
+	# If the trainer already stands beyond the front/back bounds, cross at that
+	# exact Z instead of steering back toward a fixed lane. This is the live
+	# failure the first route exposed: its guessed +Z waypoint could put solid
+	# scenery between a perfectly safe current stance and the requested point.
+	var crossing_z := _player.global_position.z
+	if crossing_z >= front_z and crossing_z <= back_z:
+		crossing_z = front_z if absf(crossing_z - front_z) < absf(crossing_z - back_z) else back_z
+	if not await _walk_axis_to(crossing_z, false, "geometry-derived roof crossing clearance"):
+		return false
+	if not await _walk_axis_to(wanted_lane_x, true, "geometry-derived roof crossing lane"):
+		return false
+	if not await _walk_axis_to(wanted_player.z, false, "geometry-derived roof approach lane"):
+		return false
+	return await _move_ghost_to(target, aim_offset)
+
+
+func _turn_camera_toward(world_direction: Vector3) -> bool:
+	var wanted := Vector2(world_direction.x, world_direction.z).normalized()
+	if wanted.length_squared() < 0.01:
+		_fail("roof camera orientation received no planar direction")
+		return false
+	for frame in MOVE_FRAME_LIMIT:
+		var forward := -(_camera_rig.call("planar_basis") as Basis).z
+		var flat := Vector2(forward.x, forward.z).normalized()
+		if flat.dot(wanted) >= 0.995:
+			_parse_axis(_look_x_axis, 0.0)
+			return true
+		# The camera applies a positive look-right axis as a rightward yaw. The
+		# signed planar cross product tells the parsed controller which physical
+		# direction closes the remaining angle; no transform is written here.
+		var turn_right := -Vector3(forward.x, 0.0, forward.z).cross(world_direction).y > 0.0
+		_parse_axis(_look_x_axis, (1.0 if turn_right else -1.0) * _look_x_sign)
+		await _tree.physics_frame
+	_parse_axis(_look_x_axis, 0.0)
+	_fail("controller right stick could not orient the roof camera toward the exterior ring")
+	return false
+
+
+func _stow_piece_for_travel() -> bool:
+	if str(_game.get("pending_build")) == "":
+		return true
+	await _tap_action(&"build_cancel")
+	await _settle(6)
+	if str(_game.get("pending_build")) != "":
+		_fail("visible Build Cancel did not stow the armed piece before controller travel")
+		return false
+	if _open_build_menu() != null:
+		_fail("stowing placement unexpectedly opened the Build catalogue")
+		return false
+	return true
+
+
+func _lower_shell_bounds() -> Rect2:
+	var bounds := Rect2()
+	var has_piece := false
+	var records: Array = _game.get("placed_buildings") as Array
+	for i in range(_house_record_start, records.size()):
+		var record := records[i] as Dictionary
+		if not ["floor", "wall", "door"].has(str(record.get("id", ""))):
+			continue
+		var position := _record_position(record)
+		if position == Vector3.INF:
+			continue
+		# A full half-module in both axes is conservative for walls/doors but
+		# exact for floors. Conservatism is intentional: controller routing must
+		# clear visible/collidable end caps, not skim their nominal thin axis.
+		var low := Vector2(position.x - BUILD_SNAP.HALF, position.z - BUILD_SNAP.HALF)
+		var high := Vector2(position.x + BUILD_SNAP.HALF, position.z + BUILD_SNAP.HALF)
+		if not has_piece:
+			bounds = Rect2(low, high - low)
+			has_piece = true
+		else:
+			bounds = bounds.expand(low).expand(high)
+	return bounds if has_piece else Rect2()
+
+
+func _walk_axis_to(coordinate: float, x_axis: bool, purpose: String) -> bool:
+	var current := _player.global_position.x if x_axis else _player.global_position.z
+	var direction := signf(coordinate - current)
+	if direction == 0.0:
+		return true
+	for frame in MOVE_FRAME_LIMIT:
+		current = _player.global_position.x if x_axis else _player.global_position.z
+		var remaining := coordinate - current
+		if remaining * direction <= 0.0:
+			_release_move_stick()
+			return true
+		var strength := clampf(absf(remaining) / 0.9, 0.32, 1.0)
+		var world_direction := Vector3(direction, 0.0, 0.0) if x_axis else Vector3(0.0, 0.0, direction)
+		var local := (_camera_rig.call("planar_basis") as Basis).inverse() * world_direction * strength
+		_parse_move_stick(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
+		await _tree.physics_frame
+	_release_move_stick()
+	_fail("controller could not cross the %s" % purpose)
+	return false
+
+
 func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 	var records_before: Array = (_game.get("placed_buildings") as Array).duplicate(true)
 	var neighbours_before := _record_fingerprints_except(records_before, "wall", target_position)
@@ -223,7 +397,14 @@ func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 	var stone_before := _item_count("stone")
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
 	var wanted_player := target_position - forward * 2.0
+	if not await _stow_piece_for_travel():
+		return false
 	if not await _walk_to(wanted_player):
+		return false
+	# Dismantle highlighting belongs to the live placer and therefore requires
+	# Build to be armed. Re-enter through the public catalogue only after the
+	# travel is complete; selecting Wall spends nothing until Place is pressed.
+	if not await _select_piece("wall"):
 		return false
 	await _settle(8)
 	var highlighted := _highlighted_placed_piece()
@@ -416,13 +597,16 @@ func _parse_axis(axis: JoyAxis, value: float) -> void:
 func _resolve_move_bindings() -> void:
 	var right := _joy_motion_for(&"move_right")
 	var back := _joy_motion_for(&"move_back")
-	if right == null or back == null:
-		_fail("movement actions need physical joypad axes for post-Build resume proof")
+	var look_right := _joy_motion_for(&"look_right")
+	if right == null or back == null or look_right == null:
+		_fail("movement and camera actions need physical joypad axes for the exterior-ring proof")
 		return
 	_move_x_axis = right.axis
 	_move_x_sign = signf(right.axis_value)
 	_move_y_axis = back.axis
 	_move_y_sign = signf(back.axis_value)
+	_look_x_axis = look_right.axis
+	_look_x_sign = signf(look_right.axis_value)
 
 
 func _joy_motion_for(action: StringName) -> InputEventJoypadMotion:
