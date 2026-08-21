@@ -107,12 +107,35 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("no player or no build placer in the world; the first day cannot be played")
 		return
 
-	# Gather: activate a real harvest node's interactable at point-blank.
-	var before_wood := int(inventory.call("count", "wood"))
+	# Gather: activate a real harvest node's interactable at point-blank. The
+	# nearest authored node is currently stone, so this route must draw its
+	# pickaxe first rather than relying on the retired "carrying is enough"
+	# rule. Assign and press the real hotbar action: writing equipped_tool
+	# directly would let this smoke pass without proving the visible player
+	# route that harvest_node.gd now requires.
 	var node := _nearest_harvest(world, player.global_position)
 	if node == null:
 		_fail("no harvest nodes in the world; there is nothing to gather")
 		return
+	var item_id := str(node.get("_item_id"))
+	var items: RefCounted = _game.get("items")
+	var required_tool := str(items.call("gathered_with", item_id)) if items != null else ""
+	if not required_tool.is_empty():
+		if int(inventory.call("find_slot", required_tool)) < 0:
+			inventory.call("add", required_tool, 1)
+		if not bool(_game.call("assign_hotbar", 0, required_tool)):
+			_fail("could not assign the %s required by the nearest %s node to the hotbar"
+				% [required_tool, item_id])
+			return
+		await _press("hotbar_1")
+		var hold: Node = player.get("tool_hold")
+		if str(_game.get("equipped_tool")) != required_tool \
+				or hold == null or str(hold.call("equipped")) != required_tool \
+				or hold.call("prop_node") == null:
+			_fail("hotbar_1 did not visibly equip the %s required by the nearest %s node"
+				% [required_tool, item_id])
+			return
+	var amount_before := int(inventory.call("count", item_id))
 	player.global_position = node.global_position + Vector3(0.5, 0.5, 0.0)
 	player.velocity = Vector3.ZERO
 	for i in 30:
@@ -124,15 +147,20 @@ func _check_the_first_day_arc(world: Node) -> void:
 	Input.action_release("interact")
 	for i in 10:
 		await physics_frame
-	var gathered := int(inventory.call("count", "wood")) > before_wood \
-		or int(inventory.call("count", "stone")) > 0 \
-		or int(inventory.call("count", "fiber")) > 0 \
-		or int(inventory.call("count", "berries")) > 0
+	var gathered := int(inventory.call("count", item_id)) > amount_before
 	if not gathered:
-		_fail("standing on a harvest node and pressing interact gathered nothing (arbiter offers '%s')"
-			% (str(arbiter.call("prompt")) if arbiter != null else "no arbiter"))
+		_fail("standing on a %s node with %s visibly equipped and pressing interact gathered nothing (arbiter offers '%s')"
+			% [item_id, required_tool if not required_tool.is_empty() else "no tool required",
+				str(arbiter.call("prompt")) if arbiter != null else "no arbiter"])
 		return
-	print("gathered from a harvest node")
+	print("gathered %s from a harvest node with %s visibly equipped" % [
+		item_id, required_tool if not required_tool.is_empty() else "no tool required"])
+	if not required_tool.is_empty():
+		await _press("hotbar_1")
+		if not str(_game.get("equipped_tool")).is_empty():
+			_fail("pressing the equipped %s's hotbar slot again did not stow it" % required_tool)
+			return
+		_game.call("assign_hotbar", 0, "")
 
 	# Fund and arm the camp, then plant it through the placer's own press.
 	inventory.call("add", "wood", 12)
