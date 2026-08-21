@@ -142,6 +142,35 @@ static func resolve(
 	}
 
 
+## Apply a caller-owned failure bound after the ordinary catch roll.
+##
+## This does not belong in `resolve()` itself: ordinary catches must retain the
+## uncapped geometric odds above. The opening sequence has one explicit content
+## promise of its own (docs/OPENING_SEQUENCE.md: its tutorial catch cannot fail
+## twice), so CombatManager opts into this helper only for that configured beat
+## and species. `prior_failures` counts landed, legal throws; physical misses and
+## refusals never call catch resolution and therefore never advance the bound.
+##
+## The outcome is still decided once, here, before any wobble is performed. If
+## the bound converts a failed roll, its shake count is rebuilt from the final
+## outcome so the presentation cannot contradict the decision.
+static func apply_failure_bound(
+	decision: Dictionary, prior_failures: int, max_failures: int
+) -> Dictionary:
+	var bounded := decision.duplicate()
+	if bool(bounded.get("caught", false)) or max_failures < 0 \
+			or prior_failures < max_failures:
+		return bounded
+	bounded["caught"] = true
+	bounded["shakes"] = shakes_for(
+		true,
+		float(bounded.get("chance", 0.0)),
+		float(bounded.get("roll", 0.0))
+	)
+	bounded["failure_bound_applied"] = true
+	return bounded
+
+
 ## How many times the orb wobbles before it settles or breaks open.
 ##
 ## Derived from the decision, never from a fresh roll. On a failure the count is

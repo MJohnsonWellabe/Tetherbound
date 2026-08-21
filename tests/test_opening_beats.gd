@@ -143,10 +143,15 @@ func test_a_facing_of_nothing_still_produces_a_row() -> void:
 	assert_true(offsets[0].distance_to(offsets[1]) > 0.1)
 
 
-func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate() -> void:
-	# docs/OPENING_SEQUENCE.md: chosen so the tutorial catch cannot fail twice.
-	var id := str(BEATS.encounter().get("species", ""))
+func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate_and_a_failure_bound() -> void:
+	# The high base rate makes the first attempt honestly likely. The explicit
+	# bound is what actually enforces docs/OPENING_SEQUENCE.md's stronger
+	# promise that the tutorial catch cannot fail twice.
+	var encounter := BEATS.encounter()
+	var id := str(encounter.get("species", ""))
 	assert_ne(id, "", "beat 6 needs a creature to walk out to")
+	assert_eq(int(encounter.get("max_catch_failures", -1)), 1,
+		"the tutorial may break out once, but a second landed legal throw must catch")
 	var species := preload("res://scripts/creatures/creature_species.gd")
 	assert_true(species.has(id), "the opening's wild creature '%s' is not in species.json" % id)
 	var best := species.catch_rate(id)

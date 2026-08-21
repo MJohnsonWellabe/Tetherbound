@@ -1058,6 +1058,21 @@ func _starter_already_granted() -> bool:
 func _on_combat_entered() -> void:
 	if _beat == BEATS.WALK_OUT:
 		_set_beat(BEATS.ENCOUNTER)
+	# OPENING_SEQUENCE.md promises that the authored practice catch cannot fail
+	# twice. Species rate alone is probability, not a bound, so opt this exact
+	# encounter into CombatManager's narrow landed-throw assist. Checking both
+	# beat and configured species prevents another Bramblebun fought later from
+	# inheriting tutorial odds. Every other fight actively disables the policy.
+	var enemy: RefCounted = _manager.call("enemy") as RefCounted
+	var encounter_cfg := BEATS.encounter()
+	var tutorial_species := str(encounter_cfg.get("species", ""))
+	var tutorial_fight := _beat == BEATS.ENCOUNTER and enemy != null \
+			and str(enemy.get("species_id")) == tutorial_species
+	_manager.call(
+		"configure_tutorial_catch_assist",
+		tutorial_fight,
+		int(encounter_cfg.get("max_catch_failures", 1))
+	)
 
 
 func _on_combat_exited(outcome: String) -> void:

@@ -160,6 +160,33 @@ func test_resolve_is_reproducible() -> void:
 	assert_eq(first["shakes"], second["shakes"])
 
 
+func test_tutorial_failure_bound_allows_one_failed_landed_throw_then_catches() -> void:
+	# Exact Gate A opening reproduction: Bramblebun at 26/124 HP with a basic
+	# orb. Pin a deliberately losing roll to prove policy rather than luck.
+	var hp_fraction := 26.0 / 124.0
+	var ordinary: Dictionary = CATCH.resolve(
+		SPECIES.catch_rate("bramblebun"), hp_fraction, "orb_basic", BODY, BODY, 0.999
+	)
+	assert_false(ordinary["caught"], "the chosen roll must lose under ordinary catch balance")
+
+	var first: Dictionary = CATCH.apply_failure_bound(ordinary, 0, 1)
+	assert_false(first["caught"], "the tutorial still allows one honest breakout")
+	assert_almost_eq(float(first["chance"]), float(ordinary["chance"]), 0.0001,
+		"the tutorial policy must not retune the ordinary catch chance")
+
+	var second: Dictionary = CATCH.apply_failure_bound(ordinary, 1, 1)
+	assert_true(second["caught"], "the configured tutorial catch must not fail twice")
+	assert_eq(int(second["shakes"]), CATCH.shakes_for(true, float(second["chance"]), 0.0),
+		"the wobble must describe the final assisted outcome")
+
+
+func test_failure_bound_is_opt_in_and_never_changes_ordinary_catches() -> void:
+	var ordinary: Dictionary = CATCH.resolve(0.6, 26.0 / 124.0, "orb_basic", BODY, BODY, 0.999)
+	var unbounded: Dictionary = CATCH.apply_failure_bound(ordinary, 99, -1)
+	assert_false(unbounded["caught"], "a disabled bound must preserve ordinary RNG forever")
+	assert_false(unbounded.has("failure_bound_applied"))
+
+
 func test_a_near_miss_shakes_more_than_a_hopeless_throw() -> void:
 	# The wobble count is honest information about how close the throw was.
 	var near: int = CATCH.shakes_for(false, 0.5, 0.55)

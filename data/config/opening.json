@@ -48,7 +48,9 @@
   "encounter": {
     "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice creature and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
     "species": "bramblebun",
-    "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.55), chosen so the tutorial catch cannot fail twice."
+    "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.60), chosen for the opening's forgiving first catch.",
+    "max_catch_failures": 1,
+    "_comment_catch_bound": "docs/OPENING_SEQUENCE.md says the tutorial catch cannot fail twice. This bounds only landed, otherwise-legal throws at this configured species while the opening is on its encounter beat. Physical misses, fainted targets and trained creatures never reach the roll and ordinary catches never read this value."
   },
 
   "beats": {

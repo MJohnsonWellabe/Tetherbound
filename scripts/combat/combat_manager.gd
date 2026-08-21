@@ -149,6 +149,14 @@ var _catch_shakes_total: int = 0
 var _catch_succeeded: bool = false
 var _catch_index: int = 0
 
+## Opening-only reliability policy, configured by SequenceDirector rather than
+## inferred from species here. Bramblebun remains an ordinary RNG catch
+## everywhere else; only the authored first-catch beat gets the documented
+## "cannot fail twice" bound. The count survives a run/re-engage during that
+## beat and resets when the sequence disables the policy.
+var _tutorial_catch_failure_bound: int = -1
+var _tutorial_catch_failures: int = 0
+
 ## `R9.4-remainder-9-combat`: floats over the real opponent for the length of
 ## the fight, so it cannot be confused with an ambient decorative creature from the
 ## same spawn cluster.
@@ -192,6 +200,21 @@ func active_creature() -> RefCounted:
 
 func enemy() -> RefCounted:
 	return _enemy
+
+
+## SequenceDirector owns whether the current fight is the authored tutorial.
+## Re-enabling an already-active policy preserves failures across a run and
+## retry; changing or disabling it starts the next context cleanly.
+func configure_tutorial_catch_assist(enabled: bool, max_failures: int = 1) -> void:
+	var next_bound := maxi(max_failures, 0) if enabled else -1
+	if next_bound == _tutorial_catch_failure_bound:
+		return
+	_tutorial_catch_failure_bound = next_bound
+	_tutorial_catch_failures = 0
+
+
+func tutorial_catch_failures() -> int:
+	return _tutorial_catch_failures
 
 
 ## R4.7: is `creature` the fight's flagged Best Creature? Compared by
@@ -991,6 +1014,12 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		radius,
 		_rng.randf()
 	)
+	if _tutorial_catch_failure_bound >= 0:
+		decision = CATCH.apply_failure_bound(
+			decision, _tutorial_catch_failures, _tutorial_catch_failure_bound
+		)
+		if not bool(decision["caught"]):
+			_tutorial_catch_failures += 1
 	_catch_succeeded = bool(decision["caught"])
 	_catch_shakes_total = int(decision["shakes"])
 	_catch_index = 0
