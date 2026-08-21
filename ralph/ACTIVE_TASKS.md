@@ -10,7 +10,7 @@ On every coordinator restart, reconcile these entries against current `main`, cu
 
 **Read first:** `ralph/OWNER_PLAYTEST_2026-08-21.md`.
 
-This is newer than the 2026-08-18 owner playtest and reopens Gate A wherever current owner evidence conflicts with an older green test or prior completion claim. **Do not pass Gate A until every item in this owner playtest is fixed or explicitly re-verified on the real player/ROG path.**
+This is newer than the 2026-08-18 owner playtest and reopens Gate A wherever current owner evidence conflicts with an older green test or prior completion claim. **Do not pass Gate A until every Gate-A-class item in this owner playtest is fixed or explicitly re-verified on the real player/ROG path.**
 
 Fresh owner blockers include:
 
@@ -20,6 +20,7 @@ Fresh owner blockers include:
 - Settings and teleport-destination lists not scrolling by controller;
 - first village trainer battle losing camera control when combat starts;
 - overlapping controller bindings between companion cycling, hotbar and modal contexts;
+- Load Game reaching the home/menu screen but failing to transition into a playable loaded world;
 - map unreadability plus zoom not focusing usefully around the player;
 - major shortcut prompts (Build/Map/etc.) needing larger, clearer placement under the hotbar;
 - opening objective/direction clarity still insufficient for normal first-session play;
@@ -27,12 +28,15 @@ Fresh owner blockers include:
 - building rotate not working;
 - door/build/roof modular sizing and usable doors still wrong;
 - free-build/free-crafting rule inconsistency;
+- equipped axe hold/grip and visible chopping swing still not reading correctly in normal play;
 - confusing party-cycle presentation and remaining `Pal` terminology;
 - team count showing `2/5` after three creatures are caught;
 - roadside signs placed in travel lanes;
 - trees/houses/bushes/props incorrectly occupying pond water;
 - unsafe full submersion lacking intended damage/hazard behavior;
 - washed-out/grey lighting state appearing after several minutes of play;
+- Stronghold and Burrow Warrens fights sometimes phasing participants outside reachable arena bounds and becoming effectively impossible;
+- pond-to-village travel currently feeling long, bare and boring; retain this as Gate B/C/D1 route-content work even after Gate A's representative baseline passes;
 - website/story front door needing a Team Tether / draining-the-land / Grandpa-too-old / player-must-step-up rewrite.
 
 A current owner reproduction outranks an older smoke/unit result. If a regression still passes while the owner path fails, fix the false-positive coverage gap as part of the defect.
@@ -43,15 +47,16 @@ A current owner reproduction outranks an older smoke/unit result. If a regressio
 |---|---|---|---|
 | Modal/input freezes | `39-RG1-owner-playtest-modal-freeze-reopen.md` + older `01-RG1-post-modal-freeze.md` | RECONCILE | Repeated Innkeeper, bed, Build, menus return to world control; no freeze/input loss |
 | Controller UI | `03-RG6-controller-ui-input-audit.md` | RECONCILE | All reachable menus/dialogue/settings work by controller |
-| Save/load | `04-RG7-save-position-and-progression-persistence.md` | RECONCILE | Exact position/facing/story state survive save/load |
+| Save/load | `04-RG7-save-position-and-progression-persistence.md` | RECONCILE | Title/load flow enters world; exact position/facing/story state survive save/load |
 | Combat camera | `05-RG8-combat-camera-follow-and-control.md` | RECONCILE | Camera follows active creature with normal orbit control and returns correctly |
+| Combat arena containment | current owner playtest + regional combat smokes | RECONCILE | Stronghold/Warrens and representative fights keep participants inside reachable legal arena bounds |
 | Exploration control legend | `10-RG3-always-visible-exploration-control-legend.md` | RECONCILE | Major verbs readable without opening another screen |
 | Build placement base regression | `02-RG4-build-placement-confirmation.md` | VERIFY | Base placement still works; do not regress it |
 | Build repeat placement | `40-BUILD-valheim-repeat-placement.md` | RECONCILE | Selected piece remains active until cancel/change |
 | Build dismantle | `41-BUILD-dismantle-full-refund.md` | RECONCILE | Player-built structures can be targeted/dismantled with full refund |
 | Build modular snapping | `42-BUILD-modular-snap-contract.md` | RECONCILE | 2×2 floor + aligned walls + doorway + roof can be built cleanly |
 | Build HUD controls | `13-RG14-verify-build-placement-control-strip.md` | VERIFY | Place/rotate/snap/cancel readable during placement |
-| Gathering/tool feel | `44-GATHER-equipped-tool-swing-and-pickup-feedback.md` | RECONCILE | Correct tool equipped, visible swing/hit, drops, `+X` pickup feedback |
+| Gathering/tool feel | `44-GATHER-equipped-tool-swing-and-pickup-feedback.md` | RECONCILE | Correct tool visibly held; believable swing/hit; drops; `+X` pickup feedback |
 | Creature bed/recovery | `43-CREATURE-BED-gradual-overnight-rest.md` | RECONCILE | Creature visibly rests, gradually heals, unavailable while resting, overnight completion matters |
 | Catch aiming/throw | `45-CATCH-over-shoulder-aim-and-throw.md` | RECONCILE | Hold aim → controlled camera/reticle/trajectory → physical throw/cancel |
 | Party cycling | `48-PARTY-cycle-pals-in-world.md` | RECONCILE | Previous/next creature works in exploration without menu trip |
@@ -105,7 +110,7 @@ For environment changes, capture at least one open-field view and one lush pond-
 
 **Gate A passes only when that session is reliable, the verbs are credible, and the tested environment is representative enough to judge the real game.**
 
-After the 2026-08-21 owner playtest, Gate A evidence must also include the target-hardware/controller/map/build/camera/party-count/village/pond/lighting/submersion checks defined in `ralph/OWNER_PLAYTEST_2026-08-21.md`.
+After the 2026-08-21 owner playtest, Gate A evidence must also include the target-hardware/controller/map/build/camera/party-count/village/pond/lighting/submersion/load-game/gathering-presentation/combat-containment checks defined in `ralph/OWNER_PLAYTEST_2026-08-21.md`.
 
 ## Next package after Gate A
 
@@ -114,5 +119,7 @@ After the 2026-08-21 owner playtest, Gate A evidence must also include the targe
 Fresh-save evidence path:
 
 Grandpa → starter → naming → first wild fight/catch → build team → train → gather → small home → creature bed → player bed/sleep → tournament readiness → tournament win → clear South Bridge objective.
+
+The pond-to-village route-content complaint from the 2026-08-21 owner playtest remains a required Gate B/C/D1 follow-through item: post-tournament travel must not be a long empty walk.
 
 Do not work distant region polish ahead of Gate A/B unless it can run safely in parallel without taking resources from higher-impact active work.
