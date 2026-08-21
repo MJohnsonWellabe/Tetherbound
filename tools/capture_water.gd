@@ -66,6 +66,14 @@ func _run() -> void:
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
+	# Terrain3D keeps its own camera reference for region/LOD preparation. The
+	# authored gameplay rig is still parked at spawn, hundreds of metres from
+	# the relocated pond, so making this capture camera current is not enough:
+	# without the explicit handoff the pond terrain stays prepared around spawn,
+	# leaving the remote site incomplete while the water surface remains visible.
+	var terrain: Node = world.get("_terrain") as Node
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
