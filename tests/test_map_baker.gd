@@ -71,6 +71,33 @@ func test_bake_returns_a_texture_of_the_requested_resolution() -> void:
 	assert_eq(image.get_height(), RESOLUTION)
 
 
+func test_default_bake_uses_square_world_texels_over_a_rectangular_corridor() -> void:
+	var corridor := {
+		"min_x": -256.0,
+		"max_x": 256.0,
+		"min_z": -256.0,
+		"max_z": 768.0,
+	}
+	var image := MAP_BAKER.bake(FakeWorld.new(), 0, corridor).get_image()
+	assert_eq(image.get_width(), 64,
+		"the 512m corridor width should bake at one texel per 8m")
+	assert_eq(image.get_height(), 128,
+		"a world twice as long must produce a texture twice as tall, not a stretched square")
+
+
+func test_authored_route_survives_coarse_terrain_sampling() -> void:
+	var image := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS).get_image()
+	# Grandpa's House route starts at (10,-10). At this deliberately coarse
+	# 8m/px bake its 3m width cannot reliably hit texel centres, so this point
+	# specifically proves the canonical-polyline overlay carries the route.
+	var route_pixel := _world_to_pixel(Vector2(10.0, -10.0))
+	# RGB8 quantizes the authored float colour on write.
+	var actual := image.get_pixelv(route_pixel)
+	assert_true(maxf(absf(actual.r - MAP_BAKER.PATH_COLOUR.r),
+		maxf(absf(actual.g - MAP_BAKER.PATH_COLOUR.g), absf(actual.b - MAP_BAKER.PATH_COLOUR.b))) < 0.01,
+		"an authored route waypoint must remain visible at minimap bake density")
+
+
 func test_a_deep_basin_pixel_reads_as_water() -> void:
 	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS)
 	var image := texture.get_image()

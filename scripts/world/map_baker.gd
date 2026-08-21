@@ -70,8 +70,14 @@ const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 ## and a cooler worked-stone grey for building aprons, blended in that
 ## order so a path crossing a village square still reads as path -- the
 ## same "paths win" rule the terrain shader itself already follows.
-const PATH_COLOUR := Color(0.65, 0.54, 0.42)
+const PATH_COLOUR := Color(0.44, 0.30, 0.18)
 const BUILDING_APRON_COLOUR := Color(0.58, 0.56, 0.52)
+
+## Keep the historical ~262k-sample cost while giving the corridor square
+## world texels: 2,048x8,192m becomes 256x1,024px. The authored route overlay
+## below preserves narrow trails that an 8m centre sample can legitimately miss.
+const DEFAULT_METRES_PER_PIXEL := 8.0
+const CACHE_SCHEMA := "corridor-aspect-8m-routes-v1"
 
 ## Set by `bake_cached()` on every call — true when the cached PNG was reused,
 ## false when a bake actually ran. Exists purely so `tests/test_map_baker.gd`
@@ -79,7 +85,7 @@ const BUILDING_APRON_COLOUR := Color(0.58, 0.56, 0.52)
 static var last_bake_was_cache_hit := false
 
 
-## Samples `world.call("ground_height_at", x, z)` on a `resolution`² grid
+## Samples `world.call("ground_height_at", x, z)` on a grid
 ## across `bounds` (default: the whole playground, per `world_extent.gd`) and
 ## colours each pixel by height/slope. `world` is typed `Object`, not `Node`,
 ## deliberately: it only needs to answer `ground_height_at`, and
@@ -91,18 +97,26 @@ static var last_bake_was_cache_hit := false
 ##
 ## `bounds`, when given, is `{min_x, max_x, min_z, max_z}` — a sub-rectangle
 ## of the world rather than the whole thing, for a future per-region caller
-## (see the DEFERRED note above this function's const block). Square by
-## construction when omitted (today's world), so `resolution × resolution`
-## pixels stay 1:1 with world metres exactly as before.
-static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) -> ImageTexture:
+## (see the DEFERRED note above this function's const block). An explicit
+## `resolution` keeps the historical square test/probe contract; production
+## derives each axis from the rectangle so texels cover equal world distances.
+## `resolution > 0` retains the square synthetic/test contract. Production
+## omits it, producing a rectangular texture with square 8m world texels; a
+## square texture over the 2,048x8,192m corridor destroys both aspect and the
+## local trail signal the minimap needs.
+static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) -> ImageTexture:
 	var extent := bounds if not bounds.is_empty() else WORLD_EXTENT.bounds()
 	var min_x: float = float(extent.get("min_x", 0.0))
 	var min_z: float = float(extent.get("min_z", 0.0))
-	var step_x := (float(extent.get("max_x", 0.0)) - min_x) / float(resolution)
-	var step_z := (float(extent.get("max_z", 0.0)) - min_z) / float(resolution)
+	var span_x := float(extent.get("max_x", 0.0)) - min_x
+	var span_z := float(extent.get("max_z", 0.0)) - min_z
+	var resolution_x := resolution if resolution > 0 else maxi(1, int(ceil(span_x / DEFAULT_METRES_PER_PIXEL)))
+	var resolution_z := resolution if resolution > 0 else maxi(1, int(ceil(span_z / DEFAULT_METRES_PER_PIXEL)))
+	var step_x := span_x / float(resolution_x)
+	var step_z := span_z / float(resolution_z)
 
 	var heights := PackedFloat32Array()
-	heights.resize(resolution * resolution)
+	heights.resize(resolution_x * resolution_z)
 
 	var min_height := INF
 	var max_height := -INF
@@ -110,14 +124,14 @@ static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) 
 	# Two-pass: sample every height first (and remember it) so the slope
 	# shading pass below can read already-sampled neighbours instead of
 	# calling back into `world` a second time per pixel.
-	for iz in resolution:
+	for iz in resolution_z:
 		var z := min_z + (float(iz) + 0.5) * step_z
-		for ix in resolution:
+		for ix in resolution_x:
 			var x := min_x + (float(ix) + 0.5) * step_x
 			var h: float = world.call("ground_height_at", x, z)
 			if is_nan(h):
 				h = 0.0
-			heights[iz * resolution + ix] = h
+			heights[iz * resolution_x + ix] = h
 			min_height = minf(min_height, h)
 			max_height = maxf(max_height, h)
 
@@ -132,16 +146,16 @@ static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) 
 	var meadow_green := UITokens.HP_GREEN.lerp(Color(0.5, 0.5, 0.5), 0.2) ## ~20% desaturated toward grey; reads as grass, not a stat bar.
 	var pale_high := UITokens.GROUND_OCHRE.lerp(Color(0.85, 0.83, 0.78), 0.55) ## highest ground: pale gray-ochre.
 
-	var image := Image.create(resolution, resolution, false, Image.FORMAT_RGB8)
+	var image := Image.create(resolution_x, resolution_z, false, Image.FORMAT_RGB8)
 	var heightfield: RefCounted = HEIGHTFIELD.new()
 
-	for iz in resolution:
+	for iz in resolution_z:
 		var z := min_z + (float(iz) + 0.5) * step_z
-		for ix in resolution:
+		for ix in resolution_x:
 			var x := min_x + (float(ix) + 0.5) * step_x
-			var h := heights[iz * resolution + ix]
-			var h_east := heights[iz * resolution + mini(ix + 1, resolution - 1)]
-			var h_south := heights[mini(iz + 1, resolution - 1) * resolution + ix]
+			var h := heights[iz * resolution_x + ix]
+			var h_east := heights[iz * resolution_x + mini(ix + 1, resolution_x - 1)]
+			var h_south := heights[mini(iz + 1, resolution_z - 1) * resolution_x + ix]
 
 			var colour := _colour_for(h, water_level, land_floor, max_height, meadow_green, pale_high)
 
@@ -168,7 +182,34 @@ static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) 
 
 			image.set_pixel(ix, iz, colour)
 
+	# A 3m road cannot be trusted to intersect the centre of every 8m terrain
+	# texel. Raster the SAME canonical polylines the heightfield/world consume,
+	# after the terrain pass, so route continuity does not depend on accidental
+	# sampling alignment. This is thousands of segment pixels rather than a
+	# second per-pixel scan of the whole authored route network.
+	_overlay_authored_routes(image, heightfield, extent)
+
 	return ImageTexture.create_from_image(image)
+
+
+static func _overlay_authored_routes(image: Image, heightfield: RefCounted, extent: Dictionary) -> void:
+	var routes: Array = heightfield.call("road_polylines")
+	var min_world := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var world_size := Vector2(
+		maxf(float(extent.get("max_x", 0.0)) - min_world.x, 0.001),
+		maxf(float(extent.get("max_z", 0.0)) - min_world.y, 0.001))
+	var image_size := Vector2(image.get_width(), image.get_height())
+	for raw_line: Variant in routes:
+		var line := raw_line as PackedVector2Array
+		for index in line.size() - 1:
+			var from_pixel := (line[index] - min_world) / world_size * image_size
+			var to_pixel := (line[index + 1] - min_world) / world_size * image_size
+			var steps := maxi(1, int(ceil(maxf(absf(to_pixel.x - from_pixel.x), absf(to_pixel.y - from_pixel.y)))))
+			for sample in steps + 1:
+				var point := from_pixel.lerp(to_pixel, float(sample) / float(steps))
+				var pixel := Vector2i(int(floor(point.x)), int(floor(point.y)))
+				if pixel.x >= 0 and pixel.y >= 0 and pixel.x < image.get_width() and pixel.y < image.get_height():
+					image.set_pixelv(pixel, PATH_COLOUR)
 
 
 ## Same bake, cached to disk under `cache_path` (default `user://cache/`),
@@ -201,7 +242,7 @@ static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) 
 ## second process touches it."
 static func bake_cached(world: Object, cache_path: String = "user://cache/map_meadows.png") -> ImageTexture:
 	var config_bytes := FileAccess.get_file_as_bytes(TERRAIN_CONFIG_PATH)
-	var key := str(hash(config_bytes))
+	var key := "%s:%s" % [CACHE_SCHEMA, str(hash(config_bytes))]
 	var key_path := cache_path + ".key"
 
 	if FileAccess.file_exists(cache_path) and FileAccess.file_exists(key_path):

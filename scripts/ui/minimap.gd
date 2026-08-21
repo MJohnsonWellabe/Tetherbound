@@ -76,6 +76,7 @@ var _span_m: float = 90.0
 ## every frame the minimap redraws and the world's bounds do not change
 ## mid-session.
 var _world_min := Vector2.ZERO
+var _world_max := Vector2.ZERO
 
 var _player_pos: Vector3 = Vector3.ZERO
 var _movement_yaw: float = 0.0
@@ -97,6 +98,7 @@ func _init() -> void:
 	_font = load(UITokens.FONT_PATH)
 	var bounds: Dictionary = WORLD_EXTENT.bounds()
 	_world_min = Vector2(float(bounds.get("min_x", 0.0)), float(bounds.get("min_z", 0.0)))
+	_world_max = Vector2(float(bounds.get("max_x", 0.0)), float(bounds.get("max_z", 0.0)))
 
 
 ## `map_state` is `Game.map` (a `MapState`, see `autoload/map_state.gd`);
@@ -215,13 +217,15 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 
 	draw_set_transform(centre, rotation, Vector2.ONE * scale_px_per_m)
 
-	# The terrain texture is baked 1px/metre over the whole world, from the
-	# same `world_extent.gd` bounds this file reads (`map_baker.gd`), so the
-	# source region in texture pixels is the same size in world metres as
-	# `_span_m`.
-	var cx := _player_pos.x - _world_min.x
-	var cz := _player_pos.z - _world_min.y
-	var terrain_src := Rect2(cx - half_span, cz - half_span, _span_m, _span_m)
+	# Source coordinates are texture pixels, not metres. The corridor is four
+	# times longer than it is wide and the shared bake is rectangular, so each
+	# axis must use its own world-to-texture scale. The old px==metres shortcut
+	# sampled outside the 512px texture around the village and reduced a 90m
+	# north/south view to roughly six useful pixels.
+	var terrain_src := terrain_source_region(
+		Vector2(_player_pos.x, _player_pos.z), _span_m,
+		Vector2(_terrain_texture.get_width(), _terrain_texture.get_height()),
+		{"min_x": _world_min.x, "min_z": _world_min.y, "max_x": _world_max.x, "max_z": _world_max.y})
 	draw_texture_rect_region(_terrain_texture, dest, terrain_src)
 
 	if _fog_texture != null and _map_state != null:
@@ -230,10 +234,25 @@ func _draw_map_layer(centre: Vector2, scale_px_per_m: float, rotation: float) ->
 		# that derivation only happened to work while the grid was square and
 		# `CELL` was never anything but "world span / grid count".
 		var cell_m := maxf(float(_map_state.cell_size()), 0.001)
+		var cx := _player_pos.x - _world_min.x
+		var cz := _player_pos.z - _world_min.y
 		var fog_src := Rect2((cx - half_span) / cell_m, (cz - half_span) / cell_m, _span_m / cell_m, _span_m / cell_m)
 		draw_texture_rect_region(_fog_texture, dest, fog_src)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+## Converts a square local world window to the rectangular shared bake. Kept
+## pure so the corridor aspect contract is regression-testable without a
+## rendered screenshot.
+static func terrain_source_region(world_centre: Vector2, span_m: float, texture_size: Vector2, bounds: Dictionary) -> Rect2:
+	var world_min := Vector2(float(bounds.get("min_x", 0.0)), float(bounds.get("min_z", 0.0)))
+	var world_size := Vector2(
+		maxf(float(bounds.get("max_x", 0.0)) - world_min.x, 0.001),
+		maxf(float(bounds.get("max_z", 0.0)) - world_min.y, 0.001))
+	var pixels_per_metre := texture_size / world_size
+	var half := Vector2.ONE * span_m * 0.5
+	return Rect2((world_centre - half - world_min) * pixels_per_metre, Vector2.ONE * span_m * pixels_per_metre)
 
 
 func _rebuild_fog() -> void:
@@ -402,7 +421,10 @@ func _draw_ticks_and_compass(centre: Vector2, box: Vector2) -> void:
 	# beneath it (header comment has the derivation of `north_dir`); the
 	# glyph itself is drawn upright — only its POSITION rotates.
 	var north_dir := Vector2(-sin(_movement_yaw), cos(_movement_yaw))
-	var north_pos := centre + north_dir * (tick_radius - 2.0)
+	# Keep the full glyph inside the frame, not centred on its inner edge. The
+	# latter made N look clipped/crowded whenever north approached a corner.
+	var north_pos := centre + north_dir * (tick_radius - 16.0)
+	draw_circle(north_pos, 9.0, Color(UITokens.BG_DEEP, 0.82))
 	_draw_upright_text(north_pos, "N", UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
 
 
