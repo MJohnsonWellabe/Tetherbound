@@ -1603,7 +1603,9 @@ jobs:
           godot --headless --path . --script tests/smoke_relay.gd
           godot --headless --path . --script tests/smoke_stronghold.gd
 
-  # Main (and manual runs) only. The export tail was ~40% of every branch
+  # Main only. Ralph dispatches CI after a clean branch rebase; treating that
+  # workflow_dispatch as an export request made every rebase pay this tail.
+  # The export tail was ~40% of every branch
   # run, and it duplicates work: Release re-exports main itself before
   # publishing, so a broken export can never reach the download link through
   # a branch — it would surface on main's own run, where fixing red main is
@@ -1622,7 +1624,7 @@ jobs:
       - verify-regions-shard
     if: |
       needs.changes.outputs.code == 'true' &&
-      (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+      github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
