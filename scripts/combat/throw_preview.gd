@@ -160,21 +160,26 @@ func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3
 	# alpha, which `PRIMITIVE_LINE_STRIP`'s single shared material colour
 	# could not.
 	_line_mesh.clear_surfaces()
-	var total: int = maxi(points.size() - 1, 1)
-	_line_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	for i in points.size() - 1:
-		var dash_end: Vector3 = points[i].lerp(points[i + 1], DASH_COVERAGE)
-		var near_alpha: float = lerp(FADE_NEAR_ALPHA, FADE_FAR_ALPHA, float(i) / float(total))
-		var far_alpha: float = lerp(FADE_NEAR_ALPHA, FADE_FAR_ALPHA, float(i + 1) / float(total))
-		var near_colour := colour
-		near_colour.a = colour.a * near_alpha
-		var far_colour := colour
-		far_colour.a = colour.a * far_alpha
-		_line_mesh.surface_set_color(near_colour)
-		_line_mesh.surface_add_vertex(points[i])
-		_line_mesh.surface_set_color(far_colour)
-		_line_mesh.surface_add_vertex(dash_end)
-	_line_mesh.surface_end()
+	# At point-blank range the orb origin can already overlap the target's
+	# generous hit radius, so the honest preview is a single point. ImmediateMesh
+	# rejects a surface with no vertices; leave the line empty and let the
+	# on-target reticle communicate the immediate hit instead.
+	if points.size() >= 2:
+		var total: int = points.size() - 1
+		_line_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+		for i in total:
+			var dash_end: Vector3 = points[i].lerp(points[i + 1], DASH_COVERAGE)
+			var near_alpha: float = lerp(FADE_NEAR_ALPHA, FADE_FAR_ALPHA, float(i) / float(total))
+			var far_alpha: float = lerp(FADE_NEAR_ALPHA, FADE_FAR_ALPHA, float(i + 1) / float(total))
+			var near_colour := colour
+			near_colour.a = colour.a * near_alpha
+			var far_colour := colour
+			far_colour.a = colour.a * far_alpha
+			_line_mesh.surface_set_color(near_colour)
+			_line_mesh.surface_add_vertex(points[i])
+			_line_mesh.surface_set_color(far_colour)
+			_line_mesh.surface_add_vertex(dash_end)
+		_line_mesh.surface_end()
 
 	_marker.visible = not hit_target
 	_marker.global_position = end

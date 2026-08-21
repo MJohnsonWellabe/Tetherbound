@@ -85,6 +85,15 @@ var _response_exponent: float = 1.0
 ## to 1.0 by every set_target.
 var _assist_scale: float = 1.0
 
+## The target assist is for the last, careful part of lining up a throw. It
+## must not reduce a fully-deflected stick: a close creature can circle the
+## trainer faster than the assisted turn rate, leaving the reticle permanently
+## behind it even though the player is holding the stick all the way over.
+## Blend the assist away across the outer part of the stick so fine aim keeps
+## its slowdown and deliberate tracking keeps the profile's full turn speed.
+const ASSIST_FULL_SPEED_START := 0.55
+const ASSIST_FULL_SPEED_END := 0.92
+
 ## While a fight is running the rig follows the player's creature instead of the
 ## trainer, at a shorter creature's height. Combat is piloted (D07), and a
 ## piloted creature wants exactly this camera — so it is re-pointed rather than
@@ -219,7 +228,8 @@ func _apply_look(delta: float) -> void:
 		# Bend the response so small deflections move slowly and full
 		# deflection keeps its speed — a fine-aim centre for the throw camera.
 		stick = stick.normalized() * pow(stick.length(), _response_exponent)
-	var turn := _gamepad_sensitivity * _sensitivity_scale * _assist_scale
+	var turn := _gamepad_sensitivity * _sensitivity_scale \
+		* aim_assist_scale(stick.length(), _assist_scale)
 	var yaw_change := -stick.x * turn * delta
 	var pitch_change := -stick.y * turn * delta
 
@@ -277,3 +287,10 @@ func planar_basis() -> Basis:
 ## every set_target, so a profile change cannot inherit a stale slowdown.
 func set_look_scale(scale_value: float) -> void:
 	_assist_scale = clampf(scale_value, 0.1, 1.0)
+
+
+static func aim_assist_scale(stick_strength: float, requested_scale: float) -> float:
+	var fine_scale := clampf(requested_scale, 0.1, 1.0)
+	var full_speed_weight := smoothstep(
+		ASSIST_FULL_SPEED_START, ASSIST_FULL_SPEED_END, clampf(stick_strength, 0.0, 1.0))
+	return lerpf(fine_scale, 1.0, full_speed_weight)
