@@ -16,6 +16,12 @@ extends "res://tests/test_case.gd"
 
 const MAP_BAKER := preload("res://scripts/world/map_baker.gd")
 const RESOLUTION := 64
+const TEST_BOUNDS := {
+	"min_x": -256.0,
+	"max_x": 256.0,
+	"min_z": -256.0,
+	"max_z": 256.0,
+}
 
 ## A single hill and a single below-water basin, at fixed world coordinates,
 ## as a deterministic closed-form function — no noise, no state, so two
@@ -47,52 +53,56 @@ func _cleanup(cache_path: String) -> void:
 		DirAccess.remove_absolute(key_path)
 
 
+func _world_to_pixel(world_position: Vector2) -> Vector2i:
+	var step_x := (TEST_BOUNDS.max_x - TEST_BOUNDS.min_x) / float(RESOLUTION)
+	var step_z := (TEST_BOUNDS.max_z - TEST_BOUNDS.min_z) / float(RESOLUTION)
+	return Vector2i(
+		int((world_position.x - TEST_BOUNDS.min_x) / step_x),
+		int((world_position.y - TEST_BOUNDS.min_z) / step_z),
+	)
+
+
 # --- bake() ------------------------------------------------------------------
 
 func test_bake_returns_a_texture_of_the_requested_resolution() -> void:
-	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION)
+	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS)
 	var image := texture.get_image()
 	assert_eq(image.get_width(), RESOLUTION)
 	assert_eq(image.get_height(), RESOLUTION)
 
 
 func test_a_deep_basin_pixel_reads_as_water() -> void:
-	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION)
+	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS)
 	var image := texture.get_image()
 
-	# world -> pixel: image spans ±256m over `RESOLUTION` pixels (map_baker.gd's
-	# own HALF_SPAN); the basin's centre (-100,-100) lands here.
-	var half_span := 256.0
-	var step := (half_span * 2.0) / float(RESOLUTION)
-	var ix := int((FakeWorld.BASIN_CENTRE.x + half_span) / step)
-	var iz := int((FakeWorld.BASIN_CENTRE.y + half_span) / step)
+	# Keep this synthetic feature test at a resolution where the 60m basin is
+	# actually sampled. The production default is now the 8km Meadows corridor;
+	# at 64px its 128m z step can legitimately skip this deliberately tiny fake.
+	var basin_pixel := _world_to_pixel(FakeWorld.BASIN_CENTRE)
 
-	var basin_colour := image.get_pixel(ix, iz)
+	var basin_colour := image.get_pixelv(basin_pixel)
 	assert_true(basin_colour.b > basin_colour.r,
 		"a deep underwater pixel must read bluer than red, got %s" % basin_colour)
 
 
 func test_a_hill_pixel_differs_from_flat_ground() -> void:
-	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION)
+	var texture := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS)
 	var image := texture.get_image()
 
-	var half_span := 256.0
-	var step := (half_span * 2.0) / float(RESOLUTION)
-	var hill_ix := int((FakeWorld.HILL_CENTRE.x + half_span) / step)
-	var hill_iz := int((FakeWorld.HILL_CENTRE.y + half_span) / step)
+	var hill_pixel := _world_to_pixel(FakeWorld.HILL_CENTRE)
 
 	# A corner far from both features: world height 0 there, ordinary flat
 	# ground.
 	var flat_colour: Color = image.get_pixel(0, 0)
-	var hill_colour: Color = image.get_pixel(hill_ix, hill_iz)
+	var hill_colour: Color = image.get_pixelv(hill_pixel)
 
 	assert_true(flat_colour != hill_colour,
 		"the hill's summit must read as visually different from flat ground")
 
 
 func test_bake_is_deterministic() -> void:
-	var first := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION).get_image()
-	var second := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION).get_image()
+	var first := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS).get_image()
+	var second := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS).get_image()
 	assert_eq(first.get_data(), second.get_data(),
 		"baking the same world twice must produce byte-identical images")
 
