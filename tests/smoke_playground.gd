@@ -20,6 +20,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
 const MAX_DROP := 60.0
+const TERRAIN_BAKE_TOLERANCE := 0.35
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const HARVEST_POINT_SCRIPT := preload("res://scripts/world/vegetation_harvest_point.gd")
 const HARVEST_NODE_SCRIPT := preload("res://scripts/world/harvest_node.gd")
 const FELLED_RESOURCE_SCRIPT := preload("res://scripts/world/felled_resource.gd")
@@ -73,6 +75,8 @@ func _run() -> void:
 				failures.append("terrain returned NaN heights")
 			elif absf(sample_a - sample_b) < 1.0:
 				failures.append("terrain looks flat: two distant samples differ by <1m")
+
+			failures.append_array(_relocated_pond_bake_matches_recipe(data))
 
 	var player: CharacterBody3D = world.get_node_or_null(^"Player") as CharacterBody3D
 	if player == null:
@@ -141,6 +145,48 @@ func _run() -> void:
 		for line in failures:
 			print("smoke FAIL: %s" % line)
 		quit(1)
+
+
+## The terrain recipe is not the terrain the player walks on: Terrain3D loads
+## committed region resources baked from that recipe. Gate A raised the
+## relocated mill/ranger pads after restoring the pond surface, but the first
+## repair changed only terrain_playground.json. The live village asks this
+## baked data where to stand its buildings, while water.gd asks the analytic
+## heightfield where to trim its surface, so stale region files can put a
+## building several metres below the water inside a dry mesh cutout. Hold the
+## two sources together at both structures' centres and representative corners.
+func _relocated_pond_bake_matches_recipe(data: Object) -> Array[String]:
+	var found: Array[String] = []
+	var field: RefCounted = HEIGHTFIELD.new()
+	var samples := {
+		"mill centre": Vector2(-382.0, 514.0),
+		"mill south-west footprint": Vector2(-385.2, 510.8),
+		"mill south-east footprint": Vector2(-378.8, 510.8),
+		"mill north-west footprint": Vector2(-385.2, 517.2),
+		"mill north-east footprint": Vector2(-378.8, 517.2),
+		"ranger centre": Vector2(-350.0, 507.0),
+		"ranger south-west footprint": Vector2(-353.2, 504.2),
+		"ranger south-east footprint": Vector2(-346.8, 504.2),
+		"ranger north-west footprint": Vector2(-353.2, 509.8),
+		"ranger north-east footprint": Vector2(-346.8, 509.8),
+	}
+	for label: String in samples:
+		var point: Vector2 = samples[label]
+		var intended: float = field.height_at(point.x, point.y)
+		var baked: float = float(data.call("get_height", Vector3(point.x, 0.0, point.y)))
+		if is_nan(baked):
+			found.append("relocated pond bake returned NaN at %s %s" % [label, point])
+			continue
+		var delta := absf(baked - intended)
+		print("pond bake %-30s intended=%7.2f baked=%7.2f delta=%.3f" % [
+			label, intended, baked, delta
+		])
+		if delta > TERRAIN_BAKE_TOLERANCE:
+			found.append(
+				"relocated pond bake is stale at %s: baked %.2f, recipe %.2f (delta %.2fm)"
+				% [label, baked, intended, delta]
+			)
+	return found
 
 
 ## The F3 readout has to produce real numbers, not an empty box.
