@@ -77,26 +77,32 @@ mouse_filter = 2
 ;
 ; grow_vertical = 0 (BEGIN) with alignment = 2 (END): the stack hugs the
 ; bottom edge and grows UPWARD into empty screen, rather than downward off it.
+;
+; Gate A handheld hierarchy: this dock spans the authored safe width so its
+; two children can use different horizontal zones while retaining the shared
+; VBox relationship above. The contextual prompt keeps its authored 800px
+; measure and remains centred. The hotbar shrinks to its content at the right
+; edge, keeping the trainer/camera focus lane clear instead of covering the
+; character's torso at the normal third-person framing.
 [node name="BottomDock" type="VBoxContainer" parent="Root"]
-anchor_left = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -400.0
+offset_left = 56.0
 offset_top = -300.0
-offset_right = 400.0
+offset_right = -56.0
 offset_bottom = -96.0
-grow_horizontal = 2
 grow_vertical = 0
 alignment = 2
 mouse_filter = 2
 theme_override_constants/separation = 30
 
-; SHRINK_CENTER so the panel keeps its own content width inside the wider dock
-; instead of stretching to the prompt's 800.
+; SHRINK_END so the panel keeps its own content width in the right safe zone.
+; This separates persistent item shortcuts from the centred contextual verb;
+; it does not change either action layer or any of their bindings.
 [node name="HotbarPanel" type="PanelContainer" parent="Root/BottomDock"]
 custom_minimum_size = Vector2(514, 0)
-size_flags_horizontal = 4
+size_flags_horizontal = 8
 mouse_filter = 2
 
 [node name="Margin" type="MarginContainer" parent="Root/BottomDock/HotbarPanel"]
@@ -198,7 +204,8 @@ horizontal_alignment = 1
 text = ""
 
 [node name="Prompt" type="RichTextLabel" parent="Root/BottomDock"]
-size_flags_horizontal = 3
+custom_minimum_size = Vector2(800, 0)
+size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 28
 horizontal_alignment = 1

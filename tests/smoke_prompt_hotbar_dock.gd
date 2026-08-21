@@ -56,6 +56,11 @@ var _message: Label = null
 ## Height of the one-line prompt, so the wrapping cases can prove they wrapped.
 var _short_prompt_height := 0.0
 
+## The trainer and aiming/camera focus live in the middle of the authored
+## third-person viewport. Persistent inventory shortcuts may frame that lane,
+## but must not cover it; contextual prompts intentionally remain centred.
+const PLAYER_FOCUS_HALF_WIDTH := 220.0
+
 
 func _init() -> void:
 	_run()
@@ -106,6 +111,16 @@ func _run() -> void:
 		print("  ok    both live in one %s (%s)" % [
 			_prompt.get_parent().get_class(), _prompt.get_parent().name,
 		])
+
+	var screen_centre := float(_screen.x) * 0.5
+	var player_focus_lane := Rect2(
+		Vector2(screen_centre - PLAYER_FOCUS_HALF_WIDTH, 0.0),
+		Vector2(PLAYER_FOCUS_HALF_WIDTH * 2.0, float(_screen.y))
+	)
+	if _hotbar.get_global_rect().intersects(player_focus_lane):
+		_fail("hotbar covers the central trainer/camera focus lane at 1920x1080: %s" % _hotbar.get_global_rect())
+	if absf(_prompt.get_global_rect().get_center().x - screen_centre) > 1.0:
+		_fail("contextual prompt is not centred in the authored safe viewport: %s" % _prompt.get_global_rect())
 
 	await _case("quiet", false, SHORT_PROMPT)
 	_short_prompt_height = _prompt.get_global_rect().size.y
