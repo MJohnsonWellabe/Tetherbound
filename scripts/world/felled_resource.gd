@@ -71,6 +71,16 @@ func setup(spec: Dictionary) -> void:
 	add_child(_build_visual())
 
 
+## Read-only identity for a controller route that must collect the specific
+## pile it just created without reading a private backing field.
+func resource_item() -> String:
+	return _item_id
+
+
+func resource_amount() -> int:
+	return _amount
+
+
 func _build_visual() -> Node3D:
 	if _item_id == "wood":
 		return _build_woodpile()

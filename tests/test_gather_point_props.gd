@@ -13,6 +13,7 @@ extends "res://tests/test_case.gd"
 ## superseding R2.3/OW7's own glint entirely) means neither stage lights up.
 
 const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd")
+const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 
 var _point: Node3D = null
 
@@ -69,3 +70,23 @@ func test_the_standing_prompt_defaults_to_chop() -> void:
 	if prompt == null:
 		return
 	assert_eq(str(prompt.get("label")), "Chop")
+
+
+func test_public_resource_identity_supports_route_selection_without_private_fields() -> void:
+	var point := _make("wood")
+	assert_true(point.has_method("resource_item"),
+		"controller evidence needs a public resource identity, not `_item_id` access")
+	assert_true(point.has_method("resource_amount"),
+		"controller evidence needs a public resource amount, not `_amount` access")
+	assert_eq(str(point.call("resource_item")), "wood")
+	assert_eq(int(point.call("resource_amount")), 3)
+
+
+func test_felled_pickup_exposes_the_same_read_only_resource_identity() -> void:
+	var pickup := FELLED_RESOURCE.new() as Node3D
+	pickup.call("setup", {"item": "stone", "amount": 2})
+	assert_true(pickup.has_method("resource_item"))
+	assert_true(pickup.has_method("resource_amount"))
+	assert_eq(str(pickup.call("resource_item")), "stone")
+	assert_eq(int(pickup.call("resource_amount")), 2)
+	pickup.free()

@@ -534,6 +534,18 @@ func test_a_missing_model_still_falls_back_to_the_box() -> void:
 	node.free()
 
 
+func test_authored_node_exposes_read_only_resource_identity_for_route_selection() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	assert_true(node.has_method("resource_item"),
+		"a controller route must not inspect HarvestNode's private `_item_id`")
+	assert_true(node.has_method("resource_amount"),
+		"a controller route must not inspect HarvestNode's private `_amount`")
+	assert_eq(str(node.call("resource_item")), "wood")
+	assert_eq(int(node.call("resource_amount")), 4)
+	node.free()
+
+
 func test_gather_hides_the_visual_and_respawn_restores_it() -> void:
 	var node: Node3D = HARVEST_NODE.new()
 	node.call("setup", WOOD_SPEC)

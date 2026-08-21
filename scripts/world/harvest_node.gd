@@ -64,6 +64,17 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 
 
+## Read-only identity for controller-driven evidence and route selection.
+## The harvest implementation keeps its backing fields private; callers that
+## need to choose an actually visible, live node must not reach into them.
+func resource_item() -> String:
+	return _item_id
+
+
+func resource_amount() -> int:
+	return _amount
+
+
 ## OF20. Every `model` in data/config/harvest.json is a `.gltf` from the
 ## Quaternius stylized-nature kit (see the header above, R9.4), and a glTF
 ## imports as a PackedScene, not a bare Mesh (check the `.import` sidecar:

@@ -108,6 +108,17 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 
 
+## Read-only identity for controller-driven evidence and route selection.
+## This deliberately exposes no harvesting or save mutation; it keeps route
+## code out of the private `_item_id`/`_amount` implementation fields.
+func resource_item() -> String:
+	return _item_id
+
+
+func resource_amount() -> int:
+	return _amount
+
+
 ## RG9, owner directive: "You shouldn't be able to gather a standing tree.
 ## You should have to chop it. Then it becomes downed wood. Then you gather
 ## that. Same for stone." This is now the CHOP, not the gather -- the tool
