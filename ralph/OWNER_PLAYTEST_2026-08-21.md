@@ -38,6 +38,12 @@ The owner played the current build on the ROG Ally and found the following issue
 - Audit the complete controller action map for context conflicts across exploration, hotbar, Build, Satchel, menus, combat, and party cycling.
 - A button may be reused across mutually exclusive contexts only when ownership is deterministic and no hidden action fires.
 
+### OP21-23 — Load Game does not resume into play
+- Choosing Load Game can enter the menu/home UI but never transition into the loaded world; the game then just sits there.
+- Treat this as a Gate A save/load/front-door blocker, not a cosmetic title issue.
+- Reproduce from the actual shipped title/load flow with a real save, prove scene transition completes, world controls become active, and saved state/position are restored.
+- Add regression coverage for title -> Load -> selected save -> playable world, including controller focus handoff away from the menu.
+
 ## P0/P1 — Build system correctness and scale
 
 ### OP21-07 — Building rotate does not work
@@ -96,6 +102,12 @@ The owner played the current build on the ROG Ally and found the following issue
 - Gate B owns the full polished first-session ladder, but Gate A cannot pass with the current owner-described state of being unable to tell what to do.
 - Implement enough objective/HUD/NPC guidance now that normal opening play is understandable without external instructions; Gate B can deepen pacing and presentation afterward.
 
+### OP21-26 — Pond-to-village route is long, bare, and boring
+- If the intended post-tournament route sends the player between the village and pond, that stretch currently feels like empty traversal rather than gameplay.
+- Populate and compose the route with meaningful reasons to stop: wild creatures, trainers/NPCs, gatherables/resources, landmarks, side interactions, visual pulls, and/or camp/build opportunities appropriate to the progression.
+- Do not simply carpet the route with random density. Author a paced sequence with open breathing room, readable landmarks, and recurring gameplay purpose.
+- Gate A only needs the opening area representative enough to judge honestly; the full post-tournament cadence belongs to Gate B/C and the D1 Lower Meadows package. Keep this item in the backlog until that route no longer reads as dead walking.
+
 ## P1 — World composition / environment correctness
 
 ### OP21-17 — Village shape/layout makes no sense
@@ -122,6 +134,23 @@ The owner played the current build on the ROG Ally and found the following issue
 - Owner noticed it immediately after building the first workbench, but causation is unknown.
 - Reproduce over the live day/night cycle and around build placement; identify whether this is lighting/environment transition, post-processing, weather/state, exposure, or a build-event side effect.
 - Gate A day/night readability should reject any sustained washed-out grey state that makes the game look broken or materially degrades readability.
+
+## P0/P1 — Gathering presentation
+
+### OP21-24 — Axe hold and swing still do not look right
+- The trainer does not hold the axe in a believable expected grip/pose.
+- The owner still does not see a convincing chopping swing during normal gathering.
+- Reopen the equipped-tool presentation requirement even if focused gathering tests are green.
+- Verify on the actual player path that the axe is visibly in hand before the hit, the animation reads as a deliberate swing through the target, and the hit/result is synchronized with that visible action.
+
+## P0 — Combat arena containment
+
+### OP21-25 — Stronghold and Burrow Warrens fights can phase outside the arena
+- In some fights in the Stronghold and Burrow Warrens, combatants/player can be phased or displaced outside the intended fight area.
+- Once outside, the fight can become effectively impossible to complete.
+- Treat this as a core combat reliability blocker even though the reproductions are in later locations.
+- Audit encounter teleport/arena bounds/collision/nav placement and ensure every combat participant remains in a reachable legal arena state through entry, movement, switching, knockback/teleport, and teardown.
+- Add regressions using representative Stronghold and Burrow Warrens encounters, not only the opening wild-fight harness.
 
 ## P2 — Website / story front door
 
@@ -153,16 +182,20 @@ Before Gate A may pass after this playtest, the representative evidence should a
 10. The live lighting cycle does not settle into a broken washed-out grey state.
 11. Unsafe full submersion has the intended hazard/damage response.
 12. Player-facing terminology uses Creature/Tetherbound language rather than Pal terminology.
+13. Title -> Load Game -> selected save reliably enters a controllable loaded world instead of stalling on the home/menu screen.
+14. Normal gathering visibly shows a believable held axe and synchronized chopping swing/hit.
+15. Representative Stronghold and Burrow Warrens fights keep all participants inside reachable combat bounds.
 
 ## Execution guidance
 
 Prioritize in this order:
 
 1. target-hardware lag and controller/input ownership blockers;
-2. trainer-battle camera, Settings/Map usability, and party-count correctness;
-3. build rotate/scale/door/roof correctness;
+2. load-game stall, trainer-battle camera, Settings/Map usability, party-count correctness, and combat-arena containment;
+3. build rotate/scale/door/roof correctness and gathering-tool presentation;
 4. opening guidance and HUD readability;
 5. village/pond/sign/lighting/world composition defects;
-6. website story redesign in parallel where it does not slow the game-critical path.
+6. pond-to-village dead-travel/content cadence as Gate B/C/D1 work once Gate A's representative baseline is trustworthy;
+7. website story redesign in parallel where it does not slow the game-critical path.
 
 Use bounded workers. A current owner reproduction outranks an older green test. If an old regression says one of these paths passes, first determine why it failed to represent the real ROG/player path and close that false-positive gap.
