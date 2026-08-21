@@ -4,18 +4,27 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
+## ACTIVE TEMPORARY OVERLAY — Weekend Meadows Sprint
+
+For work performed during the 2026-08-21 through 2026-08-23 weekend push, read and follow:
+
+`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md`
+
+That file changes priority, parallelization, and checkpoint cadence in order to reach a full playable Meadows chapter by Sunday night. **It does not remove or weaken any canonical gate, owner-playtest, backlog, or detailed-prompt requirement.**
+
 ## 1. Read order
 
 A fresh coordinator or lane should establish context in this order:
 
 1. `CLAUDE.md` — hard rules and agent contract.
 2. `docs/TETHERBOUND_GAME_VISION.md` — what the finished Meadows game is supposed to feel like.
-3. `ralph/ACTIVE_GAME_PLAN.md` — gameplay gates and regional execution order.
-4. `ralph/ACTIVE_TASKS.md` — compact current work manifest for the active gate.
-5. `ralph/OWNER_PLAYTEST_2026-08-18.md` — newest owner-play evidence; newer owner evidence wins where old wording conflicts.
-6. `ralph/PROMPT_COMPATIBILITY_MAP.md` — prevents duplicate implementations from overlapping historical prompts.
-7. `ralph/conventions.md` — branch, testing, visual-judge, and shipping rules.
-8. Only then read the **specific detailed prompt(s)** and the **specific code/spec sections** needed for the selected work.
+3. `ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md` — active temporary production-sprint overlay.
+4. `ralph/ACTIVE_GAME_PLAN.md` — gameplay gates and regional execution order.
+5. `ralph/ACTIVE_TASKS.md` — compact current work manifest for the active gate.
+6. newest `ralph/OWNER_PLAYTEST_*.md` first — newest owner-play evidence wins where old wording/tests conflict; read older owner playtests only as needed for history/context.
+7. `ralph/PROMPT_COMPATIBILITY_MAP.md` — prevents duplicate implementations from overlapping historical prompts.
+8. `ralph/conventions.md` — branch, testing, visual-judge, and shipping rules.
+9. Only then read the **specific detailed prompt(s)** and the **specific code/spec sections** needed for the selected work.
 
 Do **not** cold-read all of `BACKLOG.md`, `DONE.md`, or every prompt file. They are reference/history stores, not the startup briefing.
 
@@ -25,11 +34,15 @@ Do **not** cold-read all of `BACKLOG.md`, `DONE.md`, or every prompt file. They 
 Read `ralph/COORDINATED_RUN.md` after the files above. The coordinator:
 
 - reconciles the active gate against current `main`;
-- chooses the highest-impact incomplete work inside that gate;
+- applies the active weekend SHIP BLOCKER / QUALITY BLOCKER / POLISH prioritization;
+- keeps the full fresh-save Meadows chapter as the critical path;
+- chooses the highest-impact incomplete work;
 - launches 3–5 non-conflicting lanes when useful;
+- allows safe later-gate implementation in parallel when it does not steal capacity from blocking work;
 - owns cross-lane file exclusions and package-level integration;
 - verifies what actually landed on `main`;
-- runs the full gameplay evidence segment before advancing a gate.
+- runs the full gameplay evidence segment before declaring a gate complete;
+- produces integrated playable checkpoints rather than disappearing into one giant task.
 
 ### Implementation lane
 Read `ralph/PROMPT.md` after the files above. A lane:
@@ -40,15 +53,20 @@ Read `ralph/PROMPT.md` after the files above. A lane:
 - tests it;
 - pushes a `ralph/<task>` branch;
 - records useful findings;
-- does not redefine the active game plan.
+- does not redefine the active game plan or discard owner requirements;
+- checkpoints rather than expanding beyond a bounded task indefinitely.
 
 ## 3. How work is selected
 
-`ralph/ACTIVE_GAME_PLAN.md` decides **which gameplay gate matters now**.
+`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md` decides **weekend production priority and safe parallelization**.
+
+`ralph/ACTIVE_GAME_PLAN.md` decides **canonical gameplay gate/package ownership and acceptance order**.
 
 `ralph/ACTIVE_TASKS.md` gives the compact current manifest.
 
-`ralph/BACKLOG.md` is the complete ledger and remains authoritative for whether an old task exists, but it **does not control current Meadows priority** when the active plan groups/reorders that work.
+The newest owner playtest files are authoritative evidence. A fresh owner reproduction reopens an older supposedly-fixed item when they conflict.
+
+`ralph/BACKLOG.md` is the complete ledger and remains authoritative for whether an old task exists, but it **does not control current Meadows priority** when the active plan/sprint groups or reorders that work.
 
 Detailed files under `docs/ralph-prompts/` explain individual implementation requirements. Read only the prompt(s) relevant to the current task/package.
 
@@ -71,13 +89,15 @@ For every gameplay gate/package, verify:
 - long dead-travel intervals are identified and fixed when they are not intentional breathing room;
 - regional presentation is readable and coherent;
 - save/progression/gates work through the whole segment;
-- relevant controller, smoke, render, visual-judge, and performance checks pass.
+- relevant controller, smoke, render, visual-judge, and performance checks pass;
+- player-facing systems are proven in the integrated production path, not only isolated unit/smoke tests;
+- target-hardware/ROG evidence is used where the acceptance depends on handheld controls or performance.
 
 Do not wait for owner approval between evidence gates. Fix the segment and continue automatically. Ask only for a genuinely unresolved design decision.
 
 ## 5. Current chapter flow
 
-The active Meadows build progresses:
+The canonical Meadows build progresses:
 
 **Gate A — trustworthy core verbs**
 → **Gate B — fresh start through village tournament**
@@ -89,6 +109,8 @@ The active Meadows build progresses:
 → **D5 — Stronghold Approach**
 → **Gate E — Stronghold / Warden / legendary finale**
 → **Gate F — full 3–4 hour Meadows integration playthrough**.
+
+For the weekend sprint, implementation may overlap across gates where dependencies/file ownership are safe, but a gate is not declared passed until its canonical evidence criteria are met.
 
 The stop condition is not an empty task list. It is a complete Meadows chapter that passes the vision and Prompt 70.
 
