@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
+const TITLE_SCRIPT := preload("res://scripts/ui/title_screen.gd")
 const PREFABS_PATH := "res://data/config/building_prefabs.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 
@@ -15,6 +16,17 @@ func test_game_boots_to_lightweight_title_front_door() -> void:
 		if node != null:
 			assert_true(node.is_in_group(&"title_screen"))
 			node.free()
+
+
+func test_export_verification_alone_routes_through_title_to_meadows() -> void:
+	assert_true(TITLE_SCRIPT.should_enter_export_verification(
+		PackedStringArray(["--rendering-driver", "opengl3", "--verify-export"])))
+	assert_false(TITLE_SCRIPT.should_enter_export_verification(PackedStringArray()))
+	assert_false(TITLE_SCRIPT.should_enter_export_verification(
+		PackedStringArray(["--rendering-driver", "opengl3"])))
+	assert_false(TITLE_SCRIPT.should_enter_export_verification(
+		PackedStringArray(["--verify-export-later"])),
+		"only the exact private verifier flag may bypass the title")
 
 
 func test_pond_mill_has_a_real_openable_door_contract() -> void:

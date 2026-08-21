@@ -6,6 +6,7 @@ extends Control
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
+const EXPORT_VERIFY_FLAG := "--verify-export"
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 
 var _main_box: VBoxContainer
@@ -28,7 +29,21 @@ func _ready() -> void:
 		self.theme = theme
 	_build()
 	_refresh_load_button()
+	# Release verification launches the exported project through its real main
+	# scene.  The title is now that main scene, so explicitly preserve the
+	# verifier's old contract by taking only its private command-line path into a
+	# clean Meadows run.  Normal players still stop here and choose New or Load.
+	if should_enter_export_verification(OS.get_cmdline_args()):
+		# This is a new exported process, so Game is already clean.  Entering the
+		# world directly also keeps the verifier independent of title-button save
+		# policy; the world's EXPORT-CHECK remains the sole pass/fail authority.
+		_enter_world("Verifying export…")
+		return
 	_new_button.grab_focus()
+
+
+static func should_enter_export_verification(arguments: PackedStringArray) -> bool:
+	return arguments.has(EXPORT_VERIFY_FLAG)
 
 
 func _build() -> void:
