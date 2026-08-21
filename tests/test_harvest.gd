@@ -41,34 +41,35 @@ func before_each() -> void:
 
 func test_gather_with_the_right_tool_pays_the_full_amount() -> void:
 	bag.add("axe", 1)
-	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db)
+	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db, "axe")
 	assert_eq(int(result["amount"]), 3)
 	assert_eq(int(result["required_slot"]), bag.find_slot("axe"))
 
 
-func test_gather_bare_handed_falls_back_to_the_reduced_rate() -> void:
-	var with_tool: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db)
+func test_gather_with_no_equipped_tool_is_refused() -> void:
 	bag.add("axe", 1)
-	var with_axe: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db)
-	assert_true(int(with_tool["amount"]) > 0, "bare-handed must still pay something")
-	assert_true(int(with_tool["amount"]) < int(with_axe["amount"]),
-		"bare-handed must pay less than the right tool")
-	assert_eq(int(with_tool["required_slot"]), -1, "no tool in hand, nothing to damage")
+	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db, "")
+	assert_eq(int(result["amount"]), 0,
+		"carrying an axe is not enough when no tool is visibly equipped")
+	assert_eq(int(result["required_slot"]), -1, "a refusal must damage nothing")
 
 
 func test_gather_with_the_wrong_tool_pays_nothing() -> void:
+	bag.add("axe", 1)
 	bag.add("pickaxe", 1)
-	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db)
-	assert_eq(int(result["amount"]), 0, "owning some OTHER tool must refuse, not fall back")
+	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db, "pickaxe")
+	assert_eq(int(result["amount"]), 0,
+		"holding a pickaxe must refuse wood even when an axe is also in the Satchel")
+	assert_eq(int(result["required_slot"]), -1, "the hidden axe must not wear down")
 
 
-func test_gather_with_a_broken_required_tool_falls_back_rather_than_refusing() -> void:
+func test_gather_with_a_broken_equipped_tool_is_refused() -> void:
 	bag.add("axe", 1)
 	var slot: int = bag.find_slot("axe")
 	bag.damage_tool(slot, db.max_durability("axe") + 50)
-	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db)
-	assert_true(int(result["amount"]) > 0, "a broken axe must still pay the bare-handed rate")
-	assert_eq(int(result["required_slot"]), -1, "a broken tool must not be the one that wears down")
+	var result: Dictionary = HARVEST_LOGIC.gather("wood", 3, bag, db, "axe")
+	assert_eq(int(result["amount"]), 0, "a broken held axe must not authorize a hit")
+	assert_eq(int(result["required_slot"]), -1, "a broken tool must not wear down again")
 
 
 func test_gather_of_an_untool_gated_resource_always_pays_the_full_amount() -> void:
@@ -94,35 +95,31 @@ func test_the_smiths_set_covers_every_tool_gated_meadow_resource() -> void:
 		assert_eq(db.gathered_with(resource), tool_id,
 			"'%s' should be gathered with '%s'" % [resource, tool_id])
 
-		var barehanded: Dictionary = HARVEST_LOGIC.gather(resource, 4, INVENTORY.new(db), db)
+		var barehanded: Dictionary = HARVEST_LOGIC.gather(resource, 4, INVENTORY.new(db), db, "")
 		var equipped: RefCounted = INVENTORY.new(db)
 		equipped.add(tool_id, 1)
-		var with_tool: Dictionary = HARVEST_LOGIC.gather(resource, 4, equipped, db)
+		var with_tool: Dictionary = HARVEST_LOGIC.gather(resource, 4, equipped, db, tool_id)
 
 		assert_eq(int(with_tool["amount"]), 4,
 			"'%s' should pay '%s' in full" % [tool_id, resource])
-		assert_true(int(with_tool["amount"]) > int(barehanded["amount"]),
-			"'%s' should beat bare hands on '%s'" % [tool_id, resource])
+		assert_eq(int(barehanded["amount"]), 0,
+			"'%s' must be equipped before '%s' can be gathered" % [tool_id, resource])
 		assert_true(int(with_tool["required_slot"]) >= 0,
 			"'%s' should be the tool that wears down" % tool_id)
 
 
-## All three at once is the state the player is actually left in after the
-## handover, and it is the state the wrong-tool rule would otherwise have
-## broken. Owning a pickaxe alone pays ZERO on wood (test above), so any gap in
-## the set leaves the player strictly worse off at that resource than they were
-## bare-handed a minute earlier — which is why the knife is in the handover
-## even though the owner named two tools. See village.json's
-## `_comment_of30_knife`. This is the test that fails if it is ever taken back
-## out without re-gating `fiber`.
-func test_carrying_his_whole_set_gathers_everything_the_meadow_offers() -> void:
+## Tam's complete set must cover every gated meadow resource when the matching
+## member is equipped. Merely carrying the set is checked separately above and
+## no longer authorizes a mismatched visible swing.
+func test_equipping_each_member_of_his_set_gathers_everything_the_meadow_offers() -> void:
 	bag.add("axe", 1)
 	bag.add("pickaxe", 1)
 	bag.add("knife", 1)
 	for resource in ["wood", "stone", "fiber", "berries"]:
-		var result: Dictionary = HARVEST_LOGIC.gather(resource, 3, bag, db)
+		var required: String = str(db.gathered_with(resource))
+		var result: Dictionary = HARVEST_LOGIC.gather(resource, 3, bag, db, required)
 		assert_eq(int(result["amount"]), 3,
-			"carrying the smith's set, '%s' should pay in full" % resource)
+			"equipping '%s' should pay '%s' in full" % [required, resource])
 
 
 ## The generalisation of the case above, so a NEW tool-gated resource added
@@ -145,7 +142,8 @@ func test_nothing_the_smith_gives_leaves_a_tool_gated_resource_stranded() -> voi
 		var resource := str(id)
 		if db.gathered_with(resource).is_empty():
 			continue
-		var result: Dictionary = HARVEST_LOGIC.gather(resource, 2, owned, db)
+		var required: String = str(db.gathered_with(resource))
+		var result: Dictionary = HARVEST_LOGIC.gather(resource, 2, owned, db, required)
 		assert_eq(int(result["amount"]), 2,
 			"'%s' gates on '%s', which Tam's handover does not include -- with his other tools in hand it now pays nothing at all" % [
 				resource, db.gathered_with(resource)])
@@ -287,13 +285,12 @@ func test_rootstone_is_a_real_pickaxe_gated_resource() -> void:
 	assert_false(definition.is_empty(), "rootstone is not in items.json")
 	assert_eq(db.gathered_with("rootstone"), "pickaxe",
 		"rootstone should want the same tool stone does; §10 upgrades what exists rather than adding a system")
-	var bare: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, INVENTORY.new(db), db)
+	var bare: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, INVENTORY.new(db), db, "")
 	var equipped: RefCounted = INVENTORY.new(db)
 	equipped.add("pickaxe", 1)
-	var with_tool: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, equipped, db)
+	var with_tool: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, equipped, db, "pickaxe")
 	assert_eq(int(with_tool["amount"]), 2, "a pickaxe should pay rootstone in full")
-	assert_true(int(with_tool["amount"]) > int(bare["amount"]),
-		"a pickaxe should beat bare hands on rootstone")
+	assert_eq(int(bare["amount"]), 0, "rootstone must refuse an empty hand")
 
 
 func test_every_rootstone_deposit_is_past_the_south_bridge() -> void:

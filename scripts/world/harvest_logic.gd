@@ -38,31 +38,30 @@ static func tool_slot(tool_id: String, inventory: RefCounted) -> int:
 	return slot if slot >= 0 and int(inventory.call("durability_at", slot)) > 0 else -1
 
 ## Returns `{"amount": int, "required_slot": int}`. `amount` is what the
-## caller should actually grant (0 means refused: wrong tool for a
-## tool-gated resource). `required_slot` is the inventory slot that should
-## take `damage_tool()` when `amount` came from a full-yield gather with the
-## right tool in hand, or -1 when nothing should wear down (bare-handed, or
-## the resource is not tool-gated at all).
-static func gather(item_id: String, base_amount: int, inventory: RefCounted, items: RefCounted) -> Dictionary:
+## caller should actually grant (0 means refused: the required tool is not
+## the one visibly equipped). `required_slot` is the exact equipped tool's
+## inventory slot, which should take `damage_tool()` after a successful hit,
+## or -1 when nothing should wear down (refusal, or an ungated resource).
+##
+## Ownership and equipment are deliberately separate. Tam hands the player a
+## set of tools, but carrying an axe in the Satchel must not let a visible
+## pickaxe swing chop wood and quietly spend the hidden axe's durability.
+static func gather(item_id: String, base_amount: int, inventory: RefCounted, items: RefCounted,
+		equipped_tool: String = "") -> Dictionary:
 	var required_slot := -1
 	var actual_amount := base_amount
 	var required: String = str(items.call("gathered_with", item_id))
 	if required.is_empty():
 		return {"amount": actual_amount, "required_slot": -1}
 
-	# R2.2's broken-tool rule, via tool_slot() above.
-	required_slot = tool_slot(required, inventory)
-	var owns_required := required_slot >= 0
+	if equipped_tool != required:
+		return {"amount": 0, "required_slot": -1}
 
-	# A broken tool doesn't count toward "owns a tool, just the wrong one"
-	# either -- otherwise a broken axe pays 0 for wood instead of falling
-	# back to the bare-handed rate.
-	var owns_any_tool := false
-	if not owns_required:
-		for tool_id in items.call("tool_ids"):
-			if tool_slot(str(tool_id), inventory) >= 0:
-				owns_any_tool = true
-				break
+	# The held id still has to name a real, working inventory tool. A stale
+	# equipped_tool value after breakage/removal cannot authorize a hit.
+	required_slot = tool_slot(equipped_tool, inventory)
+	if required_slot < 0:
+		return {"amount": 0, "required_slot": -1}
 
-	actual_amount = int(items.call("harvest_yield", item_id, base_amount, owns_required, owns_any_tool))
+	actual_amount = int(items.call("harvest_yield", item_id, base_amount, true, false))
 	return {"amount": actual_amount, "required_slot": required_slot}

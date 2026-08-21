@@ -227,5 +227,5 @@ func _ready() -> void:
 ## same path the prompt drives -- one gather implementation, two ways to
 ## reach it, matching `vegetation_harvest_point.gd`/`harvest_node.gd`'s own
 ## `gather()`.
-func gather() -> void:
+func gather(_equipped_tool: Variant = null) -> void:
 	_on_gathered()

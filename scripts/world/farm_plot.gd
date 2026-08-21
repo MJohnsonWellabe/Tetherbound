@@ -313,7 +313,7 @@ func _on_activated() -> void:
 ## `vegetation_harvest_point.gd::gather()` so a swing and a prompt press can
 ## never disagree -- and so `tool_hold.gd` needs no knowledge that farm plots
 ## exist at all.
-func gather() -> void:
+func gather(_equipped_tool: Variant = null) -> void:
 	var game := _game()
 	if game == null or _index < 0:
 		return

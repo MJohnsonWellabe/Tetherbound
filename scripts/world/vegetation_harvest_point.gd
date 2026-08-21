@@ -122,7 +122,7 @@ func setup(spec: Dictionary) -> void:
 ## anything IN the satchel. A player can always chop; a felled pile with
 ## nowhere to go simply waits on the ground, same as any other gather point
 ## the satchel has no room for.
-func _on_gathered() -> void:
+func _on_gathered(equipped_tool: Variant = null) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; chopped %s into nothing" % _item_id)
@@ -131,11 +131,16 @@ func _on_gathered() -> void:
 	var items: RefCounted = game.get("items")
 	if items == null or inventory == null:
 		return
-	var gathered: Dictionary = HARVEST_LOGIC.gather(_item_id, _amount, inventory, items)
+	var held_tool := str(game.get("equipped_tool")) if equipped_tool == null else str(equipped_tool)
+	var gathered: Dictionary = HARVEST_LOGIC.gather(
+		_item_id, _amount, inventory, items, held_tool)
 	var actual_amount: int = int(gathered["amount"])
 	if actual_amount <= 0:
 		# The wrong tool for this resource: refused, and the tree stays put for
 		# whenever the player comes back with the right one.
+		var required_tool := str(items.call("gathered_with", _item_id))
+		if not required_tool.is_empty():
+			game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
 		return
 	var required_slot: int = int(gathered["required_slot"])
 	if required_slot >= 0:
@@ -170,6 +175,6 @@ func _ready() -> void:
 ## same path the prompt drives -- one gather implementation, two ways to reach
 ## it, so a swing and a press can never disagree about yield, tool gating,
 ## durability or respawn.
-func gather() -> void:
-	_on_gathered()
+func gather(equipped_tool: Variant = null) -> void:
+	_on_gathered(equipped_tool)
 

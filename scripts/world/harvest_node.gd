@@ -239,7 +239,7 @@ func _item_colour() -> Color:
 	return items.call("colour", _item_id) if items != null else Color(0.6, 0.5, 0.4)
 
 
-func _on_gathered() -> void:
+func _on_gathered(equipped_tool: Variant = null) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
@@ -249,7 +249,12 @@ func _on_gathered() -> void:
 	var actual_amount := _amount
 	var required_slot := -1
 	if items != null and inventory != null:
-		var gathered: Dictionary = HARVEST_LOGIC.gather(_item_id, _amount, inventory, items)
+		# An interaction has no argument and therefore reads the live hand. A
+		# tool swing passes the identity of the prop that actually swung, so a
+		# later equipment change cannot turn a pickaxe impact into an axe hit.
+		var held_tool := str(game.get("equipped_tool")) if equipped_tool == null else str(equipped_tool)
+		var gathered: Dictionary = HARVEST_LOGIC.gather(
+			_item_id, _amount, inventory, items, held_tool)
 		actual_amount = int(gathered["amount"])
 		required_slot = int(gathered["required_slot"])
 
@@ -302,6 +307,6 @@ func _ready() -> void:
 ## same path the prompt drives -- one gather implementation, two ways to reach
 ## it, so a swing and a press can never disagree about yield, tool gating,
 ## durability or respawn.
-func gather() -> void:
-	_on_gathered()
+func gather(equipped_tool: Variant = null) -> void:
+	_on_gathered(equipped_tool)
 

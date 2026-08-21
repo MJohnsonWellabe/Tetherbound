@@ -401,12 +401,11 @@ func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
 ## proximity, no facing check at all, which is why the interact prompt kept
 ## working while the swing silently never did.
 ##
-## Reproduces the real case: the player walks up to a harvestable placement
-## the way `_face()` actually leaves them (Model turned to face it, body
-## untouched), then swings. Equips an axe and pre-owns a pickaxe too, so
-## whichever resource is nearest is never refused on tool-gating grounds --
-## this check is about the cone connecting, not about yield math already
-## covered by test_inventory.gd.
+## Reproduces the real case on an authored tutorial node: the player owns the
+## whole tool set, visibly holds the WRONG one, and swings. Nothing may be
+## rewarded or damaged until the required tool is actually drawn. The second
+## swing equips the right prop and proves the same live hit-window path pays
+## the resource and wears exactly that held tool.
 func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Array[String]:
 	var found: Array[String] = []
 	var player: CharacterBody3D = world.get_node_or_null(^"Player") as CharacterBody3D
@@ -425,20 +424,21 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	var inventory: RefCounted = game.get("inventory")
 	if inventory == null:
 		return ["Game exposes no inventory; cannot equip a tool to check the swing"] as Array[String]
+	var items: RefCounted = game.get("items")
+	if items == null:
+		return ["Game exposes no item database; cannot resolve the required held tool"] as Array[String]
 
-	# "harvestable" (harvest_logic.gd::GROUP) is shared with farm_plot.gd,
-	# whose own `gather()` tills/sows/picks a bed and needs a hoe -- a real
-	# collision with this check's own tool setup below, which owns an axe and
-	# a pickaxe but no hoe. Restricted to the two scripts that actually cover
-	# "stones or trees" (the owner's own words): vegetation's own scattered
-	# points and harvest_node.gd's authored tutorial spots.
+	# This check owns the authored-node route. The chop-then-gather check below
+	# independently exercises vegetation's standing/felled route.
 	var best: Node3D = null
 	var best_distance := INF
 	for node: Node in world.get_tree().get_nodes_in_group("harvestable"):
 		if not is_instance_valid(node) or not (node is Node3D):
 			continue
-		var script: Script = node.get_script() as Script
-		if script != HARVEST_POINT_SCRIPT and script != HARVEST_NODE_SCRIPT:
+		if (node.get_script() as Script) != HARVEST_NODE_SCRIPT:
+			continue
+		var item_id := str(node.get("_item_id"))
+		if str(items.call("gathered_with", item_id)).is_empty():
 			continue
 		var distance := player.global_position.distance_to((node as Node3D).global_position)
 		if distance < best_distance:
@@ -472,28 +472,27 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	for i in 6:
 		await physics_frame
 
-	inventory.call("add", "axe", 1)
-	inventory.call("add", "pickaxe", 1)
-	game.set("equipped_tool", "axe")
+	for tool_id in ["axe", "pickaxe", "knife"]:
+		inventory.call("add", tool_id, 1)
+	var required_tool := str(items.call("gathered_with", str(best.get("_item_id"))))
+	var wrong_tool := "pickaxe" if required_tool != "pickaxe" else "axe"
+	game.set("equipped_tool", wrong_tool)
 	for i in 4:
 		await process_frame
 
-	# Both tools already owned (not necessarily equipped -- harvest_logic.gd
-	# gates yield on ownership, not on which is in hand), so whichever
-	# resource `best` actually is, the gather is never refused for the wrong
-	# tool -- this check is only about the cone connecting.
-	#
-	# The total item count across every slot, not `used_slots()`: a fresh
-	# game already starts holding wood (62) and stone (18)
-	# (`game_state.gd::_starter_kit` or equivalent), so a successful gather of
-	# either just tops up an EXISTING stack rather than opening a new slot --
-	# `used_slots()` would silently read "no change" on a swing that actually
-	# connected and false-failed this check on a build with nothing wrong.
-	var total_before := _inventory_item_total(inventory)
+	if hold.call("prop_node") == null:
+		return ["the wrong equipped tool has no visible held prop; the swing path is not player-readable"] as Array[String]
+	var total_before_wrong := _inventory_item_total(inventory)
+	var required_slot := int(inventory.call("find_slot", required_tool))
+	var wrong_slot := int(inventory.call("find_slot", wrong_tool))
+	var required_durability_before := int(inventory.call("durability_at", required_slot))
+	var wrong_durability_before := int(inventory.call("durability_at", wrong_slot))
 
 	if not bool(hold.call("swing")):
-		found.append("tool_hold.swing() refused to start with a tool equipped and nothing else swinging")
+		found.append("tool_hold.swing() refused to start with the wrong tool visibly equipped")
 		return found
+	if float(model.get("_tool_swing_for")) <= 0.0:
+		found.append("tool_hold.swing() did not trigger the trainer's visible tool-swing animation path")
 
 	# The swing resolves at its own midpoint (tool_hold.gd::SWING_SECONDS), so
 	# give it real _process frames, not physics frames -- _resolve_swing() runs
@@ -503,19 +502,33 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 		if not bool(hold.call("is_swinging")):
 			break
 
-	var total_after := _inventory_item_total(inventory)
-	# A connected gather always changes something observable: the satchel's
-	# total item count goes up (a gather never removes anything), or the
-	# target is gone outright (HARVEST-ALL's permanent removal). Neither
-	# happens on a whiff.
-	var gathered := total_after > total_before or not is_instance_valid(best)
-	if not gathered:
-		found.append("swinging at a harvestable node found %.2fm from the original spawn, " % best_distance +
-			"after walking up to face it (Model turned, body untouched -- the real _face() shape), " +
-			"connected to nothing -- the cone test is not using the player's real facing")
-	else:
-		print("swing connected: satchel total %d -> %d, target valid=%s" %
-			[total_before, total_after, is_instance_valid(best)])
+	if _inventory_item_total(inventory) != total_before_wrong:
+		found.append("holding %s gathered %s even though %s was required" %
+			[wrong_tool, str(best.get("_item_id")), required_tool])
+	if int(inventory.call("durability_at", required_slot)) != required_durability_before:
+		found.append("the hidden %s lost durability during a visible %s swing" % [required_tool, wrong_tool])
+	if int(inventory.call("durability_at", wrong_slot)) != wrong_durability_before:
+		found.append("the wrong held %s lost durability on a refused hit" % wrong_tool)
+
+	game.set("equipped_tool", required_tool)
+	for i in 4:
+		await process_frame
+	if hold.call("prop_node") == null:
+		return ["the required equipped %s has no visible held prop" % required_tool] as Array[String]
+	var total_before_correct := _inventory_item_total(inventory)
+	var durability_before_correct := int(inventory.call("durability_at", required_slot))
+	if not bool(hold.call("swing")):
+		return ["tool_hold.swing() refused the correct visibly equipped %s" % required_tool] as Array[String]
+	for i in 30:
+		await process_frame
+		if not bool(hold.call("is_swinging")):
+			break
+	if _inventory_item_total(inventory) <= total_before_correct:
+		found.append("the correctly held %s swing connected to authored %s but granted no reward" %
+			[required_tool, str(best.get("_item_id"))])
+	if int(inventory.call("durability_at", required_slot)) != durability_before_correct - 1:
+		found.append("the correctly held %s did not lose exactly one durability" % required_tool)
+	print("equipped-tool gate: %s refused, %s rewarded and wore once" % [wrong_tool, required_tool])
 
 	return found
 
@@ -543,6 +556,9 @@ func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: No
 	var inventory: RefCounted = game.get("inventory")
 	if inventory == null:
 		return ["Game exposes no inventory; cannot check chop-then-gather"] as Array[String]
+	var items: RefCounted = game.get("items")
+	if items == null:
+		return ["Game exposes no item database; cannot check chop-then-gather"] as Array[String]
 
 	var standing: Node3D = null
 	var best_distance := INF
@@ -561,14 +577,40 @@ func _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world: No
 	var chop_pos: Vector3 = standing.global_position
 	_face_and_stand_near(player, model, chop_pos, world)
 
-	inventory.call("add", "axe", 1)
-	inventory.call("add", "pickaxe", 1)
-	game.set("equipped_tool", "axe")
+	for tool_id in ["axe", "pickaxe", "knife"]:
+		inventory.call("add", tool_id, 1)
+	var required_tool := str(items.call("gathered_with", str(standing.get("_item_id"))))
+	var wrong_tool := "pickaxe" if required_tool != "pickaxe" else "axe"
+	var required_slot := int(inventory.call("find_slot", required_tool))
+	var wrong_slot := int(inventory.call("find_slot", wrong_tool))
+	var required_durability_before := int(inventory.call("durability_at", required_slot))
+	var wrong_durability_before := int(inventory.call("durability_at", wrong_slot))
+	game.set("equipped_tool", wrong_tool)
 	for i in 4:
 		await process_frame
+	if hold.call("prop_node") == null:
+		return ["the wrong vegetation tool %s produced no visible held prop" % wrong_tool] as Array[String]
+	if not bool(hold.call("swing")):
+		return ["tool_hold.swing() refused the wrong %s before the vegetation gate could be tested" % wrong_tool] as Array[String]
+	for i in 30:
+		await process_frame
+		if not bool(hold.call("is_swinging")):
+			break
+	if not is_instance_valid(standing):
+		return ["a visible %s swing felled vegetation that requires %s" % [wrong_tool, required_tool]] as Array[String]
+	if int(inventory.call("durability_at", required_slot)) != required_durability_before:
+		return ["the hidden %s lost durability during a refused vegetation %s swing" % [required_tool, wrong_tool]] as Array[String]
+	if int(inventory.call("durability_at", wrong_slot)) != wrong_durability_before:
+		return ["the wrong held %s lost durability on refused vegetation" % wrong_tool] as Array[String]
+
+	game.set("equipped_tool", required_tool)
+	for i in 4:
+		await process_frame
+	if hold.call("prop_node") == null:
+		return ["vegetation requires %s but equipping it produced no visible held prop" % required_tool] as Array[String]
 
 	if not bool(hold.call("swing")):
-		return ["tool_hold.swing() refused the chop with a tool equipped"] as Array[String]
+		return ["tool_hold.swing() refused the chop with the required %s equipped" % required_tool] as Array[String]
 	for i in 30:
 		await process_frame
 		if not bool(hold.call("is_swinging")):

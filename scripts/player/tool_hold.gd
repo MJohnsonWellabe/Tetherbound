@@ -20,10 +20,9 @@ extends Node3D
 ##      against whatever harvest nodes are in reach.
 ##
 ## It does NOT own the harvest arithmetic. `harvest_logic.gd` and
-## `item_db.gd::harvest_yield` already decide what a gather yields and whether
-## the tool was the right one, and they keep deciding it -- a swing is just a
-## second way to ask, alongside the interact prompt, which stays exactly as it
-## was for players who prefer it.
+## `item_db.gd::harvest_yield` decide what a gather yields; this node forwards
+## the held id so that shared arithmetic can verify the tool that visibly
+## swung. A swing is just a second way to ask, alongside the interact prompt.
 ##
 ## ## Why the props are bone-attached the way they are
 ##
@@ -225,7 +224,11 @@ func _resolve_swing() -> void:
 	if best == null:
 		return
 	if best.has_method("gather"):
-		best.call("gather")
+		# Forward the identity of the prop whose swing is resolving. Harvest
+		# nodes use this exact held id rather than inferring permission from any
+		# unrelated tool elsewhere in the Satchel. Other harvestables accept the
+		# optional argument and retain their ungated semantics.
+		best.call("gather", _equipped)
 		swing_connected.emit(best)
 
 
