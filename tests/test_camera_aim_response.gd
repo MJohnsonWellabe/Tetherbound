@@ -46,6 +46,14 @@ func test_launch_assist_is_zero_for_a_stationary_target() -> void:
 	assert_almost_eq(predicted.distance_to(centre), 0.0, 0.001)
 
 
+func test_launch_assist_ignores_grounded_body_floor_bias() -> void:
+	var planar := THROW_AIM.launch_target_velocity(Vector3(3.4, -2.0, -1.2))
+	assert_almost_eq(planar.x, 3.4, 0.001)
+	assert_almost_eq(planar.y, 0.0, 0.001,
+		"ground-contact velocity must not lead an orb below a target")
+	assert_almost_eq(planar.z, -1.2, 0.001)
+
+
 func test_launch_assist_clamps_pathological_target_velocity() -> void:
 	var centre := Vector3(0.0, 1.0, -7.0)
 	var predicted: Vector3 = THROW_AIM.predict_launch_point(

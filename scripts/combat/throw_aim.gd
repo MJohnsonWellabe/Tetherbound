@@ -433,7 +433,7 @@ func _commit_launch_assist() -> void:
 	origin += initial * _spawn_forward
 	var target_velocity := Vector3.ZERO
 	if _target is CharacterBody3D:
-		target_velocity = (_target as CharacterBody3D).velocity
+		target_velocity = launch_target_velocity((_target as CharacterBody3D).velocity)
 	_committed_assist_point = predict_launch_point(
 		origin, centre, target_velocity, _speed, _gravity, _release_windup,
 		_launch_assist_max_seconds, _launch_assist_max_target_speed,
@@ -627,6 +627,13 @@ static func predict_launch_point(
 	if lead.length() > max_distance:
 		lead = lead.normalized() * max_distance
 	return centre + lead
+
+
+## CharacterBody3D keeps a small downward velocity while grounded to maintain
+## contact. Catch prediction is planar: that bookkeeping must never be treated
+## as a falling target during the release windup.
+static func launch_target_velocity(body_velocity: Vector3) -> Vector3:
+	return Vector3(body_velocity.x, 0.0, body_velocity.z)
 
 
 func _aim_camera() -> Camera3D:
