@@ -17,5 +17,16 @@ func _init() -> void:
 		push_error("relocated Meadows pond produced no rendered surface: %s" % stats)
 		quit(1)
 		return
-	print("pond water smoke passed: %d rendered quads" % int(stats["pond_quads"]))
+	# Gate A judges this as a representative lush pocket, not merely as water
+	# geometry. Keep the layered banks honest when terrain/water levels move:
+	# every authored family must resolve at least one real placement against
+	# the current shoreline rather than existing only as inert config.
+	for key: String in ["reeds", "marginals", "bank_flowers", "rocks", "lilypads"]:
+		if int(stats.get(key, 0)) <= 0:
+			push_error("relocated pond produced no %s shoreline dressing: %s" % [key, stats])
+			quit(1)
+			return
+	print("pond water smoke passed: %d rendered quads, layered shore %s" % [
+		int(stats["pond_quads"]), stats
+	])
 	quit()

@@ -42,8 +42,8 @@
       "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf"
     ],
     "tint": "#7a9460",
-    "clumps": 16,
-    "per_clump": 20,
+    "clumps": 24,
+    "per_clump": 24,
     "clump_radius": 4.2,
     "band_below": 0.55,
     "band_above": 0.28,
@@ -51,7 +51,14 @@
     "scale_max": 1.25,
     "max_bank_slope_deg": 33.0,
     "seed": 20260812,
-    "_comment_stands": "EV5 blind rounds 4-5, the one repeated in-scope ask not yet acted on: 34 small clumps spaced around a ~300m shoreline read as 'a perimeter ring', not vegetation. A dozen anchors at 20 stalks each makes a few REAL brakes with long open banks between them -- open water access, the thing both rounds asked for. Tint lifted a step (#6c8850 -> #7a9460): the stands rendered near-black against bright water. TUNABLE."
+    "bearing_ranges_deg": [
+      [-175.0, -135.0],
+      [-125.0, -110.0],
+      [55.0, 105.0],
+      [130.0, 170.0]
+    ],
+    "_comment_gate_a_pockets": "Gate A pond-side composition: concentrate the established reed clumps into four irregular bank arcs instead of distributing them around the entire large basin. The Pond Circuit arrival (-87 degrees), mill/ranger/jetty side, and departure (+35 degrees) remain inside one continuous open sector from -105 to +55 degrees; gaps between the other arcs preserve additional shoreline access. Counts make each selected arc a layered stand, not a perimeter ring. TUNABLE.",
+    "_comment_stands": "EV5 blind rounds 4-5 found that many small clumps spread around the whole shore read as a perimeter ring. The authored Gate A bearing arcs above now make a few real brakes with long open banks between them; the 24 clumps vary internally and only sample those pockets. Tint stays lifted from #6c8850 to #7a9460 because darker stands rendered near-black against bright water. TUNABLE."
   },
   "_comment_marginals": "EV5-remainder: a SECOND waterside plant silhouette beyond the wispy-grass reed — the nature pack's own broadleaf Plant_1_Big, arching over the waterline at reduced scale, in-family per D24. Same band keys as `reeds` (water.gd routes both through one builder). EV5-remainder-2: the fuller Stylized Nature MegaKit landed (d64df71) and was searched for a literal sedge/cattail model — none exists by name in any of its 270 files. Grass_Wheat is the closest available read: a tall, narrow, dense blade-cluster mesh with a distinct seed-head silhouette (1.11x1.78x1.01m raw bbox, 1530 verts) genuinely distinct from Plant_1_Big's broad arching leaf (2.89x3.76x3.13m, 360 verts) — reuses the already-staged Grass.png texture, a plain vertical gradient strip fully controlled by this band's own tint. ALL TUNABLE, including whether Grass_Wheat should get its own tint/scale split from Plant_1_Big's if a verify pass flags a proportion mismatch.",
   "marginals": {
@@ -60,15 +67,45 @@
       "res://assets/environment/stylized_nature/Grass_Wheat.gltf"
     ],
     "tint": "#5f8a52",
-    "clumps": 8,
-    "per_clump": 3,
+    "clumps": 15,
+    "per_clump": 6,
     "clump_radius": 3.2,
     "band_below": 0.25,
     "band_above": 0.5,
     "scale_min": 0.28,
     "scale_max": 0.5,
     "max_bank_slope_deg": 30.0,
-    "seed": 20260813
+    "seed": 20260813,
+    "bearing_ranges_deg": [
+      [-165.0, -145.0],
+      [-122.0, -112.0],
+      [68.0, 95.0],
+      [142.0, 162.0]
+    ],
+    "_comment_gate_a_pockets": "Broadleaf and wheat silhouettes sit inside the larger reed arcs so the banks layer from low water grass to taller marginal plants instead of repeating one silhouette everywhere. Narrower ranges leave visible reed-only edges around each pocket. TUNABLE."
+  },
+  "_comment_bank_flowers": "Gate A: ankle-height warm flower groups on the dry lip of selected reed pockets. This reuses the existing Meadows flower family at its established 0.07-0.26 scale, and uses the shore's actual height isoline rather than hand-placing blooms at coordinates that would drift when the basin is tuned.",
+  "bank_flowers": {
+    "models": [
+      "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+      "res://assets/environment/stylized_nature/Flower_4_Group.gltf"
+    ],
+    "tint": "#dfc487",
+    "clumps": 12,
+    "per_clump": 18,
+    "clump_radius": 4.8,
+    "band_below": -0.08,
+    "band_above": 0.85,
+    "scale_min": 0.08,
+    "scale_max": 0.22,
+    "sink": 0.025,
+    "max_bank_slope_deg": 28.0,
+    "seed": 20260821,
+    "bearing_ranges_deg": [
+      [-158.0, -138.0],
+      [70.0, 92.0],
+      [146.0, 164.0]
+    ]
   },
   "_comment_dressing": "EV5-remainder: the aquatic dressing eight blind rounds converged asking for — all from packs already staged and ledgered (searched before treating anything as blocked): Rock_Medium boulders half-submerged, Pebble_Round scaled up into smooth shore stones, the Kenney logs (ledger: 'retained for the log shapes') beached as driftwood, Plant_7's flat rosette floating as lily pads. Counts, depth bands, scales, sinks ALL TUNABLE. Boulders collide (vegetation.gd's hologram/camera lesson); stones are shin-height and do not.",
   "dressing": {
@@ -82,6 +119,11 @@
       "tint": "#8f8d84",
       "_comment_tint": "Own-render pass: untinted, the pack's bluish rock texture rendered as pale baby-blue crowns against the water — a warm grey multiply lands them in the same family as the hillside scatter's retinted rocks. TUNABLE.",
       "count": 14,
+      "bearing_ranges_deg": [
+        [-160.0, -132.0],
+        [60.0, 90.0],
+        [145.0, 170.0]
+      ],
       "into_water_max": 5.0,
       "up_bank_max": 1.2,
       "max_depth": 1.6,
@@ -98,7 +140,13 @@
         "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
       ],
       "tint": "#9c988c",
-      "count": 16,
+      "count": 34,
+      "bearing_ranges_deg": [
+        [-175.0, -135.0],
+        [-125.0, -110.0],
+        [50.0, 110.0],
+        [130.0, 175.0]
+      ],
       "into_water_max": 3.5,
       "up_bank_max": 1.5,
       "max_depth": 0.9,
@@ -116,6 +164,11 @@
       "tint": "#7d6a55",
       "_comment_tint": "Own-render pass: the Kenney log's cream vertex colours multiply through the batch tint, so it is authored darker than the target weathered grey-brown. TUNABLE.",
       "count": 6,
+      "bearing_ranges_deg": [
+        [-155.0, -125.0],
+        [72.0, 96.0],
+        [145.0, 165.0]
+      ],
       "band_below": 0.3,
       "band_above": 0.45,
       "scale_min": 1.6,
@@ -129,9 +182,15 @@
       ],
       "tint": "#6f9a55",
       "_comment_tint": "Own-render pass: at #4f7d44 the pad clusters read as near-black clumps on the bright water; lifted a step. TUNABLE.",
-      "clusters": 6,
-      "per_cluster": 8,
+      "clusters": 10,
+      "per_cluster": 9,
       "cluster_radius": 3.2,
+      "bearing_ranges_deg": [
+        [-165.0, -135.0],
+        [-125.0, -110.0],
+        [58.0, 105.0],
+        [135.0, 170.0]
+      ],
       "depth_min": 0.3,
       "depth_max": 1.3,
       "scale_min": 0.7,

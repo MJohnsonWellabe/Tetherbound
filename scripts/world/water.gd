@@ -56,7 +56,8 @@ var _region_ready := false
 var _stats := {
 	"pond_quads": 0, "stream_points": 0, "reeds": 0,
 	# EV5-remainder — the waterside dressing the blind rounds asked for.
-	"marginals": 0, "rocks": 0, "driftwood": 0, "lilypads": 0, "jetty_pieces": 0,
+	"marginals": 0, "bank_flowers": 0, "rocks": 0,
+	"driftwood": 0, "lilypads": 0, "jetty_pieces": 0,
 	# SE21 — the river is a second body of water in the same layer.
 	"river_quads": 0, "river_reeds": 0, "river_scrub": 0,
 }
@@ -101,12 +102,12 @@ func build() -> void:
 	# The shoreline fan is shared by every shore-anchored layer below —
 	# computed once so they all agree about where the waterline is.
 	var shore := _shoreline(centre)
-	_build_shore_flora(shore)
+	_build_shore_flora(shore, centre)
 	_build_dressing(shore, centre)
 	_build_jetty(centre)
-	print("[water] pond quads %d, stream points %d, reeds %d, marginals %d, rocks %d, driftwood %d, lilypads %d, jetty %d, level %.1f" % [
+	print("[water] pond quads %d, stream points %d, reeds %d, marginals %d, bank flowers %d, rocks %d, driftwood %d, lilypads %d, jetty %d, level %.1f" % [
 		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"],
-		_stats["marginals"], _stats["rocks"], _stats["driftwood"],
+		_stats["marginals"], _stats["bank_flowers"], _stats["rocks"], _stats["driftwood"],
 		_stats["lilypads"], _stats["jetty_pieces"], _level
 	])
 	print("[water] river quads %d, bank reeds %d, bank scrub %d" % [
@@ -699,24 +700,64 @@ func _shoreline(pond_centre: Vector2) -> Array[Vector2]:
 	return shore
 
 
+## Optional authored arcs for a shoreline layer. The pond is large enough that
+## drawing every layer from the whole fan makes sparse dots at low counts and a
+## continuous planted ring at high counts. Bearing ranges keep the existing
+## terrain-derived shoreline while letting data concentrate plants and stones
+## into a few irregular pockets with open access between them.
+func _shore_for_config(
+	shore: Array[Vector2], pond_centre: Vector2, layer_cfg: Dictionary
+) -> Array[Vector2]:
+	var ranges: Array = layer_cfg.get("bearing_ranges_deg", [])
+	if ranges.is_empty():
+		return shore
+	var filtered: Array[Vector2] = []
+	for point: Vector2 in shore:
+		var bearing := rad_to_deg((point - pond_centre).angle())
+		for entry: Variant in ranges:
+			if not entry is Array or (entry as Array).size() < 2:
+				continue
+			var limits := entry as Array
+			var start_deg := float(limits[0])
+			var end_deg := float(limits[1])
+			var inside := bearing >= start_deg and bearing <= end_deg
+			if start_deg > end_deg:
+				inside = bearing >= start_deg or bearing <= end_deg
+			if inside:
+				filtered.append(point)
+				break
+	if filtered.is_empty():
+		push_warning("shoreline bearing ranges selected no points; using the full shore")
+		return shore
+	return filtered
+
+
 ## Reeds at the banks (bible §15) plus, EV5-remainder, a second marginal
 ## species — the broadleaf Plant_1_Big at the waterline, in-family per D24,
 ## a different silhouette from the wispy-grass reed. EV5-remainder-2 added a
 ## third: Grass_Wheat, the closest available sedge/cattail read in the fuller
 ## MegaKit (no literal cattail model exists in the pack) — a tall, narrow,
 ## dense blade-cluster distinct from Plant_1_Big's broad arch.
-func _build_shore_flora(shore: Array[Vector2]) -> void:
+func _build_shore_flora(shore: Array[Vector2], pond_centre: Vector2) -> void:
 	if shore.is_empty():
 		return
-	_stats["reeds"] = _build_plant_band(_water_cfg.get("reeds", {}), shore)
-	_stats["marginals"] = _build_plant_band(_water_cfg.get("marginals", {}), shore)
+	var reeds: Dictionary = _water_cfg.get("reeds", {})
+	var marginals: Dictionary = _water_cfg.get("marginals", {})
+	var bank_flowers: Dictionary = _water_cfg.get("bank_flowers", {})
+	_stats["reeds"] = _build_plant_band(reeds, _shore_for_config(shore, pond_centre, reeds))
+	_stats["marginals"] = _build_plant_band(
+		marginals, _shore_for_config(shore, pond_centre, marginals)
+	)
+	_stats["bank_flowers"] = _build_plant_band(
+		bank_flowers, _shore_for_config(shore, pond_centre, bank_flowers)
+	)
 
 
 ## One config-driven band of plants straddling the waterline. The reed keys
 ## documented in water.json apply to any band; returns how many were placed.
 func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
 	var models: Array = band_cfg.get("models", [])
-	if models.is_empty():
+	if models.is_empty() or shore.is_empty():
 		return 0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(band_cfg.get("seed", 1))
@@ -729,6 +770,7 @@ func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
 	var max_slope := float(band_cfg.get("max_bank_slope_deg", 33.0))
 	var scale_min := float(band_cfg.get("scale_min", 0.55))
 	var scale_max := float(band_cfg.get("scale_max", 1.0))
+	var sink := float(band_cfg.get("sink", REED_SINK))
 
 	var placements: Dictionary = {}
 	for model: Variant in models:
@@ -754,7 +796,7 @@ func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
 				continue
 			var model := str(models[rng.randi_range(0, models.size() - 1)])
 			(placements[model] as Array).append({
-				"position": Vector3(spot.x, ground - REED_SINK, spot.y),
+				"position": Vector3(spot.x, ground - sink, spot.y),
 				"yaw": rng.randf_range(0.0, TAU),
 				"scale": rng.randf_range(scale_min, scale_max),
 				# A few degrees of lean, biased nowhere in particular. Bolt-
@@ -912,10 +954,22 @@ func _build_dressing(shore: Array[Vector2], pond_centre: Vector2) -> void:
 	_jetty_keepout(pond_centre)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(dressing.get("seed", 20260813))
-	_stats["rocks"] = _scatter_rocks(dressing.get("boulders", {}), shore, pond_centre, rng)
-	_stats["rocks"] += _scatter_rocks(dressing.get("stones", {}), shore, pond_centre, rng)
-	_stats["driftwood"] = _scatter_driftwood(dressing.get("driftwood", {}), shore, pond_centre, rng)
-	_stats["lilypads"] = _scatter_lilypads(dressing.get("lilypads", {}), shore, pond_centre, rng)
+	var boulders: Dictionary = dressing.get("boulders", {})
+	var stones: Dictionary = dressing.get("stones", {})
+	var driftwood: Dictionary = dressing.get("driftwood", {})
+	var lilypads: Dictionary = dressing.get("lilypads", {})
+	_stats["rocks"] = _scatter_rocks(
+		boulders, _shore_for_config(shore, pond_centre, boulders), pond_centre, rng
+	)
+	_stats["rocks"] += _scatter_rocks(
+		stones, _shore_for_config(shore, pond_centre, stones), pond_centre, rng
+	)
+	_stats["driftwood"] = _scatter_driftwood(
+		driftwood, _shore_for_config(shore, pond_centre, driftwood), pond_centre, rng
+	)
+	_stats["lilypads"] = _scatter_lilypads(
+		lilypads, _shore_for_config(shore, pond_centre, lilypads), pond_centre, rng
+	)
 
 
 ## Rocks and driftwood must not land on the jetty: the first render put a
@@ -960,7 +1014,7 @@ func _in_keepout(p: Vector2) -> bool:
 ## because one scale range cannot serve meshes two orders apart in volume.
 func _scatter_rocks(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vector2, rng: RandomNumberGenerator) -> int:
 	var models: Array = cfg.get("models", [])
-	if models.is_empty():
+	if models.is_empty() or shore.is_empty():
 		return 0
 	var count := int(cfg.get("count", 12))
 	var into_water := float(cfg.get("into_water_max", 5.0))
@@ -1093,7 +1147,7 @@ func _scatter_driftwood(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vec
 ## off the banks and out of the deep middle where they would read as flotsam.
 func _scatter_lilypads(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vector2, rng: RandomNumberGenerator) -> int:
 	var models: Array = cfg.get("models", [])
-	if models.is_empty():
+	if models.is_empty() or shore.is_empty():
 		return 0
 	var clusters := int(cfg.get("clusters", 6))
 	var per_cluster := int(cfg.get("per_cluster", 7))
