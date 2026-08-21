@@ -26,6 +26,7 @@ var _wild: Node3D = null
 var _ally: Node3D = null
 var _misses := 0
 var _resolutions: Array[bool] = []
+const NATURAL_OPENING_ENGAGE_DISTANCE := 5.72
 
 
 func _init() -> void:
@@ -115,12 +116,17 @@ func _walk_to_and_engage() -> bool:
 	for _i in 1500:
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= range_value * 0.6:
+		# Mirror the continuous opening's measured interaction geometry. The
+		# smaller historical fixture stopped at 3.6m, while the real opening
+		# engaged at 5.72m; that extra flight time is exactly the condition this
+		# regression is meant to preserve.
+		if to.length() <= minf(range_value * 0.98, NATURAL_OPENING_ENGAGE_DISTANCE):
 			_stop_left_stick()
 			break
 		_drive_stick_toward(_player, _wild.global_position)
 		await physics_frame
 	_stop_left_stick()
+	print("controller catch: mirrored opening engage distance %.2fm" % _player.global_position.distance_to(_wild.global_position))
 	await _tap_action(&"interact")
 	for _i in 120:
 		if bool(_manager.call("is_fighting")):

@@ -299,16 +299,18 @@ func _fight_until_catchable() -> bool:
 
 
 func _catch_with_real_throws() -> bool:
-	for attempt in 8:
+	var launches := 0
+	while launches < 8:
 		if not bool(_combat.call("is_fighting")):
 			break
-		await _tap_action("combat_throw")
-		for _i in 90:
-			if bool(_combat.call("is_aiming")):
-				break
-			await physics_frame
-		if not bool(_combat.call("is_aiming")):
-			continue
+		# A resolved throw has a production 0.9s cooldown. One press during that
+		# window is deliberately ignored, so retry until a real aim opens instead
+		# of counting the ignored press as one of this evidence run's launches.
+		# The old loop therefore launched only on iterations 2/4/6/8 after a miss,
+		# exactly matching the alternating outcomes in the continuous-run log.
+		if not await _open_throw_aim():
+			_fail("catch aim did not reopen after its bounded cooldown")
+			return false
 		if not await _aim_camera_at(_wild, 360):
 			_fail("right-stick aim could not line up the real throw reticle")
 			return false
@@ -316,6 +318,7 @@ func _catch_with_real_throws() -> bool:
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
 		await _tap_action("combat_throw")
+		launches += 1
 		# A launch is not a landed throw. Wait first for the projectile's physical
 		# outcome, so a miss advances the retry immediately instead of spending the
 		# full catch-resolution budget waiting for a signal that only a strike can
@@ -327,23 +330,39 @@ func _catch_with_real_throws() -> bool:
 				break
 			await physics_frame
 		if _throw_misses > misses_before:
-			print("physical throw %d went wide; retrying after a real miss" % (attempt + 1))
+			print("physical launch %d went wide; retrying after a real miss" % launches)
 			continue
 		if _throw_strikes <= strikes_before:
-			_fail("physical throw %d launched but produced no strike or miss outcome" % (attempt + 1))
+			_fail("physical launch %d produced no strike or miss outcome" % launches)
 			return false
 		for _i in 900:
 			if _catch_results.size() > results_before or not bool(_combat.call("is_fighting")):
 				break
 			await physics_frame
 		if _catch_results.size() > results_before and _catch_results[-1]:
-			_checkpoint("physical landed throw caught Bramblebun on attempt %d (%d strike(s), %d miss(es))" % [
-				attempt + 1, _throw_strikes, _throw_misses,
+			_checkpoint("physical landed throw caught Bramblebun on launch %d (%d strike(s), %d miss(es))" % [
+				launches, _throw_strikes, _throw_misses,
 			])
 			return true
 	_fail("eight natural weakened-target launches produced %d strike(s), %d miss(es), and no catch" % [
 		_throw_strikes, _throw_misses,
 	])
+	return false
+
+
+## Open a fresh physical aim after any preceding throw's lockout.
+##
+## `try_begin_aim()` intentionally ignores input during its cooldown and emits
+## no refusal. A single press cannot distinguish that expected lockout from a
+## dropped controller input, so use the same bounded retry pattern as the
+## focused controller-catching smoke.
+func _open_throw_aim() -> bool:
+	for _attempt in 18:
+		await _tap_action("combat_throw")
+		for _i in 6:
+			if bool(_combat.call("is_aiming")):
+				return true
+			await physics_frame
 	return false
 
 
