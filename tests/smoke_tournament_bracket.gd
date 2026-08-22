@@ -52,6 +52,7 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## The fight's own reach numbers, read rather than guessed. See
 ## `_load_attack_ranges()` for why this file may not carry its own.
 const COMBAT_CONFIG := "res://data/config/combat.json"
@@ -78,7 +79,7 @@ const STALL_FRAMES := 900
 const FLAGS_TO_CLEAR: PackedStringArray = [
 	"tournament_team_ready", "tournament_training_ready", "tournament_entered",
 	"tournament_quarter_won", "tournament_semi_won", "tournament_won",
-	"recipe_saddle",
+	"tournament_condition_ready", "recipe_saddle",
 ]
 
 ## Where the player stands to fight. `practice_trainer`'s own vetted-clear spot
@@ -294,7 +295,56 @@ func _a_ready_party_is_offered_the_sign_up() -> bool:
 		_fail("a party of %d creatures at level %d did not write tournament_training_ready" % [
 			TOURNAMENT.required_party_size(), TOURNAMENT.required_level()])
 		return false
+
+	# RG19-spec/D68. Levelled is not the same as ready: the entrants have to
+	# be rested, fed and happy, and a team that has only been raised is none
+	# of the three.
+	if bool(progression.call("has", "tournament_condition_ready")):
+		_fail("a team that has never slept, eaten or been cared for wrote tournament_condition_ready")
+		return false
+	if not _marshal_says("tournament_halda_condition", "a levelled team in poor condition"):
+		return false
+	var report := TOURNAMENT.readiness_report(_game.get("party"))
+	if report.is_empty():
+		_fail("the marshal refused the team but the readiness report names nothing to fix")
+		return false
+	print("condition: refused, and the report says -> %s" % report[0])
+
+	await _bring_the_team_into_condition()
+	if not bool(progression.call("has", "tournament_condition_ready")):
+		_fail("a rested, fed and happy team still did not write tournament_condition_ready: %s"
+			% str(TOURNAMENT.readiness_report(_game.get("party"))))
+		return false
 	return _marshal_says("tournament_halda_signup", "a team that qualifies")
+
+
+## Feed and rest the team the way a player does: real food through
+## `creature_condition.feed()` and a real completed night through the same
+## `Game.complete_creature_bed_rests()` the player's own bed calls.
+func _bring_the_team_into_condition() -> void:
+	var party: RefCounted = _game.get("party")
+	var cfg: Dictionary = CONDITION.config()
+	var food: Dictionary = {}
+	var items: RefCounted = _game.get("items")
+	if items != null:
+		food = (items.call("definition", "berries") as Dictionary).get("creature_food", {})
+	if food.is_empty():
+		_fail("berries carry no creature_food block; there is nothing to feed the team")
+		return
+	for i in int(party.call("size")):
+		var creature: RefCounted = party.call("at", i)
+		if creature == null:
+			continue
+		# Feed until full, the same call the backpack makes per berry.
+		for _bite in 12:
+			if not bool(CONDITION.feed(creature, cfg, food).get("accepted", false)):
+				break
+		creature.set("resting", true)
+	var slept: int = int(_game.call("complete_creature_bed_rests"))
+	if slept <= 0:
+		_fail("nobody completed a night's rest; the creature bed path did not run")
+	await _let_the_board_poll()
+	print("condition: fed the team and slept the night -- %d creature(s) rested" % slept)
 
 
 ## --- 4: signing up -------------------------------------------------------------
@@ -351,8 +401,11 @@ func _a_lost_round_can_be_retried() -> bool:
 		return false
 	print("loss: the quarter-final is still on offer, and '%s' is still unset" % won_flag)
 
-	# "After healing your creatures" is the other half of the owner's rule.
+	# "After healing your creatures" is the other half of the owner's rule --
+	# and RG19-spec/D68 means a knocked-out creature also lost its rest, so
+	# getting back into the ring is healing AND caring for them.
 	_heal_the_party()
+	await _bring_the_team_into_condition()
 	return true
 
 

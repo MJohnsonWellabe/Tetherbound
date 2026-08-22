@@ -280,6 +280,12 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 		"with the bodies but not the levels, she should be sending the player out to train")
 
 	progression.set_flag("tournament_training_ready")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_condition",
+		"a levelled team in poor condition should be told to rest and feed them, not signed up")
+
+	# RG19-spec/D68's volatile flag, written by `tournament.gd`'s poll once the
+	# entrants are rested, fed and happy.
+	progression.set_flag("tournament_condition_ready")
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_signup",
 		"a ready team should be offered the sign-up")
 
@@ -298,6 +304,22 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 	progression.set_flag("tournament_won")
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_champion",
 		"a champion should get the champion's line, and it should carry the riding news")
+
+
+## RG19-spec/D68. Condition gates ENTRY, not the bracket. A team that tires
+## out or goes hungry between rounds must still be offered the round it is in
+## the middle of -- being sent back out to feed somebody with a bout half
+## fought is the one way this gate could brick a run.
+func test_a_hungry_team_mid_bracket_is_still_offered_its_round() -> void:
+	var marshal := _marshal()
+	if marshal.is_empty():
+		return
+	for flag: String in ["tournament_team_ready", "tournament_training_ready",
+			"tournament_condition_ready", "tournament_entered"]:
+		progression.set_flag(flag)
+	progression.set_flag("tournament_condition_ready", false)
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_quarter",
+		"a team that went hungry mid-bracket was sent back out instead of being offered its round")
 
 
 ## "You can lose and retry after healing your creatures." Losing sets no flag
