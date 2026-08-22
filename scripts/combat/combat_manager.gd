@@ -702,6 +702,13 @@ func _award_victory() -> void:
 		var amount: int = award if i == _active_index else share
 		var levels_gained: int = member.gain_xp(amount, cfg)
 		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		# Prompt 67's history, recorded where the facts already are. This loop
+		# already skips a fainted member ("it did not fight"), so the same rule
+		# decides what counts as a battle fought -- one definition, one place.
+		member.set("battles_fought", int(member.get("battles_fought")) + 1)
+		if levels_gained > 0:
+			member.set("levels_gained_with_you",
+				int(member.get("levels_gained_with_you")) + levels_gained)
 		# RG19-spec/D68: everyone who was in the fight gets the mood of having
 		# won it, and a level-up is worth a little more on top. Paid to the
 		# same members the XP is, on the same rule -- a fainted party member

@@ -1171,6 +1171,13 @@ func _resolve_catch(kept: RefCounted) -> void:
 		push_error("the Game autoload has no party")
 		return
 
+	# Prompt 67's history: stamp the day it joined you, once, at the moment it
+	# does. Set here rather than at spawn because a wild creature the player
+	# never caught has no day it joined them, and this is the one path every
+	# catch takes -- the tutorial's included.
+	if int(kept.get("caught_on_day")) <= 0:
+		kept.set("caught_on_day", int(game.get("day")))
+
 	if not bool(party.call("is_full")):
 		if not bool(party.call("add", kept)):
 			push_error("the caught %s never reached the party" % str(kept.get("species_id")))

@@ -154,7 +154,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 13
+const VERSION := 14
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -647,6 +647,9 @@ func _party_to_array(party: Variant) -> Array:
 			"level": int(instance.get("level")),
 			"xp": int(instance.get("xp")),
 			"bond": int(instance.get("bond")),
+			"battles_fought": int(instance.get("battles_fought")),
+			"caught_on_day": int(instance.get("caught_on_day")),
+			"levels_gained_with_you": int(instance.get("levels_gained_with_you")),
 			"move_quick": str(instance.get("move_quick")),
 			"move_charged": str(instance.get("move_charged")),
 			"iv_hp": float(instance.get("iv_hp")),
@@ -683,6 +686,12 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.display_name = str(d.get("display_name", creature.species_id))
 		creature.creature_type = str(d.get("creature_type", "ground"))
 		creature.nickname = str(d.get("nickname", ""))
+		# Defaulted to 0, which is what a pre-VERSION-14 save honestly means:
+		# the history was not being kept, so the ceremony says nothing about it
+		# rather than inventing a number. No migration pass needed.
+		creature.battles_fought = int(d.get("battles_fought", 0))
+		creature.caught_on_day = int(d.get("caught_on_day", 0))
+		creature.levels_gained_with_you = int(d.get("levels_gained_with_you", 0))
 		creature.max_hp = float(d.get("max_hp", 1.0))
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))
