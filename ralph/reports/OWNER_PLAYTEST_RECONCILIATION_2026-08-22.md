@@ -87,8 +87,8 @@ had already reported and both of which were still real:
 | OP21-07 | Building rotate does not work | **CONFIRMED FIXED** | `smoke_free_build.gd` PASS. |
 | OP21-08 | Doors not openable; modular scale wrong | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS. |
 | OP21-09 | Roof pieces the wrong size | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS. |
-| OP21-10 | Free building implies free crafting | **PENDING** | `smoke_craft_panel_controller.gd` queued. |
-| OP21-11 | Major hotkeys under the hotbar, legible at handheld size | **PENDING** | `smoke_prompt_hotbar_dock.gd` / `smoke_hud_handheld_legibility.gd` queued; `shots/_diag/hud_hotbar_legend.png` captured for the blind judge. |
+| OP21-10 | Free building implies free crafting | **CONFIRMED FIXED** (controller path) | `smoke_craft_panel_controller.gd` PASS — "navigate, craft, refresh focus, and close use physical pad input". Whether the free-build/free-craft *economy rule* is coherent is a design question the report also raises; the panel itself works by pad. |
+| OP21-11 | Major hotkeys under the hotbar, legible at handheld size | **CONFIRMED FIXED** | `smoke_prompt_hotbar_dock.gd` PASS (prompt and hotbar share one dock, measured at 1920x1080) and `smoke_hud_handheld_legibility.gd` PASS — "HUD hotbar/legend/prompt stack is legible and non-overlapping at **1280x800**", which is the Ally's own panel resolution rather than a desktop canvas. `shots/_diag/hud_hotbar_legend.png` captured for the blind judge on top of that. |
 | OP21-12 | Party-cycle presentation is confusing | **CONFIRMED FIXED** (mechanics) / **PENDING** (presentation) | `smoke_creature_control.gd` PASS proves the verb behaves. Whether the *feedback* still "looks strange" is a visual question: `shots/_diag/hud_party_cycle.png` is captured for the blind judge and that half is not closed here. |
 | OP21-13 | UI still says "Change Pal" | **CONFIRMED FIXED** | No player-facing "Pal" string survives in `scripts/`, `data/` or `scenes/`. |
 | OP21-14 | Team shows 2/5 after three catches | **CONFIRMED FIXED** | `smoke_party_count_after_catches.gd` PASS — three real catches through the real minigame read `TEAM 3 / 5`, portraits agree, and it survives save/reload. |
@@ -124,3 +124,102 @@ records.** `DONE.md` and the commit log said things were fixed that were fixed;
 they also said the map fog ruling was resolved when no code had shipped, and
 they were silent about the axe never swinging on the device the game ships on.
 The only way to tell those apart was to boot the game and press the buttons.
+
+---
+
+## Addendum — findings from the blind cold playtest
+
+A separate agent, given no knowledge of this session's work and told not to
+read the status docs, played the same route through the real harnesses and its
+own probes. It found five things this reconciliation had not, three of which
+are live defects in shipped code. Recorded here because they are the same
+*kind* of finding as the owner's own reports — things only playing turns up.
+
+### BP1 — the South Bridge gully is a trap (SEVERE)
+
+Falling into the 11 m trench in front of the closed bridge leaves the player
+unable to move forward or back. Observed: **52 seconds of full forward stick,
+zero displacement**, at `(0.0, -12.1, 1333.7)`. Escape exists only by walking
+~50 m sideways along the trench to where the carve fades.
+
+There *is* a recovery volume. It is in the wrong place:
+
+```
+GullyFailsafe  area at (-1322.0, -17.6, 1338.0)  recover_to=(8.0, -1.9, 1317.0)
+```
+
+The gully is at **x ≈ 0, z = 1330**; its guard sits 1.3 km west in open meadow.
+The `recover_to` point is correct — it is only the trigger box that is lost.
+
+Cause, read in `scripts/world/gated_crossing.gd`: the crossing sets its own
+`position` AND `rotation.y` to the carve (line ~149), then `_hang_failsafe()`
+parents the volume under `self` while `severed_spokes.gd::_add_carve_failsafe()`
+places it in **world** coordinates. The volume is therefore transformed twice.
+`severed_spokes.gd`'s own failsafes are fine — their holder sits at the origin,
+which is why this only bites the crossings.
+
+Consequence the playtest also observed: a run that fell in ended with the
+player teleported to world spawn and a death satchel at the bottom of a trench
+1.3 km from home.
+
+### BP2 — your own creature and trainer intercept your orbs, and the orb is spent
+
+Three of eight tutorial throws logged `first_hit=AllyCreature` or
+`first_hit=Body`. The orb is consumed (`throw_aim.gd::_spend_orb()` runs before
+flight resolves) and the only feedback is the generic `"the orb went wide"`
+from `combat_manager.gd::_on_orb_missed()`. Nothing says the player's own
+creature was in the way, so the mechanic reads as random.
+
+This is independent of the aim defect fixed in this branch and is still live.
+It compounds OP9: at the observed hit rate Grandpa's opening gift of 15 orbs
+(`data/dialogue/opening.json`, `give:orb_basic:15`) is about two tutorial
+attempts, and nothing on the route restocks orbs before Tam unlocks the recipe.
+
+### BP3 — the chapter ends on an empty objective panel
+
+After the legendary choice the tracked line correctly becomes `""` — but
+`playground_hud.gd` builds `ObjectiveBlock` in `_ready()` and never changes its
+visibility; `_update_objective()` only writes `.text`. So the finished game
+leaves the eyebrow **"M A I N   S T O R Y"** on screen above a blank line,
+permanently. The objective chain itself is healthy: 25 steps walked, every one
+a distinct sensible line, including SF34's `n/3` counters.
+
+### BP4 — `backpack_assign` draws a keyboard key on a pad
+
+With `using_gamepad()` true, the quick-bar verb renders `J / [J]` while its two
+neighbours on the same line render correct pad glyphs. It is really bound to
+**L3**; its `GLYPHS` entry in `input_glyph.gd` is `{}`, so `icon()` falls
+through to the bound-key fallback. On the one screen a controller player must
+use to reach the hammer and the torch, the verb that puts an item on the bar
+reads as having no controller binding at all.
+
+### BP5 — Grandpa narrates the village gate from inside his house
+
+`data/dialogue/village.json` gives `road_gate_locked`/`road_gate_unlocked` the
+speaker `Grandpa Elias` with `grandpa.png`, fired by `road_gate.gd::_on_tried()`
+at the village edge while Grandpa is spawned at his house. **Data-read, not
+observed on screen** — the playtest was explicit that it did not capture the
+panel, so the on-screen severity is unverified.
+
+### BP6 — OP21-26 measured
+
+The village → South Bridge leg is **1295 m, 215 s, with a 189-second stretch
+with nothing authored within 35 m**. Corroborated by the spawn tables: the last
+on-corridor wild cluster before the bridge is at z = 80 and the next is at
+z = 1400, and `trainers.json` has nothing between the tournament trainers at
+z = 12 and `south_bridge_grunt` at z = 1314. The pond group at z ≈ 507–552
+sits 350 m off the road and never comes within 160 m.
+
+This is the owner's OP21-26 with numbers on it. It also notes the *next* leg is
+fine (clusters at 1400/1550/1700/2010/2440 plus two pickets), so the emptiness
+is specific to the leg the tournament sends the player on.
+
+### BP7 — what held up
+
+The tournament (specific entry refusal, losable and re-offerable, board tracks
+through to champion), the Warrens (gated branch, first-clear reward once), the
+Relay (captain → captive → gear, and she is later in the village with a changed
+greeting), and the Stronghold/Warden/climax (five rooms, shutter gating, the
+machine refusing before the Warden falls, 95 plants back and the storm horizon
+flipping to land). `[village_npcs] placed 6 of 8` is correct, not a bug — the
+two absent are `place_when`-gated.
