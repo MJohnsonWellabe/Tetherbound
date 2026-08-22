@@ -235,6 +235,32 @@
       "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
       "model_scale": 1.0,
       "_why_d1": "BAND1-D1 remainder. The same probe's after-run left a 515m gap between the berries stop (order 1004) and the south_bridge_grunt checkpoint -- the run-in to the gate fight went quiet again. This sits past the spine's (330,1130)/(180,1200) bend, closing most of that gap while leaving the final stretch into the checkpoint itself alone; a gate fight should read as an arrival, not one more stop among several."
+    },
+    {
+      "order": 1010,
+      "item": "wood",
+      "amount": 3,
+      "label": "Gather deadfall",
+      "at": [
+        338.5,
+        929.0
+      ],
+      "model": "res://assets/environment/nature/log_large.glb",
+      "model_scale": 1.0,
+      "_why_d1": "Prompt 61's camp-siting criteria ask a camp-worthy space for 'nearby basic wood/stone/fiber availability', and the trail_camp had stone at 26m and nothing else authored -- wood and fibre came only from the shared scatter layers, which is availability by accident rather than by design. Deadfall 7m north-west of the fire: close enough to be the obvious answer to 'I want to build here', far enough that it is not inside the camp's own composition."
+    },
+    {
+      "order": 1011,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut long grass",
+      "at": [
+        349.5,
+        940.5
+      ],
+      "model": "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf",
+      "model_scale": 0.8,
+      "_why_d1": "The fibre half of the same requirement, on the opposite side of the camp from the deadfall so gathering both is a short walk around the fire rather than one stop. stylized_nature's tall grass, matching the tufts already authored at this camp -- environment/nature's grass models render as flat cyan through this path (ralph/BLOCKED.md)."
     }
   ]
 }

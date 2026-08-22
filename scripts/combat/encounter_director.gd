@@ -254,13 +254,22 @@ func _spawn_creatures() -> void:
 			var spot := centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
+			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
+			# BEFORE populate because gameplay size has to be set before the
+			# capsule is built. See `_apply_elder()` below for the whole shape.
+			var elder: Dictionary = spawn.get("elder", {}) if spawn.get("elder", {}) is Dictionary else {}
+			if not elder.is_empty():
+				wild.set("body_scale", float(elder.get("body_scale", 1.0)))
 			wild.call("populate", species, _player)
 			# The CLUSTER's centre, not this individual's scattered spot: a
 			# cluster sitting on a region boundary must not hand two of its own
 			# members different level bands, which is what reading the body's
 			# own z would do.
 			_roll_wild_level(wild, species, rng, centre.z)
-			wild.call("configure", MATH.config().get("wild", {}))
+			var wild_cfg: Dictionary = MATH.config().get("wild", {})
+			if not elder.is_empty():
+				wild_cfg = _apply_elder(wild, elder, wild_cfg)
+			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
 			# here means every route into a fight goes through one place, so a
@@ -416,6 +425,57 @@ func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator,
 	leveled.shiny = is_shiny
 	wild.set("instance", leveled)
 	wild.call("set_shiny", is_shiny)
+
+
+## PW2 (BAND1-D1). An `elder` block on a spawns.json entry turns that cluster's
+## creatures into memorable individuals of a species that is otherwise ordinary
+## — not a new species, not a boss, and still catchable, which PW2 requires and
+## which falls out for free here because nothing about the wild path changes.
+##
+## The block is read in two places because its fields land at two different
+## moments. `body_scale` has to be set before `populate()` builds the capsule
+## (see `creature_body.gd::body_scale` for why scaling the art instead would be
+## wrong); everything below happens after, once there is a rolled instance to
+## adjust. Absent block means an ordinary creature, which is every entry in the
+## table but the ones that say otherwise — the same shape as R5.3's `time` and
+## `weather` gates.
+##
+##   body_scale   — gameplay size multiplier; art, reach and catch odds follow
+##   level_bonus  — added to the level the region's own band just rolled, so
+##                  an elder stays relative to its region instead of pinning a
+##                  number that goes stale when `chapter_curve.json` moves
+##   title        — nameplate prefix ("Elder Mosshell"). PW2's readability rule
+##                  asks the player to know this is unusual before or very
+##                  early in combat; the name is the plainest way to say it and
+##                  costs no new UI
+##   any `wild` config key (`wander_radius`, `notice_range`, ...) — merged over
+##                  the shared wild config for this creature only, which is
+##                  where PW2's REQUIRED behavioural distinction comes from.
+##                  Stats and scale alone are explicitly not enough.
+##
+## Returns the config `configure()` should be called with.
+func _apply_elder(wild: Node3D, elder: Dictionary, base_cfg: Dictionary) -> Dictionary:
+	var instance: Variant = wild.get("instance")
+	var bonus := int(elder.get("level_bonus", 0))
+	if instance != null and bonus != 0:
+		var cfg: Dictionary = PROGRESSION.config()
+		instance.call("set_level", int(instance.get("level")) + bonus, cfg)
+
+	var title := str(elder.get("title", ""))
+	if instance != null and title != "":
+		instance.set("display_name", "%s %s" % [title, str(instance.get("display_name"))])
+
+	var merged := base_cfg.duplicate()
+	for key: Variant in elder:
+		# The three fields above are this director's own; anything else is a
+		# `configure()` key and is passed straight through, so a new tunable in
+		# wild_creature.gd needs no edit here to become elder-overridable.
+		if key in ["body_scale", "level_bonus", "title"]:
+			continue
+		if str(key).begins_with("_"):
+			continue
+		merged[key] = elder[key]
+	return merged
 
 
 ## Positions in spawns.json are absolute world metres — [x, y, z] with y always

@@ -134,6 +134,38 @@
         "Take it. I'll tell them you had a key already.",
         "Straight over and don't stop on the span. There's nothing down there but the old road."
       ]
+    },
+    "old_champion_challenge": {
+      "speaker": "Old Bram",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "Prompt 30's Old Champion: 'character/trainer history and a memorable battle or lesson using an existing NPC rig/team'. The history is Team Tether's arrival told from the losing side, which is the same story the site front door tells and the same one Grandpa is too old to finish -- so this is canon being said by somebody else, not a new thread. He never asks the player for anything and sets no flag until he is beaten: prompt 30 forbids the fetch-quest template and this is the opposite of one.",
+      "lines": [
+        "Sit if you like. I've not got anywhere to be.",
+        "You'll be the one they're all talking about. Won the ribbon down in the square.",
+        {
+          "text": "I won it too. Long time ago now. Held it eleven years.",
+          "effect": "flag:old_champion_met"
+        },
+        "Then the Tether came up the road with their pylons and their paperwork, and I went down to the bridge to tell them no.",
+        "I was fifty-three and I had two creatures who'd never lost. Neither of those facts helped.",
+        {
+          "text": "So. You're going that way, and I'd like to know whether it's worth me hoping. Show me.",
+          "effect": "battle:old_champion_bram"
+        }
+      ]
+    },
+    "old_champion_beaten": {
+      "speaker": "Old Bram",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "The payoff line. The items and coins are granted by the trainer's own `reward` block the moment the fight is won (data/config/bands/band1_lower_meadows/trainers.json), so a player who walks off and never speaks to him again keeps them -- this is the acknowledgement, not the delivery. The last two lines are the ONLY place the elder mosshell (spawns.json order 1900) is named anywhere in the game. Prompt 30: some optional content should be found by curiosity, and secrets should not be pre-labelled on the map, so the elder has no marker -- but a player who did the harder optional thing gets told where the other one is, which makes the two a chain instead of two icons.",
+      "lines": [
+        "Ha. Well.",
+        "That's the first time in nine years I've enjoyed losing.",
+        "Take the orbs. I've no use for them and you're going to need them -- the far side of that bridge doesn't hand anything over.",
+        "One more thing, since you've earned the telling.",
+        "West of the pond, past where the path bends away, there's a hollow that stays green when everything round it burns off. There's a mosshell down there older than I am.",
+        "I've never been able to take it. You might. Mind it sees you coming a long way off."
+      ]
     }
   }
 }

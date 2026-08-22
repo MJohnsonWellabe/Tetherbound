@@ -4,6 +4,178 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 
+
+## BAND1-D1 round 4 — the evidence run, band1's two optional draws, and four tests that were right
+
+`tests: full suite 1301 tests, 714654 assertions, 0 failed` · `area: content/band1, creatures, tools`
+
+Prompt 62's remaining acceptance lines, taken in one pass. Everything here is on
+`claude/start-d1-odnxb2`; nothing is on `main`.
+
+### The evidence run
+
+Prompt 62 asks for a continuous run from tournament victory to South Bridge,
+recording cadence, dead travel and objective legibility. Nobody had done it.
+`tools/_probe_band1_evidence.gd` (new) does the half a machine honestly can: it
+walks band1's real spine through the **built** world and records what a player
+would meet, rather than reading the authored JSON back.
+
+That distinction is the whole reason it exists next to
+`tools/_probe_band1_cadence.py`. The cadence probe projects config positions
+onto the spine — right for authoring, fast, and structurally unable to tell you
+whether a single one of those entries exists in the running game. A spawn whose
+ground lookup failed, a creature hidden behind an R5.3 `time`/`weather` gate, a
+trainer body that never placed: all invisible to a JSON reader, all of them
+what the player actually gets.
+
+| | |
+|---|---|
+| route walked | **2372 m** (~9.9 min of pure walking at 4 m/s) |
+| things met within 30 m of the path | **121** |
+| longest stretch meeting nothing new | **100 m** |
+| where | 2352 m along — the final approach to the bridge, ending on the gatekeeper |
+| typical worst-case gaps | 50–88 m, twelve of them across the region |
+| South Bridge open without the key | **false** |
+
+The 100 m is the quiet approach to the gate and reads as deliberate rather than
+as a hole. The honest limitation, stated because the number invites more trust
+than it has earned: this is a **traversal probe, not a physics-driven
+playthrough**. The body is stepped along the route and stood on the ground
+rather than driven at walk speed, because 2.4 km through physics at this
+project's own measured rate (`smoke_traversal.gd`: ~1700 ticks for ~120 m) is
+~34,000 ticks and hours of wall clock. So it measures content cadence and says
+nothing about traversal feel or footing. Prompt 62's evidence run wants both.
+**The half that needs a human still needs a human.**
+
+### Band 1's two optional draws, which did not exist
+
+Prompt 62 asks the region for a less-common wild temptation and for at least one
+optional thing that competes with direct progress. It had neither, and
+`objectives.json`'s `local` array — the game's entire Local Requests list —
+was **empty**, across the whole chapter.
+
+**Elder Mosshell** (`spawns.json` order 1900) is band1's answer to the first,
+and PW2's variant system is now real. An optional `elder` block on a spawn entry
+carries `title`, `body_scale`, `level_bonus` and any `configure()` key; absent
+means an ordinary creature, which is the same shape R5.3's `time`/`weather`
+gates already use. Two things worth keeping:
+
+- **`body_scale` scales gameplay size, not art.** `creature_body.gd`'s own
+  comment is that the collider is built from the species and the art is fitted
+  to it, so `_height`/`_radius` drive the capsule, the hit cone's reach and the
+  catch accuracy bonus. Scaling the node would have moved only the picture —
+  precisely the invisible reach discrepancy PW2 forbids. Scaling those two
+  moves art, reach and catch odds together. Verified:
+  `body_radius` 0.986 against an ordinary mosshell's 0.730, and the ordinary
+  ones in the same file unchanged.
+- **The behavioural distinction is not scale.** PW2 requires one and says stats
+  and size cannot be the only one. `notice_range` 20 against the shared default
+  of 9 means it stops and turns to watch from more than twice the usual
+  distance — and `wild_creature.gd` calls that stop-and-look "the only cue the
+  game gives that the creature is engageable", so it reads *before* combat,
+  which is PW2's readability rule. `wander_radius` 1.5 against 7 means it holds
+  its ground. Both are existing tunables.
+
+Sited by `tools/_probe_offroute_site.gd` in a damp hollow west of the pond: 75 m
+lateral off every authored route (past the 60 m the cadence probe counts as
+optional detour), 96 m from the pond centre where every other band1 mosshell
+lives, above the water line, flat enough for an arena. No map landmark, on
+purpose — prompt 30 says not to pre-label secrets.
+
+**Old Bram** (`trainers.json` order 1010) is prompt 30's Old Champion: a former
+village champion who went down to the bridge to tell Team Tether no, at
+fifty-three, with two creatures who had never lost. Same story the site front
+door tells, from the losing side. 82 m off the road on the opposite side from
+`trail_camp`, so band1's two draws are two places rather than one busy corner.
+Reuses `villager_farmer` with white hair — the `grandpa` rig was the other
+candidate and was rejected because a second NPC wearing Grandpa's face reads as
+Grandpa, and his whole point is that he is not the player's family.
+
+His reward is greater orbs rather than a TM, and that is the design: they are
+what makes the *other* optional thing reachable, and his defeated line is the
+only place in the game the elder is named. Two optional pieces that feed each
+other beat two unrelated icons.
+
+He is also the `local` array's first entry ever, which needed one small general
+capability: `revealed_by` in `quest_log.gd`. Optional content and the Main Story
+want opposite things from that list — a main beat should be visible before you
+do it, an optional one should not, and "Beat Old Bram in the eastern fields" on
+a fresh save tells the player about a man they have not met in a field they have
+not walked to. Absent means always listed, so every existing entry is unchanged.
+
+### Four tests were right and this lane was wrong
+
+The first cut of Bram failed four assertions. All four were correct and all four
+are worth writing down, because each is a rule about this codebase that is not
+obvious from the schema:
+
+1. **`chapter_curve.json` outranks a lane's judgement.** He fielded levels 11–12
+   because the player meets him after a level 10–11 tournament final. But the
+   finals are `gate_fight: true` and `test_chapter_curve.gd` exempts gate fights
+   on purpose — they are the chapter's set-piece, not the region's baseline.
+   Band1 says team enter 3, exit 8, trainer band [2, 7]. He is now 6–7. The
+   contract's rule is author *to* the curve and report what you want instead;
+   the request is below.
+2. **`defeat_flag` and `defeated` are not the same key.** One is the flag the
+   combat system sets and `already_beaten()` reads; the other is a conversation
+   id. Conflating them shipped a trainer whose defeat recorded nothing.
+3. **`rechallenge` is a boolean, not a conversation id.** Set to a string it
+   reads truthy, and `test_trainers_data.gd`'s own words for the result are
+   "that is an XP faucet". The rematch conversation was deleted rather than left
+   as dead data.
+4. One fact, one flag: `reward.flags` no longer duplicates `defeat_flag`.
+
+### Three probe bugs, one of which is a GDScript trap
+
+Found while building the evidence run, and all three produced confident wrong
+output rather than errors:
+
+- **`func _all(node, into: Array = [])` shares one array across every call**,
+  exactly like Python. Two calls in one run returned the first call's contents
+  with the whole tree appended again — which is how two trainers that are
+  demonstrably standing in the world went missing from one report and not
+  another. Cost about half an hour of believing the South Bridge gatekeeper was
+  not being placed. He is; `tools/_probe_trainer_bodies.gd` (new) confirms every
+  world-pass trainer stands where its config says.
+- **`trainer_npc.gd` is the placer, not the body.** Matching trainers by script
+  path catches three container nodes at the world origin and no trainers at all;
+  the bodies carry a `trainer_id` meta and no script.
+- **`harvest_node.gd` keeps `_item_id` private with no getter**, and
+  `get("item_id")` returns null rather than erroring — a column of
+  `gather <null>` that still looked like it was working.
+
+### Smaller things
+
+- **The player-built camp now has a lit fire and a real bedroll.**
+  `scripts/build/camp.gd` had the same two defects the authored trail camp
+  failed a blind judgement on: an unlit `Bonfire_Fire.obj` with a light floating
+  over it, and `quaternius_furniture/BedTwin.obj` — an indoor bed frame — as its
+  "bedroll". `campfire_glow.ignite()` lights the real flame surface, and the
+  Kenney bedroll sourced in round 3b is the bedroll. Only on the real thing, not
+  the drag-around ghost.
+- **The trail camp has wood and fibre**, 7 m and 6 m from the fire. Prompt 61's
+  camp-siting criteria ask a camp-worthy space for nearby wood/stone/fibre; it
+  had authored stone at 26 m and nothing else, with wood and fibre arriving only
+  from the shared scatter — availability by accident rather than by design.
+
+### Coordinator requests
+
+1. **A curve question, not a lane's to settle.** `chapter_curve.json` gives
+   band1 a trainer band of [2, 7] and a team that exits at 8, while the village
+   tournament — inside band1 — fields 10–11 under the `gate_fight` exemption.
+   Every non-gate trainer in band1 is therefore authored *below* the strength of
+   a player who has just done band1's own headline event, and prompt 62's
+   evidence run starts at exactly that moment. Bram is authored to the curve and
+   is correct by it; he will also be an easy fight for a post-tournament team.
+   The fix is either a split band for the post-tournament stretch or a raised
+   band1 trainer ceiling, and it belongs to whoever owns the curve.
+2. **The re-bake now covers three clearings**, not one: `trail_camp` moved
+   (order 1000), plus new arenas for the elder (1900) and Bram (1901). The
+   fingerprint defect is unchanged, so none of them invalidates the bake.
+3. Still outstanding and not mine: the `environment/nature` untextured-material
+   defect reaching the shared scatter layers (`ralph/BLOCKED.md`), and an
+   independent blind judgement of `shots/trail_camp/`.
+
 ## BAND1-D1 round 3 — the trail camp's fire, and two capture-tool bugs that faked the art defects
 
 `tests: full suite` · `area: content/band1, tools/capture`

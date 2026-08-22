@@ -10,7 +10,7 @@
       "hair": {
         "visible": true,
         "color": "#c9a86a",
-        "_comment": "Spec \u00a721 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
+        "_comment": "Spec §21 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
       },
       "position": [
         13.0,
@@ -157,7 +157,8 @@
     },
     {
       "order": 1000,
-      "id": "south_bridge_grunt", "gate_fight": true,
+      "id": "south_bridge_grunt",
+      "gate_fight": true,
       "name": "Tether Grunt",
       "_comment": "TOURNAMENT-1, owner directive 2026-08-22 section 2: 'The South Bridge gatekeeper becomes a Team Tether grunt (existing rig), freeing Oskar to be a tournament round.' He holds `south_bridge_key` -- the same item `scripts/world/south_bridge.gd` has always asked for -- so Gate 1 is now a Team Tether checkpoint rather than a villager's errand, which is also the first time the player meets the faction as an obstacle rather than as scenery. `rank: grunt` is data/config/npc_ranks.json's existing grunt treatment on a rig that is already installed; CLAUDE.md forbids a new humanoid mesh here and none is used.",
       "rank": "grunt",
@@ -195,7 +196,8 @@
     },
     {
       "order": 1001,
-      "id": "tournament_quarter_mira", "gate_fight": true,
+      "id": "tournament_quarter_mira",
+      "gate_fight": true,
       "name": "Mira",
       "_comment": "TOURNAMENT-1, round 1 of 3 (owner directive 2026-08-22 section 2). Bracket slot 1 vs slot 2: the player against Mira. Deliberately the SAME PERSON as `trainer_mira` and deliberately a SECOND entry rather than a reuse of that one: her village challenge is already beaten by the time the bracket is drawn (`already_beaten()` would refuse it), and a tournament round is a different fight with different creatures and a different reward. Owner-locked: the fought rounds use Band 1's existing trainers and no new humanoid.",
       "placed_by": "tournament",
@@ -234,7 +236,8 @@
     },
     {
       "order": 1002,
-      "id": "tournament_semi_tam", "gate_fight": true,
+      "id": "tournament_semi_tam",
+      "gate_fight": true,
       "name": "Tam",
       "_comment": "TOURNAMENT-1, round 2 of 3. The near half's other quarter-final (Tam vs Fen) is simulated on the board and Tam wins it, so the semi-final is the player against Tam. Same two-types-in-one-team lesson his village battle teaches, levelled for the bracket.",
       "placed_by": "tournament",
@@ -273,7 +276,8 @@
     },
     {
       "order": 1003,
-      "id": "tournament_final_oskar", "gate_fight": true,
+      "id": "tournament_final_oskar",
+      "gate_fight": true,
       "name": "Oskar",
       "_comment": "TOURNAMENT-1, round 3 of 3 -- the final. Owner-locked: 'The final opponent rides a Meadowhart.' Meadowhart is already the authored first mount (data/creatures/species.json, `rideable.requires_item: \"saddle\"`), so the creature the player fights last is the creature the prize is about. Burrowback deliberately stays non-rideable. `reward.flags` carries `recipe_saddle`, which is what actually grants the saddle pattern -- `defeat_flag` is `tournament_won`, the contract flag data/progression/objectives.json's tournament ladder ends on.",
       "placed_by": "tournament",
@@ -315,6 +319,54 @@
       },
       "defeat_flag": "tournament_won",
       "rechallenge": false
+    },
+    {
+      "order": 1010,
+      "id": "old_champion_bram",
+      "name": "Old Bram",
+      "config_key": "villager_farmer",
+      "hair": {
+        "visible": true,
+        "color": "#d6d2c8",
+        "_comment": "White. Distinct from every hair colour already on this rig family -- farmer #5c3a22, smith #8a8578, ranger #7a3c22, practice_trainer #c9a86a -- and the plainest way to say 'old' on a rig that is not old. CLAUDE.md: reuse the installed cast and differentiate per material; a new humanoid mesh here would be exceptional and this is not exceptional. The `grandpa` rig was the other candidate and was rejected on purpose: a second NPC wearing Grandpa's face reads as Grandpa, and this character's whole point is that he is NOT the player's family."
+      },
+      "position": [
+        195.0,
+        905.0
+      ],
+      "facing_deg": 215.0,
+      "_why_here": "Prompt 30's Old Champion, and band1's answer to prompt 62's 'at least one optional thing tempts the player away from direct progress'. Sited by tools/_probe_offroute_site.gd, not by eye: 0.32m of relief over 10m so the battle arena forms on flat ground, 82m lateral from every authored route, and 83m from the spine's own (230,830) bend -- close enough that a player cresting the rise sees a figure sitting alone in a field and wonders, far enough that the road never walks them into him. He is deliberately on the OPPOSITE side of the road from trail_camp at (344,935), so band1's two optional draws are two places rather than one busy corner. Prompt 30 asks that at least some optional content be discoverable through curiosity rather than a quest giver, and that not every secret be pre-labelled; that is why he has no map landmark and nobody in the village points at him.",
+      "challenge": "old_champion_challenge",
+      "defeated": "old_champion_beaten",
+      "rechallenge": false,
+      "team": [
+        {
+          "species": "meadowhart",
+          "level": 6
+        },
+        {
+          "species": "galecrest",
+          "level": 7
+        }
+      ],
+      "_comment_team": "Levels 6-7, at the TOP of chapter_curve.json's band1 trainer band of [2, 7]. The first cut of this entry fielded 11-12 and tests/test_chapter_curve.gd failed it twice, correctly. The reasoning behind 11-12 was that the player meets Bram after winning a level 10-11 tournament final, so an optional fight pitched below that is not worth an 80m detour -- but that reasoning read the curve off the wrong row. The tournament finals are `gate_fight: true` and the curve test EXEMPTS gate fights on purpose; they are the chapter's staged set-piece, not the region's baseline. What band1 actually says is team enter 3, exit 8, so 7 is the strongest ordinary trainer this region is allowed to field and is a fair fight against the level-8 team the curve expects to leave here. GATE_D_LANE_CONTRACT section 3: author TO the curve, never edit it to fit content you wrote. There is a real tension underneath this -- see the coordinator request in ralph/DONE.md -- but it is a curve question and it is not a lane's to settle. Both species are already band1 residents (spawns.json), so the team is drawn from the ecology the player has been meeting. Meadowhart leads because it is the species the tournament champion line already tells the player can be ridden: seeing one fight for somebody else is the setup for wanting one.",
+      "reward": {
+        "coins": 60,
+        "items": [
+          {
+            "id": "orb_greater",
+            "count": 5
+          },
+          {
+            "id": "potion_small",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "_comment_reward": "Prompt 30: useful at the point found, never mandatory, and no new loot economy. Greater orbs are the deliberate choice over a TM -- they are the one item that makes the OTHER optional thing in this band reachable, the elder mosshell in the hollow west of the pond (spawns.json order 1900), which is a level-9 catch a player with basic orbs will probably fail. Beating the champion is how you get equipped to take the elder, and his defeated line is what tells you the elder is there. Two optional pieces that feed each other beat two unrelated icons.",
+      "defeat_flag": "defeated_old_bram",
+      "_comment_flags": "`defeat_flag` is the flag the combat system sets on a win and the one trainers.gd::already_beaten reads; `defeated` beside it is a CONVERSATION id, and the first cut of this entry conflated the two and shipped no defeat flag at all -- tests/test_trainers_data.gd caught it. `rechallenge` is a BOOLEAN, not a conversation id, and the first cut set it to one, which reads as truthy and made Bram infinitely re-fightable. That test's own words for it are 'that is an XP faucet', and an optional trainer who can be farmed is exactly the thing prompt 30's 'rewards persist and are idempotent' rule exists to prevent. `reward.flags` is empty because `defeat_flag` already records the win; a second flag saying the same thing is a second thing to keep in sync."
     }
   ],
   "_comment_tournament": "TOURNAMENT-1. Orders 1000-1003 are this band's tournament block plus the South Bridge gatekeeper, taken from the band's own reserved 1000-1999 range so no other band can collide and no existing entry had to be renumbered. The bracket itself, the entry thresholds and the four simulated opponents live in data/config/tournament.json; only the fights live here."

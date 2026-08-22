@@ -676,6 +676,25 @@
       ],
       "radius": 17.6,
       "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. a pocket short of the South Bridge approach, west of the spine's return swing through (30,1250) -- keeps the final stretch from reading as road-only even though the immediate run-in to the grunt checkpoint stays clear by design."
+    },
+    {
+      "order": 1900,
+      "species": "mosshell",
+      "count": 1,
+      "centre": [
+        -490.0,
+        0.0,
+        555.0
+      ],
+      "radius": 0.0,
+      "elder": {
+        "title": "Elder",
+        "body_scale": 1.35,
+        "level_bonus": 4,
+        "wander_radius": 1.5,
+        "notice_range": 20.0
+      },
+      "_why_d1": "PW2 / prompt 62's 'at least one less-common/special temptation', and band1's only elder. SITE: a damp hollow west of the pond, found by tools/_probe_elder_site.gd rather than picked -- 0.83m of relief over 10m so the encounter arena forms on flat ground, 3.9m above the water line so it is not IN the pond, 96m from the pond centre (mosshell habitat: every other mosshell in band1 is pond-side) and 75m lateral from the nearest authored route. That last number is the point: tools/_probe_band1_cadence.py counts anything past 60m lateral as an optional detour rather than corridor cadence, so this is something a player finds by being curious about a low green hollow off the pond loop, not something the road walks them into. Prompt 30's rule that some optional content should be discoverable through curiosity rather than a quest giver, and its rule not to pre-label every secret, are why this gets no map landmark. DIFFERENTIATION: PW2 requires a behavioural distinction and says stats and scale cannot be the only one. `notice_range` 20 against the shared default of 9 means it stops and turns to watch the player from more than twice the usual distance -- and wild_creature.gd's own comment calls that stop-and-look 'the only cue the game gives that the creature is engageable', so this reads before combat starts, which is exactly PW2's readability rule. `wander_radius` 1.5 against 7 means it holds its ground instead of drifting: an old animal that owns this hollow. Both are existing configure() tunables, not new machinery. LEVEL: +4 on whatever band1's own curve rolls, not a pinned number -- an elder should stay relative to its region when chapter_curve.json moves. Against a post-tournament team that has just beaten a level 10-11 final, that is a real fight and not a wall, which is PW2's own 'keep early Band 1 encounters appropriately approachable'. CATCHABLE, deliberately: it is a wild, so the five-creature squeeze this creates is the whole temptation. Nothing on the wild path changes to make that true."
     }
   ]
 }

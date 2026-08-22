@@ -467,6 +467,89 @@
         }
       ],
       "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it: 0.29m of relief across 8m, 7.8m from the trail's (300,880)-(370,950) leg. A camp is a place someone chose to stop; the ground has to look like a reason to choose it."
+    },
+    {
+      "order": 1010,
+      "name": "old_champion_rest",
+      "_why": "Prompt 30 asks every optional activity for 'local environmental storytelling so it belongs to its region'. Old Bram sitting alone in an empty field is a man standing in a field; a man sitting on a fallen tree he has clearly sat on for years, with a ring of old stones and his gear beside him, is somebody who comes here. Seven props, deliberately few: this is a place a person uses, not a settlement. Every model is one this band's trail_camp already uses, so no new prop family enters the chapter for one NPC (CLAUDE.md's one-prop-family rule).",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [
+            193.7,
+            905.9
+          ],
+          "yaw_deg": 18.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [
+            196.9,
+            904.6
+          ],
+          "yaw_deg": 40.0,
+          "scale": 0.19,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "First of three stones set in a loose arc in front of the log -- the fire he does not light any more. Same models and the same 0.11-0.22 scale band as trail_camp's fire ring, for the same measured reason: the RockPath family are flat pebble mosaics and read as gravel at any scale."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [
+            196.2,
+            906.6
+          ],
+          "yaw_deg": 110.0,
+          "scale": 0.16,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second stone."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [
+            197.4,
+            906.1
+          ],
+          "yaw_deg": 260.0,
+          "scale": 0.14,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Third stone, the smallest, closing the arc."
+        },
+        {
+          "model": "Bag",
+          "at": [
+            192.4,
+            905.4
+          ],
+          "yaw_deg": 25.0,
+          "scale": 1.0,
+          "_why": "His bag, set down at the far end of the log rather than carried -- the difference between somebody passing through and somebody who has been here since morning."
+        },
+        {
+          "model": "Bush_Common",
+          "at": [
+            198.6,
+            907.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.45,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Authored edge on the approach side, so the 13m clearing his arena needs does not read as a bald circle in open grass. Same lesson trail_camp learned the hard way."
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [
+            191.6,
+            902.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second piece of authored edge, opposite side, at a different height so the two do not read as a pair."
+        }
+      ]
     }
   ]
 }
