@@ -61,6 +61,13 @@ const ROUND_FRAME_LIMIT := 9000
 ## The deliberate loss is a much shorter affair — one creature has to be
 ## knocked over once — but it still needs a ceiling of its own.
 const LOSS_FRAME_LIMIT := 3000
+## Frames a round may go without the opponent losing HP before this file calls
+## it stuck. Comfortably longer than the beat between one of a trainer's
+## creatures falling and the next stepping up (`trainers.json`'s
+## `send_out_seconds`, 1.6s ≈ 96 frames) plus a charged attack's own wind-up,
+## and far shorter than the round ceiling -- so a genuine stall is reported
+## with its state rather than as a timeout with none.
+const STALL_FRAMES := 900
 
 ## Every flag this test is allowed to find already set is cleared first, so a
 ## seeded playground party or a stray autoload state cannot hand the test a
@@ -323,9 +330,25 @@ func _fight_and_win(spec: Dictionary) -> bool:
 	var team_size: int = TRAINERS.team_of(trainer).size()
 	var felled_before := _felled
 	var frames := 0
+	# Stall detection. A fight that stops making progress -- nobody losing HP,
+	# nobody closing distance -- must fail with a DIAGNOSIS rather than by
+	# silently burning the frame ceiling, which is what the first version of
+	# this file did and which says nothing about why. Progress is "the
+	# opponent took damage, or somebody was felled": either resets the clock.
+	var last_opponent_hp := INF
+	var felled_at_last_progress := _felled
+	var stalled := 0
 	while bool(_director.call("trainer_battle_active")) and frames < ROUND_FRAME_LIMIT:
 		frames += 1
 		if not bool(_manager.call("is_fighting")):
+			# Between rounds of the same trainer, or the beat before their next
+			# creature steps up. Not progress, but not a stall either -- the
+			# director's own clock is running.
+			stalled += 1
+			if stalled > STALL_FRAMES:
+				_fail("%s stalled: no fight running and no progress for %d frames (battle still active against '%s', %d of %d felled)" % [
+					label, stalled, str(_director.call("trainer_battle_id")), _felled - felled_before, team_size])
+				return false
 			await physics_frame
 			continue
 
@@ -340,8 +363,32 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		var opponent: Node3D = _world.find_child("TrainerCreature_*", true, false) as Node3D
 		var ally: Node3D = _director.call("ally_body") as Node3D
 		if opponent == null or ally == null:
+			stalled += 1
+			if stalled > STALL_FRAMES:
+				_fail("%s stalled: a fight is running but %s for %d frames" % [
+					label,
+					"the opponent's body is missing" if opponent == null else "the ally has no body on the field",
+					stalled])
+				return false
 			await physics_frame
 			continue
+
+		# Progress, or the lack of it.
+		var enemy: RefCounted = _manager.call("enemy")
+		var enemy_hp: float = float(enemy.get("hp")) if enemy != null else INF
+		if enemy_hp < last_opponent_hp or _felled > felled_at_last_progress:
+			last_opponent_hp = enemy_hp
+			felled_at_last_progress = _felled
+			stalled = 0
+		else:
+			stalled += 1
+			if stalled > STALL_FRAMES:
+				_fail("%s stalled: %d frames without the opponent losing HP -- %.1f HP left, %.1fm away, quick_ready=%s charged_ready=%s, %d of %d felled" % [
+					label, stalled, enemy_hp,
+					ally.global_position.distance_to(opponent.global_position),
+					str(_manager.call("quick_ready")), str(_manager.call("charged_ready")),
+					_felled - felled_before, team_size])
+				return false
 
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
