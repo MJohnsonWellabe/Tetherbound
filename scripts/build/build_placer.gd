@@ -28,6 +28,7 @@ extends Node
 const CAMP := preload("res://scripts/build/camp.gd")
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
@@ -43,7 +44,11 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## R4.8: `creature_bed` joins this list for its interaction, not for any
 ## saved state — unlike `storage`, it has nothing worth persisting (a rest is
 ## momentary), so `_spawn_building`'s `state_data` branch stays storage-only.
-const STATEFUL_IDS := ["camp", "storage", "creature_bed"]
+## OP21-08: `door` joins for the same reason as `creature_bed` — it needs the
+## real `village_door.gd` hinge/prompt build_piece.gd cannot give it, not
+## saved state (open/closed does not persist across save/load, same as every
+## authored village door today).
+const STATEFUL_IDS := ["camp", "storage", "creature_bed", "door"]
 
 ## R3.1. Every node this script has planted for real, ghost excluded — how
 ## `restore_from_game` finds and clears the old set before rebuilding from a
@@ -136,6 +141,11 @@ var _was_snapped := false
 ## so switching pieces in the Build menu does not carry a rotation the player
 ## chose for a different piece onto the next one.
 var _yaw_deg := 0.0
+## OP21-07: true once the player has pressed any rotate action for the
+## currently-armed piece. Gates whether `_show_ghost` lets a structural
+## anchor's suggested `yaw_deg` overwrite `_yaw_deg` — see that call site.
+## Reset by `_drop_ghost`, same lifetime as `_yaw_deg` itself.
+var _player_rotated_since_arm := false
 ## D34/spec 13.4's `build_snap_cycle`: the step size a left/right rotate press
 ## turns the ghost by. NOT reset by `_drop_ghost` — this is a placer-wide
 ## preference ("I am doing fine work right now"), not a per-ghost value.
@@ -246,10 +256,13 @@ func _physics_process(_delta: float) -> void:
 
 	if Input.is_action_just_pressed(ROTATE_ACTION):
 		_yaw_deg = fposmod(_yaw_deg + BUILD_GRID.ROTATION_STEP_DEG, 360.0)
+		_player_rotated_since_arm = true
 	if Input.is_action_just_pressed(ROTATE_LEFT_ACTION):
 		_yaw_deg = fposmod(_yaw_deg - _rotation_step_deg, 360.0)
+		_player_rotated_since_arm = true
 	if Input.is_action_just_pressed(ROTATE_RIGHT_ACTION):
 		_yaw_deg = fposmod(_yaw_deg + _rotation_step_deg, 360.0)
+		_player_rotated_since_arm = true
 	if Input.is_action_just_pressed(SNAP_CYCLE_ACTION):
 		_rotation_step_deg = BUILD_GRID.next_snap_step_deg(_rotation_step_deg)
 	_update_dismantle_target()
@@ -303,6 +316,24 @@ func _piece_light(game: Node, id: String) -> Dictionary:
 	return light if light is Dictionary else {}
 
 
+## OP21-09: the same catalogue entry's own optional `scale` field ([x, y, z]),
+## `Vector3.ONE` for anything that has none (every entry but the roof today).
+## Fed straight into `build_piece.gd::build_real` -- see that file's own
+## comment for why this is generic rather than roof-specific.
+func _piece_scale(game: Node, id: String) -> Vector3:
+	if STATEFUL_IDS.has(id):
+		return Vector3.ONE
+	var items: RefCounted = game.get("items")
+	if items == null:
+		return Vector3.ONE
+	var entry: Dictionary = items.call("buildable", id)
+	var raw: Variant = entry.get("scale", [])
+	if raw is Array and (raw as Array).size() >= 3:
+		var a := raw as Array
+		return Vector3(float(a[0]), float(a[1]), float(a[2]))
+	return Vector3.ONE
+
+
 ## The ghost: the armed piece's own silhouette at half alpha, coloured by
 ## legality. Rebuilt whenever the armed id changes, so switching pieces in
 ## the Build tab swaps the ghost rather than leaving the old one behind.
@@ -324,11 +355,15 @@ func _show_ghost(game: Node, armed: String) -> void:
 			_ghost = CREATURE_BED.new()
 			_ghost.name = "CreatureBedGhost"
 			_ghost.call("build_ghost")
+		elif armed == "door":
+			_ghost = BUILD_DOOR.new()
+			_ghost.name = "DoorGhost"
+			_ghost.call("build_ghost")
 		else:
 			var mesh_path := _piece_mesh(game, armed)
 			_ghost = BUILD_PIECE.new()
 			_ghost.name = "PieceGhost"
-			_ghost.call("build_ghost", mesh_path)
+			_ghost.call("build_ghost", mesh_path, _piece_scale(game, armed))
 		get_parent().add_child(_ghost)
 
 	var forward := -_player.global_transform.basis.z
@@ -346,14 +381,18 @@ func _show_ghost(game: Node, armed: String) -> void:
 	var spot: Vector3 = preview.position
 	var snapped_to_neighbour := bool(preview.get("snapped_to_neighbour", false))
 	var resolved_yaw := float(preview.get("yaw_deg", NAN))
-	if not is_nan(resolved_yaw):
-		# A structural edge chooses the wall AXIS, not which visually-equivalent
-		# face (0/180 or 90/270) the player selected. Repeat placement promises
-		# to retain that orientation, and save regression checks it exactly.
-		var same_wall_axis := BUILD_SNAP.WALL_IDS.has(armed) \
-			and absf(fposmod(_yaw_deg, 180.0) - fposmod(resolved_yaw, 180.0)) < 0.01
-		if not same_wall_axis:
-			_yaw_deg = resolved_yaw
+	if not is_nan(resolved_yaw) and not _player_rotated_since_arm:
+		# OP21-07: the anchor's suggested yaw is a convenience default for a
+		# player who has not touched rotate this arm — it snaps a fresh wall
+		# flush to a floor edge without making them dial it in by hand. The
+		# OLD rule kept applying the anchor's yaw forever, collapsing every
+		# rotate press onto the anchor's own 180-mod axis (0<->180 only, a
+		# no-op on this kit's symmetric wall mesh) and making a 90-degree
+		# turn impossible near any floor/wall neighbour -- i.e. always, in
+		# real house-building. Once the player has pressed rotate at all,
+		# their choice wins outright; snapping only ever assists position,
+		# never overrides a deliberate orientation.
+		_yaw_deg = resolved_yaw
 	if snapped_to_neighbour and not _was_snapped:
 		AUDIO_CUES.play(&"build_snap")
 	_was_snapped = snapped_to_neighbour
@@ -521,12 +560,17 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		placed.name = "CreatureBed"
 		get_parent().add_child(placed)
 		placed.call("build_real")
+	elif id == "door":
+		placed = BUILD_DOOR.new()
+		placed.name = "Door"
+		get_parent().add_child(placed)
+		placed.call("build_real")
 	else:
 		var mesh_path := _piece_mesh(game, id)
 		placed = BUILD_PIECE.new()
 		placed.name = "Piece_%s" % id
 		get_parent().add_child(placed)
-		placed.call("build_real", mesh_path, _piece_light(game, id))
+		placed.call("build_real", mesh_path, _piece_light(game, id), _piece_scale(game, id))
 		# The workbench is a crafting STATION now, not scenery. Owner brief:
 		# "use the workbench to craft capture orbs, knives, axes, pickaxes" --
 		# it was placeable geometry with no interaction at all, which is most
@@ -805,6 +849,7 @@ func _drop_ghost() -> void:
 	_ghost_id = ""
 	_was_snapped = false
 	_yaw_deg = 0.0
+	_player_rotated_since_arm = false
 	_snap_candidates = []
 	_set_overlay_visible(false)
 

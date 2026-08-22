@@ -5,6 +5,7 @@ extends SceneTree
 ## live InputMap; the harness stages ordinary paid inventory, never Free Build.
 
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 
 class FlatWorld extends Node3D:
 	func ground_height_at(_x: float, _z: float) -> float:
@@ -112,7 +113,12 @@ func _build_paid_modular_sample() -> void:
 		var p: Array = record.get("position", [])
 		if str(record.get("id", "")) == "roof":
 			roof_count += 1
-			if p.size() == 3 and absf(float(p[1]) - 3.05) > 0.001:
+			# BUILD-KIT-2: reads the contract's own ROOF_Y instead of a
+			# hardcoded 3.05 -- that literal drifted stale (the wall-top
+			# anchor moved to 3.326 to close the gap the roof mesh's own
+			# un-centred pivot left below the wall's top plate) and this
+			# assertion had no way to notice.
+			if p.size() == 3 and absf(float(p[1]) - BUILD_SNAP.ROOF_Y) > 0.001:
 				_fail("production roof placement ignored the wall-top anchor: %s" % [p])
 		if str(record.get("id", "")) == "door" and p.size() == 3:
 			door_ok = absf(float(p[2]) + 1.0) < 0.001
