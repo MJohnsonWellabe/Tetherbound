@@ -178,3 +178,92 @@ Sag and ground clearance pull directly against each other, so both were swept
 cost is a pylon 20% taller than the one the critic liked — taken deliberately,
 as a decisive fix round 2 can actually see rather than a timid one that changes
 nothing.
+
+
+---
+
+# Round 2 — verdict, and what it settled
+
+**A — no (unchanged). B — yes, narrowly (was no).** The critic was fresh, given
+the same instructions and no knowledge of round 1 or of anything that changed.
+
+## The three lane-owned fixes all landed, confirmed blind
+
+- **Masonry.** The walls it called "television static… a corrupted texture or
+  per-pixel dither" it now cites as evidence in the region's favour: *"some real
+  kit exists (textured dark stone walls mid-frame)."*
+- **The survey is valid.** Criterion 8 became answerable for the first time:
+  *"Against the 1.80 m trainer… the hero pylon, path width, boulders and most
+  trees agree about the metre — the world's core scale is sound."* Round 1 could
+  not assess it at all.
+- **HUD.** Zero mentions, from a numbered defect.
+- **Cable, half fixed.** *"In 06-the-waystop-day the sag between pylons is
+  good"* — but at 03-mid-route it still reads as a straight ribbon. The defect
+  narrowed from "the wire undoes them" to one located inconsistency, and the
+  remaining case is the camera standing 4 m from a 12 m pylon with the span
+  leaving frame overhead, which is survey framing as much as world geometry.
+- **The spine is endorsed:** *"the pylon hero asset is genuinely good… readable
+  silhouette at every distance… the repeating pylon line does the landmark-
+  language job the design notes ask for."*
+
+## Defect 14 — "no creature appears in any of the twelve frames" — is wrong
+
+And establishing that cost two wrong counts of this lane's own making, both of
+which pointed the same way and both of which agreed with the critic, which is
+what made them convincing.
+
+1. The first probe asked `is_in_group("creatures")`. `encounter_director.gd`
+   puts spawned bodies in **no group at all**, so it could only ever return
+   zero. This lane came close to reporting "Band 5's 75 creatures do not spawn"
+   as a major finding on the strength of a check incapable of finding them.
+2. The corrected probe counted nodes whose name *begins with* `Wild_`, and
+   returned 6 where 22 stood — because of a **real defect underneath**, below.
+
+Counted correctly, standing on the route: **19 / 31 / 23 creatures within 160 m**
+at the three viewpoints, nearest 14 m. They are also visible in
+`03-mid-route-day` — small brown shapes at mid-left, ~40–60 m out.
+
+So the region is populated and the critic's factual claim is false. Its
+*experiential* point is fair and worth keeping: at 40–160 m, in a 70° frame, a
+bramblebun-sized animal is a dozen pixels, and the route does not read as
+inhabited even when it is. That is a real gap against the Palworld bar and it
+is **not** fixed by adding more creatures to the table.
+
+### The defect that undercount exposed
+
+`encounter_director.gd` named each body `Wild_<species>_<n>` with `n` indexing
+**within a cluster**, and added every one to the same parent. Two clusters of
+one species therefore both emit `Wild_burrowback_1..N`, and the engine silently
+auto-renames the second set to `@Wild_burrowback_1@123` — reintroducing exactly
+the "name nobody chose" that the comment above that line exists to prevent.
+Latent while a band held one cluster per species; **Band 5's density pass took
+the region to 22 clusters with five burrowback and five duskhush, and made it
+certain.** Now keyed on `order`, which is authored, unique across the merged
+table and already reserved per band.
+
+## `23-BILLBOARD-WHITE` — still does not reproduce, now on real evidence
+
+Round 1's negative was taken from frames with the player parked 7 km away and
+was worth little. Re-tested with the player standing on the route
+(`tools/_probe_band5_whitebox.gd`): within 160 m of the waystop there is **no
+untextured billboard or impostor**. Every pale untextured mesh is accounted for
+— an `accessory_badge` sphere, the Sigil gate's lock and shackle, signpost arms
+(0.1–0.9 m), and bright teal `3fe8c4` boxes 18–32 m long that are the
+stronghold's own lit conduit runs. The "flat white plane against the hillside"
+is a storm slab, already root-caused.
+
+## What round 2 leaves, and who owns it
+
+**Nothing further is lane-owned.** Every remaining defect needs a file, a
+system or an asset outside D5:
+
+- the stronghold's own art — the critic's #1, and explicitly *"needs art not in
+  the build… no amount of scatter or lighting will hide a five-hundred-metre
+  grey plane"*;
+- the storm slabs (`rift_collapse.gd`), now also flagged for glowing at night;
+- ground scatter density (`vegetation.json`), clouds, day-palette drift;
+- night ambient, moonlight, the moon disc, and character lighting at night
+  (`art.json` / `world_look.gd`) — the critic: *"there is no night art direction
+  in these frames at all, only an absence of light"*;
+- tree value/shading inconsistency and single-species groves;
+- foreground foliage scale outliers.
