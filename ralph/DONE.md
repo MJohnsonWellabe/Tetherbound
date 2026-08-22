@@ -3,7 +3,7 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
-## GATES-ABC-VERIFY — verify the integration-ABC merge; twelve stale harnesses and five real defects
+## GATES-ABC-VERIFY — verify the integration-ABC merge; twelve stale harnesses and seven real defects
 
 `tests: full unit suite, 20 smoke tests re-run on the running build, blind playtest, blind visual judge` · `area: input, ui, world, ci`
 
@@ -54,12 +54,54 @@ came from the throws that landed. The tournament's intermittent quarter-final
 stall was `find_child` returning the PREVIOUS round's corpse — 2 failures in 3
 before, 4 consecutive passes after.
 
+**Two more defects, found by the shards this branch added** — and the pair is
+the argument for adding them. `verify-gate-evidence-shard` and
+`verify-owner-regressions-shard` both came back RED on their first real run, on
+code this branch did not write:
+
+- **The opening could dead-end on an empty satchel.** `apply_failure_bound()`
+  keeps only half of OPENING_SEQUENCE.md's "cannot fail twice": it counts LANDED
+  throws by design, so a player who MISSES is bounded only by orb stock.
+  Grandpa gives fifteen and both resupplies (Tam's recipe, the village trader)
+  are past the road gate — which is past this catch. Run dry and
+  `try_begin_aim()` refuses every press with "no orbs left" forever while the
+  beat waits for a catch that can no longer be attempted. No exit but a new
+  game. `opening.json`'s `catch_orb_floor`, held per frame (the first attempt
+  hung it off the refusal signal and restocked one press too late, after a
+  button that visibly did nothing). `smoke_gate_a_opening_segment.gd` now
+  DRAINS to the last orb before the catch loop, so every run walks the path.
+- **The build hammer forfeited the interact button to a status line.**
+  `_hammer_opens_the_catalogue()` refused whenever ANY provider was drawing a
+  line. What wins, nearly always, is `_creature_control_offer()` — a
+  NON-ACTIONABLE line, "[RB] Call out <creature>", advertising a different
+  button, returned for any player who has a creature and stands near nothing
+  else. `interaction_arbiter.gd::activate()` already refuses to fire it, so the
+  press was free. Under CONTROLLER-MAP `build_open` has no pad button, making
+  hammer + interact the ONLY pad route into build mode: the other half of the
+  owner's "building doesn't work" report. The gate asks the arbiter's own
+  question now — is the button SPOKEN FOR.
+
+`smoke_party_count_after_catches.gd` was the third red and the GAME was right: a
+nearer prop winning a distance-ranked arbiter is correct behaviour, and the
+harness now closes in until the target is actually being offered, as its own
+header already claimed it did. That file has ONE commit, from the
+integration-ABC era, untouched by this branch — it was failing on `main` with
+nothing saying so, because it sat in no CI shard until now. **Of the reds these
+shards found, one was the game's fault and one was the test's, and nothing short
+of booting it and printing what was actually winning could tell them apart.**
+
 **What is NOT closed**, recorded in `ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md`:
-catch strike rate ~36% (OP9/prompt 45), target-hardware performance (needs an
-Ally), the landmarks-through-fog half of directive §3, level-up feedback never
-driven on screen, five HUD defects the blind judge named, and the world
-composition it called out for Gate D/F. The blind judge independently
-reproduced all three of `WEATHER-2`'s defects without being shown that entry.
+catch strike rate ~22% over 27 launches (OP9/prompt 45 — the dead-end is closed,
+the FEEL is not), target-hardware performance (needs an Ally), the
+landmarks-through-fog half of directive §3, level-up feedback never driven on
+screen, five HUD defects the blind judge named, OP21-17/18/19 (composition, the
+judge owns them), and OP21-26, which is now MEASURED rather than felt — 1295 m
+and 215 s village-to-South-Bridge with a 189-second stretch with nothing
+authored within 35 m, corroborated in the spawn data, and Gate B/C/D1's to fix.
+OP21-16 is addressed with its caveat kept: a blind agent walked all 25 objective
+steps, which is evidence the chain is FOLLOWABLE, not proof the opening TEACHES.
+The blind judge independently reproduced all three of `WEATHER-2`'s defects
+without being shown that entry.
 
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 
