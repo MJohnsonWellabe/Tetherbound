@@ -215,6 +215,32 @@
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 1.15,
       "_why": "the late-ridge stretch past the Warrens, beside the deadwood node (order 2004) and the night-gated duskhush spawn -- same reasoning as the pair above, ported to the band's other bare stretch"
+    },
+    {
+      "order": 2008,
+      "_comment_camp": "BAND2-63, prompt 61's camp-siting checklist: a field camp wants 'nearby basic wood/stone/fiber availability'. The `ranger_camp` clearing (vegetation.json order 2001, -259,2256.5) had none within 250m -- the nearest stone was the order 2002 pair, 300m+ back down the spur. A wood node right at the camp means a player who stops here to build a bed does not have to leave the clearing to feed it.",
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -252.0,
+        2249.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "model_scale": 0.24
+    },
+    {
+      "order": 2009,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -264.0,
+        2264.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "same camp-siting reasoning as the wood node above -- a build needs fiber as often as it needs wood, and this is the only field camp in the band"
     }
   ]
 }

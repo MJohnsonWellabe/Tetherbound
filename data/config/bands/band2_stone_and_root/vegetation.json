@@ -8,6 +8,13 @@
       "z": 1800.0,
       "radius": 17.0,
       "_why": "SD16: the Old Quarry's worked floor -- foundations, the conduit head and five rootstone deposits stand on it, and a copse growing through the middle of a working face would undo the read before the drained ground ever got a chance. The `deadfall` anchor above sets `cleared_by_clearings: false` so this does not throw its authored stand away -- see its own note"
+    },
+    {
+      "order": 2001,
+      "x": -259.0,
+      "z": 2256.5,
+      "radius": 15.0,
+      "_why": "BAND2-63, prompt 61's camp-siting brief: a 'relatively flat/buildable... memorable clearing'. The `ranger_camp` prop cluster (props.json order 2001) already reads as a place someone lived, on the `ranger_camp_spur` loop -- off the critical path, short of the Warrens' own aggro, past both the quarry and the ridge population, which is exactly what prompt 61 asks a field camp to be. It had no clearing entry, so the scatter's own scenery had exactly as much claim to this ground as the authored props (GATE_D_LANE_CONTRACT.md sec4's known fingerprint defect means this specific clearing does not take effect until the coordinator's re-bake). Radius 15 covers the authored prop footprint plus real open ground around it -- this file authors the clearing only; the recovery itself stays the player's own creature-bed build, not a pre-built free hotel (prompt 61's own rule)."
     }
   ]
 }

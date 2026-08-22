@@ -183,6 +183,38 @@
           "_why": "ROUND 3. A second, lower seat opposite the bench -- two ways to sit reads as a place people actually gathered, not one bench posed alone"
         }
       ]
+    },
+    {
+      "order": 2014,
+      "name": "quarry_supply_cache",
+      "_why": "BAND2-63. `terrain_playground.json`'s `ranger_camp_spur` loop names its own reason for existing as 'the abandoned camp, AND THE FIRST EVIDENCE TEAM TETHER HAS BEEN MOVING MATERIAL' -- the camp above delivers the first half; nothing in the band ever delivered the second. Same crate the Old Quarry's own `quarry_station` cluster uses for cut stone (`Crate_Wooden`, see that cluster's own note), so a player who has already read that pile at the quarry reads THIS one the same way without being told twice -- material moving from the working face, through here, toward wherever Team Tether takes it. Sited on the spur's own path (-210,2230), well short of the ranger camp itself (-259,2256) so this reads as something found ALONG the way rather than part of the camp -- somebody hauling a load stopped here, or was stopped here, and never came back for it.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-208.6, 2229.4],
+          "yaw_deg": 15.0,
+          "sink_m": 0.07,
+          "scale": 1.0,
+          "_why": "the anchor -- a second crate of cut stone, the same load the quarry's own crate carries, this one part-way down the spur instead of on the quarry floor"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [-210.2, 2228.6],
+          "yaw_deg": 100.0,
+          "pitch_deg": 70.0,
+          "sink_m": 0.05,
+          "scale": 0.95,
+          "_why": "toppled off the first, on its side -- a dropped load, not a delivered one"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-207.4, 2230.6],
+          "yaw_deg": 40.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "what lashed the load down for hauling, come loose with it -- the detail that says CARRIED rather than simply left, matching the loop's own words"
+        }
+      ]
     }
   ]
 }

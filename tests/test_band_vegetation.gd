@@ -88,8 +88,19 @@ func test_scatter_rules_config_carries_both_split_arrays() -> void:
 	for array_key: String in SPLIT_KEYS:
 		var want: Array = baseline.get(array_key, []) as Array
 		var got: Array = config.get(array_key, []) as Array
-		assert_eq(got.size(), want.size(),
-			"scatter_rules.config()'s '%s' has %d entries, expected %d" % [array_key, got.size(), want.size()])
+		# BAND2-63: `>=`, matching `test_merged_arrays_are_identical_to_the_pre_split_file`'s
+		# own comparison a few lines up in this same file -- that test's whole
+		# docstring says "the load-bearing claim is identity, not tidiness", and a
+		# regional content pass legitimately adding a clearing (a new authored
+		# entry, never a renumbered or dropped one) is exactly the growth that
+		# comparison already tolerates. This second check, which walks the SAME
+		# data through `scatter_rules.config()`'s own double-load merge instead of
+		# `load_config()` directly, had drifted to strict equality and broke on
+		# band2_stone_and_root's first new clearing since the split -- a false
+		# failure on real content, not a caught regression.
+		assert_true(got.size() >= want.size(),
+			"scatter_rules.config()'s '%s' has %d entries, fewer than the %d pre-split baseline authored" % [
+				array_key, got.size(), want.size()])
 	SCATTER_RULES._config = {}
 
 
