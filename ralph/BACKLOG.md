@@ -2035,6 +2035,46 @@ tool-in-hand + assignable hotbar + the map button (save format 6→7).
 
 ## Found along the way — small, unscheduled
 
+- **GATEC-ECOLOGY / GATEC-TRAINERS — the corridor's empty half, found 2026-08-22
+  and closed.** Bands 3 and 5 shipped empty `spawns.json` files and Band 4 held
+  one cluster across its 2240m, so from the Burrow Warrens to the Warden — three
+  of five regions, the entire back half of the chapter — the world contained two
+  Meadowharts. Band 2 shipped an empty `trainers.json`, so the quarry/warrens
+  region was wild traversal plus one dungeon boss and the first Team Tether
+  fight did not happen until the relay in Band 3. Both closed on
+  `claude/gatec-progression-curves-ep2j4x` (19 spawn clusters, 2 grunts, 17
+  trainer battles chapter-wide). **The lesson worth keeping is the failure mode,
+  not the fix:** `GATEC-CURVE` had just authored per-region wild escalation into
+  `chapter_curve.json` and wired `encounter_director` to resolve it from a
+  cluster's world z — a correct mechanism with no clusters in three of five
+  regions to apply to. Same shape as the `PERF-LOD` entry above: written, tested,
+  and inert. Prefer checking that a new rule has content to act on over checking
+  that the rule is right. `model: opus`
+
+- **Band 4 has no harvest nodes of its own.** The region named
+  `band4_upper_meadows_ironwood` contains zero harvest entries; the ironwood
+  grove its name refers to is five nodes authored in
+  `bands/band2_stone_and_root/harvest.json` at z=2461, 12m from the Burrow
+  Warrens entrance. Not a bug in Band 2 — the grove is sited fine and the player
+  cuts it where they already are — but Band 4 is the chapter's longest region
+  and gives the player nothing to gather in it. Belongs to
+  `65-BAND4-finished-upper-meadows.md`. `model: sonnet`
+
+- **`stronghold_climax.json`'s Warden fallback is pre-OW5D.** Its `warden.fallback`
+  is `[232, -206]` and its `site` comment describes arena boxes at z -227..-169,
+  both from before the corridor moved north; `bands/band5.../trainers.json`
+  carries the relocated `[90.2, 7569.4]` with the offset written down. Fallback-only,
+  so it bites solely when the building fails to build — but that is exactly when
+  a fallback is read, and it would put the Warden 7.7km from his own room.
+  `model: sonnet`
+
+- **The three Sigil captains do not escalate along the corridor.** In route order
+  Riverwatch (z=4350) tops at 16, Field (z=5590) at 15, Ridge (z=6460) at 16.
+  Any order opens the gate so no order is wrong, but the first captain met is
+  currently the joint-hardest. `GATEC-CURVE` already retuned two of the three, so
+  this is a deliberate leave-alone pending owner play rather than an oversight.
+  `model: sonnet`
+
 - **Spec §6 — 6–10 optional activities, not forty shallow quests.** Lost Pal,
   Broken Cart, Night Watch, The Old Champion, Deep Warren, River Nest, Team
   Tether patrols, Meadowhart Herd. Each wants a home in Phase 8's bands rather
