@@ -60,6 +60,26 @@ const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 
+## STRONGHOLD-MAT. Every wall/floor box in this file was a flat
+## StandardMaterial3D colour with no texture at all -- the same class of bug
+## `MAT-BLOCKOUT` already fixed for the Warrens (`burrow_warrens.gd::_material`)
+## and the quarry/relay stone (`severed_spokes.gd::_stone_material`): one model
+## family, reached down a code path that never warmed its material. Confirmed
+## by rendering `tools/_probe_storm_pass.gd`'s own viewpoints on 2026-08-22 —
+## the stronghold is still a flat grey/tan blockout from the approach, on the
+## single largest structure in the chapter. `T_UnevenBrick` is the SAME cut
+## stone the castle's plinth, the boundary wall and every Team Tether blocker's
+## masonry already use (`severed_spokes.gd`'s own `STONE_ALBEDO/NORMAL/ROUGHNESS`
+## constants) -- stronghold.json's own header already claims this shell is
+## "the same weathered value family the castle's own plinth uses"; it just
+## never got the texture that claim describes. Reused, not re-picked, so the
+## works stay visually the same masonry family as the castle behind them
+## (D24: one village family).
+const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const STONE_TILE := 3.2
+
 ## Which trainers.json rows belong to this building. `trainer_npc.gd` skips
 ## every row naming a `placed_by` it was not asked for, so the table stays the
 ## one source of teams, rewards and defeat flags while the ROOM decides where
@@ -254,13 +274,29 @@ const BASE_COURSE_PROUD := 0.35
 
 ## --- materials --------------------------------------------------------------
 
-func _material(colour: Color, emissive := 0.0) -> StandardMaterial3D:
-	var key := "%s_%.2f" % [colour.to_html(), emissive]
+func _material(colour: Color, emissive := 0.0, textured := false) -> StandardMaterial3D:
+	var key := "%s_%.2f_%s" % [colour.to_html(), emissive, textured]
 	if _materials.has(key):
 		return _materials[key]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = colour
 	m.roughness = 0.92
+	if textured:
+		# Same triplanar-on-a-primitive-box technique `burrow_warrens.gd` and
+		# `severed_spokes.gd::_stone_material` already use: no authored UVs on
+		# these procedurally-sized walls/floors, so the texture has to project
+		# itself. `albedo_color` still multiplies the texture, so every config
+		# key that used to BE the wall's colour (`_stone`, `_stone_light`,
+		# `_floor_colour`) still tints it -- the works keep their own palette,
+		# they just stop being flat.
+		m.albedo_texture = STONE_ALBEDO
+		m.albedo_color = colour
+		m.normal_enabled = true
+		m.normal_texture = STONE_NORMAL
+		m.roughness_texture = STONE_ROUGHNESS
+		m.uv1_triplanar = true
+		m.uv1_scale = Vector3.ONE * STONE_TILE
+	else:
+		m.albedo_color = colour
 	if emissive > 0.0:
 		m.emission_enabled = true
 		m.emission = colour
@@ -327,7 +363,7 @@ func _timber() -> Color:
 ## cheapest cue that turns a flat box into built masonry, and the one the
 ## castle's own two-course curtain already uses.
 func _wall_material(outer: bool) -> StandardMaterial3D:
-	return _material(_stone_light() if outer else _stone())
+	return _material(_stone_light() if outer else _stone(), 0.0, true)
 
 
 func _floor_colour() -> Color:
@@ -387,7 +423,7 @@ func _build_chambers() -> void:
 		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
 
 		_box(Vector3(outer.x, _skirt, outer.y),
-			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
 		if not bool(chamber.get("open", false)):
 			_box(Vector3(outer.x, 1.0, outer.y),
 				Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_timber()))
@@ -491,7 +527,7 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	else:
 		course.x += BASE_COURSE_PROUD
 	_box(course, Vector3(at.x, _floor_y + base - extra + BASE_COURSE_H * 0.5, at.z),
-		_material(_stone_dark()), false)
+		_material(_stone_dark(), 0.0, true), false)
 
 
 ## The ways between spaces: floor, side walls, and a ceiling wherever BOTH ends
@@ -528,7 +564,7 @@ func _build_passages() -> void:
 		if not along_x:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 1.0, length)
-		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
+		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
 		if roofed:
 			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z),
 				_material(_timber()))
@@ -618,7 +654,7 @@ func _build_approach_ramp() -> void:
 	var box := BoxMesh.new()
 	box.size = Vector3(width, thickness, length)
 	mesh.mesh = box
-	mesh.material_override = _material(_floor_colour())
+	mesh.material_override = _material(_floor_colour(), 0.0, true)
 	mesh.position = top_mid - up * (thickness * 0.5)
 	mesh.rotation.x = -angle
 	add_child(mesh)

@@ -193,6 +193,90 @@
       "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",
       "defeat_flag": "defeated_warden",
       "rechallenge": false
+    },
+    {
+      "order": 5005,
+      "id": "stronghold_outer_watch",
+      "name": "Watchman Corr",
+      "_comment": "BAND5-CONTENT. Prompt 66: 'ordinary faction patrols/checkpoints to build pressure before the interior... do not consume every major combat beat before the stronghold.' Every named Team Tether fight in this band used to stand in the same 12m span at the Hall's own doorstep (z 7557-7569) -- four fights stacked at the door and 560m of open, unoccupied ground in front of them. This is the FIRST body the player meets after the three-Sigil approach opens: a lone grunt on a walk, floor-of-band level, at the mouth of the region rather than its threshold. His job is the same one `quarry_picket_dorn` had at the start of Band 2 -- tell an unready party this ground is not free, cheaply, before the real cost arrives.",
+      "rank": "grunt",
+      "position": [
+        -68.0,
+        7140.0
+      ],
+      "facing_deg": 160.0,
+      "_why_here": "12m off the spine's own first band-5 waypoint (-80,7120), on the meadow side of the mouth burrowback cluster (order 5000, centre (-85,7125) r18) rather than inside it -- close enough that the two reinforce the same read (drained ground, something dug in, something posted) without a wild aggro chase landing on top of a challenge prompt. Facing back down the road toward where the player enters the band, by eye, the same way `south_bridge_grunt`/`quarry_picket_dorn`'s own facing values are tuned rather than computed.",
+      "challenge": "stronghold_outer_watch_challenge",
+      "defeated": "stronghold_outer_watch_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 15
+        },
+        {
+          "species": "duskhush",
+          "level": 15
+        }
+      ],
+      "_why_team": "The same two species this exact stretch of ground already fields wild (spawns.json orders 5000/5002) -- his own creatures came off this land, not out of a barracks. Floor of the band's [15,20] trainer range: this fight is a doorbell, not an obstacle.",
+      "reward": {
+        "coins": 45,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_outer_watch",
+      "rechallenge": false
+    },
+    {
+      "order": 5006,
+      "id": "stronghold_checkpoint",
+      "name": "Warder Ness",
+      "_comment": "BAND5-CONTENT. The escalation step between `stronghold_outer_watch` and the doorstep gauntlet: an OFFICER (npc_ranks.json's ladder, one rung above grunt, the same rank `stronghold_courtyard`'s Warder Solene holds) standing just past the three-Sigil gate (`playground_world.gd`'s SIGIL_GATE_AT, (0,7400)) rather than before it. The gate itself already tells the player this ground is sealed to the unprepared; this fight tells them what is on the other side of that seal -- occupied, ranked, and getting worse. Three creatures against the outer watch's two, levels a step above his, still inside the band's [15,20] table and still below the courtyard's own 16-17.",
+      "rank": "officer",
+      "position": [
+        45.0,
+        7440.0
+      ],
+      "facing_deg": 165.0,
+      "_why_here": "Between spine waypoints (80,7370) and (20,7480), 25m past the Sigil gate on the bearing the gate's own leaf turns to face -- the first thing the player sees once the gate opens is this fight, not open meadow. 55m clear of the duskhush cluster at the gate (order 5002, centre (85,7375) r18) and well outside the trailpup cluster ahead (order 5003, centre (20,7485) r16), so neither wild aggro nor either cluster's own radius contests his 4.0m challenge prompt.",
+      "challenge": "stronghold_checkpoint_challenge",
+      "defeated": "stronghold_checkpoint_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 16
+        },
+        {
+          "species": "galecrest",
+          "level": 16
+        },
+        {
+          "species": "mosshell",
+          "level": 16
+        }
+      ],
+      "_why_team": "Trailpup and galecrest are this band's own wild roster (spawns.json orders 5003/5001); mosshell is `stronghold_courtyard`'s own species, met here a room early and wilder for it, the same continuity the mudsnout special encounter (spawns.json order 5004) uses. Three creatures, one level above the outer watch, and the escalation reads: the further in, the more the checkpoint fields.",
+      "reward": {
+        "coins": 65,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "orb_basic",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_checkpoint",
+      "rechallenge": false
     }
   ]
 }

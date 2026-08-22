@@ -1,4 +1,38 @@
 {
   "_comment": "BAND-SPLIT-2. This band's own dialogue container -- see band1_lower_meadows.json in this same directory for the full reasoning. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS).",
-  "conversations": {}
+  "_comment_trainers": "BAND5-CONTENT. Lines for `stronghold_outer_watch` and `stronghold_checkpoint` (data/config/bands/band5_stronghold_approach/trainers.json) -- the doorstep gauntlet's own lines live in data/dialogue/stronghold.json, that room's file, not this one. Same doctrine `band2_stone_and_root.json`'s own note states: two lines each, both about the job in front of them, nobody explains Team Tether to a stranger. `tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary` forbids naming the legendary anywhere outside the stronghold and neither speech does.",
+  "conversations": {
+    "stronghold_outer_watch_challenge": {
+      "speaker": "Watchman Corr",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Far as you're walking, this is where I stop you asking nicely.",
+        "Ground past here answers to us now. Turn back or prove you belong on it."
+      ]
+    },
+    "stronghold_outer_watch_defeated": {
+      "speaker": "Watchman Corr",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Go on, then. Won't be the last of us you meet before the Hall.",
+        "And it gets worse from here, not better."
+      ]
+    },
+    "stronghold_checkpoint_challenge": {
+      "speaker": "Warder Ness",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Corr let you through the gate, not past me. Rank means something out here.",
+        "Three to your string against one grunt's two -- let's see if that math troubles you."
+      ]
+    },
+    "stronghold_checkpoint_defeated": {
+      "speaker": "Warder Ness",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Keeper Hald's past the works, and he won't talk this much before he fights you.",
+        "Walk careful. The land gets worse the closer you get to the works, and so do we."
+      ]
+    }
+  }
 }

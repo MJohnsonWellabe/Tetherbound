@@ -1,0 +1,13 @@
+{
+  "_comment": "BAND-SPLIT-2. See band1_lower_meadows/vegetation.json for why this file exists. `order` equals the index this entry held in the pre-split file for a band that had legacy entries; band5 had none, so this is a fresh file and its one entry takes an unused number in this band's own 5000-5999 reserved range, per the Gate D lane contract.",
+  "_comment_bare": "BAND5-CONTENT. Band 5 had no vegetation.json at all -- no clearing anywhere in the region's 680m kept scatter off anything, which is fine everywhere there is nothing authored to keep it off of, and stops being fine the moment `the_waystop` (props.json order 5001, harvest.json orders 5001-5005) stands here. `scripts/world/scatter_bake.gd::config_fingerprint()` does not hash this file (the Gate D lane contract's own known defect, section 4) -- the coordinator re-bakes scatter once at integration with the fingerprint fixed, so this clearing takes effect there, not on a local test run against the currently-baked tiles.",
+  "clearings": [
+    {
+      "order": 5000,
+      "x": -25.0,
+      "z": 7460.0,
+      "radius": 14.0,
+      "_why": "the_waystop -- keeps trees and boulders off the bench/log seating and the wood/stone/fiber nodes around them, the same treatment every other authored clearing in the chapter gives a place the player is meant to stand and interact rather than push through undergrowth"
+    }
+  ]
+}

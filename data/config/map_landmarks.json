@@ -86,6 +86,18 @@
       "discover_radius": 40.0,
       "category": "major",
       "_comment_ow5c_seam": "OW5C follow-up: matches the crossing itself after its -2m seam-workaround shift (-150 -> -152)."
+    },
+    {
+      "id": "the_waystop",
+      "display_name": "The Waystop",
+      "icon": "camp",
+      "_comment": "BAND5-CONTENT, prompt 66's final preparation point (data/config/bands/band5_stronghold_approach/props.json order 5001, vegetation.json order 5000). `minor`, not `major`: it is a place to stop, not a destination the region exists to reach, the same weight `road_gate` carries. `camp` is a real vendored icon (assets/ui/icons/map/camp.png, tests/test_map_icons.gd) -- normally drawn as a dynamic marker for a trainer camp beat, but the file itself is a plain landmark icon like any other and nothing forbids a static site using the same word for the same kind of place.",
+      "position": [
+        -25.0,
+        7460.0
+      ],
+      "discover_radius": 20.0,
+      "category": "minor"
     }
   ],
   "_comment_tether_relay": "SE23, spec 3 Band 3. A `major` landmark: the chapter's first mini-stronghold and the rung of 32's ladder where Team Tether becomes a place rather than a rumour, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the relay is meant to be walked into, so it appears the ordinary way, by going there. `relay` is an icon that already exists in assets/ui/icons/map/ and was drawn for exactly this. Position is the site centre data/config/relay_site.json authored and scripts/world/tether_relay.gd builds from -- if it moves, all three move together.",

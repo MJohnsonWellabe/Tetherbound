@@ -34,6 +34,14 @@
       "centre": [20.0, 0.0, 7485.0],
       "radius": 16.0,
       "_why": "The last 80m before the Hall ((20,7480) is the spine's final point before (0,7560)). The chapter's strongest ordinary wild creatures, standing between the player and the Warden -- the final chance to weigh a catch against the five that are about to fight the boss."
+    },
+    {
+      "order": 5004,
+      "species": "mudsnout",
+      "count": 1,
+      "centre": [130.0, 0.0, 7290.0],
+      "radius": 26.0,
+      "_why": "BAND5-CONTENT. Prompt 66's 'special encounter' -- one solitary, optional catch that tempts a prepared player to spend resources before the Hall. Mudsnout is deliberately the same species `stronghold_courtyard`'s Warder Solene fields (trainers.json) at level 16-17: Team Tether's own stock, escaped or turned loose off the drained ground, wilder for it. Not new lore -- it says the faction's creatures come from this same land, which the courtyard fight already implies. Sited off-spine at the `tm_heavenfall` detour (playground_world.gd's TM_AT, (140,7300)) so the same trip that risks the apex Air TM also risks this fight: two reasons to leave the road in the same 30m, not two separate errands. A LARGE radius (26m, against the ordinary clusters' 16-22m) reads as a single wary animal ranging rather than a den -- the opposite presentation from the burrowback/galecrest/duskhush/trailpup clusters, on purpose, so a prepared player can tell at a glance this is the one worth stalking rather than just another patch of aggro."
     }
   ]
 }
