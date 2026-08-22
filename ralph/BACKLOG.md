@@ -170,7 +170,8 @@ translucent, or both. Judge it from a capture, not from the inspector.
 ### SITE-SHOTS — the story page is written, and four of its frames need a Godot run
 `OP21-22` is done: `site/index.html` is rewritten around the actual premise
 (Team Tether back and draining the land, Grandpa too old for the journey, the
-player steps up, five creatures, tournament -> Warrens -> relay -> captains ->
+player steps up, five creatures, the village trainers and Oskar's South Bridge
+Key -> Warrens -> relay -> captains ->
 Warden -> the region heals), with the road to Meadows Hall as an ordered
 six-leg journey and the reserved tether teal used only where Team Tether is.
 
@@ -724,6 +725,31 @@ A guided opening chain. `OW9` shipped two handover beats (gather, then build);
 this asks for the whole ladder, surfaced on screen rather than only in dialogue.
 
 ### RG19 — A village tournament as the early goal
+
+**UNRESOLVED, found 2026-08-22 while writing the download page: the tournament
+and the spec's Band 1 are two different first gates, and nothing says which
+wins.** `grep -ril tournament scripts/ data/ tests/` returns **zero hits** — it
+is entirely unbuilt, which is expected. What is not expected is that the higher-
+precedence `docs/MEADOWS_PROGRESSION_SPEC.md` §3 BAND 1 does not use a
+tournament at all: its first-band structure is a three-trainer circuit (Mira /
+Oskar / Tam, all four standing in
+`data/config/bands/band1_lower_meadows/trainers.json` today alongside Bryn) and
+its first hard gate is the **South Bridge Key**, taken off Oskar the Bridgehand
+(§3 L304–307, and step 10 of §38's sequence). The tournament appears in
+`docs/TETHERBOUND_GAME_VISION.md` §3 and in this entry, both of which the
+canon order in `CLAUDE.md` puts *below* the spec.
+
+So whoever builds this has to settle one thing first, and it is a real design
+question rather than a bookkeeping one: **is the tournament the Band 1 gate
+(replacing Oskar's key), or a village event that sits alongside it?** Both are
+defensible — the owner asked for a tournament in an owner-approved note, and
+the spec's key-off-a-trainer gate is already half-standing in data. Do not
+quietly implement one and leave the other in the docs; that is how the download
+page ended up promising players a tournament that does not exist, which is
+what surfaced this.
+
+The condition-system ordering below is unaffected either way.
+
 
 **OWNER APPROVED, 2026-08-18: "yes we should spec out creature condition."**
 The tournament is confirmed, and the owner named the part to build first: the
