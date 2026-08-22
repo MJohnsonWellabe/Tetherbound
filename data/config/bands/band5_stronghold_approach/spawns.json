@@ -1,5 +1,39 @@
 {
-  "_comment": "BAND-SPLIT. Band-local spawns for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
+  "_comment": "BAND-SPLIT. Band-local wild population for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. New entries take an unused order in this band's reserved range 5000-5999, which no other band can collide with.",
+  "_comment_why_this_file_was_empty": "WILD-ECOLOGY. Prompt 60: 'Current Band 5 empty spawn file must be reconciled' and 'not an empty faction-only corridor.' The approach to the Meadows Hall fielded Team Tether's gauntlet and nothing else alive -- so the chapter's last region, the one the whole climb has been preparing for, was also the only region where the world itself had no presence. GATEC-CURVE had authored this band's wild range as [14, 17], the strongest field in the chapter and the one that makes a late catch a genuine argument against a raised member of the five; with no clusters here that range applied to nothing at all.",
+  "_comment_habitat": "Short region (z 7000-7560, ~560m of spine) and a hostile one. The read is a drained land whose animals have not left it: what is here is dug in, roosting on Team Tether's own stonework, or hunting the approach. Density is higher per metre than any other band because the region is short -- four clusters over 560m -- and that is deliberate: the last corridor should feel occupied by something other than trainers. Levels come from chapter_curve.json's band for this z, not from this file.",
   "spawns": [
+    {
+      "order": 5000,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [-85.0, 0.0, 7125.0],
+      "radius": 18.0,
+      "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four."
+    },
+    {
+      "order": 5001,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [-25.0, 0.0, 7255.0],
+      "radius": 22.0,
+      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable."
+    },
+    {
+      "order": 5002,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [85.0, 0.0, 7375.0],
+      "radius": 18.0,
+      "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players."
+    },
+    {
+      "order": 5003,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [20.0, 0.0, 7485.0],
+      "radius": 16.0,
+      "_why": "The last 80m before the Hall ((20,7480) is the spine's final point before (0,7560)). The chapter's strongest ordinary wild creatures, standing between the player and the Warden -- the final chance to weigh a catch against the five that are about to fight the boss."
+    }
   ]
 }

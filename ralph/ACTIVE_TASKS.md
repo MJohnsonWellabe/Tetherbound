@@ -117,6 +117,27 @@ For environment changes, capture at least one open-field view and one lush pond-
 
 After the 2026-08-21 owner playtest, Gate A evidence must also include the target-hardware/controller/map/build/camera/party-count/village/pond/lighting/submersion/load-game/gathering-presentation/combat-containment checks defined in `ralph/OWNER_PLAYTEST_2026-08-21.md`.
 
+## Gate C — backbone recorded 2026-08-22
+
+`ralph/GATE_C_EVIDENCE.md` records Gate C's owning prompts (57, 58, 59, 60, 61,
+67, 68) against their own acceptance lists, on branch
+`claude/gatec-progression-curves-ep2j4x`.
+
+The chapter-wide maps and curves Gate C exists to produce now exist:
+`chapter_curve.json` (57/67, from `GATEC-CURVE`), `chapter_rewards.json` (58),
+`objectives.json`'s twelve-beat chain (68), and the counted content map behind
+`tools/_probe_chapter_map.py` (59/60).
+
+Read the evidence file for the caveats, which matter: that lane had no Godot, so
+the GDScript suite has NOT been run against those changes and the branch is
+`claude/**`, which CI does not watch. Two acceptance items are deferred by the
+prompts themselves to regional packages D1-D5 — PW2's special encounters and
+prompt 61's camp siting — and one, prompt 61's attrition tuning, cannot be
+settled without play.
+
+Gate C being backbone-complete does not move the current gate. **Gate A is still
+the current gate** and the 2026-08-21 owner blockers above are untouched by it.
+
 ## Next package after Gate A
 
 **Gate B owner:** `docs/ralph-prompts/56-OPENING-first-session-to-tournament.md`

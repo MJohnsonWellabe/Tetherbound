@@ -8,6 +8,52 @@
       "label": "Find a way through the village gate."
     },
     {
+      "id": "beat_the_village_trainers",
+      "flag_id": "defeated_oskar",
+      "label": "Win your battles with the village trainers.",
+      "count_flags": [
+        "defeated_mira",
+        "defeated_tam",
+        "defeated_oskar"
+      ],
+      "_why": "Oskar's own flag is the completion because Oskar pays the South Bridge Key (bands/band1_lower_meadows/trainers.json) -- so the entry is done exactly when the thing it unlocks is in the player's satchel, not when an arbitrary third villager falls. count_flags renders the n/3, the same SF34 feature the captains entry below already uses."
+    },
+    {
+      "id": "open_the_south_bridge",
+      "flag_id": "south_bridge_open",
+      "label": "Open the South Bridge.",
+      "_why": "scripts/world/south_bridge.gd's own flag, set by gated_crossing.gd when the key turns."
+    },
+    {
+      "id": "clear_the_burrow_warrens",
+      "flag_id": "warrens_cleared",
+      "label": "Clear the Burrow Warrens beneath the Old Quarry.",
+      "_why": "The quarry has no flag of its own -- it is a harvest site, not a gate -- so it is named in the label of the beat it leads to rather than given a boolean it does not need."
+    },
+    {
+      "id": "defeat_the_relay_captain",
+      "flag_id": "relay_captain_defeated",
+      "label": "Defeat the Relay Captain."
+    },
+    {
+      "id": "rescue_the_captive",
+      "flag_id": "captive_rescued",
+      "label": "Find who Team Tether is holding at the relay.",
+      "_why": "Ordered after the captain because that is the real gating: data/config/relay_site.json puts the captive's rescue conversation behind `if_flag: relay_captain_defeated`. Out-of-order completion is safe regardless -- an entry whose flag is already set is simply done, and the tracked line moves to the first one that is not."
+    },
+    {
+      "id": "disable_the_relay",
+      "flag_id": "relay_disabled",
+      "label": "Shut down the Tether Relay.",
+      "_why": "scripts/world/tether_relay.gd's console flag. Ordered after the captain to match data/config/tether_relay.json's own authored intent for the console's `requires_flag` seam."
+    },
+    {
+      "id": "restore_the_mill_crossing",
+      "flag_id": "mill_crossing_restored",
+      "label": "Restore the Old Mill Crossing.",
+      "_why": "scripts/world/mill_crossing.gd's MILL_FLAG, opened by the gear the Relay Captain pays."
+    },
+    {
       "id": "defeat_the_captains",
       "flag_id": "hall_approach_open",
       "label": "Defeat the Upper Meadows captains.",
@@ -15,9 +61,33 @@
         "defeated_captain_field",
         "defeated_captain_ridge",
         "defeated_captain_riverwatch"
+      ]
+    },
+    {
+      "id": "fight_through_the_hall",
+      "flag_id": "defeated_stronghold_elite",
+      "label": "Fight through the guard inside Meadows Hall.",
+      "count_flags": [
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite"
       ],
-      "_comment": "SF34. `flag_id` is the GATE's flag, not a fourth captain flag: the objective is not finished by winning three fights, it is finished by walking up to the Hall approach and putting the three Sigils in it -- which is the last thing the player physically does in the band. The three captain defeat flags are the count, so the line reads 'Defeat the Upper Meadows captains. 2/3' on the way there and only clears once the gate is open."
+      "_why": "The elite is the last of the three and the one the Warden stands behind, so the elite's flag is the completion and the other two are the count."
+    },
+    {
+      "id": "defeat_the_warden",
+      "flag_id": "defeated_warden",
+      "label": "Defeat the Meadows Warden."
+    },
+    {
+      "id": "shut_down_the_machine",
+      "flag_id": "legendary_freed",
+      "label": "Shut down what Team Tether built under the Hall.",
+      "_why": "Deliberately does not name what the machine holds -- see _comment_no_spoilers. `legendary_freed` is the flag the climax already sets; only the wording here is new."
     }
   ],
-  "local": []
+  "local": [],
+  "_comment_chain": "CHAPTER-OBJECTIVES (prompt 68). This list was TWO entries -- the village gate and the Upper Meadows captains -- for a 3-4 hour chapter, so everything between the opening and Band 4 (the South Bridge, the quarry, the warrens, the captive, the relay, the crossing) and everything after the captains (the Hall, the Warden, the machine) was untracked. A player who put the game down mid-chapter had no line telling them what they were in the middle of. The eleven entries below are all built from flags the game ALREADY sets -- no new boolean was invented for any of them, per the prompt's 'avoid redundant booleans where real game state can answer completion' -- and the architecture is untouched: still DONE-or-not-yet, still first-unset-in-file-order for the tracked line, still no prerequisites and no branching (spec sec19 and CLAUDE.md both ban a quest engine).",
+  "_comment_no_spoilers": "WHY THE LATE LABELS ARE VAGUE. scripts/ui/tab_quest_log.gd renders EVERY main entry, done and not-done alike, so every label here is readable from the first minute of the game. That makes this file subject to spec sec32's reveal ladder exactly like dialogue is: the last entries are written in the terms the player already has -- Team Tether, the Hall, the Warden, a machine -- and none of them names what is inside the stronghold. The right fix for a spoiler here is a vaguer label, never a visibility condition; a condition would be the branching the architecture comment above rules out.",
+  "_comment_directions": "NO COMPASS DIRECTIONS IN THESE LABELS, on purpose. Prompt 68 asks for an audit of wording that drifted after the OW5D relocation. The audit was done and the shipped dialogue came back CONSISTENT -- but only because this world's north is -Z (scripts/ui/minimap.gd's header: 'screen-up ... is world -Z (north) and screen-right is world +X'), so the corridor running toward +Z runs SOUTH, and Mira's 'south crossing', Oskar's 'bridge south of here' and the Foreman's 'seams south of here' are all correct for a South Bridge at z=+1330 below a village at z=-10. Reading +Z as north makes every one of those lines look like a bug and is the easy mistake to make here. These labels name places instead of bearings so they cannot rot the next time the corridor moves."
 }

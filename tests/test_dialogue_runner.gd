@@ -1001,6 +1001,55 @@ func test_the_exemption_is_exactly_one_file() -> void:
 			"%s is exempt from a scan it is not part of; the exemption must name a file the game actually loads" % path)
 
 
+## TRAINER-JOURNEY. The five BAND-SPLIT-2 containers
+## (`scripts/story/dialogue_runner.gd`'s own EXTRA_DIALOGUE_PATHS loads all of
+## them) were absent from DIALOGUE_FILES above, so §32's rule had never been
+## enforced on a single line spoken by a band-local trainer or NPC. That was
+## harmless only for as long as every one of them was an empty container, which
+## stopped being true the moment Band 2 got its two Team Tether pickets.
+##
+## Kept separate from the scan above rather than folded into it, because that
+## test asserts every file it reads HAS spoken lines -- a correct assertion for
+## a shipped scene file and the wrong one for a band container, four of which
+## are still legitimately empty. Here an empty file passes trivially and a file
+## that gains one line is covered the moment it does, with nobody having to
+## remember to add it to a list.
+const BAND_DIALOGUE_FILES := [
+	"res://data/dialogue/bands/band1_lower_meadows.json",
+	"res://data/dialogue/bands/band2_stone_and_root.json",
+	"res://data/dialogue/bands/band3_the_river_lock.json",
+	"res://data/dialogue/bands/band4_upper_meadows_ironwood.json",
+	"res://data/dialogue/bands/band5_stronghold_approach.json",
+]
+
+
+func test_no_band_dialogue_names_the_legendary_either() -> void:
+	var scanned := 0
+	for path: String in BAND_DIALOGUE_FILES:
+		assert_true(FileAccess.file_exists(path),
+			"%s is loaded by dialogue_runner but does not exist" % path)
+		var lowered := _all_spoken_in(path).to_lower()
+		scanned += 1
+		for word: String in FORBIDDEN_WORDS:
+			assert_false(lowered.contains(word),
+				"a character in %s says '%s'; §32 puts that reveal in the stronghold, and every band is read before it"
+					% [path, word])
+	assert_eq(scanned, BAND_DIALOGUE_FILES.size(),
+		"scanned %d band containers, expected %d" % [scanned, BAND_DIALOGUE_FILES.size()])
+
+
+## The band containers are hand-written in two places -- dialogue_runner's
+## EXTRA_DIALOGUE_PATHS and the list above -- and a band added to one and not
+## the other is a file the game reads and no test scans. That is precisely the
+## hole this pair of tests was written to close, so it is worth failing over.
+func test_every_band_container_the_game_loads_is_scanned() -> void:
+	for path: String in RUNNER.EXTRA_DIALOGUE_PATHS:
+		if not path.contains("/dialogue/bands/"):
+			continue
+		assert_true(BAND_DIALOGUE_FILES.has(path),
+			"dialogue_runner loads %s and BAND_DIALOGUE_FILES does not scan it" % path)
+
+
 ## And the positive half: the reveal has to actually BE in there. A rule that
 ## forbids the words everywhere and a stronghold that never says them is a
 ## chapter with no reveal at all — which is exactly the failure the ladder was

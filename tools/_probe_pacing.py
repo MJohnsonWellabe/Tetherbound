@@ -53,6 +53,7 @@ measures 2h30 here is a 3-4 hour run in a human's hands, and one that measures
 import json
 import math
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -81,6 +82,7 @@ HARVEST = band_content.load_config("data/config/harvest.json", "nodes")
 SPAWNS = band_content.load_config("data/config/spawns.json", "spawns")
 CATCHING = load("data/config/catching.json")
 CURVE = load("data/config/chapter_curve.json")
+LANDMARKS = load("data/config/map_landmarks.json")["landmarks"]
 RECIPES_ROOT = load("data/recipes/recipes_rootstone.json")["recipes"]
 RECIPES_IRON = load("data/recipes/recipes_ironwood.json")["recipes"]
 
@@ -287,6 +289,52 @@ def trainer_beat(tid, band, note=""):
     }
 
 
+# --- where the sites actually ARE -------------------------------------------
+#
+# These used to be four coordinate literals sitting in BEATS. `OW5D` then
+# relocated the whole corridor north (`stronghold.json`'s own
+# `_comment_ow5d_relocation` records the -141.8/+7775.4 offset), the band
+# configs moved with it, and these literals did not -- so the probe went on
+# measuring the South Bridge at z=80 while Band 1's own content sat at
+# z=1330, and measured the Warden's room at z=-206 while the Warden stood at
+# z=7569. The result was three phantom multi-kilometre legs walking back to
+# the origin and out again, which is why the travel column doubled and the
+# verdict read OVER without a single beat of content having changed.
+#
+# So no site coordinate is written here any more. Each one is read from the
+# file that owns it, and `check_sites_are_current()` below fails loudly rather
+# than silently mismeasuring if that ever stops being true.
+
+
+def landmark(lid):
+    """A major site's position, from data/config/map_landmarks.json -- the file
+    the in-game map itself reads, so a site the player can see on the map and
+    the site this probe walks to cannot drift apart."""
+    for entry in LANDMARKS:
+        if entry.get("id") == lid:
+            return tuple(entry["position"])
+    raise SystemExit("map_landmarks.json has no landmark '%s'" % lid)
+
+
+def gd_const_vec2(rel, name):
+    """A `const NAME := Vector2(x, y)` out of a GDScript file.
+
+    The Sigil gate is placed by code, not data (`playground_world.gd`'s
+    SIGIL_GATE_AT), and copying its number here is exactly the mistake this
+    block exists to stop making."""
+    src = open(os.path.join(ROOT, rel)).read()
+    m = re.search(r"const\s+%s\s*:=\s*Vector2\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)" % name, src)
+    if m is None:
+        raise SystemExit("%s has no `const %s := Vector2(...)`" % (rel, name))
+    return (float(m.group(1)), float(m.group(2)))
+
+
+def trainer_at(tid):
+    """A trainer's own placed position, for a beat that happens where they
+    stand (the legendary is freed in the Warden's own building)."""
+    return tuple(TRAINER_BY_ID[tid]["position"])
+
+
 def site_beat(band, name, at, note="", seconds=0.0):
     return {"kind": "site", "band": band, "name": name, "at": tuple(at),
             "note": note, "seconds": seconds}
@@ -325,41 +373,96 @@ WARRENS_AT = tuple(WARRENS["site"]["at"])
 BAND0_SCRIPTED_S = 14.0 * 60.0
 
 BEATS = [
-    site_beat(0, "Grandpa's house (wake, Grandpa, starter, name)", (-22.0, -16.0),
+    site_beat(0, "Grandpa's house (wake, Grandpa, starter, name)", landmark("grandpa_house"),
               seconds=BAND0_SCRIPTED_S),
     trainer_beat("practice_trainer", 0, "the taught first fight"),
-    site_beat(0, "The village", (10.0, -10.0), seconds=120.0,
+    site_beat(0, "The village", landmark("village"), seconds=120.0,
               note="harvest/camp basics, signpost"),
 
     trainer_beat("trainer_mira", 1),
     trainer_beat("trainer_tam", 1),
     trainer_beat("trainer_oskar", 1, "pays the South Bridge Key"),
-    site_beat(1, "The South Bridge (gate 1)", (5.0, 80.0), seconds=30.0),
+    site_beat(1, "The South Bridge (gate 1)", landmark("south_bridge"), seconds=30.0),
 
     site_beat(2, "Old Quarry rootstone", ROOTSTONE_AT,
               seconds=harvest_walk_seconds("rootstone")),
     site_beat(2, "Burrow Warrens", WARRENS_AT, note="dungeon, see fights below"),
+    # ORDER, not geography. The ironwood grove's five nodes are authored in
+    # `bands/band2_stone_and_root/harvest.json` at z=2461 -- 12m from the
+    # Burrow Warrens' own entrance -- so ironwood is cut where the player
+    # already is. Scheduling it as a Band 4 beat (which this probe did, on the
+    # strength of Band 4 being NAMED "Upper Meadows / Ironwood") sent the route
+    # 2.2km back south past the warrens and 4.0km north again for a grove it
+    # had already walked through: ~6km and ten minutes of pure backtracking
+    # that no player would ever perform. Band 4 having no harvest nodes of its
+    # own is a real content gap and belongs to `65-BAND4-finished-upper-
+    # meadows.md`; it is not a reason to mismeasure the route that ships.
+    site_beat(2, "Ironwood grove", IRONWOOD_AT, seconds=harvest_walk_seconds("ironwood")),
 
     trainer_beat("relay_picket_hess", 3),
     trainer_beat("relay_picket_orrin", 3),
     trainer_beat("relay_officer_dell", 3),
     trainer_beat("relay_captain", 3, "frees the captive, pays the Mill Bridge Gear"),
-    site_beat(3, "Old Mill Crossing", (162.4, 42.1), seconds=60.0,
+    site_beat(3, "Old Mill Crossing", landmark("old_mill_crossing"), seconds=60.0,
               note="restore the crossing"),
 
-    site_beat(4, "Ironwood grove", IRONWOOD_AT, seconds=harvest_walk_seconds("ironwood")),
+    # The three Sigil captains in the order the corridor presents them, south
+    # to north: Riverwatch stands 150m from the Old Mill Crossing (z=4350),
+    # Field at z=5590, Ridge at z=6460, and the gate their Sigils open at
+    # z=7400. The probe used to fight Riverwatch LAST, after Ridge, which
+    # walked 2.6km back down the corridor and 3.8km up it again. Nothing
+    # requires that order -- three Sigils in any order open the gate -- so
+    # measuring the worst one was measuring a route the player has no reason
+    # to take.
+    trainer_beat("captain_riverwatch", 4),
     trainer_beat("captain_field", 4),
     trainer_beat("captain_ridge", 4),
-    trainer_beat("captain_riverwatch", 4),
-    site_beat(4, "The Sigil gate", (130.0, -176.0), seconds=30.0),
+    site_beat(4, "The Sigil gate", gd_const_vec2("scripts/world/playground_world.gd", "SIGIL_GATE_AT"), seconds=30.0),
 
     trainer_beat("stronghold_patrol", 5),
     trainer_beat("stronghold_courtyard", 5),
     trainer_beat("stronghold_elite", 5),
     trainer_beat("warden_aldis", 5, "the Warden"),
-    site_beat(5, "Free the legendary, the Rift collapses", (232.0, -206.0), seconds=300.0,
+    site_beat(5, "Free the legendary, the Rift collapses", trainer_at("warden_aldis"), seconds=300.0,
               note="reveal, release ceremony, meadow healing"),
 ]
+
+# --- the drift guard ----------------------------------------------------------
+#
+# Every site above now comes from a config file, but a beat can still be
+# ASSIGNED to the wrong band, and the failure mode is identical: a leg that
+# walks out of the band and back for no authored reason, inflating the travel
+# column without any content having changed. So before anything is measured,
+# check each beat against the centre of its own band's content. A beat more
+# than BAND_DRIFT_M from its band's own trainers/sites is either mis-banded or
+# reading a stale coordinate, and either way the number this probe prints is
+# not worth having.
+BAND_DRIFT_M = 3000.0
+
+
+def check_sites_are_current():
+    by_band = {}
+    for beat in BEATS:
+        by_band.setdefault(beat["band"], []).append(beat)
+    problems = []
+    for band, beats in sorted(by_band.items()):
+        cx = sum(b["at"][0] for b in beats) / len(beats)
+        cz = sum(b["at"][1] for b in beats) / len(beats)
+        for b in beats:
+            d = math.dist(b["at"], (cx, cz))
+            if d > BAND_DRIFT_M:
+                problems.append(
+                    "  band %d: '%s' at (%.0f, %.0f) is %.0fm from the band's own centre "
+                    "(%.0f, %.0f) -- stale coordinate or wrong band?"
+                    % (band, b["name"], b["at"][0], b["at"][1], d, cx, cz))
+    if problems:
+        print("STALE SITE COORDINATES -- the estimate below would be fiction:")
+        print("\n".join(problems))
+        raise SystemExit(2)
+
+
+check_sites_are_current()
+
 
 # The warrens are a dungeon, not a single beat: its aggressive spawns and its
 # guardian are real fights on the critical path (burrow_warrens.json).

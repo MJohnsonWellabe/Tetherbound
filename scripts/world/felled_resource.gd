@@ -33,6 +33,14 @@ const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 ## universally readable firewood stack, and at ~0.35m tall it is knee-high
 ## next to a 4-7m tree — present without competing with it.
 const LOG_MODEL := "res://assets/environment/nature/log.glb"
+## EXPEDITION-REST. Fiber's own felled form. Without this a cut bundle of plant
+## fibre fell through to `_build_rubble()` and the player picked their cordage
+## off a pile of grey stone chunks -- the same defect
+## vegetation_harvest_point.gd's own header records for wood ("wood to pick up
+## doesn't look like wood"), which took an owner playtest to catch the first
+## time. Wheat rather than a generic grass tuft because the pickup is CUT
+## material lying on the ground, not a plant still growing there.
+const FIBER_MODEL := "res://assets/environment/stylized_nature/Grass_Wheat.gltf"
 const LOG_RISE := 0.173
 
 ## The pack's logs ship untextured, as a pale cream on both surfaces — the
@@ -84,6 +92,8 @@ func resource_amount() -> int:
 func _build_visual() -> Node3D:
 	if _item_id == "wood":
 		return _build_woodpile()
+	if _item_id == "fiber":
+		return _build_bundle()
 	return _build_rubble()
 
 
@@ -135,6 +145,40 @@ func _build_woodpile() -> Node3D:
 ## whether stone reads well at all; this only needs to say "there is a
 ## resource here", the same bar `harvest_node.gd::_box_visual()` sets for its
 ## own no-model fallback.
+## A cut bundle: three stooks leaned together, same PackedScene discipline as
+## `_build_woodpile` (never assign the glTF straight to a `mesh` property --
+## that is the OF20 trap this file's woodpile comment records). Falls back to
+## rubble if the model is missing, so a bad asset path degrades to something
+## visible rather than to nothing at all.
+func _build_bundle() -> Node3D:
+	if not ResourceLoader.exists(FIBER_MODEL):
+		push_warning("fiber model %s missing; the felled fiber falls back to rubble" % FIBER_MODEL)
+		return _build_rubble()
+	var packed: PackedScene = load(FIBER_MODEL) as PackedScene
+	if packed == null:
+		push_warning("fiber model %s did not load as a PackedScene; falling back to rubble" % FIBER_MODEL)
+		return _build_rubble()
+
+	var bundle := Node3D.new()
+	bundle.name = "FiberBundle"
+	var bearing := float(hash(position) & 0xFFFFFF) / float(0xFFFFFF) * TAU
+	# Leaned in against each other rather than stood upright: cut stalks that
+	# somebody set down, which is what this pickup is.
+	for spec: Array in [
+		[Vector3(-0.12, 0.0, 0.02), 0.22, 0.0],
+		[Vector3(0.13, 0.0, -0.04), -0.19, 1.9],
+		[Vector3(0.0, 0.0, 0.11), 0.08, 3.7],
+	]:
+		var stook := packed.instantiate() as Node3D
+		if stook == null:
+			continue
+		stook.position = (spec[0] as Vector3).rotated(Vector3.UP, bearing)
+		stook.rotation = Vector3(float(spec[1]), bearing + float(spec[2]), 0.0)
+		stook.scale = Vector3.ONE * 0.75
+		bundle.add_child(stook)
+	return bundle
+
+
 func _build_rubble() -> Node3D:
 	var mound := Node3D.new()
 	mound.name = "Rubble"

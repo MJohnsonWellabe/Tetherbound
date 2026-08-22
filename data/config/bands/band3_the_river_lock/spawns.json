@@ -1,5 +1,73 @@
 {
-  "_comment": "BAND-SPLIT. Band-local spawns for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "_comment": "BAND-SPLIT. Band-local wild population for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. New entries take an unused order in this band's reserved range 3000-3999, which no other band can collide with.",
+  "_comment_why_this_file_was_empty": "WILD-ECOLOGY. This file existed with an empty `spawns` array, which prompt 60 names directly: 'Current Band 3 spawns.json being empty is not acceptable for a finished region.' The consequence was not only an empty region. GATEC-CURVE had just authored this band a wild level range of [9, 12] in data/config/chapter_curve.json and wired encounter_director to resolve it from a cluster's world z -- and with no clusters here, that band was inert: a correctly-built escalation rule applied to nothing. Between the Burrow Warrens and the Upper Meadows the player crossed 1580m of river country in which no wild creature existed at all, which is also the stretch where the team is supposed to have reached its full five and be weighing them against each other.",
+  "_comment_habitat": "The region's identity is the gorge (data/config/terrain_playground.json's `river`, running east-west at z~4200, 10-15m deep, narrowing to a 3.6m half-width at the Old Mill Crossing) and Team Tether's occupation of the relay. Air species own the gorge because a 15m trench is where updraft lives and where a silhouette reads from a long way off; water species are sited at the crossing, the one place on the route where the water is actually reachable; ground species are pushed onto the spoil the relay dug rather than the drained ground itself. Levels are NOT set here -- encounter_director resolves them from chapter_curve.json's band for this z, so retuning the region retunes its field.",
   "spawns": [
+    {
+      "order": 3000,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [-90.0, 0.0, 3300.0],
+      "radius": 20.0,
+      "_why": "The first wild creatures of the region, on the spine's own western swing out of Band 2 ((0,3180) -> (-110,3290) -> (-160,3420)). Common, readable, catch_rate 0.55 and the least dangerous thing here: a team arriving at the region's expected level 10 meets the band's new strength on something it can comfortably beat, which is what makes the galecrest at the gorge later land as a step up rather than a wall."
+    },
+    {
+      "order": 3001,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [-165.0, 0.0, 3430.0],
+      "radius": 18.0,
+      "time": "night",
+      "_why": "The wooded dip at the spine's westernmost point. A second nocturnal site: before this, the chapter's entire night ecology was two duskhush clusters in Bands 1 and 2, so a player travelling this region after dark saw exactly the same emptiness as by day. `time` gating is the existing schema (see the head file's _comment_conditions), not a new mechanism."
+    },
+    {
+      "order": 3002,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [275.0, 0.0, 3890.0],
+      "radius": 18.0,
+      "_why": "Behind the Tether Relay, on the leg out of it ((350,3760) -> (280,3900)). A digging ground species in the spoil banks the relay's own excavation left -- the ecology reacting to Team Tether's presence rather than ignoring it, which is prompt 60's 'wild presence affected by drained/occupied land'."
+    },
+    {
+      "order": 3003,
+      "species": "mosshell",
+      "count": 2,
+      "centre": [-40.0, 0.0, 4075.0],
+      "radius": 16.0,
+      "_why": "The south bank on the approach to the crossing ((-30,4060) is a spine point). The first water species of the region and the gentler of the two: catch_rate 0.40 against brooktail's 0.45 but a slower, more approachable animal, met before the player reaches the narrows."
+    },
+    {
+      "order": 3004,
+      "species": "brooktail",
+      "count": 3,
+      "centre": [-195.0, 0.0, 4225.0],
+      "radius": 18.0,
+      "_why": "The Old Mill Crossing narrows (the course's own half_width minimum, 3.6m at (-152,4203)) -- the one point on the critical path where the river is close enough to reach. This is the region's team-building temptation in prompt 60's sense: the corridor's best available water type, standing at the crossing every player must use, at a level (band [9,12]) that is a real argument against a member of the five rather than a curiosity. Brooktail is also on captain_riverwatch's own team, so the player meets the species as opposition and as a candidate in the same region."
+    },
+    {
+      "order": 3005,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [-70.0, 0.0, 4150.0],
+      "radius": 22.0,
+      "_why": "The gorge updraft immediately south of the crossing. Galecrest is the `aggressor` role (head file `roles`), so this is deliberately ungated and deliberately on the route: the crossing should be the moment the river country stops being scenery. Sited on the rim rather than in the trench -- the ambush happens on the approach, the same rule the head file's _comment_placement applies to the Band 1 rocky rise."
+    },
+    {
+      "order": 3006,
+      "species": "reedwing",
+      "count": 2,
+      "centre": [70.0, 0.0, 4260.0],
+      "radius": 20.0,
+      "weather": ["rain"],
+      "_why": "The north bank downstream of the crossing, in rain only. Reedwing is the `weather_gated` role and had exactly one site in the whole chapter (Band 1's pond, z=507); a player who first saw rain north of the warrens had no weather ecology to discover. Rain over a river gorge is also the least arbitrary place in the Meadows to put it."
+    },
+    {
+      "order": 3007,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [140.0, 0.0, 4560.0],
+      "radius": 18.0,
+      "_why": "The north leg out of the region ((160,4570) is a spine point), on the ground the player covers between the crossing and Band 4. Placed so the last 300m of the region is not the empty run-out that the whole band used to be."
+    }
   ]
 }

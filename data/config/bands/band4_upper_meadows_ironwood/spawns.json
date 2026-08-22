@@ -1,6 +1,102 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
   "spawns": [
-    {"order": 4, "species": "meadowhart", "count": 2, "centre": [60.0, 0.0, 6230.0], "radius": 20.0, "_why_ow5d": "upper ridge species (section 5: Galecrest/Meadowhart/stronger Trailpup -> Band 4). This is the ORIGINAL, far-flung cluster this file's own `_comment_meadowhart_sh47` already names as badly placed (250m off every route). Moved to (60,6230) -- section 3.2's own 'High pasture loop', explicitly described there as 'Meadowhart herd, the riding payoff, open ground after the old-growth'. See the SH47-added cluster below for why the OTHER Meadowhart cluster was NOT sent here too."}
-  ]
+    {
+      "order": 4,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        60.0,
+        0.0,
+        6230.0
+      ],
+      "radius": 20.0,
+      "_why_ow5d": "upper ridge species (section 5: Galecrest/Meadowhart/stronger Trailpup -> Band 4). This is the ORIGINAL, far-flung cluster this file's own `_comment_meadowhart_sh47` already names as badly placed (250m off every route). Moved to (60,6230) -- section 3.2's own 'High pasture loop', explicitly described there as 'Meadowhart herd, the riding payoff, open ground after the old-growth'. See the SH47-added cluster below for why the OTHER Meadowhart cluster was NOT sent here too."
+    },
+    {
+      "order": 4000,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [
+        -310.0,
+        0.0,
+        5000.0
+      ],
+      "radius": 22.0,
+      "_why": "The old-growth on the western swing ((-300,4990) is a spine point). Section 5 puts stronger Trailpup in Band 4, and at this band's [11,14] that is what it is -- the same species the player could have caught at level 3 in Band 1, met again at a strength that makes it a different animal. That contrast is the clearest statement in the chapter that the world got harder and the player did not scale it."
+    },
+    {
+      "order": 4001,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -410.0,
+        0.0,
+        5150.0
+      ],
+      "radius": 20.0,
+      "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for."
+    },
+    {
+      "order": 4002,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [
+        180.0,
+        0.0,
+        5595.0
+      ],
+      "radius": 18.0,
+      "_why": "The high pasture beside captain_field (170,5590). Ground species on the pasture the captain is standing on -- the region's opposition and its ecology occupying the same place rather than alternating."
+    },
+    {
+      "order": 4003,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        440.0,
+        0.0,
+        5870.0
+      ],
+      "radius": 20.0,
+      "_why": "The eastern loop ((450,5860)). The most deliberate placement in this band: Mudsnout is the chapter's one evolving species (progression.json's `evolution` block, level 15 + bond 55 + a Heartstone) and this band rolls [11,14], so a Mudsnout caught here arrives within a level or two of evolving. Prompt 57 asks that the evolution 'land at a meaningful time in the chapter and feel earned' and that it not be so late normal players never see it; the Band 1 Mudsnout a player still has is the one they raised, and this is the one that makes evolving a live decision for a player who did not."
+    },
+    {
+      "order": 4004,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [
+        -120.0,
+        0.0,
+        6345.0
+      ],
+      "radius": 18.0,
+      "_why": "Between the pasture and the ridge captain ((-110,6340)). Common flyer, and the breather between two of the band's harder encounters."
+    },
+    {
+      "order": 4005,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -215.0,
+        0.0,
+        6625.0
+      ],
+      "radius": 20.0,
+      "_why": "The ridge past captain_ridge ((-210,6620)). The second aggressive site of the band, placed after the captain rather than before so the region escalates toward its exit instead of front-loading its danger."
+    },
+    {
+      "order": 4006,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        60.0,
+        0.0,
+        6830.0
+      ],
+      "radius": 18.0,
+      "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit."
+    }
+  ],
+  "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here."
 }
