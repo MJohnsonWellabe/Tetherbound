@@ -199,6 +199,183 @@ func _split_into_functions(text: String) -> Dictionary:
 	return out
 
 
+## DPAD-COLLISION. `test_exploration_pollers_check_input_owner_before_reading_shared_dpad_actions`
+## above proves every poller that reads a shared d-pad action first asks
+## `INPUT_OWNER`. It does NOT prove the two actions sharing a button are
+## actually safe to share it -- `hotbar_2`/`hotbar_3` and
+## `combat_switch_left`/`combat_switch_right` (project.godot: both pairs on
+## joypad 13/14) each independently consulted `INPUT_OWNER` correctly and the
+## test above stayed green throughout, because `INPUT_OWNER` only answers
+## "does some OTHER panel own input right now" -- it has no opinion on
+## whether TWO exploration-tier pollers are reading the same physical button
+## at the same time as each other. They were, during plain exploration with
+## no panel open at all, and one d-pad press fired both a hotbar slot and a
+## party cycle.
+##
+## This is that second, previously-unproven guarantee: no two actions live in
+## the SAME context share a physical joypad button. `ACTION_CONTEXT` is the
+## hand-classified answer to "when can this action actually fire" a full
+## action-map audit produced (see this task's own report for the reasoning
+## behind every entry) -- project.godot's text alone cannot express that,
+## since it is code (gating checks scattered across pollers) that decides it,
+## not config. Two actions in DIFFERENT (mutually exclusive) contexts sharing
+## a button is the legitimate, common reuse pattern this project relies on
+## throughout (`hotbar_4`/`build_rotate`, `creature_recall`/
+## `build_snap_cycle`, `torch_toggle`/`backpack_split`, `tool_cycle`/
+## `hotbar_5`, ...); two actions in the SAME context sharing one is the
+## defect class this file exists to catch.
+const ACTION_CONTEXT := {
+	# exploration: unconditional during ordinary play, or gated only by
+	# `playground_hud.gd::_world_input_allowed()` / the equivalent checks in
+	# `encounter_director.gd::_read_creature_control_input()` (a fight, the
+	# arbiter disabled, or a panel in INPUT_OWNER's group) -- genuinely live
+	# with nothing else open.
+	"jump": "exploration",
+	"sprint": "exploration",
+	"interact": "exploration",
+	"inventory": "exploration",
+	"map": "exploration",
+	"creature_recall": "exploration",
+	"combat_switch_left": "exploration",
+	"combat_switch_right": "exploration",
+	"torch_toggle": "exploration",
+	"build_open": "exploration",
+	"torch_place": "exploration",
+	"use_tool": "exploration",
+	"hotbar_1": "exploration",
+	"hotbar_2": "exploration",
+	"hotbar_3": "exploration",
+	"hotbar_4": "exploration",
+	"hotbar_5": "exploration",
+
+	# combat: read only while `CombatManager.is_fighting()` (or the
+	# trainer-battle equivalent) is true -- mutually exclusive with
+	# "exploration" and "build" below, since neither ordinary movement/build
+	# state exists mid-fight.
+	"combat_quick": "combat",
+	"combat_charged": "combat",
+	"combat_throw": "combat",
+	"combat_run": "combat",
+
+	# build: read only while a ghost is armed (`build_placer.gd`:
+	# `pending_build != ""`), itself further gated by INPUT_OWNER --
+	# mutually exclusive with "exploration" (`sequence_director.gd` disables
+	# the arbiter, and `_world_input_allowed()`'s own check, while building)
+	# and with "combat" (a fight cannot start with a ghost armed).
+	"build_place": "build",
+	"build_cancel": "build",
+	"build_rotate_left": "build",
+	"build_rotate_right": "build",
+	"build_snap_cycle": "build",
+	"build_rotate": "build",
+	"build_dismantle": "build",
+
+	# menu: read only from inside a tree-paused panel, or by the pause shell
+	# itself deciding whether to open/close/switch tabs -- mutually exclusive
+	# with everything above because a paused tree stops every exploration
+	# poller outright, and the shell's own shortcut/open reads explicitly
+	# stand aside for a live build ghost (`game_menu.gd::_read_actions()`).
+	"ui_accept": "menu",
+	"menu_confirm": "menu",
+	"menu_cancel": "menu",
+	"menu_tab_right": "menu",
+	"tool_cycle": "menu",
+	"backpack_drop": "menu",
+	"backpack_split": "menu",
+	"backpack_assign": "menu",
+}
+
+
+## A new action added to project.godot's `[input]` block with a joypad event
+## and left out of `ACTION_CONTEXT` above would otherwise silently skip the
+## collision check below rather than fail it -- exactly the shape of gap that
+## let `combat_switch_left`/`combat_switch_right` reach exploration without
+## ever being checked against the hotbar. This fails loudly instead.
+func test_every_joypad_bound_action_is_classified() -> void:
+	var by_button := _actions_by_joypad_button()
+	var unclassified: Array[String] = []
+	for actions in by_button.values():
+		for action: String in actions:
+			if not ACTION_CONTEXT.has(action) and not unclassified.has(action):
+				unclassified.append(action)
+	assert_true(
+		unclassified.is_empty(),
+		"project.godot binds a joypad button for %s, which ACTION_CONTEXT does not classify -- add it (with the same reasoning every other entry carries) before this check can trust it is safe" % str(unclassified)
+	)
+
+
+## `ui_accept`/`menu_confirm` (joypad button 0, both "menu") is the one
+## deliberate exception: project.godot's own UI-PAD1 comment on `ui_accept`
+## says outright that sharing A with `menu_confirm` is intentional, not a
+## collision -- both mean "confirm" on the same screen, read by two different
+## systems (a focused `Button`'s built-in `ui_accept`, and this project's own
+## `menu_confirm` poll) rather than two DIFFERENT verbs racing for one press.
+## Pressing A does the one thing the player expects either way; there is no
+## second, unrelated effect to hide. Every other pair this test finds in the
+## same context is exactly that second, unrelated-effect shape, which is why
+## this is a one-entry exception list and not a way to silence a real find.
+const ALLOWED_SAME_CONTEXT_PAIRS := [
+	["ui_accept", "menu_confirm"],
+]
+
+
+func _is_allowed_same_context_pair(a: String, b: String) -> bool:
+	for pair in ALLOWED_SAME_CONTEXT_PAIRS:
+		if (pair[0] == a and pair[1] == b) or (pair[0] == b and pair[1] == a):
+			return true
+	return false
+
+
+## The actual guarantee: no two actions classified into the SAME context
+## share a physical joypad button. Fails with the exact button and pair on a
+## real collision, the same way the OP21-06 fix would have if this had
+## existed then.
+func test_no_two_same_context_actions_share_a_joypad_button() -> void:
+	var by_button := _actions_by_joypad_button()
+	for button in by_button.keys():
+		var actions: Array = by_button[button]
+		if actions.size() < 2:
+			continue
+		for i in actions.size():
+			for j in range(i + 1, actions.size()):
+				var a: String = actions[i]
+				var b: String = actions[j]
+				if not ACTION_CONTEXT.has(a) or not ACTION_CONTEXT.has(b):
+					continue # already failed by test_every_joypad_bound_action_is_classified
+				if _is_allowed_same_context_pair(a, b):
+					continue
+				if ACTION_CONTEXT[a] == ACTION_CONTEXT[b]:
+					_fail(
+						"'%s' and '%s' both bind joypad button %d and are BOTH classified '%s' -- two world verbs live in the same context share one physical button, the exact OP21-06/DPAD-COLLISION defect class (a press of that button fires both, with no way to press only one)" % [
+							a, b, int(button), ACTION_CONTEXT[a],
+						]
+					)
+
+
+## Every action->button pair in project.godot's `[input]` block, grouped by
+## button. Separate from `_colliding_actions()` above (which only cares about
+## the three d-pad buttons Godot's own `ui_*` focus navigation uses) -- this
+## one needs the full table, every button, for the general cross-context
+## check above.
+func _actions_by_joypad_button() -> Dictionary:
+	var text := FileAccess.get_file_as_string("res://project.godot")
+	var out: Dictionary = {}
+	var block_re := RegEx.new()
+	block_re.compile("(?ms)^(\\w+)=\\{(.*?)\\n\\}")
+	var button_re := RegEx.new()
+	button_re.compile("InputEventJoypadButton[^)]*\"button_index\"\\s*:\\s*(\\d+)")
+	for block in block_re.search_all(text):
+		var name: String = block.get_string(1)
+		var body: String = block.get_string(2)
+		for bm in button_re.search_all(body):
+			var button := int(bm.get_string(1))
+			if not out.has(button):
+				out[button] = []
+			if not (out[button] as Array).has(name):
+				(out[button] as Array).append(name)
+	return out
+
+
 ## Parses `project.godot`'s `[input]` block fresh on every run -- see the
 ## file header on why this is deliberately not a hand-maintained list.
 func _colliding_actions() -> Array[String]:
