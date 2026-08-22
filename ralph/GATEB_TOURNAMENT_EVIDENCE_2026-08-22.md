@@ -282,8 +282,36 @@ fight half fought is the one way this gate could strand a run.
 2. **No CI run.** `claude/**` does not trigger `ci.yml`; everything here was
    run locally on a software-rendered box. A `ralph/**` push is what settles
    both this and item 3.
-3. **The fresh-save path stops at the first catch** (section 5), and needs
-   that CI run to say whether it is real or an artifact of this environment.
+3. **The fresh-save path stops at the first catch, deterministically.** Not
+   flaky: three separate runs on a clean save directory all ended
+   "eight natural weakened-target launches produced 1 strike, 7 misses, and
+   no catch". A fourth run captured the game's own commit lines and shows
+   the aim is NOT the whole story:
+
+   ```
+   catch launch: commit eligible=true  reticle=0.160/0.600 first_hit=Wild_bramblebun_2 los=true
+   catch launch: commit eligible=true  reticle=0.256/0.600 first_hit=Wild_bramblebun_2 los=true
+   catch launch: commit eligible=true  reticle=0.410/0.600 first_hit=Wild_bramblebun_2 los=true
+   catch launch: commit eligible=false reticle=0.884/0.600 ... reason=reticle_outside_body
+   ```
+
+   Three launches the GAME judged eligible, well inside the body, line of
+   sight true, against a Bramblebun weakened to 31/124 HP -- and no catch.
+   `combat_manager.gd:178` calls `_rng.randomize()`, so this is not a fixed
+   seed repeating one unlucky sequence.
+
+   On `data/config/catching.json`'s headline numbers a centred throw at that
+   HP should sit somewhere around half. Three good throws failing, in every
+   run, is not that. Either the effective chance is far below what the config
+   reads like, or the weakened-HP factor is not reaching the roll. **This is
+   Gate A's catching beat, not the tournament's**, and it is handed over
+   rather than fixed here -- but Gate B cannot pass while the first catch in
+   the chapter behaves like this, because every later beat is downstream of
+   it.
+
+   The secondary half is real too: after the first throws the harness's aim
+   drifts (0.884, 1.389) and stops re-converging on a creature that has
+   moved, so a player gets fewer good throws than the eight the test spends.
 4. **`opening:beat:road` has no writer** -- the chain's first objective, the
    first line a new player is shown.
 5. **"Enough nearby creatures to prepare naturally" is unproven.** The bracket
