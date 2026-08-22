@@ -88,6 +88,12 @@ const HOTBAR_SLOTS := 5
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
 ## keys), so one list serves both jobs.
 const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+## Named constants (not the magic 28/16 this used to inline directly into the
+## bbcode format string) so `smoke_hud_handheld_legibility.gd` can assert real
+## physical pixel sizes against the values actually drawn, the way it already
+## does for `LEGEND_GLYPH_PX`.
+const HOTBAR_GLYPH_PX := 36
+const HOTBAR_COUNT_FONT_SIZE := 36
 
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
@@ -121,10 +127,15 @@ const REGION_BANNER_SECONDS := 3.2
 ## origin), matching the rest of this file's "sized for the Ally" convention.
 
 const CREATURE_BLOCK_POS := Vector2(56.0, 830.0)
-const CREATURE_BLOCK_SIZE := Vector2(374.0, 110.0) ## x 56-430, y 830-940
+## Grown 110 -> 162 (x 56-430, y 830-992) to fit the bigger 56px portrait, the
+## HP value readout beside the bar, and a dedicated row for the persistent
+## party-pip row -- the pips do NOT share the header's text row (a first
+## version tried that and "ACTIVE COMPANION" at readable size ran straight
+## into them; the header needed its own full-width line).
+const CREATURE_BLOCK_SIZE := Vector2(374.0, 162.0)
 const PARTY_ACTIVE_GAP := UITokens.GAP
 
-const VITALS_POS := Vector2(56.0, 946.0) ## buff row starts here; satiety row ends ~1010
+const VITALS_POS := Vector2(56.0, 1006.0) ## buff row starts here; satiety row ends ~1070
 const VITALS_WIDTH := 300.0
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
@@ -153,8 +164,23 @@ const OBJECTIVE_BLOCK_HEIGHT := 90.0
 ## 1280x800 (canvas_items stretch, scale 1280/1920 = 0.667), that was ~16
 ## physical px. 44px authored -> ~29 physical px, comfortably past the
 ## established floor with margin for "more legible", not just "not the worst".
-const LEGEND_GLYPH_PX := 44
-const LEGEND_FONT_SIZE := 24
+## OP21 handheld remainder: a blind critic measured the 44/24 pair above at
+## real 1280x800 physical pixels and found the LABEL text -- not the glyph --
+## still only 11px cap height, well under its own ~16px arm's-length bar
+## (`UITokens.FONT_TINY`-scale text was the actual offender; the glyph image
+## was already fine at 44 authored / ~29 physical). 24 -> 36 hits ~16.8
+## physical cap height at this project's 0.667 canvas_items scale factor
+## (36 * 0.667 * ~0.7 cap-height ratio); glyph raised the same 1.5x to stay
+## proportional to the now-larger label beside it.
+const LEGEND_GLYPH_PX := 66
+const LEGEND_FONT_SIZE := 36
+## Shared local floor for every other micro-label this file draws that the
+## same critic measured at 9px -- "ACTIVE COMPANION", "Lv 1"/"GROUND", the
+## hotbar item count. Deliberately NOT `UITokens.FONT_TINY`: that constant is
+## shared by a dozen other screens this lane does not own (menu tabs, combat,
+## the minimap), so bumping it here would move text this task never measured.
+## 38 * 0.667 * ~0.7 ~= 17.7 physical px, clearing the ~16px bar with margin.
+const HUD_READABLE_FONT_SIZE := 38
 ## RichTextLabel's `fit_content` measures height against its CURRENT width,
 ## and a freshly-built PanelContainer with no width hint of its own has none
 ## yet -- the label wrapped to a near-zero column and reported an absurd
@@ -167,7 +193,7 @@ const LEGEND_FONT_SIZE := 24
 ## below deliberately adds NO further vertical margin on top of that; this
 ## exact double-margin mistake already shipped once (see the function's own
 ## history comment) and squeezed the glyph row down to an 8px label.
-const LEGEND_SIZE := Vector2(1180.0, 76.0)
+const LEGEND_SIZE := Vector2(1700.0, 112.0)
 
 const MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 28.0
@@ -243,6 +269,22 @@ var _creature_energy_fill: StyleBoxFlat = null
 var _creature_no_creature_label: Label = null
 var _creature_block_has_creature_last := true ## forces the first _update_creature_block to write
 var _creature_icon: TextureRect = null
+var _creature_hp_value_label: Label = null
+var _creature_header_out_last := false ## -1-state forces the first header write
+var _creature_header_has_creature_last := false
+
+## Small always-on "how many, who's active" readout, five pips wide -- never
+## more, never fewer, same "five rows always exist" discipline
+## `party_strip.gd`'s own header documents, just persistent instead of a
+## reveal-and-fade. Added because the full `party_strip.gd` reveal only shows
+## for `UITokens.T_PARTY_FADE` seconds after a change: a blind critic reading
+## an idle frame between changes saw ONE card (this block) and no five-slot
+## roster anywhere, with the five-slot item hotbar sitting right below it as
+## the only other five-of-anything on screen -- exactly the wrong thing to
+## mistake for the team. This row answers "how many/which/what would cycling
+## do" without text, at all times, not just mid-transition.
+var _party_pips: Array[Panel] = []
+var _party_pip_boxes: Array[StyleBoxFlat] = []
 
 ## --- party strip --------------------------------------------------------------
 
@@ -284,6 +326,7 @@ var _minimap_baked := false
 ## --- objective block ------------------------------------------------------------
 
 var _objective_text_label: Label = null
+var _objective_eyebrow_label: Label = null
 var _objective_last_text := ""
 
 ## --- region banner ---------------------------------------------------------------
@@ -351,6 +394,7 @@ func _ready() -> void:
 	# file just built, in one pass, rather than one make_text_legible call per
 	# widget scattered through the builders above.
 	UITokens.make_text_legible(_root)
+	_strengthen_objective_contrast()
 
 
 func _style_hotbar() -> void:
@@ -385,28 +429,59 @@ func _build_creature_block() -> void:
 	_creature_header = Label.new()
 	_creature_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_header.text = "ACTIVE COMPANION"
-	_creature_header.position = Vector2(40.0, 3.0)
-	_creature_header.size = Vector2(280.0, 22.0)
-	_creature_header.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_header.position = Vector2(40.0, 2.0)
+	_creature_header.size = Vector2(324.0, 30.0)
+	_creature_header.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_header.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 	_creature_panel.add_child(_creature_header)
 
+	## Five persistent pips, right-aligned on their OWN row below the header
+	## text -- see `_party_pips`'s own declaration for why this exists
+	## alongside the transient `party_strip.gd` reveal rather than instead of
+	## it, and this function's own header comment for why it is not sharing
+	## the header's text row.
+	for i in 5:
+		var pip := Panel.new()
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pip.custom_minimum_size = Vector2(18.0, 18.0)
+		pip.position = Vector2(CREATURE_BLOCK_SIZE.x - 12.0 - (5 - i) * 22.0, 32.0)
+		pip.size = Vector2(18.0, 18.0)
+		var pip_box := StyleBoxFlat.new()
+		pip_box.bg_color = Color(UITokens.TEXT_MUTED, 0.35)
+		pip_box.border_width_left = 1
+		pip_box.border_width_top = 1
+		pip_box.border_width_right = 1
+		pip_box.border_width_bottom = 1
+		pip_box.border_color = UITokens.BORDER
+		pip_box.corner_radius_top_left = 3
+		pip_box.corner_radius_top_right = 3
+		pip_box.corner_radius_bottom_left = 3
+		pip_box.corner_radius_bottom_right = 3
+		pip.add_theme_stylebox_override("panel", pip_box)
+		_party_pip_boxes.append(pip_box)
+		_party_pips.append(pip)
+		_creature_panel.add_child(pip)
+
 	_creature_content = Control.new()
 	_creature_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_content.position = Vector2(12.0, 24.0)
-	_creature_content.size = CREATURE_BLOCK_SIZE - Vector2(24.0, 24.0)
+	_creature_content.position = Vector2(12.0, 54.0)
+	_creature_content.size = Vector2(CREATURE_BLOCK_SIZE.x - 24.0, CREATURE_BLOCK_SIZE.y - 54.0 - 12.0)
 	_creature_panel.add_child(_creature_content)
 
+	# 56x56, up from 40x40 -- a blind critic called the old ~28-physical-px
+	# portrait "too small to identify a species at arm's length", and a
+	# portrait reads faster than the name text beside it once it is big
+	# enough to actually show the silhouette.
 	_creature_chip = ColorRect.new()
 	_creature_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_chip.position = Vector2(0.0, 4.0)
-	_creature_chip.size = Vector2(40.0, 40.0)
+	_creature_chip.size = Vector2(56.0, 56.0)
 	_creature_content.add_child(_creature_chip)
 
 	_creature_portrait = TextureRect.new()
 	_creature_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_portrait.position = Vector2(2.0, 6.0)
-	_creature_portrait.size = Vector2(36.0, 36.0)
+	_creature_portrait.position = Vector2(3.0, 9.0)
+	_creature_portrait.size = Vector2(50.0, 50.0)
 	_creature_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_creature_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_creature_content.add_child(_creature_portrait)
@@ -422,28 +497,28 @@ func _build_creature_block() -> void:
 
 	_creature_name_label = Label.new()
 	_creature_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_name_label.position = Vector2(52.0, -2.0)
+	_creature_name_label.position = Vector2(64.0, -2.0)
 	_creature_name_label.size = Vector2(280.0, 32.0)
 	_creature_name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	_creature_content.add_child(_creature_name_label)
 
 	_creature_level_label = Label.new()
 	_creature_level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_level_label.position = Vector2(52.0, 30.0)
-	_creature_level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_level_label.position = Vector2(64.0, 34.0)
+	_creature_level_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	_creature_content.add_child(_creature_level_label)
 
 	_creature_type_label = Label.new()
 	_creature_type_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_type_label.position = Vector2(170.0, 30.0)
-	_creature_type_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_type_label.position = Vector2(200.0, 34.0)
+	_creature_type_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_content.add_child(_creature_type_label)
 
 	_creature_hp_bar = ProgressBar.new()
 	_creature_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_hp_bar.position = Vector2(0.0, 54.0)
-	_creature_hp_bar.size = Vector2(240.0, 14.0)
+	_creature_hp_bar.position = Vector2(0.0, 68.0)
+	_creature_hp_bar.size = Vector2(240.0, 16.0)
 	_creature_hp_bar.show_percentage = false
 	_creature_hp_bar.min_value = 0.0
 	_creature_hp_bar.max_value = 1.0
@@ -452,9 +527,24 @@ func _build_creature_block() -> void:
 	_creature_hp_bar.add_theme_stylebox_override("fill", _creature_hp_fill)
 	_creature_content.add_child(_creature_hp_bar)
 
+	# Numeric readout beside the bar -- a blind critic read the bare fill as
+	# "an unlabeled ~55%-filled green bar [that] reads as wrong at a glance"
+	# on a fresh Lv 1 creature with nothing wrong with it. The player's own
+	# vitals cluster already pairs its bar with a "284 / 320" label; this
+	# gives the companion's HP the same treatment instead of a bare fill.
+	_creature_hp_value_label = Label.new()
+	_creature_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_hp_value_label.position = Vector2(246.0, 68.0)
+	_creature_hp_value_label.size = Vector2(94.0, 16.0)
+	_creature_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_creature_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_creature_hp_value_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	_creature_hp_value_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_creature_content.add_child(_creature_hp_value_label)
+
 	_creature_energy_bar = ProgressBar.new()
 	_creature_energy_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_energy_bar.position = Vector2(0.0, 72.0)
+	_creature_energy_bar.position = Vector2(0.0, 88.0)
 	_creature_energy_bar.size = Vector2(240.0, 6.0)
 	_creature_energy_bar.show_percentage = false
 	_creature_energy_bar.min_value = 0.0
@@ -466,7 +556,7 @@ func _build_creature_block() -> void:
 
 	_creature_no_creature_label = Label.new()
 	_creature_no_creature_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_no_creature_label.position = Vector2(52.0, 46.0)
+	_creature_no_creature_label.position = Vector2(64.0, 70.0)
 	_creature_no_creature_label.text = "No creature out"
 	_creature_no_creature_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_creature_no_creature_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
@@ -484,6 +574,9 @@ func _update_creature_block() -> void:
 		_creature_content.visible = has_creature
 		_creature_no_creature_label.visible = not has_creature
 		_creature_block_has_creature_last = has_creature
+
+	_update_creature_header(has_creature)
+	_update_party_pips()
 
 	if not has_creature:
 		return
@@ -505,11 +598,77 @@ func _update_creature_block() -> void:
 	_creature_type_label.add_theme_color_override("font_color", _type_colour(creature_type))
 
 	_creature_hp_bar.value = clampf(float(creature.call("hp_fraction")), 0.0, 1.0)
+	_creature_hp_value_label.text = "%d / %d" % [
+		int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp")))),
+	]
 
 	var energy := float(creature.get("energy"))
 	_creature_energy_bar.visible = energy > 0.0
 	if _creature_energy_bar.visible:
 		_creature_energy_bar.value = clampf(float(creature.call("energy_fraction")), 0.0, 1.0)
+
+
+## Two independent critics both flagged the same contradiction: this block
+## said "ACTIVE COMPANION <name>" while the centre prompt, at the same
+## moment, offered "Call out <name>" -- i.e. the HUD asserted the creature
+## was both out and stowed within ~100 vertical pixels. Investigation: it is
+## a LABELLING bug, not a state bug. `Party.active()` (what this block reads)
+## means "the roster slot the player has selected," full stop -- it carries
+## no idea whether that creature is actually spawned in the world.
+## `encounter_director.gd::_creature_control_offer()` is the thing that
+## actually knows that, via its own `_ally_body` (a real `Node3D`, present
+## only after `summon_active_creature()` runs) -- exposed publicly as
+## `ally_body()`, and already read the same defensive way
+## `_update_minimap()`'s own header describes (find "AllyCreature" by name in
+## the current scene, no coupling to which provider is arbitrating). When
+## no such node exists, the header now says "READY TO CALL OUT" instead of
+## "ACTIVE COMPANION" -- true in both states, and never contradicts the
+## centre prompt sitting right below it.
+func _update_creature_header(has_creature: bool) -> void:
+	var out := false
+	if has_creature:
+		var world := get_tree().get_current_scene()
+		var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
+		out = ally != null and is_instance_valid(ally)
+	if out == _creature_header_out_last and has_creature == _creature_header_has_creature_last:
+		return
+	_creature_header_out_last = out
+	_creature_header_has_creature_last = has_creature
+	_creature_header.text = "ACTIVE COMPANION" if out else "READY TO CALL OUT"
+
+
+## Persistent five-pip roster readout -- filled+tinted for an owned slot,
+## bright ring for whichever is active, dim red for fainted. See `_party_pips`'s
+## declaration for why this exists alongside `party_strip.gd`'s own transient
+## reveal rather than replacing it.
+func _update_party_pips() -> void:
+	if _party == null:
+		for i in _party_pip_boxes.size():
+			_party_pip_boxes[i].bg_color = Color(UITokens.TEXT_MUTED, 0.35)
+			_party_pip_boxes[i].border_color = UITokens.BORDER
+			_party_pip_boxes[i].border_width_left = 1
+			_party_pip_boxes[i].border_width_top = 1
+			_party_pip_boxes[i].border_width_right = 1
+			_party_pip_boxes[i].border_width_bottom = 1
+		return
+	var members: Array = _party.call("members")
+	var active_index := int(_party.call("active_index"))
+	for i in _party_pip_boxes.size():
+		var box := _party_pip_boxes[i]
+		var selected := i == active_index and i < members.size()
+		var border_width := 3 if selected else 1
+		box.border_width_left = border_width
+		box.border_width_top = border_width
+		box.border_width_right = border_width
+		box.border_width_bottom = border_width
+		if i >= members.size():
+			box.bg_color = Color(UITokens.TEXT_MUTED, 0.18)
+			box.border_color = UITokens.BORDER
+			continue
+		var member: RefCounted = members[i]
+		var fainted := bool(member.get("fainted"))
+		box.bg_color = UITokens.DANGER if fainted else _species_tint(str(member.get("species_id")))
+		box.border_color = UITokens.TEAL_SOFT if selected else UITokens.BORDER
 
 
 func _species_tint(species_id: String) -> Color:
@@ -983,6 +1142,7 @@ func _build_objective_block() -> void:
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH, 22.0)
 	block.add_child(eyebrow)
+	_objective_eyebrow_label = eyebrow
 
 	_objective_text_label = Label.new()
 	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -993,6 +1153,23 @@ func _build_objective_block() -> void:
 	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	block.add_child(_objective_text_label)
+
+
+## Runs after `UITokens.make_text_legible(_root)`, which would otherwise
+## overwrite a per-widget override applied earlier in `_ready()` -- see
+## `_build_objective_block()`'s own comment for why this exists and why a
+## backing panel is not the fix. Roughly 1.5x the shared outline both labels
+## already carry, tuned as "clearly heavier," not a specific measured target
+## -- unlike the font-size fixes above, no blind pass measured a physical
+## contrast ratio for naked text over a variable, moving 3D background to
+## check this against.
+func _strengthen_objective_contrast() -> void:
+	var wide_outline := int(round(UITokens.OUTLINE_SIZE * 1.5))
+	for label in [_objective_eyebrow_label, _objective_text_label]:
+		if label == null:
+			continue
+		label.add_theme_constant_override("outline_size", wide_outline)
+		label.add_theme_color_override("font_outline_color", Color(UITokens.OUTLINE, 1.0))
 
 
 func _update_objective() -> void:
@@ -1358,27 +1535,44 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# that moved in the bag keeps drawing its real count here.
 		var slot := int(inventory.call("find_slot", id)) if not id.is_empty() else -1
 		var stack: Dictionary = inventory.call("stack_at", slot) if slot >= 0 else {}
-		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], 28)
+		# 28 -> 36: this call used to override `icon()`'s own documented 36px
+		# floor ("the smallest step that read clearly" -- see that function's
+		# header) down to 28, the one glyph call on this whole HUD that did.
+		# A blind critic separately flagged the hotbar numerals as visibly
+		# more pixelated than the legend's -- same vendored PNGs, same
+		# `icon()` call, the only difference was this smaller target size.
+		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
 		var text: String
 		if id.is_empty():
-			text = "%s\n[color=#666a63]-[/color]" % glyph
+			# Blank second line, not a "-" glyph: a blind critic read the old
+			# dash as "a ~2px dark dot artifact" in every empty slot at
+			# handheld distance -- a single punctuation character has nothing
+			# to read once it is downscaled that far. An empty slot now draws
+			# cleanly empty instead of a mark nobody can identify.
+			text = "%s\n" % glyph
 		else:
 			var icon_path := str(db.call("definition", id).get("icon", ""))
-			var colour: Color = db.call("colour", id)
 			var tool_max: int = int(inventory.call("max_durability_at", slot)) if slot >= 0 else 0
 			var count_text: String
 			if tool_max > 0:
 				count_text = "%d/%d" % [int(inventory.call("durability_at", slot)), tool_max]
 			else:
 				count_text = "x%d" % int(stack.get("n", 0))
-			# Out of stock, still bound: greyed, so the slot reads as "yours,
-			# empty" rather than vanishing and shuffling the bar under the
-			# player's thumb.
-			if stack.is_empty():
-				colour = Color(0.4, 0.42, 0.39)
+			# The count text's OWN colour, not `items.json`'s `colour` field --
+			# that field is a slot-tile TINT (`item_db.gd::colour()`'s own
+			# header calls it exactly that), never designed to be read as
+			# foreground text. A blind critic could not read "berries"'s tile
+			# tint (#a33a55, dark crimson) as the "x12" count text against the
+			# hotbar's dark navy panel without 4x magnification -- the one
+			# number in the hotbar that actually matters. Out-of-stock still
+			# greys, same as before; in-stock now reads at full contrast.
+			var text_colour := Color(0.4, 0.42, 0.39) if stack.is_empty() else UITokens.TEXT_PRIMARY
 			var icon_bbcode := "[img=28x28]%s[/img]" % icon_path if not icon_path.is_empty() else ""
-			text = "%s\n%s [font_size=16][color=#%s]%s[/color][/font_size]" % [
-				glyph, icon_bbcode, colour.to_html(false), count_text
+			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
+			# resolution, the smallest text on the whole HUD and, per the
+			# blind critic, illegible without magnification.
+			text = "%s\n%s [font_size=%d][color=#%s]%s[/color][/font_size]" % [
+				glyph, icon_bbcode, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text

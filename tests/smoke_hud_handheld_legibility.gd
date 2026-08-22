@@ -26,6 +26,20 @@ const HANDHELD_SIZE := Vector2i(1280, 800)
 ## resolution cannot silently stop this test from meaning anything.
 const MIN_PHYSICAL_GLYPH_PX := 24.0
 
+## OP21 handheld remainder round 2: a blind critic measured real TEXT (not
+## glyph images) at physical pixels a first pass of this file never checked
+## at all -- legend labels came back 11px, "ACTIVE COMPANION" 9px, the hotbar
+## item count 7px, all against the critic's own ~16px cap-height comfort bar
+## for arm's-length handheld reading. `CAP_HEIGHT_RATIO` is not invented: it
+## is the ratio backed out of that same measurement pass, which found
+## `UITokens.FONT_TINY` (19, unchanged by this task) rendering at 9 physical
+## px -- 19 * _content_scale() * 0.7 = 8.9, matching the reported 9 almost
+## exactly. Using the same ratio here keeps this test measuring the thing the
+## critic actually measured, not a more forgiving proxy that would pass a
+## font size the critic already rejected.
+const CAP_HEIGHT_RATIO := 0.7
+const MIN_PHYSICAL_TEXT_PX := 16.0
+
 var _failures: Array[String] = []
 var _world: Node3D = null
 var _hud: CanvasLayer = null
@@ -76,6 +90,10 @@ func _run() -> void:
 	_check_legend_glyph_physical_size()
 	_check_legend_sits_under_hotbar()
 	_check_no_horizontal_overflow()
+	_check_legend_label_physical_size()
+	_check_micro_label_physical_size()
+	_check_hotbar_count_physical_size()
+	_check_hotbar_glyph_physical_size()
 
 	root.size = original_size
 	_report()
@@ -146,6 +164,55 @@ func _check_no_horizontal_overflow() -> void:
 		_fail("exploration legend runs off the left edge at %dx%d (x=%.1f)" % [
 			HANDHELD_SIZE.x, HANDHELD_SIZE.y, rect.position.x,
 		])
+
+
+func _check_cap_height(authored_font_size: int, what: String) -> void:
+	var scale := _content_scale()
+	var physical_px := float(authored_font_size) * scale * CAP_HEIGHT_RATIO
+	if physical_px < MIN_PHYSICAL_TEXT_PX:
+		_fail(
+			"%s measures ~%.1f physical cap-height px at %dx%d (authored %d px x scale %.3f x cap-ratio %.2f) -- below the %.0f px arm's-length floor" % [
+				what, physical_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y,
+				authored_font_size, scale, CAP_HEIGHT_RATIO, MIN_PHYSICAL_TEXT_PX,
+			]
+		)
+
+
+func _check_legend_label_physical_size() -> void:
+	_check_cap_height(PLAYGROUND_HUD.LEGEND_FONT_SIZE, "exploration legend label text")
+
+
+## The other 9px offenders from the same measurement pass: "ACTIVE COMPANION",
+## "Lv 1"/"GROUND", the companion's own HP value -- every one of them now
+## draws at `HUD_READABLE_FONT_SIZE` instead of the shared `UITokens.FONT_TINY`
+## (deliberately not raised globally -- see that constant's own header).
+func _check_micro_label_physical_size() -> void:
+	_check_cap_height(PLAYGROUND_HUD.HUD_READABLE_FONT_SIZE, "creature-block micro-label text")
+
+
+## The worst offender in the whole HUD by the critic's own numbers: the
+## hotbar item count ("x12") measured 7px, unreadable without 4x
+## magnification, and it was ALSO the one number a blind critic said was
+## drawn in a colour (the item's own tile tint) that could fall below its
+## contrast threshold entirely -- see `_update_hotbar()`'s own comment on
+## `text_colour`.
+func _check_hotbar_count_physical_size() -> void:
+	_check_cap_height(PLAYGROUND_HUD.HOTBAR_COUNT_FONT_SIZE, "hotbar item count text")
+
+
+## The hotbar's own glyphs used to override `icon()`'s documented 36px floor
+## down to 28 -- the one call on this HUD that did, and the thing a blind
+## critic read as visibly more pixelated than every other glyph on screen.
+func _check_hotbar_glyph_physical_size() -> void:
+	var scale := _content_scale()
+	var physical_px := float(PLAYGROUND_HUD.HOTBAR_GLYPH_PX) * scale
+	if physical_px < MIN_PHYSICAL_GLYPH_PX:
+		_fail(
+			"hotbar slot glyphs measure %.1f physical px at %dx%d (authored %d px x scale %.3f) -- below the %.0f px legibility floor" % [
+				physical_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y,
+				PLAYGROUND_HUD.HOTBAR_GLYPH_PX, scale, MIN_PHYSICAL_GLYPH_PX,
+			]
+		)
 
 
 func _fail(message: String) -> void:
