@@ -18,6 +18,19 @@ extends "res://tests/test_case.gd"
 ## and asserts the merge reproduces them entry for entry, index for index,
 ## value for value.
 ##
+## GATEC-CURVE, the one amendment to that rule, stated here so the next person
+## to hit it does not have to guess. What these fixtures exist to freeze is
+## IDENTITY -- `order`, array index, `centre`, `position`, `count`, and every
+## other input a seed is derived from -- because those are what a neighbouring
+## band's edit can silently move. A deliberate BALANCE retune of an entry's own
+## `level` by whoever owns the chapter curve moves nothing and rerolls nothing,
+## and the alternative reading (no authored number may ever be tuned again after
+## the split) would freeze the game's balance permanently, which nobody
+## intended. `captain_field` and `captain_ridge`'s team levels were updated here
+## for exactly that reason; see docs/MEADOWS_PROGRESSION_CURVE.md section 4 for
+## why they moved. Nothing else in the fixtures has been touched, and the
+## identity keys above are still pinned forever.
+##
 ## The fixtures are deliberately frozen copies and NOT a golden file to be
 ## regenerated. Every assertion below is scoped to the first `baseline.size()`
 ## entries, so content authored after the split appends past them and this stays
