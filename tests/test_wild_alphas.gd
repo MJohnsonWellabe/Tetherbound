@@ -127,3 +127,46 @@ func test_the_director_applies_the_bonus_additively() -> void:
 	assert_true(body.contains("set_meta"),
 		"_make_alpha does not mark the body as an alpha, so nothing downstream "
 		+ "(a log line, a test, a future presentation pass) can tell it apart")
+	# The bug this test did not catch the first time.
+	#
+	# The original `_make_alpha` set `wild.scale`, which grows only the ART.
+	# `creature_body.gd` builds the capsule, the collider, the hit cone's reach
+	# and `body_radius()` -- which feeds the catch accuracy bonus -- from
+	# `_height` and `_radius`, and node scale touches none of them. A 1.35x alpha
+	# would have LOOKED 35% bigger while resolving throws against an ordinary
+	# body, so a throw that visually struck it would come back an edge hit or a
+	# miss. That is `reticle_outside_body`.
+	#
+	# Every other check in this file reads data or source text, which is why
+	# none of them saw it. This one names the mechanism.
+	assert_false(body.contains("wild.scale"),
+		"_make_alpha sets node scale, which grows the art and leaves body_radius() "
+		+ "and centre() reporting the ordinary body; throws that visually hit an "
+		+ "alpha would resolve as misses")
+	assert_true(body.contains("apply_size_multiplier"),
+		"_make_alpha does not grow the GAMEPLAY size; an alpha has to fight as "
+		+ "big as it looks")
+
+
+## The multiplier has to move the number the catch maths actually reads.
+func test_growing_a_body_grows_the_radius_the_catch_maths_uses() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/creatures/creature_body.gd")
+	assert_ne(source, "", "creature_body.gd could not be read")
+	var start := source.find("func apply_size_multiplier(")
+	assert_true(start >= 0,
+		"creature_body.gd has no apply_size_multiplier; the alpha tier has no way "
+		+ "to grow a creature without desyncing its art from its hitbox")
+	if start < 0:
+		return
+	var end := source.find("\nfunc ", start + 1)
+	var body := source.substr(start, (end - start) if end > start else -1)
+	for field: String in ["_height", "_radius"]:
+		assert_true(body.contains("%s *=" % field),
+			"apply_size_multiplier does not scale %s, which drives the capsule, "
+			% field + "the collider and the hit cone")
+	assert_true(body.contains("_collision.shape"),
+		"apply_size_multiplier does not rebuild the collider, so the alpha would "
+		+ "fight inside an ordinary creature's hitbox")
+	assert_true(body.contains("_build_model") or body.contains("_build_capsule"),
+		"apply_size_multiplier does not rebuild the visible body, so the alpha "
+		+ "would be bigger only in the numbers")

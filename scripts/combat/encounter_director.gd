@@ -370,9 +370,14 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 		var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
 			centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
 		instance.call("set_level", int(instance.get("level")) + bonus, cfg)
+	# Gameplay size, not node scale. `creature_body.gd::apply_size_multiplier()`
+	# grows `_height` and `_radius` and rebuilds the capsule, collider and art
+	# from them -- setting `wild.scale` would grow only the art, leaving
+	# `body_radius()` and `centre()` reporting the ordinary body, so throws that
+	# visually struck an alpha would resolve as edge hits or misses.
 	var scale := float(alpha.get("scale", 1.0))
-	if scale != 1.0:
-		wild.scale = Vector3.ONE * scale
+	if scale != 1.0 and wild.has_method("apply_size_multiplier"):
+		wild.call("apply_size_multiplier", scale)
 	# Named so a log line, a smoke test or a remote tree can pick it out of its
 	# own cluster -- the same reason the loop above indexes its ordinary names.
 	wild.name = "Alpha_%s" % species
