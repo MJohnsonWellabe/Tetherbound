@@ -60,30 +60,51 @@ const BOARD_THICKNESS := 0.07
 const BOARD_CENTRE_HEIGHT := 1.5
 const BOARD_SPACING := 0.9
 
-const LABEL_FONT_SIZE := 40
-## Metres per font pixel, the CEILING rather than the value used. The board is
-## redrawn as the bracket fills in and the longest line grows with it, so
-## `pixel_size_for()` refits the block every redraw and this only caps how
-## large the text is allowed to get on a sparse board. Without the refit an
-## edit to tournament.json's `bracket` -- a longer opponent name, a fifth
-## simulated bout -- would silently push painted text off the panel, which is
-## the exact defect signpost.gd already paid for once with its arm labels.
-const LABEL_PIXEL_SIZE := 0.0034
-## Label3D stacks lines at roughly 1.2x the font size. Used to fit the block
-## vertically as well as horizontally, so a bracket that grows a round does not
-## overrun the panel's top and bottom edges instead of its sides.
-const LABEL_LINE_SPACING := 1.35
-## Mean glyph advance as a fraction of the font size, for the same estimate.
-## 0.62 rather than signpost.gd's 0.55: the widest line on this board is the
-## all-caps title, and uppercase Latin runs wider than the mixed-case text that
-## figure was picked for. The first render clipped "LOWER MEADOWS TOURNAMENT"
-## off both ends of the panel with 0.55.
+## The painted bracket. Sizes are in metres unless the name says otherwise.
+##
+## The board draws a REAL BRACKET -- four columns of slots joined by
+## connectors -- rather than a paragraph of "A vs B -- winner" lines. Two
+## owner rulings sit behind that, given on the first render of this board:
+## "the tournament bracket should be a bracket", and "it should only fill in
+## after events not be filled in from the start". The first is this layout;
+## the second is `bracket_state()`, which refuses to name anybody in a round
+## whose feeding bouts have not been decided yet.
+const NAME_FONT_SIZE := 40
+## Metres per font pixel for a slot's name. Sized so the longest authored name
+## fits inside one slot cell; `fitted_pixel_size()` is the check, and a test
+## pins it against the real bracket so a longer name in tournament.json cannot
+## silently overrun its cell.
+const NAME_PIXEL_SIZE := 0.0022
+## Mean glyph advance as a fraction of the font size. Same estimate
+## `signpost.gd` uses, at the 0.62 the all-caps title needed.
 const LABEL_GLYPH_ADVANCE := 0.62
-## Fraction of the panel the text block is allowed to occupy.
-const LABEL_MARGIN := 0.88
+## The four columns' centres, as offsets from the panel's own centre: the
+## draw, the quarter-final winners, the semi-final winners, the champion.
+const COLUMN_X: PackedFloat32Array = [-0.92, -0.30, 0.28, 0.86]
+## One slot cell. Names are centred in it and connectors start at its edge.
+const SLOT_WIDTH := 0.52
+## The eight draw slots, top to bottom, as offsets from the panel's centre.
+const ROW_TOP := 0.34
+const ROW_STEP := 0.145
+## The title sits above the draw.
+const TITLE_Y := 0.60
+const TITLE_FONT_SIZE := 40
+const TITLE_PIXEL_SIZE := 0.0026
+## Connector lines and the empty-slot rules waiting to be filled in.
+const LINE_THICKNESS := 0.012
+const LINE_DEPTH := 0.006
+## An undecided slot is drawn as an empty ruled line rather than left blank,
+## so a bracket with nothing decided still READS as a bracket with places
+## waiting in it -- which is the whole of what the owner asked for.
+const EMPTY_RULE_WIDTH := 0.34
+## The one ink colour every painted thing on this board shares.
+const INK := Color("#241a10")
 
 var _board: Node3D = null
-var _text: Label3D = null
+## One Label3D per bracket slot, by column: 8 in the draw, then 4, 2 and 1.
+var _slot_labels: Array = []
+## The empty rules under the slots nobody has earned yet, hidden as they fill.
+var _slot_rules: Array[MeshInstance3D] = []
 var _prompt: Node = null
 var _built := false
 
@@ -173,37 +194,49 @@ func _build_board() -> void:
 	body.add_child(shape)
 	_board.add_child(body)
 
-	# The painted face. A single Label3D rather than one per line: the bracket
-	# is one block of text with its own internal alignment, and eleven separate
-	# nodes would each need their own vertical placement kept in step with the
-	# panel's height.
-	_text = Label3D.new()
-	_text.name = "Bracket"
-	_text.font_size = LABEL_FONT_SIZE
-	_text.pixel_size = LABEL_PIXEL_SIZE
-	_text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-	_text.no_depth_test = false
-	# CENTRED, not left-aligned, and the first render is why. A Label3D with
-	# HORIZONTAL_ALIGNMENT_LEFT puts its ORIGIN at the left edge of the text
-	# block rather than at its centre, so the whole bracket sat starting at the
-	# middle of the panel with "LOWER MEADOWS TOURNAMENT" and two of the
-	# results hanging off the right-hand edge into open air. Centring is the
-	# fix that needs no glyph measurement: the block is centred on the panel it
-	# is painted on, whatever the longest line turns out to be.
-	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_text.modulate = Color("#241a10")
-	# Same reason signpost.gd carries one: dark ink loses its edges wherever
-	# the board crosses a shadow, and the panel is stood in a field with trees
-	# behind it.
-	# Small. At 8 the outline haloed every glyph and, with the pale panel
-	# behind it, washed the whole board out to a flat white rectangle in the
-	# walk-up frame. 3 is enough to hold the ink's edges without becoming the
-	# thing you see from twenty metres.
-	_text.outline_size = 3
-	_text.outline_modulate = Color("#f4ecd8")
-	# A hair proud of the panel's front face so the two never z-fight.
-	_text.position = Vector3(0.0, BOARD_CENTRE_HEIGHT, BOARD_THICKNESS * 0.5 + 0.008)
-	_board.add_child(_text)
+	# The painted face: a real bracket. One Label3D per SLOT plus the
+	# connectors that join them, rather than one Label3D holding a paragraph.
+	#
+	# The paragraph is what the owner rejected on sight -- "the tournament
+	# bracket should be a bracket" -- and it could not have been anything else:
+	# a single centred text block in a proportional font cannot hold columns in
+	# line, and this project ships no monospace face to fall back on. Slots
+	# placed in metres do not need one.
+	var title := Label3D.new()
+	title.name = "Title"
+	title.font_size = TITLE_FONT_SIZE
+	title.pixel_size = TITLE_PIXEL_SIZE
+	title.text = "LOWER MEADOWS TOURNAMENT"
+	_paint(title, Vector3(0.0, BOARD_CENTRE_HEIGHT + TITLE_Y, 0.0))
+	_board.add_child(title)
+
+	_slot_labels.clear()
+	var rows := _row_layout()
+	for depth in rows.size():
+		var column: Array[Label3D] = []
+		for i in (rows[depth] as PackedFloat32Array).size():
+			var slot := Label3D.new()
+			slot.name = "Slot_%d_%d" % [depth, i]
+			slot.font_size = NAME_FONT_SIZE
+			slot.pixel_size = NAME_PIXEL_SIZE
+			_paint(slot, Vector3(
+				COLUMN_X[depth], BOARD_CENTRE_HEIGHT + (rows[depth] as PackedFloat32Array)[i], 0.0))
+			_board.add_child(slot)
+			column.append(slot)
+			# The rule a name is written on. Drawn for every slot the player
+			# has not earned yet and hidden the moment one is, so an empty
+			# bracket still reads as a bracket with places waiting in it
+			# instead of as a mostly blank board.
+			if depth > 0:
+				var rule := _line(
+					Vector2(COLUMN_X[depth], (rows[depth] as PackedFloat32Array)[i] - 0.055),
+					EMPTY_RULE_WIDTH, LINE_THICKNESS)
+				rule.name = "Rule_%d_%d" % [depth, i]
+				_board.add_child(rule)
+				_slot_rules.append(rule)
+		_slot_labels.append(column)
+
+	_build_connectors(rows)
 
 	var prompt := INTERACTABLE.new()
 	prompt.name = "Interactable"
@@ -236,36 +269,112 @@ func _refresh(force: bool) -> void:
 	_party_revision = party_revision
 
 	_write_entry_flags(party, progression)
-	if _text != null:
-		var lines := board_lines(progression)
-		_text.text = "\n".join(lines)
-		_text.pixel_size = pixel_size_for(lines)
-		_fit_to_panel()
+	_repaint_bracket(progression)
 	if _prompt != null:
 		_prompt.set("label", status_line(progression))
 
 
-## Shrink the painted block until its REAL bounds fit the panel.
+## Write the current bracket onto the slots.
 ##
-## `pixel_size_for()` is an estimate from a glyph-advance constant, and an
-## estimate is exactly what put "LOWER MEADOWS TOURNAMENT" off both ends of the
-## board and "You vs Oskar" off the bottom edge in the first render: the font's
-## actual advances and line height are not the constants, and no constant will
-## be right for every string a future bracket can produce. This asks the node
-## that already laid the text out how big it came out and scales to suit --
-## a measurement, not a better guess. Only ever shrinks: the estimate is the
-## ceiling and a block that already fits is left alone.
-func _fit_to_panel() -> void:
-	if _text == null:
+## Every slot's text comes from `bracket_state()`, so the board can only ever
+## show what has actually been decided -- the owner's second ruling, and the
+## one that is a RULE rather than a layout: "it should only fill in after
+## events, not be filled in from the start."
+func _repaint_bracket(progression: RefCounted) -> void:
+	if _slot_labels.is_empty():
 		return
-	var bounds := _text.get_aabb()
-	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
-		return
-	var shrink := minf(
-		(BOARD_WIDTH * LABEL_MARGIN) / bounds.size.x,
-		(BOARD_HEIGHT * LABEL_MARGIN) / bounds.size.y)
-	if shrink < 1.0:
-		_text.pixel_size *= shrink
+	var state := bracket_state(progression)
+	var fitted := fitted_pixel_size(progression)
+	var rule := 0
+	for depth in _slot_labels.size():
+		if depth >= state.size():
+			continue
+		var column: Array = state[depth]
+		var labels: Array[Label3D] = _slot_labels[depth]
+		for i in labels.size():
+			if i >= column.size():
+				continue
+			var name := str((column[i] as Dictionary).get("name", ""))
+			labels[i].text = name
+			labels[i].pixel_size = fitted
+			if depth > 0 and rule < _slot_rules.size():
+				# The rule is the empty place; a filled one does not need it.
+				_slot_rules[rule].visible = name.is_empty()
+				rule += 1
+
+
+## Where every slot sits vertically, per column: eight places in the draw,
+## then four, two and one, each centred between the two it is fed by. Returned
+## rather than stored so the connectors and the labels cannot disagree about
+## where a row is.
+func _row_layout() -> Array:
+	var rows: Array = []
+	var draw := PackedFloat32Array()
+	for i in 8:
+		draw.append(ROW_TOP - float(i) * ROW_STEP)
+	rows.append(draw)
+	for depth in 3:
+		var previous: PackedFloat32Array = rows[depth]
+		var column := PackedFloat32Array()
+		for i in (previous.size() / 2):
+			column.append((previous[i * 2] + previous[i * 2 + 1]) * 0.5)
+		rows.append(column)
+	return rows
+
+
+## The lines that make it a bracket rather than four lists side by side: for
+## every pair, a stub out of each feeding slot, a vertical joining the two,
+## and a stub into the slot they feed.
+func _build_connectors(rows: Array) -> void:
+	for depth in 3:
+		var previous: PackedFloat32Array = rows[depth]
+		var next: PackedFloat32Array = rows[depth + 1]
+		var edge := COLUMN_X[depth] + SLOT_WIDTH * 0.5
+		var spine := (COLUMN_X[depth] + COLUMN_X[depth + 1]) * 0.5
+		for i in next.size():
+			var top := previous[i * 2]
+			var bottom := previous[i * 2 + 1]
+			for y: float in [top, bottom]:
+				_board.add_child(_line(
+					Vector2((edge + spine) * 0.5, y - 0.03), spine - edge, LINE_THICKNESS))
+			_board.add_child(_line(
+				Vector2(spine, (top + bottom) * 0.5 - 0.03),
+				LINE_THICKNESS, absf(top - bottom)))
+			_board.add_child(_line(
+				Vector2((spine + COLUMN_X[depth + 1] - SLOT_WIDTH * 0.5) * 0.5, next[i] - 0.03),
+				COLUMN_X[depth + 1] - SLOT_WIDTH * 0.5 - spine, LINE_THICKNESS))
+
+
+## One painted line on the board's face: a thin dark box a hair proud of the
+## panel, the same ink the names are written in.
+func _line(at: Vector2, width: float, height: float) -> MeshInstance3D:
+	var bar := MeshInstance3D.new()
+	bar.name = "Line"
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(maxf(width, LINE_THICKNESS), maxf(height, LINE_THICKNESS), LINE_DEPTH)
+	var ink := StandardMaterial3D.new()
+	ink.albedo_color = INK
+	ink.roughness = 0.95
+	mesh.material = ink
+	bar.mesh = mesh
+	bar.position = Vector3(at.x, BOARD_CENTRE_HEIGHT + at.y, BOARD_THICKNESS * 0.5 + LINE_DEPTH * 0.5)
+	return bar
+
+
+## The shared setup every painted label on this board wants: dark ink, no
+## billboarding (it is paint on a physical panel, not a floating tag), and a
+## hair of clearance off the panel face so the two never z-fight.
+func _paint(label: Label3D, at: Vector3) -> void:
+	label.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	label.no_depth_test = false
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.modulate = INK
+	# Small. At 8 the outline haloed every glyph and, with the pale panel
+	# behind it, washed the whole board out to a flat white rectangle in the
+	# walk-up frame.
+	label.outline_size = 3
+	label.outline_modulate = Color("#f4ecd8")
+	label.position = Vector3(at.x, at.y, at.z + BOARD_THICKNESS * 0.5 + 0.008)
 
 
 ## The two contract flags, written from data/config/tournament.json's own
@@ -353,59 +462,118 @@ const PARTY_CAP := 5
 
 ## --- the bracket text ---------------------------------------------------------
 
-## Every line painted on the board right now, given what has happened.
+## The bracket as it stands right now: four columns of slots, each either
+## NAMED or still waiting.
 ##
-## Pure and static apart from the flag store it is handed, for the same reason
-## `village_npcs.greeting_for()` is: the board's content is the interesting
-## part and a test should be able to read it without standing a panel on
-## Terrain3D. A null store (a capture tool, a bare test scene) reads as a fresh
-## save -- the draw with nothing resolved, which is the honest answer.
-static func board_lines(progression: RefCounted) -> PackedStringArray:
-	var out := PackedStringArray()
-	out.append("LOWER MEADOWS TOURNAMENT")
+## Returns `[[slot, ...], ...]` -- one array per column, 8/4/2/1 long -- where
+## a slot is `{"name": String, "decided": bool}`. An undecided slot carries an
+## empty name, and that is the load-bearing part: the owner's ruling is that
+## the board "should only fill in after events, not be filled in from the
+## start", and the previous board printed "You vs Tam" and "You vs Oskar" from
+## the moment the draw opened -- pairings that only exist if you already know
+## who wins the quarter-finals. A bracket that prints the future is not a
+## bracket, it is a spoiler.
+##
+## The tree needs no new data. `bracket`'s slot order IS the draw: slots pair
+## (1,2), (3,4), (5,6), (7,8), their winners pair up in turn, and the config's
+## own `_comment_pairings` describes exactly that shape. So the four
+## quarter-final bouts are the four pairs of the first column, and every later
+## bout is a pair of winners.
+##
+## Pure and static, like `status_line()` and for the same reason: the board's
+## CONTENT is the interesting half and a test should be able to read it
+## without standing a panel up in a world.
+static func bracket_state(progression: RefCounted) -> Array:
 	var slots := bracket()
-	var by_round: Dictionary = {}
-	for entry: Variant in rounds():
-		var spec := entry as Dictionary
-		by_round[str(spec.get("id", ""))] = spec
+	var columns: Array = []
 
-	# Quarter-finals: the player's own bout is slot 1 vs slot 2, then the three
-	# simulated pairings in the order the config lists them.
-	#
-	# No blank spacer lines between the sections. Label3D collapses an empty
-	# line to zero height, so the three that used to be here bought no visual
-	# separation at all and only made `pixel_size_for()` fit the block for
-	# fourteen lines when it draws eleven -- shrinking the text for whitespace
-	# that never appeared.
-	out.append("Quarter-finals")
-	var quarter := by_round.get("quarter", {}) as Dictionary
-	var semi := by_round.get("semi", {}) as Dictionary
-	var final_round := by_round.get("final", {}) as Dictionary
-	out.append(_bout_line(
-		_slot_name(slots, 0), _opponent_of(quarter),
-		_round_result(quarter, progression)))
-	for sim: Dictionary in simulated_for("quarter"):
-		out.append(_bout_line(str(sim.get("a", "")), str(sim.get("b", "")),
-			_simulated_result(sim, progression)))
+	# Column 0: the draw. Known the moment the draw is posted -- who is IN the
+	# tournament is not a result, and a bracket board with no names on it at
+	# all would tell a player nothing about what they have entered.
+	var draw: Array = []
+	for i in 8:
+		draw.append({"name": _slot_name(slots, i), "decided": true})
+	columns.append(draw)
 
-	out.append("Semi-finals")
-	out.append(_bout_line(_slot_name(slots, 0), _opponent_of(semi),
-		_round_result(semi, progression)))
-	for sim: Dictionary in simulated_for("semi"):
-		out.append(_bout_line(str(sim.get("a", "")), str(sim.get("b", "")),
-			_simulated_result(sim, progression)))
-
-	out.append("Final")
-	out.append(_bout_line(_slot_name(slots, 0), _opponent_of(final_round),
-		_round_result(final_round, progression)))
-	return out
+	# Columns 1-3: winners only, and only once their own bout is decided.
+	var round_ids: PackedStringArray = ["quarter", "semi", "final"]
+	var previous := draw
+	for depth in 3:
+		var column: Array = []
+		var bouts := previous.size() / 2
+		for i in bouts:
+			var a := previous[i * 2] as Dictionary
+			var b := previous[i * 2 + 1] as Dictionary
+			column.append(_bout_winner(
+				str(a.get("name", "")), str(b.get("name", "")),
+				str(round_ids[depth]), progression))
+		columns.append(column)
+		previous = column
+	return columns
 
 
-## One painted row: "You vs Mira  --  You". The result column is a row of
-## dots until the bout has been decided, which is what makes a half-filled
-## board read as a bracket in progress rather than as a list of names.
-static func _bout_line(a: String, b: String, result: String) -> String:
-	return "%s vs %s  --  %s" % [a, b, result if result != "" else "...."]
+## Who won the bout between `a` and `b`, or an undecided slot.
+##
+## Three ways a bout can stand:
+##
+## * one of its two places is still empty -- the bout does not exist yet, so
+##   it cannot have a winner. This is what stops the final from naming Oskar
+##   before the semi-finals have been fought;
+## * the player is in it -- it is one of the three FOUGHT rounds, decided by
+##   that round's own `won_flag`, which is the trainer's `defeat_flag`;
+## * neither is the player -- it is one of the simulated bouts, decided by its
+##   own `reveal_after` flag, which is deliberately the flag of the player's
+##   preceding match so the far half of the draw resolves while they fight.
+static func _bout_winner(a: String, b: String, round_id: String,
+		progression: RefCounted) -> Dictionary:
+	var undecided := {"name": "", "decided": false}
+	if a.is_empty() or b.is_empty():
+		return undecided
+
+	var player := player_slot_name()
+	if a == player or b == player:
+		var spec := round_spec(round_id)
+		var flag := str(spec.get("won_flag", ""))
+		if flag.is_empty() or progression == null or not bool(progression.call("has", flag)):
+			return undecided
+		return {"name": player, "decided": true}
+
+	for entry: Dictionary in simulated_for(round_id):
+		var sim_a := str(entry.get("a", ""))
+		var sim_b := str(entry.get("b", ""))
+		if not ((sim_a == a and sim_b == b) or (sim_a == b and sim_b == a)):
+			continue
+		var reveal := str(entry.get("reveal_after", ""))
+		if reveal.is_empty() or progression == null or not bool(progression.call("has", reveal)):
+			return undecided
+		return {"name": str(entry.get("winner", "")), "decided": true}
+	return undecided
+
+
+## The name the player's own slot carries on the board. Read from the
+## bracket's `player: true` entry rather than written down here, so renaming
+## the slot is a data edit.
+static func player_slot_name() -> String:
+	for entry: Variant in bracket():
+		var slot := entry as Dictionary
+		if bool(slot.get("player", false)):
+			return str(slot.get("name", "You"))
+	return "You"
+
+
+## Metres per font pixel that keeps the longest name the bracket can currently
+## show inside one slot cell. Static and pure so a test can assert the fit
+## without a panel in the world -- text that does not fit is a defect nobody
+## notices in a headless run and everybody notices in a frame.
+static func fitted_pixel_size(progression: RefCounted) -> float:
+	var longest := 0
+	for column: Variant in bracket_state(progression):
+		for entry: Variant in (column as Array):
+			longest = maxi(longest, str((entry as Dictionary).get("name", "")).length())
+	if longest <= 0:
+		return NAME_PIXEL_SIZE
+	var widest := float(longest) * LABEL_GLYPH_ADVANCE * float(NAME_FONT_SIZE)
+	return minf(NAME_PIXEL_SIZE, SLOT_WIDTH / widest)
 
 
 static func _slot_name(slots: Array, index: int) -> String:
@@ -416,25 +584,6 @@ static func _slot_name(slots: Array, index: int) -> String:
 
 static func _opponent_of(round_spec: Dictionary) -> String:
 	return str(round_spec.get("opponent", "?"))
-
-
-## The player's own bout. Won when the round's flag is set; otherwise
-## undecided. A LOSS is deliberately not a state the board can show: the round
-## stays open, the marshal offers it again, and a board that said "You -- lost"
-## while the fight was still available would be lying about the rule the owner
-## locked ("you can lose and retry after healing your creatures").
-static func _round_result(round_spec: Dictionary, progression: RefCounted) -> String:
-	var flag := str(round_spec.get("won_flag", ""))
-	if flag == "" or progression == null or not bool(progression.call("has", flag)):
-		return ""
-	return "You"
-
-
-static func _simulated_result(sim: Dictionary, progression: RefCounted) -> String:
-	var flag := str(sim.get("reveal_after", ""))
-	if flag == "" or progression == null or not bool(progression.call("has", flag)):
-		return ""
-	return str(sim.get("winner", ""))
 
 
 ## The one line the board says out loud when the player is standing at it --
@@ -453,21 +602,6 @@ static func status_line(progression: RefCounted) -> String:
 			return "Tournament board: %s, you vs %s" % [
 				str(spec.get("label", "Next")), str(spec.get("opponent", "?"))]
 	return "Tournament board"
-
-
-## Metres per font pixel that keeps this whole block inside the panel, fitted
-## on whichever of width or height binds first. Static and pure so a test can
-## assert the fit without a panel in the world -- text that does not fit is a
-## defect nobody notices in a headless run and everybody notices in a frame.
-static func pixel_size_for(lines: PackedStringArray) -> float:
-	var longest := 0
-	for line: String in lines:
-		longest = maxi(longest, line.length())
-	var glyphs := maxf(1.0, float(longest) * LABEL_GLYPH_ADVANCE * float(LABEL_FONT_SIZE))
-	var by_width := (BOARD_WIDTH * LABEL_MARGIN) / glyphs
-	var stack := maxf(1.0, float(lines.size()) * LABEL_LINE_SPACING * float(LABEL_FONT_SIZE))
-	var by_height := (BOARD_HEIGHT * LABEL_MARGIN) / stack
-	return minf(LABEL_PIXEL_SIZE, minf(by_width, by_height))
 
 
 ## --- the table ----------------------------------------------------------------

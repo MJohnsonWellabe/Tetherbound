@@ -411,33 +411,82 @@ func test_the_bridge_key_moved_off_the_tournaments_finalist() -> void:
 
 ## --- the board ----------------------------------------------------------------
 
-## A fresh board shows the whole draw and resolves nothing. Eight names, no
-## winners: the directive's "the bracket reads as real" starts here.
-func test_a_fresh_board_names_every_slot_and_resolves_nothing() -> void:
-	var painted := "\n".join(TOURNAMENT.board_lines(progression))
+func test_a_fresh_board_names_the_draw_and_decides_nothing() -> void:
+	var state := TOURNAMENT.bracket_state(progression)
+	assert_eq(state.size(), 4, "a bracket of eight has four columns: 8, 4, 2 and 1")
+	var draw: Array = state[0]
+	assert_eq(draw.size(), 8, "the draw should hold all eight slots")
 	for entry: Variant in TOURNAMENT.bracket():
 		var name := str((entry as Dictionary).get("name", ""))
-		assert_true(painted.contains(name), "the board never names bracket slot '%s'" % name)
-	assert_true(painted.contains("...."),
-		"a fresh board shows no undecided bouts at all; every result is already filled in")
+		var found := false
+		for slot: Variant in draw:
+			found = found or str((slot as Dictionary).get("name", "")) == name
+		assert_true(found, "the draw never names bracket slot '%s'" % name)
+	for depth in [1, 2, 3]:
+		for slot: Variant in (state[depth] as Array):
+			assert_false(bool((slot as Dictionary).get("decided", false)),
+				"a fresh board has already decided a round-%d bout" % depth)
+			assert_eq(str((slot as Dictionary).get("name", "")), "",
+				"a fresh board already names a round-%d winner" % depth)
+
+
+## THE owner ruling, 2026-08-22, on the first render of this board: "it should
+## only fill in after events not be filled in from the start."
+##
+## The board this replaced printed "You vs Tam" in the semi-finals and "You vs
+## Oskar" in the final from the moment the draw opened -- pairings that only
+## exist if the quarter-finals have already been fought. A slot may not carry
+## a name until BOTH bouts feeding it are decided.
+func test_a_later_round_names_nobody_until_its_feeders_are_decided() -> void:
+	progression.set_flag("tournament_entered")
+	var after_entry := TOURNAMENT.bracket_state(progression)
+	for slot: Variant in (after_entry[1] as Array):
+		assert_eq(str((slot as Dictionary).get("name", "")), "",
+			"entering the draw filled a quarter-final result in before a punch was thrown")
+
+	# The player wins their own quarter. That decides THEIR semi-final place
+	# and, by the simulated results, the other three -- but not the final,
+	# whose feeders are two undecided semi-finals.
+	progression.set_flag("tournament_quarter_won")
+	var after_quarter := TOURNAMENT.bracket_state(progression)
+	for slot: Variant in (after_quarter[1] as Array):
+		assert_true(bool((slot as Dictionary).get("decided", false)),
+			"the quarter-final column should be full once the player has won theirs")
+	for slot: Variant in (after_quarter[2] as Array):
+		assert_eq(str((slot as Dictionary).get("name", "")), "",
+			"a semi-final winner was named before any semi-final was fought")
+	assert_eq(str(((after_quarter[3] as Array)[0] as Dictionary).get("name", "")), "",
+		"the champion was named before the final existed")
+
+	progression.set_flag("tournament_semi_won")
+	var after_semi := TOURNAMENT.bracket_state(progression)
+	assert_eq(str(((after_semi[2] as Array)[0] as Dictionary).get("name", "")),
+		TOURNAMENT.player_slot_name(),
+		"winning the semi-final should put the player through on the board")
+	assert_eq(str(((after_semi[3] as Array)[0] as Dictionary).get("name", "")), "",
+		"the champion was named before the final was fought")
+
+	progression.set_flag("tournament_won")
+	assert_eq(str(((TOURNAMENT.bracket_state(progression)[3] as Array)[0] as Dictionary).get("name", "")),
+		TOURNAMENT.player_slot_name(),
+		"winning the final should crown the player on the board")
 
 
 ## The simulated half fills in BETWEEN the player's own matches, which is the
-## behaviour the directive asks for by name. Before the player's quarter-final
-## the other three quarters are undecided; after it, all three have a winner.
+## behaviour the directive asks for by name.
 func test_the_simulated_quarter_finals_resolve_after_the_players_own() -> void:
-	var before := "\n".join(TOURNAMENT.board_lines(progression))
-	for sim: Dictionary in TOURNAMENT.simulated_for("quarter"):
-		var bout := "%s vs %s  --  %s" % [str(sim.get("a", "")), str(sim.get("b", "")), str(sim.get("winner", ""))]
-		assert_false(before.contains(bout),
-			"the board resolved '%s' before the player had fought a single bout" % bout)
+	for slot: Variant in (TOURNAMENT.bracket_state(progression)[1] as Array):
+		assert_false(bool((slot as Dictionary).get("decided", false)),
+			"the board resolved a quarter-final before the player had fought a single bout")
 
 	progression.set_flag("tournament_quarter_won")
-	var after := "\n".join(TOURNAMENT.board_lines(progression))
+	var winners: Array[String] = []
+	for slot: Variant in (TOURNAMENT.bracket_state(progression)[1] as Array):
+		winners.append(str((slot as Dictionary).get("name", "")))
 	for sim: Dictionary in TOURNAMENT.simulated_for("quarter"):
-		var bout := "%s vs %s  --  %s" % [str(sim.get("a", "")), str(sim.get("b", "")), str(sim.get("winner", ""))]
-		assert_true(after.contains(bout),
-			"the board never resolved '%s' after the player won their own quarter-final" % bout)
+		assert_true(winners.has(str(sim.get("winner", ""))),
+			"the board never put '%s' through after the player won their own quarter-final"
+				% str(sim.get("winner", "")))
 
 
 ## Every simulated bout's `reveal_after` has to be a flag something actually
@@ -468,41 +517,53 @@ func test_each_rounds_win_flag_is_its_trainers_defeat_flag() -> void:
 
 ## A LOSS leaves the bout UNDECIDED on the board, not lost. The round stays
 ## open and the marshal offers it again, so a board that closed the bout would
-## contradict the rule the owner locked. Checked on the player's own row rather
-## than by grepping for the word "lost", which no board could ever print today
-## and which would therefore be an assertion that cannot fail.
+## contradict the rule the owner locked.
 func test_a_lost_bout_stays_undecided_on_the_board() -> void:
 	progression.set_flag("tournament_entered")
-	var quarter := TOURNAMENT.round_spec("quarter")
-	var row := "You vs %s  --  ...." % str(quarter.get("opponent", ""))
-	assert_true("\n".join(TOURNAMENT.board_lines(progression)).contains(row),
-		"after entering and losing, the player's own bout should still read undecided; the board says:\n%s"
-			% "\n".join(TOURNAMENT.board_lines(progression)))
+	var players_place := (TOURNAMENT.bracket_state(progression)[1] as Array)[0] as Dictionary
+	assert_false(bool(players_place.get("decided", false)),
+		"after entering and losing, the player's own bout should still read undecided")
 
-	progression.set_flag(str(quarter.get("won_flag", "")))
-	assert_false("\n".join(TOURNAMENT.board_lines(progression)).contains(row),
-		"winning the bout did not change the board; the undecided row is still painted")
+	progression.set_flag(str(TOURNAMENT.round_spec("quarter").get("won_flag", "")))
+	players_place = (TOURNAMENT.bracket_state(progression)[1] as Array)[0] as Dictionary
+	assert_eq(str(players_place.get("name", "")), TOURNAMENT.player_slot_name(),
+		"winning the bout did not put the player through on the board")
 
 
-## The painted block has to fit the panel it is painted on, at every stage of
-## the bracket. A fitted size that came out at or below zero would render
-## nothing at all, and a size above the ceiling would overrun the board.
-func test_the_painted_block_fits_the_board_at_every_stage() -> void:
-	var stages: Array[String] = ["", "tournament_quarter_won", "tournament_semi_won", "tournament_won"]
+## Every name the bracket can show has to fit the slot cell it is painted in,
+## at every stage. A name that overruns its cell is a defect nobody notices in
+## a headless run and everybody notices in a frame.
+func test_every_painted_name_fits_its_slot_at_every_stage() -> void:
+	var stages: Array[String] = ["", "tournament_entered", "tournament_quarter_won",
+		"tournament_semi_won", "tournament_won"]
 	for flag: String in stages:
 		if flag != "":
 			progression.set_flag(flag)
-		var lines := TOURNAMENT.board_lines(progression)
-		var fitted := TOURNAMENT.pixel_size_for(lines)
+		var fitted := TOURNAMENT.fitted_pixel_size(progression)
 		assert_true(fitted > 0.0, "the bracket fitted to a pixel size of %f; nothing would be painted" % fitted)
-		assert_true(fitted <= TOURNAMENT.LABEL_PIXEL_SIZE,
-			"the bracket fitted above its own ceiling and would overrun the panel")
-		var longest := 0
-		for line: String in lines:
-			longest = maxi(longest, line.length())
-		var width := float(longest) * TOURNAMENT.LABEL_GLYPH_ADVANCE * float(TOURNAMENT.LABEL_FONT_SIZE) * fitted
-		assert_true(width <= TOURNAMENT.BOARD_WIDTH,
-			"the widest bracket line is %.2fm wide on a %.2fm board" % [width, TOURNAMENT.BOARD_WIDTH])
+		assert_true(fitted <= TOURNAMENT.NAME_PIXEL_SIZE,
+			"the bracket fitted above its own ceiling and would overrun the slot")
+		for column: Variant in TOURNAMENT.bracket_state(progression):
+			for entry: Variant in (column as Array):
+				var name := str((entry as Dictionary).get("name", ""))
+				var width := float(name.length()) * TOURNAMENT.LABEL_GLYPH_ADVANCE \
+					* float(TOURNAMENT.NAME_FONT_SIZE) * fitted
+				assert_true(width <= TOURNAMENT.SLOT_WIDTH,
+					"'%s' is %.2fm wide in a %.2fm slot" % [name, width, TOURNAMENT.SLOT_WIDTH])
+
+
+## The four columns must not overlap each other or hang off the panel.
+func test_the_columns_fit_across_the_panel() -> void:
+	var half := TOURNAMENT.BOARD_WIDTH * 0.5
+	var previous := -half
+	for x: float in TOURNAMENT.COLUMN_X:
+		var left := x - TOURNAMENT.SLOT_WIDTH * 0.5
+		var right := x + TOURNAMENT.SLOT_WIDTH * 0.5
+		assert_true(left >= previous,
+			"a bracket column starting at %.2fm overlaps the one before it" % left)
+		assert_true(right <= half,
+			"a bracket column reaching %.2fm hangs off a %.2fm board" % [right, TOURNAMENT.BOARD_WIDTH])
+		previous = right
 
 
 ## The one line the board says out loud tracks the bracket. It is the only
