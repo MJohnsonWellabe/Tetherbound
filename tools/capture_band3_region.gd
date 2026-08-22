@@ -292,6 +292,25 @@ func _run() -> void:
 	world.add_child(camera)
 	camera.make_current()
 
+	# THE ONE THAT MATTERS. `playground_world.gd` hands Terrain3D the PLAYER's
+	# camera (`_terrain.set_camera(_camera)`, line 225) so it can decide which
+	# regions to keep resident and where to build collision. Every capture tool
+	# in this repo parks the player out of frame and renders from a camera of
+	# its own -- which means Terrain3D has been keeping detail and collision
+	# resident around a point up to a kilometre from the shot, and the frames
+	# are of whatever coarse LOD happened to reach the viewpoint.
+	#
+	# Measured: with the terrain still following the parked player, 16 of this
+	# tool's 18 ground raycasts hit NOTHING at all -- there was no collision
+	# under any viewpoint. Handing Terrain3D the capture camera is what makes
+	# the frames be of the world the player would actually see.
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
+	else:
+		print("WARN no Terrain node with set_camera(); frames will render "
+			+ "whatever LOD reaches the viewpoint from the parked player")
+
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
