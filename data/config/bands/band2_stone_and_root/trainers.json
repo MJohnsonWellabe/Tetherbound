@@ -52,7 +52,7 @@
         2440.0
       ],
       "facing_deg": 146.3,
-      "_why_here": "At the mouth of the Burrow Warrens (burrow_warrens.json's site at (-420,2470)), 40m short of the entrance on the spine's own approach from (-310,2320). Team Tether dug into the warrens for the seams; posting a watch on the hole they made is why he is standing there, and it means the dungeon is entered past an opponent rather than walked into. Deliberately NOT inside the warrens -- the dungeon's own residents and guardian are its content and a trainer in the dark would contest them.",
+      "_why_here": "At the mouth of the Burrow Warrens, 35m short of the entrance on the spine's own approach from (-310,2320). BAND2-63-WARRENS moved the cave itself from (-420,2470) to (-382,2510) -- the old site could not be walked through, see burrow_warrens.json's `_comment_resiting` -- and Pell moved with it, keeping the same job and the same distance from the door he is watching; `facing_deg` is re-derived from the new stand toward that same approach point. Team Tether dug into the warrens for the seams; posting a watch on the hole they made is why he is standing there, and it means the dungeon is entered past an opponent rather than walked into. Deliberately NOT inside the warrens -- the dungeon's own residents and guardian are its content and a trainer in the dark would contest them.",
       "challenge": "warrens_pell_challenge",
       "defeated": "warrens_pell_defeated",
       "team": [

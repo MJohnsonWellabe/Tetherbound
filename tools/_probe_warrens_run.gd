@@ -104,6 +104,14 @@ func _run() -> void:
 func _walk_the_route(player: CharacterBody3D, warrens: Node3D) -> void:
 	print("")
 	print("--- route -------------------------------------------------------------")
+	# Waypoints, not chamber centres alone. A passage's own side walls overlap
+	# the chamber wall they cut through by `wall_thickness`, so the last metre
+	# of each wall stands proud INSIDE the room as a stub at the corner of the
+	# doorway. A player steers round it without noticing; a probe walking a
+	# dead-straight line into the far room's centre wedges against the stub and
+	# reports the dungeon impassable, which is a fact about the probe. So each
+	# leg aims at the doorway first and the room second, the way a person walks
+	# through a door.
 	var entrance: Vector3 = warrens.call("marker", "entrance")
 	await _put_down(player, entrance + Vector3(0.0, 1.5, 0.0))
 	# The residents are aggressive by design and there are seven of them in a
@@ -116,17 +124,48 @@ func _walk_the_route(player: CharacterBody3D, warrens: Node3D) -> void:
 	# ROUTE; the fight budget is added back in the totals at the end.
 	_quieten_the_residents(warrens)
 	for leg: String in ["mouth", "hall", "den"]:
-		await _leg(player, warrens, leg)
+		for point: Vector3 in _approach(warrens, leg):
+			await _leg(player, warrens, leg, point)
 	# The optional branch, from the den, once the door is open.
 	var progression := _progression()
 	if progression != null:
 		progression.call("set_flag", "warrens_cleared")
 	warrens.call("grant_clear_reward")
-	await _leg(player, warrens, "vault")
+	for point: Vector3 in _approach(warrens, "vault"):
+		await _leg(player, warrens, "vault", point)
 
 
-func _leg(player: CharacterBody3D, warrens: Node3D, chamber: String) -> void:
-	var target: Vector3 = warrens.call("marker", chamber)
+## The doorway into `chamber` (if this file knows one) and then the chamber
+## itself. Doorways are derived from the shipped passage table, not guessed.
+func _approach(warrens: Node3D, chamber: String) -> Array:
+	var points: Array = []
+	var config := _config()
+	var chambers: Dictionary = {}
+	for entry: Variant in config.get("chambers", []):
+		chambers[str((entry as Dictionary).get("id", ""))] = entry
+	for entry: Variant in config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		if str(passage.get("to", "")) != chamber:
+			continue
+		var from_id := str(passage.get("from", ""))
+		if not chambers.has(from_id) or not chambers.has(chamber):
+			continue
+		var a: Array = (chambers[from_id] as Dictionary).get("at", [0.0, 0.0])
+		var b: Array = (chambers[chamber] as Dictionary).get("at", [0.0, 0.0])
+		var mid := Vector2((float(a[0]) + float(b[0])) * 0.5, (float(a[1]) + float(b[1])) * 0.5)
+		var floor_y: float = float(warrens.call("marker", chamber).y)
+		points.append(Vector3(mid.x, 0.0, mid.y))
+	var out: Array = []
+	for local: Vector3 in points:
+		# `marker()` hands back global metres; the doorway is authored in the
+		# cave's local frame, so it goes through the node's own transform.
+		out.append(warrens.to_global(Vector3(local.x, warrens.call("marker", chamber).y \
+			- warrens.global_position.y, local.z)))
+	out.append(warrens.call("marker", chamber))
+	return out
+
+
+func _leg(player: CharacterBody3D, warrens: Node3D, chamber: String, target: Vector3) -> void:
 	var start := player.global_position
 	var walked := 0.0
 	var frames := 0
@@ -156,6 +195,33 @@ func _leg(player: CharacterBody3D, warrens: Node3D, chamber: String) -> void:
 				float(frames) / float(Engine.physics_ticks_per_second),
 				local.x, local.y, local.z, str(player.is_on_floor()), str(player.is_on_wall()),
 				Vector2(player.velocity.x, player.velocity.z).length()])
+			if is_zero_approx(Vector2(player.velocity.x, player.velocity.z).length()):
+				var space := player.get_world_3d().direct_space_state
+				var query := PhysicsShapeQueryParameters3D.new()
+				var sphere := SphereShape3D.new()
+				sphere.radius = 1.4
+				query.shape = sphere
+				query.transform = Transform3D(Basis(), player.global_position + Vector3.UP)
+				query.collide_with_bodies = true
+				query.exclude = [player.get_rid()]
+				var ray := PhysicsRayQueryParameters3D.create(
+					player.global_position + Vector3.UP * 0.9,
+					player.global_position + Vector3.UP * 0.9 + (target - player.global_position).normalized() * 3.0)
+				ray.exclude = [player.get_rid()]
+				var forward_hit := space.intersect_ray(ray)
+				if not forward_hit.is_empty():
+					var point: Vector3 = warrens.to_local(forward_hit["position"])
+					print("        ray ahead hits %s at local %.2f, %.2f, %.2f normal %.2f, %.2f, %.2f" % [
+						str((forward_hit["collider"] as Node3D).name), point.x, point.y, point.z,
+						forward_hit["normal"].x, forward_hit["normal"].y, forward_hit["normal"].z])
+				for hit: Dictionary in space.intersect_shape(query, 12):
+					var body: Object = hit.get("collider")
+					if body == null:
+						continue
+					var where: Vector3 = warrens.to_local((body as Node3D).global_position)
+					print("        within 1.4m: %s parent %s at local %.2f, %.2f, %.2f" % [
+						str((body as Node3D).name), str((body as Node3D).get_parent().name),
+						where.x, where.y, where.z])
 			for i in player.get_slide_collision_count():
 				var hit := player.get_slide_collision(i)
 				var collider := hit.get_collider()
@@ -309,6 +375,14 @@ func _player_walk_speed() -> float:
 		if section is Dictionary and (section as Dictionary).has("walk_speed"):
 			return float((section as Dictionary)["walk_speed"])
 	return float((parsed as Dictionary).get("walk_speed", 5.0))
+
+
+func _config() -> Dictionary:
+	var file := FileAccess.open("res://data/config/burrow_warrens.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 func _progression() -> RefCounted:
