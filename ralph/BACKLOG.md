@@ -108,6 +108,41 @@ Highest-value single change, per the critic: give `cloudy` real cloud cover and
 That also stops cloudy and rain reading as near-duplicates. All fixes are
 in-scene grade/lighting work; none need new art.
 
+### PERF-LOD — Terrain3D vegetation LOD is written, tested and deliberately switched off
+
+All ~130k vegetation instances render at LOD0 regardless of distance. `lod0_range`
+and `fade_margin` are a real working lever — semantics verified against upstream
+Terrain3D 1.0.2 source, not guessed — and per-layer values already exist in
+`data/config/vegetation.json`. The two `asset.set()` calls in
+`scripts/world/vegetation.gd` that activate them are commented out behind a
+`TODO(PERF-2)`.
+
+They are off **on purpose**. `conventions.md` requires a blind pass for
+visual-affecting work, and no before/after frames have ever been produced, so
+activating it would ship an unverified change to the approved lush pond pocket
+and the open-field contrast. Two lanes independently reached that judgement and
+both left it inert rather than shipping on no evidence.
+
+**Four capture attempts have now failed, all the same way.** The last was a
+single continuous foreground run that reached **43 minutes** (past an 1800s
+bar) and never emitted either view. The world stands up fine during the run —
+129,723 props scattered, village/stronghold/relay placed, no errors — so the
+tool is not broken. Box load went from 1.00 at dispatch to 8.7–12.6 within
+minutes as other lanes entered their own render phases.
+
+**The diagnosis is specific and the unblock is cheap.** The sink is not
+`vegetation.gd` (its own `build()` stays ~2.3s) but the rest of
+`playground_world.gd::_ready()` — village, trainers, quarry, relay, river,
+stronghold — none of which a vegetation-LOD comparison needs. The next attempt
+should capture from a **minimal scene containing only terrain plus vegetation**,
+and/or cut `SETTLE_FRAMES`, so the render survives partial contention instead of
+requiring a sustained idle box this environment has never provided.
+
+Worth keeping in perspective: the two large measured performance wins already
+landed (the missing scatter bake, ~45x on load; the O(n^2) interaction-provider
+registration, ~5x on boot). LOD is an unmeasured speculative lever on top of
+those, which is why it is recorded here rather than forced through.
+
 ### BUILD-KIT-4 — what round 3 left
 Tracked in `BLOCKED.md` for the parts needing an owner decision. Not blocked and
 still open: interior cross-braces read as scaffolding from inside (real geometry
