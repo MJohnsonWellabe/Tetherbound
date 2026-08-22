@@ -526,7 +526,15 @@ func _build_creature_block() -> void:
 	_creature_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_header.text = "ACTIVE COMPANION"
 	_creature_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_creature_header.clip_text = true
+	# NOT `clip_text = true` -- a first version of this rebuild set it,
+	# meaning to guarantee the text stayed inside the panel, and instead
+	# discovered the opposite failure a real capture caught: `clip_text`
+	# tells a Label's MINIMUM size to ignore its own text width, so nothing
+	# ever asked the panel to grow past `CREATURE_BLOCK_MIN_WIDTH`, and
+	# "READY TO CALL OUT" (longer than "ACTIVE COMPANION") clipped to "READY
+	# TO CALL C". Leaving text un-clipped lets its real width become part of
+	# the row's -- and therefore the panel's -- honest minimum size, which is
+	# what actually keeps it on-screen instead of truncated.
 	_creature_header.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_header.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 	header_row.add_child(_creature_header)
@@ -611,7 +619,10 @@ func _build_creature_block() -> void:
 	# other label on this panel was already raised to clear.
 	_creature_name_label = Label.new()
 	_creature_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_name_label.clip_text = true
+	# Not clipped, same reasoning as the header above -- the panel is already
+	# wide enough to fit the longer "READY TO CALL OUT"/HP-value strings, so
+	# a player-chosen name has plenty of room without needing its own escape
+	# hatch that would otherwise risk silently truncating it.
 	_creature_name_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	info_col.add_child(_creature_name_label)
 
@@ -665,7 +676,13 @@ func _build_creature_block() -> void:
 	_creature_hp_value_label.custom_minimum_size = Vector2(100.0, 0.0)
 	_creature_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_creature_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_creature_hp_value_label.clip_text = true
+	# NOT `clip_text = true` -- a real capture caught this exact label
+	# reading as "/ 120" instead of "120 / 120": `clip_text` combined with
+	# RIGHT alignment clips from the START of the string (the end stays
+	# anchored to the box's right edge), so a value wider than the 100px
+	# floor above silently ate its own leading digits instead of growing the
+	# row -- the same class of mistake `_creature_header`'s own comment
+	# describes, just on the other side of the row.
 	_creature_hp_value_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_hp_value_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	hp_row.add_child(_creature_hp_value_label)
