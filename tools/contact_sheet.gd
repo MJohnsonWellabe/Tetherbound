@@ -12,8 +12,20 @@ extends SceneTree
 ##
 ## Runs headless: this is image compositing, not rendering.
 
-const SHOTS_DIR := "res://shots"
-const OUT_PATH := "res://shots/_sheet.png"
+## Both overridable, so a lane can sheet its own capture set without moving
+## files into `res://shots` and disturbing the standing survey:
+##
+##   godot --headless --path . --script tools/contact_sheet.gd -- \
+##     --dir=res://shots/band5_approach --out=res://shots/band5_approach/_sheet.png
+##
+## Added by the D5 lane, which had twelve day/night frames of one region to put
+## in front of the blind critic and no way to sheet them without clobbering the
+## five survey shots the skill's own instructions expect to find here.
+const DEFAULT_SHOTS_DIR := "res://shots"
+const DEFAULT_OUT_PATH := "res://shots/_sheet.png"
+
+var _shots_dir := DEFAULT_SHOTS_DIR
+var _out_path := DEFAULT_OUT_PATH
 const COLUMNS := 3
 const TILE_WIDTH := 620
 const PADDING := 14
@@ -22,9 +34,14 @@ const BACKGROUND := Color(0.07, 0.08, 0.09, 1.0)
 
 
 func _init() -> void:
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--dir="):
+			_shots_dir = argument.substr("--dir=".length())
+		elif argument.begins_with("--out="):
+			_out_path = argument.substr("--out=".length())
 	var paths := _frame_paths()
 	if paths.is_empty():
-		push_error("no frames in %s; run tools/survey.sh first" % SHOTS_DIR)
+		push_error("no frames in %s; run tools/survey.sh first" % _shots_dir)
 		quit(1)
 		return
 
@@ -72,13 +89,13 @@ func _init() -> void:
 		# below, which is enough to name any tile.
 		_rule(sheet, x, y + tile.get_height() + 8, TILE_WIDTH, Color(0.42, 0.55, 0.29, 1.0))
 
-	var error := sheet.save_png(OUT_PATH)
+	var error := sheet.save_png(_out_path)
 	if error != OK:
-		push_error("could not write %s (%d)" % [OUT_PATH, error])
+		push_error("could not write %s (%d)" % [_out_path, error])
 		quit(1)
 		return
 
-	print("%d tiles -> %s  (%dx%d)" % [tiles.size(), OUT_PATH, sheet_width, sheet_height])
+	print("%d tiles -> %s  (%dx%d)" % [tiles.size(), _out_path, sheet_width, sheet_height])
 	print("reading order, left to right, top to bottom:")
 	for index in names.size():
 		print("  %d. %s" % [index + 1, names[index]])
@@ -96,7 +113,7 @@ func _rule(target: Image, x: int, y: int, width: int, colour: Color) -> void:
 
 func _frame_paths() -> Array[String]:
 	var out: Array[String] = []
-	var dir := DirAccess.open(SHOTS_DIR)
+	var dir := DirAccess.open(_shots_dir)
 	if dir == null:
 		return out
 	dir.list_dir_begin()
@@ -104,7 +121,7 @@ func _frame_paths() -> Array[String]:
 	while entry != "":
 		# Skip the sheet itself, or each run composites the previous one in.
 		if entry.ends_with(".png") and not entry.begins_with("_"):
-			out.append("%s/%s" % [SHOTS_DIR, entry])
+			out.append("%s/%s" % [_shots_dir, entry])
 		entry = dir.get_next()
 	dir.list_dir_end()
 	out.sort()
