@@ -196,6 +196,10 @@ func _exercise_world_build(cycle: int) -> void:
 		await process_frame
 	await _tap("interact")
 	var build_menu := await _wait_open_group("build_menu")
+	# Diagnosed BEFORE the hammer goes away: read after the cleanup below, every
+	# report would open with "equipped_tool is '', not the hammer" and describe
+	# this harness tidying up rather than the failure it is reporting.
+	var refusal := "" if build_menu != null else _why_the_hammer_was_refused()
 	# Put the hammer away whatever happened next. Left in hand, every later
 	# `interact` in this stress loop opens the catalogue instead of talking to
 	# Bram or using the bed -- `playground_hud.gd::_hammer_opens_the_catalogue()`
@@ -203,7 +207,7 @@ func _exercise_world_build(cycle: int) -> void:
 	_game.set("equipped_tool", "")
 	if build_menu == null:
 		_fail("world Build cycle %d: the hammer + interact opened nothing%s" % [
-			cycle + 1, _why_the_hammer_was_refused(),
+			cycle + 1, refusal,
 		])
 		return
 	await _tap("ui_accept")
@@ -492,8 +496,17 @@ func _why_the_hammer_was_refused() -> String:
 	if arbiter != null and is_instance_valid(arbiter):
 		if not bool(arbiter.call("enabled")):
 			reasons.append("the interaction arbiter is DISABLED (a modal never released the world)")
-		elif arbiter.call("winning_provider") != null:
-			reasons.append("a prompt provider is winning the interact button")
+		else:
+			var winner: Variant = arbiter.call("winning_provider")
+			if winner != null:
+				var label := str(winner)
+				if winner is Node:
+					var node := winner as Node
+					label = "%s (%s)" % [str(node.name), str(node.get_class())]
+					var owner_body := node.get_parent()
+					if owner_body != null:
+						label += " under %s" % str(owner_body.name)
+				reasons.append("the prompt provider %s is winning the interact button" % label)
 	var owner_node: Variant = INPUT_OWNER.current(self)
 	if owner_node != null:
 		reasons.append("INPUT_OWNER is still held by %s" % str(owner_node))

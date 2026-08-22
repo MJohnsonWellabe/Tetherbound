@@ -109,7 +109,9 @@ had already reported and both of which were still real:
 
 ## Open after this pass
 
-1. **OP9** — catch strike rate ~36%. Measured, not fixed. Prompt 45.
+1. **OP9** — catch strike rate ~22% over 27 launches, not the ~36% an earlier
+   11-launch sample suggested. Measured, not fixed. Prompt 45. The *dead-end*
+   this used to imply is closed (see Addendum 3); the *feel* is not.
 2. **OP21-01** — target-hardware performance. Needs a ROG Ally.
 3. **OP21-15 (half)** — landmarks visible through fog once an NPC names them.
 4. **OP11** — level-up feedback never driven on screen this pass.
@@ -299,3 +301,123 @@ shape, silhouette, colour relationships, framing and UI layout; NOT for shadow
 softness, ambient occlusion, bloom or post-processing. The critic confined its
 lighting remarks to direction, value structure and shadow placement, which
 survive the downgrade, and said so.
+
+
+---
+
+## Addendum 3 — the opening could dead-end on an empty satchel
+
+Found while trying to get Step 2's continuous Gate A run past the tutorial
+catch, which had failed three times running. The failures were not the harness.
+
+### What is wrong
+
+`docs/OPENING_SEQUENCE.md` promises the practice catch cannot fail twice.
+`combat_manager.gd::configure_tutorial_catch_assist()` keeps half of that:
+`catch_math.apply_failure_bound()` converts the second failed ROLL. It counts
+**landed** throws deliberately — a throw that never reached the creature is not
+a failed catch — and that leaves the other half open. A player who **misses** is
+bounded by nothing except how many orbs they are carrying.
+
+That would be harmless if orbs were replaceable at that point. They are not:
+
+| Orb source | Where it is |
+| --- | --- |
+| Grandpa's `give:orb_basic:15` | the opening — fifteen, once |
+| Tam's `recipe_orb_basic` | the village, **past the road gate** |
+| the village trader | the village, **past the road gate** |
+
+And the road gate is past this catch. So an opening that runs dry is a hard
+dead-end: `throw_aim.gd::try_begin_aim()` refuses every further press with
+`"no orbs left"` while `sequence_director.gd` holds the beat waiting for a catch
+that can no longer be attempted. There is no exit but a new game.
+
+At the ~22% strike rate measured above, this is not a corner case.
+
+### Reproduced, then fixed, then reproduced fixed
+
+Not reasoned about — **observed**, by draining the satchel to its last orb on
+the real path and pressing on:
+
+```
++95.04s — satchel drained to 1 orb(s) so the empty case is on the real path
+ERROR: launch 1 left the satchel empty during the tutorial catch;
+       the opening is now a dead end (opening.json catch_orb_floor did not apply)
+```
+
+The fix is `opening.json`'s `catch_orb_floor: 5`, held per frame by
+`sequence_director.gd::_hold_the_tutorial_orb_floor()` behind the same
+beat-and-species predicate as the failure bound. The first attempt hung it off
+the `catch_refused` signal alone and **was wrong**: the refusal only fires once
+the player presses throw with nothing to throw, so the restock landed after a
+press that visibly did nothing. A dead button is the exact failure the opening
+is supposed not to have. The refusal handler survives as the between-frames
+backstop; both paths go through one function.
+
+After:
+
+```
++91.26s — satchel drained to 1 orb(s) so the empty case is on the real path
++95.50s — running dry restocked the tutorial satchel to 5 orb(s)
++124.40s — physical landed throw caught Bramblebun on launch 2 (2 strike(s), 0 miss(es))
++128.66s — catch complete; exploration resumed with two-creature party
+gate A opening segment: OK — title through natural catch passed continuously
+```
+
+### Why it went unseen
+
+A fifteen-orb run almost never reaches zero inside a harness budget, so nothing
+ever walked the path. `smoke_gate_a_opening_segment.gd` now drains to one orb
+before the catch loop and asserts the satchel never empties — so every future
+run exercises the dead-end instead of hoping to stumble onto it, and a harness
+that simply kept throwing cannot report a healthy opening.
+
+That also retired the harness's arbitrary 8-launch cap. With the floor in place
+the opening never refuses a throw, so the only honest reason to stop is that
+catching is broken.
+
+---
+
+## Addendum 4 — two shards this branch added came back red
+
+Both surfaced by CI shards that did not exist before this branch, on code this
+branch did not write. Recorded here because the *pattern* is the finding.
+
+### `smoke_party_count_after_catches.gd` — never once run by CI
+
+`could not engage the real wild body at Wild_bramblebun_2`, with seven further
+failures cascading from that one. The file has **one commit, from the
+integration-ABC era, and this session has never touched it.** It fails on
+current `main`, and nothing said so, because it sat in no CI shard until this
+branch added one.
+
+This is the same finding as the twelve stale harnesses, arriving from the other
+direction: there, tests were merged broken; here, a test was merged working and
+rotted with nothing watching. Both have the same root — **46 of 64 smoke tests
+were in no CI shard.**
+
+### `smoke_post_modal_control.gd` — the hammer route loses the button
+
+`the hammer + interact opened nothing`, all three stress cycles. Root cause
+named by instrumenting the refusal rather than guessing: **a prompt provider is
+winning the interact button**, so `playground_hud.gd::_hammer_opens_the_catalogue()`
+declines.
+
+This may well be a real controller-only defect rather than a harness artifact.
+Under CONTROLLER-MAP, `build_open` has no pad button — hammer + `interact` is the
+**only** pad route into build mode — and the Meadows carries ~22,000 harvestable
+prompt sources. "Stand somewhere with nothing interactable in reach" is not a
+reasonable thing to ask of a player who wants to build.
+
+Deliberately **not** fixed on a guess. The obvious repair — let a hammer in hand
+suppress prompts, the way `_refresh_lockout()` already does for an armed ghost —
+would also stop the player talking to Bram while carrying one, and that is a
+design call that wants evidence behind it. Open.
+
+### A correction to this file's own method
+
+The first diagnostic written for the hammer failure read `equipped_tool` *after*
+the harness had put the hammer away, so every report would have opened by
+blaming the harness's own cleanup instead of the failure. Fixed to capture
+before. Worth recording because this file's whole argument is that a failure
+message should say where to look, and that one pointed the wrong way.
