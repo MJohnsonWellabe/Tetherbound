@@ -2035,6 +2035,20 @@ tool-in-hand + assignable hotbar + the map button (save format 6→7).
 
 ## Found along the way — small, unscheduled
 
+- **`tether_relay.json`'s console gate is a seam waiting on a dependency that
+  already shipped.** Its `requires_flag` is `""` with a comment saying to set it
+  to `relay_captain_defeated` "once SE25 has landed" — and `SE25` is recorded
+  done in this file, with `relay_captain` in
+  `bands/band3_the_river_lock/trainers.json` setting exactly that flag. So the
+  relay console can currently be shut down without beating the captain who
+  guards it, and the authored intent (mechanism built, `tests/smoke_relay.gd`
+  already sets the value and checks the refusal) has been one string away from
+  live since SE25 merged. NOT flipped here: it is a behaviour change and this
+  lane had no Godot to run `smoke_relay` against. Third instance of the same
+  pattern in this file after `PERF-LOD` and `GATEC-CURVE`'s inert wild bands —
+  worth a sweep for `requires_flag`/`if_flag` seams whose named dependency has
+  since landed. `model: sonnet`
+
 - **GATEC-ECOLOGY / GATEC-TRAINERS — the corridor's empty half, found 2026-08-22
   and closed.** Bands 3 and 5 shipped empty `spawns.json` files and Band 4 held
   one cluster across its 2240m, so from the Burrow Warrens to the Warden — three
