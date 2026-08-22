@@ -96,6 +96,9 @@ var _events: Array = []
 var _dead: Array = []
 ## Filled by `_drive`, read by `_report`.
 var _walk := {}
+## Wild bodies inside the band at boot. Counted, never snapshotted -- see
+## `_collect_interest`.
+var _wild_standing := 0
 
 
 func _init() -> void:
@@ -185,19 +188,22 @@ func _run() -> void:
 func _collect_interest() -> void:
 	var kinds := {}
 
+	# Wild bodies are NOT snapshotted here, and the first version of this probe
+	# was wrong because it did them the same way as everything else. They roam:
+	# `wild_creature.gd` walks them around their cluster the whole time the
+	# world is running, and this walk is nearly seven minutes of simulated
+	# time. Against frozen boot positions the run reported meeting 11 of 155
+	# creatures -- a measurement of how far they had wandered from where they
+	# spawned, not of what the player passed. They are re-read live every
+	# frame in `_drive` instead; only their COUNT is taken here.
+	_wild_standing = 0
 	for wild in _director.call("wild_creatures"):
 		var body := wild as Node3D
 		if body == null:
 			continue
-		var p := body.global_position
-		if p.z < Z_FROM or p.z > Z_TO:
-			continue
-		var species := "wild"
-		if body.has_method("species_id"):
-			species = str(body.call("species_id"))
-		elif body.get("species") != null:
-			species = str(body.get("species"))
-		_add_interest("wild", "%s@%d" % [species, body.get_instance_id()], p, kinds)
+		if body.global_position.z >= Z_FROM and body.global_position.z <= Z_TO:
+			_wild_standing += 1
+	kinds["wild (live, roaming)"] = _wild_standing
 
 	var trainers: Node = _world.get_node_or_null(^"Trainers")
 	if trainers != null:
@@ -348,6 +354,12 @@ func _drive(points: Array[Vector2]) -> void:
 	var teleports := 0
 	var teleported := 0.0
 	var stalls := 0
+	## Which waypoint the last stall was targeting, so the same one is not
+	## retried forever.
+	var stalled_at_idx := -1
+	## Ground handed over by a stall. Never counted as walked, and reported,
+	## because a cadence figure that quietly credits skipped ground is a lie.
+	var skipped := 0.0
 	var last_meeting_m := 0.0
 	var window_frames := 0
 	var window_target_dist := Vector2(prev.x, prev.z).distance_to(points[idx])
@@ -389,6 +401,22 @@ func _drive(points: Array[Vector2]) -> void:
 		# once: a picket standing beside a herd is a single moment for the
 		# player and the report should read that way.
 		var met_here := false
+
+		# The roamers, read where they actually are this frame.
+		for wild in _director.call("wild_creatures"):
+			var body := wild as Node3D
+			if body == null:
+				continue
+			var wid := "wild@%d" % body.get_instance_id()
+			if _met.has(wid):
+				continue
+			if now.distance_to(body.global_position) > _reach:
+				continue
+			_met[wid] = true
+			_events.append({"kind": "wild", "id": wid, "at_m": walked,
+				"pos": body.global_position})
+			met_here = true
+
 		for item: Dictionary in _interest:
 			# Cheap z reject first. There are a couple of thousand candidates
 			# and ~19,000 frames in this walk; a float compare before the
@@ -423,13 +451,24 @@ func _drive(points: Array[Vector2]) -> void:
 				# step over it, and keep the cadence honest by not crediting the
 				# skipped ground as walked.
 				stalls += 1
+				# Step to the waypoint it was HEADING FOR, not the one past it.
+				# The first version advanced `idx` before teleporting, so a
+				# stall at the Hess picket jumped the body from the approach
+				# road straight to (280, 3900) -- over the top of the entire
+				# relay compound, which then reported as 185m of dead travel
+				# with Orrin, Dell, Vance and the relay yard never sampled.
+				# Only if the SAME waypoint stalls twice is it given up on.
+				if stalled_at_idx == idx:
+					idx += 1
+					if idx >= points.size():
+						break
+				stalled_at_idx = idx
 				print("  STALL at (%.1f, %.1f) heading for (%.0f, %.0f): "
-					% [now.x, now.z, target.x, target.y]
-					+ "floor=%s wall=%s -- skipping to the next waypoint"
-					% [_player.is_on_floor(), _player.is_on_wall()])
-				idx += 1
-				if idx >= points.size():
-					break
+					% [now.x, now.z, points[idx].x, points[idx].y]
+					+ "floor=%s wall=%s -- stepping to that waypoint (%.1fm not walked)"
+					% [_player.is_on_floor(), _player.is_on_wall(),
+						Vector2(now.x, now.z).distance_to(points[idx])])
+				skipped += Vector2(now.x, now.z).distance_to(points[idx])
 				var skip := Vector3(points[idx].x, 0.0, points[idx].y)
 				skip.y = float(_world.call("ground_height_at", skip.x, skip.z)) + 1.0
 				_player.global_position = skip
@@ -451,7 +490,7 @@ func _drive(points: Array[Vector2]) -> void:
 			"pos": _player.global_position})
 
 	_walk = {
-		"walked": walked, "frames": frames, "stalls": stalls,
+		"walked": walked, "frames": frames, "stalls": stalls, "skipped": skipped,
 		"teleports": teleports, "teleported": teleported,
 		"seconds": (Time.get_ticks_msec() - run_start) / 1000.0,
 		"end": _player.global_position,
@@ -469,7 +508,8 @@ func _report() -> void:
 		float(_walk.get("walked", 0.0)) / _walk_speed_cfg / 60.0, _walk_speed_cfg])
 	print("moved BY THE WORLD      : %.1f m over %d teleports (never counted as walked)" % [
 		float(_walk.get("teleported", 0.0)), int(_walk.get("teleports", 0))])
-	print("stalls stepped over     : %d" % int(_walk.get("stalls", 0)))
+	print("stalls stepped over     : %d  (%.1f m handed over, never counted as walked)" % [
+		int(_walk.get("stalls", 0)), float(_walk.get("skipped", 0.0))])
 	var end: Vector3 = _walk.get("end", Vector3.ZERO)
 	print("end position            : (%.1f, %.1f, %.1f)" % [end.x, end.y, end.z])
 
@@ -479,7 +519,7 @@ func _report() -> void:
 	print("\n=== MET WHILE WALKING (within %.0fm of the driven body) ===" % _reach)
 	for k in by_kind.keys():
 		print("  %-9s %d" % [k, by_kind[k]])
-	var standing := {}
+	var standing := {"wild": _wild_standing}
 	for item: Dictionary in _interest:
 		standing[item["kind"]] = int(standing.get(item["kind"], 0)) + 1
 	print("  -- of what stands in the band:")
