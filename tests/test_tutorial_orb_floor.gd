@@ -83,10 +83,45 @@ func test_the_floor_answers_the_refusal_the_empty_satchel_actually_emits() -> vo
 		"sequence_director.gd never connects catch_refused, so the floor can never fire")
 
 
-func test_the_floor_cannot_follow_the_player_out_of_the_opening() -> void:
+## Both ways into the floor must reach the one that checks the predicate.
+##
+## There are two: the per-frame hold (so the beat never runs dry) and the
+## refusal backstop (for a drain that lands between frames). Neither may apply
+## the floor on its own -- one rule, one place, or the two drift apart and only
+## one of them stays gated.
+func test_both_entry_points_route_through_the_one_gated_restock() -> void:
 	var source := _director_source()
+	assert_true(source.contains("_hold_the_tutorial_orb_floor()"),
+		"sequence_director.gd has no _hold_the_tutorial_orb_floor")
 	var start := source.find("func _on_catch_refused(")
 	assert_true(start >= 0, "sequence_director.gd has no _on_catch_refused handler")
+	if start < 0:
+		return
+	var end := source.find("\nfunc ", start + 1)
+	var handler := source.substr(start, (end - start) if end > start else -1)
+	assert_true(handler.contains("_hold_the_tutorial_orb_floor()"),
+		"the refusal handler restocks by itself instead of going through the gated path")
+	assert_false(handler.contains("inventory"),
+		"the refusal handler touches the satchel directly; the gate lives in "
+		+ "_hold_the_tutorial_orb_floor and this would bypass it")
+	# Per-frame, so the player never presses a button that does nothing.
+	var process_start := source.find("func _process(")
+	assert_true(process_start >= 0, "sequence_director.gd has no _process")
+	if process_start < 0:
+		return
+	var process_end := source.find("\nfunc ", process_start + 1)
+	var process_body := source.substr(
+		process_start, (process_end - process_start) if process_end > process_start else -1
+	)
+	assert_true(process_body.contains("_hold_the_tutorial_orb_floor()"),
+		"the floor is not held per frame; reacting to the refusal alone restocks "
+		+ "one press too late, after a button that visibly did nothing")
+
+
+func test_the_floor_cannot_follow_the_player_out_of_the_opening() -> void:
+	var source := _director_source()
+	var start := source.find("func _hold_the_tutorial_orb_floor(")
+	assert_true(start >= 0, "sequence_director.gd has no _hold_the_tutorial_orb_floor")
 	if start < 0:
 		return
 	var end := source.find("\nfunc ", start + 1)
