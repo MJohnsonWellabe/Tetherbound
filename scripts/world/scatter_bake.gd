@@ -23,17 +23,55 @@ extends RefCounted
 const MAGIC := 0x53434154 # "SCAT"
 const FORMAT_VERSION := 1
 
+## For the band `vegetation.json` files `config_fingerprint()` has to cover; see
+## its own header. This file still does no other content loading.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
-## `data/config/vegetation.json` + `data/config/terrain_playground.json`,
-## hashed together. Baked placements are only trusted when this matches the
-## value stamped into every region file at bake time — a bake against an
-## older config is a staleness class that does not exist before this file,
-## so it must be loud rather than silently served.
+
+## Every file the placement pass reads, hashed together. Baked placements are
+## only trusted when this matches the value stamped into every region file at
+## bake time — a bake against an older config is a staleness class that does
+## not exist before this file, so it must be loud rather than silently served.
+##
+## GATE-D. This used to hash only the two head files, and that was wrong from
+## the moment BAND-SPLIT-2 cut `clearings` and `footprints` out of
+## `data/config/vegetation.json` into `data/config/bands/<band>/vegetation.json`.
+## `scatter_rules.gd::config()` merges those back and
+## `scatter_rules.gd::_place_layer` drops any placement that lands inside one,
+## so a band author adding a clearing around their own camp changed WHERE
+## SCATTER GOES and did not change this number. `is_fresh` then said yes, the
+## stale bake was served, and the camp stayed buried in grass with nothing
+## anywhere reporting a problem — the exact silent-staleness failure the
+## paragraph above says must be loud.
+##
+## Found while setting up Gate D, where five regional lanes author five band
+## directories concurrently and every one of them has a reason to add a
+## clearing. Hashing the band files makes the first such edit fail
+## `tests/test_scatter_perf_budget.gd`'s freshness assertion instead, which is
+## a re-bake somebody has to run rather than a defect nobody can see.
 static func config_fingerprint() -> int:
+	var paths: Array[String] = [
+		"res://data/config/vegetation.json",
+		"res://data/config/terrain_playground.json",
+	]
+	# Order is fixed by BAND_CONTENT.BANDS, not by a directory listing, for the
+	# same reason that const exists: a scan would silently pick up a stray
+	# directory or silently miss one in an export, and either would move this
+	# number for a reason nobody could trace.
+	for band in BAND_CONTENT.BANDS:
+		paths.append("res://data/config/bands/%s/vegetation.json" % band)
+
 	var mixed := 0
-	for path in ["res://data/config/vegetation.json", "res://data/config/terrain_playground.json"]:
+	for path in paths:
 		var file := FileAccess.open(path, FileAccess.READ)
 		if file == null:
+			# A band with no vegetation.json is normal, not an error — most
+			# bands have none. Skip it rather than returning 0, which would
+			# mean "no bake is ever fresh" for every band that has not needed
+			# a clearing yet. The two head files are still required: those
+			# genuinely missing means the config is broken.
+			if path.begins_with("res://data/config/bands/"):
+				continue
 			return 0
 		mixed = mixed ^ (file.get_as_text().hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
 	return mixed
