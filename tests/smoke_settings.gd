@@ -265,9 +265,9 @@ func _check_the_tab_is_reachable_with_a_pad() -> void:
 	for step in tabs.size() + 1:
 		if int(_menu.get("_index")) == wanted:
 			break
-		await _tap_pad(_pad_button_for("tool_cycle"))
+		await _tap_pad(_pad_button_for("menu_tab_left"))
 	if int(_menu.get("_index")) != wanted:
-		_fail("`tool_cycle` never reached the settings tab")
+		_fail("`menu_tab_left` never reached the settings tab")
 		return
 
 	_tab = _menu.get("_bodies")[wanted]
@@ -275,7 +275,7 @@ func _check_the_tab_is_reachable_with_a_pad() -> void:
 	if _rows.is_empty():
 		_fail("the settings tab drew no rows")
 		return
-	print("settings reached on `tool_cycle`: %d rebindable rows" % _rows.size())
+	print("settings reached on `menu_tab_left`: %d rebindable rows" % _rows.size())
 
 
 func _check_focus_can_be_driven() -> void:

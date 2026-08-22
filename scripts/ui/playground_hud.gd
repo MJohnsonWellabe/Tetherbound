@@ -95,6 +95,12 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 const HOTBAR_GLYPH_PX := 36
 const HOTBAR_COUNT_FONT_SIZE := 36
 
+## The item id that means "I am building". `data/items/items.json`'s hammer,
+## which already existed as a workbench tool -- CONTROLLER-MAP gave it the
+## second job rather than adding an item, because the pad map has no build
+## button left and a tool in hand is how every other verb is chosen now.
+const BUILD_TOOL := "hammer"
+
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
 ## Pixels of clear screen between the hotbar panel's real bottom edge and the
@@ -1135,7 +1141,7 @@ func _reflow_left_stack() -> void:
 ## index landed on the slot immediately before/after where it just was, with
 ## wrap) and if so hands the widget a `flash_cycle()` call — this is the one
 ## place both the old and new index are known, since `encounter_director.gd`
-## (which actually presses `combat_switch_left/right`) only ever sees the new
+## (which actually reads `party_cycle`) only ever sees the new
 ## state through `Party.revision`.
 func _update_party_strip() -> void:
 	if _party_strip == null or _party == null:
@@ -1964,16 +1970,18 @@ func _exploration_legend_should_show() -> bool:
 func _exploration_legend_text() -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
+	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
+	# are hotbar tools now -- select the hammer or the torch on the bar and
+	# press interact -- so a legend line naming a pad button for either would
+	# be naming a button that does something else (B is satchel slot 1). Their
+	# keyboard shortcuts survive and are still listed in Settings > Controls.
+	# Call Out took the space, because RB is the one world verb with no other
+	# on-screen home.
 	var entries: Array[String] = [
-		_legend_entry("build_open", "Build", normal),
 		_legend_entry("map", "Map", normal),
 		_legend_entry("inventory", "Satchel", normal),
-		"%s%s  [color=#%s]Change Creature[/color]" % [
-			INPUT_GLYPH.icon("switch_left", LEGEND_GLYPH_PX, change_tint),
-			INPUT_GLYPH.icon("switch_right", LEGEND_GLYPH_PX, change_tint),
-			change_tint.to_html(true),
-		],
-		_legend_entry("torch_place", "Torch", normal),
+		_legend_entry("creature_recall", "Call Out", normal),
+		_legend_entry("party_cycle", "Change Creature", change_tint),
 	]
 	return "     ".join(entries)
 
@@ -2113,7 +2121,16 @@ func _read_hotbar_input() -> void:
 	# not the third -- `_build_menu_is_open()` was written onto the world-hotkey
 	# poll alone -- which is exactly why the hotbar leaked under an open build
 	# menu and the hammer did not.
-	if not _world_input_allowed():
+	# CONTROLLER-MAP: the hotbar STAYS LIVE in a fight. The owner's map puts
+	# slots 1-5 on B and the d-pad "in every context including combat, so food
+	# and orbs stay reachable mid-fight" -- and nothing else on the pad reads
+	# those five buttons during a fight any more, which is what makes that safe.
+	# The aim is still excluded: while an orb is being aimed, B is the back-out
+	# and X is the release, and a hotbar press underneath either would be the
+	# same one-press-two-verbs bug in a smaller window.
+	if not _world_input_allowed(false, true):
+		return
+	if _combat_is_aiming():
 		return
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
@@ -2326,6 +2343,9 @@ func _read_world_hotkeys() -> void:
 		return
 	if not _world_input_allowed():
 		return
+	if _hammer_opens_the_catalogue():
+		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
+		return
 	if Input.is_action_just_pressed(&"torch_place"):
 		_arm_torch_placement()
 		return
@@ -2351,9 +2371,13 @@ func _read_world_hotkeys() -> void:
 ##
 ## Three things can hold input, and they are asked in cost order:
 ##
-##   - a fight (HD2: `hotbar_2`/`3` share the d-pad with
-##     `combat_switch_left`/`right` per D32, so without this a mid-fight
-##     creature switch also quietly ate a potion)
+##   - a fight, unless the caller passes `allow_combat` -- which only the
+##     hotbar does, and only since CONTROLLER-MAP. HD2 refused the hotbar in a
+##     fight because `hotbar_2`/`3` shared the d-pad with D32's directional
+##     switch actions, so a mid-fight switch also ate a potion. Those actions
+##     are gone (one `party_cycle` press on LB replaced both), so the reason
+##     for the refusal went with them and the owner's map wants the bar
+##     reachable mid-fight
 ##   - the interaction arbiter being asleep, which is a conversation, a naming
 ##     prompt or a fade (`sequence_director.gd::_refresh_lockout`) -- reused
 ##     rather than re-derived, and the reason OF25 stopped a digit typed into a
@@ -2365,8 +2389,8 @@ func _read_world_hotkeys() -> void:
 ## already not running. No arbiter reachable (a stripped-down test or capture
 ## scene) reads as permissive, the same null-safe default `_combat_is_running()`
 ## already uses -- nothing there to be modal ABOUT.
-func _world_input_allowed(allow_armed_build: bool = false) -> bool:
-	if _combat_is_running():
+func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = false) -> bool:
+	if _combat_is_running() and not allow_combat:
 		return false
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
 		var armed_build := allow_armed_build and _game != null \
@@ -2405,6 +2429,36 @@ func _build_menu_is_open() -> bool:
 		if node.has_method("is_open") and bool(node.call("is_open")):
 			return true
 	return false
+
+
+## CONTROLLER-MAP: "select it, press interact, you are in build mode".
+##
+## `build_open` lost its pad button — the owner's fourteen-button map has no
+## room for one and the directive bans a chord — so the hammer became the way
+## in: put it on the quick bar, press its slot to take it in hand, then press
+## interact. Without this a controller could not reach the build catalogue at
+## all, which is the one thing retiring `build_open`'s button must not cost.
+##
+## Deferred to the arbiter first. `interact` is talk/gather/chop/mine as well,
+## and `interaction_arbiter.gd` is the one reader of it in the world — so a
+## press that has a real target does that instead, and the hammer only claims
+## the button when nothing is offering. Standing in front of Grandpa with a
+## hammer in hand still talks to Grandpa.
+##
+## `winning_provider()` rather than the drawn prompt text: the prompt is a
+## formatted string and carries no identity, which is what that accessor's own
+## header says it exists for.
+func _hammer_opens_the_catalogue() -> bool:
+	if not Input.is_action_just_pressed(&"interact"):
+		return false
+	if _game == null or str(_game.get("equipped_tool")) != BUILD_TOOL:
+		return false
+	if _build_menu_is_open():
+		return false
+	if _arbiter != null and is_instance_valid(_arbiter) \
+			and _arbiter.call("winning_provider") != null:
+		return false
+	return true
 
 
 ## Swing the equipped tool at whatever is in front of the trainer.

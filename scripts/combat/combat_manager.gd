@@ -536,25 +536,22 @@ func _physics_process(delta: float) -> void:
 func _refuse_combat_input() -> void:
 	# Nothing pressed is the case on very nearly every frame, so it is answered
 	# before any node lookup.
-	var throwing := Input.is_action_just_pressed("combat_throw")
+	var throwing := _throw_pressed()
 	var attacking := Input.is_action_just_pressed("combat_quick") \
 			or Input.is_action_just_pressed("combat_charged")
 	if not throwing and not attacking:
 		return
 
-	# Every one of these buttons is shared with something else (project.godot),
-	# and a refusal that fires on top of the other thing is worse than silence.
+	# Two of these buttons are shared with build mode (project.godot):
 	#
 	#   LMB / RMB  -> build_place / build_cancel
 	#   LT / RT    -> build_rotate_left / build_rotate_right
 	#
 	# All four only mean anything with a placement armed, so one check covers
-	# them. `torch_place` is the exception that needs its own: it shares RT with
-	# `combat_quick` outright and equips/stows the carried torch on the same
-	# press (playground_hud.gd::_arm_torch_placement, OW12), so that press is
-	# not an inert button at all.
-	if Input.is_action_just_pressed("torch_place"):
-		return
+	# them, and a refusal that fires on top of the other thing is worse than
+	# silence. `torch_place` used to need its own line here because it shared RT
+	# with `combat_quick`; CONTROLLER-MAP took its pad binding away entirely, so
+	# there is no longer a torch press to stand aside for.
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return
@@ -772,7 +769,11 @@ func _read_player_input() -> void:
 	if bool(_throw.call("is_busy")):
 		return
 
-	if Input.is_action_just_pressed("combat_run"):
+	# CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
+	# `combat_run` keeps its keyboard Escape and lost its pad button, so the pad
+	# reaches this through `creature_recall` -- the same button that calls the
+	# creature out and puts it away outside a fight.
+	if _flee_pressed():
 		_begin_resolve("fled")
 		return
 
@@ -790,8 +791,25 @@ func _read_player_input() -> void:
 	if _action != Action.READY:
 		return
 
-	if Input.is_action_just_pressed("combat_throw"):
+	if _throw_pressed():
 		_try_throw()
+
+
+## The throw button, on both devices.
+##
+## CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so
+## `combat_throw` no longer has a pad binding of its own; X reaches this
+## through `interact`. Keyboard F still works, and is what the on-screen
+## `throw` glyph names for a desktop player.
+func _throw_pressed() -> bool:
+	return Input.is_action_just_pressed("combat_throw") \
+			or Input.is_action_just_pressed("interact")
+
+
+## The disengage button, on both devices. See `_read_player_input`.
+func _flee_pressed() -> bool:
+	return Input.is_action_just_pressed("combat_run") \
+			or Input.is_action_just_pressed("creature_recall")
 
 
 ## Fire a buffered attack press once the creature is ready for it.
@@ -1301,8 +1319,8 @@ func _finish() -> void:
 ## Voluntary mid-combat switching. LOGIC ONLY here — the header comment has
 ## named `_active_index` into `_party` as this seam since M2, and this is that
 ## later milestone. No input is read here and no selector is drawn: a future
-## HUD milestone binds `combat_switch_left`/`combat_switch_right` (tap cycles,
-## hold opens the party strip, D32) to the functions below.
+## HUD milestone binds `party_cycle` (one LB press cycles) to the functions
+## below. D32's hold-to-open-a-selector chord was retired by CONTROLLER-MAP.
 ##
 ## There is no auto-switch-on-faint (D32's own "what was deliberately not
 ## built") — a faint of the active creature still ends the fight exactly as it

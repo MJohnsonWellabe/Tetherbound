@@ -298,10 +298,13 @@ func is_open() -> bool:
 
 ## Open on a tab id, or on whatever was last shown.
 ##
-## Refuses while a fight is running. `menu_cancel` and `combat_run` share a
-## binding (Escape / B) in project.godot's input map, so in a fight that button
-## already means "flee" — see docs/decisions/D14. This agent may not add input
-## actions, so the menu yields rather than stealing the flee button.
+## Refuses while a fight is running. That started as a binding accident —
+## `menu_cancel` and `combat_run` shared Escape / B, so in a fight the button
+## already meant "flee" (D14) — and CONTROLLER-MAP has since separated them:
+## the shell opens on `game_menu` (Escape / gamepad Menu) and flee is the pad's
+## RB. The refusal is kept anyway because it is the behaviour the game shipped
+## with and D14 argued for on its own terms: a real-time fight does not stop
+## for a pause screen. Deleting it is a design change, not a mapping one.
 ##
 ## Refuses the same way while a story modal owns the screen — see
 ## `_refusal_reason()`. The blind playtest opened this shell on top of the
@@ -575,7 +578,7 @@ func override_footer(text: String) -> void:
 ## The footer used to be a hand-typed string, and it told keyboard players to
 ## press gamepad buttons: "A  Select    B  Close", while the two entries beside
 ## them ("Q / LB", "Tab / RB") correctly named both devices. That was not merely
-## cosmetic. The literal keyboard B is bound to `build_open` (project.godot), so
+## cosmetic. The literal keyboard B is still bound to `build_open`, so
 ## a keyboard player who obeyed the legend and pressed B opened the Build tab
 ## instead of closing the menu — found by a blind playtest, which spent the rest
 ## of the session unable to leave the screen the same way it came in.
@@ -670,7 +673,7 @@ func _read_actions() -> void:
 		if _reopen_guard > 0:
 			_reopen_guard -= 1
 			return
-		if Input.is_action_just_pressed(str(_config.get("open_action", "menu_cancel"))):
+		if Input.is_action_just_pressed(str(_config.get("open_action", "game_menu"))):
 			if not open():
 				_explain_refusal()
 			return
@@ -681,11 +684,17 @@ func _read_actions() -> void:
 				return
 		return
 
+	# CONTROLLER-MAP note: Menu OPENS the shell and B closes it, deliberately
+	# asymmetric. Menu could not also close it: gamepad Menu is `backpack_drop`
+	# in the satchel tab (data/config/menu.json's "Backpack" group note), so a
+	# close on the same button would be a second live verb on one press exactly
+	# where the player is holding a stack. B is the authored back button in
+	# every menu anyway.
 	if Input.is_action_just_pressed(str(_config.get("close_action", "menu_cancel"))):
 		close()
 		return
 
-	if Input.is_action_just_pressed(str(_config.get("cycle_action", "tool_cycle"))):
+	if Input.is_action_just_pressed(str(_config.get("cycle_action", "menu_tab_left"))):
 		previous_tab()
 		return
 

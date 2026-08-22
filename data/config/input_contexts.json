@@ -1,0 +1,110 @@
+{
+  "_comment": "Which actions are simultaneously LIVE, and where. `tests/test_input_context_collisions.gd` walks project.godot's [input] section and fails if two actions listed in the same context bind the same joypad button or axis. Nothing in the game reads this file at runtime; it exists so the answer to 'can one press mean two things here?' is written down and checked, instead of being rebuilt from scratch in a comment every time somebody moves a binding.",
+
+  "_comment_why": "The enforcement test that already existed (tests/test_world_verb_input_owner_enforcement.gd) asks whether a world-verb poll consults input_owner.gd. That is a real question and a different one: it catches a poll that keeps reading while a panel owns input. It cannot catch two verbs that are BOTH legitimately live and both bound to d-pad left, which is how the hotbar/creature-switch collision survived from D32 to the owner playtest that finally reported it.",
+
+  "_comment_authored_map": "The map itself is the owner directive of 2026-08-22 (ralph/OWNER_DIRECTIVES_2026-08-22.md section 1): A jump, B hotbar 1, X interact, Y satchel, d-pad hotbar 2-5, LB cycle party member, RB call out / put away, LT/RT charged/quick attack, View map, Menu game menu, L3 sprint, R3 recentre. Held-button chords are banned, so a collision can never be resolved by making one of the two a hold.",
+
+  "_comment_shape": "`actions` lists what is live. `includes` pulls in another context wholesale, for a surface that sits on top of one (a menu tab on top of the pause shell). `aliases` are pairs that MAY share a button because they are one verb reached two ways -- Godot's built-in ui_accept beside the project's own menu_confirm, for instance. Keep that list short and justify every entry: an alias is a hole in the check.",
+
+  "aliases": [
+    ["ui_accept", "menu_confirm"],
+    ["menu_cancel", "build_cancel"]
+  ],
+  "_comment_aliases": "ui_accept/menu_confirm: A. project.godot's own UI-PAD1 note explains why both exist and why sharing A is deliberate -- a Godot Button activates on ui_accept, and every hand-rolled panel polls menu_confirm. menu_cancel/build_cancel: B. build_menu.gd::_process reads BOTH in one `or` and does one thing with them.",
+
+  "contexts": {
+    "world": {
+      "_comment": "Free run of the map: no fight, no menu, no armed build ghost. Torch, the build hammer and the tool swing are in this list with keyboard bindings only -- CONTROLLER-MAP took their pad buttons away and made torch and hammer hotbar tools. On a pad the build catalogue opens on `interact` with the hammer in hand (playground_hud.gd::_hammer_opens_the_catalogue), which is one more reader of X, not a second binding on it.",
+      "actions": [
+        "move_forward", "move_back", "move_left", "move_right",
+        "look_up", "look_down", "look_left", "look_right",
+        "jump", "sprint", "camera_recenter",
+        "interact", "inventory", "map", "game_menu",
+        "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
+        "party_cycle", "creature_recall",
+        "torch_toggle", "torch_place", "build_open", "use_tool"
+      ]
+    },
+
+    "combat": {
+      "_comment": "A fight is running and the player is piloting a creature. NOT `includes: world`: the pause shell and its two shortcuts (inventory, map) refuse to open mid-fight (game_menu.gd::open), and the world hotkeys stand down (playground_hud.gd::_world_input_allowed). The hotbar does NOT stand down any more -- the directive puts food and orbs on the d-pad during a fight, which is safe precisely because the directional switch actions that used to share it are gone. `interact` is here as the throw button: combat_manager.gd::_throw_pressed reads it beside combat_throw's keyboard F.",
+      "actions": [
+        "move_forward", "move_back", "move_left", "move_right",
+        "look_up", "look_down", "look_left", "look_right",
+        "jump", "sprint", "camera_recenter",
+        "interact", "combat_throw", "combat_quick", "combat_charged", "combat_run",
+        "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
+        "party_cycle", "creature_recall"
+      ]
+    },
+
+    "combat_aim": {
+      "_comment": "An orb is being aimed (throw_aim.gd::_tick_aiming). The hotbar is deliberately deaf here (playground_hud.gd::_read_hotbar_input) so that B unambiguously backs out of the aim and X unambiguously releases it.",
+      "actions": [
+        "move_forward", "move_back", "move_left", "move_right",
+        "look_up", "look_down", "look_left", "look_right",
+        "camera_recenter",
+        "interact", "combat_throw", "combat_quick", "combat_run", "menu_cancel"
+      ]
+    },
+
+    "build_placement": {
+      "_comment": "A ghost is armed and the catalogue has closed. The world is live underneath, so movement is here too. `build_open` reopens the catalogue and is keyboard-only.",
+      "actions": [
+        "move_forward", "move_back", "move_left", "move_right",
+        "look_up", "look_down", "look_left", "look_right",
+        "jump", "sprint", "camera_recenter",
+        "build_place", "build_cancel", "build_dismantle",
+        "build_rotate", "build_rotate_left", "build_rotate_right", "build_snap_cycle",
+        "build_open"
+      ]
+    },
+
+    "build_catalogue": {
+      "_comment": "build_menu.gd is open. It deliberately does NOT pause the tree, but it joins input_owner.gd's group, and player_controller.gd already reads that flag -- so move/jump/sprint are inert and are correctly absent here. Category is LB/RB, reusing the pause shell's own tab actions rather than inventing a build-only pair.",
+      "actions": [
+        "look_up", "look_down", "look_left", "look_right",
+        "ui_accept", "menu_confirm", "menu_cancel", "build_cancel",
+        "menu_tab_left", "menu_tab_right"
+      ]
+    },
+
+    "menu": {
+      "_comment": "The pause shell itself, tab-agnostic. The tree is paused, so nothing world-side is live. `inventory` and `map` stay live as jump-to-tab shortcuts (data/config/menu.json's `shortcuts`). `game_menu` is NOT here: Menu opens the shell and B closes it, deliberately asymmetric, because Menu is `backpack_drop` on the satchel tab.",
+      "actions": [
+        "move_forward", "move_back", "move_left", "move_right",
+        "ui_accept", "menu_confirm", "menu_cancel",
+        "menu_tab_left", "menu_tab_right",
+        "inventory", "map"
+      ]
+    },
+
+    "menu_backpack": {
+      "_comment": "The satchel tab on top of the shell. `interact` (X) is its Use verb (tab_backpack.gd::USE_ACTION) and is live on the same frame as the three backpack_* verbs, which is why backpack_assign could not stay on X. Its three verbs are Menu / R3 / L3.",
+      "includes": ["menu"],
+      "actions": ["interact", "backpack_drop", "backpack_split", "backpack_assign"]
+    },
+
+    "menu_creatures": {
+      "_comment": "The Creatures tab. It borrows backpack_drop for evolve, backpack_split for rename and backpack_assign for Best Creature -- only one tab is ever open, so the borrow is free -- and reads `interact` to activate a row.",
+      "includes": ["menu"],
+      "actions": ["interact", "backpack_drop", "backpack_split", "backpack_assign"]
+    },
+
+    "menu_map": {
+      "_comment": "The full map tab. Triggers zoom, the stick pans.",
+      "includes": ["menu"],
+      "actions": ["map_zoom_in", "map_zoom_out"]
+    },
+
+    "narrative_modal": {
+      "_comment": "dialogue_panel.gd, name_prompt.gd and starter_picker.gd. All three own input through input_owner.gd, all three are answered with interact / confirm / cancel.",
+      "actions": ["interact", "ui_accept", "menu_confirm", "menu_cancel"]
+    }
+  },
+
+  "_comment_unlisted": "Every action in project.godot's [input] section must appear in at least one context, or in `context_free` below. The test enforces that, so a new action cannot be added without somebody saying where it is live.",
+  "context_free": [],
+  "_comment_context_free": "Empty on purpose. If an action genuinely belongs to no context -- a debug key, say -- list it here WITH a reason, rather than quietly leaving it out."
+}

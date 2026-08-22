@@ -219,7 +219,31 @@ func _process(delta: float) -> void:
 	_follow(delta)
 
 
+## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is
+## following. Written as a snap rather than a glide because the verb the owner
+## authored is "recentre", and a camera that takes half a second to arrive
+## reads as drift rather than as a button doing something. Pitch is left alone:
+## the complaint a recentre answers is "I am looking at the back of my own
+## head", which is a yaw problem.
+##
+## `_target.global_basis.z` is the direction the followed body faces; the rig
+## sits BEHIND it, so the yaw that puts the camera at its back is that vector's
+## own heading. A target with no meaningful facing (a spinning creature body
+## mid-attack) still gets a defined answer, which is better than refusing.
+func _recentre_behind_target() -> void:
+	if _target == null or not is_instance_valid(_target):
+		return
+	var forward := -_target.global_transform.basis.z
+	if Vector2(forward.x, forward.z).length() < 0.001:
+		return
+	yaw = wrapf(atan2(-forward.x, -forward.z), -PI, PI)
+	rotation = Vector3(pitch, yaw, 0.0)
+
+
 func _apply_look(delta: float) -> void:
+	if Input.is_action_just_pressed(&"camera_recenter"):
+		_recentre_behind_target()
+
 	# Gamepad, in degrees per second so sensitivity is frame-rate independent.
 	var stick := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	if stick.length() < _deadzone:

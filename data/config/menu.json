@@ -2,13 +2,14 @@
   "_comment": "The pause menu, described rather than coded. The previous prototype kept its menu in src/data/pauseMenu.json for the same reason: adding a screen should be a JSON entry plus a tab script, never a new branch in the shell.",
   "_comment_tabs": "Order is the on-screen order. `script` is the tab body; it must extend scripts/ui/menu_tab.gd. tests/test_menu_data.gd fails the build if a listed script is missing, because a typo'd path would otherwise show as a silently blank tab.",
   "_comment_ow1_remainder_label": "OW1-remainder (blind usability pass): the tab used to be labelled \"Backpack\" while everything inside it -- tab_backpack.gd's own header comment, its SATCHEL grid heading, and every player-facing toast it prints ('Press a satchel slot to move it', 'the satchel is full', etc) -- calls it the satchel. A player reading the tab row and the panel underneath it saw two different names for the same screen. `id`/the `shortcuts`/`backpack` config keys are unchanged (they're plumbing, not what the player reads), and tab_backpack.gd's own vocabulary is untouched -- it was already `Satchel`, which is why the label moved to match it rather than the other way around. The Settings > Controls group name and its three `backpack_*` action descriptions below were renamed the same way, so the keybinding screen agrees with the tab it is describing.",
+  "_comment_controller_map": "CONTROLLER-MAP (owner directive 2026-08-22): the shell now OPENS on `game_menu` (Escape / gamepad Menu) and still CLOSES on `menu_cancel` (Escape / gamepad B). B could not stay the open button because the authored map gives B to hotbar slot 1. `tool_cycle` is retired outright -- the hotbar is direct-select -- so prev-tab is the new `menu_tab_left` action (Q / LB), which keeps `tool_cycle`'s keyboard key.",
   "_comment_open": "`menu_cancel` is Escape / B by DEFAULT and the player can now move it — Settings > Controls. It shares its default with `combat_run`, so out of the box the menu still refuses to open mid-fight; see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
-  "_comment_cycle": "`tool_cycle` (Q / LB) steps to the PREVIOUS tab, `menu_tab_right` (Tab / RB) steps to the NEXT one -- owner playtest report: 'LB = tab left, RB = tab right', matching the buttons' own left/right position on the controller. The tab row is also focusable, and left/right on it does the same job.",
+  "_comment_cycle": "`menu_tab_left` (Q / LB) steps to the PREVIOUS tab, `menu_tab_right` (Tab / RB) steps to the NEXT one -- owner playtest report: 'LB = tab left, RB = tab right', matching the buttons' own left/right position on the controller. The tab row is also focusable, and left/right on it does the same job.",
   "_comment_of21": "OF21: the shipped defaults had two same-context gamepad collisions -- `inventory` and `hotbar_1` both on Y, `torch_toggle` and `backpack_drop` both on Start -- each one a real bug (opening the backpack also ate hotbar slot 1; toggling the torch also dropped the focused item). Y stays `inventory` (the more load-bearing of the two); `hotbar_1` moved to RB, alongside `combat_throw` (combat-only) -- see `scripts/ui/input_glyph.gd`'s `hotbar_1` entry for why that's safe. `torch_toggle` moved to R3 (button 8, whose only other reader `backpack_split` is menu-context) rather than displacing `backpack_drop`, which already had a documented reason for sitting on Start (see the \"Backpack\" group note below) -- a first pass tried the Guide button, but Guide-class buttons are system-captured on the ROG Ally and never reach the game. `build_open` and `torch_place` are new world-context actions this same pass added ahead of their caller (OF24 wires them) -- `build_open` reused Start (freed by `torch_toggle`'s move, and `backpack_drop` is menu-only so the two can't collide), `torch_place` reused RT alongside `combat_quick`/`build_rotate_right`, the same trigger dual-use D35 already established for LT.",
 
-  "open_action": "menu_cancel",
+  "open_action": "game_menu",
   "close_action": "menu_cancel",
-  "cycle_action": "tool_cycle",
+  "cycle_action": "menu_tab_left",
   "reverse_cycle_action": "menu_tab_right",
   "_comment_shortcuts": "Action id -> tab id. `game_menu.gd` reads this generically in both directions: pressed with the menu closed it opens onto that tab, pressed with the menu already open it switches to it. `map` (M / gamepad Back) was defined in project.godot and listed as rebindable in the \"The world\" group below since the map shipped, and NOTHING read it -- the owner's brief asked for `M` to open the map and for the handheld to have a dedicated button, and both bindings already existed. The full map was reachable only by opening the pause menu and cycling tabs across to it. One line here, because the reader was already general.",
   "shortcuts": {
@@ -92,12 +93,8 @@
         },
         {
           "name": "The world",
-          "note": "`use_tool` is LMB and gamepad LT. LT is genuinely free during ordinary exploration -- its other two readers, `combat_charged` and `build_rotate_left`, are each locked to a context this one never overlaps (a running fight, an armed build ghost). The right trigger was the obvious choice and is already `torch_place`, which OF24 put there deliberately; taking it would have made one press both swing an axe and plant a torch, the exact collision class the build fixes removed.",
-          "actions": ["interact", "use_tool", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle", "build_open", "torch_place"]
-        },
-        {
-          "name": "Building",
-          "actions": ["build_rotate"]
+          "note": "CONTROLLER-MAP (owner directive 2026-08-22) re-authored the pad map and four of these verbs came off it entirely: `use_tool` (chopping and mining are interact now), `torch_toggle` and `torch_place` (the torch is a hotbar tool -- \"torch doesn't need a button\"), and `build_open` (so is the build hammer). All four keep their keyboard keys and stay rebindable here; their gamepad column reads unbound, which is correct rather than broken. LT and RT are the creature's charged and quick attacks and nothing else.",
+          "actions": ["interact", "inventory", "map", "game_menu", "camera_recenter", "party_cycle", "creature_recall", "use_tool", "torch_toggle", "build_open", "torch_place"]
         },
         {
           "name": "Quick items",
@@ -106,24 +103,21 @@
         },
         {
           "name": "Fighting",
-          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight (build_placer.gd only reads its actions while `pending_build` is set, combat_manager.gd only reads these while a fight is State.ACTIVE), so the triggers never mean two things at once. OF21 adds a third RT reader, `torch_place` (The world group) -- it only fires from ordinary exploration, before any ghost exists and outside a fight, so all three stay mutually exclusive.",
-          "actions": [
-            "combat_quick", "combat_charged", "combat_throw", "combat_run",
-            "combat_switch_left", "combat_switch_right"
-          ]
+          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight, so the triggers never mean two things at once. CONTROLLER-MAP took the pad buttons off `combat_throw` and `combat_run`: the orb is selected on the quick bar and thrown with interact (X), and fleeing is RB, because putting your creature away IS disengaging. Both keep their keys. Switching creatures is `party_cycle` (The world group), one LB press, in the field and mid-fight alike.",
+          "actions": ["combat_quick", "combat_charged", "combat_throw", "combat_run"]
         },
         {
           "name": "Building",
-          "note": "Placing a structure. These only act while a build ghost is out, so their default buttons can double up with exploration controls -- and, on `build_rotate_left`/`build_rotate_right`, with the Fighting group's triggers -- without ever meaning two things at once.",
-          "actions": ["build_place", "build_dismantle", "build_cancel", "build_rotate_left", "build_rotate_right", "build_snap_cycle"]
+          "note": "Placing a structure. These only act while a build ghost is out or the catalogue is open, so their default buttons can double up with exploration controls -- and, on `build_rotate_left`/`build_rotate_right`, with the Fighting group's triggers -- without ever meaning two things at once. `data/config/input_contexts.json` is the written-down version of that claim, and `tests/test_input_context_collisions.gd` checks it.",
+          "actions": ["build_place", "build_dismantle", "build_cancel", "build_rotate", "build_rotate_left", "build_rotate_right", "build_snap_cycle"]
         },
         {
           "name": "Menus",
-          "actions": ["menu_confirm", "menu_cancel", "map_zoom_in", "map_zoom_out"]
+          "actions": ["menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right", "map_zoom_in", "map_zoom_out"]
         },
         {
           "name": "Satchel",
-          "note": "OW1: backpack_drop and backpack_assign BOTH shipped on keyboard G, and both are read from tab_backpack.gd's one poll() with _read_drop() first -- so on a keyboard G always opened the drop confirmation and the assign verb was unreachable entirely, which is half of the owner's 'I can't move anything into [the hotbar]'. backpack_assign moved to J, putting the three backpack verbs on G/H/J side by side; tests/test_controls.gd::test_no_two_menu_context_actions_share_a_keyboard_key fails the build if they collide again. Original note follows. backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. OF21 moved `torch_toggle` off Start (it used to collide with backpack_drop here) and, separately, put the new `build_open` (The world group) on Start too -- safe for the same reason: build_open is only read from ordinary exploration, a state backpack_drop's own `menu.is_open()` gate never overlaps with. Group renamed from \"Backpack\" to \"Satchel\" (OW1-remainder) to match the tab label -- the action ids (`backpack_*`) are unchanged, only the player-facing name.",
+          "note": "OW1: backpack_drop and backpack_assign BOTH shipped on keyboard G, and both are read from tab_backpack.gd's one poll() with _read_drop() first -- so on a keyboard G always opened the drop confirmation and the assign verb was unreachable entirely, which is half of the owner's 'I can't move anything into [the hotbar]'. backpack_assign moved to J, putting the three backpack verbs on G/H/J side by side; tests/test_controls.gd::test_no_two_menu_context_actions_share_a_keyboard_key fails the build if they collide again. Original note follows. backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. CONTROLLER-MAP left Start to backpack_drop alone in a menu: `torch_toggle` and `build_open` gave up their pad buttons entirely, and the new `game_menu` on Start is only read while the shell is CLOSED. `backpack_assign` moved from Y to X, because Y is `inventory` and both are live on this tab at once -- the one same-context gamepad collision the OF21 pass left behind. Group renamed from \"Backpack\" to \"Satchel\" (OW1-remainder) to match the tab label -- the action ids (`backpack_*`) are unchanged, only the player-facing name.",
           "actions": ["backpack_drop", "backpack_split", "backpack_assign"]
         }
       ],
@@ -142,9 +136,12 @@
         "interact": "Interact",
         "inventory": "Open the satchel",
         "map": "Map",
-        "tool_cycle": "Next tool  /  previous tab",
+        "menu_tab_left": "Previous tab",
         "menu_tab_right": "Next tab",
         "creature_recall": "Call out  /  put away your creature",
+        "game_menu": "Open the game menu",
+        "camera_recenter": "Swing the camera back behind you",
+        "party_cycle": "Cycle to your next creature",
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "use_tool": "Swing the equipped tool",
         "build_open": "Open the build menu",
@@ -159,8 +156,6 @@
         "combat_charged": "Charged attack",
         "combat_throw": "Throw an orb",
         "combat_run": "Flee the fight",
-        "combat_switch_left": "Send out the previous creature",
-        "combat_switch_right": "Send out the next creature",
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",
         "map_zoom_in": "Map: zoom in",
@@ -212,5 +207,5 @@
   },
 
   "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it. `{action}` is replaced at draw time by whatever key that action is currently bound to (game_menu.gd::legend), so rebinding in Settings does not leave the legend lying; the gamepad half stays literal because this is a plain Label and cannot draw a glyph. Select and Close used to read 'A' and 'B' with no keyboard half at all, while Prev/Next tab beside them named both devices -- and the literal keyboard B is bound to build_open, so a keyboard player obeying the legend opened the Build tab instead of closing the menu. OW1-remainder (blind usability pass, judged at 40% scale): the 'Menu + View held, or F10  Reset all controls' clause used to sit on the end of THIS shared footer, so it showed on every tab including the satchel -- already a dense, context-specific footer of its own once a stack is held (tab_backpack.gd's own `override_footer` calls) -- reading as a leftover from a controls screen on a screen that isn't one. Dropped from the shared default: `tab_settings.gd` already carries this exact sentence as its own on-screen hint (see that file's own comment -- 'said on the screen as well as in the footer, because a player who has rebound their way out of the menu cannot read the footer'), so nothing is lost, only un-cluttered everywhere else.",
-  "footer": "{menu_confirm} / A  Select        {menu_cancel} / B  Close        {tool_cycle} / LB  Prev tab        {menu_tab_right} / RB  Next tab"
+  "footer": "{menu_confirm} / A  Select        {menu_cancel} / B  Close        {menu_tab_left} / LB  Prev tab        {menu_tab_right} / RB  Next tab"
 }

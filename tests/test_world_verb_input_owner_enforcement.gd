@@ -6,10 +6,13 @@ extends "res://tests/test_case.gd"
 ## `input_owner.gd` who owns input right now.
 ##
 ## `scripts/combat/encounter_director.gd::_read_creature_control_input()`
-## was exactly this bug: it read `combat_switch_left`/`combat_switch_right`
-## (project.godot: gamepad d-pad left/right, joypad buttons 13/14 -- the
-## same physical d-pad `ui_left`/`ui_right` drive Control focus with)
-## unconditionally, with no call anywhere near `INPUT_OWNER.current()`. A
+## was exactly this bug: it read the directional creature-switch actions
+## (then on gamepad d-pad left/right, joypad buttons 13/14 -- the same
+## physical d-pad `ui_left`/`ui_right` drive Control focus with)
+## unconditionally, with no call anywhere near `INPUT_OWNER.current()`.
+## CONTROLLER-MAP has since merged those two actions into one `party_cycle`
+## press on LB, so the d-pad now carries the hotbar and nothing else -- but
+## the hotbar actions are still on it, so this check still has work to do. A
 ## text-scanning test rather than another behavioral smoke test on purpose:
 ## `smoke_build_owns_creature_cycle.gd` (this same task) proves the ONE
 ## regression the owner reported actually reproduces and stays fixed, but a
@@ -29,7 +32,7 @@ extends "res://tests/test_case.gd"
 ##   - `scripts/ui/playground_hud.gd` (the hotbar and world-hotkey polls)
 ##   - `scripts/combat/encounter_director.gd` (creature-control/engage)
 ##
-## `scripts/ui/combat_hud.gd` also reads `combat_switch_left`/`right`
+## `scripts/ui/combat_hud.gd` also reads `party_cycle`
 ## (mid-fight creature switching), but only from inside a block its own
 ## `_process` gates on `is_fighting` -- and both `game_menu.gd` and the
 ## world hotkey that opens Build are themselves gated off during a fight
@@ -52,10 +55,14 @@ extends "res://tests/test_case.gd"
 ##
 ## Colliding actions themselves are NOT hand-picked: they are parsed fresh
 ## from `project.godot` every run, keyed on the physical buttons
-## (joypad 12/13/14 -- d-pad down/left/right) that collide with Godot's
-## built-in `ui_down`/`ui_left`/`ui_right` focus navigation, so a future
-## rebind that moves a new action onto that d-pad is caught automatically
-## without anyone updating this file.
+## (joypad 11/12/13/14 -- the whole d-pad) that collide with Godot's
+## built-in `ui_up`/`ui_down`/`ui_left`/`ui_right` focus navigation, so a
+## future rebind that moves a new action onto that d-pad is caught
+## automatically without anyone updating this file.
+##
+## The complementary check -- two actions that are BOTH live in the same
+## context and BOTH on one button, which no amount of `input_owner.gd`
+## discipline would have caught -- is `tests/test_input_context_collisions.gd`.
 
 const POLLER_FILES := [
 	"res://scripts/ui/playground_hud.gd",
@@ -66,10 +73,10 @@ const POLLER_FILES := [
 ## physical buttons Godot's built-in `ui_down`/`ui_left`/`ui_right` bind to
 ## by default, and therefore the ones any custom action sharing them can
 ## silently steal focus navigation from. `input_owner.gd`'s own file header
-## documents this exact set for the hotbar leak; `ui_up` (button 11) has no
-## project.godot action bound to it today, so it is omitted rather than
-## included for symmetry that would never match anything.
-const COLLIDING_JOYPAD_BUTTONS := [12, 13, 14]
+## documents this for the hotbar leak. `ui_up` (button 11) joined the list
+## in CONTROLLER-MAP, which put `hotbar_3` there -- before that no action
+## was bound to it and it was omitted rather than included for symmetry.
+const COLLIDING_JOYPAD_BUTTONS := [11, 12, 13, 14]
 
 
 func test_project_dpad_actions_actually_parse() -> void:
@@ -79,7 +86,7 @@ func test_project_dpad_actions_actually_parse() -> void:
 	# even fire" precondition.
 	var colliding := _colliding_actions()
 	assert_true(colliding.size() >= 2, "expected multiple project.godot actions bound to the shared d-pad buttons, got %s -- the parser or project.godot's format changed" % str(colliding))
-	assert_true(colliding.has("combat_switch_left"), "known d-pad-left action combat_switch_left did not parse")
+	assert_true(colliding.has("hotbar_2"), "known d-pad-left action hotbar_2 did not parse")
 
 
 func test_exploration_pollers_check_input_owner_before_reading_shared_dpad_actions() -> void:
@@ -113,7 +120,7 @@ func test_exploration_pollers_check_input_owner_before_reading_shared_dpad_actio
 ##
 ## Three shapes are handled, because `POLLER_FILES` uses all three:
 ##
-##   1. a literal argument -- `is_action_just_pressed("combat_switch_left")`
+##   1. a literal argument -- `is_action_just_pressed("creature_recall")`
 ##      (`encounter_director.gd::_read_creature_control_input`)
 ##   2. an array-indexed identifier -- `is_action_just_pressed(HOTBAR_ACTIONS[i])`
 ##      (`playground_hud.gd::_read_hotbar_input`) -- resolved by finding
