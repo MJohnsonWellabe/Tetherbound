@@ -178,3 +178,59 @@ field present?". An audit that checks shape finds gaps that are not there; an
 audit that checks consumers finds the ones that are. The seven verdicts above
 were reached by reading consumers — these two rows are where the shape-checking
 crept back in, and they are the two that were wrong.
+
+---
+
+## What this session closed after the audit
+
+The audit above is the state as **found**. Four of its gaps were closed in the
+same session; this records which, so the table is not read later as still-open
+work.
+
+| Gap | Prompt | Now |
+| --- | --- | --- |
+| No alpha/elder tier anywhere | 60 | **Built.** Four alphas, one per band from 2 on |
+| Reward audit omits the tournament | 58 | **Closed.** Four rows, pinned against trainer data |
+| No per-creature history | 67 | **Built.** Three counters, save VERSION 14 |
+| Camps buildable but not sited | 61 | **Built.** 21 harvest nodes across bands 3–5 |
+| Two rest semantics "coexist" | 61 | **Resolved** — one was dead; filed as DEAD-REST |
+
+Still open and genuinely unbuilt: species-specific shiny rates (60), the
+spawn-siting audit artefact in the prompt's requested shape (60), favourite-food
+and feeding-bond (67), and the attrition tuning artefact (61).
+
+### The two bugs this work introduced and caught
+
+Both were mine, both were caught by checking rather than by a passing test, and
+both are the same mistake.
+
+**The alpha scaled its art and not its body.** `_make_alpha` set `wild.scale`,
+which grows the model and nothing else — `creature_body.gd` builds the capsule,
+the collider, the hit cone and `body_radius()` from `_height` and `_radius`. A
+1.35× alpha would have looked bigger while resolving throws against an ordinary
+body, so a throw that visually struck it returns an edge hit or a miss. That is
+`reticle_outside_body`, which this branch had already spent four rounds on.
+Fixed with `apply_size_multiplier()`, which scales gameplay size and rebuilds
+from it.
+
+**Two invented data values in the camp siting.** `Grass_Large.gltf` does not
+exist — the shipped fiber model is `Plant_7_Big` — and a stone scale of `0.30`
+against the shipped `1.0`. The first would have stood a harvest node in the
+world with no mesh, which a player reads as "nothing is there" rather than as an
+error.
+
+### The pattern worth carrying forward
+
+`test_wild_alphas.gd` passed while the alpha fought at ordinary size, because
+every check in it read **data or source text**. `test_level_up_announcement.gd`
+passed a hand-rolled runner while asserting the singular `trait` against a
+config that spells it `traits`.
+
+That is the same flaw this audit names in its own corrections section — asking
+*"is this field present?"* instead of *"what reads this field?"* — committed
+twice more, by the person who wrote the correction. Shape-checking is easy to
+write and it is how a test ends up green over broken code.
+
+The three checks that actually caught things tonight all asked about consumers:
+what does `model_config()` do with `rank`; what reads `_radius`; does this model
+path resolve.
