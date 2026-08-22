@@ -45,7 +45,13 @@ func test_the_crossing_failsafe_holder_ignores_the_crossing_transform() -> void:
 	var hang := source.find("func _hang_failsafe")
 	assert_true(hang >= 0, "gated_crossing.gd has no _hang_failsafe(); the subject has moved")
 	var body := source.substr(hang)
-	var call_site := body.find("_add_carve_failsafe")
+	# The CALL, not any mention of it. The first version searched for the bare
+	# name and found it inside `_hang_failsafe`'s own explanatory comment, which
+	# sits above the guard line -- so the test failed against code that was
+	# correct, which is the worst way for a test to be wrong.
+	var call_site := body.find('call("_add_carve_failsafe"')
+	if call_site < 0:
+		call_site = body.find("_add_carve_failsafe(")
 	assert_true(call_site >= 0, "_hang_failsafe no longer builds the volume")
 
 	var before_the_call := body.substr(0, call_site)
