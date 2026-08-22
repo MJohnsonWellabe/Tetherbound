@@ -60,13 +60,16 @@ func _run() -> void:
 			Vector3(pond.x, field.height_at(pond.x, pond.y) - 1.0, pond.y),
 		],
 		"pond-lush-pocket": [
-			# (-25,-10) put the eye ~4m UNDER the new waterline (the pond basin
-			# moved, this offset did not) -- the first render was a look up at
-			# the surface from the lakebed. (-70,-20) is dry with a real margin
-			# (probed: h=-13.91 vs water_level=-17.0, tools/_probe-style check
-			# before shipping this the second time).
-			Vector3(pond.x - 70.0, field.height_at(pond.x - 70.0, pond.y - 20.0) + 2.2, pond.y - 20.0),
-			Vector3(pond.x + 10.0, field.height_at(pond.x + 10.0, pond.y + 10.0), pond.y + 10.0),
+			# Second fix. (-70,-20) was dry but pointed at the WRONG side of the
+			# pond -- a placement-count probe (RULES.all_placements, bucketed
+			# into 8 compass sectors around pond_centre) found the actual tree/
+			# bush density concentrated S/SE of the pond (215 of ~340 nearby
+			# placements), toward the mill/ranger cluster, not the far shore
+			# this offset framed. Eye now sits east of that measured density
+			# peak (~pond+(15,-71)) on dry ground (probed h=-12.13 vs
+			# water_level -17.0), looking back across it toward the water.
+			Vector3(pond.x + 60.0, field.height_at(pond.x + 60.0, pond.y - 70.6) + 2.2, pond.y - 70.6),
+			Vector3(pond.x + 7.0, field.height_at(pond.x + 7.0, pond.y - 45.0), pond.y - 45.0),
 		],
 		"mill-crossing": [
 			Vector3(-405.0, field.height_at(-405.0, 500.0) + 2.2, 500.0),
@@ -77,8 +80,13 @@ func _run() -> void:
 			Vector3(10.0, 2.0, -10.0),
 		],
 		"road-sign-shoulder": [
-			Vector3(-350.0, field.height_at(-350.0, 385.0) + 4.0, 385.0),
-			Vector3(-360.0, field.height_at(-360.0, 400.0), 400.0),
+			# Tightened: the first framing put the sign too far off to read at
+			# this resolution and was not included in the reviewed batch.
+			# Eye sits ~20m back along the Pond Circuit trailhead's own road
+			# bearing (points[0]->points[1]) looking straight at the sign's
+			# corrected position (~2.5m off the centreline, OP21-18's fix).
+			Vector3(-351.0, field.height_at(-351.0, 382.0) + 2.0, 382.0),
+			Vector3(-357.76, field.height_at(-357.76, 401.12), 401.12),
 		],
 	}
 
