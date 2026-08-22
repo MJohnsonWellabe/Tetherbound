@@ -1,4 +1,147 @@
 {
-  "_comment": "BAND-SPLIT. Band-local clusters for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
-  "clusters": []
+  "_comment": "BAND-SPLIT. Band-local clusters for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_why_this_was_empty": "GATE-D3. This file existed with an empty `clusters` array -- nothing built anywhere in 1580m of river country. tether_relay.json's own `_comment_props` invited exactly this: 'The site's loose gear ... belongs in data/config/props.json as a `relay_station` cluster ... That cluster is not authored yet.' The four clusters below are that invitation plus the region's other two missing beats: Team Tether presence building on the approach BEFORE the pickets (prompt 64: 'The route should not jump from wilderness directly into the four-person relay gauntlet'), and the mill/crossing structures §3 Band 3 asks the river region to read as a landmark rather than decorative terrain. Every model is one the settlement already uses (D24, one prop family) -- nothing here is new.",
+  "clusters": [
+    {
+      "order": 3000,
+      "name": "riverwatch_rest",
+      "_why": "GATE-D3, the region's camp/rest siting (prompt 64: 'a reasonable recovery/staging point before or around the relay approach should exist'). Sited on the flattest ground measured anywhere in the band (vegetation.json order 3000, 0.35m of spread over an 8m box), right past the spine's bend into the relay road and well short of either picket. Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one. What stands here is evidence a traveller already used this spot: a seat, a set-down pack, a water barrel. It reads as an obvious place to plant your own camp before pushing into Team Tether ground, not as a free-heal station inside the gauntlet.",
+      "props": [
+        {
+          "model": "Bench",
+          "at": [211.6, 3699.2],
+          "yaw_deg": 25.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- somewhere to sit before the approach"
+        },
+        {
+          "model": "Barrel",
+          "at": [209.0, 3701.4],
+          "yaw_deg": -10.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water, kept within reach of the bench"
+        },
+        {
+          "model": "Bag",
+          "at": [210.8, 3700.9],
+          "yaw_deg": 110.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set down against the bench leg, not merely near it -- the same 'touching pile reads as one load' rule the quarry and ranger-camp clusters already use"
+        }
+      ]
+    },
+    {
+      "order": 3001,
+      "name": "relay_approach_checkpoint",
+      "_why": "GATE-D3. The first physical sign of Team Tether on the road, well short of Hess -- a barricade stack rather than a person, because a fight here would just be a third picket and prompt 64 asks for presence BUILDING before the gauntlet, not another battle. Positioned at (240,3678), 8m past the spine's own bend and clear of Hess's own arena at (248,3683.5) so the two do not compete for the player's stopping point.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [240.6, 3677.4],
+          "yaw_deg": 15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the anchor -- stacked supply, left where the crew set it down rather than carried the last stretch to the site"
+        },
+        {
+          "model": "Barrel",
+          "at": [239.4, 3678.6],
+          "yaw_deg": -25.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "set against the crate, one load"
+        },
+        {
+          "model": "Rope_1",
+          "at": [241.5, 3679.2],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "a coiled cordon line -- the closest this pack's own catalog comes to a barricade marker, and the honest read is 'somebody was here recently,' which is the whole point of a checkpoint the player is not challenged at"
+        }
+      ]
+    },
+    {
+      "order": 3002,
+      "name": "relay_station",
+      "_why": "GATE-D3, adopting tether_relay.json's own open invitation (`_comment_props`): the site's loose gear, placed inside the compound yard rather than duplicated in that file. Positions are the site's own (s,t) local frame (tether_relay.json's `_frame`) converted to world metres -- s around -7..-9 (just inside the gate, off the road axis every fight stands on) so the crates sit in the yard corner rather than in the walk line between Hess/Orrin/Dell and the console.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [350.4, 3770.0],
+          "yaw_deg": 40.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the anchor -- requisitioned stock, still crated"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [349.0, 3770.3],
+          "yaw_deg": -30.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "against the first crate's side, one load"
+        },
+        {
+          "model": "Barrel",
+          "at": [352.8, 3769.2],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "a second stack, a couple of paces off -- the yard has an edge instead of a boundary"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [339.4, 3764.9],
+          "yaw_deg": 70.0,
+          "pitch_deg": -70.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "left leaning near the gate, the excavation tool that dug the spoil the burrowback cluster now lives in"
+        },
+        {
+          "model": "Bag",
+          "at": [344.5, 3753.8],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "near the pad's foot -- somebody's kit, the detail that makes the site occupied rather than merely built"
+        }
+      ]
+    },
+    {
+      "order": 3003,
+      "name": "old_mill_crossing_gear",
+      "_why": "GATE-D3, spec's own 'mill/crossing structures' beat. mill_crossing.gd and terrain_playground.json's `crossings[old_mill_crossing]` already build the deck, the channel and the gate logic -- this is the loose gear around it, the same treatment the quarry's working face gets: tools left where the crew stopped, which is also the honest reason a bridge missing one gear (data/dialogue/relay.json's `relay_captive_freed`) reads as abandoned rather than never-finished. Sited on the south bank short of the narrows, clear of the carved gorge edge.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-60.4, 4159.6],
+          "yaw_deg": 55.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the anchor -- spare deck timber, crated"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-59.0, 4160.8],
+          "yaw_deg": -20.0,
+          "sink_m": 0.03,
+          "scale": 1.1,
+          "_why": "coiled rigging line for the deck, set down beside the crate"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [-61.6, 4158.5],
+          "yaw_deg": 140.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "tipped a couple of paces off -- the group has an edge, not a boundary"
+        }
+      ]
+    }
+  ]
 }

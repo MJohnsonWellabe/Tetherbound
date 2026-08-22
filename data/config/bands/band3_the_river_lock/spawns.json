@@ -68,6 +68,14 @@
       "centre": [140.0, 0.0, 4560.0],
       "radius": 18.0,
       "_why": "The north leg out of the region ((160,4570) is a spine point), on the ground the player covers between the crossing and Band 4. Placed so the last 300m of the region is not the empty run-out that the whole band used to be."
+    },
+    {
+      "order": 3008,
+      "species": "brooktail",
+      "count": 2,
+      "centre": [-70.0, 0.0, 4130.0],
+      "radius": 16.0,
+      "_why": "GATE-D3, the region's optional detour (prompt 64: 'at least one detour/special wild/discovery associated with river ecology or Team Tether occupation'). Sited directly on `near_bank_river_walk` (terrain_playground.json trail.loops), the authored spur that leaves the spine at the crossing's own approach ((-30,4060)) and walks the near bank downstream -- 'shows the far side you cannot reach yet, dead-ends at the crossing you have to earn,' in the loop's own words, and until this entry nothing actually lived on it. A second, smaller brooktail pocket rather than a new species: D24/CLAUDE.md forbid a new creature for one detour, and finding the crossing's own water type again downstream, away from the narrows crowd at order 3004, is what makes the loop worth the walk off the critical path instead of just a longer way to the same fight."
     }
   ]
 }

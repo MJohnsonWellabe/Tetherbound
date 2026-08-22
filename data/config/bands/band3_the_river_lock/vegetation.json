@@ -1,0 +1,12 @@
+{
+  "_comment": "BAND-SPLIT-2. See band1_lower_meadows/vegetation.json for why this file exists. `order` equals the index this entry would hold in the merged pre-split array, and is reserved against Band 3's 3000-3999 range like every other band-scoped config here (see tests/test_band_vegetation.gd's own note on why).",
+  "clearings": [
+    {
+      "order": 3000,
+      "x": 210.0,
+      "z": 3700.0,
+      "radius": 11.0,
+      "_why": "GATE-D3. The flat shoulder just past the spine's own bend into the relay approach ((230,3670) is a spine waypoint) -- measured with tools/_probe_band3.gd at 0.35m of spread over an 8m box, the flattest ground found anywhere in the band. This is the region's answer to prompt 64's camp/rest requirement: not a pre-built healer inside the gauntlet, but a real clearing, off the pickets' own ground and before either of them, where the player can actually plant a camp and rest before pushing in. A copse standing on it would defeat the point -- the camp placer needs open, walkable ground, the same reason clearings exist for every other hand-placed structure in the game."
+    }
+  ]
+}

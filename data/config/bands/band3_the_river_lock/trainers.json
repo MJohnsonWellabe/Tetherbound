@@ -7,14 +7,15 @@
       "name": "Hess",
       "_comment": "SE25. Spec sec3 Band 3 / sec12: 'two or three Team Tether trainers and a relay captain' at the relay station. The OUTER picket -- the first Team Tether personnel the player is ever stopped by, met on the approach road well before the site itself. Levels are Band 3 (~8-12) and ALL TUNABLE; never player-scaled (spec sec11/D30: a level is a real level, and the world does not move to meet you).",
       "_site": "SE23 IS NOT BUILT YET. These four stand at the relay SITE, whose one authored coordinate is data/config/relay_site.json's `site.centre` [108, 34] -- on the quarry's own conduit bearing toward the stronghold (old_quarry.json's [229.8,-144.4]), 150m out from the quarry floor. Every position below is derived from that centre. When SE23 builds the station it should ADOPT relay_site.json's centre rather than pick another, and move these four with it if it needs to.",
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760). Pure translation, so `facing_deg` (-34.4, == `approach_bearing_deg`) is still correct without re-deriving it.",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760).",
+      "_comment_gate_d3": "GATE-D3. OW5D's own placement, along the site's internal conduit bearing, left Hess only ~22m short of the site centre -- alongside Orrin, Dell and Vance in an 18m span, which is exactly what prompt 64 names as the failure: 'The route should not jump from wilderness directly into the four-person relay gauntlet.' Moved OUT onto the spine road itself (terrain_playground.json trail.bands[2], the (230,3670)->(350,3760) leg the player actually walks into the region), 140m short of the site centre. `facing_deg` recomputed for the new leg: the trainer faces back down the direction the player arrives from, opposite the (0.8,0.6) travel bearing of this leg, atan2(-0.8,-0.6) = -126.9 deg (not the old -34.4, which described the site's own separate conduit-approach frame Orrin/Dell/Vance still stand on). Ground measured with a scratch heightfield probe (tools/_probe_band3.gd, not committed): -3.20m, 1.04m of spread over an 8m box -- flatter than the old site, comfortably inside an 11m arena.",
       "rank": "grunt",
       "position": [
-        338.5,
-        3775.0
+        248.0,
+        3683.5
       ],
-      "facing_deg": -34.4,
-      "_why_here": "On the approach, 22m short of the site centre, facing back down the conduit road the player walks up. Ground here measures -5.55m with 1.84m of spread over an 8m box (tools/_probe_relay.gd) -- gentle enough for an 11m arena.",
+      "facing_deg": -126.9,
+      "_why_here": "On the spine itself, 140m short of the site centre, right past the bend where the road turns into the relay approach -- the first Team Tether contact of the region, past the new camp clearing (vegetation.json order 3000) and the checkpoint prop cluster (props.json `relay_approach_checkpoint`), well before any sign of the compound.",
       "challenge": "relay_hess_challenge",
       "defeated": "relay_hess_defeated",
       "team": [
@@ -46,13 +47,14 @@
       "name": "Orrin",
       "_comment": "SE25. The INNER picket -- the second stop on the same road, a little stronger and a little further in. Two grunts before an officer before the captain is the rank ladder NP2's palettes exist to make readable at gameplay distance.",
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "_comment_gate_d3": "GATE-D3. Moved out with Hess (see that entry's own `_comment_gate_d3`) onto the same spine leg, roughly midway between Hess and the site centre rather than 13m from it -- so the picket line is a real gradient the player walks through (Hess -> Orrin -> Dell -> Vance, each a step deeper and a step stronger) instead of a cluster met all at once. `facing_deg` recomputed the same way Hess's was: -126.9, facing back down the leg toward the incoming player. Ground: 4.24m, 2.57m spread over an 8m box (tools/_probe_band3b.gd, not committed) -- rougher than Hess's spot but inside the same tolerance the old site positions already shipped at (Dell's own original spread was 2.31m).",
       "rank": "grunt",
       "position": [
-        344.0,
-        3768.0
+        284.0,
+        3710.5
       ],
-      "facing_deg": -34.4,
-      "_why_here": "13m short of the site centre on the same bearing. Ground -4.31m, 1.95m spread over an 8m box.",
+      "facing_deg": -126.9,
+      "_why_here": "On the spine, roughly 70m short of the site centre and 60m past Hess -- the second checkpoint, close enough to the compound that Team Tether's presence now reads as continuous rather than as two isolated encounters.",
       "challenge": "relay_orrin_challenge",
       "defeated": "relay_orrin_defeated",
       "team": [
