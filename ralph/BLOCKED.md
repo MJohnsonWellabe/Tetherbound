@@ -6,7 +6,67 @@ design decision rather than inventing one.
 
 ---
 
-## OPEN, 2026-08-22 — the modular roof cannot form a continuous ridge without a new mesh
+## OPEN, 2026-08-22 — the map is "unusable" because fog is working exactly as specified
+
+**Owner decision needed.** This reverses a prior deliberate decision, so it is not
+an engineering call.
+
+The owner reported the map as "currently unusable — cannot see useful
+information on it." Two lanes and two independent blind critics investigated.
+The map is **not** broken:
+
+- The fog grid in `autoload/map_state.gd` paints undiscovered ground **fully
+  opaque** (`FOG_UNDISCOVERED := Color(0.02,0.02,0.03,1.0)`), and
+  `tests/test_map_fog.gd` asserts exactly that on both the full map and the
+  minimap. The file's own OW3 comment records why: a translucent fog was
+  previously judged as "reveals everything automatically" even at reduced
+  contrast, so it was deliberately hardened to opaque.
+- "Surveyed: 0%" is honest rounding, not a stuck counter. The world is
+  2048x8192m (`world_extent.gd`); a fresh session has explored a fraction of
+  one percent.
+- The tile the player stands on **is** revealed — `game_state.gd:478` calls
+  `map.mark_visited()` on every discovery tick.
+- The minimap renders terrain correctly from the identical `MapState` /
+  `map_baker.gd` data, which rules out any bake or pipeline failure.
+
+So the full map is black early in the game because the player has explored
+almost nothing, and the fog is doing precisely what it was designed to do.
+
+**The tension.** A map that shows nothing until you have walked everywhere is
+technically correct and practically unusable in the opening hours — which is
+exactly when a new player most needs it, and exactly when the owner hit it. OW3
+solved a real problem (a map that hands you the world for free) and created
+this one.
+
+Options, all cheap, none of which an implementation lane should pick unilaterally:
+
+1. **Seed a starting reveal** around the village and the authored opening
+   route, so the first chapter has a usable map without giving away the biome.
+2. **Reveal authored landmarks and roads at low fidelity** while leaving terrain
+   fogged — the player sees the skeleton, not the contents.
+3. **Two-tier fog**: opaque for never-visited, dimmed-but-legible for
+   "known of but not visited," reserving full reveal for actually-walked ground.
+4. **Keep it as is** and accept that the map earns its usefulness through play.
+
+Note option 4 is a legitimate answer; the current behaviour is deliberate and
+tested. But it should be chosen knowingly, because the owner has now reported
+it as a defect once.
+
+**What is NOT blocked and has been fixed** on `ralph/MAP-TERRAIN` regardless:
+zoom now follows the player (it previously scaled around the world's geometric
+centre); the player marker and objective diamond no longer overlap; minor
+landmark icons got backing plates so they are visible on light terrain; canvas
+label and heading fonts were raised from ~8-11px cap height toward the ~16px
+handheld bar; the minimap's distance label got an outline; and the minimap
+player arrow is no longer smaller than the objective diamond it points at.
+
+**Also worth knowing:** the critic's report that zoom does not centre on the
+player was likewise correct-but-misleading. The capture spawns ~512m from the
+world's south edge, so `_clamp_pan()`'s world-edge clamp legitimately holds the
+view back by a measured 527.6m. The behaviour is right; the evidence was taken
+at a spot where the clamp is active.
+
+
 
 **Owner decision needed.** Everything else in OP21-07/08/09 shipped; this is the
 one part tuning cannot reach.
