@@ -108,6 +108,45 @@ Highest-value single change, per the critic: give `cloudy` real cloud cover and
 That also stops cloudy and rain reading as near-duplicates. All fixes are
 in-scene grade/lighting work; none need new art.
 
+### TWO-SUNS — there are two suns in the sky at golden hour
+`site/img/camp-dusk.jpg` (now deleted) has two orange discs in the upper sky,
+one upper-left and one upper-centre. Captured through `WorldLook`'s own
+`golden` preset in `data/config/art.json`, so this is what the preset renders,
+not a capture-harness artefact — a second sun quad, or a sky element
+duplicated by the preset. An independent blind critic found it in the first
+second of looking. Everything else in that frame is among the better lighting
+in the build, which is why it is worth fixing rather than reshooting around.
+
+### SITE-ART-DEBT — what a blind pass found across the whole frame set
+An independent critic judged every committed page frame against
+`docs/reference/tetherbound-meadows-keyart.png` with no knowledge of what had
+changed. Six frames were pulled outright (see the note in `site/index.html`'s
+CSS). What it found across the rest is scene/art work, not page work:
+
+- **The sky is a bare vertical gradient in every daylight frame.** The key art
+  has cumulus in all seven panels. Named the cheapest available upgrade and the
+  main reason the wide shots read as empty.
+- **One green, foreground to horizon**, with mown-lawn striping visible in
+  `hero-meadow`. The key art's ground is flower drifts, dirt breakup, rock
+  scatter and shaded pockets.
+- **A white floating quad** appears in `01-spawn-outward`, `03-rise-overlook`,
+  `06-charged-attack-lands` and `aim-arc` — same artefact, four frames. `06`
+  also has the `SKY-PLANES` translucent rectangles in it.
+- **Cube-with-a-rock-texture architecture** at the gate and the relay: no
+  silhouette, no trim, no scale cues, and the relay's walls read as knee-high
+  edging beside a 3m gateway. Human figures inside it are dwarfed 4–5x by the
+  pylons.
+- **Team Tether's oxblood has not landed.** In the key art it is the danger
+  colour on their banners; in the build their only signature is a teal glow
+  line that reads as a friendly waypoint path.
+- `village-talk` clips a HUD panel mid-word at the left edge and puts white
+  objective text over an orange roof.
+
+Verdict on the two bar questions: does it read as the key art's world — **no**,
+though `mill-crossing` and `village-square` get within reach; does it read as
+the same kind of game as the Palworld references — **from `aim-arc` and
+`02-arena-opens` alone, yes**, from the whole set, no.
+
 ### SPOKE-VIEWS — `tools/capture_severed_spokes.gd` photographs empty meadow
 Its seven viewpoints are pre-`OW5B`/`OW5D` and put the eye ~700m from where
 these roads now are: `stone_gate`'s eye is `[-164, -1.3]`, the sealed gate is
