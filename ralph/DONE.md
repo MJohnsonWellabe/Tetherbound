@@ -3,6 +3,63 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## D5 / BAND5-CONTENT — an approach that points at the stronghold
+
+`tests: test_stronghold_data.gd, test_trainers_data.gd, test_item_gate.gd, smoke_stronghold.gd` · `area: world/band5`
+
+Prompt 66's remaining asks. Density was already done on this branch (22
+clusters / 75 creatures) and was not touched. Full evidence, both coordinator
+requests and the owed work are in `ralph/GATE_D5_EVIDENCE.md`.
+
+Three of the prompt's items turned out to be one object. Band 5 had **no tether
+machinery at all** — the chapter's conduit network stopped at the relay (z 3749)
+and the quarry (z 1790), so the last 680m, the approach to the machine the whole
+network feeds, was open meadow with a castle on the skyline. Fifteen lit pylons
+now run an unbroken trunk line arriving at the works, borrowed from
+`severed_spokes.gd`'s builder the way `old_quarry.gd` borrows it. Straight,
+beside the wandering road rather than on it: a line that followed the spine
+would be a handrail, which is the "magical GPS" the prompt names, where a
+straight line the road keeps re-crossing is a bearing. `meadow_healing.gd` finds
+lit fittings by material rather than by name, so all fifteen go dark on the walk
+home with no ending work added.
+
+Sited by measurement — `tools/_probe_band5_pylon_line.gd`. `_conduit_span` sags
+the cable from each pylon's OWN base, so ground rising mid-span pushes itself
+into a cable computed from the two ends; the first candidate put it **1.74m**
+above the ground, head height on a 1.8m player. 15 stations at 10.0m is the
+smallest height that clears — worst 3.14m.
+
+**The driven run found something nobody had measured.** The three-Sigil gate at
+(0,7400) sat **55.9m off the authored spine**: the region's one physical
+progression checkpoint stood in open meadow beside the road, and the road never
+passed it. `playground_world.gd`'s own comment had deferred exactly this to
+"fresh tuning against the real approach once it is built". It is built. Moved to
+(63.6,7400) where the spine actually crosses that latitude and yawed to -28.6°,
+both measured, with the leaf's span axis measured off its AABB rather than
+assumed. It is still a 4.07m leaf on open ground and therefore staging rather
+than a barrier — said out loud at the constant; the flanking carve needs
+`terrain_playground.json` and is requested, not faked.
+
+Dead travel **123m → 63m**. The whole eastward diagonal before the gate had
+nothing within reach of the road. Three beats placed into it — a duskhush
+cluster, a stone node, and a Team Tether supply drop rather than a third body,
+because the prompt says not to spend every combat beat before the stronghold.
+The remaining 63m is the final approach to the works and is deliberate.
+
+Drained ground is **half shipped, honestly**. `drains.stations` holds seven
+entries, four at the quarry and three at the relay, and none in Band 5 — the
+drain got weaker the closer the player walked to the machine causing it.
+`approach_drain_skin.gd` ships the runtime half now, driven by `drain_factor()`
+so it paints exactly where a station says; the stations are
+`terrain_playground.json`, which no Gate D lane may edit, so eight are requested
+in the report and the skin logs plainly that it rendered nothing until they
+land.
+
+**Owed, not done: the blind visual pass.** Six captures are in
+`shots/band5_approach/` for an independent critic — this lane did not grade its
+own frames, and `22-SKY-PLANES`/`23-BILLBOARD-WHITE` stay open pending that
+verdict.
+
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 
 `tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
