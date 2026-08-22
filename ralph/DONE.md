@@ -81,6 +81,36 @@ lane was fixed in round 1 and re-rendered:
   nothing leading into it"*. The grove shot is reframed onto the stand with the
   old-growth behind it as mid-ground mass.
 
+Round 2, on the re-rendered frames, judged blind again and told the stand was
+still *"scattered instances of a repeated asset"* — and its reasons found a
+real bug this lane had inherited without noticing:
+
+- *"Oxblood has leaked onto friendly scenery — the red ironwood canopies are
+  the largest saturated red mass anywhere in the survey"*, and *"the same asset
+  is two different colours in adjacent frames"*. One bug, and **the repo
+  already knew it**: `vegetation.json`'s `grove` layer carries R9.4's own note
+  that `Leaves_TwistedTree_C.png` is RGB(167,23,23) — *"THE RED LEAK, found by
+  two independent blind reviews eleven days apart"* — and retextures those
+  leaves green so the meadow's biggest trees are not blood red.
+  `harvest_node.gd::_material_fixups_for_model()` applies that same layer data
+  to a harvest node **by model path**, and the `grove` layer lists only
+  `TwistedTree_2` and `_4`. A node built from `_1` or `_3` gets no fixup and
+  renders the pack's raw crimson. This stand was authored from `_2`, `_1` and
+  `_3` — one stand in two colours, with the red half on the one hue spec §21
+  reserves for Team Tether. Re-authored across `_2` and `_4` only, keeping two
+  forms and the scale spread. **This is the third independent blind review to
+  find the same red**, which is the argument for the two follow-ups it opens,
+  neither of them this lane's file: **band2's five ironwood nodes carry the
+  identical leak**, and a harvest node whose model no scatter layer lists
+  silently gets no material fixup at all.
+- Round 2 also opened with a defect round 1 never named and no band content can
+  cause: **the trainer renders as a solid black cut-out** in `ridge-patrol-camp`
+  and `watchtower-spur`, with correctly lit wooden props a metre away in the
+  same frame. It called the game's cast "a black speck" and said the owner's
+  Palworld bar cannot be evaluated at all from these frames. That belongs to
+  whoever owns character materials/lighting, and it is the loudest thing in
+  this survey.
+
 Most of what it named is **not this lane's to fix, and is recorded here as
 evidence rather than quietly dropped**:
 
