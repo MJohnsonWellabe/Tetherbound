@@ -341,6 +341,30 @@ func _hang_failsafe(world: Node3D, carve: Dictionary, centre: Vector2, across: V
 		return
 	var spokes: Node3D = SEVERED_SPOKES.new()
 	spokes.name = "GullyFailsafe"
+	# TOP LEVEL, and this is load-bearing, not tidiness.
+	#
+	# `_add_carve_failsafe()` places its volume in WORLD coordinates -- that is
+	# correct for `severed_spokes.gd`'s own holder, which sits at the origin.
+	# This crossing does not: it sets `position` to the carve centre and
+	# `rotation.y` across the trench (see `build()` above), so a child inheriting
+	# that transform is displaced by the whole crossing pose. Measured on the
+	# real Meadows scene with tools/_probe_gully.gd, before this line existed:
+	#
+	#     SouthBridge  local=(8.0, -14.7, 1330.0)  GLOBAL=(-1322.0, -17.6, 1338.0)
+	#
+	# The gully is at x~0, z=1330. Its guard was sitting 1.3km west in open
+	# meadow, and the trench it was supposed to guard had nothing in it at all.
+	# A blind playtest fell in and held forward for 52 seconds without moving:
+	# the floor is below the road on both sides, so forward and back are walls,
+	# and the only way out is ~50m sideways to where the carve fades. Worse, a
+	# player who dies down there leaves a satchel 1.3km from anywhere.
+	#
+	# `top_level` makes the holder ignore the parent transform, so the world
+	# coordinates `_add_carve_failsafe()` computes are the ones it gets. The
+	# alternative -- converting to local here -- would mean this file knowing
+	# how that function places things, which is exactly the coupling its own
+	# header says it does not want.
+	spokes.top_level = true
 	add_child(spokes)
 	var village_side := [
 		[centre.x - across.x * reach * RECOVERY_BACK, centre.y - across.y * reach * RECOVERY_BACK],
