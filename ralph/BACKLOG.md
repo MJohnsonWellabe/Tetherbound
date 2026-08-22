@@ -226,6 +226,43 @@ rather than authored portraits -- the fix is camera control on the picker, not
 new art. The judge rated the creature designs themselves as the strongest thing
 in the whole frame set, which makes the framing the only thing in the way.
 
+### DEAD-REST — `home_recovery.gd` has no production callers
+
+Found while reconciling prompt 61's "two rest semantics coexist" note. They do
+not coexist; one is dead.
+
+`scripts/creatures/home_recovery.gd::rest()` is an instant `heal_fully()` plus
+rest XP. Across the whole project it is **preloaded once and invoked never**:
+`scripts/ui/creature_bed_panel.gd:25` holds the `const`, and no line anywhere in
+`scripts/` or `autoload/` calls it. Its only callers are two TEST files --
+`tests/test_fainting.gd` (8 sites) and `tests/smoke_stronghold.gd:254`.
+
+The live path is `autoload/game_state.gd`: `_tick_creature_bed_recovery()` heals
+gradually per frame from `progression.json`'s `creature_bed.full_heal_seconds`,
+and `complete_creature_bed_rests()` pays the full-rest bonus overnight. That is
+the path `smoke_gate_a_rest_torch.gd` asserts on ("bed recovery was not
+gradual"), and it is what the stronghold's rest point actually uses, because
+`stronghold.gd::_build_recovery_point()` builds a real `CREATURE_BED`.
+
+**Why this is worth an entry rather than a deletion right now.** This is the
+same shape as the twelve stale harnesses this branch already fixed, one step
+further along: `test_fainting.gd` passes, and what it proves is that a function
+nothing calls behaves as written. `conventions.md`'s own rule -- "a test that
+passes because the feature is absent is worse than no test" -- covers this from
+the other side.
+
+`smoke_stronghold.gd:254` is the sharper case: it calls `HOME_RECOVERY.rest()`
+directly to simulate the stronghold's recovery, so it asserts against a code
+path the game does not take at that point in the chapter. It would keep passing
+if the real bed recovery broke.
+
+The work: decide whether `home_recovery.gd` is deleted (and `test_fainting.gd`'s
+eight sites retargeted at the live path) or given a real caller. Not done here
+because deleting production code and rewriting two suites is not a change to
+make at the end of a verification pass -- but it should not sit unnamed either.
+`stronghold.gd`'s comment, which claimed the reuse that was not happening, is
+corrected on this branch.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on
