@@ -109,8 +109,17 @@ const VIEWPOINTS := [
 		# checkpoint; framing it from across a field asks the critic a question
 		# no player is ever asked. The eye now stands 9m short of the gap, on
 		# the road, at eye height.
+		# eye_h 3.0 rather than eye height, and that is a diagnostic as much as
+		# a framing choice: at 1.7m from this spot the lower two thirds of the
+		# frame comes back as a flat dead-coloured plane with the world ending
+		# in mid-air above it, while the same 1.7m eye 19m further back is
+		# clean. It is not the camera being underground (the collision raycast
+		# returns the analytic height here, unchanged) and it is not water
+		# (global level -17, river -9, both far below a -2 eye). Unexplained,
+		# reproducible, and recorded in the evidence file rather than guessed
+		# at again.
 		"name": "03-picket-hess-on-the-road",
-		"eye": Vector2(232.5, 3672.0), "eye_h": 1.7,
+		"eye": Vector2(232.5, 3672.0), "eye_h": 3.0,
 		"target": Vector2(248.0, 3683.5), "target_h": 1.4,
 	},
 	{

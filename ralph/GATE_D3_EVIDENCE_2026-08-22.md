@@ -277,14 +277,36 @@ coordinator-owned, reported here rather than edited:
   used anywhere, so the enemy installation reads as the friendliest palette in
   the set.
 
-**Unjudged.** The checkpoint reframe (27m -> 9m) was made *after* round 2 and
-has not been put to a critic. The barricade and Hess do now appear in the
-frame, which is a fact about whether the props render, not a verdict on whether
-the composition works. That frame also came back with a large dark band across
-its lower two thirds under software GL that the earlier framing did not have;
-whether that is a shadow, an artefact of a near-ground camera, or a real
-rendering fault is not established, and it should be the first thing round 3
-is asked about.
+### 5.1 An unexplained rendering artefact at the checkpoint — open
+
+Round 3 was asked about the dark band in the checkpoint frame and answered
+with measurements rather than an impression: from y≈450 to the bottom edge,
+across the full 1280px width, the region is a constant RGB ≈ (46,58,44)
+varying by under three levels; the top edge is dead straight and
+horizon-parallel; the props standing in it keep full saturated wood tone; the
+terrain and a wall segment visibly terminate in mid-air at the seam. Their
+reading was a water body or terrain hole rendering as an unshaded plane.
+
+**Two explanations were tested and both are wrong.**
+
+*Not the camera being underground.* That was the leading theory, and it had a
+real basis — §1.2 shows the analytic heightfield and the collision terrain
+disagreeing by up to 22m, so an eye seated on the analytic value can end up
+inside the ground. The capture tool now raycasts every eye and target onto the
+real physics surface (a genuine fix, kept). At this viewpoint the ray returns
+the analytic height unchanged, the eye is identical before and after, and the
+artefact is identical too.
+
+*Not water.* `terrain_playground.json`'s global level is **-17.0** and the
+river's is **-9.0**. The eye is at **-2**. Both surfaces are far below it.
+
+**What is established:** it is positional, not a height effect. The same 1.7m
+eye 19m further back at (214, 3668) renders clean; at (232.5, 3672) it does
+not. Repro: `tools/capture_band3_region.gd`, viewpoint `03`, eye (232.5, 3672).
+
+Handed over rather than guessed at a third time. It is in terrain/rendering,
+not in band content, and nothing in `data/config/bands/band3_the_river_lock/`
+can produce or fix it.
 
 **Convergence.** Round 2 named new defects, so the pass had not converged when
 this session ended. Every band-scoped item it named is fixed; the remainder is
