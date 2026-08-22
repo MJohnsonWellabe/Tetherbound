@@ -3,6 +3,75 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-C-CLOSE — audit Gate C's seven prompts, then close four of the gaps
+
+`tests: full unit suite (1300+), 4 new test files, 8-shard re-run` · `area: ecology, rest, progression, rewards, data`
+
+Continues GATES-ABC-VERIFY below. Gate C had never been checked at all, and the
+branch was being reported as "Gates A/B/C verified" on the strength of Gate A's
+evidence run alone.
+
+**Audited by three independent readers**, each told explicitly not to trust
+`DONE.md`, `BACKLOG.md`, or any doc claiming something shipped -- only actual
+data and code. Result: **three IMPLEMENTED, four PARTIAL, none absent**. The
+backbone every regional package inherits is real: `chapter_curve.json` resolves
+wild level from world z with no player scaling, 21 trainers ladder from level 2
+to 20, all 20 objectives trace individually to a real flag writer, and the
+five-creature cap is enforced in `party.gd` rather than merely documented.
+
+**The distrust instruction earned itself twice, in OPPOSITE directions.**
+`objectives.json`'s own comment calls nine tournament flags unwritten "CONTRACT"
+flags -- all nine are live. `chapter_curve.json` still calls band 2 trainerless
+with two trainers in the file beside it. In this repo **a comment asserting
+another file's state is evidence of nothing**, and that cuts both ways: it
+understates as often as it overstates.
+
+**Four gaps closed:**
+
+- **The chapter had no alpha tier.** No `alpha`/`elder`/`special`/`nest`/`rare`
+  field in any of the five band spawn files; `grep PW2` returned nothing. Four
+  alphas now, one per band from 2 on, none in band 1 (prompt 71 keeps the
+  opening meadow gentle). `level_bonus` is ADDITIVE over the region's own roll,
+  never absolute, so an alpha cannot drift out of band when the curve moves.
+- **The reward audit omitted the tournament.** The rewards had been paid since
+  TOURNAMENT-1; the audit table could not see them. Four rows, read off the
+  shipping data, with a test pinning the audited coin figure against what
+  `tournament_final_oskar` actually pays.
+- **No per-creature history**, so the release ceremony had nothing to surface.
+  Three counters (`battles_fought`, `levels_gained_with_you`, `caught_on_day`),
+  save VERSION 14. The ceremony says NOTHING when there is nothing true to say --
+  "0 battles" would be a claim about a creature a pre-14 save was not counting.
+- **Camps were buildable everywhere and worth stopping nowhere.** Bands 3-5
+  shipped `harvest.json` with `nodes: []`; 21 nodes now, sited within ~50m of
+  spawn cluster centres those bands already ship.
+
+A fifth, prompt 61's "two rest semantics coexist", **resolved rather than
+closed**: `home_recovery.rest()` has zero production callers. Filed as
+DEAD-REST, because `test_fainting.gd` passes while proving a function nothing
+calls behaves as written, and `smoke_stronghold.gd` simulates the stronghold's
+recovery through it -- so it would keep passing if the real bed recovery broke.
+
+**Two bugs this work introduced, both mine, neither caught by a test I wrote for
+it.** The alpha scaled `wild.scale` -- the ART -- while `body_radius()` and
+`centre()` kept reporting an ordinary body, so throws that visually struck a
+1.35x alpha would resolve as edge hits or misses. That is `reticle_outside_body`
+reintroduced, on the same branch that spent four rounds on it. And two invented
+values in the camp siting: `Grass_Large.gltf` does not exist, and a stone scale
+of 0.30 against a shipped 1.0.
+
+**What the next firing should take from this.** Both bugs slipped because the
+tests checked SHAPE -- is the field present, does the source contain this string
+-- which is the exact flaw the audit's own corrections section names. Everything
+that caught something real asked what CONSUMES a value: what `model_config()`
+does with `rank` (which made "6 rows missing rank" a false positive -- adding it
+would have cost seven villagers their bodies), what reads `_radius`, whether a
+model path resolves. **Write the consumer check.**
+
+Still open and named, not rounded off: species-specific shiny rates, the
+spawn-siting audit artefact, favourite-food and feeding-bond, attrition tuning.
+Gate B's continuous run is likewise unbuilt -- its segments all pass
+individually, which is weaker evidence than the segment passing.
+
 ## GATES-ABC-VERIFY — verify the integration-ABC merge; twelve stale harnesses and seven real defects
 
 `tests: full unit suite, 20 smoke tests re-run on the running build, blind playtest, blind visual judge` · `area: input, ui, world, ci`
