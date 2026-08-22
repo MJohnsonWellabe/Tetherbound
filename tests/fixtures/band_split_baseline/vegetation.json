@@ -870,6 +870,12 @@
       "z": 1800.0,
       "radius": 17.0,
       "_why": "SD16: the Old Quarry's worked floor -- foundations, the conduit head and five rootstone deposits stand on it, and a copse growing through the middle of a working face would undo the read before the drained ground ever got a chance. The `deadfall` anchor above sets `cleared_by_clearings: false` so this does not throw its authored stand away -- see its own note"
+    },
+    {
+      "x": -25.0,
+      "z": 7460.0,
+      "radius": 14.0,
+      "_why": "the_waystop -- keeps trees and boulders off the bench/log seating and the wood/stone/fiber nodes around them, the same treatment every other authored clearing in the chapter gives a place the player is meant to stand and interact rather than push through undergrowth"
     }
   ],
   "_comment_footprints": "R9.4-remainder-8: unlike clearings above, EVERY layer respects these, including grass/drygrass/flowers -- a footprint is the literal extent of a solid structure, not the wider 'keep the arena/yard readable' radius clearings exist for, so the grass/flowers exemption that avoids a bald ring around the yard has no reason to apply here. Found by real grass tufts standing on Grandpa's own interior floor and rug in a tools/capture_buildings.gd render. Radius is the building's half-diagonal plus a small margin, not a repeat of the wider yard clearing above.",

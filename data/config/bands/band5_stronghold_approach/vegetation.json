@@ -1,9 +1,9 @@
 {
-  "_comment": "BAND-SPLIT-2. See band1_lower_meadows/vegetation.json for why this file exists. `order` equals the index this entry held in the pre-split file for a band that had legacy entries; band5 had none, so this is a fresh file and its one entry takes an unused number in this band's own 5000-5999 reserved range, per the Gate D lane contract.",
+  "_comment": "BAND-SPLIT-2. See band1_lower_meadows/vegetation.json for why this file exists. UNLIKE spawns/trainers/harvest/props, this config's `order` is NOT the 5000-5999 reserved-range convention -- test_band_vegetation.gd::test_merged_arrays_are_identical_to_the_pre_split_file asserts `order` equals the entry's own INDEX in the merged array, matching band1/band2's own header ('order equals the index this entry held in the pre-split file'). Band2's last clearing is order 8; this file's one entry continues the same sequence at 9, the next open index, not a band-local range.",
   "_comment_bare": "BAND5-CONTENT. Band 5 had no vegetation.json at all -- no clearing anywhere in the region's 680m kept scatter off anything, which is fine everywhere there is nothing authored to keep it off of, and stops being fine the moment `the_waystop` (props.json order 5001, harvest.json orders 5001-5005) stands here. `scripts/world/scatter_bake.gd::config_fingerprint()` does not hash this file (the Gate D lane contract's own known defect, section 4) -- the coordinator re-bakes scatter once at integration with the fingerprint fixed, so this clearing takes effect there, not on a local test run against the currently-baked tiles.",
   "clearings": [
     {
-      "order": 5000,
+      "order": 9,
       "x": -25.0,
       "z": 7460.0,
       "radius": 14.0,
