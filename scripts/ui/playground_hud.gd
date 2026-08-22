@@ -212,7 +212,14 @@ const VITALS_WIDTH := 300.0
 const VITALS_BAR_HEIGHT := 20.0
 const VITALS_ROW_GAP := 10.0
 const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
-const VITALS_CAPTION_WIDTH := 68.0
+## HUD-EMPHASIS: 68 -> 92. A blind critic's real render showed "FOOD" (4
+## capitals at `VITALS_VALUE_FONT`, 38) running past the caption column's old
+## 60px text box (`VITALS_CAPTION_WIDTH - 8`) and directly into the satiety
+## bar's own fill -- "numerals half-on half-off the bar." Widened so the
+## caption has real room at this font size; the satiety bar and its value
+## label both derive their own x/width FROM this constant already, so
+## nothing downstream needed a second fix.
+const VITALS_CAPTION_WIDTH := 92.0
 const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
 const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value
@@ -234,7 +241,13 @@ const OBJECTIVE_BLOCK_HEIGHT := 170.0
 ## labels inside it -- both were flush to the block's own right edge back
 ## when the block WAS the text's bounding box; now that a panel is drawn
 ## behind them, flush-right would touch the panel's own border.
-const OBJECTIVE_INSET := 12.0
+## HUD-EMPHASIS: 12 -> 20. A blind critic's real render measured "MAIN
+## STORY" and the first quest line running essentially wall-to-wall against
+## the panel's right edge -- 12 authored px at this HUD's 0.667 canvas_items
+## scale is ~8 physical px, thin enough at a right-aligned glyph's own side
+## bearing to read as touching. Not yet clipping today, but one longer quest
+## string away from it.
+const OBJECTIVE_INSET := 20.0
 
 ## OP21-11: the owner's own words were "should sit under the hotbar" — moved
 ## from RG3's original upper-left placement into `Root/BottomDock`'s
@@ -479,6 +492,22 @@ func _ready() -> void:
 	# matters: the panel's height changes whenever its message row appears, and
 	# nothing else fires on that.
 
+	# HUD-EMPHASIS: a blind critic named the contextual prompt ("Call out
+	# <name>", the only place the player is told the button that puts a
+	# creature into their hands) as drawn "with no backing plate directly
+	# over grass, sitting between two plated panels" (the hotbar above it,
+	# the exploration legend below it in the same `BottomDock` stack). The
+	# `normal` stylebox is `RichTextLabel`'s own background item -- this adds
+	# a plate without restructuring the scene tree or touching
+	# `fit_content`'s own auto-sizing, which just grows to include the new
+	# stylebox's content margins.
+	var prompt_box := UITokens.panel_box()
+	prompt_box.content_margin_left = 16.0
+	prompt_box.content_margin_top = 6.0
+	prompt_box.content_margin_right = 16.0
+	prompt_box.content_margin_bottom = 6.0
+	_prompt_label.add_theme_stylebox_override("normal", prompt_box)
+
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
 	UITokens.make_text_legible(_region_banner)
@@ -506,6 +535,7 @@ func _ready() -> void:
 	# widget scattered through the builders above.
 	UITokens.make_text_legible(_root)
 	_strengthen_objective_contrast()
+	_soften_vitals_contrast()
 	_reflow_left_stack()
 
 
@@ -1177,6 +1207,24 @@ func _build_vitals_cluster() -> void:
 	_vitals_cluster.size = Vector2(VITALS_WIDTH, VITALS_HEIGHT)
 	_root.add_child(_vitals_cluster)
 
+	# HUD-EMPHASIS: a blind critic named this corner the one that "reads
+	# unfinished relative to the rest of the HUD" -- gold "FOOD" text on a
+	# gold bar, numerals half-on half-off the bar fill, no containing panel
+	# while every other cluster (creature block, roster, quest block, hotbar,
+	# legend) wears one. The comment above on the HP icon's own backing chip
+	# already documents the deliberate original call ("legibility outline
+	# instead of a box") -- superseded here the same way `_build_objective_block()`'s
+	# own header describes for the quest block: a small translucent panel,
+	# not a new "giant window," sized to the cluster's own real content
+	# (including the icon columns that sit at negative local x) rather than
+	# growing to cover anything more.
+	var vitals_plate := Panel.new()
+	vitals_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vitals_plate.position = Vector2(-40.0, -8.0)
+	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT + 16.0)
+	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
+	_vitals_cluster.add_child(vitals_plate)
+
 	_build_buff_row(_vitals_cluster)
 
 	# hp_heart.png is a mid-tone green glyph, matching HP_GREEN by design (see
@@ -1577,7 +1625,13 @@ func _build_objective_block() -> void:
 	# shared constant; a local override here does the same job this file
 	# already does for its other micro-labels.
 	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
-	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	# HUD-EMPHASIS: `TEXT_MUTED` -> `TEXT_SECONDARY`. A blind critic read the
+	## eyebrow as "low-contrast grey-blue over a translucent panel with a tree
+	## behind it... it nearly vanishes even at full zoom" -- still the
+	## quietest label on the panel (the quest line itself stays
+	## `TEXT_PRIMARY`), just no longer the near-background grey that made it
+	## disappear against a moving 3D backdrop.
+	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	eyebrow.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_INSET)
 	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, 34.0)
@@ -1617,6 +1671,26 @@ func _strengthen_objective_contrast() -> void:
 			continue
 		label.add_theme_constant_override("outline_size", wide_outline)
 		label.add_theme_color_override("font_outline_color", Color(UITokens.OUTLINE, 1.0))
+
+
+## The mirror image of `_strengthen_objective_contrast()`: that function
+## exists because the objective block had NO plate when its outline had to
+## carry the whole contrast burden alone. This corner is the opposite case --
+## `_build_vitals_cluster()`'s new plate (HUD-EMPHASIS) now does that job, so
+## the same heavy `UITokens.make_text_legible()` outline the plate-less
+## version needed is now doing double duty a blind critic named directly:
+## "the heavy drop-shadows on 'x12' and those numerals are doing contrast
+## work the missing plates should be doing." Runs after
+## `make_text_legible(_root)` for the same override-ordering reason
+## `_strengthen_objective_contrast()`'s own header gives.
+func _soften_vitals_contrast() -> void:
+	var soft_outline := int(round(UITokens.OUTLINE_SIZE * 0.4))
+	for label in [_hp_value_label, _satiety_caption_label, _satiety_value_label, _satiety_state_label]:
+		if label == null:
+			continue
+		label.add_theme_constant_override("outline_size", soft_outline)
+		label.add_theme_constant_override("shadow_offset_x", 0)
+		label.add_theme_constant_override("shadow_offset_y", 0)
 
 
 func _update_objective() -> void:

@@ -11,6 +11,7 @@ extends SceneTree
 
 const HUD_SCENE := preload("res://scenes/ui/playground_hud.tscn")
 const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
+const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 const HANDHELD_SIZE := Vector2i(1280, 800)
@@ -111,6 +112,7 @@ func _run() -> void:
 	_check_objective_text_physical_size()
 	_check_vitals_value_physical_size()
 	await _check_cycle_banner_fits_without_clipping()
+	await _check_cycle_banner_destination_is_dominant()
 
 	root.size = original_size
 	_report()
@@ -392,6 +394,58 @@ func _check_cycle_banner_fits_without_clipping() -> void:
 		_fail(
 			"cycle banner content (%.1fpx tall) overflows its own box (%.1fpx) -- the text wrapped to a second line that gets silently clipped, hiding half the from-to cue (banner text: %s)" % [
 				content_h, banner.size.y, banner.text,
+			]
+		)
+
+
+## HUD-EMPHASIS: the whole point of this task, proven on the LIVE mounted
+## widget rather than just the pure-logic assertion `test_hud_widgets.gd`
+## already carries. A blind critic measured the destination name (the single
+## word the player cycled to find out) as the smallest text on the entire
+## screen -- this asserts the inversion is actually fixed in physical
+## pixels, and that docking the taller banner onto the header (see
+## `party_strip.gd::_build()`'s own comment on `CYCLE_BANNER_HEIGHT` growing)
+## did not push it back off the real handheld canvas the way a naive "grow
+## upward" fix would have.
+func _check_cycle_banner_destination_is_dominant() -> void:
+	var strip := _hud.get_node_or_null(^"Root/PartyStrip")
+	if strip == null:
+		_fail("HUD did not build Root/PartyStrip for the destination-dominance check")
+		return
+	strip.call("flash_cycle", 1, "Terrapup", "Bramblebun", 2, 5)
+	for i in 3:
+		await process_frame
+	var banner := strip.get(&"_cycle_banner") as RichTextLabel
+	if banner == null or not banner.visible:
+		_fail("cycle banner did not become visible for the destination-dominance check")
+		return
+
+	var scale := _content_scale()
+	var dest_px := float(PARTY_STRIP.CYCLE_DEST_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
+	var source_px := float(PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
+	if dest_px <= source_px:
+		_fail(
+			"cycle banner destination name (%.1f physical px) is not larger than the source name (%.1f physical px) -- the exact inversion this task exists to fix" % [
+				dest_px, source_px,
+			]
+		)
+	const DEST_MIN_PHYSICAL_PX := 18.0
+	if dest_px < DEST_MIN_PHYSICAL_PX:
+		_fail(
+			"cycle banner destination name measures ~%.1f physical px -- below the %.0f px floor the critic asked for a dominant announcement to clear" % [
+				dest_px, DEST_MIN_PHYSICAL_PX,
+			]
+		)
+
+	# On-screen, not just non-clipping within its own box: `party_strip.gd`
+	# docks the banner onto the header rather than floating fully above it
+	# specifically so a taller box for the bigger destination font does not
+	# push its own top edge off the real canvas.
+	var banner_rect := banner.get_global_rect()
+	if banner_rect.position.y < -0.5:
+		_fail(
+			"cycle banner's own top edge sits off the top of the real %dx%d canvas (y=%.1f) -- the destination text itself may be clipped, not just the box" % [
+				HANDHELD_SIZE.x, HANDHELD_SIZE.y, banner_rect.position.y,
 			]
 		)
 

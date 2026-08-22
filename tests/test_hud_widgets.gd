@@ -272,7 +272,10 @@ func test_resting_entry_has_an_explicit_unavailable_marker() -> void:
 		"fainted": false, "resting": true,
 	}], 0)
 	assert_true(strip._rest_labels[0].visible, "resting must be readable without inferring it from dimming")
-	assert_false(strip._ko_labels[0].visible)
+	# HUD-EMPHASIS: `KO`'s visibility now lives on its badge, not the bare
+	# label inside it -- see `_build_row()`'s own comment on why the badge
+	# carries a `self_modulate` compensation the label alone cannot.
+	assert_false(strip._ko_badges[0].visible)
 	assert_true(strip._rows[0].modulate.a < PARTY_STRIP.SELECTED_MODULATE)
 	strip.free()
 
@@ -360,6 +363,51 @@ func test_flash_cycle_shows_previous_and_next_and_roster_position() -> void:
 		"roster position must be stated, not left for the player to infer")
 	assert_true(strip._cycle_banner.text.contains("▶"),
 		"forward cycling must show a forward-facing arrow")
+	strip.free()
+
+
+## HUD-EMPHASIS: the whole point of this task. A blind critic measured the
+## destination name -- "the single word the player cycled to find out" -- as
+## the smallest text on the entire screen, smaller than the creature being
+## left behind and the roster-position readout beside it. Encodes the
+## invariant directly against the constants `flash_cycle()` actually tags
+## each run with, not just a "text contains the name" check that would pass
+## even with the sizes inverted.
+func test_flash_cycle_destination_name_is_the_dominant_element() -> void:
+	assert_true(
+		PARTY_STRIP.CYCLE_DEST_FONT_SIZE > PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE,
+		"the destination (where the player is going) must be authored larger than the source (where they left)"
+	)
+	assert_true(
+		PARTY_STRIP.CYCLE_DEST_FONT_SIZE > PARTY_STRIP.CYCLE_POSITION_FONT_SIZE,
+		"the destination name must be the single most dominant element in the banner"
+	)
+
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	var text: String = strip._cycle_banner.text
+	var dest_tag := "[font_size=%d]" % PARTY_STRIP.CYCLE_DEST_FONT_SIZE
+	var source_tag := "[font_size=%d]" % PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE
+	var dest_tag_pos := text.find(dest_tag)
+	var source_tag_pos := text.find(source_tag)
+	var dest_name_pos := text.find("Bramblebun")
+	var source_name_pos := text.find("Terrapup")
+	assert_true(dest_tag_pos != -1 and source_tag_pos != -1,
+		"the banner text must carry both the destination and source font-size tags")
+	assert_true(dest_tag_pos < dest_name_pos and dest_name_pos < dest_tag_pos + dest_tag.length() + 60,
+		"the destination name must actually be wrapped in its own dominant font-size tag, not just present somewhere in the string")
+	assert_true(source_tag_pos < source_name_pos and source_name_pos < source_tag_pos + source_tag.length() + 60,
+		"the source name must actually be wrapped in its own small font-size tag")
+
+	# HUD-EMPHASIS root-cause regression guard: `[b]` alone silently falls
+	# back to the theme's untouched `bold_font_size` default, which is what
+	# made the destination name render smaller than everything else despite
+	# `flash_cycle()` already wrapping it in `[b]` before this task. This
+	# must stay explicitly overridden so that root cause cannot come back
+	# quietly if a future edit ever drops the `[font_size=]` tags and leans
+	# on `[b]` alone again.
+	assert_eq(strip._cycle_banner.get_theme_font_size("bold_font_size"), PARTY_STRIP.CYCLE_DEST_FONT_SIZE,
+		"bold_font_size must be explicitly overridden -- relying on [b] alone silently under-sizes the destination name")
 	strip.free()
 
 
