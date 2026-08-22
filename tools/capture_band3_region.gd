@@ -74,12 +74,21 @@ const VIEWPOINTS := [
 		"target": Vector2(211.6, 3699.2), "target_h": 1.0,
 	},
 	{
-		# Hess on the spine road, 140m short of the site, with the checkpoint
-		# crates behind him. This is the "presence builds before the captain"
-		# frame -- the one the picket redesign exists for.
+		# The checkpoint barricade and Hess behind it, from where a player
+		# actually meets them.
+		#
+		# Rounds 1 and 2 shot this from (214, 3668), 27m short of the
+		# barricade, and the blind critic reported no checkpoint at all --
+		# "the road runs through unimpeded". The props are there and correctly
+		# seated (verified against the heightfield, all nine of them), but this
+		# kit's crates and barrels are under a metre tall, so at 27m the whole
+		# barricade is thirty pixels of speck. A player walks THROUGH this
+		# checkpoint; framing it from across a field asks the critic a question
+		# no player is ever asked. The eye now stands 9m short of the gap, on
+		# the road, at eye height.
 		"name": "03-picket-hess-on-the-road",
-		"eye": Vector2(214.0, 3668.0), "eye_h": 1.8,
-		"target": Vector2(252.0, 3686.0), "target_h": 1.2,
+		"eye": Vector2(232.5, 3672.0), "eye_h": 1.7,
+		"target": Vector2(248.0, 3683.5), "target_h": 1.4,
 	},
 	{
 		# The relay from the approach: industrial intrusion arriving in a
