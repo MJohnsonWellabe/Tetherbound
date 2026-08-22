@@ -100,16 +100,21 @@ const VIEWPOINTS := [
 		# The gorge, from ON the south rim looking obliquely along the cut.
 		#
 		# Round 1 shot this from (60, 4150) at +14m, 200m back, and the blind
-		# critic's verdict was "there is no gorge" -- correctly, because from
-		# there a hill stands between the eye and the trench and all that
-		# reaches the frame is a grey gravel ribbon and a sliver of blue at the
-		# edge. That was the camera, not the terrain: the channel is 15m deep
-		# against a 3.4m rim. A trench is only legible from close enough that
-		# its near rim is under you and its far wall is across the frame, so
-		# the eye now stands 8m off the lip.
+		# critic's verdict was "there is no gorge". Round 2 moved onto the rim
+		# and it STILL did not show one. The terrain is not the problem -- a
+		# heightfield transect at x=-120 falls from -2.0m at z=4194 to -16.6m
+		# at z=4200, a 14.6m wall in six metres, and climbs back out by z=4218.
+		# The camera was.
+		#
+		# `target_h` is added to the GROUND height at the target, and the
+		# ground at the target is the channel floor, 25m down. Asking for -7
+		# aimed the camera at y=-32: a steep pitch into the near grass, which
+		# is exactly what came back. Aim at the floor itself (target_h 0) from
+		# the south rim, 44m short of it, and the near lip sits in the
+		# foreground with the cut receding west behind it.
 		"name": "06-river-gorge-along-the-course",
-		"eye": Vector2(-88.0, 4188.0), "eye_h": 3.0,
-		"target": Vector2(-168.0, 4206.0), "target_h": -7.0,
+		"eye": Vector2(-98.0, 4192.0), "eye_h": 2.0,
+		"target": Vector2(-140.0, 4204.0), "target_h": 0.0,
 	},
 	{
 		# The Old Mill Crossing from the south landing, standing where the
