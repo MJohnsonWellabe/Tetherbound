@@ -117,14 +117,31 @@ func _run() -> void:
 		party.call("cycle_active", 1)
 		# One process frame so `playground_hud.gd::_process` (which polls,
 		# does not react to a signal) actually notices the revision change and
-		# calls `flash_cycle()` before the shot -- the previous version of
-		# this harness settled straight into the shot from the SAME awaited
-		# frame the property changed on, which on some frame-ordering runs
-		# caught the banner not-yet-drawn. `CYCLE_BANNER_SECONDS` is 1.3s
-		# (~78 frames at 60fps); this still fires the shot well inside that
-		# window, just after (not possibly before) the banner text lands.
+		# calls `flash_cycle()` before the shot.
+		#
+		# HUD-POPUP: this used to settle 20 more frames before the shot, on
+		# the reasoning that `CYCLE_BANNER_SECONDS` (1.3s, ~78 frames at
+		# 60fps) left huge headroom. That reasoning assumed real wall-clock
+		# frame time; `party_strip.gd::MAX_TIMER_DELTA` (added by the prior
+		# lane to survive a slow COLD-BOOT frame) caps what ANY frame can
+		# subtract from the countdown at 0.05s REGARDLESS of how long the
+		# frame actually took -- and this whole capture runs under llvmpipe
+		# software rendering the entire way through, not just at boot, so
+		# every one of those 20-plus frames hit that cap. 1.3s / 0.05s is 26
+		# frames, not 78 -- and the old total here (1 process frame + 20
+		# settle + `POSE_FRAMES` 6 = 27) was ONE FRAME PAST the countdown's
+		# own exhaustion point. `_diagnose_cycle_banner()` ran at frame ~21
+		# (comfortably inside the 26-frame budget, hence its own diagnostic
+		# always reporting the banner correct) and the shot ran six frames
+		# later, past frame 26 -- reading the banner AFTER `_process()` had
+		# already hidden it. Every property the diagnostic checked was
+		# genuinely correct at the moment it checked; the capture just aged
+		# past that moment before pressing the shutter. Cut to 3 settle
+		# frames (well under the 26-frame ceiling with real margin) rather
+		# than raising `MAX_TIMER_DELTA` or `CYCLE_BANNER_SECONDS`, which
+		# would change real player-facing timing to fix a diagnostic tool.
 		await process_frame
-		await _settle(20)
+		await _settle(3)
 		_diagnose_cycle_banner(world)
 		await _shoot(camera, "hud_party_cycle", written, failures)
 

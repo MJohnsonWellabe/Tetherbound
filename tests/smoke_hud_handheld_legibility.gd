@@ -11,6 +11,7 @@ extends SceneTree
 
 const HUD_SCENE := preload("res://scenes/ui/playground_hud.tscn")
 const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
+const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 const HANDHELD_SIZE := Vector2i(1280, 800)
@@ -107,6 +108,11 @@ func _run() -> void:
 		await process_frame
 	_check_left_stack_clears_bottom_dock()
 	_check_creature_panel_children_stay_inside_it()
+	_check_party_strip_never_overlaps_creature_panel_or_vitals()
+	_check_objective_text_physical_size()
+	_check_vitals_value_physical_size()
+	await _check_cycle_banner_fits_without_clipping()
+	await _check_cycle_banner_destination_is_dominant()
 
 	root.size = original_size
 	_report()
@@ -303,6 +309,145 @@ func _assert_descendants_inside(node: Node, bounds: Rect2) -> void:
 						c.name if not c.name.is_empty() else c.get_class(), HANDHELD_SIZE.x, HANDHELD_SIZE.y, r, bounds,
 					])
 		_assert_descendants_inside(child, bounds)
+
+
+## HUD-POPUP task 1, proven on the LIVE scene rather than just the pure
+## position math `test_hud_widgets.gd` checks: `Root/PartyStrip`'s real
+## global rect must never intersect the creature panel's or the vitals
+## cluster's. `set_rest_position()` snaps `.position` immediately while the
+## strip is not visible (see that function's own header), so this holds even
+## though nothing in this harness ever triggers a reveal.
+func _check_party_strip_never_overlaps_creature_panel_or_vitals() -> void:
+	var strip := _hud.get_node_or_null(^"Root/PartyStrip") as Control
+	var creature_block := _hud.get_node_or_null(^"Root/CreatureBlock") as Control
+	var vitals := _hud.get_node_or_null(^"Root/VitalsCluster") as Control
+	if strip == null or creature_block == null or vitals == null:
+		_fail("HUD did not build PartyStrip/CreatureBlock/VitalsCluster for the overlap check")
+		return
+	var creature_panel: Control = creature_block.get_child(0) as Control if creature_block.get_child_count() > 0 else null
+	if creature_panel == null:
+		_fail("creature block has no panel child for the overlap check")
+		return
+	var strip_rect := strip.get_global_rect()
+	var creature_rect := creature_panel.get_global_rect()
+	var vitals_rect := vitals.get_global_rect()
+	if strip_rect.intersects(creature_rect):
+		_fail("party strip overlaps the creature panel at %dx%d (strip %s, panel %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, strip_rect, creature_rect,
+		])
+	if strip_rect.intersects(vitals_rect):
+		_fail("party strip overlaps the player vitals cluster at %dx%d (strip %s, vitals %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, strip_rect, vitals_rect,
+		])
+
+
+## HUD-POPUP task 3: the quest subtext ("Find a way through the village
+## gate.") measured ~12 physical px before this task raised it to
+## `HUD_READABLE_FONT_SIZE`, same floor as everything else on this HUD.
+func _check_objective_text_physical_size() -> void:
+	var label := _hud.get(&"_objective_text_label") as Label
+	if label == null:
+		_fail("HUD did not build _objective_text_label for the cap-height check")
+		return
+	_check_cap_height(label.get_theme_font_size("font_size"), "quest subtext")
+
+
+## HUD-POPUP task 3: the player's own HP readout ("100 / 100") measured ~10
+## physical px before this task; the satiety row's new value label is held to
+## the same floor since it is new text, not a pre-existing offender.
+func _check_vitals_value_physical_size() -> void:
+	var hp_label := _hud.get(&"_hp_value_label") as Label
+	var satiety_label := _hud.get(&"_satiety_value_label") as Label
+	if hp_label == null or satiety_label == null:
+		_fail("HUD did not build the vitals value labels for the cap-height check")
+		return
+	_check_cap_height(hp_label.get_theme_font_size("font_size"), "player HP value text")
+	_check_cap_height(satiety_label.get_theme_font_size("font_size"), "player satiety value text")
+
+
+## HUD-POPUP task 2: the real bug behind "the cycle still does not read as an
+## event from one frame" was not a missing cue -- `flash_cycle()` already
+## built one -- it was that the cue's OWN `RichTextLabel` wrapped to a second
+## line and then clipped it, because the box was sized for one line
+## (42px tall) but not wide enough to hold the whole string on one line. Only
+## a real, rendered `RichTextLabel` (with an active theme/font, which a
+## tree-less `test_hud_widgets.gd` instance does not have --
+## `get_content_height()` reports 0 there) can catch this, which is why this
+## check lives here rather than as pure logic.
+func _check_cycle_banner_fits_without_clipping() -> void:
+	var strip := _hud.get_node_or_null(^"Root/PartyStrip")
+	if strip == null:
+		_fail("HUD did not build Root/PartyStrip for the cycle-banner check")
+		return
+	strip.call("flash_cycle", 1, "Terrapup", "Bramblebun", 2, 5)
+	for i in 3:
+		await process_frame
+	var banner := strip.get(&"_cycle_banner") as RichTextLabel
+	if banner == null:
+		_fail("party strip has no _cycle_banner for the clipping check")
+		return
+	if not banner.visible:
+		_fail("cycle banner did not become visible after flash_cycle()")
+		return
+	var content_h := banner.get_content_height()
+	if content_h > banner.size.y + 0.5:
+		_fail(
+			"cycle banner content (%.1fpx tall) overflows its own box (%.1fpx) -- the text wrapped to a second line that gets silently clipped, hiding half the from-to cue (banner text: %s)" % [
+				content_h, banner.size.y, banner.text,
+			]
+		)
+
+
+## HUD-EMPHASIS: the whole point of this task, proven on the LIVE mounted
+## widget rather than just the pure-logic assertion `test_hud_widgets.gd`
+## already carries. A blind critic measured the destination name (the single
+## word the player cycled to find out) as the smallest text on the entire
+## screen -- this asserts the inversion is actually fixed in physical
+## pixels, and that docking the taller banner onto the header (see
+## `party_strip.gd::_build()`'s own comment on `CYCLE_BANNER_HEIGHT` growing)
+## did not push it back off the real handheld canvas the way a naive "grow
+## upward" fix would have.
+func _check_cycle_banner_destination_is_dominant() -> void:
+	var strip := _hud.get_node_or_null(^"Root/PartyStrip")
+	if strip == null:
+		_fail("HUD did not build Root/PartyStrip for the destination-dominance check")
+		return
+	strip.call("flash_cycle", 1, "Terrapup", "Bramblebun", 2, 5)
+	for i in 3:
+		await process_frame
+	var banner := strip.get(&"_cycle_banner") as RichTextLabel
+	if banner == null or not banner.visible:
+		_fail("cycle banner did not become visible for the destination-dominance check")
+		return
+
+	var scale := _content_scale()
+	var dest_px := float(PARTY_STRIP.CYCLE_DEST_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
+	var source_px := float(PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
+	if dest_px <= source_px:
+		_fail(
+			"cycle banner destination name (%.1f physical px) is not larger than the source name (%.1f physical px) -- the exact inversion this task exists to fix" % [
+				dest_px, source_px,
+			]
+		)
+	const DEST_MIN_PHYSICAL_PX := 18.0
+	if dest_px < DEST_MIN_PHYSICAL_PX:
+		_fail(
+			"cycle banner destination name measures ~%.1f physical px -- below the %.0f px floor the critic asked for a dominant announcement to clear" % [
+				dest_px, DEST_MIN_PHYSICAL_PX,
+			]
+		)
+
+	# On-screen, not just non-clipping within its own box: `party_strip.gd`
+	# docks the banner onto the header rather than floating fully above it
+	# specifically so a taller box for the bigger destination font does not
+	# push its own top edge off the real canvas.
+	var banner_rect := banner.get_global_rect()
+	if banner_rect.position.y < -0.5:
+		_fail(
+			"cycle banner's own top edge sits off the top of the real %dx%d canvas (y=%.1f) -- the destination text itself may be clipped, not just the box" % [
+				HANDHELD_SIZE.x, HANDHELD_SIZE.y, banner_rect.position.y,
+			]
+		)
 
 
 func _fail(message: String) -> void:

@@ -50,7 +50,13 @@ const CHIP_SIZE := Vector2(40.0, 40.0)
 ## `playground_hud.gd::HUD_READABLE_FONT_SIZE`'s identical reasoning). A blind
 ## critic measured this strip's own small text (13px on "Ripplet", 9-10px on
 ## "Lv 1"/"WATER") against a ~16px arm's-length cap-height floor.
-const STRIP_READABLE_FONT_SIZE := 34
+## HUD-EMPHASIS: 34 -> 36. The formula floor (`smoke_hud_handheld_legibility.gd`'s
+## own `CAP_HEIGHT_RATIO`) puts 34 at ~15.9 physical px -- under the 16px bar
+## with zero margin, exactly what a later critic pass flagged ("roster names
+## measure exactly 16px with no margin; any world-brightness change behind
+## the translucent rows pushes them under"). 36 clears it with ~0.9px to
+## spare.
+const STRIP_READABLE_FONT_SIZE := 36
 const RAIL_WIDTH := 4.0
 const HP_BAR_SIZE := Vector2(72.0, 8.0)
 
@@ -61,6 +67,15 @@ const RESTING_MODULATE := 0.5
 const UNSELECTED_MODULATE := 0.78
 const VACANT_MODULATE := 0.62
 const SELECTED_MODULATE := 1.0
+
+## The KO badge's own `modulate.a`, exactly reciprocal to `FAINTED_MODULATE`
+## -- see `_build_row()`'s own comment on the badge for why this constant,
+## not a guess, is correct AND why it has to be `modulate` (which cascades to
+## the badge's own child label) rather than `self_modulate` (which does not):
+## `KO` only ever shows while the row's modulate is exactly
+## `FAINTED_MODULATE`, so multiplying by its reciprocal here always lands
+## back on a full 1.0 final alpha for both the badge and its text.
+const KO_BADGE_MODULATE_COMPENSATION := 1.0 / FAINTED_MODULATE
 
 ## How far the strip slides while revealing, in local pixels. Small on
 ## purpose — this is a reveal, not a fly-in; §6.1 asks for a strip that reads
@@ -74,6 +89,53 @@ const REVEAL_OFFSET := 12.0
 ## the roster) for this long — comfortably inside `T_PARTY_FADE`'s hold, so
 ## the strip is never showing without it once a real cycle has happened.
 const CYCLE_BANNER_SECONDS := 1.3
+## See `_build()`'s own comment on the cycle banner node for why this is not
+## `ROW_SIZE.x` any more -- a fixed 250px box silently clipped the whole
+## second half of the from-to cue on every real render. 900, not the 480
+## an initial repro with "Biscuit"/"Ripplet" found sufficient: the smoke
+## test's own regression check (`smoke_hud_handheld_legibility.gd`) used the
+## longer "Terrapup"/"Bramblebun" pair and still measured a real overflow at
+## 640 -- creature names are player-visible strings this file does not
+## control the length of, so the margin is sized off a longer real species
+## pair, not the shortest one that happened to work. Widened again from 820
+## to 900 alongside `CYCLE_DEST_FONT_SIZE` (HUD-EMPHASIS) -- the destination
+## name now renders noticeably wider than it did at the old uniform size.
+const CYCLE_BANNER_WIDTH := 900.0
+## HUD-EMPHASIS root-cause: a blind critic measured the destination name --
+## "the single word the player cycled to find out" -- as the SMALLEST text
+## on the whole screen (10px), smaller than the creature being left behind
+## (16px) and the "N / 5" position readout (15px), despite `flash_cycle()`
+## below wrapping it in `[b]`. The bug was never a missing size difference:
+## it was that only `normal_font_size` was ever overridden on this
+## `RichTextLabel` -- `[b]` renders through the theme's separate
+## `bold_font_size` item, which this file never touched, so the one run the
+## player most needs to read fell back to Godot's small default bold size
+## while everything else drew at `STRIP_READABLE_FONT_SIZE`. Fixed at the
+## root two ways: `bold_font_size` is now explicitly overridden below
+## (`_build()`), and `flash_cycle()` additionally wraps every run in its own
+## `[font_size=]` tag so the from/to/position sizes are never at the mercy of
+## an untouched theme fallback again.
+##
+## The four sizes below encode the fix's whole point, in order of emphasis:
+## the destination is now the dominant element (`CYCLE_DEST_FONT_SIZE`,
+## bigger than every other label on this HUD, not just this strip), the
+## source is deliberately the small grey one (`CYCLE_SOURCE_FONT_SIZE`), and
+## the arrow/position readout sit at a legible-but-secondary size in between.
+## `CYCLE_DEST_FONT_SIZE` * 0.667 (Ally content scale) * 0.7 (cap-height
+## ratio, `smoke_hud_handheld_legibility.gd::CAP_HEIGHT_RATIO`) ~= 21.5
+## physical px, comfortably past the ~18px floor the critic asked for.
+const CYCLE_SOURCE_FONT_SIZE := 24
+const CYCLE_ARROW_FONT_SIZE := 30
+const CYCLE_DEST_FONT_SIZE := 46
+const CYCLE_POSITION_FONT_SIZE := 34
+## 42 -> 50 -> 66: even after `CYCLE_BANNER_WIDTH` stopped the text from
+## wrapping to a second (clipped) line, a live measurement found the single
+## real line at `STRIP_READABLE_FONT_SIZE` (34) rendering ~47px tall --
+## outline/shadow padding on top of the font's own line height. Grown again
+## for `CYCLE_DEST_FONT_SIZE` (46, up from the old uniform 34): the same
+## ~1.38x padding ratio puts a single line at that size around 63px, so 66
+## keeps a few px of headroom rather than landing exactly on the edge.
+const CYCLE_BANNER_HEIGHT := 66.0
 
 var _pinned := false
 var _fade_timer := 0.0
@@ -97,6 +159,10 @@ var _slot_labels: Array[Label] = []
 var _name_labels: Array[Label] = []
 var _level_labels: Array[Label] = []
 var _ko_labels: Array[Label] = []
+## The badges wrapping `_ko_labels` -- see `_build_row()`'s own comment;
+## `visible` toggles here, not on the label directly, since the badge is what
+## carries the `self_modulate` compensation.
+var _ko_badges: Array[PanelContainer] = []
 var _rest_labels: Array[Label] = []
 var _hp_bars: Array[ProgressBar] = []
 var _hp_fills: Array[StyleBoxFlat] = []
@@ -112,6 +178,13 @@ var _last_level: Array[int] = [-1, -1, -1, -1, -1]
 var _last_portrait: Array[String] = ["", "", "", "", ""]
 var _last_selected: Array[bool] = [false, false, false, false, false]
 var _last_vacant: Array[bool] = [true, true, true, true, true]
+## HUD-POPUP: whether the row that WAS selected last frame was also "out"
+## (see `update_from_party()`'s own header) -- a separate cache from
+## `_last_selected` because the same row can flip out<->not-out without its
+## selected-ness changing at all (summoning a creature that was already the
+## active pick), which needs the rail/chip recoloured even though neither
+## `vacant` nor `selected` moved.
+var _last_out: Array[bool] = [true, true, true, true, true]
 
 
 ## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
@@ -145,6 +218,18 @@ func _build() -> void:
 		return  # idempotent: a test calling this twice must not double the rows
 
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# HUD-POPUP: this widget's own rect used to stay (0, 0)-sized forever --
+	# a plain `Control` parented directly under `Root` (not inside a
+	# Container) never grows to fit its children the way `_creature_panel`'s
+	# own `_reflow_left_stack()` comment describes for the SAME class of
+	# node. Nothing noticed while every overlap check on this widget was
+	# pure position math against the documented `TOTAL_HEIGHT`/`ROW_SIZE.x`
+	# contract; the first check run against the REAL live scene
+	# (`smoke_hud_handheld_legibility.gd`'s new overlap test) found
+	# `get_global_rect()` reporting a real position but a zero size, which
+	# makes `Rect2.intersects()` vacuously false against anything -- a check
+	# that could never fail no matter where this widget actually drew.
+	size = Vector2(ROW_SIZE.x, TOTAL_HEIGHT)
 	var stack := VBoxContainer.new()
 	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stack.add_theme_constant_override("separation", int(HEADER_GAP))
@@ -190,20 +275,98 @@ func _build() -> void:
 	_cycle_banner.fit_content = false
 	_cycle_banner.scroll_active = false
 	_cycle_banner.shortcut_keys_enabled = false
-	_cycle_banner.position = Vector2(0.0, -46.0)
-	_cycle_banner.size = Vector2(ROW_SIZE.x, 42.0)
-	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# HUD-EMPHASIS: the destination name is wrapped in `[b]` (see
+	# `flash_cycle()`) for extra weight on top of its own larger
+	# `[font_size=]` tag -- `RichTextLabel` renders bold runs through the
+	# theme's separate `bold_font_size` item, not `normal_font_size`, and
+	# this was never overridden. Left alone, `[b]` silently fell back to
+	# Godot's small default bold size, which is the actual reason the
+	# destination name rendered as the SMALLEST text on screen even before
+	# this task's font-size rework -- see `CYCLE_DEST_FONT_SIZE`'s own
+	# header. Both are now explicit so neither can regress independently.
+	_cycle_banner.add_theme_font_size_override("bold_font_size", CYCLE_DEST_FONT_SIZE)
+	# HUD-EMPHASIS: a plate, docked onto the TEAM header rather than floating
+	# free above it -- a blind critic found the banner sitting at the very
+	# top of the screen with nothing behind it and no visual relationship to
+	# the panel below ("Biscuit ▶ [unreadable] 2/5" at arm's length). Same
+	# shape/tint as the header's own box so the two read as one element that
+	# grew, not two unrelated widgets; the RichTextLabel's own `normal`
+	# background stylebox is enough -- no extra Panel/Container needed.
+	# Fully opaque background, not `BG_DEEP`'s own 0.90 alpha: the banner
+	# renders on top of (and, while docked, exactly over) the header's own
+	# bright `TEAM n / 5` text -- a real render with the header's default
+	# alpha showed that text ghosting through the plate at zoom, since the
+	# whole point of docking here is for the banner to fully replace the
+	# header while it shows, not layer over it.
+	var banner_box := UI_TOKENS.panel_box(Color(UI_TOKENS.BG_DEEP, 1.0), Color(UI_TOKENS.TEAL, 0.85))
+	banner_box.content_margin_left = 12.0
+	banner_box.content_margin_top = 4.0
+	banner_box.content_margin_right = 12.0
+	banner_box.content_margin_bottom = 4.0
+	_cycle_banner.add_theme_stylebox_override("normal", banner_box)
+	# HUD-EMPHASIS: was `-CYCLE_BANNER_HEIGHT` (fully above the header, flush
+	# with its top) -- at the taller `CYCLE_BANNER_HEIGHT` the bigger
+	# destination text now needs, that pushed the banner's own top edge
+	# within single-digit px of the real screen top (`TOP_SAFE_INSET` is 56;
+	# a critic already measured this banner's text starting at y~=13 even at
+	# the OLD, shorter height). Docking it onto the header instead --
+	# bottom edge flush with the header's own bottom, so the plated banner
+	# visually REPLACES the header while it shows rather than stacking a
+	# second box above it -- keeps only `CYCLE_BANNER_HEIGHT - HEADER_HEIGHT`
+	# of new height pushing upward past the header's old top, not the whole
+	# banner height. The banner draws after `stack` in this function (later
+	# sibling = on top), so its opaque plate fully covers the header's own
+	# "TEAM n / 5" text while visible instead of doubling it up.
+	_cycle_banner.position = Vector2(0.0, -(CYCLE_BANNER_HEIGHT - HEADER_HEIGHT))
+	# HUD-POPUP task 2: was `Vector2(ROW_SIZE.x, 42.0)` (250 wide) with CENTER
+	# alignment. `flash_cycle()`'s bbcode ("Biscuit  ▶  Ripplet   2 / 5") is
+	# wider than that at this font size; a first investigation into the
+	# banner rendering as fully blank in every real capture chased this as
+	# the cause (a too-narrow box wrapping to a clipped second line) and
+	# widened it defensively -- worth keeping regardless, since it removes a
+	# REAL (if smaller) partial-clip on longer creature-name pairs, see
+	# `_check_cycle_banner_fits_without_clipping()` in
+	# `smoke_hud_handheld_legibility.gd`. It was not, however, the actual
+	# cause of the "completely blank" failure -- see `CYCLE_BANNER_SECONDS`'s
+	# own comment on `tools/capture_hud_op21.gd`'s frame budget for that.
+	# Left-aligned, not centered: if a name long enough to still overflow
+	# this ever appears, the OUTGOING name and arrow -- the part of the cue
+	# that establishes direction -- are what a reader sees first, not a
+	# coin-flip on which end centering keeps on-screen.
+	_cycle_banner.size = Vector2(CYCLE_BANNER_WIDTH, CYCLE_BANNER_HEIGHT)
+	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_cycle_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_cycle_banner.add_theme_font_size_override("normal_font_size", STRIP_READABLE_FONT_SIZE)
 	_cycle_banner.visible = false
 	add_child(_cycle_banner)
 
 
+## HUD-EMPHASIS: a locally-owned row background rather than the shared
+## `UI_TOKENS.slot_box()` a dozen other screens (menu tabs, combat, the
+## minimap) also draw with -- the same "shared token, local override"
+## reasoning `STRIP_READABLE_FONT_SIZE`'s own header gives for not raising
+## that shared font floor. `slot_box()`'s `BG_PANEL_ALT` is already 0.82
+## alpha, but a blind critic's proof case (Kite's greyed "KO" over a
+## near-black rock) was not the alpha alone -- `_update_row()` ALSO
+## multiplies the whole row's `modulate.a` down to `FAINTED_MODULATE` (0.4)
+## for a fainted entry, compounding with the panel's own translucency to
+## ~0.33 effective opacity over a variable, moving 3D backdrop. Raised here
+## to a near-opaque floor so the row itself stays legible against any
+## backdrop; the KO tag's own legibility against ITS row is handled
+## separately below (`_ko_badge_boxes`), since a more opaque row alone does
+## not fix a badge still multiplied by the same row modulate.
+static func _row_box(selected: bool) -> StyleBoxFlat:
+	var box := UI_TOKENS.slot_box(selected)
+	var bg := box.bg_color
+	box.bg_color = Color(bg.r, bg.g, bg.b, maxf(bg.a, 0.94))
+	return box
+
+
 func _build_row(slot_index: int) -> PanelContainer:
 	var row := PanelContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.custom_minimum_size = ROW_SIZE
-	row.add_theme_stylebox_override("panel", UI_TOKENS.slot_box(false))
+	row.add_theme_stylebox_override("panel", _row_box(false))
 	_rows.append(row)
 
 	var margin := MarginContainer.new()
@@ -295,14 +458,66 @@ func _build_row(slot_index: int) -> PanelContainer:
 	# Small "KO" tag next to the level, shown only for a fainted entry — blind
 	# visual review: a fainted creature in the strip had no marker at all, reading
 	# identically to a healthy one at a glance.
+	#
+	# HUD-EMPHASIS: a solid badge, not bare text. A blind critic's proof case
+	# (Kite's greyed "KO" over a near-black rock) traced to `_update_row()`
+	# dimming the WHOLE row's `modulate.a` to `FAINTED_MODULATE` (0.4) for a
+	# fainted entry -- exactly the state "KO" exists to announce, which made
+	# the single most important status word in the roster its LEAST emphatic
+	# one, for a compositing reason rather than a font-size one. A solid
+	# `chip_box`-shaped backing plus `modulate` compensation
+	# (`KO_BADGE_MODULATE_COMPENSATION`, below) makes the badge read at full
+	# strength regardless of the row's own fade.
+	#
+	# `modulate`, not `self_modulate`: a first version of this used
+	# `self_modulate`, which only affects a node's OWN drawing and does NOT
+	# cascade to children -- a real render still showed the badge's child
+	# `ko_label` text at the row's dim 0.4 alpha, because `self_modulate`
+	# never touched it at all. `modulate` cascades multiplicatively to every
+	# descendant the same way the row's own dimming does, so it both lifts
+	# the badge's own panel AND the label text drawn inside it back to a
+	# combined 1.0.
+	# `PanelContainer`, not a bare `Panel`: a `Panel` reports a (0, 0) minimum
+	# size and never auto-sizes to its child the way a Container does, so
+	# inside `level_row`'s `HBoxContainer` it was allocated essentially no
+	# area at all -- the label still drew (a `Control` draws itself at its
+	# own computed rect regardless of its parent's), but the red backing box
+	# behind it had almost no visible rect to paint. A real render caught
+	# this directly: sampling pixels around the "KO" text found plain grass
+	# green, not `UI_TOKENS.DANGER`. `PanelContainer` sizes itself to its
+	# child plus the stylebox's own content margins, the same way every
+	# other badge/chip shape in this codebase gets its background from its
+	# content instead of a hand-measured size.
+	var ko_badge := PanelContainer.new()
+	ko_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var ko_badge_box := StyleBoxFlat.new()
+	ko_badge_box.bg_color = UI_TOKENS.DANGER
+	ko_badge_box.corner_radius_top_left = UI_TOKENS.RADIUS_SLOT
+	ko_badge_box.corner_radius_top_right = UI_TOKENS.RADIUS_SLOT
+	ko_badge_box.corner_radius_bottom_left = UI_TOKENS.RADIUS_SLOT
+	ko_badge_box.corner_radius_bottom_right = UI_TOKENS.RADIUS_SLOT
+	ko_badge_box.content_margin_left = 6.0
+	ko_badge_box.content_margin_right = 6.0
+	ko_badge_box.content_margin_top = 1.0
+	ko_badge_box.content_margin_bottom = 1.0
+	ko_badge.add_theme_stylebox_override("panel", ko_badge_box)
+	# `KO` only ever shows while `fainted` is true, and `_update_row()` only
+	# ever sets the row's own `modulate.a` to exactly `FAINTED_MODULATE` in
+	# that same state (see its own header) -- so a constant reciprocal here
+	# is exact, not a guess: 0.4 (parent) * 2.5 (this) = 1.0 final alpha,
+	# every time the badge is actually visible.
+	ko_badge.modulate.a = KO_BADGE_MODULATE_COMPENSATION
+	ko_badge.visible = false
+	_ko_badges.append(ko_badge)
+	level_row.add_child(ko_badge)
+
 	var ko_label := Label.new()
 	ko_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ko_label.text = "KO"
 	ko_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
-	ko_label.add_theme_color_override("font_color", UI_TOKENS.DANGER)
-	ko_label.visible = false
+	ko_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_PRIMARY)
 	_ko_labels.append(ko_label)
-	level_row.add_child(ko_label)
+	ko_badge.add_child(ko_label)
 
 	var rest_label := Label.new()
 	rest_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -347,21 +562,40 @@ func show_strip() -> void:
 ## the active index leaves `direction` 0 and this call is skipped, so the
 ## banner never claims a cycle that didn't happen.
 ##
-## Muted "was" name, an arrow, bright "now" name, then position in the roster
-## as plain N/total — the three things the owner said cycling didn't make
-## clear: who you left, who you're on, and where that sits among five.
+## Small muted "was" name, an arrow, LARGE bold "now" name, then position in
+## the roster as a medium readout — the three things the owner said cycling
+## didn't make clear: who you left, who you're on, and where that sits among
+## five. HUD-EMPHASIS: every run carries its own explicit `[font_size=]` tag
+## now (see `CYCLE_DEST_FONT_SIZE`'s own header for why relying on `[b]`
+## alone silently under-sized the one run that matters most) -- the
+## destination name is deliberately the dominant element on this whole HUD,
+## not just the strip, since it is the one word the player cycled to find
+## out.
 func flash_cycle(direction: int, previous_label: String, next_label: String,
 		position_1based: int, total: int) -> void:
 	if _cycle_banner == null or direction == 0:
 		return
 	var arrow := "▶" if direction > 0 else "◀"
-	_cycle_banner.text = "[color=#%s]%s[/color]  %s  [b][color=#%s]%s[/color][/b]   [color=#%s]%d / %d[/color]" % [
-		UI_TOKENS.TEXT_MUTED.to_html(false), previous_label,
-		arrow,
-		UI_TOKENS.TEAL_SOFT.to_html(false), next_label,
-		UI_TOKENS.TEXT_SECONDARY.to_html(false), position_1based, total,
+	_cycle_banner.text = (
+		"[font_size=%d][color=#%s]%s[/color][/font_size]  " +
+		"[font_size=%d][color=#%s]%s[/color][/font_size]  " +
+		"[font_size=%d][b][color=#%s]%s[/color][/b][/font_size]   " +
+		"[font_size=%d][color=#%s]%d / %d[/color][/font_size]"
+	) % [
+		CYCLE_SOURCE_FONT_SIZE, UI_TOKENS.TEXT_MUTED.to_html(false), previous_label,
+		CYCLE_ARROW_FONT_SIZE, UI_TOKENS.TEXT_SECONDARY.to_html(false), arrow,
+		CYCLE_DEST_FONT_SIZE, UI_TOKENS.TEAL_SOFT.to_html(false), next_label,
+		CYCLE_POSITION_FONT_SIZE, UI_TOKENS.TEXT_SECONDARY.to_html(false), position_1based, total,
 	]
 	_cycle_banner.visible = true
+	# HUD-EMPHASIS: the banner is docked directly over the header (see
+	# `_build()`'s own comment on `_cycle_banner.position`) and its plate is
+	# fully opaque -- but a real render still showed "TEAM n / 5" ghosting
+	# through at zoom regardless, which a compositing z-order/alpha fix alone
+	# did not fully explain. Hiding the header's own label outright while the
+	# banner shows is the deterministic fix: there is nothing left underneath
+	# to bleed through, however the plate itself ends up compositing.
+	_count_label.visible = false
 	_cycle_banner_timer = CYCLE_BANNER_SECONDS
 
 
@@ -386,22 +620,43 @@ func set_pinned(pinned: bool) -> void:
 ## later integration pass — builds these from `Party.members()` and
 ## `CreatureInstance.label()`/`hp_fraction()`; this widget never reaches for either
 ## itself (see this file's header).
-func update_from_party(entries: Array, active_index: int) -> void:
+##
+## HUD-POPUP task 2: `active_out` answers a question this widget could not
+## ask on its own before -- is the SELECTED slot actually standing in the
+## world, or just the roster's current pick? (`playground_hud.gd`'s own
+## `_active_creature_is_out()` is the one place that reads `AllyCreature`
+## from the live scene; this widget stays decoupled from the scene tree, per
+## this file's own header, so the caller hands the answer in as plain data,
+## the same as every other field on `entries`.) Defaults `true` so a caller
+## that never passes it (every existing test) keeps the old always-bright
+## rail rather than silently downgrading every selected row to "picked, not
+## present."
+func update_from_party(entries: Array, active_index: int, active_out: bool = true) -> void:
 	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
 		var entry: Dictionary = entries[i] if has_creature else {}
-		_update_row(i, entry, has_creature, has_creature and i == active_index)
+		var selected := has_creature and i == active_index
+		_update_row(i, entry, has_creature, selected, selected and active_out)
 
 
-func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) -> void:
+func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, out: bool) -> void:
 	var fainted := has_creature and bool(entry.get("fainted", false))
 	var resting := has_creature and bool(entry.get("resting", false))
 	var vacant := not has_creature
 
-	if vacant != _last_vacant[i] or selected != _last_selected[i]:
-		_rows[i].add_theme_stylebox_override("panel", UI_TOKENS.slot_box(selected))
+	if vacant != _last_vacant[i] or selected != _last_selected[i] or out != _last_out[i]:
+		_last_out[i] = out
+		_rows[i].add_theme_stylebox_override("panel", _row_box(selected))
 		_rails[i].visible = selected
+		# The rail is the ONE piece of this row's chrome that changes with
+		# `out` -- full-brightness `TEAL` for "this creature is standing in
+		# the world," the dimmer `TEAL_SOFT` for "this is the roster's pick,
+		# nothing more" -- rather than touching the chip border too, which
+		# stays the plain "this row is selected" signal it always was
+		# (`test_selected_row_gets_the_teal_rail_and_full_modulate` already
+		# covers that it must not vary).
+		_rails[i].color = UI_TOKENS.TEAL if out else UI_TOKENS.TEAL_SOFT
 		_chip_boxes[i].border_color = UI_TOKENS.TEAL_SOFT if selected else UI_TOKENS.BORDER
 		var border_width := 2 if selected else 1
 		_chip_boxes[i].border_width_left = border_width
@@ -421,7 +676,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 		# nothing) and level label are what blind visual review saw as "a
 		# stray bar" between real entries. Hidden entirely, not just emptied.
 		_level_labels[i].visible = false
-		_ko_labels[i].visible = false
+		_ko_badges[i].visible = false
 		_rest_labels[i].visible = false
 		_set_portrait(i, "")
 		_slot_labels[i].visible = true
@@ -446,7 +701,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) 
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))
 	_set_level(_level_labels[i], i, level, "Lv %d" % level)
-	_ko_labels[i].visible = fainted
+	_ko_badges[i].visible = fainted
 	_rest_labels[i].visible = resting
 
 	_hp_bars[i].value = clampf(float(entry.get("hp_fraction", 0.0)), 0.0, 1.0)
@@ -551,6 +806,10 @@ func _process(delta: float) -> void:
 		_cycle_banner_timer -= timer_delta
 		if _cycle_banner_timer <= 0.0:
 			_cycle_banner.visible = false
+			# HUD-EMPHASIS: undo flash_cycle()'s own header hide -- see that
+			# function's comment for why the header label is hidden while the
+			# banner shows.
+			_count_label.visible = true
 
 	if _pinned or not visible:
 		return

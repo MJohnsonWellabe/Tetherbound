@@ -69,23 +69,25 @@ func test_full_roster_mount_clears_the_separate_active_panel() -> void:
 			"occupied and vacant rows must reserve the same fixed vertical space"
 		)
 	# HUD-LAYOUT: the left column (party strip / creature panel / vitals) is
-	# now stacked bottom-up from the CANVAS BOTTOM (see
+	# stacked bottom-up from the CANVAS BOTTOM (see
 	# `playground_hud.gd::BOTTOM_DOCK_TOP_OFFSET`'s header for why a fixed
 	# top-anchored offset was the actual defect), so its position math takes
-	# an explicit canvas height and creature-panel height rather than reading
-	# fixed constants.
+	# an explicit canvas height rather than reading fixed constants.
 	#
-	# This function no longer asserts "the roster never touches the active
-	# panel": at the canvas heights this HUD actually runs at, the strip's
-	# own `TOTAL_HEIGHT` (540, five text-driven rows -- a deliberate
-	# legibility fix, not a number this task should shrink) genuinely does
-	# not fit in the room left above a correctly bottom-anchored creature
-	# panel; the honest tradeoff `party_strip_position()`'s own header
-	# documents is a reveal that briefly overlaps the (already-labelled)
-	# panel behind it rather than one that silently clips off the top of the
-	# screen. `test_party_strip_never_goes_off_the_top_of_the_screen` and
-	# `test_left_stack_clears_bottom_dock_at_every_supported_aspect` below
-	# are what now carry this widget's real position guarantees.
+	# HUD-POPUP: this function used to say the roster and the active panel
+	# were allowed to touch -- the strip's own `TOTAL_HEIGHT` (540, five
+	# text-driven rows) genuinely did not fit in the room the old design left
+	# above a correctly bottom-anchored creature panel, and the clamp that
+	# handled the shortfall let the reveal draw its bottom rows straight over
+	# the panel behind it. A blind critic then measured exactly that frame:
+	# the panel's title compositing through a party row's name, an HP readout
+	# floating over the wrong row, six distinct collisions from one shared
+	# rect. The party strip no longer shares a rect with the creature panel
+	# at all -- `PARTY_STRIP_X` moved it to its own screen region --
+	# `test_party_strip_no_longer_overlaps_the_creature_panel` below is what
+	# proves that on real geometry, and
+	# `test_left_stack_clears_bottom_dock_at_every_supported_aspect` still
+	# carries the vitals/creature-panel column's own guarantee.
 	strip.free()
 
 
@@ -126,24 +128,81 @@ func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
 		)
 
 
-## `party_strip.gd::TOTAL_HEIGHT` (540, five text-driven rows) does not fit
-## in the room left above a correctly bottom-anchored creature panel at
-## either supported canvas height -- the un-clamped formula computes a
-## negative top for the reveal, meaning roughly its top third would draw
-## above the screen entirely. `party_strip_position()` clamps to
-## `TOP_SAFE_INSET` for exactly this case. This test proves the clamp
-## actually engages (not just that it exists) using the SAME representative
-## creature-panel height every other test in this block uses.
+## `party_strip_position()` never draws the reveal above `TOP_SAFE_INSET`,
+## regardless of canvas height -- the strip's own screen region (see its own
+## header) means this is normally a plain top anchor, not an engaged clamp,
+## but the function still has a defensive floor for a canvas short enough
+## that `TOP_SAFE_INSET + TOTAL_HEIGHT` would overrun `Root/BottomDock`'s
+## nominal top. This test proves the bound holds at both supported canvas
+## heights.
 func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
-	var creature_h := 150.0
 	for canvas_h in [1080.0, 1200.0]:
 		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
-			canvas_h, creature_h, PARTY_STRIP.TOTAL_HEIGHT
+			canvas_h, PARTY_STRIP.TOTAL_HEIGHT, PLAYGROUND_HUD.CREATURE_BLOCK_MIN_WIDTH
 		)
 		assert_true(
-			strip_pos.y >= PLAYGROUND_HUD.TOP_SAFE_INSET - 0.001,
-			"party strip top (%.1f) must never sit above TOP_SAFE_INSET (%.1f) at canvas height %.0f" % [
-				strip_pos.y, PLAYGROUND_HUD.TOP_SAFE_INSET, canvas_h,
+			strip_pos.y >= 0.0 - 0.001,
+			"party strip top (%.1f) must never draw above the screen at canvas height %.0f" % [
+				strip_pos.y, canvas_h,
+			]
+		)
+		assert_almost_eq(
+			strip_pos.y, PLAYGROUND_HUD.TOP_SAFE_INSET, 0.001,
+			"party strip should rest at TOP_SAFE_INSET, not an engaged clamp, at canvas height %.0f -- " % canvas_h +
+			"if this fails, TOTAL_HEIGHT or BOTTOM_DOCK_TOP_OFFSET moved enough to eat the defensive floor's margin"
+		)
+
+
+## HUD-POPUP: the top defect a blind critic found -- the creature panel's
+## own title/HP/type readout compositing directly on top of party rows 3 and
+## 4 ("R**Kite**ADY TO CALL OUT" was one specific byproduct of the two
+## widgets sharing a rect). Checked on real `Rect2` geometry, not just a Y
+## comparison, so a future width change to either widget cannot silently
+## reopen this without tripping the test.
+##
+## `creature_w` is deliberately NOT `CREATURE_BLOCK_MIN_WIDTH` here -- the
+## first version of this fix used exactly that constant as a fixed guess at
+## the panel's real width, and a live render with a seeded creature (an HP
+## value column, a type tag, a portrait) immediately measured the panel at
+## 435, well past its 374px floor, reopening the same collision this test
+## exists to catch. 435 is that measured value, not a round number, so this
+## test would have failed against BOTH the pre-fix design (same x as the
+## panel) and the first, width-naive version of the actual fix.
+func test_party_strip_no_longer_overlaps_the_creature_panel() -> void:
+	var creature_h := 230.0
+	var creature_w := 435.0
+	for canvas_h in [1080.0, 1200.0]:
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(canvas_h, PARTY_STRIP.TOTAL_HEIGHT, creature_w)
+		var strip_rect := Rect2(strip_pos, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT))
+		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
+		var creature_rect := Rect2(creature_pos, Vector2(creature_w, creature_h))
+		assert_false(
+			strip_rect.intersects(creature_rect),
+			"party strip %s must never intersect the creature panel %s at canvas height %.0f" % [
+				strip_rect, creature_rect, canvas_h,
+			]
+		)
+
+
+## HUD-POPUP task 4: "Bramblebun's row (party row 5) is clipped at the panel
+## bottom by the player's own HP and satiety bars" -- the vitals cluster used
+## to share the SAME x column as the party strip's old (clamped, overlapping)
+## rest position, so the strip's fifth row could land under the vitals rect
+## with no panel backing of its own. Now that the strip lives in its own
+## screen region, the two literally cannot share a column; this proves it on
+## geometry rather than trusting the new x offset by eye.
+func test_party_strip_never_overlaps_player_vitals() -> void:
+	for canvas_h in [1080.0, 1200.0]:
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
+			canvas_h, PARTY_STRIP.TOTAL_HEIGHT, PLAYGROUND_HUD.CREATURE_BLOCK_MIN_WIDTH
+		)
+		var strip_rect := Rect2(strip_pos, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT))
+		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
+		var vitals_rect := Rect2(vitals_pos, Vector2(PLAYGROUND_HUD.VITALS_WIDTH, PLAYGROUND_HUD.VITALS_HEIGHT))
+		assert_false(
+			strip_rect.intersects(vitals_rect),
+			"party strip %s must never intersect the player vitals cluster %s at canvas height %.0f" % [
+				strip_rect, vitals_rect, canvas_h,
 			]
 		)
 
@@ -213,7 +272,10 @@ func test_resting_entry_has_an_explicit_unavailable_marker() -> void:
 		"fainted": false, "resting": true,
 	}], 0)
 	assert_true(strip._rest_labels[0].visible, "resting must be readable without inferring it from dimming")
-	assert_false(strip._ko_labels[0].visible)
+	# HUD-EMPHASIS: `KO`'s visibility now lives on its badge, not the bare
+	# label inside it -- see `_build_row()`'s own comment on why the badge
+	# carries a `self_modulate` compensation the label alone cannot.
+	assert_false(strip._ko_badges[0].visible)
 	assert_true(strip._rows[0].modulate.a < PARTY_STRIP.SELECTED_MODULATE)
 	strip.free()
 
@@ -232,6 +294,32 @@ func test_selected_row_gets_the_teal_rail_and_full_modulate() -> void:
 		"the active creature portrait should carry the same selected highlight")
 	assert_almost_eq(strip._rows[1].modulate.a, PARTY_STRIP.SELECTED_MODULATE)
 	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.UNSELECTED_MODULATE)
+	# `update_from_party()`'s default `active_out=true`: the rail reads
+	# full-brightness TEAL, same as before this task touched it.
+	assert_eq(strip._rails[1].color, UI_TOKENS.TEAL,
+		"a selected AND summoned row's rail should read the bright TEAL")
+	strip.free()
+
+
+## HUD-POPUP task 2: "the list's teal 'active' highlight moves to the new
+## creature at the same moment the popup says that creature is only 'ready to
+## be called out.' Selected-but-not-summoned and active-in-the-world
+## currently share one visual treatment." This proves the two states now
+## carry two different rail colours, with the chip border (the plain
+## "selected" signal `test_selected_row_gets_the_teal_rail_and_full_modulate`
+## above already covers) deliberately left untouched by the distinction.
+func test_selected_but_not_out_row_gets_the_dimmer_rail() -> void:
+	var strip := _make_strip()
+	var entries: Array = [
+		{"label": "Terrapup", "level": 4, "hp_fraction": 1.0, "tint": Color(0.55, 0.35, 0.15), "fainted": false},
+	]
+	strip.update_from_party(entries, 0, false)
+
+	assert_true(strip._rails[0].visible, "the selected row's rail should still show")
+	assert_eq(strip._rails[0].color, UI_TOKENS.TEAL_SOFT,
+		"a selected-but-not-summoned row's rail should read the dimmer TEAL_SOFT, not full TEAL")
+	assert_eq(strip._chip_boxes[0].border_color, UI_TOKENS.TEAL_SOFT,
+		"the chip border stays the plain 'selected' signal regardless of out-state")
 	strip.free()
 
 
@@ -248,6 +336,34 @@ func test_fainted_entry_dims_and_tints_its_hp_bar_danger() -> void:
 	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.FAINTED_MODULATE, 0.001,
 		"a fainted creature should read as dimmed even while selected")
 	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.DANGER, "a fainted creature's hp bar should be danger-tinted")
+
+	# HUD-EMPHASIS regression guard: a first version of this fix compensated
+	# with `self_modulate`, which does not cascade to a node's own children --
+	# a real render still showed the KO badge's own text at the row's dim
+	# 0.4 alpha despite the badge's panel itself reading correctly. `modulate`
+	# is required specifically because it DOES cascade to the label inside
+	# the badge; asserting the property name indirectly (via the actual
+	# combined alpha the row * badge chain produces) is what would have
+	# caught the self_modulate mistake, since `self_modulate` alone would
+	# have let this same assertion pass for the badge's own rect while the
+	# text inside it stayed dim.
+	assert_true(strip._ko_badges[0].visible, "KO badge must be visible on a fainted entry")
+	assert_almost_eq(
+		strip._rows[0].modulate.a * strip._ko_badges[0].modulate.a, 1.0, 0.001,
+		"the KO badge's own modulate must exactly cancel the row's fainted dimming, not just approximate it"
+	)
+	# HUD-EMPHASIS regression guard #2: a real render also caught the badge
+	# itself painting essentially nothing -- a bare `Panel` reports a (0, 0)
+	# minimum size and never auto-sizes to its child inside `level_row`'s
+	# `HBoxContainer`, so the label still drew (a `Control` draws at its own
+	# rect regardless of its parent's) while the red backing box behind it
+	# had almost no rect to paint (pixel-sampled as plain grass green, not
+	# `UI_TOKENS.DANGER`, in the actual capture). `PanelContainer` is what
+	# makes the badge size itself to its content; asserting the class
+	# directly is what would have caught the `Panel` mistake before a render
+	# had to.
+	assert_true(strip._ko_badges[0] is PanelContainer,
+		"the KO badge must be a PanelContainer so it sizes itself to its label -- a bare Panel paints nothing")
 	strip.free()
 
 
@@ -275,6 +391,51 @@ func test_flash_cycle_shows_previous_and_next_and_roster_position() -> void:
 		"roster position must be stated, not left for the player to infer")
 	assert_true(strip._cycle_banner.text.contains("▶"),
 		"forward cycling must show a forward-facing arrow")
+	strip.free()
+
+
+## HUD-EMPHASIS: the whole point of this task. A blind critic measured the
+## destination name -- "the single word the player cycled to find out" -- as
+## the smallest text on the entire screen, smaller than the creature being
+## left behind and the roster-position readout beside it. Encodes the
+## invariant directly against the constants `flash_cycle()` actually tags
+## each run with, not just a "text contains the name" check that would pass
+## even with the sizes inverted.
+func test_flash_cycle_destination_name_is_the_dominant_element() -> void:
+	assert_true(
+		PARTY_STRIP.CYCLE_DEST_FONT_SIZE > PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE,
+		"the destination (where the player is going) must be authored larger than the source (where they left)"
+	)
+	assert_true(
+		PARTY_STRIP.CYCLE_DEST_FONT_SIZE > PARTY_STRIP.CYCLE_POSITION_FONT_SIZE,
+		"the destination name must be the single most dominant element in the banner"
+	)
+
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	var text: String = strip._cycle_banner.text
+	var dest_tag := "[font_size=%d]" % PARTY_STRIP.CYCLE_DEST_FONT_SIZE
+	var source_tag := "[font_size=%d]" % PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE
+	var dest_tag_pos := text.find(dest_tag)
+	var source_tag_pos := text.find(source_tag)
+	var dest_name_pos := text.find("Bramblebun")
+	var source_name_pos := text.find("Terrapup")
+	assert_true(dest_tag_pos != -1 and source_tag_pos != -1,
+		"the banner text must carry both the destination and source font-size tags")
+	assert_true(dest_tag_pos < dest_name_pos and dest_name_pos < dest_tag_pos + dest_tag.length() + 60,
+		"the destination name must actually be wrapped in its own dominant font-size tag, not just present somewhere in the string")
+	assert_true(source_tag_pos < source_name_pos and source_name_pos < source_tag_pos + source_tag.length() + 60,
+		"the source name must actually be wrapped in its own small font-size tag")
+
+	# HUD-EMPHASIS root-cause regression guard: `[b]` alone silently falls
+	# back to the theme's untouched `bold_font_size` default, which is what
+	# made the destination name render smaller than everything else despite
+	# `flash_cycle()` already wrapping it in `[b]` before this task. This
+	# must stay explicitly overridden so that root cause cannot come back
+	# quietly if a future edit ever drops the `[font_size=]` tags and leans
+	# on `[b]` alone again.
+	assert_eq(strip._cycle_banner.get_theme_font_size("bold_font_size"), PARTY_STRIP.CYCLE_DEST_FONT_SIZE,
+		"bold_font_size must be explicitly overridden -- relying on [b] alone silently under-sizes the destination name")
 	strip.free()
 
 
