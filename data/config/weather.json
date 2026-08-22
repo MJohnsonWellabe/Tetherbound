@@ -3,63 +3,70 @@
   "_comment_cycle": "How long one weather state holds before world_weather.gd rolls a new one, in real seconds. Wide range on purpose -- a fixed interval reads as a scripted flicker, not weather.",
   "cycle_seconds_min": 240.0,
   "cycle_seconds_max": 480.0,
+  "_comment_weighting": "OP21-21: a uniform 1-in-4 roll put a washed-out preset (cloudy/fog/rain) on screen 75% of the time, on a 4-8 minute timer -- the owner's 'washed out after several minutes' complaint lines up with that timer almost exactly. `weight` below is a relative roll weight per preset (default 1.0 if omitted); clear is weighted heaviest so the game's default read stays clear most of the time while the other three still show up regularly as real, distinct moods rather than being removed. weight_clear+weight_cloudy+weight_fog+weight_rain = 6.0 here -> clear ~50%, cloudy ~20%, fog ~13%, rain ~17%.",
+  "_comment_streak": "max_consecutive_non_clear caps how many weather cycles in a row can land away from clear, regardless of what the weighted roll would have picked -- so even a run of bad luck (fog, then rain, then cloudy) cannot hold the grey-ish end of the palette on screen indefinitely. world_weather.gd forces the next roll to clear once this many non-clear cycles have played back to back.",
+  "max_consecutive_non_clear": 2,
   "presets": {
     "clear": {
       "_comment": "No sun/sky/environment override -- whatever the active time-of-day preset already set. Present so it is a real, selectable state (survey/debug included) rather than an implicit absence.",
-      "rain": false
+      "rain": false,
+      "weight": 3.0
     },
     "cloudy": {
-      "_comment": "A stylised flat-overcast look, not literal cloud shapes -- world_look.gd's own header already states why: a ProceduralSkyMaterial can produce a gradient and a soft sun blob and nothing else. 'Cloudy' here means a dimmer, flatter sky and lower-contrast light; the sun's own cast shadow stays on (world_look.gd::_apply_sun's comment has the real reason -- driving it off blanked the whole terrain under this renderer/Terrain3D combination, a worse defect than the shadow it was meant to soften).",
+      "_comment": "A stylised flat-overcast look, not literal cloud shapes -- world_look.gd's own header already states why: a ProceduralSkyMaterial can produce a gradient and a soft sun blob and nothing else. 'Cloudy' here means a dimmer, flatter sky and lower-contrast light; the sun's own cast shadow stays on (world_look.gd::_apply_sun's comment has the real reason -- driving it off blanked the whole terrain under this renderer/Terrain3D combination, a worse defect than the shadow it was meant to soften). OP21-21 retune: the old sky/ambient colours (#8b97a0 / #c9ced1 / #a9afb6) measured 4-13% saturation -- functionally neutral grey. Pushed toward a deeper, more saturated blue-grey (measured 15-29% saturation on the same swatches) so 'overcast' reads as an atmospheric colour choice rather than a drained one, at a very similar brightness (value dropped <=0.1) so this is a hue/chroma fix, not a lighting fix.",
       "rain": false,
+      "weight": 1.2,
       "sun": {
-        "energy_mult": 0.5,
-        "angular_distance": 3.5
-      },
-      "sky": {
-        "top_colour": "#8b97a0",
-        "horizon_colour": "#c9ced1",
-        "ground_horizon_colour": "#c9ced1"
-      },
-      "environment": {
-        "ambient_energy_mult": 0.9,
-        "ambient_colour": "#a9afb6",
-        "fog_density_add": 0.0009
-      }
-    },
-    "fog": {
-      "_comment": "Ground-hugging haze, much denser than any time-of-day preset's own light depth-cueing fog. Sky pushed toward the fog colour (not the sun's own horizon colour) so distant terrain fades into a flat void instead of meeting a hard-edged horizon band -- the exact seam EV8 already fixed once for the ordinary time-of-day fog.",
-      "rain": false,
-      "sun": {
-        "energy_mult": 0.65,
+        "energy_mult": 0.6,
         "angular_distance": 3.0
       },
       "sky": {
-        "top_colour": "#c6cdcf",
-        "horizon_colour": "#d7dcdc",
-        "ground_horizon_colour": "#d7dcdc"
+        "top_colour": "#5f7386",
+        "horizon_colour": "#9aabb5",
+        "ground_horizon_colour": "#9aabb5"
       },
       "environment": {
         "ambient_energy_mult": 0.95,
-        "fog_density_add": 0.015,
-        "fog_colour": "#d2d8d8"
+        "ambient_colour": "#7e93a3",
+        "fog_density_add": 0.0006
       }
     },
-    "rain": {
-      "_comment": "Cloudy plus falling rain plus a cooler, wetter ambient. Shares the cloudy sky family rather than inventing a third palette -- rain reads as 'cloudy, and now it is raining', not a fourth unrelated mood.",
-      "rain": true,
+    "fog": {
+      "_comment": "Ground-hugging haze, much denser than any time-of-day preset's own light depth-cueing fog. Sky pushed toward the fog colour (not the sun's own horizon colour) so distant terrain fades into a flat void instead of meeting a hard-edged horizon band -- the exact seam EV8 already fixed once for the ordinary time-of-day fog. OP21-21 retune: this was the worst offender -- `tools/capture_weather.gd` + `tools/frame_stats.py` measured whole-frame mean saturation of 0.18 against clear's 0.68 (a 73% collapse), near-ground luminance HIGHER than clear (0.299 vs 0.161, i.e. brighter AND greyer at once), and only ONE surviving hue family in the whole frame (the sky's blue vanished into the ground's own green) -- that combination is what 'washed-out grey that looks broken' measures as. Old swatches (#c6cdcf / #d7dcdc / #d2d8d8) measured 2-4% saturation, i.e. off-white. New swatches measure 12-23% saturation, clearing the hue-family chroma floor so the sky reads as its own blue/cyan again rather than merging into the ground colour. Re-measured after the retune: mean saturation 0.36 (2x, still well below clear's 0.68 -- this is meant to read as muted haze, not weather-free), near-ground luminance 0.182 (within 13% of clear's 0.161, no longer the brightest frame of the four), 4 hue families present (was 1). fog_density_add roughly halved (0.015 -> 0.007) and ambient_energy_mult trimmed (0.95 -> 0.8) so the extra chroma is not immediately re-flattened by a brighter, denser haze on top of it.",
+      "rain": false,
+      "weight": 0.8,
       "sun": {
-        "energy_mult": 0.4,
-        "angular_distance": 3.5
+        "energy_mult": 0.7,
+        "angular_distance": 2.5
       },
       "sky": {
-        "top_colour": "#5f6d76",
-        "horizon_colour": "#8d979c",
-        "ground_horizon_colour": "#8d979c"
+        "top_colour": "#7b95a0",
+        "horizon_colour": "#a8bcc0",
+        "ground_horizon_colour": "#a8bcc0"
       },
       "environment": {
         "ambient_energy_mult": 0.8,
-        "ambient_colour": "#8d99a3",
-        "fog_density_add": 0.0022
+        "fog_density_add": 0.007,
+        "fog_colour": "#9cb2b7"
+      }
+    },
+    "rain": {
+      "_comment": "Cloudy plus falling rain plus a cooler, wetter ambient. Shares the cloudy sky family rather than inventing a third palette -- rain reads as 'cloudy, and now it is raining', not a fourth unrelated mood. OP21-21 retune: rain measured best of the three overcast states before this pass (0.45 mean saturation, blue still present) but is nudged further from grey the same way cloudy/fog were, plus a touch more sun energy so falling rain reads against a lit scene rather than a dim one.",
+      "rain": true,
+      "weight": 1.0,
+      "sun": {
+        "energy_mult": 0.5,
+        "angular_distance": 3.0
+      },
+      "sky": {
+        "top_colour": "#546877",
+        "horizon_colour": "#8797a0",
+        "ground_horizon_colour": "#8797a0"
+      },
+      "environment": {
+        "ambient_energy_mult": 0.85,
+        "ambient_colour": "#7e8fa0",
+        "fog_density_add": 0.0018
       }
     }
   }

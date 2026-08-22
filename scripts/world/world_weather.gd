@@ -54,6 +54,11 @@ var _cycle_timer: float = 0.0
 var _next_change_at: float = 60.0
 var _rain: GPUParticles3D = null
 
+## OP21-21: how many weather cycles in a row have landed away from "clear".
+## Reset to 0 whenever "clear" is picked or forced. See
+## `max_consecutive_non_clear` in weather.json and `_pick_next()` below.
+var _consecutive_non_clear: int = 0
+
 
 func _ready() -> void:
 	add_to_group(GROUP)
@@ -84,7 +89,7 @@ func _process(delta: float) -> void:
 		return
 	_cycle_timer = 0.0
 	_queue_next_change()
-	set_weather(_order[_rng.randi_range(0, _order.size() - 1)])
+	set_weather(_pick_next())
 
 
 func weather() -> String:
@@ -100,6 +105,18 @@ func set_weather(name: String) -> void:
 	_weather = name
 	var preset: Dictionary = _presets.get(name, {})
 
+	# OP21-21: track how many cycles in a row have NOT been clear, so
+	# _pick_next() can force a return to clear before a run of grey-ish
+	# presets (fog, then rain, then cloudy, ...) reads as sustained rather
+	# than as weather. Tracked here rather than only in _pick_next() so it
+	# stays correct no matter who calls set_weather() -- the random cycle,
+	# survey.gd/capture_weather.gd forcing a named preset, or a future debug
+	# toggle.
+	if name == "clear":
+		_consecutive_non_clear = 0
+	else:
+		_consecutive_non_clear += 1
+
 	var look: Node = get_node_or_null(look_path)
 	if look != null and look.has_method("set_weather"):
 		look.call("set_weather", preset)
@@ -108,6 +125,32 @@ func set_weather(name: String) -> void:
 		var raining := bool(preset.get("rain", false))
 		_rain.emitting = raining
 		_rain.visible = raining
+
+
+## OP21-21: a weighted roll (weather.json's per-preset `weight`, default 1.0)
+## instead of the old uniform pick across all four presets -- a uniform roll
+## put a washed-out preset on screen 75% of the time. Also enforces
+## `max_consecutive_non_clear`: once that many cycles in a row have landed
+## away from "clear", the next roll is forced back to "clear" regardless of
+## weight, so a bad-luck run of grey-ish presets cannot chain indefinitely.
+func _pick_next() -> String:
+	var cap := int(_config.get("max_consecutive_non_clear", 2))
+	if cap > 0 and _consecutive_non_clear >= cap and _presets.has("clear"):
+		return "clear"
+
+	var total := 0.0
+	for key: String in _order:
+		total += maxf(0.0, float(_presets.get(key, {}).get("weight", 1.0)))
+	if total <= 0.0:
+		return _order[_rng.randi_range(0, _order.size() - 1)]
+
+	var roll := _rng.randf_range(0.0, total)
+	var acc := 0.0
+	for key: String in _order:
+		acc += maxf(0.0, float(_presets.get(key, {}).get("weight", 1.0)))
+		if roll <= acc:
+			return key
+	return _order[_order.size() - 1]
 
 
 func _queue_next_change() -> void:
