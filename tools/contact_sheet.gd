@@ -12,8 +12,13 @@ extends SceneTree
 ##
 ## Runs headless: this is image compositing, not rendering.
 
+## Which directory of frames to composite, and where the sheet lands. Both
+## default to the survey's own `res://shots`; `--dir=` points them at a
+## subdirectory instead, so a regional capture (GATE-D3's `shots/band3`) gets
+## its own sheet without its frames having to be mixed into the survey's.
 const SHOTS_DIR := "res://shots"
-const OUT_PATH := "res://shots/_sheet.png"
+var _shots_dir := SHOTS_DIR
+var _out_path := "res://shots/_sheet.png"
 const COLUMNS := 3
 const TILE_WIDTH := 620
 const PADDING := 14
@@ -22,9 +27,15 @@ const BACKGROUND := Color(0.07, 0.08, 0.09, 1.0)
 
 
 func _init() -> void:
+	for a in OS.get_cmdline_user_args():
+		var parts := a.split("=", true, 1)
+		if parts[0].lstrip("-") == "dir" and parts.size() > 1:
+			_shots_dir = "res://%s" % parts[1].trim_prefix("res://").trim_suffix("/")
+			_out_path = "%s/_sheet.png" % _shots_dir
+
 	var paths := _frame_paths()
 	if paths.is_empty():
-		push_error("no frames in %s; run tools/survey.sh first" % SHOTS_DIR)
+		push_error("no frames in %s; run tools/survey.sh first" % _shots_dir)
 		quit(1)
 		return
 
@@ -72,13 +83,13 @@ func _init() -> void:
 		# below, which is enough to name any tile.
 		_rule(sheet, x, y + tile.get_height() + 8, TILE_WIDTH, Color(0.42, 0.55, 0.29, 1.0))
 
-	var error := sheet.save_png(OUT_PATH)
+	var error := sheet.save_png(_out_path)
 	if error != OK:
-		push_error("could not write %s (%d)" % [OUT_PATH, error])
+		push_error("could not write %s (%d)" % [_out_path, error])
 		quit(1)
 		return
 
-	print("%d tiles -> %s  (%dx%d)" % [tiles.size(), OUT_PATH, sheet_width, sheet_height])
+	print("%d tiles -> %s  (%dx%d)" % [tiles.size(), _out_path, sheet_width, sheet_height])
 	print("reading order, left to right, top to bottom:")
 	for index in names.size():
 		print("  %d. %s" % [index + 1, names[index]])
@@ -96,7 +107,7 @@ func _rule(target: Image, x: int, y: int, width: int, colour: Color) -> void:
 
 func _frame_paths() -> Array[String]:
 	var out: Array[String] = []
-	var dir := DirAccess.open(SHOTS_DIR)
+	var dir := DirAccess.open(_shots_dir)
 	if dir == null:
 		return out
 	dir.list_dir_begin()
@@ -104,7 +115,7 @@ func _frame_paths() -> Array[String]:
 	while entry != "":
 		# Skip the sheet itself, or each run composites the previous one in.
 		if entry.ends_with(".png") and not entry.begins_with("_"):
-			out.append("%s/%s" % [SHOTS_DIR, entry])
+			out.append("%s/%s" % [_shots_dir, entry])
 		entry = dir.get_next()
 	dir.list_dir_end()
 	out.sort()
