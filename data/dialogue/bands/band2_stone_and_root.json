@@ -1,4 +1,38 @@
 {
   "_comment": "BAND-SPLIT-2. This band's own dialogue container -- see band1_lower_meadows.json in this same directory for the full reasoning. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Filed 2026-08-17 specifically because this band had a ranger camp shipping and no dialogue file to put its trainer's lines in -- see ralph/NOTES.md.",
-  "conversations": {}
+  "conversations": {
+    "quarry_dorn_challenge": {
+      "speaker": "Dorn",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Seams are company ground. Have been since before your village had an opinion about it.",
+        "You want stone out of them, you're a problem I'm paid to have. Let's get it over with."
+      ]
+    },
+    "quarry_dorn_defeated": {
+      "speaker": "Dorn",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Take your stone. It's not the stone anyone up the line actually cares about.",
+        "And don't thank me. I'd have stopped you if I could have."
+      ]
+    },
+    "warrens_pell_challenge": {
+      "speaker": "Pell",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "That hole behind me is ours. We cut it, we hold it, and nobody local goes down it.",
+        "Dorn let you past. Dorn's soft. I'd back my three against your whole string."
+      ]
+    },
+    "warrens_pell_defeated": {
+      "speaker": "Pell",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Fine. Go down. You'll last about as long as the last one who did.",
+        "Something's been living in there since long before we started digging, and it doesn't care whose badge you're not wearing."
+      ]
+    }
+  },
+  "_comment_trainers": "TRAINER-JOURNEY. The two Team Tether pickets this band gained (data/config/bands/band2_stone_and_root/trainers.json). This file was filed in 2026-08-17 for exactly this -- a band with a trainer shipping and nowhere to put its lines -- and has been an empty container since. Doctrine, not lore dump (prompt 59): each of the four speeches is two lines, both men are talking about their job, and neither explains Team Tether to a stranger. Nothing here names the legendary; tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces that across every dialogue file and the stronghold is the only place that rung is spoken."
 }
