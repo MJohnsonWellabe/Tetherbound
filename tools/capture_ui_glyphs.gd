@@ -37,6 +37,19 @@ const OUT_DIR := "res://shots/ui_glyphs"
 ## it. `playground_hud.gd`'s own `_prompt_label` is the authority for this path.
 ## The COMBAT HUD kept its own `Root/Prompt`; only the exploration one moved.
 const EXPLORATION_PROMPT := ^"Root/BottomDock/Prompt"
+
+## The persistent legend, which is a SIBLING of the prompt in the same dock.
+##
+## It has to be hidden alongside the prompt when the combat frame is staged.
+## `playground_hud.gd::_exploration_legend_should_show()` already returns false
+## while `_combat_is_running()`, so in a real fight a player never sees the
+## legend and the combat prompt together -- but this tool fakes the fight by
+## setting `combat.visible = true` without one running, so the legend stays up
+## and the two draw over each other. A blind visual critic shown that frame
+## reported the overprint as the single most severe defect in the set, which is
+## correct about the pixels and wrong about the game. Hidden here so the frame
+## shows what is actually on screen during a fight.
+const EXPLORATION_LEGEND := ^"Root/BottomDock/ExplorationLegend"
 const SETTLE_FRAMES := 300
 const POSE_FRAMES := 6
 
@@ -98,6 +111,13 @@ func _run() -> void:
 			var explore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
 			if explore_prompt != null:
 				explore_prompt.visible = false
+			var explore_legend: Control = hud.get_node_or_null(EXPLORATION_LEGEND) as Control
+			if explore_legend != null:
+				explore_legend.visible = false
+			else:
+				failures.append("combat-prompt: no %s to hide; the staged frame will "
+					% EXPLORATION_LEGEND + "show the legend under the combat prompt, "
+					+ "which is a capture artifact and not what a fight looks like")
 		var combat_prompt: RichTextLabel = combat.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if combat_prompt != null:
 			# combat_hud.gd's own _process polls _director.call("prompt") every
@@ -114,6 +134,9 @@ func _run() -> void:
 			var restore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
 			if restore_prompt != null:
 				restore_prompt.visible = true
+			var restore_legend: Control = hud.get_node_or_null(EXPLORATION_LEGEND) as Control
+			if restore_legend != null:
+				restore_legend.visible = true
 	else:
 		failures.append("combat-prompt: no CombatHUD in the scene (skipping)")
 
