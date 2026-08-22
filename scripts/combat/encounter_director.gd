@@ -238,6 +238,12 @@ func _ready() -> void:
 ## scene with genuinely no ground fails loudly instead of looping.
 const GROUND_WAIT_FRAMES := 300
 
+## How far under the analytic ground a wild has to be before activation puts it
+## back. Matches `tools/_probe_wild_grounding.gd`'s own threshold and is generous
+## for the same reason: terrain the heightfield and the collider disagree about
+## by a metre is a different and much smaller problem than a body in free fall.
+const REGROUND_DEPTH_M := 5.0
+
 
 func _spawn_creatures() -> void:
 	var entries: Array = spawns_config().get("spawns", []) as Array
@@ -1080,7 +1086,49 @@ func _set_wild_active(wild: Node3D, active: bool) -> void:
 		return
 	if _wild_gates.has(wild) and not wild.visible:
 		return  # the gate owns this one's visibility, and with it its process state
+	if active:
+		_reground_if_fallen(wild)
 	wild.set_physics_process(active)
+
+
+## GATE-D. Put a creature back on the ground if it is under it, before handing
+## it back its physics.
+##
+## Found by `tools/_probe_wild_grounding.gd` (authored by the Band 3 lane, whose
+## driven run met 11 of that region's 155 creatures). `creature_body.gd`
+## subtracts gravity on any frame `is_on_floor()` is false, and Terrain3D builds
+## collision dynamically around the CAMERA within a granted radius --
+## `playground_world.gd` hands it the player's camera. So a creature spawned
+## kilometres away has no floor on the frame it spawns, and falls at 26 m/s^2
+## for as long as the world runs. The probe measured 137 of Band 3's 155
+## creatures 190-200m under the terrain and still descending, with Bands 4 and 5
+## at 100%.
+##
+## Nothing reported it, which is why 155 authored creatures and a region that
+## plays empty were both true at once: `_stand_on_ground` succeeds --
+## `place_on_ground` puts the body at the analytic height and returns true --
+## and the fall happens afterwards, in physics, silently.
+##
+## Distance activation is most of the cure: a creature that never ticks never
+## falls, and merging it took the probe's worst band from 88% underground to 0%.
+## This closes the case activation cannot: the moment a cluster DOES activate,
+## the player is walking toward it, and Terrain3D may not have built collision
+## there yet. Without this the creature would resume physics with no floor and
+## start the same fall, now in front of the player.
+##
+## Re-placed at its CURRENT x/z, not at `home`: a creature that wandered while
+## active and then slept is legitimately where it stopped, and dragging it back
+## to its authored spot on every activation would undo the wandering. Only a
+## body that is genuinely under the ground is moved.
+func _reground_if_fallen(wild: Node3D) -> void:
+	var world := get_parent()
+	if world == null or not world.has_method("ground_height_at"):
+		return
+	var at := wild.global_position
+	var ground := float(world.call("ground_height_at", at.x, at.z))
+	if is_nan(ground) or at.y >= ground - REGROUND_DEPTH_M:
+		return
+	wild.call("place_on_ground", Vector3(at.x, 0.0, at.z))
 
 
 ## The nearest wild creature the player could choose to fight right now.
