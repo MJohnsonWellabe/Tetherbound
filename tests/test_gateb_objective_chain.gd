@@ -66,15 +66,34 @@ func test_exactly_one_main_objective_is_tracked_at_a_time() -> void:
 		progression.set_flag(step[0])
 
 
-func test_completing_the_whole_chain_reaches_the_south_bridge_handoff_then_the_captains() -> void:
+func test_completing_the_whole_chain_reaches_the_south_bridge_handoff_then_the_next_beat() -> void:
 	for step: Array in CHAIN:
 		progression.set_flag(step[0])
-	# Everything through south_bridge_open is done; the next -- and only
-	# remaining -- undone main entry is the pre-existing captains beat, which
-	# GATEB-OBJECTIVES must not disturb.
+	# Everything through south_bridge_open is done; the tracked line should
+	# move on to whatever `data/progression/objectives.json` names as the
+	# very next main entry after `south_bridge_open` -- Gate C/D1's own call,
+	# not this file's. Read straight from data rather than hardcoding a label
+	# (ralph/conventions.md: assert the rule, derive the value) so this test
+	# does not go stale the next time a beat is inserted between the bridge
+	# and the captains, the way `clear_the_burrow_warrens` etc. already were.
+	var file := FileAccess.open("res://data/progression/objectives.json", FileAccess.READ)
+	assert_true(file != null, "data/progression/objectives.json is missing")
+	var parsed: Variant = JSON.parse_string(file.get_as_text()) if file != null else null
+	assert_true(parsed is Dictionary, "data/progression/objectives.json is not a JSON object")
+	var main: Array = (parsed as Dictionary).get("main", []) as Array if parsed is Dictionary else []
+	var bridge_index := -1
+	for i in main.size():
+		if str((main[i] as Dictionary).get("flag_id", "")) == "south_bridge_open":
+			bridge_index = i
+			break
+	assert_true(bridge_index != -1 and bridge_index + 1 < main.size(),
+		"south_bridge_open is not in objectives.json's main chain, or has nothing after it")
+	var next_label := str((main[bridge_index + 1] as Dictionary).get("label", ""))
+	assert_ne(next_label, "", "the main entry after south_bridge_open has no label")
+
 	var text: String = log_reader.tracked_text(progression)
-	assert_true(text.find("captains") != -1,
-		"after the whole opening ladder, the tracked line should be the captains objective; got '%s'" % text)
+	assert_true(text.find(next_label) != -1,
+		"after the whole opening ladder, the tracked line should be '%s' (the next main entry after south_bridge_open); got '%s'" % [next_label, text])
 
 
 func test_the_chain_fails_without_any_flags_set_reflecting_an_incomplete_opening() -> void:

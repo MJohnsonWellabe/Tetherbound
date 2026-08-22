@@ -249,6 +249,16 @@ const ACTION_CONTEXT := {
 	"build_open": "exploration",
 	"torch_place": "exploration",
 	"use_tool": "exploration",
+	# CONTROLLER-MAP: LB, read by `encounter_director.gd::_read_creature_control_input()`
+	# (guarded off mid-fight) AND by `combat_hud.gd::_handle_switch_input()`
+	# (combat only) -- the same "cycle party member" verb in both contexts,
+	# never both at once. Classified here rather than under "combat" because
+	# it consolidated the old `combat_switch_left`/`combat_switch_right` pair,
+	# which lived in this section.
+	"party_cycle": "exploration",
+	# CONTROLLER-MAP: R3, read continuously by `camera_rig.gd` during live
+	# play, paused-panel-independent like the rest of this section.
+	"camera_recenter": "exploration",
 	"hotbar_1": "exploration",
 	"hotbar_2": "exploration",
 	"hotbar_3": "exploration",
@@ -286,10 +296,19 @@ const ACTION_CONTEXT := {
 	"menu_confirm": "menu",
 	"menu_cancel": "menu",
 	"menu_tab_right": "menu",
+	# CONTROLLER-MAP: LB, the same "step tab/category left" verb
+	# `menu_tab_right` steps right for, read by both the pause shell
+	# (`game_menu.gd::_read_actions`) and build_menu.gd's category cycling --
+	# see `menu_tab_right`'s own entry above.
+	"menu_tab_left": "menu",
 	"tool_cycle": "menu",
 	"backpack_drop": "menu",
 	"backpack_split": "menu",
 	"backpack_assign": "menu",
+	# CONTROLLER-MAP: gamepad Menu, `game_menu.gd::_read_actions`'s own
+	# `open_action` -- "by the pause shell itself deciding whether to open"
+	# per this section's header comment.
+	"game_menu": "menu",
 }
 
 
@@ -321,8 +340,17 @@ func test_every_joypad_bound_action_is_classified() -> void:
 ## second, unrelated effect to hide. Every other pair this test finds in the
 ## same context is exactly that second, unrelated-effect shape, which is why
 ## this is a one-entry exception list and not a way to silence a real find.
+##
+## `game_menu`/`backpack_drop` (joypad button 6, both "menu") is the second:
+## `game_menu.gd::_read_actions()`'s own CONTROLLER-MAP comment says the
+## sharing is deliberate -- gamepad Menu opens the shell (read only while
+## unpaused) and is reused as `backpack_drop` inside the satchel tab (read
+## only while that tab is open, tree paused). One is never live while the
+## other is; a real close verb was kept off this button for exactly that
+## reason ("Menu could not also close it").
 const ALLOWED_SAME_CONTEXT_PAIRS := [
 	["ui_accept", "menu_confirm"],
+	["game_menu", "backpack_drop"],
 ]
 
 

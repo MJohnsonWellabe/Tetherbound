@@ -181,6 +181,17 @@ const WORLD_FLAGS := {
 	"relay_disabled": "scripts/world/tether_relay.gd (console flag)",
 	"hall_approach_open": "scripts/world/playground_world.gd (SIGIL_GATE_FLAG)",
 	"legendary_freed": "scripts/world/stronghold_climax.gd",
+	# opening ladder / tournament build-up. None of these are trainer defeat
+	# flags, so `_trainer_defeat_flags()` can never see them -- real writers,
+	# just not that kind.
+	"opening:beat:road": "scripts/story/sequence_director.gd (_set_beat(BEATS.ROAD), OPENING_BEAT_PREFIX + \"road\")",
+	"tournament_team_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
+	"tournament_training_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
+	"home_materials_gathered": "scripts/build/home_progress.gd",
+	"home_built": "scripts/build/home_progress.gd",
+	"creature_bed_built": "scripts/build/creature_bed.gd (CREATURE_BED_FLAG)",
+	"player_slept_at_home": "scripts/build/camp.gd::_on_rest()",
+	"tournament_entered": "data/dialogue/bands/band1_lower_meadows.json's tournament_halda_signup (flag:tournament_entered)",
 }
 
 
@@ -246,8 +257,15 @@ func test_every_counted_objective_counts_real_defeat_flags() -> void:
 		# counter is meant to read 3/3 while the objective is still open, and
 		# test_the_count_reaches_three_of_three_before_the_objective_is_done
 		# above exists to pin exactly that.
-	assert_true(counted >= 3,
-		"expected at least three counted objectives, found %d" % counted)
+	# Was 3 (a placeholder `beat_the_village_trainers` counted Mira/Tam/Oskar
+	# as an unordered trio). TOURNAMENT-2 replaced it with the real bracket --
+	# sequential `tournament_enter`/`tournament_win` objectives, since a
+	# three-round bracket has a fixed order, not a "beat these three in any
+	# order" count. That is a legitimate design change, not a regression: the
+	# floor tracks what should exist now, `defeat_the_captains` and
+	# `fight_through_the_hall`.
+	assert_true(counted >= 2,
+		"expected at least two counted objectives, found %d" % counted)
 
 
 ## No two entries may wait on the same flag: the second is done the instant the
