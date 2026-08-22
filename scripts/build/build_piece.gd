@@ -26,22 +26,30 @@ var _flicker_time := 0.0
 
 ## The see-through preview the placer drags around. No collision, no light --
 ## a glowing ghost would read as already-placed.
-func build_ghost(mesh_path: String) -> void:
-	_spawn(mesh_path, false, {})
+func build_ghost(mesh_path: String, model_scale: Vector3 = Vector3.ONE) -> void:
+	_spawn(mesh_path, false, {}, model_scale)
 
 
 ## The real thing: solid, collidable, and lit if `light` (the buildable's own
 ## `data/items/buildables.json` `light` block) is non-empty.
-func build_real(mesh_path: String, light: Dictionary = {}) -> void:
-	_spawn(mesh_path, true, light)
+##
+## OP21-09: `model_scale` is `buildables.json`'s own optional `scale` field —
+## a per-axis correction for a kit mesh that does not tile onto
+## `build_snap_contract.gd`'s module at its authored size (the roof panel:
+## measured 3.30w x 1.95d against the 2m module it is placed one-per-floor-
+## tile on). Defaults to no-op `Vector3.ONE` for every piece that already
+## fits its module, which is every piece but the roof today.
+func build_real(mesh_path: String, light: Dictionary = {}, model_scale: Vector3 = Vector3.ONE) -> void:
+	_spawn(mesh_path, true, light, model_scale)
 
 
-func _spawn(mesh_path: String, solid: bool, light: Dictionary) -> void:
+func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vector3 = Vector3.ONE) -> void:
 	if not ResourceLoader.exists(mesh_path):
 		push_warning("build piece missing: %s" % mesh_path)
 		return
 	var scene: PackedScene = load(mesh_path)
 	_model = scene.instantiate() as Node3D
+	_model.scale = model_scale
 	add_child(_model)
 	if not light.is_empty():
 		_build_light(light)
@@ -58,13 +66,21 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary) -> void:
 	if first:
 		return
 
+	# `combined` is in `_model`'s own local space (every `mesh_instance`
+	# transform above is relative to `_model`, not to this node) — the
+	# collision body is a sibling of `_model`, not a child of it, so its
+	# position/size need `model_scale` applied explicitly rather than
+	# inheriting it the way a child node would.
+	var center := combined.get_center() * model_scale
+	var size := combined.size * model_scale
+
 	var body := StaticBody3D.new()
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = combined.size
+	box.size = size
 	shape.shape = box
 	body.add_child(shape)
-	body.position = combined.get_center()
+	body.position = center
 	add_child(body)
 
 

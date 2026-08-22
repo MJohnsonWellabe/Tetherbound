@@ -28,6 +28,7 @@ const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 ## or "placed_building" string could.
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
+const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SETTLE_FRAMES := 240
 
@@ -75,6 +76,7 @@ func _run() -> void:
 	await _check_it_can_be_switched_off_again()
 	await _check_the_first_day_arc(world)
 	await _check_bg1_grid_rotation_and_snap(world)
+	await _check_op21_07_rotate_wins_over_structural_anchor(world)
 	await _check_a_specific_piece_is_chosen_through_real_pad_navigation(world)
 	await _check_build_actions_are_gated_behind_a_reopened_menu(world)
 	await _check_interact_is_gated_behind_an_open_build_menu()
@@ -424,6 +426,125 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 		_fail("two walls were planted and spent no wood")
 
 	_game.set("pending_build", "")
+
+
+## OP21-07 regression. `_check_bg1_grid_rotation_and_snap` above never places a
+## `floor` piece anywhere in this file, so both walls it plants only ever go
+## through `build_snap_contract.gd`'s free/no-neighbour fallback (`yaw_deg`
+## stays NAN, the structural override in `build_placer.gd::_show_ghost` never
+## runs) -- it is a false positive against the actual owner report, which is
+## specifically that rotate breaks down near a floor edge or existing wall,
+## i.e. during real house-building. This places a floor first so a real
+## structural anchor exists, rotates a wall a full 90 degrees off that
+## anchor's own suggested axis, and asserts the placed wall actually turned --
+## not the old behaviour, where the anchor's suggested yaw silently won back
+## as soon as the rotation crossed onto a different 180-degree axis.
+func _check_op21_07_rotate_wins_over_structural_anchor(world: Node) -> void:
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		_fail("no player to place from")
+		return
+	var inventory: RefCounted = _game.get("inventory")
+	inventory.call("add", "wood", 100)
+	inventory.call("add", "stone", 100)
+
+	# A patch of ground right beside `_check_bg1_grid_rotation_and_snap`'s own
+	# two walls, not an arbitrary distant offset -- that ground is already
+	# proven flat and reachable (those two walls stand on it), where a fresh
+	# guess elsewhere in this large open world risks slope/water/village
+	# geometry the test has no way to know about in advance.
+	var earlier_walls := _wall_nodes(world)
+	var base_spot: Vector3 = earlier_walls[0].global_position if not earlier_walls.is_empty() else player.global_position
+	var floor_spot := base_spot + Vector3(6.0, 0.0, 0.0)
+
+	var forward := _forward(world, player)
+	_game.set("pending_build", "floor")
+	for i in 10:
+		await physics_frame
+	player.global_position = floor_spot - forward * BUILD_PLACER.PLACE_AHEAD
+	player.velocity = Vector3.ZERO
+	for i in 15:
+		await physics_frame
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+	for i in 20:
+		await physics_frame
+
+	var floors: Array = []
+	for node: Node in world.get_tree().get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == "floor":
+			floors.append(node)
+	if floors.size() != 1:
+		_fail("op21-07 setup: expected 1 fresh floor, got %d" % floors.size())
+		_game.set("pending_build", "")
+		return
+	var floor_node := floors[0] as Node3D
+	var floor_pos: Vector3 = floor_node.global_position
+
+	# The floor's own front edge (build_snap_contract.gd's HALF = MODULE/2):
+	# a wall aimed here resolves against a REAL structural anchor whose own
+	# suggested yaw is 0 -- the exact situation the owner reproduction names
+	# ("near a floor edge ... essentially always during real house-building").
+	var half: float = BUILD_SNAP.HALF
+	var anchor_spot := floor_pos + Vector3(0.0, 0.0, half)
+
+	_game.set("pending_build", "wall")
+	for i in 10:
+		await physics_frame
+	player.global_position = anchor_spot - forward * BUILD_PLACER.PLACE_AHEAD
+	player.velocity = Vector3.ZERO
+	for i in 15:
+		await physics_frame
+
+	# Confirm the ghost really did pick up the anchor's own suggested yaw
+	# before the player touches rotate at all -- otherwise a "it turned"
+	# result below would prove nothing (nothing to override in the first
+	# place).
+	var placer := world.get_tree().get_first_node_in_group(BUILD_PLACER.BUILD_PLACER_GROUP)
+	if placer == null:
+		_fail("no BuildPlacer in the scene")
+		_game.set("pending_build", "")
+		return
+	var pre_yaw := float(placer.get("_yaw_deg"))
+	if not is_equal_approx(fposmod(pre_yaw, 360.0), 0.0):
+		_fail("setup: wall ghost near the floor's front edge should default to the anchor's 0-degree suggestion before any rotate press, got %.1f" % pre_yaw)
+
+	Input.action_press("build_rotate")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_rotate")
+	for i in 15:
+		await physics_frame
+
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+	for i in 20:
+		await physics_frame
+	_game.set("pending_build", "")
+
+	var walls := _wall_nodes(world)
+	var new_wall: Node3D = null
+	for node: Node3D in walls:
+		if node.global_position.distance_to(anchor_spot) < BUILD_GRID.GRID_SIZE:
+			new_wall = node
+	if new_wall == null:
+		_fail("op21-07: rotating a wall against a structural anchor did not place anything near it")
+		return
+
+	var placed_yaw := wrapf(new_wall.rotation.y, -PI, PI)
+	var ninety := deg_to_rad(90.0)
+	if is_equal_approx(placed_yaw, wrapf(0.0, -PI, PI)) or is_equal_approx(placed_yaw, wrapf(deg_to_rad(180.0), -PI, PI)):
+		_fail("op21-07: one build_rotate press near a floor edge should turn the wall 90 degrees; it planted at %.1f degrees, unchanged from the anchor's own 0/180 axis"
+			% rad_to_deg(new_wall.rotation.y))
+	elif not (is_equal_approx(placed_yaw, wrapf(ninety, -PI, PI)) or is_equal_approx(placed_yaw, wrapf(-ninety, -PI, PI))):
+		_fail("op21-07: expected the wall to plant at +-90 degrees off the anchor's axis, got %.1f degrees"
+			% rad_to_deg(new_wall.rotation.y))
+	else:
+		print("op21-07: rotate turned a wall 90 degrees off a real structural anchor, and it placed")
 
 
 ## TEST2. Nothing in this suite had ever chosen a SPECIFIC build piece by
