@@ -328,8 +328,6 @@
         "res://assets/environment/stylized_nature/Bush_Common.gltf",
         "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
         "res://assets/environment/stylized_nature/Fern_1.gltf",
-        "res://assets/environment/stylized_nature/Plant_1.gltf",
-        "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
         "res://assets/environment/stylized_nature/Plant_7.gltf",
         "res://assets/environment/stylized_nature/Plant_7_Big.gltf"
       ],
@@ -376,7 +374,81 @@
       "_comment_harvest_fiber": "EXPEDITION-REST/REWARD-ECONOMY. Fiber had NO renewable source. Wood comes from the `trees` layer and stone from `rocks`, both at harvest_fraction 1.0 and both available anywhere the corridor has vegetation -- but fiber came only from five authored nodes in bands/band1_lower_meadows/harvest.json, all at z<=312, totalling 20, with no respawn anywhere in the system (D60 removed respawn outright). Against that: the recipes want 28 fiber (the Riding Saddle alone is 8, orb_prime 4, orb_greater 3) and the buildables want 22 more (camp 10, creature_bed 8, storage 4). 20 in the world against 50 asked for, all of it in the first 300m of a 7.5km chapter.\nThe consequence was prompt 61's whole premise: 'the player reaches a memorable buildable clearing with nearby basic resources ... place an injured creature in its physical bed'. Past Band 1 a player could not build a camp or a creature bed at any price, because the material did not exist to be gathered -- and a player who crafted the saddle and a Greater Orb on the critical path (13 fiber) could not afford one creature bed for the rest of the game.\nFixed on the mechanism that already ships, not a new one: `bushes` -- ferns and broad plants, the layer whose own comment calls it 'the middle layer' -- now yields fiber the same way trees yield wood. harvest_fraction 0.2 rather than trees' 1.0, using the lever _mark_harvestable's own comment describes as being there for exactly this ('a rare-resource species, say'): roughly one bush in five carries a prompt, so fiber is findable everywhere without adding a prompt to every shrub on the ROG's screen or doubling the world's harvest-point count. The stride is over draw order, not model, so the flowering bushes in this layer's model list carry it as often as the ferns do. ALL TUNABLE.",
       "harvest_item": "fiber",
       "harvest_fraction": 0.2,
-      "harvest_amount": 2
+      "harvest_amount": 2,
+      "_comment_rosettes_gate_d": "GATE-D. Plant_1 and Plant_1_Big were cut from this layer's general scatter, and Plant_1 put back only as pond/stream-margin anchors below. Both are stiff succulent rosettes -- broad rigid blades from a single central crown, tips flaring out -- which is agave/yucca/bromeliad vocabulary, not temperate meadow, and no retint or retexture reaches a silhouette. Found when a blind critique of the D1 trail camp flagged 'spiky agave/banana frond plants reading tropical'. That was reported as a camp defect and is not one: this layer scatters across the whole 7.5km corridor, so it was every band's ground cover, tens of thousands of times. Confirmed by rendering the layer's seven models side by side (tools/_capture_bushes_gate_d.gd) and putting that frame to an independent critic that did not produce it. Plant_1_Big is dropped outright rather than rescaled: at 2.35m it stood above head height and above this layer's own shrubs, and it is visibly Plant_1 scaled ~2.3x, so the layer loses no silhouette by its going. Plant_1 survives at the water margins only, where a blade rosette has one honest reading, a flag-iris or bulrush clump.",
+      "_comment_anchors_gate_d": "Anchors are how the water-margin restriction is expressed. An anchor may override any of its layer's own keys including `models` (SD16), so these stay part of `bushes` -- same retint, same collision, same fiber harvest -- instead of becoming a parallel layer, which vegetation.gd::_warn_about_shared_models would penalise for sharing a model anyway. Deliberately few and small: a blade rosette is legible where there is water and nowhere else, and scattering it at layer density would restate the defect this cut exists to remove.",
+      "anchors": [
+        {
+          "at": [
+            -379.0,
+            531.0
+          ],
+          "radius": 13.0,
+          "count": 5,
+          "models": [
+            "res://assets/environment/stylized_nature/Plant_1.gltf"
+          ],
+          "scale_min": 0.55,
+          "scale_max": 0.95,
+          "_why": "pond's east bank"
+        },
+        {
+          "at": [
+            -411.0,
+            559.0
+          ],
+          "radius": 13.0,
+          "count": 5,
+          "models": [
+            "res://assets/environment/stylized_nature/Plant_1.gltf"
+          ],
+          "scale_min": 0.55,
+          "scale_max": 0.95,
+          "_why": "pond's west bank, so the reading is a margin habit rather than one clump"
+        },
+        {
+          "at": [
+            -141.0,
+            52.0
+          ],
+          "radius": 8.0,
+          "count": 3,
+          "models": [
+            "res://assets/environment/stylized_nature/Plant_1.gltf"
+          ],
+          "scale_min": 0.55,
+          "scale_max": 0.95,
+          "_why": "starter stream's upper bend"
+        },
+        {
+          "at": [
+            -138.0,
+            84.0
+          ],
+          "radius": 8.0,
+          "count": 3,
+          "models": [
+            "res://assets/environment/stylized_nature/Plant_1.gltf"
+          ],
+          "scale_min": 0.55,
+          "scale_max": 0.95,
+          "_why": "starter stream's middle bend"
+        },
+        {
+          "at": [
+            -143.0,
+            98.0
+          ],
+          "radius": 8.0,
+          "count": 3,
+          "models": [
+            "res://assets/environment/stylized_nature/Plant_1.gltf"
+          ],
+          "scale_min": 0.55,
+          "scale_max": 0.95,
+          "_why": "starter stream's lower bend, before the village approach"
+        }
+      ]
     },
     "grass": {
       "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference \u2014 Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
