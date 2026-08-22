@@ -691,9 +691,9 @@ func _read_creature_control_input() -> void:
 		if party != null and bool(party.call("cycle_active", cycle)):
 			var active: RefCounted = party.call("active")
 			if game != null and active != null:
-				game.call("push_world_message", "Active Pal: %s" % str(active.call("label")))
+				game.call("push_world_message", "Active creature: %s" % str(active.call("label")))
 		elif game != null:
-			game.call("push_world_message", "No other available Pal")
+			game.call("push_world_message", "No other available creature")
 		return
 
 	if not Input.is_action_just_pressed("creature_recall"):
