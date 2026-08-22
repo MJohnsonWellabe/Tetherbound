@@ -1,11 +1,85 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
   "spawns": [
-    {"order": 2, "species": "trailpup", "count": 2, "centre": [150.0, 0.0, 1550.0], "radius": 18.0, "_why_ow5d": "grove species (section 5: Trailpup/Duskhush/Burrowback -> Band 1 oak ring / Band 2). Was on the South Bridge -> Old Quarry leg (the meadowhart[30,95] entry's own comment places it 'between the pipwing cluster at [20,80] and the trailpup one at [80,60]'); that leg becomes early Band 2 in the new corridor (spine (0,1360)->(70,1450)->(190,1540)), so moved to (150,1550) -- early Band 2 forest, past the new South Bridge, short of the quarry itself."},
-    {"order": 3, "species": "burrowback", "count": 1, "centre": [-435.0, 0.0, 2465.0], "radius": 10.0, "_why_ow5d": "quarry/warrens species (section 5: Burrowback/Mudsnout/Tuskroot -> Band 2 near the quarry/warrens). Moved WITH the Burrow Warrens, preserving its old (-15,-5) offset from the warrens' old site.at [70,-140] against the new site.at (-420,2470) -- this cluster was always the warrens' own resident population (burrow_warrens.json's spawns already put Burrowback in every chamber), not a coincidence."},
-    {"order": 5, "species": "meadowhart", "count": 2, "centre": [40.0, 0.0, 1400.0], "radius": 16.0, "_why_ow5d": "DELIBERATE DEPARTURE from a literal Band-4 ecology read -- see this file's top-level `_comment_ow5d`. This is the SH47 fix, added specifically so the rideable mount is met early ('in stride') rather than requiring a 624m round-trip detour once riding unlocks in Band 2/3. Sending it to Band 4 with the other Meadowhart cluster would reintroduce exactly the dead-walking problem SH47 fixed. Kept in early Band 2 instead, just past the new South Bridge (spine starts at (0,1360)), preserving the original design intent at the new corridor's equivalent early stretch."},
-    {"order": 9, "species": "duskhush", "count": 1, "centre": [250.0, 0.0, 1700.0], "radius": 12.0, "time": "night", "_why_ow5d": "grove species (section 5: Trailpup/Duskhush/Burrowback -> Band 1 oak ring / Band 2), and the `nocturnal` role. Moved deeper into Band 2's forest (past trailpup, short of the quarry at (400,1800)) -- section 5 describes Band 2's vegetation as going 'from scattered to closed... deeper oak, low canopy, less sky', which is a good ecological fit for a nocturnal species. `time: night` gate unchanged."},
-    {"order": 2005, "species": "mudsnout", "count": 2, "centre": [220.0, 0.0, 2010.0], "radius": 16.0, "_why": "MQ2B. Quarry/warrens ecology (spec: Burrowback/Mudsnout/Tuskroot -> Band 2) had no field presence between the quarry itself and the Warrens -- both existing clusters of that trio sit ON the two dungeon sites, nothing grazes the ridge between them. Placed beside the same stretch the two new spoil-heap stone nodes (order 2001/2002) sit on, so the beat reads as one place -- rock exposure with something living in it -- rather than two separate coincidences."},
-    {"order": 2006, "species": "duskhush", "count": 1, "centre": [70.0, 0.0, 2900.0], "radius": 14.0, "time": "night", "_why": "MQ2B. The only night-gated spawn in the band sat at (250,1700), in the first third; a player who only ever passes this band by day never has a reason to notice the other two-thirds are meant to look and feel different after dark. A second nocturnal pocket past the Warrens, beside the new deadwood nodes (order 2003/2004), gives the far half of the band the same day/night contrast the near half already has."}
-  ]
+    {
+      "order": 2,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        150.0,
+        0.0,
+        1550.0
+      ],
+      "radius": 18.0,
+      "_why_ow5d": "grove species (section 5: Trailpup/Duskhush/Burrowback -> Band 1 oak ring / Band 2). Was on the South Bridge -> Old Quarry leg (the meadowhart[30,95] entry's own comment places it 'between the pipwing cluster at [20,80] and the trailpup one at [80,60]'); that leg becomes early Band 2 in the new corridor (spine (0,1360)->(70,1450)->(190,1540)), so moved to (150,1550) -- early Band 2 forest, past the new South Bridge, short of the quarry itself."
+    },
+    {
+      "order": 3,
+      "species": "burrowback",
+      "count": 1,
+      "centre": [
+        -435.0,
+        0.0,
+        2465.0
+      ],
+      "radius": 10.0,
+      "_why_ow5d": "quarry/warrens species (section 5: Burrowback/Mudsnout/Tuskroot -> Band 2 near the quarry/warrens). Moved WITH the Burrow Warrens, preserving its old (-15,-5) offset from the warrens' old site.at [70,-140] against the new site.at (-420,2470) -- this cluster was always the warrens' own resident population (burrow_warrens.json's spawns already put Burrowback in every chamber), not a coincidence.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "The lone burrowback out at (-435,2465), well off the quarry road. First alpha in the chapter and deliberately the one furthest from the spine: it is a thing you go and find, not a thing that finds you."
+    },
+    {
+      "order": 5,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        40.0,
+        0.0,
+        1400.0
+      ],
+      "radius": 16.0,
+      "_why_ow5d": "DELIBERATE DEPARTURE from a literal Band-4 ecology read -- see this file's top-level `_comment_ow5d`. This is the SH47 fix, added specifically so the rideable mount is met early ('in stride') rather than requiring a 624m round-trip detour once riding unlocks in Band 2/3. Sending it to Band 4 with the other Meadowhart cluster would reintroduce exactly the dead-walking problem SH47 fixed. Kept in early Band 2 instead, just past the new South Bridge (spine starts at (0,1360)), preserving the original design intent at the new corridor's equivalent early stretch."
+    },
+    {
+      "order": 9,
+      "species": "duskhush",
+      "count": 1,
+      "centre": [
+        250.0,
+        0.0,
+        1700.0
+      ],
+      "radius": 12.0,
+      "time": "night",
+      "_why_ow5d": "grove species (section 5: Trailpup/Duskhush/Burrowback -> Band 1 oak ring / Band 2), and the `nocturnal` role. Moved deeper into Band 2's forest (past trailpup, short of the quarry at (400,1800)) -- section 5 describes Band 2's vegetation as going 'from scattered to closed... deeper oak, low canopy, less sky', which is a good ecological fit for a nocturnal species. `time: night` gate unchanged."
+    },
+    {
+      "order": 2005,
+      "species": "mudsnout",
+      "count": 2,
+      "centre": [
+        220.0,
+        0.0,
+        2010.0
+      ],
+      "radius": 16.0,
+      "_why": "MQ2B. Quarry/warrens ecology (spec: Burrowback/Mudsnout/Tuskroot -> Band 2) had no field presence between the quarry itself and the Warrens -- both existing clusters of that trio sit ON the two dungeon sites, nothing grazes the ridge between them. Placed beside the same stretch the two new spoil-heap stone nodes (order 2001/2002) sit on, so the beat reads as one place -- rock exposure with something living in it -- rather than two separate coincidences."
+    },
+    {
+      "order": 2006,
+      "species": "duskhush",
+      "count": 1,
+      "centre": [
+        70.0,
+        0.0,
+        2900.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why": "MQ2B. The only night-gated spawn in the band sat at (250,1700), in the first third; a player who only ever passes this band by day never has a reason to notice the other two-thirds are meant to look and feel different after dark. A second nocturnal pocket past the Warrens, beside the new deadwood nodes (order 2003/2004), gives the far half of the band the same day/night contrast the near half already has."
+    }
+  ],
+  "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."
 }

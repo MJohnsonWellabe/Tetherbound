@@ -7,7 +7,11 @@
       "order": 5000,
       "species": "burrowback",
       "count": 2,
-      "centre": [-85.0, 0.0, 7125.0],
+      "centre": [
+        -85.0,
+        0.0,
+        7125.0
+      ],
       "radius": 18.0,
       "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four."
     },
@@ -15,15 +19,28 @@
       "order": 5001,
       "species": "galecrest",
       "count": 3,
-      "centre": [-25.0, 0.0, 7255.0],
+      "centre": [
+        -25.0,
+        0.0,
+        7255.0
+      ],
       "radius": 22.0,
-      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable."
+      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable.",
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.35
+      },
+      "_why_alpha": "The galecrest flock at (-25,7255), on the approach itself. The last wild alpha before the Warden, standing in the open on the stronghold road -- the chapter's final reminder that the Meadows is not only Team Tether's."
     },
     {
       "order": 5002,
       "species": "duskhush",
       "count": 2,
-      "centre": [85.0, 0.0, 7375.0],
+      "centre": [
+        85.0,
+        0.0,
+        7375.0
+      ],
       "radius": 18.0,
       "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players."
     },
@@ -31,9 +48,14 @@
       "order": 5003,
       "species": "trailpup",
       "count": 2,
-      "centre": [20.0, 0.0, 7485.0],
+      "centre": [
+        20.0,
+        0.0,
+        7485.0
+      ],
       "radius": 16.0,
       "_why": "The last 80m before the Hall ((20,7480) is the spine's final point before (0,7560)). The chapter's strongest ordinary wild creatures, standing between the player and the Warden -- the final chance to weigh a catch against the five that are about to fight the boss."
     }
-  ]
+  ],
+  "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."
 }
