@@ -459,3 +459,70 @@ the harness had put the hammer away, so every report would have opened by
 blaming the harness's own cleanup instead of the failure. Fixed to capture
 before. Worth recording because this file's whole argument is that a failure
 message should say where to look, and that one pointed the wrong way.
+
+
+---
+
+## Addendum 5 — the second blind visual judge, and what triage did to it
+
+Run Fable-only per `ralph/OWNER_DIRECTIVES_2026-08-22.md` §5, blind: twelve
+frames (seven UI/HUD, three weather, both tournament board views), the art
+board, and the rubric. It was told nothing about what changed. It returned
+nineteen defects.
+
+**Two of its top findings are artefacts of what it was shown, not defects.**
+This is the part worth recording, because a critic that only sees pixels cannot
+tell a bad frame from a bad game, and taking its ranking at face value would
+have meant "fixing" two things that are not broken.
+
+| # | Judge's finding | Verdict |
+| --- | --- | --- |
+| 1 | *"Text collides with text in `combat-prompt.png`"* — called the single most severe defect in the set | **Capture artefact.** `playground_hud.gd::_exploration_legend_should_show()` already returns false while `_combat_is_running()`, so a player never sees the legend and the combat prompt together. `capture_ui_glyphs.gd` fakes the fight (`combat.visible = true`, no fight running) and hid only the exploration PROMPT, not its sibling legend in the same dock. Fixed in the tool. |
+| 9 (part) | *"`hud_hotbar_legend.png` names RB twice at once… stacked"* | **Stale frames.** Those `_diag` captures are from **19:31**; `f6fe2932` fixed exactly that duplication at **20:11**. The judge was shown the bug forty minutes after it was fixed. |
+
+The rest of #9 — `[C]` bracket-text sitting beside boxed key glyphs, two visual
+grammars in one legend — is read off the 20:13 frames and **stands**.
+
+### Genuine, and this branch's
+
+- **#11** the persistent legend out-shouts the contextual prompt. Its own
+  question answered honestly: legible, yes; competing, yes, and currently
+  winning a fight it should lose.
+- **#12** the hotbar leaks past the dialogue panel, leaving a stray slot 5.
+- **#15** `"Catch your first wild / creature."` orphans its last word, right-
+  aligned, in all seven UI frames.
+- **#13** four of five hotbar slots draw near-identical icons.
+- **#6** the tournament bracket's connector lines do not join; the final dangles
+  unlabelled. The board's *names* are legible and read as real, which was the
+  owner directive's actual ask.
+- **#7** the board face is a flat UI texture in a carpentry frame.
+- **#8** two of three starter portraits face away from the camera — in the one
+  moment the game asks the player to choose by appearance.
+
+**Not fixed here, deliberately.** These are HUD-EMPHASIS lineage work that has
+already been through its own blind-judge rounds, and re-tuning widths and
+z-order at the end of a verification pass risks regressing what those rounds
+bought. They are backlog entries, named above, not silent omissions.
+
+### Genuine, and not this branch's
+
+Weather lighting (#3 sun shadows during rain, #4 fog that skips the ground, #5 a
+crest cluster that stays crushed-black in all three states), world density
+(#19), blown-out interiors (#14), and two identical villager meshes in one frame
+(#2). **The judge independently re-found `WEATHER-2` for the second time,
+without being shown that entry or the previous critique.** That is worth more
+than the finding itself: two blind critics converging on the same three defects
+is evidence they are real and not one critic's taste.
+
+### What it said was working, unprompted
+
+The creatures. *"Terrapup especially has real appeal: readable silhouettes,
+coherent stylization, and they look like they belong to one family."* The
+trainer reads at thumbnail size at correct 1.8 m scale. The HUD's teal-on-dark
+identity is consistent across all seven frames. `tournament-ground.png` is the
+best landscape in the set — a genuine landmark hill in the art board's language.
+
+On the bar question it was direct: someone shown these beside the reference
+would correctly identify the same genre and ambition, and would immediately add
+that this one is *"years earlier in dressing"* — density, weather response and
+prop finish, most of it scene work rather than new art.

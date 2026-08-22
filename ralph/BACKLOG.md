@@ -173,6 +173,59 @@ in this pass drove a level-up and read the resulting on-screen text, so it is
 recorded NOT VERIFIED rather than assumed. `smoke_tournament_bracket.gd` fights
 real rounds and would be a cheap place to assert it.
 
+### HUD-JUDGE-2 — the five UI defects the second blind judge named
+
+`ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md` Addendum 5. All five
+read off frames rendered AFTER the HUD lineage landed, so they are current, and
+all five are cosmetic rather than functional:
+
+- the persistent legend out-shouts the contextual prompt it sits above
+  (`exploration-prompt.png`) -- the judge's own words, "it wins a fight it
+  should lose";
+- the hotbar leaks past the dialogue panel, leaving a stray slot 5
+  (`dialogue-panel.png`);
+- `"Catch your first wild / creature."` orphans its last word, right-aligned,
+  in all seven UI frames;
+- four of five hotbar slots draw near-identical icons -- at 30% they read as
+  one item repeated;
+- `[C]` bracket-text sits beside boxed key glyphs in the same legend: two
+  visual grammars in one line, and the gray makes `[C]` read as disabled.
+
+NOT taken on the verification branch on purpose. This is HUD-EMPHASIS lineage
+work that has already been through its own blind-judge rounds; re-tuning widths,
+alignment and z-order at the end of a verification pass risks regressing what
+those rounds bought, for defects that cost the player nothing functional.
+
+Two of the judge's findings are deliberately NOT here, and the next firing
+should not re-add them from the report: the combat-prompt "text collides with
+text" was a capture artefact (fixed in `capture_ui_glyphs.gd`), and the "RB
+named twice" duplication was read off `_diag` frames rendered forty minutes
+before `f6fe2932` fixed it.
+
+### BOARD-BRACKET — the tournament board's lines do not join
+
+The names are legible and read as real village record-keeping, which is what the
+owner directive asked for. The bracket PLUMBING is wrong: round-two joins sprout
+horizontal strokes that float and never meet the semifinal cleanly, and the
+final dangles into empty panel with no slot label. The right half of the board
+is empty gray. Anyone who has seen a bracket reads this one as drawn wrong.
+
+Also from the same frame: the board FACE is a flat untextured gray-green with
+vector-crisp hairlines and the HUD's own sans-serif, inside a frame-and-posts
+that do read as carpentry. Judge's summary -- "carpentry frame, UI panel face".
+Needs a texture pass, which is small art rather than scene work.
+
+### STARTER-PORTRAITS — two of three starters face away from the camera
+
+`starter-picker.png`: Terrapup presents a readable 3/4 view, Ripplet is side-on
+with its face barely resolved, Galewisp shows its back. This is the single
+moment the game asks the player to choose a permanent companion BY APPEARANCE,
+and two thirds of the choices hide the thing being chosen. The poses differ
+again in `name-prompt.png`, so these are live renders with uncontrolled framing
+rather than authored portraits -- the fix is camera control on the picker, not
+new art. The judge rated the creature designs themselves as the strongest thing
+in the whole frame set, which makes the framing the only thing in the way.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on
