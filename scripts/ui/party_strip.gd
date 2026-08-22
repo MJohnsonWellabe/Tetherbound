@@ -114,6 +114,20 @@ var _last_selected: Array[bool] = [false, false, false, false, false]
 var _last_vacant: Array[bool] = [true, true, true, true, true]
 
 
+## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
+## once the creature panel below this widget has a real measured height (and
+## again only if that height or the canvas size genuinely changes -- see
+## that function's own header). Updates `_rest_position` unconditionally;
+## only snaps `.position` to match immediately while the strip is not
+## currently visible, so this can never yank the widget mid-reveal or
+## mid-fade out from under its own tween -- the next `show_strip()` simply
+## targets the new rest position like it always does.
+func set_rest_position(pos: Vector2) -> void:
+	_rest_position = pos
+	if not visible:
+		position = pos
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position

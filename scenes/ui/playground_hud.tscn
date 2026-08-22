@@ -203,11 +203,18 @@ theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 text = ""
 
+; HUD-LAYOUT: 28 -> 36. A blind critic measured this line -- "Call out
+; Biscuit", the single most important teaching line on this HUD (it is the
+; only place the player is told the button that puts a creature into their
+; hands) -- at ~15px physical cap height on the Ally's real 1280x800 window,
+; just under the same ~16px arm's-length floor `HUD_READABLE_FONT_SIZE`
+; (`playground_hud.gd`) already raised every other label on this HUD to
+; clear.
 [node name="Prompt" type="RichTextLabel" parent="Root/BottomDock"]
 custom_minimum_size = Vector2(800, 0)
 size_flags_horizontal = 4
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 28
+theme_override_font_sizes/normal_font_size = 36
 horizontal_alignment = 1
 bbcode_enabled = true
 fit_content = true

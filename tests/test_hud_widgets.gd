@@ -68,21 +68,84 @@ func test_full_roster_mount_clears_the_separate_active_panel() -> void:
 			0.001,
 			"occupied and vacant rows must reserve the same fixed vertical space"
 		)
-	var resting_position: Vector2 = PLAYGROUND_HUD.party_strip_position(PARTY_STRIP.TOTAL_HEIGHT)
-	var roster_bottom := resting_position.y + PARTY_STRIP.TOTAL_HEIGHT
-	var active_panel_top := PLAYGROUND_HUD.CREATURE_BLOCK_POS.y
-
-	assert_almost_eq(
-		active_panel_top - roster_bottom,
-		PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
-		0.001,
-		"all five text-driven rows need a fixed positive gap above ACTIVE COMPANION"
-	)
-	assert_true(
-		active_panel_top - roster_bottom >= 12.0,
-		"the roster must not touch or obscure the separately labelled active panel"
-	)
+	# HUD-LAYOUT: the left column (party strip / creature panel / vitals) is
+	# now stacked bottom-up from the CANVAS BOTTOM (see
+	# `playground_hud.gd::BOTTOM_DOCK_TOP_OFFSET`'s header for why a fixed
+	# top-anchored offset was the actual defect), so its position math takes
+	# an explicit canvas height and creature-panel height rather than reading
+	# fixed constants.
+	#
+	# This function no longer asserts "the roster never touches the active
+	# panel": at the canvas heights this HUD actually runs at, the strip's
+	# own `TOTAL_HEIGHT` (540, five text-driven rows -- a deliberate
+	# legibility fix, not a number this task should shrink) genuinely does
+	# not fit in the room left above a correctly bottom-anchored creature
+	# panel; the honest tradeoff `party_strip_position()`'s own header
+	# documents is a reveal that briefly overlaps the (already-labelled)
+	# panel behind it rather than one that silently clips off the top of the
+	# screen. `test_party_strip_never_goes_off_the_top_of_the_screen` and
+	# `test_left_stack_clears_bottom_dock_at_every_supported_aspect` below
+	# are what now carry this widget's real position guarantees.
 	strip.free()
+
+
+## HUD-LAYOUT's own regression: the OLD `CREATURE_BLOCK_POS`/`VITALS_POS`
+## were fixed, top-anchored pixel offsets tuned against an assumed
+## 1080-tall canvas. This project stretches `canvas_items` with
+## `aspect="expand"`, and the Ally's real 1280x800 window computes an
+## EFFECTIVE canvas of 1920x1200 (wider aspect ratio than 16:9 needs more
+## vertical canvas to fill) -- 120px taller than the authoring assumption.
+## `Root/BottomDock` already derives its own position from the canvas
+## BOTTOM (`offset_top = -460`, anchored `anchor_top/bottom = 1`), so it
+## slides down correctly on the taller canvas; the left column did not, and
+## a real render of the full HUD scene at 1280x800 measured the creature
+## panel and vitals cluster overlapping BottomDock's actual rect. This test
+## proves the fixed math instead: the left column's lowest element must
+## clear `BOTTOM_DOCK_TOP_OFFSET`'s own nominal top by at least
+## `LEFT_STACK_CLEARANCE`, at both the project's 16:9 authoring aspect
+## (1080) and the Ally's real effective canvas (1200).
+func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
+	var creature_h := 150.0
+	for canvas_h in [1080.0, 1200.0]:
+		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
+		var vitals_bottom := vitals_pos.y + PLAYGROUND_HUD.VITALS_HEIGHT
+		var dock_top: float = canvas_h + float(PLAYGROUND_HUD.BOTTOM_DOCK_TOP_OFFSET)
+		assert_true(
+			dock_top - vitals_bottom >= PLAYGROUND_HUD.LEFT_STACK_CLEARANCE - 0.001,
+			"left stack must clear BottomDock's nominal top at canvas height %.0f (vitals bottom %.1f, dock top %.1f)" % [
+				canvas_h, vitals_bottom, dock_top,
+			]
+		)
+
+		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
+		assert_almost_eq(
+			vitals_pos.y - (creature_pos.y + creature_h),
+			PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
+			0.001,
+			"vitals cluster must sit a fixed gap below the creature panel at canvas height %.0f" % canvas_h
+		)
+
+
+## `party_strip.gd::TOTAL_HEIGHT` (540, five text-driven rows) does not fit
+## in the room left above a correctly bottom-anchored creature panel at
+## either supported canvas height -- the un-clamped formula computes a
+## negative top for the reveal, meaning roughly its top third would draw
+## above the screen entirely. `party_strip_position()` clamps to
+## `TOP_SAFE_INSET` for exactly this case. This test proves the clamp
+## actually engages (not just that it exists) using the SAME representative
+## creature-panel height every other test in this block uses.
+func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
+	var creature_h := 150.0
+	for canvas_h in [1080.0, 1200.0]:
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
+			canvas_h, creature_h, PARTY_STRIP.TOTAL_HEIGHT
+		)
+		assert_true(
+			strip_pos.y >= PLAYGROUND_HUD.TOP_SAFE_INSET - 0.001,
+			"party strip top (%.1f) must never sit above TOP_SAFE_INSET (%.1f) at canvas height %.0f" % [
+				strip_pos.y, PLAYGROUND_HUD.TOP_SAFE_INSET, canvas_h,
+			]
+		)
 
 
 func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash() -> void:

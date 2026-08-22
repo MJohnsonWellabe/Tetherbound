@@ -126,17 +126,60 @@ const REGION_BANNER_SECONDS := 3.2
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
 ## origin), matching the rest of this file's "sized for the Ally" convention.
 
-const CREATURE_BLOCK_POS := Vector2(56.0, 830.0)
-## Grown 110 -> 162 (x 56-430, y 830-992) to fit the bigger 56px portrait, the
-## HP value readout beside the bar, and a dedicated row for the persistent
-## party-pip row -- the pips do NOT share the header's text row (a first
-## version tried that and "ACTIVE COMPANION" at readable size ran straight
-## into them; the header needed its own full-width line).
-const CREATURE_BLOCK_SIZE := Vector2(374.0, 162.0)
+## HUD-LAYOUT: the creature panel, the vitals cluster and the party strip
+## used to be positioned with a fixed, hand-measured Y coordinate each,
+## authored against a 1920x1080 canvas. That stopped being true the moment
+## `_root`'s ACTUAL canvas stopped being 1080 tall -- this project stretches
+## `canvas_items` with `aspect="expand"`, and the Ally's real 1280x800 window
+## (aspect 1.6, narrower than the authored 1920x1080's 1.778) computes an
+## effective canvas of 1920x1200, not 1920x1080. `Root/BottomDock` (the
+## .tscn) already accounts for this correctly -- it anchors to the CANVAS
+## BOTTOM (`anchor_top/bottom = 1`, `offset_top = -460`) so its position is
+## always "460px above whatever the real bottom is." This left column never
+## got the same treatment: `CREATURE_BLOCK_POS.y = 830` and
+## `VITALS_POS.y = 1006` were both measured against an assumed 1080-tall
+## canvas and anchored from the TOP. On the Ally's real 1200-tall canvas,
+## BottomDock's top edge sits at 1200-460=740 -- squarely inside both blocks
+## (830-992 and 1006-1070), a genuine, reproducible overlap confirmed by
+## rendering the real HUD scene at 1280x800 and reading `get_global_rect()`
+## on every block, not by eyeballing a screenshot. `_reflow_left_stack()`
+## below fixes the ROOT cause: the whole left column (party strip, creature
+## panel, vitals cluster) is now positioned from the CANVAS BOTTOM, using
+## `_root.size.y` read at runtime, the same anchor BottomDock already uses --
+## so the two can never drift apart again regardless of aspect ratio.
+const CREATURE_BLOCK_X := 56.0
+## Mirrors `Root/BottomDock`'s own `offset_top` in the .tscn exactly -- see
+## the header above. Keep the two in sync if either changes; each file's
+## comment points at the other.
+const BOTTOM_DOCK_TOP_OFFSET := -460.0
+## Clear space kept between the left column's lowest element and
+## BottomDock's nominal top -- generous enough to survive BottomDock's own
+## transient growth (the hotbar's Message row adding ~30px while a hotbar
+## response is showing) without the two ever touching.
+const LEFT_STACK_CLEARANCE := 40.0
+## Floor for the party strip's reveal when there is not enough room above
+## the creature panel to fit it in full -- see `party_strip_position()`'s
+## own header. Matches `UITokens.HUD_INSET`, the same top-edge margin the
+## minimap and objective block already use, so a clamped reveal still lines
+## up with the rest of this HUD's top row rather than picking its own.
+const TOP_SAFE_INSET := UITokens.HUD_INSET
 const PARTY_ACTIVE_GAP := UITokens.GAP
 
-const VITALS_POS := Vector2(56.0, 1006.0) ## buff row starts here; satiety row ends ~1070
+## The creature panel no longer carries a fixed height -- see
+## `_build_creature_block()`'s header for why hand-placed offsets were the
+## actual defect, not just this file's old Y math. Width keeps a floor (not a
+## cap): a `PanelContainer` only grows past this if a row's real content
+## (namely "READY TO CALL OUT", the longest header string) genuinely needs
+## more, which is the "honest minimum size" this task asked for instead of
+## fixed pixels a longer string could silently overflow.
+const CREATURE_BLOCK_MIN_WIDTH := 374.0
+
 const VITALS_WIDTH := 300.0
+## Real content height of the vitals cluster (buff row 0-28, HP icon/bar
+## 28-54, satiety bar+label 54-70) -- used only to size the gap the left
+## stack's reflow leaves above it; the cluster's own children still lay out
+## with the same local offsets they always have.
+const VITALS_HEIGHT := 70.0
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
@@ -253,7 +296,7 @@ var _hotbar_message_until := 0.0
 ## --- active-creature block --------------------------------------------------------
 
 var _creature_block: Control = null
-var _creature_panel: Panel = null
+var _creature_panel: PanelContainer = null
 var _creature_header: Label = null
 var _creature_content: Control = null
 var _creature_chip: ColorRect = null
@@ -289,6 +332,7 @@ var _party_pip_boxes: Array[StyleBoxFlat] = []
 ## --- party strip --------------------------------------------------------------
 
 var _party_strip: Control = null
+var _party_strip_script: Script = null
 var _party_strip_last_index := -999
 var _party_strip_last_revision := -999
 ## OP21-12: the last active creature's name, so a later cycle can say "Willow
@@ -341,6 +385,14 @@ var _exploration_legend_label: RichTextLabel = null
 var _legend_last_gamepad := false
 var _legend_last_party_revision := -999
 var _legend_was_drawn := false
+
+## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
+
+## Sentinel below any real canvas height, so the first `_reflow_left_stack()`
+## call after `_ready()` always runs once, whatever `_root.size.y` turns out
+## to be by then.
+var _left_stack_canvas_h := -1.0
+var _left_stack_creature_h := -1.0
 
 
 func _ready() -> void:
@@ -395,6 +447,7 @@ func _ready() -> void:
 	# widget scattered through the builders above.
 	UITokens.make_text_legible(_root)
 	_strengthen_objective_contrast()
+	_reflow_left_stack()
 
 
 func _style_hotbar() -> void:
@@ -406,6 +459,26 @@ func _style_hotbar() -> void:
 # --- active-creature block ----------------------------------------------------------
 
 
+## HUD-LAYOUT: rebuilt from hand-placed `.position`/`.size` offsets onto real
+## containers. Every element that used to be told its own pixel rect now
+## only says how it wants to relate to its NEIGHBOURS -- a `PanelContainer`
+## whose only fixed number is a width FLOOR (`CREATURE_BLOCK_MIN_WIDTH`, not
+## a cap) around a `VBoxContainer` of rows, each row itself an `HBoxContainer`
+## where it has more than one element. This is a direct fix for a concrete,
+## reproduced defect, not a style preference: at `HUD_READABLE_FONT_SIZE`
+## (bumped 24->38 by an earlier pass for legibility, correctly, but never
+## paired with bigger rects for the same text), the OLD fixed-offset layout
+## had "READY TO CALL OUT" overrunning its 324px label box, the five party
+## pips hand-placed at a fixed y=32 landing ON TOP OF that overrun text, the
+## HP value label's 16px-tall box unable to hold its own 38px font and
+## spilling below the panel's bottom edge, and the level/HP rows close
+## enough together (34 and 68) that the HP bar's fill visibly clipped the
+## bottom of "Lv 1". None of those are possible once each row's height comes
+## from its own children's real minimum size instead of a guessed offset --
+## a `VBoxContainer` cannot lay a later row on top of an earlier one, the
+## same guarantee `Root/BottomDock` already relies on for the hotbar/legend/
+## prompt stack (see that node's own long comment in the .tscn).
+##
 ## Portrait chip, label()/level, HP bar, an energy strip shown only while
 ## there IS energy to show, and a type tag — or, with no active creature, a dim
 ## "No creature out" chip. Species tint comes from `CreatureSpecies.placeholder()`, the
@@ -413,39 +486,65 @@ func _style_hotbar() -> void:
 ## widgets can never tint the same creature two different colours.
 func _build_creature_block() -> void:
 	_creature_block = Control.new()
+	_creature_block.name = "CreatureBlock"
 	_creature_block.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_block.position = CREATURE_BLOCK_POS
-	_creature_block.size = CREATURE_BLOCK_SIZE
 	_root.add_child(_creature_block)
 
-	_creature_panel = Panel.new()
+	_creature_panel = PanelContainer.new()
 	_creature_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_panel.size = CREATURE_BLOCK_SIZE
+	_creature_panel.custom_minimum_size = Vector2(CREATURE_BLOCK_MIN_WIDTH, 0.0)
 	_creature_panel.add_theme_stylebox_override(
 		"panel", UITokens.panel_box(UITokens.BG_DEEP, Color(UITokens.TEAL, 0.72))
 	)
 	_creature_block.add_child(_creature_panel)
 
+	# `panel_box()` already contributes 16px of content margin on every side
+	# via the stylebox itself -- a `PanelContainer` applies that automatically
+	# to whatever it holds, so no separate `MarginContainer` belongs here (the
+	# exact double-margin trap `_build_exploration_legend()`'s own comment
+	# already names for the legend panel).
+	var vbox := VBoxContainer.new()
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_theme_constant_override("separation", 8)
+	_creature_panel.add_child(vbox)
+
+	var header_row := HBoxContainer.new()
+	header_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	header_row.add_theme_constant_override("separation", 8)
+	vbox.add_child(header_row)
+
+	_creature_icon = TextureRect.new()
+	_creature_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_icon.texture = load(ICON_CREATURES)
+	_creature_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_creature_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_creature_icon.custom_minimum_size = Vector2(24.0, 24.0)
+	_creature_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	header_row.add_child(_creature_icon)
+
 	_creature_header = Label.new()
 	_creature_header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_header.text = "ACTIVE COMPANION"
-	_creature_header.position = Vector2(40.0, 2.0)
-	_creature_header.size = Vector2(324.0, 30.0)
+	_creature_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_creature_header.clip_text = true
 	_creature_header.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_header.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
-	_creature_panel.add_child(_creature_header)
+	header_row.add_child(_creature_header)
 
-	## Five persistent pips, right-aligned on their OWN row below the header
-	## text -- see `_party_pips`'s own declaration for why this exists
-	## alongside the transient `party_strip.gd` reveal rather than instead of
-	## it, and this function's own header comment for why it is not sharing
-	## the header's text row.
+	## Five persistent pips, on their own row below the header text -- see
+	## `_party_pips`'s own declaration for why this exists alongside the
+	## transient `party_strip.gd` reveal rather than instead of it. A row of
+	## its own, laid out by `HBoxContainer`, so it can never land on top of
+	## the header text above it regardless of how wide that text gets.
+	var pip_row := HBoxContainer.new()
+	pip_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pip_row.alignment = BoxContainer.ALIGNMENT_END
+	pip_row.add_theme_constant_override("separation", 6)
+	vbox.add_child(pip_row)
 	for i in 5:
 		var pip := Panel.new()
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pip.custom_minimum_size = Vector2(18.0, 18.0)
-		pip.position = Vector2(CREATURE_BLOCK_SIZE.x - 12.0 - (5 - i) * 22.0, 32.0)
-		pip.size = Vector2(18.0, 18.0)
 		var pip_box := StyleBoxFlat.new()
 		pip_box.bg_color = Color(UITokens.TEXT_MUTED, 0.35)
 		pip_box.border_width_left = 1
@@ -460,72 +559,101 @@ func _build_creature_block() -> void:
 		pip.add_theme_stylebox_override("panel", pip_box)
 		_party_pip_boxes.append(pip_box)
 		_party_pips.append(pip)
-		_creature_panel.add_child(pip)
+		pip_row.add_child(pip)
 
-	_creature_content = Control.new()
+	_creature_content = VBoxContainer.new()
 	_creature_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_content.position = Vector2(12.0, 54.0)
-	_creature_content.size = Vector2(CREATURE_BLOCK_SIZE.x - 24.0, CREATURE_BLOCK_SIZE.y - 54.0 - 12.0)
-	_creature_panel.add_child(_creature_content)
+	_creature_content.add_theme_constant_override("separation", 6)
+	vbox.add_child(_creature_content)
+
+	var info_row := HBoxContainer.new()
+	info_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	info_row.add_theme_constant_override("separation", 12)
+	_creature_content.add_child(info_row)
 
 	# 56x56, up from 40x40 -- a blind critic called the old ~28-physical-px
 	# portrait "too small to identify a species at arm's length", and a
 	# portrait reads faster than the name text beside it once it is big
-	# enough to actually show the silhouette.
+	# enough to actually show the silhouette. Wrapped in its own fixed-size
+	# Control: the chip and portrait are meant to overlay each other (the
+	# portrait's transparent surround shows the species-tinted chip behind
+	# it), which is the one place in this panel two children legitimately
+	# share a rect on purpose rather than by accident.
+	var portrait_slot := Control.new()
+	portrait_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait_slot.custom_minimum_size = Vector2(56.0, 56.0)
+	info_row.add_child(portrait_slot)
+
 	_creature_chip = ColorRect.new()
 	_creature_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_chip.position = Vector2(0.0, 4.0)
+	_creature_chip.position = Vector2(0.0, 0.0)
 	_creature_chip.size = Vector2(56.0, 56.0)
-	_creature_content.add_child(_creature_chip)
+	portrait_slot.add_child(_creature_chip)
 
 	_creature_portrait = TextureRect.new()
 	_creature_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_portrait.position = Vector2(3.0, 9.0)
+	_creature_portrait.position = Vector2(3.0, 3.0)
 	_creature_portrait.size = Vector2(50.0, 50.0)
 	_creature_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_creature_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_creature_content.add_child(_creature_portrait)
+	portrait_slot.add_child(_creature_portrait)
 
-	_creature_icon = TextureRect.new()
-	_creature_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_icon.texture = load(ICON_CREATURES)
-	_creature_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_creature_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_creature_icon.position = Vector2(12.0, 4.0)
-	_creature_icon.size = Vector2(20.0, 20.0)
-	_creature_panel.add_child(_creature_icon)
+	var info_col := VBoxContainer.new()
+	info_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	info_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	info_col.add_theme_constant_override("separation", 2)
+	info_row.add_child(info_col)
 
+	# Bumped to match the rest of this panel's text (was `FONT_BODY`, 26) --
+	# a blind critic separately measured the creature's own NAME at ~14px
+	# physical cap height, just under the ~16px arm's-length floor every
+	# other label on this panel was already raised to clear.
 	_creature_name_label = Label.new()
 	_creature_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_name_label.position = Vector2(64.0, -2.0)
-	_creature_name_label.size = Vector2(280.0, 32.0)
-	_creature_name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
-	_creature_content.add_child(_creature_name_label)
+	_creature_name_label.clip_text = true
+	_creature_name_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	info_col.add_child(_creature_name_label)
+
+	var level_type_row := HBoxContainer.new()
+	level_type_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	level_type_row.add_theme_constant_override("separation", 16)
+	info_col.add_child(level_type_row)
 
 	_creature_level_label = Label.new()
 	_creature_level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_level_label.position = Vector2(64.0, 34.0)
 	_creature_level_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	_creature_content.add_child(_creature_level_label)
+	level_type_row.add_child(_creature_level_label)
 
 	_creature_type_label = Label.new()
 	_creature_type_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_type_label.position = Vector2(200.0, 34.0)
 	_creature_type_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
-	_creature_content.add_child(_creature_type_label)
+	level_type_row.add_child(_creature_type_label)
+
+	# HP bar and its "78 / 120" readout sit SIDE BY SIDE in one row instead
+	# of the old bar-with-a-label-floating-past-its-own-rect: the bar takes
+	# whatever width is left (`SIZE_EXPAND_FILL`), the value gets its own
+	# fixed column, and an `HBoxContainer` cannot let either draw outside the
+	# panel the way a hand-placed `position.x = 246` with a 94px-wide label
+	# box could once the font inside it grew.
+	var hp_row := HBoxContainer.new()
+	hp_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hp_row.add_theme_constant_override("separation", 10)
+	_creature_content.add_child(hp_row)
 
 	_creature_hp_bar = ProgressBar.new()
 	_creature_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_hp_bar.position = Vector2(0.0, 68.0)
-	_creature_hp_bar.size = Vector2(240.0, 16.0)
+	_creature_hp_bar.custom_minimum_size = Vector2(160.0, 18.0)
+	_creature_hp_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_creature_hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_creature_hp_bar.show_percentage = false
 	_creature_hp_bar.min_value = 0.0
 	_creature_hp_bar.max_value = 1.0
 	_creature_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
 	_creature_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
 	_creature_hp_bar.add_theme_stylebox_override("fill", _creature_hp_fill)
-	_creature_content.add_child(_creature_hp_bar)
+	hp_row.add_child(_creature_hp_bar)
 
 	# Numeric readout beside the bar -- a blind critic read the bare fill as
 	# "an unlabeled ~55%-filled green bar [that] reads as wrong at a glance"
@@ -534,18 +662,17 @@ func _build_creature_block() -> void:
 	# gives the companion's HP the same treatment instead of a bare fill.
 	_creature_hp_value_label = Label.new()
 	_creature_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_hp_value_label.position = Vector2(246.0, 68.0)
-	_creature_hp_value_label.size = Vector2(94.0, 16.0)
+	_creature_hp_value_label.custom_minimum_size = Vector2(100.0, 0.0)
 	_creature_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_creature_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_creature_hp_value_label.clip_text = true
 	_creature_hp_value_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_creature_hp_value_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	_creature_content.add_child(_creature_hp_value_label)
+	hp_row.add_child(_creature_hp_value_label)
 
 	_creature_energy_bar = ProgressBar.new()
 	_creature_energy_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_energy_bar.position = Vector2(0.0, 88.0)
-	_creature_energy_bar.size = Vector2(240.0, 6.0)
+	_creature_energy_bar.custom_minimum_size = Vector2(0.0, 6.0)
 	_creature_energy_bar.show_percentage = false
 	_creature_energy_bar.min_value = 0.0
 	_creature_energy_bar.max_value = 1.0
@@ -556,12 +683,11 @@ func _build_creature_block() -> void:
 
 	_creature_no_creature_label = Label.new()
 	_creature_no_creature_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_creature_no_creature_label.position = Vector2(64.0, 70.0)
 	_creature_no_creature_label.text = "No creature out"
 	_creature_no_creature_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_creature_no_creature_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_creature_no_creature_label.visible = false
-	_creature_panel.add_child(_creature_no_creature_label)
+	vbox.add_child(_creature_no_creature_label)
 
 
 func _update_creature_block() -> void:
@@ -667,7 +793,7 @@ func _update_party_pips() -> void:
 			continue
 		var member: RefCounted = members[i]
 		var fainted := bool(member.get("fainted"))
-		box.bg_color = UITokens.DANGER if fainted else _species_tint(str(member.get("species_id")))
+		box.bg_color = UITokens.DANGER if fainted else _distinct_tint(members, i)
 		box.border_color = UITokens.TEAL_SOFT if selected else UITokens.BORDER
 
 
@@ -676,6 +802,30 @@ func _species_tint(species_id: String) -> Color:
 		return UITokens.TEXT_MUTED
 	var placeholder: Dictionary = CREATURE_SPECIES.placeholder(species_id)
 	return Color(str(placeholder.get("colour", "#cccccc")))
+
+
+## A blind critic found two of the five party pips reading as the same
+## colour ("both brown") -- `CreatureSpecies.placeholder()` hands out one
+## fixed colour per species (data this lane does not own, see the file
+## ownership list), and nothing stopped two of a five-creature roster from
+## rolling the same placeholder tint. Rather than touch creature data, this
+## nudges the hue of any tint that repeats EARLIER in the same roster list,
+## by a fixed step per repeat -- deterministic (same roster always renders
+## the same way), and shared by both `_update_party_pips()` and
+## `_update_party_strip()`'s entries below, so a duplicate is resolved once
+## and both widgets agree, the same "never tint the same creature two
+## different colours" guarantee `_species_tint()`'s own callers already
+## relied on for a SINGLE creature.
+func _distinct_tint(members: Array, index: int) -> Color:
+	var base := _species_tint(str((members[index] as RefCounted).get("species_id")))
+	var earlier_matches := 0
+	for j in index:
+		if _species_tint(str((members[j] as RefCounted).get("species_id"))).is_equal_approx(base):
+			earlier_matches += 1
+	if earlier_matches == 0:
+		return base
+	var hue := fposmod(base.h + 0.16 * earlier_matches, 1.0)
+	return Color.from_hsv(hue, clampf(base.s, 0.4, 1.0), clampf(base.v, 0.45, 1.0), base.a)
 
 
 ## Meadows ships a curated runtime copy of the owner-supplied render for every
@@ -714,21 +864,117 @@ func _mount_party_strip() -> void:
 		push_warning("HUD: party_strip.gd did not produce a Control")
 		return
 	_party_strip = inst
+	_party_strip_script = script
+	_party_strip.name = "PartyStrip"
 	_party_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	# Positioned to slide in ABOVE the active-creature block, sharing its left
-	# edge. PartyStrip fixes all five rows to the occupied text-driven height,
-	# so its declared total remains true whether each slot is filled or vacant.
-	var height: float = float(script.TOTAL_HEIGHT)
-	_party_strip.position = party_strip_position(height)
+	# Real position comes from `_reflow_left_stack()`, once the creature
+	# panel below it has a real measured height -- see that function's
+	# header. `party_strip.gd::set_rest_position()` is what actually places
+	# it (and is safe to call before the widget has ever been shown, which
+	# is exactly when this first runs).
 	_root.add_child(_party_strip)
 
 
-static func party_strip_position(strip_height: float) -> Vector2:
+## Pure position math for the left column (party strip / creature panel /
+## vitals cluster), stacked bottom-up above `Root/BottomDock`'s real top
+## edge -- see `BOTTOM_DOCK_TOP_OFFSET`'s header comment for why this has to
+## be derived from the CANVAS BOTTOM rather than a fixed top offset. Static
+## and side-effect-free on purpose: `_reflow_left_stack()` is the only
+## caller in real play, but `tests/test_hud_widgets.gd` exercises the same
+## math with hand-picked canvas heights, with no scene tree required.
+static func left_stack_bottom(canvas_height: float) -> float:
+	return canvas_height + BOTTOM_DOCK_TOP_OFFSET - LEFT_STACK_CLEARANCE
+
+
+static func vitals_position(canvas_height: float) -> Vector2:
+	return Vector2(CREATURE_BLOCK_X, left_stack_bottom(canvas_height) - VITALS_HEIGHT)
+
+
+static func creature_block_position(canvas_height: float, creature_panel_height: float) -> Vector2:
 	return Vector2(
-		CREATURE_BLOCK_POS.x,
-		CREATURE_BLOCK_POS.y - strip_height - PARTY_ACTIVE_GAP
+		CREATURE_BLOCK_X,
+		vitals_position(canvas_height).y - PARTY_ACTIVE_GAP - creature_panel_height,
 	)
+
+
+## Clamped to `TOP_SAFE_INSET`, not left to run negative. The party strip's
+## own `TOTAL_HEIGHT` (540, five text-driven rows plus a header -- a
+## deliberate legibility fix, not a number this task should shrink) does
+## not actually fit in the room left ABOVE the creature panel once that
+## panel is itself correctly bottom-anchored: `creature_block_position()`'s
+## own gap budget above `Root/BottomDock` is under 300px at either supported
+## canvas height (1080 or 1200), well short of 540+`PARTY_ACTIVE_GAP`.
+##
+## Two bad options, honestly, not a solved problem: the un-clamped math
+## draws roughly the top third of the reveal OFF the top of the screen
+## (confirmed by computing both canvas heights); this clamp instead lets the
+## reveal overlap the creature panel it slides in above. The clamped case is
+## the better of the two -- the strip is added to `_root` AFTER the creature
+## block (`_ready()`'s build order), so it draws on top and stays fully
+## readable, and the overlap is transient (`T_PARTY_FADE`/`CYCLE_BANNER_SECONDS`,
+## a few seconds at most) rather than a permanent layout defect -- but it is
+## a real, visible tradeoff a future pass should revisit, most likely by
+## shrinking the strip's own footprint for a reveal specifically (its full
+## five-row height may not need to be the reveal's height too), not by
+## touching this clamp.
+static func party_strip_position(canvas_height: float, creature_panel_height: float, strip_height: float) -> Vector2:
+	var hugging_creature_panel: float = (
+		creature_block_position(canvas_height, creature_panel_height).y - PARTY_ACTIVE_GAP - strip_height
+	)
+	return Vector2(CREATURE_BLOCK_X, maxf(TOP_SAFE_INSET, hugging_creature_panel))
+
+
+## Places the whole left column from the CANVAS BOTTOM every time `_root`'s
+## actual size is seen to change (once at startup, since `_ready()` can run
+## before the viewport has settled its final stretch size, and again only if
+## a real resize ever happens -- never mid-session in practice). Cheap and
+## rare rather than run unconditionally every frame specifically so it never
+## fights `party_strip.gd`'s own reveal/hide tween, which owns `.position`
+## the rest of the time.
+func _reflow_left_stack() -> void:
+	var canvas_h: float = _root.size.y
+	if canvas_h <= 0.0:
+		return
+	# The creature panel's real height can itself change (the energy bar row
+	# joining/leaving, a longer name wrapping) -- gating this whole function
+	# on canvas height alone would leave the party strip's REST position
+	# stale the next time it revealed. `vitals_cluster`/`creature_block`
+	# never animate their own `.position`, so repositioning them every frame
+	# is just a couple of cheap Vector2 writes; only the party strip's tween
+	# needs the change-guard below.
+	# A `PanelContainer` parented directly under a plain `Control` (as this
+	# one is, under `_creature_block`) does not automatically grow its own
+	# `.size` to match its children's real minimum size the way it would
+	# inside a parent Container -- that auto-fit only happens one layer up.
+	# Setting it explicitly here, every time this runs, is what makes the
+	# panel's OWN rect (what `get_global_rect()` reports, and what the
+	# bounds tests in `tests/smoke_hud_handheld_legibility.gd` check every
+	# child against) actually match its content instead of staying frozen at
+	# whatever `custom_minimum_size` floor it started with.
+	var creature_h := 0.0
+	if _creature_panel != null:
+		var min_size := _creature_panel.get_combined_minimum_size()
+		_creature_panel.size = min_size
+		creature_h = min_size.y
+
+	if _vitals_cluster != null:
+		_vitals_cluster.position = vitals_position(canvas_h)
+
+	if _creature_block != null:
+		_creature_block.position = creature_block_position(canvas_h, creature_h)
+
+	if is_equal_approx(canvas_h, _left_stack_canvas_h) and is_equal_approx(creature_h, _left_stack_creature_h):
+		return
+	_left_stack_canvas_h = canvas_h
+	_left_stack_creature_h = creature_h
+
+	if _party_strip != null and _party_strip_script != null:
+		var strip_h: float = float(_party_strip_script.get("TOTAL_HEIGHT"))
+		var strip_pos := party_strip_position(canvas_h, creature_h, strip_h)
+		if _party_strip.has_method("set_rest_position"):
+			_party_strip.call("set_rest_position", strip_pos)
+		else:
+			_party_strip.position = strip_pos
 
 
 ## Wired to `Game.party.active_index()` + `.revision`: rebuild entries and
@@ -754,13 +1000,15 @@ func _update_party_strip() -> void:
 	_party_strip_last_index = index
 	_party_strip_last_revision = revision
 
+	var members: Array = _party.call("members")
 	var entries: Array = []
-	for creature: RefCounted in _party.call("members"):
+	for i in members.size():
+		var creature: RefCounted = members[i]
 		entries.append({
 			"label": str(creature.call("label")),
 			"level": int(creature.get("level")),
 			"hp_fraction": float(creature.call("hp_fraction")),
-			"tint": _species_tint(str(creature.get("species_id"))),
+			"tint": _distinct_tint(members, i),
 			"portrait": _species_portrait_path(str(creature.get("species_id"))),
 			"fainted": bool(creature.get("fainted")),
 			"resting": bool(creature.get("resting")),
@@ -792,9 +1040,12 @@ func _update_party_strip() -> void:
 ## per-bar fade this replaces.
 func _build_vitals_cluster() -> void:
 	_vitals_cluster = Control.new()
+	_vitals_cluster.name = "VitalsCluster"
 	_vitals_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_vitals_cluster.position = VITALS_POS
-	_vitals_cluster.size = Vector2(VITALS_WIDTH, 64.0)
+	# Position is set by `_reflow_left_stack()`, not here -- see that
+	# function's header and `BOTTOM_DOCK_TOP_OFFSET`'s comment for why a
+	# fixed top-anchored offset was the actual HUD-LAYOUT defect.
+	_vitals_cluster.size = Vector2(VITALS_WIDTH, VITALS_HEIGHT)
 	_root.add_child(_vitals_cluster)
 
 	_build_buff_row(_vitals_cluster)
@@ -1137,17 +1388,22 @@ func _build_objective_block() -> void:
 	var eyebrow := Label.new()
 	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	eyebrow.text = "M A I N   S T O R Y" # letter-spaced feel; no theme letter-spacing support
-	eyebrow.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	# `UITokens.FONT_TINY` (19) measured ~7 physical px at the Ally's real
+	# resolution -- same "shared by a dozen screens this lane does not own"
+	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that
+	# shared constant; a local override here does the same job this file
+	# already does for its other micro-labels.
+	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH, 22.0)
+	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH, 34.0)
 	block.add_child(eyebrow)
 	_objective_eyebrow_label = eyebrow
 
 	_objective_text_label = Label.new()
 	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_objective_text_label.position = Vector2(0.0, 24.0)
-	_objective_text_label.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT - 24.0)
+	_objective_text_label.position = Vector2(0.0, 36.0)
+	_objective_text_label.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT - 36.0)
 	_objective_text_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -1264,6 +1520,11 @@ func _process(delta: float) -> void:
 	_read_hotbar_input()
 	_read_world_hotkeys()
 	_update_creature_block()
+	# After the creature block's content is written for this frame, not
+	# before: `_reflow_left_stack()` measures the creature panel's real
+	# combined-minimum-size, so it has to run once this frame's text/energy
+	# bar visibility is actually in place, or it is always one frame stale.
+	_reflow_left_stack()
 	_update_party_strip()
 	_update_objective()
 	_update_region_banner()

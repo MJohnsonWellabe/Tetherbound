@@ -56,7 +56,16 @@ func _run() -> void:
 		_fail("Game autoload is missing")
 		_report()
 		return
-	(game.get("party") as RefCounted).call("clear")
+	var party: RefCounted = game.get("party")
+	party.call("clear")
+	# Seeded, not left empty: the creature-panel bounds checks below need a
+	# REAL active creature (name/level/type/HP text, the exact content that
+	# escaped its rows before this fix) drawn, not just the "READY TO CALL
+	# OUT" empty state, which has less content to overflow with.
+	var seeded: RefCounted = game.call("make_creature", "terrapup", "Biscuit")
+	if seeded != null:
+		party.call("add", seeded)
+		seeded.take_damage(float(seeded.get("max_hp")) * 0.35)
 
 	_world = Node3D.new()
 	_world.name = "HandheldWorld"
@@ -94,6 +103,10 @@ func _run() -> void:
 	_check_micro_label_physical_size()
 	_check_hotbar_count_physical_size()
 	_check_hotbar_glyph_physical_size()
+	for i in 3:
+		await process_frame
+	_check_left_stack_clears_bottom_dock()
+	_check_creature_panel_children_stay_inside_it()
 
 	root.size = original_size
 	_report()
@@ -213,6 +226,83 @@ func _check_hotbar_glyph_physical_size() -> void:
 				PLAYGROUND_HUD.HOTBAR_GLYPH_PX, scale, MIN_PHYSICAL_GLYPH_PX,
 			]
 		)
+
+
+## HUD-LAYOUT's own regression, proven against the LIVE scene rather than
+## just the pure position math `test_hud_widgets.gd` checks: the creature
+## panel and the player vitals cluster must never intersect
+## `Root/BottomDock` (the hotbar, the exploration legend, or the contextual
+## prompt) at the Ally's real 1280x800 window. This is the exact defect a
+## real render caught before the fix -- `CREATURE_BLOCK_POS`/`VITALS_POS`
+## were fixed, top-anchored offsets tuned against an assumed 1080-tall
+## canvas, and the Ally's real `canvas_items`/`aspect="expand"` stretch
+## computes an effective 1920x1200 canvas, not 1920x1080 -- 120px taller,
+## with `Root/BottomDock` (anchored to the canvas BOTTOM) sliding down into
+## territory the left column never moved out of. Confirmed against the
+## pre-fix code by temporarily reverting `_reflow_left_stack()`.
+func _check_left_stack_clears_bottom_dock() -> void:
+	var dock := _hud.get_node_or_null(^"Root/BottomDock") as Control
+	var creature_block := _hud.get_node_or_null(^"Root/CreatureBlock") as Control
+	if dock == null or creature_block == null:
+		_fail("HUD did not build the BottomDock/CreatureBlock nodes needed for the overlap check")
+		return
+	var creature_panel: Control = creature_block.get_child(0) as Control if creature_block.get_child_count() > 0 else null
+	if creature_panel == null:
+		_fail("creature block has no panel child to measure")
+		return
+	var dock_rect := dock.get_global_rect()
+	var creature_rect := creature_panel.get_global_rect()
+	if dock_rect.intersects(creature_rect):
+		_fail("creature panel overlaps Root/BottomDock at %dx%d (panel %s, dock %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, creature_rect, dock_rect,
+		])
+
+	# `VitalsCluster`'s own declared size already covers its real content
+	# (`VITALS_HEIGHT`), so its own global rect is the honest measure.
+	var vitals := _hud.get_node_or_null(^"Root/VitalsCluster") as Control
+	if vitals == null:
+		_fail("HUD did not build Root/VitalsCluster")
+		return
+	var vitals_rect := vitals.get_global_rect()
+	if dock_rect.intersects(vitals_rect):
+		_fail("player vitals cluster overlaps Root/BottomDock at %dx%d (vitals %s, dock %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, vitals_rect, dock_rect,
+		])
+	if creature_rect.intersects(vitals_rect):
+		_fail("player vitals cluster overlaps the creature panel at %dx%d" % [HANDHELD_SIZE.x, HANDHELD_SIZE.y])
+
+
+## Direct, structural proof that the container rebuild actually contains its
+## own children: the header row, pip row and HP row must all fit fully
+## inside the panel's own rect -- the exact three ways the old hand-placed
+## layout escaped (header text overrunning its box, the HP value label
+## spilling below the panel, "GROUND"/"WATER" crowding past the border).
+func _check_creature_panel_children_stay_inside_it() -> void:
+	var creature_block := _hud.get_node_or_null(^"Root/CreatureBlock") as Control
+	if creature_block == null or creature_block.get_child_count() == 0:
+		_fail("creature block missing for the containment check")
+		return
+	var panel := creature_block.get_child(0) as Control
+	var panel_rect := panel.get_global_rect()
+	_assert_descendants_inside(panel, panel_rect)
+
+
+func _assert_descendants_inside(node: Node, bounds: Rect2) -> void:
+	for child in node.get_children():
+		if child is Control:
+			var c := child as Control
+			# `is_visible_in_tree()`, not the bare `.visible` flag: a hidden
+			# ancestor (e.g. `_creature_content` while no creature is out)
+			# leaves every descendant's OWN `.visible` untouched at `true`,
+			# so checking only the local flag flagged nodes that never
+			# actually draw.
+			if c.is_visible_in_tree() and c.size.x > 0.0 and c.size.y > 0.0:
+				var r := c.get_global_rect()
+				if not bounds.encloses(r.grow(-0.5)):
+					_fail("creature panel child '%s' escapes the panel bounds at %dx%d (child %s, panel %s)" % [
+						c.name if not c.name.is_empty() else c.get_class(), HANDHELD_SIZE.x, HANDHELD_SIZE.y, r, bounds,
+					])
+		_assert_descendants_inside(child, bounds)
 
 
 func _fail(message: String) -> void:
