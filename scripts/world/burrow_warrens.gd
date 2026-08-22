@@ -46,6 +46,11 @@ const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 
+## OP21-25. See `combat_arena_bounds_at()` below -- how far inside a chamber's
+## wall FACE the fight boundary is required to sit. Clearance for a body's own
+## radius, not a fudge factor.
+const ARENA_WALL_MARGIN := 1.0
+
 ## MAT-BLOCKOUT. The wall/ceiling boxes below carried a flat StandardMaterial3D
 ## colour and nothing else, by design (see this file's header) -- a blind
 ## critic named the result correctly: "completely flat-shaded... no texture...
@@ -766,6 +771,36 @@ func ground_height_at(x: float, z: float) -> float:
 	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
 		return float(_world.call("ground_height_at", x, z))
 	return NAN
+
+
+## OP21-25: the largest radius `combat_arena.gd` can draw around `(x, z)`
+## without its boundary reaching a real cave wall -- the containment fix.
+## `combat_arena.hold_inside()` corrects a fighter with a raw position write,
+## not a physics move, so it has no collision to stop it: a boundary that
+## reaches past a chamber's walls does not clip a knocked-back fighter against
+## them, it teleports the fighter straight through to the far side. Every
+## chamber here is smaller than `combat.json`'s flat 11m default radius in at
+## least one dimension -- even "den", the biggest, is 16x14 -- so every fight
+## in the warrens was asking for a boundary wider than the room. Sized off the
+## same `_footprint` rects `ground_height_at()` above already tests against.
+##
+## Returns -1.0 -- "no opinion, keep the caller's own default" -- when `(x, z)`
+## is not inside any chamber this building knows about (a passage, a bare test
+## scene with no footprint yet). CombatManager falls back to `combat.json`'s
+## flat radius in that case, same as it always did.
+func combat_arena_bounds_at(x: float, z: float) -> float:
+	var local := to_local(Vector3(x, 0.0, z))
+	var best := -1.0
+	for rect: Array in _footprint:
+		if local.x < float(rect[0]) or local.x > float(rect[2]) \
+				or local.z < float(rect[1]) or local.z > float(rect[3]):
+			continue
+		var clearance: float = minf(
+			minf(local.x - float(rect[0]), float(rect[2]) - local.x),
+			minf(local.z - float(rect[1]), float(rect[3]) - local.z))
+		var usable := maxf(0.5, clearance - ARENA_WALL_MARGIN)
+		best = usable if best < 0.0 else minf(best, usable)
+	return best
 
 
 ## Global position of a named place: any chamber id, plus "entrance" and

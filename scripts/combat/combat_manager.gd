@@ -314,12 +314,64 @@ func begin(
 ## The arena is centred between the two fighters, not on the trainer. Centring
 ## it on the trainer would put them at the middle of a circle they are supposed
 ## to be standing at the edge of, watching.
+##
+## OP21-25: `combat.json`'s radius is one flat number for every fight
+## anywhere, and the Stronghold/Burrow Warrens rooms are mostly smaller than
+## it in at least one dimension. `combat_arena.hold_inside()` corrects a
+## fighter with a raw position write, not a physics move -- it has no
+## collision to stop it -- so a boundary that reaches past a room's real walls
+## does not clip a knocked-back fighter against them, it teleports the fighter
+## straight through to the far side, and the fight becomes unwinnable exactly
+## as OP21-25 describes. `_arena_bounds()` asks whatever built this room
+## (`stronghold.gd`, `burrow_warrens.gd`) how much radius it can actually
+## afford, the same way `_ground_height()` below already asks it for a Y --
+## and only ever SHRINKS the configured radius, never grows it, so the open
+## meadow (nothing answers the query, `_arena_bounds()` returns -1.0) fights
+## exactly as before.
 func _open_arena() -> void:
-	var cfg: Dictionary = MATH.config().get("arena", {})
+	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
 	_arena = ARENA.new()
 	_arena.name = "CombatArena"
 	_player.get_parent().add_child(_arena)
-	_arena.call("configure", _midpoint(cfg), cfg)
+	var centre := _midpoint(cfg)
+	var bound := _arena_bounds(centre)
+	if bound > 0.0:
+		cfg["radius"] = minf(float(cfg.get("radius", 11.0)), bound)
+	_arena.call("configure", centre, cfg)
+
+
+## The most radius the room around `centre` can afford, or -1.0 if no room
+## claims it.
+##
+## This is a SPATIAL search over the world root's own children, not an
+## ancestry walk. An `_ground_height()`-style walk up from the player (or from
+## this manager) does not work here: the player is never reparented into
+## `Stronghold`/`BurrowWarrens` when they walk inside one (`playground_world.gd`
+## keeps `Player` a permanent sibling of both), and neither is a trainer's
+## deployed creature -- `encounter_director.gd::begin_trainer_battle()` adds
+## every `TrainerCreature_*` body to ITS OWN parent (the world root), not to
+## whichever room the trainer stands in. A wild creature IS parented under its
+## room (`burrow_warrens.gd::_spawn_population()` passes `parent: self`), but a
+## fix that only worked for wild fights would leave every Stronghold gauntlet
+## and the Warden himself uncovered -- exactly the trainer battles OP21-25
+## names. So this asks every child of the arena's own host (the same node
+## `_open_arena()` just parented the arena under) that answers to
+## `combat_arena_bounds_at`, and returns the first one that claims `centre` as
+## its own. `Stronghold` and `BurrowWarrens` are both direct children of the
+## world root (`playground_world.gd::_build_stronghold()`/
+## `_build_burrow_warrens()`), so this reaches them regardless of which body
+## the fight happens to be using.
+func _arena_bounds(centre: Vector3) -> float:
+	var host: Node = _player.get_parent() if _player != null else get_parent()
+	if host == null:
+		return -1.0
+	for child in host.get_children():
+		if child == _arena or not (child is Node) or not child.has_method("combat_arena_bounds_at"):
+			continue
+		var bound := float(child.call("combat_arena_bounds_at", centre.x, centre.z))
+		if bound > 0.0:
+			return bound
+	return -1.0
 
 
 func _midpoint(cfg: Dictionary) -> Vector3:

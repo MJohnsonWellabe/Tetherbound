@@ -66,6 +66,18 @@ const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 ## its people stand.
 const PLACED_BY := "stronghold"
 
+## OP21-25. `combat_arena.gd`'s default radius is a flat 11m (data/config/
+## combat.json) and every fight that starts inside this building asks for it
+## uniformly, whatever room it lands in. `tether_approach` is 16x18, so an 11m
+## radius already clears its walls with only 2-3m to spare; the gauntlet
+## trainers ahead of and behind it (`outer_works` 20x24, `courtyard` 22x28) are
+## the same story. `combat_arena_bounds_at()` below is CombatManager's own
+## `_ground_height()` pattern for radius instead of Y: walk up from the fight,
+## ask the room what it can afford. This margin is how far inside the wall
+## FACE the boundary is required to sit -- clearance for a body's own radius
+## plus the base course/trim geometry proud of the wall, not a fudge factor.
+const ARENA_WALL_MARGIN := 1.0
+
 ## Roomier than the warrens' cave profile: the arena is 24x26m and a 2.6m arm
 ## puts the camera inside the player's back in a space that size. Still tighter
 ## than the meadow default, because every one of these rooms has a wall close
@@ -1096,6 +1108,34 @@ func ground_height_at(x: float, z: float) -> float:
 	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
 		return float(_world.call("ground_height_at", x, z))
 	return NAN
+
+
+## OP21-25: the largest radius `combat_arena.gd` can draw around `(x, z)`
+## without its boundary reaching a real wall -- the containment fix.
+## `combat_arena.hold_inside()` corrects a fighter with a raw position write,
+## not a physics move, so it has no collision to stop it: a boundary that
+## reaches past this room's walls does not clip a knocked-back fighter against
+## them, it teleports the fighter straight through to the far side. Sized off
+## the same `_footprint` rects `ground_height_at()` above already tests
+## against, so a fight can never open somewhere this file thinks has no floor.
+##
+## Returns -1.0 -- "no opinion, keep the caller's own default" -- when `(x, z)`
+## is not inside any chamber this building knows about (a passage, mid-route
+## outdoors, a bare test scene with no footprint yet). CombatManager falls
+## back to `combat.json`'s flat radius in that case, same as it always did.
+func combat_arena_bounds_at(x: float, z: float) -> float:
+	var local := to_local(Vector3(x, 0.0, z))
+	var best := -1.0
+	for rect: Array in _footprint:
+		if local.x < float(rect[0]) or local.x > float(rect[2]) \
+				or local.z < float(rect[1]) or local.z > float(rect[3]):
+			continue
+		var clearance: float = minf(
+			minf(local.x - float(rect[0]), float(rect[2]) - local.x),
+			minf(local.z - float(rect[1]), float(rect[3]) - local.z))
+		var usable := maxf(0.5, clearance - ARENA_WALL_MARGIN)
+		best = usable if best < 0.0 else minf(best, usable)
+	return best
 
 
 ## Global position of a named place: any chamber id, any `marks` id, plus
