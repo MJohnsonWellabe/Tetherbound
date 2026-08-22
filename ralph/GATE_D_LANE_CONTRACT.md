@@ -140,6 +140,69 @@ Counts are a floor, not the goal. The acceptance in prompts `62`–`66` is about
 cadence: regular but non-uniform reasons to stop, no long stretch of purposeless
 running, and at least one optional thing that competes with direct progress.
 
+## 5b. Wild density — owner directive, 2026-08-22
+
+The owner read the first regional numbers and rejected them outright:
+
+> "I think you're going to need a lot more than 24 creatures in a band. look at
+> Pokemon density and palworld density. even valheim deer and boar density it's
+> far more."
+
+They are right, and the arithmetic is worse than the raw counts suggest. Band 1
+at 24 creatures over 1872 m of spine is one creature per 78 m. Band 4 at 18 over
+2240 m is one per 124 m. Valheim Meadows — the sparsest reference the owner
+named — beats both comfortably; Palworld and open-world Pokémon are not close.
+
+**Per-band authored targets:**
+
+| Band | spine | clusters | creatures |
+|---|---|---|---|
+| 1 | 1872 m | 45–60 | 170–260 |
+| 2 | 1820 m | 45–60 | 170–260 |
+| 3 | 1580 m | 38–50 | 140–210 |
+| 4 | 2240 m | 55–75 | 200–300 |
+| 5 |  680 m | 18–28 |  70–110 |
+
+The shape matters as much as the count:
+
+- a cluster roughly every **30–50 m of route**, of **3–5** creatures, not 1–2;
+- plus off-route habitat pockets, so leaving the trail is rewarded and the route
+  does not read as a conveyor belt;
+- **non-uniform** — dense where habitat justifies it, thinner on exposed,
+  worked or drained ground. "Thinner" now means a cluster every ~80 m, not
+  every ~800 m. Each band's existing `_comment_habitat` reasoning still decides
+  WHERE; this directive changes HOW MUCH.
+
+Hand-placed residents (the Burrow Warrens' own, and anything else placed by name
+rather than by the field table) are separate from these counts.
+
+## 5c. Why this needed engine work first
+
+Nobody could have authored that density before, and it is worth recording why so
+the next author does not rediscover it by shipping a build that will not run.
+
+`scripts/combat/encounter_director.gd::_spawn_creatures()` instantiates **every**
+spawn in the merged table — all five bands, the whole 7.5 km corridor — at world
+load, and never despawns any of them. It also awaits `_stand_on_ground()` per
+creature, so boot cost scales linearly with the authored count.
+`scripts/creatures/wild_creature.gd::_physics_process()` then ticks every one of
+them every physics frame regardless of distance: a `distance_to` the player,
+`face_towards` or `_wander`, and a body integration. There is no distance sleep
+and no despawn; `set_physics_process(false)` on a fainted creature is the only
+existing precedent for switching one off.
+
+At ~70 creatures that is survivable. At 700–1100 on a ROG Ally it is not.
+
+Distance-based activation is therefore a **prerequisite**, and it is dispatched
+as its own lane (`ralph/gate-d-wild-streaming`) against
+`encounter_director.gd` and `wild_creature.gd`. **No content lane touches either
+file** — they are shared, outside every band's ownership, and the streaming lane
+is editing them right now.
+
+A boot-time or frame-time regression a content lane measures from raised density
+is expected until that lane lands. Report the number, note it is pending, and
+carry on — do not tune density back down to make a local measurement look good.
+
 ## 6. Hard rules, restated because content authoring is where they get broken
 
 - **Five creatures, ever.** No storage, no reserve, no sixth slot.
