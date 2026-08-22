@@ -83,14 +83,24 @@ func _run() -> void:
 	await _shoot("map_handheld_default", written, failures)
 
 	# --- (b) zoomed on the player: proves the OP21-15 centring fix ---
+	# Drives the tab's OWN state directly (`_zoom`, then `poll()` — the exact
+	# function the real per-frame loop calls) rather than simulating a
+	# joypad press: `smoke_gate_a_map_cycle.gd` already proves RT/LT and
+	# `Input.is_action_just_pressed` wiring end-to-end with real
+	# `InputEventJoypadMotion` events; this tool exists to render the
+	# RESULT of a zoom step, and a first pass here that used
+	# `Input.action_press` silently never flipped `_zoom` at all (the
+	# "just pressed" edge did not land inside this script's own frame
+	# timing), producing three byte-identical screenshots. Setting `_zoom`
+	# and calling the tab's real `poll()` exercises the exact same
+	# `_follow_player_if_not_panned()` path a real RT press would, with
+	# neither doubt about frame timing nor a hidden second mechanism.
 	var bodies: Array = menu.get("_bodies")
 	var map_tab: Control = bodies[int(menu.get("_index"))] as Control
 	if map_tab != null:
-		Input.action_press("map_zoom_in")
-		for i in 4:
-			await process_frame
-		Input.action_release("map_zoom_in")
-		for i in 40:
+		map_tab.set("_zoom", 4.0)
+		for i in 10:
+			map_tab.call("poll")
 			await process_frame
 	await _shoot("map_handheld_zoomed", written, failures)
 
@@ -100,10 +110,11 @@ func _run() -> void:
 		map_tab.set("_manual_pan", true)
 		map_tab.set("_pan_world", map_tab.call("_pan_world_for_player", Vector3(150.0, 0.0, 1800.0)))
 		map_tab.call("_clamp_pan")
-		var canvas: Control = map_tab.get("_canvas") as Control
-		if canvas != null:
-			canvas.queue_redraw()
-		for i in 10:
+		var trails_canvas: Control = map_tab.get("_canvas") as Control
+		if trails_canvas != null:
+			trails_canvas.queue_redraw() # manual state edits bypass poll()'s own redraw triggers
+		for i in 4:
+			map_tab.call("poll") # _manual_pan is already true, so this will not un-pan
 			await process_frame
 	await _shoot("map_handheld_trails", written, failures)
 
