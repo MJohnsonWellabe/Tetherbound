@@ -1602,6 +1602,15 @@ jobs:
           godot --headless --path . --script tests/smoke_relay_station.gd
           godot --headless --path . --script tests/smoke_relay.gd
           godot --headless --path . --script tests/smoke_stronghold.gd
+          # STREAM-D. Not picked up by verify-unit-tests: run_tests.gd globs
+          # test_*.gd only, and this one has to be a standalone SceneTree
+          # script because _tick_streaming() reads Node3D.global_position,
+          # whose getter requires is_inside_tree() -- unreachable from inside
+          # run_tests.gd's synchronous _init(). Named here so it is actually
+          # run by something; a test nobody runs is not a test, and this one
+          # guards the distance activation that the chapter's ~700-1100
+          # authored creatures depend on to stay inside frame budget.
+          godot --headless --path . --script tests/smoke_wild_streaming.gd
 
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
