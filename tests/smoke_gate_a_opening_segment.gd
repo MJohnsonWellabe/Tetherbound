@@ -440,6 +440,22 @@ func _catch_with_real_throws() -> bool:
 		if not await _aim_camera_at(_wild, 360):
 			_fail("right-stick aim could not line up the real throw reticle")
 			return false
+		# Do not throw into a rock.
+		#
+		# Holding the fight put an end to it ending -- and left the player
+		# standing in ONE spot for every launch. A 40-launch run from a bad spot
+		# came back 1 strike / 39 misses, and the tally says why: `first_hit`
+		# was `Rock_Medium_2_Collision` on 27 of them, with six explicit
+		# `line_of_sight_blocked`. A boulder was in the line the whole time.
+		#
+		# `throw_aim.gd::launch_assist_diagnostics()` reports this BEFORE the
+		# orb is committed, so the player-true move is available: see that the
+		# shot is blocked, step somewhere it is not, look again. Throwing anyway
+		# spends an orb into a rock, which no player does twice.
+		if not await _step_until_the_shot_is_clear():
+			_fail("could not find a spot with a clear line to the Bramblebun "
+				+ "after launch %d" % launches)
+			return false
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
@@ -914,3 +930,40 @@ func _hold_the_fight_where_it_was() -> void:
 	if own != null:
 		own.set("hp", own.get("max_hp"))
 		own.set("fainted", false)
+
+
+## Move until the throw has a clear line, then re-aim. True if it does.
+##
+## Reads the game's own pre-launch verdict rather than guessing at geometry:
+## `eligible` is exactly the condition that decides whether the throw gets its
+## launch assist, and `first_hit` names whatever is in the way when it does not.
+func _step_until_the_shot_is_clear() -> bool:
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null or not throw.has_method("launch_assist_diagnostics"):
+		return true
+	for attempt in 12:
+		var report: Dictionary = throw.call("launch_assist_diagnostics")
+		if bool(report.get("eligible", false)):
+			return true
+		var blocked_by := str(report.get("first_hit", "unavailable"))
+		var reason := str(report.get("reason", "unavailable"))
+		# Strafe rather than close in: the reticle problems here are things
+		# STANDING BETWEEN the trainer and the creature, and sideways is what
+		# clears a line that forward does not.
+		var to := _wild.global_position - _player.global_position
+		to.y = 0.0
+		var sideways := to.cross(Vector3.UP).normalized()
+		if attempt % 2 == 1:
+			sideways = -sideways
+		var step := _player.global_position + sideways * 3.0
+		if to.length() > 7.0:
+			step += to.normalized() * 2.5
+		print("shot blocked by %s (%s); stepping aside" % [blocked_by, reason])
+		await _drive_body_toward(_player, step, 26)
+		_stop_left_stick()
+		for _i in 6:
+			await physics_frame
+		if not await _aim_camera_at(_wild, 240):
+			continue
+	var final: Dictionary = throw.call("launch_assist_diagnostics")
+	return bool(final.get("eligible", false))
