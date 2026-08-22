@@ -79,7 +79,8 @@ rather than half-fixed inside a verification pass. Full evidence in
 
 ### CATCH-FEEL — the throw lands about a third of the time · `model: sonnet` · `tests: smoke_gate_a_opening_segment, smoke_controller_catching` · OP9 / prompt 45
 
-Measured over 11 physical launches on the fixed aim path: **4 strikes, ~36%**.
+**CORRECTED after more runs.** Over **27** physical launches on the fixed aim
+path: **6 strikes, ~22%** — not the 36% an early 11-launch sample suggested.
 Every run now catches (3/3 after the aim fix, on launches 3, 7 and 1), so this
 no longer blocks the chapter — `catch_math.gd`'s tutorial failure bound
 guarantees the catch on the second LANDED throw. But two thirds of throws
@@ -91,15 +92,16 @@ nothing on the route restocks before Tam unlocks the recipe.
 **It is worse than an average, because the tutorial's safety net needs TWO
 landed throws.** `catch_math.gd::apply_failure_bound` guarantees the catch on
 the second LANDED throw, and `smoke_gate_a_opening_segment.gd` spends eight
-orbs. At a 36% strike rate the chance of landing at most one in eight is
-**15.5% — roughly one fresh save in six** where the bound never fires and the
-chapter's first taught mechanic simply fails. That is not a tail case; it was
-observed directly, twice, as `eight natural weakened-target launches produced
-1 strike(s), 7 miss(es), and no catch`, on the FIXED aim path.
+orbs. At a 22% strike rate the chance of landing at most one in eight is **45%**.
+Run-level observation matches: **3 of 5 fresh-save runs caught, 2 did not**,
+both failures reading `eight natural weakened-target launches produced 1
+strike(s), 7 miss(es), and no catch` on the FIXED aim path.
 
-So the honest state is: the aim defect is fixed and the mechanic works most of
-the time, and about one player in six is told to catch something and cannot.
-Gate B sits downstream of this beat.
+So the honest state is: the aim defect is genuinely fixed, and roughly **half**
+of fresh saves still cannot complete the chapter's first taught mechanic within
+the orbs they are given. Gate B sits downstream of this beat, and the Gate A
+continuous core cannot reliably get past it either — which is why the
+build/gather/sleep segment behind it is currently unproven end to end.
 
 **Do not fix this by widening the assist reticle without playing it.** Two
 separate things were already wrong here and both were mistaken for odds tuning
