@@ -38,6 +38,15 @@ extends "res://tests/test_case.gd"
 ## occupy, are pinned forever. That is exactly the property five agents
 ## authoring five bands need: nobody else's new content can move yours.
 ##
+## "Frozen" means frozen against ACCIDENT, not against the owner. TOURNAMENT-1
+## is the first deliberate edit to a pinned entry: the 2026-08-22 owner
+## directive took the South Bridge Key out of `trainer_oskar`'s reward and gave
+## it to a Team Tether grunt, so that one entry was mirrored here by hand. That
+## is the correct handling and the only correct handling -- mirror the change in
+## the fixture, keep the entry at its index, and never relax the comparison or
+## delete the row. A fixture edit is a deliberate act that shows up in a diff;
+## a relaxed comparison is a check that silently stops working.
+##
 ## Verified failable before shipping, twice, because "it passes" proves nothing:
 ##
 ##   * Deleting one node from `bands/band2_stone_and_root/harvest.json` fails

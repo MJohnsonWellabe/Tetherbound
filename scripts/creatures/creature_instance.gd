@@ -16,6 +16,10 @@ extends RefCounted
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
+## RG19-spec/D68. Condition (rested/fed/happy) arithmetic. Preloadable from
+## here without a cycle: creature_condition.gd knows nothing about this class,
+## it only reads and writes fields on whatever RefCounted it is handed.
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 var species_id: String = ""
 var display_name: String = ""
@@ -60,6 +64,29 @@ var rested: bool = false
 ## -1 when not assigned. Stored on the creature rather than by party slot so
 ## reordering the five cannot silently put the wrong pal in a bed.
 var rest_bed_index: int = -1
+
+## --- condition (RG19-spec, D68) ---------------------------------------------
+##
+## "Well rested, well fed and happy" — the three states the village tournament
+## gates on. `rested` above is the first of them and predates this; these two
+## are the other halves. Both are plain 0..100 meters here and are INTERPRETED
+## nowhere in this file: what counts as fed, what counts as happy, how fast
+## either moves and what a night's rest is worth all live in
+## `scripts/creatures/creature_condition.gd` over
+## `data/config/creature_condition.json`, so a threshold can be tuned without
+## touching a creature.
+##
+## Deliberately NOT folded into `bond`: bond is permanent progression that buys
+## stats and only ever climbs (D30), happiness is a mood that can be lost and
+## regained in one afternoon.
+var nourishment: float = 70.0
+var happiness: float = 55.0
+
+## Seconds of awake time `rested` still has left before it lapses. Set when a
+## night in a creature bed completes; ticked down by
+## `creature_condition.tick()`. 0 with `rested` false is the ordinary resting
+## state of a creature that has not been to bed.
+var rested_seconds_left: float = 0.0
 
 ## --- progression (D30) -----------------------------------------------------
 
@@ -209,6 +236,12 @@ static func from_species(
 	instance.fainted = false
 	instance.nickname = ""
 	instance.shiny = is_shiny
+	# RG19-spec/D68. Every creature that enters the game starts at the
+	# configured condition rather than at a silent zero (permanently starving)
+	# or a silent max (the mechanic never appears). `start()` reads
+	# creature_condition.json itself when the caller has no condition config in
+	# hand, which every existing caller of this function does not.
+	CONDITION.start(instance)
 	return instance
 
 

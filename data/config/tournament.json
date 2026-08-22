@@ -1,0 +1,99 @@
+{
+  "_comment": "TOURNAMENT-1. The village tournament, owner-locked on 2026-08-22 (ralph/OWNER_DIRECTIVES_2026-08-22.md section 2): an EIGHT-SLOT bracket of which the player fights exactly THREE rounds. The other four slots are named opponents whose results are simulated on the board between the player's own matches, so the bracket reads as a real event rather than as three trainer battles in a row. Nothing here invents a quest engine -- the rounds are ordinary `data/config/bands/band1_lower_meadows/trainers.json` entries fought through `encounter_director.begin_trainer_battle()`, opened by the ordinary `battle:` dialogue effect, and every piece of state is a flat progression flag.",
+  "_comment_no_new_art": "CLAUDE.md and spec sec21: the three fought rounds are Band 1's EXISTING trainers (Mira, Tam, Oskar) and the marshal is a villager entry on a rig that already exists. No new humanoid mesh, no Meshy generation, no new creature. The four simulated names never stand up a body at all -- they are text on a board, which is the whole reason the owner allowed eight slots against three fights.",
+  "_comment_tunable": "Every number in this file is TUNABLE. The entry thresholds in particular are a first honest guess at 'your team is ready' and nobody has played the ladder yet.",
+
+  "entry": {
+    "min_party_size": 3,
+    "min_level": 6,
+    "_comment": "The two contract flags `tournament_team_ready` and `tournament_training_ready` are set from THESE numbers and nowhere else -- scripts/world/tournament.gd reads them and writes the flags, so the threshold is data and the rule is one line of code. `min_party_size` is bounded above by the five-creature cap (autoload/party.gd MAX_CREATURES) and must never be raised past it: an entry condition the player cannot satisfy is a chapter that stops. Three is 'a team, not a favourite' -- the same lesson Tam's own switching battle teaches -- and leaves two slots free so the player is not forced to fill the cap before the tournament.",
+    "_comment_training": "`min_level` is checked against the `min_party_size` STRONGEST creatures, not against every creature owned: a player who catches a fourth level-1 bramblebun on the walk over must not lose their entry for it. Once set, neither flag is ever cleared -- they are contract flags marking 'this happened', and a creature swapped out afterwards does not un-train the player."
+  },
+
+  "board": {
+    "position": [20.0, 15.0],
+    "facing_deg": 205.0,
+    "_comment": "The north field behind the square, inside the same 14m vegetation clearing (data/config/bands/band1_lower_meadows/vegetation.json, clearing order 4 at 13,9) that Bryn's practice arena already stands in -- so the tournament fights happen on ground that is deliberately clear of trees, and the tournament ground IS the practice ground the player already knows. 9.2m from that clearing's centre and 9.2m from Bryn himself, which is more than the two prompt radii added together (4.2 + 3.6), so the board never contests his challenge prompt.",
+    "_comment_facing": "Degrees of yaw, same convention every placed prop and NPC in this project uses: 0 looks along -Z (toward the village). 205 turns the board's painted face back toward the square, so a player walking up from the well reads it head-on."
+  },
+
+  "marshal": {
+    "name": "Halda",
+    "_comment": "The person who runs it. A `data/config/village_npcs.json` entry on the villager_ranger rig with her own hair colour -- CLAUDE.md's rule is 'reuse the installed cast, differentiate per material', and a tournament marshal is exactly the case that rule exists for. She is named here as well so a test can assert the board and the marshal agree about who is running the event."
+  },
+
+  "rounds": [
+    {
+      "id": "quarter",
+      "label": "Quarter-final",
+      "trainer": "tournament_quarter_mira",
+      "opponent": "Mira",
+      "conversation": "tournament_quarter",
+      "won_flag": "tournament_quarter_won"
+    },
+    {
+      "id": "semi",
+      "label": "Semi-final",
+      "trainer": "tournament_semi_tam",
+      "opponent": "Tam",
+      "conversation": "tournament_semi",
+      "won_flag": "tournament_semi_won"
+    },
+    {
+      "id": "final",
+      "label": "Final",
+      "trainer": "tournament_final_oskar",
+      "opponent": "Oskar",
+      "conversation": "tournament_final",
+      "won_flag": "tournament_won"
+    }
+  ],
+  "_comment_rounds": "Three, in order. `trainer` is a real trainers.json id whose `reward.flags` sets `won_flag` -- so the round is recorded by the SAME code path that records every other trainer defeat in the chapter, and there is no second place where a win is remembered. `conversation` is the marshal's line that ends on `battle:<trainer>`; the fight starts when that dialogue box closes, exactly as a villager's challenge does.",
+  "_comment_final_mount": "The final opponent rides a Meadowhart -- owner-locked. Meadowhart is already the authored first mount (data/creatures/species.json, `rideable.requires_item: \"saddle\"`), so the reward the win grants points straight at the creature the player just fought. Burrowback deliberately stays non-rideable.",
+  "_comment_retry": "Losing a round is not fatal and not final: the round's flag is simply not set, the marshal offers the same round again, and the player heals their team first (the creature bed, a potion, the inn). Owner-locked: 'You can lose and retry after healing your creatures.' Nothing here needs to implement that -- `encounter_director._finish_trainer_battle(false)` already ends a lost trainer battle with no flag and no reward, and `can_challenge()` already refuses while the player's creature is fainted, which is what sends them off to heal.",
+
+  "bracket": [
+    {"slot": 1, "name": "You", "player": true},
+    {"slot": 2, "name": "Mira"},
+    {"slot": 3, "name": "Tam"},
+    {"slot": 4, "name": "Fen"},
+    {"slot": 5, "name": "Oskar"},
+    {"slot": 6, "name": "Hollis"},
+    {"slot": 7, "name": "Bryn"},
+    {"slot": 8, "name": "Dara"}
+  ],
+  "_comment_bracket": "Eight slots, drawn on the board in this order and paired 1v2, 3v4, 5v6, 7v8. Four of them are the player and the three trainers they actually fight; the other four (Fen, Hollis, Bryn, Dara) are the named opponents the owner's directive calls for. Bryn is Band 1's practice trainer and stands in this same field -- he is a NAME in the bracket here rather than a fourth fight, which is what keeps the fought-round count at three.",
+
+  "simulated": [
+    {
+      "round": "quarter",
+      "a": "Tam",
+      "b": "Fen",
+      "winner": "Tam",
+      "reveal_after": "tournament_quarter_won"
+    },
+    {
+      "round": "quarter",
+      "a": "Oskar",
+      "b": "Hollis",
+      "winner": "Oskar",
+      "reveal_after": "tournament_quarter_won"
+    },
+    {
+      "round": "quarter",
+      "a": "Bryn",
+      "b": "Dara",
+      "winner": "Bryn",
+      "reveal_after": "tournament_quarter_won"
+    },
+    {
+      "round": "semi",
+      "a": "Oskar",
+      "b": "Bryn",
+      "winner": "Oskar",
+      "reveal_after": "tournament_semi_won"
+    }
+  ],
+  "_comment_simulated": "The results that are not fought. `reveal_after` is the progression flag that fills them in on the board, and it is deliberately the flag of the player's OWN preceding match: the other half of the draw resolves while the player is in the ring, which is how a real bracket board fills in. The winners are authored rather than rolled -- a random draw would sometimes put Bryn in the final, and the owner locked the final opponent as Oskar on his Meadowhart.",
+  "_comment_pairings": "The player's own path is fixed by these results and is the reason the fought rounds are Mira, then Tam, then Oskar: quarter-final 1v2 is You vs Mira, the other quarter on the near half is Tam vs Fen (Tam), so the semi-final is You vs Tam; the far half resolves Oskar vs Hollis and Bryn vs Dara, their semi is Oskar vs Bryn (Oskar), and the final is You vs Oskar."
+}

@@ -222,6 +222,82 @@
       ],
       "_why": "R7.9, owner-requested: an inn where the villagers can stay, with an innkeeper who trades. `villager_keeper` is a THIRD use of the same rig already standing twice in this file (Oskar, Kell) -- CLAUDE.md/§21's reuse rule and this file's own Kell comment call that the accepted call rather than a new archetype. Position is `inn_interior.gd::bar_position()` (the gap behind the counter, local [0,0,-4.39]) carried through the inn's own placement in data/config/village.json (`at: [-1.5,-9.0]`, `yaw_deg: 90.0`) by the same rotation formula this file's own Mira position was derived from and verified against (world_x = building_x + local_x*cos(yaw) + local_z*sin(yaw); world_z = building_z - local_x*sin(yaw) + local_z*cos(yaw)) -- not eyeballed. `facing_deg` matches the inn's own `yaw_deg` for the same reason Mira's matches cottage_a's: it points the local +z (front-door) direction the counter faces, exactly as `village_mira`'s entry above already establishes the convention.",
       "_why_vendor": "D39's dual-role pattern is a vendor branch AND a later trainer branch; this ships only the vendor half, matching the design ralph/NOTES.md's own R7.9 entry recorded and the same scope call OF31 made for Mira before SC12 later added her challenge. A trainer branch needs a balanced team, a level, a reward and a `trainers.json` entry under `placed_by: \"village_npcs\"`, which risks the balance assertions `test_trainers_data.gd` runs across the whole roster -- real, separate scope, left open rather than guessed at."
+    },
+    {
+      "name": "Halda",
+      "_comment": "TOURNAMENT-1. The tournament marshal -- the person who signs the player into the bracket and opens each of the three fought rounds. A villager entry on the `villager_ranger` rig with her own hair colour, not a new humanoid: CLAUDE.md and spec sec21 both say a new person is a per-material variant on a rig that is already installed, and a marshal is exactly that case. She is a NON-COMPETITOR by design -- Mira, Tam and Oskar are all in the draw, so the person running it cannot be one of them.",
+      "config_key": "villager_ranger",
+      "hair": {
+        "visible": true,
+        "color": "#8f8f96",
+        "_comment": "Iron grey, distinct from farmer (#5c3a22), smith (#8a8578), ranger (#7a3c22) and Bryn (#c9a86a) so the sixth body on this rig does not read as one of the others wandered north out of the square."
+      },
+      "position": [
+        23.5,
+        11.5
+      ],
+      "facing_deg": 215.0,
+      "_why_here": "The tournament ground: the open north field behind the square, inside the same 14m vegetation clearing at [13, 9] that Bryn's practice arena already uses, 5.0m from the bracket board at [20, 15] and 10.8m from Bryn himself -- more than the two challenge prompts' radii added together, so she never contests his. Facing 215 degrees turns her back toward the square, so she is looking at whoever walks up from the well.",
+      "greeting": "tournament_halda",
+      "greeting_when": [
+        {
+          "if_flag": "tournament_won",
+          "conversation": "tournament_halda_champion",
+          "_why": "FIRST in the list: once the tournament is won, every branch below it is spent and this is her permanent steady state. It is also the line the owner directive asks for -- the one that says a Meadowhart can be ridden and what the saddle costs. The pattern itself is granted by the final round's own `reward.flags`, not by this conversation, so a champion who never walks back here still has it."
+        },
+        {
+          "if_flag": "tournament_semi_won",
+          "unless_flag": "tournament_won",
+          "conversation": "tournament_final",
+          "_why": "Round 3. Ends on `battle:tournament_final_oskar`, and stays offered for as long as the final is unwon -- which is what makes a loss retryable: nothing is consumed by losing, so the player heals their team and greets her again."
+        },
+        {
+          "if_flag": "tournament_quarter_won",
+          "unless_flag": "tournament_semi_won",
+          "conversation": "tournament_semi",
+          "_why": "Round 2. Ends on `battle:tournament_semi_tam`."
+        },
+        {
+          "if_flag": "tournament_entered",
+          "unless_flag": "tournament_quarter_won",
+          "conversation": "tournament_quarter",
+          "_why": "Round 1. Ends on `battle:tournament_quarter_mira`."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready",
+            "tournament_condition_ready"
+          ],
+          "unless_flag": "tournament_entered",
+          "conversation": "tournament_halda_signup",
+          "_why": "Sign-up. All THREE entry flags: the two contract flags written from tournament.json's thresholds, and RG19-spec/D68's volatile `tournament_condition_ready`, which scripts/world/tournament.gd sets AND clears as the team is rested, fed and cared for. The numbers live in data; this file never carries a second copy of them. The conversation's last line sets `tournament_entered`."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready"
+          ],
+          "unless_flag": [
+            "tournament_condition_ready",
+            "tournament_entered"
+          ],
+          "conversation": "tournament_halda_condition",
+          "_why": "RG19-spec/D68. Trained, but not in shape: the owner's own entry rule is that entrants are 'well rested, well fed, and happy'. Told as a reason rather than a locked door -- the line names rest, food and care, and the team screen shows which creature is short of which. Sits ABOVE the train branch so a team that is levelled but hungry hears about the food rather than about levels, and below sign-up so a ready team never sees it. `unless_flag` includes `tournament_entered` so a player who has already signed up is never sent back out to feed somebody mid-bracket."
+        },
+        {
+          "if_flag": "tournament_team_ready",
+          "unless_flag": "tournament_training_ready",
+          "conversation": "tournament_halda_train",
+          "_why": "You have the bodies, they are not ready. Told as a reason rather than as a locked door -- she names what to go and do, which is the whole difference between an entry condition and a wall."
+        },
+        {
+          "unless_flag": "tournament_team_ready",
+          "conversation": "tournament_halda_closed",
+          "_why": "The first thing she ever says to a player who has one creature: three, and they have to be a team. LAST of the conditional branches so every later stage of the ladder wins over it, and above the plain `greeting` so a fresh save meets the tournament as a goal rather than as banter."
+        }
+      ]
     }
-  ]
+  ],
+  "_comment_tournament_1": "TOURNAMENT-1. Halda, the tournament marshal, is the seventh entry and the first villager whose whole `greeting_when` list is a progression LADDER rather than a vendor/gift pair. That is deliberately the existing mechanism and not a new one: the tournament has seven states and each of them is one flag, so the ordered-branch reader `village_npcs.greeting_for()` already written for Mira answers all seven without a line of new code. Order matters and is checked by tests/test_tournament.gd -- champion first, then the rounds newest-first, then sign-up, then the two not-ready explanations."
 }

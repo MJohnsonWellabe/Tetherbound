@@ -203,8 +203,21 @@ func test_the_meadows_offers_more_creatures_than_the_party_can_hold() -> void:
 
 # --- authored content sits inside its own region ------------------------------
 
+## A `gate_fight` (village tournament rounds, the South Bridge gatekeeper) is
+## DELIBERATELY a step above its own region's ordinary wild/trainer band --
+## that escalation over the field around it is what makes it read as a gate
+## rather than another patrol. TOURNAMENT-2 fields band1_lower_meadows trainers
+## up to level 12 against that region's 2-7 trainer_levels band for exactly
+## this reason. Still checked against the CORRIDOR ceiling below, so a gate
+## fight cannot run away to an arbitrary level -- only skip its own region's
+## band, not every band.
 func test_every_trainer_fights_at_their_own_regions_strength() -> void:
 	var checked := 0
+	var corridor_ceiling := 0
+	for region: Variant in (_curve().get("regions", []) as Array):
+		var band: Array = (region as Dictionary).get("trainer_levels", []) as Array
+		if band.size() >= 2:
+			corridor_ceiling = maxi(corridor_ceiling, int(band[1]))
 	for entry: Variant in _trainers():
 		var trainer: Dictionary = entry as Dictionary
 		var position: Array = trainer.get("position", []) as Array
@@ -214,9 +227,15 @@ func test_every_trainer_fights_at_their_own_regions_strength() -> void:
 		var band: Array = region.get("trainer_levels", []) as Array
 		if band.size() < 2:
 			continue
+		var is_gate_fight := bool(trainer.get("gate_fight", false))
 		for member: Variant in (trainer.get("team", []) as Array):
 			var level := int((member as Dictionary).get("level", 0))
 			checked += 1
+			if is_gate_fight:
+				assert_true(level <= corridor_ceiling,
+					"'%s' is a gate fight fielding a level %d creature, which exceeds the corridor's own highest authored trainer band (%d) -- a gate may exceed its own region, not the whole chapter"
+					% [str(trainer.get("id", "")), level, corridor_ceiling])
+				continue
 			assert_true(level >= int(band[0]) and level <= int(band[1]),
 				"'%s' stands in %s at z=%.0f and fields a level %d creature; that region's authored band is %d-%d"
 				% [str(trainer.get("id", "")), str(region.get("id", "")), float(position[1]),

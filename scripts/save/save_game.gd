@@ -149,11 +149,12 @@ extends RefCounted
 ## build, a small fake in tests.
 
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 12
+const VERSION := 13
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -528,6 +529,39 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 12 -> 13: RG19-spec/D68's creature condition. A v12 creature has
+## no nourishment, happiness or rest clock, so it takes the configured
+## STARTING values rather than zero -- a creature caught before the model
+## existed was never starving, it was simply never measured. `rested` is
+## already carried by v12 and is left exactly as the save wrote it, but the
+## expiry clock starts empty, so a creature loaded as rested keeps that until
+## the next faint rather than for a phantom 45 minutes.
+func _migrate_v12(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 13
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		creature["nourishment"] = _condition_defaults().get("nourishment", 70.0)
+		creature["happiness"] = _condition_defaults().get("happiness", 55.0)
+		creature["rested_seconds_left"] = 0.0
+	migrated["party"] = party
+	return migrated
+
+
+## creature_condition.json's starting values, read once. The migration and the
+## missing-key defaults above both want them, and neither should carry its own
+## copy of a number the config owns.
+static func _condition_defaults() -> Dictionary:
+	var cfg: Dictionary = CREATURE_CONDITION.config()
+	return {
+		"nourishment": float(cfg.get("nourishment", {}).get("start", 70.0)),
+		"happiness": float(cfg.get("happiness", {}).get("start", 55.0)),
+	}
+
+
 func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary:
 	var entry_raw: Variant = species_table.get(species_id, {})
 	var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
@@ -624,6 +658,9 @@ func _party_to_array(party: Variant) -> Array:
 			"boost_hp": int(instance.get("boost_hp")),
 			"boost_attack": int(instance.get("boost_attack")),
 			"boost_defence": int(instance.get("boost_defence")),
+			"nourishment": float(instance.get("nourishment")),
+			"happiness": float(instance.get("happiness")),
+			"rested_seconds_left": float(instance.get("rested_seconds_left")),
 		})
 	return out
 
@@ -672,6 +709,12 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.trait_primary = str(d.get("trait_primary", ""))
 		creature.trait_secondary = str(d.get("trait_secondary", ""))
 		creature.shiny = bool(d.get("shiny", false))
+		# RG19-spec/D68. Absent on any save older than VERSION 13; the
+		# defaults are creature_condition.json's own starting values, which is
+		# what a creature that predates the model honestly has.
+		creature.nourishment = float(d.get("nourishment", _condition_defaults().get("nourishment", 70.0)))
+		creature.happiness = float(d.get("happiness", _condition_defaults().get("happiness", 55.0)))
+		creature.rested_seconds_left = float(d.get("rested_seconds_left", 0.0))
 		party_ref.call("add", creature)
 
 

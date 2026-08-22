@@ -41,6 +41,7 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 ## D47: elixir caps live in data/config/progression.json, read through the
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 ## OW1. Owner, after playing: "I can't move things in my inventory. There's no
 ## separate hot bar section. I can't move anything into it."
@@ -192,6 +193,9 @@ var _targeting_elixir: String = ""
 ## a tonic asks the same "which of yours?" question a heal, a TM and an elixir
 ## already ask, and eligibility is simply "not fainted".
 var _targeting_tonic: String = ""
+## RG19-spec/D68. The food item waiting for somebody to feed it to, same shape
+## as `_targeting_tonic` above and running through the same picker.
+var _targeting_food: String = ""
 
 ## TM/move lookups, loaded on first use and kept. `tm_db.gd` owns the
 ## compatibility list and `move_db.gd` owns power/type/slot; this screen reads
@@ -233,6 +237,7 @@ func build() -> void:
 	_targeting_tm = ""
 	_targeting_elixir = ""
 	_targeting_tonic = ""
+	_targeting_food = ""
 	_confirming = -1
 
 	var config := _config()
@@ -1186,6 +1191,18 @@ func _read_use() -> void:
 				say("%s repaired, free." % str(db.call("item_name", id)))
 			return
 
+	# RG19-spec/D68. Food a creature can eat picks its eater the same way a
+	# tonic does. Checked BEFORE the player's own satiety because berries are
+	# both, and the team is the reason the tournament asks you to gather them.
+	if def.has("creature_food"):
+		_targeting_food = id
+		_open_target_picker(
+			0.0, 0.0, "",
+			"Nobody here is hungry.",
+			"Who eats it?"
+		)
+		return
+
 	var satiety := float(def.get("satiety", 0.0))
 	if satiety > 0.0:
 		var player := _player_node()
@@ -1529,6 +1546,11 @@ func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> 
 	if not _targeting_tonic.is_empty():
 		# Any living creature can drink a tonic; a fainted one cannot.
 		return not bool(creature.get("fainted"))
+	if not _targeting_food.is_empty():
+		# A living creature that is not already full. Refusing the full ones
+		# is what stops a berry being spent for nothing.
+		return not bool(creature.get("fainted")) \
+			and CONDITION.nourishment_fraction(creature, CONDITION.config()) < 1.0
 	if not _targeting_elixir.is_empty():
 		# Any living creature can drink one; the only refusal is a stat that
 		# has already taken all the elixir points it will ever hold.
@@ -1551,6 +1573,11 @@ func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: St
 		return "empty"
 	if not _targeting_tonic.is_empty():
 		return "fainted" if bool(creature.get("fainted")) else ""
+	if not _targeting_food.is_empty():
+		if bool(creature.get("fainted")):
+			return "fainted"
+		return "" if CONDITION.nourishment_fraction(creature, CONDITION.config()) < 1.0 \
+			else "already full"
 	if not _targeting_elixir.is_empty():
 		if bool(creature.get("fainted")):
 			return "fainted"
@@ -1728,6 +1755,21 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 	var id := str(stack.get("id", ""))
+
+	if not _targeting_food.is_empty():
+		var food := (db.call("definition", id) as Dictionary).get("creature_food", {}) as Dictionary
+		var fed: Dictionary = CONDITION.feed(creature, CONDITION.config(), food)
+		if not bool(fed.get("accepted", false)):
+			say("%s isn't hungry for that." % str(creature.call("label")))
+			_end_targeting()
+			return
+		inventory.call("remove", id, 1)
+		say("%s ate the %s. %s" % [
+			str(creature.call("label")), str(db.call("item_name", id)),
+			CONDITION.label(creature, CONDITION.config())
+		])
+		_end_targeting()
+		return
 
 	if not _targeting_tonic.is_empty():
 		var tonic := (db.call("definition", id) as Dictionary).get("creature_buff", {}) as Dictionary

@@ -138,6 +138,36 @@ settled without play.
 Gate C being backbone-complete does not move the current gate. **Gate A is still
 the current gate** and the 2026-08-21 owner blockers above are untouched by it.
 
+---
+
+## Gate B — current state, 2026-08-22
+
+**Read `ralph/GATEB_TOURNAMENT_EVIDENCE_2026-08-22.md` before touching Gate B.**
+It is the full status record: what is built and verified, what was found, and
+what is left with an owner against each item.
+
+Short version. The village tournament is BUILT and fought end to end
+(`ralph/TOURNAMENT-1`, verified and extended on `ralph/TOURNAMENT-2`): eight-slot
+bracket, three fought rounds, lose-and-retry, coins, the saddle prize, the
+board rebuilt to the owner's 2026-08-22 ruling that a bracket must look like a
+bracket and fill in only after events. RG19-spec's creature-condition gate
+(rested/fed/happy, D68) is built and earned in the real player path. Save/load
+across the bracket is covered. Unit suite 1234 tests, 0 failed.
+
+Gate B is NOT passable yet, and the reason is not the tournament:
+
+1. **the chapter's first catch fails deterministically** -- three clean-save
+   runs, three throws the game itself judged eligible, no catch. Gate A's
+   catching beat owns it; every Gate B beat is downstream of it;
+2. **nothing is on `main`** -- TOURNAMENT-1, integration-3 and TOURNAMENT-2 are
+   three unmerged branches, and the Gate B objective chain is split across two
+   of them. Nothing lands without a dispatched consolidation run;
+3. `opening:beat:road` is named by `objectives.json` and set by no code;
+4. nobody has shown a player can reach the tournament's entry threshold through
+   ordinary play in the opening area -- a named Gate B pass criterion;
+5. both blind visual passes answered no to both bar questions, for reasons that
+   are no longer about the tournament board.
+
 ## Next package after Gate A
 
 **Gate B owner:** `docs/ralph-prompts/56-OPENING-first-session-to-tournament.md`

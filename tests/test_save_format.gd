@@ -17,6 +17,8 @@ extends "res://tests/test_case.gd"
 ## would mistake for a real save.
 
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
@@ -92,6 +94,7 @@ func _game(seed_party: bool = true) -> RefCounted:
 	var game := FakeGame.new()
 	game.party = PARTY.new()
 	game.inventory = INVENTORY.new(db)
+	game.progression = PROGRESSION_STATE.new()
 	if seed_party:
 		var creature: RefCounted = CREATURE.from_species("terrapup", {
 			"display_name": "Terrapup", "type": "ground", "base_hp": 100.0,
@@ -848,3 +851,111 @@ func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 	assert_eq(read.day, 6)
 	assert_almost_eq(read.satiety, 80.0)
 	assert_eq(read.progression.all_set(), [], "a v2 save predates progression flags; nothing to recover")
+
+
+## --- the tournament across a save (26-RG19) -----------------------------------
+
+## 26-RG19's own acceptance list: "save/load does not duplicate rewards or
+## regress to pre-tournament objective." The bracket is nothing but flags and
+## a satchel, so this is the whole of that requirement -- and until now
+## nothing tested it at all.
+func test_a_half_fought_bracket_survives_a_save() -> void:
+	var game := _game()
+	game.progression.set_flag("tournament_team_ready")
+	game.progression.set_flag("tournament_training_ready")
+	game.progression.set_flag("tournament_entered")
+	game.progression.set_flag("tournament_quarter_won")
+	assert_true(saver.save_game(game, 0))
+
+	var loaded := _game()
+	assert_true(saver.load_game(loaded, 0))
+	for flag: String in ["tournament_entered", "tournament_quarter_won"]:
+		assert_true(bool(loaded.progression.has(flag)),
+			"'%s' did not survive the save; the player is back outside the bracket" % flag)
+	assert_false(bool(loaded.progression.has("tournament_semi_won")),
+		"a round nobody has fought came back won")
+
+
+## The board reads the same bracket after the reload -- the player is still
+## standing in the semi-final, not sent back to the draw.
+func test_the_board_reads_the_same_bracket_after_a_reload() -> void:
+	var game := _game()
+	game.progression.set_flag("tournament_entered")
+	game.progression.set_flag("tournament_quarter_won")
+	var before := TOURNAMENT.status_line(game.progression)
+	assert_true(saver.save_game(game, 0))
+
+	var loaded := _game()
+	assert_true(saver.load_game(loaded, 0))
+	assert_eq(TOURNAMENT.status_line(loaded.progression), before,
+		"the board forgot where the player was in the bracket")
+
+
+## The first-clear reward is guarded by the defeat flag, so what makes it
+## unfarmable across a reload is that flag surviving. A won final that came
+## back unwon would pay its coins and its saddle pattern a second time.
+func test_a_won_tournament_cannot_be_reloaded_into_a_second_payout() -> void:
+	var game := _game()
+	game.progression.set_flag("tournament_won")
+	game.progression.set_flag("recipe_saddle")
+	game.inventory.add("coin", 40)
+	assert_true(saver.save_game(game, 0))
+
+	var loaded := _game()
+	assert_true(saver.load_game(loaded, 0))
+	assert_true(bool(loaded.progression.has("tournament_won")),
+		"the victory flag did not survive; the final would pay out again")
+	assert_true(bool(loaded.progression.has("recipe_saddle")),
+		"the saddle pattern did not survive the save")
+	assert_eq(int(loaded.inventory.count("coin")), 40,
+		"the reward did not come back exactly once")
+
+
+## RG19-spec/D68. Condition is part of the save now, and a team that was fed
+## and rested before saving must not come back hungry -- that would refuse a
+## qualified player their own tournament after a reload.
+func test_condition_survives_a_save() -> void:
+	var game := _game()
+	var creature: RefCounted = game.party.at(0)
+	creature.set("nourishment", 91.0)
+	creature.set("happiness", 88.0)
+	CONDITION.note_rest_completed(creature, CONDITION.config())
+	assert_true(saver.save_game(game, 0))
+
+	var loaded := _game()
+	assert_true(saver.load_game(loaded, 0))
+	var back: RefCounted = loaded.party.at(0)
+	assert_almost_eq(float(back.get("nourishment")), 91.0, 0.001, "the team came back hungry")
+	assert_almost_eq(float(back.get("happiness")), 88.0, 0.001, "the team came back miserable")
+	assert_true(bool(back.get("rested")), "a rested team came back tired")
+
+
+## A save written before the condition model existed loads as a creature that
+## was never measured, not as one that is starving.
+func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
+	var game := _game()
+	assert_true(saver.save_game(game, 0))
+
+	# Rewrite the slot as VERSION 12: the format immediately before D68.
+	var path := "%ssave_0.json" % TEST_DIR
+	var file := FileAccess.open(path, FileAccess.READ)
+	var data: Dictionary = JSON.parse_string(file.get_as_text()) as Dictionary
+	file.close()
+	data["version"] = 12
+	for raw: Variant in (data.get("party", []) as Array):
+		(raw as Dictionary).erase("nourishment")
+		(raw as Dictionary).erase("happiness")
+		(raw as Dictionary).erase("rested_seconds_left")
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	out.store_string(JSON.stringify(data))
+	out.close()
+
+	var loaded := _game()
+	assert_true(saver.load_game(loaded, 0), "a version 12 save no longer loads at all")
+	var back: RefCounted = loaded.party.at(0)
+	var cfg: Dictionary = CONDITION.config()
+	assert_almost_eq(float(back.get("nourishment")),
+		float(cfg.get("nourishment", {}).get("start", 70.0)), 0.001,
+		"a creature from before the model came back starving rather than unmeasured")
+	assert_almost_eq(float(back.get("happiness")),
+		float(cfg.get("happiness", {}).get("start", 55.0)), 0.001)

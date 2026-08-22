@@ -22,6 +22,8 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
+## RG19-spec/D68. Rested/fed/happy, ticked here for every party member.
+const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -461,8 +463,14 @@ func _process(delta: float) -> void:
 	# menus pause the tree and this with it, so reading the backpack costs no
 	# tonic time.
 	if party != null:
+		var condition_cfg: Dictionary = CREATURE_CONDITION.config()
 		for member: Variant in (party.call("members") as Array):
 			(member as RefCounted).call("tick_buffs", delta)
+			# RG19-spec/D68. Every party member, not just the one out in
+			# front: a five that only the active companion feeds is a five in
+			# name only. Paused menus pause the tree and this with it, so
+			# reading the backpack costs no nourishment.
+			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
 	var progression_revision: int = int(progression.get("revision"))
 	if progression_revision != _last_progression_revision:
 		_last_progression_revision = progression_revision
@@ -618,6 +626,9 @@ func complete_creature_bed_rests() -> int:
 			creature.call("gain_xp", rest_xp, cfg)
 		if rest_bond > 0:
 			creature.call("gain_bond", rest_bond, cfg)
+		# RG19-spec/D68: the night in the bed is what "well rested" means, and
+		# it is worth a little mood on top. The bed does not carry the numbers.
+		CREATURE_CONDITION.note_rest_completed(creature, CREATURE_CONDITION.config())
 		completed += 1
 	if completed > 0:
 		party.set("revision", int(party.get("revision")) + 1)

@@ -234,15 +234,40 @@ func test_mira_oskar_and_tam_are_placed_elsewhere_not_spawned_here() -> void:
 				"practice_trainer is trainer_npc.gd's OWN placed body; it must not name placed_by")
 
 
-## Oskar's reward is checked by name and not just by "some item exists": SC14
-## reads `south_bridge_key` specifically off his table entry, and a renamed
-## item id here would silently strand that task.
-func test_oskars_reward_names_the_south_bridge_key() -> void:
-	var ids: Array[String] = []
+## The South Bridge Key is checked by name and not just by "some item exists":
+## `gated_crossing.gd` reads `south_bridge_key` specifically, and a renamed item
+## id would silently strand Gate 1.
+##
+## TOURNAMENT-1 moved WHO holds it. It was Oskar's (SC14); the 2026-08-22 owner
+## directive puts a Team Tether grunt on the crossing so Oskar is free to be the
+## tournament's final round. This test asserts BOTH halves of that move -- the
+## grunt has it and Oskar no longer does -- because a half-applied move is a
+## chapter with two keys or none.
+func test_the_south_bridge_key_is_held_by_the_team_tether_grunt() -> void:
+	var grunt_ids: Array[String] = []
+	for item: Variant in TRAINERS.reward_items(TRAINERS.trainer("south_bridge_grunt")):
+		grunt_ids.append(str((item as Dictionary).get("id", "")))
+	assert_true(grunt_ids.has("south_bridge_key"),
+		"south_bridge_grunt's reward should include south_bridge_key; got %s" % str(grunt_ids))
+
+	var oskar_ids: Array[String] = []
 	for item: Variant in TRAINERS.reward_items(TRAINERS.trainer("trainer_oskar")):
-		ids.append(str((item as Dictionary).get("id", "")))
-	assert_true(ids.has("south_bridge_key"),
-		"trainer_oskar's reward should include south_bridge_key; got %s" % str(ids))
+		oskar_ids.append(str((item as Dictionary).get("id", "")))
+	assert_false(oskar_ids.has("south_bridge_key"),
+		"trainer_oskar still hands over the South Bridge Key; the gatekeeper is the grunt now")
+
+
+## And the grunt is a grunt: an existing Team Tether rank on an installed rig,
+## never a new humanoid. CLAUDE.md forbids the alternative outright.
+func test_the_bridge_gatekeeper_wears_the_existing_grunt_rank() -> void:
+	var spec := TRAINERS.trainer("south_bridge_grunt")
+	assert_false(spec.is_empty(), "south_bridge_grunt is not in trainers.json; Gate 1 has nobody on it")
+	assert_eq(str(spec.get("rank", "")), "grunt",
+		"the bridge gatekeeper should use npc_ranks.json's existing grunt rank")
+	assert_eq(str(spec.get("config_key", "")), "",
+		"a ranked NPC must not also name an art.json config_key; model_config() would ignore the rank")
+	assert_ne(str(TRAINERS.model_config(spec).get("model", "")), "",
+		"the grunt rank resolves to no model; nobody would be standing at the bridge")
 
 
 ## D39: coins are an ordinary stacking item, so a trainer paying coin is just
@@ -660,6 +685,13 @@ const WARRENS_PATH := "res://data/config/burrow_warrens.json"
 ## optional one is never walled.
 const CRITICAL_PATH := [
 	"practice_trainer", "trainer_mira", "trainer_tam", "trainer_oskar",
+	# TOURNAMENT-1: the village tournament's three fought rounds and the Team
+	# Tether grunt now standing where Oskar's key used to be. All four are
+	# mandatory -- the bracket is Gate B's own ladder and the grunt holds the
+	# only South Bridge Key in the game -- so leaving them out would understate
+	# what the chapter actually pays and overstate the level jump into Band 2.
+	"tournament_quarter_mira", "tournament_semi_tam", "tournament_final_oskar",
+	"south_bridge_grunt",
 	"relay_picket_hess", "relay_picket_orrin", "relay_officer_dell", "relay_captain",
 	"captain_field", "captain_ridge", "captain_riverwatch",
 	"stronghold_patrol", "stronghold_courtyard", "stronghold_elite", "warden_aldis",
