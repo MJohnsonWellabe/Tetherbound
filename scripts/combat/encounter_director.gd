@@ -244,7 +244,23 @@ func _spawn_creatures() -> void:
 			# "Wild_bramblebun" under one parent would be silently auto-renamed
 			# by the engine, and a name nobody chose is a name no log line or
 			# remote-tree screenshot can be matched against.
-			wild.name = "Wild_%s_%d" % [species, n + 1]
+			# `order`, not just `n`. Indexing within the cluster fixed the
+			# collision this comment describes only for ONE cluster: the moment
+			# two clusters of the same species sit under this same parent, both
+			# emit `Wild_burrowback_1..N` and the engine silently auto-renames
+			# the second set to `@Wild_burrowback_1@123` -- reintroducing
+			# exactly "a name nobody chose" that the comment above exists to
+			# prevent. That was latent while a band held one cluster per
+			# species; Band 5's density pass took the region to 22 clusters
+			# with FIVE burrowback and FIVE duskhush among them, and made it
+			# certain. Found when a probe counting `Wild_`-prefixed nodes
+			# reported 6 creatures where 22 stood, because the auto-renamed
+			# majority no longer started with `Wild_`.
+			#
+			# `order` is authored, unique across the whole merged table and
+			# reserved per band (the band files' own header says so), so it is
+			# already the identity this name wanted.
+			wild.name = "Wild_%s_%d_%d" % [species, int(spawn.get("order", index)), n + 1]
 			wild.set_script(WILD_SCRIPT)
 			get_parent().add_child(wild)
 			# sqrt on the radius fraction makes the points uniform over the

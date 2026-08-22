@@ -58,9 +58,21 @@ func _run() -> void:
 				continue
 			# Creatures: anything in the group the spawner uses, or a node whose
 			# script path names a creature. Both, so a rename cannot hide them.
-			if n3.is_in_group("creatures") or n3.is_in_group("wild_creatures"):
+			# BY NAME, not by group. The first version of this probe asked
+			# `is_in_group("creatures")` and reported a confident zero at every
+			# viewpoint -- `encounter_director.gd::_spawn_creatures` adds each
+			# body as `Wild_<species>_<n>` and puts it in NO group, so the check
+			# could only ever return zero. A false negative that agrees with
+			# what you expected to find is the most expensive kind.
+			#
+			# `contains`, not `begins_with`, for the second reason: colliding
+			# names are auto-renamed to `@Wild_x_1@123`, so a prefix test
+			# undercounts too. Both flaws pointed the same way -- fewer
+			# creatures than there are.
+			if n3.name.contains("Wild_"):
 				creatures += 1
-				species[n3.name] = true
+				var key := "%s@%.0fm" % [n3.name, here.distance_to(at)]
+				species[key] = true
 				continue
 			var mesh := n3 as MeshInstance3D
 			if mesh == null or mesh.mesh == null or not mesh.visible:
