@@ -203,34 +203,156 @@
       "name": "trail_camp",
       "props": [
         {
-          "model": "Bag",
+          "model": "Bonfire",
           "at": [
             348.0,
             919.0
           ],
+          "yaw_deg": 20.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.05,
+          "glow": "campfire",
+          "_why": "BAND1-D1-v2, GATE-D coordinator directive: the camp's actual focus. quaternius_survival's Bonfire (logs, unlit -- Bonfire_Fire's extra surface shares the same combined mesh with the logs rather than isolating a flame, checked before use) plus `glow:\"campfire\"` (scripts/world/campfire_glow.gd, new) for the light/flame-billboard/ember/smoke overlay: the critic's central finding was that the single most important prop for the word 'camp' was absent from a build that already ships it. Everything else in this cluster is arranged around this point, not spaced along a line beside it."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            345.95,
+            919.55
+          ],
+          "yaw_deg": 200.0,
+          "scale": 1.0,
+          "_why": "Long seat facing the fire across it -- length axis roughly tangent to the fire so two people could sit side by side and both face in. 2.78m long (measured, tools' own probe pattern), so kept a full 2m+ from the fire ring rather than crowding it."
+        },
+        {
+          "model": "Stool",
+          "at": [
+            349.9,
+            917.95
+          ],
           "yaw_deg": 25.0,
           "scale": 1.0,
-          "_why": "BAND1-D1. The cluster's anchor -- a travelling pack set down for the night. Same composition (Bag/Crate_Wooden/Barrel) as the existing trainer_camp cluster (order 2) rather than a new prop grammar, following that cluster's own resolution: props.gd places everything flush to the ground, so a cache someone set down is what this system can honestly build, not a furnished campsite. Set ~18m off the spine's own (360,910) vertex (perpendicular to the trail's local heading) rather than on it, so the camp sits beside the road the way the bridge_repair_site and trainer_camp clusters sit beside their own paths, not blocking the walked line -- tools/_probe_band1_cadence.py confirms the offset."
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "A second, smaller seat on the opposite side of the fire from the bench -- not a second copy of the same prop, so the ring reads as people sitting at different points around one fire rather than one prop repeated."
+        },
+        {
+          "model": "log_large",
+          "at": [
+            346.65,
+            917.45
+          ],
+          "yaw_deg": 65.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "A third, informal seat -- a felled log rolled up to the fire rather than furniture, breaking the bench/stool's own regularity. environment/nature's log_large.glb, not the fantasy-kit crate family."
+        },
+        {
+          "model": "log",
+          "at": [
+            349.15,
+            920.65
+          ],
+          "yaw_deg": -40.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "pitch_deg": 4.0,
+          "_why": "A smaller loose log at the fire's far side, tilted slightly (pitch) rather than dead level -- one more break from every prop standing perfectly axis-upright, which the critique named directly."
         },
         {
           "model": "Crate_Wooden",
           "at": [
-            349.1,
-            920.2
+            345.45,
+            918.65
           ],
-          "yaw_deg": 190.0,
+          "yaw_deg": 300.0,
           "scale": 1.0,
-          "_why": "BAND1-D1. Touching the pack -- the pile's second piece, set down alongside rather than spaced out."
+          "_why": "Supply crate touching the bench's near end -- the pile a traveller who stopped here actually lives out of, not a separate cache off to the side."
+        },
+        {
+          "model": "Bag",
+          "at": [
+            345.65,
+            918.15
+          ],
+          "yaw_deg": 340.0,
+          "scale": 1.0,
+          "_why": "Leaning against the crate, not centred alone -- the same 'pile someone set down together' composition the existing trainer_camp/bridge_repair_site clusters already use, now built around the fire instead of instead of it."
+        },
+        {
+          "model": "Backpack",
+          "at": [
+            349.55,
+            920.15
+          ],
+          "yaw_deg": 150.0,
+          "scale": 0.55,
+          "dir": "res://assets/props/quaternius_survival",
+          "_why": "A second, different-shaped pack near the log seat -- quaternius_survival's Backpack (a different silhouette from the fantasy kit's Bag) so the fire has gear on both sides rather than one prop family repeated around it. Scaled 0.55: measured raw AABB is 3.34x3.12x1.75m, a hiking-pack mesh authored at a scale this pack's other props are not -- unscaled it would dwarf the bench."
+        },
+        {
+          "model": "Rope_1",
+          "at": [
+            345.25,
+            918.25
+          ],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "_why": "Coiled beside the crate/bag pile, the same role it plays at the bridge_repair_site cluster -- a coil of cordage a camp plausibly has."
         },
         {
           "model": "Barrel",
           "at": [
-            346.9,
-            920.0
+            350.2,
+            919.15
           ],
-          "yaw_deg": 100.0,
+          "yaw_deg": 95.0,
           "scale": 1.0,
-          "_why": "BAND1-D1. Water barrel closing the pile from the near side. Sited beside the spine's own (360,910) bend -- the corridor's roughly halfway point between the pond and South Bridge, and the one place on that 760m leg the trail visibly turns rather than running straight, which is also why the stone gatherable (harvest.json order 1003) sits at the same bend: a rest stop that shares a landmark with a resource stop reads as a real place to stop, not a marker planted mid-field. Given the map icon `band1_trail_camp` (map_landmarks.json) so it can be found again once seen -- a practical waypoint, not one of prompt 30's curiosity secrets."
+          "_why": "Water barrel, kept at the outer edge of the ring rather than in the direct sightline to the fire. Measured raw AABB (tools/_probe pattern): 0.698 x 0.898 x 0.698m at scale 1.0 -- already the ~0.9m the coordinator's critique asked for; the v1 frame's '1.7-2m' read was this same barrel photographed close and low against the Bag prop it sat beside, not a wrong scale value. Left at scale 1.0 rather than shrunk further, which would make it wrong twice."
+        },
+        {
+          "model": "RockPath_Round_Wide",
+          "at": [
+            351.6,
+            916.4
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.1,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "First of four RockPath stones laid as stepping points from the spine's own (360,910) bend toward the fire -- the closest this system can build to the coordinator's 'worn dirt patch' without touching terrain_playground.json's path system, which is outside every Gate-D lane's reach (GATE_D_LANE_CONTRACT section 3). A prop-level worn approach, not a texture one."
+        },
+        {
+          "model": "RockPath_Round_Small_1",
+          "at": [
+            350.7,
+            917.1
+          ],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second stepping stone, closer to the fire ring."
+        },
+        {
+          "model": "RockPath_Round_Small_2",
+          "at": [
+            349.5,
+            918.0
+          ],
+          "yaw_deg": -20.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Third stepping stone, at the ring's own outer edge."
+        },
+        {
+          "model": "RockPath_Round_Thin",
+          "at": [
+            347.4,
+            917.1
+          ],
+          "yaw_deg": 40.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fourth stone, off to the side of the direct line from the other three -- an approach reads as worn ground, not a single-file row of identical props, which the critique's own complaint about the rock/wagon/barrel line was exactly about."
         }
       ]
     }

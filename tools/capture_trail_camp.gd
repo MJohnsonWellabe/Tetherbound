@@ -34,10 +34,13 @@ const VIEWPOINTS := [
 	},
 	{
 		# From the spine itself (near the (360,910) bend), looking at the
-		# camp the way a player walking the road actually would.
+		# camp the way a player walking the road actually would. target_h
+		# lowered from 1.0 -- the first cut's shallow look angle put a lot of
+		# open sky (and the sun) in frame and washed the shot out; aiming
+		# lower keeps more ground/camp in frame and off the sun.
 		"name": "02-camp-from-spine",
-		"eye": Vector2(361.0, 908.0), "eye_h": 1.7,
-		"target": CAMP_CENTRE, "target_h": 1.0,
+		"eye": Vector2(361.0, 908.0), "eye_h": 1.6,
+		"target": CAMP_CENTRE, "target_h": 0.4,
 	},
 ]
 

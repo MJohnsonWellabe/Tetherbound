@@ -18,6 +18,7 @@ const CONFIG_PATH := "res://data/config/props.json"
 ## BAND-SPLIT. The `clusters` array is cut per corridor band under
 ## `data/config/bands/<band>/props.json` and merged back here.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 
 var _placed := 0
 
@@ -47,13 +48,52 @@ func placed() -> int:
 
 func _place(into: Node3D, spec: Dictionary) -> void:
 	var model := str(spec.get("model", ""))
-	var path := "%s/%s.gltf" % [PROPS_DIR, model]
-	if not ResourceLoader.exists(path):
-		push_error("prop missing: %s" % path)
-		return
-	var packed: PackedScene = load(path) as PackedScene
-	if packed == null:
-		push_error("prop failed to load as a scene: %s" % path)
+	# `dir` (optional, default PROPS_DIR): BAND1-D1. Every prop cluster before
+	# this pass only ever named a bare quaternius_fantasy filename, so that
+	# stays the default and every existing entry is untouched. A cluster that
+	# needs an asset from a different installed pack (quaternius_survival's
+	# Bonfire, quaternius_furniture's Stool, stylized_nature's RockPath/scatter
+	# props, quaternius_castle's Banner) names its own `dir` instead of forcing
+	# every band onto one folder or duplicating assets into quaternius_fantasy.
+	# This is CLAUDE.md's "one prop family" read as one INSTALLED prop family
+	# (nothing new is generated or sourced), not one folder.
+	var dir := str(spec.get("dir", PROPS_DIR))
+	var gltf_path := "%s/%s.gltf" % [dir, model]
+	var glb_path := "%s/%s.glb" % [dir, model]
+	var obj_path := "%s/%s.obj" % [dir, model]
+
+	var root: Node3D = null
+	if ResourceLoader.exists(gltf_path):
+		var packed: PackedScene = load(gltf_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % gltf_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(glb_path):
+		# .glb is the same glTF format as .gltf, just binary -- the corridor's
+		# own environment/nature kit (log.glb, grass_*.glb) ships this way.
+		var packed: PackedScene = load(glb_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % glb_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(obj_path):
+		# OBJ ships as a bare Mesh, not a scene -- the same fallback
+		# building_prefabs.gd::_build_template already uses for the castle
+		# kit (its own comment: "the castle kit ships OBJ+MTL, not glTF").
+		# Wrapped in a MeshInstance3D so the rest of this function (the
+		# combined-AABB collider build below) sees the same node shape a
+		# glTF scene's root would give it.
+		var mesh: Mesh = load(obj_path) as Mesh
+		if mesh == null:
+			push_error("prop failed to load as a mesh: %s" % obj_path)
+			return
+		var mi := MeshInstance3D.new()
+		mi.name = model
+		mi.mesh = mesh
+		root = mi
+	else:
+		push_error("prop missing: %s (looked for .gltf/.glb/.obj under %s)" % [model, dir])
 		return
 
 	var at: Array = spec.get("at", [0.0, 0.0])
@@ -65,7 +105,6 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		return
 
 	var scale_factor := float(spec.get("scale", 1.0))
-	var root: Node3D = packed.instantiate()
 	root.name = model
 	# `sink_m` (optional, default 0): extra downward offset below the sampled
 	# ground height. Most of the pack's models embed only a few centimetres at
@@ -90,6 +129,18 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		deg_to_rad(float(spec.get("roll_deg", 0.0))))
 	root.scale = Vector3.ONE * scale_factor
 	into.add_child(root)
+
+	# `glow` (optional): BAND1-D1 coordinator directive -- a static log mesh
+	# with no baked emissive material (checked: assets/props/quaternius_survival/
+	# Bonfire*.mtl carries Ke 0 0 0 on every surface) reads as unlit cargo, not
+	# a fire, and is invisible as a landmark from any distance. `"campfire"` is
+	# the only value read today; CAMPFIRE_GLOW attaches under `root` so it
+	# inherits the prop's own ground position (and rotation/scale -- entries
+	# using this should keep scale_factor at 1.0, since the glow's own sizes
+	# are tuned for that).
+	var glow := str(spec.get("glow", ""))
+	if glow == "campfire":
+		root.add_child(CAMPFIRE_GLOW.new())
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect(root, meshes)
