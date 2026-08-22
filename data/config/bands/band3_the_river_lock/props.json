@@ -30,6 +30,30 @@
           "sink_m": 0.06,
           "scale": 1.0,
           "_why": "set down against the bench leg, not merely near it -- the same 'touching pile reads as one load' rule the quarry and ranger-camp clusters already use"
+        },
+        {
+          "model": "Bed_Twin1",
+          "at": [213.9, 3701.8],
+          "yaw_deg": -65.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "GATE-D3 round 2. The blind critic read this spot as 'a prop dropped into a field rather than somewhere anyone has stayed' -- three objects on untouched grass with nothing that says a night was spent here. This is the piece that says it. A bedroll left behind is also the honest read for a staging point that is NOT a rest mechanic: the game has exactly one rest structure (scripts/build/camp.gd) and this is still not a second one, it is evidence the last traveller through slept here before pushing into Team Tether ground"
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [212.7, 3697.6],
+          "yaw_deg": 40.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "left by the bench with the firewood it cut. Two pieces of evidence of work beat one, and an axe set down is the cheapest thing in this kit that reads as an interrupted human activity"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [208.2, 3698.4],
+          "yaw_deg": -15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the fourth corner of the group, closing it into a camp with a middle rather than a line of objects along the road"
         }
       ]
     },
@@ -220,11 +244,12 @@
     {
       "order": 3004,
       "name": "old_mill_yard",
+      "_why_regrouped": "GATE-D3 round 3. Round 2's version put five pieces at five separate spots across an open apron, and the critic read exactly that back: 'nothing grouped into a working area, nothing pointed at anything else... a mill yard should have material staged where the mill needs it.' Regrouped into one loading face 4-8m off the mill's own south-east corner, crates touching, barrel closing the stack, bench and bucket turned toward the door. The whole group now spans 4m instead of 8m and every piece faces the building it serves.",
       "_why": "GATE-D3 round 2, and it exists because of one specific piece of blind criticism: shown the Old Mill Crossing, the critic said the half-timbered mill 'stands alone on a bare hilltop on a stone plinth, with no path to its door, no fence, no outbuilding, no garden' -- a prop dropped on grass rather than a place someone worked. The mill itself is built by mill_crossing.gd from the crossing's own `mill` block and is not this file's to move; what it has never had is a yard. This is that yard: the working clutter of a water mill, on the north bank clear of the mill's own footprint and well clear of the channel carve (everything at z>=4218, against a fade that ends at 4215). Same prop family as every other cluster in the region (D24) -- no new models.",
       "props": [
         {
           "model": "FarmCrate_Apple",
-          "at": [-136.4, 4219.8],
+          "at": [-139.9, 4217.4],
           "yaw_deg": 25.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -232,7 +257,7 @@
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [-134.9, 4218.4],
+          "at": [-138.6, 4216.4],
           "yaw_deg": -40.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -240,7 +265,7 @@
         },
         {
           "model": "Barrel",
-          "at": [-137.2, 4222.1],
+          "at": [-141.0, 4218.6],
           "yaw_deg": 0.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -248,7 +273,7 @@
         },
         {
           "model": "Bench",
-          "at": [-139.6, 4220.6],
+          "at": [-142.2, 4220.3],
           "yaw_deg": 105.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -256,7 +281,7 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [-138.8, 4222.9],
+          "at": [-141.3, 4221.2],
           "yaw_deg": 60.0,
           "sink_m": 0.04,
           "scale": 1.0,

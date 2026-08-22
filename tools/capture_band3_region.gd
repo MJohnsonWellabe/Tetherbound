@@ -69,9 +69,15 @@ const VIEWPOINTS := [
 	{
 		# `riverwatch_rest` (props.json 3000): the staging spot before Team
 		# Tether ground. Does it read as a place a traveller already used?
+		#
+		# Round 2 shot it from 20m and the critic reported the site occupying
+		# about 3% of the frame with the lower half of the image empty grass --
+		# the same mistake as the checkpoint frame, and the same fix. This kit's
+		# props are sub-metre; a camp has to be framed from inside walking
+		# distance or the frame is mostly field.
 		"name": "02-riverwatch-rest",
-		"eye": Vector2(196.0, 3712.0), "eye_h": 1.7,
-		"target": Vector2(211.6, 3699.2), "target_h": 1.0,
+		"eye": Vector2(204.5, 3705.5), "eye_h": 1.7,
+		"target": Vector2(211.6, 3699.6), "target_h": 0.9,
 	},
 	{
 		# The checkpoint barricade and Hess behind it, from where a player
