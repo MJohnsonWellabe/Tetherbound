@@ -6,6 +6,51 @@ design decision rather than inventing one.
 
 ---
 
+## OPEN, 2026-08-22 — the modular roof cannot form a continuous ridge without a new mesh
+
+**Owner decision needed.** Everything else in OP21-07/08/09 shipped; this is the
+one part tuning cannot reach.
+
+`Roof_RoundTile_2x1` carries a gable end at *both* of its local-X extremes. The
+build kit places one roof per 2m floor module, so every seam between two
+adjacent roof tiles shows two gable faces back to back, with a dark slot
+between them. An independent blind critic, judging the rendered house without
+knowing what had changed, ranked this second of six defects and called the
+result "three separate tents, not one roof."
+
+**Cap suppression was investigated and is not possible.** The glTF has exactly
+two primitives — `MI_RoundTiles` and `MI_WoodTrim` — and each spans the full
+local-X range of the piece. There is no separate gable-cap surface to hide, so
+no material or visibility trick reaches it. This was verified against the raw
+vertex data, not inferred.
+
+That leaves three options, and picking between them is a design call, not an
+engineering one:
+
+1. **A mid-run roof mesh with no gable caps.** The clean fix, and the one the
+   critic asked for. Blocked by the hard rules: no new Meadows meshes, Meshy
+   reserved for Team Tether hero objects, and no generation without owner
+   reference art. Needs an explicit owner exemption plus a reference sheet.
+2. **One stretched roof piece per wall run** instead of one per floor module.
+   Stays inside the art rules and removes the mid-run seams, but changes the
+   roof anchor model and how roofs scale on non-rectangular footprints. A real
+   change to the kit's design, worth doing deliberately rather than as a
+   side effect of a defect fix.
+3. **Accept the segmented roof for the Meadows chapter** and record it as known.
+   Cheapest; leaves a defect a blind critic ranks near the top of what makes a
+   player-built house read as unfinished.
+
+Everything else the critic named in that pass is fixed or explained: the roof
+hole was `ROOF_Y` sitting 0.27m below the wall top plate, the "floating timber
+fragment" was the open door leaf seen edge-on from the capture camera rather
+than a geometry bug, and the marble-looking plaster was `MI_Plaster` importing
+with `metallic=1.0` from the glTF default.
+
+**What would clear this:** an owner choice between 1, 2 and 3 — and for 1, a
+reference sheet in `docs/art/reference/`.
+
+---
+
 ## ✅ RESOLVED, 2026-08-15 — `model: fable` dispatch is available again (was: out of usage credits)
 
 `ralphKeyed-20260815-0251` held the Meshy key this firing and, per `PROMPT.md`'s
