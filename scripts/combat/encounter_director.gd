@@ -130,6 +130,44 @@ var _respawn_timers: Dictionary = {}
 ## actually need a check.
 var _wild_gates: Dictionary = {}
 
+## --- STREAM-D: distance-based activation ------------------------------------
+##
+## The owner has directed wild density up from ~70 to roughly 700-1100 across
+## the chapter (`ralph/DONE.md` carries the exact wording). Two things do not
+## scale to that: `_spawn_creatures()` below instantiates and never despawns
+## anything, and `wild_creature.gd`'s `_physics_process()` ticks
+## unconditionally regardless of distance. This is the fix for the second one
+## -- the first is deliberately NOT touched here (see `_tick_streaming()`'s
+## own header for why boot cost is a smaller, separate problem this pass
+## leaves alone).
+##
+## One entry per `spawns.json` CLUSTER (matching the seeded-scatter loop in
+## `_spawn_creatures()` one-for-one), not per creature: `centre`/`radius`
+## already exist for each entry, so checking against those scales with band
+## count rather than population -- the same reasoning the task itself names.
+## Keys: `centre` (Vector3), `radius` (float), `members` (Array[Node3D]),
+## `active` (bool, the last activation state this cluster's members were set
+## to, so `_tick_streaming()` only touches a cluster's members on an actual
+## transition instead of every member every frame).
+var _clusters: Array[Dictionary] = []
+
+## O(1) member -> cluster lookup, built alongside `_clusters` in
+## `_spawn_creatures()`. Needed by `_tick_respawn()`: a creature that just
+## `revive_at_home()`d turns its own physics_process back on regardless of
+## streaming state (that call is older than this feature and rightly does not
+## know about it), and without this lookup a revived creature whose cluster
+## is still far away would stay awake until the NEXT cluster-level distance
+## transition happened to fire -- which might be never, if the player never
+## approaches or leaves that exact cluster again. A hand-placed creature
+## (`spawn_wild()`) has no entry here, and `.get(wild, {})` reads that as "not
+## streamed", which is correct: hand-placed creatures are never deactivated.
+var _wild_cluster: Dictionary = {}
+
+## Cached result of `_activation_radius_margin()`. Negative means "not yet
+## computed" -- 0 is a value the config could plausibly produce and would
+## wrongly look uncached forever.
+var _activation_margin: float = -1.0
+
 ## --- R8.1: trainer battles -------------------------------------------------
 ##
 ## A trainer battle is not a second combat system. It is the SAME fight this
@@ -238,6 +276,15 @@ func _spawn_creatures() -> void:
 		var rng := RandomNumberGenerator.new()
 		rng.seed = hash("wild_spawn_%d" % int(spawn.get("order", index)))
 
+		# STREAM-D: one cluster entry per table row, built alongside the loop
+		# that already walks it rather than reconstructed from `_wild_creatures`
+		# afterwards -- `centre`/`radius` are already right here and a second
+		# pass would just be re-deriving them.
+		var cluster: Dictionary = {
+			"centre": centre, "radius": radius,
+			"members": [] as Array[Node3D], "active": true,
+		}
+
 		for n in count:
 			var wild: Node3D = CREATURE_SCENE.instantiate()
 			# Indexed, because clusters exist now. Two nodes both named
@@ -268,11 +315,20 @@ func _spawn_creatures() -> void:
 			# camera.
 			wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 			_wild_creatures.append(wild)
+			(cluster["members"] as Array[Node3D]).append(wild)
+			_wild_cluster[wild] = cluster
 
 			var gate := _gate_for_spawn(spawn)
 			if not gate.is_empty():
 				_wild_gates[wild] = gate
 				wild.visible = _gate_active(gate)
+
+		_clusters.append(cluster)
+
+	# Set every cluster's real activation state against the player's actual
+	# starting position, rather than leaving the whole freshly spawned meadow
+	# processing until the first `_process()` tick happens to run.
+	_tick_streaming()
 
 	if default_starter != "":
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
@@ -825,6 +881,12 @@ func _process(delta: float) -> void:
 	_tick_respawn(delta)
 	_tick_trainer_battle(delta)
 	_sync_spawn_gates()
+	# After the gate sync, not before: a gate that just opened calls
+	# `creature_body.gd::_on_visibility_changed()` via `wild.visible = true`,
+	# which turns `physics_process` back ON regardless of distance. Running
+	# streaming second means a still-distant, newly-gated-visible creature is
+	# put back to sleep in the same frame instead of one frame late.
+	_tick_streaming()
 	_sync_active_creature()
 	_update_prompt()
 
@@ -861,6 +923,17 @@ func _tick_respawn(delta: float) -> void:
 		_respawn_timers.erase(wild)
 		if is_instance_valid(wild):
 			wild.call("revive_at_home")
+			# `revive_at_home()` unconditionally turns physics_process back ON
+			# (it predates streaming and is right to, on its own terms — a
+			# creature standing still fainted is not what "revived" means).
+			# STREAM-D: if this creature's cluster is still marked inactive, put
+			# it back to sleep immediately rather than leave it awake until the
+			# next time the player's distance to this exact cluster happens to
+			# cross the activation radius — which, for a cluster the player has
+			# already walked away from, may be a very long time.
+			var cluster: Dictionary = _wild_cluster.get(wild, {})
+			if not cluster.is_empty() and not bool(cluster.get("active", true)):
+				wild.set_physics_process(false)
 			# Orbs deliberately do NOT refill here any more. They are real
 			# satchel items now — Grandpa's gift is the starting supply, and
 			# running dry is a real state the game is allowed to reach.
@@ -927,6 +1000,87 @@ func _sync_spawn_gates() -> void:
 		if wild == _engaged_with or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
 		wild.visible = _gate_active(_wild_gates[wild])
+
+
+## Distance beyond a cluster's own scatter radius at which its members start
+## ticking.
+##
+## Must clear the largest range at which a member could plausibly first need
+## to react to the player — aggression's own `notice_range` (the distance at
+## which an aggressive creature starts closing) and the peaceful "stops and
+## looks at you" `notice_range` in `wild.json`'s wild config — with room to
+## spare, so a creature is never activated already inside its own detection
+## range with no runway to notice anything. Read from the same two config
+## blocks `_roll_wild_level()`'s neighbours already load (CATCH's own
+## `aggression` block, MATH's `wild` block) instead of hard-coded, so
+## retuning either range in data keeps this buffer honest with no matching
+## code change. Cached: this is read from `_tick_streaming()`, which runs
+## every `_process()` tick.
+func _activation_radius_margin() -> float:
+	if _activation_margin >= 0.0:
+		return _activation_margin
+	var aggro_notice := float(CATCH.config().get("aggression", {}).get("notice_range", 14.0))
+	var peaceful_notice := float(MATH.config().get("wild", {}).get("notice_range", 9.0))
+	_activation_margin = maxf(aggro_notice, peaceful_notice) + 10.0
+	return _activation_margin
+
+
+## STREAM-D. Distance-based activation, ticked per CLUSTER rather than per
+## creature — see `_clusters`'s own header for why that is the unit.
+##
+## Ticks a cluster's whole membership together, and only on an actual
+## transition: two creatures from the same cluster reading a different
+## activation state mid-transition is not a bug worth guarding against (they
+## are within one cluster radius of each other; the player cannot be
+## meaningfully "in range" of one and not the other), and re-touching every
+## member of every cluster every frame is exactly the per-creature cost this
+## exists to avoid paying.
+##
+## Guards the same three states `_sync_spawn_gates()` above already guards,
+## for the same reason: a creature `_engaged_with` (a fight — which is also
+## where a catch happens), fainting (`_faint_timers`) or respawning
+## (`_respawn_timers`) owns its own physics_process state already, and
+## switching it off from under any of those would be exactly the "deactivated
+## mid-catch" bug this task was warned against. A gated-invisible creature
+## (`_wild_gates`) is skipped for a different reason: its own visibility is
+## `_sync_spawn_gates()`'s business, and `creature_body.gd`'s
+## `_on_visibility_changed()` already ties that visibility to
+## physics_process — fighting over the same flag from two systems would just
+## mean whichever ran last in `_process()` wins.
+##
+## Deliberately does NOT touch position, level, IVs, traits or the shiny
+## roll, and never frees or rebuilds a body: activation only ever flips
+## `set_physics_process` — the one existing precedent for switching a wild
+## creature's tick off, `wild_creature.gd::notify_fainted()`. Nothing here
+## consumes the per-cluster `rng` `_spawn_creatures()` seeds and never
+## `randomize()`s, so a creature that walks back into range is the exact node
+## it was, not a fresh draw — which is what keeps this compatible with
+## `_spawn_creatures()`'s own determinism promise: that rng is spent once, at
+## boot, and streaming never asks it for anything.
+func _tick_streaming() -> void:
+	if _player == null:
+		return
+	var player_pos := _player.global_position
+	var margin := _activation_radius_margin()
+	for cluster: Dictionary in _clusters:
+		var centre: Vector3 = cluster["centre"]
+		var radius: float = cluster["radius"]
+		var should_be_active := player_pos.distance_to(centre) <= radius + margin
+		if should_be_active == bool(cluster["active"]):
+			continue
+		cluster["active"] = should_be_active
+		for wild: Node3D in (cluster["members"] as Array[Node3D]):
+			_set_wild_active(wild, should_be_active)
+
+
+func _set_wild_active(wild: Node3D, active: bool) -> void:
+	if not is_instance_valid(wild):
+		return
+	if wild == _engaged_with or _faint_timers.has(wild) or _respawn_timers.has(wild):
+		return
+	if _wild_gates.has(wild) and not wild.visible:
+		return  # the gate owns this one's visibility, and with it its process state
+	wild.set_physics_process(active)
 
 
 ## The nearest wild creature the player could choose to fight right now.
