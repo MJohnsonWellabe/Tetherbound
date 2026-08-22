@@ -14,10 +14,22 @@ const OUT := "res://shots/band4"
 const SETTLE_FRAMES := 240
 
 const SHOTS := {
-	"ironwood-grove": [Vector3(-330.0, 5.0, 5100.0), Vector3(-350.0, 2.0, 5055.0)],
+	"ironwood-grove": [Vector3(-316.0, 4.5, 5046.0), Vector3(-343.0, 1.5, 5078.0)],
 	"ridge-patrol-camp": [Vector3(-244.0, 6.5, 6462.0), Vector3(-235.5, 3.5, 6472.0)],
 	"field-camp-clearing": [Vector3(415.0, 3.0, 6000.0), Vector3(400.0, 0.0, 6040.0)],
+	"watchtower-spur": [Vector3(-205.0, 12.0, 6430.0), Vector3(-262.0, 4.0, 6482.0)],
+	"ironwood-camp-pad": [Vector3(-310.0, 5.0, 5115.0), Vector3(-334.0, 1.0, 5085.0)],
+	"far-panels-east": [Vector3(-244.0, 6.5, 6462.0), Vector3(-100.0, 18.0, 6520.0), 22.0],
+	"far-panels-north": [Vector3(415.0, 3.0, 6000.0), Vector3(300.0, 30.0, 6900.0), 22.0],
 }
+
+## GATE-D4b added the last two. `watchtower-spur` is the wide read of the ruin
+## and its garrison from the approach -- the composition the close
+## `ridge-patrol-camp` frame cannot show, and the one the region's "ruined
+## watch / occupation traces" identity actually rests on. `ironwood-camp-pad`
+## is clearings[4002], looking across the new pad into the ironwood stand
+## behind it, because a pad that reads as a bald circle in the grass is a
+## defect a close frame of the trees alone would never catch.
 
 
 func _init() -> void:
@@ -50,6 +62,12 @@ func _run() -> void:
 		var spec: Array = SHOTS[name]
 		camera.global_position = spec[0]
 		camera.look_at(spec[1])
+		# Optional third element: field of view. A 22-degree lens is not a
+		# prettier frame, it is a MEASUREMENT -- round 1's blind critic called
+		# the pale panels over the horizon "unlit or untextured billboard quads
+		# that failed to resolve", in three frames, and at 62 degrees they are
+		# forty pixels wide. Naming what they actually are needs the reach.
+		camera.fov = float(spec[2]) if spec.size() > 2 else 62.0
 		for i in 30:
 			await process_frame
 		var image := root.get_texture().get_image()

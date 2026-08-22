@@ -91,4 +91,12 @@ func _init() -> void:
 		["ironcamp E", -325.0, 5120.0], ["ironcamp F", -360.0, 5010.0],
 	]:
 		_report(str(c[0]), float(c[1]), float(c[2]), 6.0)
+	print("--- GATE-D4b round 2: tightened ironwood stand candidates (pad r=2m) ---")
+	for c: Array in [
+		["stand a", -342.0, 5078.0], ["stand b", -336.0, 5069.0], ["stand c", -347.0, 5066.0],
+		["stand d", -331.0, 5080.0], ["stand e", -352.0, 5074.0], ["stand f", -339.0, 5060.0],
+		["stand g", -345.0, 5088.0], ["stand h", -333.0, 5058.0], ["stand i", -350.0, 5056.0],
+		["stand j", -327.0, 5070.0], ["stand k", -356.0, 5084.0], ["stand l", -341.0, 5093.0],
+	]:
+		_report(str(c[0]), float(c[1]), float(c[2]), 2.0)
 	quit(0)
