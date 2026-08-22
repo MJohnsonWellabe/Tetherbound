@@ -844,7 +844,7 @@ static func _consider(
 	if field.has_method("water_level"):
 		var pond_level: float = field.water_level()
 		if not is_nan(pond_level) and height < pond_level - 0.5:
-			return false
+			return
 
 	# Nothing grows IN the stream channel either (EV5) — a grass tuft standing
 	# mid-current reads as a bug the way a tree on a path does. Same shape as
