@@ -1,0 +1,14 @@
+{
+  "_comment": "OP21-20 — the owner's answer to water.gd's own open question: full submersion in the pond/stream/river reads badly with no response, so it now hurts. Every number here is a tuning knob, not a hardcoded constant, because none of them have been played yet. `scripts/world/water.gd` is the only reader.",
+  "_comment_scope": "SHORELINE CONTACT AND WADING ARE NEVER PUNISHED. Only counts as a hazard once the player's own head is below the surface by more than `depth_threshold_m` -- at the deepest pond point (~3m) that means crouching or standing in the deep basin, not walking the shallows or the banks. There is no partial-submersion penalty and none should be added; this is a full-submersion-only hazard per the owner's directive.",
+  "submersion": {
+    "_comment_player_height": "Matches scenes/player/player.tscn's capsule (radius 0.4, height 1.8) with a feet-at-origin capsule -- global_position.y is the trainer's feet, so this is added to find the top of the head.",
+    "player_height_m": 1.8,
+    "_comment_depth_threshold": "Small safety margin below the surface before the head counts as fully under, so standing right at the waterline does not flicker in and out of the hazard state.",
+    "depth_threshold_m": 0.15,
+    "_comment_grace": "Seconds of continuous full submersion before any damage starts. Ducking under and surfacing again resets this to zero -- only continuous submersion accumulates.",
+    "grace_seconds": 2.5,
+    "damage_per_tick": 6.0,
+    "tick_interval_s": 1.0
+  }
+}

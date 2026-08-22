@@ -132,3 +132,37 @@ Settings screen next to the controls — impossible to forget is switched on.
 - The toggle must come out before launch. It is four deletions and this file.
 - `user://settings.json` is now genuinely a *settings* file rather than a
   controls file. Display and audio follow the same passthrough.
+
+## Amendment — OP21-10 (2026-08-22): free build now waives crafting too
+
+Section 2 above scoped free build to *building* costs on purpose, and
+`tests/test_recipes.gd::test_craft_never_touches_free_build` was written to
+assert exactly that boundary — crafting has its own materials loop
+(`GameState.recipe_cost_for`/`can_craft`/`craft`) and deliberately did not
+consult the toggle.
+
+The owner's `ralph/OWNER_PLAYTEST_2026-08-21.md` (OP21-10) overrules that
+scoping: if building is free in the current mode, a structure's prerequisite
+crafting must not be the one step that still drains the satchel. A build
+costing nothing while its own recipe eats materials reads as inconsistent
+friction, not as a boundary anyone playing the game can see the reason for.
+
+**What changed:** `GameState.recipe_cost_for` now returns `[]` while
+`free_build` is on, the same empty-cost shape `build_cost_for` already
+returns. Nothing else about the contract moves — `can_craft` still refuses an
+untaught (OF30) or unknown recipe however rich the satchel is or however the
+toggle is set, and a `reinforce` recipe still refuses if the tool it upgrades
+is not actually owned. Free build waives *cost*, not the recipe's other
+gates.
+
+The old test was inverted in place rather than deleted —
+`test_craft_now_respects_free_build_per_op21_10` in `tests/test_recipes.gd` —
+specifically so a future reader searching history for "free_build" and
+"craft" finds the reversal and its reason, not a hole where a test used to
+be.
+
+This is the second thing D16 said would need touching before launch: the
+toggle itself (section "What was decided" / "Consequences") still comes out
+entirely before release, and when it does, `recipe_cost_for`'s `free_build`
+branch leaves with it — one more line for the same four-deletion list, not a
+new permanent branch in the crafting path.

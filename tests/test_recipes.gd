@@ -197,11 +197,24 @@ func test_craft_fails_all_or_nothing_when_short() -> void:
 		assert_eq(bag.count(id), int(before[id]), "'%s' must be untouched by a failed craft" % id)
 
 
-func test_craft_never_touches_free_build() -> void:
-	# docs/decisions/D16 scopes free_build to BUILDING costs. Crafting has its
-	# own materials loop and must not become a second, undocumented cheat.
+## OP21-10 reversal: this test used to assert the opposite -- that free_build
+## left crafting costs untouched, per D16's original scoping. The owner has
+## since overruled that scoping (docs/decisions/D16 §"Amendment — OP21-10"):
+## free build now waives crafting exactly like it waives building. The name
+## keeps the old wording on purpose, with an inverted body, so anyone
+## grepping history for "free_build" and "craft" lands on the reversal
+## instead of a silently deleted test.
+func test_craft_now_respects_free_build_per_op21_10() -> void:
+	assert_false(state.can_craft("orb_basic"), "an empty satchel still can't craft with free_build off")
 	state.free_build = true
-	assert_false(state.can_craft("orb_basic"), "free_build must not waive crafting costs")
+	assert_true(state.can_craft("orb_basic"), "free_build must now waive crafting costs too (OP21-10)")
+	assert_eq(state.recipe_cost_for("orb_basic"), [], "recipe_cost_for must read empty while free_build is on")
+	assert_true(state.craft("orb_basic"), "craft must succeed with an empty satchel while free_build is on")
+	assert_eq(bag.count("orb_basic"), 1)
+	for requirement in db.recipe("orb_basic").get("cost", []):
+		var entry := requirement as Dictionary
+		assert_eq(bag.count(str(entry.get("id", ""))), 0,
+			"free_build must not have spent '%s' -- nothing was in the satchel to spend" % str(entry.get("id", "")))
 
 
 ## --- OF30: what Tam has to teach you before you can make it ------------------

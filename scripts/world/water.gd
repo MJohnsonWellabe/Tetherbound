@@ -21,12 +21,22 @@ extends Node3D
 ## wades in and walks on the bed, exactly as the traversal smoke test walks
 ## everywhere else. Blocking the water's edge would invent a movement rule,
 ## and there is no swimming system to hand deep water to — the deepest point
-## is ~3m, which submerges the trainer briefly if they insist. If that reads
-## badly in play it is a design question for the owner, not something this
-## composer should quietly legislate with an invisible wall.
+## is ~3m, which submerges the trainer briefly if they insist.
+##
+## OP21-20: it read badly in play, and the owner answered the open question
+## above — full submersion is now a hazard. See `_process` and the
+## `is_fully_submerged`/`tick_submersion` pair below for the mechanism, and
+## `data/config/water_hazard.json` for every tunable number. Ordinary
+## shoreline contact and wading are never punished: only the player's own
+## head going under, past a small margin, for longer than a grace period,
+## starts a damage tick — and it stops the instant they surface. This is a
+## hazard response, not a second survival meter: no drowning "meter" is drawn,
+## there is no starvation-style death spiral, and the human's only response to
+## it is to get out of the water, exactly like a fall.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const CONFIG_PATH := "res://data/config/water.json"
+const HAZARD_CONFIG_PATH := "res://data/config/water_hazard.json"
 const SHADER := preload("res://shaders/water.gdshader")
 
 ## Resolution of the baked terrain-height texture the shader reads depth
@@ -43,6 +53,17 @@ const REED_SINK := 0.14
 var _field: RefCounted = null
 var _water_cfg: Dictionary = {}
 var _level: float = NAN
+
+## OP21-20 hazard state. `_hazard_cfg` is `water_hazard.json`'s `submersion`
+## block; `_hazard_state` is the mutable `{submerged_s, tick_s, damage}` dict
+## `tick_submersion` advances every frame. `_player` is resolved lazily in
+## `_process` (rather than in `build()`) because a fresh scene occasionally
+## has the water composer run in the same frame as the player spawn — see
+## `_resolve_player`.
+var _hazard_cfg: Dictionary = {}
+var _hazard_state: Dictionary = {"submerged_s": 0.0, "tick_s": 0.0, "damage": 0.0}
+var _player: CharacterBody3D = null
+var _hazard_overlay: ColorRect = null
 
 ## PERF2. `_region()` is a ~2100-sample scan of the heightfield, and it was run
 ## twice — once for the material and again inside `_build_pond` — for an answer
@@ -66,6 +87,8 @@ var _stats := {
 func build() -> void:
 	_field = HEIGHTFIELD.new()
 	_water_cfg = _load_config()
+	_hazard_cfg = _load_hazard_config()
+	_build_hazard_overlay()
 	_level = float(_field.call("water_level"))
 	if is_nan(_level):
 		push_warning("terrain_playground.json has no water block; the meadow stays dry")
@@ -117,6 +140,168 @@ func build() -> void:
 
 func stats() -> Dictionary:
 	return _stats
+
+
+# --- OP21-20: full-submersion hazard -----------------------------------------
+#
+# Split the way player_vitals.gd splits stamina/satiety arithmetic from
+# player_controller.gd's scene glue: `is_fully_submerged`/`tick_submersion`
+# are pure static functions with no Node, no scene tree, and no autoload --
+# a test can preload this script and call them directly, which is the same
+# code `_process` below calls, not a reimplementation of it. `_process` is
+# the thin glue that supplies real numbers (the player's actual head height,
+# real delta) and reacts to what the pure function decides (spend health,
+# move the overlay).
+
+
+## Is the point `head_y` metres, fully under a water surface at `water_level`,
+## by more than `depth_threshold`? A small threshold keeps a head bobbing
+## exactly at the waterline from flickering in and out of the hazard state.
+static func is_fully_submerged(head_y: float, water_level: float, depth_threshold: float) -> bool:
+	return water_level - head_y > depth_threshold
+
+
+## Advance the hazard state machine by one frame.
+##
+## `state` is `{"submerged_s": float, "tick_s": float, "damage": float}` and
+## is both mutated and returned, so a caller can carry it forward across
+## frames (the node's `_hazard_state`) or hand a fresh one to a test without
+## touching anything global. `damage` is reset to 0.0 every call and set to
+## `cfg.damage_per_tick` only on the frame a tick actually lands -- most
+## frames it is 0.0, which is the normal case, not a failure to detect
+## anything.
+##
+## Not submerged at all: both timers reset to zero. This is the whole
+## "ducking out to breathe clears the grace period" rule -- there is no
+## partial credit for having been under a moment ago.
+static func tick_submersion(state: Dictionary, delta: float, submerged: bool, cfg: Dictionary) -> Dictionary:
+	var grace: float = float(cfg.get("grace_seconds", 2.5))
+	var tick_interval: float = maxf(float(cfg.get("tick_interval_s", 1.0)), 0.05)
+	var damage_per_tick: float = float(cfg.get("damage_per_tick", 6.0))
+
+	if not submerged:
+		state["submerged_s"] = 0.0
+		state["tick_s"] = 0.0
+		state["damage"] = 0.0
+		return state
+
+	state["submerged_s"] = float(state.get("submerged_s", 0.0)) + delta
+	state["damage"] = 0.0
+	if float(state["submerged_s"]) >= grace:
+		state["tick_s"] = float(state.get("tick_s", 0.0)) + delta
+		if float(state["tick_s"]) >= tick_interval:
+			state["tick_s"] = float(state["tick_s"]) - tick_interval
+			state["damage"] = damage_per_tick
+	return state
+
+
+## 0..1 across the grace period, for the overlay's escalating feedback: 0 the
+## instant the head goes under, 1.0 once damage is about to start (and stays
+## there while it continues). Never negative, never past 1 -- the overlay
+## reads this as "how worried should this look," not as remaining grace.
+static func warning_fraction(submerged_s: float, grace_seconds: float) -> float:
+	if grace_seconds <= 0.0:
+		return 1.0
+	return clampf(submerged_s / grace_seconds, 0.0, 1.0)
+
+
+func _load_hazard_config() -> Dictionary:
+	var file := FileAccess.open(HAZARD_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("water_hazard.json missing; full submersion will not be a hazard")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var root: Dictionary = parsed if parsed is Dictionary else {}
+	return root.get("submersion", {}) as Dictionary
+
+
+## A minimal, self-contained full-screen tint -- not the project's HUD.
+## Deliberately a bare CanvasLayer/ColorRect built and owned entirely by this
+## file rather than routed through playground_hud.gd, per this task's file
+## ownership: the hazard needs SOME on-screen feedback so the damage is never
+## an unexplained "why is my health dropping," but the real HUD is another
+## lane's file. Starts fully transparent and invisible whenever the player is
+## not fully submerged.
+func _build_hazard_overlay() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "SubmersionOverlay"
+	layer.layer = 11
+	var rect := ColorRect.new()
+	rect.name = "Tint"
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.color = Color(0.05, 0.35, 0.55, 0.0)
+	layer.add_child(rect)
+	add_child(layer)
+	_hazard_overlay = rect
+
+
+## Lazily resolved rather than looked up in `build()`: `build()` runs the same
+## frame `playground_world.gd` adds this node to the tree, immediately after
+## `_place_player()`, so the sibling should already exist -- but re-trying
+## here rather than caching a miss means a scene that ever changes that order
+## degrades to "no hazard feedback yet" instead of a permanently null player.
+func _resolve_player() -> CharacterBody3D:
+	if _player != null and is_instance_valid(_player):
+		return _player
+	var sibling := get_parent()
+	if sibling == null:
+		return null
+	_player = sibling.get_node_or_null(^"Player") as CharacterBody3D
+	return _player
+
+
+func _process(delta: float) -> void:
+	if is_nan(_level) or _hazard_cfg.is_empty():
+		return
+	var player := _resolve_player()
+	if player == null:
+		return
+
+	var player_height: float = float(_hazard_cfg.get("player_height_m", 1.8))
+	var depth_threshold: float = float(_hazard_cfg.get("depth_threshold_m", 0.15))
+	var head_y := player.global_position.y + player_height
+	var submerged := is_fully_submerged(head_y, _level, depth_threshold)
+
+	_hazard_state = tick_submersion(_hazard_state, delta, submerged, _hazard_cfg)
+
+	var grace: float = float(_hazard_cfg.get("grace_seconds", 2.5))
+	var submerged_s: float = float(_hazard_state.get("submerged_s", 0.0))
+	_update_hazard_overlay(warning_fraction(submerged_s, grace), submerged_s >= grace)
+
+	var damage: float = float(_hazard_state.get("damage", 0.0))
+	if damage > 0.0:
+		_apply_hazard_damage(player, damage)
+
+
+## Blue and rising while the grace period counts down (the escalating
+## "get out" warning), red once damage is actually landing. Never drawn at
+## all — alpha stays 0 — unless the player's head is currently under.
+func _update_hazard_overlay(fraction: float, in_damage_phase: bool) -> void:
+	if _hazard_overlay == null:
+		return
+	if fraction <= 0.0:
+		_hazard_overlay.color.a = 0.0
+		return
+	var tint := Color(0.75, 0.12, 0.12) if in_damage_phase else Color(0.08, 0.4, 0.6)
+	_hazard_overlay.color = Color(tint.r, tint.g, tint.b, lerpf(0.08, 0.55, fraction))
+
+
+## Spends the damage directly against `vitals.health` -- the same field
+## `player_vitals.gd::apply_landing` writes for a fall, read/written here
+## rather than adding a new method to that file (out of this task's file
+## ownership). Mirrors `apply_landing`'s own clamp-and-emit shape: health
+## never goes negative, and `died` fires once, from here, exactly the way
+## `player_controller.gd::_physics_process` fires it after a lethal fall.
+func _apply_hazard_damage(player: CharacterBody3D, damage: float) -> void:
+	var vitals: RefCounted = player.get("vitals")
+	if vitals == null:
+		return
+	if bool(vitals.call("is_dead")):
+		return
+	vitals.health = maxf(0.0, float(vitals.health) - damage)
+	if bool(vitals.call("is_dead")) and player.has_signal("died"):
+		player.emit_signal("died")
 
 
 ## The world-rect the height texture and the pond grid both cover: the pond's

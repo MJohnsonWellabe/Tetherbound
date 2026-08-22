@@ -948,12 +948,18 @@ func can_afford(id: String) -> bool:
 
 
 ## R2.4. What a recipe costs, from data/recipes/recipes.json -- [{id, n}, ...],
-## empty for an unknown recipe. Unlike `build_cost_for`, free build does NOT
-## waive this: free build is documented and scoped to building material costs
-## (docs/decisions/D16), and silently extending it to crafting would be
-## growing a development toggle into a second cheat nobody asked for.
+## empty for an unknown recipe.
+##
+## OP21-10 reversal (docs/decisions/D16 §"Amendment — OP21-10"): free build
+## now waives this exactly the way it waives `build_cost_for` -- same toggle,
+## same empty-array shape, same "ask can_craft/can_afford, don't read the
+## empty array as free" rule. D16 originally scoped free build away from
+## crafting on purpose, with a test asserting exactly that; the owner has
+## since overruled the scoping itself -- free build meaning "structures cost
+## nothing" while their prerequisite crafting still drains the satchel read
+## as inconsistent friction in play, so the toggle now covers both.
 func recipe_cost_for(id: String) -> Array:
-	if items == null:
+	if free_build or items == null:
 		return []
 	var raw: Variant = items.recipe(id).get("cost", [])
 	return raw as Array if typeof(raw) == TYPE_ARRAY else []
