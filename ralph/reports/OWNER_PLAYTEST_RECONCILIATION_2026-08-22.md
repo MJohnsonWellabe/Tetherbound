@@ -93,7 +93,7 @@ had already reported and both of which were still real:
 | OP21-13 | UI still says "Change Pal" | **CONFIRMED FIXED** | No player-facing "Pal" string survives in `scripts/`, `data/` or `scenes/`. |
 | OP21-14 | Team shows 2/5 after three catches | **CONFIRMED FIXED** | `smoke_party_count_after_catches.gd` PASS — three real catches through the real minigame read `TEAM 3 / 5`, portraits agree, and it survives save/reload. |
 | OP21-15 | The map is unusable | **STILL BROKEN → PARTLY FIXED** (zoom/readability half: **CONFIRMED FIXED**, `smoke_gate_a_map_cycle.gd` proves zoom stays pinned to the player and pan/clamp/recovery work) | The owner's own §3 ruling (village and roads start revealed) was recorded in `BLOCKED.md` as "RESOLVED by owner ruling" while **both commits that closed it touched only `BLOCKED.md`** — no code shipped, so a fresh save still built a zero-reveal grid and opened black. Seed reveal now authored in `map_landmarks.json` and pinned by `test_map_fog.gd` from both sides. The **landmarks-through-fog** half is NOT built and is filed, not half-done: it needs a "an NPC told me" state distinct from "I stood next to it". |
-| OP21-16 | Opening direction still unclear | **PENDING** | `smoke_gate_a_opening_segment.gd` PASS end to end (title → wake → Grandpa → starter → naming → catch), but "would a first-time player know what to do" is the blind playtest's question, not a harness's. |
+| OP21-16 | Opening direction still unclear | **ADDRESSED, with the caveat below** | Answered by the blind cold playtest rather than by the harness, which was the right instrument: an agent with no knowledge of this work **walked all 25 objective steps**, every one resolving, and reached the climax. It did not report losing the thread. Two direction defects it *did* find are fixed here — BP3 (the chapter ends on an empty objective panel) and BP5 (Grandpa narrates the gate from inside his house). Caveat kept honest: an agent reading an objective string is not a person reading a world, so this is evidence the chain is followable, not proof the opening *teaches*. A human pass could still reopen it. |
 | OP21-17 | Village layout makes no sense | **PENDING** | Visual; needs the blind judge. |
 | OP21-18 | Signs sit in the road | **PENDING** | Visual; needs the blind judge. |
 | OP21-19 | Props submerged in the pond | **PENDING** | `smoke_pond_water.gd` PASS proves the water and its shore layers exist, but it does not assert that no tree or house intersects the surface — that is the owner's actual complaint and it is a visual check. Left open for the blind judge rather than claimed on a passing water test. |
@@ -103,7 +103,7 @@ had already reported and both of which were still real:
 | OP21-23 | Load Game never enters the world | **CONFIRMED FIXED** | `smoke_title_load_game.gd` PASS — "physical pad activation loaded a real save and entered Meadows". |
 | OP21-24 | Axe hold and swing still wrong | **STILL BROKEN → FIXED** | Reproduced: on a pad, X gathered via the interact prompt, credited the satchel, printed `+3 Wood`, and the axe never moved. `use_tool` was the only caller of `swing()` and CONTROLLER-MAP took its pad button. The prompt press now starts an aimed swing and the yield lands on the impact. |
 | OP21-25 | Stronghold/Warrens fights phase outside the arena | **CONFIRMED FIXED** | `smoke_arena_contain.gd` PASS, and it reproduces the original defect explicitly before showing the fix: "with the flat 11.0m default, hold_inside() corrects a displaced ally to 11.0m from centre, OUTSIDE the room (OP21-25 reproduced); the fix is what prevents it". |
-| OP21-26 | Pond-to-village route is dead travel | **PENDING** | Explicitly Gate B/C/D1 route-content work by the report's own wording. Not closable by a harness. |
+| OP21-26 | Pond-to-village route is dead travel | **CONFIRMED — STILL BROKEN, now measured** | Reproduced with numbers (Addendum, BP6): the village → South Bridge leg is **1295 m, 215 s, with a 189-second stretch with nothing authored within 35 m**. Corroborated in the spawn data — last on-corridor cluster before the bridge at z=80, next at z=1400, and `trainers.json` empty between z=12 and z=1314. The pond group sits 350 m off-road and never comes within 160 m. The *next* leg is fine, so the emptiness is specific to the leg the tournament sends the player on. Remains Gate B/C/D1 route-content work by the report's own wording — **not this branch's to fix**, but it is no longer an impression. |
 
 ---
 
@@ -115,8 +115,10 @@ had already reported and both of which were still real:
 2. **OP21-01** — target-hardware performance. Needs a ROG Ally.
 3. **OP21-15 (half)** — landmarks visible through fog once an NPC names them.
 4. **OP11** — level-up feedback never driven on screen this pass.
-5. **OP21-17/18/19, 21-26** — composition and pacing; the blind judge and a play pass own these.
-6. **WEATHER-2** — the remainder an independent critic already named.
+5. **OP21-17/18/19** — composition; the blind visual judge owns these.
+6. **OP21-26** — measured (1295 m / 189 s dead stretch), owned by Gate B/C/D1
+   route content, not by this branch.
+7. **WEATHER-2** — the remainder an independent critic already named.
 
 ## Method note, for whoever reads this next
 
