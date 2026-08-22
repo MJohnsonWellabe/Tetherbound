@@ -121,11 +121,17 @@ func _build_paid_modular_sample() -> void:
 			if p.size() == 3 and absf(float(p[1]) - BUILD_SNAP.ROOF_Y) > 0.001:
 				_fail("production roof placement ignored the wall-top anchor: %s" % [p])
 		if str(record.get("id", "")) == "door" and p.size() == 3:
-			door_ok = absf(float(p[2]) + 1.0) < 0.001
+			# BUILD-KIT-3: the door's VISIBLE material, not its glTF origin,
+			# belongs at z=-1 -- `_thickness_correction` now shifts the node
+			# further out (see build_snap_contract.gd's own header) so that
+			# material lands there. -1.0 alone is the pre-fix, uncorrected
+			# anchor.
+			var expected_z := -1.0 + BUILD_SNAP._thickness_correction(BUILD_SNAP.WALL_Z_CENTER, 0.0).z
+			door_ok = absf(float(p[2]) - expected_z) < 0.001
 	if roof_count != 4:
 		_fail("expected four supported roof pieces, got %d" % roof_count)
 	if not door_ok:
-		_fail("door did not occupy the shared wall edge at z=-1")
+		_fail("door did not occupy the shared wall edge at z=-1 (corrected)")
 	else:
 		print("paid controller build: 2x2 floor + shared door/walls + four wall-top roofs")
 

@@ -22,23 +22,42 @@ const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 ## nothing enforced that), which is exactly the kind of drift a blind critic
 ## would have no way to attribute to "capture bug" vs. "kit bug." `ROOF_SCALE`
 ## stays a literal for the reason given below -- it lives in `buildables
-## .json` data, not this script. `BUILD_SNAP.ROOF_Z_OFFSET`/`WALL_Z_CENTER`
-## are NOT applied here on purpose: this capture's whole point is to render
-## exactly what `build_snap_contract.gd::resolve()` gives a real placement,
-## so applying a correction here that the live contract does not apply would
-## make the evidence lie about what a player actually gets. See that
-## constant's own comment for why the fix is measured but not yet wired in.
+## .json` data, not this script.
+##
+## BUILD-KIT-3: `_wall`/`_roof` below now call `BUILD_SNAP._thickness_correction`
+## directly (the function is `static`, so a script preload can reach it same
+## as the contract's own internals do) instead of placing pieces at the bare
+## floor-edge anchor the way BUILD-KIT-2 deliberately did. That
+## BUILD-KIT-2 choice was itself the bug this branch's first task ran down:
+## rendering the committed state fresh (this branch, before this fix) showed
+## a real ~0.5m gap between the front wall and the front roof row, and
+## interior cross-brace timber visible through an unflush corner -- not a
+## capture-script artifact, since this file's per-tile roof/wall placement
+## already matched what `resolve()` computes for this exact house layout
+## (checked by hand against `_add_floor_edges`/`_add_supported_roofs`'s own
+## logic before touching anything). The contract now applies the same
+## correction to every real placement, so mirroring it here is what keeps
+## this capture honest about what a player actually gets -- the opposite of
+## the previous non-application, which was honest about a real placement
+## that had not been fixed yet.
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 
 const DIR := "res://assets/buildings/quaternius_medieval"
-const FLOOR_MESH := DIR + "/Floor_UnevenBrick.gltf"
+## BUILD-KIT-3: matches buildables.json's `floor` entry, swapped from
+## Floor_UnevenBrick to Floor_WoodDark -- item 7 of the blind critique
+## ("interior floor is exterior street paving... cool grey cobbles inside a
+## warm plaster-and-timber cottage"). Same 2m-module AABB, confirmed via
+## `tools/diag_roof_wall_bounds.gd`'s sibling before switching.
+const FLOOR_MESH := DIR + "/Floor_WoodDark.gltf"
 const WALL_MESH := DIR + "/Wall_Plaster_Straight.gltf"
 const ROOF_MESH := DIR + "/Roof_RoundTile_2x1.gltf"
 ## data/items/buildables.json's own roof `scale` field (OP21-09) -- read as a
 ## literal here rather than parsing the catalogue, since this capture only
 ## needs the one value and a parse dependency would be one more way this
 ## script could silently drift from what a real placement actually uses.
-const ROOF_SCALE := Vector3(0.6066, 0.6066, 1.0)
+## BUILD-KIT-3: z raised to 1.10 alongside the JSON -- see that file's own
+## comment on the `roof` entry for why.
+const ROOF_SCALE := Vector3(0.6066, 0.6066, 1.10)
 const ROOF_Y := BUILD_SNAP.ROOF_Y
 
 const OUT_DIR := "res://shots/_diag"
@@ -97,11 +116,15 @@ func _floor(at: Vector3, parent: Node3D) -> void:
 	p.position = at
 
 
+## `at` is the bare floor-edge anchor, same input `_add_floor_edges` starts
+## from -- the thickness correction below is what `resolve()` adds before a
+## real placement ever sees the position, so applying it here too is what
+## keeps this capture's transforms identical to a real placer's.
 func _wall(at: Vector3, yaw_deg: float, parent: Node3D) -> void:
 	var p := BUILD_PIECE.new()
 	parent.add_child(p)
 	p.call("build_real", WALL_MESH)
-	p.position = at
+	p.position = at + BUILD_SNAP._thickness_correction(BUILD_SNAP.WALL_Z_CENTER, yaw_deg)
 	p.rotation.y = deg_to_rad(yaw_deg)
 
 
@@ -109,7 +132,7 @@ func _door(at: Vector3, yaw_deg: float, parent: Node3D) -> Node3D:
 	var p := BUILD_DOOR.new()
 	parent.add_child(p)
 	p.call("build_real")
-	p.position = at
+	p.position = at + BUILD_SNAP._thickness_correction(BUILD_SNAP.WALL_Z_CENTER, yaw_deg)
 	p.rotation.y = deg_to_rad(yaw_deg)
 	return p
 
@@ -118,7 +141,7 @@ func _roof(at: Vector3, yaw_deg: float, parent: Node3D) -> void:
 	var p := BUILD_PIECE.new()
 	parent.add_child(p)
 	p.call("build_real", ROOF_MESH, {}, ROOF_SCALE)
-	p.position = at
+	p.position = at + BUILD_SNAP._thickness_correction(BUILD_SNAP.ROOF_Z_CENTER, yaw_deg)
 	p.rotation.y = deg_to_rad(yaw_deg)
 
 

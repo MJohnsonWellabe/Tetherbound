@@ -22,7 +22,9 @@ const OUT_DIR := "res://shots/_diag"
 const SETTLE_FRAMES := 20
 
 const MESHES := {
-	"floor": "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+	# BUILD-KIT-3: matches buildables.json's `floor` entry (Floor_WoodDark,
+	# swapped from Floor_UnevenBrick -- see that file's comment).
+	"floor": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf",
 	"wall": "res://assets/buildings/quaternius_medieval/Wall_Plaster_Straight.gltf",
 	"door": "res://assets/buildings/quaternius_medieval/Door_1_Flat.gltf",
 	"roof": "res://assets/buildings/quaternius_medieval/Roof_RoundTile_2x1.gltf",
