@@ -89,7 +89,7 @@ anchor_right = 1.0
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 56.0
-offset_top = -300.0
+offset_top = -460.0
 offset_right = -56.0
 offset_bottom = -96.0
 grow_vertical = 0
@@ -101,7 +101,7 @@ theme_override_constants/separation = 30
 ; This separates persistent item shortcuts from the centred contextual verb;
 ; it does not change either action layer or any of their bindings.
 [node name="HotbarPanel" type="PanelContainer" parent="Root/BottomDock"]
-custom_minimum_size = Vector2(514, 0)
+custom_minimum_size = Vector2(660, 0)
 size_flags_horizontal = 8
 mouse_filter = 2
 
@@ -122,7 +122,7 @@ theme_override_constants/separation = 14
 alignment = 1
 
 [node name="Slot1" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(86, 64)
+custom_minimum_size = Vector2(112, 104)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1"]
@@ -137,7 +137,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot2" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(86, 64)
+custom_minimum_size = Vector2(112, 104)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2"]
@@ -152,7 +152,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot3" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(86, 64)
+custom_minimum_size = Vector2(112, 104)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3"]
@@ -167,7 +167,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot4" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(86, 64)
+custom_minimum_size = Vector2(112, 104)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4"]
@@ -182,7 +182,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot5" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(86, 64)
+custom_minimum_size = Vector2(112, 104)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5"]

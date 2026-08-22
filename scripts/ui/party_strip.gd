@@ -37,13 +37,20 @@ const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
 # occupied name/level stacks grow while vacant rows stayed short, invalidating
 # the mount's five-row height and putting slot 5 over ACTIVE COMPANION.
-const ROW_SIZE := Vector2(250.0, 76.0)
+const ROW_SIZE := Vector2(250.0, 96.0)  # 76 -> 96: room for STRIP_READABLE_FONT_SIZE's bigger text without clipping
 const ROW_SEPARATION := 6
 const ROW_MARGIN := 6
 const HEADER_HEIGHT := 30.0
 const HEADER_GAP := 6.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 const CHIP_SIZE := Vector2(40.0, 40.0)
+## Local floor for this widget's own small text (TEAM count, level, KO/REST
+## tags) -- deliberately not `UI_TOKENS.FONT_TINY`, which a dozen other
+## screens this lane does not own also draw with (see
+## `playground_hud.gd::HUD_READABLE_FONT_SIZE`'s identical reasoning). A blind
+## critic measured this strip's own small text (13px on "Ripplet", 9-10px on
+## "Lv 1"/"WATER") against a ~16px arm's-length cap-height floor.
+const STRIP_READABLE_FONT_SIZE := 34
 const RAIL_WIDTH := 4.0
 const HP_BAR_SIZE := Vector2(72.0, 8.0)
 
@@ -145,7 +152,7 @@ func _build() -> void:
 	_count_label.text = "TEAM  0 / 5"
 	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_count_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_count_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	_count_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	_count_label.add_theme_color_override("font_color", UI_TOKENS.TEAL_SOFT)
 	header.add_child(_count_label)
 
@@ -169,11 +176,11 @@ func _build() -> void:
 	_cycle_banner.fit_content = false
 	_cycle_banner.scroll_active = false
 	_cycle_banner.shortcut_keys_enabled = false
-	_cycle_banner.position = Vector2(0.0, -34.0)
-	_cycle_banner.size = Vector2(ROW_SIZE.x, 30.0)
+	_cycle_banner.position = Vector2(0.0, -46.0)
+	_cycle_banner.size = Vector2(ROW_SIZE.x, 42.0)
 	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cycle_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_cycle_banner.add_theme_font_size_override("normal_font_size", UI_TOKENS.FONT_LABEL)
+	_cycle_banner.add_theme_font_size_override("normal_font_size", STRIP_READABLE_FONT_SIZE)
 	_cycle_banner.visible = false
 	add_child(_cycle_banner)
 
@@ -255,7 +262,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 
 	var name_label := Label.new()
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	name_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_LABEL)
+	name_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	_name_labels.append(name_label)
 	info.add_child(name_label)
 
@@ -266,7 +273,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 
 	var level_label := Label.new()
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	level_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	level_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	level_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
 	_level_labels.append(level_label)
 	level_row.add_child(level_label)
@@ -277,7 +284,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	var ko_label := Label.new()
 	ko_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ko_label.text = "KO"
-	ko_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	ko_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	ko_label.add_theme_color_override("font_color", UI_TOKENS.DANGER)
 	ko_label.visible = false
 	_ko_labels.append(ko_label)
@@ -286,7 +293,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	var rest_label := Label.new()
 	rest_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rest_label.text = "REST"
-	rest_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	rest_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	rest_label.add_theme_color_override("font_color", UI_TOKENS.WATER_BLUE)
 	rest_label.visible = false
 	_rest_labels.append(rest_label)

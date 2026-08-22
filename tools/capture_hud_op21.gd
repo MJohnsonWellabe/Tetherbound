@@ -65,6 +65,32 @@ func _run() -> void:
 	if player != null:
 		player.set_physics_process(false)
 
+	# OP21-glyphs: simulate an Ally session, not an empty headless one. This
+	# harness ran with NO joypad attached, so `game_state.gd::_last_input_was_gamepad`
+	# initialised false (`not Input.get_connected_joypads().is_empty()`, and
+	# the list is empty here) and every `input_glyph.gd::icon()` call fell back
+	# to keyboard keycaps for the whole capture -- a real Ally player, pad
+	# already connected at boot, gets `true` on frame one and never sees a
+	# keycap at all (see that field's own header comment: "Starts true if a pad
+	# is already connected"). `Input.get_connected_joypads()` reflects real OS
+	# device enumeration and cannot be faked in a headless container, but
+	# injecting one real `InputEventJoypadButton` reproduces the state that
+	# matters -- `_last_input_was_gamepad` only cares about event TYPE, not
+	# device connectivity, so this is not a hack around the check, it is the
+	# same signal a physical A-button tap would send.
+	var press := InputEventJoypadButton.new()
+	press.device = 0
+	press.button_index = JOY_BUTTON_A
+	press.pressed = true
+	Input.parse_input_event(press)
+	await process_frame
+	var release := InputEventJoypadButton.new()
+	release.device = 0
+	release.button_index = JOY_BUTTON_A
+	release.pressed = false
+	Input.parse_input_event(release)
+	await process_frame
+
 	var party: RefCounted = _seed_demo_state(world)
 
 	var written: Array[String] = []
@@ -78,9 +104,15 @@ func _run() -> void:
 		# directly -- the HUD's own `_process` notices `Party.revision` change
 		# the same way a real d-pad press would and fires `flash_cycle()`.
 		party.call("cycle_active", 1)
-		# Just past the reveal tween, well inside CYCLE_BANNER_SECONDS (1.3s
-		# at 60fps ~= 78 frames) so the banner is caught mid-hold, not at the
-		# instant it appears or after it has already faded.
+		# One process frame so `playground_hud.gd::_process` (which polls,
+		# does not react to a signal) actually notices the revision change and
+		# calls `flash_cycle()` before the shot -- the previous version of
+		# this harness settled straight into the shot from the SAME awaited
+		# frame the property changed on, which on some frame-ordering runs
+		# caught the banner not-yet-drawn. `CYCLE_BANNER_SECONDS` is 1.3s
+		# (~78 frames at 60fps); this still fires the shot well inside that
+		# window, just after (not possibly before) the banner text lands.
+		await process_frame
 		await _settle(20)
 		await _shoot(camera, "hud_party_cycle", written, failures)
 
