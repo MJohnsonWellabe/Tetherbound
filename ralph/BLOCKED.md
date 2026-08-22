@@ -49,6 +49,44 @@ with `metallic=1.0` from the glTF default.
 **What would clear this:** an owner choice between 1, 2 and 3 — and for 1, a
 reference sheet in `docs/art/reference/`.
 
+### Update, 2026-08-22, after three rounds and three independent blind critiques
+
+The gable cap is not the only missing piece. Three separate Fable critics, each
+judging fresh frames with no knowledge of what changed and no sight of the
+previous critiques, independently ranked the roof first of all defects and
+called the building "not something a player would be pleased to have built."
+Round 3 named the full set of modules a modular roof needs and this kit does
+not have:
+
+- a **mid-run module with no gable cap** (the original entry above);
+- a **valley piece** where two gable rows meet. The house is ~4m deep, so it is
+  covered by two parallel A-frames forming an M with a trough down the middle
+  and nothing to close it. Any building deeper than one module hits this;
+- **corner and edge closure pieces**, so a 2×2 footprint reads sealed rather
+  than leaving open rectangles at the rear top corners;
+- an **eave course** that projects past the wall face. Round 3 raised the roof's
+  `scale.z` to 1.10 to buy an overhang and the critic still read the tiles as
+  terminating flush, contributing to a "boxy, toy-block silhouette."
+
+Three rounds of tuning did close real bugs — `ROOF_Y` was 0.27m below the wall
+top plate, and a yaw-unaware thickness constant was letting two flush-intended
+walls land on different world lines at a corner. Both are fixed and shipping.
+But every remaining defect is a piece that does not exist, which is why this is
+recorded rather than iterated on a fourth time. Per `ralph/conventions.md`, the
+stopping rule is a wall, not a round count, and this is the wall.
+
+One nuance worth checking before any art is commissioned: round 3's critic
+reported a bright slot running the full length of the wall-top line, not only
+at corners. If that is a remaining seat/offset bug rather than a missing piece,
+it is fixable in data and should be ruled out first — it would be cheap, and it
+is the single largest contributor to "the roof is broken."
+
+**Not blocked on art:** the interior cross-braces (real geometry inside the
+0.4m wall thickness, reading as scaffolding from inside), the ridge caps
+reading as plastic against clay tile, the inconsistent per-wall timber
+articulation, the door threshold light leak, and a stray grey brick block
+behind the interior braces. Those are ordinary kit work for a later lane.
+
 ---
 
 ## ✅ RESOLVED, 2026-08-15 — `model: fable` dispatch is available again (was: out of usage credits)
