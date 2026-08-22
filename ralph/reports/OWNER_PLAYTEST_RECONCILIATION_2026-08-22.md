@@ -1,0 +1,126 @@
+# Owner playtest reconciliation — 2026-08-22
+
+Every distinct finding in `ralph/OWNER_PLAYTEST_2026-08-18.md` and
+`ralph/OWNER_PLAYTEST_2026-08-21.md`, reproduced against the **running build**
+on `claude/gates-abc-verification-ne0rwx` (branched from `main` at `a22534ff`).
+
+## The rule this file was written under
+
+A commit message saying "fixed X" is a claim, not evidence. Every CONFIRMED
+FIXED below means *this* pass drove the scenario in a booted game through real
+`InputEventJoypadButton` events on the live InputMap and watched it behave.
+Where the only thing available was a unit assertion over data, the row says so
+rather than borrowing a smoke test's credibility.
+
+## What reconciling actually turned up
+
+The merge landed the **game** correctly. It did not land the **tests**.
+
+Nine harnesses were still asserting the pre-CONTROLLER-MAP pad map, and **46 of
+the 64 files in `tests/` are named by no CI job at all** — including, almost
+exactly, the set written to prove these owner bugs fixed. So the green badge on
+`a22534ff` never ran one of them, and two of the nine were emitting output that
+reads exactly like the owner's own reports reproducing on a build where the
+feature works. That is the single most important finding here: **a regression
+nobody runs is a comment.**
+
+Two shipped defects were found by doing this properly, both of which the owner
+had already reported and both of which were still real:
+
+* **OP21-24** — on a controller the axe never swung. `use_tool` was the only
+  input that ever called `tool_hold.gd::swing()`, and CONTROLLER-MAP correctly
+  took its pad button away, so X gathered through the prompt and the tool never
+  moved. The swing was not removed; it was made unreachable by the device the
+  game is played on.
+* **OP1 / OP21-06** — pressing Menu with anything in the satchel opened the
+  pause screen straight into a **"Drop it?" confirmation** on the focused slot,
+  because gamepad Start is `game_menu` and `backpack_drop` at once. That
+  confirmation holds the shell's input, so the next B cancelled a drop the
+  player never asked for instead of closing the menu. One stray A from
+  destroying an item they never selected.
+
+## Legend
+
+| Status | Meaning |
+|---|---|
+| **CONFIRMED FIXED** | The old scenario was driven in the running game and now behaves correctly. |
+| **STILL BROKEN → FIXED** | Reproduced the original defect in the running game this pass, then fixed it. |
+| **STILL BROKEN** | Reproduced, not fixed. |
+| **CANNOT REPRODUCE** | Says why. |
+| **REMAINDER** | Behaves, but measurably short of what the report asked for. Recorded, not closed. |
+
+---
+
+## `OWNER_PLAYTEST_2026-08-18.md`
+
+| # | The report's claim | Status | Evidence in the running game |
+|---|---|---|---|
+| OP1 | Modal lifecycle freeze; innkeeper/bed/Build; "the main menu could no longer be opened" | **STILL BROKEN → FIXED** | The pause round trip itself is sound: `tools/_probe_pause.gd` drove Menu then B as physical joypad events and got `open=true/paused=true` → `open=false/paused=false`, twice. But on a **stocked satchel** it read `deaf=true confirming=0` — the drop confirmation. Fixed; `tests/smoke_menu_open_does_not_offer_to_drop.gd` pins it. |
+| OP2 | Roof will not snap to walls; floors/walls half a square off | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS — a coherent 2x2 house with door and roof, built through the controller path. |
+| OP3 | Chop needs the axe equipped and a visible swing; `+3 Wood` feedback | **STILL BROKEN → FIXED** | The swing half was dead on a pad (see OP21-24). Fixed. The `+N Wood` half is asserted by `tests/helpers/gate_a_npc_gather_segment.gd`, which compares the exact HUD string. |
+| OP4 | Torch upright in hand; relights after stow/redraw | **CONFIRMED FIXED** | `smoke_gate_a_rest_torch.gd` PASS across repeated draw/stow cycles: prop visible, flame anchor above the prop origin, both light nodes active, no duplicates. |
+| OP5 | Front door / title screen missing | **CONFIRMED FIXED** | `smoke_title_new_game.gd` PASS — physical pad activation resets live state and enters the Meadows. |
+| OP6 | Placement must keep the piece selected (Valheim-style repeat) | **CONFIRMED FIXED** | `smoke_free_build.gd` PASS. |
+| OP7 | Dismantle with full refund | **CONFIRMED FIXED** | `smoke_free_build.gd` PASS. |
+| OP8 | Creature bed: visible body, gradual HP, unavailable while resting, overnight | **CONFIRMED FIXED** | `smoke_gate_a_rest_torch.gd` PASS — "visible body, gradual HP a -> b, active selection refused". |
+| OP9 | Over-the-shoulder aim/throw feels bad | **REMAINDER** | Catching works: 3/3 clean runs after the aim fix (caught on launch 3, 7, 1). But the strike rate is **~36%** (4 strikes / 11 launches). It no longer blocks the chapter — the tutorial failure bound guarantees the catch on the second landed throw — but two thirds of throws missing is the owner's complaint expressed as a number. Prompt 45's to close. |
+| OP10 | Release ceremony, not just a cleared slot | **CONFIRMED FIXED** (partial) | `smoke_boss.gd` PASS reaches it: "the belt is full; R4.10's release ceremony has the decision". `smoke_release.gd` not yet run in this pass. |
+| OP11 | Level-up must announce identity, level, unlock | **NOT VERIFIED THIS PASS** | No harness drove a level-up to read its on-screen text. Do not treat as closed. |
+| OP12 | Cycle creatures in exploration without the menu | **CONFIRMED FIXED** | `smoke_build_owns_creature_cycle.gd` PASS — "no menu: LB cycled the active creature (0 -> 1)". `smoke_creature_control.gd` PASS adds the rest of the verb: "dismissed, recalled, swapped, and refused mid-fight", and the swapped creature is the one standing beside the trainer. |
+| OP13 | The pond needs real water | **PENDING** | `smoke_pond_water.gd` queued. World boot reports real water: 2538 pond quads, reeds, marginals, lilypads, jetty. |
+| OP14 | Doors that look usable must open | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS includes the doorway; `R7.8` shipped village doors. |
+| OP15 | Map/minimap missing authored trails | **CONFIRMED FIXED** | `smoke_gate_a_map_cycle.gd` PASS — "real pad cycling, movement-up minimap, full-map zoom/pan, recovery". Movement-up, which the owner had already reported as improved, holds. |
+| OP16 | Meadows core-loop density | **CONFIRMED FIXED** (data) | `test_chapter_content_map.gd` and `test_chapter_curve.gd` PASS in the 1301-test suite. Data-level only — pacing is Gate F's to judge by play. |
+
+---
+
+## `OWNER_PLAYTEST_2026-08-21.md` (ROG Ally)
+
+| # | The report's claim | Status | Evidence in the running game |
+|---|---|---|---|
+| OP21-01 | ROG Ally is "super laggy" | **CANNOT REPRODUCE** | No ROG Ally in this environment, and `ralph/OWNER_DIRECTIVES_2026-08-22.md` §5 accepts that: "No ROG Ally is available to this environment." Headless software rendering cannot measure frame time — `capture_hud_op21.gd` says so itself. Needs target hardware; not closable here. |
+| OP21-02 | Satchel input leaks into the hotbar | **CONFIRMED FIXED** | `smoke_satchel_owns_hotbar.gd` PASS — "Satchel open: hotbar_2 fired nothing", "the d-pad moved focus to slot 0". |
+| OP21-03 | Build shortcut leaves the controller cycling creatures | **CONFIRMED FIXED** | `smoke_build_owns_creature_cycle.gd` PASS, 4/4: LB cycles with no menu; with Build open neither the d-pad nor LB cycles, and the d-pad moves grid focus. |
+| OP21-04 | Settings and the teleport list will not scroll by controller | **CONFIRMED FIXED** | `smoke_settings.gd` PASS. `SETTINGS-SCROLL` in `DONE.md` names this item by number; this pass confirms it on the running build rather than taking that record's word. |
+| OP21-05 | First village trainer battle loses camera control | **CONFIRMED FIXED** | `smoke_trainer_battle_camera.gd` PASS — orbit holds during the fight and the exploration camera is restored on exit. |
+| OP21-06 | Controller binding collisions remain | **STILL BROKEN → FIXED** | The unit-level audits pass (`test_input_context_collisions.gd`, `test_world_verb_input_owner_enforcement.gd`). They did not catch the live one: Start = `game_menu` + `backpack_drop`. See OP1. |
+| OP21-07 | Building rotate does not work | **CONFIRMED FIXED** | `smoke_free_build.gd` PASS. |
+| OP21-08 | Doors not openable; modular scale wrong | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS. |
+| OP21-09 | Roof pieces the wrong size | **CONFIRMED FIXED** | `smoke_gate_a_build_house.gd` PASS. |
+| OP21-10 | Free building implies free crafting | **PENDING** | `smoke_craft_panel_controller.gd` queued. |
+| OP21-11 | Major hotkeys under the hotbar, legible at handheld size | **PENDING** | `smoke_prompt_hotbar_dock.gd` / `smoke_hud_handheld_legibility.gd` queued; `shots/_diag/hud_hotbar_legend.png` captured for the blind judge. |
+| OP21-12 | Party-cycle presentation is confusing | **CONFIRMED FIXED** (mechanics) / **PENDING** (presentation) | `smoke_creature_control.gd` PASS proves the verb behaves. Whether the *feedback* still "looks strange" is a visual question: `shots/_diag/hud_party_cycle.png` is captured for the blind judge and that half is not closed here. |
+| OP21-13 | UI still says "Change Pal" | **CONFIRMED FIXED** | No player-facing "Pal" string survives in `scripts/`, `data/` or `scenes/`. |
+| OP21-14 | Team shows 2/5 after three catches | **CONFIRMED FIXED** | `smoke_party_count_after_catches.gd` PASS — three real catches through the real minigame read `TEAM 3 / 5`, portraits agree, and it survives save/reload. |
+| OP21-15 | The map is unusable | **STILL BROKEN → PARTLY FIXED** (zoom/readability half: **CONFIRMED FIXED**, `smoke_gate_a_map_cycle.gd` proves zoom stays pinned to the player and pan/clamp/recovery work) | The owner's own §3 ruling (village and roads start revealed) was recorded in `BLOCKED.md` as "RESOLVED by owner ruling" while **both commits that closed it touched only `BLOCKED.md`** — no code shipped, so a fresh save still built a zero-reveal grid and opened black. Seed reveal now authored in `map_landmarks.json` and pinned by `test_map_fog.gd` from both sides. The **landmarks-through-fog** half is NOT built and is filed, not half-done: it needs a "an NPC told me" state distinct from "I stood next to it". |
+| OP21-16 | Opening direction still unclear | **PENDING** | `smoke_gate_a_opening_segment.gd` PASS end to end (title → wake → Grandpa → starter → naming → catch), but "would a first-time player know what to do" is the blind playtest's question, not a harness's. |
+| OP21-17 | Village layout makes no sense | **PENDING** | Visual; needs the blind judge. |
+| OP21-18 | Signs sit in the road | **PENDING** | Visual; needs the blind judge. |
+| OP21-19 | Props submerged in the pond | **PENDING** | `smoke_pond_water.gd` queued. |
+| OP21-20 | Submerging the trainer has no consequence | **CONFIRMED FIXED** (unit) | `test_water_hazard.gd` — 11 assertions PASS covering grace, damage tick, wading, surfacing reset. Logic-level; the feel of it is unjudged. |
+| OP21-21 | Washed-out grey state after a few minutes | **CONFIRMED FIXED, with a named remainder** | `test_world_weather.gd` PASS: saturation floors on every preset, fog density below the whiteout ceiling, `clear` weighted highest, `max_consecutive_non_clear` bounded. `BACKLOG.md`'s `WEATHER-2` records the honest leftovers from an independent critic (cloudy is crushed and cloudless; one shadow rig across all four states; weather never touches the ground). Four frames captured this pass for re-judging. |
+| OP21-22 | Website should sell the actual story | **CONFIRMED FIXED** | `site/index.html` rewritten; `SITE-SHOTS` tracks the four frames it still wants. |
+| OP21-23 | Load Game never enters the world | **CONFIRMED FIXED** | `smoke_title_load_game.gd` PASS — "physical pad activation loaded a real save and entered Meadows". |
+| OP21-24 | Axe hold and swing still wrong | **STILL BROKEN → FIXED** | Reproduced: on a pad, X gathered via the interact prompt, credited the satchel, printed `+3 Wood`, and the axe never moved. `use_tool` was the only caller of `swing()` and CONTROLLER-MAP took its pad button. The prompt press now starts an aimed swing and the yield lands on the impact. |
+| OP21-25 | Stronghold/Warrens fights phase outside the arena | **CONFIRMED FIXED** | `smoke_arena_contain.gd` PASS, and it reproduces the original defect explicitly before showing the fix: "with the flat 11.0m default, hold_inside() corrects a displaced ally to 11.0m from centre, OUTSIDE the room (OP21-25 reproduced); the fix is what prevents it". |
+| OP21-26 | Pond-to-village route is dead travel | **PENDING** | Explicitly Gate B/C/D1 route-content work by the report's own wording. Not closable by a harness. |
+
+---
+
+## Open after this pass
+
+1. **OP9** — catch strike rate ~36%. Measured, not fixed. Prompt 45.
+2. **OP21-01** — target-hardware performance. Needs a ROG Ally.
+3. **OP21-15 (half)** — landmarks visible through fog once an NPC names them.
+4. **OP11** — level-up feedback never driven on screen this pass.
+5. **OP21-17/18/19, 21-26** — composition and pacing; the blind judge and a play pass own these.
+6. **WEATHER-2** — the remainder an independent critic already named.
+
+## Method note, for whoever reads this next
+
+The reason this reconciliation was worth doing is not the table. It is that
+**six of these rows could not have been answered from the repository's own
+records.** `DONE.md` and the commit log said things were fixed that were fixed;
+they also said the map fog ruling was resolved when no code had shipped, and
+they were silent about the axe never swinging on the device the game ships on.
+The only way to tell those apart was to boot the game and press the buttons.
