@@ -199,12 +199,12 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [-210.2, 2228.6],
+          "at": [-210.4, 2228.4],
           "yaw_deg": 100.0,
-          "pitch_deg": 70.0,
-          "sink_m": 0.05,
+          "pitch_deg": 90.0,
+          "sink_m": 0.15,
           "scale": 0.95,
-          "_why": "toppled off the first, on its side -- a dropped load, not a delivered one"
+          "_why": "ROUND 2 (blind self-pass): round 1's 70-degree pitch did not read as toppled against a crate model that is already boxy from most angles -- pushed to a full 90 so the crate's OWN long edge breaks the ground plane the standing one sits flat on, the same silhouette cue a fallen box gives at a glance. Sink raised to match, so the corner that is now the lowest point does not float."
         },
         {
           "model": "Rope_1",
