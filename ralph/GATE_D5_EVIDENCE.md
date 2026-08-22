@@ -197,6 +197,120 @@ Note 14 of 36 authored points are within reach *of the road*; the other 22 are
 deliberately off-spine (the density pass's own pockets, and the `tm_heavenfall`
 special encounter at (140, 7300), which is meant to be a detour).
 
+## 5a. `22-SKY-PLANES` — reproduced, and root-caused
+
+**Reproduced on this branch**, which is the first thing prompt 22 asks for.
+`shots/band5_approach/01-band-mouth.png`, `04-before-the-gate.png` and
+`06-the-waystop.png` all show several large translucent rectangles hanging above
+and behind the stronghold. This is not stale bug prose, and it is worst on
+exactly the sightline this region is built around: the player looking at the
+works.
+
+**The producer is `scripts/world/rift_collapse.gd`'s `StormWall` group**, built
+from `data/config/rift_collapse.json::storm_wall.slabs`.
+`tools/_probe_band5_sky_planes.gd` walked every visible MeshInstance3D within
+900 m of the approach and sorted by height above ground. Exactly three large
+**transparent** meshes exist, and they are all storm slabs:
+
+```
+ABOVE     NODE                            MESH/SIZE          AT                 TRANS
+ 47.4     RiftCollapse/StormWall/…Wall_1  Quad 460x190x0     (  33, 47, 7968)   true
+ 22.4     RiftCollapse/StormWall/…Wall_0  Quad 420x150x0     ( -46, 27, 7919)   true
+ 13.9     RiftCollapse/StormWall/…Wall_2  Quad 360x122x0     (-112, 13, 7870)   true
+```
+
+Every other big mesh in range is a `Stronghold/` box and every one of them is
+opaque. So the candidate families prompt 22 lists — a bad LOD/impostor, a
+missing texture, a stray debug plane, a transform error — are all **ruled out**.
+This is intended geometry, correctly placed, seen from a viewpoint it was never
+sized for.
+
+**Why it fails here, specifically.** `storm_wall`'s own comment states the
+intent: *"The rift, from 200m of open meadow away: a slate wall of weather
+standing across the whole eastern sky behind the broken bridge, with land
+visible nowhere past it… three overlapping slabs… so the near edge does not read
+as a billboard."* That works because it is authored for one viewpoint at one
+distance — the slabs sit 262–356 m from the rift, where a 420 × 150 m card
+subtends roughly 70° × 28° and genuinely fills the sky.
+
+Band 5's approach looks at their **flank, from much further away**. Measured
+from this lane's own capture eyes to `StormWall_1`: **968 m** at the band mouth,
+619 m before the gate, 506 m at the Waystop. At 506 m that slab subtends about
+49° wide but only ~20° tall, with open sky above it and horizon visible past its
+ends — so the one property the design depends on ("land visible nowhere past
+it") is exactly what breaks, and a wall of weather becomes a rectangle of glass.
+OW5D put the stronghold at z 7560 and left the storm wall at z 7870–7968, 310–410 m
+directly behind it on the player's bearing; the corridor created a sightline the
+slabs were never authored against.
+
+**Not fixed here, deliberately.** `rift_collapse.json`/`rift_collapse.gd` are not
+this lane's files, and the storm wall is a hero visual whose own job is to close
+the horizon beyond the Meadows — making it invisible from the approach could
+break the thing it exists for, which is a design call rather than a defect fix
+(`CLAUDE.md`, "ask instead of inventing"). The diagnosis is complete and the
+options are cheap to state:
+
+1. **Occlude rather than resize** — the slabs' bases sit at y = -46 and the
+   approach ground runs 0–8 m; raising the base so the ground and the works
+   occlude their lower edge from the south costs nothing on the rift's own
+   viewpoint, which looks along the slabs rather than at them.
+2. **Scale with distance** — widen/heighten the slabs so they still fill the sky
+   at ~1 km, which preserves "land visible nowhere past it" from both viewpoints
+   at the cost of geometry the rift viewpoint does not need.
+3. **A second, further group** authored for the corridor's own bearing, leaving
+   the rift's three untouched.
+
+Re-run `tools/_probe_band5_sky_planes.gd` to confirm whichever lands.
+
+## 5b. `23-BILLBOARD-WHITE` — does NOT reproduce on this route
+
+Prompt 23's symptom is "upright white rectangular cards visible among trees near
+the storm road". The six captures cover the whole Band 5 route at player eye
+height, several of them through stands of trees (`04-before-the-gate.png` most
+directly). **No white or default-material cards appear in any of them**, and the
+sky-plane probe found no untextured large geometry other than the storm slabs
+already accounted for above.
+
+This is a negative result on **this route only**. The defect was reported on the
+storm road, which is a Band 1 spoke and not Band 5's ground, so this does not
+close prompt 23 — it removes Band 5 from its scope. The lane that owns the storm
+road should reproduce it there.
+
+## 5c. The stronghold silhouette is 7.7 km from the stronghold
+
+Prompt 66 asks whether "the stronghold grows in visual dominance" as the player
+approaches, and lists "stronghold silhouette dominance" under regional identity.
+It cannot, and the reason is not this region's content.
+
+`scripts/world/landmark.gd` builds the assembled Quaternius castle — the
+`StrongholdSilhouette` node, the thing the whole chapter has been walking toward
+— at `RISE_CENTRE + OFFSET` = **(229.8, -144.4)**, hard-coded, sited by a probe
+against sightlines from the village square. `stronghold.json`'s `site.at` was
+moved by OW5D to **(0, 7560)**. Those are **7,704 m apart**.
+
+`stronghold.json::_comment_where` still describes the relationship the two were
+built to have: *"The route is the WORKS BEHIND the castle… this complex stands
+on the flat ground south of it and the player works east and then north until
+the Legendary Chamber sits directly behind the castle's own footprint."* That
+relationship no longer exists. `map_landmarks.json` agrees with the works
+(`stronghold` at [0, 7560]); only the castle mesh stayed behind.
+
+Confirmed two ways: by arithmetic from the constants, and by
+`tools/_probe_band5_sky_planes.gd`, which found **no castle or plinth geometry
+of any kind within 900 m of the approach** — the largest structures in range are
+all `Stronghold/` boxes, the works' own walls.
+
+What the player gets today: a castle standing near the village in Band 1, walked
+past in the first hour and never returned to, and a final approach whose climax
+building is a low dark wall with nothing rising behind it.
+
+**Not fixed here.** Moving the castle is a world-layout decision that would
+change the Band 1 sightlines `landmark.gd` was measured against, and it is
+genuinely two different chapters depending on the answer — one silhouette
+relocated behind the works, or an early distant landmark plus a separate arrival
+building. That is on `CLAUDE.md`'s "ask instead of inventing" list. **Owner or
+coordinator call, and the single largest player-facing gap left in this region.**
+
 ## 6. What this lane did NOT verify — owed work
 
 - **The blind visual pass is NOT done.** Six captures were produced

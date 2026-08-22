@@ -37,8 +37,31 @@ func _run() -> void:
 			print("drained quads on the approach: %d" % int(drain.call("quads")))
 
 	_cadence()
-	await _captures(world)
+	await _captures(world, "day")
+
+	# Prompt 66's last visual-cleanup item is "torch/night readability on the
+	# final route", and it cannot be reproduced from a noon frame. Same six
+	# eyes, same targets, night preset -- so the day and night sheets differ in
+	# exactly one variable and the critic can attribute what they see.
+	var look: Node = _find_look(world)
+	if look == null:
+		print("no world_look node found; the night pass did not run")
+	else:
+		look.call("apply_time", "night")
+		for i in 30:
+			await physics_frame
+		await _captures(world, "night")
 	quit(0)
+
+
+func _find_look(node: Node) -> Node:
+	if node.has_method("apply_time") and node.has_method("times_available"):
+		return node
+	for child in node.get_children():
+		var found := _find_look(child)
+		if found != null:
+			return found
+	return null
 
 
 ## --- the walk ---------------------------------------------------------------
@@ -138,7 +161,7 @@ func _cadence() -> void:
 ## at the works. What they are FOR: whether the pylon line reads as a bearing,
 ## and whether the stronghold grows. Judged by an independent critic, never here
 ## -- `ralph/lanes/COMMON.md` §8.
-func _captures(world: Node) -> void:
+func _captures(world: Node, suffix: String) -> void:
 	var camera := Camera3D.new()
 	camera.fov = 70.0
 	camera.far = 3000.0
@@ -169,7 +192,7 @@ func _captures(world: Node) -> void:
 		for i in 4:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		var path := "%s/%s.png" % [OUT_DIR, shot[0]]
+		var path := "%s/%s-%s.png" % [OUT_DIR, shot[0], suffix]
 		root.get_texture().get_image().save_png(path)
 		print("wrote %s" % path)
 
