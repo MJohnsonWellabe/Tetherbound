@@ -198,12 +198,26 @@ func test_every_item_the_audit_names_is_real() -> void:
 	assert_true(rows.size() >= 15,
 		"the reward audit has only %d rows; it does not cover the chapter" % rows.size())
 	for row: Variant in rows:
-		for key: String in ((row as Dictionary).get("reward", {}) as Dictionary).keys():
-			if key in ["coins", "xp_bonus", "tm", "spends", "rootstone", "heartstone"]:
+		var activity := str((row as Dictionary).get("activity", ""))
+		var reward: Dictionary = (row as Dictionary).get("reward", {})
+		for key: String in reward.keys():
+			# Scalars and currencies, which are rewards but not items.
+			# `xp` and `bond` joined this list with the "ordinary wild fights"
+			# row: an ordinary fight's whole payout IS xp and bond, and a reward
+			# map that could not say so was the reason that row was missing.
+			if key in ["coins", "xp", "xp_bonus", "bond", "tm", "spends",
+					"rootstone", "heartstone"]:
+				continue
+			# `flags` is not an item either, but it is the one non-item reward
+			# that can be WRONG in a way worth catching: a recipe unlock naming
+			# a flag nothing grants is a prize the player never receives. So it
+			# is checked harder than it is skipped.
+			if key == "flags":
+				_assert_reward_flags_are_granted(activity, reward.get(key, []))
 				continue
 			assert_true(known.has(key),
 				"the reward audit's '%s' row pays '%s', which is not an item"
-					% [str((row as Dictionary).get("activity", "")), key])
+					% [activity, key])
 
 
 ## Prompt 58 names the tournament as a required section of the reward map.
@@ -260,3 +274,28 @@ func test_the_audited_tournament_prize_matches_what_the_final_actually_pays() ->
 	assert_eq(int(found_final.get("coins", -1)), int(final_reward.get("coins", -2)),
 		"the audit's coin figure for the tournament final disagrees with what the "
 		+ "trainer data actually pays")
+
+
+## Every flag an audit row claims as a reward must be granted by real trainer
+## data. An audited prize nothing hands over is worse than an unaudited one:
+## the table asserts the player gets it.
+func _assert_reward_flags_are_granted(activity: String, flags: Variant) -> void:
+	if not (flags is Array):
+		return
+	var granted := ""
+	for path: String in [
+		"res://data/config/bands/band1_lower_meadows/trainers.json",
+		"res://data/config/bands/band2_stone_and_root/trainers.json",
+		"res://data/config/bands/band3_the_river_lock/trainers.json",
+		"res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+		"res://data/config/bands/band5_stronghold_approach/trainers.json",
+	]:
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file != null:
+			granted += file.get_as_text()
+	assert_false(granted.is_empty(), "no band trainer data read; this check would pass vacuously")
+	for flag: Variant in (flags as Array):
+		assert_true(granted.contains(str(flag)),
+			"the reward audit's '%s' row claims flag '%s', which no trainer in any "
+			% [activity, str(flag)] + "band actually grants -- an audited prize "
+			+ "nothing hands over")
