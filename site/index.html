@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tetherbound</title>
-<meta name="description" content="Team Tether is back and the Meadows is going dry. Grandpa cannot make the journey. You build a team of five creatures and go instead. A 3-4 hour first chapter for Windows and the ROG Ally.">
+<meta name="description" content="Team Tether holds all eight strongholds and the roads between the regions are cut. Grandpa stopped them once and is too old to do it again. Build a team of five and start with the Meadows. A 3-4 hour first chapter for Windows and the ROG Ally.">
 <meta property="og:title" content="Tetherbound">
-<meta property="og:description" content="Team Tether is draining the Meadows. Grandpa is too old to stop them. Five creatures, no storage box, and a road that ends at Meadows Hall.">
+<meta property="og:description" content="Eight strongholds taken, seven roads out of the Meadows cut, and pylons draining the land. Five creatures, no storage box, and a first chapter that ends at Meadows Hall.">
 <!-- og:image cannot fall back gracefully, so it must point at a file that is
      committed today. -->
 <meta property="og:image" content="img/hero-meadow.jpg">
@@ -35,11 +35,11 @@
 
   Each image slot is a layered CSS background, so a missing file falls through
   to another committed frame where one fits, or to a palette gradient where
-  none does. The page never shows a broken image. `.s-tether` is the slot that
-  matters most for the new story framing and it has no dedicated capture yet:
-  it falls through to the eastern-rise overlook, which genuinely contains the
-  pylon ring, the walled relay compound and the pale drained ground around
-  them. Replacing it with a close capture is queued in ralph/BACKLOG.md.
+  none does. The page never shows a broken image. The story sections are built
+  on tools/capture_site_story.gd's frames -- a severed outward road, the relay
+  compound and its apparatus, the village and its people, the mill crossing and
+  Meadows Hall from the approach -- and each falls back to a committed frame
+  that honestly stands in, or to a gradient where none does.
 
   Colours are data/config/palette.json — the same file the game's materials,
   lighting and UI read. The site and the build cannot drift apart in palette
@@ -334,9 +334,11 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
    farmhouse", which is exactly the kind of promise this page is not allowed to
    make. The section keeps the copy and loses the frame until the interior is
    dressed and re-shot (queued in ralph/BACKLOG.md, needs a Godot capture run).
-   Same reason `.s-village` no longer has a village-square.jpg to load: that
-   capture put the camera inside a roof. */
-.s-starters{background-image:url("img/starters-by-the-door.jpg"),linear-gradient(160deg,var(--leaf-deep),var(--timber))}
+   `.s-starters` is gone for a different reason: it framed three starters
+   standing in a row outside the door, which was the opening's staging until
+   2026-08-11 and has been wrong ever since (`SA0-orbs`,
+   docs/OPENING_SEQUENCE.md). The choice is three orbs previewed indoors during
+   Grandpa's briefing, and `.s-orbs` shows that instead. */
 .s-village{background-image:url("img/village-square.jpg"),url("img/01-spawn-outward.jpg"),linear-gradient(160deg,var(--trail-wheat),var(--grass-olive))}
 /* ^ village-square.jpg is deliberately absent from the repo rather than
    committed-and-broken, so this slot resolves to the walk-out frame under it
@@ -347,19 +349,33 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
 .s-strike{background-image:url("img/06-charged-attack-lands.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
 .s-rain{background-image:url("img/weather-rain.jpg"),linear-gradient(160deg,var(--slate-cool),var(--stone-grey))}
 .s-night{background-image:url("img/night-torch.jpg"),linear-gradient(160deg,var(--night-plum),#0b0e0a)}
-/* The story slot. A close capture of the relay does not exist yet; the
-   eastern-rise overlook does, and it contains the pylon ring, the walled
-   compound and the drained pale ground around them, which is precisely what
-   the caption claims. When the close frame is captured it drops in here and
-   nothing else changes. */
-.s-tether{
-  /* Shown at the full 16:9 of the source rather than cropped tighter: the
-     relay site is in the middle distance of this frame and any closer crop is
-     an upscale of a 1280-wide capture, which goes soft and starts showing
-     shading artefacts the wide view reads past. The close capture that would
-     survive a tight crop does not exist yet -- see the queued item. */
-  background-image:url("img/tether-site.jpg"),url("img/03-rise-overlook.jpg"),
-    linear-gradient(160deg,var(--slate-cool),var(--oxblood));
+
+/* The story slots, captured by tools/capture_site_story.gd. Each names the
+   frame it wants first and falls through to a committed frame that honestly
+   stands in, then to a palette gradient. */
+.s-severed{background-image:url("img/severed-road.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
+.s-storm{background-image:url("img/storm-road.jpg"),linear-gradient(160deg,var(--slate-cool),var(--night-plum))}
+.s-relay{background-image:url("img/relay-approach.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
+.s-machines{background-image:url("img/relay-machines.jpg"),linear-gradient(160deg,var(--timber),var(--oxblood))}
+.s-mill{background-image:url("img/mill-crossing.jpg"),linear-gradient(160deg,var(--day-blue),var(--slate-cool))}
+.s-talk{background-image:url("img/village-talk.jpg"),url("img/village-people.jpg"),linear-gradient(160deg,var(--timber),var(--leaf-deep))}
+.s-legendary{background-image:url("img/legendary-bound.jpg"),linear-gradient(160deg,var(--night-plum),#0b0e0a)}
+/* `.s-hall` has no figure on the page. The capture exists and it is an
+   untextured grey blockout standing under translucent sky-planes --
+   `STRONGHOLD-MAT` and `SKY-PLANES` in ralph/BACKLOG.md, both open. The page
+   does not show the chapter's destination until the destination has materials
+   on it; the rule holds even when the missing frame is the one you most want
+   to show. */
+.s-hall{background-image:url("img/stronghold-approach.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
+/* The starter choice as the game actually presents it: three orbs previewed
+   during Grandpa's briefing, indoors. The page used to show three starters
+   standing outside the door, which was the 2026-08-11 staging and has been
+   wrong ever since (`SA0-orbs`, docs/OPENING_SEQUENCE.md). Contain, not cover:
+   it is a UI frame and cropping it cuts the orbs off. */
+.s-orbs{
+  background-image:url("img/starter-orbs.jpg"),linear-gradient(160deg,var(--timber),#0b0e0a);
+  background-size:contain;
+  background-color:#1a1d16;
 }
 
 /* The roster grid is a real <img> rather than a background: it is the one
@@ -419,9 +435,9 @@ footer p{margin:.4rem 0}
   <span class="flag">First chapter · in progress</span>
   <h1 class="wordmark"><span>Tetherbound</span></h1>
   <p class="tagline">
-    Team Tether is back, and the Meadows is going dry around their pylons.
-    Grandpa cannot make this journey any more. <b>You go instead</b> — with five
-    creatures, no storage box, and no weapon of your own.
+    Team Tether holds all eight strongholds, and every road out of the Meadows
+    now ends at something they did to it. Grandpa's generation stopped them
+    once. <b>They are too old to do it again.</b>
   </p>
 
   <div class="get">
@@ -447,25 +463,35 @@ footer p{margin:.4rem 0}
   <section class="band tether">
     <div class="wrap">
       <span class="eyebrow">The situation</span>
-      <h2>Team Tether is back, and the land is going with them</h2>
+      <h2>Seven roads out of the Meadows. None of them arrive anywhere.</h2>
       <p class="lede tight">
-        They drove pylons into the Meadows and started pulling power out of the
-        ground. You can see where they have been: the grass goes pale, then
-        grey, then stops. They hold the deeper roads, the Old Mill Crossing is
-        shut with someone of the village's on the wrong side of it, and the old
-        stone hall on the far ridge — <b>Meadows Hall</b> — is theirs now, with
-        machinery running inside it that nobody built for stone.
+        Broken bridges, ruined gates, abandoned trade posts, and country you can
+        see across and cannot reach. Team Tether did not build seven dead ends —
+        they cut seven roads, and they did the same to every region. Now they
+        hold all eight strongholds, their pylons are strung across the land
+        draining its energy season by season, and nothing moves between regions
+        except through them.
       </p>
-      <figure class="wide">
-        <div class="shot s-tether" role="img" aria-label="The Meadows from the eastern rise: the mill and river at the left, a walled Tether site ringed with glowing teal pylons in the middle distance standing in a circle of drained pale ground, and the village at the crossroads beyond"></div>
-        <figcaption><b>Their ground</b>The eastern rise, looking across the chapter: the mill and the river, a walled Tether site with its pylon ring standing in a bleached circle of drained meadow, and the village at the crossroads past it. Captured in engine — nothing on this page is concept art.</figcaption>
-      </figure>
+      <div class="shots">
+        <figure class="wide">
+          <div class="shot s-severed" role="img" aria-label="A road running out of the Meadows and stopping dead at a barrier of Team Tether hardware, with land visible beyond it"></div>
+          <figcaption><b>A severed road</b>One of the seven. The road is old and it used to go somewhere; what stands at the end of it is not.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot s-relay" role="img" aria-label="A walled Team Tether relay compound with a line of glowing teal pylons, standing in ground drained pale"></div>
+          <figcaption><b>A drain station</b>Their machinery sits on the roads you actually walk. The ground around it goes pale and stays that way.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot s-machines" role="img" aria-label="The Tether Relay's apparatus close up: manifolds, cabling and a control console"></div>
+          <figcaption><b>The apparatus</b>Manifolds, conduits and a console. You can walk up to it, and eventually you get to turn one off.</figcaption>
+        </figure>
+      </div>
       <p class="pull">
-        Whatever the machine under the hall is drawing from, it has been down
-        there a long time.
+        Their own line is that the connected world was unstable, and that the
+        barriers made peace.
         <small>
-          You will not be told what it is. You find out at the bottom, after the
-          Warden, which is the only order it works in.
+          Some of it may even be true. Team Tether is not written as cartoons —
+          a Warden can be sincere while the system he keeps running is not.
         </small>
       </p>
     </div>
@@ -473,29 +499,34 @@ footer p{margin:.4rem 0}
 
   <section class="wrap">
     <span class="eyebrow">Why you</span>
-    <h2>Grandpa was the trainer. He can't make the walk any more.</h2>
-    <p class="lede">
-      So the morning starts small and domestic and slightly too quiet: you wake
-      upstairs in his farmhouse, and three starters are standing by the door
-      downstairs. You choose one by walking up to it, not by scrolling a list.
-      He tells you what is out there and what happens to people who go at it
-      unprepared, the other two stay with him, and then the village lets you out
-      — plaster and timber around a square, a well, a workshop, dirt paths
-      running off into the meadows. By nightfall you have a creature, a camp,
-      and a reason to keep going.
+    <h2>Grandpa stopped them once. He is too old to do it twice.</h2>
+    <p class="lede tight">
+      You wake upstairs in his farmhouse and come down into a conversation he
+      has clearly been putting off. He was one of the people who pushed Team
+      Tether back the last time, when the eight strongholds were still theirs to
+      hold, and every one of that generation is now too old to walk it again. So
+      he gives you the pack instead — fifteen plain orbs, potions, berries, two
+      revives — and his belt.
+    </p>
+    <p class="pull">
+      “It holds five — no more, ever, and that rule is older than Team Tether.”
+      <small>
+        Grandpa Elias, handing over the belt. It is the game's hardest rule and
+        it is said once, as a fact about the world, not as a tooltip.
+      </small>
     </p>
     <div class="shots">
       <figure>
-        <div class="shot s-starters" role="img" aria-label="Three starter creatures standing by the farmhouse door"></div>
-        <figcaption><b>Choose</b>The starters wait by the door. You pick one by walking to it — and you name it.</figcaption>
+        <div class="shot s-orbs" role="img" aria-label="The starter choice: three orbs on screen holding Terrapup, Ripplet and Galewisp, with the prompt to look and choose"></div>
+        <figcaption><b>Choose</b>Three orbs on the table — ground, water, air. He raised all three from the shell. You look them over, take one, and name it.</figcaption>
       </figure>
       <figure>
-        <div class="shot s-village" role="img" aria-label="The trainer standing in open meadow just outside the village, paths running away over the rise"></div>
-        <figcaption><b>Leave</b>Out the door and into it. Every dirt path out of the village ends in meadow — and one of them ends at the hall.</figcaption>
+        <div class="shot s-talk" role="img" aria-label="Talking to a villager in the square, the dialogue panel open on screen"></div>
+        <figcaption><b>Ask around</b>The village has people in it who want things, sell things, and will fight you if you ask.</figcaption>
       </figure>
       <figure>
-        <div class="shot s-camp" role="img" aria-label="A campfire and bedroll under the stars, a creature resting beside them"></div>
-        <figcaption><b>Rest</b>Day one ends where you put it down: a fire, a bedroll, your creature beside you under the stars.</figcaption>
+        <div class="shot s-village" role="img" aria-label="The village square: the well at its centre, the workshop behind it, cottages and dirt lanes running out"></div>
+        <figcaption><b>The square</b>A well, a workshop, a handful of houses, and lanes that leave in every direction.</figcaption>
       </figure>
     </div>
   </section>
@@ -505,9 +536,11 @@ footer p{margin:.4rem 0}
     <h2>From the farmhouse door to Meadows Hall</h2>
     <p class="lede">
       One chapter, about three to four hours if you go straight at it, and it is
-      built as a journey rather than a map full of icons. Each leg leaves you
-      measurably harder to stop than the last — a stronger five, better gear, a
-      route that has opened because you opened it.
+      built as a journey rather than a map full of icons. Meadows Hall is not the
+      ridge above the village — it is seven and a half kilometres of Meadows
+      away, across a river you cannot cross yet, and every leg between here and
+      there leaves you measurably harder to stop: a stronger five, better gear,
+      a route that opened because you opened it.
     </p>
     <ol class="road">
       <li>
@@ -559,13 +592,33 @@ footer p{margin:.4rem 0}
         <h3>Meadows Hall, and the Warden</h3>
         <p>
           Outer works, courtyard, the chamber approach — old stone with their
-          hardware bolted through it, getting louder the further down you go.
-          The Warden is the fight the whole chapter has been assembling your
-          team for. Then you shut the tether machine off and find out what it
-          was holding.
+          hardware bolted through it, louder the further down you go. The Warden
+          is the fight the whole chapter has been assembling your team for, and
+          he does not think you understand what these barriers are holding
+          apart.
+        </p>
+      </li>
+      <li class="tether">
+        <h3>Then the machinery fails</h3>
+        <p>
+          The drained ground starts coming back, the barriers Team Tether put
+          across this region stop being barriers, and one of the seven roads
+          stops being a dead end — the country on the other side is suddenly
+          there, at distance, reachable later. Six roads to go, and nobody has
+          told you yet who cut them.
         </p>
       </li>
     </ol>
+    <div class="shots">
+      <figure>
+        <div class="shot s-mill" role="img" aria-label="The Old Mill Crossing: the mill building beside the river and the footbridge over it"></div>
+        <figcaption><b>The Old Mill Crossing</b>The one authored way over the river, and it is not yours until the relay stops running.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-storm" role="img" aria-label="The Storm Road, stopped where a permanent storm wall crosses it, a live line of Team Tether pylons running into it"></div>
+        <figcaption><b>The Storm Road</b>Another of the seven, with their pylon line marching into the thing that stops it. What is holding this road shut is still switched on.</figcaption>
+      </figure>
+    </div>
   </section>
 
   <section class="wrap">
@@ -615,20 +668,22 @@ footer p{margin:.4rem 0}
     <h2>Seventeen live here. You keep five.</h2>
     <p class="lede">
       Ground, water and air — no fire, no electric, not in this biome. Every one
-      of them is modelled from the project's own concept art, and a handful
-      carry a rarer colourway you will only see if you meet the right one. By
-      the time you reach the hall your five have a history: one from the first
-      morning, one that cost you something, one you kept because it can carry
-      you uphill.
+      of them is modelled from the project's own concept art. By the time you
+      reach the hall your five have a history: one from the first morning, one
+      that cost you something, one you kept because it can carry you uphill.
     </p>
     <!-- The one real <img> on the page: this frame's detail matters more than
          its crop, so it must scale rather than cover. Every other slot is a
          layered CSS background that falls back on its own; this one cannot, so
          it removes itself instead of showing a broken image. -->
     <figure class="roster" id="roster">
-      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each shown in its ordinary colourway beside its rarer one" loading="lazy" decoding="async" width="1280" height="720"
+      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each in its ordinary colourway" loading="lazy" decoding="async" width="1280" height="720"
            onerror="document.getElementById('roster').hidden=true">
       <figcaption>Every species in the chapter. The belt holds five of them.</figcaption>
+    </figure>
+    <figure class="wide" style="margin-top:2.2rem">
+      <div class="shot s-legendary" role="img" aria-label="The bound legendary standing inside a ring of cold teal containment light in the chamber beneath Meadows Hall"></div>
+      <figcaption><b>The chamber</b>What the machinery under Meadows Hall is holding, and the ring of light holding it. This is the real room and the real creature, photographed where the game stands them.</figcaption>
     </figure>
     <p class="pull">
       At the bottom of the hall, something asks to come with you — and your belt
@@ -646,9 +701,9 @@ footer p{margin:.4rem 0}
     <p class="lede">
       The meadow is not one clear afternoon. Rain and fog roll through, some
       creatures only come out at night, and after sunset you carry your own
-      light or you do not see the path. And when the tether goes off, the region
-      answers: barriers come down, the people who were taken come back, and the
-      drained ground starts to green again.
+      light or you do not see the path. And the world keeps score: kill a drain
+      station and the ground around it recovers, free the Meadows and the
+      barrier at its edge comes down for good.
     </p>
     <div class="shots">
       <figure>

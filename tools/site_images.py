@@ -79,8 +79,32 @@ MAPPING = [
     # with success rather than failure.
     ("shots/catch/catch_high.png",             "site/img/aim-arc.jpg",                 960),
 
-    # The roster grid — tools/capture_shiny_pairs.gd (OF28, all 17 species).
-    ("shots/_shiny_pairs.png",                 "site/img/roster.jpg",                 1280),
+    # The story frames — tools/capture_site_story.gd (2026-08-22). The page's
+    # premise sections are built on these: the world was cut apart, their
+    # machinery is standing on the roads you walk, and the stronghold is at the
+    # far end of the chapter rather than on the ridge above the village.
+    ("shots/story/village-square.png",         "site/img/village-square.jpg",          960),
+    ("shots/story/village-talk.png",           "site/img/village-talk.jpg",            960),
+    ("shots/story/severed-road.png",           "site/img/severed-road.jpg",           1280),
+    ("shots/story/storm-road.png",             "site/img/storm-road.jpg",              960),
+    ("shots/story/relay-approach.png",         "site/img/relay-approach.jpg",          960),
+    ("shots/story/relay-machines.png",         "site/img/relay-machines.jpg",          960),
+    # NOT on the page: the stronghold currently renders as an untextured grey
+    # blockout under translucent sky-planes (STRONGHOLD-MAT, SKY-PLANES). The
+    # mapping stays so a textured re-shoot lands in the slot that is already
+    # wired for it.
+    # ("shots/story/stronghold-approach.png",  "site/img/stronghold-approach.jpg",     960),
+    ("shots/story/legendary-bound.png",        "site/img/legendary-bound.jpg",        1280),
+    ("shots/story/mill-crossing.png",          "site/img/mill-crossing.jpg",           960),
+    # The starter choice as the game presents it -- three orbs previewed during
+    # the briefing, indoors (`SA0-orbs`). tools/capture_starter_picker.gd.
+    ("shots/_diag/starter_picker_default.png", "site/img/starter-orbs.jpg",            960),
+
+    # The roster grid. ORDINARY colourways only: the pair sheet from
+    # capture_shiny_pairs.gd is an internal judging frame and putting it on the
+    # page showed every rare colourway in the game to players who had not
+    # caught anything yet. Owner directive 2026-08-22: do not show the shinies.
+    ("shots/_roster_ordinary.png",             "site/img/roster.jpg",                 1280),
 
     # Weather and night, neither of which the page covered before.
     ("shots/weather/rain.png",                 "site/img/weather-rain.jpg",            960),

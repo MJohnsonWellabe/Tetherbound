@@ -108,6 +108,26 @@ Highest-value single change, per the critic: give `cloudy` real cloud cover and
 That also stops cloudy and rain reading as near-duplicates. All fixes are
 in-scene grade/lighting work; none need new art.
 
+### SPOKE-VIEWS — `tools/capture_severed_spokes.gd` photographs empty meadow
+Its seven viewpoints are pre-`OW5B`/`OW5D` and put the eye ~700m from where
+these roads now are: `stone_gate`'s eye is `[-164, -1.3]`, the sealed gate is
+at `[-688.9, 2517.9]`. A run using them renders open grass and reports success.
+`data/config/terrain_playground.json`'s `spokes.routes` carries the live
+numbers (last road point + blocker centre) and `tools/capture_site_story.gd`
+now reads those; the spokes tool should do the same rather than hold a second
+copy. Nothing is wrong with the spokes themselves — shot from the right place
+they read exactly as intended, a sealed arch with a live Tether pylon beside it
+and the conduit line running away.
+
+### LEGENDARY-CAGE — the containment VFX renders as flat white slabs
+`stronghold_climax.gd::_build_cage()` asks for a cold teal ring (`#7fd8c4` at
+energy 2.2). Under the project's own GL Compatibility renderer the emissive
+clamps and the ring photographs as a dozen opaque white bars across the animal
+— see `site/img/legendary-bound.jpg`, which is the chapter's last image and its
+worst-looking one. The stag behind them is fine. Likely fixes: drop the energy
+below 1.0 and carry the colour in albedo, or make the bars thinner and
+translucent, or both. Judge it from a capture, not from the inspector.
+
 ### SITE-SHOTS — the story page is written, and four of its frames need a Godot run
 `OP21-22` is done: `site/index.html` is rewritten around the actual premise
 (Team Tether back and draining the land, Grandpa too old for the journey, the
@@ -115,7 +135,16 @@ player steps up, five creatures, tournament -> Warrens -> relay -> captains ->
 Warden -> the region heals), with the road to Meadows Hall as an ordered
 six-leg journey and the reserved tether teal used only where Team Tether is.
 
-What it could not do is capture anything: **no Godot in the session's
+**Update, same day, second pass.** The owner read the page and rejected it:
+the frames were stale, the starters do not stand by the door any more, and the
+stronghold is nowhere near the village. Godot 4.7 was installed into the
+session container by hand (it is not in the image), the project imported, and
+`tools/capture_site_story.gd` + `tools/capture_roster_ordinary.gd` written and
+run — so the page now carries ten new frames and the story is rebuilt on
+`GAME_DESIGN.md` §3 as amended by `D23`, `MEADOWS_PROGRESSION_SPEC.md` §23–31
+and `docs/OPENING_SEQUENCE.md`. What is left from the first pass is below.
+
+The first pass could not capture anything: **no Godot in the session's
 container**, so the page was rebuilt from the frames already committed. Judging
 those frames honestly against the page's own no-misrepresentation rule cost two
 of them, and both are now deleted rather than left committed-and-broken:

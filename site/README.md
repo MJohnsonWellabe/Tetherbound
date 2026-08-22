@@ -110,6 +110,33 @@ page has to keep working without anyone re-running a survey first.
 not do is the fastest way to stop being able to trust your own screenshots —
 and the blind visual critic reads the same frames.
 
+### The story frames
+
+`tools/capture_site_story.gd` is the sibling of `capture_site_shots.gd` and
+shoots what the story sections need: the village square, villagers, a villager
+mid-conversation with the real dialogue panel open, a severed outward road, the
+Tether Relay from outside its wall and up at its apparatus, Meadows Hall from
+the approach, and the Old Mill Crossing. Every eye and target in it is an XZ
+plus a height *above the live terrain*, and the landmark coordinates are read
+out of `data/config/map_landmarks.json` rather than copied, because the
+authored sites have been relocated wholesale before (`OW5D`) and the last set
+of hardcoded numbers left a camera inside a roof for months.
+
+It is slow — the full playground scene is ~130k scattered props under llvmpipe
+— so it skips any frame already on disk and a run can be resumed by simply
+running it again.
+
+The starter frame is `tools/capture_starter_picker.gd`, not a staged row of
+creatures outside the door: the door staging was reversed on 2026-08-11
+(`SA0-orbs`, `docs/OPENING_SEQUENCE.md`) and the choice is three orbs previewed
+indoors during Grandpa's briefing. The page showed the old staging for months
+after it stopped being true.
+
+The roster frame is `tools/capture_roster_ordinary.gd`. **Do not put
+`_shiny_pairs.png` on the page** — it is `OF28`'s internal judging frame, and
+publishing it showed every rare colourway in the game to players who had not
+caught anything yet. Owner directive, 2026-08-22.
+
 ### Frames the page is currently missing, and why
 
 The same rule cuts the other way: a captured frame that misrepresents the game
