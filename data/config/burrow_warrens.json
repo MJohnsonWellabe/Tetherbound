@@ -47,12 +47,15 @@
     {"species": "terrapup", "chamber": "vault", "count": 1, "level": 13, "aggressive": true, "offset": [-2.0, -1.5]}
   ],
   "_comment_guardian": "Spec Sec3 Band 2 and Sec20: a STRONG NORMAL SPECIES, explicitly not a new legendary and explicitly not a new mesh. Burrowback is the roster's highest-defence Ground creature and the animal this whole warren belongs to, so the biggest one in it is the thing at the bottom. Level is well above its own residents and above the recommended Band 2 team, TUNABLE -- it is meant to be the fight you come back for, not a wall. It can be CAUGHT rather than beaten (catching is available during wild combat, CLAUDE.md; a guardian is not trainer-owned) and either way the warrens counts as cleared -- a dungeon that can only be resolved one of the two legal ways would be a rule this game does not have.",
+  "_comment_guardian_presentation": "BAND2-63-WARRENS. Prompt 63's acceptance asks for a guardian that is \"memorable, not standard fight + HP\", and what shipped was a Burrowback at a higher number: the world prompt said `Engage Burrowback`, the combat plate said `Burrowback`, and the body was the same size as the three-metre-away residents. These two keys are presentation ONLY and deliberately so -- D23 forbids a new mesh and spec Sec20 forbids inventing a legendary, and CLAUDE.md names materials/modest scale/animation/VFX/encounter context as the differentiation that is allowed instead. `nickname` is written onto the spawned body's `display_name` (what `encounter_director.gd`'s engage prompt reads) AND the instance's `nickname` (what `creature_instance.label()` reads, so a player who CATCHES it keeps the name and the species underneath is not lost -- that is the bug encounter_director.gd:463 already documents). `art_scale` multiplies the model pivot, never the capsule: the collider, the hit cone's reach and the catch accuracy bonus are all built from species.json's `height`/`radius` on purpose (creature_body.gd::_build_placeholder), and scaling the fight instead of the silhouette would retune combat by changing a presentation number. TUNABLE.",
   "guardian": {
     "species": "burrowback",
     "level": 14,
     "chamber": "den",
     "offset": [3.0, 4.0],
-    "name": "Warren Guardian"
+    "name": "Warren Guardian",
+    "nickname": "Warren Guardian",
+    "art_scale": 1.4
   },
   "_comment_clear": "SB9's flat flag store (autoload/progression_state.gd), the same one trainer defeats, the road gate and the TM pickups already write to. `flag` is set the moment the guardian goes down; `reward` pays exactly once against it, so re-entering a cleared warrens is a walk through an empty cave, not a payout faucet. Reward shape is SC15's (`coins`/`items`/`xp_bonus`), on purpose -- the trainer payout is the same idea and a second reward format would drift from it.",
   "clear": {
@@ -71,6 +74,27 @@
     {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
     {"at": [-6.0, 43.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
     {"at": [-13.0, 24.5], "item": "stone", "amount": 4, "label": "Break out stone"}
+  ],
+  "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
+  "dressing": [
+    {"model": "FarmCrate_Empty", "chamber": "mouth", "offset": [2.3, -3.6], "yaw_deg": -25.0, "sink_m": 0.04,
+      "_why": "the first thing inside the mouth, four paces in: one empty crate, so the very first read of the cave is somebody has been carrying things out of here, before a single creature or deposit is seen"},
+    {"model": "Crate_Wooden", "chamber": "hall", "offset": [5.2, -3.6], "yaw_deg": 15.0, "sink_m": 0.06,
+      "_why": "the staging pile's anchor against the hall's east wall, well off both the mouth->den corridor at x=0 and the burrowback pair at [-4, 2] -- a load filled and never collected"},
+    {"model": "FarmCrate_Empty", "chamber": "hall", "offset": [6.0, -2.6], "yaw_deg": -40.0, "sink_m": 0.05,
+      "_why": "set touching the first crate rather than merely near it, EV7-clusters-fix's own finding: a loose arc reads as dumped, a touching pile reads as one load"},
+    {"model": "Barrel", "chamber": "hall", "offset": [4.3, -2.4], "yaw_deg": 0.0, "sink_m": 0.05,
+      "_why": "water for whoever was working the seam, kept with the load -- the detail that makes this a shift rather than a raid"},
+    {"model": "Pickaxe_Bronze", "chamber": "hall", "offset": [6.3, -4.6], "yaw_deg": 62.0, "pitch_deg": -74.0, "sink_m": 0.02,
+      "_why": "leaning off vertical against the hall wall, the one prop that names the work -- and the same tool the rootstone deposits three metres away want from the player"},
+    {"model": "Bag", "chamber": "hall", "offset": [4.5, -4.7], "yaw_deg": 130.0, "sink_m": 0.06,
+      "_why": "somebody's pack, still here: the detail that makes the site abandoned rather than merely finished, exactly as it does at the quarry station"},
+    {"model": "Crate_Wooden", "chamber": "den", "offset": [-5.6, 1.2], "yaw_deg": -70.0, "sink_m": 0.06,
+      "_why": "the deepest crate, a metre and a half from the den's own rootstone deposit and across the room from the guardian -- they got this far, they were still cutting, and then they stopped. This is what makes the animal at the bottom the reason the dig ended rather than a fight bolted onto the end of a corridor"},
+    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [-4.3, 0.2], "yaw_deg": -15.0, "roll_deg": 90.0, "sink_m": 0.03,
+      "_why": "tipped on its side beside that crate: the one prop in the cave that is not standing, so the den's pile reads as left in a hurry against the hall's, which reads as stacked"},
+    {"model": "Barrel", "chamber": "den", "offset": [-6.6, 2.4], "yaw_deg": 0.0, "sink_m": 0.05,
+      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"}
   ],
   "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
   "prize": {

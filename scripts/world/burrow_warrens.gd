@@ -45,6 +45,9 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+## BAND2-63-WARRENS. The above-ground prop placer, reused underground for the
+## cave's Team Tether dressing -- see `_build_dressing()`.
+const PROPS := preload("res://scripts/world/props.gd")
 
 ## OP21-25. See `combat_arena_bounds_at()` below -- how far inside a chamber's
 ## wall FACE the fight boundary is required to sit. Clearance for a body's own
@@ -146,6 +149,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_lights()
 	_build_interior_area()
 	_build_deposits()
+	_build_dressing()
 	_build_prize()
 	_sync_vault_door()
 
@@ -518,6 +522,58 @@ func _build_deposits() -> void:
 		node.call("setup", spec)
 
 
+## The cave's authored props: crates, a barrel, a pickaxe, a bag, a tipped
+## bucket. Prompt 63's required-dungeon list asks for `evidence of Team Tether
+## activity` inside the warrens itself, and there was none down here -- the
+## band's only Team Tether trace was a prop cluster out at the ranger camp
+## spur, which a player who walks to the mouth and goes straight down never
+## sees. See `burrow_warrens.json`'s own `_comment_dressing` for what the set
+## says and why there is deliberately nothing to READ in it.
+##
+## Placed through `props.gd` rather than through this file's own `_box()`,
+## because that script already owns the two things a second implementation
+## would get wrong: the collider built from the combined mesh AABB, and the
+## `sink_m` offset that keeps a shallow-origin model from reading as floating.
+##
+## `top_level` is the whole trick. The placer needs to sit UNDER this node so
+## that `props.gd::_ground_height()`'s walk up the parent chain reaches this
+## file's `ground_height_at()` and gets the cave floor -- but `props.gd` writes
+## world metres straight into `root.position`, which a rotated parent would
+## then re-interpret as its own local space and swing the whole set off into
+## the hillside. `top_level` keeps the tree parent (so the ground lookup works)
+## while ignoring its transform (so world coordinates stay world coordinates).
+## The authored yaw is cave-local for the same reason every other position in
+## this file is, so the site's own yaw is added back on here.
+func _build_dressing() -> void:
+	var entries: Array = _config.get("dressing", [])
+	if entries.is_empty():
+		return
+	var placer: Node3D = PROPS.new()
+	placer.name = "Dressing"
+	placer.top_level = true
+	add_child(placer)
+	var site_yaw := float(_config.get("site", {}).get("yaw_deg", 0.0))
+	var index := 0
+	for entry: Variant in entries:
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = (entry as Dictionary).duplicate()
+		index += 1
+		var chamber := str(spec.get("chamber", ""))
+		if not _chambers.has(chamber):
+			push_warning("warrens dressing names chamber '%s', which does not exist" % chamber)
+			continue
+		var centre := _local_of((_chambers[chamber] as Dictionary).get("at", []))
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var world := to_global(Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
+		spec["at"] = [world.x, world.z]
+		# Unique, and readable in a remote tree: this set uses three models
+		# twice each, and same-named siblings get auto-renamed to `@Node3D@`ids.
+		spec["name"] = "%s_%s_%d" % [str(spec.get("model", "prop")), chamber, index]
+		spec["yaw_deg"] = float(spec.get("yaw_deg", 0.0)) + site_yaw
+		placer.call("place", placer, spec)
+
+
 ## The Heartstone (R4.6's evolution catalyst), in the branch chamber. One
 ## time, across saves: the flag is what stops a reload minting a second.
 func _build_prize() -> void:
@@ -637,7 +693,48 @@ func _spawn_population(director: Node) -> void:
 		})
 	if _guardian != null:
 		_guardian_seen_alive = true
+		_dress_the_guardian(guardian)
 		_markers["guardian"] = _guardian.global_position
+
+
+## What makes the thing at the bottom read as the thing at the bottom.
+##
+## Prompt 63's acceptance asks for a guardian that is `memorable, not standard
+## fight + HP`, and level 14 on an otherwise ordinary Burrowback body is
+## exactly the second thing: the engage prompt said `Engage Burrowback`, the
+## combat plate said `Burrowback`, and it stood the same height as the level-11
+## Trailpup one room back. Both changes here are PRESENTATION and are the kind
+## CLAUDE.md explicitly names as the alternative to a new mesh (D23) or an
+## invented legendary (spec Sec20).
+##
+##   * The name goes on TWO different objects because two different screens
+##     read two different things: `encounter_director.gd`'s engage prompt reads
+##     the BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the
+##     INSTANCE through `creature_instance.label()`, which prefers `nickname`
+##     and falls back to the species name. Writing the nickname rather than
+##     overwriting the instance's own `display_name` is what keeps the species
+##     underneath -- a player who CATCHES the guardian (legal, and this cave
+##     says so out loud) gets a creature called Warren Guardian that still
+##     knows it is a Burrowback. That is the bug encounter_director.gd:463
+##     already documents, not to be reintroduced here.
+##   * `art_scale` multiplies the model pivot only. The capsule, the hit cone's
+##     reach and the catch accuracy bonus are all built from species.json's
+##     `height`/`radius` by `creature_body.gd::_build_placeholder()` on
+##     purpose, so scaling the body itself would silently retune the fight;
+##     scaling the silhouette makes it bigger without touching a single number
+##     the fight is balanced on.
+func _dress_the_guardian(spec: Dictionary) -> void:
+	var nickname := str(spec.get("nickname", ""))
+	if nickname != "":
+		_guardian.set("display_name", nickname)
+		var instance: Object = _guardian.get("instance")
+		if instance != null:
+			instance.set("nickname", nickname)
+	var art_scale := float(spec.get("art_scale", 1.0))
+	if not is_equal_approx(art_scale, 1.0) and _guardian.has_method("model_pivot"):
+		var pivot: Node3D = _guardian.call("model_pivot") as Node3D
+		if pivot != null:
+			pivot.scale = Vector3.ONE * art_scale
 
 
 ## --- clearing --------------------------------------------------------------

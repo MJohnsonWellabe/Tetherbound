@@ -315,7 +315,16 @@ func _draw_enemy() -> void:
 	if foe == null:
 		return
 	_enemy_eyebrow.text = "LEVEL %d" % int(foe.level)
-	_enemy_name.text = str(foe.display_name)
+	# `label()`, not `display_name`: for every wild creature in the game those
+	# are the same string, because `label()` falls back to the species name
+	# whenever there is no nickname. The one creature that has one is the
+	# Burrow Warrens guardian (`burrow_warrens.gd::_dress_the_guardian`), which
+	# is named so the fight the region is built around does not open with a
+	# plate reading the same species word as the three animals in the corridor
+	# behind it. Reading `label()` here also means a CAUGHT creature the player
+	# has renamed is called what they called it when it is on the other side of
+	# a fight, which is the same rule the ally plate above already follows.
+	_enemy_name.text = str(foe.label())
 	_enemy_type_tag.text = str(foe.creature_type).to_upper()
 	_enemy_type_tag.add_theme_color_override("font_color", _type_color(str(foe.creature_type)))
 

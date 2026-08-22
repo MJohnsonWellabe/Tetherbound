@@ -37,7 +37,7 @@ func build() -> void:
 		add_child(group)
 		for entry: Variant in (cluster as Dictionary).get("props", []):
 			if entry is Dictionary:
-				_place(group, entry as Dictionary)
+				place(group, entry as Dictionary)
 	print("[props] placed %d props in %d clusters" % [_placed, parsed.get("clusters", []).size()])
 
 
@@ -45,7 +45,19 @@ func placed() -> int:
 	return _placed
 
 
-func _place(into: Node3D, spec: Dictionary) -> void:
+## One prop from one spec: `model`, `at` (WORLD metres [x, z]), and the
+## optional `yaw_deg`/`pitch_deg`/`roll_deg`/`scale`/`sink_m` documented
+## inline below.
+##
+## Public, and called from outside this file by exactly one other place:
+## `burrow_warrens.gd::_build_dressing()`, which stands its own instance of
+## this script up as a `top_level` child of the cave so that `_ground_height()`
+## below walks up into the WARRENS' `ground_height_at()` -- the cave floor --
+## instead of the hillside now several metres overhead. Reused rather than
+## re-implemented because the collider-from-combined-AABB and the `sink_m`
+## reasoning below are the two things a second copy would get subtly wrong,
+## and a crate you can walk through is a hologram underground too.
+func place(into: Node3D, spec: Dictionary) -> void:
 	var model := str(spec.get("model", ""))
 	var path := "%s/%s.gltf" % [PROPS_DIR, model]
 	if not ResourceLoader.exists(path):
@@ -66,7 +78,12 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 
 	var scale_factor := float(spec.get("scale", 1.0))
 	var root: Node3D = packed.instantiate()
-	root.name = model
+	# `name` (optional, default the model name): Godot silently auto-renames
+	# same-named siblings to `@Node3D@25876`-style ids, which is invisible in
+	# the world and useless in a probe or a remote tree the moment one cluster
+	# uses the same model twice. A caller that places several of one model in
+	# one parent -- burrow_warrens.gd's cave dressing does -- passes its own.
+	root.name = str(spec.get("name", model))
 	# `sink_m` (optional, default 0): extra downward offset below the sampled
 	# ground height. Most of the pack's models embed only a few centimetres at
 	# their own authored origin (EV7-clusters-fix probe:
@@ -109,7 +126,7 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		aabb = aabb.merge(to_root_local * (meshes[i].global_transform * meshes[i].get_aabb()))
 
 	var body := StaticBody3D.new()
-	body.name = "%s_Collision" % model
+	body.name = "%s_Collision" % root.name
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = aabb.size * scale_factor
