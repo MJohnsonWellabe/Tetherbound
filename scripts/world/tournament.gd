@@ -58,7 +58,19 @@ const BOARD_WIDTH := 2.5
 const BOARD_HEIGHT := 1.55
 const BOARD_THICKNESS := 0.07
 const BOARD_CENTRE_HEIGHT := 1.5
-const BOARD_SPACING := 0.9
+## Where the posts stand, as an offset from the panel's centre. OUTSIDE the
+## painted face, not across it. At 0.9 they stood in front of the panel and
+## covered the entire left-hand column of the draw and the champion's slot --
+## a bracket board whose posts hide two of its four columns. They also read as
+## two dowels with a rectangle floating between them, which is the "no
+## joinery" half of the same defect.
+const POST_SPACING := BOARD_WIDTH * 0.5 - 0.04
+## How far behind the panel the posts and rails sit. The panel is nailed to
+## the FRONT of the frame, the way a real notice board is built, so nothing
+## structural crosses the thing you are meant to read.
+const FRAME_DEPTH := 0.05
+## The two rails the panel is nailed to, top and bottom.
+const RAIL_THICKNESS := 0.055
 
 ## The painted bracket. Sizes are in metres unless the name says otherwise.
 ##
@@ -80,14 +92,14 @@ const NAME_PIXEL_SIZE := 0.0022
 const LABEL_GLYPH_ADVANCE := 0.62
 ## The four columns' centres, as offsets from the panel's own centre: the
 ## draw, the quarter-final winners, the semi-final winners, the champion.
-const COLUMN_X: PackedFloat32Array = [-0.92, -0.30, 0.28, 0.86]
+const COLUMN_X: PackedFloat32Array = [-0.95, -0.32, 0.28, 0.90]
 ## One slot cell. Names are centred in it and connectors start at its edge.
 const SLOT_WIDTH := 0.52
 ## The eight draw slots, top to bottom, as offsets from the panel's centre.
 const ROW_TOP := 0.34
 const ROW_STEP := 0.145
 ## The title sits above the draw.
-const TITLE_Y := 0.60
+const TITLE_Y := 0.62
 const TITLE_FONT_SIZE := 40
 const TITLE_PIXEL_SIZE := 0.0026
 ## Connector lines and the empty-slot rules waiting to be filled in.
@@ -156,8 +168,25 @@ func _build_board() -> void:
 		post_mesh.height = POST_HEIGHT
 		post_mesh.material = timber
 		post.mesh = post_mesh
-		post.position = Vector3(side * BOARD_SPACING, POST_HEIGHT * 0.5, 0.0)
+		post.position = Vector3(side * POST_SPACING, POST_HEIGHT * 0.5, -FRAME_DEPTH)
 		_board.add_child(post)
+
+	# The frame the panel is nailed to: two rails between the posts, top and
+	# bottom, behind the painted face. Cheap carpentry, and the difference
+	# between "a board built out of boards" and "a rectangle floating between
+	# two dowels".
+	for edge in [-1.0, 1.0]:
+		var rail := MeshInstance3D.new()
+		rail.name = "Rail_%s" % ("B" if edge < 0.0 else "T")
+		var rail_mesh := BoxMesh.new()
+		rail_mesh.size = Vector3(POST_SPACING * 2.0 + POST_RADIUS * 2.0,
+			RAIL_THICKNESS, RAIL_THICKNESS)
+		rail_mesh.material = timber
+		rail.mesh = rail_mesh
+		rail.position = Vector3(0.0,
+			BOARD_CENTRE_HEIGHT + edge * (BOARD_HEIGHT * 0.5 - RAIL_THICKNESS),
+			-FRAME_DEPTH)
+		_board.add_child(rail)
 
 	var panel := MeshInstance3D.new()
 	panel.name = "Panel"
@@ -188,7 +217,8 @@ func _build_board() -> void:
 	body.name = "Board_Collision"
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(BOARD_WIDTH + POST_RADIUS * 2.0, POST_HEIGHT, BOARD_THICKNESS * 2.0)
+	box.size = Vector3(POST_SPACING * 2.0 + POST_RADIUS * 2.0, POST_HEIGHT,
+		BOARD_THICKNESS + FRAME_DEPTH * 2.0)
 	shape.shape = box
 	shape.position = Vector3(0.0, POST_HEIGHT * 0.5, 0.0)
 	body.add_child(shape)
