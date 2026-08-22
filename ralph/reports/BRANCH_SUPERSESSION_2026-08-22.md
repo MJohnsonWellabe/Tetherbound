@@ -77,3 +77,38 @@ afterwards will believe it cleaned up. The GitHub MCP surface has
 **These eight are safe to delete by whatever can delete them** — a GitHub
 Actions run, or a human. The analysis above is the part that does not need
 repeating.
+
+---
+
+## Deletion status, 2026-08-22 21:45
+
+**Seven of the eight are already gone from origin.** `git ls-remote --heads`
+lists neither `TOURNAMENT-1`, `TOURNAMENT-2`, `HUD-GLYPHS`, `HUD-LAYOUT`,
+`HUD-POPUP`, `WEATHER-LIGHT`, `DPAD-COLLISION` nor `ralph/integration-3`. This
+session did not delete them -- a `ralph/branch-supersession-cleanup` branch
+exists on origin, so the cleanup ran through its own mechanism.
+
+**`ralph/HUD-EMPHASIS` remains, and cannot be deleted from this environment.**
+The attempt fails and then lies about it:
+
+```
+$ git push origin --delete ralph/HUD-EMPHASIS
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+Everything up-to-date
+```
+
+That last line is the dangerous part: the command reports success after failing,
+and `git ls-remote --heads origin ralph/HUD-EMPHASIS` still returns the ref. The
+session's git proxy blocks ref deletion, and the GitHub MCP server exposes
+`create_branch` with no delete counterpart, so there is no route to it from here.
+
+Its supersession is not in doubt -- verified on evidence in the table above, not
+on ancestry, which says the opposite. Six commits show as "not on main" and
+main's `combat_hud.gd` is ~260 lines SHORTER, because those lines are D32's
+hold-to-open party selector, banned by `OWNER_DIRECTIVES_2026-08-22.md` §1. Main
+has zero references to it and `combat_switch_left` is not in `project.godot`.
+
+**Left for whoever has a route to origin's refs.** One stale branch is harmless;
+a delete that reports "Everything up-to-date" after failing is not, and that is
+the part worth knowing before someone trusts the same command.
