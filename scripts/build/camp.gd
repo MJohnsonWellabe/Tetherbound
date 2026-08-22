@@ -151,6 +151,13 @@ func _on_craft() -> void:
 
 func _pass_the_night(game: Node) -> void:
 	var day := int(game.call("advance_day"))
+	# GATEB-FLAGS: `player_slept_at_home`, data/progression/objectives.json's
+	# ladder. Set here, on the actual completed rest, not on the interact
+	# prompt firing -- the objective asks for the sleep itself, not the
+	# attempt to start one.
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		progression.call("set_flag", "player_slept_at_home")
 	# Gate A creature-bed contract: sleep completes only pals physically put
 	# to bed. Non-resting party members keep their current HP, which is the
 	# meaningful preparation tradeoff the bed is supposed to create.
