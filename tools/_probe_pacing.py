@@ -80,6 +80,7 @@ WARRENS = load("data/config/burrow_warrens.json")
 HARVEST = band_content.load_config("data/config/harvest.json", "nodes")
 SPAWNS = band_content.load_config("data/config/spawns.json", "spawns")
 CATCHING = load("data/config/catching.json")
+CURVE = load("data/config/chapter_curve.json")
 RECIPES_ROOT = load("data/recipes/recipes_rootstone.json")["recipes"]
 RECIPES_IRON = load("data/recipes/recipes_ironwood.json")["recipes"]
 
@@ -224,6 +225,30 @@ def dialogue_seconds(path):
 # --- derived: catching the five -----------------------------------------------
 
 
+# GATEC-CURVE: the wild band is no longer one global number.
+# data/config/chapter_curve.json gives each corridor region its own, resolved
+# in-game from a spawn's world z, so a grind fight in the Upper Meadows is not
+# the same fight as one in the practice meadow and must not be priced like one.
+# This probe's own beat "band" index is 0-5 (Band 0 Homebound shares Band 1's
+# region; Act VI is the approach), which is the mapping below.
+PROBE_BAND_TO_REGION = {0: 0, 1: 0, 2: 1, 3: 2, 4: 3, 5: 4}
+
+
+def wild_band(probe_band=None):
+    """The [low, high] wild level band for one of this probe's bands.
+
+    Falls back to progression.json's global band -- which is still what every
+    caller with no position gets in-game -- when the curve has no row for it.
+    """
+    regions = CURVE.get("regions", [])
+    index = PROBE_BAND_TO_REGION.get(probe_band)
+    if index is not None and index < len(regions):
+        band = regions[index].get("wild_band")
+        if band and len(band) == 2:
+            return band[0], band[1]
+    return PROG["level"]["wild_band"]
+
+
 def catch_seconds():
     """One wild catch: soften it, then throw until it sticks.
 
@@ -239,7 +264,7 @@ def catch_seconds():
     throws = 1.0 / max(per_throw, 0.02)
     th = CATCHING["throw"]
     per_throw_s = float(th["cooldown"]) + float(th["release_windup"]) + 1.0 + 2.0  # +aim
-    wild_lo, wild_hi = PROG["level"]["wild_band"]
+    wild_lo, wild_hi = wild_band()
     soften_hp = creature_hp("bramblebun", (wild_lo + wild_hi) / 2.0) * 0.75
     return soften_hp / DPS + throws * per_throw_s + FIGHT_OVERHEAD_S
 
@@ -516,7 +541,7 @@ def run():
             want = band_expected[next_band]
             if level < want:
                 need = cumulative_xp(level, want) - xp
-                wild_lo, wild_hi = PROG["level"]["wild_band"]
+                wild_lo, wild_hi = wild_band(beat["band"])
                 wild_avg = (wild_lo + wild_hi) / 2.0
                 per = xp_award_for(wild_avg)
                 n = int(math.ceil(need / max(per, 1)))

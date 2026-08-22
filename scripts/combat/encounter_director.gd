@@ -17,6 +17,11 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## D30: wild creatures spawn inside a level band rather than at one fixed level.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+## GATEC-CURVE: which level band that spawn's REGION rolls in. `PROGRESSION`'s
+## own `level.wild_band` is one global band for the whole 7.5km corridor and
+## stays the fallback for callers with no position; this decides the band from
+## where the cluster actually stands.
+const CHAPTER_CURVE := preload("res://scripts/creatures/chapter_curve.gd")
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 ## OF27: the shiny roll's odds. A pure data reader, same static-cache shape as
 ## PROGRESSION/MATH/CATCH above, so this stays a one-line addition to the
@@ -250,7 +255,11 @@ func _spawn_creatures() -> void:
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			wild.call("populate", species, _player)
-			_roll_wild_level(wild, species, rng)
+			# The CLUSTER's centre, not this individual's scattered spot: a
+			# cluster sitting on a region boundary must not hand two of its own
+			# members different level bands, which is what reading the body's
+			# own z would do.
+			_roll_wild_level(wild, species, rng, centre.z)
 			wild.call("configure", MATH.config().get("wild", {}))
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -362,6 +371,17 @@ func _set_fixed_level(wild: Node3D, species: String, level: int) -> void:
 ## split here would be inventing a rule nobody asked for. spawns.json stays
 ## untouched by this change.
 ##
+## GATEC-CURVE made it per-REGION, which is a different split and one the
+## chapter did ask for. `centre_z` is the cluster's own world z;
+## `chapter_curve.json` names the band each region rolls in and
+## `chapter_curve.gd` returns a copy of the progression config carrying it, so
+## every line below is unchanged and the rng draw ORDER -- level, three IVs, two
+## traits, shiny, in that order -- is byte-for-byte what it was. Band 1's band
+## is still `[2, 6]`, so the opening meadow every smoke test walks through
+## rolls exactly the levels it rolled before. What changes is that a creature
+## standing in the stronghold approach is no longer level 4. Species are still
+## not skewed against each other; only where they stand matters.
+##
 ## Also rolls individuality and a trait pair (R4.2) through this same `rng` —
 ## the wild encounter is where GAME_DESIGN.md 11's "same-species creatures
 ## have slightly different underlying stat quality" is actually met by the
@@ -383,8 +403,9 @@ func _set_fixed_level(wild: Node3D, species: String, level: int) -> void:
 ## `populate()` above (that happened before this roll), so it is told
 ## directly via `set_shiny`, which re-tints the model already standing in
 ## the world rather than rebuilding it.
-func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator) -> void:
-	var cfg: Dictionary = PROGRESSION.config()
+func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator, centre_z: float) -> void:
+	var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
+		centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
 	var definition: Dictionary = SPECIES.definition(species)
 	var iv_rolls: Array = [rng.randf(), rng.randf(), rng.randf()]
 	var trait_rolls: Array = [rng.randf(), rng.randf()]

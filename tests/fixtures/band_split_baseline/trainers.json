@@ -489,15 +489,15 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 11
+          "level": 13
         },
         {
           "species": "tuskroot",
-          "level": 12
+          "level": 14
         },
         {
           "species": "meadowhart",
-          "level": 13
+          "level": 15
         }
       ],
       "reward": {
@@ -539,15 +539,15 @@
       "team": [
         {
           "species": "pipwing",
-          "level": 12
+          "level": 14
         },
         {
           "species": "duskhush",
-          "level": 13
+          "level": 15
         },
         {
           "species": "galecrest",
-          "level": 15
+          "level": 16
         }
       ],
       "reward": {

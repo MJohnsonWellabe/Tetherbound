@@ -1,0 +1,86 @@
+{
+  "_comment": "GATEC-CURVE. The Meadows chapter's progression curve, as data. One row per corridor region, in route order, each stating what the player's five are expected to BE when they arrive and what the region fields against them. Prompts 57 (team progression curve) and 67 (five-creature pressure) both asked for the chapter's curve to exist somewhere a later regional package can tune without reading GDScript; before this file it existed in three places, none of them tunable -- trainer levels scattered across five band directories, an expected-level model inside tools/_probe_pacing.py, and a CRITICAL_PATH constant inside a test file.",
+
+  "_comment_authority": "This file does NOT own trainer teams (data/config/bands/<band>/trainers.json), wild populations (bands/<band>/spawns.json), the xp curve or the award (data/config/progression.json). It owns the BAND each of those must land inside, and tests/test_chapter_curve.gd fails the build when one drifts out. That split is deliberate: a regional package still authors its own content, it just cannot silently author it at the wrong strength for where it sits on the route.",
+
+  "_comment_measurement": "The `team` bands are MEASURED, not wished for. `python3 tools/_probe_pacing.py` walks the shipped critical path against the shipped xp curve and award and prints, per band, the level a lead creature enters and leaves at: 3->8, 8->10, 10->13, 13->16, 16->20 (2026-08-22, curve 40*L^1.15, award 30+16L). Those five pairs are what the `team.enter`/`team.exit` numbers below are. Re-run the probe after any tuning here or in progression.json; if the printed numbers move, these move with them.",
+
+  "_comment_no_scaling": "Prompt 57: 'The world does not rescale to the player.' Nothing in this file is read against the player's actual level. `wild_band` is resolved from a spawn's WORLD POSITION and nothing else -- a level-3 player who walks to the stronghold approach meets the same level 14-17 creatures a level-19 player does, and that is the point.",
+
+  "_comment_z_bands": "`z_to` is the region's exclusive upper world-z bound, mirroring MEADOWS_MACRO_LAYOUT.md section 3's table and scripts/world/world_perimeter.gd's BAND*_Z1 constants exactly. tests/test_chapter_curve.gd asserts the two agree, because a corridor whose perimeter style changes at one z and whose creature strength changes at another would read as two different maps laid over each other. The last region's bound is deliberately far past the south cap so nothing can fall off the end of the table.",
+
+  "regions": [
+    {
+      "id": "band1_lower_meadows",
+      "name": "Lower Meadows",
+      "z_to": 1360.0,
+      "team": {"enter": 3, "exit": 8, "expected_members": 3},
+      "wild_band": [2, 6],
+      "trainer_levels": [2, 7],
+      "tools": ["starter orb", "basic orbs", "first TMs", "creature bed", "player bed"],
+      "xp_sources": ["practice fight", "village tournament rounds", "field wild fights", "first catches"],
+      "temptations": "The first four catches happen here, so the five fills up here. Every later region's roster pressure is paid for by how attached the player got in this one.",
+      "tuning": "Wild band UNCHANGED from progression.json's historical global [2,6]: the opening is the most-tested stretch in the repo and the point of this file is not to reopen it."
+    },
+    {
+      "id": "band2_stone_and_root",
+      "name": "Stone & Root (Old Quarry / Burrow Warrens)",
+      "z_to": 3180.0,
+      "team": {"enter": 8, "exit": 10, "expected_members": 4},
+      "wild_band": [6, 8],
+      "trainer_levels": [9, 14],
+      "tools": ["rootstone recipes", "riding saddle", "greater orb", "heartstone (Mudsnout evolution)"],
+      "xp_sources": ["warrens residents", "warrens guardian", "quarry field fights"],
+      "temptations": "Mudsnout's evolution gate (level 15 + bond 55 + heartstone) is decided here even though it fires later, and the Meadowhart met just past the South Bridge is the traversal slot arriving while the party is still filling.",
+      "tuning": "The field band tops out at 8, one below the Warrens' weakest resident: burrow_warrens.json's hand-placed levels (9, 10, 10, 11, guardian 14) sit strictly ABOVE the ridge outside on purpose -- a dungeon that fights at field strength is not a dungeon -- and tests/test_chapter_curve.gd fails the build if that ordering is ever lost. `trainer_levels` covers the warrens too, because it is this region's authored opposition; the band has no trainers of its own, which is prompt 59's gap, not this file's."
+    },
+    {
+      "id": "band3_the_river_lock",
+      "name": "The River Lock (Tether Relay)",
+      "z_to": 4760.0,
+      "team": {"enter": 10, "exit": 13, "expected_members": 5},
+      "wild_band": [9, 12],
+      "trainer_levels": [8, 16],
+      "tools": ["relay-tier TMs", "second trait unlocks at full bond", "appraisal reading"],
+      "xp_sources": ["relay picket line", "relay officer", "relay captain", "Captain Riverwatch"],
+      "temptations": "The five is normally full by the time the relay is reached, so this is the first region where a catch costs somebody. It is the earliest place the cap is supposed to hurt.",
+      "tuning": "The relay's four-fight ladder (8, 9, 10, 11-12) is the densest trainer run in the chapter and carries the player across this whole band on its own; the wild band exists to make a catch here a real alternative, not to be the xp source."
+    },
+    {
+      "id": "band4_upper_meadows_ironwood",
+      "name": "Upper Meadows / Ironwood",
+      "z_to": 7000.0,
+      "team": {"enter": 13, "exit": 16, "expected_members": 5},
+      "wild_band": [11, 14],
+      "trainer_levels": [13, 16],
+      "tools": ["ironwood recipes", "sigils", "riding in earnest", "Tuskroot"],
+      "xp_sources": ["regional captains", "ironwood ecology", "optional detours"],
+      "temptations": "The Meadowhart cluster up here is the traversal creature met at a level that can actually fight, which is prompt 67's 'traversal must not create a dead slot' -- a mount picked up at level 2 in a level-14 region would have been exactly that dead slot.",
+      "tuning": "Widest band in the chapter (28 minutes of travel by the probe, the longest leg) so the ecology has room to vary without a wall."
+    },
+    {
+      "id": "band5_stronghold_approach",
+      "name": "Stronghold Approach & Meadows Hall",
+      "z_to": 1000000.0,
+      "team": {"enter": 16, "exit": 20, "expected_members": 5},
+      "wild_band": [14, 17],
+      "trainer_levels": [15, 20],
+      "tools": ["everything the chapter has", "full-bond perks", "Best Creature"],
+      "xp_sources": ["patrol", "courtyard", "elite", "the Warden"],
+      "temptations": "The legendary join offer lands here against five creatures that have each been carried the length of the chapter. If a player can name a filler creature at this point, prompt 67 has failed upstream of the Hall, not in it.",
+      "tuning": "Wild top (17) stays under the Warden's ace (20) and under the elite (19): the approach is drained, occupied land, not a place that out-levels the boss it leads to."
+    }
+  ],
+
+  "five_slot": {
+    "_comment": "CLAUDE.md: five creatures total, no storage, no reserve, no sixth slot. Nothing here adds one. These are the numbers that decide whether the cap is a LIVE decision late in the chapter or a rule the player last thought about in hour one, and tests/test_chapter_curve.gd enforces each against the regions above.",
+
+    "max_catch_level_deficit": 2,
+    "_comment_deficit": "How far below a region's expected team ENTRY level that region's strongest wild creature may sit before a catch there stops being a real option. This is the single number that decides whether the five-cap keeps biting: under the old single global [2,6] band, a creature caught in the stronghold approach arrived twelve levels below the team it was joining, so no player would ever weigh it against a member they had raised, so the cap silently stopped mattering after the first hour. A deficit of 2 means a fresh catch is always close enough to argue for.",
+
+    "min_distinct_wild_species": 6,
+    "_comment_options": "More desirable creatures than slots is the whole mechanism. Six is the floor, not the target -- the roster is 17 species and the spawn table currently fields 12 distinct ones. Asserted against the merged spawn table so deleting a species from the world fails the build instead of quietly making the cap free.",
+
+    "_comment_costs": "What the player actually loses by replacing a member, all of it already implemented and none of it storage: invested levels (progression.json's curve is steep enough that a mid-chapter replacement starts several fights behind), accumulated bond and its stat nodes plus the second trait it unlocks at full bond, Best Creature designation, an in-progress evolution gate, and the traversal slot if the one being cut is the mount. The release ceremony (R4.10) is where those are shown before the choice is committed."
+  }
+}

@@ -4,6 +4,7 @@
     {
       "order": 11,
       "id": "captain_field",
+      "_comment_gatec_curve": "GATEC-CURVE raised this team from 11/12/13 to 13/14/15. It was the one DIP in the chapter's opposition curve: the player reaches this captain at z=5590, having already beaten the relay captain (11/11/12, z=3757) and Captain Riverwatch (13/14/16, z=4350), so a level-11 lead creature here was weaker than two fights the player had already won and the region read as a step backwards. Still inside spec section 3's 'roughly 10-16 entering this band' and inside tests/test_trainers_data.gd::test_captain_teams_sit_in_the_bands_own_level_range. The band this must stay inside now lives in data/config/chapter_curve.json.",
       "name": "Captain Halder",
       "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
       "rank": "captain",
@@ -24,15 +25,15 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 11
+          "level": 13
         },
         {
           "species": "tuskroot",
-          "level": 12
+          "level": 14
         },
         {
           "species": "meadowhart",
-          "level": 13
+          "level": 15
         }
       ],
       "reward": {
@@ -56,6 +57,7 @@
     {
       "order": 12,
       "id": "captain_ridge",
+      "_comment_gatec_curve": "GATEC-CURVE raised this team from 12/13/15 to 14/15/16, for the same reason as captain_field above and to keep this file's own claim that Vess is 'a level step above the Field Captain' true after that change. 16 is the ceiling the captain band test already enforces.",
       "name": "Captain Vess",
       "_comment": "SF34. The second captain: Air-focused team, rewards the Ridge Sigil. A level step above the Field Captain -- the three are meant to be fought in road order, not in one sitting, and nothing enforces that order because nothing needs to: the Sigils are a set and the gate counts them, not their sequence.",
       "rank": "captain",
@@ -76,15 +78,15 @@
       "team": [
         {
           "species": "pipwing",
-          "level": 12
+          "level": 14
         },
         {
           "species": "duskhush",
-          "level": 13
+          "level": 15
         },
         {
           "species": "galecrest",
-          "level": 15
+          "level": 16
         }
       ],
       "reward": {
