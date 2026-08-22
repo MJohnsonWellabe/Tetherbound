@@ -364,7 +364,29 @@ func _catch_with_real_throws() -> bool:
 					% launches)
 				return false
 			_wild = revived
-			_checkpoint("the Bramblebun was knocked out; re-engaging it (%d)" % re_engages)
+			# Put your own creature back on its feet first.
+			#
+			# The run that exposed this reported `prompt='Ripplet is out of the
+			# fight.'` -- `encounter_director.gd::interaction_offer()` refuses
+			# engagement outright while the ally is fainted, and says why: "with
+			# no creature on its feet there is nothing to fight with". After a
+			# long attrition catch that is the normal end state, and a player
+			# would rest or use a potion before walking back.
+			#
+			# Assigning hp directly is the shortcut the sibling harnesses
+			# already take (`smoke_catching.gd`, `smoke_party_count_after_catches.gd`
+			# both set `creature.hp` outright): this file's subject is the CATCH
+			# path, not the healing path, and `smoke_gate_a_rest_torch.gd` owns
+			# resting.
+			var own: RefCounted = _combat.call("active_creature")
+			if own == null:
+				var party: RefCounted = _game.get("party")
+				own = party.call("active") if party != null else null
+			if own != null:
+				own.set("fainted", false)
+				own.set("hp", own.get("max_hp"))
+			_checkpoint("the Bramblebun was knocked out; healing up and re-engaging it (%d)"
+				% re_engages)
 			if not await _walk_to_and_engage_wild(_wild, 1800):
 				_fail("could not re-engage the respawned Bramblebun")
 				return false
