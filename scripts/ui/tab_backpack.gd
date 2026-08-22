@@ -75,10 +75,7 @@ const USE_ACTION := "interact"
 
 ## Discard the focused stack, after a confirm -- destructive, so it gets one.
 const DROP_ACTION := "backpack_drop"
-## How long `backpack_drop` stands down after the shell opens. Two frames: the
-## opening press is read by this tab on the frame it becomes visible, and
-## `is_action_just_pressed` can still be true on the next one.
-const OPEN_GUARD_FRAMES := 2
+
 ## Halve the focused stack into the first empty slot. Non-destructive (both
 ## halves stay in the satchel), so unlike Use and Drop this applies on the
 ## same press with no picker or confirm.
@@ -97,10 +94,10 @@ const SPLIT_ACTION := "backpack_split"
 ## of them collide again.
 const ASSIGN_ACTION := "backpack_assign"
 
-## Frames left in which `backpack_drop` is ignored because the press that
-## armed it is the same press that opened the shell. See `_read_drop()` and
-## `notify_shell_opened()`.
-var _open_guard: int = 0
+## True while `backpack_drop` must be ignored because the press still down is
+## the one that opened the shell. Cleared when that button is RELEASED, not
+## after N frames -- see `notify_shell_opened()`.
+var _ignore_drop_until_release: bool = false
 
 var _grid: GridContainer = null
 var _summary: Label = null
@@ -769,15 +766,20 @@ func revision() -> int:
 ## `_confirming` directly (0, the focused slot) rather than inferring from the
 ## shell's deaf flag. Being told beats noticing.
 func notify_shell_opened() -> void:
-	_open_guard = OPEN_GUARD_FRAMES
+	_ignore_drop_until_release = true
 
 
 func poll() -> void:
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
-	if _open_guard > 0:
-		_open_guard -= 1
+	# Held until the opening press is physically released. A frame countdown was
+	# tried first and is not enough: `tools/_probe_pause.gd` shows `_read_drop`
+	# firing with the counter already spent, because more than one poll elapses
+	# between the shell opening and the button coming back up. "Not until they
+	# let go" is the only version of this guard that cannot be out-waited.
+	if _ignore_drop_until_release and not Input.is_action_pressed(DROP_ACTION):
+		_ignore_drop_until_release = false
 	_read_use()
 	_read_drop()
 	_read_split()
@@ -1361,7 +1363,7 @@ func _read_drop() -> void:
 	# deleting an item the player never selected. Same guard shape the shell
 	# already uses against the mirror case (`suppress_reopen`) and
 	# `dialogue_panel.gd::OPEN_GUARD_FRAMES` uses against its own.
-	if _open_guard > 0:
+	if _ignore_drop_until_release:
 		return
 	if not Input.is_action_just_pressed(DROP_ACTION):
 		return

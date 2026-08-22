@@ -1636,6 +1636,7 @@ jobs:
           godot --headless --path . --script tests/smoke_build_owns_creature_cycle.gd
           godot --headless --path . --script tests/smoke_trainer_battle_camera.gd
           godot --headless --path . --script tests/smoke_arena_contain.gd
+          godot --headless --path . --script tests/smoke_menu_open_does_not_offer_to_drop.gd
 
   verify-gate-evidence-shard:
     runs-on: ubuntu-latest
