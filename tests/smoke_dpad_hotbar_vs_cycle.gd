@@ -60,7 +60,15 @@ const LB_BUTTON := 9
 ## `smoke_menu_owns_dpad.gd` already documents for using an equippable rather
 ## than a potion (which auto-targets and can silently no-op either way).
 const TOOL_ID := "axe"
+## A second tool, so the d-pad RIGHT check has something real to reach for.
+## Without it that press correctly equips nothing (the slot is empty) and the
+## assertion cannot tell "the d-pad does not reach slot 4" from "slot 4 holds
+## nothing", which is the shape of test this file exists to not be.
+const SECOND_TOOL_ID := "pickaxe"
 const HOTBAR2_INDEX := 1 ## hotbar_2, zero-based into Game.hotbar / HOTBAR_ACTIONS
+## hotbar_4 is d-pad RIGHT under the owner's map (project.godot, joypad 14).
+## The old file called this slot 3 because d-pad right used to be `hotbar_3`.
+const HOTBAR4_INDEX := 3
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -128,6 +136,16 @@ func _stock_the_satchel() -> bool:
 		_fail("the hotbar has no slot %d to assign" % HOTBAR2_INDEX)
 		return false
 	assignments[HOTBAR2_INDEX] = TOOL_ID
+
+	inventory.call("add", SECOND_TOOL_ID, 1)
+	if int(inventory.call("count", SECOND_TOOL_ID)) < 1:
+		_fail("could not put a %s in the satchel" % SECOND_TOOL_ID)
+		return false
+	if assignments.size() <= HOTBAR4_INDEX:
+		_fail("the hotbar has no slot %d to assign" % HOTBAR4_INDEX)
+		return false
+	assignments[HOTBAR4_INDEX] = SECOND_TOOL_ID
+
 	_game.set("hotbar", assignments)
 	return true
 
@@ -161,11 +179,11 @@ func _check_plain_dpad_right_uses_hotbar_and_does_not_cycle() -> void:
 	var after := int(_party.call("active_index"))
 	var equipped := str(_game.get("equipped_tool"))
 
-	if equipped.is_empty():
-		_fail("plain d-pad right did not equip anything from hotbar_4 -- slot 4 is unreachable on a pad")
+	if equipped != SECOND_TOOL_ID:
+		_fail("plain d-pad right did not equip %s from hotbar_4 (equipped '%s') -- slot 4 is unreachable on a pad" % [SECOND_TOOL_ID, equipped])
 	if after != before:
 		_fail("plain d-pad right ALSO cycled the active creature (%d -> %d) -- one press fired two world verbs" % [before, after])
-	if after == before and not equipped.is_empty():
+	if after == before and equipped == SECOND_TOOL_ID:
 		print("  ok    plain d-pad right: equipped %s from hotbar_4 and did not cycle the party" % equipped)
 
 
