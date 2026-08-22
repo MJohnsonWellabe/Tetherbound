@@ -6,7 +6,33 @@ design decision rather than inventing one.
 
 ---
 
-## BAND1-D1 — the trail camp needs a sleep prop, and no installed asset is one
+## ✅ RESOLVED 2026-08-22 by owner correction — sourced, not generated
+
+**This entry was wrong, and the owner said so in one line: "you can't go get a
+free bed or tent asset that matches the game?"**
+
+Yes. `CLAUDE.md` forbids *generating* without owner-supplied reference art — the
+Meshy rule. Its **Asset work** section separately and explicitly permits
+*sourcing* a candidate asset for this private project, subject to cohesion, a
+`docs/ASSET_LEDGER.md` row, no assumption of redistributability, and an in-engine
+scale/material test. Round 3 collapsed those two rules into one and parked
+solvable work. The correct read is that only the Meshy path was blocked.
+
+**Resolved by** Kenney's Survival Kit 2.0 (CC0 1.0, licence verified from the
+`License.txt` inside the zip, not the download page), vendored to
+`assets/props/kenney_survival/`. Quaternius's own Survival pack was checked
+first for cohesion — it is the five models already vendored here — and has no
+shelter of any kind. `tools/_probe_kenney_survival.gd` confirmed in-engine
+before placement that every surface carries a real `colormap` albedo texture,
+which is the exact check `environment/nature` fails in the entry below. The
+`trail_camp` cluster now has a tent and a bedroll; ledger row filed.
+
+The ground-wear decal half is **still open** and is genuinely different: it is
+not a missing asset but a terrain-path capability that lives in
+`terrain_playground.json`, which no Gate-D lane may edit. That stays with the
+coordinator.
+
+### The original entry, kept for its diagnosis
 
 **Owner-supplied reference art needed.** `CLAUDE.md` and
 `ralph/GATE_D_LANE_CONTRACT.md` §6 both forbid generating anything without it,

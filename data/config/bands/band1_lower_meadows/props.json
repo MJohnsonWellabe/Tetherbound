@@ -424,13 +424,13 @@
         {
           "model": "Clover_1",
           "at": [
-            342.0,
-            939.0
+            340.6,
+            938.6
           ],
           "yaw_deg": 0.0,
           "scale": 0.55,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Low clover clump south-west, at ground level where the bushes are not, so the camp's edge is not all one height."
+          "_why": "Low clover clump south-west, at ground level where the bushes are not, so the camp's edge is not all one height. Moved 1.4m west of its first position to clear the tent's footprint."
         },
         {
           "model": "Rock_Medium_2",
@@ -442,6 +442,28 @@
           "scale": 0.22,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "A single larger boulder on the trail side, 0.67m -- bigger than the fire-ring stones so the two read as different things, and something for the eye to land on between the trail and the fire."
+        },
+        {
+          "model": "tent-canvas",
+          "at": [
+            343.5,
+            939.4
+          ],
+          "yaw_deg": -6.5,
+          "scale": 3.5,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "The shelter, and the prop that unblocks this camp's acceptance line. Two independent blind critics landed on the same gap -- nothing here said anyone SLEPT here -- and BAND1-D1 round 3 first parked it in ralph/BLOCKED.md as needing owner-supplied reference art. That was wrong, and the owner said so: CLAUDE.md forbids GENERATING without reference art, while 'Asset work' explicitly permits SOURCING a candidate asset. Kenney's Survival Kit (CC0 1.0, docs/ASSET_LEDGER.md) ships a tent, three bedrolls and a fire pit. Chosen over Quaternius's own Survival pack, which is the five models already vendored here (Axe, Backpack, Bonfire, Bonfire_Fire, Knife) and has no shelter. Verified in-engine before placement (tools/_probe_kenney_survival.gd): every surface carries a real `colormap` albedo texture, which is exactly the check environment/nature failed earlier this round. Authored small -- raw 0.56 x 0.49 x 0.56m -- so scale 3.5 gives a 1.96m one-person tent, sized against the 0.90m barrel and the 2.78m bench beside it rather than by eye. Sited BEYOND the fire on the camp's south arc, not on its north-west one: the first cut put it north-west, where it stood on ground 0.30m above the fire (measured) and, from all three authored viewpoints, sat between the camera and the camp instead of behind it. From here it is a silhouette behind the flame in the close view and behind the smoke column on the road approach, and it never occludes the glow that is what actually carries at range. Yaw was tested both ways against the render rather than trusted from the maths: at +90 the tent presents a closed canvas wall to the camp and the bedroll disappears behind it; at the computed face-the-fire value the open gable and the bedroll inside it both read. A shelter you cannot see into is a shed."
+        },
+        {
+          "model": "bedroll",
+          "at": [
+            343.1,
+            938.6
+          ],
+          "yaw_deg": 166.0,
+          "scale": 3.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "The bedroll, laid at the tent's mouth with its long axis pointing out toward the fire. The tent carries the silhouette at distance; this is the detail that does the same work up close, where a canvas shape alone still reads as equipment rather than as somebody's night. Raw 0.31 x 0.12 x 0.61m with its long axis on local z, so scale 3.0 gives 0.93 x 0.36 x 1.83m -- a real bedroll's footprint. `bedroll-frame` and `bedroll-packed` were vendored alongside it and are unused for now: a packed roll is what a traveller carries, not what an occupied camp leaves out."
         }
       ],
       "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it: 0.29m of relief across 8m, 7.8m from the trail's (300,880)-(370,950) leg. A camp is a place someone chose to stop; the ground has to look like a reason to choose it."

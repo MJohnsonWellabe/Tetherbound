@@ -135,13 +135,57 @@ albedo textures.
   acceptance the other two cannot show: at 23m the props are barely readable and
   the smoke column is the whole test.
 
-### What is NOT fixed, honestly
+### Round 3b — the sleep prop, after an owner correction
 
-- **No bedroll, tent or lean-to.** This is the prop that converts "objects" into
-  "someone stopped", and the build does not have one. Recorded in
-  `ralph/BLOCKED.md`; nothing generated.
-- **No ground-wear decal** under the camp. Same file. The approach-stone
-  workaround was tried and made things worse.
+Round 3 shipped with "no bedroll, tent or lean-to" parked in `ralph/BLOCKED.md`
+as needing owner-supplied reference art. **The owner corrected that in one
+line:** *"you can't go get a free bed or tent asset that matches the game?"*
+
+They were right and the entry was wrong. `CLAUDE.md` forbids *generating*
+without reference art — the Meshy rule — while its **Asset work** section
+separately permits *sourcing* a candidate asset, subject to cohesion, a ledger
+row, no assumed redistributability, and an in-engine scale/material test. Round
+3 collapsed two rules into one and parked work that was never blocked. Worth
+remembering as a failure mode: the hard rules are narrower than they feel when
+you are three levels deep in a lane brief.
+
+Sourced **Kenney Survival Kit 2.0**, CC0 1.0, licence read from the
+`License.txt` inside the zip rather than the download page, vendored to
+`assets/props/kenney_survival/` with its shared `colormap.png`. Quaternius's own
+Survival pack was checked first, since the camp's Bonfire comes from it and
+cohesion argues for one family — it is exactly the five models already vendored
+here (Axe, Backpack, Bonfire, Bonfire_Fire, Knife) and has no shelter at all.
+
+`tools/_probe_kenney_survival.gd` (new) ran the ledger's own "test scale and
+materials in-engine" rule before anything was placed — the same check
+`environment/nature` had just failed. All five candidates carry a real
+`colormap` albedo texture. The pack is authored small (0.3–0.6m raw), so
+`tent-canvas` scales 3.5 to a 1.96m one-person tent and `bedroll` scales 3.0 to
+0.93 × 1.83m, both sized against the camp's own measured 0.90m barrel and 2.78m
+bench rather than by eye.
+
+Two placement facts found from renders rather than assumed:
+
+- The tent's **first siting was wrong**. North-west of the fire put it on ground
+  0.30m higher (measured) and, from all three authored viewpoints, between the
+  camera and the camp. It now sits beyond the fire on the south arc: a
+  silhouette behind the flame up close and behind the smoke column from the
+  road, never occluding the glow that is what actually carries at range.
+- The tent's **yaw was tested both ways**. At the +90 alternative it presents a
+  closed canvas wall and the bedroll vanishes behind it. A shelter you cannot
+  see into is a shed.
+
+`bedroll-frame`, `bedroll-packed` and `campfire-pit` are vendored unused from
+the same fetch, as siblings rather than a second trip to the same source.
+`campfire-pit` is worth a look by whoever revisits this camp — it is a
+stone-ringed fire pit, and it may do in one prop what this round does with a
+Bonfire plus six hand-sited boulders.
+
+### What is still NOT fixed
+- **No ground-wear decal** under the camp. This half of the old blocked entry
+  stays blocked and is genuinely a different problem: not a missing asset but a
+  terrain-path capability living in `terrain_playground.json`, which no Gate-D
+  lane may edit. The approach-stone workaround was tried and made things worse.
 - The clearing move does **not** invalidate the baked scatter on this branch —
   `scatter_bake.gd::config_fingerprint()` still hashes only the two head configs
   (GATE_D_LANE_CONTRACT §4). The frames below were rendered against a **local**
@@ -161,6 +205,12 @@ and five: the critic's own guidance was one thorough tuning round, then stop,
 because without a sleep prop and a real campfire further rounds converge on a
 well-lit prop dump. The campfire half of that ceiling is now solved. The sleep
 prop is not, and it is owner-art-blocked.
+
+The `ASSET_LEDGER.md` row for the torch also carried a claim this round proved
+false — that the Bonfire's `Fire` surface "shares one ArrayMesh with its log
+geometry and cannot be pulled out standalone". True of the OBJ file, false of
+what Godot imports. Corrected in place rather than left to mislead the next
+person who needs a flame.
 
 **Round 2's verdict is now recorded above** — `DONE.md` previously said round 2
 was unjudged, and the record should not claim less certainty than we have.
