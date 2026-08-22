@@ -134,3 +134,121 @@ func test_two_readers_never_disagree_about_the_same_flag_state() -> void:
 	var reader_b := QUEST_LOG.new()
 	progression.set_flag("road_gate_open")
 	assert_eq(reader_a.tracked_text(progression), reader_b.tracked_text(progression))
+
+
+## --- CHAPTER_OBJECTIVES_CHECKS (prompt 68) ----------------------------------
+##
+## The chain went from two entries to twelve, which turns a class of typo that
+## used to be harmless into a chapter-stopper. Every entry here is DONE only
+## when its own `flag_id` is set, and the tracked line is the first entry that
+## is not done -- so an entry naming a flag NOTHING IN THE GAME EVER SETS does
+## not fail loudly, it silently becomes the permanent tracked objective and
+## every beat behind it is unreachable in the HUD for the rest of the chapter.
+## `road_gate_opne` would do it. These tests are the cheap check against that.
+
+const TRAINERS_FOR_OBJECTIVES := preload("res://scripts/world/trainer_npc.gd")
+const OBJECTIVES_PATH := "res://data/progression/objectives.json"
+
+## Flags set by the world rather than by beating somebody: each is named by a
+## script or config that ships, and the comment says which, so a reader can
+## check the claim without grepping.
+const WORLD_FLAGS := {
+	"road_gate_open": "scripts/world/playground_world.gd's road gate, opened via key_pickup.gd",
+	"south_bridge_open": "scripts/world/south_bridge.gd",
+	"mill_crossing_restored": "scripts/world/mill_crossing.gd (MILL_FLAG)",
+	"warrens_cleared": "scripts/world/burrow_warrens.gd",
+	"captive_rescued": "data/dialogue/relay.json (flag:captive_rescued)",
+	"relay_disabled": "scripts/world/tether_relay.gd (console flag)",
+	"hall_approach_open": "scripts/world/playground_world.gd (SIGIL_GATE_FLAG)",
+	"legendary_freed": "scripts/world/stronghold_climax.gd",
+}
+
+
+func _objectives() -> Dictionary:
+	var file := FileAccess.open(OBJECTIVES_PATH, FileAccess.READ)
+	assert_true(file != null, "%s is missing" % OBJECTIVES_PATH)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "%s is not a JSON object" % OBJECTIVES_PATH)
+	return parsed if parsed is Dictionary else {}
+
+
+func _trainer_defeat_flags() -> Dictionary:
+	var out: Dictionary = {}
+	for entry: Variant in TRAINERS_FOR_OBJECTIVES.trainers():
+		var flag := str((entry as Dictionary).get("defeat_flag", ""))
+		if flag != "":
+			out[flag] = str((entry as Dictionary).get("id", ""))
+	return out
+
+
+## The one that matters: every flag the chain waits on is a flag something
+## actually sets -- a trainer's own defeat_flag, or a named world flag above.
+func test_every_objective_waits_on_a_flag_something_actually_sets() -> void:
+	var beaten := _trainer_defeat_flags()
+	assert_false(beaten.is_empty(),
+		"no trainer defeat flags were read; this check would pass vacuously")
+	var checked := 0
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		var flag := str(entry.get("flag_id", ""))
+		assert_ne(flag, "", "a main objective names no flag_id at all")
+		checked += 1
+		assert_true(beaten.has(flag) or WORLD_FLAGS.has(flag),
+			("main objective '%s' waits on flag '%s', which no trainer sets and which is not a known world "
+			+ "flag; it would become the permanent tracked objective and strand every beat behind it")
+			% [str(entry.get("id", "")), flag])
+	assert_true(checked >= 10,
+		"only %d main objectives were checked; the chain shrank back toward its two-entry state" % checked)
+
+
+## Same rule for the n/3 counters. A miscounted objective is milder than a
+## stranded one -- it still completes -- but "2/3" that can only ever reach 2/3
+## tells the player to go and find a fight that does not exist.
+func test_every_counted_objective_counts_real_defeat_flags() -> void:
+	var beaten := _trainer_defeat_flags()
+	var counted := 0
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		var flags: Array = entry.get("count_flags", []) as Array
+		if flags.is_empty():
+			continue
+		counted += 1
+		for flag: Variant in flags:
+			assert_true(beaten.has(str(flag)) or WORLD_FLAGS.has(str(flag)),
+				"objective '%s' counts '%s', which nothing sets; its counter could never fill"
+					% [str(entry.get("id", "")), str(flag)])
+		# Deliberately NOT asserting that an entry's own flag is among the ones
+		# it counts. `defeat_the_captains` counts the three captains and
+		# completes on `hall_approach_open`, because beating them and then
+		# carrying their Sigils to the gate are two different acts -- its
+		# counter is meant to read 3/3 while the objective is still open, and
+		# test_the_count_reaches_three_of_three_before_the_objective_is_done
+		# above exists to pin exactly that.
+	assert_true(counted >= 3,
+		"expected at least three counted objectives, found %d" % counted)
+
+
+## No two entries may wait on the same flag: the second is done the instant the
+## first is, so it can never be tracked and reads as a beat the player skipped.
+func test_no_two_objectives_wait_on_the_same_flag() -> void:
+	var seen: Array[String] = []
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var flag := str((raw as Dictionary).get("flag_id", ""))
+		assert_false(seen.has(flag),
+			"two main objectives both complete on '%s'; the later one can never be tracked" % flag)
+		seen.append(flag)
+
+
+## Setting every flag in order must leave nothing tracked. Catches a chain that
+## can be walked start to finish and still claims the player has work left.
+func test_completing_the_whole_chain_leaves_nothing_tracked() -> void:
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		progression.set_flag(str((raw as Dictionary).get("flag_id", "")))
+	for raw: Variant in log_reader.main_entries(progression):
+		assert_true(bool((raw as Dictionary).get("done", false)),
+			"'%s' still reads not-done after every objective flag was set"
+				% str((raw as Dictionary).get("label", "")))
+	assert_eq(log_reader.tracked_text(progression), "",
+		"the chapter's objectives are all complete and something is still tracked")
