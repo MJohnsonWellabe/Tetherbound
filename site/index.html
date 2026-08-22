@@ -4,33 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tetherbound</title>
-<meta name="description" content="A third-person survival, crafting and creature-training game. Five creatures, no storage. A 3-4 hour first chapter for Windows and the ROG Ally.">
+<meta name="description" content="Team Tether is back and the Meadows is going dry. Grandpa cannot make the journey. You build a team of five creatures and go instead. A 3-4 hour first chapter for Windows and the ROG Ally.">
 <meta property="og:title" content="Tetherbound">
-<meta property="og:description" content="Five creatures. No storage. Your creature does the fighting, and you have to be there.">
+<meta property="og:description" content="Team Tether is draining the Meadows. Grandpa is too old to stop them. Five creatures, no storage box, and a road that ends at Meadows Hall.">
 <!-- og:image cannot fall back gracefully, so it must point at a file that is
      committed today. -->
 <meta property="og:image" content="img/hero-meadow.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌿</text></svg>">
 
 <!--
+  This page sells the game's actual story, not a feature list. The premise it
+  leads with is the repo's own canon and nothing here invents around it:
+  docs/TETHERBOUND_GAME_VISION.md sec3 and docs/MEADOWS_PROGRESSION_SPEC.md.
+  Team Tether is back; their pylons are draining the land; Grandpa is a former
+  trainer who can no longer make the journey; the player builds a team of five
+  and goes instead, through the village tournament, the Warrens, the river
+  relay, three regional captains and the Warden at Meadows Hall, and the region
+  visibly heals afterwards.
+
   Every image on this page is a REAL in-game frame from the project's own
   capture tools, not concept art and not a mock-up. That is deliberate: a
   download page that promises something the build does not do is the fastest
   way to stop trusting your own screenshots.
 
   It also means these rot. Re-shoot after any milestone that changes how the
-  game looks — site/README.md carries the commands. Every frame here was
-  captured 2026-08-16; the set before it was allowed to age past a settlement
+  game looks — site/README.md carries the commands. The frames here were
+  captured 2026-08-16; the set before them was allowed to age past a settlement
   rebuild, a roster repaint and a control-scheme change, and the page spent a
   week showing a village that no longer existed.
 
   Each image slot is a layered CSS background, so a missing file falls through
   to another committed frame where one fits, or to a palette gradient where
-  none does. The page never shows a broken image.
+  none does. The page never shows a broken image. `.s-tether` is the slot that
+  matters most for the new story framing and it has no dedicated capture yet:
+  it falls through to the eastern-rise overlook, which genuinely contains the
+  pylon ring, the walled relay compound and the pale drained ground around
+  them. Replacing it with a close capture is queued in ralph/BACKLOG.md.
 
   Colours are data/config/palette.json — the same file the game's materials,
   lighting and UI read. The site and the build cannot drift apart in palette
-  without somebody changing that file.
+  without somebody changing that file. --tether-teal keeps its in-game
+  reservation here: it appears only where Team Tether does.
 
   Type direction is docs/art/reference/ev9_display_lettering_style_guide.png:
   rounded geometric sans, high x-height, wide stance, cream on near-black with
@@ -56,11 +70,12 @@
   --dusk:#5a5c92;
   --night-plum:#704f71;
   /* Team Tether's reserved energy colour (SF33, sampled from the owner's pylon
-     board). Added to palette.json 2026-08-15; mirrored here because this file
-     claims to track that one verbatim. */
+     board). In game it appears only on live Tether machinery; on this page it
+     appears only in the sections about Team Tether, plus the tip of the rule
+     under the wordmark — the threat sitting under the title. */
   --tether-teal:#3fe8c4;
-  /* Reserved for danger in-game; used here only for the build-state mark,
-     which is the one warning on the page. */
+  /* Reserved for danger in-game; used here on the build-state mark and the
+     Team Tether band's ground, which are the page's two warnings. */
   --oxblood:#332228;
 
   --ink:#f2f0e6;
@@ -142,12 +157,13 @@ a{color:var(--flower-gold)}
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .tagline{
-  max-width:38ch;
+  max-width:44ch;
   font-size:clamp(1.05rem,2.4vw,1.45rem);
   color:var(--ink);
   text-shadow:0 1px 10px rgba(0,0,0,.8);
   margin:0 0 2rem;
 }
+.tagline b{color:var(--flower-gold);font-weight:700}
 
 /* ---------- download ---------- */
 
@@ -192,7 +208,32 @@ h2{
   font-size:clamp(1.5rem,3.4vw,2.1rem); letter-spacing:-.02em;
   margin:0 0 .35em;
 }
+/* The one-line label above a section heading. Gold everywhere except the
+   Team Tether band, which takes the reserved teal. */
+.eyebrow{
+  display:block; margin:0 0 .6rem;
+  color:var(--flower-gold);
+  font-size:.78rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+}
 .lede{color:var(--ink-dim);max-width:62ch;margin:0 0 2.6rem}
+.lede.tight{margin-bottom:1.4rem}
+.lede b{color:var(--ink);font-weight:600}
+
+/* A single line of story, set large. Used twice: the threat, and the choice
+   the whole chapter is built to force. */
+.pull{
+  max-width:26ch;
+  margin:2.6rem 0 0;
+  font-size:clamp(1.5rem,4vw,2.4rem);
+  line-height:1.22;
+  letter-spacing:-.02em;
+  color:var(--ink);
+}
+.pull small{
+  display:block; margin-top:.9rem;
+  font-size:.9rem; font-weight:500; letter-spacing:.02em;
+  color:var(--ink-dim); max-width:44ch;
+}
 
 .rules{
   display:grid; gap:1.1rem;
@@ -207,6 +248,48 @@ h2{
   padding:1.15rem 1.25rem;
 }
 .rules b{display:block;color:var(--flower-gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+
+/* ---------- the road: the chapter as an ordered journey ---------- */
+
+.road{
+  list-style:none; margin:0; padding:0;
+  display:grid; gap:0;
+  counter-reset:leg;
+  max-width:74ch;
+}
+.road li{
+  counter-increment:leg;
+  position:relative;
+  padding:0 0 1.9rem 3.4rem;
+}
+/* The connecting line, drawn behind the markers. It stops at the last leg. */
+.road li::before{
+  content:""; position:absolute; left:1.06rem; top:1.9rem; bottom:0;
+  width:2px; background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+}
+.road li:last-child{padding-bottom:0}
+.road li:last-child::before{display:none}
+.road li::after{
+  content:counter(leg,decimal-leading-zero);
+  position:absolute; left:0; top:.1rem;
+  width:2.2rem; height:2.2rem; border-radius:50%;
+  display:grid; place-items:center;
+  font-size:.74rem; font-weight:700; letter-spacing:.04em;
+  color:var(--flower-gold);
+  background:rgba(217,179,64,.10);
+  border:1px solid rgba(217,179,64,.42);
+}
+/* Legs where Team Tether is what stands in the way take the reserved teal. */
+.road li.tether::after{
+  color:var(--tether-teal);
+  background:rgba(63,232,196,.10);
+  border-color:rgba(63,232,196,.42);
+}
+.road h3{
+  margin:.15rem 0 .3rem;
+  font-size:1.06rem; letter-spacing:-.01em;
+}
+.road p{margin:0;color:var(--ink-dim);font-size:.95rem;max-width:58ch}
 
 /* ---------- patch notes ---------- */
 
@@ -245,15 +328,39 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
   background-size:cover;
   background-repeat:no-repeat;
 }
-.s-bedroom{background-image:url("img/opening-bedroom.jpg"),linear-gradient(160deg,var(--timber),var(--oxblood))}
+/* There is no `.s-bedroom` slot any more. The only committed capture of the
+   farmhouse interior was an undressed white blockout room with a bed in it --
+   it was on this page for months captioned "First light in Grandpa's
+   farmhouse", which is exactly the kind of promise this page is not allowed to
+   make. The section keeps the copy and loses the frame until the interior is
+   dressed and re-shot (queued in ralph/BACKLOG.md, needs a Godot capture run).
+   Same reason `.s-village` no longer has a village-square.jpg to load: that
+   capture put the camera inside a roof. */
 .s-starters{background-image:url("img/starters-by-the-door.jpg"),linear-gradient(160deg,var(--leaf-deep),var(--timber))}
 .s-village{background-image:url("img/village-square.jpg"),url("img/01-spawn-outward.jpg"),linear-gradient(160deg,var(--trail-wheat),var(--grass-olive))}
+/* ^ village-square.jpg is deliberately absent from the repo rather than
+   committed-and-broken, so this slot resolves to the walk-out frame under it
+   and picks the intended shot back up the moment one is captured. */
 .s-camp{background-image:url("img/camp-dusk.jpg"),linear-gradient(160deg,var(--dusk),var(--night-plum))}
 .s-combat{background-image:url("img/02-arena-opens.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
 .s-aim{background-image:url("img/aim-arc.jpg"),url("img/08-orb-in-flight.jpg"),linear-gradient(160deg,var(--day-blue),var(--dusk))}
 .s-strike{background-image:url("img/06-charged-attack-lands.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
 .s-rain{background-image:url("img/weather-rain.jpg"),linear-gradient(160deg,var(--slate-cool),var(--stone-grey))}
 .s-night{background-image:url("img/night-torch.jpg"),linear-gradient(160deg,var(--night-plum),#0b0e0a)}
+/* The story slot. A close capture of the relay does not exist yet; the
+   eastern-rise overlook does, and it contains the pylon ring, the walled
+   compound and the drained pale ground around them, which is precisely what
+   the caption claims. When the close frame is captured it drops in here and
+   nothing else changes. */
+.s-tether{
+  /* Shown at the full 16:9 of the source rather than cropped tighter: the
+     relay site is in the middle distance of this frame and any closer crop is
+     an upscale of a 1280-wide capture, which goes soft and starts showing
+     shading artefacts the wide view reads past. The close capture that would
+     survive a tight crop does not exist yet -- see the queued item. */
+  background-image:url("img/tether-site.jpg"),url("img/03-rise-overlook.jpg"),
+    linear-gradient(160deg,var(--slate-cool),var(--oxblood));
+}
 
 /* The roster grid is a real <img> rather than a background: it is the one
    image on the page whose detail matters more than its crop, and it must be
@@ -278,6 +385,22 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
   border-top:1px solid rgba(255,255,255,.07);
   border-bottom:1px solid rgba(255,255,255,.07);
 }
+/* The Team Tether band. Same overlook underneath, but pulled toward the
+   reserved oxblood and lit by a single teal glow, so the section reads as
+   theirs before a word of it is read. */
+.band.tether{
+  background:
+    radial-gradient(120% 90% at 78% 12%,rgba(63,232,196,.16),transparent 58%),
+    linear-gradient(rgba(20,14,17,.90),rgba(20,14,17,.96)),
+    url("img/03-rise-overlook.jpg") center/cover fixed no-repeat;
+  background-color:#140e11;
+  border-top:1px solid rgba(63,232,196,.22);
+  border-bottom:1px solid rgba(63,232,196,.22);
+}
+.band.tether .eyebrow{color:var(--tether-teal)}
+.band.tether .pull{max-width:24ch}
+.band.tether figure{border-color:rgba(63,232,196,.20)}
+.band.tether figcaption b{color:var(--tether-teal)}
 
 footer{color:var(--ink-dim);font-size:.87rem;padding:2.5rem clamp(1.2rem,5vw,3rem) 3.5rem;max-width:1180px;margin:0 auto}
 footer p{margin:.4rem 0}
@@ -295,7 +418,11 @@ footer p{margin:.4rem 0}
   <div class="hero-art" role="img" aria-label="Rolling meadows under a day sky, with the village in the middle distance"></div>
   <span class="flag">First chapter · in progress</span>
   <h1 class="wordmark"><span>Tetherbound</span></h1>
-  <p class="tagline">Five creatures on your belt. No storage box, no second chances at the roster. Your creature does the fighting — and you are in there with it.</p>
+  <p class="tagline">
+    Team Tether is back, and the Meadows is going dry around their pylons.
+    Grandpa cannot make this journey any more. <b>You go instead</b> — with five
+    creatures, no storage box, and no weapon of your own.
+  </p>
 
   <div class="get">
     <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip">
@@ -316,14 +443,138 @@ footer p{margin:.4rem 0}
 </header>
 
 <main>
+
+  <section class="band tether">
+    <div class="wrap">
+      <span class="eyebrow">The situation</span>
+      <h2>Team Tether is back, and the land is going with them</h2>
+      <p class="lede tight">
+        They drove pylons into the Meadows and started pulling power out of the
+        ground. You can see where they have been: the grass goes pale, then
+        grey, then stops. They hold the deeper roads, the Old Mill Crossing is
+        shut with someone of the village's on the wrong side of it, and the old
+        stone hall on the far ridge — <b>Meadows Hall</b> — is theirs now, with
+        machinery running inside it that nobody built for stone.
+      </p>
+      <figure class="wide">
+        <div class="shot s-tether" role="img" aria-label="The Meadows from the eastern rise: the mill and river at the left, a walled Tether site ringed with glowing teal pylons in the middle distance standing in a circle of drained pale ground, and the village at the crossroads beyond"></div>
+        <figcaption><b>Their ground</b>The eastern rise, looking across the chapter: the mill and the river, a walled Tether site with its pylon ring standing in a bleached circle of drained meadow, and the village at the crossroads past it. Captured in engine — nothing on this page is concept art.</figcaption>
+      </figure>
+      <p class="pull">
+        Whatever the machine under the hall is drawing from, it has been down
+        there a long time.
+        <small>
+          You will not be told what it is. You find out at the bottom, after the
+          Warden, which is the only order it works in.
+        </small>
+      </p>
+    </div>
+  </section>
+
   <section class="wrap">
-    <h2>What it is</h2>
+    <span class="eyebrow">Why you</span>
+    <h2>Grandpa was the trainer. He can't make the walk any more.</h2>
     <p class="lede">
-      A third-person survival, crafting and creature-training game built in Godot,
-      aimed at a handheld first. This build is the Meadows — the game's first
-      chapter, about three to four hours: wake up in a farmhouse, choose a
-      starter, walk out into the biome, and fight and catch wild creatures
-      yourself.
+      So the morning starts small and domestic and slightly too quiet: you wake
+      upstairs in his farmhouse, and three starters are standing by the door
+      downstairs. You choose one by walking up to it, not by scrolling a list.
+      He tells you what is out there and what happens to people who go at it
+      unprepared, the other two stay with him, and then the village lets you out
+      — plaster and timber around a square, a well, a workshop, dirt paths
+      running off into the meadows. By nightfall you have a creature, a camp,
+      and a reason to keep going.
+    </p>
+    <div class="shots">
+      <figure>
+        <div class="shot s-starters" role="img" aria-label="Three starter creatures standing by the farmhouse door"></div>
+        <figcaption><b>Choose</b>The starters wait by the door. You pick one by walking to it — and you name it.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-village" role="img" aria-label="The trainer standing in open meadow just outside the village, paths running away over the rise"></div>
+        <figcaption><b>Leave</b>Out the door and into it. Every dirt path out of the village ends in meadow — and one of them ends at the hall.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-camp" role="img" aria-label="A campfire and bedroll under the stars, a creature resting beside them"></div>
+        <figcaption><b>Rest</b>Day one ends where you put it down: a fire, a bedroll, your creature beside you under the stars.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <span class="eyebrow">The road</span>
+    <h2>From the farmhouse door to Meadows Hall</h2>
+    <p class="lede">
+      One chapter, about three to four hours if you go straight at it, and it is
+      built as a journey rather than a map full of icons. Each leg leaves you
+      measurably harder to stop than the last — a stronger five, better gear, a
+      route that has opened because you opened it.
+    </p>
+    <ol class="road">
+      <li>
+        <h3>Win the village tournament</h3>
+        <p>
+          The first real proof you are a trainer, and the first thing the
+          village takes seriously. You get there by doing the actual loop:
+          catch, fight, level, switch, gather, unlock recipes, build a small
+          home and a bed for a creature that needs one.
+        </p>
+      </li>
+      <li>
+        <h3>South Bridge and the Lower Meadows</h3>
+        <p>
+          Out past the pond and over the bridge, into open country with wild
+          populations that no longer lose to a starter you caught yesterday, roadside
+          trainers who want a battle, and the first Rootstone worth carrying
+          home.
+        </p>
+      </li>
+      <li>
+        <h3>The quarry and the Burrow Warrens</h3>
+        <p>
+          Underground. Ground-type creatures on their own turf, a guardian at
+          the bottom, upgrades worth the trip — and the first physical evidence
+          that Team Tether has been moving equipment through here.
+        </p>
+      </li>
+      <li class="tether">
+        <h3>Break the relay on the river</h3>
+        <p>
+          The river stops you and the crossing is theirs. Grunts, then an
+          officer, then Captain Vance. Winning frees the person they took, kills
+          the local machinery and reopens the crossing — the world is physically
+          different afterwards, and Team Tether stops being a thing Grandpa
+          described.
+        </p>
+      </li>
+      <li class="tether">
+        <h3>Three captains, three Sigils</h3>
+        <p>
+          The Upper Meadows: high pasture, old growth, ridges, ruins, patrols,
+          Ironwood, and a saddle so you can finally ride. Three regional
+          captains hold the Sigils that physically open the approach to the
+          hall. This is your last honest chance to fix a weakness in the five.
+        </p>
+      </li>
+      <li class="tether">
+        <h3>Meadows Hall, and the Warden</h3>
+        <p>
+          Outer works, courtyard, the chamber approach — old stone with their
+          hardware bolted through it, getting louder the further down you go.
+          The Warden is the fight the whole chapter has been assembling your
+          team for. Then you shut the tether machine off and find out what it
+          was holding.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap">
+    <span class="eyebrow">How it plays</span>
+    <h2>Five, and you are in the fight with them</h2>
+    <p class="lede">
+      None of the above is a cutscene you unlock. It is a survival, crafting and
+      creature-training game built in Godot for a handheld first, and these four
+      rules are what make the road feel the way it does.
     </p>
 
     <ul class="rules">
@@ -334,67 +585,41 @@ footer p{margin:.4rem 0}
     </ul>
   </section>
 
-  <section class="wrap">
-    <h2>How it begins</h2>
-    <p class="lede">
-      Not with a menu. You wake in the upstairs bedroom of Grandpa's farmhouse,
-      and three starters are standing by the door. You choose one by walking up
-      to it. The other two stay with Grandpa. Then the village lets you out —
-      plaster and timber around a square, a well, a workshop, dirt paths running
-      off into the meadows — and by nightfall you have built your first camp and
-      your first day is over.
-    </p>
-    <div class="shots">
-      <figure>
-        <div class="shot s-bedroom" role="img" aria-label="The upstairs bedroom in Grandpa's farmhouse at first light"></div>
-        <figcaption><b>Wake</b>First light in Grandpa's farmhouse. No title card.</figcaption>
-      </figure>
-      <figure>
-        <div class="shot s-starters" role="img" aria-label="Three starter creatures standing by the farmhouse door"></div>
-        <figcaption><b>Choose</b>The starters wait by the door. You pick one by walking to it, not by scrolling a list.</figcaption>
-      </figure>
-      <figure>
-        <div class="shot s-village" role="img" aria-label="The village square, with dirt paths leading out into rolling meadows"></div>
-        <figcaption><b>Leave</b>The village square. Every dirt path out of it ends in meadow.</figcaption>
-      </figure>
-      <figure>
-        <div class="shot s-camp" role="img" aria-label="A campfire and bedroll under the stars, a creature resting beside them"></div>
-        <figcaption><b>Rest</b>Day one ends where you put it down: a fire, a bedroll, your creature beside you under the stars.</figcaption>
-      </figure>
-    </div>
-  </section>
-
   <section class="band">
     <div class="wrap">
-      <h2>The fight</h2>
+      <span class="eyebrow">The fight</span>
+      <h2>The arena forms where you were standing</h2>
       <p class="lede">
-        Every image on this page is a real in-game frame, captured by the
-        project's own survey tool. No concept art, no touch-ups.
+        Not a separate scene, not a turn queue. You engage in the field you were
+        crossing, and you drive your creature yourself until one side is done.
       </p>
       <div class="shots">
         <figure>
           <div class="shot s-combat" role="img" aria-label="Two creatures fighting inside a bounded arena in the open meadow"></div>
-          <figcaption>The arena forms where you engaged, not in a separate scene. You are driving your creature directly.</figcaption>
+          <figcaption>The arena forms where you engaged. You are driving your creature directly.</figcaption>
         </figure>
         <figure>
           <div class="shot s-aim" role="img" aria-label="Aiming a catch, the trajectory arc drawn from the trainer toward a wild creature"></div>
           <figcaption>The throw. The arc shows exactly where the orb will land — and the fight keeps going while you aim.</figcaption>
         </figure>
         <figure class="wide">
-          <div class="shot s-strike" role="img" aria-label="A charged attack landing in a burst of light"></div>
-          <figcaption>A charged attack landing. Attacks are aimed, chargeable, and missable — for both sides.</figcaption>
+          <div class="shot s-strike" role="img" aria-label="The moment a wild fight is won, the on-screen line reading that the wild creature is beaten"></div>
+          <figcaption>The end of a wild fight, called on screen. Attacks are aimed, chargeable and missable — for both sides — so this is a result, not a formality.</figcaption>
         </figure>
       </div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2>Seventeen, and you keep five</h2>
+    <span class="eyebrow">The roster</span>
+    <h2>Seventeen live here. You keep five.</h2>
     <p class="lede">
-      The whole Meadows roster. Ground, water and air — no fire, no electric,
-      not in this biome. Every one of them is modelled from the project's own
-      concept art, and a handful carry a rarer colourway you will only see if
-      you meet the right one.
+      Ground, water and air — no fire, no electric, not in this biome. Every one
+      of them is modelled from the project's own concept art, and a handful
+      carry a rarer colourway you will only see if you meet the right one. By
+      the time you reach the hall your five have a history: one from the first
+      morning, one that cost you something, one you kept because it can carry
+      you uphill.
     </p>
     <!-- The one real <img> on the page: this frame's detail matters more than
          its crop, so it must scale rather than cover. Every other slot is a
@@ -405,19 +630,30 @@ footer p{margin:.4rem 0}
            onerror="document.getElementById('roster').hidden=true">
       <figcaption>Every species in the chapter. The belt holds five of them.</figcaption>
     </figure>
+    <p class="pull">
+      At the bottom of the hall, something asks to come with you — and your belt
+      is already full.
+      <small>
+        The chapter is built to make that hurt. Whatever you answer, the answer
+        is the ending: these are my five.
+      </small>
+    </p>
   </section>
 
   <section class="wrap">
-    <h2>Weather, and the dark</h2>
+    <span class="eyebrow">The world</span>
+    <h2>Weather, the dark, and what happens after</h2>
     <p class="lede">
       The meadow is not one clear afternoon. Rain and fog roll through, some
       creatures only come out at night, and after sunset you carry your own
-      light or you do not see the path.
+      light or you do not see the path. And when the tether goes off, the region
+      answers: barriers come down, the people who were taken come back, and the
+      drained ground starts to green again.
     </p>
     <div class="shots">
       <figure>
-        <div class="shot s-rain" role="img" aria-label="The meadow under rain, the far hills lost in grey"></div>
-        <figcaption><b>Rain</b>Weather is a condition of the world, not a filter over it — and some spawns wait for it.</figcaption>
+        <div class="shot s-rain" role="img" aria-label="The meadow under heavy overcast, the far hills lost in grey"></div>
+        <figcaption><b>Weather</b>Grey rolls in and takes the hills with it. Weather is a condition of the world, not a filter over it — and some spawns wait for it.</figcaption>
       </figure>
       <figure>
         <div class="shot s-night" role="img" aria-label="The meadow at night, lit by a carried torch"></div>
@@ -453,13 +689,15 @@ footer p{margin:.4rem 0}
   </script>
 
   <section class="wrap">
+    <span class="eyebrow">Straight answer</span>
     <h2>Honest state of it</h2>
     <p class="lede">
       This is one chapter, not a finished game. What is here is the Meadows,
       end to end: the opening morning, the village and the people in it, wild
       combat and catching, trainers who want a battle, levels and moves and
       evolution, building, riding, weather, day and night, and saves. What is
-      not here is the seven biomes after it.
+      not here is the seven biomes after it — and the chapter is still being
+      hardened, so expect rough edges on the way to the hall.
     </p>
     <p class="lede">
       The creatures and characters — all seventeen species, the trainer,

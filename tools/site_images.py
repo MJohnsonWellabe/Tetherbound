@@ -35,6 +35,15 @@ QUALITY = 82
 MAPPING = [
     # Authored page shots — tools/capture_site_shots.gd
     ("shots/site/hero-meadow.png",             "site/img/hero-meadow.jpg",            1280),
+    # Both of these mappings still stand, and both of their captured frames were
+    # deleted from site/img in the 2026-08-22 story rewrite because they
+    # misrepresented the game: `village-square` puts the camera INSIDE A ROOF
+    # (the frame is 70% roof tiles) and `opening-bedroom` shot an undressed
+    # white blockout room under a caption promising Grandpa's farmhouse at first
+    # light. Re-aiming the village-square viewpoint in capture_site_shots.gd and
+    # dressing the interior both need a Godot run; until then the page's layered
+    # fallbacks cover the two slots. Fixing either is a change to
+    # tools/capture_site_shots.gd, not to this file.
     ("shots/site/village-square.png",          "site/img/village-square.jpg",          960),
     ("shots/site/opening-bedroom.png",         "site/img/opening-bedroom.jpg",         960),
     ("shots/site/starters-by-the-door.png",    "site/img/starters-by-the-door.jpg",    960),

@@ -108,6 +108,45 @@ Highest-value single change, per the critic: give `cloudy` real cloud cover and
 That also stops cloudy and rain reading as near-duplicates. All fixes are
 in-scene grade/lighting work; none need new art.
 
+### SITE-SHOTS — the story page is written, and four of its frames need a Godot run
+`OP21-22` is done: `site/index.html` is rewritten around the actual premise
+(Team Tether back and draining the land, Grandpa too old for the journey, the
+player steps up, five creatures, tournament -> Warrens -> relay -> captains ->
+Warden -> the region heals), with the road to Meadows Hall as an ordered
+six-leg journey and the reserved tether teal used only where Team Tether is.
+
+What it could not do is capture anything: **no Godot in the session's
+container**, so the page was rebuilt from the frames already committed. Judging
+those frames honestly against the page's own no-misrepresentation rule cost two
+of them, and both are now deleted rather than left committed-and-broken:
+
+- **`opening-bedroom.jpg`** was an undressed white blockout room with a bed,
+  under the caption "First light in Grandpa's farmhouse". The section keeps its
+  copy and runs three figures instead of four.
+- **`village-square.jpg`** was ~70% roof tiles: the `village-square` viewpoint
+  in `tools/capture_site_shots.gd` puts the camera inside a roof. Coordinates
+  left alone and the defect commented in the tool — re-aiming a camera in a 3D
+  scene is not a blind change.
+
+The captures wanted, in value order, all needing one Godot session:
+
+1. **`tether-site.jpg`** — a close frame of a relay site: pylon ring, cabling,
+   drained ground. `.s-tether` is wired for it already and falls through to
+   `03-rise-overlook.jpg`, which has all three in the middle distance but too
+   small to carry the section. Highest-value shot the story page lacks.
+2. **Meadows Hall approach** and **the Warden**. The road section ends at both
+   and shows neither.
+3. Re-aim `village-square`; dress and re-shoot the farmhouse interior.
+4. `camp-dusk.jpg` has untextured orange spheres floating over the horizon;
+   `weather-rain.jpg` is flat overcast with no readable rain (its caption was
+   rewritten to say "grey" rather than promise rain the frame does not show).
+   The second overlaps `WEATHER-2` above — fix the weather, then re-shoot.
+
+Also closed in passing: all fifteen `site/img/*.jpg.import` Godot sidecars were
+committed and published to Pages despite `site/README.md` telling everyone not
+to since the page was written. Untracked, and `site/img/*.import` is in
+`.gitignore` now so the rule enforces itself.
+
 ### PERF-LOD — Terrain3D vegetation LOD is written, tested and deliberately switched off
 
 All ~130k vegetation instances render at LOD0 regardless of distance. `lod0_range`

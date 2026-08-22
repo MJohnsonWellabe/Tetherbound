@@ -39,7 +39,10 @@ Fresh owner blockers include:
 - washed-out/grey lighting state appearing after several minutes of play;
 - Stronghold and Burrow Warrens fights sometimes phasing participants outside reachable arena bounds and becoming effectively impossible;
 - pond-to-village travel currently feeling long, bare and boring; retain this as Gate B/C/D1 route-content work even after Gate A's representative baseline passes;
-- website/story front door needing a Team Tether / draining-the-land / Grandpa-too-old / player-must-step-up rewrite.
+- website/story front door needing a Team Tether / draining-the-land /
+  Grandpa-too-old / player-must-step-up rewrite — **the rewrite has shipped**
+  (`site/index.html`); the four frames it still wants need a Godot capture
+  run and are recorded as `SITE-SHOTS` in `ralph/BACKLOG.md`.
 
 A current owner reproduction outranks an older smoke/unit result. If a regression still passes while the owner path fails, fix the false-positive coverage gap as part of the defect.
 

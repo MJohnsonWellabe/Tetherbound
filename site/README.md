@@ -36,6 +36,22 @@ is exactly as permanent and does not care about the prerelease flag.
 Marking the release "not a prerelease" would also have fixed the link, and is
 the wrong fix: the flag is telling the truth.
 
+## What the page says now
+
+The page is written around the game's story, not around a feature list:
+**Team Tether is back, their pylons are draining the Meadows, Grandpa is a
+former trainer who can no longer make the journey, and the player builds a team
+of five and goes instead** — village tournament, South Bridge, the quarry and
+the Burrow Warrens, the river relay, three regional captains' Sigils, and the
+Warden at Meadows Hall, after which the region visibly heals. That is
+`docs/TETHERBOUND_GAME_VISION.md` §3 and `docs/MEADOWS_PROGRESSION_SPEC.md`
+verbatim in intent; nothing on the page invents a story beat, and the copy is
+deliberately vague about what the tether machine is holding because the game
+reveals it at the bottom of the hall.
+
+`--tether-teal` keeps its in-game reservation on this page: it appears only in
+the Team Tether band and on the road legs where Team Tether is the obstacle.
+
 ## The images are real frames
 
 `site/img/*.jpg` are in-game captures, not concept art and not mock-ups. To
@@ -83,7 +99,9 @@ it.
 
 Do not commit `site/img/*.jpg.import`. They are Godot sidecars — `site/` lives
 inside the Godot project, so the editor imports the page's JPEGs as textures.
-They serve no purpose on a website and get uploaded to Pages.
+They serve no purpose on a website and get uploaded to Pages. This paragraph
+was here the whole time and all fifteen of them were committed anyway, so
+`site/img/*.import` is now in `.gitignore` and the rule enforces itself.
 
 `shots/` is gitignored and regenerated; `site/img/` is committed, because the
 page has to keep working without anyone re-running a survey first.
@@ -91,6 +109,37 @@ page has to keep working without anyone re-running a survey first.
 **Do not touch these up.** A download page that shows something the build does
 not do is the fastest way to stop being able to trust your own screenshots —
 and the blind visual critic reads the same frames.
+
+### Frames the page is currently missing, and why
+
+The same rule cuts the other way: a captured frame that misrepresents the game
+has to come off the page, even when nothing replaces it. Two did, in the story
+rewrite, and both are deleted rather than left committed-and-broken so that the
+layered fallbacks do their job and a fresh capture drops straight back in:
+
+- **`opening-bedroom.jpg`** — the capture was an undressed white blockout room
+  with a bed in it, captioned "First light in Grandpa's farmhouse". The section
+  keeps the copy and has three figures instead of four until the interior is
+  dressed and re-shot. `tools/capture_site_shots.gd` still knows the viewpoint.
+- **`village-square.jpg`** — the `village-square` viewpoint in
+  `capture_site_shots.gd` puts the camera *inside a roof*: the frame is 70%
+  roof tiles. Its coordinates are unchanged here because re-aiming a camera in
+  a 3D scene is not something to guess at blind; it needs one Godot run. The
+  slot falls through to `01-spawn-outward.jpg` meanwhile.
+
+Wanted and never captured:
+
+- **`tether-site.jpg`** — a close frame of a relay site: pylon ring, cabling,
+  drained ground. `.s-tether` is already wired for it and falls through to
+  `03-rise-overlook.jpg`, which contains all three in the middle distance. This
+  is the single highest-value shot the story page does not have.
+- A **Meadows Hall approach** frame and a **Warden** frame. The road section
+  ends at both and shows neither.
+
+Also worth a re-shoot when someone is in there: `camp-dusk.jpg` has untextured
+orange spheres floating over the horizon, and `weather-rain.jpg` is flat
+overcast with no readable rain (the caption was rewritten to say "grey" rather
+than promise rain it does not show).
 
 ## Colours
 

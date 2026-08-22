@@ -27,6 +27,14 @@ const SETTLE_FRAMES := 50
 ## moved, and the "bedroom" frame was a camera inside the roof.
 const SHOTS := {
 	"hero-meadow": [Vector3(58.0, 14.0, 28.0), Vector3(-10.0, 4.0, -12.0)],
+	# BROKEN VIEWPOINT, 2026-08-22: this eye/target pair frames the inside of a
+	# roof -- the captured JPEG was ~70% roof tiles with the square nowhere in
+	# it, and it sat on the download page captioned "The village square" until
+	# the story rewrite deleted the frame. Whoever next runs a capture: move
+	# the eye up and back off the buildings until the square, the well and the
+	# paths out are in shot, then re-run tools/site_images.py. Left at the old
+	# numbers deliberately -- re-aiming a camera in a 3D scene is not a change
+	# to guess at without rendering it.
 	"village-square": [Vector3(-6.0, 6.5, 4.0), Vector3(14.0, 3.0, -8.0)],
 	"camp-dusk": [Vector3(26.8, 4.8, -32.3), Vector3(30.5, 3.0, -36.0)],
 	# R7.2: close enough to actually read a villager as a person rather than a

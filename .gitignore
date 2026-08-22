@@ -40,3 +40,9 @@ __pycache__/
 
 # Subagent worktrees, created by the Agent tool for isolated parallel work
 .claude/worktrees/
+
+# Godot sidecars for the download page's JPEGs. `site/` lives inside the
+# project, so the editor imports them as textures; they are useless on a
+# website and get published to Pages. site/README.md has said not to commit
+# these since the page was written -- they were committed anyway.
+site/img/*.import
