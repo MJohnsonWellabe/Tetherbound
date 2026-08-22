@@ -17,6 +17,12 @@ const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
+## CONTROLLER-MAP (ralph/OWNER_DIRECTIVES_2026-08-22.md section 1) took the pad
+## binding off `combat_throw`: the orb is a hotbar item now and X throws it, so
+## `interact` IS the pad's throw button. combat_manager.gd::_throw_pressed and
+## throw_aim.gd both read it beside `combat_throw`'s surviving keyboard F. This
+## harness may only press what a pad can press, so it presses that.
+const THROW_ACTION := &"interact"
 const CHOSEN_NAME := "Bud"
 const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
@@ -64,6 +70,16 @@ func _run() -> void:
 		_finish()
 		return
 	await _tap_action("ui_accept")
+	# title_screen.gd::_on_new_pressed() interposes a "Start a fresh game?"
+	# confirmation whenever ANY save slot is occupied, with "Start Fresh Game"
+	# already focused. A harness that only ever ran against an empty user://
+	# never met it and reported the stall as "never reached the Meadows world" --
+	# which is the one screen a returning player meets EVERY time, so answering
+	# it here is the production path, not a test convenience.
+	var confirm := root.get_viewport().gui_get_focus_owner() as Button
+	if confirm != null and confirm.text == "Start Fresh Game":
+		_checkpoint("answered the returning-player fresh-game confirmation")
+		await _tap_action("ui_accept")
 	for _i in 2400:
 		if current_scene != null and current_scene.scene_file_path == WORLD_SCENE:
 			_world = current_scene
@@ -321,7 +337,7 @@ func _catch_with_real_throws() -> bool:
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
-		await _tap_action("combat_throw")
+		await _tap_action(THROW_ACTION)
 		launches += 1
 		# A launch is not a landed throw. Wait first for the projectile's physical
 		# outcome, so a miss advances the retry immediately instead of spending the
@@ -362,7 +378,7 @@ func _catch_with_real_throws() -> bool:
 ## focused controller-catching smoke.
 func _open_throw_aim() -> bool:
 	for _attempt in 18:
-		await _tap_action("combat_throw")
+		await _tap_action(THROW_ACTION)
 		for _i in 6:
 			if bool(_combat.call("is_aiming")):
 				return true
@@ -528,7 +544,9 @@ func _event_for(action: StringName, pressed: bool) -> InputEvent:
 
 
 func _required_pad_actions_exist() -> bool:
-	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick", &"combat_throw"]:
+	# `combat_throw` is deliberately absent: CONTROLLER-MAP left it keyboard-only
+	# and requiring a pad binding for it failed this whole run at boot.
+	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick"]:
 		if _event_for(action, true) == null:
 			_fail("required action '%s' has no physical joypad binding" % action)
 	return _failures.is_empty()
