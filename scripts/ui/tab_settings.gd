@@ -49,6 +49,16 @@ const COLOUR_QUIET := Color(0.55, 0.57, 0.52)
 var _config: Dictionary = {}
 var _rows: Array = []
 var _reset_all_button: Button = null
+## The ONE scroll container for the entire tab (OP21-04). Built once at the top
+## of `build()`, before any section runs, and handed nothing back to overwrite
+## it: every section appends its Controls into the single `list` inside it
+## instead of making a scroll box of its own. That used to be two separate
+## per-section ScrollContainers, and the second one built each `build()`
+## silently clobbered this member — which is also why the first one (the
+## teleport list) never had a working `_keep_visible` target. One container,
+## built first, fixes both: general Settings scrolling and teleport-row
+## scroll-follow, with the same `ensure_control_visible` call already proven
+## out on the binding rows below.
 var _scroll: ScrollContainer = null
 
 ## Free build, the temporary development toggle. See the Gameplay section below.
@@ -98,6 +108,21 @@ func build() -> void:
 		add_child(broken)
 		return
 
+	# ONE scroll container for the whole tab, built before any section runs, so
+	# no section builder can ever overwrite `_scroll` out from under another
+	# (see the header comment on `_scroll` for the bug this replaced). Every
+	# section below appends into `list`, the single vertical document inside
+	# it, rather than owning a scroll box of its own.
+	_scroll = ScrollContainer.new()
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(_scroll)
+
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 14)
+	_scroll.add_child(list)
+
 	var settings: Dictionary = _config.get("settings", {}) as Dictionary
 	var sections: Variant = settings.get("sections", [])
 	if typeof(sections) != TYPE_ARRAY:
@@ -109,9 +134,9 @@ func build() -> void:
 		var section := entry as Dictionary
 		match str(section.get("id", "")):
 			"controls":
-				_build_controls(section, settings.get("controls", {}) as Dictionary)
+				_build_controls(list, section, settings.get("controls", {}) as Dictionary)
 			"gameplay":
-				_build_gameplay(section, settings.get("gameplay", {}) as Dictionary)
+				_build_gameplay(list, section, settings.get("gameplay", {}) as Dictionary)
 			_:
 				# A section named in JSON with nobody to draw it would otherwise be
 				# an invisible gap. Say so rather than skip silently.
@@ -126,17 +151,17 @@ func build() -> void:
 # `gameplay` case above and `_poll_gameplay` removes the settings half of it;
 # see docs/decisions/D16 for the other three files.
 #
-# It is drawn FIRST, above Controls, for one reason: everything in Controls
-# lives inside a ScrollContainer that expands to fill the tab, so a section
-# after it would sit at the bottom of the screen behind a list the player has
-# to scroll past. One row above the list is also one row to delete later.
+# It is drawn FIRST, above Controls, for one reason: the whole tab now lives in
+# one ScrollContainer (see `_scroll`'s own comment), so anything drawn first
+# is simply closer to the top of that one scroll -- one row above the list is
+# also one row to delete later.
 
 
-func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
+func _build_gameplay(list: VBoxContainer, section: Dictionary, gameplay: Dictionary) -> void:
 	var heading := Label.new()
 	heading.add_theme_font_size_override("font_size", 30)
 	heading.text = str(section.get("label", "Gameplay"))
-	add_child(heading)
+	list.add_child(heading)
 
 	# A plain Button in toggle mode rather than a CheckButton: the menu theme
 	# styles `Button` alone, and focus being the loudest thing on screen is what
@@ -150,7 +175,7 @@ func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
 	_free_build_button.toggle_mode = true
 	_free_build_label = str(gameplay.get("free_build_label", "Free build"))
 	_free_build_button.pressed.connect(_on_free_build)
-	add_child(_free_build_button)
+	list.add_child(_free_build_button)
 
 	var note := Label.new()
 	note.add_theme_font_size_override("font_size", 22)
@@ -158,7 +183,7 @@ func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(gameplay.get("free_build_note", ""))
-	add_child(note)
+	list.add_child(note)
 
 	# OF26. Same shape as free build immediately above: a toggle button plus a
 	# note. The list it gates is built once, right here, and shown/hidden by
@@ -172,7 +197,7 @@ func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
 	_debug_teleport_button.toggle_mode = true
 	_debug_teleport_label = str(gameplay.get("debug_teleport_label", "Debug teleport"))
 	_debug_teleport_button.pressed.connect(_on_debug_teleport)
-	add_child(_debug_teleport_button)
+	list.add_child(_debug_teleport_button)
 
 	var teleport_note := Label.new()
 	teleport_note.add_theme_font_size_override("font_size", 22)
@@ -180,10 +205,10 @@ func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
 	teleport_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	teleport_note.custom_minimum_size = Vector2(1100, 0)
 	teleport_note.text = str(gameplay.get("debug_teleport_note", ""))
-	add_child(teleport_note)
+	list.add_child(teleport_note)
 
 	_teleport_section = _build_debug_teleport_section()
-	add_child(_teleport_section)
+	list.add_child(_teleport_section)
 
 
 func _on_free_build() -> void:
@@ -247,10 +272,13 @@ func _on_debug_teleport() -> void:
 
 ## OF26 debug scaffolding. One row per `GameState.debug_teleport_destinations()`
 ## entry, built once (see the call site's own comment on why this is not
-## rebuilt on toggle). Bounded to a fixed-height ScrollContainer of its own —
-## the outer Content area (`game_menu.gd`) does not scroll, and this list's
-## length depends on how many regions/landmarks/spokes happen to be authored,
-## not on anything this tab controls.
+## rebuilt on toggle). Used to be bounded to its own fixed-height (260px)
+## ScrollContainer, which never scrolled — nothing wired a row's
+## `focus_entered` to it, and even fixed it would have fought the tab's own
+## per-section scroll box for who owned `_scroll` (OP21-04). The list now
+## flows as plain rows inside the single outer scroll `build()` sets up, the
+## same as every Controls binding row below, so it inherits working
+## scroll-follow for free rather than needing a second copy of the mechanism.
 func _build_debug_teleport_section() -> Control:
 	var section := VBoxContainer.new()
 	section.add_theme_constant_override("separation", 6)
@@ -261,15 +289,10 @@ func _build_debug_teleport_section() -> Control:
 	heading.text = "\n%s destinations" % _debug_teleport_label
 	section.add_child(heading)
 
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(0, 260)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	section.add_child(scroll)
-
 	var list := VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 4)
-	scroll.add_child(list)
+	section.add_child(list)
 
 	var game := state()
 	var destinations: Array = game.call("debug_teleport_destinations") if game != null else []
@@ -298,6 +321,7 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = "  %s" % display_name
 	button.pressed.connect(func() -> void: _on_teleport(display_name, position))
+	button.focus_entered.connect(func() -> void: _keep_visible(button))
 	_teleport_rows.append({"display_name": display_name, "position": position, "button": button})
 	return button
 
@@ -320,11 +344,11 @@ func _on_teleport(display_name: String, position: Vector2) -> void:
 # --- the Controls section ---------------------------------------------------
 
 
-func _build_controls(section: Dictionary, controls: Dictionary) -> void:
+func _build_controls(list: VBoxContainer, section: Dictionary, controls: Dictionary) -> void:
 	var heading := Label.new()
 	heading.add_theme_font_size_override("font_size", 30)
 	heading.text = str(section.get("label", "Controls"))
-	add_child(heading)
+	list.add_child(heading)
 
 	# The global reset sits ABOVE the rows on purpose: it is the way out of a
 	# layout the player has broken, and the way out should not be at the bottom
@@ -335,7 +359,7 @@ func _build_controls(section: Dictionary, controls: Dictionary) -> void:
 	_reset_all_button.focus_mode = Control.FOCUS_ALL
 	_reset_all_button.text = "  Reset every control to its default"
 	_reset_all_button.pressed.connect(_on_reset_all)
-	add_child(_reset_all_button)
+	list.add_child(_reset_all_button)
 
 	var hint := Label.new()
 	hint.add_theme_font_size_override("font_size", 22)
@@ -344,17 +368,7 @@ func _build_controls(section: Dictionary, controls: Dictionary) -> void:
 	# Said on the screen as well as in the footer, because a player who has
 	# rebound their way out of the menu cannot read the footer.
 	hint.text = "A on a binding to change it, then press the button you want. B leaves it alone. From anywhere in the game, hold Menu + View on the pad — or F10 — for a second and a half to put every control back."
-	add_child(hint)
-
-	_scroll = ScrollContainer.new()
-	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	add_child(_scroll)
-
-	var list := VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.add_theme_constant_override("separation", 6)
-	_scroll.add_child(list)
+	list.add_child(hint)
 
 	list.add_child(_column_header())
 

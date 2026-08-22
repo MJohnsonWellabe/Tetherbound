@@ -3,6 +3,42 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SETTINGS-SCROLL — one scroll container for the whole Settings tab (OP21-04)
+
+`model: sonnet` · `tests: smoke_settings.gd, smoke_menu.gd` · `area: ui`
+
+The owner could not reliably scroll Settings on the ROG Ally, and the debug
+teleport destination list never scrolled at all. Root cause: `tab_settings.gd`
+had TWO independent per-section `ScrollContainer`s (Controls' own, and the
+teleport list's own fixed-260px one) but only ONE `_scroll` member to track
+them, so whichever section's builder ran last in `build()`'s section loop
+(Controls) silently clobbered the field the teleport rows would have needed —
+and no teleport row's `focus_entered` was even wired to it in the first place.
+
+Fixed by building ONE `ScrollContainer` for the entire tab, first thing in
+`build()`, before any section runs — every section now appends into a shared
+`list` inside it instead of owning a scroll box of its own. The teleport
+list's own fixed-height sub-`ScrollContainer` is gone; its rows flow in the
+same document as the Controls rows and inherit the already-proven
+`focus_entered -> ensure_control_visible` scroll-follow for free. This also
+answers the "Settings generally cannot be scrolled" half of the report: there
+is now exactly one document and one way to move through it, for the whole
+tab, not two competing ones.
+
+`tests/smoke_settings.gd`'s `_check_debug_teleport` used to walk the D-pad
+through every destination row and check focus alone — passing identically on
+the broken build, since focus moves through an offscreen Control exactly as
+readily as an onscreen one. It now also asserts the focused row is fully
+contained in the scroll container's own on-screen rect, at the ROG Ally's
+actual 1280x800 viewport (the project's authored 1920x1080 test resolution
+was tall enough that the 18-row destination list fit without scrolling at
+all, which would have made even a `scroll_vertical` delta check pass for the
+wrong reason).
+
+Did not touch `scripts/ui/menu_tab.gd` or `scripts/ui/game_menu.gd`/
+`game_menu.tscn` — the fix stayed entirely inside `tab_settings.gd`'s own
+`build()`.
+
 ## OPS8 — close CAP1, and file the scatter bound that blocks MQ2B
 
 `model: haiku` · `tests: none` · `area: ops` · `3af85030`

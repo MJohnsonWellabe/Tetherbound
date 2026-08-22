@@ -206,6 +206,19 @@ func _focused() -> Control:
 	return viewport.gui_get_focus_owner() if viewport != null else null
 
 
+## OP21-04. Is `control` actually inside `scroll`'s own on-screen rect, top and
+## bottom, in global coordinates -- the check that catches a broken scroll-follow
+## regardless of whether the list happened to fit the viewport already (which
+## would make a plain "did scroll_vertical change" assertion pass for the wrong
+## reason). A one-pixel epsilon absorbs float rounding in the layout pass.
+func _fully_visible_in(control: Control, scroll: ScrollContainer) -> bool:
+	var control_rect := control.get_global_rect()
+	var scroll_rect := scroll.get_global_rect()
+	const EPSILON := 1.0
+	return control_rect.position.y >= scroll_rect.position.y - EPSILON \
+		and control_rect.position.y + control_rect.size.y <= scroll_rect.position.y + scroll_rect.size.y + EPSILON
+
+
 func _code(action: String, slot: String) -> String:
 	var bindings: RefCounted = _menu.get("bindings")
 	return KEY_BINDINGS.code(bindings.call("binding", action, slot))
@@ -567,6 +580,24 @@ func _check_debug_teleport() -> void:
 	# The toggle remains focused after activation. Every now-visible destination
 	# must join its D-pad Down chain in authored order; hidden controls are not
 	# allowed to appear between them or steal focus.
+	#
+	# OP21-04: focus reaching a row is not the same as the player being able to
+	# SEE it — Godot moves logical focus through an off-screen Control exactly
+	# as readily as an on-screen one, which is the false-positive shape this
+	# test used to have (it drove every row and never once looked at whether
+	# anything actually scrolled). At the project's authored 1920x1080 test
+	# resolution the 18-destination list fits without scrolling at all, so
+	# proving scroll-follow here means shrinking to the ROG Ally's actual
+	# handheld viewport (1280x800, the acceptance target this task names) for
+	# the walk, the same `root.size = ...` pattern
+	# tests/smoke_build_menu_footprint.gd already uses to pin a viewport size.
+	var handheld_size := Vector2i(1280, 800)
+	var desktop_size := root.size
+	root.size = handheld_size
+	await process_frame
+	await process_frame
+
+	var scroll: ScrollContainer = _tab.get("_scroll")
 	var visible_destinations: Array = _tab.get("_teleport_rows")
 	for i in visible_destinations.size():
 		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
@@ -575,8 +606,26 @@ func _check_debug_teleport() -> void:
 			_fail("D-pad could not reach visible debug destination %d ('%s')" % [
 				i, str((visible_destinations[i] as Dictionary).get("display_name", "?"))
 			])
+			root.size = desktop_size
 			return
-	print("physical D-pad reaches all %d enabled debug destinations" % visible_destinations.size())
+		# The strongest form of "the player can see this": the focused row's own
+		# rect actually overlaps the scroll container's visible viewport, not
+		# just "some scroll value changed" (which proves nothing if the list
+		# happened to already fit). `ensure_control_visible` keeps a control at
+		# least partially onscreen; require full containment on the vertical
+		# axis, since a control that is merely clipped at its very edge is a
+		# real regression on a 7-inch handheld held at arm's length.
+		if not _fully_visible_in(expected, scroll):
+			_fail("debug destination %d ('%s') has focus but is scrolled out of view at %s" % [
+				i, str((visible_destinations[i] as Dictionary).get("display_name", "?")), handheld_size
+			])
+			root.size = desktop_size
+			return
+	root.size = desktop_size
+	await process_frame
+	print("physical D-pad reaches all %d enabled debug destinations at %s; scrolling follows" % [
+		visible_destinations.size(), handheld_size
+	])
 
 	# One region + one spoke end, checked exactly, synchronously, while the
 	# menu (and so the world) is still paused.
