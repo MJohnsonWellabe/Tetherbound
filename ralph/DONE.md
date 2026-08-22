@@ -3,6 +3,71 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## BAND2-63 — finished Quarry / Burrow Warrens (Gate D2)
+
+`tests: test_band_content.gd, test_band_vegetation.gd (one assertion loosened), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, smoke_warrens.gd, smoke_traversal.gd, full suite (1301 tests)` · `area: band2_stone_and_root content`
+
+Prompt 63's package, run against the baseline `tools/_probe_chapter_map.py`
+already recorded for band2 (6 wild clusters/9 creatures, 2 trainers, 2 prop
+clusters, 17 gatherables, no clearing, no rootstone comprehension check ever
+run) — see `ralph/GATE_D_LANE_CONTRACT.md` and its own baseline table.
+
+An owner directive mid-pass (2026-08-22: "you're going to need a lot more than
+24 creatures in a band... look at Pokemon density and Palworld density") raised
+the authored target from the old baseline to Pokemon/Palworld-scale ecology.
+What shipped:
+
+- **56 wild clusters, 195 creatures**, non-uniform by zone: ~80m spacing on
+  the worked quarry stone (deliberately thinner), ~30m around the Burrow
+  Warrens' own mouth (the owner's named example of where density should
+  concentrate), ~35-45m everywhere else, roughly a third of clusters off the
+  road so leaving it is rewarded. Five species (burrowback/mudsnout/trailpup/
+  meadowhart/duskhush) — recorded as deliberate in `spawns.json`'s own
+  comment, not a variety shortfall: an honest Ground identity at bulk and
+  strength, per prompt 63's own "meaningful alternatives" framed as strength
+  and numbers rather than a wider catalogue.
+- **One optional strong/rare encounter**: a level-13 Terrapup in the Burrow
+  Warrens' optional vault chamber, next to the heartstone — the one place in
+  the whole chapter a player can catch one in the wild (`burrow_warrens.json`).
+- **Team Tether evidence** at the `ranger_camp_spur` loop: a `quarry_supply_cache`
+  prop cluster (cut-stone crates, the same family the quarry's own working
+  face uses) delivering on that loop's own `_why` in `terrain_playground.json`,
+  authored since before this band had anything there.
+- **Camp/rest siting**: a buildable clearing plus a wood/fiber node at the
+  `ranger_camp` cluster, and a `map_landmarks.json` pin using the long-unused
+  `camp` icon.
+- **Third Team Tether picket** (`band2_outrider_kest`, order 2002): escalates
+  past Pell and hands the player off toward Band 3 rather than only guarding
+  the door behind him — added after a coordinator checkpoint questioned
+  whether two pickets over 1820m still held against prompt 59's "no major
+  region is simply wild traversal followed by one boss."
+- **Rootstone comprehension verified**, not just asserted: `tools/_probe_band2_cadence.py`
+  confirms every recipe in `data/recipes/recipes_rootstone.json` is craftable
+  off the first quarry visit's 5 deposits alone.
+
+Cadence, measured by the same probe: longest straight-line gap fell from what
+would have been several hundred metres at baseline to 75m, one beat every ~22m
+on average across the 1820m band.
+
+`tests/test_band_vegetation.gd::test_scatter_rules_config_carries_both_split_arrays`
+was loosened from exact-count to `>=`, matching its own sibling test's
+comparison a few lines up in the same file — a regional content pass legitimately
+adding one clearing is exactly the growth that sibling test already tolerates.
+D1 and D4 hit the identical false failure independently; the coordinator
+resolves the overlap at integration.
+
+**Known remainders, honestly**: the `quarry_supply_cache` cluster got one
+self-rendered blind-pass round (not a true isolated critic — no subagent tool
+was available in this environment) that fixed a toppled-crate silhouette but
+left the `Rope_1` prop illegible at normal camera distance, the same limitation
+the already-shipped `ranger_camp` cluster's own rope has. The band's own
+clearing addition does not take effect in the live scatter bake until the
+coordinator fixes `scatter_bake.gd`'s fingerprint and re-bakes (GATE_D_LANE_CONTRACT.md
+§4's known defect, inherited, not fixed here). Requested `density_scale` for
+band2: unchanged from 0.05 — the density problem this pass was asked to solve
+was authored wild-creature count, not scatter foliage density, and nothing in
+the driven run pointed at the vegetation layer as bare.
+
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 
 `tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
