@@ -60,8 +60,13 @@ func _run() -> void:
 			Vector3(pond.x, field.height_at(pond.x, pond.y) - 1.0, pond.y),
 		],
 		"pond-lush-pocket": [
-			Vector3(pond.x - 25.0, field.height_at(pond.x - 25.0, pond.y - 10.0) + 2.0, pond.y - 10.0),
-			Vector3(pond.x - 5.0, field.height_at(pond.x - 5.0, pond.y + 5.0), pond.y + 5.0),
+			# (-25,-10) put the eye ~4m UNDER the new waterline (the pond basin
+			# moved, this offset did not) -- the first render was a look up at
+			# the surface from the lakebed. (-70,-20) is dry with a real margin
+			# (probed: h=-13.91 vs water_level=-17.0, tools/_probe-style check
+			# before shipping this the second time).
+			Vector3(pond.x - 70.0, field.height_at(pond.x - 70.0, pond.y - 20.0) + 2.2, pond.y - 20.0),
+			Vector3(pond.x + 10.0, field.height_at(pond.x + 10.0, pond.y + 10.0), pond.y + 10.0),
 		],
 		"mill-crossing": [
 			Vector3(-405.0, field.height_at(-405.0, 500.0) + 2.2, 500.0),
