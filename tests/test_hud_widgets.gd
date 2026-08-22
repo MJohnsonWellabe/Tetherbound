@@ -41,7 +41,8 @@ func _make_strip() -> Control:
 
 func test_build_makes_five_fixed_rows() -> void:
 	var strip := _make_strip()
-	assert_eq(strip.get_child_count(), 1, "expected one roster stack directly under the widget")
+	assert_eq(strip.get_child_count(), 2,
+		"expected the roster stack plus OP21-12's cycle banner directly under the widget")
 	assert_eq(strip._list.get_child_count(), PARTY_STRIP.SLOTS, "the row list does not hold five children")
 	assert_eq(strip._rows.size(), PARTY_STRIP.SLOTS)
 	assert_eq(strip._count_label.text, "TEAM  0 / 5")
@@ -193,6 +194,51 @@ func test_a_healthy_entry_keeps_the_green_hp_fill() -> void:
 		{"label": "Terrapup", "level": 4, "hp_fraction": 1.0, "tint": Color(0.55, 0.35, 0.15), "fainted": false},
 	], 0)
 	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.HP_GREEN)
+	strip.free()
+
+
+# --- OP21-12: cycle-clarity banner ----------------------------------------------
+
+
+func test_flash_cycle_shows_previous_and_next_and_roster_position() -> void:
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	assert_true(strip._cycle_banner.visible, "a real cycle must show the transition banner")
+	assert_true(strip._cycle_banner.text.contains("Terrapup"),
+		"the creature the player was on must be named")
+	assert_true(strip._cycle_banner.text.contains("Bramblebun"),
+		"the creature the player is moving to must be named")
+	assert_true(strip._cycle_banner.text.contains("2 / 5"),
+		"roster position must be stated, not left for the player to infer")
+	assert_true(strip._cycle_banner.text.contains("▶"),
+		"forward cycling must show a forward-facing arrow")
+	strip.free()
+
+
+func test_flash_cycle_backward_shows_the_backward_arrow() -> void:
+	var strip := _make_strip()
+	strip.flash_cycle(-1, "Bramblebun", "Terrapup", 1, 5)
+	assert_true(strip._cycle_banner.text.contains("◀"),
+		"backward cycling must show a backward-facing arrow, not the forward one")
+	strip.free()
+
+
+func test_flash_cycle_with_zero_direction_is_a_no_op() -> void:
+	# A same-frame roster edit that happens to also move the active index
+	# (a catch, a menu reorder) is not a cycle -- the caller passes direction
+	# 0 for it, and this must not claim a transition that didn't happen.
+	var strip := _make_strip()
+	strip.flash_cycle(0, "Terrapup", "Bramblebun", 2, 5)
+	assert_false(strip._cycle_banner.visible)
+	strip.free()
+
+
+func test_cycle_banner_hides_itself_after_its_hold_expires() -> void:
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	assert_true(strip._cycle_banner.visible)
+	strip._process(PARTY_STRIP.CYCLE_BANNER_SECONDS + 0.1)
+	assert_false(strip._cycle_banner.visible, "the banner must not linger past its own hold")
 	strip.free()
 
 

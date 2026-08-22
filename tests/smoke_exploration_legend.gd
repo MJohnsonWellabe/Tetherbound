@@ -7,6 +7,7 @@ extends SceneTree
 
 const HUD_SCENE := preload("res://scenes/ui/playground_hud.tscn")
 const ARBITER_SCRIPT := preload("res://scripts/world/interaction_arbiter.gd")
+const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
 
 var _failures: Array[String] = []
 var _world: Node3D = null
@@ -29,7 +30,6 @@ func _init() -> void:
 
 
 func _run() -> void:
-	root.size = Vector2i(1920, 1080)
 	# SceneTree scripts enter _init before project autoloads finish joining root.
 	# Yield once before asking for the same Game singleton production uses.
 	await process_frame
@@ -56,11 +56,14 @@ func _run() -> void:
 	for i in 5:
 		await process_frame
 
-	_legend = _hud.get_node_or_null(^"Root/ExplorationLegend") as Control
-	_label = _hud.get_node_or_null(^"Root/ExplorationLegend/Margin/Label") as RichTextLabel
+	# OP21-11: the legend moved from `Root/ExplorationLegend` into
+	# `Root/BottomDock`, directly under the hotbar — see
+	# `playground_hud.gd::_build_exploration_legend`'s own header.
+	_legend = _hud.get_node_or_null(^"Root/BottomDock/ExplorationLegend") as Control
+	_label = _hud.get_node_or_null(^"Root/BottomDock/ExplorationLegend/Margin/Label") as RichTextLabel
 	_prompt = _hud.get_node_or_null(^"Root/BottomDock/Prompt") as RichTextLabel
 	if _legend == null or _label == null or _prompt == null:
-		_fail("HUD did not build ExplorationLegend, its label, or the contextual prompt")
+		_fail("HUD did not build ExplorationLegend under BottomDock, its label, or the contextual prompt")
 		_report()
 		return
 
@@ -68,6 +71,28 @@ func _run() -> void:
 	await _check_live_device_switch()
 	await _check_context_prompt_stays_independent()
 	await _check_modal_ownership()
+
+	# The bound/order checks in `_check_authored_layout` are the one place
+	# this file cares what the real canvas size is. `root.size` set on frame
+	# zero (as this used to do, before the harness has actually finished
+	# spinning up) does not stick -- headless still reports 64x64 and never
+	# reconciles -- and never got caught because the legend's old fixed
+	# top-left position happened to sit inside [0,1920]x[0,1080] regardless
+	# of how far the aspect="expand" canvas actually extends underneath a
+	# too-small window. The relocated, bottom-anchored legend is not that
+	# forgiving, so this now sets the size for real: several settle frames
+	# first (`smoke_build_menu_footprint.gd`'s own proven order), then the
+	# assignment, then several more before trusting any rect it measures.
+	for i in 10:
+		await process_frame
+	root.size = Vector2i(1920, 1080)
+	for i in 10:
+		await process_frame
+	if root.size != Vector2i(1920, 1080):
+		_fail("viewport would not take the authored 1920x1080 size (got %s)" % root.size)
+		_report()
+		return
+
 	_check_authored_layout()
 	_report()
 
@@ -75,7 +100,7 @@ func _run() -> void:
 func _check_normal_keyboard_legend() -> void:
 	if not _legend.visible:
 		_fail("exploration legend is not visible in an unowned normal world")
-	for expected in ["Build", "Map", "Satchel", "Change Pal", "Torch"]:
+	for expected in ["Build", "Map", "Satchel", "Change Creature", "Torch"]:
 		if not _label.text.contains(expected):
 			_fail("exploration legend is missing '%s'" % expected)
 	for path in ["keyboard_b.png", "keyboard_m.png", "keyboard_i.png", "keyboard_p.png"]:
@@ -149,17 +174,40 @@ func _check_modal_ownership() -> void:
 func _check_authored_layout() -> void:
 	var legend_rect := _legend.get_global_rect()
 	var content_height := _label.get_content_height()
-	if _label.size.y < content_height or _label.size.y < 24.0:
-		_fail("exploration legend clips its 24 px glyph row (label %.1f px, content %.1f px)" % [
-			_label.size.y, content_height,
+	if _label.size.y < content_height or _label.size.y < PLAYGROUND_HUD.LEGEND_GLYPH_PX:
+		_fail("exploration legend clips its %d px glyph row (label %.1f px, content %.1f px)" % [
+			PLAYGROUND_HUD.LEGEND_GLYPH_PX, _label.size.y, content_height,
 		])
-	for path in [^"Root/BottomDock", ^"Root/Minimap", ^"Root/ObjectiveBlock"]:
+	# BottomDock itself is the legend's own parent now (OP21-11), so it is
+	# deliberately not in this overlap set — everything else the legend must
+	# still stay clear of.
+	for path in [^"Root/Minimap", ^"Root/ObjectiveBlock"]:
 		var control := _hud.get_node_or_null(path) as Control
 		if control != null and control.visible and legend_rect.intersects(control.get_global_rect()):
 			_fail("exploration legend overlaps %s at 1920x1080" % str(control.get_path()))
 	if legend_rect.position.x < 0.0 or legend_rect.position.y < 0.0 \
 			or legend_rect.end.x > 1920.0 or legend_rect.end.y > 1080.0:
 		_fail("exploration legend leaves the authored 1920x1080 safe canvas")
+
+	# OP21-11's literal ask: "should sit under the hotbar." BottomDock is a
+	# VBoxContainer, so this is a real layout contract, not a coincidence of
+	# one frame's numbers -- the hotbar's bottom edge must sit at or above the
+	# legend's top edge, and the legend's own bottom edge at or above the
+	# contextual prompt's top edge.
+	var hotbar := _hud.get_node_or_null(^"Root/BottomDock/HotbarPanel") as Control
+	if hotbar == null:
+		_fail("HotbarPanel missing; cannot verify the legend sits under it")
+		return
+	var hotbar_rect := hotbar.get_global_rect()
+	var prompt_rect := _prompt.get_global_rect()
+	if legend_rect.position.y < hotbar_rect.end.y - 0.5:
+		_fail("exploration legend does not sit under the hotbar (legend top %.1f, hotbar bottom %.1f)" % [
+			legend_rect.position.y, hotbar_rect.end.y,
+		])
+	if prompt_rect.position.y < legend_rect.end.y - 0.5:
+		_fail("contextual prompt does not sit under the relocated legend (prompt top %.1f, legend bottom %.1f)" % [
+			prompt_rect.position.y, legend_rect.end.y,
+		])
 
 
 func _fail(message: String) -> void:

@@ -134,13 +134,40 @@ const MINIMAP_SIZE := Vector2(240.0, 240.0)
 const OBJECTIVE_MAX_WIDTH := 420.0
 const OBJECTIVE_BLOCK_HEIGHT := 90.0
 
-## RG3: one quiet line at the upper-left edge. The lower HUD is already shared
-## by the hotbar, contextual prompt and active creature; placing a persistent
-## legend there would recreate the overlap class BottomDock was introduced to
-## eliminate. The upper-left is otherwise reserved only for the opt-in F3
-## debug readout (which starts below this line).
-const EXPLORATION_LEGEND_POS := Vector2(56.0, 56.0)
-const EXPLORATION_LEGEND_SIZE := Vector2(682.0, 56.0)
+## OP21-11: the owner's own words were "should sit under the hotbar" — moved
+## from RG3's original upper-left placement into `Root/BottomDock`'s
+## VBoxContainer (see the .tscn's own long comment on why that container
+## exists at all: it is the one place on this HUD where two variable-height
+## rows genuinely cannot overlap, because Godot lays them out in sequence
+## rather than at hand-tuned offsets). The legend is inserted between
+## `HotbarPanel` and `Prompt` in `_build_exploration_legend()` below, so it
+## always renders directly beneath the hotbar chips and directly above the
+## contextual prompt — no separate position constant needed any more; the
+## VBox derives it every frame from both neighbours' real heights.
+##
+## Glyph/font size, not position, is OP21-11's other half: the legend used to
+## draw its glyphs at 24px, smaller than `input_glyph.gd::icon()`'s own
+## documented floor ("28->36 was the smallest step that read clearly" for a
+## harder glyph than any of these five carry) and the worst offender on the
+## whole HUD at the project's 1920x1080 authoring scale. At the Ally's actual
+## 1280x800 (canvas_items stretch, scale 1280/1920 = 0.667), that was ~16
+## physical px. 44px authored -> ~29 physical px, comfortably past the
+## established floor with margin for "more legible", not just "not the worst".
+const LEGEND_GLYPH_PX := 44
+const LEGEND_FONT_SIZE := 24
+## RichTextLabel's `fit_content` measures height against its CURRENT width,
+## and a freshly-built PanelContainer with no width hint of its own has none
+## yet -- the label wrapped to a near-zero column and reported an absurd
+## 1400+px content height the first time this ran. A fixed minimum size, the
+## same approach the old top-left panel used, sidesteps that: wide enough for
+## all five entries at the enlarged glyph/font (measured against "Change
+## Creature", the longest label, plus its two switch-direction glyphs) with
+## room to spare. Height is the 44px glyph plus `UITokens.panel_box()`'s own
+## 16px top+16px content margin (32px total) -- `_build_exploration_legend`
+## below deliberately adds NO further vertical margin on top of that; this
+## exact double-margin mistake already shipped once (see the function's own
+## history comment) and squeezed the glyph row down to an 8px label.
+const LEGEND_SIZE := Vector2(1180.0, 76.0)
 
 const MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 28.0
@@ -222,6 +249,9 @@ var _creature_icon: TextureRect = null
 var _party_strip: Control = null
 var _party_strip_last_index := -999
 var _party_strip_last_revision := -999
+## OP21-12: the last active creature's name, so a later cycle can say "Willow
+## → Ashcap" instead of just lighting up a new row.
+var _party_strip_last_active_label := ""
 
 ## --- player vitals cluster ----------------------------------------------------
 
@@ -546,6 +576,13 @@ static func party_strip_position(strip_height: float) -> Vector2:
 ## reveal the strip only when either actually changed, per the task spec --
 ## polling every frame but writing only on a real change, the same discipline
 ## the widget's own per-row cache already uses internally.
+##
+## OP21-12: also decides whether this change was a genuine cycle (the active
+## index landed on the slot immediately before/after where it just was, with
+## wrap) and if so hands the widget a `flash_cycle()` call — this is the one
+## place both the old and new index are known, since `encounter_director.gd`
+## (which actually presses `combat_switch_left/right`) only ever sees the new
+## state through `Party.revision`.
 func _update_party_strip() -> void:
 	if _party_strip == null or _party == null:
 		return
@@ -553,6 +590,8 @@ func _update_party_strip() -> void:
 	var revision := int(_party.get("revision"))
 	if index == _party_strip_last_index and revision == _party_strip_last_revision:
 		return
+	var previous_index := _party_strip_last_index
+	var previous_label := _party_strip_last_active_label
 	_party_strip_last_index = index
 	_party_strip_last_revision = revision
 
@@ -569,6 +608,20 @@ func _update_party_strip() -> void:
 		})
 	_party_strip.call("update_from_party", entries, index)
 	_party_strip.call("show_strip")
+
+	var total := entries.size()
+	var next_label := str(entries[index].get("label", "")) if index >= 0 and index < total else ""
+	_party_strip_last_active_label = next_label
+
+	if previous_index >= 0 and previous_index != index and total > 0 \
+			and not previous_label.is_empty() and not next_label.is_empty():
+		var direction := 0
+		if (previous_index + 1) % total == index:
+			direction = 1
+		elif (previous_index - 1 + total) % total == index:
+			direction = -1
+		if direction != 0:
+			_party_strip.call("flash_cycle", direction, previous_label, next_label, index + 1, total)
 
 
 # --- player vitals cluster --------------------------------------------------------
@@ -1127,28 +1180,39 @@ func _prompt_belongs_to_combat() -> bool:
 
 
 ## RG3's small, always-present answer to "what can I do from the field?".
-## Situation-specific verbs remain exclusively in BottomDock/Prompt; this row
-## contains only persistent world shortcuts. A single RichTextLabel keeps the
+## Situation-specific verbs remain exclusively in `Prompt`; this row contains
+## only persistent world shortcuts. A single RichTextLabel keeps the
 ## relationship compact and makes device changes atomic -- there cannot be one
 ## stale keyboard chip beside three updated controller chips for a frame.
+##
+## OP21-11: mounted into `Root/BottomDock`'s VBoxContainer, not `_root`
+## directly, and moved to sit right after `HotbarPanel` (index 1, ahead of
+## `Prompt`) -- literally "under the hotbar," and laid out by the same
+## container that already keeps the hotbar and the contextual prompt from
+## overlapping (see the .tscn's own long comment on why BottomDock exists).
+## `size_flags_horizontal = SHRINK_END` matches `HotbarPanel`'s own flag so
+## both hug the same right-hand safe zone instead of the legend spanning the
+## full authored width behind the player's back.
 func _build_exploration_legend() -> void:
+	var dock: VBoxContainer = $Root/BottomDock
+
 	_exploration_legend = PanelContainer.new()
 	_exploration_legend.name = "ExplorationLegend"
 	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_exploration_legend.position = EXPLORATION_LEGEND_POS
-	_exploration_legend.custom_minimum_size = EXPLORATION_LEGEND_SIZE
+	_exploration_legend.custom_minimum_size = LEGEND_SIZE
+	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_box())
-	_root.add_child(_exploration_legend)
+	dock.add_child(_exploration_legend)
+	dock.move_child(_exploration_legend, 1)
 
 	var margin := MarginContainer.new()
 	margin.name = "Margin"
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_theme_constant_override("margin_left", 14)
-	# The panel style already contributes 16 px vertically on each side. Adding
-	# another vertical inset here squeezed the 24 px glyph row into an 8 px
-	# label, clipping every persistent field control in the real HUD.
+	margin.add_theme_constant_override("margin_left", 16)
+	# No vertical margin here -- the panel style already contributes 16px top
+	# and 16px bottom (see `LEGEND_SIZE`'s own comment above).
 	margin.add_theme_constant_override("margin_top", 0)
-	margin.add_theme_constant_override("margin_right", 14)
+	margin.add_theme_constant_override("margin_right", 16)
 	margin.add_theme_constant_override("margin_bottom", 0)
 	_exploration_legend.add_child(margin)
 
@@ -1160,7 +1224,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_label.scroll_active = false
 	_exploration_legend_label.shortcut_keys_enabled = false
 	_exploration_legend_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_exploration_legend_label.add_theme_font_size_override("normal_font_size", 17)
+	_exploration_legend_label.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
 	margin.add_child(_exploration_legend_label)
 	UITokens.make_text_legible(_exploration_legend_label)
 
@@ -1201,9 +1265,9 @@ func _exploration_legend_text() -> String:
 		_legend_entry("build_open", "Build", normal),
 		_legend_entry("map", "Map", normal),
 		_legend_entry("inventory", "Satchel", normal),
-		"%s%s  [color=#%s]Change Pal[/color]" % [
-			INPUT_GLYPH.icon("switch_left", 24, change_tint),
-			INPUT_GLYPH.icon("switch_right", 24, change_tint),
+		"%s%s  [color=#%s]Change Creature[/color]" % [
+			INPUT_GLYPH.icon("switch_left", LEGEND_GLYPH_PX, change_tint),
+			INPUT_GLYPH.icon("switch_right", LEGEND_GLYPH_PX, change_tint),
 			change_tint.to_html(true),
 		],
 		_legend_entry("torch_place", "Torch", normal),
@@ -1213,7 +1277,7 @@ func _exploration_legend_text() -> String:
 
 func _legend_entry(action: String, label: String, tint: Color) -> String:
 	return "%s  [color=#%s]%s[/color]" % [
-		INPUT_GLYPH.icon(action, 24, tint), tint.to_html(true), label,
+		INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint), tint.to_html(true), label,
 	]
 
 

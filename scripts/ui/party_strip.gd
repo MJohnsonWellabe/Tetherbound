@@ -60,9 +60,18 @@ const SELECTED_MODULATE := 1.0
 ## as "appearing," not one that travels across the screen.
 const REVEAL_OFFSET := 12.0
 
+## OP21-12: the owner could not tell what was happening while cycling — the
+## strip just reappeared with a different row lit up, indistinguishable from
+## a menu flickering open. `flash_cycle()` below draws the transition itself
+## (which creature you were on, which you're moving to, where that sits in
+## the roster) for this long — comfortably inside `T_PARTY_FADE`'s hold, so
+## the strip is never showing without it once a real cycle has happened.
+const CYCLE_BANNER_SECONDS := 1.3
+
 var _pinned := false
 var _fade_timer := 0.0
 var _tween: Tween = null
+var _cycle_banner_timer := 0.0
 
 ## The position the caller (the HUD, at mount time) placed this widget at.
 ## Captured once in `_build()` so the reveal tween has a fixed "home" to slide
@@ -72,6 +81,7 @@ var _rest_position := Vector2.ZERO
 var _rows: Array[PanelContainer] = []
 var _count_label: Label = null
 var _list: VBoxContainer = null
+var _cycle_banner: RichTextLabel = null
 var _rails: Array[ColorRect] = []
 var _chips: Array[Panel] = []
 var _chip_boxes: Array[StyleBoxFlat] = []
@@ -146,6 +156,26 @@ func _build() -> void:
 
 	for i in SLOTS:
 		_list.add_child(_build_row(i))
+
+	# OP21-12's cycle banner. A sibling of `stack`, not a row inside it —
+	# `TOTAL_HEIGHT` above is a hard contract other code measures against
+	# (`playground_hud.gd::party_strip_position`, `test_hud_widgets.gd`'s
+	# gap assertion), so this cannot join the VBox as a real row without
+	# invalidating both. It sits just above the header instead, on-screen
+	# clearance already checked by that same gap test.
+	_cycle_banner = RichTextLabel.new()
+	_cycle_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cycle_banner.bbcode_enabled = true
+	_cycle_banner.fit_content = false
+	_cycle_banner.scroll_active = false
+	_cycle_banner.shortcut_keys_enabled = false
+	_cycle_banner.position = Vector2(0.0, -34.0)
+	_cycle_banner.size = Vector2(ROW_SIZE.x, 30.0)
+	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_cycle_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_cycle_banner.add_theme_font_size_override("normal_font_size", UI_TOKENS.FONT_LABEL)
+	_cycle_banner.visible = false
+	add_child(_cycle_banner)
 
 
 func _build_row(slot_index: int) -> PanelContainer:
@@ -287,6 +317,31 @@ func _build_row(slot_index: int) -> PanelContainer:
 func show_strip() -> void:
 	_fade_timer = UI_TOKENS.T_PARTY_FADE
 	_reveal()
+
+
+## OP21-12. `direction`: +1 for next, -1 for previous, called only when the
+## caller (`playground_hud.gd::_update_party_strip`) can tell the new active
+## index is genuinely adjacent (with wrap) to the one it replaced — a
+## same-frame roster edit (a catch, a menu reorder) that happens to also move
+## the active index leaves `direction` 0 and this call is skipped, so the
+## banner never claims a cycle that didn't happen.
+##
+## Muted "was" name, an arrow, bright "now" name, then position in the roster
+## as plain N/total — the three things the owner said cycling didn't make
+## clear: who you left, who you're on, and where that sits among five.
+func flash_cycle(direction: int, previous_label: String, next_label: String,
+		position_1based: int, total: int) -> void:
+	if _cycle_banner == null or direction == 0:
+		return
+	var arrow := "▶" if direction > 0 else "◀"
+	_cycle_banner.text = "[color=#%s]%s[/color]  %s  [b][color=#%s]%s[/color][/b]   [color=#%s]%d / %d[/color]" % [
+		UI_TOKENS.TEXT_MUTED.to_html(false), previous_label,
+		arrow,
+		UI_TOKENS.TEAL_SOFT.to_html(false), next_label,
+		UI_TOKENS.TEXT_SECONDARY.to_html(false), position_1based, total,
+	]
+	_cycle_banner.visible = true
+	_cycle_banner_timer = CYCLE_BANNER_SECONDS
 
 
 ## Pinned keeps the strip visible with no fade countdown at all — combat
@@ -438,6 +493,14 @@ func _on_fade_out_finished() -> void:
 
 
 func _process(delta: float) -> void:
+	# Runs whether or not the strip itself is fading/pinned — a cycle mid-fight
+	# (pinned) still deserves the same "who you were on, who you're on now"
+	# readout the fade path gets.
+	if _cycle_banner_timer > 0.0:
+		_cycle_banner_timer -= delta
+		if _cycle_banner_timer <= 0.0:
+			_cycle_banner.visible = false
+
 	if _pinned or not visible:
 		return
 	if _fade_timer > 0.0:
