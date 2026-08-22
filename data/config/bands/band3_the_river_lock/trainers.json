@@ -11,11 +11,12 @@
       "_comment_gate_d3": "GATE-D3. OW5D's own placement, along the site's internal conduit bearing, left Hess only ~22m short of the site centre -- alongside Orrin, Dell and Vance in an 18m span, which is exactly what prompt 64 names as the failure: 'The route should not jump from wilderness directly into the four-person relay gauntlet.' Moved OUT onto the spine road itself (terrain_playground.json trail.bands[2], the (230,3670)->(350,3760) leg the player actually walks into the region), 140m short of the site centre. `facing_deg` recomputed for the new leg: the trainer faces back down the direction the player arrives from, opposite the (0.8,0.6) travel bearing of this leg, atan2(-0.8,-0.6) = -126.9 deg (not the old -34.4, which described the site's own separate conduit-approach frame Orrin/Dell/Vance still stand on). Ground measured with a scratch heightfield probe (tools/_probe_band3.gd, not committed): -3.20m, 1.04m of spread over an 8m box -- flatter than the old site, comfortably inside an 11m arena.",
       "rank": "grunt",
       "position": [
-        248.0,
-        3683.5
+        241.3,
+        3680.0
       ],
       "facing_deg": -126.9,
-      "_why_here": "On the spine itself, 140m short of the site centre, right past the bend where the road turns into the relay approach -- the first Team Tether contact of the region, past the new camp clearing (vegetation.json order 3000) and the checkpoint prop cluster (props.json `relay_approach_checkpoint`), well before any sign of the compound.",
+      "_comment_gate_d3_round4": "GATE-D3 round 4. Moved 7m back down the road to stand AT the checkpoint gap instead of in open ground several metres behind it. The blind critic's reading of the previous placement was exact -- 'the single figure stands on the open road several metres behind the props... nobody is stationed at the gap' -- and a barricade with nobody in the gap is scenery, not a checkpoint. Kept 1.2m off the road centreline on the leg's own normal so the gap stays walkable: props.json's own `_why_rebuilt` records why nothing in this band stands on the walking line any more, and putting the picket there instead of a crate would have been the same defect wearing a person.",
+      "_why_here": "On the spine itself, ~135m short of the site centre, right past the bend where the road turns into the relay approach -- the first Team Tether contact of the region, past the new camp clearing (vegetation.json order 3000) and the checkpoint prop cluster (props.json `relay_approach_checkpoint`), well before any sign of the compound.",
       "challenge": "relay_hess_challenge",
       "defeated": "relay_hess_defeated",
       "team": [

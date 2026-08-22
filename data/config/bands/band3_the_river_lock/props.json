@@ -5,11 +5,12 @@
     {
       "order": 3000,
       "name": "riverwatch_rest",
+      "_why_clustered": "GATE-D3 round 4. The blind critic read this twice as loose props on a lawn -- 'four objects, four regular intervals, one line... a campsite is legible because everything faces the fire.' It was: six pieces strung along the road over 6m with no centre. Pulled into a 2.5m ring around one centre at (211.0, 3700.0), bench and bedroll turned inward, kit against the bench leg, crate closing the far side. This kit has no fire, brazier or tent -- the honest limit of one prop family (D24) -- so the ring itself has to carry it, and a ring of used gear facing a gap where a fire would go is what this catalogue can actually say. If a campfire prop is ever added, it goes at that centre.",
       "_why": "GATE-D3, the region's camp/rest siting (prompt 64: 'a reasonable recovery/staging point before or around the relay approach should exist'). Sited on the flattest ground measured anywhere in the band (vegetation.json order 3000, 0.35m of spread over an 8m box), right past the spine's bend into the relay road and well short of either picket. Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one. What stands here is evidence a traveller already used this spot: a seat, a set-down pack, a water barrel. It reads as an obvious place to plant your own camp before pushing into Team Tether ground, not as a free-heal station inside the gauntlet.",
       "props": [
         {
           "model": "Bench",
-          "at": [211.6, 3699.2],
+          "at": [211.9, 3698.9],
           "yaw_deg": 25.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -17,7 +18,7 @@
         },
         {
           "model": "Barrel",
-          "at": [209.0, 3701.4],
+          "at": [209.8, 3701.2],
           "yaw_deg": -10.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -25,7 +26,7 @@
         },
         {
           "model": "Bag",
-          "at": [210.8, 3700.9],
+          "at": [211.3, 3699.6],
           "yaw_deg": 110.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -33,7 +34,7 @@
         },
         {
           "model": "Bed_Twin1",
-          "at": [213.9, 3701.8],
+          "at": [212.4, 3701.3],
           "yaw_deg": -65.0,
           "sink_m": 0.08,
           "scale": 1.0,
@@ -41,7 +42,7 @@
         },
         {
           "model": "Axe_Bronze",
-          "at": [212.7, 3697.6],
+          "at": [210.2, 3698.4],
           "yaw_deg": 40.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -49,7 +50,7 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [208.2, 3698.4],
+          "at": [210.5, 3701.9],
           "yaw_deg": -15.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -61,6 +62,7 @@
       "order": 3001,
       "name": "relay_approach_checkpoint",
       "_why": "GATE-D3. The first physical sign of Team Tether on the road, well short of Hess -- a barricade rather than a person, because a fight here would just be a third picket and prompt 64 asks for presence BUILDING before the gauntlet, not another battle. At s=12.5m along the (230,3670)->(350,3760) spine leg, 10m short of Hess at s=22.5 so the two do not compete for the player's stopping point.",
+      "_why_asymmetric": "GATE-D3 round 4. The rebuild below was laid out symmetrically -- barrel+crate left, crate+barrel right, matching distances either side of the centreline -- and a blind critic named that immediately as reading generated rather than built. The east line is now angled off the road bearing, spaced wider and run 1.6m further out than the west. The 6.4m gap is unchanged: the asymmetry is in how the two sides are built, not in how wide the road stays.",
       "_why_rebuilt": "GATE-D3 round 2, and it is two defects in one cluster. The driven run (tools/_probe_band3_driven.gd) WEDGED the real player body here: the crate and barrel stood 0.4m and 1.2m from the spine centreline, so a body walking the road pushed straight into them for ninety frames and stopped. Three props dropped on the walking line of the region's main road. Second, the blind critic was shown this spot and said plainly that nothing here reads as a picket -- two identical crates on a path, no camp, no barrier, no reason. Both are answered the same way: the barricade is now a LINE ACROSS the road with a 6.4m gap walked through the middle of it, and the picket's own camp sits off the verge behind it. A checkpoint you steer through reads as a checkpoint; a checkpoint you get stuck on reads as a bug. Every lateral offset below is measured on that leg's own normal (-0.6,0.8), so the gap stays a gap if the road is ever re-cut.",
       "props": [
         {
@@ -89,15 +91,15 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [241.9, 3674.9],
-          "yaw_deg": 36.9,
+          "at": [242.0, 3674.8],
+          "yaw_deg": 22.0,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "east end, the mirror of the west crate. The 6.4m the two leave between them is the gap the road walks through: wide enough that a body steers it without touching either, narrow enough that the player is obviously being funnelled"
+          "_why": "east end. Deliberately NOT the mirror of the west crate -- round 4's critic called the previous perfectly bilateral layout 'the strongest generated tell in the set', so this side is angled off the road bearing, spaced wider, and run out further. The 6.4m the two leave between them is the gap the road walks through: wide enough that a body steers it without touching either, narrow enough that the player is obviously being funnelled"
         },
         {
           "model": "Barrel",
-          "at": [242.9, 3673.7],
+          "at": [244.1, 3673.6],
           "yaw_deg": 15.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -105,7 +107,7 @@
         },
         {
           "model": "Rope_1",
-          "at": [243.8, 3672.4],
+          "at": [245.4, 3672.6],
           "yaw_deg": 36.9,
           "sink_m": 0.03,
           "scale": 1.0,
