@@ -92,10 +92,12 @@ const GLYPHS := {
 
 	## D32's `combat_switch_left`/`combat_switch_right` (mid-combat creature
 	## switching -- the move grid's Switch cell and, tap-vs-hold, the party
-	## selector). Shares files with `horizontal`'s own left/right pair rather
-	## than vendoring anything new: same left/right keyboard arrows, same
-	## gamepad d-pad icons `hotbar_2`/`hotbar_3` above already borrow for the
-	## identical physical buttons.
+	## selector; also exploration party cycling, `encounter_director.gd`).
+	## Shares files with `horizontal`'s own left/right pair rather than
+	## vendoring anything new: same left/right keyboard arrows, same bare
+	## gamepad d-pad icons -- unmodified, since this is the action that keeps
+	## the plain d-pad gesture after DPAD-COLLISION (see `hotbar_2`/`hotbar_3`
+	## below, which moved to an LB-held chord instead of contesting this one).
 	"switch_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_dpad_left.png"},
 	"switch_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_dpad_right.png"},
 
@@ -103,10 +105,14 @@ const GLYPHS := {
 	## press on both devices (no select-then-confirm step) -- true parity is
 	## what CLAUDE.md's "controller first" asks for, not keyboard getting a
 	## one-press hotbar while a pad gets a slower cycle-and-confirm one.
-	## Chosen from buttons nothing else in exploration reads: LB and D-pad
-	## left/right/down are all free (D-pad up is `creature_recall`; A/B/X/Y
-	## are jump/cancel/interact/inventory; RB and mouse-left/right were
-	## combat-only).
+	## Chosen from buttons nothing else in exploration read AT THE TIME: LB
+	## and D-pad left/right/down were all free (D-pad up is `creature_recall`;
+	## A/B/X/Y are jump/cancel/interact/inventory; RB and mouse-left/right were
+	## combat-only). D-pad left/right stopped being free later, when party
+	## cycling (`encounter_director.gd`'s `combat_switch_left`/`_right`) was
+	## given the same physical buttons for exploration use -- see the
+	## DPAD-COLLISION note on `hotbar_2`/`hotbar_3` below for how that got
+	## resolved without moving party cycling's own established d-pad grammar.
 	##
 	## OF21: `hotbar_1` moved OFF Y -- Y was `inventory` AND `hotbar_1` at
 	## once, so opening the backpack also quietly ate whatever sat in slot 1.
@@ -123,8 +129,19 @@ const GLYPHS := {
 	## other's the fight HUD), the same reuse this file already does for
 	## `switch_left`/`switch_right` and D-pad below.
 	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_rb.png"},
-	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": "xbox_dpad_left.png"},
-	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_right.png"},
+	## DPAD-COLLISION: gamepad d-pad left/right moved off a bare press --
+	## `combat_switch_left`/`combat_switch_right` (party cycling) already own
+	## that unmodified gesture, live at the same time as the hotbar during
+	## plain exploration, which is exactly the pairing every OTHER shared
+	## button in this file avoids by being confined to mutually exclusive
+	## states. `playground_hud.gd::_read_hotbar_input` now reaches these two
+	## slots on gamepad through hold-LB + d-pad-left/right instead of a plain
+	## press; the two-icon array (same "shown side by side" convention
+	## `horizontal` above already uses) draws that chord as LB next to the
+	## d-pad direction rather than implying a bare d-pad press still works.
+	## Keyboard 2/3 are unchanged -- they were never part of the collision.
+	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": ["xbox_lb.png", "xbox_dpad_left.png"]},
+	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": ["xbox_lb.png", "xbox_dpad_right.png"]},
 	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_down.png"},
 	"hotbar_5": {"keyboard": "keyboard_5.png", "gamepad": "xbox_lb.png"},
 

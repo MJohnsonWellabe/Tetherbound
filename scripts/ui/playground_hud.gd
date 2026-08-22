@@ -95,6 +95,29 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 const HOTBAR_GLYPH_PX := 36
 const HOTBAR_COUNT_FONT_SIZE := 36
 
+## DPAD-COLLISION: `hotbar_2`/`hotbar_3` and `combat_switch_left`/
+## `combat_switch_right` (party cycling, `encounter_director.gd`) both bind
+## gamepad d-pad left/right (project.godot: joypad 13/14) -- unlike every
+## other d-pad/button reuse in this project's input map, BOTH readers are
+## live in the same context (plain exploration, nothing modal open), so one
+## d-pad press fired both a hotbar slot and a party cycle at once. Every
+## other button collision in project.godot works because its two claimants
+## are mutually exclusive by STATE (a fight, an armed build ghost, a paused
+## panel) -- this is the one pair where that was never true, and an exhaustive
+## audit of every bound joypad button found no button left unclaimed by some
+## exploration-tier verb to move either action onto instead (see this task's
+## own report for the full table).
+##
+## The fix: d-pad left/right, unmodified, stays parked on party cycling --
+## the SAME gesture `combat_hud.gd` already uses for mid-fight switching, so
+## the one physical grammar means the same thing in both places. `hotbar_2`/
+## `hotbar_3` move behind a hold-then-chord on `hotbar_5`'s own button (LB) --
+## gamepad only; keyboard 2/3 are untouched and were never part of the
+## collision. Tapping LB alone still uses slot 5 as always, just after a
+## short buffer (`HOTBAR5_CHORD_WINDOW`) that gives a following d-pad press
+## time to redirect it to slot 2/3 instead -- see `_read_hotbar_input()`.
+const HOTBAR5_CHORD_WINDOW := 0.18
+
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
 ## Pixels of clear screen between the hotbar panel's real bottom edge and the
@@ -292,6 +315,11 @@ var _max_raw_axis_seen := 0.0
 
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
 var _hotbar_message_until := 0.0
+
+## DPAD-COLLISION: non-zero while a gamepad LB tap is waiting to see whether a
+## d-pad left/right press follows within `HOTBAR5_CHORD_WINDOW` (chord ->
+## slot 2/3) or times out/LB releases first (plain tap -> slot 5).
+var _hotbar5_chord_pending_until := 0.0
 
 ## --- active-creature block --------------------------------------------------------
 
@@ -1866,9 +1894,42 @@ func _read_hotbar_input() -> void:
 	# poll alone -- which is exactly why the hotbar leaked under an open build
 	# menu and the hammer did not.
 	if not _world_input_allowed():
+		# A stale pending chord must not fire once input stops being ours --
+		# e.g. the player opened a panel mid-buffer. Drop it silently rather
+		# than firing slot 5 the instant the panel closes.
+		_hotbar5_chord_pending_until = 0.0
 		return
+
+	var on_gamepad := INPUT_GLYPH.using_gamepad()
+
+	# DPAD-COLLISION: resolve a pending LB tap FIRST, before this frame's own
+	# fresh presses, so the frame the d-pad follow-up lands on cannot race a
+	# same-frame re-arm below.
+	if _hotbar5_chord_pending_until > 0.0:
+		var lb_held := on_gamepad and Input.is_action_pressed(&"hotbar_5")
+		if lb_held and Input.is_action_just_pressed(&"combat_switch_left"):
+			_hotbar5_chord_pending_until = 0.0
+			_use_hotbar_slot(1) # hotbar_2
+			return
+		if lb_held and Input.is_action_just_pressed(&"combat_switch_right"):
+			_hotbar5_chord_pending_until = 0.0
+			_use_hotbar_slot(2) # hotbar_3
+			return
+		if not lb_held or Time.get_ticks_msec() / 1000.0 >= _hotbar5_chord_pending_until:
+			_hotbar5_chord_pending_until = 0.0
+			_use_hotbar_slot(4) # hotbar_5, the plain tap this buffer was guarding
+			return
+		return # still inside the window -- wait for the next frame's verdict
+
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
+			if i == 4 and on_gamepad:
+				# Don't use slot 5 yet -- give a following d-pad press this
+				# same LB hold a short window to redirect to slot 2/3 instead.
+				# Keyboard's "5" key never enters this branch and fires with
+				# zero added latency, same as before this task.
+				_hotbar5_chord_pending_until = Time.get_ticks_msec() / 1000.0 + HOTBAR5_CHORD_WINDOW
+				return
 			_use_hotbar_slot(i)
 			return
 

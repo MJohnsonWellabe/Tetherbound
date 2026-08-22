@@ -182,16 +182,29 @@ hotbar_1={
 , Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
 ]
 }
+; DPAD-COLLISION: `hotbar_2`/`hotbar_3` no longer carry a gamepad
+; InputEventJoypadButton of their own. They used to bind the same physical
+; d-pad left/right `combat_switch_left`/`combat_switch_right` do (buttons
+; 13/14 below), and unlike every OTHER button reuse in this file, both
+; readers are live at once during plain exploration -- nothing gates them
+; into mutually exclusive states the way a fight/build-ghost/paused-panel
+; does for every other shared button here. One d-pad press fired a hotbar
+; slot AND cycled the active creature. Keyboard 2/3 are untouched (never
+; part of the collision); on gamepad, `playground_hud.gd::_read_hotbar_input`
+; now reaches these two slots through a hold-LB + d-pad-left/right chord on
+; `hotbar_5`'s own button instead -- see that function and
+; `encounter_director.gd::_read_creature_control_input`'s matching guard for
+; the full reasoning. `tests/test_world_verb_input_owner_enforcement.gd`
+; asserts no two exploration-tier world verbs share a physical joypad button
+; going forward, so this class cannot come back unnoticed.
 hotbar_2={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":50,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
 ]
 }
 hotbar_3={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":51,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
 ]
 }
 hotbar_4={
