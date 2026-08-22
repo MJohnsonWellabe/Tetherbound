@@ -112,9 +112,36 @@ const SIGNPOST_AT := Vector2(13.5, -7.0)
 ## data/config/harvest.json node — nearest is >7m). Both `ground`-compatible,
 ## the Meadows' dominant type (GAME_DESIGN.md 8), same as every wild species
 ## placed here so far.
+## REWARD-ECONOMY added the other three. `data/items/items.json` has carried
+## fourteen TMs since R4.4; nine are stocked at Mira's, these two stand in the
+## opening field, and `tm_earthshatter`, `tm_leviathan_surge` and
+## `tm_heavenfall` — one apex TM per type, each of whose own blurb says "Very
+## rare" — could not be obtained anywhere in the game. Not a balance problem: a
+## shipped item with no acquisition path at all, the same written-but-inert
+## shape as the relay console's `requires_flag` seam recorded in BACKLOG.md.
+##
+## Sited by prompt 58's rule ("where discovery and difficulty justify their
+## value") rather than by convenience: one per type, each off the spine in the
+## late region that owns that type, each a real detour a player chooses to make.
+## They are one-time pickups on exactly the mechanism the first two use — the
+## `tm:<id>` flag below already makes a reload unable to mint a second copy —
+## so nothing new is introduced to carry them.
 const TM_AT := {
 	"tm_stone_rush": Vector2(34.0, -20.0),
 	"tm_burrow_strike": Vector2(6.0, -30.0),
+	# Water, beside the river gorge ~350m downstream of the Old Mill Crossing.
+	# 45m off the course centreline at x=500, where terrain_playground.json's
+	# `river` measures half_width 12 and rim 6 — an 18m carve edge, so ~27m of
+	# clearance. Beside the gorge, not in it, and reached by walking the river
+	# instead of crossing it.
+	"tm_leviathan_surge": Vector2(500.0, 4240.0),
+	# Ground, on Band 4's western high stone, ~110m off the spine's own far
+	# point (-420, 5140). The upper country's rock, past the old-growth.
+	"tm_earthshatter": Vector2(-520.0, 5180.0),
+	# Air, off the Meadows Hall approach road in Band 5 — the latest and hardest
+	# of the three to reach, in the region whose wild band is the chapter's
+	# strongest.
+	"tm_heavenfall": Vector2(140.0, 7300.0),
 }
 
 ## Where Grandpa's house stands: the west building pad in

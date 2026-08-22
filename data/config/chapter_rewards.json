@@ -1,0 +1,232 @@
+{
+  "_comment": "REWARD-ECONOMY (prompt 58). The chapter's reward audit, as data. One row per activity that pays something, in route order, recording what it gives, what that lets the player DO next, and whether the player can be expected to understand that use at the moment they receive it -- which is prompt 58's actual test ('a reward is good when the player can connect it to something they want to do next'), not whether a prize exists. Rewards themselves live where they always have: trainer payouts in the band trainer files, shop stock in trade.json, recipes in data/recipes/, world pickups in playground_world.gd. Nothing here is a second economy; this is the map of the one that ships, and tests/test_chapter_rewards.gd checks the map against it.",
+  "_comment_no_new_systems": "Prompt 58 opens by forbidding a second inventory, currency, recipe or loot system, so this file deliberately holds no numbers the game reads. It is an audit and a set of invariants. The one CHANGE the audit produced was a placement, not a system: three apex TMs (tm_earthshatter/tm_leviathan_surge/tm_heavenfall) existed as items with full move data and no acquisition path anywhere in the game -- see playground_world.gd's TM_AT.",
+  "materials": {
+    "_comment": "Prompt 58's resource tiers, with the use that makes each one worth picking up. Audited 2026-08-22: every material the world can yield is a recipe input, a build cost or shop stock -- there are no orphan collectibles in the Meadows.",
+    "baseline": [
+      "wood",
+      "stone",
+      "fiber",
+      "berries"
+    ],
+    "progression": [
+      "rootstone",
+      "ironwood"
+    ],
+    "_comment_supply": "Measured against data/config/bands/*/harvest.json plus the warrens deposits: rootstone supply 28 against 12 needed by the two critical-path recipes (Riding Saddle 8, Greater Orb 4); ironwood 15 against orb_prime's 4. Both comfortable, neither so loose the material stops mattering."
+  },
+  "activities": [
+    {
+      "activity": "practice_trainer (Bryn)",
+      "required": true,
+      "reward": {
+        "coins": 20,
+        "potion_small": 1
+      },
+      "enables": "First coins and the first potion \u2014 the potion teaches that damage is recoverable outside a menu.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "trainer_mira",
+      "required": true,
+      "reward": {
+        "coin": 10,
+        "potion_small": 1
+      },
+      "enables": "Coins toward Mira's own store, which she keeps \u2014 the one trainer whose reward and whose sink are the same person.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "trainer_tam",
+      "required": true,
+      "reward": {
+        "coin": 12,
+        "orb_basic": 3
+      },
+      "enables": "Three Basic Orbs, immediately after Tam teaches the orb recipe. This is the chapter's clearest reward-to-use link: the thing he explains and the thing he hands over are the same thing.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "trainer_oskar",
+      "required": true,
+      "reward": {
+        "coin": 15,
+        "south_bridge_key": 1
+      },
+      "enables": "The South Bridge Key \u2014 the reward IS the progression. Opens Band 2.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "quarry_picket_dorn",
+      "required": false,
+      "reward": {
+        "coins": 30,
+        "potion_small": 2
+      },
+      "enables": "Coins and potions before the quarry and the warrens, the longest stretch so far without a bed.",
+      "understood_when_received": true,
+      "note": "Optional. Sited so the player meets it needing exactly what it pays."
+    },
+    {
+      "activity": "warrens_watch_pell",
+      "required": false,
+      "reward": {
+        "coins": 40,
+        "potion_small": 2,
+        "orb_basic": 3
+      },
+      "enables": "Three Basic Orbs at the door of the dungeon whose field is the strongest the player has met \u2014 the means to catch what is behind him.",
+      "understood_when_received": true,
+      "note": "Optional. Prompt 58's 'optional trainers need enough value to justify engagement'."
+    },
+    {
+      "activity": "Burrow Warrens clear",
+      "required": true,
+      "reward": {
+        "xp_bonus": "see burrow_warrens.json",
+        "rootstone": "deposits",
+        "heartstone": 1
+      },
+      "enables": "Rootstone for the saddle and the Greater Orb, and the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot).",
+      "understood_when_received": false,
+      "note": "The Heartstone is the one reward whose use is NOT obvious on pickup \u2014 progression.json's evolution block names it but nothing says so at the moment it is taken. Left as-is: it sits in an optional branch chamber off the critical path, so a player who finds it has already chosen to explore, and spelling it out would pre-empt the evolution discovery. Flagged here rather than silently passed."
+    },
+    {
+      "activity": "relay_picket_hess",
+      "required": true,
+      "reward": {
+        "coins": 25,
+        "potion_small": 1
+      },
+      "enables": "Coins and a potion on the relay approach.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "relay_picket_orrin",
+      "required": true,
+      "reward": {
+        "coins": 28,
+        "potion_small": 2
+      },
+      "enables": "Coins and potions, escalating with the rank.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "relay_officer_dell",
+      "required": true,
+      "reward": {
+        "coins": 35,
+        "orb_greater": 2
+      },
+      "enables": "Two Greater Orbs \u2014 the first time the better orb tier arrives as a reward rather than a recipe, and the region's wild band is high enough that the difference is felt.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "relay_captain (Vance)",
+      "required": true,
+      "reward": {
+        "coins": 60,
+        "orb_greater": 3,
+        "revive": 1,
+        "xp_bonus": 120
+      },
+      "enables": "The Mill Bridge Gear (progression), a Revive, three Greater Orbs and the chapter's first xp_bonus. The largest single payout before the finale.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "captain_riverwatch",
+      "required": true,
+      "reward": {
+        "coins": 50,
+        "river_sigil": 1,
+        "orb_greater": 2,
+        "xp_bonus": 80
+      },
+      "enables": "River Sigil (progression) plus Greater Orbs.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "captain_field",
+      "required": true,
+      "reward": {
+        "coins": 40,
+        "field_sigil": 1,
+        "potion_small": 2,
+        "xp_bonus": 60
+      },
+      "enables": "Field Sigil (progression) plus potions.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "captain_ridge",
+      "required": true,
+      "reward": {
+        "coins": 45,
+        "ridge_sigil": 1,
+        "revive": 1,
+        "xp_bonus": 70
+      },
+      "enables": "Ridge Sigil (progression) plus a Revive.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "stronghold_patrol / courtyard / elite",
+      "required": true,
+      "reward": {
+        "coins": 300,
+        "potion_small": 7,
+        "orb_basic": 3,
+        "revive": 1
+      },
+      "enables": "The gauntlet's coins arrive too late for Mira's store to matter, so these are consumables for the Warden fight specifically \u2014 which is the correct shape for a reward paid inside the final building.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "warden_aldis",
+      "required": true,
+      "reward": {
+        "coins": 150,
+        "revive": 2,
+        "potion_small": 4,
+        "xp_bonus": 400
+      },
+      "enables": "The chapter's largest xp_bonus, revives and potions.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "TM: Stone Rush / Burrow Strike (world pickups)",
+      "required": false,
+      "reward": {
+        "tm": 1
+      },
+      "enables": "Two Ground TMs in the opening field \u2014 team-building choice from the first hour.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "TM: Earthshatter / Leviathan Surge / Heavenfall (world pickups)",
+      "required": false,
+      "reward": {
+        "tm": 1
+      },
+      "enables": "One apex TM per type (power 2.0, the highest in data/moves/moves.json), each off-spine in the late region that owns its type. The reward for choosing to explore instead of walking the road.",
+      "understood_when_received": true,
+      "note": "ADDED by this audit. All three shipped as items with full move and compatibility data and no way to obtain them; see playground_world.gd's TM_AT."
+    },
+    {
+      "activity": "Mira's store",
+      "required": false,
+      "reward": {
+        "spends": "coins"
+      },
+      "enables": "Nine TMs at 120-300 coins, orbs, potions, revives and seeds \u2014 the chapter's coin sink. Total coin income from required and optional trainers is 860 plus 30 starting, so a player who fights everything can afford roughly three of the expensive TMs: a real choice, not a shopping list.",
+      "understood_when_received": true
+    }
+  ],
+  "invariants": {
+    "_comment": "What tests/test_chapter_rewards.gd fails the build over. Each is one of prompt 58's own acceptance bullets turned into something checkable.",
+    "every_tm_is_obtainable": true,
+    "no_orphan_materials": true,
+    "coin_income_covers_at_least_n_expensive_tms": 2,
+    "_comment_coins": "Two rather than three so ordinary play, not completionist play, clears the bar."
+  }
+}
