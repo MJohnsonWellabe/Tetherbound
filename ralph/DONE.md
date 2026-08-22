@@ -52,10 +52,16 @@ the captive, the console and the crossing to Band 4's captains. Team Tether
 escalation walks in rank order. The relay is a real compound, not four NPCs on
 a lawn.
 
-**Raised, not changed:** Captain Vance is L11-12 with his own officer at L10
-and `captain_riverwatch` past the crossing at L13-16 -- the region's set-piece
-boss is its third-hardest fight. `chapter_curve.json` is authored TO, never
-edited to fit content, so either Vance moves up or Riverwatch moves down.
+**Checked and NOT raised:** Captain Vance is L11-12 with his officer at L10 and
+`captain_riverwatch` past the crossing at L13-16, which reads at first like the
+region's set-piece boss being its third-hardest fight. It is not a defect --
+`chapter_curve.json`'s own band3 tuning note authors this ladder by name ("the
+relay's four-fight ladder (8, 9, 10, 11-12) is the densest trainer run in the
+chapter"), and Riverwatch's 13-16 is the band-exit gate matching band4. Vance
+is the story climax, Riverwatch the difficulty gate, deliberately. An earlier
+draft of the evidence file proposed a curve change here; it was withdrawn
+before shipping, because authoring the curve to fit content is exactly what the
+lane contract forbids.
 
 **Requested `density_scale` for band3: 0.06** (from the 0.03 floor, against
 band2's 0.05 and band1's 0.07). Near-ground cover was the critic's first-ranked

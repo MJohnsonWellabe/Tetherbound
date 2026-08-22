@@ -154,18 +154,31 @@ that is not broken:
 | Wild ecology is real and findable | **No** | §1.1 — 137 of 155 under the map |
 | Team Tether presence builds before the captain | **Yes** | Hess at 140m out, Orrin at ~70m, then Dell and Vance in the compound; walked in that order |
 | Relay is a compact assault, not four NPCs together | **Yes** | walls, gate, gantry, apparatus, lit conduit runs, 46m dead-ground skin; the two pickets are outside it |
-| Vance is a real milestone | **Partly** | see below |
+| Vance is a real milestone | **Yes** | see below — carried by presentation, and his level is what the curve authors |
 | Rescue/crossing visibly changes what the player can do | **Yes** | §4 |
 | Player leaves understanding Team Tether by experience | **Yes** | checkpoint → picket → picket → officer → captain → captive, no exposition |
 
 **On Vance.** He is rank `captain`, three creatures at L11–12, xp bonus 120,
 and he stands at the end of a real compound with the captive behind him so the
-rescue cannot be walked to without the fight. What undercuts him is arithmetic:
-his officer, Dell, is L10 — one level below — and `captain_riverwatch` past the
-crossing is L13–16, comfortably stronger. The region's set-piece boss is its
-third-hardest fight. `chapter_curve.json` is coordinator-owned and must be
-authored *to*, never edited to fit content, so this is raised rather than
-changed: **either Vance moves up the curve or Riverwatch moves down.**
+rescue cannot be walked to without the fight.
+
+An earlier draft of this file called that a curve defect — Dell is L10, one
+level under him, and `captain_riverwatch` past the crossing is L13–16, so the
+region's set-piece boss is not its hardest fight — and proposed moving one of
+them. **That was wrong and is withdrawn.** `chapter_curve.json`'s own band3
+tuning note authors this ladder explicitly: *"The relay's four-fight ladder
+(8, 9, 10, 11-12) is the densest trainer run in the chapter and carries the
+player across this whole band on its own."* Vance is exactly where the curve
+puts him, and Riverwatch's 13–16 is the band-exit gate matching band4's
+trainer band, not an accident. Proposing a curve edit here would have reopened
+a settled decision to fit content, which is the specific thing
+`GATE_D_LANE_CONTRACT.md` §3 forbids.
+
+The accurate statement is narrower and is not a defect: Vance is the region's
+**story** climax and Riverwatch is its **difficulty** gate, deliberately. What
+carries Vance as a milestone is presentation — rank, the compound, the four-
+fight run into him, the captive behind him — not his level, and presentation
+is what prompt 64 actually asks for.
 
 ---
 
