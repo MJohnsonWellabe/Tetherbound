@@ -1,11 +1,73 @@
 {
   "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
   "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
+  "_comment_gateb": "GATE B (68-CHAPTER/17-RG18). Everything between `open_road_gate` and `defeat_the_captains` is the opening's preparation ladder -- wake, starter, first catch, build a team, train, gather, build a home, build a Creature Bed, sleep, then the village tournament and the road to South Bridge. Nine entries, in the exact order RG18's owner-locked sequence gives: 1 get creatures for the tournament, 2 train them, 3 gather materials, 4 build a home, 5 build a creature bed, 6 build/use your own bed and sleep, 7 enter the tournament, 8 win it, 9 head to the bridge.",
+  "_comment_gateb_flags": "The starter/first-catch beats already write real flags (`opening:beat:*`, `opening:starter_granted`, `sequence_director.gd`) and `south_bridge_open` already fires for real (Oskar's defeat hands over `south_bridge_key`, which `gated_crossing.gd`/`south_bridge.gd` reads) -- those three entries below are wired to real state today. The nine tournament-ladder flags in between (`tournament_team_ready` through `tournament_won`) are CONTRACT flags: nothing sets them yet. quest_log.gd only ever reads `progression`'s flag store (SB9) -- it has no live view of party size, XP, placed buildings or sleep, and giving it one would mean touching build/**, combat/** and autoload/game_state.gd, which this task does not own. Until the owning systems (RG13 building unlocks, RG19 tournament/condition model, the creature-bed/sleep rest loop) call `progression.set_flag(...)` on these exact ids, the HUD will track the first ladder entry and hold there -- that is the honest state of an unbuilt system, not a bug in this file. See ralph/DONE.md's GATEB-OBJECTIVES entry for the full contract list.",
   "main": [
+    {
+      "id": "opening_first_catch",
+      "flag_id": "opening:beat:road",
+      "label": "Catch your first wild creature.",
+      "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`. Covers wake/Grandpa/starter/naming/walk-out for free: any save that has not yet reached this beat is still inside the scripted opening, where the sequence director's own prompts are already the guidance."
+    },
     {
       "id": "open_road_gate",
       "flag_id": "road_gate_open",
       "label": "Find a way through the village gate."
+    },
+    {
+      "id": "tournament_build_team",
+      "flag_id": "tournament_team_ready",
+      "label": "Catch and raise a team for the village tournament.",
+      "_comment": "CONTRACT flag -- RG19 owns the real roster-size/eligibility rule (spec: tied to the five-creature cap). Set this once a party is tournament-ready by that rule, not a second copy of the number here."
+    },
+    {
+      "id": "tournament_train_team",
+      "flag_id": "tournament_training_ready",
+      "label": "Train with your team before the tournament.",
+      "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number."
+    },
+    {
+      "id": "tournament_gather_materials",
+      "flag_id": "home_materials_gathered",
+      "label": "Gather wood and stone for a home.",
+      "_comment": "CONTRACT flag. Tam/the Quarry Foreman already narrate the WHY (OF30/OW9, data/dialogue/village.json) -- this is the WHAT, set once the player holds enough of the baseline materials the next build step (a home) actually costs."
+    },
+    {
+      "id": "tournament_build_home",
+      "flag_id": "home_built",
+      "label": "Build a small home of your own.",
+      "_comment": "CONTRACT flag. The smallest coherent completion rule (RG18) is the owning building lane's call -- a placed `camp` plus enough structure to read as 'a home', not a second housing-validation system authored here."
+    },
+    {
+      "id": "tournament_build_creature_bed",
+      "flag_id": "creature_bed_built",
+      "label": "Build a Creature Bed so your team can rest.",
+      "_comment": "CONTRACT flag. `creature_bed.gd` already places the object (R2.8/Gate A); this fires once it is placed, giving creature care a visible, tracked reason to exist before the tournament asks for a rested team."
+    },
+    {
+      "id": "tournament_sleep",
+      "flag_id": "player_slept_at_home",
+      "label": "Sleep until morning in your new home.",
+      "_comment": "CONTRACT flag. `camp.gd::_on_rest()` already does the fade/advance-day/heal-the-party rest interaction; this fires on that same rest so completion requires the actual sleep, not just placing the bed."
+    },
+    {
+      "id": "tournament_enter",
+      "flag_id": "tournament_entered",
+      "label": "Enter the village tournament.",
+      "_comment": "CONTRACT flag -- RG19's own tournament-entry system. This objective must not duplicate RG19's eligibility checklist; it only reflects RG19's own verdict."
+    },
+    {
+      "id": "tournament_win",
+      "flag_id": "tournament_won",
+      "label": "Win the village tournament.",
+      "_comment": "CONTRACT flag -- RG19's own tournament victory state."
+    },
+    {
+      "id": "head_to_south_bridge",
+      "flag_id": "south_bridge_open",
+      "label": "Cross the South Bridge into the Lower Meadows.",
+      "_comment": "Real flag, already wired: Oskar (Bridgehand) hands over `south_bridge_key` on defeat (data/config/bands/band1_lower_meadows/trainers.json), which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here."
     },
     {
       "id": "defeat_the_captains",

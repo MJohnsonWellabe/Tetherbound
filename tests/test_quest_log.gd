@@ -29,6 +29,7 @@ func test_tracked_text_names_the_first_undone_main_objective() -> void:
 
 
 func test_completing_the_road_gate_objective_changes_the_tracked_text() -> void:
+	progression.set_flag("opening:beat:road")
 	var before: String = log_reader.tracked_text(progression)
 	progression.set_flag("road_gate_open")
 	var after: String = log_reader.tracked_text(progression)
@@ -39,7 +40,7 @@ func test_main_entries_report_done_only_once_their_flag_is_set() -> void:
 	var before: Array = log_reader.main_entries(progression)
 	var road_gate_entry: Dictionary = {}
 	for entry: Dictionary in before:
-		if str(entry.get("label", "")).find("gate") != -1:
+		if str(entry.get("label", "")).find("village gate") != -1:
 			road_gate_entry = entry
 	assert_false(bool(road_gate_entry.get("done", true)), "the road-gate entry reads done before its flag is set")
 
@@ -113,10 +114,27 @@ func test_the_captains_objective_is_done_only_once_the_hall_approach_opens() -> 
 ## counter included -- the count is computed in one place for exactly this
 ## reason.
 func test_the_tracked_line_carries_the_same_count_as_the_log_row() -> void:
-	progression.set_flag("road_gate_open")
+	_complete_the_gateb_ladder()
 	progression.set_flag(CAPTAIN_FLAGS[0])
 	assert_eq(log_reader.tracked_text(progression), _captain_line())
 	assert_true(log_reader.tracked_text(progression).ends_with("1/3"))
+
+
+## GATEB-OBJECTIVES: every flag between `road_gate_open` and the captains
+## entry, in objectives.json's own file order -- the same contract
+## test_gateb_objective_chain.gd walks one flag at a time. Used here only to
+## get past the ladder so the older captain-count tests still exercise what
+## they were written to exercise.
+func _complete_the_gateb_ladder() -> void:
+	progression.set_flag("opening:beat:road")
+	progression.set_flag("road_gate_open")
+	for flag: String in [
+		"tournament_team_ready", "tournament_training_ready",
+		"home_materials_gathered", "home_built", "creature_bed_built",
+		"player_slept_at_home", "tournament_entered", "tournament_won",
+		"south_bridge_open",
+	]:
+		progression.set_flag(flag)
 
 
 ## An entry with no `count_flags` must be untouched by the feature -- no
