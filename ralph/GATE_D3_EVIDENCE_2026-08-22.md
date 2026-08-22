@@ -245,6 +245,15 @@ coordinator-owned, reported here rather than edited:
   used anywhere, so the enemy installation reads as the friendliest palette in
   the set.
 
+**Unjudged.** The checkpoint reframe (27m -> 9m) was made *after* round 2 and
+has not been put to a critic. The barricade and Hess do now appear in the
+frame, which is a fact about whether the props render, not a verdict on whether
+the composition works. That frame also came back with a large dark band across
+its lower two thirds under software GL that the earlier framing did not have;
+whether that is a shadow, an artefact of a near-ground camera, or a real
+rendering fault is not established, and it should be the first thing round 3
+is asked about.
+
 **Convergence.** Round 2 named new defects, so the pass had not converged when
 this session ended. Every band-scoped item it named is fixed; the remainder is
 the list above, none of which is this lane's to touch. A third round is worth
