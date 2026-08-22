@@ -236,15 +236,16 @@ func _process(delta: float) -> void:
 			pause_menu.call("suppress_reopen")
 		close()
 		return
-	# `tool_cycle` (keyboard Q / right-stick click) and the rotate-left/right
-	# actions (mouse wheel / LT-RB, LB-RT depending on binding — see
-	# project.godot) are both free while this menu is open: placement's own
-	# reading of them only happens once a piece is armed and the menu has
-	# already closed. Reusing them here is "bumpers switch category" (task
-	# brief) without a sixth new input action.
-	if Input.is_action_just_pressed("tool_cycle") or Input.is_action_just_pressed("build_rotate_right"):
+	# CONTROLLER-MAP: "LB/RB catalogue category". The same `menu_tab_left` /
+	# `menu_tab_right` pair the pause shell steps tabs with, because this is the
+	# same verb on the same two buttons and a build-only duplicate would be one
+	# more thing to keep in step. The rotate actions used to double as category
+	# cycling here; they no longer do, because the authored map puts rotate on
+	# LT/RT in build mode and a trigger that also changed category would be the
+	# same one-press-two-verbs bug this task exists to remove.
+	if Input.is_action_just_pressed("menu_tab_right"):
 		_select_category(_category_index + 1)
-	elif Input.is_action_just_pressed("build_rotate_left"):
+	elif Input.is_action_just_pressed("menu_tab_left"):
 		_select_category(_category_index - 1)
 
 	# Focus tick (spec 20): same "only on a real change" watch as

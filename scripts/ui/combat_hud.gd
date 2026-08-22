@@ -1,9 +1,16 @@
 extends CanvasLayer
 
-## Reads the fight and draws it. Owns no state of its own — except the switch
-## selector's cursor and the tap/hold timers, which are interaction state, not
-## fight state: `CombatManager` has no idea whether a d-pad press is 0.1s or
-## 0.4s into being held, and it should not have to.
+## Reads the fight and draws it. Owns no state of its own.
+##
+## It used to own a switch cursor and a tap/hold timer: D32 put mid-fight
+## switching on a tap of the d-pad and a HELD d-pad opened a five-row party
+## selector. CONTROLLER-MAP retired both. The owner directive of 2026-08-22
+## bans held-button chords outright, and it merges "cycle party member" and
+## "switch which creature you are piloting" into one `party_cycle` press on LB
+## — which is also what frees the d-pad to be the hotbar during a fight. The
+## selector had no other way in, and `PartyStrip` (already on screen, already
+## pinned while a switch is available) shows the same five rows, so it went
+## with the chord rather than being left unreachable.
 ##
 ## Everything else is pulled from CombatManager and the two creature instances each
 ## frame rather than pushed in on signals. A HUD that keeps its own copy of the
@@ -48,17 +55,7 @@ const VERB_DIMMED := Color("8b9184")
 const CELL_DIMMED := Color(0.55, 0.55, 0.55, 1.0)
 const CELL_READY := Color(1.0, 1.0, 1.0, 1.0)
 
-## Tap vs hold for `combat_switch_left`/`combat_switch_right` (D32, spec §9.4).
-## Below this, a release cycles; at or above it, the party selector opens.
-const SWITCH_HOLD_THRESHOLD := 0.28
-
-const SELECTOR_ROWS := 5
-const SELECTOR_ROW_SIZE := Vector2(280.0, 56.0)
-const SELECTOR_CHIP_SIZE := Vector2(36.0, 36.0)
-const SELECTOR_HP_SIZE := Vector2(84.0, 8.0)
-
-## Shared screen slot for `PartyStrip` and the selector panel. Both sit
-## directly above the creature block (`AllyPanel`, whose top edge is 206px off the
+## Screen slot for `PartyStrip`, which sits directly above the creature block (`AllyPanel`, whose top edge is 206px off the
 ## bottom of a 1080-tall canvas — see `combat_hud.tscn`'s own offsets) with
 ## generous headroom: `PARTY_STRIP.ROW_SIZE`'s 56px is a MINIMUM, not the
 ## real rendered height — a row's two-line name/level stack plus its
@@ -67,12 +64,9 @@ const SELECTOR_HP_SIZE := Vector2(84.0, 8.0)
 ## block, which overlapped it outright. 430px of clearance covers five rows
 ## at up to ~80px each plus separation with room to spare.
 ##
-## The two widgets never actually occupy this slot at the same time — see
-## `_open_selector()` — so sharing one position is a deliberate simplification
-## of spec §9.4's "party_strip mounted ABOVE this block... pinned visible
-## while a switch is available/being chosen": showing the identical four rows
-## twice, side by side, read as a duplication bug in the first capture of
-## this shot, not as two different pieces of information.
+## It was shared with the switch selector until CONTROLLER-MAP removed that
+## widget; spec §9.4's "party_strip mounted ABOVE this block... pinned visible
+## while a switch is available/being chosen" is now the strip's job alone.
 const SWITCH_PANEL_POS := Vector2(56.0, 380.0)
 
 @export var manager_path: NodePath
@@ -103,22 +97,9 @@ var _orb_cluster: RichTextLabel = null
 var _was_resolving_catch: bool = false
 var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 
-## --- switching (D32) --------------------------------------------------------
-var _switch_hold_dir: int = 0
-var _switch_hold_time: float = 0.0
-var _selector_open: bool = false
-var _selector_list: Array = []
-var _selector_cursor: int = 0
-
+## The always-on party strip (spec 9.4). Built in code, mounted at
+## `SWITCH_PANEL_POS`.
 var _party_strip: Control = null
-var _selector_root: PanelContainer = null
-var _selector_rows: Array[PanelContainer] = []
-var _selector_rails: Array[ColorRect] = []
-var _selector_chips: Array[ColorRect] = []
-var _selector_names: Array[Label] = []
-var _selector_levels: Array[Label] = []
-var _selector_hp_bars: Array[ProgressBar] = []
-var _selector_hp_fills: Array[StyleBoxFlat] = []
 
 @onready var _enemy_panel: PanelContainer = $Root/EnemyPanel
 @onready var _enemy_eyebrow: Label = $Root/EnemyPanel/EnemyVBox/Eyebrow
@@ -187,8 +168,6 @@ func _ready() -> void:
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
-	_build_selector()
-
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.position = SWITCH_PANEL_POS
 	$Root.add_child(_party_strip)
@@ -213,7 +192,7 @@ func _ready() -> void:
 ## inline, and this cluster only ever needs to change together (one
 ## `_update_orb_cluster` call, one string). Built here rather than in the
 ## .tscn per the task brief's own scope line for that file ("mount only");
-## `_selector_root`/`_party_strip` above are already built the same way.
+## `_party_strip` above is already built the same way.
 func _build_orb_cluster() -> void:
 	_orb_cluster = RichTextLabel.new()
 	_orb_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -265,96 +244,6 @@ func _quiet_panel_box() -> StyleBoxFlat:
 	return box
 
 
-## --- the small custom switch selector (D32, spec §9.4) ---------------------
-##
-## Not `PartyStrip` reused wholesale — the task brief itself offers that as
-## the alternative and picks this as the simpler path. It draws the same five
-## fixed party rows `PartyStrip` does (chip/name/level/hp, vacant and fainted
-## states) so the two widgets read as one family sitting side by side, but adds
-## the one thing `PartyStrip` has no reason to know about: a cursor separate
-## from "who is out right now".
-func _build_selector() -> void:
-	_selector_root = PanelContainer.new()
-	_selector_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_selector_root.add_theme_stylebox_override("panel", UITokens.panel_box())
-	_selector_root.position = SWITCH_PANEL_POS
-	_selector_root.visible = false
-	$Root.add_child(_selector_root)
-
-	var list := VBoxContainer.new()
-	list.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	list.add_theme_constant_override("separation", 6)
-	_selector_root.add_child(list)
-
-	for i in SELECTOR_ROWS:
-		list.add_child(_build_selector_row())
-
-
-func _build_selector_row() -> PanelContainer:
-	var row := PanelContainer.new()
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.custom_minimum_size = SELECTOR_ROW_SIZE
-	row.add_theme_stylebox_override("panel", UITokens.slot_box(false))
-	_selector_rows.append(row)
-
-	var hbox := HBoxContainer.new()
-	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hbox.add_theme_constant_override("separation", 8)
-	row.add_child(hbox)
-
-	var rail := ColorRect.new()
-	rail.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rail.custom_minimum_size = Vector2(4.0, 0.0)
-	rail.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	rail.color = UITokens.TEAL
-	rail.visible = false
-	_selector_rails.append(rail)
-	hbox.add_child(rail)
-
-	var chip := ColorRect.new()
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.custom_minimum_size = SELECTOR_CHIP_SIZE
-	chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_selector_chips.append(chip)
-	hbox.add_child(chip)
-
-	var info := VBoxContainer.new()
-	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	info.add_theme_constant_override("separation", 2)
-	hbox.add_child(info)
-
-	var name_label := Label.new()
-	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	name_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-	_selector_names.append(name_label)
-	info.add_child(name_label)
-
-	var level_label := Label.new()
-	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	_selector_levels.append(level_label)
-	info.add_child(level_label)
-
-	var hp_bar := ProgressBar.new()
-	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hp_bar.custom_minimum_size = SELECTOR_HP_SIZE
-	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	hp_bar.show_percentage = false
-	hp_bar.min_value = 0.0
-	hp_bar.max_value = 1.0
-	hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
-	var fill := UITokens.fill_box(UITokens.HP_GREEN)
-	hp_bar.add_theme_stylebox_override("fill", fill)
-	_selector_hp_fills.append(fill)
-	_selector_hp_bars.append(hp_bar)
-	hbox.add_child(hp_bar)
-
-	return row
-
-
 func _process(delta: float) -> void:
 	_tick_outcome(delta)
 	_tick_xp(delta)
@@ -364,7 +253,6 @@ func _process(delta: float) -> void:
 
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
 	if not fighting:
-		_reset_switch_input()
 		_show_fight(false)
 		return
 
@@ -373,7 +261,7 @@ func _process(delta: float) -> void:
 	_draw_ally()
 	_draw_grid()
 	_update_capture_reticle()
-	_handle_switch_input(delta)
+	_handle_switch_input()
 	_update_party_strip()
 
 
@@ -394,8 +282,6 @@ func _show_fight(visible_now: bool) -> void:
 			_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
 		_enemy_panel.modulate.a = 1.0
 		_grid_panel.modulate.a = 1.0
-	if _selector_root != null:
-		_selector_root.visible = visible_now and _selector_open
 
 
 ## `EV9-double-prompt`: this row exists to keep showing "Engage X" before a
@@ -611,10 +497,7 @@ func _draw_throw_cell(orbs: int, ready: bool) -> void:
 
 
 func _draw_switch_cell(ready: bool) -> void:
-	var glyph := "%s%s" % [
-		INPUT_GLYPH.icon("switch_left", 28, VERB_READY if ready else VERB_DIMMED),
-		INPUT_GLYPH.icon("switch_right", 28, VERB_READY if ready else VERB_DIMMED),
-	]
+	var glyph := INPUT_GLYPH.icon("party_cycle", 34, VERB_READY if ready else VERB_DIMMED)
 	_cell_switch_content.text = "[center]%s\nSwitch[/center]" % glyph
 	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
 	_mark_ready("switch", ready, _cell_switch_pulse)
@@ -714,82 +597,35 @@ func _update_capture_reticle() -> void:
 	_capture_reticle.call("update_target", screen_pos, chance, true)
 
 
-## --- switching input (D32, spec §9.4) ---------------------------------------
+## --- switching input (D32 §9.4, remapped by CONTROLLER-MAP) -----------------
 ##
-## Tap `combat_switch_left`/`combat_switch_right` (< `SWITCH_HOLD_THRESHOLD`)
-## cycles; holding opens the selector below. No time-slow (D32's own "what was
-## deliberately not built") — the fight keeps running underneath this the
-## entire time, which is why every branch here re-checks `is_aiming` /
-## `is_resolving_catch` rather than assuming whatever was true when the hold
-## started still is.
+## One press of `party_cycle` (LB) steps to the next available creature. No
+## hold, no selector, no time-slow — the fight keeps running underneath, which
+## is why this re-checks `is_aiming` / `is_resolving_catch` every frame rather
+## than trusting whatever was true when the fight started.
 ##
 ## CONSUMPTION, and its limit: this reads `Input.is_action_just_pressed`
-## polling, the same mechanism `CombatManager._read_player_input` already
-## uses for every other combat verb, and is deliberately guarded to do nothing
-## at all while `_manager.call("is_fighting")` is false. What it can NOT do is
-## stop `playground_hud.gd`'s own hotbar poll from seeing the same press:
-## `hotbar_2`/`hotbar_3` share the identical physical d-pad-left/right buttons
-## (`project.godot`), `Input.is_action_just_pressed` is a global read with no
-## concept of one script consuming it before another, and `playground_hud.gd`
-## polls its hotbar with no combat gate at all — a documented, pre-existing gap
-## (that file's own `_read_hotbar_input` header, "KNOWN GAP: not gated off
-## during combat"). This file does not touch `playground_hud.gd` (out of
-## scope for this task) — see this task's report for the confirmed leak.
-func _handle_switch_input(delta: float) -> void:
+## polling, the same mechanism `CombatManager._read_player_input` already uses
+## for every other combat verb. What it can NOT do is stop another poller from
+## seeing the same press. That used to matter a great deal — `hotbar_2`/
+## `hotbar_3` shared the physical d-pad with the old directional switch actions,
+## so a mid-fight switch also ate a satchel slot — and it is exactly the bug
+## CONTROLLER-MAP removes: LB is this verb and nothing else, and the d-pad is
+## the hotbar and nothing else, in every context including a fight.
+func _handle_switch_input() -> void:
 	if _manager == null:
 		return
 
 	# Aiming and a resolving catch both already own player input elsewhere in
 	# the fight (`throw_aim.gd`, the frozen beat around the orb); a switch
-	# attempt here would be a second thing reading the same buttons. Close
-	# any selector left open rather than strand it mid-throw.
+	# attempt here would be a second thing reading the same button.
 	if bool(_manager.call("is_aiming")) or bool(_manager.call("is_resolving_catch")):
-		if _selector_open:
-			_close_selector()
-		_switch_hold_dir = 0
-		_switch_hold_time = 0.0
 		return
 
-	var can_switch: bool = bool(_manager.call("can_switch"))
-
-	for dir in [-1, 1]:
-		var action := "combat_switch_left" if dir < 0 else "combat_switch_right"
-		if not Input.is_action_just_pressed(action):
-			continue
-		if not can_switch:
-			_refuse_switch()
-			continue
-		_switch_hold_dir = dir
-		_switch_hold_time = 0.0
-
-	if _switch_hold_dir != 0:
-		var held_action := "combat_switch_left" if _switch_hold_dir < 0 else "combat_switch_right"
-		var other_action := "combat_switch_right" if _switch_hold_dir < 0 else "combat_switch_left"
-
-		if Input.is_action_pressed(held_action):
-			_switch_hold_time += delta
-			if not _selector_open and _switch_hold_time >= SWITCH_HOLD_THRESHOLD:
-				_open_selector()
-			# While held, the OTHER switch action steps the highlight — the
-			# held button's own `just_pressed` cannot fire again without a
-			# release, which is reserved for confirming (spec §9.4: "d-pad
-			# up/down (or the switch actions themselves stepping)").
-			if _selector_open and Input.is_action_just_pressed(other_action):
-				_step_selector(-_switch_hold_dir)
-		else:
-			if _selector_open:
-				_confirm_selector()
-			elif _switch_hold_time < SWITCH_HOLD_THRESHOLD:
-				if not bool(_manager.call("cycle_active", _switch_hold_dir)):
-					_refuse_switch()
-			_switch_hold_dir = 0
-			_switch_hold_time = 0.0
-
-	if _selector_open:
-		if Input.is_action_just_pressed("menu_confirm"):
-			_confirm_selector()
-		elif Input.is_action_just_pressed("menu_cancel"):
-			_close_selector()
+	if not Input.is_action_just_pressed(&"party_cycle"):
+		return
+	if not bool(_manager.call("can_switch")) or not bool(_manager.call("cycle_active", 1)):
+		_refuse_switch()
 
 
 func _refuse_switch() -> void:
@@ -797,95 +633,7 @@ func _refuse_switch() -> void:
 	_miss_left = 1.2
 
 
-func _reset_switch_input() -> void:
-	_switch_hold_dir = 0
-	_switch_hold_time = 0.0
-	if _selector_open:
-		_close_selector()
-
-
-func _open_selector() -> void:
-	var list: Array = _manager.call("switchable_indices")
-	if list.is_empty():
-		return
-	_selector_list = list
-	_selector_cursor = 0
-	_selector_open = true
-	if _selector_root != null:
-		_selector_root.visible = true
-	# Hand the shared screen slot off from the ambient strip to the selector
-	# immediately, rather than leaving both visible together (see
-	# `SWITCH_PANEL_POS`'s header). `_hide_strip` is `PartyStrip`'s own
-	# private fade-out — reflection, the same idiom this file already uses
-	# for `_party_entries()` and `_active_index`, because starting that fade
-	# is not part of `PartyStrip`'s public API and this task does not touch
-	# `party_strip.gd`.
-	if _party_strip != null:
-		_party_strip.call("_hide_strip")
-	_refresh_selector()
-
-
-func _step_selector(steps: int) -> void:
-	if _selector_list.is_empty():
-		return
-	var size: int = _selector_list.size()
-	_selector_cursor = ((_selector_cursor + steps) % size + size) % size
-	_refresh_selector()
-
-
-func _confirm_selector() -> void:
-	if _selector_open and not _selector_list.is_empty():
-		var index: int = int(_selector_list[_selector_cursor])
-		if not bool(_manager.call("request_switch", index)):
-			_refuse_switch()
-	_close_selector()
-
-
-func _close_selector() -> void:
-	_selector_open = false
-	if _selector_root != null:
-		_selector_root.visible = false
-
-
-## The five party rows: chip/name/level/hp for whichever entries exist, a teal
-## rail on whichever slot is the CURRENTLY PILOTED creature (not the cursor), and a
-## brighter cursor-highlighted border on whichever slot the d-pad selection is
-## currently on. Those two are different things on purpose — the player is
-## choosing who to switch TO, and needs both "who is out now" and "what my
-## cursor is on" visible at once.
-func _refresh_selector() -> void:
-	var entries := _party_entries()
-	var active_index: int = int(_manager.get("_active_index")) if _manager != null else -1
-	var highlighted_index: int = int(_selector_list[_selector_cursor]) if not _selector_list.is_empty() else -1
-
-	for i in SELECTOR_ROWS:
-		var has_creature: bool = i < entries.size()
-		var entry: Dictionary = entries[i] if has_creature else {}
-		var fainted: bool = has_creature and bool(entry.get("fainted", false))
-		var is_active: bool = has_creature and i == active_index
-		var is_cursor: bool = has_creature and i == highlighted_index
-
-		_selector_rows[i].add_theme_stylebox_override("panel", UITokens.slot_box(is_cursor))
-		_selector_rails[i].visible = is_active
-
-		if not has_creature:
-			_selector_chips[i].color = Color(UITokens.TEXT_MUTED, 0.35)
-			_selector_rows[i].modulate.a = 0.35
-			_selector_names[i].text = ""
-			_selector_levels[i].text = ""
-			_selector_hp_bars[i].value = 0.0
-			continue
-
-		_selector_rows[i].modulate.a = 0.4 if fainted else 1.0
-		_selector_chips[i].color = entry.get("tint", UITokens.TEXT_MUTED)
-		_selector_names[i].text = str(entry.get("label", ""))
-		_selector_levels[i].text = "Lv %d" % int(entry.get("level", 1))
-		_selector_hp_bars[i].value = clampf(float(entry.get("hp_fraction", 0.0)), 0.0, 1.0)
-		_selector_hp_fills[i].bg_color = UITokens.DANGER if fainted else UITokens.HP_GREEN
-
-
-## Refresh the always-on party strip (pinned while a switch is available or
-## being chosen) and, while a selector is open, its rows too.
+## Refresh the always-on party strip, pinned while a switch is available.
 func _update_party_strip() -> void:
 	if _party_strip == null:
 		return
@@ -893,21 +641,13 @@ func _update_party_strip() -> void:
 	var active_index: int = int(_manager.get("_active_index")) if _manager != null else 0
 	_party_strip.call("update_from_party", entries, active_index)
 
-	# Pinned while a switch is available, EXCEPT while the selector has taken
-	# over the shared screen slot (`_open_selector` already started its fade
-	# out) -- pinning here too would re-reveal it every frame, right under
-	# the selector it just handed the slot to.
 	var switchable: Array = _manager.call("switchable_indices")
 	var available: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
-	_party_strip.call("set_pinned", available and not _selector_open)
-
-	if _selector_open:
-		_refresh_selector()
+	_party_strip.call("set_pinned", available)
 
 
 ## The combat party, as `{label, level, hp_fraction, tint, fainted}` entries
-## in party order — the exact shape both `PartyStrip.update_from_party` and
-## this file's own selector rows want.
+## in party order — the exact shape `PartyStrip.update_from_party` wants.
 ##
 ## Reads `CombatManager`'s own `_party` array by reflection (`.get("_party")`)
 ## rather than a formal getter: the manager exposes `switchable_indices()` /

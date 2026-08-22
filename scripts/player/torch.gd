@@ -14,7 +14,8 @@ extends Node3D
 ##     (`auto_at_night`) -- covers "available immediately" with zero input,
 ##     so a player who never touches the control still is not left in the
 ##     dark.
-##   - manually, via the `torch_toggle` action (L / gamepad Start) -- an
+##   - manually, via the `torch_toggle` action (L; keyboard only since
+##     CONTROLLER-MAP made the torch a hotbar tool with no pad button) -- an
 ##     explicit override that wins over the automatic behaviour until toggled
 ##     again, for a player who wants it on before dusk or off at night.
 ##

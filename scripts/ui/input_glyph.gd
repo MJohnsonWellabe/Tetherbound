@@ -29,6 +29,13 @@ const DIR := "res://assets/ui/input_prompts/"
 ## single-direction icons shown side by side instead of one combined glyph;
 ## every other id stays a single file.
 const GLYPHS := {
+	## CONTROLLER-MAP (owner directive, 2026-08-22) re-authored the whole pad
+	## map, so several entries below moved. The map is now: A jump, B hotbar 1,
+	## X interact/place/throw, Y satchel (dismantle in build mode), View map,
+	## Menu the game menu, L3 sprint, R3 recentre, LB cycle party member, RB
+	## call out / put away, LT/RT charged/quick attack, d-pad left/up/right/down
+	## hotbar 2-5. Torch and the build hammer are hotbar tools and have no pad
+	## button at all any more, which is why their gamepad halves are gone.
 	"interact": {"keyboard": "keyboard_e.png", "gamepad": "xbox_button_x.png"},
 	"confirm": {"keyboard": "keyboard_return.png", "gamepad": "xbox_button_a.png"},
 	"cancel": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_b.png"},
@@ -36,7 +43,7 @@ const GLYPHS := {
 		"keyboard": ["keyboard_arrow_left.png", "keyboard_arrow_right.png"],
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
-	"creature_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
+	"creature_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_rb.png"},
 	## RG3's persistent exploration legend. These are the existing live
 	## inventory/map actions (project.godot), not a second HUD-only binding
 	## table. The three keycaps below come from the same vendored CC0 Kenney
@@ -52,18 +59,11 @@ const GLYPHS := {
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
 	##
-	## OF21: gamepad moved off Start -- `torch_toggle` and `backpack_drop`
-	## both shipped on Start (button 6), so pressing it in the field also
-	## dropped whatever the backpack UI had focused. Start stays
-	## `backpack_drop`'s (documented reason: data/config/menu.json's
-	## "Backpack" group note). The first replacement was the Guide button
-	## (button 5, unused in the map) -- but on the ROG Ally, the primary
-	## device, Guide-class buttons are captured by the system overlay and
-	## never reach the game, so it moved again to R3 (button 8), whose only
-	## other reader (`backpack_split`) is menu-context and can never overlap
-	## a field press. Icon extracted from the same vendored CC0 Kenney pack
-	## as every other glyph here -- no new asset generation, no new licence.
-	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_stick_r_press.png"},
+	## CONTROLLER-MAP: keyboard-only now. The owner's map has no torch button
+	## ("torch doesn't need a button") -- the torch is a tool the player picks
+	## on the hotbar, so the pad half was retired rather than moved. L stays
+	## for a desktop player; R3 became `camera_recenter`.
+	"torch_toggle": {"keyboard": "keyboard_l.png"},
 	## Combat's five verbs (`HD1`). `combat_quick`/`combat_charged` bind to
 	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
 	## key is kept for both (matching every other entry's two-way device
@@ -85,19 +85,20 @@ const GLYPHS := {
 	## licence to track.
 	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_rt.png"},
 	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_lt.png"},
-	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_rb.png"},
+	## CONTROLLER-MAP: the orb is selected on the hotbar and thrown with
+	## interact, so the pad glyph is X, the same button `interact` draws.
+	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_button_x.png"},
 	## `combat_run` binds to Escape/gamepad-B -- physically identical to
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
 	## the `cancel` id directly rather than this duplicating its two files.
 
-	## D32's `combat_switch_left`/`combat_switch_right` (mid-combat creature
-	## switching -- the move grid's Switch cell and, tap-vs-hold, the party
-	## selector). Shares files with `horizontal`'s own left/right pair rather
-	## than vendoring anything new: same left/right keyboard arrows, same
-	## gamepad d-pad icons `hotbar_2`/`hotbar_3` above already borrow for the
-	## identical physical buttons.
-	"switch_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_dpad_left.png"},
-	"switch_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_dpad_right.png"},
+	## CONTROLLER-MAP collapsed D32's two directional switch actions into one
+	## `party_cycle` press on LB -- which is what gave the d-pad back to the
+	## hotbar during a fight. One glyph, therefore, not a left/right pair. No
+	## keyboard entry: `party_cycle` is bound to C and no C keycap has been
+	## extracted from the Kenney pack, so a desktop player gets `icon()`'s
+	## "[C]" fallback, read live off the InputMap.
+	"party_cycle": {"gamepad": "xbox_lb.png"},
 
 	## HD2's quick-access hotbar. Five slots, each its own single direct
 	## press on both devices (no select-then-confirm step) -- true parity is
@@ -108,25 +109,18 @@ const GLYPHS := {
 	## are jump/cancel/interact/inventory; RB and mouse-left/right were
 	## combat-only).
 	##
-	## OF21: `hotbar_1` moved OFF Y -- Y was `inventory` AND `hotbar_1` at
-	## once, so opening the backpack also quietly ate whatever sat in slot 1.
-	## Y stays `inventory` (the more load-bearing of the two); `hotbar_1`
-	## moves to RB. RB's only other reader, `combat_throw`, is combat-only
-	## (`combat_manager.gd` reads it exclusively from `State.ACTIVE`) while
-	## the hotbar is explicitly deaf during a fight
-	## (`playground_hud.gd::_combat_is_running()`), so the two can never
-	## both mean something at the same moment -- the same mutual-exclusion
-	## argument D35 already used for the combat/build triggers, and the one
-	## `hotbar_5`/`tool_cycle` below already relies on for LB. `hotbar_1` and
-	## `combat_throw` now draw the identical `xbox_rb.png` icon on purpose
-	## (never shown on screen at the same time -- one's the field HUD, the
-	## other's the fight HUD), the same reuse this file already does for
-	## `switch_left`/`switch_right` and D-pad below.
-	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_rb.png"},
+	## CONTROLLER-MAP: slot 1 is B and slots 2-5 are the d-pad read clockwise
+	## from the left (left, up, right, down), in EVERY context including a
+	## fight. Nothing else on the pad reads those five buttons in the world any
+	## more, which is the whole point of the re-author: food and orbs stay
+	## reachable mid-fight, and the OF21-era "these can never both mean
+	## something at the same moment" arguments are no longer load-bearing
+	## because there is no longer a second reader to argue about.
+	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_button_b.png"},
 	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": "xbox_dpad_left.png"},
-	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_right.png"},
-	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_down.png"},
-	"hotbar_5": {"keyboard": "keyboard_5.png", "gamepad": "xbox_lb.png"},
+	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_up.png"},
+	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_right.png"},
+	"hotbar_5": {"keyboard": "keyboard_5.png", "gamepad": "xbox_dpad_down.png"},
 
 	## Build-system v2's five verbs (D34). Nothing calls `icon()` with these ids
 	## yet -- build_placer.gd is a later milestone -- so these are wired ahead
@@ -150,7 +144,8 @@ const GLYPHS := {
 	## caller wanting the keyboard glyph should show the word "Shift" directly
 	## until a real Shift PNG is vendored, the same way combat_hud.gd reaches
 	## for the `cancel` id instead of a `combat_run` entry that was never added.
-	"build_snap_cycle": {"gamepad": "xbox_dpad_down.png"},
+	"build_snap_cycle": {"gamepad": "xbox_dpad_up.png"},
+	"build_dismantle": {"keyboard": "keyboard_b.png", "gamepad": "xbox_button_y.png"},
 
 	## OF21 input groundwork, wired for real by OF24: `playground_hud.gd`'s
 	## `_read_world_hotkeys()` reads both straight from the world -- `build_open`
@@ -162,20 +157,13 @@ const GLYPHS := {
 	## (`playground_hud.gd::_arm_torch_placement`), same button, same
 	## everything below.
 	##
-	## `build_open` sits on gamepad Start/Menu (button 6), freed up by
-	## `torch_toggle`'s move off it above -- Start's only other reader,
-	## `backpack_drop`, only fires while the backpack tab is open
-	## (`tab_backpack.gd` gates on `menu.is_open()`), a state a build hotkey
-	## is never read in, so the two can't collide.
-	##
-	## `torch_place` sits on gamepad RT, alongside `combat_quick` (combat-only)
-	## and `build_rotate_right` (only live while a build ghost is already out)
-	## -- `torch_place` itself only makes sense from ordinary exploration,
-	## before any ghost exists and outside a fight, so all three read RT in
-	## mutually exclusive states, the same trigger dual-use D35 already
-	## established for `combat_charged`/`build_rotate_left` on LT.
-	"build_open": {"keyboard": "keyboard_b.png", "gamepad": "xbox_button_start.png"},
-	"torch_place": {"keyboard": "keyboard_p.png", "gamepad": "xbox_rt.png"},
+	## CONTROLLER-MAP: both are keyboard-only now. The build hammer and the
+	## torch became hotbar tools -- select the tool, press interact -- so
+	## neither keeps a pad button. Start/Menu went to `game_menu` and RT went
+	## to `combat_quick` alone.
+	"build_open": {"keyboard": "keyboard_b.png"},
+	"torch_place": {"keyboard": "keyboard_p.png"},
+	"game_menu": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_start.png"},
 
 	## OW1: the backpack's three own verbs, so its detail column can draw them
 	## instead of listing "Drop" and "Split" as bare words with no button
@@ -200,10 +188,17 @@ const GLYPHS := {
 	##
 	## Files are reused, not new: Start is `backpack_drop`'s real button
 	## (see data/config/menu.json's "Backpack" group note), R3 is
-	## `backpack_split`'s, and Y is `backpack_assign`'s.
+	## `backpack_split`'s. `backpack_assign` has no art at all: it went Y -> X ->
+	## L3 in CONTROLLER-MAP (Y is `inventory`, X is the satchel's own Use verb,
+	## and both are live on that tab at the same time), and L3 has no glyph.
 	"backpack_drop": {"gamepad": "xbox_button_start.png"},
 	"backpack_split": {"keyboard": "keyboard_h.png", "gamepad": "xbox_stick_r_press.png"},
-	"backpack_assign": {"gamepad": "xbox_button_y.png"},
+	## CONTROLLER-MAP: `backpack_assign` is L3 / J. No left-stick-press PNG has
+	## been extracted from the Kenney pack and no J keycap either, so the entry
+	## is deliberately EMPTY: listing the id keeps `icon()` off its
+	## "[backpack_assign]" unknown-id path and onto the "[J]" bound-key
+	## fallback `build_snap_cycle` already uses for Shift.
+	"backpack_assign": {},
 }
 
 

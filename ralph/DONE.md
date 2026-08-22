@@ -3,6 +3,58 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
+
+`tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
+
+Implements `ralph/OWNER_DIRECTIVES_2026-08-22.md` section 1 and records it as
+`docs/decisions/D68`. Held-button chords are banned, so the hold-LB hotbar chord
+from DPAD-COLLISION is reverted and D32's hold-to-open party selector is gone
+with it.
+
+The map: A jump, B hotbar 1, X interact, Y satchel, d-pad left/up/right/down
+hotbar 2-5, LB cycle party member, RB call out / put away (and flee), LT/RT
+charged/quick attack, View map, Menu game menu, L3 sprint, R3 recentre.
+
+What had to move for it to fit, all of it the directive's own answer to "what
+would you get rid of":
+
+- `tool_cycle` retired; the hotbar is direct-select. Prev-tab is a new
+  `menu_tab_left` (Q / LB) and the build catalogue's category cycling reuses the
+  shell's own LB/RB pair instead of borrowing the rotate triggers.
+- `combat_switch_left`/`combat_switch_right` merged into `party_cycle` (C / LB).
+  That is what freed the d-pad, so **the hotbar is now live during a fight** —
+  `playground_hud.gd::_world_input_allowed` grew an `allow_combat` flag, and the
+  hotbar is still deaf while an orb is being aimed.
+- Torch, build hammer, tool swing, throw and flee lost their pad buttons and
+  kept their keys. Throw is interact; flee is `creature_recall` on RB; and the
+  hammer got a real hotbar path — `playground_hud.gd::_hammer_opens_the_catalogue`
+  opens the build catalogue on interact with the hammer in hand, standing aside
+  whenever the arbiter has a target, because otherwise retiring `build_open`'s
+  button would leave a controller unable to build at all.
+- New actions: `game_menu` (Escape / Menu — B could not open the shell any more,
+  it is hotbar 1), `camera_recenter` (Home / R3, implemented in `camera_rig.gd`)
+  and `menu_tab_left`.
+- `backpack_assign` moved Y -> L3, and R4.7's Best Creature verb (which had
+  borrowed `creature_recall`, now RB, i.e. the tab-right button) borrows it. Y
+  was `inventory` and X is the satchel's own Use verb; both are live on that tab
+  at the same time, so Y was a real pre-existing collision and X would have been
+  a new one. `smoke_menu.gd` caught the X attempt.
+
+**The audit test is the durable part.** `data/config/input_contexts.json`
+declares which actions are live together, per context;
+`tests/test_input_context_collisions.gd` crosses it with `project.godot` and
+fails when two live actions share a pad input. It was proved to fail first: with
+`combat_switch_left`/`right` restored to buttons 13/14 and declared live in
+`combat`, it reports both collisions by name and by button ("D-pad left
+(pad:13)"). `test_controls.gd`'s hand-picked `WORLD_CONTEXT_ACTIONS` check was
+deleted rather than kept as a narrower duplicate — that list is exactly what let
+the d-pad bug through, because it never named the combat context at all.
+
+Keyboard bindings are untouched. `tools/run_one_test.gd` is new: runs one test
+file, because the full suite is many minutes and a lane iterating on one test
+should not sit through the other hundred.
+
 ## SETTINGS-SCROLL — one scroll container for the whole Settings tab (OP21-04)
 
 `model: sonnet` · `tests: smoke_settings.gd, smoke_menu.gd` · `area: ui`

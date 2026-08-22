@@ -6,6 +6,13 @@ session: align Tetherbound's DEFAULT bindings with Palworld's, "so a Palworld
 player's hands land right," without breaking this project's existing
 contextual bindings.
 
+> **Amended by `D68` (2026-08-22).** The RT/LT attack defaults below survive
+> intact. What is gone is the wider "these triggers are safe because their
+> other readers are context-exclusive" argument as it applied to `torch_place`:
+> the authored controller map took the pad binding off the torch entirely, so
+> LT and RT are the creature's two attacks and build-mode rotation, and nothing
+> else.
+
 ## The decision
 
 `project.godot`'s default gamepad bindings for the two combat attack verbs

@@ -100,10 +100,14 @@ func _run() -> void:
 func _check_normal_keyboard_legend() -> void:
 	if not _legend.visible:
 		_fail("exploration legend is not visible in an unowned normal world")
-	for expected in ["Build", "Map", "Satchel", "Change Creature", "Torch"]:
+	# CONTROLLER-MAP: Build and Torch left this legend. Both are hotbar tools
+	# now, so naming a pad button for either would name a button that does
+	# something else. Call Out took the space -- RB is the one world verb with
+	# no other on-screen home.
+	for expected in ["Map", "Satchel", "Call Out", "Change Creature"]:
 		if not _label.text.contains(expected):
 			_fail("exploration legend is missing '%s'" % expected)
-	for path in ["keyboard_b.png", "keyboard_m.png", "keyboard_i.png", "keyboard_p.png"]:
+	for path in ["keyboard_m.png", "keyboard_i.png", "keyboard_r.png"]:
 		if not _label.text.contains(path):
 			_fail("keyboard legend did not resolve live glyph asset '%s'" % path)
 	if _label.text.contains("Talk") or _label.text.contains("Gather") or _label.text.contains("Open"):
@@ -118,7 +122,7 @@ func _check_live_device_switch() -> void:
 	Input.parse_input_event(pad)
 	for i in 3:
 		await process_frame
-	for path in ["xbox_button_start.png", "xbox_button_view.png", "xbox_button_y.png", "xbox_rt.png"]:
+	for path in ["xbox_button_view.png", "xbox_button_y.png", "xbox_rb.png", "xbox_lb.png"]:
 		if not _label.text.contains(path):
 			_fail("controller legend did not update to '%s'" % path)
 
@@ -128,7 +132,7 @@ func _check_live_device_switch() -> void:
 	Input.parse_input_event(key)
 	for i in 3:
 		await process_frame
-	if not _label.text.contains("keyboard_b.png") or _label.text.contains("xbox_button_start.png"):
+	if not _label.text.contains("keyboard_m.png") or _label.text.contains("xbox_button_view.png"):
 		_fail("legend did not switch back to keyboard presentation after keyboard input")
 
 

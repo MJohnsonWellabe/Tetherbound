@@ -4,18 +4,21 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_build_owns_creature_cycle.gd
 ##
-## `encounter_director.gd::_read_creature_control_input()` read
-## `combat_switch_left`/`combat_switch_right` unconditionally whenever no
-## fight/trainer-round/arbiter gate applied. Those actions are bound to
-## gamepad d-pad left/right (project.godot: joypad buttons 13/14) -- the same
-## physical d-pad Godot's built-in `ui_left`/`ui_right` drive Control focus
-## with. `build_menu.gd` deliberately does not pause the tree (OW10's
-## Valheim-style live build), so the world stayed live behind it and one
-## d-pad press both cycled the active creature AND, separately, should have
-## moved the menu's own grid focus. `smoke_menu_owns_dpad.gd` already proves
-## the hotbar half of this grammar; this proves the party-cycle half, which
-## has a second bound action (`combat_switch_right`, button 14) the hotbar
-## test never touches.
+## `encounter_director.gd::_read_creature_control_input()` read the party
+## cycle action unconditionally whenever no fight/trainer-round/arbiter gate
+## applied. It was then bound to gamepad d-pad left/right -- the same physical
+## d-pad Godot's built-in `ui_left`/`ui_right` drive Control focus with.
+## `build_menu.gd` deliberately does not pause the tree (OW10's Valheim-style
+## live build), so the world stayed live behind it and one d-pad press both
+## cycled the active creature AND, separately, should have moved the menu's own
+## grid focus.
+##
+## CONTROLLER-MAP moved party cycling to LB, so the d-pad no longer reaches the
+## encounter director at all. This test is kept and retargeted rather than
+## deleted: what it actually proves is that a d-pad press with the build menu
+## open reaches the MENU and not the world, and `hotbar_2` is still on d-pad
+## left, so the ownership question is unchanged. Its companion
+## `smoke_menu_owns_dpad.gd` proves the hotbar half from the other side.
 ##
 ## A single physical press is sent, not two synthetic actions independently,
 ## because the whole defect is that ONE press used to fire both. Sending it
@@ -33,9 +36,9 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 const SETTLE_FRAMES := 300
 
-## project.godot: combat_switch_left is joypad button 13, the same physical
-## d-pad-left Godot's built-in ui_left also fires on. One press must reach
-## both actions for this test to mean anything -- see the header.
+## project.godot: hotbar_2 is joypad button 13, the same physical d-pad-left
+## Godot's built-in ui_left also fires on. One press must reach both actions
+## for this test to mean anything -- see the header.
 const DPAD_LEFT_BUTTON := 13
 
 var _failures: Array[String] = []
@@ -167,9 +170,8 @@ func _check_build_menu_owns_the_same_press() -> void:
 
 ## One physical button, sent once. Real `InputEventJoypadButton` through the
 ## live InputMap, per `ralph/conventions.md` -- this is what lets the same
-## press resolve to `combat_switch_left` (project.godot override) AND the
-## built-in `ui_left` Control focus reads, exactly as it does on the ROG
-## Ally.
+## press resolve to `hotbar_2` (project.godot override) AND the built-in
+## `ui_left` Control focus reads, exactly as it does on the ROG Ally.
 func _press_dpad_left() -> void:
 	var down := InputEventJoypadButton.new()
 	down.button_index = DPAD_LEFT_BUTTON

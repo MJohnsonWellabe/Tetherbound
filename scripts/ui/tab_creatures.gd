@@ -57,20 +57,23 @@ const ACTIVATE_ACTION := "interact"
 ## the auto-teach it drove; see `_read_evolve()`'s neighbouring comment.)
 const EVOLVE_ACTION := "backpack_drop"
 
-## R4.7: designate the focused creature as Best Creature. `backpack_drop`
-## went to R4.6's `EVOLVE_ACTION` first, so this borrows `creature_recall`
-## (R / gamepad D-pad up) instead — `encounter_director.gd`'s only consumer
-## of it has no `process_mode` override, so it inherits the game tree's
-## pause exactly like `backpack_drop`/`backpack_split` do while a menu is
-## open, and cannot fire underneath this screen.
-const BEST_ACTION := "creature_recall"
+## R4.7: designate the focused creature as Best Creature.
+##
+## Borrows `backpack_assign` (J / gamepad L3), a menu-only verb whose only
+## other reader, `tab_backpack.gd`, lives on a different tab.
+##
+## It borrowed `creature_recall` until CONTROLLER-MAP put that on RB — the same
+## button the pause shell steps tabs right with. `backpack_assign` is the borrow
+## that replaced it, and it only became available because the same pass moved
+## `backpack_assign` itself off X (which is `ACTIVATE_ACTION` here) onto L3.
+const BEST_ACTION := "backpack_assign"
 
 ## PT-17: rename the focused creature. A name is otherwise settable exactly
 ## once, in the opening (`name_prompt.gd`'s only other caller,
 ## `sequence_director.gd`) -- one mis-navigated press there named a creature
 ## forever, with no way back. Borrows `backpack_split` (H / gamepad R3) the
-## same way `EVOLVE_ACTION`/`BEST_ACTION` above already borrow
-## `backpack_drop`/`creature_recall`: this agent may not add actions to
+## same way `EVOLVE_ACTION` above already borrows `backpack_drop`:
+## this agent may not add actions to
 ## project.godot's input map, only one menu tab is ever visible at a time,
 ## and `backpack_split`'s only other reader (`tab_backpack.gd`) is not this
 ## one. Free to reuse again for the same reason `R4.4`'s retired

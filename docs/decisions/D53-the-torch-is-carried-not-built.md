@@ -4,6 +4,12 @@
 against the owner's report: *"torches need to be a carry able item not
 placeable one."*
 
+> **Extended by `D68` (2026-08-22).** The torch also lost its dedicated
+> button. The owner's controller map has no torch key on the pad — "torch
+> doesn't need a button" — so it is reached the way this decision already said
+> it should be: as a tool on the quick bar. `torch_toggle` and `torch_place`
+> keep their keyboard keys (L and P) and stay rebindable.
+
 ## What was decided
 
 The torch is now `data/items/items.json`'s own `torch` entry — `kind: "tool"`,

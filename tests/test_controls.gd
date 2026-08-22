@@ -86,14 +86,39 @@ func test_defaults_are_read_out_of_the_input_map() -> void:
 	assert_eq(KEY_BINDINGS.code(bindings.binding("jump", "gamepad")), "pad:0")
 
 
+## Actions that deliberately ship with NO gamepad binding.
+##
+## The owner's 2026-08-22 controller map (ralph/OWNER_DIRECTIVES_2026-08-22.md
+## section 1) is fourteen buttons wide and every one is spoken for, so six verbs
+## came off the pad rather than being folded into a held-button chord, which the
+## same directive bans. Each still has a keyboard key and each is still
+## rebindable here -- a player who WANTS the torch on a button can put it there.
+##
+## Listed explicitly rather than the assertion being softened to "if it has
+## one": a seventh action quietly losing its pad binding is a regression, and
+## this list is the difference between that and a decision visible in review.
+const PAD_UNBOUND_BY_DESIGN := {
+	"use_tool": "chopping and mining are interact (X) now",
+	"torch_toggle": "the torch is a hotbar tool -- the torch does not need a button",
+	"torch_place": "same verb's fast-equip half",
+	"build_open": "the build hammer is a hotbar tool: select it, press interact",
+	"combat_throw": "the orb is selected on the bar and thrown with interact",
+	"combat_run": "fleeing is RB -- putting your creature away IS disengaging",
+}
+
+
 func test_every_action_has_both_a_keyboard_and_a_gamepad_binding() -> void:
 	# Every rebindable action ships with both, except the camera stick, which has
-	# no keyboard half because mouse look is camera code rather than an action.
+	# no keyboard half because mouse look is camera code rather than an action,
+	# and the six verbs the authored pad map deliberately leaves keyboard-only.
 	for group in _controls().get("groups", []):
 		for action in (group as Dictionary).get("actions", []):
 			var name := str(action)
 			assert_true(bindings.has(name), "%s is not in the input map" % name)
-			assert_ne(bindings.binding(name, "gamepad"), null, "%s has no gamepad binding" % name)
+			if PAD_UNBOUND_BY_DESIGN.has(name):
+				assert_eq(bindings.binding(name, "gamepad"), null, "%s is listed as pad-unbound by design (%s) but has a gamepad binding -- update the list or the map" % [name, PAD_UNBOUND_BY_DESIGN[name]])
+			else:
+				assert_ne(bindings.binding(name, "gamepad"), null, "%s has no gamepad binding" % name)
 			if not name.begins_with("look_"):
 				assert_ne(bindings.binding(name, "keyboard"), null, "%s has no keyboard binding" % name)
 
@@ -112,7 +137,7 @@ func test_the_navigation_actions_can_never_be_rebound() -> void:
 
 
 func test_every_listed_action_has_a_label_and_appears_once() -> void:
-	# A missing label draws a row named `combat_switch_left`, and an action
+	# A missing label draws a row named `party_cycle`, and an action
 	# listed in two groups draws two rows that fight over the same binding.
 	var labels: Dictionary = _controls().get("labels", {}) as Dictionary
 	var seen: Array[String] = []
@@ -228,52 +253,17 @@ func test_the_shipped_defaults_share_triggers_between_combat_and_build() -> void
 	assert_true(on_lt.has("build_rotate_left"))
 
 
-## OF21: no two WORLD-context actions may share a gamepad button. Cross-context
-## sharing (world+combat, world+build, world+menu) is fine and deliberate --
-## the two consumers can never both be listening at once, the same argument
-## D35 already used for the combat/build triggers -- and is exactly what
-## `test_the_shipped_defaults_already_share_buttons` above exists to protect.
-## This test only guards the one kind of collision that IS a real bug: two
-## actions BOTH live during ordinary exploration fighting over one button
-## (the `inventory`/`hotbar_1` and `torch_toggle`/`backpack_drop` bugs OF21
-## fixed). The list below is hand-picked, not derived from menu.json's
-## "The world" group, because that group is a settings-screen grouping
-## (organizational) rather than a runtime-context claim -- `tool_cycle` and
-## `menu_tab_right` are listed there too but are only ever read while a menu
-## or the build catalogue is open (`game_menu.gd`, `build_menu.gd`), so they
-## are MENU-context here, not world.
-const WORLD_CONTEXT_ACTIONS := [
-	"move_forward", "move_back", "move_left", "move_right",
-	"look_up", "look_down", "look_left", "look_right",
-	"jump", "sprint", "interact", "inventory", "map", "creature_recall",
-	"torch_toggle", "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
-	"build_open", "torch_place",
-]
-
-
-func test_no_two_world_context_actions_share_a_gamepad_button() -> void:
-	# Keyed by "button:N" or "axis:N:+/-" so a button and an axis with the same
-	# index never get treated as the same key.
-	var claimed: Dictionary = {}
-	for action in WORLD_CONTEXT_ACTIONS:
-		assert_true(InputMap.has_action(str(action)), "%s is not a real action" % action)
-		for event in InputMap.action_get_events(str(action)):
-			var key := ""
-			var button := event as InputEventJoypadButton
-			var motion := event as InputEventJoypadMotion
-			if button != null:
-				key = "button:%d" % button.button_index
-			elif motion != null:
-				key = "axis:%d:%s" % [motion.axis, "+" if motion.axis_value >= 0.0 else "-"]
-			else:
-				continue
-			assert_false(
-				claimed.has(key),
-				"%s and %s both claim gamepad %s -- both are world-context, so this is a real collision" % [
-					claimed.get(key), action, key
-				]
-			)
-			claimed[key] = action
+## OF21's world-context collision test USED TO LIVE HERE, over a hand-picked
+## `WORLD_CONTEXT_ACTIONS` list. CONTROLLER-MAP replaced it with
+## `tests/test_input_context_collisions.gd`, which does the same job for every
+## context rather than only for exploration, and reads which actions are live
+## together out of `data/config/input_contexts.json` instead of a const nobody
+## remembered to update. The hand-picked list is what let the d-pad collision
+## survive: `combat_switch_left` and `hotbar_2` were both on joypad 13 and both
+## live in a fight, and no list here named the combat context at all.
+##
+## Deleted rather than left as a narrower duplicate, because two overlapping
+## collision tests is how one of them goes stale unnoticed.
 
 
 ## OW1: the same rule as the world-context test above, for the three verbs
@@ -287,10 +277,9 @@ func test_no_two_world_context_actions_share_a_gamepad_button() -> void:
 ## A being both `jump` and `menu_confirm` is; these three are read by the same
 ## function, in the same state, on the same press.
 ##
-## Deliberately keyboard-only. The gamepad half is already covered for these by
-## the world-context test's argument (Start, R3 and Y are each shared only with
-## an action that is never live while the backpack tab is open), and the pad
-## bindings are genuinely distinct.
+## Both halves are checked. The gamepad half is now also covered, from the
+## other direction, by `tests/test_input_context_collisions.gd`'s
+## `menu_backpack` context.
 const BACKPACK_VERB_ACTIONS := ["backpack_drop", "backpack_split", "backpack_assign"]
 
 
@@ -300,11 +289,10 @@ const BACKPACK_VERB_ACTIONS := ["backpack_drop", "backpack_split", "backpack_ass
 ## missing/duplicated pad binding is precisely the class of bug that shipped a
 ## game whose menus no controller could press.
 ##
-## Honest about what this half currently bites on: all three backpack verbs are
-## keyboard-only today (G / H / J, no joypad events at all), so the joypad
-## branch finds nothing to compare. It is a guard for the day one of them gains
-## a pad binding, not a claim that anything is being checked right now. The two
-## tests below it are the ones with a live failure mode.
+## All three verbs now have BOTH halves bound (G/H/J and Menu/R3/X), so the
+## joypad branch has something real to compare -- it did not when UI-PAD1 wrote
+## this note, and `backpack_assign` moving off Y in CONTROLLER-MAP is the change
+## that gave it teeth.
 func test_no_two_menu_context_actions_share_a_button() -> void:
 	var claimed: Dictionary = {}
 	for action in BACKPACK_VERB_ACTIONS:
@@ -431,7 +419,7 @@ func test_a_binding_survives_being_written_and_read_back() -> void:
 	bindings.set_binding("map", "gamepad", motion)
 	var mouse := InputEventMouseButton.new()
 	mouse.button_index = MOUSE_BUTTON_MIDDLE
-	bindings.set_binding("tool_cycle", "keyboard", mouse)
+	bindings.set_binding("menu_tab_left", "keyboard", mouse)
 	assert_true(bindings.save())
 
 	var reloaded: RefCounted = KEY_BINDINGS.new(path)
@@ -440,7 +428,7 @@ func test_a_binding_survives_being_written_and_read_back() -> void:
 	assert_eq(KEY_BINDINGS.code(reloaded.binding("jump", "keyboard")), "key:%d" % KEY_J)
 	assert_eq(KEY_BINDINGS.code(reloaded.binding("interact", "gamepad")), "pad:9")
 	assert_eq(KEY_BINDINGS.code(reloaded.binding("map", "gamepad")), "axis:2:+")
-	assert_eq(KEY_BINDINGS.code(reloaded.binding("tool_cycle", "keyboard")), "mouse:%d" % MOUSE_BUTTON_MIDDLE)
+	assert_eq(KEY_BINDINGS.code(reloaded.binding("menu_tab_left", "keyboard")), "mouse:%d" % MOUSE_BUTTON_MIDDLE)
 	reloaded.reset_all()
 
 

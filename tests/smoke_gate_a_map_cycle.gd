@@ -64,25 +64,26 @@ func _check_real_pad_party_cycle() -> void:
 		_fail("controller-cycle setup bypassed the five-creature ownership cap")
 		return
 
-	# An unavailable second slot must be skipped by the real Next Pal binding.
+	# CONTROLLER-MAP: one LB verb, one direction. The directional pair this
+	# check used to drive is gone -- the authored pad map gives the d-pad back
+	# to the hotbar, so "previous creature" is four more presses of the same
+	# button rather than a second binding.
+	#
+	# An unavailable second slot must still be skipped by the real binding.
 	_party.call("set_resting", 1, true, 91)
-	await _press_action("combat_switch_right")
+	await _press_action("party_cycle")
 	if int(_party.call("active_index")) != 2:
-		_fail("physical Next Pal did not skip the resting slot (active=%d)" % int(_party.call("active_index")))
+		_fail("physical LB did not skip the resting slot (active=%d)" % int(_party.call("active_index")))
 		return
 	_party.call("set_resting", 1, false)
 
-	# Continue through every owned slot and wrap, then prove Previous wraps back.
+	# Continue through every owned slot and wrap all the way round.
 	for expected in [3, 4, 0, 1, 2]:
-		await _press_action("combat_switch_right")
+		await _press_action("party_cycle")
 		if int(_party.call("active_index")) != expected:
-			_fail("physical Next Pal expected slot %d, got %d" % [expected, int(_party.call("active_index"))])
+			_fail("physical LB expected slot %d, got %d" % [expected, int(_party.call("active_index"))])
 			return
-	await _press_action("combat_switch_left")
-	if int(_party.call("active_index")) != 1:
-		_fail("physical Previous Pal did not cycle backward (active=%d)" % int(_party.call("active_index")))
-		return
-	print("  ok    real pad Previous/Next cycles five owned creatures, wraps, and skips resting")
+	print("  ok    real pad LB cycles five owned creatures, wraps, and skips resting")
 
 
 func _check_actual_travel_drives_minimap() -> void:
@@ -233,7 +234,7 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 
 	var active_before := int(_party.call("active_index"))
-	await _press_action("combat_switch_right")
+	await _press_action("party_cycle")
 	if int(_party.call("active_index")) != active_before:
 		_fail("party cycling leaked through while the full map owned input")
 

@@ -556,8 +556,8 @@ func _check_op21_07_rotate_wins_over_structural_anchor(world: Node) -> void:
 ## `_check_the_first_day_arc` above arms `pending_build` directly too.
 ## Neither drives a category switch or grid navigation through input at all.
 ##
-## So this presses real `InputEventJoypadButton` events for `tool_cycle`
-## (switch category), `ui_right`/`ui_left` (move focus across the grid) and
+## So this presses real `InputEventJoypadButton` events for `menu_tab_right`
+## (switch category -- RB, since CONTROLLER-MAP), `ui_right`/`ui_left` (move focus across the grid) and
 ## `ui_accept` (confirm) -- reading every button index from the live InputMap,
 ## same discipline as `smoke_backpack_pad_target.gd` -- to land on Structures'
 ## Doorway specifically (index 2 of 5, category index 2 of 4): neither the
@@ -596,17 +596,17 @@ func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) 
 		_game.set("free_build", false)
 		return
 
-	var tool_cycle_button := _pad_button_for("tool_cycle")
+	var category_next_button := _pad_button_for("menu_tab_right")
 	var right_button := _pad_button_for("ui_right")
 	var left_button := _pad_button_for("ui_left")
 	var accept_button := _pad_button_for("ui_accept")
-	if tool_cycle_button < 0 or right_button < 0 or left_button < 0 or accept_button < 0:
-		_fail("tool_cycle, ui_right, ui_left or ui_accept has no joypad binding -- a controller cannot navigate this menu")
+	if category_next_button < 0 or right_button < 0 or left_button < 0 or accept_button < 0:
+		_fail("menu_tab_right, ui_right, ui_left or ui_accept has no joypad binding -- a controller cannot navigate this menu")
 		await _close_build_menu_and_restore_pause(menu)
 		_game.set("free_build", false)
 		return
 
-	# --- switch category with real tool_cycle presses, not `_select_category` --
+	# --- switch category with real RB presses, not `_select_category` ---------
 	var categories: Array = menu.get("_categories")
 	var target_category_index := categories.find(TARGET_CATEGORY)
 	if target_category_index < 0:
@@ -616,15 +616,15 @@ func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) 
 		return
 	var steps := posmod(target_category_index - int(menu.get("_category_index")), categories.size())
 	for i in steps:
-		await _tap_pad(tool_cycle_button)
+		await _tap_pad(category_next_button)
 	if int(menu.get("_category_index")) != target_category_index:
-		_fail("%d real tool_cycle presses landed on category %d, not %s (%d)" % [
+		_fail("%d real menu_tab_right presses landed on category %d, not %s (%d)" % [
 			steps, int(menu.get("_category_index")), TARGET_CATEGORY, target_category_index,
 		])
 		await _close_build_menu_and_restore_pause(menu)
 		_game.set("free_build", false)
 		return
-	print("  ok    %d real tool_cycle presses switched to the %s category" % [steps, TARGET_CATEGORY])
+	print("  ok    %d real menu_tab_right presses switched to the %s category" % [steps, TARGET_CATEGORY])
 
 	# --- navigate the grid with real ui_right/ui_left presses to a SPECIFIC, --
 	# --- non-default piece -----------------------------------------------------
@@ -1230,9 +1230,9 @@ func _go_to(tab_id: String) -> Node:
 	for step in tabs.size() + 1:
 		if int(_menu.get("_index")) == wanted:
 			break
-		await _press("tool_cycle")
+		await _press("menu_tab_left")
 	if int(_menu.get("_index")) != wanted:
-		_fail("`tool_cycle` never reached the %s tab" % tab_id)
+		_fail("`menu_tab_left` never reached the %s tab" % tab_id)
 		return null
 	return _menu.get("_bodies")[wanted]
 

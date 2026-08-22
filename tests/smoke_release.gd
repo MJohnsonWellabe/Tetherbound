@@ -179,9 +179,9 @@ func _check_the_menu_cannot_be_left() -> void:
 		_fail("menu_cancel closed the menu mid-ceremony; the choice can be dodged")
 		return
 	var index_before := int(_menu.get("_index"))
-	await _press("tool_cycle")
+	await _press("menu_tab_left")
 	if int(_menu.get("_index")) != index_before:
-		_fail("tool_cycle changed tab mid-ceremony")
+		_fail("menu_tab_left changed tab mid-ceremony")
 	await _press("menu_tab_right")
 	if int(_menu.get("_index")) != index_before:
 		_fail("menu_tab_right changed tab mid-ceremony")

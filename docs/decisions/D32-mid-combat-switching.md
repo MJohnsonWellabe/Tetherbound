@@ -4,6 +4,14 @@
 **Date:** 2026-08-13 · **Decided by:** the owner, as one of four canon
 changes approved alongside `D29`, `D30` and `D31`.
 
+> **Superseded in part by `D68` (2026-08-22).** The tap/hold split described
+> below is gone: the owner banned held-button chords outright, so
+> `combat_switch_left`/`combat_switch_right` merged into one `party_cycle`
+> press on LB and the party selector was removed with the hold that opened it.
+> Everything else here — that switching is a real mechanic, that it costs a
+> lockout, that there is no time-slow and no auto-switch-on-faint — still
+> stands.
+
 ## The decision
 
 Switching pals during a fight stops being reserved input and becomes a real

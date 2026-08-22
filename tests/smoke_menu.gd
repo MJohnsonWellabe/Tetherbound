@@ -282,7 +282,7 @@ func _check_the_footer_names_keys_a_keyboard_player_can_press() -> void:
 	var verbs := {
 		"Select": "menu_confirm",
 		"Close": "menu_cancel",
-		"Prev tab": "tool_cycle",
+		"Prev tab": "menu_tab_left",
 		"Next tab": "menu_tab_right",
 	}
 	for verb: String in verbs.keys():
@@ -334,13 +334,13 @@ func _check_focus_can_be_driven() -> void:
 
 
 func _check_tabs_can_be_cycled() -> void:
-	# Owner playtest report: "LB = tab left, RB = tab right". `tool_cycle` (Q /
-	# LB) must step BACKWARD and `menu_tab_right` (Tab / RB) must step
+	# Owner playtest report: "LB = tab left, RB = tab right". `menu_tab_left`
+	# (Q / LB) must step BACKWARD and `menu_tab_right` (Tab / RB) must step
 	# FORWARD. Drive the physical bindings and visit every registered tab; a
 	# two-tab spot check could leave a newly added tab unreachable or unfocused.
 	var tab_count := int(_menu.get("_tabs").size())
 	var rb := _pad_button_for("menu_tab_right")
-	var lb := _pad_button_for("tool_cycle")
+	var lb := _pad_button_for("menu_tab_left")
 	if rb < 0 or lb < 0:
 		_fail("LB/RB tab actions do not both have physical joypad bindings")
 		return
@@ -1243,15 +1243,19 @@ func _check_closes_and_gives_the_game_back(world: Node) -> void:
 	print("closed on `menu_cancel`: mouse recaptured, tree running, player free")
 
 
+## CONTROLLER-MAP: the shell opens on `game_menu` (Escape / gamepad Menu) and
+## closes on `menu_cancel` (Escape / gamepad B). Deliberately asymmetric on a
+## pad -- B is satchel slot 1 in the world and could not stay the open button --
+## and deliberately symmetric on a keyboard, where Escape is both.
 func _check_opens_on_the_menu_button() -> void:
-	await _press("menu_cancel")
+	await _press("game_menu")
 	if not bool(_menu.call("is_open")):
-		_fail("pressing `menu_cancel` in the world did not open the menu")
+		_fail("pressing `game_menu` in the world did not open the menu")
 		return
 	await _press("menu_cancel")
 	if bool(_menu.call("is_open")):
-		_fail("the same button that opened the menu did not close it")
-	print("`menu_cancel` opens and closes")
+		_fail("`menu_cancel` did not close the menu `game_menu` opened")
+	print("`game_menu` opens, `menu_cancel` closes")
 
 
 func _focused_control() -> Control:

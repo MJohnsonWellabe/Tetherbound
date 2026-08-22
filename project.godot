@@ -164,22 +164,16 @@ map_zoom_out={
 , Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
-tool_cycle={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
-]
-}
 creature_recall={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
 ]
 }
 hotbar_1={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":49,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
 ]
 }
 hotbar_2={
@@ -191,19 +185,19 @@ hotbar_2={
 hotbar_3={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":51,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
 ]
 }
 hotbar_4={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":52,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
 ]
 }
 hotbar_5={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":53,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
 ]
 }
 combat_quick={
@@ -221,25 +215,17 @@ combat_charged={
 combat_throw={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":70,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
 ]
 }
 combat_run={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
 ]
 }
-combat_switch_left={
+party_cycle={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194319,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
-]
-}
-combat_switch_right={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194321,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":67,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
 ]
 }
 build_place={
@@ -287,7 +273,6 @@ menu_tab_right={
 torch_toggle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":76,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }
 backpack_split={
@@ -299,13 +284,18 @@ backpack_split={
 use_tool={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"double_click":false,"script":null)
-, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
+; CONTROLLER-MAP. L3, not X. X is `interact`, which the satchel tab reads as
+; its Use verb (tab_backpack.gd::USE_ACTION) -- the two are live on the same
+; tab, on the same frame, so sharing X made "use this potion" also mean "put it
+; on the bar". It shipped on Y until this pass, colliding with `inventory` the
+; same way. L3 is the only button a menu leaves free: `sprint` shares the
+; physical button but is world-context and PAUSABLE.
 backpack_assign={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":74,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
 ]
 }
 ; UI-PAD1. `ui_accept` is a Godot built-in and was NOT listed here, so the
@@ -361,7 +351,6 @@ build_rotate={
 build_open={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
 ]
 }
 build_dismantle={
@@ -373,6 +362,34 @@ build_dismantle={
 torch_place={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
-, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+; CONTROLLER-MAP. The pause shell used to open on `menu_cancel`, which is
+; gamepad B -- and B is hotbar slot 1 in the owner's authored map, so the shell
+; needed a button of its own. Menu (button 6) is what the map assigns it. The
+; keyboard half stays Escape, which is also `menu_cancel`'s key, because Escape
+; has always both opened and closed the shell and taking that away would be a
+; regression nobody asked for. `menu_cancel` still CLOSES it.
+game_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+]
+}
+; CONTROLLER-MAP. LB's half of "LB tab left, RB tab right". This was
+; `tool_cycle` (keyboard Q / R3) borrowed by data/config/menu.json; `tool_cycle`
+; is retired by the directive, so the verb gets a named action and keeps Q.
+menu_tab_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
+; CONTROLLER-MAP. R3 in the authored map. Keyboard Home, which no other action
+; uses. `scripts/player/camera_rig.gd` swings the yaw back behind the target.
+camera_recenter={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194317,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }

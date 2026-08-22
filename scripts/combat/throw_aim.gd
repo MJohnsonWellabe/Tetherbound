@@ -239,7 +239,13 @@ func _tick_aiming(delta: float) -> void:
 	if _guard > 0.0:
 		return
 
-	if Input.is_action_just_pressed("combat_throw") or Input.is_action_just_pressed("combat_quick"):
+	# CONTROLLER-MAP: interact (X) is the pad's throw button now -- `combat_throw`
+	# kept its keyboard F and lost its pad binding when the orb became a hotbar
+	# item. `combat_quick` stays because the aim opens on the same press that
+	# releases it and a player already holding the attack trigger expects that.
+	if Input.is_action_just_pressed("combat_throw") \
+			or Input.is_action_just_pressed("interact") \
+			or Input.is_action_just_pressed("combat_quick"):
 		_commit_launch_assist()
 		_windup = _release_windup
 
