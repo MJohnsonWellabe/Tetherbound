@@ -60,6 +60,13 @@
       "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them",
       "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250).",
       "_comment_ow5c_seam": "OW5C follow-up: shifted +8 in x with south_bridge crossings[0] (WALL1 seam workaround)."
+    },
+    {
+      "order": 1000,
+      "x": 348.0,
+      "z": 919.5,
+      "radius": 12.0,
+      "_why": "BAND1-D1: the trail_camp prop cluster (props.json order 1000) at the spine's (360,910) bend -- same treatment every other authored prop cluster in this file gets, so the rest stop's pack/crate/barrel pile is not itself buried by the scatter pass. NOTE for the coordinator: scatter_bake.gd's config_fingerprint() does not hash this file (GATE_D_LANE_CONTRACT.md section 4's known defect), so this clearing does not by itself invalidate the current bake -- it needs the same fingerprint fix and single re-bake every band's new clearing does."
     }
   ],
   "footprints": [

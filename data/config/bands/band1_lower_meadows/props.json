@@ -197,6 +197,42 @@
           "_why": "EV7-clusters-fix: water bucket at the pile's far (west) side, foot of the pile -- kept off the deck/rail collider the same way the rest of the cluster is now (local z 1.75, not 0.89 like the position this replaced, which was inside the walkway's own collider footprint)."
         }
       ]
+    },
+    {
+      "order": 1000,
+      "name": "trail_camp",
+      "props": [
+        {
+          "model": "Bag",
+          "at": [
+            348.0,
+            919.0
+          ],
+          "yaw_deg": 25.0,
+          "scale": 1.0,
+          "_why": "BAND1-D1. The cluster's anchor -- a travelling pack set down for the night. Same composition (Bag/Crate_Wooden/Barrel) as the existing trainer_camp cluster (order 2) rather than a new prop grammar, following that cluster's own resolution: props.gd places everything flush to the ground, so a cache someone set down is what this system can honestly build, not a furnished campsite. Set ~18m off the spine's own (360,910) vertex (perpendicular to the trail's local heading) rather than on it, so the camp sits beside the road the way the bridge_repair_site and trainer_camp clusters sit beside their own paths, not blocking the walked line -- tools/_probe_band1_cadence.py confirms the offset."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            349.1,
+            920.2
+          ],
+          "yaw_deg": 190.0,
+          "scale": 1.0,
+          "_why": "BAND1-D1. Touching the pack -- the pile's second piece, set down alongside rather than spaced out."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            346.9,
+            920.0
+          ],
+          "yaw_deg": 100.0,
+          "scale": 1.0,
+          "_why": "BAND1-D1. Water barrel closing the pile from the near side. Sited beside the spine's own (360,910) bend -- the corridor's roughly halfway point between the pond and South Bridge, and the one place on that 760m leg the trail visibly turns rather than running straight, which is also why the stone gatherable (harvest.json order 1003) sits at the same bend: a rest stop that shares a landmark with a resource stop reads as a real place to stop, not a marker planted mid-field. Given the map icon `band1_trail_camp` (map_landmarks.json) so it can be found again once seen -- a practical waypoint, not one of prompt 30's curiosity secrets."
+        }
+      ]
     }
   ]
 }
