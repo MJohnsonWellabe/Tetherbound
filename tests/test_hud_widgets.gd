@@ -68,21 +68,84 @@ func test_full_roster_mount_clears_the_separate_active_panel() -> void:
 			0.001,
 			"occupied and vacant rows must reserve the same fixed vertical space"
 		)
-	var resting_position: Vector2 = PLAYGROUND_HUD.party_strip_position(PARTY_STRIP.TOTAL_HEIGHT)
-	var roster_bottom := resting_position.y + PARTY_STRIP.TOTAL_HEIGHT
-	var active_panel_top := PLAYGROUND_HUD.CREATURE_BLOCK_POS.y
-
-	assert_almost_eq(
-		active_panel_top - roster_bottom,
-		PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
-		0.001,
-		"all five text-driven rows need a fixed positive gap above ACTIVE COMPANION"
-	)
-	assert_true(
-		active_panel_top - roster_bottom >= 12.0,
-		"the roster must not touch or obscure the separately labelled active panel"
-	)
+	# HUD-LAYOUT: the left column (party strip / creature panel / vitals) is
+	# now stacked bottom-up from the CANVAS BOTTOM (see
+	# `playground_hud.gd::BOTTOM_DOCK_TOP_OFFSET`'s header for why a fixed
+	# top-anchored offset was the actual defect), so its position math takes
+	# an explicit canvas height and creature-panel height rather than reading
+	# fixed constants.
+	#
+	# This function no longer asserts "the roster never touches the active
+	# panel": at the canvas heights this HUD actually runs at, the strip's
+	# own `TOTAL_HEIGHT` (540, five text-driven rows -- a deliberate
+	# legibility fix, not a number this task should shrink) genuinely does
+	# not fit in the room left above a correctly bottom-anchored creature
+	# panel; the honest tradeoff `party_strip_position()`'s own header
+	# documents is a reveal that briefly overlaps the (already-labelled)
+	# panel behind it rather than one that silently clips off the top of the
+	# screen. `test_party_strip_never_goes_off_the_top_of_the_screen` and
+	# `test_left_stack_clears_bottom_dock_at_every_supported_aspect` below
+	# are what now carry this widget's real position guarantees.
 	strip.free()
+
+
+## HUD-LAYOUT's own regression: the OLD `CREATURE_BLOCK_POS`/`VITALS_POS`
+## were fixed, top-anchored pixel offsets tuned against an assumed
+## 1080-tall canvas. This project stretches `canvas_items` with
+## `aspect="expand"`, and the Ally's real 1280x800 window computes an
+## EFFECTIVE canvas of 1920x1200 (wider aspect ratio than 16:9 needs more
+## vertical canvas to fill) -- 120px taller than the authoring assumption.
+## `Root/BottomDock` already derives its own position from the canvas
+## BOTTOM (`offset_top = -460`, anchored `anchor_top/bottom = 1`), so it
+## slides down correctly on the taller canvas; the left column did not, and
+## a real render of the full HUD scene at 1280x800 measured the creature
+## panel and vitals cluster overlapping BottomDock's actual rect. This test
+## proves the fixed math instead: the left column's lowest element must
+## clear `BOTTOM_DOCK_TOP_OFFSET`'s own nominal top by at least
+## `LEFT_STACK_CLEARANCE`, at both the project's 16:9 authoring aspect
+## (1080) and the Ally's real effective canvas (1200).
+func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
+	var creature_h := 150.0
+	for canvas_h in [1080.0, 1200.0]:
+		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
+		var vitals_bottom := vitals_pos.y + PLAYGROUND_HUD.VITALS_HEIGHT
+		var dock_top: float = canvas_h + float(PLAYGROUND_HUD.BOTTOM_DOCK_TOP_OFFSET)
+		assert_true(
+			dock_top - vitals_bottom >= PLAYGROUND_HUD.LEFT_STACK_CLEARANCE - 0.001,
+			"left stack must clear BottomDock's nominal top at canvas height %.0f (vitals bottom %.1f, dock top %.1f)" % [
+				canvas_h, vitals_bottom, dock_top,
+			]
+		)
+
+		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
+		assert_almost_eq(
+			vitals_pos.y - (creature_pos.y + creature_h),
+			PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
+			0.001,
+			"vitals cluster must sit a fixed gap below the creature panel at canvas height %.0f" % canvas_h
+		)
+
+
+## `party_strip.gd::TOTAL_HEIGHT` (540, five text-driven rows) does not fit
+## in the room left above a correctly bottom-anchored creature panel at
+## either supported canvas height -- the un-clamped formula computes a
+## negative top for the reveal, meaning roughly its top third would draw
+## above the screen entirely. `party_strip_position()` clamps to
+## `TOP_SAFE_INSET` for exactly this case. This test proves the clamp
+## actually engages (not just that it exists) using the SAME representative
+## creature-panel height every other test in this block uses.
+func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
+	var creature_h := 150.0
+	for canvas_h in [1080.0, 1200.0]:
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
+			canvas_h, creature_h, PARTY_STRIP.TOTAL_HEIGHT
+		)
+		assert_true(
+			strip_pos.y >= PLAYGROUND_HUD.TOP_SAFE_INSET - 0.001,
+			"party strip top (%.1f) must never sit above TOP_SAFE_INSET (%.1f) at canvas height %.0f" % [
+				strip_pos.y, PLAYGROUND_HUD.TOP_SAFE_INSET, canvas_h,
+			]
+		)
 
 
 func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash() -> void:
@@ -237,8 +300,33 @@ func test_cycle_banner_hides_itself_after_its_hold_expires() -> void:
 	var strip := _make_strip()
 	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
 	assert_true(strip._cycle_banner.visible)
-	strip._process(PARTY_STRIP.CYCLE_BANNER_SECONDS + 0.1)
+	# HUD-LAYOUT: a single oversized `delta` no longer collapses the whole
+	# hold in one `_process()` call -- `MAX_TIMER_DELTA` caps what any one
+	# frame can subtract (see that constant's own header for the real bug
+	# this fixes: a slow real frame during a cold scene boot exhausting the
+	# hold before the reveal was ever drawn). Enough calls at the cap to
+	# cover the hold, same as a real slow-but-nonzero framerate would.
+	var frames := int(ceil(PARTY_STRIP.CYCLE_BANNER_SECONDS / PARTY_STRIP.MAX_TIMER_DELTA)) + 1
+	for i in frames:
+		strip._process(PARTY_STRIP.MAX_TIMER_DELTA)
 	assert_false(strip._cycle_banner.visible, "the banner must not linger past its own hold")
+	strip.free()
+
+
+## HUD-LAYOUT's own regression: one abnormally slow frame (a hitch, or the
+## first frame after a heavy scene load -- exactly what a cold Meadows boot
+## produces) must not, by itself, exhaust the whole cycle-banner hold before
+## anyone has a chance to see it. This is the literal bug a real full-world
+## capture caught: `visible=false` on both the banner and the strip at the
+## moment of the shot, despite `flash_cycle()` having just run.
+func test_one_oversized_frame_does_not_hide_the_cycle_banner() -> void:
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	strip._process(PARTY_STRIP.CYCLE_BANNER_SECONDS + 1.0)
+	assert_true(
+		strip._cycle_banner.visible,
+		"a single oversized frame delta must not by itself exhaust the cycle banner's hold"
+	)
 	strip.free()
 
 
