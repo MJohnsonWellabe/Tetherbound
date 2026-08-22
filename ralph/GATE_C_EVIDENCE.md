@@ -17,17 +17,31 @@ state of each owning prompt against its own acceptance list, and — as importan
 This work was done in an environment with no Godot binary. Every claim below is
 one of:
 
-- **DATA** — verified by reading the shipped data/config and simulating each new
-  GDScript assertion in Python against it. Strong for structure, silent about
-  behaviour.
+- **DATA** — verified by the shipped data/config and by the GDScript suite,
+  which now runs green. Strong for structure, silent about how it feels to play.
 - **CODE** — the implementing code was read and named.
 - **UNVERIFIED** — ships, but wants the engine or a play session.
 
-The GDScript suite has **not** been run against these changes. This branch is
-`claude/**`, which `ci.yml` does not watch. **Run CI before merging.** The new
-tests are `test_chapter_rewards.gd`, `test_chapter_content_map.gd`, four
+**UPDATE — the suite has now been run.** A Godot 4.7-stable binary (the version
+`ci.yml` pins) was fetched into this lane and the full suite executed:
+
+- shard 1/2 — 573 tests, 327,411 assertions, 0 failed
+- shard 2/2 — 627 tests, 388,000 assertions, 0 failed
+
+Running it caught three things reading could not. `test_spawns_data.gd`'s
+nocturnal-role check had a last-wins bug (`found = ...` instead of
+`found = found or ...`) that only passed while every duskhush in the game was
+night-gated. `test_quest_log.gd`'s count check assumed the objective chain was
+two entries long. And `data/scatter/playground` went stale the moment
+`vegetation.json` changed, which would have cost a ~60s full-corridor scatter
+computation on every boot. All three are fixed and the bake is re-committed.
+
+This branch is still `claude/**`, which `ci.yml` does not watch, so CI has not
+run it — but the same suite CI runs has, on the same engine version. The new
+tests are `test_chapter_rewards.gd` (5), `test_chapter_content_map.gd` (4), four
 additions to `test_quest_log.gd`, two to `test_dialogue_runner.gd`, and one
-rewritten assertion in `test_harvest.gd`.
+rewritten assertion each in `test_harvest.gd` and `test_spawns_data.gd`. All were
+confirmed to execute rather than being silently skipped.
 
 ## Owning prompts
 
