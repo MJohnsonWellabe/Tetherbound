@@ -27,6 +27,16 @@ const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## OP21-03/OP21-06: shared input-ownership answer, the same one
+## `playground_hud.gd::_world_input_allowed()` already asks. Without this,
+## `_read_creature_control_input()` read `combat_switch_left`/`right`
+## unconditionally whenever no fight/trainer-round/arbiter gate applied — and
+## those actions are bound to gamepad d-pad left/right (project.godot,
+## joypad buttons 13/14), the same physical d-pad `ui_left`/`ui_right` drive
+## Build menu grid focus with. Build deliberately does not pause the tree
+## (OW10), so one d-pad press both navigated Build and cycled the active
+## creature underneath it — the owner's exact repro.
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -658,6 +668,12 @@ func _read_creature_control_input() -> void:
 	if trainer_battle_active():
 		return
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+		return
+	# OP21-03/OP21-06: a non-pausing panel (Build) owning input must own the
+	# d-pad exclusively. A tree-pausing panel needs no entry here -- this node
+	# is PROCESS_MODE_PAUSABLE like the rest of the world, so it has already
+	# stopped running while one of those is up.
+	if INPUT_OWNER.current(get_tree()) != null:
 		return
 
 	# PARTY-CYCLE: the same shoulder/d-pad grammar used to switch in combat now
