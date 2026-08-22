@@ -448,8 +448,10 @@
         ]
       }
     ],
+    "_comment_op21_17_rise_cottage_conflict": "OP21-17, FOUND NOT FIXED. 'The Rise' road's first leg ((10,-10)->(45,-22)) passes within 0.21m of cottage_b's centre (village.json `structures`, at [21,-14]) -- well inside its own footprint half_extents [3.05,3.05] (building_aprons.footprints), i.e. a maintained road running straight through a house wall, exactly the kind of thing that makes the square not read as a believable settlement. Not fixed by this pass: a `paths.routes` polyline is baked into the ground CONTROL map offline (`build_playground_terrain.gd::_path_control`, per `paths`'s own top comment), so moving it needs a real terrain re-bake, not a data edit alone -- and every candidate detour tried by hand (bending south toward the practice-meadow fences, bending north toward cottage_a's own apron, widening either bend) traded this building conflict for a new one against a neighbour, the village square being tightly packed already. Re-siting this leg needs the bake step and a render to confirm the new line, which this pass's box (heavily contended by several other lanes' own render jobs) could not safely absorb alongside the rest of OP21-17/18/19. Left flagged rather than shipped half-verified.",
     "_comment_trailheads_of10_remainder": "OF10-remainder. Two independent blind reviews named the same defect: 'The Rise' road above just stops in open grass at its own truncated end (74,-41) -- OF10a's `flats._comment_of10_r3` apron levels the ground there but reads as too subtle at approach distance to register as an arrival. `signpost.gd`'s junction fingerpost already exists to say 'this way to X'; a trailhead is the same object with one arm instead of every route in the file, so `routes_override` was added there rather than inventing a second prop. `at` sits off the road's own centreline (village.json/SIGNPOST_AT does the same thing beside the well) so the sign has its own footing and does not stand where a player is walking. Label matches the route's own name -- 'yes, the Rise is this way' is the honest thing to say at the point the maintained road itself stops (OF10a's cliff comment: the collar is 4-6m further on, past what the 45-degree floor limit allows). TUNABLE positions.",
     "_comment_trailhead_bearing_of10_remainder_r2": "Round 2, caught by direct inspection of tools/capture_rise_approach.gd's own `road-approach` frame (eye (26,-14), looking straight at (74,-41) -- exactly the frame this item exists to fix): `points` originally reused the road's own last two waypoints verbatim, [(45,-22),(74,-41)], so the arm's bearing was nearly collinear with a player walking the road toward it. signpost.gd paints the label on the plank's two BROAD faces, perpendicular to the arm's own axis -- a viewer standing almost exactly on that axis sees the plank edge-on, and the render confirmed it: a bare thin post, no visible plank, from the one viewpoint that matters most. Rotating the arm's own destination point ~25 degrees off the road's exact line (toward the rise's foot generally, not away from it -- the new aim point sits along the flank rather than back down at the village) keeps the sign honestly 'pointing toward the Rise' while breaking the edge-on alignment for a head-on approach. A real trailhead fingerpost is hand-set at a readable angle, not laser-aligned with the trail it stands beside; this is that, not a new mechanic.",
+    "_comment_trailheads_op21_18": "OP21-18. The Rise (immediately below) is the only trailhead this table originally got right: `at` sits 2.5m off the road's own centreline, per its own `_why` above ('so the sign has its own footing and does not stand where a player is walking'). Every trailhead added since -- the seven spoke trailheads and the ten corridor-band loop trailheads, 18 entries total -- copied `points[0]` straight into `at` instead, planting the post's own base exactly on the road/loop centreline it is meant to stand beside: a literal sign in the travel lane, on every one of them, which is exactly the owner's OP21-18 reproduction. Fixed by offsetting each `at` 2.5m perpendicular to its own `points[0]->points[1]` bearing (same standoff The Rise already uses, computed rather than eyeballed), consistently to one side of the direction of travel -- `points` itself (the arm's aim line) is untouched, since the plank's bearing and the post's footing are independent, the same separation The Rise's own r2 comment already relies on.",
     "trailheads": [
       {
         "_why": "the Rise road's own end -- a fingerpost off the road's shoulder, angled ~25deg off the road's own bearing so its plank reads face-on to a player walking up the road toward it",
@@ -472,8 +474,8 @@
       {
         "_why": "SC14: where the south road leaves the square, pointing at the crossing. The bridge is NOT a fifth entry in `routes` above on purpose -- signpost.gd draws one arm per route on the junction fingerpost by the well, and its post is only tall enough for four (ARM_START_HEIGHT 2.05 stepping down by ARM_SPACING 0.44 puts a fifth arm at 0.29m, in the grass). A trailhead is the same object with one arm, which is what OF10-remainder built it for. The plank names the destination and never its condition -- the same hard rule the seven spokes' signs carry.",
         "at": [
-          11.6,
-          1256.0
+          14.1,
+          1256.15
         ],
         "label": "South Bridge",
         "points": [
@@ -490,8 +492,8 @@
       },
       {
         "at": [
-          -360,
-          400
+          -357.76,
+          401.12
         ],
         "label": "Pond Circuit",
         "points": [
@@ -507,8 +509,8 @@
       },
       {
         "at": [
-          230,
-          830
+          231.45,
+          827.97
         ],
         "label": "Oak Grove Ring",
         "points": [
@@ -524,8 +526,8 @@
       },
       {
         "at": [
-          310,
-          1660
+          311.6,
+          1658.08
         ],
         "label": "Quarry Rim Overlook",
         "points": [
@@ -541,8 +543,8 @@
       },
       {
         "at": [
-          -150,
-          2210
+          -149.21,
+          2212.37
         ],
         "label": "Ranger Camp Spur",
         "points": [
@@ -558,8 +560,8 @@
       },
       {
         "at": [
-          -420,
-          2470
+          -417.83,
+          2468.76
         ],
         "label": "Warren Undertrail",
         "points": [
@@ -575,8 +577,8 @@
       },
       {
         "at": [
-          230,
-          3670
+          231.63,
+          3668.1
         ],
         "label": "Relay Approach Loop",
         "points": [
@@ -592,8 +594,8 @@
       },
       {
         "at": [
-          -30,
-          4060
+          -27.83,
+          4061.24
         ],
         "label": "Near Bank River Walk",
         "points": [
@@ -609,8 +611,8 @@
       },
       {
         "at": [
-          330,
-          5700
+          331.88,
+          5698.35
         ],
         "label": "Wind Ridge Traverse",
         "points": [
@@ -626,8 +628,8 @@
       },
       {
         "at": [
-          60,
-          6230
+          62.0,
+          6231.5
         ],
         "label": "High Pasture Loop",
         "points": [
@@ -643,8 +645,8 @@
       },
       {
         "at": [
-          -280,
-          6460
+          -278.05,
+          6461.56
         ],
         "label": "Watchtower Spur",
         "points": [
@@ -660,8 +662,8 @@
       },
       {
         "at": [
-          400,
-          1800
+          397.61,
+          1800.72
         ],
         "label": "Quarry Haul Road",
         "points": [
@@ -677,8 +679,8 @@
       },
       {
         "at": [
-          -360.0,
-          400.0
+          -359.57,
+          402.46
         ],
         "label": "River Gorge Spoke",
         "points": [
@@ -712,8 +714,8 @@
       },
       {
         "at": [
-          400.0,
-          1800.0
+          400.34,
+          1797.52
         ],
         "label": "Mountain Trail Spoke",
         "points": [
@@ -729,8 +731,8 @@
       },
       {
         "at": [
-          -420.0,
-          2470.0
+          -419.56,
+          2472.46
         ],
         "label": "Stone Gate Spoke",
         "points": [
@@ -746,8 +748,8 @@
       },
       {
         "at": [
-          450.0,
-          5860.0
+          450.81,
+          5857.64
         ],
         "label": "High Pass Spoke",
         "points": [
@@ -763,8 +765,8 @@
       },
       {
         "at": [
-          430.0,
-          1020.0
+          430.81,
+          1017.63
         ],
         "label": "Cliff Road Spoke",
         "points": [
@@ -780,8 +782,8 @@
       },
       {
         "at": [
-          -150.0,
-          4150.0
+          -149.7,
+          4152.48
         ],
         "label": "Blighted Road Spoke",
         "points": [
@@ -1994,108 +1996,109 @@
       "head_ramp": 14.0,
       "points": [
         [
-          -148.0,
-          38.0
+          -398.0,
+          445.0
         ],
         [
-          -146.5,
-          40.5
+          -396.5,
+          447.5
         ],
         [
-          -144.2,
-          44.0
+          -394.2,
+          451.0
         ],
         [
-          -142.1,
-          48.0
+          -392.1,
+          455.0
         ],
         [
-          -141.0,
-          52.0
+          -391.0,
+          459.0
         ],
         [
-          -141.7,
-          55.9
+          -391.7,
+          462.9
         ],
         [
-          -143.6,
-          59.9
+          -393.6,
+          466.9
         ],
         [
-          -145.4,
-          64.0
+          -395.4,
+          471.0
         ],
         [
-          -146.0,
-          68.0
+          -396.0,
+          475.0
         ],
         [
-          -144.6,
-          72.0
+          -394.6,
+          479.0
         ],
         [
-          -142.0,
-          76.1
+          -392.0,
+          483.1
         ],
         [
-          -139.4,
-          80.1
+          -389.4,
+          487.1
         ],
         [
-          -138.0,
-          84.0
+          -388.0,
+          491.0
         ],
         [
-          -138.6,
-          87.7
+          -388.6,
+          494.7
         ],
         [
-          -140.4,
-          91.2
+          -390.4,
+          498.2
         ],
         [
-          -142.3,
-          94.7
+          -392.3,
+          501.7
         ],
         [
-          -143.0,
-          98.0
+          -393.0,
+          505.0
         ],
         [
-          -141.8,
-          101.1
+          -391.8,
+          508.1
         ],
         [
-          -139.6,
-          104.1
+          -389.6,
+          511.1
         ],
         [
-          -137.3,
-          107.0
+          -387.3,
+          514.0
         ],
         [
-          -136.0,
-          110.0
+          -386.0,
+          517.0
         ],
         [
-          -136.3,
-          113.3
+          -386.3,
+          520.3
         ],
         [
-          -137.6,
-          116.8
+          -387.6,
+          523.8
         ],
         [
-          -139.0,
-          119.8
+          -389.0,
+          526.8
         ],
         [
-          -140.0,
-          122.0
+          -390.0,
+          529.0
         ]
       ]
     },
-    "_comment_ow5d_pond": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: `pond_centre` moves from (-145,138) to (-395,545) -- the anchor every other pond-group OW5D move (village.json mill/footbridge/ranger, flats[4,5], building_aprons.footprints[5,6], vegetation.json footprints/clearings, spawns.json's four water species) is offset from, uniformly by (-250,+407). NOT moved by this pass, and flagged loudly: `water.level`/`shore_step` (unverified at the new site's actual ground), the `outlet.sill`/`outlet.channel` (which connect the pond to the river gorge and are entangled with OW5C's river re-derivation -- moving the pond alone without them leaves this outlet pointing at the OLD gorge join), and `stream.points` (the pond's own inflow, 25 authored points feeding it from the old (-148,38) head -- the macro-layout doc's full section 10.2 lists a re-authored stream 'feeding the pond from (-200,300)', but that row is NOT in this task's given relocation table, so it was left untouched here). Moving the pond's centre without its stream and outlet is exactly the kind of tear the macro-layout doc warns about; this is recorded so the gap is visible rather than silently shipped."
+    "_comment_ow5d_pond": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: `pond_centre` moves from (-145,138) to (-395,545) -- the anchor every other pond-group OW5D move (village.json mill/footbridge/ranger, flats[4,5], building_aprons.footprints[5,6], vegetation.json footprints/clearings, spawns.json's four water species) is offset from, uniformly by (-250,+407). NOT moved by this pass, and flagged loudly: `water.level`/`shore_step` (unverified at the new site's actual ground), the `outlet.sill`/`outlet.channel` (which connect the pond to the river gorge and are entangled with OW5C's river re-derivation -- moving the pond alone without them leaves this outlet pointing at the OLD gorge join), and `stream.points` (the pond's own inflow, 25 authored points feeding it from the old (-148,38) head -- the macro-layout doc's full section 10.2 lists a re-authored stream 'feeding the pond from (-200,300)', but that row is NOT in this task's given relocation table, so it was left untouched here). Moving the pond's centre without its stream and outlet is exactly the kind of tear the macro-layout doc warns about; this is recorded so the gap is visible rather than silently shipped.",
+    "_comment_op21_19_reprobe": "OP21-19 re-probe (the owner's 'trees/houses/bushes standing in the pond' reproduction). `water.level` above was ALREADY corrected to -17.0 by a prior Gate A pass (see `_comment_gate_a_level`) and `pond_centre`/mill/footbridge/ranger/flats/vegetation-footprints above were already offset correctly, per this comment's own account -- those were not the bug. The actual bug this pass found and fixed: vegetation.json's per-layer `min_height` gates (trees/grove/saplings/deadfall/bushes/grass/drygrass/flowers/rocks/path_stones) were still anchored to the OLD water level (-22.5) this same OW5D pass left untouched, so every layer's floor sat 4-6m BELOW the new -17.0 waterline and grew straight through it -- exactly what stood trees and bushes in the water. Re-anchored by the same +5.5m the water level itself moved (see vegetation.json's own updated comments), and scripts/world/scatter_rules.gd now also enforces a hard `water_level()-0.5` floor underneath every layer's own min_height, so a future re-relocation cannot silently reopen this the way this one did. `stream.points` (the pond's inflow, previously flagged above as untouched) was ALSO translated by this pass, by the same (-250,+407) -- it was landing 270m from the new pond with no probe-verified reconnection; a direct height_at probe along the new points now shows a mostly-monotonic descent from the head (-9.7m) into the basin, with a small (~2.7m) non-monotonic wobble over the last ~15m as the course crosses the basin's own slope into the waterline -- not re-smoothed by this pass, flagged rather than silently left. `outlet.sill`/`outlet.channel` remain UNTOUCHED and still point at the OLD gorge join: unlike the stream, this is entangled with `river_gorge`'s own (already-relocated, but for a DIFFERENT, later reason -- see its own `_comment_length`) carve geometry, and blindly translating it risked cutting a channel that connects to nothing at the new site without inspecting the actual gorge shelf there first. Left for the lane/task that owns OW5C's river re-derivation, as this comment already asked."
   },
   "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo \u2014 it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
   "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 \u2014 below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",

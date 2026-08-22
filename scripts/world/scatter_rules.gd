@@ -823,14 +823,35 @@ static func _consider(
 		if float(field.path_factor(spot.x, spot.y)) > threshold:
 			return
 
+	# OP21-19: a hard floor at the pond's own waterline, underneath every
+	# layer's `min_height`. The pond is handled by height, not a band — see
+	# `playground_heightfield.gd::water_level()`'s own comment, "below this
+	# height and underwater are the same statement" — so per-layer
+	# `min_height` (vegetation.json) is normally enough on its own to let reeds
+	# and marsh grass wade a little into the shallows while keeping trees dry.
+	# It is not a *geometric* gate, though: it is one more tunable number per
+	# layer, and OW5D's blind (-250,+407) relocation of the pond basin moved
+	# `water.level` (from -22.5 to -17.0, restoring a rendered surface at the
+	# new basin) without anyone re-deriving those per-layer numbers, which is
+	# exactly how trees/bushes ended up standing in the new water — every
+	# layer's `min_height` was still anchored to the OLD, deeper waterline
+	# (fixed alongside this gate, see vegetation.json). This is the backstop:
+	# whatever a layer's own `min_height` says, nothing stands more than half
+	# a metre below the CURRENT water surface. Half a metre, not zero, so a
+	# layer that deliberately wades the shore_step lip (grass/reeds) is not
+	# pushed dry — it only stops anything from standing in water deep enough
+	# to read as "in the pond" rather than "at its edge."
+	if field.has_method("water_level"):
+		var pond_level: float = field.water_level()
+		if not is_nan(pond_level) and height < pond_level - 0.5:
+			return
+
 	# Nothing grows IN the stream channel either (EV5) — a grass tuft standing
 	# mid-current reads as a bug the way a tree on a path does. Same shape as
 	# the path gate above, same per-instance edge jitter so the channel's clear
-	# band ravels instead of tracing an exact offset curve. The pond is handled
-	# differently: it is a height, not a band, so layers keep out of it with
-	# their own `min_height` (vegetation.json) — reeds and marsh grass WANT to
-	# stand in the shallows, and a per-layer height gate lets each layer say
-	# how far in it wades.
+	# band ravels instead of tracing an exact offset curve. The pond's OWN
+	# waterline is now also a hard gate (immediately above); per-layer
+	# `min_height` remains for how far into the shallows a wading layer goes.
 	if not bool(layer.get("grows_in_stream", false)) and field.has_method("stream_factor"):
 		var stream_jitter := float(layer.get("path_edge_jitter", 0.0))
 		var stream_threshold := 0.35
