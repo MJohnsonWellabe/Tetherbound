@@ -51,17 +51,28 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 
 const ICON_DIR := "res://assets/ui/icons/map/"
-const ICON_SIZE := 26.0
-const PLAYER_MARKER_RADIUS := 6.0
+## OP21-15: bumped from 26 across the board (icon/marker/font sizes below) —
+## this screen's `canvas.draw_*` calls sit under the SAME `canvas_items`
+## viewport stretch every other Control on the tab does (`project.godot`'s
+## `window/stretch/mode`), so a literal pixel size authored to read cleanly on
+## the project's 1920x1080 authoring canvas becomes visibly smaller once that
+## canvas is squeezed into the Ally's 1280x800 handheld output (stretch scale
+## ~0.667). The owner's "currently unusable" covered exactly this: markers and
+## labels that were legible at desktop size were not at handheld size. This
+## file's own constants are the only legibility knob available here —
+## `UITokens.FONT_TINY`/`FONT_LABEL` are shared by every other tab and are not
+## this task's to retune globally.
+const ICON_SIZE := 30.0
+const PLAYER_MARKER_RADIUS := 8.0
 ## The facing arrow, in pixels: where its base sits (just clear of the dot's
 ## cream ring, which is drawn at `PLAYER_MARKER_RADIUS + 3`), how far past that
 ## the tip reaches, and how wide the base is. Long enough to read as a heading
 ## at a glance on a handheld, short enough not to be mistaken for a route line
 ## to something. TUNABLE.
-const PLAYER_FACING_BASE := 10.0
-const PLAYER_FACING_LENGTH := 10.0
-const PLAYER_FACING_HALF_WIDTH := 6.0
-const OBJECTIVE_RADIUS := 9.0
+const PLAYER_FACING_BASE := 12.0
+const PLAYER_FACING_LENGTH := 12.0
+const PLAYER_FACING_HALF_WIDTH := 7.0
+const OBJECTIVE_RADIUS := 11.0
 const MIN_ZOOM := 1.0
 const MAX_ZOOM := 16.0
 ## Deliberate strategic scales: the 4:1 north/south Meadows corridor needs a
@@ -74,6 +85,18 @@ const PAN_SPEED_MPS := 1200.0
 ## trail is drawn from whole grid cells (4m each), so anything smaller than a
 ## cell is invisible on screen anyway.
 const REDRAW_MOVE_EPSILON := 2.0
+
+## Canvas text sizes — bumped from `UITokens.FONT_TINY`/`FONT_LABEL` (19/23)
+## for the same handheld-legibility reason `ICON_SIZE` above is bumped. These
+## are read raw by `draw_string`/`draw_string_outline`, never by a `Label`
+## node, so `UITokens.make_text_legible()`'s automatic outline pass (which
+## only walks `Label`/`RichTextLabel` children) never reaches them — every
+## canvas text draw below goes through `_draw_string_legible()` instead,
+## which applies the SAME `UITokens.OUTLINE`/`OUTLINE_SIZE` treatment by
+## hand, so a region name or destination label reads against any terrain
+## colour underneath it rather than only the darkest ones.
+const CANVAS_HEADING_FONT_SIZE := 20
+const CANVAS_LABEL_FONT_SIZE := 26
 
 ## One draw call's worth of state, refreshed by `MapCanvas._draw()` reaching
 ## back into the owning tab. A plain `Control` rather than a scene: this
@@ -95,6 +118,16 @@ var _controls_label: RichTextLabel = null
 
 var _zoom: float = MIN_ZOOM
 var _pan_world: Vector2 = Vector2.ZERO
+
+## OP21-15: true once the player has moved the right stick while zoomed in.
+## While false, the view keeps `_pan_world` locked to the player's own world
+## position every `poll()` (`_follow_player_if_not_panned()`), so zooming in
+## always centres and scales around wherever the player currently stands
+## instead of the map's static geometric centre. Cleared back to false the
+## moment zoom returns to `MIN_ZOOM` (`_clamp_pan()`), so re-opening zoom
+## after backing all the way out starts following the player again rather
+## than re-using a stale manual pan from earlier in the session.
+var _manual_pan: bool = false
 
 var _last_map_revision: int = -1
 var _last_player_pos: Vector3 = Vector3.ZERO
@@ -134,6 +167,7 @@ func build() -> void:
 		child.queue_free()
 	_zoom = MIN_ZOOM
 	_pan_world = Vector2.ZERO
+	_manual_pan = false
 	_terrain_attempted = false
 	_terrain_tex = null
 	_fog_tex = null
@@ -158,8 +192,10 @@ func build() -> void:
 	header.add_child(spacer)
 
 	_surveyed_label = Label.new()
-	_surveyed_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_surveyed_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	# OP21-15: bumped past UITokens.FONT_TINY (19) — see CANVAS_LABEL_FONT_SIZE's
+	# header for why this screen keeps its own legibility sizing.
+	_surveyed_label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
+	_surveyed_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	header.add_child(_surveyed_label)
 
 	_canvas = MapCanvas.new()
@@ -178,7 +214,7 @@ func build() -> void:
 	_controls_label.fit_content = true
 	_controls_label.scroll_active = false
 	_controls_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_controls_label.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_controls_label.add_theme_font_size_override("normal_font_size", CANVAS_HEADING_FONT_SIZE + 2)
 	_controls_label.text = "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
 		INPUT_GLYPH.icon("map_zoom_out", 24),
 		INPUT_GLYPH.icon("map_zoom_in", 24),
@@ -206,6 +242,7 @@ func poll() -> void:
 	if _canvas == null:
 		return
 	_read_navigation_input()
+	_follow_player_if_not_panned()
 
 	var map_state: RefCounted = _map_state()
 	var current_revision: int = int(map_state.get("revision")) if map_state != null else -1
@@ -245,11 +282,54 @@ func _read_navigation_input() -> void:
 	var pan_input := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	if _zoom > MIN_ZOOM and pan_input.length_squared() > 0.01:
 		_pan_world += pan_input * PAN_SPEED_MPS * get_process_delta_time() / _zoom
+		_manual_pan = true # a deliberate pan owns the view until zoom resets to MIN_ZOOM
 		changed = true
 
 	if changed:
 		_clamp_pan()
 		_canvas.queue_redraw()
+
+
+## OP21-15 fix: "zoom does not centre or scale around the player's location as
+## expected." Every `poll()` this tab is shown, while zoomed in and the player
+## has not deliberately panned elsewhere, snaps `_pan_world` to the player's
+## own world offset from the map's centre — so a zoom press re-centres AND
+## re-scales around wherever the player currently is (the whole point of a
+## "you are here, zoom in" map), and simply walking around while zoomed keeps
+## the player under the view without them ever touching the right stick.
+## `_manual_pan` (set the instant the right stick actually moves the view,
+## cleared the instant zoom returns to `MIN_ZOOM`) is what lets a player who
+## deliberately panned elsewhere look at that other place without this
+## dragging their view back to themselves every frame.
+func _follow_player_if_not_panned() -> void:
+	if _manual_pan or _zoom <= MIN_ZOOM:
+		return
+	var player := _player_node()
+	if player == null:
+		return
+	var target := _pan_world_for_player(player.global_position)
+	if target.distance_to(_pan_world) <= 0.01:
+		return
+	_pan_world = target
+	_clamp_pan()
+	_canvas.queue_redraw()
+
+
+## The world-space offset (metres, same unit `_pan_world` is stored in) that
+## puts `world_pos` at the centre of the map rectangle — i.e. the pan value
+## `_world_to_canvas`/`_map_rect_for_canvas` need so that position renders at
+## the panel's own centre. Independent of `_zoom`: `_pan_world` is a world-
+## space quantity, not a screen-space one, so the same offset centres the
+## player at any zoom level once `_map_rect_for_canvas` scales the rectangle
+## around it.
+func _pan_world_for_player(world_pos: Vector3) -> Vector2:
+	var origin: Vector2 = MAP_STATE.origin()
+	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
+	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	return Vector2(
+		world_pos.x - (origin.x + span_x * 0.5),
+		world_pos.z - (origin.y + span_z * 0.5),
+	)
 
 
 func _next_zoom_level(direction: int) -> float:
@@ -263,6 +343,7 @@ func _next_zoom_level(direction: int) -> float:
 func _clamp_pan() -> void:
 	if _zoom <= MIN_ZOOM:
 		_pan_world = Vector2.ZERO
+		_manual_pan = false # whole-world fit has no "player" or "manual" focal point to remember
 		return
 	var span_x := float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
 	var span_z := float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
@@ -325,14 +406,15 @@ func _legend_entry(icon_name: String, label_text: String) -> Control:
 
 	var icon := TextureRect.new()
 	icon.texture = _icon_texture(icon_name)
-	icon.custom_minimum_size = Vector2(18, 18)
+	icon.custom_minimum_size = Vector2(24, 24)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(icon)
 
 	var label := Label.new()
 	label.text = label_text
-	label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	# OP21-15: see CANVAS_LABEL_FONT_SIZE's header — bumped past FONT_TINY.
+	label.add_theme_font_size_override("font_size", CANVAS_HEADING_FONT_SIZE + 2)
 	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	row.add_child(label)
 
@@ -473,7 +555,7 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 	if entries.is_empty():
 		return
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.desired_y) < float(b.desired_y))
-	const GAP := 34.0
+	const GAP := 38.0 # >= CANVAS_LABEL_FONT_SIZE's own line height, so bumped labels never touch
 	var cursor := top
 	for index in entries.size():
 		var entry := entries[index]
@@ -489,11 +571,22 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 		cursor = float(entry.label_y) - GAP
 
 
+## Every canvas-drawn label on this tab goes through here rather than a bare
+## `draw_string` — see `CANVAS_HEADING_FONT_SIZE`'s header for why:
+## `UITokens.make_text_legible()` only reaches `Label`/`RichTextLabel` nodes,
+## and every string this file draws is a raw `_draw()` call over a busy,
+## multi-coloured baked terrain texture, so it needs the SAME outline
+## treatment applied by hand rather than going unplated.
+func _draw_string_legible(canvas: Control, font: Font, baseline: Vector2, text: String, alignment: HorizontalAlignment, width: float, font_size: int, colour: Color) -> void:
+	canvas.draw_string_outline(font, baseline, text, alignment, width, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
+	canvas.draw_string(font, baseline, text, alignment, width, font_size, colour)
+
+
 func _draw_callout_heading(canvas: Control, text: String, rect: Rect2, alignment: HorizontalAlignment) -> void:
 	if rect.size.x <= 20.0:
 		return
-	var baseline := rect.position + Vector2(0.0, rect.size.y - _region_font.get_descent(UITokens.FONT_TINY))
-	canvas.draw_string(_region_font, baseline, text, alignment, rect.size.x, UITokens.FONT_TINY, UITokens.TEXT_MUTED)
+	var baseline := rect.position + Vector2(0.0, rect.size.y - _region_font.get_descent(CANVAS_HEADING_FONT_SIZE))
+	_draw_string_legible(canvas, _region_font, baseline, text, alignment, rect.size.x, CANVAS_HEADING_FONT_SIZE, UITokens.TEXT_SECONDARY)
 
 
 func _draw_region_callout(canvas: Control, map_rect: Rect2, callout: Dictionary) -> void:
@@ -505,8 +598,8 @@ func _draw_region_callout(canvas: Control, map_rect: Rect2, callout: Dictionary)
 	canvas.draw_polyline(PackedVector2Array([point, Vector2(map_rect.position.x - 8.0, point.y), line_end]), line_colour, 1.5, true)
 	canvas.draw_circle(point, 3.0, UITokens.TEAL)
 	var label_rect := Rect2(18.0, y - 12.0, maxf(map_rect.position.x - 48.0, 20.0), 24.0)
-	var baseline := label_rect.position + Vector2(0.0, label_rect.size.y - _region_font.get_descent(UITokens.FONT_LABEL))
-	canvas.draw_string(_region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_RIGHT, label_rect.size.x, UITokens.FONT_LABEL, UITokens.TEXT_SECONDARY)
+	var baseline := label_rect.position + Vector2(0.0, label_rect.size.y - _region_font.get_descent(CANVAS_LABEL_FONT_SIZE))
+	_draw_string_legible(canvas, _region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_RIGHT, label_rect.size.x, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_SECONDARY)
 
 
 func _draw_destination_callout(canvas: Control, map_rect: Rect2, callout: Dictionary) -> void:
@@ -523,7 +616,7 @@ func _draw_destination_callout(canvas: Control, map_rect: Rect2, callout: Dictio
 		text_x += 30.0
 	var label_width := maxf(canvas.size.x - text_x - 18.0, 20.0)
 	var baseline := Vector2(text_x, y + 7.0)
-	canvas.draw_string(_region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_LEFT, label_width, UITokens.FONT_LABEL, UITokens.TEXT_PRIMARY)
+	_draw_string_legible(canvas, _region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_LEFT, label_width, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_PRIMARY)
 
 
 func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> Array[Rect2]:
@@ -553,7 +646,11 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 	var player := _player_node()
 	if player != null:
 		var point := _world_to_canvas(Vector2(player.global_position.x, player.global_position.z), map_rect)
-		var exclusion := Rect2(point - Vector2(24.0, 24.0), Vector2(48.0, 48.0))
+		# Matches `_draw_player`'s own halo radius (`PLAYER_MARKER_RADIUS +
+		# PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0`) so a label never
+		# lands on top of the bigger OP21-15 legibility halo.
+		var player_radius := PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0
+		var exclusion := Rect2(point - Vector2(player_radius, player_radius), Vector2(player_radius, player_radius) * 2.0)
 		if viewport.intersects(exclusion):
 			occupied.append(exclusion)
 	return occupied
@@ -562,9 +659,9 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 func _marker_size(entry: Dictionary) -> float:
 	var category := str(entry.get("category", ""))
 	if category == "major":
-		return 32.0
+		return 38.0
 	if category == "minor":
-		return 22.0
+		return 26.0
 	return ICON_SIZE
 
 
@@ -621,10 +718,10 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 		return
 	placed.append(rect)
 	var text := str(region.get("display_name", ""))
-	var font_size := UITokens.FONT_LABEL
+	var font_size := CANVAS_LABEL_FONT_SIZE
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
-	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
+	_draw_string_legible(canvas, _region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 
 ## Returns the exact final text rect after collision avoidance. Kept separate
@@ -639,7 +736,7 @@ func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dicti
 	if text.is_empty():
 		return Rect2()
 	var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
-	var font_size := UITokens.FONT_LABEL
+	var font_size := CANVAS_LABEL_FONT_SIZE
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 
 	# PADDING is real breathing room, not the bare minimum that stops
@@ -708,6 +805,13 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: flo
 	# a position and no heading -- which was the entire point of adding it.
 	var base := point + forward * PLAYER_FACING_BASE
 	var tip := base + forward * PLAYER_FACING_LENGTH
+
+	# OP21-15: a dark halo behind the whole marker (dot + ring + arrow) so it
+	# reads against EVERY terrain colour it can land on, not just the darker
+	# half of the height ramp — the pale-high ground `map_baker.gd` bakes at
+	# the ramp's top end came closest to matching the cream ring outright.
+	canvas.draw_circle(point, PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0, Color(UITokens.OUTLINE, 0.55))
+
 	canvas.draw_colored_polygon(
 		PackedVector2Array([
 			tip,
@@ -717,7 +821,7 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: flo
 		UITokens.TEAL
 	)
 	canvas.draw_circle(point, PLAYER_MARKER_RADIUS, UITokens.TEAL)
-	canvas.draw_arc(point, PLAYER_MARKER_RADIUS + 3.0, 0.0, TAU, 16, UITokens.TEXT_PRIMARY, 1.5, true)
+	canvas.draw_arc(point, PLAYER_MARKER_RADIUS + 3.0, 0.0, TAU, 20, UITokens.TEXT_PRIMARY, 2.5, true)
 
 
 ## The camera's planar yaw, derived exactly as `playground_hud.gd` derives it

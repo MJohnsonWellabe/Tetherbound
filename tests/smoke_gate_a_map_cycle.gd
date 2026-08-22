@@ -149,23 +149,67 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if zoomed_rect.size.x < fit_rect.size.x * 3.5 or zoomed_rect.size.y < fit_rect.size.y * 3.5:
 		_fail("zoom changed state without visibly scaling the map presentation")
 		return
+
+	# OP21-15: zoom now recentres on the PLAYER's own world position (see
+	# tab_map.gd's `_follow_player_if_not_panned`), so this smoke's own
+	# player (spawned near the house, close to the corridor's south edge)
+	# is nowhere near the relay by the time RT has zoomed in once. A real
+	# numeric check, not "zoom was called" — two parts:
+	#
+	#  1. `_pan_world` right now must equal the CLAMPED player-follow target
+	#     `_pan_world_for_player(player pos)` produces — i.e. the view is
+	#     centred on the player, or as close to it as the world boundary
+	#     honestly allows, never merely "somewhere." Recomputed through the
+	#     tab's own functions (not duplicated math) so this cannot drift from
+	#     the real implementation, and restored immediately after so nothing
+	#     downstream sees a mutated tab.
+	#  2. Since this spawn sits close to the map's south edge, the clamp is
+	#     expected to engage on the Z axis — confirmed explicitly, so a
+	#     regression that stopped clamping (and let the view scroll off the
+	#     world) would also fail this rather than passing by accident.
+	var live_pan: Vector2 = map_tab.get("_pan_world")
+	var unclamped_target: Vector2 = map_tab.call("_pan_world_for_player", _player.global_position)
+	map_tab.set("_pan_world", unclamped_target)
+	map_tab.call("_clamp_pan")
+	var clamped_target: Vector2 = map_tab.get("_pan_world")
+	map_tab.set("_pan_world", live_pan)
+	if live_pan.distance_to(clamped_target) > 1.0:
+		_fail("zoomed full map did not keep the player centred (pan %s, expected clamped-to-player %s)" % [live_pan, clamped_target])
+		return
+	if unclamped_target.distance_to(clamped_target) < 10.0:
+		_fail("this smoke's spawn no longer sits near a map edge, so the boundary-clamp half of the OP21-15 check is not exercised — move the probe or the spawn")
+		return
+	print("  ok    zoom keeps the view pinned to the player (clamped %.1fm from the true target at this spawn, by the honest world-edge limit)" % unclamped_target.distance_to(clamped_target))
+
 	# The relay's named region and major destination intentionally share a
 	# centre. Their geometry is therefore the canonical regression case for
-	# label-vs-marker collision avoidance at local zoom.
+	# label-vs-marker collision avoidance at local zoom — checked here against
+	# a view independently panned to the relay itself (saved/restored around
+	# the probe) so the check stays meaningful regardless of where the
+	# player-following default pan above happens to have left the view.
 	var relay_centre := Vector2(348.0, 3756.0)
-	var relay_point: Vector2 = map_tab.call("_world_to_canvas", relay_centre, zoomed_rect)
+	var saved_pan: Vector2 = map_tab.get("_pan_world")
+	var saved_manual: bool = map_tab.get("_manual_pan")
+	map_tab.set("_manual_pan", true)
+	map_tab.set("_pan_world", map_tab.call("_pan_world_for_player", Vector3(relay_centre.x, 0.0, relay_centre.y)))
+	map_tab.call("_clamp_pan")
+	var relay_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	var relay_point: Vector2 = map_tab.call("_world_to_canvas", relay_centre, relay_rect)
 	var relay_marker_rect := Rect2(relay_point - Vector2(24.0, 24.0), Vector2(48.0, 48.0))
 	var relay_occupied: Array[Rect2] = [relay_marker_rect]
 	var relay_label_rect: Rect2 = map_tab.call(
 		"_resolved_region_label_rect",
 		canvas,
-		zoomed_rect,
+		relay_rect,
 		{"display_name": "The Tether Relay", "centre": relay_centre},
 		relay_occupied,
 	)
+	map_tab.set("_pan_world", saved_pan)
+	map_tab.set("_manual_pan", saved_manual)
 	if relay_label_rect.size == Vector2.ZERO or relay_label_rect.intersects(relay_marker_rect):
 		_fail("zoomed region label still overlaps its major destination marker")
 		return
+
 	var centre_before_pan := zoomed_rect.get_center()
 	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
 	if (map_tab.get("_pan_world") as Vector2).x <= 1.0:
