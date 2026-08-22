@@ -88,8 +88,25 @@ number, and the blind playtest independently reached the same place from the
 other side: at that rate Grandpa's opening 15 orbs is about two attempts, and
 nothing on the route restocks before Tam unlocks the recipe.
 
+**It is worse than an average, because the tutorial's safety net needs TWO
+landed throws.** `catch_math.gd::apply_failure_bound` guarantees the catch on
+the second LANDED throw, and `smoke_gate_a_opening_segment.gd` spends eight
+orbs. At a 36% strike rate the chance of landing at most one in eight is
+**15.5% — roughly one fresh save in six** where the bound never fires and the
+chapter's first taught mechanic simply fails. That is not a tail case; it was
+observed directly, twice, as `eight natural weakened-target launches produced
+1 strike(s), 7 miss(es), and no catch`, on the FIXED aim path.
+
+So the honest state is: the aim defect is fixed and the mechanic works most of
+the time, and about one player in six is told to catch something and cannot.
+Gate B sits downstream of this beat.
+
 **Do not fix this by widening the assist reticle without playing it.** Two
-separate things were already wrong here and both were mistaken for odds tuning.
+separate things were already wrong here and both were mistaken for odds tuning
+— see `dc4724b` (the aim loop drove the rig PIVOT's yaw while the aim camera
+sits offset over the shoulder) and `d1ec734` (the throw button had no pad
+binding at all, so nothing was ever launched). A third round of "raise the
+numbers" without reproducing first would be the same mistake again.
 
 ### ORB-BLOCKED — your own creature eats your orbs, silently · `model: sonnet` · `tests: smoke_controller_catching`
 
