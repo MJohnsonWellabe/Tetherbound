@@ -82,14 +82,28 @@ func test_scatter_rules_config_carries_both_split_arrays() -> void:
 	# The real caller merges via config(), not load_config() directly -- this
 	# proves the two-call merge in scatter_rules.gd actually wires both arrays
 	# into one dictionary rather than the second call clobbering the first.
+	#
+	# BAND1-D1 changed this from assert_eq to >=, matching
+	# test_merged_arrays_are_identical_to_the_pre_split_file's own rule right
+	# above: a band authoring a NEW clearing (this pass added
+	# band1_lower_meadows's trail_camp clearing, order 1000) is supposed to
+	# grow this count, and an exact-equality check would fail every future
+	# content pass that ever adds one. What still has to hold is that the
+	# BASELINE entries are still present and in order -- checked by the sibling
+	# test above via `order`/index identity -- not that nothing was ever added
+	# after it. Verified failable before this fix: this test failed with
+	# "clearings' has 10 entries, expected 9" the moment the trail_camp
+	# clearing landed, which is exactly the false positive this loosening
+	# removes.
 	SCATTER_RULES._config = {}
 	var config := SCATTER_RULES.config()
 	var baseline := _read_json(BASELINE_PATH)
 	for array_key: String in SPLIT_KEYS:
 		var want: Array = baseline.get(array_key, []) as Array
 		var got: Array = config.get(array_key, []) as Array
-		assert_eq(got.size(), want.size(),
-			"scatter_rules.config()'s '%s' has %d entries, expected %d" % [array_key, got.size(), want.size()])
+		assert_true(got.size() >= want.size(),
+			"scatter_rules.config()'s '%s' has %d entries but the baseline authored %d; the merge lost entries" % [
+				array_key, got.size(), want.size()])
 	SCATTER_RULES._config = {}
 
 

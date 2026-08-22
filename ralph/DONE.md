@@ -3,7 +3,89 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
-## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
+## BAND1-D1 — Lower Meadows dead-travel fill and density raise
+
+`tests: test_band_content.gd, test_band_vegetation.gd (1 assertion loosened, see below), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, test_map_landmarks.gd, test_map_icons.gd, full suite` · `area: content/band1`
+
+Prompt 62, gate D lane D1. Two problems, one pass: the 2026-08-21 owner
+playtest calling the pond-to-South-Bridge stretch "long, bare and boring",
+and the later 2026-08-22 owner directive comparing Meadows wild density
+unfavourably to Pokemon/Palworld/even Valheim's deer and boar.
+
+`tools/_probe_band1_cadence.py` (new) projects every authored trainer/wild/
+harvest/prop position onto band1's real spine polyline (not a straight line)
+and reports the longest gap between on-route points. Baseline: **1600m**, 73%
+of the band's own 2403m arc length, between the pond and South Bridge — every
+one of band1's 8 trainers, 8 wild clusters and 14 gatherables sat within
+~550m of the village or the pond, and the 760m spine leg south of the pond
+carried nothing at all.
+
+First pass added 9 hand-sited corridor entries (4 wild clusters, 5
+gatherables, 1 prop cluster — `trail_camp`, reusing the existing trainer_camp
+Bag/Crate_Wooden/Barrel composition rather than a new prop grammar) at the
+spine's own bends, each position checked against the probe. That alone cut
+the longest gap to 378m. Then the owner's density directive raised the bar
+much further: `tools/_gen_band1_density.py` (new, throwaway generator, not
+part of the shipped data path) walks the spine at ~55m arc steps, alternating
+lateral offset and species by locale (pond-edge species near the pond,
+grove-flavoured near the oak_grove_ring, open-field species otherwise), and
+adds 5 off-route habitat pockets. Its output was hand-reviewed for collisions
+with authored structures (one cluster that landed on the mill's own footprint
+was nudged off it and away from the existing pond-edge clusters it would
+otherwise have overlapped) and spliced into `spawns.json`.
+
+Result: **56 wild clusters, 200 creatures** (from 8/16), inside the owner's
+45-60 cluster / 170-260 creature target. **19 authored gatherables** (from
+14). Longest on-route dead-travel gap: **84m** (from 1600m). All 9 roster
+species (including a first Band-1 sighting of meadowhart, wild and off-route
+rather than trainer-owned) are represented; nothing was invented.
+
+The meadowhart cluster (spawns order 1005) is also this band's optional
+detour, coordinated with prompt 30's approved "Meadowhart Herd" beat rather
+than a new quest system: ~220m off the spine near the bridge approach, wild
+and therefore catchable (SH47's band-2 herd, just past the bridge, exists for
+the rideable-in-stride fix, not as an early sighting — this is the only place
+in the band a player can see or catch one before the tournament's own mount
+reward makes them want to).
+
+`test_band_vegetation.gd::test_scatter_rules_config_carries_both_split_arrays`
+asserted the merged `clearings` array's size EXACTLY matched a frozen
+pre-split baseline (9) — a check that could never survive any band ever
+authoring a new clearing, which is exactly what `trail_camp`'s own clearing
+did. Loosened to `>=`, matching the sibling test three lines above it that
+already uses the correct rule; the baseline-identity check (order/index/value
+per entry) is untouched.
+
+**Deliberately not touched: the village trainer clump.** `trainer_mira`/
+`trainer_oskar`/`trainer_tam` (band1 trainers.json orders 1-3) sit within
+30m of the village centre, and the lane brief asked whether siting them
+along the routes their names describe (Meadow Keeper, Bridgehand, Field
+Scout) would serve the region better. Investigated and declined: their
+`trainers.json` `position` is not a freestanding picket spawn -- `placed_by:
+"village_npcs"` means these entries ride the SAME villager body
+`village_npcs.json` places, and that file's Mira is inside cottage_a behind
+her shop counter, Oskar and Tam stand in the square with their own
+`greeting_when` vendor/gift dialogue ladders, and the tournament marshal's
+own bracket references all three standing in the square (`village_npcs.json`
+`_comment_tournament_1`). Moving their `trainers.json` position without
+rebuilding their shop/dialogue placement would desync the two, and rebuilding
+that placement is a real, separate scope this lane did not have room for
+alongside the density raise -- flagged rather than silently attempted or
+silently dropped. `south_bridge_grunt` (order 1000) already sits at the far
+end as the band's second trainer beat; the 56 new wild clusters are what now
+fill the 1300m between them.
+
+Not done: the mandatory blind visual pass on the new `trail_camp` prop
+cluster (`tools/capture_trail_camp.gd`, written but not yet run against
+`.claude/skills/visual-judge` — see this lane's own report for why: render
+contention from four sibling Gate-D lanes running full suites concurrently
+on the same box made a render pass unaffordable inside this session).
+Boot/frame-time cost of the density raise is expected and is not this lane's
+problem to solve — GATE_D coordinator is dispatching a dedicated streaming
+lane for `encounter_director.gd`/`wild_creature.gd` distance-based
+activation; neither file was touched here.
+
+
 
 `tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
 

@@ -1,17 +1,681 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
   "spawns": [
-    {"order": 0, "species": "bramblebun", "count": 3, "centre": [30.0, 0.0, -40.0], "radius": 15.0, "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved. Also the `practice` role and the Practice Meadow itself is section 10.1's own unmoved list."},
-    {"order": 1, "species": "mudsnout", "count": 2, "centre": [-60.0, 0.0, 20.0], "radius": 12.0, "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved."},
-    {"order": 6, "species": "paddlenewt", "count": 2, "centre": [-370.0, 0.0, 537.0], "radius": 14.0, "_why_ow5d": "pond species, moves with the pond per section 10.2's own row (same (-250,+407) offset as `water.pond_centre`)."},
-    {"order": 7, "species": "mosshell", "count": 1, "centre": [-380.0, 0.0, 552.0], "radius": 10.0, "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."},
-    {"order": 8, "species": "brooktail", "count": 2, "centre": [-360.0, 0.0, 522.0], "radius": 14.0, "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."},
-    {"order": 10, "species": "pipwing", "count": 3, "centre": [20.0, 0.0, 80.0], "radius": 20.0, "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved."},
-    {"order": 11, "species": "reedwing", "count": 2, "centre": [-340.0, 0.0, 507.0], "radius": 15.0, "weather": ["rain"], "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above. `weather: [rain]` gate unchanged."},
-    {"order": 12, "species": "galecrest", "count": 1, "centre": [35.0, 0.0, -115.0], "radius": 12.0, "_why_wall1": "Moved off Captain Halder -- see _comment_galecrest_wall1 above. This supersedes the _why_ow5d note below, which was written before the cause was known and left the cluster at [55,-120].", "_why_ow5d": "DELIBERATE DEPARTURE from a literal Band-4 ecology read -- see this file's top-level `_comment_ow5d`. Galecrest is section 5's 'upper ridge' species and the `aggressor` role read by encounter_director.gd. tests/smoke_aggression.gd hard-codes WALK_FRAMES against this exact cluster being ~95m from the practice cluster; moving it to Band 4 would silently break that test's timing budget. Left UNMOVED and flagged rather than resolved -- test files are out of this task's scope."},
-    {"order": 1002, "species": "pipwing", "count": 2, "centre": [-20.0, 0.0, 700.0], "radius": 14.0, "_why_d1": "BAND1-D1. Everything the pond hands off to south of z=552 was empty until this pass -- no wild, no gatherable, no prop, for the ~760m the spine runs before South Bridge -- and the 2026-08-21 owner playtest calls that exact stretch out by name ('pond-to-village travel feels long, bare and boring'). This is the first of three field clusters that break it up: a common species right beside the spine's own (-50,700) vertex, so the quiet resumes gradually rather than all 760m landing at once. Position checked against tools/_probe_band1_cadence.py -- lateral offset from the spine is ~35m, on-route by that probe's own 60m call."},
-    {"order": 1003, "species": "bramblebun", "count": 2, "centre": [140.0, 0.0, 800.0], "radius": 16.0, "_why_d1": "BAND1-D1. Second corridor cluster, west of the spine as it swings out through (90,760)/(230,830) -- far enough from the pipwing cluster above that the two engage prompts do not contest each other, close enough that the stretch between them still reads as travelled ground rather than another dead interval. tools/_probe_band1_cadence.py: ~35m lateral."},
-    {"order": 1004, "species": "mudsnout", "count": 2, "centre": [380.0, 0.0, 970.0], "radius": 16.0, "_why_d1": "BAND1-D1. Third corridor cluster, beside the spine's own eastward bulge through (360,910)/(430,1020) -- the last ordinary wild stop before the south_bridge_grunt checkpoint, so the run into the gate does not go quiet again after cluster 1003. tools/_probe_band1_cadence.py: ~30m lateral."},
-    {"order": 1005, "species": "meadowhart", "count": 2, "centre": [-150.0, 0.0, 1230.0], "radius": 22.0, "_why_d1": "BAND1-D1 optional detour, coordinated with prompt 30's approved 'Meadowhart Herd' beat rather than inventing a separate quest. Deliberately OFF the spine (the route here runs (330,1130)-(180,1200)-(30,1250), swinging back toward South Bridge; the spine's own x at z=1230 is ~70) so finding the herd costs a real decision to leave the direct line to the bridge, not a glance sideways -- tools/_probe_band1_cadence.py measures the lateral offset at ~220m, clearly off-route rather than borderline. Meadowhart is otherwise unseen in Band 1 -- SH47 sited the band 2 herd just past the bridge for the rideable-in-stride fix, not as an early sighting -- so this is the only place in the band a player can lay eyes on (and, since it is wild and not trainer-owned, legally catch) the species the tournament final's mount and the saddle recipe already made them want. Same wild_band [2,6] as every other cluster in the file; nothing about being a detour makes it a different creature."}
+    {
+      "order": 0,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        30.0,
+        0.0,
+        -40.0
+      ],
+      "radius": 15.0,
+      "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved. Also the `practice` role and the Practice Meadow itself is section 10.1's own unmoved list."
+    },
+    {
+      "order": 1,
+      "species": "mudsnout",
+      "count": 2,
+      "centre": [
+        -60.0,
+        0.0,
+        20.0
+      ],
+      "radius": 12.0,
+      "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved."
+    },
+    {
+      "order": 6,
+      "species": "paddlenewt",
+      "count": 2,
+      "centre": [
+        -370.0,
+        0.0,
+        537.0
+      ],
+      "radius": 14.0,
+      "_why_ow5d": "pond species, moves with the pond per section 10.2's own row (same (-250,+407) offset as `water.pond_centre`)."
+    },
+    {
+      "order": 7,
+      "species": "mosshell",
+      "count": 1,
+      "centre": [
+        -380.0,
+        0.0,
+        552.0
+      ],
+      "radius": 10.0,
+      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."
+    },
+    {
+      "order": 8,
+      "species": "brooktail",
+      "count": 2,
+      "centre": [
+        -360.0,
+        0.0,
+        522.0
+      ],
+      "radius": 14.0,
+      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."
+    },
+    {
+      "order": 10,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        20.0,
+        0.0,
+        80.0
+      ],
+      "radius": 20.0,
+      "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved."
+    },
+    {
+      "order": 11,
+      "species": "reedwing",
+      "count": 2,
+      "centre": [
+        -340.0,
+        0.0,
+        507.0
+      ],
+      "radius": 15.0,
+      "weather": [
+        "rain"
+      ],
+      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above. `weather: [rain]` gate unchanged."
+    },
+    {
+      "order": 12,
+      "species": "galecrest",
+      "count": 1,
+      "centre": [
+        35.0,
+        0.0,
+        -115.0
+      ],
+      "radius": 12.0,
+      "_why_wall1": "Moved off Captain Halder -- see _comment_galecrest_wall1 above. This supersedes the _why_ow5d note below, which was written before the cause was known and left the cluster at [55,-120].",
+      "_why_ow5d": "DELIBERATE DEPARTURE from a literal Band-4 ecology read -- see this file's top-level `_comment_ow5d`. Galecrest is section 5's 'upper ridge' species and the `aggressor` role read by encounter_director.gd. tests/smoke_aggression.gd hard-codes WALK_FRAMES against this exact cluster being ~95m from the practice cluster; moving it to Band 4 would silently break that test's timing budget. Left UNMOVED and flagged rather than resolved -- test files are out of this task's scope."
+    },
+    {
+      "order": 1002,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [
+        -20.0,
+        0.0,
+        700.0
+      ],
+      "radius": 14.0,
+      "_why_d1": "BAND1-D1. Everything the pond hands off to south of z=552 was empty until this pass -- no wild, no gatherable, no prop, for the ~760m the spine runs before South Bridge -- and the 2026-08-21 owner playtest calls that exact stretch out by name ('pond-to-village travel feels long, bare and boring'). This is the first of three field clusters that break it up: a common species right beside the spine's own (-50,700) vertex, so the quiet resumes gradually rather than all 760m landing at once. Position checked against tools/_probe_band1_cadence.py -- lateral offset from the spine is ~35m, on-route by that probe's own 60m call."
+    },
+    {
+      "order": 1003,
+      "species": "bramblebun",
+      "count": 2,
+      "centre": [
+        140.0,
+        0.0,
+        800.0
+      ],
+      "radius": 16.0,
+      "_why_d1": "BAND1-D1. Second corridor cluster, west of the spine as it swings out through (90,760)/(230,830) -- far enough from the pipwing cluster above that the two engage prompts do not contest each other, close enough that the stretch between them still reads as travelled ground rather than another dead interval. tools/_probe_band1_cadence.py: ~35m lateral."
+    },
+    {
+      "order": 1004,
+      "species": "mudsnout",
+      "count": 2,
+      "centre": [
+        380.0,
+        0.0,
+        970.0
+      ],
+      "radius": 16.0,
+      "_why_d1": "BAND1-D1. Third corridor cluster, beside the spine's own eastward bulge through (360,910)/(430,1020) -- the last ordinary wild stop before the south_bridge_grunt checkpoint, so the run into the gate does not go quiet again after cluster 1003. tools/_probe_band1_cadence.py: ~30m lateral."
+    },
+    {
+      "order": 1005,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        -150.0,
+        0.0,
+        1230.0
+      ],
+      "radius": 22.0,
+      "_why_d1": "BAND1-D1 optional detour, coordinated with prompt 30's approved 'Meadowhart Herd' beat rather than inventing a separate quest. Deliberately OFF the spine (the route here runs (330,1130)-(180,1200)-(30,1250), swinging back toward South Bridge; the spine's own x at z=1230 is ~70) so finding the herd costs a real decision to leave the direct line to the bridge, not a glance sideways -- tools/_probe_band1_cadence.py measures the lateral offset at ~220m, clearly off-route rather than borderline. Meadowhart is otherwise unseen in Band 1 -- SH47 sited the band 2 herd just past the bridge for the rideable-in-stride fix, not as an early sighting -- so this is the only place in the band a player can lay eyes on (and, since it is wild and not trainer-owned, legally catch) the species the tournament final's mount and the saddle recipe already made them want. Same wild_band [2,6] as every other cluster in the file; nothing about being a detour makes it a different creature."
+    },
+    {
+      "order": 1006,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        -2.4,
+        0.0,
+        35.2
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~55m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1007,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        31.2,
+        0.0,
+        103.8
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~110m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1008,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        -52.9,
+        0.0,
+        121.3
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~165m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1009,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        -35.0,
+        0.0,
+        196.9
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~220m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1010,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [
+        -102.9,
+        0.0,
+        210.1
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~275m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1011,
+      "species": "mudsnout",
+      "count": 5,
+      "centre": [
+        -90.1,
+        0.0,
+        295.1
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~330m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1012,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        -174.5,
+        0.0,
+        282.6
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~385m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1013,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        -202.7,
+        0.0,
+        345.8
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~440m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1014,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        -282.5,
+        0.0,
+        314.0
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~495m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1015,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        -305.3,
+        0.0,
+        387.6
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~550m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1016,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        -383.3,
+        0.0,
+        386.3
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~605m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1017,
+      "species": "reedwing",
+      "count": 5,
+      "centre": [
+        -357.1,
+        0.0,
+        468.1
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~660m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1018,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        -432.2,
+        0.0,
+        485.5
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~715m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1019,
+      "species": "mosshell",
+      "count": 4,
+      "centre": [
+        -345.0,
+        0.0,
+        595.0
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~770m arc, 27m lateral, right side of the spine. Nudged off the mill/footbridge footprint by hand -- see tools/_gen_band1_density.py's own OVERRIDES."
+    },
+    {
+      "order": 1020,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        -383.7,
+        0.0,
+        597.0
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~825m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1021,
+      "species": "reedwing",
+      "count": 3,
+      "centre": [
+        -308.0,
+        0.0,
+        583.1
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~880m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1022,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [
+        -274.0,
+        0.0,
+        643.4
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~935m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1023,
+      "species": "mudsnout",
+      "count": 5,
+      "centre": [
+        -197.5,
+        0.0,
+        604.4
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~990m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1024,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        -166.6,
+        0.0,
+        674.3
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1045m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1025,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        -100.7,
+        0.0,
+        653.2
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1100m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1026,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        -71.1,
+        0.0,
+        733.9
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1155m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1027,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        49.2,
+        0.0,
+        726.2
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1265m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1028,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        81.7,
+        0.0,
+        786.0
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1320m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1029,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        209.6,
+        0.0,
+        776.2
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1430m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1030,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        232.9,
+        0.0,
+        849.4
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1485m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1031,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        301.8,
+        0.0,
+        842.5
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1540m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1032,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        314.0,
+        0.0,
+        927.5
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1595m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1033,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        386.1,
+        0.0,
+        923.1
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1650m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1034,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [
+        406.9,
+        0.0,
+        1005.3
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1760m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1035,
+      "species": "mudsnout",
+      "count": 5,
+      "centre": [
+        418.7,
+        0.0,
+        1090.4
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1815m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1036,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        341.8,
+        0.0,
+        1094.7
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1870m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1037,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        322.4,
+        0.0,
+        1163.3
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1925m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1038,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        244.7,
+        0.0,
+        1126.8
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~1980m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1039,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        217.7,
+        0.0,
+        1199.0
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2035m arc, 15m lateral, right side of the spine."
+    },
+    {
+      "order": 1040,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        152.1,
+        0.0,
+        1180.9
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2090m arc, 27m lateral, left side of the spine."
+    },
+    {
+      "order": 1041,
+      "species": "galecrest",
+      "count": 5,
+      "centre": [
+        120.8,
+        0.0,
+        1260.9
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2145m arc, 39m lateral, right side of the spine."
+    },
+    {
+      "order": 1042,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        51.5,
+        0.0,
+        1227.0
+      ],
+      "radius": 14.2,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2200m arc, 15m lateral, left side of the spine."
+    },
+    {
+      "order": 1043,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        26.8,
+        0.0,
+        1288.3
+      ],
+      "radius": 15.6,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2255m arc, 27m lateral, right side of the spine."
+    },
+    {
+      "order": 1044,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        -57.9,
+        0.0,
+        1274.0
+      ],
+      "radius": 17.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~2310m arc, 39m lateral, left side of the spine."
+    },
+    {
+      "order": 1045,
+      "species": "brooktail",
+      "count": 4,
+      "centre": [
+        -420.0,
+        0.0,
+        610.0
+      ],
+      "radius": 17.6,
+      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. far shore of the pond, past the approved lush pocket -- a second pond-edge pull for a player who circles the water rather than crossing at the mill."
+    },
+    {
+      "order": 1046,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        330.0,
+        0.0,
+        780.0
+      ],
+      "radius": 17.6,
+      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. the oak grove ring's own far side (leaves centre (230,830)), off the spine's (230,830) vertex by ~110m -- a grove interior pocket rather than another roadside cluster."
+    },
+    {
+      "order": 1047,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        -260.0,
+        0.0,
+        950.0
+      ],
+      "radius": 19.0,
+      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. open field well west of the spine's eastward bulge through (360,910)/(430,1020) -- rewards cutting the corner instead of following the road's own longer arc."
+    },
+    {
+      "order": 1048,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        500.0,
+        0.0,
+        1050.0
+      ],
+      "radius": 16.2,
+      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. the open rise east of the spine near its (430,1020) apex -- a second galecrest sighting away from the practice-meadow original, echoing the 'upper ridge' aggressor role out here."
+    },
+    {
+      "order": 1049,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -30.0,
+        0.0,
+        1150.0
+      ],
+      "radius": 17.6,
+      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. a pocket short of the South Bridge approach, west of the spine's return swing through (30,1250) -- keeps the final stretch from reading as road-only even though the immediate run-in to the grunt checkpoint stays clear by design."
+    }
   ]
 }
