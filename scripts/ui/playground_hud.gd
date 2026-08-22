@@ -2450,12 +2450,27 @@ func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = 
 ##
 ## The hotbar is already inert while the selector is open, so nothing readable
 ## is being taken away — only the drawing of it.
+##
+## The same argument, unchanged, applies to every other panel that docks along
+## this strip and owns input while it is up. A blind visual critic shown
+## `shots/ui_glyphs/dialogue-panel.png` reported it: Grandpa's conversation box
+## covers most of the hotbar and leaves slot 5 stranded to its right, with dim
+## slot ghosts reading through the panel — "either hide the hotbar during
+## dialogue or place the panel clear of it". That is OW11's own sentence about
+## the build selector, one panel along.
+##
+## `input_owner.gd::GROUP` is the right question rather than a list of panel
+## types: the contract is already "a panel that owns input while it is up joins
+## GROUP", `dialogue_panel.gd` joins it on open, and
+## `_exploration_legend_should_show()` above already stands the legend down on
+## exactly this predicate. The hotbar is inert whenever something owns input,
+## so again only the drawing of it is taken away.
 func _yield_bottom_to_build_menu() -> void:
-	var building := _build_menu_is_open()
+	var yielding := _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
 	if _hotbar_panel != null:
-		_hotbar_panel.visible = not building
+		_hotbar_panel.visible = not yielding
 	if _prompt_label != null:
-		_prompt_label.visible = not building
+		_prompt_label.visible = not yielding
 
 
 func _build_menu_is_open() -> bool:

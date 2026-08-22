@@ -336,11 +336,41 @@ func _catch_with_real_throws() -> bool:
 	_checkpoint("satchel drained to %d orb(s) so the empty case is on the real path" % drained)
 	var launches := 0
 	var restocked := false
+	var re_engages := 0
 	# Generous, not unbounded: with the floor in place the opening never refuses
 	# a throw, so the only honest reason to stop is that catching is broken.
 	while launches < 40:
 		if not bool(_combat.call("is_fighting")):
-			break
+			# The fight ENDED, which over a long catch usually means your own
+			# creature finished the Bramblebun off -- the launch log shows it
+			# intercepting orbs (`first_hit=AllyCreature`) throughout. The
+			# design expects this: `sequence_director.gd::_on_combat_exited`
+			# says so in as many words -- "They won it instead of catching it,
+			# or ran... the beat stays where it is and they get another go",
+			# and species.json gives this creature the highest catch rate in
+			# the game precisely so the tutorial catch need not land first
+			# time. The encounter director stands it back up.
+			#
+			# So a player walks back and engages again, and giving up here
+			# reported a broken game for a beat working as written.
+			if re_engages >= 3:
+				_fail("the fight ended %d times without a catch; the tutorial creature "
+					% re_engages + "is being killed faster than it can be caught")
+				return false
+			re_engages += 1
+			var revived := await _wait_for_the_bramblebun_back_on_its_feet()
+			if revived == null:
+				_fail("the fight ended after launch %d and no Bramblebun came back"
+					% launches)
+				return false
+			_wild = revived
+			_checkpoint("the Bramblebun was knocked out; re-engaging it (%d)" % re_engages)
+			if not await _walk_to_and_engage_wild(_wild, 1800):
+				_fail("could not re-engage the respawned Bramblebun")
+				return false
+			if not await _fight_until_catchable():
+				return false
+			continue
 		# A resolved throw has a production 0.9s cooldown. One press during that
 		# window is deliberately ignored, so retry until a real aim opens instead
 		# of counting the ignored press as one of this evidence run's launches.
@@ -795,3 +825,18 @@ func _why_the_aim_would_not_open() -> String:
 	if _orbs_held() <= 0:
 		return "the satchel was empty and the floor did not refill it"
 	return "the aim simply never opened; orbs=%d, target upright" % _orbs_held()
+
+
+## Wait for the encounter director to put the practice creature back up.
+##
+## Returns the live body, or null if none came back inside the budget. Asked of
+## the director rather than by node name: the respawn is a NEW body, so a cached
+## `_wild` from before the knockout is a freed handle.
+func _wait_for_the_bramblebun_back_on_its_feet() -> Node3D:
+	for _i in 900:
+		var body := _encounter.call("wild_creature") as Node3D
+		if body != null and is_instance_valid(body) and body.visible \
+				and body.has_method("is_alive") and bool(body.call("is_alive")):
+			return body
+		await physics_frame
+	return null
