@@ -32,7 +32,23 @@
         "Fine. Go down. You'll last about as long as the last one who did.",
         "Something's been living in there since long before we started digging, and it doesn't care whose badge you're not wearing."
       ]
+    },
+    "band2_kest_challenge": {
+      "speaker": "Kest",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You cleared the warrens and kept walking. Most don't.",
+        "Doesn't matter to me why. You're still on the wrong side of this road."
+      ]
+    },
+    "band2_kest_defeated": {
+      "speaker": "Kest",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Go on, then. Not like I'm the last one you'll run into between here and the river.",
+        "Tell whoever's paying you attention that the seams don't end at the warrens door."
+      ]
     }
   },
-  "_comment_trainers": "TRAINER-JOURNEY. The two Team Tether pickets this band gained (data/config/bands/band2_stone_and_root/trainers.json). This file was filed in 2026-08-17 for exactly this -- a band with a trainer shipping and nowhere to put its lines -- and has been an empty container since. Doctrine, not lore dump (prompt 59): each of the four speeches is two lines, both men are talking about their job, and neither explains Team Tether to a stranger. Nothing here names the legendary; tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces that across every dialogue file and the stronghold is the only place that rung is spoken."
+  "_comment_trainers": "TRAINER-JOURNEY, then BAND2-63. The band's third Team Tether picket (data/config/bands/band2_stone_and_root/trainers.json order 2002) added a third pair of lines to the same shape the first two already use. Doctrine, not lore dump (prompt 59): two lines each, talking about the job, no legendary name (tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces that everywhere). Kest's own lines are the one place in this file that looks FORWARD rather than at the door behind him -- 'between here and the river' is the region handing the player off to Band 3 the same way Dorn handed off to Pell."
 }

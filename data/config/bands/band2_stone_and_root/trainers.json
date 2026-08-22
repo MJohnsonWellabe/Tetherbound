@@ -1,6 +1,7 @@
 {
   "_comment": "BAND-SPLIT. Band-local trainers for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
   "_comment_mq2b": "MQ2B checked this deliberately rather than leaving it empty by omission. Neither `docs/MEADOWS_PROGRESSION_SPEC.md` section 3 nor `docs/MEADOWS_MACRO_LAYOUT.md` names a Band 2 trainer, and the macro-layout doc calls this band's human occupation 'abandoned' -- the ranger camp is empty, the quarry has nobody in it. The band's required fight is the Burrow Warrens guardian (burrow_warrens.json), not a trainer battle. If a future pass wants a Band 2 trainer, that is new named-character authorship (CLAUDE.md's ask-before-inventing list), not a gap this file forgot to fill.",
+  "_comment_band2_63_third_picket": "BAND2-63. That reasoning held at two pickets over 1820m; the coordinator's own checkpoint flagged it as close to prompt 59's 'no major region is simply wild traversal followed by one boss' with the Warrens guardian standing in for the boss. A THIRD grunt, past the Warrens rather than before it, is the same ordinary picket-siting CLAUDE.md's ask-list already exempts (an unnamed rank-and-file member of an existing faction, on the existing grunt rig, material-differentiated the way Dorn and Pell already are) -- not the new named character with real story weight the header comment above was actually warning against. Sited deep in the oak forest past the Warrens' second mouth, escalating past Pell the same way Pell escalated past Dorn, and reinforcing the region's own curiosity beat: Team Tether did not stop at the quarry or the warrens, they are still moving south toward wherever Band 3's relay picks them up.",
   "trainers": [
     {
       "order": 2000,
@@ -85,6 +86,32 @@
       },
       "_why_reward": "Orbs rather than coins alone: the warrens is immediately behind him and this band's field is the strongest the player has met, so the reward for clearing the door is the means to catch what is behind it. Same shape as trainer_tam's orb payout in Band 1, one band up.",
       "defeat_flag": "defeated_warrens_pell",
+      "rechallenge": false
+    },
+    {
+      "order": 2002,
+      "id": "band2_outrider_kest",
+      "name": "Kest",
+      "_comment": "See `_comment_band2_63_third_picket` above. Levels 12-12, above Pell's 10-11 and still inside Band 2's authored trainer band [9,14] -- the third and final step in this band's own escalation before the region hands off to Band 3's relay pickets (9-10) and captain (11-12), so the ladder climbs steadily rather than resetting at the band seam. TUNABLE.",
+      "rank": "grunt",
+      "position": [0.0, 2980.0],
+      "facing_deg": -142.4,
+      "_why_here": "Deep in the oak forest past the Warrens' second mouth (`warren_undertrail` loop rejoins at -180,2730), on the spine's own approach from (-100,2850) -- derived the same way Dorn's facing was, from the previous spine point. Standing this far past the dungeon, on the road toward the River Lock, is the point of him: Team Tether's presence in this band did not end at the warrens door, it is still moving south.",
+      "challenge": "band2_kest_challenge",
+      "defeated": "band2_kest_defeated",
+      "team": [
+        {"species": "burrowback", "level": 12},
+        {"species": "duskhush", "level": 12}
+      ],
+      "_why_team": "Ground and Air again, the same pairing Pell used one fight back -- Kest is not a harder LESSON than Pell, he is the same lesson held at a higher level, which is what a third picket in one band should be rather than inventing a new type problem the band's own field never poses.",
+      "reward": {
+        "coins": 45,
+        "items": [
+          {"id": "potion_small", "count": 2}
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_band2_outrider_kest",
       "rechallenge": false
     }
   ],
