@@ -3,6 +3,124 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## STREAM-D — distance-based activation for wild creatures
+
+`tests: smoke_wild_streaming.gd (new, run standalone -- not test_case.gd-shaped, see its own header), tools/_probe_wild_streaming.gd (new probe)` · `area: combat/creatures`
+
+The owner has directed wild density up from ~70 to roughly 700-1100 across
+the chapter's five bands (the content lanes are authoring toward that now).
+Two things in the engine did not scale to it: `encounter_director.gd`'s
+`_spawn_creatures()` instantiates every creature at world load and never
+despawns any, and `wild_creature.gd`'s `_physics_process()` ticks every
+spawned creature every frame regardless of distance from the player.
+
+This closes the second one. `_tick_streaming()`, ticked once per
+`_process()` from `encounter_director.gd`, checks the player's distance
+against each spawns.json CLUSTER's own centre and radius -- not against
+every individual creature -- so the check scales with band count rather
+than population. A cluster within its own radius plus an activation margin
+(the larger of `catching.json`'s `aggression.notice_range` and
+`combat.json`'s `wild.notice_range`, plus headroom, so a creature is never
+activated already inside its own detection range) keeps ticking exactly as
+before; everything else calls `set_physics_process(false)` on its members
+and touches nothing else.
+
+That "touches nothing else" is the load-bearing part. Deactivation never
+frees or rebuilds a body, never moves it, and never re-rolls its level,
+IVs, traits or shiny status -- it flips one flag, the same one
+`notify_fainted()` already uses. A creature that walks back into range is
+the exact node it was, which is what keeps this compatible with
+`_spawn_creatures()`'s own determinism promise (same seed, same meadow
+every boot): the per-cluster `rng` is spent once, at boot, and streaming
+never asks it for anything.
+
+Guards the same three states `_sync_spawn_gates()` already guards, for the
+same reason: a creature `_engaged_with` (a fight, which is also where a
+catch happens), fainting (`_faint_timers`) or respawning
+(`_respawn_timers`) owns its own `physics_process` already, and switching
+it off from under any of those would be exactly the "deactivated
+mid-catch" bug this was written to avoid. A gated-invisible creature
+(R5.3's time/weather gate) is left alone entirely: `creature_body.gd`'s
+`_on_visibility_changed()` already ties visibility to `physics_process`,
+and fighting over the same flag from two systems would just mean whichever
+ran last in `_process()` wins -- `_tick_streaming()` runs after
+`_sync_spawn_gates()` in `_process()` for the same reason, so a gate that
+just opened is not immediately re-closed by a stale distance check from
+earlier in the same frame.
+
+One real bug found and closed along the way: `_tick_respawn()`'s
+`revive_at_home()` call turns `physics_process` back on unconditionally
+(right, on its own terms -- a creature standing still fainted forever is
+not "revived"), so a creature that respawns while its cluster is still
+marked inactive would otherwise stay awake until the next time the
+player's distance to that exact cluster happened to cross the activation
+radius -- which, for a cluster the player has already walked away from,
+could be a very long time. A new `_wild_cluster` member -> cluster lookup
+fixes it: a revived creature is put back to sleep immediately if its
+cluster is still inactive.
+
+`tools/_probe_wild_streaming.gd` measured, on this box (which was running
+five other Godot workloads on 4 cores throughout -- absolute milliseconds
+below are noisy; the creature counts are not):
+
+| pass | live | ticking | boot+spawn | avg physics frame |
+|---|---|---|---|---|
+| today's density (~77), forced all-active (pre-change baseline) | 77 | 69 | 48.6s | 16.58ms |
+| today's density, streaming on | 77 | 10 | 36.2s | 16.70ms |
+| synthetic ~967-creature table, streaming on | 967 | 15 | 46.0s | 16.73ms |
+| synthetic ~967-creature table, forced all-active | 967 | 967 | 47.7s | 44.71ms |
+
+Today's density: 77 live creatures either way (no regression), 69 -> 10
+ticking (85.5% fewer). At the density the owner asked for: 967 live, only
+15 ever ticking at once with the player parked near one cluster (98.4%
+fewer than all-active), and the all-active pass's frame time very nearly
+tripled (16.7ms -> 44.7ms) even under this box's own noise floor -- which
+is what streaming exists to prevent at the density the content lanes are
+now authoring toward.
+
+Boot+spawn time did NOT scale with population in this measurement: ~36-49s
+across all four passes regardless of whether 77 or 967 creatures were
+spawned, which says the ~40s floor here is the corridor's terrain/
+vegetation/village build (129,419 scattered props, 21,957 harvestable
+nodes -- see the `[vegetation]`/`[playground]` boot lines any of these
+passes print), not the creature spawn loop. That is a real number, not a
+"should be fine": `_spawn_creatures()`'s instantiate-everything-at-load
+behaviour and its per-creature `await _stand_on_ground()` ground raycast
+were deliberately NOT touched by this task (out of scope, stated in the
+task brief), and at ~1000 real creatures spread across bands with less
+warm/homogeneous terrain than this synthetic table's corridor-interior
+placements, that per-creature raycast retry budget
+(`GROUND_WAIT_FRAMES` = 300) could still cost real time in a way this
+measurement did not surface. Somebody should re-measure boot time once the
+five content lanes' real tables land, not assume this number transfers.
+
+What was deliberately not built: despawning or freeing distant creatures
+(would break the "come back identical" guarantee for no measured benefit
+-- physics_process off already gets to ~0 marginal cost per distant
+creature), lazy/deferred spawning of distant clusters at boot (the boot
+cost problem above, named but out of scope), and any render-side distance
+culling (`visible` is untouched by streaming; only `physics_process` is).
+
+`tests/smoke_wild_streaming.gd` is NOT `test_case.gd`-shaped and is not
+auto-discovered by `tests/run_tests.gd` -- it needs a live SceneTree
+(`Node3D.global_position`'s getter hard-requires `is_inside_tree()`, which
+the D02 pure-logic runner's own RefCounted test instances never have) so
+it is a small standalone SceneTree script, run directly:
+`godot --headless --path . --script tests/smoke_wild_streaming.gd`. It
+pins the cluster-level activate/deactivate transition in both directions,
+that the three guarded states are never touched, that a deactivate/
+reactivate round trip changes nothing about a creature's identity or
+position, and that a gated-invisible member is left alone. Full suite
+(1303 tests, 0 failed) plus `smoke_aggression.gd`, `smoke_catching.gd`,
+`smoke_combat.gd` and `smoke_traversal.gd` all green against this branch.
+
+`wild_creature.gd` was not touched -- the only precedent this needed
+(`set_physics_process(false)` in `notify_fainted()`) already existed, and
+`creature_body.gd`'s base-class visibility -> physics_process wiring
+already covered the gate interaction once ordered correctly in
+`_process()`.
+
+
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 
 `tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
