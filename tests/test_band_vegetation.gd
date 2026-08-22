@@ -82,14 +82,27 @@ func test_scatter_rules_config_carries_both_split_arrays() -> void:
 	# The real caller merges via config(), not load_config() directly -- this
 	# proves the two-call merge in scatter_rules.gd actually wires both arrays
 	# into one dictionary rather than the second call clobbering the first.
+	#
+	# GATE-D3, 2026-08-22: this was an exact `==` against the frozen baseline
+	# until a band's own new clearing (band3, siting a camp per prompt 64)
+	# became the first entry any band ever added AFTER the split -- every
+	# existing clearing predates it and was already part of the pre-split
+	# snapshot the fixture froze. `==` was never exercised against real
+	# growth. The sibling per-entry test just above already tolerates growth
+	# ("content authored after the split appends past them and this stays
+	# green", `merged.size() >= want_array.size()`), and this is the same
+	# claim restated through `scatter_rules.config()`'s own merge path, so it
+	# gets the same tolerance rather than a second, stricter rule for the
+	# identical data.
 	SCATTER_RULES._config = {}
 	var config := SCATTER_RULES.config()
 	var baseline := _read_json(BASELINE_PATH)
 	for array_key: String in SPLIT_KEYS:
 		var want: Array = baseline.get(array_key, []) as Array
 		var got: Array = config.get(array_key, []) as Array
-		assert_eq(got.size(), want.size(),
-			"scatter_rules.config()'s '%s' has %d entries, expected %d" % [array_key, got.size(), want.size()])
+		assert_true(got.size() >= want.size(),
+			"scatter_rules.config()'s '%s' has %d entries, but the pre-split baseline names %d -- entries were lost" % [
+				array_key, got.size(), want.size()])
 	SCATTER_RULES._config = {}
 
 

@@ -2,6 +2,7 @@
   "_comment": "BAND-SPLIT. Band-local wild population for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. New entries take an unused order in this band's reserved range 3000-3999, which no other band can collide with.",
   "_comment_why_this_file_was_empty": "WILD-ECOLOGY. This file existed with an empty `spawns` array, which prompt 60 names directly: 'Current Band 3 spawns.json being empty is not acceptable for a finished region.' The consequence was not only an empty region. GATEC-CURVE had just authored this band a wild level range of [9, 12] in data/config/chapter_curve.json and wired encounter_director to resolve it from a cluster's world z -- and with no clusters here, that band was inert: a correctly-built escalation rule applied to nothing. Between the Burrow Warrens and the Upper Meadows the player crossed 1580m of river country in which no wild creature existed at all, which is also the stretch where the team is supposed to have reached its full five and be weighing them against each other.",
   "_comment_habitat": "The region's identity is the gorge (data/config/terrain_playground.json's `river`, running east-west at z~4200, 10-15m deep, narrowing to a 3.6m half-width at the Old Mill Crossing) and Team Tether's occupation of the relay. Air species own the gorge because a 15m trench is where updraft lives and where a silhouette reads from a long way off; water species are sited at the crossing, the one place on the route where the water is actually reachable; ground species are pushed onto the spoil the relay dug rather than the drained ground itself. Levels are NOT set here -- encounter_director resolves them from chapter_curve.json's band for this z, so retuning the region retunes its field.",
+  "_comment_gate_d3_density": "GATE-D3, owner directive 2026-08-22: 'I think you're going to need a lot more than 24 creatures in a band. look at Pokemon density and palworld density. even valheim deer and boar density it's far more.' The original 8-cluster/18-creature population (one creature per ~79m) was built to prove the habitat logic above, not to be the finished density -- this pass keeps every original cluster and every rule in `_comment_habitat` unchanged (air owns the gorge, water sits at the reachable crossing, ground works the spoil) and adds 41 more clusters at that same logic, walked along the corridor roughly every 40-46m with lateral offsets so the route reads as inhabited country rather than a conveyor belt of named encounters -- on-route clusters at the spine itself, off-route pockets 18-36m to either side so leaving the road finds something too. Orders 3009-3049. `pipwing` (catch_rate 0.55, the region's commonest species) fills the gaps between the named habitat sites the way it already does in Bands 1 and 2. Every new cluster keeps clear of the four relay trainers' and Captain Oreth's own arenas (20m+) and of the existing hand-placed clusters (24m+), so nothing here contests a fight's footing. Fifty clusters, 155 creatures, one creature per ~10m of route -- inside the owner's 38-50 cluster / 140-210 creature target. `encounter_director.gd` currently instantiates and ticks every spawn in the whole corridor with no distance-based activation; the coordinator is dispatching a dedicated streaming lane for that (`_spawn_creatures`/`wild_creature.gd::_physics_process`) rather than this band owning it -- a boot/frame-time cost from this density is expected and not fixed here.",
   "spawns": [
     {
       "order": 3000,
@@ -76,6 +77,338 @@
       "centre": [-70.0, 0.0, 4130.0],
       "radius": 16.0,
       "_why": "GATE-D3, the region's optional detour (prompt 64: 'at least one detour/special wild/discovery associated with river ecology or Team Tether occupation'). Sited directly on `near_bank_river_walk` (terrain_playground.json trail.loops), the authored spur that leaves the spine at the crossing's own approach ((-30,4060)) and walks the near bank downstream -- 'shows the far side you cannot reach yet, dead-ends at the crossing you have to earn,' in the loop's own words, and until this entry nothing actually lived on it. A second, smaller brooktail pocket rather than a new species: D24/CLAUDE.md forbid a new creature for one detour, and finding the crossing's own water type again downstream, away from the narrows crowd at order 3004, is what makes the loop worth the walk off the critical path instead of just a longer way to the same fight."
+    },
+    {
+      "order": 3009,
+      "species": "bramblebun",
+      "count": 2,
+      "centre": [-16.3, 0.0, 3196.3],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2."
+    },
+    {
+      "order": 3010,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [-62.9, 0.0, 3214.6],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2."
+    },
+    {
+      "order": 3011,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [-67.2, 0.0, 3275.5],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2."
+    },
+    {
+      "order": 3012,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [-145.6, 0.0, 3282.2],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the western approach out of Band 2."
+    },
+    {
+      "order": 3013,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [-94.9, 0.0, 3350.9],
+      "radius": 16.0,
+      "time": "night",
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). nocturnal -- gated to night, the western approach out of Band 2."
+    },
+    {
+      "order": 3014,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [-145.0, 0.0, 3380.9],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2."
+    },
+    {
+      "order": 3015,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [-110.4, 0.0, 3441.3],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2."
+    },
+    {
+      "order": 3016,
+      "species": "burrowback",
+      "count": 3,
+      "centre": [-117.5, 0.0, 3513.4],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the western approach out of Band 2."
+    },
+    {
+      "order": 3017,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [-18.8, 0.0, 3542.0],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2."
+    },
+    {
+      "order": 3018,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [12.4, 0.0, 3581.3],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2."
+    },
+    {
+      "order": 3019,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [71.8, 0.0, 3567.6],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2."
+    },
+    {
+      "order": 3020,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [87.1, 0.0, 3638.8],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay approach corridor, before Team Tether's own ground."
+    },
+    {
+      "order": 3021,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [160.4, 0.0, 3595.0],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2."
+    },
+    {
+      "order": 3022,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [185.5, 0.0, 3647.7],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay approach corridor, before Team Tether's own ground."
+    },
+    {
+      "order": 3023,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [217.7, 0.0, 3686.2],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay approach corridor, before Team Tether's own ground."
+    },
+    {
+      "order": 3024,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [279.0, 0.0, 3751.7],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay approach corridor, before Team Tether's own ground."
+    },
+    {
+      "order": 3025,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [298.0, 0.0, 3819.2],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3026,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [313.2, 0.0, 3878.2],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). ground, the pack species, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3027,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [252.8, 0.0, 3873.7],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3028,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [246.0, 0.0, 3958.9],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3029,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [188.5, 0.0, 3948.8],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3030,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [138.5, 0.0, 3952.8],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). ground, the pack species, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3031,
+      "species": "reedwing",
+      "count": 4,
+      "centre": [116.0, 0.0, 4009.4],
+      "radius": 14.0,
+      "weather": ["rain"],
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). weather-gated -- rain only, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3032,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [49.8, 0.0, 3979.9],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the relay's back country, on the ground its own excavation disturbed."
+    },
+    {
+      "order": 3033,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [-16.4, 0.0, 4053.2],
+      "radius": 14.0,
+      "time": "night",
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). nocturnal -- gated to night, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3034,
+      "species": "brooktail",
+      "count": 3,
+      "centre": [-66.3, 0.0, 4065.8],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). water, at a reachable bank, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3035,
+      "species": "paddlenewt",
+      "count": 4,
+      "centre": [-145.3, 0.0, 4115.5],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). water, first sighting of the species outside Band 1, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3036,
+      "species": "reedwing",
+      "count": 4,
+      "centre": [-116.0, 0.0, 4174.5],
+      "radius": 16.0,
+      "weather": ["rain"],
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). weather-gated -- rain only, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3037,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [-152.0, 0.0, 4220.5],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3038,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [-90.0, 0.0, 4278.0],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3039,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [-101.8, 0.0, 4297.4],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3040,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [-43.7, 0.0, 4350.5],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3041,
+      "species": "meadowhart",
+      "count": 4,
+      "centre": [-9.6, 0.0, 4452.7],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3042,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [51.3, 0.0, 4451.9],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3043,
+      "species": "burrowback",
+      "count": 3,
+      "centre": [50.3, 0.0, 4524.3],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3044,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [131.9, 0.0, 4499.1],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3045,
+      "species": "meadowhart",
+      "count": 4,
+      "centre": [132.0, 0.0, 4585.1],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3046,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [151.3, 0.0, 4643.0],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3047,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [81.9, 0.0, 4663.9],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3048,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [101.7, 0.0, 4737.9],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3049,
+      "species": "meadowhart",
+      "count": 4,
+      "centre": [-6.0, 0.0, 4740.1],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
     }
   ]
 }

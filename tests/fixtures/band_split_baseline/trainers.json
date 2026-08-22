@@ -1,10 +1,10 @@
 {
-  "_comment": "R8.1. Every trainer battle in the chapter, as data. Spec §12 sizes what this table has to carry -- roughly 12-17 battles (3 Lower Meadows trainers, 2-3 in the relay station, 3 regional captains, 2-4 in the stronghold, 2-4 optional patrols) -- so a new trainer is an entry here, never a new script. `scripts/world/trainer_npc.gd` places them and `scripts/combat/encounter_director.gd` fights them.",
+  "_comment": "R8.1. Every trainer battle in the chapter, as data. Spec \u00a712 sizes what this table has to carry -- roughly 12-17 battles (3 Lower Meadows trainers, 2-3 in the relay station, 3 regional captains, 2-4 in the stronghold, 2-4 optional patrols) -- so a new trainer is an entry here, never a new script. `scripts/world/trainer_npc.gd` places them and `scripts/combat/encounter_director.gd` fights them.",
   "_comment_defeat_flag": "SB9 (autoload/progression_state.gd), the same flat flag store the road gate, the TM pickups and Tam's handover already write to. Set by the encounter director the moment the trainer's last creature faints. It is what makes the battle unrepeatable (`rechallenge: false`), what SC14's bridge will read, and what SC15's reward is recorded against so beating a trainer twice pays once.",
-  "_comment_rechallenge": "false everywhere for now, and spec §11/§17 is why: a re-fightable trainer is an XP faucet, and grinding is supposed to mean 'play more of the game', not 'replay one fight'. The field exists because a later sparring partner may legitimately want it -- it is not a promise that one does.",
+  "_comment_rechallenge": "false everywhere for now, and spec \u00a711/\u00a717 is why: a re-fightable trainer is an XP faucet, and grinding is supposed to mean 'play more of the game', not 'replay one fight'. The field exists because a later sparring partner may legitimately want it -- it is not a promise that one does.",
   "_comment_team": "Fought SEQUENTIALLY: the trainer sends out the next creature when one faints, in this order. `level` is the creature's real level (D30 arithmetic, data/config/progression.json), NOT a difficulty band. `moves` is optional and overrides the species' own quick/charged pair (data/creatures/species.json) -- for a trainer whose lesson is a specific move, SC13's Tam being the obvious case.",
   "_comment_reward": "SC15's shape (spec Sec17 P1 step 9; D39: 'SC15's trainer payouts later pay coins too'). ALL TUNABLE. `coins` (int, default 0) is granted through the ordinary satchel -- `coin` is just another items.json entry (D39), so this is `inventory.add('coin', coins)`, nothing more. `items` are real item ids granted once, each `{id, count}`. `flags` are extra progression flags to set alongside the defeat flag (SC14's South Bridge Key is a flag AND an item). `xp_bonus` (int, default 0, optional) is a FLAT bonus on top of the fight's own per-kill XP -- ordinary victory XP already happens naturally, per creature felled, through combat_manager's award; this is the authored extra, applied flatly (no party-share split, unlike the per-kill award) to every non-fainted party member. Every field pays out only when the defeat flag was NOT already set, so a rechallenge can never pay twice.",
-  "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec §21). No new human generations here.",
+  "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec \u00a721). No new human generations here.",
   "_comment_levels_sh47": "SH47/D42, the gauntlet. WAS patrol 17/18, courtyard 18/19/19, elite 21/22/22; NOW 15/16, 16/17/17, 18/19/19. TUNABLE, and no fight is removed or added. Two reasons, both measured with tools/_probe_pacing.py. First, the ladder ran the wrong way at the top: the elite's aces were 21 and 22 while the Warden's own ace -- the chapter's boss, the fight everything else prepares for -- is 20. A gauntlet harder than the boss it guards inverts spec Sec8's whole shape. Second, the three regional captains cap at 16, so a player arriving off the Sigil gate faced a five-level step and the probe showed the cost: seven forced wild fights against level-2-to-6 field creatures purely to inflate a number, which is Sec11's `bad grind` by name. The gauntlet now climbs 15 -> 19 across three fights and hands the player to a Warden whose last creature is still the highest level in the chapter. Nothing about the ROOM sequence, the rewards or the rank ladder moved -- only the numbers on the teams.",
   "_comment_positions": "World metres [x, z]; Y is always asked of the world (D09). `facing_deg` is the yaw the trainer is placed with; npc_body.gd turns them to face the player on approach regardless.",
   "_comment_placed_by": "SC12/SC13. An entry naming `placed_by` is a trainer whose body already exists somewhere else -- `scripts/world/trainer_npc.gd::build()` skips it rather than standing up a second, duplicate body. Mira, Oskar and Tam all name `\"village_npcs\"`: they are the three existing village NPCs (data/config/village_npcs.json, placed by scripts/world/village_npcs.gd) and spec sec3 Band 1 says outright to reuse them rather than add a fourth. `position`/`facing_deg` below still mirror their real village_npcs.json entry for anyone reading this table, even though nothing spawns from them. Their challenge is offered through village_npcs.gd's own `greeting_when` list (not this file's prompt system) and their fight is started by sequence_director.gd's `battle:<trainer_id>` dialogue effect (not `_on_challenged`/`_on_conversation_finished` below) -- but this table, and `encounter_director.begin_trainer_battle()`, are exactly what both routes read and run.",
@@ -28,7 +28,7 @@
       "hair": {
         "visible": true,
         "color": "#c9a86a",
-        "_comment": "Spec §21 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
+        "_comment": "Spec \u00a721 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
       },
       "position": [
         13.0,
@@ -175,14 +175,15 @@
       "name": "Hess",
       "_comment": "SE25. Spec sec3 Band 3 / sec12: 'two or three Team Tether trainers and a relay captain' at the relay station. The OUTER picket -- the first Team Tether personnel the player is ever stopped by, met on the approach road well before the site itself. Levels are Band 3 (~8-12) and ALL TUNABLE; never player-scaled (spec sec11/D30: a level is a real level, and the world does not move to meet you).",
       "_site": "SE23 IS NOT BUILT YET. These four stand at the relay SITE, whose one authored coordinate is data/config/relay_site.json's `site.centre` [108, 34] -- on the quarry's own conduit bearing toward the stronghold (old_quarry.json's [229.8,-144.4]), 150m out from the quarry floor. Every position below is derived from that centre. When SE23 builds the station it should ADOPT relay_site.json's centre rather than pick another, and move these four with it if it needs to.",
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760). Pure translation, so `facing_deg` (-34.4, == `approach_bearing_deg`) is still correct without re-deriving it.",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760).",
+      "_comment_gate_d3": "GATE-D3. OW5D's own placement, along the site's internal conduit bearing, left Hess only ~22m short of the site centre -- alongside Orrin, Dell and Vance in an 18m span, which is exactly what prompt 64 names as the failure: 'The route should not jump from wilderness directly into the four-person relay gauntlet.' Moved OUT onto the spine road itself (terrain_playground.json trail.bands[2], the (230,3670)->(350,3760) leg the player actually walks into the region), 140m short of the site centre. `facing_deg` recomputed for the new leg: the trainer faces back down the direction the player arrives from, opposite the (0.8,0.6) travel bearing of this leg, atan2(-0.8,-0.6) = -126.9 deg (not the old -34.4, which described the site's own separate conduit-approach frame Orrin/Dell/Vance still stand on). Ground measured with a scratch heightfield probe (tools/_probe_band3.gd, not committed): -3.20m, 1.04m of spread over an 8m box -- flatter than the old site, comfortably inside an 11m arena.",
       "rank": "grunt",
       "position": [
-        338.5,
-        3775.0
+        248.0,
+        3683.5
       ],
-      "facing_deg": -34.4,
-      "_why_here": "On the approach, 22m short of the site centre, facing back down the conduit road the player walks up. Ground here measures -5.55m with 1.84m of spread over an 8m box (tools/_probe_relay.gd) -- gentle enough for an 11m arena.",
+      "facing_deg": -126.9,
+      "_why_here": "On the spine itself, 140m short of the site centre, right past the bend where the road turns into the relay approach -- the first Team Tether contact of the region, past the new camp clearing (vegetation.json order 3000) and the checkpoint prop cluster (props.json `relay_approach_checkpoint`), well before any sign of the compound.",
       "challenge": "relay_hess_challenge",
       "defeated": "relay_hess_defeated",
       "team": [
@@ -213,13 +214,14 @@
       "name": "Orrin",
       "_comment": "SE25. The INNER picket -- the second stop on the same road, a little stronger and a little further in. Two grunts before an officer before the captain is the rank ladder NP2's palettes exist to make readable at gameplay distance.",
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "_comment_gate_d3": "GATE-D3. Moved out with Hess (see that entry's own `_comment_gate_d3`) onto the same spine leg, roughly midway between Hess and the site centre rather than 13m from it -- so the picket line is a real gradient the player walks through (Hess -> Orrin -> Dell -> Vance, each a step deeper and a step stronger) instead of a cluster met all at once. `facing_deg` recomputed the same way Hess's was: -126.9, facing back down the leg toward the incoming player. Ground: 4.24m, 2.57m spread over an 8m box (tools/_probe_band3b.gd, not committed) -- rougher than Hess's spot but inside the same tolerance the old site positions already shipped at (Dell's own original spread was 2.31m).",
       "rank": "grunt",
       "position": [
-        344.0,
-        3768.0
+        284.0,
+        3710.5
       ],
-      "facing_deg": -34.4,
-      "_why_here": "13m short of the site centre on the same bearing. Ground -4.31m, 1.95m spread over an 8m box.",
+      "facing_deg": -126.9,
+      "_why_here": "On the spine, roughly 70m short of the site centre and 60m past Hess -- the second checkpoint, close enough to the compound that Team Tether's presence now reads as continuous rather than as two isolated encounters.",
       "challenge": "relay_orrin_challenge",
       "defeated": "relay_orrin_defeated",
       "team": [
@@ -467,12 +469,12 @@
     {
       "id": "captain_field",
       "name": "Captain Halder",
-      "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
+      "_comment": "SF34, spec \u00a73 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside \u00a73's own 'roughly 10-16 entering this band' -- NEVER player-scaled (\u00a73 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
       "rank": "captain",
       "palette": {
         "*": "#a89a6b"
       },
-      "_comment_palette": "NP2's CAPTAIN rank palette (#b0a271, data/config/npc_ranks.json) with ONE regional accent -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec §21 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting.",
+      "_comment_palette": "NP2's CAPTAIN rank palette (#b0a271, data/config/npc_ranks.json) with ONE regional accent -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec \u00a721 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting.",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: this captain was 'unplaced/near village' (the (52,-122) below was a Band-4-shaped stand-in on the OLD map, not a real Band 4 site -- the old map had no Band 4). Moved to (170,5590), the position section 3.1's Band 4 waypoint list names explicitly for the Field Captain. `facing_deg` (-20.6) is UNCHANGED and is almost certainly wrong for the new site -- it was derived by atan2 back to the OLD village at roughly the origin, and the new corridor's Band 4 geometry is a different shape entirely. Left as a flag rather than invented: re-deriving a correct facing needs the reviewer to pick which way 'back down the road' points on the new spine, which is authoring judgement past a coordinate relocation.",
       "position": [
         170.0,
@@ -567,7 +569,7 @@
     {
       "id": "captain_riverwatch",
       "name": "Captain Oreth",
-      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec §3 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
+      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec \u00a73 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
       "rank": "captain",
       "palette": {
         "*": "#8f9a86"
