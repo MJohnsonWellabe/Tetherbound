@@ -586,10 +586,9 @@ func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) 
 	# right cell, not about affordability -- already proven elsewhere in this
 	# file.
 	_game.set("free_build", true)
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 
 	var menu := await _open_build_menu_from_pause()
 	if menu == null:
@@ -757,10 +756,9 @@ func _check_build_actions_are_gated_behind_a_reopened_menu(world: Node) -> void:
 	# `menu_cancel` is both `open_action` and `close_action` (menu.json) --
 	# opens the pause menu when it is shut, same idiom every other check in
 	# this file uses before calling `_open_build_menu_from_pause()`.
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 
 	_game.set("pending_build", "wall")
 	for i in 15:
@@ -1006,10 +1004,9 @@ func _check_interact_is_gated_behind_an_open_build_menu() -> void:
 	var provider := _FakeInteractable.new()
 	arbiter.call("register", provider)
 
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 	var menu := await _open_build_menu_from_pause()
 	if menu == null:
 		arbiter.call("unregister", provider)
@@ -1075,10 +1072,9 @@ func _check_movement_and_jump_are_gated_behind_an_open_build_menu(world: Node) -
 	for i in 20:
 		await physics_frame
 
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 	var menu := await _open_build_menu_from_pause()
 	if menu == null:
 		return
@@ -1187,6 +1183,24 @@ func _cleanup() -> void:
 
 
 # --- input ------------------------------------------------------------------
+
+
+## CONTROLLER-MAP made the pause shell's open and close asymmetric
+## (`game_menu.gd`: "Menu OPENS the shell and B closes it, deliberately
+## asymmetric" -- gamepad Menu is also `backpack_drop` in the satchel tab, so
+## a close on the same button would be a second live verb there). Before
+## that, `menu_cancel` was configured as both `open_action` and
+## `close_action` (data/config/menu.json), so "press menu_cancel if not
+## already open" used to double as an open. It no longer does -- this reads
+## the real, current `open_action` out of the same config `game_menu.gd`
+## itself reads, rather than re-hardcoding a name that has already moved
+## once.
+func _ensure_pause_menu_open() -> void:
+	if bool(_menu.call("is_open")):
+		return
+	var config: Dictionary = _menu.get("_config")
+	var open_action := str(config.get("open_action", "game_menu")) if config != null else "game_menu"
+	await _press(open_action)
 
 
 ## An action, sent both ways: as state for whatever polls, and as an event for
@@ -1366,6 +1380,14 @@ func _check_a_piece_can_be_built_out_of_an_empty_satchel() -> void:
 ## A cheat that cannot be turned off is not a toggle. Turning it off must put
 ## the cost back on the same screen, in the same session.
 func _check_it_can_be_switched_off_again() -> void:
+	# The previous check ends with the pause menu closed on purpose (a clean
+	# edge for the empty-satchel piece's own B-close, per its own comment) --
+	# reopen it here the same real way `_check_the_toggle_is_reachable_with_a_pad`
+	# does, rather than assuming a still-open menu `_go_to` cannot itself create.
+	await _press("inventory")
+	if not bool(_menu.call("is_open")):
+		_fail("the menu did not reopen for the switched-off-again check")
+		return
 	_settings = await _go_to("settings")
 	if _settings == null:
 		return
@@ -1458,10 +1480,9 @@ func _close_build_menu_and_restore_pause(menu: Node) -> void:
 	if menu != null and bool(menu.call("is_open")):
 		menu.call("close")
 		await process_frame
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 3:
-			await process_frame
+	await _ensure_pause_menu_open()
+	for i in 3:
+		await process_frame
 
 
 ## OF23. `build_menu.gd::_pick` used to refuse an unaffordable piece with
@@ -1473,10 +1494,9 @@ func _close_build_menu_and_restore_pause(menu: Node) -> void:
 func _check_an_unaffordable_pick_shows_the_shortfall_and_refuses() -> void:
 	_game.set("free_build", false)
 	_game.set("pending_build", "")
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 
 	var inventory: RefCounted = _game.get("inventory")
 	for id in ["wood", "stone", "fiber"]:
@@ -1531,10 +1551,9 @@ func _check_an_unaffordable_pick_shows_the_shortfall_and_refuses() -> void:
 ## button is fixed, not just that two independently-pressed actions behave.
 func _check_b_closes_only_the_build_menu() -> void:
 	_game.set("pending_build", "")
-	if not bool(_menu.call("is_open")):
-		await _press("menu_cancel")
-		for i in 10:
-			await physics_frame
+	await _ensure_pause_menu_open()
+	for i in 10:
+		await physics_frame
 
 	var menu := await _open_build_menu_from_pause()
 	if menu == null:

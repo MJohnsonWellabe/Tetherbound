@@ -33,6 +33,7 @@ const SETTLE_FRAMES := 240
 const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const CONTROLLER_SAVE_DIR := "user://controller_ui_smoke_saves/"
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
@@ -608,7 +609,22 @@ func _check_backpack_target_picker_full_party() -> void:
 ## `satiety` field whatsoever: pressing Use on a berry said "is not something
 ## you can use here" unconditionally. This drives the same real input path
 ## the potion check above does and checks the player actually gets fed.
+## RG19-spec/D68 made berries dual-purpose: `data/items/items.json` carries
+## both `satiety` (the player) and `creature_food` (the team) on the same
+## item, and `tab_backpack.gd::_read_use()` checks `creature_food` FIRST --
+## "berries are both, and the team is the reason the tournament asks you to
+## gather them." So pressing Use on berries in the backpack now opens the
+## creature target picker, the same shape `_check_backpack_target_picker`
+## already proves for potions, rather than eating them directly off the
+## player's own satiety. This drives that real flow end to end instead of
+## asserting the pre-D68 direct-eat behaviour no food item still has.
 func _check_backpack_food_eat() -> void:
+	var use_button := _pad_button_for("interact")
+	var accept_button := _pad_button_for("ui_accept")
+	if use_button < 0 or accept_button < 0:
+		_fail("interact or ui_accept has no joypad binding — a controller cannot drive this picker")
+		return
+
 	_menu.call("select", 0)  # Backpack
 	for i in 4:
 		await process_frame
@@ -616,16 +632,15 @@ func _check_backpack_food_eat() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var db: RefCounted = _game.get("items")
 	var body: Node = _menu.get("_bodies")[0]
-	var player: Node = current_scene.get_node_or_null(^"Player")
-	if player == null:
-		_fail("food-eat check needs a Player node in the scene")
+	var party: RefCounted = _game.get("party")
+	var target: RefCounted = party.call("at", 0) if party != null else null
+	if target == null:
+		_fail("food-eat check needs a creature in party slot 0")
 		return
-	var vitals: RefCounted = player.get("vitals")
-	if vitals == null:
-		_fail("food-eat check needs the Player to carry vitals")
+	target.set("nourishment", 0.0)
+	if CONDITION.nourishment_fraction(target, CONDITION.config()) >= 1.0:
+		_fail("could not hunger the slot-0 creature to set up the food-eat check")
 		return
-
-	vitals.set("satiety", 10.0)
 
 	inventory.call("add", "berries", 3)
 	var slot: int = int(inventory.call("find_slot", "berries"))
@@ -633,22 +648,27 @@ func _check_backpack_food_eat() -> void:
 		_fail("could not find the berries slot after adding some")
 		return
 	var count_before: int = int(inventory.call("count", "berries"))
-	var satiety_before: float = float(vitals.get("satiety"))
-	var restore: float = float((db.call("definition", "berries") as Dictionary).get("satiety", 0.0))
-	if restore <= 0.0:
-		_fail("berries' own item definition carries no satiety value; cannot verify the fix meaningfully")
+	var nourishment_before: float = float(target.get("nourishment"))
+	var gain: float = float((db.call("definition", "berries") as Dictionary).get("creature_food", {}).get("nourishment", 0.0))
+	if gain <= 0.0:
+		_fail("berries' own item definition carries no creature_food.nourishment value; cannot verify the fix meaningfully")
 		return
 
 	(body.get("_buttons")[slot] as Button).grab_focus()
 	await process_frame
-	await _press("interact")
+	await _pad(use_button)
+
+	if int(body.get("_targeting")) != slot:
+		_fail("a real pad press of Use on berries did not open the creature target picker")
+		return
+	await _pad(accept_button)
 
 	if int(inventory.call("count", "berries")) != count_before - 1:
-		_fail("pressing Use on berries did not spend one from the stack")
-	if float(vitals.get("satiety")) <= satiety_before:
-		_fail("pressing Use on berries did not restore the player's satiety")
+		_fail("pressing Use on berries and confirming a target did not spend one from the stack")
+	if float(target.get("nourishment")) <= nourishment_before:
+		_fail("pressing Use on berries and confirming a target did not restore the creature's nourishment")
 	else:
-		print("Use on berries restores the player's satiety and spends the item, no target picker")
+		print("Use on berries opens the creature target picker and feeding the chosen creature spends the item")
 
 
 ## OF29 owner report: "I can pick up a TM but it needs to go in my inventory
