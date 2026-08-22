@@ -1,4 +1,129 @@
 {
-  "_comment": "BAND-SPLIT-2. This band's own dialogue container. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Unlike the four content configs BAND-SPLIT cut, this is a dictionary keyed by conversation id, not a positional array -- there is no `order` to preserve, because lookup is always by id and never by position. A trainer or NPC placed in band1_lower_meadows gets its dialogue written here instead of appended to trainers.json, so a band author never has to touch a file another band is also writing to. Empty until this band has a conversation of its own; an empty file is a correct, additive no-op (dialogue_runner.gd's own merge loop skips an empty table silently).",
-  "conversations": {}
+  "_comment": "BAND-SPLIT-2. This band's own dialogue container. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Unlike the four content configs BAND-SPLIT cut, this is a dictionary keyed by conversation id, not a positional array -- there is no `order` to preserve, because lookup is always by id and never by position. A trainer or NPC placed in band1_lower_meadows gets its dialogue written here instead of appended to trainers.json, so a band author never has to touch a file another band is also writing to.",
+  "_comment_tournament_1": "TOURNAMENT-1. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); which of her five conversations she opens is decided by her `greeting_when` list against the tournament's own progression flags, exactly the way Mira's vendor and challenge branches are chosen -- there is no tournament state machine and no quest engine, which CLAUDE.md/spec sec19 both forbid. The three round conversations end on `battle:<trainer_id>` and are spoken by the OPPONENT rather than by Halda, because the fight starts the frame that box closes and the last voice the player hears should be the person about to send a creature out.",
+  "_comment_saddle": "`tournament_halda_champion` is the NPC line the owner directive asks for: it says out loud that a Meadowhart can be ridden, and that the saddle needs rootstone from past the crossing. It does NOT carry a `flag:` effect -- the saddle pattern is granted by `tournament_final_oskar`'s own `reward.flags` the moment the final is won, so a player who never walks back to Halda still has it. The line explains the prize; it is not the prize. That split is deliberate: a reward that can only be collected by re-reading a conversation is a reward that gets lost.",
+  "_comment_portraits": "Every conversation here uses the trainer portrait plate, the only villager portrait on disk (assets/ui/portraits/ holds grandpa.png and trainer.png and nothing else). tests/test_dialogue_runner.gd::test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there requires a real file, and CLAUDE.md's prototyping rule allows the stand-in. The grunt in particular should get a faction plate when Team Tether has portrait art of its own.",
+  "conversations": {
+    "tournament_halda": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Halda. I keep the board up there and I keep the draw honest, which in this village is two jobs.",
+        "Eight slots, four bouts, then two, then one. Same as it's been run since before the road went quiet."
+      ]
+    },
+    "tournament_halda_closed": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You'll want the tournament, then. Everyone does, first week.",
+        "Rule's the rule: I don't put a name on that board unless there's a proper team stood behind it. One creature isn't a team, it's a favourite.",
+        "Go and make some friends out in the meadow. Come back with three and I'll hear you out."
+      ]
+    },
+    "tournament_halda_train": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Three of them. Good. Now look at them.",
+        "Half of that lot have never taken a real hit. I'd be signing them up for a hiding, and I'd be the one who did it.",
+        "Take them out. Fight things. Feed them, rest them, let them grow into it. Then we'll talk about the board."
+      ]
+    },
+    "tournament_halda_signup": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Now that's a team. Look at them stood there like they've done this before.",
+        {
+          "text": "Right. Slot one, and I've drawn you Mira in the first bout — she'll not go easy on you because she sold you a potion. Board's up behind me; the other half of the draw fills in as it's fought.",
+          "effect": "flag:tournament_entered"
+        }
+      ]
+    },
+    "tournament_halda_champion": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Champion of the Lower Meadows. I'll want that written on the board properly, not in my hand.",
+        "Here — the pattern for a riding saddle. It's Oskar's, by rights; he said give it to whoever took the Meadowhart off him.",
+        "A Meadowhart will carry you once you've built one. Rootstone for the frame, and the only rootstone left is past the south crossing. So: earn it, then go and get it."
+      ]
+    },
+    "tournament_quarter": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "First bout, then. Don't look at me like that — the meadow doesn't care who's nice to it either.",
+        {
+          "text": "Whole team out this time. Nothing held back, same as I promised you in the square.",
+          "effect": "battle:tournament_quarter_mira"
+        }
+      ]
+    },
+    "tournament_quarter_beaten": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Out in the first. Well. Somebody's got to be, and I'd rather it was to you."
+      ]
+    },
+    "tournament_semi": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Semi-final. Fen put up more than the board says, mind — I've a limp to prove it.",
+        {
+          "text": "You know my lesson. Let's see whether you learned it or just heard it.",
+          "effect": "battle:tournament_semi_tam"
+        }
+      ]
+    },
+    "tournament_semi_beaten": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Switched on me twice and I never saw the second one coming. That's the lesson, that is."
+      ]
+    },
+    "tournament_final": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Final. Bryn took me to the last creature in the semi and I'm still short of breath.",
+        "You'll not have seen this one out on the road. She's not a fighter by trade — she's a road, if you know how to sit on her.",
+        {
+          "text": "Beat her and the pattern's yours. Halda holds it. Come on.",
+          "effect": "battle:tournament_final_oskar"
+        }
+      ]
+    },
+    "tournament_final_beaten": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Took the Meadowhart off me fair. Go and see Halda — the pattern's hers to hand over, and I'll not go back on it."
+      ]
+    },
+    "south_bridge_grunt_challenge": {
+      "speaker": "Tether Grunt",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Far side's closed. Company business. Go back up the road.",
+        "No, I don't know what's over there either. I know what I'm paid to stand in front of.",
+        {
+          "text": "You're not walking round me and you're not talking round me. Fine. Beat me and the key's yours; that's not company policy, that's mine.",
+          "effect": "battle:south_bridge_grunt"
+        }
+      ]
+    },
+    "south_bridge_grunt_beaten": {
+      "speaker": "Tether Grunt",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Take it. I'll tell them you had a key already.",
+        "Straight over and don't stop on the span. There's nothing down there but the old road."
+      ]
+    }
+  }
 }

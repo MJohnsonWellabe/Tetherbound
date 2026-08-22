@@ -99,7 +99,7 @@
     {
       "id": "trainer_oskar",
       "name": "Oskar",
-      "_comment": "SC12/SC13/SC14. Spec sec3 Band 1: 'Oskar -- Bridgehand -- moderate trainer battle, controls or possesses the old bridge mechanism, reward: South Bridge Key.' The gate -- a real two-creature team, sturdier than Mira's. `south_bridge_key` is SC14's Gate 1 mechanism; this entry hands it over the moment it is defeated so the bridge task has a real item to read rather than a stub.",
+      "_comment": "SC12/SC13/SC14, amended by TOURNAMENT-1. Spec sec3 Band 1: 'Oskar -- Bridgehand -- moderate trainer battle'. His village challenge -- a real two-creature team, sturdier than Mira's. He NO LONGER hands over `south_bridge_key`: the 2026-08-22 owner directive moves the South Bridge gatekeeper role to a Team Tether grunt (`south_bridge_grunt` below, order 1000) so that Oskar is free to be the tournament's final round. The key is that grunt's reward now, and `gated_crossing.gd`/`south_bridge.gd` read the same item id they always did -- nothing about the gate mechanism changed, only who is standing in front of it.",
       "placed_by": "village_npcs",
       "config_key": "villager_keeper",
       "position": [
@@ -124,10 +124,6 @@
           {
             "id": "coin",
             "count": 15
-          },
-          {
-            "id": "south_bridge_key",
-            "count": 1
           }
         ],
         "flags": []

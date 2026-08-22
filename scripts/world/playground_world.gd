@@ -21,6 +21,10 @@ const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+## TOURNAMENT-1: the village tournament's bracket board. The fights themselves
+## are ordinary trainer entries and the marshal is an ordinary villager, so this
+## is the only node the tournament adds to the world.
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 ## BAND-SPLIT. `harvest.json`'s `nodes` array is cut per corridor band under
@@ -689,6 +693,16 @@ func _build_settlement() -> void:
 	trainers.name = "Trainers"
 	add_child(trainers)
 	trainers.call("build", _player)
+
+	# TOURNAMENT-1: the bracket board, in the north field behind the square.
+	# After the trainers so it stands in a settlement that is already built --
+	# it reads ground height the same way they do and nothing about it depends
+	# on them, but the tournament ground is Bryn's practice field and building
+	# the two in the order the player meets them keeps the log readable.
+	var tournament: Node3D = TOURNAMENT.new()
+	tournament.name = "Tournament"
+	add_child(tournament)
+	tournament.call("build", self)
 
 	var signpost: Node3D = SIGNPOST.new()
 	signpost.name = "Signpost"

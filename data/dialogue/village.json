@@ -139,9 +139,9 @@
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "That bridge south of here? Mine to keep shut. Tether pays this village well for it.",
+        "That bridge south of here was mine to keep shut. Was. Tether took the key off my belt in the spring and put one of their own on the near landing.",
         {
-          "text": "But rules bend for strength. Beat me square, and the key's yours.",
+          "text": "So I've nothing to hand you but a fight, and I'm told you're worth one. Come on then.",
           "effect": "battle:trainer_oskar"
         }
       ]
@@ -151,7 +151,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         {
-          "text": "Square's square — the key's yours. Mind the far bank. Nobody's walked it in years.",
+          "text": "Square's square. Wish I still had that key to give you — the lad in the grey coat has it, down at the crossing. Mind the far bank either way. Nobody's walked it in years.",
           "effect": "shop:creatures:oskar"
         }
       ]
@@ -292,5 +292,6 @@
       ]
     }
   },
-  "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's."
+  "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's.",
+  "_comment_tournament_1": "TOURNAMENT-1. Oskar's challenge and beaten lines no longer promise the South Bridge Key: the 2026-08-22 owner directive moved the gatekeeper role to a Team Tether grunt so Oskar could be the tournament's final round. His words now point at the person who actually holds it, which is also how the player learns there is somebody standing at the crossing. His `shop:creatures:oskar` effect is untouched (D39: a vendor branch is never lost), and `tests/test_dialogue_runner.gd::test_both_of_oskars_branches_open_the_swap` still passes on it."
 }

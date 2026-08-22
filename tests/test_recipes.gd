@@ -285,10 +285,22 @@ func test_a_state_with_no_flag_store_treats_a_gated_recipe_as_locked() -> void:
 func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something() -> void:
 	# A recipe gated behind a flag nothing ever sets is a recipe that is
 	# unreachable forever, and it fails silently: the craft screen simply never
-	# grows the row. Checked against the dialogue table, which is where every
-	# `flag:` effect in the game lives today.
+	# grows the row.
+	#
+	# Two places write progression flags, not one. Dialogue `flag:` effects are
+	# the original and still the common case (Tam teaching the orb). TOURNAMENT-1
+	# added the second: a trainer entry's `reward.flags`, paid by
+	# `encounter_director._record_trainer_defeat()` the first time that trainer
+	# is beaten. Scanning only the dialogue table would have failed the saddle,
+	# which is granted by winning the tournament final rather than by being told
+	# about it -- and scanning only for "some string somewhere" would prove
+	# nothing, so both sources are read the same way the game reads them.
 	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+	const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 	var written: Array[String] = []
+	for entry: Variant in TRAINERS.trainers():
+		for flag: String in TRAINERS.reward_flags(entry as Dictionary):
+			written.append(flag)
 	for id: String in RUNNER.table():
 		var conversation: Dictionary = RUNNER.table()[id]
 		for raw: Variant in conversation.get("lines", []) as Array:
@@ -336,11 +348,39 @@ func test_every_rootstone_tier_recipe_actually_costs_rootstone() -> void:
 ## flag -- recipes_rootstone.json's own `_comment_unlock` makes owning
 ## Rootstone itself the real gate. Checked against a state that has never had
 ## ANY flag set, so this is not just "no flag happens to be set right now".
+##
+## TOURNAMENT-1 carved exactly ONE exception out of that rule, and it is named
+## here rather than skipped: the 2026-08-22 owner directive makes the saddle
+## pattern the village tournament's prize, so `saddle` alone is flag-gated.
+## The carve-out is written as an explicit id so that a SECOND recipe quietly
+## growing an `unlocked_by` still fails this test.
+const TOURNAMENT_GATED_RECIPE := "saddle"
+const TOURNAMENT_GATE_FLAG := "recipe_saddle"
+
+
 func test_the_rootstone_tier_needs_no_unlock_flag() -> void:
 	for id in ROOTSTONE_TIER_RECIPES:
+		if id == TOURNAMENT_GATED_RECIPE:
+			continue
 		assert_eq(db.recipe_unlock_flag(id), "",
 			"'%s' should be known from the first minute, gated by owning Rootstone" % id)
 		assert_true(state.recipe_known(id), "'%s' must be known with no flag ever set" % id)
+
+
+## The other half of that carve-out, and the load-bearing half: the saddle is
+## NOT known on a fresh save and IS known once the tournament's flag is set.
+## Without this, deleting `unlocked_by` from the recipe would make the skip
+## above pass silently and the tournament's only material prize would vanish.
+func test_the_saddle_pattern_is_the_tournaments_prize_and_nothing_else() -> void:
+	assert_eq(db.recipe_unlock_flag(TOURNAMENT_GATED_RECIPE), TOURNAMENT_GATE_FLAG,
+		"the saddle should wait on '%s'; the tournament final's reward.flags is what writes it"
+			% TOURNAMENT_GATE_FLAG)
+	progression.set_flag(TOURNAMENT_GATE_FLAG, false)
+	assert_false(state.recipe_known(TOURNAMENT_GATED_RECIPE),
+		"the saddle pattern must not be known before the tournament is won")
+	progression.set_flag(TOURNAMENT_GATE_FLAG)
+	assert_true(state.recipe_known(TOURNAMENT_GATED_RECIPE),
+		"winning the tournament must actually teach the saddle")
 
 
 ## R4.9 shipped `orb_greater` (the tier ladder's mechanic and item) with no
@@ -378,6 +418,12 @@ func test_saddle_frame_recipe_crafts_a_real_saddle_frame() -> void:
 ## re-buying its Rootstone -- which is the entire reason `saddle_frame` is a
 ## separate item at all.
 func test_saddle_recipe_consumes_the_frame_and_makes_a_saddle() -> void:
+	# TOURNAMENT-1: the pattern is the tournament's prize now, so a state that
+	# has never won it cannot craft one however full the satchel is. Set the
+	# flag first -- this test is about the recipe's arithmetic, and the gate
+	# itself is proven separately by
+	# `test_the_saddle_pattern_is_the_tournaments_prize_and_nothing_else`.
+	progression.set_flag(TOURNAMENT_GATE_FLAG)
 	var costs: Array = state.recipe_cost_for("saddle")
 	assert_false(costs.is_empty(), "recipes_rootstone.json defines no saddle recipe")
 	var names: Array[String] = []
