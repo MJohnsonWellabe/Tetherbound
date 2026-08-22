@@ -71,6 +71,12 @@ const POST_SPACING := BOARD_WIDTH * 0.5 - 0.04
 const FRAME_DEPTH := 0.05
 ## The two rails the panel is nailed to, top and bottom.
 const RAIL_THICKNESS := 0.055
+## How many boards the panel is made of, and the seams between them.
+const PLANKS := 5
+const SEAM_THICKNESS := 0.012
+const SEAM_DEPTH := 0.008
+## The timber trim round the panel's edge.
+const BORDER := 0.07
 
 ## The painted bracket. Sizes are in metres unless the name says otherwise.
 ##
@@ -103,12 +109,12 @@ const TITLE_Y := 0.62
 const TITLE_FONT_SIZE := 40
 const TITLE_PIXEL_SIZE := 0.0026
 ## Connector lines and the empty-slot rules waiting to be filled in.
-const LINE_THICKNESS := 0.012
+const LINE_THICKNESS := 0.018
 const LINE_DEPTH := 0.006
 ## An undecided slot is drawn as an empty ruled line rather than left blank,
 ## so a bracket with nothing decided still READS as a bracket with places
 ## waiting in it -- which is the whole of what the owner asked for.
-const EMPTY_RULE_WIDTH := 0.34
+const EMPTY_RULE_WIDTH := 0.40
 ## The one ink colour every painted thing on this board shares.
 const INK := Color("#241a10")
 
@@ -209,6 +215,44 @@ func _build_board() -> void:
 	panel.position = Vector3(0.0, BOARD_CENTRE_HEIGHT, 0.0)
 	_board.add_child(panel)
 
+	# Planks and a border, because a notice board is built out of boards.
+	#
+	# Two blind visual passes named this first and in the same words: an
+	# untextured flat rectangle that "reads as a UI panel in world space, not
+	# an object". Neither needs new art to answer -- seams between the planks
+	# and a timber border round the edge are geometry, and they are what turns
+	# one quad into a made thing.
+	var seam := StandardMaterial3D.new()
+	seam.albedo_color = Color("#8d7550")
+	seam.roughness = 0.95
+	for i in PLANKS - 1:
+		var y := BOARD_HEIGHT * (float(i + 1) / float(PLANKS) - 0.5)
+		var line := MeshInstance3D.new()
+		line.name = "Seam_%d" % i
+		var seam_mesh := BoxMesh.new()
+		seam_mesh.size = Vector3(BOARD_WIDTH, SEAM_THICKNESS, SEAM_DEPTH)
+		seam_mesh.material = seam
+		line.mesh = seam_mesh
+		line.position = Vector3(0.0, BOARD_CENTRE_HEIGHT + y,
+			BOARD_THICKNESS * 0.5 + SEAM_DEPTH * 0.4)
+		_board.add_child(line)
+
+	for spec: Array in [
+		[Vector3(BOARD_WIDTH, BORDER, BORDER), Vector3(0.0, BOARD_HEIGHT * 0.5, 0.0)],
+		[Vector3(BOARD_WIDTH, BORDER, BORDER), Vector3(0.0, -BOARD_HEIGHT * 0.5, 0.0)],
+		[Vector3(BORDER, BOARD_HEIGHT, BORDER), Vector3(-BOARD_WIDTH * 0.5, 0.0, 0.0)],
+		[Vector3(BORDER, BOARD_HEIGHT, BORDER), Vector3(BOARD_WIDTH * 0.5, 0.0, 0.0)],
+	]:
+		var trim := MeshInstance3D.new()
+		trim.name = "Trim"
+		var trim_mesh := BoxMesh.new()
+		trim_mesh.size = spec[0]
+		trim_mesh.material = timber
+		trim.mesh = trim_mesh
+		trim.position = (spec[1] as Vector3) + Vector3(0.0, BOARD_CENTRE_HEIGHT,
+			BOARD_THICKNESS * 0.5 - BORDER * 0.25)
+		_board.add_child(trim)
+
 	# One collider for the whole assembly. The board is a solid object in a
 	# field the player fights in: a combat arena centred nearby will push a
 	# creature into it, and something to push against is better than something
@@ -259,7 +303,7 @@ func _build_board() -> void:
 			# instead of as a mostly blank board.
 			if depth > 0:
 				var rule := _line(
-					Vector2(COLUMN_X[depth], (rows[depth] as PackedFloat32Array)[i] - 0.055),
+					Vector2(COLUMN_X[depth], (rows[depth] as PackedFloat32Array)[i] - 0.045),
 					EMPTY_RULE_WIDTH, LINE_THICKNESS)
 				rule.name = "Rule_%d_%d" % [depth, i]
 				_board.add_child(rule)
@@ -366,12 +410,11 @@ func _build_connectors(rows: Array) -> void:
 			var bottom := previous[i * 2 + 1]
 			for y: float in [top, bottom]:
 				_board.add_child(_line(
-					Vector2((edge + spine) * 0.5, y - 0.03), spine - edge, LINE_THICKNESS))
+					Vector2((edge + spine) * 0.5, y), spine - edge, LINE_THICKNESS))
 			_board.add_child(_line(
-				Vector2(spine, (top + bottom) * 0.5 - 0.03),
-				LINE_THICKNESS, absf(top - bottom)))
+				Vector2(spine, (top + bottom) * 0.5), LINE_THICKNESS, absf(top - bottom)))
 			_board.add_child(_line(
-				Vector2((spine + COLUMN_X[depth + 1] - SLOT_WIDTH * 0.5) * 0.5, next[i] - 0.03),
+				Vector2((spine + COLUMN_X[depth + 1] - SLOT_WIDTH * 0.5) * 0.5, next[i]),
 				COLUMN_X[depth + 1] - SLOT_WIDTH * 0.5 - spine, LINE_THICKNESS))
 
 
