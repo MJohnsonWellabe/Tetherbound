@@ -131,6 +131,25 @@ analytical pass could not:
 Result of the corrected run: 2,063m walked, 25,491 physics frames, three
 stalls (320m handed over, never counted as walked), ending at z=4758.
 
+**Re-driven after the content fixes in §5**, by the same instrument that found
+them, which is the only reason to trust that they worked:
+
+| | before | after |
+|---|---|---|
+| stalls | 3 (320m handed over) | **2 (57m)** |
+| trainers met | 4 of 5 | **5 of 5** |
+| prop clusters met | 2 of 4 | **5 of 5** |
+| authored gatherables met | 3 of 12 | 4 of 12 |
+| walked | 2,063m | 2,322m |
+
+The checkpoint wedge is gone — the walk no longer stalls at (239.5, 3677.5),
+and the one remaining stall is the relay compound wall, which is a wall. With
+the body no longer teleporting over its own region, every trainer and every
+prop cluster in Band 3 is now actually encountered on the walked line.
+
+Dead travel is unchanged at 632m, as expected: it is §1.1 wearing a different
+hat and no prop moves it.
+
 **Two probe defects were found and fixed mid-session**, and both had produced
 believable wrong answers that would have sent the next round to fix content
 that is not broken:
