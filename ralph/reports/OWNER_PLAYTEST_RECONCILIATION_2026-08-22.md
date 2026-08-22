@@ -477,7 +477,7 @@ have meant "fixing" two things that are not broken.
 
 | # | Judge's finding | Verdict |
 | --- | --- | --- |
-| 1 | *"Text collides with text in `combat-prompt.png`"* — called the single most severe defect in the set | **Capture artefact.** `playground_hud.gd::_exploration_legend_should_show()` already returns false while `_combat_is_running()`, so a player never sees the legend and the combat prompt together. `capture_ui_glyphs.gd` fakes the fight (`combat.visible = true`, no fight running) and hid only the exploration PROMPT, not its sibling legend in the same dock. Fixed in the tool. |
+| 1 | *"Text collides with text in `combat-prompt.png`"* — called the single most severe defect in the set | **Capture artefact, now fixed and re-rendered.** `playground_hud.gd::_exploration_legend_should_show()` already returns false while `_combat_is_running()`, so a player never sees the legend and the combat prompt together. `capture_ui_glyphs.gd` fakes the fight (`combat.visible = true`, no fight running) and hid only the exploration PROMPT, not its sibling legend. **The first fix for this did nothing** — the HUD recomputes both from `_combat_is_running()` every frame and the tool waits thirty frames before shooting, so it turned them straight back on. `hud.set_process(false)` was the missing half. The re-rendered frame is clean: "Engage Bramblebun" alone, no legend under it. |
 | 9 (part) | *"`hud_hotbar_legend.png` names RB twice at once… stacked"* | **Stale frames.** Those `_diag` captures are from **19:31**; `f6fe2932` fixed exactly that duplication at **20:11**. The judge was shown the bug forty minutes after it was fixed. |
 
 The rest of #9 — `[C]` bracket-text sitting beside boxed key glyphs, two visual
@@ -489,6 +489,13 @@ grammars in one legend — is read off the 20:13 frames and **stands**.
   question answered honestly: legible, yes; competing, yes, and currently
   winning a fight it should lose.
 - **#12** the hotbar leaks past the dialogue panel, leaving a stray slot 5.
+  **FIXED and re-rendered clean.** Looking at the frame changed the scope call
+  recorded below: this is not width-and-emphasis tuning, it is one predicate
+  widened to match reasoning already written in the file. OW11 argues it for the
+  build selector one panel along — "it produces the hotbar's slot chips reading
+  THROUGH the selector's semi-transparent background" — and `dialogue_panel.gd`
+  already joins `input_owner.gd::GROUP` on open, which the exploration legend
+  already stands down on. The dialogue box now sits on clean ground.
 - **#15** `"Catch your first wild / creature."` orphans its last word, right-
   aligned, in all seven UI frames.
 - **#13** four of five hotbar slots draw near-identical icons.
@@ -499,10 +506,26 @@ grammars in one legend — is read off the 20:13 frames and **stands**.
 - **#8** two of three starter portraits face away from the camera — in the one
   moment the game asks the player to choose by appearance.
 
-**Not fixed here, deliberately.** These are HUD-EMPHASIS lineage work that has
-already been through its own blind-judge rounds, and re-tuning widths and
-z-order at the end of a verification pass risks regressing what those rounds
-bought. They are backlog entries, named above, not silent omissions.
+**The remaining four are not fixed here, deliberately.** #11, #13, #15 and the
+surviving half of #9 are HUD-EMPHASIS lineage work that has already been through
+its own blind-judge rounds, and re-tuning widths, alignment and z-order at the
+end of a verification pass risks regressing what those rounds bought, for
+defects that cost the player nothing functional. They are backlog entries
+(`HUD-JUDGE-2`), named, not silent omissions.
+
+#15 and #17 were both confirmed present in the freshly rendered frames while
+checking the two fixes above — the objective really does orphan `creature.` onto
+its own line, and the indoor minimap really is a bordered box containing a
+cursor and nothing else.
+
+### A method note this pass earned
+
+Both fixes above were verified by OPENING THE PNG, not by reading the diff. That
+is not ceremony: **the first attempt at #1 was committed with a confident
+message and changed nothing at all in the rendered frame.** It only got caught
+because the frame was looked at afterwards. A capture tool is the one place
+where "the code is obviously right" is worth least — its entire output is a
+picture, and the picture is checkable in one step.
 
 ### Genuine, and not this branch's
 
