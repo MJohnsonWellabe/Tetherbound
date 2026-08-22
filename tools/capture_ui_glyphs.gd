@@ -108,6 +108,15 @@ func _run() -> void:
 	if combat != null:
 		combat.visible = true
 		if hud != null:
+			# Stop the HUD's own poll FIRST, for the same reason the combat HUD's
+			# is stopped below. `playground_hud.gd::_update_exploration_legend()`
+			# and its prompt sibling both recompute `.visible` every frame from
+			# `_combat_is_running()`, and no fight is running here -- so hiding
+			# them and then waiting 30 frames for the shot hands them 30 chances
+			# to turn themselves straight back on. The first version of this fix
+			# set `.visible = false` without this line and changed nothing at all
+			# in the rendered frame.
+			hud.set_process(false)
 			var explore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
 			if explore_prompt != null:
 				explore_prompt.visible = false
@@ -137,6 +146,9 @@ func _run() -> void:
 			var restore_legend: Control = hud.get_node_or_null(EXPLORATION_LEGEND) as Control
 			if restore_legend != null:
 				restore_legend.visible = true
+			# Back on, and the HUD resumes owning its own visibility -- every
+			# later frame in this run needs the real, polled behaviour.
+			hud.set_process(true)
 	else:
 		failures.append("combat-prompt: no CombatHUD in the scene (skipping)")
 
