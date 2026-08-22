@@ -175,11 +175,28 @@ func _cadence() -> void:
 ## and whether the stronghold grows. Judged by an independent critic, never here
 ## -- `ralph/lanes/COMMON.md` §8.
 func _captures(world: Node, suffix: String) -> void:
+	# ROUND 1 WAS INVALID AND THIS IS WHY. The first pass moved only the CAMERA
+	# down the route and left the player at spawn, 7km south. Creature spawning
+	# is driven off the PLAYER, so a region carrying 22 authored clusters and 75
+	# creatures photographed as empty meadow, and the blind critic correctly
+	# refused the sheet: "there is not a single creature, and not a single
+	# trainer, in any of the twelve frames... scale agreement is therefore
+	# unjudgeable in this set, and that is itself a defect of the survey."
+	# Criterion 8 needs the trainer in shot as its 1.80m ruler.
+	#
+	# So the player is now carried to each viewpoint WITH the camera, and given
+	# real physics frames to stand there, so whatever the world would populate
+	# around a player at that spot is what gets photographed.
+	for layer: Node in _all(world):
+		if layer is CanvasLayer:
+			(layer as CanvasLayer).visible = false
+
 	var camera := Camera3D.new()
 	camera.fov = 70.0
 	camera.far = 3000.0
 	world.add_child(camera)
 	camera.make_current()
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var terrain: Node = world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", camera)
@@ -198,7 +215,20 @@ func _captures(world: Node, suffix: String) -> void:
 		var eye: Vector2 = shot[1]
 		var eye_ground: float = field.height_at(eye.x, eye.y)
 		var target_ground: float = field.height_at(target.x, target.y)
-		camera.global_position = Vector3(eye.x, eye_ground + 1.7, eye.y)
+		# The player goes first and gets time to settle and to let the world
+		# populate around them; the camera then stands just behind and above
+		# their shoulder, so the 1.80m ruler the rubric asks for is IN the shot
+		# rather than 7km away.
+		var toward := (target - eye).normalized()
+		if player != null:
+			player.global_position = Vector3(eye.x, eye_ground + 0.4, eye.y)
+			for i in 150:
+				await physics_frame
+		var back: Vector2 = eye - toward * 4.2
+		var back_ground: float = field.height_at(back.x, back.y)
+		if is_nan(back_ground):
+			back_ground = eye_ground
+		camera.global_position = Vector3(back.x, back_ground + 2.4, back.y)
 		camera.look_at(Vector3(target.x, target_ground + 6.0, target.y), Vector3.UP)
 		for i in 12:
 			await physics_frame
@@ -208,6 +238,17 @@ func _captures(world: Node, suffix: String) -> void:
 		var path := "%s/%s-%s.png" % [OUT_DIR, shot[0], suffix]
 		root.get_texture().get_image().save_png(path)
 		print("wrote %s" % path)
+
+
+## Every node under `node`, self included. The sky-plane probe has its own
+## copy; this one exists so the capture pass can find and hide every CanvasLayer
+## in the world -- round 1 burned the HUD, an open rest menu and a "TEAM 0/5"
+## card into all twelve frames, and the critic spent a numbered defect on it.
+func _all(node: Node) -> Array[Node]:
+	var out: Array[Node] = [node]
+	for child in node.get_children():
+		out.append_array(_all(child))
+	return out
 
 
 func _json(path: String) -> Dictionary:

@@ -104,3 +104,77 @@ Not the lane's, now better evidenced:
 
 Round 2 must not be graded against round 1's verdict: the two surveys will not
 be measuring the same thing.
+
+
+---
+
+# D5 — round 2: what the lane changed
+
+Round 1's three lane-owned items, all fixed. Round 2 is a **fresh survey judged
+by a fresh critic**; it is not graded against round 1's verdict, because round 1
+was not photographing the same thing.
+
+## 1. The survey now photographs the region
+
+Round 1's fatal flaw. `_probe_band5_approach.gd` moved the camera and left the
+player at spawn, so nothing spawned. Now:
+
+- the **player is carried to each viewpoint** and given 150 physics frames to
+  stand there before the shutter, so the world populates around them the way it
+  would in play;
+- the **camera stands 4.2 m back and 2.4 m up, over their shoulder**, so the
+  trainer is in shot — criterion 8 explicitly needs them as the 1.80 m ruler;
+- **every `CanvasLayer` is hidden**, which removes the HUD, the "TEAM 0/5" card
+  and the open rest menu that ate the bottom quarter of all twelve frames.
+
+## 2. The masonry static — two compounding causes, both real
+
+The critic called it "a corrupted texture or per-pixel dither, not masonry" and
+was right; this lane had filed it as taste, which was wrong.
+
+- **The tiling was ~11× too fine.** In triplanar `uv1_scale` multiplies world
+  position, so `STONE_TILE = 3.2` repeated the tile every **0.31 m**. Counted
+  off the texture itself, `T_UnevenBrick` is ~9 stones across — so each stone
+  rendered at **3.5 cm**. That is gravel. Real stones of that shape run
+  0.3–0.5 m, putting the tile at ~3.6 m of wall and the scale at **0.28**.
+- **The texture had no mipmaps** (`mipmaps/generate=false` on all three maps,
+  now `true`). Every stone in it is outlined in a thin bright white highlight —
+  the worst possible thing to minify without a mip chain. ~100 repeats across a
+  30–41 m wall, each highlight thinner than a pixel at distance, *is* the white
+  speckle.
+
+Fixing one alone would not have worked: mipmaps alone blur 3.5 cm pebbles into
+grey mud, rescaling alone still shimmers at distance.
+
+`severed_spokes.gd` uses the same 3.2 and escapes it only because its stone
+objects are sub-metre to ~6 m. **Reported, not changed** — it is not this lane's
+file and its objects may genuinely want fine tiling. Likewise the other 19
+textures in `assets/buildings/quaternius_medieval/` all ship
+`mipmaps/generate=false`; only the three this lane's material samples were
+changed.
+
+## 3. The cable — the wire, not the pylons
+
+The critic called the pylons "the best thing in the survey" and the wire "a
+bezier debug line… the wire connecting them undoes them." So the wire was fixed.
+
+Sag is **proportional to span**. `severed_spokes.gd`'s default `1.0` was tuned
+on the spokes' and quarry's ~14 m spans, where it droops 0.7 m and reads; over
+this run's 35 m spans it drooped 1.8 m across five times the length — a straight
+diagonal. `_build_pylons` now reads an optional **`sag_scale`** from the pylons
+config, defaulting to the 1.0 every existing caller already gets, so nothing
+else in the chapter moves.
+
+Sag and ground clearance pull directly against each other, so both were swept
+(`tools/_sweep_cable.gd`) instead of either being guessed:
+
+| height | sag_scale | sag over 35.4 m | worst ground clearance |
+|---|---|---|---|
+| 10.0 (round 1) | 1.0 | 1.77 m | 3.14 m |
+| 10.0 | 2.2 | 3.90 m | **1.01 m — under a walking player** |
+| **12.0** | **2.2** | **3.90 m (11% of span)** | **2.33 m** |
+
+12.0 m is the smallest swept height that keeps a 2.2× sag clear of 2.2 m. The
+cost is a pylon 20% taller than the one the critic liked — taken deliberately,
+as a decisive fix round 2 can actually see rather than a timid one that changes
+nothing.

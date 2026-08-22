@@ -79,7 +79,29 @@ const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
 const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
-const STONE_TILE := 3.2
+## MEASURED, after the blind visual pass round 1 called the walls "television
+## static… a corrupted texture or per-pixel dither, not masonry" and was right.
+##
+## Two compounding causes, both invisible until this texture was tiled across
+## something very large. `severed_spokes.gd` uses the same 3.2 and gets away
+## with it because its stone objects are sub-metre to ~6m; the stronghold is
+## the first thing in the project to run this material across 30-41m walls.
+##
+## 1. THE TILING WAS ~11x TOO FINE. In triplanar, `uv1_scale` multiplies world
+##    position, so 3.2 repeats the tile every 1/3.2 = 0.31m. Counted off the
+##    texture itself, T_UnevenBrick is about NINE stones across; at 0.31m that
+##    makes each stone 3.5cm. That is gravel, not masonry. Real stones of this
+##    shape run 0.3-0.5m, so the tile represents ~3.6m of wall and the scale
+##    that says so is 1/3.6 = 0.28.
+## 2. THE TEXTURE HAD NO MIPMAPS (`mipmaps/generate=false`, now true on all
+##    three maps). Every stone in this texture is outlined in a thin, bright,
+##    high-contrast white highlight -- the single worst thing to minify without
+##    a mip chain. ~100 repeats across a wall, each highlight thinner than a
+##    pixel at distance, is precisely the white per-pixel speckle the critic saw.
+##
+## Fixing only one would not have worked: mipmaps alone would blur 3.5cm
+## pebbles into grey mud, and rescaling alone would still shimmer at distance.
+const STONE_TILE := 0.28
 
 ## Which trainers.json rows belong to this building. `trainer_npc.gd` skips
 ## every row naming a `placed_by` it was not asked for, so the table stays the
