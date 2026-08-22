@@ -52,6 +52,9 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+## The fight's own reach numbers, read rather than guessed. See
+## `_load_attack_ranges()` for why this file may not carry its own.
+const COMBAT_CONFIG := "res://data/config/combat.json"
 
 const SETTLE_FRAMES := 300
 ## A hard ceiling per ROUND, so a director that never resolves one fails
@@ -105,6 +108,10 @@ var _game: Node = null
 var _felled := 0
 var _exit_connected := false
 
+## `combat.json`'s `player_quick.range` / `player_charged.range`, loaded once.
+var _quick_range := 2.6
+var _charged_range := 3.0
+
 
 func _init() -> void:
 	_run()
@@ -119,6 +126,7 @@ func _run() -> void:
 	if not _collect_nodes():
 		_report()
 		return
+	_load_attack_ranges()
 
 	_clear_the_slate()
 	await _ensure_ally()
@@ -173,6 +181,26 @@ func _collect_nodes() -> bool:
 		_fail("no Game autoload; there is nobody to enter the tournament")
 		return false
 	return true
+
+
+## The reach of the two attacks, from the fight's own config.
+##
+## Loaded rather than written down here for the reason the stall above
+## documents: a harness that carries its own private idea of "close enough to
+## swing" can disagree with the game and deadlock against it, and the number
+## it disagrees by does not have to be large.
+func _load_attack_ranges() -> void:
+	var file := FileAccess.open(COMBAT_CONFIG, FileAccess.READ)
+	if file == null:
+		_fail("combat.json is missing; the harness has no reach to drive to")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_fail("combat.json is not a JSON object")
+		return
+	var cfg := parsed as Dictionary
+	_quick_range = float((cfg.get("player_quick", {}) as Dictionary).get("range", 2.6))
+	_charged_range = float((cfg.get("player_charged", {}) as Dictionary).get("range", 3.0))
 
 
 func _clear_the_slate() -> void:
@@ -393,16 +421,25 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
 		_rig.set("yaw", atan2(-to.x, -to.z))
-		if to.length() > 2.0:
+		# Attack when the GAME says the swing would reach, not when an
+		# invented constant says so. The first version of this loop closed to
+		# a hard-coded 2.0m before it would throw a punch, which is TIGHTER
+		# than `combat.json`'s own `player_quick.range` (2.6) and tighter than
+		# the enemy AI's `preferred_range` (2.1) -- so against a trainer whose
+		# creature holds its spacing, the harness stood at 2.6m with both
+		# attacks charged and refused to use either, closing nothing and
+		# hitting nothing until the round's frame ceiling ran out. That is
+		# what the stall report above was built to catch, and it caught it on
+		# the tournament final.
+		var distance := to.length()
+		if bool(_manager.call("charged_ready")) and distance <= _charged_range:
+			await _press("combat_charged")
+		elif bool(_manager.call("quick_ready")) and distance <= _quick_range:
+			await _press("combat_quick")
+		else:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
-		elif bool(_manager.call("charged_ready")):
-			await _press("combat_charged")
-		elif bool(_manager.call("quick_ready")):
-			await _press("combat_quick")
-		else:
-			await physics_frame
 
 	if frames >= ROUND_FRAME_LIMIT:
 		_fail("%s never resolved after %d action frames" % [label, ROUND_FRAME_LIMIT])
