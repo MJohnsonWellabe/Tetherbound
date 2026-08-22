@@ -464,6 +464,10 @@ var _exploration_legend: PanelContainer = null
 var _exploration_legend_label: RichTextLabel = null
 var _legend_last_gamepad := false
 var _legend_last_party_revision := -999
+## Whether the contextual prompt was naming `creature_recall` when the legend
+## was last drawn. Part of the redraw key: without it a stale Call Out entry
+## would survive until the party or the input device changed.
+var _legend_last_prompt_owned_recall := false
 var _legend_was_drawn := false
 
 ## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
@@ -1962,13 +1966,23 @@ func _update_exploration_legend() -> void:
 		return
 	var gamepad := INPUT_GLYPH.using_gamepad()
 	var revision := int(_party.get("revision")) if _party != null else -1
+	# A blind visual critic, shown only the frames, called this out: "RB Call
+	# out Biscuit" floating above a legend that also says "RB Call Out" --
+	# "same button, two labels, ten pixels apart". The legend's own comment
+	# below claims RB is "the one world verb with no other on-screen home",
+	# and that is exactly false in the moment the contextual prompt is
+	# naming it. The specific line wins; the legend is the fallback.
+	var prompt_owns_recall := _prompt_label != null \
+			and _prompt_label.text.contains("Call out")
 	if _legend_was_drawn and gamepad == _legend_last_gamepad \
-			and revision == _legend_last_party_revision:
+			and revision == _legend_last_party_revision \
+			and prompt_owns_recall == _legend_last_prompt_owned_recall:
 		return
 	_legend_was_drawn = true
 	_legend_last_gamepad = gamepad
 	_legend_last_party_revision = revision
-	_exploration_legend_label.text = _exploration_legend_text()
+	_legend_last_prompt_owned_recall = prompt_owns_recall
+	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall)
 
 
 func _exploration_legend_should_show() -> bool:
@@ -1982,7 +1996,7 @@ func _exploration_legend_should_show() -> bool:
 	return INPUT_OWNER.current(get_tree()) == null
 
 
-func _exploration_legend_text() -> String:
+func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
 	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
@@ -1995,9 +2009,13 @@ func _exploration_legend_text() -> String:
 	var entries: Array[String] = [
 		_legend_entry("map", "Map", normal),
 		_legend_entry("inventory", "Satchel", normal),
-		_legend_entry("creature_recall", "Call Out", normal),
-		_legend_entry("party_cycle", "Change Creature", change_tint),
 	]
+	# Stand down while the contextual prompt directly above is already naming
+	# this button, with the creature's actual name on it. Two labels for one
+	# button, ten pixels apart, is worse than one.
+	if not prompt_owns_recall:
+		entries.append(_legend_entry("creature_recall", "Call Out", normal))
+	entries.append(_legend_entry("party_cycle", "Change Creature", change_tint))
 	return "     ".join(entries)
 
 

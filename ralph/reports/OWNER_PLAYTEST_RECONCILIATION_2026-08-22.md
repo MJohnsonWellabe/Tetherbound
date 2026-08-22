@@ -223,3 +223,79 @@ greeting), and the Stronghold/Warden/climax (five rooms, shutter gating, the
 machine refusing before the Warden falls, 95 plants back and the storm horizon
 flipping to land). `[village_npcs] placed 6 of 8` is correct, not a bug — the
 two absent are `place_when`-gated.
+
+---
+
+## Addendum 2 — the blind visual judge
+
+Six real in-game frames — the HUD pair at 1280x800 (the Ally's own panel
+resolution) and all four weather states — handed to a Fable critic with no
+knowledge of what changed, per `ralph/conventions.md` and
+`ralph/OWNER_DIRECTIVES_2026-08-22.md` §5's "blind visual review stays
+Fable-only".
+
+**Both bar questions were answered, and they differed**, which is the useful
+case: **A (key art) — no. B (Palworld genre) — yes, narrowly, and only because
+of the HUD frames.**
+
+### It independently reproduced WEATHER-2
+
+Without being told that entry exists, it named the same three defects
+`ralph/BACKLOG.md`'s `WEATHER-2` already records: `cloudy` reads as "my
+brightness setting broke" (same scene, same shadows, 30% darker, and no actual
+clouds — a grey gradient sky), the sun's shadow rig is identical in all four
+states, and nothing on the ground responds to weather (`rain.png` has no wet
+darkening, no specular, and streaks faint enough to read as sensor noise).
+A second independent critic reaching the same conclusions is the strongest
+evidence available that WEATHER-2 is real and correctly scoped.
+
+### UI defects, which are this merge's to answer
+
+The HUD lineage (HUD-EMPHASIS, HUD-LAYOUT, HUD-POPUP) all landed in
+integration-ABC, so these are in scope:
+
+1. **Two labels for one button.** "RB Call out Biscuit" floats directly above a
+   legend that also says "RB Call Out" — "same button, two labels, ten pixels
+   apart". The legend's own comment claims RB is "the one world verb with no
+   other on-screen home", which is precisely false in the moment the contextual
+   prompt is naming it. **FIXED**: the legend entry stands down while the prompt
+   owns that verb.
+2. **The party panel is too transparent over dark scenery.** "Ripplet Lv 1" loses
+   contrast where the dark hilltop shows through the translucent rows in
+   `hud_hotbar_legend.png`, while the same rows over sky in `hud_party_cycle.png`
+   read fine. Open.
+3. **The objective text wraps raggedly** — "creature." alone on its own line,
+   right-aligned, in both HUD frames. Reads as broken wrapping, not typography.
+   Open.
+4. **The satiety block is clipped by its own panel** — "FOOD" and "100%" run to
+   the panel edge with no padding, amber on amber. Open.
+5. **Four near-identical white-cross icons** sit in hotbar slots that appear to
+   be empty. "If four slots are empty they should look empty, not each hold a
+   phantom icon." Open.
+6. **An unexplained underline strip** beneath the bottom legend, which the critic
+   read as "a progress bar at 0% or a leftover debug element". Open.
+
+It also praised what works, which is worth recording so a later pass does not
+"fix" it: the trainer's silhouette and ground contact in every frame, and the
+party panel's information hierarchy — "the KO state (red badge, greyed row) is
+genuinely clear at a glance... already better than 'programmer UI'".
+
+### World defects — Gate D/F, not this branch
+
+Mid-ground emptiness ("~60m of bare single-tone green with two rocks"), the
+hilltop landmark rendering as an unlit black mass with stair-stepped foliage in
+every frame, uniform grass-tuft scatter at even intervals, and garden-bed
+timbers at bridge scale. These belong to the regional packages and to prompt 70,
+not to a merge verification, and are recorded rather than actioned here. The
+landmark reading pitch-black in `clear.png` while the grass beside it is fully
+lit is the one that may be a real bug rather than composition, and is worth a
+look by whoever owns D1.
+
+### The caveat the critic carried, correctly
+
+These frames come from Godot's **Compatibility** renderer under software
+rasterisation, not the shipping Forward+. Trustworthy for composition, terrain
+shape, silhouette, colour relationships, framing and UI layout; NOT for shadow
+softness, ambient occlusion, bloom or post-processing. The critic confined its
+lighting remarks to direction, value structure and shadow placement, which
+survive the downgrade, and said so.
