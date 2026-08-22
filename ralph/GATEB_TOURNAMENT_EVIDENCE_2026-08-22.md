@@ -5,7 +5,8 @@ B still needs. Written to be read cold by whoever picks this up next.
 
 **Branch:** `ralph/TOURNAMENT-2` (also pushed as
 `claude/tournament-gate-b-kn9wpv`), based on `ralph/TOURNAMENT-1` (c31e54e2).
-**CI:** run 1977 on that branch. **On `main`: nothing.** See §6.
+**CI:** see §6 item 3 -- the only green run on this branch so far is a
+52-second docs-only skip, not a verification of the code. **On `main`: nothing.**
 
 The tournament itself was **not** rebuilt. `TOURNAMENT-1` already carried the
 eight-slot bracket, `data/config/tournament.json`,
@@ -284,7 +285,7 @@ shown may never tick over. Every other flag in the chain has a real writer.
 |---|---|---|
 | 1 | **The first catch fails deterministically** (§3) | Gate A |
 | 2 | **Nothing is on `main`** — TOURNAMENT-1, integration-3 and TOURNAMENT-2 are three unmerged branches | coordinator |
-| 3 | **CI run 1977 must come back green** on `ralph/TOURNAMENT-2` | this branch |
+| 3 | **CI: read this before trusting a green badge.** Run 1977 (the code) was CANCELLED by a later docs push. Run 1981 says success but finished in 52 seconds -- `ci.yml`'s `changes` job diffs against `github.event.before`, saw a markdown-only push, and skipped every heavy job. **The code has no green CI run.** A `workflow_dispatch` run on this branch was queued at 14:47 and is the one to check: on a dispatch, `before` and `pull_request.base.sha` are both empty, so the filter falls back to the merge-base with main, sees the whole diff and runs the full build. Do not ship on 1981. | next coordinator |
 | 4 | **`opening:beat:road` has no writer** (§5) | Gate B follow-up |
 | 5 | **"Enough nearby creatures to prepare naturally" is unproven** — the bracket smoke BUILDS a qualifying team; nobody has shown a player can reach the entry threshold through ordinary play in the opening area. A named Gate B pass criterion that needs a play-through, not a test | Gate B / Gate C ecology |
 | 6 | **Both blind visual passes said no to both bar questions** (§4) | world/art lanes |
