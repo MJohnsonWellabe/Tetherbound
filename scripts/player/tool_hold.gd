@@ -104,6 +104,25 @@ func prop_node() -> Node3D:
 	return _prop
 
 
+## Would a swing started right now resolve against `node`?
+##
+## The identical cone test `_resolve_swing()` runs, asked ahead of the swing
+## instead of after it. `harvest_logic.gd::swing_answers_the_prompt()` needs
+## this: it turns an interact press into a visible swing, and it must not do
+## that unless the swing will actually reach what the player pressed on -- an
+## animation that resolves against nothing is worse than the silent yield it
+## would be replacing.
+func would_connect(node: Node3D) -> bool:
+	if node == null or not is_instance_valid(node) or _equipped.is_empty():
+		return false
+	var body := get_parent() as Node3D
+	if body == null:
+		return false
+	return COMBAT_MATH.in_hit_cone(
+		body.global_position, _facing_direction(body), node.global_position,
+		SWING_REACH, SWING_ARC_DEGREES)
+
+
 ## Begin a swing. Refused (returns false) with nothing in hand or with one
 ## already running, so the caller can play its own refusal.
 func swing() -> bool:

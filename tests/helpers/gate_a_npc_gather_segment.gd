@@ -11,7 +11,12 @@ extends RefCounted
 ## - travel is by the player's left stick, including through real doors;
 ## - Tam's production dialogue is the only source of the tools;
 ## - the Satchel's focused controller UI assigns the quick slots;
-## - harvesting uses `use_tool`, never a direct gather call;
+## - harvesting uses the PAD's own gather button, never a direct gather call.
+##   That is `interact` (X) since CONTROLLER-MAP: the owner's map gives X
+##   "talk, gather, chop, mine", and `use_tool` kept only its mouse button.
+##   Pressing `use_tool` here meant this segment could never run on a pad at
+##   all -- `_required_pad_actions_exist()` failed the whole Gate A continuous
+##   core on it -- and, worse, it hid that X gathered without ever swinging;
 ## - no teleport, direct inventory grant, progression mutation, or private
 ##   gameplay method stages the route.
 ##
@@ -249,9 +254,9 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if message != null:
 		message.text = ""
 		message.visible = false
-	await _tap_action(&"use_tool")
+	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
-		_fail("physical Use Tool did not start the visible %s swing" % tool_id)
+		_fail("physical interact on the node did not start the visible %s swing" % tool_id)
 		return false
 	for _i in 90:
 		if int(inventory.call("count", item_id)) > before and message != null and message.visible:
@@ -474,7 +479,7 @@ func _event_for(action: StringName, pressed: bool) -> InputEvent:
 
 func _required_pad_actions_exist() -> bool:
 	for action: StringName in [&"inventory", &"backpack_assign", &"ui_up", &"ui_down",
-			&"ui_left", &"ui_right", &"menu_cancel", &"interact", &"use_tool",
+			&"ui_left", &"ui_right", &"menu_cancel", &"interact",
 			&"hotbar_1", &"hotbar_2", &"hotbar_3"]:
 		if _event_for(action, true) == null:
 			_fail("required action '%s' has no physical joypad binding" % action)

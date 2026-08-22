@@ -256,6 +256,13 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	if game == null:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
 		return
+	# OP21-24. A press with a tool in hand swings it; the swing then calls
+	# `gather()` below with the prop that actually swung, which arrives here
+	# with `equipped_tool` set and so cannot re-enter this branch. Bare hands,
+	# the wrong tool and a node outside the swing's reach all fall straight
+	# through to the direct yield, unchanged.
+	if equipped_tool == null and HARVEST_LOGIC.swing_answers_the_prompt(self, game):
+		return
 	var inventory: RefCounted = game.get("inventory")
 	var items: RefCounted = game.get("items")
 	var actual_amount := _amount

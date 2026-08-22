@@ -129,14 +129,21 @@ func _start_mira_battle_through_dialogue() -> void:
 		await physics_frame
 
 
+## CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Fleeing is
+## RB. Putting the creature away IS disengaging; flee gets no button of its
+## own." `combat_run` kept its keyboard Escape and lost its pad button, and
+## `combat_manager.gd::_flee_pressed()` reaches the pad through
+## `creature_recall` (RB) instead. B is `hotbar_1`/`build_cancel` now and
+## disengages nothing, so this pressed a button with no bearing on the fight
+## and reported the fight still running -- which it correctly was.
 func _prove_combat_exit_restores_orbit() -> void:
-	await _press_button(JOY_BUTTON_B)
+	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical B did not flee the trainer battle")
+		_fail("physical RB did not disengage the trainer battle")
 		return
 	if _rig.get("_target") != _player or not _rig.is_processing() or not _camera.current:
 		_fail("fleeing the trainer battle did not restore the exploration camera")

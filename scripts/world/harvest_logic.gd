@@ -65,3 +65,46 @@ static func gather(item_id: String, base_amount: int, inventory: RefCounted, ite
 
 	actual_amount = int(items.call("harvest_yield", item_id, base_amount, true, false))
 	return {"amount": actual_amount, "required_slot": required_slot}
+
+
+## Should this gather spot answer an INTERACT press with a visible tool swing
+## rather than yielding on the spot?
+##
+## OP21-24, reopened by the 2026-08-21 owner playtest and still true on
+## `main`: "the owner still does not see a convincing chopping swing during
+## normal gathering." CONTROLLER-MAP is why. It took the pad button off
+## `use_tool` -- correctly, per the owner's own map, where X/`interact` is what
+## chops and mines -- but `use_tool` is the ONLY input that ever called
+## `tool_hold.gd::swing()`. So on a controller the axe never swung: X ran the
+## interact prompt, which credits the satchel and prints "+3 Wood" directly.
+## The swing was not removed, it was made unreachable by the device the game
+## is played on.
+##
+## The fix is not a second swing path. It is to make the prompt press START
+## the swing and let `tool_hold.gd::_resolve_swing()` land the gather through
+## `gather()` -- the same one implementation the mouse already drives, so a
+## swing and a press still cannot disagree about yield, tool gating,
+## durability or respawn.
+##
+## Returns true only when the swing will actually reach `node`. A press that
+## started an animation resolving against nothing would be strictly worse than
+## the silent yield it replaced, so the caller keeps its direct-gather path for
+## bare hands, for the wrong tool, and for a node outside the swing's own cone.
+static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
+	if node == null or game == null:
+		return false
+	if str(game.get("equipped_tool")).is_empty():
+		return false
+	var player := game.call("find_player") as Node3D
+	if player == null:
+		return false
+	var hold: Node3D = player.get("tool_hold")
+	if hold == null or not hold.has_method("swing") or not hold.has_method("would_connect"):
+		return false
+	if bool(hold.call("is_swinging")):
+		# Already mid-swing: that swing resolves on its own and will gather
+		# this node itself. Yielding here as well would double the press.
+		return true
+	if not bool(hold.call("would_connect", node)):
+		return false
+	return bool(hold.call("swing"))

@@ -471,7 +471,15 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		if creature != null and creature.hp_fraction() < 0.5:
 			creature.hp = creature.max_hp
 
-		var opponent: Node3D = _world.find_child("TrainerCreature_*", true, false) as Node3D
+		# Ask the FIGHT which body it is fighting. `find_child` returns the
+		# first name match in tree order, which is not the same thing: on the
+		# round after a loss the previous round's body can still be in the
+		# tree awaiting free, and this loop then aimed the camera, measured
+		# its engage distance and walked the ally toward a corpse while the
+		# live opponent stood somewhere else entirely -- an intermittent
+		# stall, at full enemy HP, that reported itself as the piloted
+		# creature being stuck mid-commit.
+		var opponent: Node3D = _manager.call("enemy_body") as Node3D
 		var ally: Node3D = _director.call("ally_body") as Node3D
 		if opponent == null or ally == null:
 			stalled += 1
@@ -494,10 +502,22 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		else:
 			stalled += 1
 			if stalled > STALL_FRAMES:
-				_fail("%s stalled: %d frames without the opponent losing HP -- %.1f HP left, %.1fm away, quick_ready=%s charged_ready=%s, %d of %d felled" % [
+				# `quick_ready=false charged_ready=false` alone cannot tell a
+				# creature rooted mid-commit from one that is merely on
+				# cooldown, and that ambiguity cost a whole diagnosis pass
+				# once already. Name the state machine directly.
+				var piloted: RefCounted = _manager.call("active_creature")
+				_fail(("%s stalled: %d frames without the opponent losing HP -- %.1f HP left, %.1fm away, "
+					+ "quick_ready=%s charged_ready=%s committed=%s manager_state=%s piloted=%s "
+					+ "piloted_hp=%s fainted=%s resting=%s, %d of %d felled") % [
 					label, stalled, enemy_hp,
 					ally.global_position.distance_to(opponent.global_position),
 					str(_manager.call("quick_ready")), str(_manager.call("charged_ready")),
+					str(_manager.call("player_is_committed")), str(_manager.get("state")),
+					str(piloted.get("species_id")) if piloted != null else "<none>",
+					str(piloted.get("hp")) if piloted != null else "-",
+					str(piloted.get("fainted")) if piloted != null else "-",
+					str(piloted.get("resting")) if piloted != null else "-",
 					_felled - felled_before, team_size])
 				return false
 

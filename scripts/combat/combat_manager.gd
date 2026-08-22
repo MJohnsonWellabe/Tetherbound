@@ -1499,6 +1499,21 @@ func catch_chance_now() -> float:
 	)
 
 
+## The body of the creature currently being fought, or null between fights.
+##
+## Public for the same reason `encounter_director.gd::ally_body()` is: a caller
+## that needs to know where the opponent physically IS must ask the fight,
+## never search the scene tree for it. `smoke_tournament_bracket.gd` did the
+## latter -- `_world.find_child("TrainerCreature_*")` -- and `find_child`
+## returns the first match in tree order, so on the round AFTER a loss (the one
+## moment two trainer-creature bodies coexist, the previous round's still
+## queued for free) it aimed and measured against the wrong body while the live
+## opponent stood elsewhere, and the round stalled with the enemy at full HP.
+## Intermittent, because it depended on free timing.
+func enemy_body() -> Node3D:
+	return _wild
+
+
 ## Where the two fighters are, for anything that needs to frame them.
 func arena_focus() -> Vector3:
 	if _ally_body != null and _wild != null:
