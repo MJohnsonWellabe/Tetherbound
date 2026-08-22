@@ -26,6 +26,17 @@ const STARTER_PICKER := "res://scripts/ui/starter_picker.gd"
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 
 const OUT_DIR := "res://shots/ui_glyphs"
+
+## OW8 moved the exploration prompt into the shared bottom dock -- "the prompt
+## and the hotbar share one container, so neither can be laid into the other".
+## This tool still asked for `Root/Prompt`, got null, and then assigned
+## `.visible` on it, which aborted the whole capture with "Invalid assignment
+## of property 'visible' ... on a base object of type 'null instance'". So the
+## glyph frames the visual-judge pass wants have not been renderable since that
+## merge, and nothing said so -- a capture tool is not a test and no shard runs
+## it. `playground_hud.gd`'s own `_prompt_label` is the authority for this path.
+## The COMBAT HUD kept its own `Root/Prompt`; only the exploration one moved.
+const EXPLORATION_PROMPT := ^"Root/BottomDock/Prompt"
 const SETTLE_FRAMES := 300
 const POSE_FRAMES := 6
 
@@ -66,13 +77,13 @@ func _run() -> void:
 	if hud != null:
 		if combat != null:
 			combat.visible = false
-		var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
+		var prompt_label: RichTextLabel = hud.get_node_or_null(EXPLORATION_PROMPT) as RichTextLabel
 		if prompt_label != null:
 			for i in 30:
 				await physics_frame
 			await _shoot("exploration-prompt", written, failures)
 		else:
-			failures.append("exploration-prompt: HUD has no Root/Prompt RichTextLabel")
+			failures.append("exploration-prompt: HUD has no RichTextLabel at %s" % EXPLORATION_PROMPT)
 	else:
 		failures.append("exploration-prompt: no PlaygroundHUD in the scene")
 
@@ -84,7 +95,9 @@ func _run() -> void:
 	if combat != null:
 		combat.visible = true
 		if hud != null:
-			hud.get_node_or_null(^"Root/Prompt").visible = false
+			var explore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
+			if explore_prompt != null:
+				explore_prompt.visible = false
 		var combat_prompt: RichTextLabel = combat.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if combat_prompt != null:
 			# combat_hud.gd's own _process polls _director.call("prompt") every
@@ -98,7 +111,9 @@ func _run() -> void:
 			failures.append("combat-prompt: no Root/Prompt RichTextLabel on CombatHUD")
 		combat.visible = false
 		if hud != null:
-			hud.get_node_or_null(^"Root/Prompt").visible = true
+			var restore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
+			if restore_prompt != null:
+				restore_prompt.visible = true
 	else:
 		failures.append("combat-prompt: no CombatHUD in the scene (skipping)")
 
