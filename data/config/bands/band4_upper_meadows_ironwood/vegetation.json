@@ -15,6 +15,13 @@
       "z": 6040.0,
       "radius": 15.0,
       "_why": "GATE-D4/prompt 65's camp/home rhythm: a real flat pad between captain_field (z=5590) and captain_ridge (z=6460) so a player who has spent both potions on Halder has ground to actually place a Camp buildable on before pressing on to Vess, rather than the rest stop being a suggestion with no clear ground to build it on. Sited on the eastern loop beside the new burrowback cluster (spawns.json order 4009) so the stop is not scenery-only. This does not build a camp -- build_piece.gd's own Camp buildable is the player's, on their own materials; this only keeps the ground clear enough to place one."
+    },
+    {
+      "order": 4002,
+      "x": -330.0,
+      "z": 5090.0,
+      "radius": 12.0,
+      "_why": "GATE-D4b/prompt 65's camp-home rhythm, the half clearings[4001] does not cover. Crafting in this game happens AT A CAMPFIRE OR WORKBENCH (scripts/ui/craft_panel.gd's own header, and build_placer.gd only opens the craft panel at a placed station) -- so the ironwood tier this band exists to introduce cannot be spent where it is cut. The five ironwood nodes (harvest.json 4000-4004) sit in the old-growth on the western swing at z~5010-5075; the nearest ground authored as a camp pad before this was clearings[4001] at z=6040, a kilometre further up the road, and the only other station in the chapter is home, ~5km back. That is the difference between `gather the region's material and make the region's Prime Orb and Ridge Tonics on the spot' and `carry three ironwood for a kilometre before the game will let you use them'. MEASURED with tools/_probe_band4_sites.gd (h=0.85m, 1.26m of spread, worst local slope 9.9 degrees over a 6m pad -- the flattest of six candidates walked across the stand), 15-45m from the five nodes so the fire is beside the trees rather than in among them. Radius 12 is the patrol pad's 13 less a metre, sized for a Camp buildable (campfire + bedroll) plus room to stand, not for an arena. Does not BUILD anything: the Camp is the player's, on their own wood/stone/fiber (data/items/buildables.json), and this only keeps scatter off ground flat enough to place it."
     }
   ],
   "footprints": []

@@ -84,4 +84,11 @@ func _init() -> void:
 		["scout D", 330.0, 5880.0],
 	]:
 		_report(str(c[0]), float(c[1]), float(c[2]), 6.0)
+	print("--- GATE-D4b: camp pad candidates beside the ironwood stand (pad r=6m) ---")
+	for c: Array in [
+		["ironcamp A", -330.0, 5090.0], ["ironcamp B", -315.0, 5065.0],
+		["ironcamp C", -345.0, 5105.0], ["ironcamp D", -300.0, 5040.0],
+		["ironcamp E", -325.0, 5120.0], ["ironcamp F", -360.0, 5010.0],
+	]:
+		_report(str(c[0]), float(c[1]), float(c[2]), 6.0)
 	quit(0)
