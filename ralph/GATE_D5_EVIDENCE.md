@@ -311,6 +311,34 @@ relocated behind the works, or an early distant landmark plus a separate arrival
 building. That is on `CLAUDE.md`'s "ask instead of inventing" list. **Owner or
 coordinator call, and the single largest player-facing gap left in this region.**
 
+## 5d. The final preparation point did not fund a rest
+
+I reported the Waystop as done on the strength of reading its config. Playing the
+arithmetic instead of the prose found a real gap.
+
+Prompt 66 asks the final preparation point to let the player "stop, adjust the
+five, rest/camp", and warns against "an automatic free heal". The Waystop's
+answer to that is the right one — a cleared 14 m nook with materials in reach, so
+the player *builds* the rest rather than being handed it. But the numbers did not
+close:
+
+| | wood | stone | fiber |
+|---|---|---|---|
+| Waystop's five nodes paid | 8 | 6 | **4** |
+| `creature_bed` costs | 6 | — | **8** |
+| `camp` costs | 12 | 8 | 10 |
+
+**Half the fiber for the one object the place exists to enable** — and the
+clearing that makes the site buildable is the same clearing that keeps the
+bushes off it, bushes being the only renewable fiber in the game
+(`vegetation.json::_comment_harvest_fiber`).
+
+Raised order 5005 from 4 to 8. That funds **exactly one creature bed** and
+leaves `camp` out of reach, which is the intended shape rather than a shortfall
+padded for comfort: the last stop before the assault heals one of the five, so
+which one is a real choice, and it is still gathered and built rather than
+granted.
+
 ## 6. What this lane did NOT verify — owed work
 
 - **The blind visual pass is NOT done.** Six captures were produced
