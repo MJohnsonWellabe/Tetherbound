@@ -57,7 +57,7 @@ const CORNER_RADIUS := 28.0
 const RING_WIDTH := 8.0
 const CORNER_STEPS := 10
 const OBJECTIVE_LABEL_PUSH := 10.0 ## px the distance label sits past the clamped diamond, toward the rim.
-const PLAYER_MARKER_CLEAR_RADIUS := 30.0
+const PLAYER_MARKER_CLEAR_RADIUS := 34.0 # bumped alongside the player marker's own enlargement below
 const MARKER_SEPARATION := 22.0
 
 ## OW3: was 0.95 — 5% show-through, which stacked with this widget's already
@@ -457,7 +457,16 @@ func _draw_frame(box: Vector2) -> void:
 	draw_style_box(accent, rect.grow(-RING_WIDTH))
 
 	# Four tether-notch node dots at the diagonal corners of the ring.
-	var notch_radius := box.x * 0.5 - RING_WIDTH * 0.5
+	# OP21-15 blind pass: "minimap corner tick decorations are clipped by the
+	# frame edge." These four notches sit at the diagonals -- exactly the
+	# directions `_draw_corner_masks`' rounded-corner wedges eat into, and the
+	# old radius (`RING_WIDTH * 0.5` in from the square's raw edge) put a
+	# notch's own 2.5px radius close enough to the widget's true corner that
+	# corner-rounding on the real device (a different box size than whatever
+	## this was authored against) could plausibly clip it. Pulled in by
+	# `CORNER_RADIUS` as well so every notch sits inside the ring's rounded
+	# interior with real clearance, not just past the ring's straight edges.
+	var notch_radius := box.x * 0.5 - RING_WIDTH * 0.5 - CORNER_RADIUS * 0.35
 	var centre := box * 0.5
 	for angle in [PI * 0.25, PI * 0.75, PI * 1.25, PI * 1.75]:
 		var notch := centre + Vector2(cos(angle), sin(angle)) * notch_radius
@@ -487,22 +496,37 @@ func _draw_ticks_and_compass(centre: Vector2, box: Vector2) -> void:
 ## The player's arrow is independent from the movement-up world layer. With
 ## look == travel it points up. Orbiting while stationary turns only this
 ## marker; strafing/backpedalling keep actual travel at the top of the map.
+## OP21-15 blind pass: "the minimap player arrow is 10x10px (~1.2mm) --
+## smaller than the waypoint diamond it points toward... the thing you are
+## should never be smaller than the thing you're going to." The objective
+## diamond draws at `r = 9.0` (an 18px point-to-point span); the old
+## `size = 12.0` triangle here was actually narrower than that once its
+## `0.62` side factor and `0.75` base pullback are accounted for, and its
+## "cream heading tip" -- the one visual cue that distinguishes a direction
+## arrow from a plain dot -- was a sliver at `0.15`/`0.28` of an already
+## small shape, reading as 1-2px of white at map scale. Both numbers are
+## bumped here: the whole marker is now unambiguously the largest fixed
+## marker on the minimap (bigger than the 18px objective diamond it needs to
+## out-rank), and the cream tip is close to half the shape's own length so
+## it survives being shrunk again by the project's canvas_items handheld
+## stretch scale.
 func _draw_player_marker(centre: Vector2) -> void:
-	var size := 12.0 # ~22px tip-to-base triangle
+	var size := 17.0 # ~30px tip-to-base triangle, wider stance too (see below)
 	var relative := angle_difference(_movement_yaw, _look_yaw)
 	var forward := Vector2(sin(relative), -cos(relative))
 	var side := Vector2(-forward.y, forward.x)
 	var points := PackedVector2Array([
 		centre + forward * size,
-		centre - forward * size * 0.75 + side * size * 0.62,
-		centre - forward * size * 0.75 - side * size * 0.62,
+		centre - forward * size * 0.75 + side * size * 0.72,
+		centre - forward * size * 0.75 - side * size * 0.72,
 	])
 	draw_colored_polygon(points, UITokens.TEAL)
-	# a small cream tip so the arrow reads at a glance against dark ground
+	# a cream tip, now close to half the arrow's own length, so the heading
+	# reads at a glance instead of needing the viewer to find a 1-2px sliver.
 	var tip := PackedVector2Array([
 		centre + forward * size,
-		centre + forward * size * 0.15 + side * size * 0.28,
-		centre + forward * size * 0.15 - side * size * 0.28,
+		centre + forward * size * -0.05 + side * size * 0.40,
+		centre + forward * size * -0.05 - side * size * 0.40,
 	])
 	draw_colored_polygon(tip, UITokens.TEXT_PRIMARY)
 
@@ -536,6 +560,17 @@ func _draw_dot(centre: Vector2, r: float, colour: Color) -> void:
 ## boundary). So the final baseline is clamped inside the widget's own
 ## `size` after the text's real dimensions are known, rather than trusting
 ## the caller's radial math to have left enough room in every direction.
+## OP21-15 blind pass: the objective distance label ("257 m") is white text
+## laid straight onto whatever terrain colour is under it, most often the
+## light meadow-green the baked terrain uses for most open ground -- with no
+## outline or shadow it vanishes into pale ground the same way `tab_map.gd`'s
+## `_draw_string_legible` was written to fix for the full map (that file's
+## own header: "every string this file draws is a raw `_draw()` call over a
+## busy, multi-coloured baked terrain texture, so it needs the SAME outline
+## treatment applied by hand rather than going unplated" -- true here too,
+## just never done). Same `UITokens.OUTLINE`/`OUTLINE_SIZE` treatment, copied
+## rather than shared for the same "concurrent agent's file" reason this
+## file's fog constants are already copied from `tab_map.gd`.
 func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: Color) -> void:
 	if _font == null:
 		return
@@ -545,4 +580,5 @@ func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: C
 	top_left.x = clampf(top_left.x, MARGIN, maxf(MARGIN, size.x - text_size.x - MARGIN))
 	top_left.y = clampf(top_left.y, MARGIN, maxf(MARGIN, size.y - text_size.y - MARGIN))
 	var baseline := top_left + Vector2(0.0, text_size.y - _font.get_descent(font_size))
+	draw_string_outline(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.OUTLINE_SIZE, UITokens.OUTLINE)
 	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, colour)
