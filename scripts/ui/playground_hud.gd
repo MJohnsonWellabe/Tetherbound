@@ -448,6 +448,9 @@ var _minimap_baked := false
 
 var _objective_text_label: Label = null
 var _objective_eyebrow_label: Label = null
+## The whole objective panel, so `_update_objective()` can hide it when there is
+## no objective left to track. See that function's own comment.
+var _objective_block: Control = null
 var _objective_last_text := ""
 
 ## --- region banner ---------------------------------------------------------------
@@ -1610,6 +1613,7 @@ func _build_objective_block() -> void:
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
 	var block := Control.new()
 	block.name = "ObjectiveBlock"
+	_objective_block = block
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
 	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
@@ -1707,6 +1711,17 @@ func _update_objective() -> void:
 		return
 	_objective_last_text = text
 	_objective_text_label.text = text
+	# An empty tracked line means there is no objective, and a panel is not the
+	# way to say that. `quest_log.gd` returns "" once every `main` entry's flag
+	# is set -- which is the state the chapter ENDS in, after the legendary
+	# choice -- and this block was built once in `_ready()` and never hidden, so
+	# a finished game sat there with the eyebrow "MAIN STORY" over a blank line,
+	# permanently. Found by a blind cold playtest walking the whole flag chain:
+	# 25 steps, every line correct, and then a panel with nothing in it.
+	#
+	# Hidden rather than emptied, because the backing panel is the visible part.
+	if _objective_block != null:
+		_objective_block.visible = not text.strip_edges().is_empty()
 
 
 # --- region banner ---------------------------------------------------------------
