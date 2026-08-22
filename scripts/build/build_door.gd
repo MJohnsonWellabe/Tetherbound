@@ -40,6 +40,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const VILLAGE_DOOR := preload("res://scripts/world/village_door.gd")
+const BUILD_MATERIAL_FINISH := preload("res://scripts/build/build_material_finish.gd")
 
 const DIR := "res://assets/buildings/quaternius_medieval"
 const WALL_GAP_MESH := DIR + "/Wall_Plaster_Door_Flat.gltf"
@@ -129,6 +130,7 @@ func _add_module(mesh_path: String, node_name: String) -> Node3D:
 	var node := scene.instantiate() as Node3D
 	node.name = node_name
 	add_child(node)
+	BUILD_MATERIAL_FINISH.apply(node)
 	return node
 
 

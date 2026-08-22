@@ -15,6 +15,20 @@ extends SceneTree
 
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
+## BUILD-KIT-2: pulled in directly (a code preload, not a JSON parse) so
+## `ROOF_Y` below can read the contract's own constant instead of a second
+## hardcoded copy of it -- the previous lane's copy had already drifted out
+## of sync with what a real placement uses (both were 3.05 at the time, but
+## nothing enforced that), which is exactly the kind of drift a blind critic
+## would have no way to attribute to "capture bug" vs. "kit bug." `ROOF_SCALE`
+## stays a literal for the reason given below -- it lives in `buildables
+## .json` data, not this script. `BUILD_SNAP.ROOF_Z_OFFSET`/`WALL_Z_CENTER`
+## are NOT applied here on purpose: this capture's whole point is to render
+## exactly what `build_snap_contract.gd::resolve()` gives a real placement,
+## so applying a correction here that the live contract does not apply would
+## make the evidence lie about what a player actually gets. See that
+## constant's own comment for why the fix is measured but not yet wired in.
+const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 
 const DIR := "res://assets/buildings/quaternius_medieval"
 const FLOOR_MESH := DIR + "/Floor_UnevenBrick.gltf"
@@ -25,7 +39,7 @@ const ROOF_MESH := DIR + "/Roof_RoundTile_2x1.gltf"
 ## needs the one value and a parse dependency would be one more way this
 ## script could silently drift from what a real placement actually uses.
 const ROOF_SCALE := Vector3(0.6066, 0.6066, 1.0)
-const ROOF_Y := 3.05
+const ROOF_Y := BUILD_SNAP.ROOF_Y
 
 const OUT_DIR := "res://shots/_diag"
 const SETTLE_FRAMES := 24
@@ -160,7 +174,17 @@ func _exterior_open_door() -> void:
 	var camera := Camera3D.new()
 	camera.fov = 45.0
 	world.add_child(camera)
-	camera.look_at_from_position(Vector3(0.5, 1.8, -4.2), Vector3(0.0, 1.2, -0.5), Vector3.UP)
+	# BUILD-KIT-2: was (0.5, 1.8, -4.2) looking almost straight down +Z --
+	# nearly along the open leaf's own hinge-swing plane (`village_door.gd`
+	# swings -100 deg, just past edge-on to that view), so the leaf's flat
+	# panel foreshortened to a sliver and only its raised Z-brace read,
+	# looking like a small triangular fragment floating with nothing
+	# visibly holding it up. Not a missing-geometry bug -- confirmed by
+	# rendering the door module alone from several angles, where the same
+	# leaf reads as a normal door at any angle with real separation from
+	# the view direction. Moved off-axis in X so the camera actually sees
+	# the open leaf's face instead of its edge.
+	camera.look_at_from_position(Vector3(2.6, 1.8, -3.4), Vector3(0.1, 1.3, -0.7), Vector3.UP)
 	await _shoot("%s/build_kit_house_door_open.png" % OUT_DIR, camera)
 	world.queue_free()
 

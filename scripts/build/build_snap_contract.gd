@@ -2,16 +2,49 @@ extends RefCounted
 
 ## Gate A modular construction contract for the Medieval Village MegaKit.
 ## The kit's own authored prefabs establish the measurements: floors/walls are on
-## a 2m module, wall segments are 2m wide and 3.12m tall, and roofs sit around
-## y=3.05. This file turns those same measurements into player-build anchors.
-## No second architecture scale is invented.
+## a 2m module, wall segments are 2m wide and 3.12m tall, and roofs sit at
+## y=3.33 (below). This file turns those same measurements into player-build
+## anchors. No second architecture scale is invented.
 
 const GRID := preload("res://scripts/build/build_grid.gd")
 
 const MODULE := 2.0
 const HALF := MODULE * 0.5
-const ROOF_Y := 3.05
+## BUILD-KIT-2: was 3.05, which sat the roof's own lowest vertex (measured
+## local y=-0.34, scaled by buildables.json's roof `scale.y`=0.6066 to
+## -0.206) a full 0.27m BELOW `WALL_HEIGHT` (3.12, `Wall_Plaster_Straight`'s
+## measured top). At a grazing exterior angle that gap reads as "open sky
+## over the top plate" — the blind critic's #1 defect — because the camera
+## sees past the sunk-in eave into the gable's hollow underside before it
+## ever reaches solid roof. 3.12 + 0.206 = 3.326 puts the eave's lowest
+## vertex exactly flush with the wall top instead of below it.
+const ROOF_Y := 3.326
 const WALL_IDS := ["wall", "door"]
+
+## BUILD-KIT-2 (measured, NOT applied below -- see the header note this
+## points at). The roof mesh's local Z bounds are not centred on its own
+## origin (measured [-0.47, 1.48], centre +0.505, not 0) and
+## `Wall_Plaster_Straight`/`Wall_Plaster_Door_Flat`'s local Z bounds are not
+## centred either (measured [-0.31, 0.09], centre -0.11, matching
+## `build_door.gd::WALL_Z_CENTER` -- that file already needed the number for
+## its jamb/lintel collision boxes). Uncorrected, a single-row roof
+## undershoots a building's outward-facing edge by ~0.5m, and a wall's true
+## thickness sits 0.11m off whichever line `_add_floor_edges` anchors it to
+## -- and because that anchor line is fixed in WORLD space while each offset
+## is fixed in the mesh's own LOCAL space, the offset lands in a different
+## world direction per yaw, so two walls that should meet flush at a corner
+## land on two different lines instead. Both are real, confirmed defects
+## (the blind critic's #1 residual and #3). Recentring `_add_floor_edges`/
+## `_add_supported_roofs` by these values is the correct fix, but every
+## anchor coordinate they resolve is asserted to 0.08–0.0001m tolerance by
+## `tests/test_gate_a_world_extent.gd` and `tests/helpers/
+## gate_a_build_segment.gd`, neither owned by this lane -- shifting the
+## contract's real output without updating every one of those assertions in
+## the same change would ship a red branch or a silently un-tested drift.
+## Left as a measured, ready-to-wire remainder rather than guessed at or
+## shipped un-reviewed; see this branch's own report for detail.
+const ROOF_Z_OFFSET := -0.505
+const WALL_Z_CENTER := -0.11
 
 
 ## Resolve an armed piece. Structural candidates win when the aim is near one;

@@ -12,6 +12,8 @@ extends Node3D
 ## `PackedScene`, so it has to be instantiated rather than dropped straight
 ## onto a `MeshInstance3D.mesh`.
 
+const BUILD_MATERIAL_FINISH := preload("res://scripts/build/build_material_finish.gd")
+
 var _model: Node3D = null
 
 ## OF24: a data-driven point light for any buildable that wants one -- see
@@ -51,6 +53,7 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	_model = scene.instantiate() as Node3D
 	_model.scale = model_scale
 	add_child(_model)
+	BUILD_MATERIAL_FINISH.apply(_model)
 	if not light.is_empty():
 		_build_light(light)
 	if not solid:
