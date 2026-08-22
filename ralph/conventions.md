@@ -47,10 +47,19 @@ on this project already.
 ## Branch naming — `ralph/**` means "ship this"
 
 **Anything pushed to a `ralph/**` branch is a shipping request.** `ci.yml`
-triggers on it, which is a full Godot import, test run and Windows export —
-**~5.2 minutes measured, not the eight or nine this file used to claim** — and
-`ralph-merge.yml` then fast-forwards `main` if it goes green. There is no "just
+triggers on it, which is a full Godot import and test run. There is no "just
 parking this here" on that prefix.
+
+The branch does not merge on its own any more — see **Shipping** below; a green
+`ralph/**` branch waits for a dispatched consolidation run. But it still costs
+a full CI run and still leaves a permanent branch behind, so the rule against
+pushing throwaways under this prefix is unchanged.
+
+**CI takes about 17 minutes, not the ~5 this file used to claim.** Measured
+2026-08-15 on real `ralph/**` runs: the twelve checks are now separate parallel
+jobs, so wall time is bounded by the slowest single check rather than their sum
+— `smoke_traversal.gd` alone is ~6 minutes. `ci.yml`'s own header carries the
+full measurement.
 
 The corrected number matters in both directions. Five minutes is cheap enough
 that a push to find out whether something works is reasonable. It is not cheap
@@ -80,13 +89,25 @@ reason not to push throwaways at all.
   to `main` mid-firing moves the target under an in-flight task branch and
   forces a rebase for no reason — the coordinator did exactly that once and
   caused it.
-- Branch `ralph/<task-id>` → push → CI → **`.github/workflows/ralph-merge.yml`
-  fast-forwards main on green.** You do not open a pull request and you do not
-  merge anything yourself: a fired session has no GitHub MCP tools and no `gh`
-  CLI, so pushing the branch *is* the ship action.
+- Branch `ralph/<task-id>` → push → CI. **Pushing is no longer the ship
+  action.** Both `ralph-merge.yml` and `ralph-sweep.yml` are now
+  `on: workflow_dispatch` only — merge's own header states it plainly:
+  "Manual consolidation is now the sole path to main... never start it from
+  branch CI." A green `ralph/**` branch therefore sits there until somebody
+  dispatches a consolidation run. Nothing lands by itself.
+
+  This file told every session the opposite until 2026-08-22, and a session
+  that believes it will report work as shipped, watch CI go green, and never
+  notice `main` did not move. Check `git log origin/main`, not the CI badge.
+- **Who dispatches.** A session holding GitHub Actions tools (the MCP
+  `actions_run_trigger`, or `gh`) dispatches `ralph-sweep.yml` against `main`;
+  it takes no inputs and sweeps every green `ralph/**` branch. A lane without
+  those tools pushes its branch, says so plainly in its report, and leaves
+  consolidation to whoever is coordinating. Under a coordinator, integration
+  is the coordinator's job — do not leave green branches unswept.
 - The merge is **fast-forward only**. If main moved while you worked, the
-  workflow fails loudly and you rebase `ralph/<task-id>` on main and push again.
-  Never resolve that by force-pushing main.
+  consolidation fails loudly and you rebase `ralph/<task-id>` on main and push
+  again. Never resolve that by force-pushing main.
 - If CI is red, the branch simply does not ship. Fix it on the same branch.
 - CI always runs: clean-checkout import with no script errors, and the Windows
   export. Both are cheap and catch the failures that make the project unopenable.
