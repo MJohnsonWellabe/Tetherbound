@@ -130,3 +130,51 @@ implemented and tested.
 What is missing is the *texture*: special encounters, sited camps, per-creature
 history, and two reward-map sections. None of it blocks a regional package from
 starting. All of it is real work, and none of it should be reported as done.
+
+## Corrections to this audit, checked after it was written
+
+Two of the reported gaps do not survive contact with the code. Recorded here
+rather than quietly deleted, because both would have been "fixed" into
+regressions by someone trusting the table above.
+
+### 59's "rank is missing on 6 rows" is a false positive
+
+`trainer_npc.gd::model_config()` treats `rank` and `config_key` as **mutually
+exclusive branches**, not as two required fields:
+
+```gdscript
+var cfg := NPC_RANKS.config_for(rank) if rank != "" \
+    else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
+```
+
+`rank` builds a body from `data/config/npc_ranks.json`, whose four entries are
+**grunt, officer, captain, warden** — every one a Team Tether rank. The six rows
+reported as missing it are the four villager trainers and the three tournament
+rounds (the same villagers again), and every one of them carries `config_key`
+instead: `villager_farmer` for Bryn and Mira, `villager_keeper` for Oskar,
+`villager_smith` for Tam. Checked across all five bands: **no trainer row has
+neither field.**
+
+So the absent `rank` is correct by design. Adding `rank: "villager"` would send
+those seven NPCs down the Team Tether branch to a rank that does not exist,
+`config_for()` would return empty, and `model_config()` returns that empty
+dictionary before the per-part variants are ever applied — the villagers would
+lose their bodies. The prompt's "faction/rank" requirement is satisfied by the
+faction being *villager* and expressed through the branch the code actually
+reads.
+
+### 68's "3/3 never displays" is a design decision, not a defect
+
+Left as reported above, but with the reason it stays: `stronghold.json:112`
+gates the Warden Arena shutter on `defeated_stronghold_elite`, the same flag the
+objective completes on, so there is no separate flag to complete on instead. The
+entry's own `_why` field reasons the choice explicitly. Changing it is the
+owner's call about presentation, not a repair.
+
+### The method note
+
+Both of these came from asking "what reads this field?" rather than "is this
+field present?". An audit that checks shape finds gaps that are not there; an
+audit that checks consumers finds the ones that are. The seven verdicts above
+were reached by reading consumers — these two rows are where the shape-checking
+crept back in, and they are the two that were wrong.
