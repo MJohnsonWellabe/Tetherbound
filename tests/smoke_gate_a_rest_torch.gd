@@ -156,9 +156,6 @@ func _exercise_repeated_torch() -> void:
 	# below fell over behind it. The torch is drawn and stowed the way every
 	# other tool is: assigned to a quick slot and toggled with that slot's
 	# button (`playground_hud.gd::_use_hotbar_slot`).
-	var inventory: RefCounted = _game.get("inventory")
-	if int(inventory.call("find_slot", "torch")) < 0:
-		inventory.call("add", "torch", 1)
 	if not bool(_game.call("assign_hotbar", 0, "torch")):
 		_fail("could not put the torch on the quick bar, which is how it is drawn now")
 		return

@@ -30,9 +30,21 @@ func _button_for(action: String) -> int:
 	return -1
 
 func _state(menu: Node, label: String) -> void:
-	print("%-22s open=%s deaf=%s tab='%s' paused=%s" % [
+	# Which backpack sub-mode, if any, is holding the shell deaf. _held is a
+	# picked-up stack, _targeting is the Use picker, _confirming is the drop
+	# confirmation -- three different callers of menu.hold_input(true).
+	var tab: Node = null
+	for n in menu.find_children("*", "", true, false):
+		if n.get_script() != null and str(n.get_script().resource_path).ends_with("tab_backpack.gd"):
+			tab = n
+			break
+	print("%-22s open=%s deaf=%s tab='%s' paused=%s | held=%s targeting=%s confirming=%s guard=%s" % [
 		label, str(menu.call("is_open")), str(menu.get("_deaf")),
-		str(menu.call("current_tab_id")), str(paused)])
+		str(menu.call("current_tab_id")), str(paused),
+		str(tab.get("_held")) if tab != null else "?",
+		str(tab.get("_targeting")) if tab != null else "?",
+		str(tab.get("_confirming")) if tab != null else "?",
+		str(tab.get("_open_guard")) if tab != null else "?"])
 
 func _run() -> void:
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
@@ -43,6 +55,15 @@ func _run() -> void:
 	var game: Node = root.get_node_or_null(^"Game")
 	var menu: Node = game.get_node_or_null(^"GameMenu")
 	print("menu node=", menu, " process_mode=", menu.process_mode if menu != null else "n/a")
+	# The clean-state round trip already passed. What the post-modal stress run
+	# has that the clean state does not is a satchel with things in it: its
+	# backpack grid then builds focusable slot buttons, and the shell opens
+	# with focus inside that grid. Seed the same condition and ask again.
+	var inv: RefCounted = game.get("inventory")
+	for id in ["wood", "stone", "fiber", "berry", "axe", "pickaxe"]:
+		inv.call("add", id, 5)
+	for _i in 30:
+		await process_frame
 	var open_b := _button_for("game_menu")
 	var close_b := _button_for("menu_cancel")
 	print("game_menu button=%d  menu_cancel button=%d" % [open_b, close_b])

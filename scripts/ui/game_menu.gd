@@ -343,6 +343,27 @@ func open(tab_id: String = "") -> bool:
 				target = i
 				break
 	select(target)
+	# The press that opened this shell is STILL DOWN, and gamepad Start is two
+	# actions at once: `game_menu` here and `backpack_drop` on the satchel tab
+	# (project.godot; data/config/menu.json's Backpack group note explains why
+	# drop sits there). The comment further down worked out one half of that
+	# collision -- that Menu must not also CLOSE the shell -- and missed this
+	# half: with anything at all in the satchel, opening the pause menu landed
+	# the player straight in a "Drop it?" confirmation on whatever slot held
+	# focus, which calls `hold_input(true)` and so ate their next B cancelling a
+	# drop they never asked for instead of closing the menu. A destructive verb,
+	# offered unasked, one A press from deleting an item they never selected.
+	#
+	# Told to the tab HERE rather than inferred by the tab from a
+	# closed-to-open transition in its own `poll()`: the confirmation opens
+	# before that poll gets a turn, so a transition-detecting guard armed
+	# itself one frame too late and changed nothing. Reproduced and then
+	# re-verified with `tools/_probe_pause.gd`, which reads the tab's own
+	# `_confirming` rather than guessing from the shell's deaf flag.
+	for body: Variant in _bodies:
+		var node := body as Node
+		if node != null and node.has_method("notify_shell_opened"):
+			node.call("notify_shell_opened")
 	return true
 
 
