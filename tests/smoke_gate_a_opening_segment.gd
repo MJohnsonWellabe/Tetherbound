@@ -318,9 +318,27 @@ func _fight_until_catchable() -> bool:
 	return false
 
 
+## The catch, with the satchel deliberately down to its last orb.
+##
+## Grandpa gives fifteen, and a run that starts with fifteen almost never
+## reaches zero inside this harness's budget -- so the dead-end that zero causes
+## went unseen until it was reasoned out rather than observed. Draining to one
+## first makes every run exercise it: the next miss empties the satchel,
+## `throw_aim.gd::try_begin_aim()` refuses with "no orbs left", and the opening
+## either restocks (opening.json's `catch_orb_floor`) or is unwinnable from here
+## with no way out but a new game. `_orbs_held()` is asserted below zero-floor
+## rather than trusted, because a harness that simply kept throwing would report
+## a healthy opening either way.
 func _catch_with_real_throws() -> bool:
+	var drained := _drain_satchel_to_last_orb()
+	if drained < 0:
+		return false
+	_checkpoint("satchel drained to %d orb(s) so the empty case is on the real path" % drained)
 	var launches := 0
-	while launches < 8:
+	var restocked := false
+	# Generous, not unbounded: with the floor in place the opening never refuses
+	# a throw, so the only honest reason to stop is that catching is broken.
+	while launches < 40:
 		if not bool(_combat.call("is_fighting")):
 			break
 		# A resolved throw has a production 0.9s cooldown. One press during that
@@ -349,6 +367,12 @@ func _catch_with_real_throws() -> bool:
 					or not bool(_combat.call("is_fighting"))):
 				break
 			await physics_frame
+		if _orbs_held() <= 0:
+			_fail("launch %d left the satchel empty during the tutorial catch; the opening is now a dead end (opening.json catch_orb_floor did not apply)" % launches)
+			return false
+		if not restocked and _orbs_held() > 1:
+			restocked = true
+			_checkpoint("running dry restocked the tutorial satchel to %d orb(s)" % _orbs_held())
 		if _throw_misses > misses_before:
 			print("physical launch %d went wide; retrying after a real miss" % launches)
 			continue
@@ -364,10 +388,33 @@ func _catch_with_real_throws() -> bool:
 				launches, _throw_strikes, _throw_misses,
 			])
 			return true
-	_fail("eight natural weakened-target launches produced %d strike(s), %d miss(es), and no catch" % [
+	_fail("forty natural weakened-target launches produced %d strike(s), %d miss(es), and no catch" % [
 		_throw_strikes, _throw_misses,
 	])
 	return false
+
+
+## How many orbs of any tier the player is actually carrying, read off the real
+## satchel rather than off `throw_aim.stock()` -- the point is to check the
+## inventory the floor writes to, not the accessor that reads it.
+func _orbs_held() -> int:
+	var total := 0
+	for id: String in ["orb_basic", "orb_greater", "orb_prime"]:
+		total += int(_game.inventory.count(id))
+	return total
+
+
+## Leave exactly one orb in the satchel. Returns what is left, or -1 if the
+## opening never handed any over -- which is its own failure and is reported as
+## one rather than silently passing an emptied-satchel test.
+func _drain_satchel_to_last_orb() -> int:
+	var held := _orbs_held()
+	if held <= 0:
+		_fail("the opening reached the tutorial catch with no orbs at all; Grandpa's gift never landed")
+		return -1
+	if held > 1:
+		_game.inventory.remove("orb_basic", held - 1)
+	return _orbs_held()
 
 
 ## Open a fresh physical aim after any preceding throw's lockout.
