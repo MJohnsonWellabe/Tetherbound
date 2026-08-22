@@ -202,7 +202,9 @@ func _exercise_world_build(cycle: int) -> void:
 	# reads the equipped tool, not a mode flag.
 	_game.set("equipped_tool", "")
 	if build_menu == null:
-		_fail("world Build cycle %d: the hammer + interact opened nothing" % (cycle + 1))
+		_fail("world Build cycle %d: the hammer + interact opened nothing%s" % [
+			cycle + 1, _why_the_hammer_was_refused(),
+		])
 		return
 	await _tap("ui_accept")
 	await _finish_placement("world Build cycle %d" % (cycle + 1), before)
@@ -471,3 +473,32 @@ func _report() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+## Which of `_hammer_opens_the_catalogue()`'s refusals is live.
+##
+## "Opened nothing" names a symptom shared by five different causes, and this
+## harness exists to catch the one where a closed modal never gave the world its
+## input back. Reporting the cause is the difference between a failure that says
+## where to look and one that starts another investigation from scratch.
+func _why_the_hammer_was_refused() -> String:
+	var hud: Node = _world.find_child("PlaygroundHUD", true, false) if _world != null else null
+	if hud == null:
+		return " (no PlaygroundHUD in the scene)"
+	var reasons: Array[String] = []
+	if str(_game.get("equipped_tool")) != "hammer":
+		reasons.append("equipped_tool is '%s', not the hammer" % str(_game.get("equipped_tool")))
+	var arbiter: Object = hud.get("_arbiter")
+	if arbiter != null and is_instance_valid(arbiter):
+		if not bool(arbiter.call("enabled")):
+			reasons.append("the interaction arbiter is DISABLED (a modal never released the world)")
+		elif arbiter.call("winning_provider") != null:
+			reasons.append("a prompt provider is winning the interact button")
+	var owner_node: Variant = INPUT_OWNER.current(self)
+	if owner_node != null:
+		reasons.append("INPUT_OWNER is still held by %s" % str(owner_node))
+	if bool(_game.get("pending_build") != ""):
+		reasons.append("pending_build is already armed as '%s'" % str(_game.get("pending_build")))
+	if reasons.is_empty():
+		return " (and none of the known refusals is live -- the press itself did not land)"
+	return " (" + "; ".join(reasons) + ")"

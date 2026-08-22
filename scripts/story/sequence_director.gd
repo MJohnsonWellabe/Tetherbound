@@ -43,6 +43,7 @@ const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
 const SHOP_PANEL := preload("res://scripts/ui/shop_panel.gd")
 const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
@@ -392,6 +393,7 @@ func _process(delta: float) -> void:
 	_maybe_open_picker()
 	_maybe_open_shop()
 	_maybe_start_battle()
+	_hold_the_tutorial_orb_floor()
 
 
 ## Effects are drained in production, here, every frame.
@@ -1095,7 +1097,26 @@ func _on_combat_entered() -> void:
 ## notice. The `_is_tutorial_catch()` predicate is the same beat-and-species one
 ## the bound uses, so this cannot leak into any later Bramblebun.
 func _on_catch_refused(reason: String) -> void:
-	if reason != "no orbs left" or not _is_tutorial_catch():
+	if reason != "no orbs left":
+		return
+	_hold_the_tutorial_orb_floor()
+
+
+## Keep the practice catch's satchel off empty.
+##
+## Polled rather than hung off the refusal alone. Reacting to the refusal is one
+## beat too late by construction: the refusal only fires when the player PRESSES
+## throw with nothing to throw, so the restock lands AFTER a press that visibly
+## did nothing. A dead button is the exact failure the opening is supposed not to
+## have, and `playground_hud.gd::_swing_equipped_tool()`'s own header makes the
+## same argument about the combat buttons -- a press that silently does nothing
+## reads as broken. Topping up the moment the count reaches zero means the beat
+## simply never runs dry.
+##
+## The refusal handler stays as the backstop for any drain that lands between
+## frames. Both go through here, so there is one rule and one place to change it.
+func _hold_the_tutorial_orb_floor() -> void:
+	if not _is_tutorial_catch():
 		return
 	var amount := int(BEATS.encounter().get("catch_orb_floor", 0))
 	if amount <= 0:
@@ -1106,10 +1127,15 @@ func _on_catch_refused(reason: String) -> void:
 	var inventory: RefCounted = game.get("inventory")
 	if inventory == null:
 		return
-	var short := amount - int(inventory.call("count", TUTORIAL_ORB))
-	if short <= 0:
+	# Every tier counts toward the floor, for `throw_aim.gd::stock()`'s reason:
+	# a player carrying only greater orbs is not out of orbs, and handing them
+	# basic ones on top would be a restock they did not need.
+	var held := 0
+	for id: String in CATCH.orb_ids():
+		held += int(inventory.call("count", id))
+	if held >= amount:
 		return
-	inventory.call("add", TUTORIAL_ORB, short)
+	inventory.call("add", TUTORIAL_ORB, amount - held)
 
 
 ## Is the fight on screen the authored practice catch? Beat AND species, for the

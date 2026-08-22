@@ -224,7 +224,9 @@ func _catch_real_creature(target: Node3D) -> void:
 	for i in 40:
 		await physics_frame
 	if not bool(_manager.call("is_fighting")):
-		_fail("could not engage the real wild body at %s" % str(target.get_path()))
+		_fail("could not engage the real wild body at %s%s" % [
+			str(target.get_path()), _why_the_engage_failed(target),
+		])
 		return
 
 	var caught := false
@@ -345,3 +347,36 @@ func _report() -> void:
 	for message: String in _failures:
 		print("FAIL: %s" % message)
 	quit(1)
+
+
+## Why the interact press did not start a fight.
+##
+## "Could not engage" is a symptom with several causes -- out of range, the
+## creature already down, the arbiter offering a different interactable, the
+## director declining the offer -- and the run that reported it gave no way to
+## tell them apart. `ralph/conventions.md` asks a failure to say where to look.
+func _why_the_engage_failed(target: Node3D) -> String:
+	var reasons: Array[String] = []
+	if not is_instance_valid(target):
+		return " (the target body was freed before the press)"
+	var to := target.global_position - _player.global_position
+	to.y = 0.0
+	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
+	reasons.append("stopped %.1fm away (engage range %.1fm)" % [to.length(), engage_range])
+	if target.has_method("is_alive") and not bool(target.call("is_alive")):
+		reasons.append("the target is not alive")
+	if not target.visible:
+		reasons.append("the target is not visible")
+	var arbiter: Object = _hud.get("_arbiter") if _hud != null else null
+	if arbiter != null and is_instance_valid(arbiter):
+		if not bool(arbiter.call("enabled")):
+			reasons.append("the interaction arbiter is DISABLED")
+		else:
+			var winner: Variant = arbiter.call("winning_provider")
+			if winner == null:
+				reasons.append("no prompt provider is winning -- nothing offered the press")
+			elif winner is Node and not (winner as Node).is_ancestor_of(target) \
+					and winner != target:
+				reasons.append("the winning prompt is %s, not the target" % str((winner as Node).name))
+	reasons.append("party is %d/5" % int(_game.party.size()))
+	return " (" + "; ".join(reasons) + ")"
