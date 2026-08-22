@@ -108,9 +108,9 @@ var _game: Node = null
 var _felled := 0
 var _exit_connected := false
 
-## `combat.json`'s `player_quick.range` / `player_charged.range`, loaded once.
-var _quick_range := 2.6
-var _charged_range := 3.0
+## `combat.json`'s `player_quick.lunge`: how close the harness closes before
+## it starts throwing punches. See `_load_attack_ranges()`.
+var _engage_distance := 3.6
 
 
 func _init() -> void:
@@ -183,12 +183,26 @@ func _collect_nodes() -> bool:
 	return true
 
 
-## The reach of the two attacks, from the fight's own config.
+## How close this harness gets before it starts swinging.
 ##
-## Loaded rather than written down here for the reason the stall above
-## documents: a harness that carries its own private idea of "close enough to
-## swing" can disagree with the game and deadlock against it, and the number
-## it disagrees by does not have to be large.
+## Deliberately the LUNGE, not the range, and the harness deliberately does
+## not decide whether a swing is in reach -- the fight does. Two rounds of
+## this file stalled on that distinction:
+##
+## * the first version closed to a hard-coded 2.0m before it would attack,
+##   which is tighter than `player_quick.range` (2.6);
+## * the second read `player_quick.range` and still deadlocked at 2.9m
+##   against the tournament final's Meadowhart, because
+##   `combat_manager.gd::_with_reach_for_the_bodies()` RAISES a move's
+##   effective range to `(mine + theirs) * body_clearance + 0.5` for large
+##   bodies. A big creature spaces itself further out AND reaches further,
+##   so the flat number in the config is a floor, not the answer -- and the
+##   swing the harness refused to throw would have landed.
+##
+## So the rule is now: close to within lunge distance, then swing whenever an
+## attack is off cooldown and let the fight judge it. Every iteration either
+## hits or approaches, and the harness holds no opinion the game can
+## contradict.
 func _load_attack_ranges() -> void:
 	var file := FileAccess.open(COMBAT_CONFIG, FileAccess.READ)
 	if file == null:
@@ -199,8 +213,10 @@ func _load_attack_ranges() -> void:
 		_fail("combat.json is not a JSON object")
 		return
 	var cfg := parsed as Dictionary
-	_quick_range = float((cfg.get("player_quick", {}) as Dictionary).get("range", 2.6))
-	_charged_range = float((cfg.get("player_charged", {}) as Dictionary).get("range", 3.0))
+	var quick: Dictionary = cfg.get("player_quick", {})
+	_engage_distance = maxf(
+		float(quick.get("lunge", 3.6)),
+		float(quick.get("range", 2.6)))
 
 
 func _clear_the_slate() -> void:
@@ -432,11 +448,17 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		# what the stall report above was built to catch, and it caught it on
 		# the tournament final.
 		var distance := to.length()
-		if bool(_manager.call("charged_ready")) and distance <= _charged_range:
+		if distance > _engage_distance:
+			Input.action_press("move_forward")
+			await physics_frame
+			Input.action_release("move_forward")
+		elif bool(_manager.call("charged_ready")):
 			await _press("combat_charged")
-		elif bool(_manager.call("quick_ready")) and distance <= _quick_range:
+		elif bool(_manager.call("quick_ready")):
 			await _press("combat_quick")
 		else:
+			# Nothing is off cooldown: keep the pressure on rather than
+			# standing still, which also closes any remaining gap.
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
