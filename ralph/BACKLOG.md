@@ -70,6 +70,52 @@ Check the tree.
 
 ---
 
+## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
+
+These are remainder items recorded per `conventions.md` rather than iterated on
+further. Each was named by an independent Fable critic judging rendered frames
+with no knowledge of what changed and no sight of prior critiques.
+
+### WEATHER-2 — the lighting rig does not participate in the weather
+OP21-21's washed-out grey is **fixed and independently confirmed**: fog now
+reads as deliberate morning mist and the critic called it the best of the four
+states. Measured saturation went 0.18 -> 0.36 with four hue families recovered,
+`clear` is weighted 3.0 against the others, and `max_consecutive_non_clear: 2`
+bounds any grey run. What the same critic found instead:
+
+- **`cloudy` is now crushed, not washed out.** Ground measured ~(20,30,3), the
+  darkest of the four, and there are **no clouds** — it is the clear-sky dome
+  desaturated. Real overcast light is flatter and often *brighter* in shadow;
+  this preset does the reverse. The critic's read: "did my brightness setting
+  break?" It is the one state a player would report as a fault.
+- **The sun shadow is identical in all four states** — same angle, same
+  hardness. Clear earns it; cloudy, fog and rain contradict it. Quoted:
+  "one lighting rig with a dimmer and a sky swap, not four weathers."
+- **Weather never touches the ground.** Rain has no wet grade or specular
+  response and its streaks are invisible against terrain, so the lower two
+  thirds of the frame is just "cloudy, bluer." Fog sits at the horizon only —
+  the midground is as crisp as clear, so it reads as a backdrop rather than
+  atmosphere you stand in.
+- **Foreground values are crushed in the dark states**, near-black green in
+  exactly the screen region the player watches. Marginal on a 7-inch panel.
+- Grass tufts render at identical acid brightness in every state, reading as
+  faintly emissive under cloudy and rain.
+- Present in all four and so not a weather defect: the crest tree/rock cluster
+  renders near-black even under full sun, which reads as an unlit material.
+
+Highest-value single change, per the critic: give `cloudy` real cloud cover and
+**raise** ambient while softening the sun shadow, instead of dimming everything.
+That also stops cloudy and rain reading as near-duplicates. All fixes are
+in-scene grade/lighting work; none need new art.
+
+### BUILD-KIT-4 — what round 3 left
+Tracked in `BLOCKED.md` for the parts needing an owner decision. Not blocked and
+still open: interior cross-braces read as scaffolding from inside (real geometry
+within the 0.4m wall thickness, not a double-sided plane — investigated with a
+scoped `cull_mode` probe), the corner-seam fix is not visually verified, the
+door leaf sits proud of its frame at the top hinge, and a stray grey brick block
+sits behind the interior braces.
+
 ## Phase -1.6 — the owner played the mid-build (owner-reported, 2026-08-18)
 
 **Reported from a real ROG session mid-build, verbatim notes.** This is the
