@@ -204,3 +204,59 @@ func test_every_item_the_audit_names_is_real() -> void:
 			assert_true(known.has(key),
 				"the reward audit's '%s' row pays '%s', which is not an item"
 					% [str((row as Dictionary).get("activity", "")), key])
+
+
+## Prompt 58 names the tournament as a required section of the reward map.
+##
+## The 2026-08-22 Gate C audit found it missing: `grep tournament
+## data/config/chapter_rewards.json` returned nothing, while
+## `data/config/bands/band1_lower_meadows/trainers.json` had been paying all
+## three rounds since TOURNAMENT-1. The rewards were real and the AUDIT was
+## blind to them -- which is the failure mode an audit table exists to prevent,
+## since a table that omits the chapter's transition prize cannot answer the
+## question it was written to answer.
+##
+## Pinned against the trainer data rather than against a constant, so the two
+## cannot drift apart again: if someone re-tunes the final's payout, this fails
+## until the audit is updated to match.
+func test_the_tournament_rounds_are_in_the_reward_audit() -> void:
+	var audit := _audit()
+	var activities: Array = audit.get("activities", [])
+	var named := ""
+	for row: Variant in activities:
+		if row is Dictionary:
+			named += str((row as Dictionary).get("activity", "")).to_lower() + "\n"
+	for round_name: String in ["quarter", "semi", "final"]:
+		assert_true(named.contains(round_name),
+			"the reward audit has no row for the tournament %s; prompt 58 names the "
+			% round_name + "tournament as a required section of the reward map")
+
+
+func test_the_audited_tournament_prize_matches_what_the_final_actually_pays() -> void:
+	var file := FileAccess.open(
+		"res://data/config/bands/band1_lower_meadows/trainers.json", FileAccess.READ)
+	assert_true(file != null, "band1 trainers.json is missing")
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return
+	var final_reward := {}
+	for entry: Variant in (parsed as Dictionary).get("trainers", []):
+		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == "tournament_final_oskar":
+			final_reward = (entry as Dictionary).get("reward", {})
+	assert_false(final_reward.is_empty(), "tournament_final_oskar has no reward block")
+	# The saddle recipe is the prize the owner directive actually names.
+	var flags: Array = final_reward.get("flags", [])
+	assert_true(flags.has("recipe_saddle"),
+		"the tournament final no longer grants recipe_saddle, which the 2026-08-22 "
+		+ "owner directive makes the tournament's prize")
+	var audit := _audit()
+	var found_final := {}
+	for row: Variant in audit.get("activities", []):
+		if row is Dictionary and str((row as Dictionary).get("activity", "")).to_lower().contains("final"):
+			found_final = (row as Dictionary).get("reward", {})
+	assert_false(found_final.is_empty(), "the audit has no reward recorded for the final")
+	assert_eq(int(found_final.get("coins", -1)), int(final_reward.get("coins", -2)),
+		"the audit's coin figure for the tournament final disagrees with what the "
+		+ "trainer data actually pays")
