@@ -229,44 +229,78 @@ directory. Two consequences worth acting on:
 
 ---
 
-## 6. Still open before Gate B can be called done
+## 6. The condition gate — RG19-spec/D68
+
+Built this session, after confirming no other branch was building it.
+
+The owner's original entry rule was "well rested, well fed, and happy". What
+`TOURNAMENT-1` shipped checked party size and level only; the condition half
+existed nowhere in the tree. `scripts/creatures/creature_condition.gd` over
+`data/config/creature_condition.json` is the model — pure static functions,
+every threshold in data, interpreted in exactly one file:
+
+* **rested** is the creature bed's existing flag, plus an expiry (45 minutes
+  awake, tunable) and a faint that clears it;
+* **fed** is a `nourishment` meter that drains on real time and does not
+  drain in a bed;
+* **happy** is a `happiness` mood, deliberately SEPARATE from `bond` so bond
+  stays permanent progression nobody can be punished out of.
+
+D29's light-hunger rule extends to creatures and is pinned by a test: an
+empty meter makes a creature ineligible, never damaged and never dead.
+
+Fed by playing — berries carry a `creature_food` block and go through the
+backpack's existing target picker. Gated in one shared place —
+`tournament.gd::condition_ready()` / `readiness_report()`, which the marshal,
+the team screen and the entry check all read. Halda gains one branch on
+`tournament_condition_ready`, the only VOLATILE flag in the store, and a line
+that names rest, food and time together instead of refusing flatly.
+
+Proven in the real player path by `smoke_tournament_bracket.gd`:
+
+```
+branch: a levelled team in poor condition -> tournament_halda_condition
+condition: refused, and the report says -> Terrapup needs a night in a creature bed, is unhappy.
+condition: fed the team and rested them -- 3 creature(s) ready
+branch: a team that qualifies -> tournament_halda_signup
+```
+
+One safety rule is asserted rather than assumed: condition gates ENTRY, not
+the bracket. A team that goes hungry between bouts is still offered the round
+it is halfway through, because being sent back out to feed somebody with a
+fight half fought is the one way this gate could strand a run.
+
+**Unit suite with all of it: 1234 tests, 728061 assertions, 0 failed.**
+
+---
+
+## 7. Still open before Gate B can be called done
 
 1. **Nothing is on `main`.** TOURNAMENT-1, integration-3 and this branch are
    three unmerged branches, and the Gate B objective chain is split across two
    of them. Gate B cannot be evaluated on `main` today.
-2. **The fresh-save path stops at the first catch** (above), and needs a CI
-   run to say whether that is real.
-3. **`opening:beat:road` has no writer** -- the chain's first objective, the
+2. **No CI run.** `claude/**` does not trigger `ci.yml`; everything here was
+   run locally on a software-rendered box. A `ralph/**` push is what settles
+   both this and item 3.
+3. **The fresh-save path stops at the first catch** (section 5), and needs
+   that CI run to say whether it is real or an artifact of this environment.
+4. **`opening:beat:road` has no writer** -- the chain's first objective, the
    first line a new player is shown.
-4. **Save/load across the bracket is untested**, which prompt 26 requires by
-   name: reloading mid-bracket must not duplicate rewards or regress the
-   objective.
-5. **The post-tournament handoff is unproven** end to end: grunt fight ->
-   `south_bridge_key` -> gate opens -> objective advances.
-6. **"Enough nearby creatures to prepare naturally" is unproven.** The bracket
+5. **"Enough nearby creatures to prepare naturally" is unproven.** The bracket
    smoke BUILDS a qualifying team; nobody has shown a player can reach the
    entry threshold through ordinary play in the opening area. That is a named
-   Gate B pass criterion, not a nicety.
-7. **Both blind visual passes answered no to both bar questions**, and the
-   tournament venue carries no event dressing and no creature in frame.
-8. **None of this has run in real CI** -- `claude/**` does not trigger
-   `ci.yml`.
+   Gate B pass criterion.
+6. **Both blind visual passes answered no to both bar questions.** The board
+   itself was rebuilt in response; what remains is not this object -- no
+   creatures in a creature game's own venue, no event dressing, a cloudless
+   sky, a sourceless shadow, and two humans who read as one human twice.
 
-### And one decision that is not an engineering call
+### Closed since the first draft
 
-**The creature-condition gate is not built.** The owner's original RG19 words
-were that entrants must be "well rested, well fed, and happy", and prompt 26
-requires eligibility to check exactly that from one shared source. What
-shipped checks party size >= 3 and level >= 6; there is no rested/fed/happy
-model anywhere in the tree. The 2026-08-22 directive re-specified the
-tournament in detail and is SILENT on condition rather than contradicting it.
-
-It matters beyond the gate: condition is what would give the five-creature cap
-and D29's satiety a reason to matter early, which `ralph/BACKLOG.md`'s own
-RG19 entry argues is worth more than the tournament itself. Three ways to go,
-and picking one is the owner's:
-
-* build it (spec, model, feeding, UI, gate) -- real work, and it changes what
-  Gate B means;
-* drop it deliberately, and record that party size and level superseded it;
-* defer it to Gate C and ship the tournament as it stands.
+* **The South Bridge grunt is not a tournament event.** Measured: the grunt
+  stands 1299m from the tournament board; Oskar's final is 3m from it. The
+  tournament's handoff is the objective pointing south; the grunt is who the
+  player meets on arrival. Confirmed with the owner.
+* **Save/load across the bracket** is covered -- five tests in
+  `test_save_format.gd`, including a real VERSION 12 save rewritten on disk.
+* **The condition gate** exists (section 6).
