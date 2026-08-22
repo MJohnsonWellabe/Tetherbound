@@ -38,7 +38,24 @@ extends SceneTree
 ##    nodes' processing is switched off before anything is framed, and the time
 ##    is re-applied after -- pinning has to survive the settle, not precede it.
 ##
-## 2. Parking the camera rig's player underground trips the water hazard.
+## 2. Eye heights are measured against the ground the PLAYER stands on, not
+##    against `playground_heightfield.gd`.
+##
+##    The analytic heightfield and the collision terrain do not agree. Standing
+##    the real body at (-152, 4195) rests it at +0.90 where the heightfield
+##    says -2.00 -- the collision surface is nearly three metres higher, and
+##    near the river channel the disagreement reaches 22m (see
+##    `ralph/GATE_D3_EVIDENCE_2026-08-22.md` 1.2). Seating a 1.7m eye on the
+##    analytic value therefore buries the camera INSIDE the terrain wherever
+##    the real ground is higher, and what comes back is a flat dead-coloured
+##    plane across the lower frame with the world ending in mid-air above it --
+##    the underside of the ground, which reads exactly like a water plane or a
+##    hole and was reported as one by a critic who had no way to know better.
+##
+##    Every eye and target is raycast onto the real collision surface instead,
+##    with the analytic height kept only as the fallback when the ray misses.
+##
+## 3. Parking the camera rig's player underground trips the water hazard.
 ##    `capture_prop_clusters.gd`'s convention is to drop the Player 500m below
 ##    the terrain to get it out of frame. `water.gd` reads a body that far
 ##    under as fully submerged and ramps a red drowning vignette over its grace
@@ -173,6 +190,29 @@ func _init() -> void:
 	_run()
 
 
+## The height of the ground a body would actually stand on at (x, z).
+##
+## Bug 2 above: `playground_heightfield.gd` is analytic and the collision
+## terrain does not match it. A ray down the world's own physics space is what
+## the player's capsule meets, so it is what a camera should be seated on. The
+## analytic value stays as the fallback for a ray that hits nothing, which
+## happens where Terrain3D has not streamed collision -- the camera has been
+## sitting at that viewpoint for the settle frames by then, so in practice it
+## has.
+func _surface(world: Node, field: RefCounted, at: Vector2) -> float:
+	var analytic: float = field.height_at(at.x, at.y)
+	var space: PhysicsDirectSpaceState3D = (world as Node3D).get_world_3d().direct_space_state
+	if space == null:
+		return analytic
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, analytic + 400.0, at.y), Vector3(at.x, analytic - 400.0, at.y))
+	query.collide_with_areas = false
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return analytic
+	return float((hit["position"] as Vector3).y)
+
+
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 
@@ -215,7 +255,7 @@ func _run() -> void:
 
 	var field: RefCounted = HEIGHTFIELD.new()
 
-	# Bug 2: above the terrain, not 500m under it.
+	# Bug 3: above the terrain, not 500m under it.
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	if player != null:
 		player.global_position = Vector3(
@@ -238,19 +278,29 @@ func _run() -> void:
 
 		var eye_xz: Vector2 = view["eye"]
 		var target_xz: Vector2 = view["target"]
+		# Two passes, and the order is the whole point. Terrain3D streams
+		# collision around the CAMERA, so there is nothing to raycast against
+		# until the camera is already standing there. Move to the analytic
+		# guess first, let collision arrive, and only then ask the physics
+		# space where the ground really is and re-seat on it.
 		var eye := Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) + float(view["eye_h"]), eye_xz.y)
 		var target := Vector3(
 			target_xz.x,
 			field.height_at(target_xz.x, target_xz.y) + float(view["target_h"]),
 			target_xz.y)
-
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
 
-		# Terrain3D streams collision and detail around the CAMERA, so a jump
-		# of a kilometre between viewpoints needs frames to resolve before the
-		# shot is of the world rather than of the world arriving.
+		# A jump of a kilometre between viewpoints needs frames to resolve
+		# before the shot is of the world rather than of the world arriving.
 		for i in 40:
+			await physics_frame
+
+		eye.y = _surface(world, field, eye_xz) + float(view["eye_h"])
+		target.y = _surface(world, field, target_xz) + float(view["target_h"])
+		camera.global_position = eye
+		camera.look_at(target, Vector3.UP)
+		for i in 20:
 			await physics_frame
 		for i in POSE_FRAMES:
 			await process_frame
