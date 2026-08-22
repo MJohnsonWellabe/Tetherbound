@@ -6,6 +6,75 @@ design decision rather than inventing one.
 
 ---
 
+## BAND1-D1 — the trail camp needs a sleep prop, and no installed asset is one
+
+**Owner-supplied reference art needed.** `CLAUDE.md` and
+`ralph/GATE_D_LANE_CONTRACT.md` §6 both forbid generating anything without it,
+so this is parked rather than solved.
+
+Prompt 62 asks Lower Meadows for "at least one plausible memorable clearing
+where stopping could make sense after a combat stretch". The `trail_camp`
+cluster at (344,935) is that place. Two independent blind critics have now put
+the same finger on the same gap, and round 3 agrees with them:
+
+**A bedroll, tent or lean-to is the prop that converts "objects arranged in a
+ring" into "someone stopped here."** Every other part of the camp — fire, fire
+ring, seats, gear, firewood — says people *were* here. None of them says people
+*slept* here, and a camp beside a road is a place you sleep.
+
+The build has nothing that can stand in:
+
+- `quaternius_survival` ships five models total: Axe, Backpack, Bonfire,
+  Bonfire_Fire, Knife.
+- `quaternius_fantasy`'s `Bed_Twin1` is indoor furniture. A four-poster in a
+  meadow is worse than the absence.
+- Nothing under `assets/` matches tent / bedroll / lean-to / awning on name.
+
+Secondary, same blocker: **a ground-wear decal** (dirt patch, scorch under the
+fire). Round 2 tried to fake worn ground with four `RockPath_Round_*` stones
+laid as an approach and the critic read them as litter; round 3 removed them.
+The terrain path system that could do it properly lives in
+`terrain_playground.json`, which no Gate-D lane may edit.
+
+**What would clear this:** owner-supplied reference art for a bedroll or small
+tent in the project's existing stylised low-poly language, and optionally a
+scorch/dirt ground decal. One prop unblocks the acceptance line; without it,
+further tuning rounds on this camp converge on a well-lit prop dump, which is
+the round-2 critic's own read and the reason round 3 stopped after one pass.
+
+---
+
+## BAND1-D1 → coordinator — `environment/nature` renders untextured, and the shared scatter uses it
+
+**Not a design decision — a defect in a file no lane may edit.** Logged here so
+it is not lost between lanes; `data/config/vegetation.json` is coordinator-owned
+under `ralph/GATE_D_LANE_CONTRACT.md` §3.
+
+`tools/_probe_camp_materials.gd` measured every `assets/environment/nature`
+model the trail camp wanted. Each one carries materials with **no albedo
+texture** and a flat placeholder colour:
+
+| material | albedo | renders as |
+|---|---|---|
+| `grass` (plant_bush, grass_large, rock_small*) | (0.45, 0.93, 0.87) | flat **cyan** |
+| `dirt` (rock_small*) | (0.95, 0.74, 0.62) | near-white |
+| `woodBark` (log, log_large) | (0.95, 0.74, 0.62) | passes, by luck |
+
+The pack is authored against a palette atlas the glTF import does not apply.
+D1 solved its own case by moving the camp's scenery to `stylized_nature`, whose
+models all carry real albedo textures — but **the shared scatter layers use the
+same pack**, so flat cyan shards appear in open field far outside this camp.
+They are visible in `shots/trail_camp/02-camp-from-spine.png` and
+`03-camp-from-road.png` well away from the cluster.
+
+This is very likely the same defect behind the round-2 blind critic's "pale
+white-stone scatter … too bright, no arrangement, reads as litter or snow
+patches", and is worth checking against the still-open note about spiky
+agave/banana-frond plants reading tropical in a temperate meadow — that one is
+a model-choice question, this one is a material question, and they are not the
+same problem.
+
+
 ## ✅ RESOLVED 2026-08-22 by owner ruling — seed a starting reveal, show named landmarks through fog
 
 The owner read the account below ("I don't understand the map fog comment"),

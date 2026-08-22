@@ -3,6 +3,168 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+
+## BAND1-D1 round 3 — the trail camp's fire, and two capture-tool bugs that faked the art defects
+
+`tests: full suite` · `area: content/band1, tools/capture`
+
+Prompt 62, gate D lane D1. Round 2's `trail_camp` failed an independent blind
+judgement — no to both bar questions — with this verdict:
+
+> Single highest-impact remaining defect: the campfire — oversized inert logs,
+> no flame, no glow, no smoke.
+
+and named fog density/tint as "the largest single-lever visual gap to both
+references, and it is a WorldEnvironment setting, not art."
+
+The start brief asked which of those was a scene bug and which was the capture
+path lying. The answer is **both, in different places, and the split is not the
+one anyone expected.**
+
+### The fire was really broken, and not in the way it looked
+
+`tools/_probe_trail_camp.gd` (new) measures every prop the cluster puts in the
+world plus the glow overlay's own children. Every glow child existed and every
+one was `visible_in_tree`. The numbers say the rest:
+
+| | world y |
+|---|---|
+| flame billboard | 3.13 |
+| smoke column top | 3.95 |
+| **Bonfire prop's own mesh top** | **4.23** |
+
+The flame and the entire smoke column were **inside the log pile**. The embers
+were visible because they are the only part that moves — `local_coords = false`,
+rising for 1.4s, out through the top. The critic reported seeing "only a few
+floating ember sparks" and that is precisely, mechanically, what was renderable.
+
+The cause underneath is scale. `Bonfire.obj` is authored 2.18m across; round 2
+placed it at scale 1.0 in a camp whose stool is 0.58m tall. "Oversized inert
+logs" was a correct reading of a 2.7m-wide fire.
+
+**And the flame existed all along.** Round 2 rejected `Bonfire_Fire.obj` on the
+note that its extra surface "shares the same combined mesh with the logs rather
+than isolating a flame". That is true of the OBJ file — one object,
+`Bonfire_Fire_Cylinder.009` — and false of what Godot imports, because the OBJ
+loader splits by material. `tools/_probe_bonfire_fire.gd` (new): three surfaces,
+`Wood`, `LightWood`, `Fire`, and `Fire` is a real flame cone standing 1.63m
+above the pile. `campfire_glow.gd::ignite()` now gives it an emissive override
+(via `set_surface_override_material`, not by editing the shared Mesh resource —
+that would light the asset everywhere it is reused). The billboard flame is
+gone. `props.gd` counter-scales the overlay so a fire shrunk to a believable
+diameter does not shrink its own 4.6m smoke column, which is what made the camp
+unfindable from the road.
+
+### Two capture-tool bugs, and one of them faked the round-2 colour verdict
+
+The D3 lane's warning that the same conventions exist in other capture tools was
+correct twice over.
+
+**1. The red wash was the drowning overlay.** `tools/capture_trail_camp.gd`
+parked the player 500m underground — the convention these tools inherited. That
+puts them under `water.gd`'s water level, so `is_fully_submerged` goes true and
+the OP21-20 full-submersion hazard ramps for the whole run, drawing a full-rect
+red `ColorRect` on its own CanvasLayer (`SubmersionOverlay`, layer 11) that
+hiding `PlaygroundHUD` does not touch, **escalating with time submerged**. The
+later the frame, the redder. Frame 03 came out drenched in sunset pink under a
+midday sky; frame 01, shot first, merely looked cool and blue. Fixed by parking
+the player across the meadow at ground level and hiding the overlay by name.
+
+**This is the round-2 critic's "largest single-lever visual gap."** It is not a
+WorldEnvironment setting and it is not art. It is this tool. The before/after on
+one unchanged viewpoint is the whole argument.
+
+**2. The day clock races the pass.** `world_look.gd::_process` advances a
+ten-minute day cycle in real time and deliberately never pauses (its own
+comment: a clock that stops when a menu opens would make every menu a free way
+to hold off dusk). Under xvfb software GL this capture takes over a minute of
+wall clock, so one `apply_time("day")` before the loop drifts between
+viewpoints. Now frozen with `set_process(false)` and re-asserted per frame.
+
+Both are the same class D3 found. Other `tools/capture_*.gd` still carry the
+underground-parking convention and were not audited here.
+
+### environment/nature is not usable through props.gd
+
+The first round-3 capture put flat **cyan** shards all round the camp — the
+bushes, grass tufts and small rocks added for foreground breakup.
+`tools/_probe_camp_materials.gd` (new) found why: every `environment/nature`
+model ships materials with **no albedo texture** and a flat placeholder colour.
+Its `grass` material is albedo (0.45, 0.93, 0.87) — that is the cyan — and its
+`dirt` material is (0.95, 0.74, 0.62), near-white. The pack is authored against
+a palette atlas the import does not apply. Only `log`/`log_large` survive, and
+only by luck: their wood-tan placeholder happens to look like wood.
+
+This is almost certainly also the round-2 critic's "pale white-stone scatter …
+too bright, no arrangement, reads as litter or snow patches" — and **the same
+models are used by the shared scatter layers**, so the cyan appears in open
+field well outside this camp. `data/config/vegetation.json` is a file no lane
+may edit (GATE_D_LANE_CONTRACT §3): **flagged for the coordinator, not fixed.**
+
+The camp's scenery now comes from `stylized_nature`, whose models all carry real
+albedo textures.
+
+### The rest of the round-3 tuning list
+
+- **Relocated the camp, (348,919) → (344,935).** The old site dropped 1.2m
+  across the camp's own 7m footprint (`tools/_probe_camp_ground.gd`), which is
+  why round 2's props sat at nine different heights and why the wide frame read
+  as a grass slope with objects on it. `tools/_probe_camp_flat.gd` swept the
+  ground 5–14m off the loop trail; (344,935) is the flattest shelf near it,
+  0.29m of relief over 8m, 7.8m from the trail. A camp is a place someone chose
+  to stop and the ground has to look like a reason to choose it. The clearing
+  (`vegetation.json` order 1000) moved with it and tightened 12m → 9m.
+- **The "haystack parked touching the fire" was the Backpack.** Raw 3.34 × 3.12
+  × 1.75m with its origin 1.46m above its own base, so round 2's scale 0.55 gave
+  a 1.7m pack sunk 0.80m into the ground — a lumpy tan half-buried mass, which
+  is a haystack. Now 0.18 with `sink_m: -0.25` to lift it back to ground level.
+- **The "wattle panel a log skewers through" was the Bench**, with `log_large`
+  2.2m away on the same bearing, inside it. They are now 2.9m apart on opposite
+  arcs of the ring.
+- **The RockPath family is out.** Third strike. They are not stones — each is a
+  flat mosaic of pale pebbles (1.06–2.13m across, 0.11m thick), so at any scale
+  it reads as gravel lying in grass. The fire ring is six `Rock_Medium_*`
+  boulders at 0.11–0.15 (0.35–0.50m). The four approach stones are gone.
+- **Seat yaws are computed, not eyeballed** — long axis tangential to the fire
+  ring for the bench and `log_large` (measured long axes, `_probe_camp_models.gd`),
+  radial for the firewood log, which is the opposite rule for the opposite reason.
+- **Three capture viewpoints, all on the loop trail** `(300,880)-(370,950)`
+  which passes 7.8m from the camp — round 2's wide frame was shot from the
+  *spine*, 14m away, which is why the critic found no trail in a composition
+  whose entire premise is "beside the trail". The third frame is new and is the
+  acceptance the other two cannot show: at 23m the props are barely readable and
+  the smoke column is the whole test.
+
+### What is NOT fixed, honestly
+
+- **No bedroll, tent or lean-to.** This is the prop that converts "objects" into
+  "someone stopped", and the build does not have one. Recorded in
+  `ralph/BLOCKED.md`; nothing generated.
+- **No ground-wear decal** under the camp. Same file. The approach-stone
+  workaround was tried and made things worse.
+- The clearing move does **not** invalidate the baked scatter on this branch —
+  `scatter_bake.gd::config_fingerprint()` still hashes only the two head configs
+  (GATE_D_LANE_CONTRACT §4). The frames below were rendered against a **local**
+  re-bake so they show the real clearing; **that bake is deliberately not
+  committed**, so it does not collide with the other four lanes. The coordinator's
+  single integration re-bake is still required.
+- Detached hard shadow blobs appear on open grass in all three frames. Not
+  chased: the capture runs Compatibility + software GL and this tool's own
+  header already says fine lighting judgements are not trustworthy there.
+
+### Judgement
+
+`shots/trail_camp/01-camp-close.png`, `02-camp-from-spine.png` and
+`03-camp-from-road.png` are re-rendered and **not graded here**. Per the lane
+brief, this round does not grade its own frames and does not run rounds four
+and five: the critic's own guidance was one thorough tuning round, then stop,
+because without a sleep prop and a real campfire further rounds converge on a
+well-lit prop dump. The campfire half of that ceiling is now solved. The sleep
+prop is not, and it is owner-art-blocked.
+
+**Round 2's verdict is now recorded above** — `DONE.md` previously said round 2
+was unjudged, and the record should not claim less certainty than we have.
+
 ## BAND1-D1 — Lower Meadows dead-travel fill and density raise
 
 `tests: test_band_content.gd, test_band_vegetation.gd (1 assertion loosened, see below), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, test_map_landmarks.gd, test_map_icons.gd, full suite` · `area: content/band1`

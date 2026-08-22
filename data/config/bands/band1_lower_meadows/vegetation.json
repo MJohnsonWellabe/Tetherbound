@@ -63,10 +63,10 @@
     },
     {
       "order": 1000,
-      "x": 348.0,
-      "z": 919.5,
-      "radius": 12.0,
-      "_why": "BAND1-D1: the trail_camp prop cluster (props.json order 1000) at the spine's (360,910) bend -- same treatment every other authored prop cluster in this file gets, so the rest stop's pack/crate/barrel pile is not itself buried by the scatter pass. NOTE for the coordinator: scatter_bake.gd's config_fingerprint() does not hash this file (GATE_D_LANE_CONTRACT.md section 4's known defect), so this clearing does not by itself invalidate the current bake -- it needs the same fingerprint fix and single re-bake every band's new clearing does."
+      "x": 344.0,
+      "z": 935.0,
+      "radius": 9.0,
+      "_why": "BAND1-D1: the trail_camp prop cluster (props.json order 1000) and the ground its fire ring, seats and gear pile stand on. Moved from (348,919.5) r=12 with the cluster itself: the old site dropped 1.2m across the camp's own footprint (tools/_probe_camp_ground.gd) and (344,935) is the flattest shelf within 14m of the loop trail (tools/_probe_camp_flat.gd, 0.29m of relief over 8m). Radius tightened 12 -> 9 at the same time: the camp's outermost prop is 5.7m from centre, so 9 keeps a ~3m margin while letting scattered grass close back in near enough that the camp reads as a cleared spot rather than a bald patch in a field. NOTE for the coordinator: scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4), so this move does NOT invalidate the baked scatter on this branch and needs the single integration re-bake."
     }
   ],
   "footprints": [

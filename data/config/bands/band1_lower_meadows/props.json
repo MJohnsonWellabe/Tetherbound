@@ -203,158 +203,248 @@
       "name": "trail_camp",
       "props": [
         {
-          "model": "Bonfire",
+          "model": "Bonfire_Fire",
           "at": [
-            348.0,
-            919.0
+            344.0,
+            935.0
           ],
           "yaw_deg": 20.0,
-          "scale": 1.0,
+          "scale": 0.45,
           "dir": "res://assets/props/quaternius_survival",
-          "sink_m": 0.05,
+          "sink_m": 0.03,
           "glow": "campfire",
-          "_why": "BAND1-D1-v2, GATE-D coordinator directive: the camp's actual focus. quaternius_survival's Bonfire (logs, unlit -- Bonfire_Fire's extra surface shares the same combined mesh with the logs rather than isolating a flame, checked before use) plus `glow:\"campfire\"` (scripts/world/campfire_glow.gd, new) for the light/flame-billboard/ember/smoke overlay: the critic's central finding was that the single most important prop for the word 'camp' was absent from a build that already ships it. Everything else in this cluster is arranged around this point, not spaced along a line beside it."
+          "_why": "BAND1-D1-v3, the camp's focus and the fix for round 2's central failure. Two changes, both measured. (1) The asset: `Bonfire_Fire.obj`, not `Bonfire.obj`. Round 2 rejected it on the note that its extra surface 'shares the same combined mesh with the logs rather than isolating a flame' -- true of the OBJ file (one object, Bonfire_Fire_Cylinder.009), false of what Godot imports, because the OBJ loader splits by material. tools/_probe_bonfire_fire.gd: 3 surfaces, `Wood`, `LightWood`, `Fire`, and `Fire` is a real flame cone standing 1.63m above the log pile. campfire_glow.gd::ignite() gives that surface an emissive override. (2) The scale: raw AABB 2.18 x 2.31 x 1.98m, so round 2's scale 1.0 put a 2.2m-wide, 1.5m-tall log pile in a camp whose stool is 0.58m tall -- the blind critic read it as 'oversized inert logs' and it was. 0.45 gives a 0.98m fire with a 0.47m log pile under a flame reaching 1.04m. The glow overlay is counter-scaled back out to absolute metres by props.gd, so shrinking the fire does not shrink its own smoke column; that shrinkage is exactly what made the camp invisible from the trail."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [
+            344.8,
+            935.26
+          ],
+          "yaw_deg": 18,
+          "scale": 0.13,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 1 of six. Replaces round 3's first cut, which built the ring out of stylized_nature's RockPath_Round_* models. Those are the third strike on that family: the round-2 critic called them 'two amorphous blobs ... too bright, no arrangement, reads as litter or snow patches', and shrinking them did not help, because they are not stones -- each one is a flat MOSAIC of pale pebbles (measured 1.06-2.13m across, 0.11m thick, one 'PathRocks' texture), so at any scale it reads as a patch of gravel lying in grass. Rock_Medium_* are actual boulders from the same pack; at 0.11-0.15 of a ~3.2m raw model they are 0.35-0.50m stones, which is what someone rings a fire with."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [
+            344.18,
+            935.92
+          ],
+          "yaw_deg": 79,
+          "scale": 0.15,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 2 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [
+            343.36,
+            935.54
+          ],
+          "yaw_deg": 140,
+          "scale": 0.12,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 3 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [
+            343.12,
+            934.66
+          ],
+          "yaw_deg": 201,
+          "scale": 0.11,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 4 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [
+            343.88,
+            934.17
+          ],
+          "yaw_deg": 262,
+          "scale": 0.14,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 5 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [
+            344.75,
+            934.43
+          ],
+          "yaw_deg": 323,
+          "scale": 0.13,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Fire-ring stone 6 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
         },
         {
           "model": "Bench",
           "at": [
-            345.95,
-            919.55
+            341.7,
+            936.0
           ],
-          "yaw_deg": 200.0,
+          "yaw_deg": 113.5,
           "scale": 1.0,
-          "_why": "Long seat facing the fire across it -- length axis roughly tangent to the fire so two people could sit side by side and both face in. 2.78m long (measured, tools' own probe pattern), so kept a full 2m+ from the fire ring rather than crowding it."
-        },
-        {
-          "model": "Stool",
-          "at": [
-            349.9,
-            917.95
-          ],
-          "yaw_deg": 25.0,
-          "scale": 1.0,
-          "dir": "res://assets/props/quaternius_furniture",
-          "_why": "A second, smaller seat on the opposite side of the fire from the bench -- not a second copy of the same prop, so the ring reads as people sitting at different points around one fire rather than one prop repeated."
+          "_why": "Long seat, 2.78m on its own local x axis (measured, tools/_probe_camp_models.gd), sat tangentially at 2.51m from the fire. The yaw is computed to put that long axis perpendicular to the radius, which is what 'facing the fire' means for a bench -- a 2.8m seat pointing radially out of a fire ring reads wrong whichever way its front happens to face. The model is 0.53m tall with 0.53m depth and no backrest, so the 180-degree ambiguity in that solution does not show."
         },
         {
           "model": "log_large",
           "at": [
-            346.65,
-            917.45
+            342.4,
+            933.25
           ],
-          "yaw_deg": 65.0,
+          "yaw_deg": 42.4,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
-          "_why": "A third, informal seat -- a felled log rolled up to the fire rather than furniture, breaking the bench/stool's own regularity. environment/nature's log_large.glb, not the fantasy-kit crate family."
+          "_why": "A third, informal seat -- a felled log rolled up to the fire rather than furniture, breaking the bench/stool's regularity. 1.00m on local x; same tangential yaw rule as the bench. Round 2 had it 2.2m from the bench and both near the same bearing, which is where the critic's 'a long log skewers straight through the wattle panel' came from: the bench IS the wattle-looking panel and log_large was inside it. They are now 2.9m apart on opposite arcs of the ring."
+        },
+        {
+          "model": "Stool",
+          "at": [
+            344.6,
+            937.2
+          ],
+          "yaw_deg": 15.3,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "A second, smaller seat on the far side of the fire from the bench. Round 2's critic said it faced the barrel; the barrel has been moved out of its sightline and the yaw is now computed to aim the model's -Z at the fire rather than picked by eye. At 0.51 x 0.58 x 0.53m it is nearly rotationally symmetric, so this mostly matters for not looking deliberate about the wrong thing."
         },
         {
           "model": "log",
           "at": [
-            349.15,
-            920.65
+            345.15,
+            936.35
           ],
-          "yaw_deg": -40.0,
+          "yaw_deg": 40.4,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
           "pitch_deg": 4.0,
-          "_why": "A smaller loose log at the fire's far side, tilted slightly (pitch) rather than dead level -- one more break from every prop standing perfectly axis-upright, which the critique named directly."
+          "_why": "Firewood, not a seat: a 0.71m log lying radially with its end toward the fire, as if part-fed in, and pitched 4 degrees off level so not every prop in the camp stands perfectly axis-upright. Radial here is deliberate and is the opposite rule from the two seats above, for the opposite reason."
         },
         {
           "model": "Crate_Wooden",
           "at": [
-            345.45,
-            918.65
+            340.4,
+            937.2
           ],
           "yaw_deg": 300.0,
           "scale": 1.0,
-          "_why": "Supply crate touching the bench's near end -- the pile a traveller who stopped here actually lives out of, not a separate cache off to the side."
+          "_why": "Supply crate, moved out to 4.2m behind the bench with the bag and rope. Round 2 stacked crate, bag, rope, backpack and barrel all inside 2.5m of the fire, which is how a camp turns into the 'well-lit prop dump' the critic warned about. Gear lives behind where people sit, not between them and the fire."
         },
         {
           "model": "Bag",
           "at": [
-            345.65,
-            918.15
+            340.95,
+            937.75
           ],
           "yaw_deg": 340.0,
           "scale": 1.0,
-          "_why": "Leaning against the crate, not centred alone -- the same 'pile someone set down together' composition the existing trainer_camp/bridge_repair_site clusters already use, now built around the fire instead of instead of it."
-        },
-        {
-          "model": "Backpack",
-          "at": [
-            349.55,
-            920.15
-          ],
-          "yaw_deg": 150.0,
-          "scale": 0.55,
-          "dir": "res://assets/props/quaternius_survival",
-          "_why": "A second, different-shaped pack near the log seat -- quaternius_survival's Backpack (a different silhouette from the fantasy kit's Bag) so the fire has gear on both sides rather than one prop family repeated around it. Scaled 0.55: measured raw AABB is 3.34x3.12x1.75m, a hiking-pack mesh authored at a scale this pack's other props are not -- unscaled it would dwarf the bench."
+          "_why": "Leaning against the crate -- the same 'pile someone set down together' composition the existing trainer_camp/bridge_repair_site clusters use."
         },
         {
           "model": "Rope_1",
           "at": [
-            345.25,
-            918.25
+            340.05,
+            936.55
           ],
           "yaw_deg": 10.0,
           "scale": 1.0,
-          "_why": "Coiled beside the crate/bag pile, the same role it plays at the bridge_repair_site cluster -- a coil of cordage a camp plausibly has."
+          "_why": "Coiled beside the crate/bag pile, the same role it plays at the bridge_repair_site cluster."
+        },
+        {
+          "model": "Backpack",
+          "at": [
+            342.95,
+            937.85
+          ],
+          "yaw_deg": -20.2,
+          "scale": 0.18,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": -0.25,
+          "_why": "The single worst prop in round 2 and the one the critic called a haystack 'parked touching the fire pile'. Measured raw: 3.34 x 3.12 x 1.75m with its origin 1.46m ABOVE its own base. At round 2's scale 0.55 that is a 1.7m-tall pack -- taller than the bench is long is not far off -- sunk 0.80m into the ground, which is exactly the lumpy tan half-buried mass a haystack is. Scale 0.18 gives a 0.60 x 0.56m pack; `sink_m` -0.25 lifts it by the scaled origin offset so it rests on the ground instead of in it. Negative sink is the existing key used the other way round, not a new one."
         },
         {
           "model": "Barrel",
           "at": [
-            350.2,
-            919.15
+            340.9,
+            934.4
           ],
           "yaw_deg": 95.0,
           "scale": 1.0,
-          "_why": "Water barrel, kept at the outer edge of the ring rather than in the direct sightline to the fire. Measured raw AABB (tools/_probe pattern): 0.698 x 0.898 x 0.698m at scale 1.0 -- already the ~0.9m the coordinator's critique asked for; the v1 frame's '1.7-2m' read was this same barrel photographed close and low against the Bag prop it sat beside, not a wrong scale value. Left at scale 1.0 rather than shrunk further, which would make it wrong twice."
+          "_why": "Water barrel (measured 0.70 x 0.90 x 0.70m, already the right size at scale 1.0 -- round 2 was right about that and it is left alone). Moved to the camp's west edge, off the line between the stool and the fire it used to sit on."
         },
         {
-          "model": "RockPath_Round_Wide",
+          "model": "Bush_Common",
           "at": [
-            351.6,
-            916.4
+            347.2,
+            937.6
           ],
           "yaw_deg": 0.0,
-          "scale": 1.1,
+          "scale": 0.42,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "First of four RockPath stones laid as stepping points from the spine's own (360,910) bend toward the fire -- the closest this system can build to the coordinator's 'worn dirt patch' without touching terrain_playground.json's path system, which is outside every Gate-D lane's reach (GATE_D_LANE_CONTRACT section 3). A prop-level worn approach, not a texture one."
+          "_why": "First of six pieces of authored scenery breaking up the camp's outer edge and the wide frame's foreground. The clearing this cluster sits in (vegetation.json order 1000) strips scattered grass for 9m, so without an authored edge the clearing itself becomes the composition problem the round-2 critic named as a '60% empty grass slope'. Raw 1.91m, so 0.42 is a 0.80m bush. environment/nature's plant_bush / grass_large / rock_small* are NOT usable through props.gd, and that finding is why this swap happened: tools/_probe_camp_materials.gd shows every one of them ships a material with NO albedo texture and a flat placeholder colour -- their 'grass' material is albedo (0.45, 0.93, 0.87), which renders as the flat CYAN shards the first round-3 capture scattered all round this camp, and their 'dirt' material is (0.95, 0.74, 0.62), near-white. That pack is authored against a palette atlas the import does not apply. Only its log/log_large survive, and only by luck -- their wood-tan placeholder happens to look like wood. stylized_nature's models all carry real albedo textures, so the camp's scenery comes from there instead."
         },
         {
-          "model": "RockPath_Round_Small_1",
+          "model": "Bush_Common_Flowers",
           "at": [
-            350.7,
-            917.1
+            339.4,
+            932.8
           ],
-          "yaw_deg": 15.0,
-          "scale": 1.0,
+          "yaw_deg": 0.0,
+          "scale": 0.38,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Second stepping stone, closer to the fire ring."
+          "_why": "Flowering variant at the camp's west edge beyond the gear pile -- the same silhouette carrying different colour, rather than a second identical bush."
         },
         {
-          "model": "RockPath_Round_Small_2",
+          "model": "Fern_1",
           "at": [
-            349.5,
-            918.0
+            345.9,
+            938.4
           ],
-          "yaw_deg": -20.0,
-          "scale": 1.0,
+          "yaw_deg": 0.0,
+          "scale": 0.26,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Third stepping stone, at the ring's own outer edge."
+          "_why": "Fern south of the stool. Raw 2.83m across and only 0.84m tall, so 0.26 gives a 0.74m low spreading clump -- a different SHAPE from the bushes, not a third round mass."
         },
         {
-          "model": "RockPath_Round_Thin",
+          "model": "Grass_Wide_Tall",
           "at": [
-            347.4,
-            917.1
+            348.2,
+            935.9
           ],
-          "yaw_deg": 40.0,
-          "scale": 1.0,
+          "yaw_deg": 0.0,
+          "scale": 0.5,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fourth stone, off to the side of the direct line from the other three -- an approach reads as worn ground, not a single-file row of identical props, which the critique's own complaint about the rock/wagon/barrel line was exactly about."
+          "_why": "Tall grass tuft on the trail side, in the near foreground of the approach view. 1.15 x 1.61m raw -> 0.58 x 0.81m."
+        },
+        {
+          "model": "Clover_1",
+          "at": [
+            342.0,
+            939.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Low clover clump south-west, at ground level where the bushes are not, so the camp's edge is not all one height."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [
+            347.9,
+            933.6
+          ],
+          "yaw_deg": 25.0,
+          "scale": 0.22,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "A single larger boulder on the trail side, 0.67m -- bigger than the fire-ring stones so the two read as different things, and something for the eye to land on between the trail and the fire."
         }
-      ]
+      ],
+      "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it: 0.29m of relief across 8m, 7.8m from the trail's (300,880)-(370,950) leg. A camp is a place someone chose to stop; the ground has to look like a reason to choose it."
     }
   ]
 }

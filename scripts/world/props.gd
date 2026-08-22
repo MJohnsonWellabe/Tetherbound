@@ -130,17 +130,29 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	root.scale = Vector3.ONE * scale_factor
 	into.add_child(root)
 
-	# `glow` (optional): BAND1-D1 coordinator directive -- a static log mesh
-	# with no baked emissive material (checked: assets/props/quaternius_survival/
-	# Bonfire*.mtl carries Ke 0 0 0 on every surface) reads as unlit cargo, not
-	# a fire, and is invisible as a landmark from any distance. `"campfire"` is
-	# the only value read today; CAMPFIRE_GLOW attaches under `root` so it
-	# inherits the prop's own ground position (and rotation/scale -- entries
-	# using this should keep scale_factor at 1.0, since the glow's own sizes
-	# are tuned for that).
+	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
+	# (assets/props/quaternius_survival/Bonfire*.mtl carries Ke 0 0 0 on every
+	# surface) reads as unlit cargo, not a fire, and is invisible as a landmark
+	# from any distance. `"campfire"` is the only value read today: it lights
+	# the mesh's own `Fire` surface if it has one, and attaches the light,
+	# ember and smoke overlay `campfire_glow.gd` owns.
+	#
+	# The overlay is counter-scaled out of `root`'s own scale on purpose.
+	# BAND1-D1 round 2 shipped the opposite rule ("entries using this should
+	# keep scale_factor at 1.0") and it was wrong twice over: the Bonfire is
+	# authored at 2.2m across, so a believable campfire MUST be scaled down,
+	# and shrinking a 4.6m smoke column by the same factor is exactly what
+	# made the camp unfindable from the trail. The glow's sizes are absolute
+	# metres; the prop's scale is the prop's business.
 	var glow := str(spec.get("glow", ""))
 	if glow == "campfire":
-		root.add_child(CAMPFIRE_GLOW.new())
+		var lit := CAMPFIRE_GLOW.ignite(root)
+		if lit == 0:
+			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
+		var overlay: Node3D = CAMPFIRE_GLOW.new()
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect(root, meshes)
