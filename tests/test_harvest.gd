@@ -457,10 +457,24 @@ func test_marking_leaves_layers_with_no_harvest_item_untouched() -> void:
 	var by_layer := _placements()
 	veg.call("_mark_harvestable", by_layer)
 
-	for name: String in ["flowers", "grass", "drygrass", "bushes"]:
+	# DERIVED from the config rather than a hardcoded list. This used to name
+	# ["flowers", "grass", "drygrass", "bushes"], which was correct until
+	# EXPEDITION-REST gave `bushes` a harvest_item of its own -- at which point
+	# a literal list would have failed the build for the layer doing exactly
+	# what it was configured to do. Asking the config which layers are supposed
+	# to be inert tests the actual rule ("no harvest_item means never marked")
+	# and cannot rot the next time a layer gains or loses one.
+	var checked := 0
+	for name: String in (RULES.config().get("layers", {}) as Dictionary).keys():
+		var layer: Dictionary = RULES.config()["layers"][name]
+		if str(layer.get("harvest_item", "")) != "":
+			continue
+		checked += 1
 		for p: Dictionary in (by_layer.get(name, []) as Array):
 			assert_false((p as Dictionary).has("harvest_item"),
 				"layer '%s' has no harvest_item configured and must never be marked" % name)
+	assert_true(checked >= 3,
+		"only %d layers have no harvest_item; this check has stopped testing anything" % checked)
 	veg.free()
 
 
