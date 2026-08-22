@@ -36,31 +36,80 @@
     {
       "order": 3001,
       "name": "relay_approach_checkpoint",
-      "_why": "GATE-D3. The first physical sign of Team Tether on the road, well short of Hess -- a barricade stack rather than a person, because a fight here would just be a third picket and prompt 64 asks for presence BUILDING before the gauntlet, not another battle. Positioned at (240,3678), 8m past the spine's own bend and clear of Hess's own arena at (248,3683.5) so the two do not compete for the player's stopping point.",
+      "_why": "GATE-D3. The first physical sign of Team Tether on the road, well short of Hess -- a barricade rather than a person, because a fight here would just be a third picket and prompt 64 asks for presence BUILDING before the gauntlet, not another battle. At s=12.5m along the (230,3670)->(350,3760) spine leg, 10m short of Hess at s=22.5 so the two do not compete for the player's stopping point.",
+      "_why_rebuilt": "GATE-D3 round 2, and it is two defects in one cluster. The driven run (tools/_probe_band3_driven.gd) WEDGED the real player body here: the crate and barrel stood 0.4m and 1.2m from the spine centreline, so a body walking the road pushed straight into them for ninety frames and stopped. Three props dropped on the walking line of the region's main road. Second, the blind critic was shown this spot and said plainly that nothing here reads as a picket -- two identical crates on a path, no camp, no barrier, no reason. Both are answered the same way: the barricade is now a LINE ACROSS the road with a 6.4m gap walked through the middle of it, and the picket's own camp sits off the verge behind it. A checkpoint you steer through reads as a checkpoint; a checkpoint you get stuck on reads as a bug. Every lateral offset below is measured on that leg's own normal (-0.6,0.8), so the gap stays a gap if the road is ever re-cut.",
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [240.6, 3677.4],
-          "yaw_deg": 15.0,
+          "at": [238.1, 3680.1],
+          "yaw_deg": 36.9,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "the anchor -- stacked supply, left where the crew set it down rather than carried the last stretch to the site"
+          "_why": "west end of the barricade, 3.2m off the centreline and squared to the road rather than to the world -- yaw 36.9 is the leg's own bearing, so the crate face reads as blocking the road instead of sitting at an accident of an angle"
         },
         {
           "model": "Barrel",
-          "at": [239.4, 3678.6],
+          "at": [237.1, 3681.3],
           "yaw_deg": -25.0,
           "sink_m": 0.05,
           "scale": 1.0,
-          "_why": "set against the crate, one load"
+          "_why": "set against the crate, one load, further out"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [236.2, 3682.6],
+          "yaw_deg": 36.9,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the west line run out to 6.4m so the barricade has length -- two crates read as luggage, a line of three reads as something put there on purpose"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [241.9, 3674.9],
+          "yaw_deg": 36.9,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "east end, the mirror of the west crate. The 6.4m the two leave between them is the gap the road walks through: wide enough that a body steers it without touching either, narrow enough that the player is obviously being funnelled"
+        },
+        {
+          "model": "Barrel",
+          "at": [242.9, 3673.7],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "east line, second piece"
         },
         {
           "model": "Rope_1",
-          "at": [241.5, 3679.2],
-          "yaw_deg": 60.0,
+          "at": [243.8, 3672.4],
+          "yaw_deg": 36.9,
           "sink_m": 0.03,
           "scale": 1.0,
-          "_why": "a coiled cordon line -- the closest this pack's own catalog comes to a barricade marker, and the honest read is 'somebody was here recently,' which is the whole point of a checkpoint the player is not challenged at"
+          "_why": "a cordon line run along the east barricade rather than coiled on the road -- the closest this pack's catalog comes to a barrier marker, and lying along the line it now has one to lie along"
+        },
+        {
+          "model": "Bench",
+          "at": [242.0, 3669.0],
+          "yaw_deg": -53.1,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the picket's own camp, 8m off the verge behind the east barricade and facing back down the road at whoever is coming. This is the piece the critic's 'no camp, no reason' asks for: somebody sits here and watches this road"
+        },
+        {
+          "model": "Bag",
+          "at": [243.4, 3669.1],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "kit set down against the bench leg -- the same touching-pile rule riverwatch_rest uses"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [242.5, 3667.6],
+          "yaw_deg": 0.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "water at the watch post. Three pieces make it a post rather than a bench nobody uses"
         }
       ]
     },
@@ -115,31 +164,103 @@
     {
       "order": 3003,
       "name": "old_mill_crossing_gear",
-      "_why": "GATE-D3, spec's own 'mill/crossing structures' beat. mill_crossing.gd and terrain_playground.json's `crossings[old_mill_crossing]` already build the deck, the channel and the gate logic -- this is the loose gear around it, the same treatment the quarry's working face gets: tools left where the crew stopped, which is also the honest reason a bridge missing one gear (data/dialogue/relay.json's `relay_captive_freed`) reads as abandoned rather than never-finished. Sited on the south bank short of the narrows, clear of the carved gorge edge.",
+      "_why": "GATE-D3, spec's own 'mill/crossing structures' beat. mill_crossing.gd and terrain_playground.json's `crossings[old_mill_crossing]` already build the deck, the channel and the gate logic -- this is the loose gear around it, the same treatment the quarry's working face gets: tools left where the crew stopped, which is also the honest reason a bridge missing one gear (data/dialogue/relay.json's `relay_captive_freed`) reads as abandoned rather than never-finished.",
+      "_why_resited": "GATE-D3 round 2. This cluster was authored at (-60,4160): 101m from the Old Mill Crossing it is named for and 54m off the spine, dressing nothing and seen by nobody. The driven run never came within reach of it and the blind critic, shown the crossing, said the mill stands alone on bare ground with no yard, no track and no reason -- both are the same defect. It now stands on the SOUTH bank landing where the player actually stops at a shut gate, 13-17m short of the narrows: the channel is 15m deep with a 3.6m half-width and a 3.4m rim, and terrain_playground.json fades the carve out to z=4191, so everything below sits at z<=4189 and never hangs over a cut edge. Laterally it is 4-5m off the road centreline (x=-152), on the verges, because the wedge this same run found at the relay checkpoint was three props standing on the walking line and that mistake is not worth making twice.",
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [-60.4, 4159.6],
-          "yaw_deg": 55.0,
+          "at": [-156.6, 4187.4],
+          "yaw_deg": 8.0,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "the anchor -- spare deck timber, crated"
+          "_why": "the anchor -- spare deck timber, crated, on the west verge of the landing where a crew working the bridge would stack it"
         },
         {
           "model": "Rope_1",
-          "at": [-59.0, 4160.8],
+          "at": [-155.9, 4186.1],
           "yaw_deg": -20.0,
           "sink_m": 0.03,
           "scale": 1.1,
-          "_why": "coiled rigging line for the deck, set down beside the crate"
+          "_why": "coiled rigging line for the deck, set down against the crate"
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [-61.6, 4158.5],
+          "at": [-157.4, 4185.2],
           "yaw_deg": 140.0,
           "sink_m": 0.04,
           "scale": 1.0,
           "_why": "tipped a couple of paces off -- the group has an edge, not a boundary"
+        },
+        {
+          "model": "Workbench",
+          "at": [-147.6, 4188.6],
+          "yaw_deg": -75.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the east verge, facing the narrows. The gate is shut because the mechanism is missing a gear, and a bench turned toward the work is what says somebody was in the middle of fixing it when Team Tether took the person who knew how"
+        },
+        {
+          "model": "Anvil_Log",
+          "at": [-148.4, 4187.1],
+          "yaw_deg": 20.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "beside the bench -- mill gearing is iron, and this is the pack's only piece that says iron was worked here"
+        },
+        {
+          "model": "Barrel",
+          "at": [-146.9, 4185.9],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "closes the east group at three pieces, matching the west"
+        }
+      ]
+    },
+    {
+      "order": 3004,
+      "name": "old_mill_yard",
+      "_why": "GATE-D3 round 2, and it exists because of one specific piece of blind criticism: shown the Old Mill Crossing, the critic said the half-timbered mill 'stands alone on a bare hilltop on a stone plinth, with no path to its door, no fence, no outbuilding, no garden' -- a prop dropped on grass rather than a place someone worked. The mill itself is built by mill_crossing.gd from the crossing's own `mill` block and is not this file's to move; what it has never had is a yard. This is that yard: the working clutter of a water mill, on the north bank clear of the mill's own footprint and well clear of the channel carve (everything at z>=4218, against a fade that ends at 4215). Same prop family as every other cluster in the region (D24) -- no new models.",
+      "props": [
+        {
+          "model": "FarmCrate_Apple",
+          "at": [-136.4, 4219.8],
+          "yaw_deg": 25.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "grain in, flour out: a mill's yard is stacked with what it is milling, and a filled crate says the place worked recently rather than being a ruin"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [-134.9, 4218.4],
+          "yaw_deg": -40.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "emptied and re-stacked beside the full one, the pair reading as a load part-worked"
+        },
+        {
+          "model": "Barrel",
+          "at": [-137.2, 4222.1],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "set out from the crates so the yard has depth instead of being one touching pile"
+        },
+        {
+          "model": "Bench",
+          "at": [-139.6, 4220.6],
+          "yaw_deg": 105.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "turned toward the mill door -- the yard's one human-scale object, and the thing that makes the group read as somewhere people sat rather than storage"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [-138.8, 4222.9],
+          "yaw_deg": 60.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "water from the race, left at the bench end"
         }
       ]
     }

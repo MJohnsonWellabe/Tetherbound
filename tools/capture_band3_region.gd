@@ -14,7 +14,7 @@ extends SceneTree
 ## judgements are not, and frame times from this harness are not a performance
 ## measurement.
 ##
-## WHAT THIS SHOOTS, AND WHY THESE EIGHT.
+## WHAT THIS SHOOTS, AND WHY THESE NINE.
 ##
 ## Prompt 64's acceptance is about a REGION, not about a prop: "river feels
 ## like a major regional landmark", "Team Tether presence builds before the
@@ -23,15 +23,18 @@ extends SceneTree
 ## set walks the region in the order a player does -- approach road, picket,
 ## relay, gorge, crossing, exit -- and deliberately includes the region's own
 ## longest empty stretch, because a critic who is only shown the good spots is
-## being asked a different question than the one that matters.
+## being asked a different question than the one that matters. It also includes
+## a wild cluster: the first round shot none, and a set with no creature in it
+## cannot be asked the scale question at all.
 ##
 ## TWO CAPTURE BUGS THIS TOOL DOES NOT HAVE, and every other capture tool does.
 ##
 ## 1. The day/weather clock races a multi-viewpoint pass. `world_look.gd` and
 ##    `world_weather.gd` both advance in `_process`, and a settle loop plus
-##    eight framed shots is minutes of game time: `apply_time("day")` called
+##    nine framed shots is minutes of game time: `apply_time("day")` called
 ##    once before the settle wears off, and the later frames come back in a red
-##    dusk wash under whatever weather rolled. The time is pinned and BOTH
+##    dusk wash under whatever weather rolled (rounds 3-6 of the previous pass
+##    did exactly that). The time is pinned and BOTH
 ##    nodes' processing is switched off before anything is framed, and the time
 ##    is re-applied after -- pinning has to survive the settle, not precede it.
 ##
@@ -94,20 +97,32 @@ const VIEWPOINTS := [
 		"target": Vector2(356.0, 3757.0), "target_h": 1.6,
 	},
 	{
-		# The gorge, looked at ALONG its course rather than across it, because
-		# a 15m trench photographed head-on reads as a ditch and its depth is
-		# the whole reason it blocks the region.
+		# The gorge, from ON the south rim looking obliquely along the cut.
+		#
+		# Round 1 shot this from (60, 4150) at +14m, 200m back, and the blind
+		# critic's verdict was "there is no gorge" -- correctly, because from
+		# there a hill stands between the eye and the trench and all that
+		# reaches the frame is a grey gravel ribbon and a sliver of blue at the
+		# edge. That was the camera, not the terrain: the channel is 15m deep
+		# against a 3.4m rim. A trench is only legible from close enough that
+		# its near rim is under you and its far wall is across the frame, so
+		# the eye now stands 8m off the lip.
 		"name": "06-river-gorge-along-the-course",
-		"eye": Vector2(60.0, 4150.0), "eye_h": 14.0,
-		"target": Vector2(-140.0, 4204.0), "target_h": -6.0,
+		"eye": Vector2(-88.0, 4188.0), "eye_h": 3.0,
+		"target": Vector2(-168.0, 4206.0), "target_h": -7.0,
 	},
 	{
-		# The Old Mill Crossing on the near bank, standing where the player
-		# stops. The narrows are 3.6m of half-width here and the mill is the
-		# region's one piece of village-family architecture.
+		# The Old Mill Crossing from the south landing, standing where the
+		# player stops at a shut gate.
+		#
+		# Round 1 stood 50m back at (-152, 4152) and the crossing itself never
+		# reached the frame -- the near rim hid the cut and the shot became a
+		# house alone on a hill. From the landing the trench, the gate, the
+		# mill and the crossing gear are one composition, which is what the
+		# region's main gate should look like.
 		"name": "07-old-mill-crossing",
-		"eye": Vector2(-152.0, 4152.0), "eye_h": 2.2,
-		"target": Vector2(-152.0, 4210.0), "target_h": 1.0,
+		"eye": Vector2(-152.0, 4181.0), "eye_h": 2.2,
+		"target": Vector2(-149.0, 4212.0), "target_h": 1.2,
 	},
 	{
 		# The region's own longest measured empty stretch, on the way out into
@@ -116,6 +131,20 @@ const VIEWPOINTS := [
 		"name": "08-north-exit-dead-stretch",
 		"eye": Vector2(110.0, 4670.0), "eye_h": 2.5,
 		"target": Vector2(20.0, 4750.0), "target_h": 2.0,
+	},
+	{
+		# Wild creatures, because round 1 had none in any frame and the critic
+		# said so first and loudest: eight frames of a creature-training game
+		# with no creature in them cannot answer the scale question at all.
+		#
+		# That was a capture choice, not an empty region -- 155 wild bodies
+		# stand in this band. This is `spawns.json` order 3017, four bramblebun
+		# on an 16m radius sitting exactly on the spine at (-19, 3542), shot
+		# from 29m: far enough to hold the cluster, close enough that the
+		# bodies are more than dots.
+		"name": "09-wild-cluster-on-the-road",
+		"eye": Vector2(-42.0, 3524.0), "eye_h": 1.8,
+		"target": Vector2(-19.0, 3542.0), "target_h": 0.8,
 	},
 ]
 

@@ -99,6 +99,12 @@ var _walk := {}
 ## Wild bodies inside the band at boot. Counted, never snapshotted -- see
 ## `_collect_interest`.
 var _wild_standing := 0
+## Closest the driven body ever got to each wild creature, keyed by instance
+## id. "11 of 155 met" is a number that can mean the region is empty near the
+## road or that the probe is broken, and those need telling apart: a
+## distribution of closest approaches says which. Cheap to keep -- it is the
+## distance the reach check already computes.
+var _wild_closest := {}
 
 
 func _init() -> void:
@@ -408,9 +414,11 @@ func _drive(points: Array[Vector2]) -> void:
 			if body == null:
 				continue
 			var wid := "wild@%d" % body.get_instance_id()
+			var d := now.distance_to(body.global_position)
+			_wild_closest[wid] = minf(float(_wild_closest.get(wid, INF)), d)
 			if _met.has(wid):
 				continue
-			if now.distance_to(body.global_position) > _reach:
+			if d > _reach:
 				continue
 			_met[wid] = true
 			_events.append({"kind": "wild", "id": wid, "at_m": walked,
@@ -527,6 +535,29 @@ func _report() -> void:
 		print("     %-9s %d standing, %d met (%.0f%%)" % [
 			k, standing[k], int(by_kind.get(k, 0)),
 			100.0 * float(int(by_kind.get(k, 0))) / maxf(1.0, float(standing[k]))])
+
+	print("\n=== HOW CLOSE THE WALK CAME TO EACH WILD CREATURE ===")
+	var buckets := [15.0, 25.0, 35.0, 50.0, 75.0, 100.0, 150.0, 250.0]
+	var counts := {}
+	for b in buckets:
+		counts[b] = 0
+	var beyond := 0
+	for wid in _wild_closest.keys():
+		var d: float = _wild_closest[wid]
+		var placed := false
+		for b in buckets:
+			if d <= float(b):
+				counts[b] = int(counts[b]) + 1
+				placed = true
+				break
+		if not placed:
+			beyond += 1
+	var running := 0
+	for b in buckets:
+		running += int(counts[b])
+		print("  within %5.0f m : %3d   (cumulative %3d of %d)" % [
+			b, int(counts[b]), running, _wild_closest.size()])
+	print("  further away  : %3d" % beyond)
 
 	print("\n=== CADENCE (in walked metres from the band's south edge) ===")
 	print("  scatter pickables are counted above but not listed -- there are thousands,")
