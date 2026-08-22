@@ -70,6 +70,90 @@ Check the tree.
 
 ---
 
+## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
+
+Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by
+reproducing something in the RUNNING game, and each is left open on purpose
+rather than half-fixed inside a verification pass. Full evidence in
+`ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md`.
+
+### CATCH-FEEL — the throw lands about a third of the time · `model: sonnet` · `tests: smoke_gate_a_opening_segment, smoke_controller_catching` · OP9 / prompt 45
+
+Measured over 11 physical launches on the fixed aim path: **4 strikes, ~36%**.
+Every run now catches (3/3 after the aim fix, on launches 3, 7 and 1), so this
+no longer blocks the chapter — `catch_math.gd`'s tutorial failure bound
+guarantees the catch on the second LANDED throw. But two thirds of throws
+missing is the owner's OP9 ("current throw aiming feels bad") stated as a
+number, and the blind playtest independently reached the same place from the
+other side: at that rate Grandpa's opening 15 orbs is about two attempts, and
+nothing on the route restocks before Tam unlocks the recipe.
+
+**Do not fix this by widening the assist reticle without playing it.** Two
+separate things were already wrong here and both were mistaken for odds tuning.
+
+### ORB-BLOCKED — your own creature eats your orbs, silently · `model: sonnet` · `tests: smoke_controller_catching`
+
+The blind playtest logged three of eight throws with `first_hit=AllyCreature`
+or `first_hit=Body` — the player's own creature and their own trainer intercept
+the orb. It is spent (`throw_aim.gd::_spend_orb()` runs before flight resolves)
+and the only feedback is the generic `"the orb went wide"` from
+`combat_manager.gd::_on_orb_missed()`. Nothing says what actually happened, so
+the mechanic reads as random. Compounds CATCH-FEEL directly.
+
+At minimum the refusal should NAME the blocker. Whether the orb should be
+refunded, or the throw should pass through the ally, is a design call.
+
+### MAP-FOG-LANDMARKS — the other half of owner directive §3 · `model: sonnet` · `tests: test_map_fog`
+
+§3 has two halves. "The village and the roads out of it start revealed" shipped
+in `GATES-ABC-VERIFY` (`map_landmarks.json`'s `starting_reveal`, pinned from
+both sides by `test_map_fog.gd`). "**Named landmarks show as icons through the
+fog** once an NPC has told the player about them" did not, and was filed rather
+than half-built: it needs a "somebody told me about this" state distinct from
+`map_state.gd`'s existing `_discovered` ("I have stood next to it"), plus the
+dialogue hooks that set it. Do not conflate the two states — the whole point is
+that a landmark can be known of and unvisited.
+
+### HUD-JUDGE-5 — five UI defects a blind critic named · `model: fable` · `tests: smoke_hud_handheld_legibility, smoke_prompt_hotbar_dock`
+
+From the blind visual pass over `shots/_diag/hud_*.png` at 1280x800, the Ally's
+own panel resolution. The sixth defect it named (the same button labelled twice)
+is fixed; these five are not:
+
+- the party panel is too transparent to stay legible over dark scenery —
+  "Ripplet Lv 1" loses contrast where the hilltop shows through, while the same
+  rows over sky read fine;
+- the objective text wraps raggedly, "creature." alone and right-aligned on its
+  own line;
+- the satiety block is clipped by its own panel: "FOOD" and "100%" run to the
+  edge with no padding, amber on amber;
+- four near-identical white-cross icons sit in hotbar slots that appear empty —
+  "if four slots are empty they should look empty, not each hold a phantom icon";
+- an unexplained underline strip under the bottom legend, read as "a progress
+  bar at 0% or a leftover debug element".
+
+It also named what WORKS and a later pass should not undo: the trainer's
+silhouette and ground contact, and the party panel's information hierarchy —
+the KO state "genuinely clear at a glance... already better than programmer UI".
+
+### LANDMARK-BLACK — the hilltop landmark renders unlit · `model: sonnet` · `tests: visual`
+
+In all four weather frames the ridge-top rock-and-tree cluster — the thing the
+opening composition points at — renders as a near-black cutout with no internal
+form, while the grass beside it is fully lit, with stair-stepped alpha edges
+distinctly cruder than the tree at frame right. The blind critic ranked it the
+second-biggest gap from the references and read it as a bug rather than a
+choice: "nothing else in the scene is that dark". Possibly a material or
+LOD/billboard fault rather than composition. D1's, but worth a look before the
+regional pass tunes anything around it.
+
+### OBJECTIVE-LEVEL-UP — level-up feedback was never driven on screen · `model: sonnet` · `tests: new`
+
+OP11 asks that a level-up announce identity, new level and any unlock. Nothing
+in this pass drove a level-up and read the resulting on-screen text, so it is
+recorded NOT VERIFIED rather than assumed. `smoke_tournament_bracket.gd` fights
+real rounds and would be a cheap place to assert it.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on

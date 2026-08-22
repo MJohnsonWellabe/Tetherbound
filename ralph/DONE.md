@@ -3,6 +3,64 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATES-ABC-VERIFY — verify the integration-ABC merge; twelve stale harnesses and five real defects
+
+`tests: full unit suite, 20 smoke tests re-run on the running build, blind playtest, blind visual judge` · `area: input, ui, world, ci`
+
+Sent to reality-check `integration-ABC` (`a22534ff`) and to reconcile every
+owner-playtest finding against the RUNNING GAME rather than against the ledger.
+
+**The merge landed the game correctly and the tests not at all.** CONTROLLER-MAP
+and the HUD lineage went in, and **twelve** things that exercise them did not:
+eleven smoke harnesses still asserting the pre-remap pad map, plus
+`tools/capture_ui_glyphs.gd`, which crashed on a HUD node path OW8 moved and so
+could not render the frames `conventions.md` requires before shipping visual
+work. **46 of the 64 files in `tests/` are named by no CI job**, which is how
+all twelve shipped green. Two of them were emitting output that reads exactly
+like the owner's own bug reports reproducing on a build where the feature works.
+Two new shards (`verify-owner-regressions-shard`, `verify-gate-evidence-shard`)
+now run the eleven that matter most, and `export` waits on both.
+
+**Five real shipped defects**, each reproduced before being fixed:
+
+- **The pause menu offered to destroy an item.** Gamepad Start is `game_menu`
+  AND `backpack_drop`; the press that opens the shell was still down when the
+  satchel tab appeared, so opening the menu with anything in the satchel landed
+  the player in a "Drop it?" confirmation on the focused slot, which held the
+  shell's input and ate their next B. One stray A from losing an item they never
+  selected. Guard armed before the shell shows any tab, held until the button is
+  released — a frame countdown gets out-waited, measured.
+- **The South Bridge gully was a trap.** Its recovery volume sat 1.3km west of
+  the gully, because `gated_crossing.gd` positions AND rotates itself and then
+  parented a world-coordinate volume under itself. A blind playtest fell in and
+  held forward 52 seconds without moving.
+- **The axe never swung on a controller** (OP21-24). `use_tool` was the only
+  caller of `tool_hold.gd::swing()` and the owner's remap correctly took its pad
+  button; the swing was not removed, it was made unreachable by the device the
+  game ships on.
+- **The relay console had no gate.** `requires_flag` left empty as a seam after
+  SE25 landed, so the Tether Relay could be shut down without meeting the
+  captain, against `objectives.json`'s own beat order.
+- **The map fog ruling was never implemented.** `BLOCKED.md` recorded owner
+  directive §3 as "RESOLVED by owner ruling" and both commits that closed it
+  touched only `BLOCKED.md`, so a fresh save still opened a black rectangle.
+
+**Two defects root-caused rather than written off.** The "deterministic catch
+failure" the Gate B evidence doc handed to Gate A was two things, neither of
+them the odds: a throw button with no pad binding, and an aim loop minimising
+the rig PIVOT's yaw while the aim camera sits offset over the shoulder. That doc
+explicitly "ruled out aiming"; it was wrong, because the commit lines it quoted
+came from the throws that landed. The tournament's intermittent quarter-final
+stall was `find_child` returning the PREVIOUS round's corpse — 2 failures in 3
+before, 4 consecutive passes after.
+
+**What is NOT closed**, recorded in `ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md`:
+catch strike rate ~36% (OP9/prompt 45), target-hardware performance (needs an
+Ally), the landmarks-through-fog half of directive §3, level-up feedback never
+driven on screen, five HUD defects the blind judge named, and the world
+composition it called out for Gate D/F. The blind judge independently
+reproduced all three of `WEATHER-2`'s defects without being shown that entry.
+
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 
 `tests: test_input_context_collisions.gd (new), test_controls.gd, test_menu_data.gd, test_world_verb_input_owner_enforcement.gd` · `area: input`
