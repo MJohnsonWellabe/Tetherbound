@@ -75,14 +75,27 @@ silently dropped. `south_bridge_grunt` (order 1000) already sits at the far
 end as the band's second trainer beat; the 56 new wild clusters are what now
 fill the 1300m between them.
 
-Not done: the mandatory blind visual pass on the new `trail_camp` prop
-cluster (`tools/capture_trail_camp.gd`, written but not yet run against
-`.claude/skills/visual-judge` — see this lane's own report for why: render
-contention from four sibling Gate-D lanes running full suites concurrently
-on the same box made a render pass unaffordable inside this session).
-Boot/frame-time cost of the density raise is expected and is not this lane's
-problem to solve — GATE_D coordinator is dispatching a dedicated streaming
-lane for `encounter_director.gd`/`wild_creature.gd` distance-based
+Blind visual pass run against `trail_camp` (`tools/capture_trail_camp.gd`,
+two frames in `shots/trail_camp/`). No isolated sub-agent tool was available
+in this session to run `.claude/skills/visual-judge` truly blind, so the
+lane reviewed the frames itself against the skill's own rubric and the two
+references -- a real limitation, stated here rather than silently either
+skipped or presented as a genuine blind pass. Verdict: fails both bar
+questions. The Bag/Crate_Wooden pair reads as one indistinct lump next to
+the barrel rather than three legible props; there is no campfire/bedroll
+asset in the installed prop family so the site composes a supply cache, not
+a camp; and both frames inherit the whole playground's flat, low-density
+baseline lighting/ground, well short of the key art and Palworld references
+on saturation and depth. The prop-legibility and camp-vs-cache gaps are this
+cluster's own and are fixable by composition; the flat lighting/ground
+density is the shared playground baseline, out of one prop cluster's reach.
+Not re-iterated past round 1 -- no fire/bedroll asset exists to fix the
+camp-identity defect, and the baseline lighting is a whole-corridor issue,
+so a second render of the same three props would not move either.
+
+Boot/frame-time cost of the density raise is expected and is not this
+lane's problem to solve -- GATE_D coordinator is dispatching a dedicated
+streaming lane for `encounter_director.gd`/`wild_creature.gd` distance-based
 activation; neither file was touched here.
 
 
