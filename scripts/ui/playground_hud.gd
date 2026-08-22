@@ -157,11 +157,10 @@ const BOTTOM_DOCK_TOP_OFFSET := -460.0
 ## transient growth (the hotbar's Message row adding ~30px while a hotbar
 ## response is showing) without the two ever touching.
 const LEFT_STACK_CLEARANCE := 40.0
-## Floor for the party strip's reveal when there is not enough room above
-## the creature panel to fit it in full -- see `party_strip_position()`'s
-## own header. Matches `UITokens.HUD_INSET`, the same top-edge margin the
-## minimap and objective block already use, so a clamped reveal still lines
-## up with the rest of this HUD's top row rather than picking its own.
+## Top-edge margin for the party strip's reveal. Matches `UITokens.HUD_INSET`,
+## the same top-edge margin the minimap and objective block already use, so
+## the reveal lines up with the rest of this HUD's top row rather than
+## picking its own.
 const TOP_SAFE_INSET := UITokens.HUD_INSET
 const PARTY_ACTIVE_GAP := UITokens.GAP
 
@@ -174,19 +173,68 @@ const PARTY_ACTIVE_GAP := UITokens.GAP
 ## fixed pixels a longer string could silently overflow.
 const CREATURE_BLOCK_MIN_WIDTH := 374.0
 
+## HUD-POPUP: the party strip used to hug the creature panel from directly
+## above (`party_strip_position()`'s old header spelled out the tradeoff:
+## its own `TOTAL_HEIGHT`, 540, never fit in the room actually left above a
+## correctly bottom-anchored creature panel at either supported canvas
+## height, so the clamp let the reveal draw its bottom rows straight over
+## the panel behind it). A blind critic then confirmed exactly that frame --
+## the panel's own title compositing through a party row's name, its HP
+## readout floating over the row beneath it, six distinct collisions from
+## one shared rect. Of the critic's three fixes (opaque the popup, move it
+## off the list, or hide the list while the popup is open), this takes
+## "move it off the list": the party strip now reveals in its own screen
+## region, to the right of the persistent status column, rather than
+## contesting the same vertical space the creature panel and vitals cluster
+## already own. That is a strictly larger fix than opacity -- opacity only
+## stops the TEXT from bleeding through; the rows and the panel would still
+## occupy literally the same rect, which is what let Kite's KO tag and the
+## incoming HP readout float ambiguously between two widgets in the first
+## place. Chosen over "hide the list": OP21-12's whole point was showing the
+## roster DURING a cycle, not replacing it with the single-creature panel at
+## the exact moment the player most wants to see where the new active
+## creature sits among all five. The strip's actual X offset is computed in
+## `party_strip_position()` from the creature panel's REAL width, not a
+## constant here -- see that function's own header for why a fixed guess at
+## the panel's width reopened this same defect once already.
+
 const VITALS_WIDTH := 300.0
-## Real content height of the vitals cluster (buff row 0-28, HP icon/bar
-## 28-54, satiety bar+label 54-70) -- used only to size the gap the left
-## stack's reflow leaves above it; the cluster's own children still lay out
-## with the same local offsets they always have.
-const VITALS_HEIGHT := 70.0
+## HUD-POPUP task 3/4: the "100 / 100" HP value used to draw at
+## `UITokens.FONT_LABEL` (23) -- ~10.7 physical px cap height at the Ally's
+## 0.667 canvas_items scale, the exact sub-16px violation the critic named.
+## `HUD_READABLE_FONT_SIZE` is the floor every other label on this HUD
+## already clears; the satiety row gets the same treatment plus the icon it
+## never had (task 4: "next to a heart-marked HP bar it is a mystery
+## meter") -- a "FOOD" caption standing in for real icon art, since a new
+## icon asset is exactly the kind of spend `CLAUDE.md`/`conventions.md`
+## reserve for an owner-supplied reference sheet, which does not exist for
+## this glyph.
+const VITALS_BAR_HEIGHT := 20.0
+const VITALS_ROW_GAP := 10.0
+const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
+const VITALS_CAPTION_WIDTH := 68.0
+const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
+const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
+## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value
+## row, satiety caption/bar/value row, 6px bottom pad) -- used only to size
+## the gap the left stack's reflow leaves above it; the cluster's own
+## children still lay out with the same local offsets they always have.
+const VITALS_HEIGHT := VITALS_SATIETY_ROW_Y + 34.0 + 6.0
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
 const MINIMAP_SIZE := Vector2(240.0, 240.0)
 
 const OBJECTIVE_MAX_WIDTH := 420.0
-const OBJECTIVE_BLOCK_HEIGHT := 90.0
+## HUD-POPUP task 3: grown from 90 to hold the quest subtext at
+## `HUD_READABLE_FONT_SIZE` (38) without wrapping past its own box -- see
+## `_build_objective_block()`'s header for the rest of that fix.
+const OBJECTIVE_BLOCK_HEIGHT := 170.0
+## Padding between the new backing panel's edge and the eyebrow/subtext
+## labels inside it -- both were flush to the block's own right edge back
+## when the block WAS the text's bounding box; now that a panel is drawn
+## behind them, flush-right would touch the panel's own border.
+const OBJECTIVE_INSET := 12.0
 
 ## OP21-11: the owner's own words were "should sit under the hotbar" — moved
 ## from RG3's original upper-left placement into `Root/BottomDock`'s
@@ -240,6 +288,11 @@ const LEGEND_SIZE := Vector2(1700.0, 112.0)
 
 const MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 28.0
+## HUD-POPUP task 2: 18 -> 28, matching `BUFF_CHIP_SIZE`'s own footprint. A
+## blind critic measured the old 18-authored pips at ~13 physical px with a
+## ~2px selection ring, "a squint at arm's length." See `_update_party_pips()`'s
+## own header for the rest of this task's pip work.
+const PARTY_PIP_SIZE := 28.0
 
 const HP_DANGER_BELOW := 0.30
 const HP_PULSE_SPEED := 3.0
@@ -338,6 +391,9 @@ var _party_strip_last_revision := -999
 ## OP21-12: the last active creature's name, so a later cycle can say "Willow
 ## → Ashcap" instead of just lighting up a new row.
 var _party_strip_last_active_label := ""
+## HUD-POPUP: see `_update_party_strip()`'s own header for why this needs its
+## own change-guard input alongside `_party_strip_last_index`/`_revision`.
+var _party_strip_last_active_out := true
 
 ## --- player vitals cluster ----------------------------------------------------
 
@@ -350,6 +406,8 @@ var _hp_bar: ProgressBar = null
 var _hp_fill: StyleBoxFlat = null
 var _hp_value_label: Label = null
 var _satiety_bar: ProgressBar = null
+var _satiety_caption_label: Label = null
+var _satiety_value_label: Label = null
 var _satiety_state_label: Label = null
 
 var _last_health_value := -1.0
@@ -393,6 +451,7 @@ var _legend_was_drawn := false
 ## to be by then.
 var _left_stack_canvas_h := -1.0
 var _left_stack_creature_h := -1.0
+var _left_stack_creature_w := -1.0
 
 
 func _ready() -> void:
@@ -552,7 +611,7 @@ func _build_creature_block() -> void:
 	for i in 5:
 		var pip := Panel.new()
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pip.custom_minimum_size = Vector2(18.0, 18.0)
+		pip.custom_minimum_size = Vector2(PARTY_PIP_SIZE, PARTY_PIP_SIZE)
 		var pip_box := StyleBoxFlat.new()
 		pip_box.bg_color = Color(UITokens.TEXT_MUTED, 0.35)
 		pip_box.border_width_left = 1
@@ -767,12 +826,22 @@ func _update_creature_block() -> void:
 ## no such node exists, the header now says "READY TO CALL OUT" instead of
 ## "ACTIVE COMPANION" -- true in both states, and never contradicts the
 ## centre prompt sitting right below it.
+## HUD-POPUP: factored out of `_update_creature_header()` (the only caller
+## before this task) so `_update_party_pips()` and `_update_party_strip()`
+## below can ask the same question -- see their own callers for why. Still
+## the one real source of truth this file has for "is the selected creature
+## actually standing in the world," unchanged from the header's own long
+## comment.
+func _active_creature_is_out(has_creature: bool) -> bool:
+	if not has_creature:
+		return false
+	var world := get_tree().get_current_scene()
+	var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
+	return ally != null and is_instance_valid(ally)
+
+
 func _update_creature_header(has_creature: bool) -> void:
-	var out := false
-	if has_creature:
-		var world := get_tree().get_current_scene()
-		var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
-		out = ally != null and is_instance_valid(ally)
+	var out := _active_creature_is_out(has_creature)
 	if out == _creature_header_out_last and has_creature == _creature_header_has_creature_last:
 		return
 	_creature_header_out_last = out
@@ -784,6 +853,22 @@ func _update_creature_header(has_creature: bool) -> void:
 ## bright ring for whichever is active, dim red for fainted. See `_party_pips`'s
 ## declaration for why this exists alongside `party_strip.gd`'s own transient
 ## reveal rather than replacing it.
+##
+## HUD-POPUP task 2: a blind critic flagged two separate things about this
+## row -- the pips themselves (~13 authored px, ~2px ring) reading as a
+## squint at arm's length with no colour-to-creature legend anywhere, and a
+## sharper conceptual gap: the party list's teal "active" highlight moves to
+## a newly-selected creature at the exact moment the header above it says
+## that creature is only "ready to be called out," so selected-but-not-out
+## and actually-out-in-the-world shared one visual treatment. `PARTY_PIP_SIZE`
+## answers the first (18 -> 28, matching `BUFF_CHIP_SIZE`'s own footprint,
+## thicker ring). The second is answered here rather than invented new
+## chrome: `_active_creature_is_out()` is the one place this file already
+## knows the difference, so a selected-but-stowed pip gets the same
+## `TEAL_SOFT` ring it always did (a pick, not a presence), while a selected
+## AND summoned pip gets the brighter `TEAL` ring `party_strip.gd`'s own rail
+## uses for the same state -- one colour now means one thing everywhere on
+## this HUD, not "selected" doing double duty for two different facts.
 func _update_party_pips() -> void:
 	if _party == null:
 		for i in _party_pip_boxes.size():
@@ -796,10 +881,11 @@ func _update_party_pips() -> void:
 		return
 	var members: Array = _party.call("members")
 	var active_index := int(_party.call("active_index"))
+	var active_out := _active_creature_is_out(active_index >= 0 and active_index < members.size())
 	for i in _party_pip_boxes.size():
 		var box := _party_pip_boxes[i]
 		var selected := i == active_index and i < members.size()
-		var border_width := 3 if selected else 1
+		var border_width := 4 if selected else 1
 		box.border_width_left = border_width
 		box.border_width_top = border_width
 		box.border_width_right = border_width
@@ -811,7 +897,10 @@ func _update_party_pips() -> void:
 		var member: RefCounted = members[i]
 		var fainted := bool(member.get("fainted"))
 		box.bg_color = UITokens.DANGER if fainted else _distinct_tint(members, i)
-		box.border_color = UITokens.TEAL_SOFT if selected else UITokens.BORDER
+		if not selected:
+			box.border_color = UITokens.BORDER
+		else:
+			box.border_color = UITokens.TEAL if active_out else UITokens.TEAL_SOFT
 
 
 func _species_tint(species_id: String) -> Color:
@@ -914,31 +1003,34 @@ static func creature_block_position(canvas_height: float, creature_panel_height:
 	)
 
 
-## Clamped to `TOP_SAFE_INSET`, not left to run negative. The party strip's
-## own `TOTAL_HEIGHT` (540, five text-driven rows plus a header -- a
-## deliberate legibility fix, not a number this task should shrink) does
-## not actually fit in the room left ABOVE the creature panel once that
-## panel is itself correctly bottom-anchored: `creature_block_position()`'s
-## own gap budget above `Root/BottomDock` is under 300px at either supported
-## canvas height (1080 or 1200), well short of 540+`PARTY_ACTIVE_GAP`.
+## HUD-POPUP: the strip's own screen region now, not a hug against the
+## creature panel -- see `PARTY_STRIP_X`'s own old header for why (kept as a
+## width FLOOR below, not the real answer any more). Top-anchored at
+## `TOP_SAFE_INSET`; the only vertical constraint is `Root/BottomDock`'s own
+## nominal top (`BOTTOM_DOCK_TOP_OFFSET`), which the strip is transient
+## enough not to need the persistent column's full `LEFT_STACK_CLEARANCE`
+## margin against -- a few seconds of reveal, not a permanent fixture. At
+## both supported canvas heights (1080, 1200) `TOP_SAFE_INSET + TOTAL_HEIGHT`
+## (56 + 540 = 596) clears the dock's nominal top (620 at 1080, 740 at 1200)
+## with real margin, so the vertical floor is normally a no-op.
 ##
-## Two bad options, honestly, not a solved problem: the un-clamped math
-## draws roughly the top third of the reveal OFF the top of the screen
-## (confirmed by computing both canvas heights); this clamp instead lets the
-## reveal overlap the creature panel it slides in above. The clamped case is
-## the better of the two -- the strip is added to `_root` AFTER the creature
-## block (`_ready()`'s build order), so it draws on top and stays fully
-## readable, and the overlap is transient (`T_PARTY_FADE`/`CYCLE_BANNER_SECONDS`,
-## a few seconds at most) rather than a permanent layout defect -- but it is
-## a real, visible tradeoff a future pass should revisit, most likely by
-## shrinking the strip's own footprint for a reveal specifically (its full
-## five-row height may not need to be the reveal's height too), not by
-## touching this clamp.
-static func party_strip_position(canvas_height: float, creature_panel_height: float, strip_height: float) -> Vector2:
-	var hugging_creature_panel: float = (
-		creature_block_position(canvas_height, creature_panel_height).y - PARTY_ACTIVE_GAP - strip_height
-	)
-	return Vector2(CREATURE_BLOCK_X, maxf(TOP_SAFE_INSET, hugging_creature_panel))
+## `creature_panel_width` -- the FIRST version of this fix took `PARTY_STRIP_X`
+## as a fixed constant off `CREATURE_BLOCK_MIN_WIDTH`, and a real render with
+## a seeded creature immediately reopened the exact defect this task fixes:
+## the panel's real width (435, once an HP value column, a type tag and a
+## portrait actually have content) grows past its 374px floor the same way
+## its HEIGHT already does -- `_build_creature_block()`'s own comment names
+## "READY TO CALL OUT" as the string that needs the floor to be a floor, not
+## a cap, and a live creature's stats push the panel wider still. The strip
+## now takes the panel's REAL measured width from `_reflow_left_stack()`
+## every call, the same dynamic `creature_h` already gets, so a live
+## `Rect2.intersects()` check (`smoke_hud_handheld_legibility.gd`) is what
+## caught this, not a second guess at the right constant.
+static func party_strip_position(canvas_height: float, strip_height: float, creature_panel_width: float) -> Vector2:
+	var dock_top: float = canvas_height + BOTTOM_DOCK_TOP_OFFSET
+	var ceiling: float = dock_top - strip_height
+	var x: float = CREATURE_BLOCK_X + maxf(creature_panel_width, CREATURE_BLOCK_MIN_WIDTH) + PARTY_ACTIVE_GAP
+	return Vector2(x, minf(TOP_SAFE_INSET, maxf(0.0, ceiling)))
 
 
 ## Places the whole left column from the CANVAS BOTTOM every time `_root`'s
@@ -969,10 +1061,12 @@ func _reflow_left_stack() -> void:
 	# child against) actually match its content instead of staying frozen at
 	# whatever `custom_minimum_size` floor it started with.
 	var creature_h := 0.0
+	var creature_w := CREATURE_BLOCK_MIN_WIDTH
 	if _creature_panel != null:
 		var min_size := _creature_panel.get_combined_minimum_size()
 		_creature_panel.size = min_size
 		creature_h = min_size.y
+		creature_w = min_size.x
 
 	if _vitals_cluster != null:
 		_vitals_cluster.position = vitals_position(canvas_h)
@@ -980,14 +1074,22 @@ func _reflow_left_stack() -> void:
 	if _creature_block != null:
 		_creature_block.position = creature_block_position(canvas_h, creature_h)
 
-	if is_equal_approx(canvas_h, _left_stack_canvas_h) and is_equal_approx(creature_h, _left_stack_creature_h):
+	# HUD-POPUP: the party strip's rest X now tracks the creature panel's
+	# real WIDTH too (see `party_strip_position()`'s own header for why a
+	# fixed guess at that width was not enough), so the change-guard has to
+	# watch it alongside canvas height -- a creature swap that changes the
+	# panel's content width (a longer name, the type tag, the HP value
+	# column) has to re-place the strip even when the canvas itself did not
+	# resize.
+	if is_equal_approx(canvas_h, _left_stack_canvas_h) and is_equal_approx(creature_w, _left_stack_creature_w):
 		return
 	_left_stack_canvas_h = canvas_h
 	_left_stack_creature_h = creature_h
+	_left_stack_creature_w = creature_w
 
 	if _party_strip != null and _party_strip_script != null:
 		var strip_h: float = float(_party_strip_script.get("TOTAL_HEIGHT"))
-		var strip_pos := party_strip_position(canvas_h, creature_h, strip_h)
+		var strip_pos := party_strip_position(canvas_h, strip_h, creature_w)
 		if _party_strip.has_method("set_rest_position"):
 			_party_strip.call("set_rest_position", strip_pos)
 		else:
@@ -1010,8 +1112,18 @@ func _update_party_strip() -> void:
 		return
 	var index := int(_party.call("active_index"))
 	var revision := int(_party.get("revision"))
-	if index == _party_strip_last_index and revision == _party_strip_last_revision:
+	# HUD-POPUP: `active_out` (whether the selected creature is actually
+	# standing in the world, not just picked) can flip on its own -- calling
+	# out or recalling a creature touches neither `active_index` nor
+	# `Party.revision` -- so the early-out below has to watch it too, or the
+	# rail/pip's "picked vs present" distinction goes stale exactly at the
+	# moment a summon/recall makes it matter.
+	var has_active_creature := index >= 0 and index < int(_party.call("size"))
+	var active_out := _active_creature_is_out(has_active_creature)
+	if index == _party_strip_last_index and revision == _party_strip_last_revision \
+			and active_out == _party_strip_last_active_out:
 		return
+	_party_strip_last_active_out = active_out
 	var previous_index := _party_strip_last_index
 	var previous_label := _party_strip_last_active_label
 	_party_strip_last_index = index
@@ -1030,7 +1142,7 @@ func _update_party_strip() -> void:
 			"fainted": bool(creature.get("fainted")),
 			"resting": bool(creature.get("resting")),
 		})
-	_party_strip.call("update_from_party", entries, index)
+	_party_strip.call("update_from_party", entries, index, active_out)
 	_party_strip.call("show_strip")
 
 	var total := entries.size()
@@ -1077,7 +1189,7 @@ func _build_vitals_cluster() -> void:
 	# without touching the owner-supplied art itself.
 	var hp_icon_bg := Panel.new()
 	hp_icon_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hp_icon_bg.position = Vector2(-30.0, 28.0)
+	hp_icon_bg.position = Vector2(-30.0, VITALS_HP_ROW_Y - 4.0)
 	hp_icon_bg.size = Vector2(26.0, 26.0)
 	var hp_icon_bg_box := StyleBoxFlat.new()
 	hp_icon_bg_box.bg_color = UITokens.BG_PANEL
@@ -1093,14 +1205,14 @@ func _build_vitals_cluster() -> void:
 	_hp_icon.texture = load(ICON_HP)
 	_hp_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_hp_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_hp_icon.position = Vector2(-26.0, 32.0)
+	_hp_icon.position = Vector2(-26.0, VITALS_HP_ROW_Y)
 	_hp_icon.size = Vector2(18.0, 18.0)
 	_vitals_cluster.add_child(_hp_icon)
 
 	_hp_bar = ProgressBar.new()
 	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_bar.position = Vector2(0.0, 32.0)
-	_hp_bar.size = Vector2(VITALS_WIDTH, 18.0)
+	_hp_bar.position = Vector2(0.0, VITALS_HP_ROW_Y)
+	_hp_bar.size = Vector2(VITALS_WIDTH, VITALS_BAR_HEIGHT)
 	_hp_bar.show_percentage = false
 	_hp_bar.min_value = 0.0
 	_hp_bar.max_value = 1.0
@@ -1109,19 +1221,41 @@ func _build_vitals_cluster() -> void:
 	_hp_bar.add_theme_stylebox_override("fill", _hp_fill)
 	_vitals_cluster.add_child(_hp_bar)
 
+	# HUD-POPUP task 3: was `UITokens.FONT_LABEL` (23), which measured ~10.7
+	# physical px cap height at the Ally's real scale -- the single specific
+	# number the critic quoted ("Player HP 100 / 100 ~10px"). Raised to the
+	# same `HUD_READABLE_FONT_SIZE` floor every other label on this HUD
+	# already clears, with the row's own height grown to hold it without
+	# clipping into the buff row above or the satiety row below.
 	_hp_value_label = Label.new()
 	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_value_label.position = Vector2(0.0, 32.0)
-	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 18.0)
+	_hp_value_label.position = Vector2(0.0, VITALS_HP_ROW_Y - 8.0)
+	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 34.0)
 	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_hp_value_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
 	_vitals_cluster.add_child(_hp_value_label)
+
+	# HUD-POPUP task 4: "the yellow satiety bar has no icon, label or value;
+	# next to a heart-marked HP bar it is a mystery meter." No new icon
+	# asset -- that needs an owner-supplied reference sheet this glyph does
+	# not have (`conventions.md`) -- so a "FOOD" text caption stands in for
+	# one, the same role the HP heart icon plays, followed by a real bar and
+	# a right-aligned percentage value mirroring the HP row exactly.
+	_satiety_caption_label = Label.new()
+	_satiety_caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_satiety_caption_label.position = Vector2(0.0, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_satiety_caption_label.text = "FOOD"
+	_satiety_caption_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING)
+	_vitals_cluster.add_child(_satiety_caption_label)
 
 	_satiety_bar = ProgressBar.new()
 	_satiety_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_bar.position = Vector2(0.0, 54.0)
-	_satiety_bar.size = Vector2(VITALS_WIDTH, 10.0)
+	_satiety_bar.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_SATIETY_ROW_Y)
+	_satiety_bar.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH, VITALS_BAR_HEIGHT)
 	_satiety_bar.show_percentage = false
 	_satiety_bar.min_value = 0.0
 	_satiety_bar.max_value = 1.0
@@ -1129,11 +1263,26 @@ func _build_vitals_cluster() -> void:
 	_satiety_bar.add_theme_stylebox_override("fill", UITokens.fill_box(UITokens.WARNING))
 	_vitals_cluster.add_child(_satiety_bar)
 
+	_satiety_value_label = Label.new()
+	_satiety_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_satiety_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_satiety_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_vitals_cluster.add_child(_satiety_value_label)
+
+	# HUNGRY/STARVING tag: kept outside `VITALS_WIDTH` to the right, same as
+	# before, so it never needs its own row (and never grows `VITALS_HEIGHT`,
+	# which the left-stack reflow treats as fixed) -- only its font size
+	# changes here, `FONT_TINY` (19, ~8.9 physical px) being well under this
+	# task's own floor for a state word the player needs to actually read.
 	_satiety_state_label = Label.new()
 	_satiety_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_state_label.position = Vector2(VITALS_WIDTH + 10.0, 51.0)
-	_satiety_state_label.size = Vector2(120.0, 16.0)
-	_satiety_state_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_state_label.size = Vector2(220.0, 34.0)
+	_satiety_state_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_satiety_state_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
 
@@ -1225,7 +1374,9 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 
 	_hp_value_label.text = "%d / %d" % [int(round(health_value)), int(round(max_health))]
 
-	_satiety_bar.value = vitals.satiety_fraction()
+	var satiety_fraction: float = vitals.satiety_fraction()
+	_satiety_bar.value = satiety_fraction
+	_satiety_value_label.text = "%d%%" % int(round(satiety_fraction * 100.0))
 	var hunger := str(vitals.call("hunger_state"))
 	match hunger:
 		"hungry":
@@ -1387,11 +1538,19 @@ func _update_minimap() -> void:
 # --- objective block ---------------------------------------------------------------
 
 
-## Below the minimap, right-aligned to the same inset. Naked text with a
-## legibility outline rather than a panel -- the spec's own call ("no giant
-## quest window"), and `UITokens.make_text_legible` already gives every Label
-## here the same outline the rest of the HUD relies on for contrast over open
-## sky and grass.
+## Below the minimap, right-aligned to the same inset.
+##
+## HUD-POPUP task 3: this used to be naked text with only a legibility
+## outline, on the spec's own call ("no giant quest window") -- but a blind
+## critic named it and the quest subtext as "the only HUD elements with no
+## backing panel, floating on sky and terrain... one lighting change from
+## vanishing," and separately measured the subtext itself (`_objective_text_label`,
+## `UITokens.FONT_LABEL` = 23) at ~12 physical px, under this HUD's own
+## ~16px floor. Both fixed together: a small translucent `panel_box()` behind
+## the two labels (the same treatment the creature panel and hotbar already
+## wear, not a new "giant window" -- it is exactly `OBJECTIVE_MAX_WIDTH` wide,
+## no bigger than the text it holds needs), and the subtext raised to
+## `HUD_READABLE_FONT_SIZE` alongside the eyebrow it already sits below.
 func _build_objective_block() -> void:
 	var right := 1920.0 - UITokens.HUD_INSET
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
@@ -1401,6 +1560,13 @@ func _build_objective_block() -> void:
 	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
 	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
 	_root.add_child(block)
+
+	var backing := PanelContainer.new()
+	backing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backing.position = Vector2.ZERO
+	backing.size = block.size
+	backing.add_theme_stylebox_override("panel", UITokens.panel_box())
+	block.add_child(backing)
 
 	var eyebrow := Label.new()
 	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1413,15 +1579,20 @@ func _build_objective_block() -> void:
 	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH, 34.0)
+	eyebrow.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_INSET)
+	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, 34.0)
 	block.add_child(eyebrow)
 	_objective_eyebrow_label = eyebrow
 
 	_objective_text_label = Label.new()
 	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_objective_text_label.position = Vector2(0.0, 36.0)
-	_objective_text_label.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT - 36.0)
-	_objective_text_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_objective_text_label.position = Vector2(OBJECTIVE_INSET, 36.0 + OBJECTIVE_INSET)
+	_objective_text_label.size = Vector2(
+		OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, OBJECTIVE_BLOCK_HEIGHT - 36.0 - OBJECTIVE_INSET * 2.0
+	)
+	# HUD-POPUP task 3: was `UITokens.FONT_LABEL` (23, ~10.7 physical px cap
+	# height) -- see this function's own header.
+	_objective_text_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1429,13 +1600,16 @@ func _build_objective_block() -> void:
 
 
 ## Runs after `UITokens.make_text_legible(_root)`, which would otherwise
-## overwrite a per-widget override applied earlier in `_ready()` -- see
-## `_build_objective_block()`'s own comment for why this exists and why a
-## backing panel is not the fix. Roughly 1.5x the shared outline both labels
-## already carry, tuned as "clearly heavier," not a specific measured target
-## -- unlike the font-size fixes above, no blind pass measured a physical
-## contrast ratio for naked text over a variable, moving 3D background to
-## check this against.
+## overwrite a per-widget override applied earlier in `_ready()`. Predates
+## `_build_objective_block()`'s own backing panel (HUD-POPUP) and stays on
+## top of it as a second line of defence, not a replacement -- the panel
+## fixes the "floating on sky and terrain" failure the critic named; this
+## outline is what already protected the text before that, and there is no
+## reason to trade one contrast guarantee for the other. Roughly 1.5x the
+## shared outline both labels already carry, tuned as "clearly heavier," not
+## a specific measured target -- unlike the font-size fixes above, no blind
+## pass measured a physical contrast ratio for this text against a variable,
+## moving 3D background to check it against.
 func _strengthen_objective_contrast() -> void:
 	var wide_outline := int(round(UITokens.OUTLINE_SIZE * 1.5))
 	for label in [_objective_eyebrow_label, _objective_text_label]:

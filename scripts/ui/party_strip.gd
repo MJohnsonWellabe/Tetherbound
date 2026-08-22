@@ -74,6 +74,23 @@ const REVEAL_OFFSET := 12.0
 ## the roster) for this long — comfortably inside `T_PARTY_FADE`'s hold, so
 ## the strip is never showing without it once a real cycle has happened.
 const CYCLE_BANNER_SECONDS := 1.3
+## See `_build()`'s own comment on the cycle banner node for why this is not
+## `ROW_SIZE.x` any more -- a fixed 250px box silently clipped the whole
+## second half of the from-to cue on every real render. 820, not the 480
+## an initial repro with "Biscuit"/"Ripplet" found sufficient: the smoke
+## test's own regression check (`smoke_hud_handheld_legibility.gd`) used the
+## longer "Terrapup"/"Bramblebun" pair and still measured a real overflow at
+## 640 -- creature names are player-visible strings this file does not
+## control the length of, so the margin is sized off a longer real species
+## pair, not the shortest one that happened to work.
+const CYCLE_BANNER_WIDTH := 820.0
+## 42 -> 50: even after `CYCLE_BANNER_WIDTH` stopped the text from wrapping
+## to a second (clipped) line, a live measurement still found the single
+## real line at `STRIP_READABLE_FONT_SIZE` (34) rendering ~47px tall --
+## outline/shadow padding on top of the font's own line height -- a few px
+## over the old fixed 42. Not the catastrophic bug (a whole missing line),
+## but still a real, avoidable partial clip.
+const CYCLE_BANNER_HEIGHT := 50.0
 
 var _pinned := false
 var _fade_timer := 0.0
@@ -112,6 +129,13 @@ var _last_level: Array[int] = [-1, -1, -1, -1, -1]
 var _last_portrait: Array[String] = ["", "", "", "", ""]
 var _last_selected: Array[bool] = [false, false, false, false, false]
 var _last_vacant: Array[bool] = [true, true, true, true, true]
+## HUD-POPUP: whether the row that WAS selected last frame was also "out"
+## (see `update_from_party()`'s own header) -- a separate cache from
+## `_last_selected` because the same row can flip out<->not-out without its
+## selected-ness changing at all (summoning a creature that was already the
+## active pick), which needs the rail/chip recoloured even though neither
+## `vacant` nor `selected` moved.
+var _last_out: Array[bool] = [true, true, true, true, true]
 
 
 ## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
@@ -145,6 +169,18 @@ func _build() -> void:
 		return  # idempotent: a test calling this twice must not double the rows
 
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# HUD-POPUP: this widget's own rect used to stay (0, 0)-sized forever --
+	# a plain `Control` parented directly under `Root` (not inside a
+	# Container) never grows to fit its children the way `_creature_panel`'s
+	# own `_reflow_left_stack()` comment describes for the SAME class of
+	# node. Nothing noticed while every overlap check on this widget was
+	# pure position math against the documented `TOTAL_HEIGHT`/`ROW_SIZE.x`
+	# contract; the first check run against the REAL live scene
+	# (`smoke_hud_handheld_legibility.gd`'s new overlap test) found
+	# `get_global_rect()` reporting a real position but a zero size, which
+	# makes `Rect2.intersects()` vacuously false against anything -- a check
+	# that could never fail no matter where this widget actually drew.
+	size = Vector2(ROW_SIZE.x, TOTAL_HEIGHT)
 	var stack := VBoxContainer.new()
 	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stack.add_theme_constant_override("separation", int(HEADER_GAP))
@@ -190,9 +226,28 @@ func _build() -> void:
 	_cycle_banner.fit_content = false
 	_cycle_banner.scroll_active = false
 	_cycle_banner.shortcut_keys_enabled = false
-	_cycle_banner.position = Vector2(0.0, -46.0)
-	_cycle_banner.size = Vector2(ROW_SIZE.x, 42.0)
-	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# HUD-POPUP: -46 -> -CYCLE_BANNER_HEIGHT, so the banner's own bottom edge
+	# sits flush with the header's top (y=0) instead of overlapping it by a
+	# few px -- see `CYCLE_BANNER_HEIGHT`'s own header for why 42 undershot
+	# a single real line at this font size in the first place.
+	_cycle_banner.position = Vector2(0.0, -CYCLE_BANNER_HEIGHT)
+	# HUD-POPUP task 2: was `Vector2(ROW_SIZE.x, 42.0)` (250 wide) with CENTER
+	# alignment. `flash_cycle()`'s bbcode ("Biscuit  ▶  Ripplet   2 / 5") is
+	# wider than that at this font size; a first investigation into the
+	# banner rendering as fully blank in every real capture chased this as
+	# the cause (a too-narrow box wrapping to a clipped second line) and
+	# widened it defensively -- worth keeping regardless, since it removes a
+	# REAL (if smaller) partial-clip on longer creature-name pairs, see
+	# `_check_cycle_banner_fits_without_clipping()` in
+	# `smoke_hud_handheld_legibility.gd`. It was not, however, the actual
+	# cause of the "completely blank" failure -- see `CYCLE_BANNER_SECONDS`'s
+	# own comment on `tools/capture_hud_op21.gd`'s frame budget for that.
+	# Left-aligned, not centered: if a name long enough to still overflow
+	# this ever appears, the OUTGOING name and arrow -- the part of the cue
+	# that establishes direction -- are what a reader sees first, not a
+	# coin-flip on which end centering keeps on-screen.
+	_cycle_banner.size = Vector2(CYCLE_BANNER_WIDTH, CYCLE_BANNER_HEIGHT)
+	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_cycle_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_cycle_banner.add_theme_font_size_override("normal_font_size", STRIP_READABLE_FONT_SIZE)
 	_cycle_banner.visible = false
@@ -386,22 +441,43 @@ func set_pinned(pinned: bool) -> void:
 ## later integration pass — builds these from `Party.members()` and
 ## `CreatureInstance.label()`/`hp_fraction()`; this widget never reaches for either
 ## itself (see this file's header).
-func update_from_party(entries: Array, active_index: int) -> void:
+##
+## HUD-POPUP task 2: `active_out` answers a question this widget could not
+## ask on its own before -- is the SELECTED slot actually standing in the
+## world, or just the roster's current pick? (`playground_hud.gd`'s own
+## `_active_creature_is_out()` is the one place that reads `AllyCreature`
+## from the live scene; this widget stays decoupled from the scene tree, per
+## this file's own header, so the caller hands the answer in as plain data,
+## the same as every other field on `entries`.) Defaults `true` so a caller
+## that never passes it (every existing test) keeps the old always-bright
+## rail rather than silently downgrading every selected row to "picked, not
+## present."
+func update_from_party(entries: Array, active_index: int, active_out: bool = true) -> void:
 	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
 		var entry: Dictionary = entries[i] if has_creature else {}
-		_update_row(i, entry, has_creature, has_creature and i == active_index)
+		var selected := has_creature and i == active_index
+		_update_row(i, entry, has_creature, selected, selected and active_out)
 
 
-func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) -> void:
+func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, out: bool) -> void:
 	var fainted := has_creature and bool(entry.get("fainted", false))
 	var resting := has_creature and bool(entry.get("resting", false))
 	var vacant := not has_creature
 
-	if vacant != _last_vacant[i] or selected != _last_selected[i]:
+	if vacant != _last_vacant[i] or selected != _last_selected[i] or out != _last_out[i]:
+		_last_out[i] = out
 		_rows[i].add_theme_stylebox_override("panel", UI_TOKENS.slot_box(selected))
 		_rails[i].visible = selected
+		# The rail is the ONE piece of this row's chrome that changes with
+		# `out` -- full-brightness `TEAL` for "this creature is standing in
+		# the world," the dimmer `TEAL_SOFT` for "this is the roster's pick,
+		# nothing more" -- rather than touching the chip border too, which
+		# stays the plain "this row is selected" signal it always was
+		# (`test_selected_row_gets_the_teal_rail_and_full_modulate` already
+		# covers that it must not vary).
+		_rails[i].color = UI_TOKENS.TEAL if out else UI_TOKENS.TEAL_SOFT
 		_chip_boxes[i].border_color = UI_TOKENS.TEAL_SOFT if selected else UI_TOKENS.BORDER
 		var border_width := 2 if selected else 1
 		_chip_boxes[i].border_width_left = border_width
