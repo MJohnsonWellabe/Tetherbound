@@ -25,6 +25,7 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const PARTY := preload("res://autoload/party.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES_CONFIG := "res://data/creatures/species.json"
 const VILLAGE_NPCS_PATH := "res://data/config/village_npcs.json"
 
@@ -597,3 +598,78 @@ func test_the_board_does_not_contest_the_practice_trainers_prompt() -> void:
 	var apart := TOURNAMENT.board_position().distance_to(Vector2(float(bryn[0]), float(bryn[1])))
 	assert_true(apart > 4.2 + TOURNAMENT.PROMPT_RADIUS,
 		"the board stands %.1fm from Bryn; their prompts overlap" % apart)
+
+
+## --- RG19-spec/D68: the condition gate ----------------------------------------
+
+## The owner's own entry rule: "They have to be well rested, well fed, and
+## happy." A team at the size and level thresholds is still not in, and that
+## is the whole point of the third condition.
+func test_a_levelled_team_in_poor_condition_is_not_allowed_in() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(TOURNAMENT.team_ready(party), "the team is the authored size")
+	assert_true(TOURNAMENT.training_ready(party), "the team is at the authored level")
+	assert_false(TOURNAMENT.condition_ready(party),
+		"a team that has never slept, eaten or been cared for was tournament-ready")
+
+
+func test_a_rested_fed_happy_team_is_allowed_in() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	assert_true(TOURNAMENT.condition_ready(party),
+		"a rested, fed and happy team was still refused: %s"
+			% str(TOURNAMENT.readiness_report(party)))
+
+
+## One creature out of condition refuses the whole team, because the team is
+## what is entered.
+func test_one_creature_out_of_condition_holds_the_team_back() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	party.at(0).set("nourishment", 0.0)
+	assert_false(TOURNAMENT.condition_ready(party), "a starving entrant was waved through")
+
+
+## And the refusal has to SAY what to fix -- 26-RG19 asks for a readiness
+## summary rather than a vague "not ready".
+func test_the_readiness_report_names_the_creature_and_the_problem() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	party.at(0).set("nourishment", 0.0)
+	var report := TOURNAMENT.readiness_report(party)
+	assert_eq(report.size(), 1, "the report should name exactly the one creature that is not ready")
+	assert_true(report[0].contains(str(party.at(0).call("label"))),
+		"the report does not name the creature it is about: %s" % report[0])
+	assert_true(report[0].contains("feed"), "the report does not say what to do: %s" % report[0])
+	assert_true(TOURNAMENT.readiness_report(party).size() < 2)
+
+
+## A ready team's report is empty -- nothing to fix, nothing to say.
+func test_a_ready_team_has_nothing_to_report() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	assert_eq(TOURNAMENT.readiness_report(party).size(), 0)
+
+
+## The condition check looks at the entrants -- the strongest `min_party_size`
+## -- so a fresh capture picked up on the walk over cannot disqualify a team
+## that is otherwise ready. Same rule `training_ready()` already follows.
+func test_a_freshly_caught_creature_does_not_disqualify_a_ready_team() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	var stray: RefCounted = SPECIES.spawn("bramblebun")
+	CONDITION.start(stray, CONDITION.config())
+	party.add(stray)
+	assert_true(TOURNAMENT.condition_ready(party),
+		"a level-1 stray in the sixth-strongest slot cost the team its entry")
+
+
+## Every entrant, in condition. Rested through the same call the creature bed
+## makes, fed and cheered to the configured maxima.
+func _bring_the_party_into_condition() -> void:
+	var cfg: Dictionary = CONDITION.config()
+	for i in int(party.size()):
+		var creature: RefCounted = party.at(i)
+		creature.set("nourishment", float(cfg.get("nourishment", {}).get("max", 100.0)))
+		creature.set("happiness", float(cfg.get("happiness", {}).get("max", 100.0)))
+		CONDITION.note_rest_completed(creature, cfg)

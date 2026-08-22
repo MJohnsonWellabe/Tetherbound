@@ -34,6 +34,10 @@ const PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 ## D30: XP/bond arithmetic and named-move power, both pure data readers with
 ## no scene-tree dependency — see their own file headers.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+## RG19-spec/D68. Winning together and being knocked out both move a
+## creature's mood; the numbers are creature_condition.json's, not this
+## file's.
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
 signal entered()
@@ -689,6 +693,7 @@ func _award_victory() -> void:
 	if _enemy == null:
 		return
 	var cfg: Dictionary = PROGRESSION.config()
+	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
 
@@ -700,6 +705,13 @@ func _award_victory() -> void:
 		var amount: int = award if i == _active_index else share
 		var levels_gained: int = member.gain_xp(amount, cfg)
 		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		# RG19-spec/D68: everyone who was in the fight gets the mood of having
+		# won it, and a level-up is worth a little more on top. Paid to the
+		# same members the XP is, on the same rule -- a fainted party member
+		# gets neither, because it did not fight.
+		CONDITION.note_victory(member, condition_cfg)
+		for _level in levels_gained:
+			CONDITION.note_level_up(member, condition_cfg)
 
 	var winner := active_creature()
 	if winner != null:
@@ -956,6 +968,10 @@ func _on_enemy_strike() -> void:
 	hit_landed.emit(false, damage)
 	state_changed.emit()
 	if killed:
+		# RG19-spec/D68. A creature carried off the field is neither happy nor
+		# still rested; `note_faint` owns both, so no caller has to remember
+		# the second half.
+		CONDITION.note_faint(creature, CONDITION.config())
 		_begin_resolve("lost")
 
 

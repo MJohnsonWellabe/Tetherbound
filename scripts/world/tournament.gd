@@ -40,6 +40,10 @@ const CONFIG_PATH := "res://data/config/tournament.json"
 ## The statement prompt bolted to the board. Same node every berry bush and
 ## signpost uses; nothing about a bracket board justifies a second one.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+## RG19-spec/D68. Rested/fed/happy. The tournament asks it questions and never
+## interprets its numbers -- every threshold lives in
+## data/config/creature_condition.json.
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 ## Metres. The board reads its own state out as a one-line statement so a
 ## player who cannot make out the painted text still learns where they are in
@@ -465,6 +469,13 @@ func _write_entry_flags(party: RefCounted, progression: RefCounted) -> void:
 		progression.call("set_flag", "tournament_team_ready")
 	if training_ready(party):
 		progression.call("set_flag", "tournament_training_ready")
+	# RG19-spec/D68, and the ONE volatile flag in this store. The two above are
+	# contract flags recording that something happened and are never cleared;
+	# condition is a state of the team TODAY, so this one is written AND
+	# cleared as the team is fed, rested and cared for -- or is not. The
+	# marshal's ladder reads it like any other flag, which is what keeps the
+	# entry rule in data rather than in a second copy inside her dialogue.
+	progression.call("set_flag", "tournament_condition_ready", condition_ready(party))
 
 
 func _progression() -> RefCounted:
@@ -514,6 +525,60 @@ static func training_ready(party: RefCounted) -> bool:
 		if levels[i] < floor_level:
 			return false
 	return true
+
+
+## Are the entrants in a state to be entered -- "well rested, well fed, and
+## happy", the owner's own words for RG19?
+##
+## Checked over the `min_party_size` STRONGEST creatures, exactly as
+## `training_ready()` is and for the same reason: a fresh level-1 capture
+## picked up on the walk to the village must not disqualify a team that is
+## otherwise ready.
+static func condition_ready(party: RefCounted) -> bool:
+	for entry: Dictionary in entrants(party):
+		if not bool((entry.get("condition", {}) as Dictionary).get("ready", false)):
+			return false
+	return not entrants(party).is_empty()
+
+
+## Who would actually be entered, strongest first, each with their condition:
+## `[{ creature, condition }]`. The one shared readiness source 26-RG19 asks
+## for -- the marshal's summary, the team screen and `condition_ready()` all
+## read THIS, so none of them can carry its own idea of "well fed".
+static func entrants(party: RefCounted) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if party == null:
+		return out
+	var members: Array = []
+	for i in int(party.call("size")):
+		var member: RefCounted = party.call("at", i)
+		if member != null:
+			members.append(member)
+	members.sort_custom(func(a: RefCounted, b: RefCounted) -> bool:
+		return int(a.get("level")) > int(b.get("level")))
+	var cfg: Dictionary = CONDITION.config()
+	for i in mini(required_party_size(), members.size()):
+		var creature: RefCounted = members[i]
+		out.append({"creature": creature, "condition": CONDITION.summary(creature, cfg)})
+	return out
+
+
+## What to tell a player who is not allowed in yet: one short line per
+## entrant that is not ready, naming what to go and do about it. Empty when
+## the team is ready. 26-RG19: "show a clear readiness summary rather than a
+## vague 'not ready' refusal; point the player toward actions that fix each
+## failure."
+static func readiness_report(party: RefCounted) -> PackedStringArray:
+	var out := PackedStringArray()
+	for entry: Dictionary in entrants(party):
+		var state := entry.get("condition", {}) as Dictionary
+		if bool(state.get("ready", false)):
+			continue
+		var creature: RefCounted = entry.get("creature")
+		var reasons: Array = state.get("reasons", [])
+		if creature != null and not reasons.is_empty():
+			out.append("%s %s." % [str(creature.call("label")), ", ".join(reasons)])
+	return out
 
 
 static func required_party_size() -> int:

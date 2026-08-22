@@ -30,6 +30,16 @@
         "Take them out. Fight things. Feed them, rest them, let them grow into it. Then we'll talk about the board."
       ]
     },
+    "tournament_halda_condition": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "RG19-spec/D68. The entry gate the owner named in his own words: 'They have to be well rested, well fed, and happy.' Shown when the team is big enough and levelled enough but not in shape. Deliberately written as a reason and a to-do list, not a refusal -- she names the three things and where to go and do them, and the team screen's own condition line says WHICH creature is short of WHICH. The thresholds are in data/config/creature_condition.json and are not repeated here or anywhere else.",
+      "lines": [
+        "Levels aren't the whole of it. Look at the state of them.",
+        "That one's dead on its feet, and that one hasn't eaten since you found it. I've seen tired creatures put in front of a crowd before. It doesn't go well for them and it doesn't go well for the person who entered them.",
+        "Beds at home, a proper feed, and time out with you where nothing's trying to bite them. Berries do fine. Then come back and I'll put your name up."
+      ]
+    },
     "tournament_halda_signup": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",

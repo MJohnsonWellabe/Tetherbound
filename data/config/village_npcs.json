@@ -266,11 +266,24 @@
         {
           "if_flag": [
             "tournament_team_ready",
-            "tournament_training_ready"
+            "tournament_training_ready",
+            "tournament_condition_ready"
           ],
           "unless_flag": "tournament_entered",
           "conversation": "tournament_halda_signup",
-          "_why": "Sign-up. The two entry-condition flags are written by scripts/world/tournament.gd from the thresholds in data/config/tournament.json -- they are the ONLY thing this list asks about, so the rule lives in data and this file never carries a second copy of the numbers. The conversation's last line sets `tournament_entered`."
+          "_why": "Sign-up. All THREE entry flags: the two contract flags written from tournament.json's thresholds, and RG19-spec/D68's volatile `tournament_condition_ready`, which scripts/world/tournament.gd sets AND clears as the team is rested, fed and cared for. The numbers live in data; this file never carries a second copy of them. The conversation's last line sets `tournament_entered`."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready"
+          ],
+          "unless_flag": [
+            "tournament_condition_ready",
+            "tournament_entered"
+          ],
+          "conversation": "tournament_halda_condition",
+          "_why": "RG19-spec/D68. Trained, but not in shape: the owner's own entry rule is that entrants are 'well rested, well fed, and happy'. Told as a reason rather than a locked door -- the line names rest, food and care, and the team screen shows which creature is short of which. Sits ABOVE the train branch so a team that is levelled but hungry hears about the food rather than about levels, and below sign-up so a ready team never sees it. `unless_flag` includes `tournament_entered` so a player who has already signed up is never sent back out to feed somebody mid-bracket."
         },
         {
           "if_flag": "tournament_team_ready",

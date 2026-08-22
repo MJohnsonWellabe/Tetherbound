@@ -30,6 +30,7 @@ const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
@@ -116,6 +117,8 @@ var _row_wraps: Array = []
 var _row_chips: Array = []
 var _row_names: Array = []
 var _row_levels: Array = []
+## RG19-spec/D68's one-line "Rested · Fed · Happy" per row.
+var _row_conditions: Array = []
 var _row_hp_bars: Array = []
 var _row_hp_fills: Array = []
 var _row_bond_counts: Array = []
@@ -242,6 +245,7 @@ func build() -> void:
 	_row_chips.clear()
 	_row_names.clear()
 	_row_levels.clear()
+	_row_conditions.clear()
 	_row_hp_bars.clear()
 	_row_hp_fills.clear()
 	_row_bond_counts.clear()
@@ -397,6 +401,14 @@ func _build_slot_row(index: int) -> Control:
 	level_label.custom_minimum_size = Vector2(48, 0)
 	stat_row.add_child(level_label)
 	_row_levels.append(level_label)
+
+	# RG19-spec/D68's condition line, beside the level it is not the same as.
+	var condition_label := Label.new()
+	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	condition_label.custom_minimum_size = Vector2(190, 0)
+	stat_row.add_child(condition_label)
+	_row_conditions.append(condition_label)
 
 	var hp_bar := ProgressBar.new()
 	hp_bar.custom_minimum_size = Vector2(150, 8)
@@ -839,6 +851,16 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	var nodes: int = int(creature.call("bond_nodes", cfg))
 	var total: int = int(cfg.get("bond", {}).get("thresholds", []).size())
 	(_row_bond_counts[i] as Label).text = "%d/%d" % [nodes, maxi(total, 1)]
+
+	# RG19-spec/D68. The tournament's entry gate is rested/fed/happy, and
+	# 26-RG19 is explicit that it may not live only in the organizer's
+	# dialogue: a gate the player cannot see on their own team is a gate they
+	# cannot act on. One line per row, red while it would refuse entry.
+	var condition: Dictionary = CONDITION.summary(creature, CONDITION.config())
+	var line := _row_conditions[i] as Label
+	line.text = CONDITION.label(creature, CONDITION.config())
+	line.add_theme_color_override("font_color",
+		UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else HEALTH_LOW)
 
 
 func _describe(index: int, cfg: Dictionary) -> void:

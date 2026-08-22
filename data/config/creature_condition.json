@@ -1,0 +1,35 @@
+{
+  "_comment": "RG19-spec (D68). The creature-condition model the village tournament gates on: RESTED, FED, HAPPY. ALL TUNABLE. Read by scripts/creatures/creature_condition.gd, which is the only file allowed to interpret these numbers -- no threshold here may be repeated in dialogue, UI or tournament code. The owner's words were 'well rested, well fed, and happy'; each of the three deliberately maps to a different verb the opening already teaches, so the gate is passed by playing the game rather than by grinding one thing: rested comes from a creature bed plus a night's sleep, fed comes from gathering or farming food, happy comes from care and from fighting alongside the player.",
+
+  "_comment_no_starvation": "D29's rule extends to creatures: this is a LIGHT model. Nourishment draining to zero makes a creature unhappy and tournament-ineligible. It never damages it, never kills it, and never takes it out of the party. There is no starvation death here and adding one is an owner decision, not a tuning change.",
+
+  "nourishment": {
+    "_comment": "0..100. `start` is what a creature has when it is caught or handed over -- deliberately short of `max` so the very first team already has a reason to be fed once, rather than the mechanic only appearing an hour in. `drain_per_minute` is real time and runs whether or not the creature is the active companion, so a benched five is not a preserved five. `resting_drain_scale` multiplies the drain while the creature is asleep in a creature bed: 0 means a bed also feeds, which is what stops a night's rest from being a night's hunger.",
+    "max": 100.0,
+    "start": 70.0,
+    "drain_per_minute": 1.1,
+    "resting_drain_scale": 0.0,
+    "fed_at": 0.55,
+    "hungry_below": 0.3
+  },
+
+  "happiness": {
+    "_comment": "0..100, and the volatile one. Distinct from `bond` (D30) on purpose: bond is permanent progression that buys stats and only ever goes up, happiness is a mood that answers 'is this creature in a state to be entered into a tournament today'. Merging them would either make bond losable (a progression stat the player can be punished out of) or make happiness permanent (a gate that unlocks once and never means anything again).",
+    "max": 100.0,
+    "start": 55.0,
+    "drift_per_minute": -0.15,
+    "hungry_drift_per_minute": -0.6,
+    "on_feed": 8.0,
+    "on_rest_completed": 12.0,
+    "on_victory": 5.0,
+    "on_faint": -12.0,
+    "on_level_up": 6.0,
+    "happy_at": 0.6
+  },
+
+  "rest": {
+    "_comment": "`rested` is a bool the creature bed already owned before this file existed (Gate A): it is earned by staying assigned to a bed through the player's own sleep, and waking early forfeits it. Two things are added here. `stays_rested_minutes` expires it after that much awake real time, so 'well rested' describes today rather than a box ticked once an hour ago -- generous by default because the gate should reward a player who prepared, not ambush one who prepared and then explored. `clear_on_faint` drops it the moment a creature is knocked out, which is the one case where calling it rested would be a plain lie.",
+    "stays_rested_minutes": 45.0,
+    "clear_on_faint": true
+  }
+}
