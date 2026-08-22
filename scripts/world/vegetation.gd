@@ -60,6 +60,17 @@ const SINK := 0.06
 const PROP_OFFSET := 1.3
 
 var _placed: int = 0
+## GATE-D: layer name -> how many placements that layer contributed to the
+## world this build. `_placed` is the total and `_build_batch` groups by MODEL
+## (two layers sharing a mesh share one batch), so neither can answer "did
+## layer X actually place anything" -- which is the question
+## `tests/smoke_art.gd` exists to ask and had been answering wrongly. It looked
+## for scene children named after each layer's models, and there have not been
+## any since the scatter moved onto Terrain3DInstancer: instances live inside
+## the instancer, not as nodes under Vegetation. So the check failed for all
+## ten layers on a world that had 129,419 props in it, and nothing noticed,
+## because ci.yml never ran smoke_art at all.
+var _layer_placed: Dictionary = {}
 ## SG46: layer name -> the placements `scatter_rules._thin_by_drain` took out
 ## around Team Tether's stations, held from the build so the healing can put
 ## back the very same instances rather than roll a second scatter that would
@@ -193,6 +204,7 @@ func build(world_size: float, terrain: Node) -> void:
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
+	_layer_placed.clear()
 	_draw_calls = 0
 	_solid = 0
 	_harvest_points = 0
@@ -268,6 +280,10 @@ func build(world_size: float, terrain: Node) -> void:
 	# the bookkeeping.
 	var by_model: Dictionary = {}
 	for layer_name: String in by_layer.keys():
+		# GATE-D: recorded here, where the layer is still known. Below this
+		# point everything is grouped by model and the layer a placement came
+		# from is gone.
+		_layer_placed[layer_name] = (by_layer[layer_name] as Array).size()
 		for entry: Variant in (by_layer[layer_name] as Array):
 			var placement: Dictionary = entry
 			var model := str(placement["model"])
@@ -1437,10 +1453,42 @@ func harvested_count() -> int:
 ## For the survey's cost readout. Not a budget and not a gate — software
 ## rendering cannot measure frame time honestly (D06) — but "how much did we
 ## just put in the world" is worth being able to say out loud.
+## GATE-D: the RETINTED mesh actually registered with the instancer for a
+## model, or null if that model was never registered.
+##
+## `tests/smoke_art.gd`'s SA1-lod check needs to read a LOD chain back off the
+## mesh standing in the world rather than off the source .gltf -- that is the
+## whole point of the check, since the regression it guards (rebuilding a mesh
+## from `surface_get_arrays()` alone) silently drops the LOD chain while
+## leaving LOD0 looking correct. It used to find that mesh by looking for a
+## `MultiMeshInstance3D` child of `Vegetation` named after the model. There has
+## not been one since the scatter moved onto `Terrain3DInstancer`, which owns
+## its own MMIs, so the check could not find CommonTree_1 and failed for a
+## reason that had nothing to do with LODs.
+func registered_mesh(model_path: String) -> Mesh:
+	if not _mesh_ids.has(model_path):
+		return null
+	var asset: Object = _assets.call("get_mesh_asset", int(_mesh_ids[model_path]))
+	if asset == null:
+		return null
+	var scene: Variant = asset.get("scene_file")
+	if scene is PackedScene:
+		var holder: Node = (scene as PackedScene).instantiate()
+		var mesh: Mesh = null
+		if holder is MeshInstance3D:
+			mesh = (holder as MeshInstance3D).mesh
+		holder.queue_free()
+		return mesh
+	return null
+
+
 func stats() -> Dictionary:
 	return {
 		"instances": _placed,
 		"batches": _draw_calls,
+		# GATE-D: layer name -> placement count for this build. See
+		# `_layer_placed`'s own declaration for what it fixes.
+		"layers": _layer_placed.duplicate(),
 		"solid": _solid,
 		"solid_resident": collision_resident_count(),
 		"harvest_points": _harvest_points,

@@ -596,19 +596,30 @@ func _the_meadow_was_dressed() -> void:
 
 	# Every layer in the config has to be present in the world. A layer that
 	# silently placed nothing looks exactly like a layer nobody wrote.
-	var drawn := {}
-	for child in vegetation.get_children():
-		drawn[child.name] = true
+	#
+	# GATE-D fixed how this is asked. It used to collect the NAMES OF
+	# `Vegetation`'s scene children and look for each layer's model basenames
+	# among them. There have been no such children since the scatter moved onto
+	# `Terrain3DInstancer`: instances live inside the instancer, not as nodes
+	# under `Vegetation`. So `drawn` was always empty, every layer "had no props
+	# in the world", and this failed all ten layers on a world the line above it
+	# had just reported as holding 129,419 props in 42 batches -- an assertion
+	# contradicting its own preceding print. Nothing caught it because ci.yml
+	# never ran smoke_art.gd; `ralph/conventions.md` tells every agent to run it
+	# by hand for creature and model work, which taught them to expect ten
+	# failures and ignore the file.
+	#
+	# `stats()["layers"]` is the placement count per layer, recorded in
+	# `vegetation.gd::build()` while the layer is still known -- the batches
+	# themselves are grouped by model, so the layer cannot be recovered later.
+	var per_layer: Dictionary = stats.get("layers", {})
+	if per_layer.is_empty():
+		_fail("vegetation stats reports no per-layer counts; the layer check cannot run")
+		return
 	for layer: String in RULES.config().get("layers", {}).keys():
 		if layer.begins_with("_"):
 			continue
-		var models: Array = RULES.config()["layers"][layer].get("models", [])
-		var any := false
-		for entry: Variant in models:
-			if drawn.has(str(entry).get_file().get_basename()):
-				any = true
-				break
-		if not any:
+		if int(per_layer.get(layer, 0)) <= 0:
 			_fail("layer '%s' has no props in the world" % layer)
 
 
@@ -639,29 +650,31 @@ func _vegetation_kept_its_lod_chain() -> void:
 		_fail("SA1-lod check: %s has no LOD levels to begin with; pick a different source model" % SOURCE)
 		return
 
-	var node: MultiMeshInstance3D = null
-	for child in vegetation.get_children():
-		if child is MultiMeshInstance3D and child.name == "CommonTree_1":
-			node = child as MultiMeshInstance3D
-			break
-	if node == null:
+	# GATE-D: asked through `vegetation.gd::registered_mesh()` rather than by
+	# hunting for a MultiMeshInstance3D child named after the model. The scatter
+	# runs on Terrain3DInstancer, which owns its own MMIs -- there has been no
+	# such child for a long time, so this check was failing on "could not find
+	# the tree" and never reached the LOD comparison it exists to make.
+	var world_mesh: Mesh = vegetation.call("registered_mesh", SOURCE)
+	if world_mesh == null:
 		_fail("SA1-lod check: CommonTree_1 was not scattered into the world; cannot verify its LOD chain")
 		return
 
-	var retinted := node.multimesh.mesh as ArrayMesh
+	var label := SOURCE.get_file().get_basename()
+	var retinted := world_mesh as ArrayMesh
 	if retinted == null:
-		_fail("'%s' scatter mesh is not an ArrayMesh" % node.name)
+		_fail("'%s' scatter mesh is not an ArrayMesh" % label)
 		return
 	if retinted.shadow_mesh == null:
-		_fail("'%s' lost its shadow mesh when retinted" % node.name)
+		_fail("'%s' lost its shadow mesh when retinted" % label)
 
 	var retinted_lods := _lod_level_counts(retinted)
 	if retinted_lods != source_lods:
 		_fail("'%s' retinted LOD chain is %s, source is %s -- retinting is discarding LOD levels again" % [
-			node.name, retinted_lods, source_lods
+			label, retinted_lods, source_lods
 		])
 	else:
-		print("  vegetation LOD   %s survives retint: %s" % [node.name, retinted_lods])
+		print("  vegetation LOD   %s survives retint: %s" % [label, retinted_lods])
 
 
 ## The first mesh found in a freshly loaded, standalone instance of `path` --

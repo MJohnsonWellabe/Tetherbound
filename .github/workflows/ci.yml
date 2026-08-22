@@ -1611,6 +1611,13 @@ jobs:
           # guards the distance activation that the chapter's ~700-1100
           # authored creatures depend on to stay inside frame budget.
           godot --headless --path . --script tests/smoke_wild_streaming.gd
+          # GATE-D. smoke_art.gd was in NO ci job at all. ralph/conventions.md
+          # tells every agent to run it by hand for creature and model work,
+          # and it had been failing on main for long enough that agents learned
+          # to expect its failures and ignore them -- which is how ten broken
+          # layer assertions survived. Naming it here means it fails a check
+          # instead of a habit.
+          godot --headless --path . --script tests/smoke_art.gd
 
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
