@@ -95,8 +95,19 @@ const REDRAW_MOVE_EPSILON := 2.0
 ## which applies the SAME `UITokens.OUTLINE`/`OUTLINE_SIZE` treatment by
 ## hand, so a region name or destination label reads against any terrain
 ## colour underneath it rather than only the darkest ones.
-const CANVAS_HEADING_FONT_SIZE := 20
-const CANVAS_LABEL_FONT_SIZE := 26
+## OP21-15's own bump (26/20, from the shared 19/23 UITokens defaults) still
+## measured well under a legible handheld comfort bar at 1280x800: a blind
+## capture-frame pass measured cap heights of only ~11px (region labels,
+## destination callouts) and ~8px (the "DISCOVERED REGIONS"/"DESTINATIONS"
+## section headers, which read through `CANVAS_HEADING_FONT_SIZE` here) against
+## the ~16px comfort-bar every other bumped chrome element (title, footer) was
+## already clearing. `assets/ui/fonts/kenney_future.ttf` is a thin geometric
+## face whose strokes are only 1-2px at these sizes, which is exactly what
+## made 11px and 8px read as much smaller than the raw number suggests.
+## Raised again here, proportionally larger for the header role since it
+## measured furthest under the bar (8px vs 11px starting point, same target).
+const CANVAS_HEADING_FONT_SIZE := 30
+const CANVAS_LABEL_FONT_SIZE := 38
 
 ## One draw call's worth of state, refreshed by `MapCanvas._draw()` reaching
 ## back into the owning tab. A plain `Control` rather than a scene: this
@@ -502,7 +513,17 @@ func _draw_map(canvas: Control) -> void:
 
 	var objective: Dictionary = map_state.call("objective_marker")
 	if not objective.is_empty():
-		_draw_objective(canvas, map_rect, objective)
+		# The player's OWN canvas point, computed here (world position, not yet
+		# drawn) so `_draw_objective` can nudge the diamond clear of it before
+		# `_draw_player` draws the marker itself on top a few lines below --
+		# see `_draw_objective`'s own header for why the two would otherwise
+		# collide at whole-Meadows fit.
+		var player_point: Variant = null
+		var player_for_clear := _player_node()
+		if player_for_clear != null:
+			player_point = _world_to_canvas(
+				Vector2(player_for_clear.global_position.x, player_for_clear.global_position.z), map_rect)
+		_draw_objective(canvas, map_rect, objective, player_point)
 
 	if world != null:
 		var player := _player_node()
@@ -680,17 +701,52 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-marker_size * 0.5)
 	if not viewport.has_point(point):
 		return
-	if category == "major":
-		canvas.draw_circle(point, marker_size * 0.58, Color(0.02, 0.03, 0.04, 0.72))
+	# OP21-15 blind pass: "two unlabeled dark-olive dots... nearly invisible
+	# against the background." Only "major" landmarks got a dark backing
+	# plate below their icon; minor landmarks (this is most of them —
+	# discover_radius is small and there are more of them than there are
+	# majors) drew the bare icon texture straight onto whatever terrain
+	# colour happened to be underneath, and several of the vendored icons
+	# (`assets/ui/icons/map/`) are themselves dark, low-saturation art that
+	# a light meadow-green terrain swallows without a plate. Every discovered
+	# landmark now gets one, sized down for minor/generic categories so a
+	# major destination still reads as visually heavier on the map.
+	var plate_scale := 0.58 if category == "major" else 0.48
+	canvas.draw_circle(point, marker_size * plate_scale, Color(0.02, 0.03, 0.04, 0.72))
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 
-func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> void:
+## `player_point` is the player marker's own canvas position, or `null` when
+## there is no player in this draw (a headless/menu-only context). OP21-15
+## blind pass: "player marker and waypoint diamond overlap at default zoom —
+## they collide corner-to-corner, producing a ~3mm cyan-and-gold smudge."
+## `_draw_player`'s own legibility halo (drawn AFTER this, so it always wins
+## the overlap) reaches `PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE +
+## PLAYER_FACING_LENGTH + 4` px out from the player -- at whole-Meadows fit
+## that halo alone is wider than the entire visible map strip's short axis,
+## so an objective anywhere near the player is guaranteed to land inside it.
+## Nudging the diamond out to just past that halo (mirroring `minimap.gd`'s
+## own `player_clear_position`/warning-line treatment for the same problem)
+## keeps both markers individually readable instead of one erasing the other.
+const PLAYER_CLEAR_RADIUS := PLAYER_MARKER_RADIUS + PLAYER_FACING_BASE + PLAYER_FACING_LENGTH + 4.0 + OBJECTIVE_RADIUS
+func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary, player_point: Variant = null) -> void:
 	var pos: Vector2 = marker.get("position", Vector2.ZERO)
-	var point := _world_to_canvas(pos, map_rect)
+	var true_point := _world_to_canvas(pos, map_rect)
+	var point := true_point
+	var nudged := false
+	if player_point is Vector2:
+		var offset := point - (player_point as Vector2)
+		if offset.length() < PLAYER_CLEAR_RADIUS:
+			var direction := offset.normalized() if offset.length_squared() > 0.001 else Vector2.UP
+			point = (player_point as Vector2) + direction * PLAYER_CLEAR_RADIUS
+			nudged = true
 	var r := OBJECTIVE_RADIUS
 	if not Rect2(Vector2.ZERO, canvas.size).grow(-r).has_point(point):
 		return
+	if nudged:
+		var line_colour := UITokens.WARNING
+		line_colour.a = 0.45
+		canvas.draw_line(true_point, point, line_colour, 1.5)
 	var points := PackedVector2Array([
 		point + Vector2(0, -r), point + Vector2(r, 0), point + Vector2(0, r), point + Vector2(-r, 0),
 	])

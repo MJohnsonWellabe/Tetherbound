@@ -23,6 +23,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 
 ## OW7. The woodpile: three Kenney logs, already in the build and already
 ## ledgered for their log shapes (`water.gd` stands the same mesh on end for
@@ -261,6 +262,10 @@ func _on_gathered() -> void:
 	var items: RefCounted = game.get("items")
 	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
 	game.call("push_world_message", "+%d %s" % [_amount, item_name])
+	# GATEB-FLAGS: `home_materials_gathered` -- felled wood/stone piles are the
+	# main way the satchel actually fills for the tutorial home, same check as
+	# harvest_node.gd's own gather completion.
+	HOME_PROGRESS.maybe_set_materials_gathered(game)
 
 	var vegetation := get_parent()
 	if vegetation != null and vegetation.has_method("clear_felled") and not _felled_key.is_empty():

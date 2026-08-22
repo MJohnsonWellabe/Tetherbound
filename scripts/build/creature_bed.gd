@@ -10,6 +10,12 @@ const REST_PANEL := preload("res://scripts/ui/creature_bed_panel.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
+## GATEB-FLAGS: the ladder's `creature_bed_built` CONTRACT flag
+## (data/progression/objectives.json) -- set the instant this object is
+## actually placed, not merely armed/ghosted, so the HUD's next line clears
+## on the real interaction the objective names.
+const CREATURE_BED_FLAG := "creature_bed_built"
+
 const MESH_PATH := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
 const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
 
@@ -36,6 +42,10 @@ func build_real() -> void:
 	prompt.call("configure", "Rest a Creature", 2.6, true)
 	prompt.connect("activated", _on_rest)
 	add_child(prompt)
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		progression.call("set_flag", CREATURE_BED_FLAG)
 
 
 func tint_ghost(ok: bool) -> void:

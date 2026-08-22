@@ -86,14 +86,29 @@ func test_defaults_are_read_out_of_the_input_map() -> void:
 	assert_eq(KEY_BINDINGS.code(bindings.binding("jump", "gamepad")), "pad:0")
 
 
+## DPAD-COLLISION: `hotbar_2`/`hotbar_3` no longer carry a single-button
+## gamepad `InputEventJoypadButton` (project.godot) -- their old one, d-pad
+## left/right, is the same physical button `combat_switch_left`/
+## `combat_switch_right` (party cycling) also live on during plain
+## exploration, and unlike every other shared button in the map, nothing
+## gates the two apart. `playground_hud.gd::_read_hotbar_input()` now reaches
+## these two slots on gamepad through a hold-LB + d-pad chord instead -- real,
+## but not a single InputMap event a settings screen could show or let a
+## player rebind, so there is nothing for `bindings.binding(name, "gamepad")`
+## to return. Keyboard 2/3 are untouched and still assert normally below.
+const NO_SINGLE_GAMEPAD_BINDING := ["hotbar_2", "hotbar_3"]
+
+
 func test_every_action_has_both_a_keyboard_and_a_gamepad_binding() -> void:
 	# Every rebindable action ships with both, except the camera stick, which has
-	# no keyboard half because mouse look is camera code rather than an action.
+	# no keyboard half because mouse look is camera code rather than an action,
+	# and `NO_SINGLE_GAMEPAD_BINDING` above.
 	for group in _controls().get("groups", []):
 		for action in (group as Dictionary).get("actions", []):
 			var name := str(action)
 			assert_true(bindings.has(name), "%s is not in the input map" % name)
-			assert_ne(bindings.binding(name, "gamepad"), null, "%s has no gamepad binding" % name)
+			if not NO_SINGLE_GAMEPAD_BINDING.has(name):
+				assert_ne(bindings.binding(name, "gamepad"), null, "%s has no gamepad binding" % name)
 			if not name.begins_with("look_"):
 				assert_ne(bindings.binding(name, "keyboard"), null, "%s has no keyboard binding" % name)
 
@@ -242,10 +257,19 @@ func test_the_shipped_defaults_share_triggers_between_combat_and_build() -> void
 ## `menu_tab_right` are listed there too but are only ever read while a menu
 ## or the build catalogue is open (`game_menu.gd`, `build_menu.gd`), so they
 ## are MENU-context here, not world.
+## DPAD-COLLISION: `combat_switch_left`/`combat_switch_right` joined this list.
+## They were left off originally because the name reads combat-only, and at
+## the time nothing else read them outside a fight. `encounter_director.gd`
+## later gave them a second, WORLD-context job -- exploration party cycling --
+## without this list ever being told, which is exactly how `hotbar_2`/
+## `hotbar_3` (also on d-pad left/right, project.godot) went unchecked against
+## them and both fired off one press. They stay off `WORLD_CONTEXT_ACTIONS`
+## only if nothing reads them outside a fight; they no longer qualify.
 const WORLD_CONTEXT_ACTIONS := [
 	"move_forward", "move_back", "move_left", "move_right",
 	"look_up", "look_down", "look_left", "look_right",
 	"jump", "sprint", "interact", "inventory", "map", "creature_recall",
+	"combat_switch_left", "combat_switch_right",
 	"torch_toggle", "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
 	"build_open", "torch_place",
 ]

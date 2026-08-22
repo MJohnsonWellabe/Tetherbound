@@ -44,12 +44,28 @@ func test_preview_agrees_with_live_for_a_legal_floor() -> void:
 
 func test_preview_agrees_with_live_for_an_occupied_structural_anchor() -> void:
 	var game := FakeGame.new()
-	# The floor exposes its north edge at the existing wall's exact cell. Unlike
-	# same-id floor aim, this structural candidate deliberately does not use the
-	# ordinary grid's neighbour-push fallback before occupancy is checked.
+	var floor_record := {"id": "floor", "position": [0.0, 0.0, 1.0]}
+	# Ask the placer where it WOULD stand a wall against this floor's edge,
+	# then stand one exactly there and prove it refuses a second. Unlike
+	# same-id floor aim, this structural candidate deliberately does not use
+	# the ordinary grid's neighbour-push fallback before occupancy is checked.
+	#
+	# The anchor is derived rather than written as a literal because a literal
+	# is what made this check stale: BUILD-KIT-3 recentred the wall on its own
+	# off-centre material instead of its glTF origin, moving every floor-edge
+	# anchor by 0.11m, and the hard-coded fixture then named a cell the placer
+	# no longer produces. `occupied()` is a 0.02m same-anchor test, so the
+	# check silently stopped reaching the occupancy branch it exists for and
+	# reported a legal placement instead. Derived, it cannot go stale again.
+	var first := _evaluate(game, "wall", [floor_record])
+	assert_true(bool(first.get("ok", false)),
+		"the first wall against a bare floor edge must be legal")
+	var anchor: Vector3 = first.get("position", Vector3.INF)
+	assert_true(anchor.is_finite(), "the structural snap resolved no position at all")
+
 	var preview := _evaluate(game, "wall", [
-		{"id": "floor", "position": [0.0, 0.0, 1.0]},
-		{"id": "wall", "position": [0.0, 0.0, 0.0]},
+		floor_record,
+		{"id": "wall", "position": [anchor.x, anchor.y, anchor.z]},
 	])
 	assert_false(bool(preview.get("ok", false)))
 	assert_eq(str(preview.get("reason", "")), "Something is already here")

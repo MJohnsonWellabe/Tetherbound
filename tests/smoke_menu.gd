@@ -1099,13 +1099,25 @@ func _check_quest_log_tab() -> void:
 		_fail("quest log's Main Story list drew no rows")
 		return
 
-	var first_row: Label = main_list.get_child(0) as Label
-	if first_row == null or first_row.text.find("gate") == -1:
+	# GATE B grew the main chain from two entries to twelve, and the road gate
+	# is no longer the first of them. This check was never about position --
+	# it is about the tab actually rendering the authored chain and reading a
+	# flag's real state -- so it finds the row by its own text rather than
+	# assuming it is row 0, which the next inserted beat would break again.
+	var road_gate_row: Label = null
+	for child: Node in main_list.get_children():
+		var row: Label = child as Label
+		if row != null and row.text.find("gate") != -1:
+			road_gate_row = row
+			break
+	if road_gate_row == null:
 		_fail("quest log's Main Story list does not show the road-gate objective")
-	elif first_row.text.begins_with("✓"):
+	elif road_gate_row.text.begins_with("✓"):
 		_fail("the road-gate objective reads done before its flag is set")
 	else:
-		print("quest log tab shows the road-gate objective, correctly open")
+		print("quest log tab shows the road-gate objective, correctly open (row %d of %d)" % [
+			road_gate_row.get_index(), main_list.get_child_count()
+		])
 
 
 ## Save is the only tab whose advertised A action writes outside the running
@@ -1187,8 +1199,16 @@ func _check_objective_line_updates_without_reload(world: Node) -> void:
 	if progression == null:
 		_fail("Game has no progression state; cannot check the objective line")
 		return
-	if bool(progression.call("has", "road_gate_open")):
-		_fail("road_gate_open is already set; this check needs to see it flip")
+	# Originally this flipped `road_gate_open` by name, which silently assumed
+	# the road gate was the objective the HUD was tracking. GATE B put nine
+	# more beats into the chain ahead of it, so setting that one flag stopped
+	# changing the tracked line at all and the check failed for a reason that
+	# had nothing to do with what it exists to prove. Ask the chain which
+	# objective is actually being tracked instead; that is the flag whose
+	# completion must move the line, whatever the chain looks like later.
+	var tracked_flag := _first_undone_main_flag(progression)
+	if tracked_flag.is_empty():
+		_fail("every main objective is already done; this check needs one to flip")
 		return
 
 	var text_before: String = str(_game.get("objective_text"))
@@ -1196,13 +1216,13 @@ func _check_objective_line_updates_without_reload(world: Node) -> void:
 	var hud_label: Label = hud.get("_objective_text_label") if hud != null else null
 	var label_before := hud_label.text if hud_label != null else ""
 
-	progression.call("set_flag", "road_gate_open")
+	progression.call("set_flag", tracked_flag)
 	for i in 6:
 		await process_frame
 
 	var text_after: String = str(_game.get("objective_text"))
 	if text_after == text_before:
-		_fail("Game.objective_text did not change after completing road_gate_open")
+		_fail("Game.objective_text did not change after completing %s" % tracked_flag)
 	elif hud_label != null and hud_label.text == label_before:
 		_fail("the HUD's on-screen objective line did not redraw after the flag changed")
 	else:
@@ -1211,7 +1231,25 @@ func _check_objective_line_updates_without_reload(world: Node) -> void:
 		])
 
 	# Reset so this run's own state does not leak into anything checked after it.
-	progression.call("set_flag", "road_gate_open", false)
+	progression.call("set_flag", tracked_flag, false)
+
+
+## The first main objective whose flag is not yet set -- exactly what
+## quest_log.gd's `tracked_text()` reports on, read from the same authored
+## file rather than restated here, so inserting a beat cannot desynchronise
+## this check from the thing it is checking.
+func _first_undone_main_flag(progression: RefCounted) -> String:
+	var raw := FileAccess.get_file_as_string("res://data/progression/objectives.json")
+	var parsed: Variant = JSON.parse_string(raw)
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return ""
+	for item: Variant in ((parsed as Dictionary).get("main", []) as Array):
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var flag := str((item as Dictionary).get("flag_id", ""))
+		if not flag.is_empty() and not bool(progression.call("has", flag)):
+			return flag
+	return ""
 
 
 # --- closing ----------------------------------------------------------------

@@ -12,6 +12,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 
 ## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
@@ -285,6 +286,11 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 		# is the honest version of "your satchel is full".
 		return
 	inventory.call("add", _item_id, actual_amount)
+	# GATEB-FLAGS: `home_materials_gathered` (data/progression/objectives.json).
+	# Checked on every successful gather here, not only wood/stone/fiber ones --
+	# home_progress.gd's own threshold check is what actually cares which ids
+	# matter, so this stays one call regardless of which resource just landed.
+	HOME_PROGRESS.maybe_set_materials_gathered(game)
 	# Keep the hand-authored first-day nodes on the same player-facing pickup
 	# contract as felled_resource.gd.  These nodes used to credit the satchel
 	# silently, so the Gate A tool swing visibly happened and the prop vanished

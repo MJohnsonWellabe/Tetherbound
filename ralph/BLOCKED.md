@@ -6,7 +6,24 @@ design decision rather than inventing one.
 
 ---
 
-## OPEN, 2026-08-22 — the map is "unusable" because fog is working exactly as specified
+## ✅ RESOLVED 2026-08-22 by owner ruling — seed a starting reveal, show named landmarks through fog
+
+The owner read the account below ("I don't understand the map fog comment"),
+was given the plain version — the map is black because fog-of-war starts with
+*zero* reveal, so a fresh save opens a black rectangle with a dot on it — and
+accepted the recommendation:
+
+- **The village and the roads out of it start revealed.**
+- **Named landmarks show as icons through the fog** once an NPC has told the
+  player about them.
+
+Walking still uncovers the world; the player just does not start blind in
+their own home town. This supersedes the "reveal nothing at the start"
+reading of OW3, and `tests/test_map_fog.gd`'s assertions move with it rather
+than being deleted. Recorded in `ralph/OWNER_DIRECTIVES_2026-08-22.md` §3.
+Option 1 + option 2 of the four listed below, for the record.
+
+### The original entry, kept for its diagnosis
 
 **Owner decision needed.** This reverses a prior deliberate decision, so it is not
 an engineering call.
@@ -68,7 +85,25 @@ at a spot where the clamp is active.
 
 
 
-**Owner decision needed.** Everything else in OP21-07/08/09 shipped; this is the
+## ✅ RESOLVED 2026-08-22 by owner ruling — a continuous ridge is not required
+
+> "the roof doesn't need a continuous edge. it just needs to look like the
+> buildings in the game when you build it as a user."
+
+The acceptance criterion is therefore **not** "one unbroken ridge line" but
+"a player-built roof reads like the village houses' roofs." No new art, no
+mid-run mesh, no Meshy. Of the three options below this retires option 1
+(new mesh) and option 2 (one stretched piece per wall run) and takes option
+3's shape without its apology: the segmented roof is acceptable *provided*
+the seams are dressed so the result reads as one building rather than three
+tents. Close the dark inter-gable slot with material/geometry the kit
+already has; judge against the village houses, not against a ridge line.
+
+Recorded in `ralph/OWNER_DIRECTIVES_2026-08-22.md` §4.
+
+### The original entry, kept for its measurements
+
+Everything else in OP21-07/08/09 shipped; this is the
 one part tuning cannot reach.
 
 `Roof_RoundTile_2x1` carries a gable end at *both* of its local-X extremes. The

@@ -697,15 +697,30 @@ func _read_creature_control_input() -> void:
 	if INPUT_OWNER.current(get_tree()) != null:
 		return
 
+	# DPAD-COLLISION: `hotbar_2`/`hotbar_3` (playground_hud.gd) reach the
+	# gamepad d-pad left/right this cycle read also owns (project.godot:
+	# joypad 13/14) through a hold-LB chord now, not a plain press -- see
+	# `playground_hud.gd::HOTBAR5_CHORD_WINDOW`'s header for the full
+	# reasoning. While that chord is live (gamepad LB held), the same d-pad
+	# press belongs to the hotbar, not the party -- without this, holding LB
+	# to reach slot 2/3 would ALSO cycle the active creature on the exact
+	# press the hotbar is reading, reproducing the identical class of bug one
+	# button pairing over. Scoped to the cycle read alone, not an early
+	# return for the whole function, so `creature_recall` (d-pad up -- not
+	# part of the hotbar's chord) still works normally while LB happens to be
+	# held.
+	var hotbar_chord_owns_dpad := INPUT_GLYPH.using_gamepad() and Input.is_action_pressed(&"hotbar_5")
+
 	# PARTY-CYCLE: the same shoulder/d-pad grammar used to switch in combat now
 	# changes the selected companion in exploration. Party.revision drives the
 	# existing _sync_active_creature() path, so a visible follower is recalled
 	# and replaced cleanly rather than a second body being spawned.
 	var cycle := 0
-	if Input.is_action_just_pressed("combat_switch_left"):
-		cycle = -1
-	elif Input.is_action_just_pressed("combat_switch_right"):
-		cycle = 1
+	if not hotbar_chord_owns_dpad:
+		if Input.is_action_just_pressed("combat_switch_left"):
+			cycle = -1
+		elif Input.is_action_just_pressed("combat_switch_right"):
+			cycle = 1
 	if cycle != 0:
 		var party := _party()
 		var game := get_node_or_null(^"/root/Game")

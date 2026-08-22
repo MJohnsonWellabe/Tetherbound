@@ -261,20 +261,30 @@ func _preflight_all_planned_anchors(placer: Node) -> bool:
 	return true
 
 
+## BUILD-KIT-3: door/wall/roof anchors get `BUILD_SNAP._thickness_correction`
+## added, same as a real placement now does (see that function's own header
+## on `build_snap_contract.gd`) -- every structural piece in this exact house
+## sequence places at yaw 0 (the front/back walls are always found before the
+## side walls in `_add_supported_roofs`'s own wall scan, confirmed by hand
+## against its iteration order), so one correction per family covers all of
+## them. Floor steps are untouched: `_add_floor_edges` never corrects the
+## floor anchor itself, only what snaps to its edges.
 func _planned_house_steps(floor_a: Vector3) -> Array[Dictionary]:
+	var wall_c := BUILD_SNAP._thickness_correction(BUILD_SNAP.WALL_Z_CENTER, 0.0)
+	var roof_c := BUILD_SNAP._thickness_correction(BUILD_SNAP.ROOF_Z_CENTER, 0.0)
 	return [
 		{"id": "floor", "position": floor_a, "require_structural": false},
 		{"id": "floor", "position": floor_a + Vector3(2, 0, 0), "require_structural": false},
 		{"id": "floor", "position": floor_a + Vector3(0, 0, 2), "require_structural": false},
 		{"id": "floor", "position": floor_a + Vector3(2, 0, 2), "require_structural": false},
-		{"id": "door", "position": floor_a + Vector3(0, 0, -1), "require_structural": true},
-		{"id": "wall", "position": floor_a + Vector3(2, 0, -1), "require_structural": true},
-		{"id": "wall", "position": floor_a + Vector3(0, 0, 3), "require_structural": true},
-		{"id": "wall", "position": floor_a + Vector3(2, 0, 3), "require_structural": true},
-		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 2), "require_structural": true},
-		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 2), "require_structural": true},
-		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 0), "require_structural": true},
-		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 0), "require_structural": true},
+		{"id": "door", "position": floor_a + Vector3(0, 0, -1) + wall_c, "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(2, 0, -1) + wall_c, "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(0, 0, 3) + wall_c, "require_structural": true},
+		{"id": "wall", "position": floor_a + Vector3(2, 0, 3) + wall_c, "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 2) + roof_c, "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 2) + roof_c, "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(2, BUILD_SNAP.ROOF_Y, 0) + roof_c, "require_structural": true},
+		{"id": "roof", "position": floor_a + Vector3(0, BUILD_SNAP.ROOF_Y, 0) + roof_c, "require_structural": true},
 	]
 
 
@@ -362,7 +372,11 @@ func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: Str
 		return false
 	if not await _turn_camera_toward(inward):
 		return false
-	var roof_target := Vector3(floor_target.x, floor_target.y + BUILD_SNAP.ROOF_Y, floor_target.z)
+	# BUILD-KIT-3: this exact house sequence's roofs all resolve at yaw 0 (see
+	# `_planned_house_steps`'s own comment on why) so the same correction
+	# applies to every call site.
+	var roof_c := BUILD_SNAP._thickness_correction(BUILD_SNAP.ROOF_Z_CENTER, 0.0)
+	var roof_target := Vector3(floor_target.x, floor_target.y + BUILD_SNAP.ROOF_Y, floor_target.z) + roof_c
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
 	var wanted_player := roof_target - forward * PLACE_AHEAD
 	if not await _walk_to(wanted_player, "%s exterior Roof stance" % side):

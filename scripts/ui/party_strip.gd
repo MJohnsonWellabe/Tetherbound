@@ -37,13 +37,20 @@ const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
 # occupied name/level stacks grow while vacant rows stayed short, invalidating
 # the mount's five-row height and putting slot 5 over ACTIVE COMPANION.
-const ROW_SIZE := Vector2(250.0, 76.0)
+const ROW_SIZE := Vector2(250.0, 96.0)  # 76 -> 96: room for STRIP_READABLE_FONT_SIZE's bigger text without clipping
 const ROW_SEPARATION := 6
 const ROW_MARGIN := 6
 const HEADER_HEIGHT := 30.0
 const HEADER_GAP := 6.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 const CHIP_SIZE := Vector2(40.0, 40.0)
+## Local floor for this widget's own small text (TEAM count, level, KO/REST
+## tags) -- deliberately not `UI_TOKENS.FONT_TINY`, which a dozen other
+## screens this lane does not own also draw with (see
+## `playground_hud.gd::HUD_READABLE_FONT_SIZE`'s identical reasoning). A blind
+## critic measured this strip's own small text (13px on "Ripplet", 9-10px on
+## "Lv 1"/"WATER") against a ~16px arm's-length cap-height floor.
+const STRIP_READABLE_FONT_SIZE := 34
 const RAIL_WIDTH := 4.0
 const HP_BAR_SIZE := Vector2(72.0, 8.0)
 
@@ -107,6 +114,20 @@ var _last_selected: Array[bool] = [false, false, false, false, false]
 var _last_vacant: Array[bool] = [true, true, true, true, true]
 
 
+## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
+## once the creature panel below this widget has a real measured height (and
+## again only if that height or the canvas size genuinely changes -- see
+## that function's own header). Updates `_rest_position` unconditionally;
+## only snaps `.position` to match immediately while the strip is not
+## currently visible, so this can never yank the widget mid-reveal or
+## mid-fade out from under its own tween -- the next `show_strip()` simply
+## targets the new rest position like it always does.
+func set_rest_position(pos: Vector2) -> void:
+	_rest_position = pos
+	if not visible:
+		position = pos
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position
@@ -145,7 +166,7 @@ func _build() -> void:
 	_count_label.text = "TEAM  0 / 5"
 	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_count_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_count_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	_count_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	_count_label.add_theme_color_override("font_color", UI_TOKENS.TEAL_SOFT)
 	header.add_child(_count_label)
 
@@ -169,11 +190,11 @@ func _build() -> void:
 	_cycle_banner.fit_content = false
 	_cycle_banner.scroll_active = false
 	_cycle_banner.shortcut_keys_enabled = false
-	_cycle_banner.position = Vector2(0.0, -34.0)
-	_cycle_banner.size = Vector2(ROW_SIZE.x, 30.0)
+	_cycle_banner.position = Vector2(0.0, -46.0)
+	_cycle_banner.size = Vector2(ROW_SIZE.x, 42.0)
 	_cycle_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cycle_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_cycle_banner.add_theme_font_size_override("normal_font_size", UI_TOKENS.FONT_LABEL)
+	_cycle_banner.add_theme_font_size_override("normal_font_size", STRIP_READABLE_FONT_SIZE)
 	_cycle_banner.visible = false
 	add_child(_cycle_banner)
 
@@ -255,7 +276,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 
 	var name_label := Label.new()
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	name_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_LABEL)
+	name_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	_name_labels.append(name_label)
 	info.add_child(name_label)
 
@@ -266,7 +287,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 
 	var level_label := Label.new()
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	level_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	level_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	level_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
 	_level_labels.append(level_label)
 	level_row.add_child(level_label)
@@ -277,7 +298,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	var ko_label := Label.new()
 	ko_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ko_label.text = "KO"
-	ko_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	ko_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	ko_label.add_theme_color_override("font_color", UI_TOKENS.DANGER)
 	ko_label.visible = false
 	_ko_labels.append(ko_label)
@@ -286,7 +307,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	var rest_label := Label.new()
 	rest_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rest_label.text = "REST"
-	rest_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	rest_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
 	rest_label.add_theme_color_override("font_color", UI_TOKENS.WATER_BLUE)
 	rest_label.visible = false
 	_rest_labels.append(rest_label)
@@ -492,18 +513,48 @@ func _on_fade_out_finished() -> void:
 	visible = false
 
 
+## HUD-LAYOUT root-cause: "the cycle banner works in an isolated harness but
+## never appears in a real full-world capture" (CLAUDE.md task header).
+## Instrumenting the real mounted widget at the moment of capture
+## (`tools/capture_hud_op21.gd::_diagnose_cycle_banner`) found it exactly as
+## the isolated harness did -- correct text, correct position, inside the
+## viewport -- except `visible=false` on BOTH the banner and the whole
+## strip. Both timers below are WALL-CLOCK countdowns (`CYCLE_BANNER_SECONDS`
+## 1.3s, `UI_TOKENS.T_PARTY_FADE` 2.5s), decremented by `delta`, Godot's
+## real elapsed seconds since the last `_process()` call -- not a frame
+## count. A cold full Meadows boot (129k scattered props, first frames after
+## a heavy scene load, worse still under software rendering or contended
+## CPU) can render at a genuinely low framerate for its first several real
+## frames, meaning `delta` on any one of those frames can be large -- easily
+## large enough that a HANDFUL of real `_process()` calls exhausts a
+## 1.3-2.5s hold before the reveal is ever drawn, let alone screenshotted.
+## This is not a z-order or positioning bug at all: the widget is briefly
+## alive and correct, then times itself out before anyone sees it.
+##
+## `MAX_TIMER_DELTA` caps what ANY SINGLE frame is allowed to subtract from
+## either hold timer, the same technique a physics step clamps its own delta
+## with to survive a debugger pause or a slow frame without a huge catch-up
+## jump. One abnormally slow frame (a hitch, or the first frame after a
+## scene transition) now costs at most one frame's worth of hold time, not
+## however many real seconds it actually took -- the exact gap this bug
+## lived in.
+const MAX_TIMER_DELTA := 1.0 / 20.0
+
+
 func _process(delta: float) -> void:
+	var timer_delta: float = minf(delta, MAX_TIMER_DELTA)
+
 	# Runs whether or not the strip itself is fading/pinned — a cycle mid-fight
 	# (pinned) still deserves the same "who you were on, who you're on now"
 	# readout the fade path gets.
 	if _cycle_banner_timer > 0.0:
-		_cycle_banner_timer -= delta
+		_cycle_banner_timer -= timer_delta
 		if _cycle_banner_timer <= 0.0:
 			_cycle_banner.visible = false
 
 	if _pinned or not visible:
 		return
 	if _fade_timer > 0.0:
-		_fade_timer -= delta
+		_fade_timer -= timer_delta
 		if _fade_timer <= 0.0:
 			_hide_strip()

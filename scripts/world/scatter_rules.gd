@@ -183,10 +183,14 @@ static func placements_for(
 	# comment for why it is opt-in per layer rather than automatic.
 	_place_corridor_fill(out, layer, field, models, half, rng)
 
+	# OP21-19: nothing stands in the pond. Applied here, as a filter, for
+	# exactly the reason D41's own filter is -- see `_drop_below_waterline`.
+	var dry: Array[Dictionary] = _drop_below_waterline(out, field)
+
 	# D41 (SD16): the drained ground around a Tether station, applied LAST and
 	# as a filter. See `_thin_by_drain` for why it cannot be a gate inside
 	# `_consider` like every other rule here.
-	return _thin_by_drain(out, layer, field, drained_out)
+	return _thin_by_drain(dry, layer, field, drained_out)
 
 
 ## D41 (SD16), the vegetation half of the drained-ground grammar: Team Tether's
@@ -213,6 +217,47 @@ static func placements_for(
 ## shuffle the filter exists to avoid. It also gives a better result: noise is
 ## patchy at metre scale, so the survivors thin out in drifts rather than at a
 ## uniform per-instance rate.
+## OP21-19, and a second lesson in `_thin_by_drain`'s rule.
+##
+## OW5D relocated the pond and moved `water.level` from -22.5 to -17.0 without
+## re-deriving the per-layer `min_height` numbers anchored to the old, deeper
+## waterline -- so trees and bushes stood in the new water. The first repair
+## added a hard `water_level() - 0.5` floor as a GATE inside `_consider`,
+## which fixed the pond and broke something bigger.
+##
+## `_thin_by_drain`'s header, twenty lines below, already says why: "a new
+## rejection in the far south would reshuffle the whole map's trees and rocks."
+## A gate rejects a candidate BEFORE its scale, model and yaw are drawn, so
+## every instance after it in that layer lands on different random numbers.
+## The pond is roughly 0.02% of a 8192x2048m corridor and the re-roll was
+## total: 257 of 256 region files changed, and one of the re-rolled colliding
+## layers stood a rock and a pebble on a slope in the practice meadow at
+## (59.7, -49.1), where `tests/smoke_traversal.gd`'s OF15 wedge detector
+## caught a held `move_back` dead-stopped for a full second. That is the exact
+## owner-reported failure the detector was written for, produced by a pond fix
+## 100m away.
+##
+## As a filter it removes the instances that are genuinely in the water and
+## moves nothing else. Half a metre, not zero, so a layer that deliberately
+## wades the `shore_step` lip is not pushed dry -- it only stops anything
+## standing in water deep enough to read as "in the pond" rather than "at its
+## edge". No `rng` is touched here, for the same reason `_thin_by_drain` uses
+## position noise instead.
+static func _drop_below_waterline(out: Array[Dictionary], field: RefCounted) -> Array[Dictionary]:
+	if not field.has_method("water_level"):
+		return out
+	var level: float = field.water_level()
+	if is_nan(level):
+		return out
+	var floor_y := level - 0.5
+	var kept: Array[Dictionary] = []
+	for placement: Dictionary in out:
+		var pos: Vector3 = placement.get("position", Vector3.ZERO)
+		if pos.y >= floor_y:
+			kept.append(placement)
+	return kept
+
+
 static func _thin_by_drain(
 	out: Array[Dictionary], layer: Dictionary, field: RefCounted,
 	drained_out: Array[Dictionary] = []
@@ -823,14 +868,35 @@ static func _consider(
 		if float(field.path_factor(spot.x, spot.y)) > threshold:
 			return
 
+	# OP21-19: a hard floor at the pond's own waterline, underneath every
+	# layer's `min_height`. Written first as a gate right here; that was the
+	# bug, and the fix is `_drop_below_waterline` below. The pond is handled by height, not a band — see
+	# `playground_heightfield.gd::water_level()`'s own comment, "below this
+	# height and underwater are the same statement" — so per-layer
+	# `min_height` (vegetation.json) is normally enough on its own to let reeds
+	# and marsh grass wade a little into the shallows while keeping trees dry.
+	# It is not a *geometric* gate, though: it is one more tunable number per
+	# layer, and OW5D's blind (-250,+407) relocation of the pond basin moved
+	# `water.level` (from -22.5 to -17.0, restoring a rendered surface at the
+	# new basin) without anyone re-deriving those per-layer numbers, which is
+	# exactly how trees/bushes ended up standing in the new water — every
+	# layer's `min_height` was still anchored to the OLD, deeper waterline
+	# (fixed alongside this gate, see vegetation.json). This is the backstop:
+	# whatever a layer's own `min_height` says, nothing stands more than half
+	# a metre below the CURRENT water surface. Half a metre, not zero, so a
+	# layer that deliberately wades the shore_step lip (grass/reeds) is not
+	# pushed dry — it only stops anything from standing in water deep enough
+	# to read as "in the pond" rather than "at its edge."
+	# The pond's waterline is NOT gated here. It is applied as a filter over
+	# the finished list -- see `_drop_below_waterline`, and see
+	# `_thin_by_drain`'s header for the rule both of them obey.
+
 	# Nothing grows IN the stream channel either (EV5) — a grass tuft standing
 	# mid-current reads as a bug the way a tree on a path does. Same shape as
 	# the path gate above, same per-instance edge jitter so the channel's clear
-	# band ravels instead of tracing an exact offset curve. The pond is handled
-	# differently: it is a height, not a band, so layers keep out of it with
-	# their own `min_height` (vegetation.json) — reeds and marsh grass WANT to
-	# stand in the shallows, and a per-layer height gate lets each layer say
-	# how far in it wades.
+	# band ravels instead of tracing an exact offset curve. The pond's OWN
+	# waterline is now also a hard gate (immediately above); per-layer
+	# `min_height` remains for how far into the shallows a wading layer goes.
 	if not bool(layer.get("grows_in_stream", false)) and field.has_method("stream_factor"):
 		var stream_jitter := float(layer.get("path_edge_jitter", 0.0))
 		var stream_threshold := 0.35

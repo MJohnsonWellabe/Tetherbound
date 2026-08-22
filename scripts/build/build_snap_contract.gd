@@ -21,30 +21,66 @@ const HALF := MODULE * 0.5
 const ROOF_Y := 3.326
 const WALL_IDS := ["wall", "door"]
 
-## BUILD-KIT-2 (measured, NOT applied below -- see the header note this
-## points at). The roof mesh's local Z bounds are not centred on its own
-## origin (measured [-0.47, 1.48], centre +0.505, not 0) and
-## `Wall_Plaster_Straight`/`Wall_Plaster_Door_Flat`'s local Z bounds are not
-## centred either (measured [-0.31, 0.09], centre -0.11, matching
-## `build_door.gd::WALL_Z_CENTER` -- that file already needed the number for
-## its jamb/lintel collision boxes). Uncorrected, a single-row roof
-## undershoots a building's outward-facing edge by ~0.5m, and a wall's true
-## thickness sits 0.11m off whichever line `_add_floor_edges` anchors it to
-## -- and because that anchor line is fixed in WORLD space while each offset
-## is fixed in the mesh's own LOCAL space, the offset lands in a different
-## world direction per yaw, so two walls that should meet flush at a corner
-## land on two different lines instead. Both are real, confirmed defects
-## (the blind critic's #1 residual and #3). Recentring `_add_floor_edges`/
-## `_add_supported_roofs` by these values is the correct fix, but every
-## anchor coordinate they resolve is asserted to 0.08–0.0001m tolerance by
-## `tests/test_gate_a_world_extent.gd` and `tests/helpers/
-## gate_a_build_segment.gd`, neither owned by this lane -- shifting the
-## contract's real output without updating every one of those assertions in
-## the same change would ship a red branch or a silently un-tested drift.
-## Left as a measured, ready-to-wire remainder rather than guessed at or
-## shipped un-reviewed; see this branch's own report for detail.
-const ROOF_Z_OFFSET := -0.505
-const WALL_Z_CENTER := -0.11
+## BUILD-KIT-3: NOW WIRED IN (was measured-but-not-applied on BUILD-KIT-2 --
+## see the git history of this comment for why it was left out that round).
+## Re-measured fresh against the installed glTFs
+## (`tools/diag_roof_wall_bounds.gd`, not shipped) rather than trusted from
+## the prior lane's numbers: `Wall_Plaster_Straight`/`Wall_Plaster_Door_Flat`
+## local Z bounds are [-0.314035, 0.092447], centre -0.110794 (the prior
+## lane's -0.11 was already correct to 3 decimals). `Roof_RoundTile_2x1`
+## local Z bounds at the OLD scale.z=1.0 were [-0.468915, 1.483274], centre
+## +0.507180 -- also not centred on its own origin.
+##
+## A blind critic's rendered evidence (this branch, `shots/_diag/
+## build_kit_house_exterior.png` before this fix) showed both consequences
+## live, not just in theory: a ~0.5m strip of open sky between the front
+## wall's top plate and the front row of roof tiles (the roof mesh's own Z
+## content sits mostly BEHIND where its node origin is placed, so a roof
+## "at" a floor tile's anchor covers mostly the tile beyond it, not the one
+## it is nominally roofing), and diagonal cross-brace timber from one wall's
+## exterior face visible through the gap at an unflush corner into the next
+## wall's interior side.
+##
+## `_thickness_correction()` below fixes both the same way: a piece's own
+## local-space Z centre, rotated into world space by the piece's placement
+## yaw (identity for a yaw-0 wall/roof, but a front/back Z offset becomes a
+## left/right X offset once a wall/roof is placed on the OTHER pair of floor
+## edges, which is exactly why a flat per-axis constant added un-rotated
+## made two flush-intended walls land on two different world lines), added
+## to the anchor `_add_floor_edges`/`_add_supported_roofs` already compute.
+## Recentres the piece's VISIBLE material on the anchor line instead of the
+## piece's glTF origin.
+##
+## Every anchor coordinate these functions resolve is asserted to
+## 0.08-0.0001m tolerance by `tests/test_gate_a_world_extent.gd` and
+## `tests/helpers/gate_a_build_segment.gd` -- both updated in this same
+## change (see their own diffs) so this ships without a silently-stale test.
+const WALL_Z_CENTER := -0.110794
+
+## BUILD-KIT-3: the roof's Z scale is now 1.10 (was 1.0) rather than the flush
+## 1.0 BUILD-KIT-2 shipped -- a deliberate eave overhang past the wall plane
+## (blind critic's #2: "walls projecting past the roof" reads wrong on every
+## reference building; the fix stays inside the art rules because it is an
+## offset/scale of the existing roof piece, not new geometry). Scaling only
+## the Z axis (the eave-to-eave direction; `ralph/BLOCKED.md`'s open gable-cap
+## item already established the ridge runs along local X, so leaving X/Y
+## scale untouched does not touch the blocked mid-run seam) moves the mesh's
+## own local-Z centre too, since Godot scales a node's children about that
+## node's origin, not about the content's bounding-box centre: centre(k) =
+## 0.507180 * k. At k=1.10, centre = 0.557898.
+const ROOF_Z_CENTER := 0.557898
+
+
+## Rotates a piece's own local-space Z-centring offset (`WALL_Z_CENTER` for a
+## wall/door, `ROOF_Z_CENTER` for a roof) into world space for the piece's
+## placement yaw, so a candidate position built from a floor-tile anchor
+## lands the piece's VISIBLE material centre on that anchor line instead of
+## the piece's glTF origin. Identity at yaw 0 (a straight Z offset); a wall
+## or roof placed on the perpendicular pair of floor edges (yaw 90) needs the
+## same physical offset expressed along world X instead, which is exactly
+## what `Vector3.rotated` does and a flat unrotated constant cannot.
+static func _thickness_correction(local_z_center: float, yaw_deg: float) -> Vector3:
+	return Vector3(0.0, 0.0, -local_z_center).rotated(Vector3.UP, deg_to_rad(yaw_deg))
 
 
 ## Resolve an armed piece. Structural candidates win when the aim is near one;
@@ -130,11 +166,16 @@ static func _add_floor_edges(out: Array, placed: Array) -> void:
 			continue
 		var p: Vector3 = p_raw
 		# MegaKit convention from building_prefabs.json: yaw 0 walls run on the
-		# front/back Z edge; yaw 90 walls run on left/right X edge.
-		out.append({"position": p + Vector3(0, 0, HALF), "yaw_deg": 0.0})
-		out.append({"position": p + Vector3(0, 0, -HALF), "yaw_deg": 0.0})
-		out.append({"position": p + Vector3(HALF, 0, 0), "yaw_deg": 90.0})
-		out.append({"position": p + Vector3(-HALF, 0, 0), "yaw_deg": 90.0})
+		# front/back Z edge; yaw 90 walls run on left/right X edge. Each anchor
+		# gets `_thickness_correction` added so the wall's own off-centre
+		# material lands ON this edge line, not offset from it (see that
+		# function's header).
+		var c0 := _thickness_correction(WALL_Z_CENTER, 0.0)
+		var c90 := _thickness_correction(WALL_Z_CENTER, 90.0)
+		out.append({"position": p + Vector3(0, 0, HALF) + c0, "yaw_deg": 0.0})
+		out.append({"position": p + Vector3(0, 0, -HALF) + c0, "yaw_deg": 0.0})
+		out.append({"position": p + Vector3(HALF, 0, 0) + c90, "yaw_deg": 90.0})
+		out.append({"position": p + Vector3(-HALF, 0, 0) + c90, "yaw_deg": 90.0})
 
 
 static func _add_wall_continuations(out: Array, placed: Array) -> void:
@@ -186,7 +227,11 @@ static func _add_supported_roofs(out: Array, placed: Array) -> void:
 				support_yaw = float(wall.get("yaw_deg", 0.0))
 				break
 		if not is_nan(support_yaw):
-			out.append({"position": Vector3(p.x, p.y + ROOF_Y, p.z), "yaw_deg": support_yaw})
+			var roof_c := _thickness_correction(ROOF_Z_CENTER, support_yaw)
+			out.append({
+				"position": Vector3(p.x, p.y + ROOF_Y, p.z) + roof_c,
+				"yaw_deg": support_yaw,
+			})
 
 
 static func _nearest_candidate(raw: Vector3, candidates_in: Array) -> Dictionary:
