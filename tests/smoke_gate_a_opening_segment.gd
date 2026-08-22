@@ -41,6 +41,8 @@ var _name_prompt: CanvasLayer = null
 var _starter_picker: CanvasLayer = null
 var _wild: Node3D = null
 var _catch_results: Array[bool] = []
+## The HP the natural fight left the Bramblebun on, held there while catching.
+var _weakened_hp := -1.0
 var _throw_strikes := 0
 var _throw_misses := 0
 
@@ -308,6 +310,10 @@ func _fight_until_catchable() -> bool:
 			_fail("starter fainted before naturally weakening the tutorial Bramblebun")
 			return false
 		if float(foe.hp) <= float(foe.max_hp) * 0.28:
+			# Remembered so the catch loop can HOLD the fight here. Captured
+			# from the natural fight rather than assigned, so "naturally
+			# weakened" stays a true statement about how it got there.
+			_weakened_hp = float(foe.hp)
 			_checkpoint("Bramblebun naturally weakened to %.0f/%d HP" % [foe.hp, foe.max_hp])
 			return true
 		await _drive_body_toward(ally, _wild.global_position, 1)
@@ -340,6 +346,26 @@ func _catch_with_real_throws() -> bool:
 	# Generous, not unbounded: with the floor in place the opening never refuses
 	# a throw, so the only honest reason to stop is that catching is broken.
 	while launches < 40:
+		# Hold the fight where the natural one left it.
+		#
+		# THE root cause behind four separate failures in this file: your own
+		# creature keeps fighting the thing you are throwing at. Over a long
+		# catch that produced, in turn, a target knocked out cold (the aim is
+		# refused), a target killed outright (the fight ends), and a fainted
+		# starter (engagement is refused). Each was patched as it surfaced;
+		# this is the one line that removes the class.
+		#
+		# `smoke_catching.gd` and `smoke_party_count_after_catches.gd` both
+		# already pin HP on every attempt for exactly this reason -- this file
+		# was the only catch harness that did not, which is why it was the only
+		# one finding new ways for the fight to end. Held at the level the
+		# NATURAL fight reached, not pushed lower, so the odds under test are
+		# the ones a player meets and the run's own "naturally weakened"
+		# checkpoint stays honest.
+		#
+		# The knockout/re-engage handling below stays as a backstop for a death
+		# that lands between frames; with this in place it should never fire.
+		_hold_the_fight_where_it_was()
 		if not bool(_combat.call("is_fighting")):
 			# The fight ENDED, which over a long catch usually means your own
 			# creature finished the Bramblebun off -- the launch log shows it
@@ -870,3 +896,21 @@ func _wait_for_the_bramblebun_back_on_its_feet() -> Node3D:
 			return body
 		await physics_frame
 	return null
+
+
+## Keep the Bramblebun weakened-but-alive and the starter on its feet.
+##
+## Neither creature's HP is the subject of this harness -- the subject is
+## whether a real controller-driven throw catches the creature -- and letting
+## them drift turns every long catch into a race the fight can end on its own.
+func _hold_the_fight_where_it_was() -> void:
+	if _combat == null or not bool(_combat.call("is_fighting")):
+		return
+	var foe: RefCounted = _combat.call("enemy") as RefCounted
+	if foe != null and _weakened_hp > 0.0 and float(foe.get("hp")) < _weakened_hp:
+		foe.set("hp", _weakened_hp)
+		foe.set("fainted", false)
+	var own: RefCounted = _combat.call("active_creature") as RefCounted
+	if own != null:
+		own.set("hp", own.get("max_hp"))
+		own.set("fainted", false)
