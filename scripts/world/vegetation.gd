@@ -77,6 +77,14 @@ var _regrown: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
 var _harvest_points: int = 0
+## PERF-2: cumulative wall time spent inside `_spawn_harvest_point()` and
+## inside `_add_collision()` respectively, across the whole `build()` --
+## `build_batches` in the boot-phase print above is both of these PLUS the
+## transform-array fill and `add_transforms()` native call, so these two
+## isolate the two costs the task asked to measure in isolation from each
+## other and from the render path.
+var _t_harvest_ms: int = 0
+var _t_collision_ms: int = 0
 
 ## HARVEST-ALL / D60. Chopped stays chopped, forever, including across a
 ## save/load — this is the record of it. layer name -> a real BITSET
@@ -188,6 +196,8 @@ func build(world_size: float, terrain: Node) -> void:
 	_draw_calls = 0
 	_solid = 0
 	_harvest_points = 0
+	_t_harvest_ms = 0
+	_t_collision_ms = 0
 	_tints.clear()
 	_mesh_ids.clear()
 	_next_mesh_id = 0
@@ -237,12 +247,21 @@ func build(world_size: float, terrain: Node) -> void:
 	# a matching scatter bake landed alongside it — an out-of-date bake is
 	# ignored, never used.
 	var base_seed := int(cfg.get("seed", 1))
+	# PERF-2: boot-time phase timing, printed once per build() -- not a
+	# budget/gate (same caveat `stats()` above already carries: this box's
+	# wall-clock is shared with other concurrent lanes and is not
+	# Ally-comparable), but naming which phase actually costs what is exactly
+	# what let this task tell "big" from "not worth touching" instead of
+	# guessing from the shape of the code.
+	var t_load0 := Time.get_ticks_msec()
 	var by_layer: Dictionary
 	if BAKE.is_fresh(BAKE_WORLD_NAME, base_seed):
 		by_layer = BAKE.load_all(BAKE_WORLD_NAME, _drained)
 	else:
 		by_layer = RULES.all_placements(field, world_size, base_seed, _drained)
+	var t_load1 := Time.get_ticks_msec()
 	_mark_harvestable(by_layer)
+	var t_mark1 := Time.get_ticks_msec()
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one instancer mesh id, or the draw-call saving is thrown away by
@@ -261,15 +280,27 @@ func build(world_size: float, terrain: Node) -> void:
 	# would call set_mesh_list() once per unique model (42 today), and this
 	# is exactly the boot-time loop being fixed, not a place to add a second
 	# one.
+	var t_group1 := Time.get_ticks_msec()
 	_register_mesh_assets(by_model.keys())
+	var t_assets1 := Time.get_ticks_msec()
 
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
+	var t_batches1 := Time.get_ticks_msec()
 	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
 	# batch is queued, not one per model -- `add_transforms()` below is
 	# called with `update=false` for exactly this reason.
 	_instancer.call("update_mmis", true)
+	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
+
+	print(("[vegetation] boot phases (ms): placements=%d mark_harvestable=%d group_by_model=%d " +
+		"register_mesh_assets=%d build_batches_total=%d (of which harvest_points[%d nodes]=%d, " +
+		"initial_collision_stream[%d solid]=%d) update_mmis=%d") % [
+		t_load1 - t_load0, t_mark1 - t_load1, t_group1 - t_mark1, t_assets1 - t_group1,
+		t_batches1 - t_assets1, _harvest_points, _t_harvest_ms, _solid, _t_collision_ms,
+		t_mmis1 - t_batches1,
+	])
 
 
 ## R2.3: makes a deterministic slice of a layer's OWN placements into real
@@ -705,6 +736,66 @@ func _make_mesh_asset(model_path: String) -> Object:
 	# bushes, rocks and deadfall place themselves on the ground with theirs,
 	# which is the thing shadows are actually for here.
 	asset.set("cast_shadows", bool(layer_cfg.get("casts_shadow", true)))
+
+	# PERF-2 / §8.3: `Terrain3DMeshAsset` exposes per-mesh `lod0_range` ..
+	# `lod9_range`, `last_lod`, `shadow_impostor`, `fade_margin` and `density`
+	# -- the macro layout doc names them as the corridor's hard prerequisite
+	# lever, and until this task NONE of them was ever set, so every one of
+	# the ~130k instances rendered (and was distance-culled, if at all) with
+	# whatever the class default happens to be, not a considered choice.
+	#
+	# Semantics verified against the real Terrain3D 1.0.2 source
+	# (TokisanGames/Terrain3D, not guessed): `set_scene_file()` builds the
+	# LOD chain by looking for `*LOD#`-named child meshes in the packed
+	# scene, falling back to "every MeshInstance3D found" and then to "the
+	# scene root mesh" -- exactly one mesh either way here, since
+	# `_retint()` above packs a single `MeshInstance3D` holding one
+	# (already-imported, already-LOD-chained-at-the-*surface*-level by the
+	# glTF importer) `ArrayMesh`. That single mesh becomes `Terrain3DMeshAsset`
+	# LOD0, `last_lod` reads back 0, and `Terrain3DInstancer::
+	# _set_mmi_lod_ranges()` still unconditionally applies a real
+	# `RenderingServer.instance_geometry_set_visibility_range()` for LOD0
+	# using `get_lod_range_end(0)` == `lod0_range` as the far cutoff and
+	# `fade_margin` as the fade band either side of it -- there is no
+	# single-LOD bypass in the instancer's own loop. So even with one mesh
+	# per asset, `lod0_range`/`fade_margin` are a real, working distance
+	# culling lever today, not dead properties waiting on a second LOD mesh.
+	# Per-layer values live in vegetation.json (`lod_range`/`lod_fade_margin`),
+	# chosen generously by prop size/importance specifically so nothing
+	# should visibly thin at ordinary play distances -- see that file's own
+	# `_comment_lod`.
+	#
+	# NOT WIRED IN YET. This task built `tools/capture_lod_before_after.gd`
+	# to render the required before/after (lush pond-side pocket + an
+	# open-field long sightline, per ralph/ACTIVE_GAME_PLAN.md's own visual
+	# contract) and could not get it to complete: three attempts, each
+	# 18-25+ minutes of sustained ~92% single-core CPU with nothing to show,
+	# on a box whose `uptime` load average sat at 5-8 the whole time (this
+	# worktree is one of several concurrent Ralph lanes sharing it tonight).
+	# The boot-phase print above shows vegetation.gd's OWN build() is fast
+	# (~2.3s clean) -- the wall-clock sink is the REST of playground_world.gd's
+	# `_ready()` (water/village/trainers/quarry/relay/river/stronghold, none
+	# of it this file's scope) under that contention, not this change. So the
+	# two lines below are commented out not because they are believed risky,
+	# but because "render the change and verify the approved composition
+	# survives" is a hard requirement this task could not satisfy tonight,
+	# and shipping a visual-affecting change unverified is worse than
+	# shipping the config and the capture tool ready for the next lane (or
+	# this one, on a quieter box) to flip on and actually look at.
+	#
+	# `shadow_impostor` is separately NOT configured even once enabled: it
+	# points the SHADOW_LOD_ID render pass at a lower-poly LOD INDEX to cast
+	# shadows from once the main mesh has faded out, which only does
+	# anything useful with a genuine second, cheaper mesh registered at that
+	# index -- this file has never generated one (CLAUDE.md: no new
+	# meshes/Meshy for the Meadows), so left at its class default rather
+	# than pointed at the same single mesh for no effect. An explicitly
+	# named remainder for whoever adds a real low-poly LOD1.
+	# TODO(PERF-2): render tools/capture_lod_before_after.gd's before/after,
+	# confirm the pond-side pocket and open-field contrast survive, then
+	# uncomment the two lines below.
+	# asset.set("lod0_range", float(layer_cfg.get("lod_range", 220.0)))
+	# asset.set("fade_margin", float(layer_cfg.get("lod_fade_margin", 30.0)))
 	return asset
 
 
@@ -744,7 +835,9 @@ func _build_batch(model_path: String, placements: Array) -> void:
 			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
 			colours[i] = Color(v, v, v, 1.0)
 		if placement.has("harvest_item"):
+			var t_h0 := Time.get_ticks_msec()
 			_spawn_harvest_point(placement)
+			_t_harvest_ms += Time.get_ticks_msec() - t_h0
 
 	# `update=false`: one bulk native call per model instead of one per
 	# placement (the MultiMesh path's `set_instance_transform` loop, ~23.7k
@@ -755,7 +848,9 @@ func _build_batch(model_path: String, placements: Array) -> void:
 
 	_placed += placements.size()
 	_draw_calls += 1
+	var t_c0 := Time.get_ticks_msec()
 	_add_collision(model_path, placements)
+	_t_collision_ms += Time.get_ticks_msec() - t_c0
 
 
 ## One real gather point on the world's own scattered vegetation (R2.3) --

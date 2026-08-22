@@ -39,6 +39,22 @@ signal activated(provider: Object)
 
 var _player: Node3D = null
 var _providers: Array = []
+## PERF-2. `register()`/`unregister()` used to test/remove membership with
+## `Array.has()`/`Array.erase()` alone, both O(n) linear scans over
+## `_providers`. Registration happens once per `Interactable._ready()`
+## (`interactable.gd::_attach()`), and HARVEST-ALL made ~19,193 scatter
+## placements (every harvestable tree/rock) each carry one -- registering
+## them all in a tight boot-time burst made every `has()` scan longer than
+## the last, an O(n^2) wall that measured as 5.75s of `vegetation.gd::
+## build()`'s 6.2s `build_batches_total` in isolation (`tools/
+## _probe_veg_boot_phases.gd`, this box, bake already fresh -- so this was
+## the actual bottleneck, not `Node.new()`/`add_child()` cost as the task
+## brief assumed going in). This mirrors `_providers` as a real O(1)
+## membership index; `_providers` itself is UNCHANGED in type, order or
+## iteration (`_recompute()` still walks the Array, which is what fixed
+## iteration order for `prompt_arbiter.gd`'s tie-breaking depends on) --
+## this only ever answers "is it already in there".
+var _provider_set: Dictionary = {}
 var _prompt: String = ""
 var _winner: Dictionary = {}
 var _winning_provider: Object = null
@@ -62,16 +78,18 @@ func set_player(player: Node3D) -> void:
 
 
 func register(provider: Object) -> void:
-	if provider == null or _providers.has(provider):
+	if provider == null or _provider_set.has(provider):
 		return
 	if not provider.has_method("interaction_offer") or not provider.has_method("interaction_activate"):
 		push_error("%s registered as an interaction provider without the two methods" % provider)
 		return
 	_providers.append(provider)
+	_provider_set[provider] = true
 
 
 func unregister(provider: Object) -> void:
 	_providers.erase(provider)
+	_provider_set.erase(provider)
 
 
 func set_enabled(enabled: bool) -> void:
@@ -164,6 +182,7 @@ func _recompute() -> void:
 	for provider: Variant in _providers.duplicate():
 		if provider == null or not is_instance_valid(provider):
 			_providers.erase(provider)
+			_provider_set.erase(provider)
 			continue
 		var offer: Variant = provider.call("interaction_offer", from)
 		if not offer is Dictionary or (offer as Dictionary).is_empty():
