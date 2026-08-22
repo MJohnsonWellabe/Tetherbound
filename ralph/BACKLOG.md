@@ -70,6 +70,87 @@ Check the tree.
 
 ---
 
+## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
+
+These are remainder items recorded per `conventions.md` rather than iterated on
+further. Each was named by an independent Fable critic judging rendered frames
+with no knowledge of what changed and no sight of prior critiques.
+
+### WEATHER-2 — the lighting rig does not participate in the weather
+OP21-21's washed-out grey is **fixed and independently confirmed**: fog now
+reads as deliberate morning mist and the critic called it the best of the four
+states. Measured saturation went 0.18 -> 0.36 with four hue families recovered,
+`clear` is weighted 3.0 against the others, and `max_consecutive_non_clear: 2`
+bounds any grey run. What the same critic found instead:
+
+- **`cloudy` is now crushed, not washed out.** Ground measured ~(20,30,3), the
+  darkest of the four, and there are **no clouds** — it is the clear-sky dome
+  desaturated. Real overcast light is flatter and often *brighter* in shadow;
+  this preset does the reverse. The critic's read: "did my brightness setting
+  break?" It is the one state a player would report as a fault.
+- **The sun shadow is identical in all four states** — same angle, same
+  hardness. Clear earns it; cloudy, fog and rain contradict it. Quoted:
+  "one lighting rig with a dimmer and a sky swap, not four weathers."
+- **Weather never touches the ground.** Rain has no wet grade or specular
+  response and its streaks are invisible against terrain, so the lower two
+  thirds of the frame is just "cloudy, bluer." Fog sits at the horizon only —
+  the midground is as crisp as clear, so it reads as a backdrop rather than
+  atmosphere you stand in.
+- **Foreground values are crushed in the dark states**, near-black green in
+  exactly the screen region the player watches. Marginal on a 7-inch panel.
+- Grass tufts render at identical acid brightness in every state, reading as
+  faintly emissive under cloudy and rain.
+- Present in all four and so not a weather defect: the crest tree/rock cluster
+  renders near-black even under full sun, which reads as an unlit material.
+
+Highest-value single change, per the critic: give `cloudy` real cloud cover and
+**raise** ambient while softening the sun shadow, instead of dimming everything.
+That also stops cloudy and rain reading as near-duplicates. All fixes are
+in-scene grade/lighting work; none need new art.
+
+### PERF-LOD — Terrain3D vegetation LOD is written, tested and deliberately switched off
+
+All ~130k vegetation instances render at LOD0 regardless of distance. `lod0_range`
+and `fade_margin` are a real working lever — semantics verified against upstream
+Terrain3D 1.0.2 source, not guessed — and per-layer values already exist in
+`data/config/vegetation.json`. The two `asset.set()` calls in
+`scripts/world/vegetation.gd` that activate them are commented out behind a
+`TODO(PERF-2)`.
+
+They are off **on purpose**. `conventions.md` requires a blind pass for
+visual-affecting work, and no before/after frames have ever been produced, so
+activating it would ship an unverified change to the approved lush pond pocket
+and the open-field contrast. Two lanes independently reached that judgement and
+both left it inert rather than shipping on no evidence.
+
+**Four capture attempts have now failed, all the same way.** The last was a
+single continuous foreground run that reached **43 minutes** (past an 1800s
+bar) and never emitted either view. The world stands up fine during the run —
+129,723 props scattered, village/stronghold/relay placed, no errors — so the
+tool is not broken. Box load went from 1.00 at dispatch to 8.7–12.6 within
+minutes as other lanes entered their own render phases.
+
+**The diagnosis is specific and the unblock is cheap.** The sink is not
+`vegetation.gd` (its own `build()` stays ~2.3s) but the rest of
+`playground_world.gd::_ready()` — village, trainers, quarry, relay, river,
+stronghold — none of which a vegetation-LOD comparison needs. The next attempt
+should capture from a **minimal scene containing only terrain plus vegetation**,
+and/or cut `SETTLE_FRAMES`, so the render survives partial contention instead of
+requiring a sustained idle box this environment has never provided.
+
+Worth keeping in perspective: the two large measured performance wins already
+landed (the missing scatter bake, ~45x on load; the O(n^2) interaction-provider
+registration, ~5x on boot). LOD is an unmeasured speculative lever on top of
+those, which is why it is recorded here rather than forced through.
+
+### BUILD-KIT-4 — what round 3 left
+Tracked in `BLOCKED.md` for the parts needing an owner decision. Not blocked and
+still open: interior cross-braces read as scaffolding from inside (real geometry
+within the 0.4m wall thickness, not a double-sided plane — investigated with a
+scoped `cull_mode` probe), the corner-seam fix is not visually verified, the
+door leaf sits proud of its frame at the top hinge, and a stray grey brick block
+sits behind the interior braces.
+
 ## Phase -1.6 — the owner played the mid-build (owner-reported, 2026-08-18)
 
 **Reported from a real ROG session mid-build, verbatim notes.** This is the
