@@ -3,6 +3,118 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-D4b — the Upper Meadows package's unfinished half: a second clean suite, riding proved on the real route, and a camp pad where the ironwood is cut
+
+`tests: tests/run_tests.gd (full, 1301/0), tools/_run_d4_tests_fast.gd (95/0), tests/smoke_riding.gd, tools/_probe_ow5_walk.gd, tools/_probe_band4_sites.gd, tools/_probe_chapter_map.py, tools/_capture_band4_sites.gd` · `area: content, band4`
+
+The GATE-D4 entry below shipped the region and named four things it had not
+finished. This item closes three of them and hands the fourth on with the
+frames it was missing.
+
+**1. The second full-suite run, properly.** The record below is honest that
+only one full run ever completed, with the two failures it then fixed, and
+that the confirming rerun was started and killed under a box running a dozen
+concurrent Godot processes. Run alone on this container: **1301 tests, 714810
+assertions, 0 failed.** The 95-test targeted set is green too, including
+against this item's own new clearing.
+
+**2. Riding pays off, measured on the real route rather than argued from the
+multiplier.** `smoke_riding.gd` passes end to end on current head: refused
+without the saddle (and the prompt names what is missing), mounted by the
+ordinary interact press, **10.00 m/s live against the trainer's 5.00 m/s
+walk**, camera on the mount, dismounted visible and grounded, survives the
+mount being freed mid-ride, refused mid-fight. The legendary's tier is intact
+above it (x2.80, no tack, 60-degree ground).
+
+What that is worth *here* was then driven, not assumed:
+`tools/_probe_ow5_walk.gd --mode=spine --z_from=4760 --z_to=7000 --speed=10`
+put a real Player body through the whole band at mount speed — **20/20
+waypoints, 3427.8 m walked on the real polyline, 0 m skipped, 0
+unrecoverable wedges, no falls, 352 s of simulated time**. Against the walked
+run's 11.4 minutes for the same polyline, the band is **5.9 minutes mounted**.
+Prompt 65 asks for riding to become genuinely useful without turning the
+creature into a dead combat slot: the useful half is a 2240 m region that
+halves, and the density below it was authored for exactly that speed. Nothing
+was changed to achieve this — it is the verification the prompt asked for
+before building, and it found nothing to build.
+
+The one wedge site is the same one the walked run logged, at (169.3, 5589.7):
+Captain Halder's own body, not terrain. It ESCAPED at mount speed as it did on
+foot.
+
+**3. A camp pad in the ironwood stand — `vegetation.json` clearings[4002].**
+The gap the package left in its own camp/home rhythm. Crafting only happens at
+a campfire or workbench (`craft_panel.gd`'s header; `build_placer.gd` opens
+the panel at a placed station and nowhere else), and the five ironwood nodes
+are cut at z~5010-5075 while the only pad authored for a camp was
+clearings[4001] at z=6040 — a kilometre up the road, with home ~5 km back the
+other way. So the tier this band exists to introduce could be gathered and not
+spent. clearings[4002] is flat ground beside the stand, 15-45 m from the
+nodes: **h=0.85 m, 1.26 m of spread, worst local slope 9.9 degrees over a 6 m
+pad**, the flattest of six candidates measured with `_probe_band4_sites.gd`
+(the six are now in that probe). It builds nothing — the Camp is the player's,
+on their own wood/stone/fiber — it only keeps scatter off ground flat enough
+to place one. Same known limitation as the other two clearings, per the lane
+contract: `scatter_bake.gd::config_fingerprint()` does not hash a band's
+`vegetation.json`, so this pad is authored correctly and is not reflected in
+the served bake until the coordinator's single re-bake.
+
+**4. The blind visual pass, run for the first time on this lane.** Both earlier
+attempts stalled for 10+ minutes rendering the 272-creature world and were
+killed; alone on this container it completed. Five frames in `shots/band4/`
+plus `_sheet.png` — the ironwood grove, the new ironwood camp pad, the ridge
+patrol camp, the watchtower spur (the wide read of ruin-and-garrison the close
+camp frame cannot show) and the field camp clearing — judged by an independent
+critic given the sheet, the individual frames and `docs/reference/`, and
+nothing about the code or what had changed, per `ralph/conventions.md`.
+
+It answered **no** to both bar questions. What it named that belongs to this
+lane was fixed in round 1 and re-rendered:
+
+- *"`ironwood-grove` does not read as a grove — four isolated trees on open
+  lawn"* and *"constant scale at even intervals ... a scatter pass, not a
+  placement"*. Both true: five nodes 35-70 m apart in a rough line at
+  model_scale 0.28-0.32. Re-sited into a clustered stand (four-tree core inside
+  ~15 m, a fifth carrying the group south), scales spread to 0.26-0.42, every
+  position re-measured. See `harvest.json`'s own `_comment_stand_d4b`.
+- *"the tree mass at the right edge of `ironwood-grove` is cut by the frame with
+  nothing leading into it"*. The grove shot is reframed onto the stand with the
+  old-growth behind it as mid-ground mass.
+
+Most of what it named is **not this lane's to fix, and is recorded here as
+evidence rather than quietly dropped**:
+
+- **Density is the critic's own number-one finding**, unprompted: *"these
+  frames are not sparser than Palworld, they have effectively no vegetation
+  layer at all — sparse props sitting on a lawn"*, and *"vegetation density is
+  the largest single win — this alone moves frames 2 and 3 from greybox to
+  game"*. That is `data/config/vegetation.json`, a coordinator file.
+- **Pale translucent panels over the horizon in three frames**, which it read
+  as *"unlit or untextured billboard quads that failed to resolve"*. At 62
+  degrees they are forty pixels wide, so `_capture_band4_sites.gd` gained an
+  optional per-shot field of view and two 22-degree frames, and
+  `tools/_probe_d4_panels.gd` (new) walked the built world to name them:
+  **`RiftCollapse/StormWall`** — three QuadMeshes 360-460 m wide and 122-190 m
+  tall at z 7870-7968, unshaded and alpha-blended by
+  `rift_collapse.gd::_slab_material()`. The critic was right about what it saw
+  and the geometry is deliberate: that file's own header calls the slabs "a
+  painted horizon" that "has to look like the sky it stands in", and down a
+  spoke road, framed by terrain, they do. From Band 4's open pasture 1.4-1.9 km
+  south they are three overlapping grey rectangles with hard vertical corners
+  standing over a bare ridge. **A whole region can see the chapter's north
+  backdrop from an angle it was never composed for** — a real finding, not band
+  content, and `rift_collapse.gd` is not this lane's file.
+- Scale defects in the **scatter layer's own models** (violet flower clusters
+  as wide as the 1.80 m trainer is tall, a bromeliad at ~2.5x his height, both
+  in `ridge-patrol-camp`), one mid-tone value range, a high noon sun with no
+  terrain form, no cloud layer, and no landmark family — every one of them
+  shared config or art that is not in the build.
+
+The outstanding `density_scale` request stands unchanged: **0.05 for band4**,
+up from the chapter floor of 0.03, matching band2. The captures are the
+first direct evidence for it — the ironwood stand renders as a handful of
+isolated trees on open grass.
+
 ## GATE-D4 — Upper Meadows / Ironwood, populated and given a material tier
 
 `tests: test_band_content.gd, test_band_vegetation.gd (1 assertion loosened, see below), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, tools/_probe_chapter_map.py, tools/_probe_band4_sites.gd (new), tools/_probe_ow5_walk.gd, tools/_gen_band4_density.py (new)` · `area: content, band4`
