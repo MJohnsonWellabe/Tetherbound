@@ -300,13 +300,31 @@ artefact is identical too.
 *Not water.* `terrain_playground.json`'s global level is **-17.0** and the
 river's is **-9.0**. The eye is at **-2**. Both surfaces are far below it.
 
-**What is established:** it is positional, not a height effect. The same 1.7m
-eye 19m further back at (214, 3668) renders clean; at (232.5, 3672) it does
-not. Repro: `tools/capture_band3_region.gd`, viewpoint `03`, eye (232.5, 3672).
+**Then a third test falsified both of the above, including this file's own
+previous conclusion.** Raising that eye from 1.7m to 3.0m at the *same* (x, z)
+clears the artefact completely and the checkpoint reads normally. So it is a
+height effect after all, and "positional, not height" — which this section
+asserted — was wrong.
 
-Handed over rather than guessed at a third time. It is in terrain/rendering,
-not in band content, and nothing in `data/config/bands/band3_the_river_lock/`
-can produce or fix it.
+Which means the underground theory was probably right, and the raycast fix
+**silently failed rather than disproving it**. `_surface()` fell back to the
+analytic height when the ray hit nothing, and returned it with no signal — so
+"the ray returns the analytic height unchanged" was read as the ray agreeing
+with the heightfield, when it was the ray finding no collision at all.
+Terrain3D streams collision around the camera and 40 settle frames is evidently
+not always enough for it to arrive. An eye at analytic+1.7 sits under a real
+surface roughly 3m higher; at analytic+3.0 it climbs out. That is exactly the
+observed behaviour.
+
+The fallback now says so, loudly, in the capture log and as a `push_warning`.
+A silent fallback that makes a broken measurement look like a successful one
+cost a full round here.
+
+**Still open:** the underlying disagreement between the analytic heightfield
+and the collision terrain (§1.2), and how long Terrain3D actually needs to
+stream collision at a fresh camera position. Both are terrain/engine, not band
+content. Repro: `tools/capture_band3_region.gd`, viewpoint `03`, eye
+(232.5, 3672), `eye_h` 1.7 breaks and 3.0 does not.
 
 **Convergence.** Round 2 named new defects, so the pass had not converged when
 this session ended. Every band-scoped item it named is fixed; the remainder is

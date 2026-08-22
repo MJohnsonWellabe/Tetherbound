@@ -218,6 +218,20 @@ func _surface(world: Node, field: RefCounted, at: Vector2) -> float:
 	query.collide_with_areas = false
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
+		# Say so. A silent fallback here cost a whole round: the checkpoint
+		# frame's dark band was diagnosed as "not the camera underground"
+		# BECAUSE this function returned the analytic height unchanged -- which
+		# looked like the ray agreeing with the heightfield and was actually
+		# the ray hitting nothing at all. Raising that eye from 1.7m to 3.0m
+		# cleared the artefact completely, which is what an eye climbing out of
+		# the ground looks like.
+		push_warning("no collision under (%.1f, %.1f); "
+			% [at.x, at.y]
+			+ "seating the camera on the analytic height %.2f, which may be "
+			% analytic
+			+ "under the real surface -- Terrain3D may not have streamed here yet")
+		print("  WARN no collision under (%.1f, %.1f), falling back to analytic %.2f" % [
+			at.x, at.y, analytic])
 		return analytic
 	return float((hit["position"] as Vector3).y)
 
