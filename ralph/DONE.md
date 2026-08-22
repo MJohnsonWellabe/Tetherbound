@@ -55,10 +55,24 @@ so it paints exactly where a station says; the stations are
 in the report and the skin logs plainly that it rendered nothing until they
 land.
 
-**Owed, not done: the blind visual pass.** Six captures are in
-`shots/band5_approach/` for an independent critic — this lane did not grade its
-own frames, and `22-SKY-PLANES`/`23-BILLBOARD-WHITE` stay open pending that
-verdict.
+Verification: **full suite green, 1301 tests / 715,080 assertions / 0 failed.**
+Twelve captures (six eyes, day and night) are in `shots/band5_approach/`.
+
+Reproduce-first on the visual items: `22-SKY-PLANES` is REAL and root-caused to
+`rift_collapse.gd`'s StormWall slabs, seen from a viewpoint they were never
+sized for — reported with three options rather than fixed, since that file is
+not this lane's and the wall's own job is closing that horizon.
+`23-BILLBOARD-WHITE` does not reproduce here. There are no torches in Band 5 at
+all, so the torch half of the night item is empty — but the pylon run turns out
+to BE the region's night lighting, and `meadow_healing` correctly turns it off
+after the Warden, which leaves the walk home unlit. Flagged for Gate E.
+
+Also found and reported, not fixed: `landmark.gd` builds the stronghold
+silhouette at (229.8,-144.4) while the stronghold is at (0,7560) — **7,704m
+apart** — so prompt 66's "grows in visual dominance" cannot happen. Owner call.
+
+**Owed, not done: the blind visual pass.** This lane did not grade its own
+frames.
 
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 

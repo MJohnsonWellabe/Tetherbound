@@ -339,11 +339,57 @@ padded for comfort: the last stop before the assault heals one of the five, so
 which one is a real choice, and it is still gathered and built rather than
 granted.
 
+## 5e. Night readability — there are no torches, and that has a consequence
+
+Prompt 66's last visual-cleanup item is "torch/night readability on the final
+route". Reproduce-first found there is nothing to reproduce **and** something
+worse underneath it.
+
+`tools/_probe_band5_approach.gd` now runs the same six eyes twice, day and
+night (`world_look.gd::apply_time`), so the two sheets differ in exactly one
+variable. Findings from the night sheet:
+
+- **There is not one torch in Band 5.** Zero matches across all five of the
+  band's config files, and the shipped prop family has no torch model to place
+  either. So the "torch readability" half of the item is empty: there are no
+  torches whose readability could be bad.
+- **The pylon run is the entire night lighting of the region**, and it works —
+  in `03-mid-route-night.png` the lit pylons and the glowing conduit are the
+  only legible features in the frame, and the cable traces the bearing to the
+  works when the ground, the scatter and the horizon have all gone black. That
+  is an unplanned benefit of §2 and the strongest evidence the spine does its
+  job: it navigates in the condition where nothing else can.
+- **`22-SKY-PLANES` is worse at night, not better.** The storm slabs read as
+  crisply delineated pale rectangles against a black sky. Confirmed in both
+  lighting states, which rules out any explanation that depends on daylight.
+
+### The consequence, which is a real one
+
+`meadow_healing.json::tether_lights` turns off **every lit Team Tether fitting**
+when the machinery dies — deliberately, and my fifteen pylons are correctly in
+scope for it. But since they are also the region's only light source, the
+arithmetic is: **after the Warden, at night, the 651 m walk back through Band 5
+has no light at all.**
+
+That file's own comment says "nothing warm is touched, which is why the freed
+legendary's own #e8d79a light survives it" — so warm light surviving the
+ending is explicitly part of the design. The approach simply has no warm light
+to survive.
+
+**Not fixed here.** Adding a warm light source to the post-victory route means
+either a prop family that does not ship a torch, or inventing lighting canon for
+a beat (`the walk home`) that belongs to Gate E's finale, not to this region.
+Flagged for the coordinator and for `69-STRONGHOLD-chapter-finale.md`: if the
+walk home is meant to be walkable at night, this route needs a warm source that
+the healing pass leaves alone. Before this lane's work the region was unlit at
+night in every state; it is now lit during the chapter and dark after, which is
+an improvement plus a newly visible gap rather than a regression.
+
 ## 6. What this lane did NOT verify — owed work
 
-- **The blind visual pass is NOT done.** Six captures were produced
-  (`shots/band5_approach/`, viewpoints down the route at eye height, all
-  looking at the works) specifically so an **independent critic** can judge
+- **The blind visual pass is NOT done.** Twelve captures were produced
+  (`shots/band5_approach/`, six viewpoints down the route at eye height all
+  looking at the works, each rendered at day and at night) specifically so an **independent critic** can judge
   whether the pylon line reads as a bearing and whether the stronghold grows in
   visual dominance. Per `ralph/lanes/COMMON.md` §8 this lane does not grade its
   own frames, and it has not. **Coordinator: dispatch the critic.**
