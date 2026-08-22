@@ -383,7 +383,7 @@ catching is broken.
 Both surfaced by CI shards that did not exist before this branch, on code this
 branch did not write. Recorded here because the *pattern* is the finding.
 
-### `smoke_party_count_after_catches.gd` — never once run by CI
+### `smoke_party_count_after_catches.gd` — never once run by CI (FIXED)
 
 `could not engage the real wild body at Wild_bramblebun_2`, with seven further
 failures cascading from that one. The file has **one commit, from the
@@ -396,7 +396,24 @@ direction: there, tests were merged broken; here, a test was merged working and
 rotted with nothing watching. Both have the same root — **46 of 64 smoke tests
 were in no CI shard.**
 
-### `smoke_post_modal_control.gd` — the hammer route loses the button
+**The game is right and the harness was wrong.** Diagnosed: "stopped 3.3m away
+(engage range 6.0m); the winning prompt is Interactable, not the target". In
+range, target alive and visible — but a nearer prop held the line. With ~22,000
+harvestable props and a distance-ranked arbiter, that is correct behaviour: a
+player reads "Gather" instead of "Engage" and takes a step. The harness now does
+the same, closing in until the arbiter is actually offering the target before it
+presses — which is what its own header already claimed it did.
+
+Verified: `PASS: three real catches through the real minigame land in
+Game.party, the on-screen TEAM counter and party strip agree, and the count
+survives a save/reload`. All eight failures gone.
+
+Recording the asymmetry deliberately: of the two reds this branch's new shards
+found, **one was the game's fault and one was the test's**, and neither could be
+told from the other without booting the thing and printing what was actually
+winning.
+
+### `smoke_post_modal_control.gd` — the hammer route loses the button (FIXED)
 
 `the hammer + interact opened nothing`, all three stress cycles. Root cause
 named by instrumenting the refusal rather than guessing: **a prompt provider is
@@ -409,10 +426,29 @@ Under CONTROLLER-MAP, `build_open` has no pad button — hammer + `interact` is 
 prompt sources. "Stand somewhere with nothing interactable in reach" is not a
 reasonable thing to ask of a player who wants to build.
 
-Deliberately **not** fixed on a guess. The obvious repair — let a hammer in hand
-suppress prompts, the way `_refresh_lockout()` already does for an armed ghost —
-would also stop the player talking to Bram while carrying one, and that is a
-design call that wants evidence behind it. Open.
+**Instrumenting the refusal named the provider, and it changed the answer.** The
+winner is `EncounterDirector`, and what it wins with is
+`_creature_control_offer()` — a **non-actionable** status line, "[RB] Call out
+\<creature\>", advertising an entirely different button. It is the fallback
+returned for any player who has a creature and is standing near nothing else,
+which is most players most of the time.
+
+So the gate was not losing a contest. `interaction_arbiter.gd::activate()`
+already refuses to fire a non-actionable winner, so the interact press was
+**free** — the hammer was standing down for a line that was never going to
+consume it. The design question that made this look risky evaporated: the fix is
+not "let the hammer suppress prompts" (which would indeed have stopped the
+player talking to Bram while holding one). It is to ask the question the arbiter
+already asks — *is the button spoken for* — via `PROMPTS.is_actionable(winner())`.
+
+Worth noting as method: the repair I would have guessed at was the wrong one,
+and the only thing separating them was printing the provider's name.
+
+Verified: `post-modal control smoke passed: 3 mixed real-joypad cycles`, from
+three of three cycles failing. `test_hammer_keeps_the_interact_button.gd` pins
+the contract, including the premise it rests on — if the creature-control line
+ever became actionable the hammer *should* stand down, so that is asserted
+rather than assumed.
 
 ### A correction to this file's own method
 
