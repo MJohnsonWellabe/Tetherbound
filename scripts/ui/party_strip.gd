@@ -513,18 +513,48 @@ func _on_fade_out_finished() -> void:
 	visible = false
 
 
+## HUD-LAYOUT root-cause: "the cycle banner works in an isolated harness but
+## never appears in a real full-world capture" (CLAUDE.md task header).
+## Instrumenting the real mounted widget at the moment of capture
+## (`tools/capture_hud_op21.gd::_diagnose_cycle_banner`) found it exactly as
+## the isolated harness did -- correct text, correct position, inside the
+## viewport -- except `visible=false` on BOTH the banner and the whole
+## strip. Both timers below are WALL-CLOCK countdowns (`CYCLE_BANNER_SECONDS`
+## 1.3s, `UI_TOKENS.T_PARTY_FADE` 2.5s), decremented by `delta`, Godot's
+## real elapsed seconds since the last `_process()` call -- not a frame
+## count. A cold full Meadows boot (129k scattered props, first frames after
+## a heavy scene load, worse still under software rendering or contended
+## CPU) can render at a genuinely low framerate for its first several real
+## frames, meaning `delta` on any one of those frames can be large -- easily
+## large enough that a HANDFUL of real `_process()` calls exhausts a
+## 1.3-2.5s hold before the reveal is ever drawn, let alone screenshotted.
+## This is not a z-order or positioning bug at all: the widget is briefly
+## alive and correct, then times itself out before anyone sees it.
+##
+## `MAX_TIMER_DELTA` caps what ANY SINGLE frame is allowed to subtract from
+## either hold timer, the same technique a physics step clamps its own delta
+## with to survive a debugger pause or a slow frame without a huge catch-up
+## jump. One abnormally slow frame (a hitch, or the first frame after a
+## scene transition) now costs at most one frame's worth of hold time, not
+## however many real seconds it actually took -- the exact gap this bug
+## lived in.
+const MAX_TIMER_DELTA := 1.0 / 20.0
+
+
 func _process(delta: float) -> void:
+	var timer_delta: float = minf(delta, MAX_TIMER_DELTA)
+
 	# Runs whether or not the strip itself is fading/pinned — a cycle mid-fight
 	# (pinned) still deserves the same "who you were on, who you're on now"
 	# readout the fade path gets.
 	if _cycle_banner_timer > 0.0:
-		_cycle_banner_timer -= delta
+		_cycle_banner_timer -= timer_delta
 		if _cycle_banner_timer <= 0.0:
 			_cycle_banner.visible = false
 
 	if _pinned or not visible:
 		return
 	if _fade_timer > 0.0:
-		_fade_timer -= delta
+		_fade_timer -= timer_delta
 		if _fade_timer <= 0.0:
 			_hide_strip()

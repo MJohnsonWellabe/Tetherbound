@@ -300,8 +300,33 @@ func test_cycle_banner_hides_itself_after_its_hold_expires() -> void:
 	var strip := _make_strip()
 	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
 	assert_true(strip._cycle_banner.visible)
-	strip._process(PARTY_STRIP.CYCLE_BANNER_SECONDS + 0.1)
+	# HUD-LAYOUT: a single oversized `delta` no longer collapses the whole
+	# hold in one `_process()` call -- `MAX_TIMER_DELTA` caps what any one
+	# frame can subtract (see that constant's own header for the real bug
+	# this fixes: a slow real frame during a cold scene boot exhausting the
+	# hold before the reveal was ever drawn). Enough calls at the cap to
+	# cover the hold, same as a real slow-but-nonzero framerate would.
+	var frames := int(ceil(PARTY_STRIP.CYCLE_BANNER_SECONDS / PARTY_STRIP.MAX_TIMER_DELTA)) + 1
+	for i in frames:
+		strip._process(PARTY_STRIP.MAX_TIMER_DELTA)
 	assert_false(strip._cycle_banner.visible, "the banner must not linger past its own hold")
+	strip.free()
+
+
+## HUD-LAYOUT's own regression: one abnormally slow frame (a hitch, or the
+## first frame after a heavy scene load -- exactly what a cold Meadows boot
+## produces) must not, by itself, exhaust the whole cycle-banner hold before
+## anyone has a chance to see it. This is the literal bug a real full-world
+## capture caught: `visible=false` on both the banner and the strip at the
+## moment of the shot, despite `flash_cycle()` having just run.
+func test_one_oversized_frame_does_not_hide_the_cycle_banner() -> void:
+	var strip := _make_strip()
+	strip.flash_cycle(1, "Terrapup", "Bramblebun", 2, 5)
+	strip._process(PARTY_STRIP.CYCLE_BANNER_SECONDS + 1.0)
+	assert_true(
+		strip._cycle_banner.visible,
+		"a single oversized frame delta must not by itself exhaust the cycle banner's hold"
+	)
 	strip.free()
 
 
