@@ -56,7 +56,7 @@
       "tools": ["ironwood recipes", "sigils", "riding in earnest", "Tuskroot"],
       "xp_sources": ["regional captains", "ironwood ecology", "optional detours"],
       "temptations": "The Meadowhart cluster up here is the traversal creature met at a level that can actually fight, which is prompt 67's 'traversal must not create a dead slot' -- a mount picked up at level 2 in a level-14 region would have been exactly that dead slot.",
-      "tuning": "Widest band in the chapter (28 minutes of travel by the probe, the longest leg) so the ecology has room to vary without a wall."
+      "tuning": "The corridor's longest single leg (Ironwood grove to the Sigil gate) so the ecology has room to vary without a wall. The 28-minute travel figure this note used to cite came from tools/_probe_pacing.py before its stale site coordinates were fixed; the leg measures ~7 minutes ridden. The team band either side of it did not move -- travel time never fed the level model."
     },
     {
       "id": "band5_stronghold_approach",
