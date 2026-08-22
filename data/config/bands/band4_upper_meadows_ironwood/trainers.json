@@ -106,6 +106,44 @@
       },
       "defeat_flag": "defeated_captain_ridge",
       "rechallenge": false
+    },
+    {
+      "order": 4000,
+      "id": "patrol_ridgeline",
+      "name": "Tether Patrol",
+      "_comment": "GATE-D4/prompt 65's 'at least one meaningful optional trainer... competing for attention with the captain route'. Spec Band 4 names Team Tether patrol camps as part of the region's identity and none existed here -- the only Team Tether personnel in the whole back half of the chapter were the relay's four fighters in Band 3 and the stronghold approach's own patrol in Band 5, so Band 4 read as the one stretch of upper-country road the faction had abandoned. `rank: grunt` matches the relay pickets' own convention (band3_the_river_lock/trainers.json) -- Team Tether ranks reuse the Warden's rig geometry until NP4-rig installs a dedicated grunt body (npc_ranks.json's own header), so this spends no new mesh. Optional and unguarded: no sigil, no flag any other content reads, purely a coins/xp detour off the watchtower spur so a player can walk past it entirely and lose nothing but the fight and the loot.",
+      "rank": "grunt",
+      "position": [
+        -235.0,
+        6470.0
+      ],
+      "facing_deg": -24.9,
+      "_why_here": "The watchtower spur, 46m from captain_ridge (-280,6460) -- the same separation captain_ridge's own `_why_here` measures to captain_riverwatch and calls a distinct place rather than sight-and-prompt range of another fight. Co-sited with the patrol camp prop dressing (props.json order 4000) and the resident galecrest (spawns.json order 4010): the ruin, its garrison, and what they left lying around, in one place rather than three unrelated additions. MEASURED: h=2.42m, 0.73m spread, worst slope 11.5 degrees over a 5m pad (tools/_probe_band4_sites.gd), flattest of five candidates walked along the spur. `facing_deg` copied from captain_ridge's own approach bearing -- both stand on the same spur road and face the same way down it.",
+      "challenge": "patrol_ridgeline_challenge",
+      "defeated": "patrol_ridgeline_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 13
+        },
+        {
+          "species": "galecrest",
+          "level": 14
+        }
+      ],
+      "reward": {
+        "coins": 30,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 35
+      },
+      "defeat_flag": "defeated_patrol_ridgeline",
+      "rechallenge": false
     }
   ]
 }

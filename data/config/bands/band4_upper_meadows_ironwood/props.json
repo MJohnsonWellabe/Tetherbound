@@ -1,4 +1,61 @@
 {
   "_comment": "BAND-SPLIT. Band-local clusters for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
-  "clusters": []
+  "clusters": [
+    {
+      "order": 4000,
+      "name": "ridge_patrol_camp",
+      "_why": "GATE-D4/prompt 65: spec Band 4 names 'ruined watch/occupation traces' and 'Team Tether patrol camps' among the region's regional identity and this band had zero prop clusters authored at package start. Sited on the watchtower spur beside the new patrol trainer (trainers.json order 4000) and 46m from captain_ridge -- the garrison the trainer belongs to, read the same way `old_quarry.gd`'s `quarry_station` and `ranger_camp` clusters read their own sites: a posting left mid-shift, not a stage set. Same prop family both of those already use (D24, one prop family) -- nothing here is new. A crate and barrel for supply, a bag and rope for gear, a whetstone for the same reason the quarry crew left one, and the axe standing in for a Team Tether tool rather than a mining one: the composition differs by what a patrol carries, not by a new mesh.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-236.4, 6472.1],
+          "yaw_deg": -40.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the post's own supply crate, set where a picket would actually stack one -- against the ruin, not in the open"
+        },
+        {
+          "model": "Barrel",
+          "at": [-235.6, 6471.3],
+          "yaw_deg": 10.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a posting nowhere near the river -- set touching the crate, one load rather than a scatter"
+        },
+        {
+          "model": "Bag",
+          "at": [-234.2, 6472.6],
+          "yaw_deg": 95.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "a picket's kit, dropped rather than packed -- the same detail that reads 'abandoned' at the quarry and the ranger camp, told a third time"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-236.9, 6470.5],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "coiled beside the crate -- what tied a watch-line to the ruin above before the ruin stopped being watched"
+        },
+        {
+          "model": "Whetstone",
+          "at": [-234.8, 6470.2],
+          "yaw_deg": -15.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "set down and not picked back up, same reasoning as the quarry crew's own whetstone -- someone left in a hurry, not on schedule"
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [-235.2, 6473.4],
+          "yaw_deg": 70.0,
+          "pitch_deg": -68.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "leaning against the crate, pitched off vertical -- the one tool that names a patrol rather than a dig, the same lean `quarry_station`'s pickaxe uses for the same reason"
+        }
+      ]
+    }
+  ]
 }

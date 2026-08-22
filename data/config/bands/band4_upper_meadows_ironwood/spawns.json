@@ -96,7 +96,830 @@
       ],
       "radius": 18.0,
       "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit."
+    },
+    {
+      "order": 4007,
+      "species": "terrapup",
+      "count": 1,
+      "centre": [
+        -285.0,
+        0.0,
+        5080.0
+      ],
+      "radius": 10.0,
+      "_why": "GATE-D4/prompt 65's 'at least one special encounter'. CORRECTED: this was originally authored as a wild Tuskroot, but Tuskroot is Mudsnout's own evolved form (progression.json's evolution block, species.json's evolves_from) and tests/test_spawns_data.gd::test_no_evolved_form_spawns_wild rightly refuses an evolved form in the wild table -- catching a pre-evolved shortcut is not what a Heartstone bond gate is for. Terrapup is the actual special find: checked against every band's own spawns.json, it is one of exactly three species (with Ripplet and Galewisp) that spawn wild NOWHERE else in the whole chapter -- ground-typed, so it fits the Upper Meadows where Ripplet (water) and Galewisp (better suited to open sky) do not. A single one, alone rather than in a herd, in the same old-growth pocket as the new ironwood stand (harvest.json order 4000-4004) and the trailpup cluster (order 4000 above): a species the player has not seen ANYWHERE in six prior bands, met the way a special encounter should read -- solitary, in cover, not a number in a crowd. Catchable (wild, never a trainer's). MEASURED: h=-3.76m, 0.65m spread, worst slope 5.0 degrees over a 6m pad (tools/_probe_band4_sites.gd) -- flattest of four candidates walked around the grove's southern edge, 84m clear of the trailpup cluster's own radius."
+    },
+    {
+      "order": 4008,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        -260.0,
+        0.0,
+        5220.0
+      ],
+      "radius": 18.0,
+      "time": "night",
+      "_why": "Duskhush is night-gated in Bands 1, 2, 3 and 5 (data/config/bands/*/spawns.json) and was entirely absent from Band 4 -- the one region in the chapter's back half where a player travelling after dark saw nothing different from noon. Same old-growth pocket as the ironwood stand and the Tuskroot above, further along the western swing toward its rejoin at (-330,5310): the grove reads as one place with three different reasons to walk it (a resource, a rare catch, a night species) rather than three separate errands stapled together. Not gated behind anything the captains need -- it is ecology, the same as every other duskhush cluster in the chapter."
+    },
+    {
+      "order": 4009,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [
+        400.0,
+        0.0,
+        6040.0
+      ],
+      "radius": 16.0,
+      "_why": "The field-camp clearing on the eastern loop, between captain_field and captain_ridge (vegetation.json's new camp clearing sits here). A ground species keeps the rest stop from reading as scenery-only, the same reasoning order 4002 gives for siting burrowback beside captain_field's own arena. Also raises Band 4's distinct wild species count from 6 to 8, which matters for prompt 67's roster-pressure validation: a player who has already filled the five in earlier bands still meets NEW options here, not just more of the same six."
+    },
+    {
+      "order": 4010,
+      "species": "galecrest",
+      "count": 1,
+      "centre": [
+        -235.0,
+        0.0,
+        6510.0
+      ],
+      "radius": 14.0,
+      "_why": "The patrol camp's own picket, worked in as ecology rather than duplicated Team Tether personnel: a single aggressive flyer denning in the ruin above the watchtower spur, sharing the ground with the new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) rather than alternating with them. Small count (1) and tight radius so it reads as a resident, not a herd competing with the trainer for the same 20m of ridge."
+    },
+    {
+      "order": 4011,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -0.9,
+        0.0,
+        4758.3
+      ],
+      "radius": 19.9,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4012,
+      "species": "galecrest",
+      "count": 5,
+      "centre": [
+        -34.9,
+        0.0,
+        4794.0
+      ],
+      "radius": 15.1,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4013,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        -57.1,
+        0.0,
+        4846.1
+      ],
+      "radius": 15.1,
+      "time": "night",
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4014,
+      "species": "duskhush",
+      "count": 5,
+      "centre": [
+        -115.9,
+        0.0,
+        4851.4
+      ],
+      "radius": 15.5,
+      "time": "night",
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4015,
+      "species": "trailpup",
+      "count": 5,
+      "centre": [
+        -160.3,
+        0.0,
+        4895.2
+      ],
+      "radius": 18.2,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4016,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        -225.9,
+        0.0,
+        4879.9
+      ],
+      "radius": 19.3,
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4017,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -242.6,
+        0.0,
+        4951.4
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4018,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        -276.0,
+        0.0,
+        4983.8
+      ],
+      "radius": 20.0,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4019,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        -283.5,
+        0.0,
+        5026.4
+      ],
+      "radius": 19.2,
+      "time": "night",
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4020,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        -334.2,
+        0.0,
+        5055.3
+      ],
+      "radius": 15.1,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4021,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        -382.3,
+        0.0,
+        5085.5
+      ],
+      "radius": 15.7,
+      "time": "night",
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4022,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        -434.6,
+        0.0,
+        5115.5
+      ],
+      "radius": 17.1,
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4023,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        -394.9,
+        0.0,
+        5216.3
+      ],
+      "radius": 19.7,
+      "time": "night",
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4024,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        -322.8,
+        0.0,
+        5238.7
+      ],
+      "radius": 18.5,
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4025,
+      "species": "burrowback",
+      "count": 5,
+      "centre": [
+        -329.3,
+        0.0,
+        5310.0
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4026,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        -292.4,
+        0.0,
+        5336.8
+      ],
+      "radius": 19.5,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4027,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        -276.3,
+        0.0,
+        5412.8
+      ],
+      "radius": 18.6,
+      "_why": "GATE-D4-DENSITY (old_growth, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4028,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        -203.4,
+        0.0,
+        5386.6
+      ],
+      "radius": 15.6,
+      "_why": "GATE-D4-DENSITY (old_growth, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4029,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        -158.6,
+        0.0,
+        5415.9
+      ],
+      "radius": 21.0,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4030,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -87.2,
+        0.0,
+        5387.8
+      ],
+      "radius": 19.2,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4031,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [
+        -57.4,
+        0.0,
+        5459.6
+      ],
+      "radius": 16.6,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4032,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [
+        -13.3,
+        0.0,
+        5494.6
+      ],
+      "radius": 22.1,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4033,
+      "species": "meadowhart",
+      "count": 5,
+      "centre": [
+        12.3,
+        0.0,
+        5561.2
+      ],
+      "radius": 16.2,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4034,
+      "species": "mudsnout",
+      "count": 5,
+      "centre": [
+        88.0,
+        0.0,
+        5533.3
+      ],
+      "radius": 22.2,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4035,
+      "species": "meadowhart",
+      "count": 5,
+      "centre": [
+        136.6,
+        0.0,
+        5576.6
+      ],
+      "radius": 21.6,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4036,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        202.0,
+        0.0,
+        5559.9
+      ],
+      "radius": 20.1,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4037,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        227.2,
+        0.0,
+        5639.1
+      ],
+      "radius": 22.1,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4038,
+      "species": "meadowhart",
+      "count": 5,
+      "centre": [
+        268.8,
+        0.0,
+        5668.6
+      ],
+      "radius": 16.7,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4039,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        290.2,
+        0.0,
+        5728.3
+      ],
+      "radius": 21.9,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4040,
+      "species": "galecrest",
+      "count": 5,
+      "centre": [
+        365.0,
+        0.0,
+        5728.0
+      ],
+      "radius": 23.4,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4041,
+      "species": "pipwing",
+      "count": 3,
+      "centre": [
+        395.2,
+        0.0,
+        5771.9
+      ],
+      "radius": 17.7,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4042,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        454.2,
+        0.0,
+        5799.8
+      ],
+      "radius": 22.7,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4043,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        436.2,
+        0.0,
+        5924.7
+      ],
+      "radius": 16.2,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4044,
+      "species": "burrowback",
+      "count": 5,
+      "centre": [
+        379.5,
+        0.0,
+        5961.6
+      ],
+      "radius": 23.4,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4045,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        382.0,
+        0.0,
+        6033.8
+      ],
+      "radius": 16.3,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4046,
+      "species": "trailpup",
+      "count": 5,
+      "centre": [
+        351.1,
+        0.0,
+        6054.8
+      ],
+      "radius": 23.5,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4047,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        322.0,
+        0.0,
+        6116.0
+      ],
+      "radius": 17.4,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4048,
+      "species": "pipwing",
+      "count": 5,
+      "centre": [
+        256.4,
+        0.0,
+        6120.3
+      ],
+      "radius": 23.3,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4049,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        199.6,
+        0.0,
+        6145.2
+      ],
+      "radius": 21.7,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4050,
+      "species": "burrowback",
+      "count": 3,
+      "centre": [
+        143.7,
+        0.0,
+        6139.4
+      ],
+      "radius": 22.7,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4051,
+      "species": "meadowhart",
+      "count": 5,
+      "centre": [
+        111.4,
+        0.0,
+        6214.3
+      ],
+      "radius": 23.9,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4052,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [
+        -5.7,
+        0.0,
+        6322.2
+      ],
+      "radius": 18.7,
+      "_why": "GATE-D4-DENSITY (ridge, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4053,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        -196.0,
+        0.0,
+        6407.5
+      ],
+      "radius": 15.4,
+      "_why": "GATE-D4-DENSITY (ridge, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4054,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        -304.4,
+        0.0,
+        6411.5
+      ],
+      "radius": 19.6,
+      "_why": "GATE-D4-DENSITY (ridge, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4055,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        -242.4,
+        0.0,
+        6548.9
+      ],
+      "radius": 15.8,
+      "_why": "GATE-D4-DENSITY (ridge, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4056,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        -87.3,
+        0.0,
+        6664.6
+      ],
+      "radius": 18.1,
+      "_why": "GATE-D4-DENSITY (ridge, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4057,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        -23.6,
+        0.0,
+        6756.4
+      ],
+      "radius": 17.5,
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4058,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        37.6,
+        0.0,
+        6787.0
+      ],
+      "radius": 15.4,
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4059,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        32.5,
+        0.0,
+        6815.1
+      ],
+      "radius": 15.8,
+      "_why": "GATE-D4-DENSITY (approach, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4060,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [
+        59.9,
+        0.0,
+        6896.2
+      ],
+      "radius": 17.5,
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4061,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        26.1,
+        0.0,
+        6967.5
+      ],
+      "radius": 19.7,
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4062,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        332.1,
+        0.0,
+        5697.4
+      ],
+      "radius": 16.4,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4063,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        400.5,
+        0.0,
+        5781.7
+      ],
+      "radius": 18.7,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4064,
+      "species": "meadowhart",
+      "count": 4,
+      "centre": [
+        377.5,
+        0.0,
+        5855.3
+      ],
+      "radius": 17.1,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4065,
+      "species": "trailpup",
+      "count": 5,
+      "centre": [
+        417.3,
+        0.0,
+        5948.0
+      ],
+      "radius": 17.4,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4066,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        408.0,
+        0.0,
+        5993.1
+      ],
+      "radius": 23.9,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4067,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [
+        335.3,
+        0.0,
+        6017.4
+      ],
+      "radius": 20.6,
+      "_why": "GATE-D4-DENSITY (pasture, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4068,
+      "species": "burrowback",
+      "count": 3,
+      "centre": [
+        318.4,
+        0.0,
+        6079.3
+      ],
+      "radius": 19.6,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4069,
+      "species": "meadowhart",
+      "count": 3,
+      "centre": [
+        287.2,
+        0.0,
+        6118.4
+      ],
+      "radius": 17.3,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4070,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        237.2,
+        0.0,
+        6139.8
+      ],
+      "radius": 17.3,
+      "_why": "GATE-D4-DENSITY (pasture, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4071,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        -14.6,
+        0.0,
+        6280.6
+      ],
+      "radius": 16.9,
+      "_why": "GATE-D4-DENSITY (ridge, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4072,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        -79.8,
+        0.0,
+        6366.9
+      ],
+      "radius": 14.1,
+      "_why": "GATE-D4-DENSITY (ridge, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
+    },
+    {
+      "order": 4073,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        -334.0,
+        0.0,
+        6549.9
+      ],
+      "radius": 15.1,
+      "_why": "GATE-D4-DENSITY (ridge, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for."
+    },
+    {
+      "order": 4074,
+      "species": "pipwing",
+      "count": 2,
+      "centre": [
+        -246.9,
+        0.0,
+        6562.3
+      ],
+      "radius": 16.5,
+      "_why": "GATE-D4-DENSITY (ridge, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour."
     }
   ],
-  "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here."
+  "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",
+  "_comment_density_pass": "GATE-D4-DENSITY, owner directive 2026-08-22 mid-package: 8 clusters/18 creatures over 2240m (later 12/24 after the special-encounter pass above) measured against Pokemon/Palworld/even-Valheim density and found barren by an order of magnitude -- 'far more' than one creature per ~124m, the owner's own words. New target: roughly 55-75 clusters, 200-300 creatures, non-uniform (dense old-growth/high pasture, thinner wind ridge). This band lands at 76 clusters / 272 creatures. Orders 4011-4074 were generated by tools/_gen_band4_density.py rather than hand-placed one at a time -- at this count hand-authoring each with its own paragraph is not the honest use of the time a reviewer would rather see spent verifying the shape than reading prose repeated 64 times. The generator walks the band's own authored spine AND its three loops (wind_ridge_traverse, high_pasture_loop, watchtower_spur -- terrain_playground.json), so off-route loop ground is populated too, not just the spine: prompt 65 wants loops worth the detour, and an empty loop is not one. Roughly 1 cluster in 3-4 sits off the painted route as a habitat pocket (lateral offset 28-55m), the rest on-route with small jitter. Species weighting per zone: old-growth favours trailpup/burrowback/mudsnout with a Duskhush night pocket and a rare Terrapup chance (never Tuskroot -- it is Mudsnout's own evolved form and does not spawn wild, see order 4007's own note); pasture favours meadowhart/burrowback/pipwing; the wind ridge stays a thinner aggressor line (galecrest/pipwing/trailpup only, ~100m spacing against the interior's ~50m) because it is authored as exposed, dangerous high ground, not because it was left unfinished; the run-out to Band 5 uses the same mix as the old-growth at a wider spacing so the handoff between regions stays populated without matching the interior's peak density. Generated centres were checked against the AVOID list (every hand-placed cluster/trainer/prop site above) so nothing stacks exactly on an already-authored site; they were NOT individually ground-probed the way the hand-placed sites above were -- at 64 new sites that is a full day of probe work Terrain3D's own scatter/creature placement already tolerates uneven ground for (the existing scatter and every other band's own bulk wild population is unprobed the same way). Levels resolve from chapter_curve.json as always, never set here. Boot-time/frame-time cost from this density is EXPECTED and is the dedicated streaming lane's problem (distance-based activation on encounter_director.gd/wild_creature.gd), not this file's -- see the owner's own directive."
 }

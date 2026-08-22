@@ -1,4 +1,51 @@
 {
   "_comment": "BAND-SPLIT. Band-local nodes for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
-  "nodes": []
+  "_comment_ironwood_d4": "GATE-D4/prompt 65. Ironwood is Band 4's whole material tier (spec Band 4, `data/recipes/recipes_ironwood.json`) and this file held zero nodes at package start -- the only ironwood anywhere in the chapter was five nodes in `data/config/bands/band2_stone_and_root/harvest.json`, sited around the Burrow Warrens, a Band 2 site the D2 lane owns and this lane does not touch. A player who reaches Band 4's captains without having taken the Warrens spur had no ironwood at all, and one who had could not restock without a ~2km walk back through a region already cleared. These five nodes put the tier where spec Band 4 actually names it: the old-growth on the western swing, the same pocket `spawns.json`'s order-4000 trailpup cluster already sites, so gathering the region's own resource happens inside the region's own old-growth rather than a neighbour's dungeon. MEASURED with `tools/_probe_band4_sites.gd` (heights 1.3-3.8m, worst local slope 5.3-9.1 degrees over a 3m pad -- the five flattest of eight candidates walked across the same old-growth pocket). Model/scale pattern matches band2's own ironwood nodes (`TwistedTree_1/2/3`, ~0.28-0.32) so the two stands read as the same species rather than two different trees that both happen to drop the same item. Amounts and scales TUNABLE.",
+  "nodes": [
+    {
+      "order": 4000,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-355.0, 5045.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.3
+    },
+    {
+      "order": 4001,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-340.0, 5030.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "order": 4002,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-350.0, 5075.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "model_scale": 0.3
+    },
+    {
+      "order": 4003,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-320.0, 5010.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.32
+    },
+    {
+      "order": 4004,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-335.0, 5060.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.28
+    }
+  ]
 }

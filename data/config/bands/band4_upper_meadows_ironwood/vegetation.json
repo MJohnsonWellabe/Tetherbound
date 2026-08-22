@@ -1,0 +1,21 @@
+{
+  "_comment": "BAND-SPLIT-2. `clearings` and `footprints` cut from data/config/vegetation.json, merged back by scripts/data/band_content.gd. `order` equals the index each entry held in the pre-split file for a band that already had one (see band1/band2's own copies of this comment); this band had NONE at package start -- GATE_D_LANE_CONTRACT.md's own baseline table shows band4 at zero authored clearings the same as bands 3 and 5. New entries below take unused numbers in this band's reserved 4000-4999 range.",
+  "_comment_fingerprint_d4": "GATE_D_LANE_CONTRACT.md section 4: scatter_bake.gd's config_fingerprint() does not hash this file, so adding clearings here does NOT invalidate the current bake on its own -- per the contract this lane does not fix that, and does not run the re-bake. The coordinator fixes the fingerprint and runs the single re-bake at integration; until then these clearings are authored correctly but not yet reflected in the served scatter.",
+  "clearings": [
+    {
+      "order": 4000,
+      "x": -235.0,
+      "z": 6470.0,
+      "radius": 13.0,
+      "_why": "The watchtower spur's new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) -- an 11m arena and six ground-hugging props both need scatter off the pad for the same reason every other trainer/cluster site in the chapter gets one (see band1's own clearings[4] on the practice trainer)."
+    },
+    {
+      "order": 4001,
+      "x": 400.0,
+      "z": 6040.0,
+      "radius": 15.0,
+      "_why": "GATE-D4/prompt 65's camp/home rhythm: a real flat pad between captain_field (z=5590) and captain_ridge (z=6460) so a player who has spent both potions on Halder has ground to actually place a Camp buildable on before pressing on to Vess, rather than the rest stop being a suggestion with no clear ground to build it on. Sited on the eastern loop beside the new burrowback cluster (spawns.json order 4009) so the stop is not scenery-only. This does not build a camp -- build_piece.gd's own Camp buildable is the player's, on their own materials; this only keeps the ground clear enough to place one."
+    }
+  ],
+  "footprints": []
+}
