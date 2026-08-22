@@ -196,6 +196,11 @@ func _exercise_world_build(cycle: int) -> void:
 		await process_frame
 	await _tap("interact")
 	var build_menu := await _wait_open_group("build_menu")
+	# Put the hammer away whatever happened next. Left in hand, every later
+	# `interact` in this stress loop opens the catalogue instead of talking to
+	# Bram or using the bed -- `playground_hud.gd::_hammer_opens_the_catalogue()`
+	# reads the equipped tool, not a mode flag.
+	_game.set("equipped_tool", "")
 	if build_menu == null:
 		_fail("world Build cycle %d: the hammer + interact opened nothing" % (cycle + 1))
 		return
@@ -207,7 +212,7 @@ func _exercise_pause_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 110.0))
 	var before := _placed_total()
 	await _tap("game_menu")
-	if not bool(_menu.call("is_open")) or not paused:
+	if not await _settles(func() -> bool: return bool(_menu.call("is_open")) and paused):
 		_fail("pause Build cycle %d: Menu did not open main menu" % (cycle + 1))
 		return
 	var guard := 0
@@ -302,11 +307,11 @@ func _pause_round_trip(context: String) -> void:
 	# open and then reported the shell as broken. Open on Menu, back out on B,
 	# which is the round trip a player actually makes.
 	await _tap("game_menu")
-	if not bool(_menu.call("is_open")) or not paused:
+	if not await _settles(func() -> bool: return bool(_menu.call("is_open")) and paused):
 		_fail("%s: Menu could not reopen pause (%s)" % [context, _diagnostics()])
 		return
 	await _tap("menu_cancel")
-	if bool(_menu.call("is_open")) or paused:
+	if not await _settles(func() -> bool: return not bool(_menu.call("is_open")) and not paused):
 		_fail("%s: B could not close pause (%s)" % [context, _diagnostics()])
 		return
 	await _control_returned(context + " recovery")
@@ -333,6 +338,27 @@ func _tap(action: String) -> void:
 	Input.parse_input_event(up)
 	for i in 5:
 		await process_frame
+
+
+## Wait, bounded, for a tapped press to actually take effect.
+##
+## Asserting on the frame immediately after the release is a race, and it is
+## the reason this file reported "B could not close pause" against a shell that
+## demonstrably opens and closes cleanly: `tools/_probe_pause.gd` drove the
+## same two physical buttons through the same live InputMap and got
+## open=true/paused=true then open=false/paused=false, twice running. The shell
+## is PROCESS_MODE_ALWAYS and closes on its own `_process` turn, which is not
+## guaranteed to be inside the five frames `_tap` happened to wait.
+##
+## Still fails if the state never arrives -- this waits for a verdict, it does
+## not assume one. A pause menu that genuinely would not close still fails here,
+## just after 90 frames instead of 5.
+func _settles(predicate: Callable) -> bool:
+	for _i in 90:
+		if bool(predicate.call()):
+			return true
+		await process_frame
+	return false
 
 
 func _pad_button_for(action: String) -> int:
