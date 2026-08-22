@@ -347,7 +347,9 @@ func _catch_with_real_throws() -> bool:
 		# The old loop therefore launched only on iterations 2/4/6/8 after a miss,
 		# exactly matching the alternating outcomes in the continuous-run log.
 		if not await _open_throw_aim():
-			_fail("catch aim did not reopen after its bounded cooldown")
+			_fail("catch aim did not reopen after launch %d (%s)" % [
+				launches, _why_the_aim_would_not_open(),
+			])
 			return false
 		if not await _aim_camera_at(_wild, 360):
 			_fail("right-stick aim could not line up the real throw reticle")
@@ -425,12 +427,38 @@ func _drain_satchel_to_last_orb() -> int:
 ## focused controller-catching smoke.
 func _open_throw_aim() -> bool:
 	for _attempt in 18:
+		# A fainted target refuses the aim outright -- combat_manager.gd's
+		# `_catch_refusal()`, "<name> is out cold, too late to catch it". That
+		# is not a stuck cooldown and pressing harder will not fix it: your OWN
+		# creature is fighting the Bramblebun while you throw at it (the launch
+		# log shows `first_hit=AllyCreature` for the orbs it intercepts), and
+		# over a long catch it can knock the thing out before you land one. The
+		# encounter director stands it back up after a few seconds, so a player
+		# waits -- and so does this, rather than reporting a cooldown fault for
+		# something that is not one.
+		if _target_is_out_cold():
+			for _i in 240:
+				await physics_frame
+				if not _target_is_out_cold() or not bool(_combat.call("is_fighting")):
+					break
+			continue
 		await _tap_action(THROW_ACTION)
 		for _i in 6:
 			if bool(_combat.call("is_aiming")):
 				return true
 			await physics_frame
 	return false
+
+
+## Is the creature we are throwing at currently fainted?
+##
+## Read off the fight's own enemy record rather than the body, because that is
+## what `combat_manager.gd` consults before it will open an aim.
+func _target_is_out_cold() -> bool:
+	if _combat == null or not bool(_combat.call("is_fighting")):
+		return false
+	var foe: RefCounted = _combat.call("enemy") as RefCounted
+	return foe != null and bool(foe.get("fainted"))
 
 
 ## Drive the right stick until the CAMERA IS ACTUALLY LOOKING AT `target`.
@@ -751,3 +779,19 @@ func _finish_terminal() -> void:
 		for message in _failures:
 			print("gate A opening segment FAIL: %s" % message)
 	quit(0 if _failures.is_empty() else 1)
+
+
+## Why `_open_throw_aim()` gave up, in the game's own terms.
+func _why_the_aim_would_not_open() -> String:
+	if _combat == null:
+		return "no CombatManager"
+	if not bool(_combat.call("is_fighting")):
+		return "the fight had already ended"
+	var foe: RefCounted = _combat.call("enemy") as RefCounted
+	if foe == null:
+		return "the fight has no enemy record"
+	if bool(foe.get("fainted")):
+		return "%s was still out cold after the respawn wait" % str(foe.get("display_name"))
+	if _orbs_held() <= 0:
+		return "the satchel was empty and the floor did not refill it"
+	return "the aim simply never opened; orbs=%d, target upright" % _orbs_held()
