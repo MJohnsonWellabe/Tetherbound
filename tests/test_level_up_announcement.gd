@@ -71,15 +71,18 @@ func test_the_unlock_threshold_is_data_driven() -> void:
 	# Guards the claim the announcement makes. If the threshold moved into code,
 	# the line could report an unlock the player has not actually earned.
 	var cfg := PROGRESSION.config()
-	var trait_cfg: Dictionary = cfg.get("trait", {})
+	# `traits`, plural -- the key `progression.gd::trait_unlocked()` actually
+	# reads. This test asserted `trait` and passed a hand-rolled runner that was
+	# not reporting failures; the real suite caught it.
+	var trait_cfg: Dictionary = cfg.get("traits", {})
 	assert_true(trait_cfg.has("unlock_bond_nodes"),
-		"progression config has no trait.unlock_bond_nodes; the announcement's "
+		"progression config has no traits.unlock_bond_nodes; the announcement's "
 		+ "unlock claim rests on a threshold that is not in data")
 
 
 func test_the_threshold_actually_gates_the_unlock() -> void:
 	var cfg := PROGRESSION.config()
-	var required := int(cfg.get("trait", {}).get("unlock_bond_nodes", 5))
+	var required := int(cfg.get("traits", {}).get("unlock_bond_nodes", 5))
 	assert_false(PROGRESSION.trait_unlocked(required - 1, cfg),
 		"trait_unlocked() reports true one node BELOW the configured threshold")
 	assert_true(PROGRESSION.trait_unlocked(required, cfg),
