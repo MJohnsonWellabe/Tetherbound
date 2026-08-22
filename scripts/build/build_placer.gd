@@ -29,6 +29,7 @@ const CAMP := preload("res://scripts/build/camp.gd")
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
@@ -635,6 +636,11 @@ func _place(game: Node, armed: String) -> void:
 	# location; costs and registration still happen once per fresh Place edge.
 	# Only explicit Cancel or choosing another catalogue entry clears/replaces it.
 	AUDIO_CUES.play(&"build_place")
+	# GATEB-FLAGS: `home_built`. Checked after every real placement, not just
+	# ones for a "home" piece -- cheap (a handful of dictionary counts) and it
+	# is the only way an out-of-order build (structure piece before the last
+	# required one) still gets recognised the moment it becomes true.
+	HOME_PROGRESS.maybe_set_home_built(game)
 
 
 ## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called
@@ -670,6 +676,10 @@ func restore_from_game(game: Node) -> void:
 		placed.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
 		# R3.1 VERSION 2: buildings placed before yaw was tracked default to 0.
 		placed.rotation.y = deg_to_rad(float(record.get("yaw_deg", 0.0)))
+	# GATEB-FLAGS: an older save whose player already met the piece count
+	# before this flag existed must resolve to it being done, not stuck
+	# re-asking for a home that is already standing.
+	HOME_PROGRESS.maybe_set_home_built(game)
 
 
 ## R3.1-remainder. The reverse of the `state_data` half of restore: called by
