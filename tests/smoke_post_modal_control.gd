@@ -185,10 +185,19 @@ func _exercise_bed(cycle: int) -> void:
 func _exercise_world_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 80.0))
 	var before := _placed_total()
-	await _tap("build_open")
+	# CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Build
+	# hammer is the same pattern: select it, press interact, you are in build
+	# mode. `build_open` loses its button." It is keyboard-only now, so tapping
+	# it on a pad opened nothing and this reported Build as broken. Equip the
+	# hammer and press interact, which is `playground_hud.gd::
+	# _hammer_opens_the_catalogue()` -- the real player route.
+	_game.set("equipped_tool", "hammer")
+	for _i in 4:
+		await process_frame
+	await _tap("interact")
 	var build_menu := await _wait_open_group("build_menu")
 	if build_menu == null:
-		_fail("world Build cycle %d: build_open opened nothing" % (cycle + 1))
+		_fail("world Build cycle %d: the hammer + interact opened nothing" % (cycle + 1))
 		return
 	await _tap("ui_accept")
 	await _finish_placement("world Build cycle %d" % (cycle + 1), before)
@@ -197,9 +206,9 @@ func _exercise_world_build(cycle: int) -> void:
 func _exercise_pause_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 110.0))
 	var before := _placed_total()
-	await _tap("menu_cancel")
+	await _tap("game_menu")
 	if not bool(_menu.call("is_open")) or not paused:
-		_fail("pause Build cycle %d: B did not open main menu" % (cycle + 1))
+		_fail("pause Build cycle %d: Menu did not open main menu" % (cycle + 1))
 		return
 	var guard := 0
 	while str(_menu.call("current_tab_id")) != "build" and guard < 8:
@@ -287,9 +296,14 @@ func _pause_round_trip(context: String) -> void:
 	if paused or INPUT_OWNER.current(self) != null:
 		_fail("%s: cannot begin pause check (%s)" % [context, _diagnostics()])
 		return
-	await _tap("menu_cancel")
+	# CONTROLLER-MAP: "Menu | game menu", "B | hotbar 1" and, in a menu, back.
+	# B never OPENED the pause shell after the remap -- `game_menu` is button 6
+	# (Menu/Start) and `menu_cancel` is B, so this asked the wrong button to
+	# open and then reported the shell as broken. Open on Menu, back out on B,
+	# which is the round trip a player actually makes.
+	await _tap("game_menu")
 	if not bool(_menu.call("is_open")) or not paused:
-		_fail("%s: B could not reopen pause (%s)" % [context, _diagnostics()])
+		_fail("%s: Menu could not reopen pause (%s)" % [context, _diagnostics()])
 		return
 	await _tap("menu_cancel")
 	if bool(_menu.call("is_open")) or paused:

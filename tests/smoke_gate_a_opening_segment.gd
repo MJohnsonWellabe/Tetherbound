@@ -386,37 +386,57 @@ func _open_throw_aim() -> bool:
 	return false
 
 
+## Drive the right stick until the CAMERA IS ACTUALLY LOOKING AT `target`.
+##
+## The error minimised here is the angle between the aim camera's own forward
+## vector and the direction from that camera to the body -- which is precisely
+## the quantity `throw_aim.gd::launch_assist_diagnostics()` reports as
+## `reticle`, and precisely what decides whether a throw gets launch assist.
+##
+## The previous version compared an angle computed FROM THE CAMERA'S POSITION
+## against `_rig.yaw`, the rig PIVOT's yaw. Those are the same number only when
+## the camera sits on the pivot. It does not: `try_begin_aim()` swaps the rig
+## to `catching.json`'s over-the-shoulder aim config, which offsets the camera
+## sideways from the pivot. So the loop drove a systematically wrong error to
+## zero, declared itself aimed within 2 degrees, and the game then measured the
+## reticle 1.4 body-radii off the creature and refused the assist
+## (`reason=reticle_outside_body`). That is the whole of the "eight launches, 1
+## strike, 7 misses" signature the Gate B evidence doc filed as a catching
+## defect: the throws were aimed at nothing, by the harness, not by the player.
 func _aim_camera_at(target: Node3D, budget: int) -> bool:
 	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null:
 		return false
-	var last_yaw_error := 0.0
-	var last_pitch_error := 0.0
+	var last_error := 0.0
 	for _i in budget:
-		# Put the reticle on the body visible now, through the raw right-stick
-		# path. Production owns the bounded wind-up/flight prediction; teaching
-		# this evidence harness to calculate its own lead both hid the controller
-		# burden and risks double-leading once launch assist is active.
+		# Re-read the live camera transform every frame: moving the stick moves
+		# the camera, so an error computed once is stale immediately.
 		var to := (target.call("centre") as Vector3) - camera.global_position
-		var desired_yaw := atan2(-to.x, -to.z)
-		var desired_pitch := atan2(to.y, maxf(Vector2(to.x, to.z).length(), 0.01))
-		var yaw_error := wrapf(desired_yaw - float(_rig.get("yaw")), -PI, PI)
-		var pitch_error := desired_pitch - float(_rig.get("pitch"))
-		last_yaw_error = yaw_error
-		last_pitch_error = pitch_error
-		if absf(yaw_error) < deg_to_rad(2.0) and absf(pitch_error) < deg_to_rad(2.0):
+		if to.length() < 0.01:
+			_stop_right_stick()
+			return true
+		var forward := -camera.global_transform.basis.z
+		var wanted := to.normalized()
+		# Split the one angular error into the two axes the sticks drive, in
+		# CAMERA space, so each stick is corrected by its own component.
+		var right := camera.global_transform.basis.x
+		var up := camera.global_transform.basis.y
+		var yaw_error := atan2(wanted.dot(right), wanted.dot(forward))
+		var pitch_error := atan2(wanted.dot(up), wanted.dot(forward))
+		last_error = rad_to_deg(forward.angle_to(wanted))
+		if absf(yaw_error) < deg_to_rad(1.0) and absf(pitch_error) < deg_to_rad(1.0):
 			_stop_right_stick()
 			return true
 		# The target keeps circling while aim owns the trainer. Full deflection is
 		# intentional here: proportional easing fell behind the live target even
 		# though the stick was correctly mapped, creating a harness-only miss.
-		var yaw_strength := 1.0 if absf(yaw_error) >= deg_to_rad(2.0) else 0.0
-		var pitch_strength := 1.0 if absf(pitch_error) >= deg_to_rad(2.0) else 0.0
-		_send_axis(JOY_AXIS_RIGHT_X, -signf(yaw_error) * yaw_strength)
+		var yaw_strength := 1.0 if absf(yaw_error) >= deg_to_rad(1.0) else 0.0
+		var pitch_strength := 1.0 if absf(pitch_error) >= deg_to_rad(1.0) else 0.0
+		_send_axis(JOY_AXIS_RIGHT_X, signf(yaw_error) * yaw_strength)
 		_send_axis(JOY_AXIS_RIGHT_Y, -signf(pitch_error) * pitch_strength)
 		await physics_frame
 	_stop_right_stick()
-	print("aim convergence stopped at yaw %.2f°, pitch %.2f°" % [rad_to_deg(last_yaw_error), rad_to_deg(last_pitch_error)])
+	print("aim convergence stopped %.2f° off the body" % last_error)
 	return false
 
 

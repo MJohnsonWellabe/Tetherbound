@@ -86,10 +86,12 @@ static func gather(item_id: String, base_amount: int, inventory: RefCounted, ite
 ## swing and a press still cannot disagree about yield, tool gating,
 ## durability or respawn.
 ##
-## Returns true only when the swing will actually reach `node`. A press that
-## started an animation resolving against nothing would be strictly worse than
-## the silent yield it replaced, so the caller keeps its direct-gather path for
-## bare hands, for the wrong tool, and for a node outside the swing's own cone.
+## Returns true only when a swing actually started, and that swing is aimed at
+## `node` itself (`tool_hold.gd::swing_at()`), so it cannot resolve against
+## nothing or against a neighbour. The caller keeps its direct-gather path for
+## bare hands and for a player with no tool_hold at all -- a press that started
+## an animation and yielded nothing would be strictly worse than the silent
+## yield it replaced.
 static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
 	if node == null or game == null:
 		return false
@@ -99,12 +101,10 @@ static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
 	if player == null:
 		return false
 	var hold: Node3D = player.get("tool_hold")
-	if hold == null or not hold.has_method("swing") or not hold.has_method("would_connect"):
+	if hold == null or not hold.has_method("swing_at"):
 		return false
 	if bool(hold.call("is_swinging")):
 		# Already mid-swing: that swing resolves on its own and will gather
-		# this node itself. Yielding here as well would double the press.
+		# something itself. Yielding here as well would double the press.
 		return true
-	if not bool(hold.call("would_connect", node)):
-		return false
-	return bool(hold.call("swing"))
+	return bool(hold.call("swing_at", node))

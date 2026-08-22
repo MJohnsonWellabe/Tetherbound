@@ -70,6 +70,10 @@ var _prop_root: Node3D = null
 var _prop: Node3D = null
 var _swing_left: float = 0.0
 var _swing_resolved: bool = true
+## Set by `swing_at()`. When a swing was started BY a node's own interact
+## prompt, that node is what the axe hits -- see `swing_at()` for why this
+## does not go back through the cone search.
+var _swing_target: Node = null
 
 
 func _process(delta: float) -> void:
@@ -104,23 +108,27 @@ func prop_node() -> Node3D:
 	return _prop
 
 
-## Would a swing started right now resolve against `node`?
+## Swing at ONE named node, because its own interact prompt asked for it.
 ##
-## The identical cone test `_resolve_swing()` runs, asked ahead of the swing
-## instead of after it. `harvest_logic.gd::swing_answers_the_prompt()` needs
-## this: it turns an interact press into a visible swing, and it must not do
-## that unless the swing will actually reach what the player pressed on -- an
-## animation that resolves against nothing is worse than the silent yield it
-## would be replacing.
-func would_connect(node: Node3D) -> bool:
-	if node == null or not is_instance_valid(node) or _equipped.is_empty():
+## OP21-24: on a pad, X gathers through the interact prompt, and `use_tool` --
+## the only input that ever called `swing()` -- kept just its mouse button when
+## CONTROLLER-MAP moved chopping onto X. So the axe never moved on the device
+## the game is played on. `harvest_logic.gd::swing_answers_the_prompt()` turns
+## that press into a real swing, and this is the entry point it uses.
+##
+## The target is remembered rather than re-found. A first attempt gated the
+## press on the cone search below and it refused at 1.2m with the axe in hand,
+## because the prompt and the cone do not agree about facing: the prompt has
+## its own rule (`interactable.gd`) and the cone has another
+## (`_facing_direction()` off the Model's +Z). Two rules for one question is
+## how this exact class of bug keeps getting paid for here. The player pressed
+## the prompt on THAT node, so that node is what the swing hits, and the cone
+## search stays what it has always been -- the answer for a swing nobody aimed.
+func swing_at(node: Node) -> bool:
+	if node == null or not is_instance_valid(node) or not swing():
 		return false
-	var body := get_parent() as Node3D
-	if body == null:
-		return false
-	return COMBAT_MATH.in_hit_cone(
-		body.global_position, _facing_direction(body), node.global_position,
-		SWING_REACH, SWING_ARC_DEGREES)
+	_swing_target = node
+	return true
 
 
 ## Begin a swing. Refused (returns false) with nothing in hand or with one
@@ -224,6 +232,15 @@ func _find_player_skeleton() -> Skeleton3D:
 ## through the node's OWN interaction contract so a swing and the interact
 ## prompt can never disagree about what a node yields.
 func _resolve_swing() -> void:
+	# A swing the player aimed by pressing a prompt resolves against that node
+	# and nothing else. Cleared here so the next unaimed swing searches again.
+	var aimed := _swing_target
+	_swing_target = null
+	if aimed != null and is_instance_valid(aimed) and aimed.has_method("gather"):
+		aimed.call("gather", _equipped)
+		swing_connected.emit(aimed)
+		return
+
 	var body := get_parent() as Node3D
 	if body == null:
 		return
