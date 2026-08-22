@@ -219,7 +219,7 @@ const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
 ## caption has real room at this font size; the satiety bar and its value
 ## label both derive their own x/width FROM this constant already, so
 ## nothing downstream needed a second fix.
-const VITALS_CAPTION_WIDTH := 92.0
+const VITALS_CAPTION_WIDTH := 104.0
 const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
 const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value

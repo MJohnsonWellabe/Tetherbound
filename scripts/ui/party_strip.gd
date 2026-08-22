@@ -68,11 +68,13 @@ const UNSELECTED_MODULATE := 0.78
 const VACANT_MODULATE := 0.62
 const SELECTED_MODULATE := 1.0
 
-## The KO badge's own `self_modulate.a`, exactly reciprocal to
-## `FAINTED_MODULATE` -- see `_build_row()`'s own comment on the badge for
-## why this constant, not a guess, is correct: `KO` only ever shows while the
-## row's modulate is exactly `FAINTED_MODULATE`, so multiplying by its
-## reciprocal here always lands back on a full 1.0 final alpha.
+## The KO badge's own `modulate.a`, exactly reciprocal to `FAINTED_MODULATE`
+## -- see `_build_row()`'s own comment on the badge for why this constant,
+## not a guess, is correct AND why it has to be `modulate` (which cascades to
+## the badge's own child label) rather than `self_modulate` (which does not):
+## `KO` only ever shows while the row's modulate is exactly
+## `FAINTED_MODULATE`, so multiplying by its reciprocal here always lands
+## back on a full 1.0 final alpha for both the badge and its text.
 const KO_BADGE_MODULATE_COMPENSATION := 1.0 / FAINTED_MODULATE
 
 ## How far the strip slides while revealing, in local pixels. Small on
@@ -160,7 +162,7 @@ var _ko_labels: Array[Label] = []
 ## The badges wrapping `_ko_labels` -- see `_build_row()`'s own comment;
 ## `visible` toggles here, not on the label directly, since the badge is what
 ## carries the `self_modulate` compensation.
-var _ko_badges: Array[Panel] = []
+var _ko_badges: Array[PanelContainer] = []
 var _rest_labels: Array[Label] = []
 var _hp_bars: Array[ProgressBar] = []
 var _hp_fills: Array[StyleBoxFlat] = []
@@ -290,7 +292,13 @@ func _build() -> void:
 	# shape/tint as the header's own box so the two read as one element that
 	# grew, not two unrelated widgets; the RichTextLabel's own `normal`
 	# background stylebox is enough -- no extra Panel/Container needed.
-	var banner_box := UI_TOKENS.panel_box(UI_TOKENS.BG_DEEP, Color(UI_TOKENS.TEAL, 0.85))
+	# Fully opaque background, not `BG_DEEP`'s own 0.90 alpha: the banner
+	# renders on top of (and, while docked, exactly over) the header's own
+	# bright `TEAM n / 5` text -- a real render with the header's default
+	# alpha showed that text ghosting through the plate at zoom, since the
+	# whole point of docking here is for the banner to fully replace the
+	# header while it shows, not layer over it.
+	var banner_box := UI_TOKENS.panel_box(Color(UI_TOKENS.BG_DEEP, 1.0), Color(UI_TOKENS.TEAL, 0.85))
 	banner_box.content_margin_left = 12.0
 	banner_box.content_margin_top = 4.0
 	banner_box.content_margin_right = 12.0
@@ -457,13 +465,30 @@ func _build_row(slot_index: int) -> PanelContainer:
 	# fainted entry -- exactly the state "KO" exists to announce, which made
 	# the single most important status word in the roster its LEAST emphatic
 	# one, for a compositing reason rather than a font-size one. A solid
-	# `chip_box`-shaped backing plus `self_modulate` compensation
+	# `chip_box`-shaped backing plus `modulate` compensation
 	# (`KO_BADGE_MODULATE_COMPENSATION`, below) makes the badge read at full
-	# strength regardless of the row's own fade -- the same self_modulate
-	# technique any Godot node uses to opt a child out of a parent's `modulate`
-	# without touching the parent's own dimming (which every other element in
-	# a fainted row still correctly wants).
-	var ko_badge := Panel.new()
+	# strength regardless of the row's own fade.
+	#
+	# `modulate`, not `self_modulate`: a first version of this used
+	# `self_modulate`, which only affects a node's OWN drawing and does NOT
+	# cascade to children -- a real render still showed the badge's child
+	# `ko_label` text at the row's dim 0.4 alpha, because `self_modulate`
+	# never touched it at all. `modulate` cascades multiplicatively to every
+	# descendant the same way the row's own dimming does, so it both lifts
+	# the badge's own panel AND the label text drawn inside it back to a
+	# combined 1.0.
+	# `PanelContainer`, not a bare `Panel`: a `Panel` reports a (0, 0) minimum
+	# size and never auto-sizes to its child the way a Container does, so
+	# inside `level_row`'s `HBoxContainer` it was allocated essentially no
+	# area at all -- the label still drew (a `Control` draws itself at its
+	# own computed rect regardless of its parent's), but the red backing box
+	# behind it had almost no visible rect to paint. A real render caught
+	# this directly: sampling pixels around the "KO" text found plain grass
+	# green, not `UI_TOKENS.DANGER`. `PanelContainer` sizes itself to its
+	# child plus the stylebox's own content margins, the same way every
+	# other badge/chip shape in this codebase gets its background from its
+	# content instead of a hand-measured size.
+	var ko_badge := PanelContainer.new()
 	ko_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var ko_badge_box := StyleBoxFlat.new()
 	ko_badge_box.bg_color = UI_TOKENS.DANGER
@@ -481,7 +506,7 @@ func _build_row(slot_index: int) -> PanelContainer:
 	# that same state (see its own header) -- so a constant reciprocal here
 	# is exact, not a guess: 0.4 (parent) * 2.5 (this) = 1.0 final alpha,
 	# every time the badge is actually visible.
-	ko_badge.self_modulate.a = KO_BADGE_MODULATE_COMPENSATION
+	ko_badge.modulate.a = KO_BADGE_MODULATE_COMPENSATION
 	ko_badge.visible = false
 	_ko_badges.append(ko_badge)
 	level_row.add_child(ko_badge)
@@ -563,6 +588,14 @@ func flash_cycle(direction: int, previous_label: String, next_label: String,
 		CYCLE_POSITION_FONT_SIZE, UI_TOKENS.TEXT_SECONDARY.to_html(false), position_1based, total,
 	]
 	_cycle_banner.visible = true
+	# HUD-EMPHASIS: the banner is docked directly over the header (see
+	# `_build()`'s own comment on `_cycle_banner.position`) and its plate is
+	# fully opaque -- but a real render still showed "TEAM n / 5" ghosting
+	# through at zoom regardless, which a compositing z-order/alpha fix alone
+	# did not fully explain. Hiding the header's own label outright while the
+	# banner shows is the deterministic fix: there is nothing left underneath
+	# to bleed through, however the plate itself ends up compositing.
+	_count_label.visible = false
 	_cycle_banner_timer = CYCLE_BANNER_SECONDS
 
 
@@ -773,6 +806,10 @@ func _process(delta: float) -> void:
 		_cycle_banner_timer -= timer_delta
 		if _cycle_banner_timer <= 0.0:
 			_cycle_banner.visible = false
+			# HUD-EMPHASIS: undo flash_cycle()'s own header hide -- see that
+			# function's comment for why the header label is hidden while the
+			# banner shows.
+			_count_label.visible = true
 
 	if _pinned or not visible:
 		return

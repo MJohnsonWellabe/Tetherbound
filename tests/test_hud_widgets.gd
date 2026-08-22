@@ -336,6 +336,34 @@ func test_fainted_entry_dims_and_tints_its_hp_bar_danger() -> void:
 	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.FAINTED_MODULATE, 0.001,
 		"a fainted creature should read as dimmed even while selected")
 	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.DANGER, "a fainted creature's hp bar should be danger-tinted")
+
+	# HUD-EMPHASIS regression guard: a first version of this fix compensated
+	# with `self_modulate`, which does not cascade to a node's own children --
+	# a real render still showed the KO badge's own text at the row's dim
+	# 0.4 alpha despite the badge's panel itself reading correctly. `modulate`
+	# is required specifically because it DOES cascade to the label inside
+	# the badge; asserting the property name indirectly (via the actual
+	# combined alpha the row * badge chain produces) is what would have
+	# caught the self_modulate mistake, since `self_modulate` alone would
+	# have let this same assertion pass for the badge's own rect while the
+	# text inside it stayed dim.
+	assert_true(strip._ko_badges[0].visible, "KO badge must be visible on a fainted entry")
+	assert_almost_eq(
+		strip._rows[0].modulate.a * strip._ko_badges[0].modulate.a, 1.0, 0.001,
+		"the KO badge's own modulate must exactly cancel the row's fainted dimming, not just approximate it"
+	)
+	# HUD-EMPHASIS regression guard #2: a real render also caught the badge
+	# itself painting essentially nothing -- a bare `Panel` reports a (0, 0)
+	# minimum size and never auto-sizes to its child inside `level_row`'s
+	# `HBoxContainer`, so the label still drew (a `Control` draws at its own
+	# rect regardless of its parent's) while the red backing box behind it
+	# had almost no rect to paint (pixel-sampled as plain grass green, not
+	# `UI_TOKENS.DANGER`, in the actual capture). `PanelContainer` is what
+	# makes the badge size itself to its content; asserting the class
+	# directly is what would have caught the `Panel` mistake before a render
+	# had to.
+	assert_true(strip._ko_badges[0] is PanelContainer,
+		"the KO badge must be a PanelContainer so it sizes itself to its label -- a bare Panel paints nothing")
 	strip.free()
 
 
