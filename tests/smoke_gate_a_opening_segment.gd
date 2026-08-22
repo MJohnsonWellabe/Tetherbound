@@ -377,6 +377,14 @@ func _catch_with_real_throws() -> bool:
 		# The old loop therefore launched only on iterations 2/4/6/8 after a miss,
 		# exactly matching the alternating outcomes in the continuous-run log.
 		if not await _open_throw_aim():
+			# The fight can end DURING those attempts -- the ally is still
+			# swinging while the aim is being asked for -- and that is the same
+			# "they won it instead" case the top of this loop already handles.
+			# Route back there rather than reporting a broken aim: the previous
+			# version checked only at the loop top, so a knockout that landed a
+			# few frames later failed the run for a beat working as designed.
+			if not bool(_combat.call("is_fighting")):
+				continue
 			_fail("catch aim did not reopen after launch %d (%s)" % [
 				launches, _why_the_aim_would_not_open(),
 			])
