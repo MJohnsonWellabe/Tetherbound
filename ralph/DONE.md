@@ -75,23 +75,41 @@ silently dropped. `south_bridge_grunt` (order 1000) already sits at the far
 end as the band's second trainer beat; the 56 new wild clusters are what now
 fill the 1300m between them.
 
-Blind visual pass run against `trail_camp` (`tools/capture_trail_camp.gd`,
-two frames in `shots/trail_camp/`). No isolated sub-agent tool was available
-in this session to run `.claude/skills/visual-judge` truly blind, so the
-lane reviewed the frames itself against the skill's own rubric and the two
-references -- a real limitation, stated here rather than silently either
-skipped or presented as a genuine blind pass. Verdict: fails both bar
+Blind visual pass on `trail_camp`, round 1 (self-reviewed -- no isolated
+sub-agent tool was available in this session to run `.claude/skills/
+visual-judge` truly blind, stated here as a real limitation rather than
+silently skipped or presented as genuine). Verdict: fails both bar
 questions. The Bag/Crate_Wooden pair reads as one indistinct lump next to
-the barrel rather than three legible props; there is no campfire/bedroll
-asset in the installed prop family so the site composes a supply cache, not
-a camp; and both frames inherit the whole playground's flat, low-density
-baseline lighting/ground, well short of the key art and Palworld references
-on saturation and depth. The prop-legibility and camp-vs-cache gaps are this
-cluster's own and are fixable by composition; the flat lighting/ground
-density is the shared playground baseline, out of one prop cluster's reach.
-Not re-iterated past round 1 -- no fire/bedroll asset exists to fix the
-camp-identity defect, and the baseline lighting is a whole-corridor issue,
-so a second render of the same three props would not move either.
+the barrel; no campfire/bedroll asset in the installed prop family so the
+site composes a supply cache, not a camp; flat baseline lighting/ground.
+
+Round 2: the Gate-D coordinator dispatched the actual independent critic
+against round 1's frames, which agreed on both bar questions but overturned
+this lane's own read of *why*: the build ships
+`assets/props/quaternius_survival/Bonfire.obj` plus the full Bench/Stool/
+log/Backpack/RockPath/scatter sets, none of which round 1 used -- "this
+scene has not hit its asset ceiling, it has barely used its asset floor."
+Reachable work, not a `BLOCKED.md` entry. `scripts/world/props.gd` only ever
+loaded a bare filename as `.gltf` under one folder (`quaternius_fantasy`),
+so those assets were unreachable from `props.json` at all -- extended with
+an optional `dir` key plus `.glb`/`.obj`-as-Mesh fallbacks (backward
+compatible; every pre-existing entry keeps its old behaviour exactly).
+`scripts/world/campfire_glow.gd` (new) gives the fire a flickering
+OmniLight3D, flame billboards, embers and a smoke column -- the same
+radial-gradient-texture technique `torch_prop.gd` already proved, since the
+fire mesh itself carries no emissive material (`Bonfire*.mtl`: `Ke 0 0 0`
+throughout). `trail_camp` rebuilt from 3 props in a line to 14 arranged in a
+ring around the fire (two different seats, two loose logs, a second pack, a
+RockPath stone approach standing in for a proper worn-dirt path, which
+touching `terrain_playground.json` would need and no lane may do). The
+barrel was measured (not eyeballed): raw AABB 0.898m tall at scale 1.0 --
+already the ~0.9m the critique asked for; round 1's oversized read was
+camera framing (close, low, beside the Bag prop), not a wrong scale value.
+
+Round 2's frames are rendered and pushed; the independent critic's verdict
+on them had not come back as of this entry. See this branch's own report to
+the coordinator for the live status -- do not treat this DONE.md entry as
+the final word on whether round 2 passed.
 
 Boot/frame-time cost of the density raise is expected and is not this
 lane's problem to solve -- GATE_D coordinator is dispatching a dedicated
