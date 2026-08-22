@@ -176,16 +176,97 @@ called a defect, but it is the one gap in the audit.
 
 ---
 
-## 5. Still to run
+## 5. The fresh-save evidence run
 
-The fresh-save-to-tournament evidence run itself. The harness exists on
-integration-3 (`tests/smoke_gate_a_opening_segment.gd --gate-a-continuous-core`:
-title → new game → wake → Grandpa → starter and naming → house exit → wild
-fight → real orb catch → village and material gathering → paid house build and
-dismantle), and the merged worktree is imported and ready to run it followed by
-the bracket.
+Run on the merged tree (integration-3 + TOURNAMENT-1 + this branch) with
+`tests/smoke_gate_a_opening_segment.gd --gate-a-continuous-core`, which drives
+real joypad events through the live InputMap per the owner directive's
+verification section.
 
-One thing that run cannot honestly claim: the seam between "team caught" and
-"team at the entry threshold" is set up rather than played, because raising
-three creatures to level 6 through real fighting is an hour of simulated play,
-not a smoke test. That seam is named here rather than papered over.
+**It does not currently reach a first catch.**
+
+```
++67.64s  starter selected and named
++72.11s  usable house/front doorway exited
++93.10s  tutorial Bramblebun combat entered
++100.29s Bramblebun naturally weakened to 28/124 HP
+         launch 1: eligible, STRIKE -- no catch
+         launches 2-8: reticle_outside_body / line_of_sight_blocked
+FAIL: eight natural weakened-target launches produced 1 strike, 7 misses, no catch
+```
+
+Everything before the catch works: the title, a fresh save, the wake, Grandpa,
+the starter and naming, the usable front door, the walk out, a natural wild
+encounter, and weakening the target through real combat. The failure is at the
+throw: after the first launch the reticle reads 1.24, 1.36, 1.55 and 0.81
+against a 0.600 body radius, so the harness is not re-converging on a creature
+that has moved.
+
+**This is not yet proof of a defect.** This box is software-rendered with
+different frame timing from CI, and integration-3 presumably went green there.
+Distinguishing "the catch beat is fragile" from "this environment throws the
+aim off" needs a real CI run on a `ralph/**` branch. Until that runs, the
+honest statement is: **nobody has yet walked the Gate B path end to end**, and
+the last place it stopped is the first catch.
+
+### A test fragility found on the way
+
+The first attempt failed at the title with "Start New Game never reached the
+configured Meadows world", which was misleading. `title_screen.gd::
+_on_new_pressed()` checks for existing saves and shows a "Start a fresh game?"
+confirmation whenever any exist -- and the harness has no answer for it, so it
+waits out its 2400-frame budget and reports a load failure.
+
+Earlier runs on this machine had written an autosave into `user://`, which is
+what triggered it. CI never sees this because CI starts with an empty save
+directory. Two consequences worth acting on:
+
+* the harness should answer that confirmation, since a returning player meets
+  it every time -- as written, the fresh-save path is only ever exercised in
+  the one case a returning player never hits;
+* an evidence run has to start from a known-clean `user://` or it is not a
+  fresh save at all.
+
+---
+
+## 6. Still open before Gate B can be called done
+
+1. **Nothing is on `main`.** TOURNAMENT-1, integration-3 and this branch are
+   three unmerged branches, and the Gate B objective chain is split across two
+   of them. Gate B cannot be evaluated on `main` today.
+2. **The fresh-save path stops at the first catch** (above), and needs a CI
+   run to say whether that is real.
+3. **`opening:beat:road` has no writer** -- the chain's first objective, the
+   first line a new player is shown.
+4. **Save/load across the bracket is untested**, which prompt 26 requires by
+   name: reloading mid-bracket must not duplicate rewards or regress the
+   objective.
+5. **The post-tournament handoff is unproven** end to end: grunt fight ->
+   `south_bridge_key` -> gate opens -> objective advances.
+6. **"Enough nearby creatures to prepare naturally" is unproven.** The bracket
+   smoke BUILDS a qualifying team; nobody has shown a player can reach the
+   entry threshold through ordinary play in the opening area. That is a named
+   Gate B pass criterion, not a nicety.
+7. **Both blind visual passes answered no to both bar questions**, and the
+   tournament venue carries no event dressing and no creature in frame.
+8. **None of this has run in real CI** -- `claude/**` does not trigger
+   `ci.yml`.
+
+### And one decision that is not an engineering call
+
+**The creature-condition gate is not built.** The owner's original RG19 words
+were that entrants must be "well rested, well fed, and happy", and prompt 26
+requires eligibility to check exactly that from one shared source. What
+shipped checks party size >= 3 and level >= 6; there is no rested/fed/happy
+model anywhere in the tree. The 2026-08-22 directive re-specified the
+tournament in detail and is SILENT on condition rather than contradicting it.
+
+It matters beyond the gate: condition is what would give the five-creature cap
+and D29's satiety a reason to matter early, which `ralph/BACKLOG.md`'s own
+RG19 entry argues is worth more than the tournament itself. Three ways to go,
+and picking one is the owner's:
+
+* build it (spec, model, feeding, UI, gate) -- real work, and it changes what
+  Gate B means;
+* drop it deliberately, and record that party size and level superseded it;
+* defer it to Gate C and ship the tournament as it stands.
