@@ -331,6 +331,7 @@ func _bring_the_team_into_condition() -> void:
 	if food.is_empty():
 		_fail("berries carry no creature_food block; there is nothing to feed the team")
 		return
+	var rested := 0
 	for i in int(party.call("size")):
 		var creature: RefCounted = party.call("at", i)
 		if creature == null:
@@ -339,12 +340,25 @@ func _bring_the_team_into_condition() -> void:
 		for _bite in 12:
 			if not bool(CONDITION.feed(creature, cfg, food).get("accepted", false)):
 				break
-		creature.set("resting", true)
-	var slept: int = int(_game.call("complete_creature_bed_rests"))
-	if slept <= 0:
-		_fail("nobody completed a night's rest; the creature bed path did not run")
+		# The night in the bed, through the same call
+		# `Game.complete_creature_bed_rests()` makes when the player sleeps.
+		#
+		# Deliberately NOT by setting `resting` on the party and calling that
+		# method: `creature_instance.gd` says the bed system owns that flag and
+		# party.gd only respects it, and setting it on a creature that is
+		# DEPLOYED in the world -- which the ally is, in this test -- leaves
+		# the director holding a body it has been told is asleep in a bed
+		# somewhere. The first version of this helper did exactly that and the
+		# next fight jammed with the piloted creature permanently mid-commit
+		# (`quick_ready=false charged_ready=false` for 901 frames at 1.4m).
+		# The bed's own end-to-end path is Gate A's to prove
+		# (`smoke_gate_a_rest_torch.gd`); this file needs the CONDITION a night
+		# produces, not a pretend bed.
+		CONDITION.note_rest_completed(creature, cfg)
+		rested += 1
+	_game.get("party").set("revision", int(_game.get("party").get("revision")) + 1)
 	await _let_the_board_poll()
-	print("condition: fed the team and slept the night -- %d creature(s) rested" % slept)
+	print("condition: fed the team and rested them -- %d creature(s) ready" % rested)
 
 
 ## --- 4: signing up -------------------------------------------------------------
