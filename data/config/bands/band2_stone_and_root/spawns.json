@@ -23,12 +23,7 @@
         2465.0
       ],
       "radius": 10.0,
-      "_why_ow5d": "quarry/warrens species (section 5: Burrowback/Mudsnout/Tuskroot -> Band 2 near the quarry/warrens). Moved WITH the Burrow Warrens, preserving its old (-15,-5) offset from the warrens' old site.at [70,-140] against the new site.at (-420,2470) -- this cluster was always the warrens' own resident population (burrow_warrens.json's spawns already put Burrowback in every chamber), not a coincidence.",
-      "alpha": {
-        "level_bonus": 3,
-        "scale": 1.3
-      },
-      "_why_alpha": "The lone burrowback out at (-435,2465), well off the quarry road. First alpha in the chapter and deliberately the one furthest from the spine: it is a thing you go and find, not a thing that finds you."
+      "_why_ow5d": "quarry/warrens species (section 5: Burrowback/Mudsnout/Tuskroot -> Band 2 near the quarry/warrens). Moved WITH the Burrow Warrens, preserving its old (-15,-5) offset from the warrens' old site.at [70,-140] against the new site.at (-420,2470) -- this cluster was always the warrens' own resident population (burrow_warrens.json's spawns already put Burrowback in every chamber), not a coincidence."
     },
     {
       "order": 5,
@@ -78,7 +73,12 @@
       ],
       "radius": 14.0,
       "time": "night",
-      "_why": "MQ2B. The only night-gated spawn in the band sat at (250,1700), in the first third; a player who only ever passes this band by day never has a reason to notice the other two-thirds are meant to look and feel different after dark. A second nocturnal pocket past the Warrens, beside the new deadwood nodes (order 2003/2004), gives the far half of the band the same day/night contrast the near half already has."
+      "_why": "MQ2B. The only night-gated spawn in the band sat at (250,1700), in the first third; a player who only ever passes this band by day never has a reason to notice the other two-thirds are meant to look and feel different after dark. A second nocturnal pocket past the Warrens, beside the new deadwood nodes (order 2003/2004), gives the far half of the band the same day/night contrast the near half already has.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "The lone duskhush at (70,2900), the deepest point of the band. Moved here from the burrowback at order 3 for a reason worth keeping: order 3 is a PRE-SPLIT entry, and tests/test_band_content.gd holds a baseline fixture asserting every pre-split entry still merges byte-identical to the file it came from, with `order` the single key the split may add. Adding `alpha` to one of those breaks the guard that proves the band split changed no world content. Order 2006 is post-split, so it is this band's to author. The siting is no worse for it -- 2900 is further along the band than 2465 and still well off the quarry road, so the alpha remains a thing you go and find."
     }
   ],
   "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."

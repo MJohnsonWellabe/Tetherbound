@@ -139,7 +139,12 @@ func test_the_director_applies_the_bonus_additively() -> void:
 	#
 	# Every other check in this file reads data or source text, which is why
 	# none of them saw it. This one names the mechanism.
-	assert_false(body.contains("wild.scale"),
+	# Searched over CODE ONLY. `_make_alpha`'s comment explains why node scale is
+	# wrong and therefore contains the words -- and the first version of this
+	# assertion matched its own explanation and failed correct code. That is the
+	# same mistake `test_crossing_failsafe_placement` made earlier on this branch,
+	# matching `_add_carve_failsafe` inside the comment that described it.
+	assert_false(_code_only(body).contains("wild.scale"),
 		"_make_alpha sets node scale, which grows the art and leaves body_radius() "
 		+ "and centre() reporting the ordinary body; throws that visually hit an "
 		+ "alpha would resolve as misses")
@@ -170,3 +175,19 @@ func test_growing_a_body_grows_the_radius_the_catch_maths_uses() -> void:
 	assert_true(body.contains("_build_model") or body.contains("_build_capsule"),
 		"apply_size_multiplier does not rebuild the visible body, so the alpha "
 		+ "would be bigger only in the numbers")
+
+
+## A source block with its comment lines removed.
+##
+## Every string search in this file is about what the code DOES. A comment that
+## explains a hazard necessarily names it, so searching raw source makes a
+## well-documented function look like the bug it is documenting.
+func _code_only(source: String) -> String:
+	var out: PackedStringArray = []
+	for line: String in source.split("\n"):
+		var stripped := line.strip_edges()
+		if stripped.begins_with("#"):
+			continue
+		var hash_at := line.find("#")
+		out.append(line.substr(0, hash_at) if hash_at >= 0 else line)
+	return "\n".join(out)

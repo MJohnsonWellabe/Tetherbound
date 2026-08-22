@@ -98,12 +98,21 @@ func test_battles_are_recorded_where_the_fight_is_already_scored() -> void:
 	# It must ride the SAME loop that awards XP, because that loop already skips
 	# a fainted member on the rule "it did not fight". Two definitions of what
 	# counts as a battle would drift.
-	var start := source.find("func _award_xp(")
-	if start < 0:
-		start = source.find("last_xp_award.clear()")
-	assert_true(start >= 0, "combat_manager.gd has no XP award site to check")
+	# Anchor on the call that DEFINES the loop, not on a string that happens to
+	# sit near it. The first version searched for `last_xp_award.clear()`, which
+	# appears TWICE in this file -- once in a reset path hundreds of lines above
+	# the award loop -- so it anchored on the wrong one and read a window that
+	# could never contain the thing it was looking for. It reported the counter
+	# missing from code that has it.
+	var start := source.find("gain_xp(")
+	assert_true(start >= 0,
+		"combat_manager.gd no longer calls gain_xp(); the XP award loop has moved "
+		+ "and this check cannot find the site it is about")
 	if start < 0:
 		return
+	# Backed up to the top of the loop body so the window covers it, then
+	# generous enough to reach the end of the per-member work.
+	start = maxi(0, start - 400)
 	var window := source.substr(start, 1400)
 	assert_true(window.contains("battles_fought"),
 		"battles_fought is not recorded in the XP award loop; that loop already "

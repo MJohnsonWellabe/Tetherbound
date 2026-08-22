@@ -536,6 +536,42 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 ## already carried by v12 and is left exactly as the save wrote it, but the
 ## expiry clock starts empty, so a creature loaded as rested keeps that until
 ## the next faint rather than for a phantom 45 minutes.
+## VERSION 13 -> VERSION 14. FIVE-CREATURE-PRESSURE's three history counters.
+##
+## The "nothing to migrate FROM" answer every migration above gives, and here it
+## is the honest one twice over: a pre-14 save was not counting battles, levels
+## or catch day, so zero is not a placeholder for a number that existed -- it is
+## the true statement that the history was never kept. `tab_creatures.gd`'s
+## ceremony reads that and says nothing rather than claiming "0 battles" about a
+## creature that may have fought a hundred.
+##
+## This function exists even though it writes only the defaults, because
+## `_migrate_to_current()` walks one step per version and REFUSES to load a save
+## when a step is missing:
+##
+##     if not has_method(step):
+##         push_warning("... this build has no %s -- not loading")
+##         return {}
+##
+## Bumping VERSION without adding the step therefore does not skip a no-op
+## migration; it breaks loading for EVERY existing save, back to version 1,
+## because the chain cannot get past 13. That is exactly what happened when the
+## history counters landed, and `test_save_format.gd` caught it.
+func _migrate_v13(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 14
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		creature["battles_fought"] = 0
+		creature["levels_gained_with_you"] = 0
+		creature["caught_on_day"] = 0
+	migrated["party"] = party
+	return migrated
+
+
 func _migrate_v12(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 13
