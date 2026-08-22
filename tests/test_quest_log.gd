@@ -112,8 +112,26 @@ func test_the_captains_objective_is_done_only_once_the_hall_approach_opens() -> 
 ## The HUD's one tracked line and the quest-log row are the same string,
 ## counter included -- the count is computed in one place for exactly this
 ## reason.
+## Set every main-chain flag that comes BEFORE the captains objective, so the
+## captains entry is the tracked line.
+##
+## Derived from the data, not a hardcoded list. This test used to set
+## `road_gate_open` alone, which was enough while the chain had two entries and
+## the captains objective was the second -- CHAPTER-OBJECTIVES made it the
+## ninth of twelve, and the tracked line became the first of the seven new
+## beats in between. Walking the file until the captains row is reached keeps
+## the test aimed at what it is actually about (that the HUD line and the log
+## row agree about a COUNT) rather than at the chain's length.
+func _complete_everything_before_the_captains() -> void:
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		if str(entry.get("label", "")).find("captains") != -1:
+			return
+		progression.set_flag(str(entry.get("flag_id", "")))
+
+
 func test_the_tracked_line_carries_the_same_count_as_the_log_row() -> void:
-	progression.set_flag("road_gate_open")
+	_complete_everything_before_the_captains()
 	progression.set_flag(CAPTAIN_FLAGS[0])
 	assert_eq(log_reader.tracked_text(progression), _captain_line())
 	assert_true(log_reader.tracked_text(progression).ends_with("1/3"))

@@ -239,12 +239,24 @@ func test_the_nocturnal_role_resolves_to_a_night_gated_species() -> void:
 	var roles: Dictionary = _config().get("roles", {}) as Dictionary
 	var id := str(roles.get("nocturnal", ""))
 	assert_ne(id, "", "spawns.json declares no 'nocturnal' role")
+	# `found = found or ...`, not `found = ...`. The old form assigned on every
+	# match, so the answer was whichever entry for this species came LAST in the
+	# merged array rather than whether ANY of them is nocturnal -- a test that
+	# happened to pass only while every duskhush cluster in the game was
+	# night-gated. WILD-ECOLOGY added one that deliberately is not (the pair
+	# roosting at the Sigil gate: a fixed beat every player passes exactly once,
+	# where a nocturnal cluster would simply be absent for most of them), and
+	# the last-wins bug turned that into a failure.
+	#
+	# What the role actually has to promise is that the species NAMED nocturnal
+	# has a nocturnal presence somewhere -- which is what the assertion message
+	# has always said.
 	var found := false
 	for entry: Variant in _spawns():
 		var spawn: Dictionary = entry
 		if str(spawn.get("species", "")) == id:
-			found = str(spawn.get("time", "")) == "night"
-	assert_true(found, "the 'nocturnal' role names '%s', which is not gated to night" % id)
+			found = found or str(spawn.get("time", "")) == "night"
+	assert_true(found, "the 'nocturnal' role names '%s', which is not gated to night anywhere" % id)
 
 
 func test_the_weather_gated_role_resolves_to_a_weather_gated_species() -> void:
