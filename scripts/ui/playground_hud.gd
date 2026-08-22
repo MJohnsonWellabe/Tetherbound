@@ -63,6 +63,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 ## OW10: the one "who owns input right now" question both world-verb polls ask.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
@@ -2488,8 +2489,21 @@ func _hammer_opens_the_catalogue() -> bool:
 		return false
 	if _build_menu_is_open():
 		return false
+	# The question is whether the interact button is SPOKEN FOR, not whether any
+	# provider is drawing a line. `encounter_director.gd::_creature_control_offer()`
+	# falls back to a non-actionable status line -- "[RB] Call out <creature>" --
+	# for any player who has a creature and is standing near nothing else, which
+	# is most players most of the time. It advertises a different button and
+	# `interaction_arbiter.gd::activate()` already refuses to fire it, so the
+	# interact press is genuinely free; asking "is anything winning" made the
+	# hammer lose the button to a line that was never going to consume it.
+	#
+	# Under CONTROLLER-MAP `build_open` has no pad button, so hammer + interact
+	# is the ONLY pad route into build mode. This is the other half of the
+	# owner's "building doesn't work" report: not a fight for the button, but a
+	# forfeit to something that was not asking for it.
 	if _arbiter != null and is_instance_valid(_arbiter) \
-			and _arbiter.call("winning_provider") != null:
+			and PROMPTS.is_actionable(_arbiter.call("winner")):
 		return false
 	return true
 

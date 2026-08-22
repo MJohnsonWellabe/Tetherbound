@@ -217,6 +217,19 @@ func _catch_real_creature(target: Node3D) -> void:
 	for i in 10:
 		await physics_frame
 
+	# Press only once the world is actually offering THIS creature.
+	#
+	# Walking to within 3.6m is not the same as being the arbiter's winner: the
+	# Meadows carries ~22,000 harvestable props, the arbiter picks by distance
+	# and priority, and one standing a metre nearer than the Bramblebun takes
+	# the line. Pressing anyway gathers a bush and reports "could not engage",
+	# which is what this harness did -- "stopped 3.3m away (engage range 6.0m);
+	# the winning prompt is Interactable, not the target".
+	#
+	# That is the GAME behaving correctly; a player would read "Gather" instead
+	# of "Engage" and take a step. This does the same thing, which is also what
+	# this function's own header already claims it does.
+	await _close_in_until_offered(target)
 	Input.action_press("interact")
 	await physics_frame
 	await physics_frame
@@ -380,3 +393,48 @@ func _why_the_engage_failed(target: Node3D) -> String:
 				reasons.append("the winning prompt is %s, not the target" % str((winner as Node).name))
 	reasons.append("party is %d/5" % int(_game.party.size()))
 	return " (" + "; ".join(reasons) + ")"
+
+
+## Shuffle around `target` until the interaction arbiter is offering IT.
+##
+## Bounded and best-effort: if nothing works the press still happens and
+## `_why_the_engage_failed()` reports what was winning instead, which is more
+## useful than a harness that silently gives up.
+func _close_in_until_offered(target: Node3D) -> void:
+	if not is_instance_valid(target):
+		return
+	var arbiter: Object = _hud.get("_arbiter") if _hud != null else null
+	if arbiter == null or not is_instance_valid(arbiter):
+		return
+	for attempt in 40:
+		if _arbiter_offers(arbiter, target):
+			return
+		# Step in a little further. The offer is distance-ranked, so closing the
+		# gap is the move that changes the answer -- and the engage range is
+		# generous enough that there is room to get well inside it.
+		var to := target.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() > 1.6:
+			_aim_camera_along(to)
+			Input.action_press("move_forward")
+			for i in 8:
+				await physics_frame
+			Input.action_release("move_forward")
+		else:
+			# Already on top of it and still losing the line: sidestep, so a prop
+			# sharing the spot stops being the nearest thing.
+			Input.action_press("move_right" if attempt % 2 == 0 else "move_left")
+			for i in 6:
+				await physics_frame
+			Input.action_release("move_right" if attempt % 2 == 0 else "move_left")
+		for i in 4:
+			await physics_frame
+
+
+## Is the arbiter's current winner this creature (or something under it)?
+func _arbiter_offers(arbiter: Object, target: Node3D) -> bool:
+	var winner: Variant = arbiter.call("winning_provider")
+	if winner == null or not (winner is Node):
+		return false
+	var node := winner as Node
+	return node == target or target.is_ancestor_of(node) or node.is_ancestor_of(target)
