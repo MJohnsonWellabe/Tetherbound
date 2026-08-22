@@ -75,6 +75,16 @@
       ],
       "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
       "model_scale": 0.85
+    },
+    {
+      "order": 5006,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stone",
+      "at": [46.0, 7331.0],
+      "model": "res://assets/environment/stylized_nature/Rock_1.gltf",
+      "model_scale": 1.0,
+      "_why": "BAND5-DEADTRAVEL. The second beat placed into the 123m empty diagonal the driven run measured (see spawns.json order 5022). Stone rather than another fiber/wood pair because the five nodes at `the_waystop` already cover a builder's needs at the camp; this one is 130m earlier, on the exposed leg, and its job is to be a reason to break stride rather than a reason to stop and build. Model and amount follow the band1/band2 stone vocabulary -- no new asset."
     }
   ]
 }

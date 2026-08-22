@@ -59,6 +59,7 @@ const CONFIG_PATH := "res://data/config/stronghold.json"
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
 
 ## STRONGHOLD-MAT. Every wall/floor box in this file was a flat
 ## StandardMaterial3D colour with no texture at all -- the same class of bug
@@ -123,6 +124,13 @@ var _chambers: Dictionary = {}          # id -> chamber dict
 var _order: Array[String] = []          # route order, as authored
 var _markers: Dictionary = {}           # name -> global Vector3
 var _materials: Dictionary = {}
+
+## How many approach pylons stood, for `stats()` and for the capture tools --
+## so neither has to count nodes by name.
+var _approach_pylons := 0
+
+## The approach drained-ground skin, held so tests and captures can reach it.
+var _approach_drain: Node3D = null
 var _footprint: Array = []              # local AABB rects [minx, minz, maxx, maxz]
 var _doors: Array = []                  # [{flag, body, mesh}]
 var _trainers: Node3D = null
@@ -179,6 +187,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 		_markers[id] = to_global(Vector3(centre.x, _floor_y, centre.z))
 
 	_load_palette()
+	_build_approach_conduits(world)
+	_build_approach_drain(world)
 	_build_chambers()
 	_build_passages()
 	_build_approach_ramp()
@@ -198,10 +208,58 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 		_markers["entrance"] = _markers.get("ramp_foot",
 			to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 4.0)))
 	set_process(true)
-	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s)%s" % [
+	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s), %d approach pylon(s)%s" % [
 		_order.size(), " -> ".join(_order), global_position.y + _floor_y, gauntlet_size(),
+		_approach_pylons,
 		", machine is a PLACEHOLDER" if machine_is_placeholder() else ""])
 	return true
+
+
+## BAND5-CONTENT, prompt 66's navigation spine / machinery readability /
+## environmental storytelling, which are one object rather than three -- see
+## `stronghold.json::_comment_approach_pylons` for the reasoning and
+## `_comment_approach_pylons_measured` for why every station is where it is.
+##
+## BORROWED, NOT REBUILT, exactly as `old_quarry.gd::_build_conduit_run` is:
+## `severed_spokes.gd::_build_pylons` already does mesh fitting, per-pylon
+## lit/dead materials, aim-along-the-line orientation, box colliders and the
+## sampled-parabola conduit spans, including the `gl_compatibility` emissive
+## bug that turned a pylon white. It takes a spoke dictionary and reads only
+## its `pylons` key, so this block goes in unchanged.
+##
+## THE HOLDER IS PARENTED TO THE WORLD, NOT TO THIS NODE, and that is not a
+## style choice. This node carries `site.at` (0,7560) AND `site.yaw_deg` 90 --
+## every chamber below is authored in the complex's own rotated local frame.
+## `_build_pylons` places its children at ABSOLUTE world coordinates, so
+## hanging them here would put the run 90 degrees off through the meadow.
+## The quarry does not hit this because its own node sits unrotated at origin.
+func _build_approach_conduits(world: Node3D) -> void:
+	var config: Dictionary = _config.get("approach_pylons", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var builder: Node3D = SEVERED_SPOKES.new()
+	builder.name = "ApproachConduits"
+	world.add_child(builder)
+	builder.call("_build_pylons", world, builder, {"pylons": config})
+	_approach_pylons = list.size()
+
+
+## Prompt 66's environmental storytelling clause. All of the reasoning, and
+## the honest statement of what this does NOT yet do, is in
+## `scripts/world/approach_drain_skin.gd`'s own header -- it is that file's
+## subject, not this one's. Parented to the WORLD for the same reason the
+## conduit run is: this node is yawed 90 degrees and the skin is authored in
+## world metres.
+func _build_approach_drain(world: Node3D) -> void:
+	var config: Dictionary = _config.get("approach_drain", {})
+	if config.is_empty():
+		return
+	var skin: Node3D = APPROACH_DRAIN.new()
+	skin.name = "ApproachDeadGround"
+	world.add_child(skin)
+	skin.call("build", world, config)
+	_approach_drain = skin
 
 
 func _load_config() -> Dictionary:
@@ -1212,6 +1270,19 @@ func trainers_node() -> Node3D:
 
 func gauntlet_size() -> int:
 	return int(_trainers.call("placed")) if _trainers != null else 0
+
+
+## How many approach pylons stood. For tests and capture tools, so neither has
+## to find them by node name -- the run hangs off the WORLD, not off this node
+## (see `_build_approach_conduits`), which makes a name search the wrong shape.
+func approach_pylons() -> int:
+	return _approach_pylons
+
+
+## The approach drained-ground skin node, or null. `meadow_healing.gd` finds it
+## by duck-typing rather than through here; this is for tests and captures.
+func approach_drain() -> Node3D:
+	return _approach_drain
 
 
 func recovery_point() -> Node3D:

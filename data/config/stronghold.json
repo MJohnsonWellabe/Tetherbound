@@ -19,6 +19,54 @@
     "tether_trim": "#332228",
     "door_colour": "#3a3f3c"
   },
+  "_comment_approach_pylons": "BAND5-CONTENT, prompt 66. Three of that prompt's asks are one object, so they are built once rather than three times: the `navigation spine` (\"pylons/landmarks should create readable world-space direction without becoming magical GPS\"), `pylon/tether machinery readability`, and the environmental storytelling clause (\"use existing machinery ... rather than inventing unrelated lore\"). Band 5 had NONE of it. The chapter's conduit network stopped at the relay (z 3749) and the quarry (z 1790) and the last 680m -- the approach to the thing the whole network feeds -- was open meadow with a castle on the horizon. The run is the answer: an unbroken, LIT trunk line arriving at the works, the exact opposite statement to the seven spokes' broken-and-dead runs, and the same one `old_quarry.json`'s own `_comment_pylons` already makes (D41: present-tense machinery doing present-tense harm, not ruins).",
+  "_comment_approach_pylons_why_a_line": "Why a straight line beside a wandering road, and not pylons ON the road. The trail's own Band 5 waypoints swing +-80m either side of x=0 (terrain_playground.json `trail.bands`), which is what stops the region being a corridor. A line that followed it would be a handrail -- literally magical GPS in world geometry, the thing the prompt names. A STRAIGHT line the road keeps crossing is the opposite: it is a BEARING. The player loses sight of it around every rise, meets it again, and each time it is pointing the same way. Direction comes from the line's own convergence in perspective, which is free and needs no marker, no minimap and no objective arrow.",
+  "_comment_approach_pylons_measured": "SITED BY MEASUREMENT, not by guess -- `tools/_probe_band5_pylon_line.gd`, which exists to answer the one question a config cannot: `severed_spokes.gd::_conduit_span` sags the cable `distance * 0.05` below an attachment at `height * 0.66` computed from EACH pylon's OWN base, so ground rising between two stations pushes itself up into a cable derived from the two ends. The first candidate (13 stations, 9m) put the cable 1.74m over the ground on span 4->5 -- head height on a 1.8m player, a defect that shows only in a render. The probe swept height against station count: 15 stations at 10.0m is the SMALLEST height that clears comfortably, worst clearance 3.14m. Relief across the run is 11.77m (-3.46 to 8.31), which is why this had to be measured at all. Re-run the probe before moving any station.",
+  "_comment_approach_pylons_healing": "This run needs no ending work and gets its payoff for free. `meadow_healing.json`'s `tether_lights` finds every LIT Team Tether fitting by WHAT ITS MATERIAL IS rather than by node name, precisely so the three files that build pylons all pay off together -- so all fifteen of these go dark on the walk home from the Warden, along with the quarry's four and the relay's. The last region to get the network is also the last to lose it, in the player's own line of sight.",
+  "approach_pylons": {
+    "height": 10.0,
+    "_comment_height": "Against the quarry spur run's 4.6m. This is the trunk that feeds the Hall and it should out-scale every spur the player has met; 10.0 is also the measured floor for cable clearance (see `_comment_approach_pylons_measured`) rather than a number picked for drama. `_build_pylons` scales the one GLB uniformly, so a 10m pylon is a 4.6m pylon at 2.17x -- heavier as well as taller, which is the correct read for a trunk.",
+    "list": [
+      { "at": [-40.00, 7010.0], "lit": true,
+        "_why": "the first one, standing at the band boundary where the trail enters at (0,7000) -- the player crests into Band 5 and the line is ALREADY there, running away from them toward something they cannot see yet. That is the whole navigational job: the direction is answered before the question is asked."
+      },
+      { "at": [-37.71, 7045.4], "lit": true },
+      { "at": [-35.43, 7080.7], "lit": true },
+      { "at": [-33.14, 7116.1], "lit": true,
+        "_why": "abreast of Watchman Corr's outer watch (bands/band5_stronghold_approach/trainers.json order 5005, (-68,7140)) -- the first Team Tether body and the first Team Tether machinery in the same 40m, so the faction reads as one thing that both stands on this ground and takes from it."
+      },
+      { "at": [-30.86, 7151.4], "lit": true },
+      { "at": [-28.57, 7186.8], "lit": true },
+      { "at": [-26.29, 7222.1], "lit": true },
+      { "at": [-24.00, 7257.5], "lit": true,
+        "_why": "the middle of the run and the middle of the region. The trail's own waypoint (80,7370) swings 100m EAST of here, so this is the stretch where the road and the line visibly diverge and the line is the one that keeps pointing at the Hall -- a bearing, not a handrail."
+      },
+      { "at": [-21.71, 7292.9], "lit": true },
+      { "at": [-19.43, 7328.2], "lit": true },
+      { "at": [-17.14, 7363.6], "lit": true },
+      { "at": [-14.86, 7398.9], "lit": true,
+        "_why": "level with the three-Sigil gate's own latitude, z=7400. The gate itself sits at (63.6,7400) -- ON the road, after this lane moved it there (playground_world.gd SIGIL_GATE_AT) -- so the line passes 78m WEST of it. That separation is the point rather than an accident: the road's gate is the thing the player has to open, and the machinery runs past it untouched on its own bearing. Team Tether's power was never stopped by the door they make everybody else use."
+      },
+      { "at": [-12.57, 7434.3], "lit": true },
+      { "at": [-10.29, 7469.6], "lit": true,
+        "_why": "in sight of `the_waystop` (props.json order 5001, (-25,7460)), 17.6m outside its 14m clearing. A player who stops at the last camp to sort their five looks up at the thing they are about to walk into. Deliberately just outside the clearing so it frames the camp rather than standing in it."
+      },
+      { "at": [-8.00, 7505.0], "lit": true,
+        "_why": "the last one before the works, 55.6m short of the outer works' centre and clear of the skirt. The run does not stop -- it arrives."
+      }
+    ]
+  },
+  "_comment_approach_drain": "BAND5-CONTENT, prompt 66's environmental storytelling clause. The full reasoning, and an honest statement of the half of the effect this does NOT own, is in `scripts/world/approach_drain_skin.gd`'s header. The short version: `terrain_playground.json`'s `drains.stations` holds seven entries, four at the quarry (z~1790) and three at the relay (z~3749), and NONE in Band 5 -- so the drained ground got weaker the closer the player walked to the machine draining it. `bounds` is the corridor the fifteen `approach_pylons` run through, with margin; the skin's alpha is `playground_heightfield.drain_factor()` itself, so it paints exactly where a station says and NOTHING anywhere else. It therefore renders nothing today and says so in the build log: `drains.stations` is a file no Gate D lane may edit (GATE_D_LANE_CONTRACT §5), so the Band 5 stations are REQUESTED in this lane's report the same way a `density_scale` is, and this is shipped ahead of them so that granting the request is one edit to one data file rather than an edit plus a code change.",
+  "approach_drain": {
+    "enabled": true,
+    "bounds": [-62.0, 6990.0, 14.0, 7530.0],
+    "cell": 4.0,
+    "lift": 0.09,
+    "tint": "#bfb6a0",
+    "max_alpha": 0.72,
+    "_comment_bounds": "[min_x, min_z, max_x, max_z]. Wraps the pylon run (x -40 -> -8 over z 7010 -> 7505) with roughly 22m of margin west and east, which carries the widest station radius the request asks for without sampling ground the drain can never reach. Cell 4.0 against the relay skin's 3.0 because this corridor is 540m long rather than 92m across and the alpha gradient here is broad -- a finer cell would multiply quads to no visible end.",
+    "_comment_tint": "`terrain_playground.json`'s own `drains.tint`, not a new colour, so the runtime skin and the eventual bake agree. That file's `_comment_tint` explains why it sits close to the healthy near-white: the colour map MULTIPLIES the PBR albedo, and a darker tint here would be a brightness change pretending to be a colour."
+  },
   "_comment_language": "R8.2's brief: a sacred natural site INDUSTRIALISED by Tether. The same grammar `SE23` uses at the relay, at full scale here. In geometry that means three things and nothing more elaborate: the shell is old cut stone (`site.stone`, the same weathered value family the castle's own plinth uses), every space carries Team Tether hardware bolted ONTO that stone rather than replacing it (`trim` bands and `conduits` below, in the reserved oxblood and the reserved teal from palette.json), and the deeper you go the more of the room is machine and the less of it is masonry. `conduits` are lit teal runs; they all point at the Legendary Chamber because that is where the power comes from, which is `SG40`'s reveal drawn a room early and never said out loud.",
   "_comment_chambers": "`open: true` means no roof -- the outer works and the courtyard are open-air yards inside high walls, the three inner spaces are roofed. `height` is floor-to-ceiling (or wall height, for the open ones). The Legendary Chamber's 22m is set by the machine, not by taste: the board draws it at ~15m against its own 0-20m scale bar, so the room has to be architecture-sized or the centrepiece cannot stand up in it.",
   "chambers": [

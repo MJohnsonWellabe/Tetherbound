@@ -103,6 +103,45 @@
           "_why": "within reach of the bench, not tipped -- this stop is tended"
         }
       ]
+    },
+    {
+      "order": 5002,
+      "name": "road_watch_drop",
+      "_why": "BAND5-DEADTRAVEL, and prompt 66's 'visible Team Tether occupation' asked for ACROSS the 680m rather than at the doorstep. The driven run measured a 123m stretch of the spine with nothing within reach; this is the first of the three beats placed into it, and the one that does the region's own job. Not a manned post -- Corr is 150m behind and Ness 130m ahead, and a third body here would spend a combat beat the prompt explicitly says not to spend before the stronghold. A supply DROP instead: a load left on the road for somebody who has not come for it yet. The occupation is present in the props even where nobody is standing, which is the whole read this leg was missing. Same Quaternius Fantasy Props MegaKit as the other two clusters (D24, one prop family).",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [9.2, 7281.4],
+          "yaw_deg": 24.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set square to the road, the way a load is put down rather than dropped"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [10.4, 7282.3],
+          "yaw_deg": 19.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "hard against the first -- `quarry_station`'s own finding, that a touching pile reads as one load and a scattered one reads as debris"
+        },
+        {
+          "model": "Barrel",
+          "at": [8.1, 7283.1],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "upright, closing the third side, so the drop has a shape from the road"
+        },
+        {
+          "model": "Bag",
+          "at": [11.8, 7280.2],
+          "yaw_deg": 41.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "one item set apart and ready to be picked up -- the cue that says somebody is coming back for this"
+        }
+      ]
     }
   ]
 }

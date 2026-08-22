@@ -101,8 +101,45 @@ const GATE_KEY_AT := Vector2(24.0, -10.0)
 ## north-south, a completely different bearing, so this yaw needs fresh
 ## tuning against the real approach once it is built -- flagged rather than
 ## guessed at. Ground truth at (0,7400) was NOT re-probed by this pass.
-const SIGIL_GATE_AT := Vector2(0.0, 7400.0)
-const SIGIL_GATE_YAW_DEG := -17.6
+## BAND5-CONTENT. The OW5D note above deferred both of these to "fresh tuning
+## against the real approach ONCE IT IS BUILT" and recorded that "ground truth
+## at (0,7400) was NOT re-probed by this pass." The approach is built, and this
+## lane's driven run (`tools/_probe_band5_approach.gd`) measured what the note
+## could not have known: (0,7400) is **55.9m from the nearest point of the
+## authored Band 5 spine**. The spine swings east to (80,7370) before turning
+## back to the works, so a player walking the road never came within 55m of the
+## chapter's own final gate. The single physical progression checkpoint of the
+## region stood in open meadow beside the route, and the objective that
+## completes on `hall_approach_open` waited on a thing the road did not pass.
+##
+## Both constants are now measured, by `tools/_probe_band5_sigil_gate.gd`:
+##   * (63.6, 7400) is where the spine ACTUALLY crosses z=7400 -- the same
+##     latitude the table gave, moved onto the road instead of beside it.
+##     Ground there carries 2.25m of relief over a 16m pad, against 2.08m at
+##     the old point: the same quality of ground, so nothing is traded for it.
+##     Clearances: 44.1m to Warder Ness's checkpoint (whose own 4.0m prompt and
+##     this gate's 4.2m therefore still never contest), 32.9m to the duskhush
+##     cluster, 95m+ to everything else authored.
+##   * -28.6 deg is `atan2(bearing.x, bearing.z)` of the road's own heading
+##     there, (-0.479, 0.878). That is the yaw that puts the leaf ACROSS the
+##     road, and the axis was MEASURED rather than assumed
+##     (`tools/_probe_gate_leaf_axis.gd`): `road_gate_leaf`'s local AABB is
+##     4.07 x 1.46 x 0.12, so the panel spans local X, and `rotation.y = θ`
+##     carries local +X onto (cos θ, -sin θ) -- perpendicular to the bearing
+##     exactly when θ = atan2(dx, dz). `GATE_YAW_DEG` above is NOT a
+##     counter-example: its own comment records that it was tuned by eye
+##     against a render rather than computed.
+##
+## WHAT THIS DOES NOT FIX, said out loud. The leaf is 4.07m wide and stands on
+## open ground with no gorge, wall or ravine flanking it, so it is a key-use
+## point and a piece of staging -- it is not a barrier, and a player who wants
+## to walk around it can. Prompt 66 asks that "a physical gorge/barrier must
+## actually constrain travel", and satisfying that needs flanking terrain from
+## `terrain_playground.json`'s `crossings`/`spokes` carves, which is a file no
+## Gate D lane may edit (GATE_D_LANE_CONTRACT §5). It is requested, with
+## measurements, in this lane's report.
+const SIGIL_GATE_AT := Vector2(63.6, 7400.0)
+const SIGIL_GATE_YAW_DEG := -28.6
 const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const SIGIL_GATE_FLAG := "hall_approach_open"
 

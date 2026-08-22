@@ -266,6 +266,18 @@
       ],
       "radius": 18.0,
       "_why": "off-spine hunting pocket east of the final stretch, well clear of the checkpoint and the doorstep gauntlet"
+    },
+    {
+      "order": 5022,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        30.0,
+        0.0,
+        7308.0
+      ],
+      "radius": 18.0,
+      "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu."
     }
   ],
   "_comment_density_pass": "BAND5-DENSITY. Owner directive, 2026-08-22: 'you're going to need a lot more than 24 creatures in a band... look at Pokemon density and Palworld density... Valheim deer and boar density it's far more.' The original five clusters/10 creatures above (plus the mudsnout special encounter) were sited against the OLD floor and are kept unchanged, positions and reasoning both -- this is an addition, not a rewrite. Orders 5005-5021 add 17 clusters/65 creatures: a cluster roughly every 35m of the spine's own ~650m length (skipping stations that already fell on an existing cluster, the outer watch or the checkpoint trainer, or landed short of the band's own z=7000 boundary), thinner (3-4, not 5) across the exposed stretch between the mouth and the Sigil gate where the original _comment_habitat's own reasoning already called the ground more dangerous than populous, plus six off-spine pockets (orders 5016-5021) so leaving the road is rewarded rather than the route reading as a conveyor belt. Total: 22 clusters, 75 creatures over ~530m of authored spine -- inside the owner's 18-28/70-110 target, toward its lower-middle rather than its ceiling, because `encounter_director.gd` instantiates and ticks every spawn in the whole 7.5km corridor with no distance-based streaming yet (a separate lane is landing that; band5 does not own either file). Species stay the four the region already established (burrowback/galecrest/duskhush/trailpup) plus mudsnout (already introduced by the special encounter, order 5004) for the direct route; the off-spine pockets add pipwing and meadowhart, both already-validated non-evolved roster species used wild elsewhere in the chapter, for the ecological variety a detour should be rewarded with."

@@ -243,7 +243,7 @@
         7440.0
       ],
       "facing_deg": 165.0,
-      "_why_here": "Between spine waypoints (80,7370) and (20,7480), 25m past the Sigil gate on the bearing the gate's own leaf turns to face -- the first thing the player sees once the gate opens is this fight, not open meadow. 55m clear of the duskhush cluster at the gate (order 5002, centre (85,7375) r18) and well outside the trailpup cluster ahead (order 5003, centre (20,7485) r16), so neither wild aggro nor either cluster's own radius contests his 4.0m challenge prompt.",
+      "_why_here": "Between spine waypoints (80,7370) and (20,7480), 44.1m past the three-Sigil gate along the player's own line of travel -- the first thing they see once the gate opens is this fight, not open meadow. BAND5-CONTENT correction: this read '25m past the Sigil gate on the bearing the gate's own leaf turns to face', which described a gate the road did not actually pass. This lane's driven run measured the gate at (0,7400) sitting 55.9m off the spine (and 60.2m from Ness), and moved it onto the road at (63.6,7400); the 44.1m above is measured from that site by `tools/_probe_band5_sigil_gate.gd`. His 4.0m prompt and the gate's 4.2m are nowhere near contesting. 55m clear of the duskhush cluster at the gate (order 5002, centre (85,7375) r18) and well outside the trailpup cluster ahead (order 5003, centre (20,7485) r16), so neither wild aggro nor either cluster's own radius contests his 4.0m challenge prompt.",
       "challenge": "stronghold_checkpoint_challenge",
       "defeated": "stronghold_checkpoint_defeated",
       "team": [
