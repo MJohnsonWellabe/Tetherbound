@@ -221,7 +221,15 @@ func _apply_sun(cfg: Dictionary) -> void:
 	# overridable via config in case a future renderer/Terrain3D version
 	# fixes the interaction, but nothing in this project sets it false today.
 	sun.shadow_enabled = bool(cfg.get("shadow_enabled", true))
-	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	# PERF cross-lane request: the ROG Ally / handheld GPU class pays for
+	# every PSSM cascade as a separate shadow-map render pass. 4 splits was
+	# never justified by anything this project measured -- dropped to 2,
+	# which halves that per-frame cost, after an in-engine visual check found
+	# no legible quality loss at normal third-person play distance (see the
+	# capture comparison recorded for this change; the far/soft edge of a
+	# distant fourth cascade split was never the source of the terrain's
+	# shadow detail at the ranges the player actually stands at).
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = float(cfg.get("shadow_max_distance", 220.0))
 	# Normal bias fights the acne a heightmap terrain produces at grazing angles.
 	# Raise it if the ground looks striped; lower it if small props stop casting.
