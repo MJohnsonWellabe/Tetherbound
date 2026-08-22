@@ -37,6 +37,19 @@ func _run() -> void:
 			print("drained quads on the approach: %d" % int(drain.call("quads")))
 
 	_cadence()
+
+	# Captures need a real renderer. Under `--headless` there is none, and
+	# `RenderingServer.frame_post_draw` never fires -- so the awaits below hang
+	# FOREVER, after the cadence numbers above have already printed and been
+	# read. Four copies of this probe sat burning a core each for 45 minutes
+	# before anybody noticed, because a hung run and a slow run look identical
+	# from outside. Run the capture pass under xvfb; headless still gets the
+	# measurements, which is the half that does not need pixels.
+	if DisplayServer.get_name() == "headless":
+		print("headless: cadence only, no captures (run under xvfb-run for the visual pass)")
+		quit(0)
+		return
+
 	await _captures(world, "day")
 
 	# Prompt 66's last visual-cleanup item is "torch/night readability on the
