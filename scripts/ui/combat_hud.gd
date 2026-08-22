@@ -31,6 +31,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
@@ -781,7 +782,27 @@ func _set_xp_line() -> void:
 		return
 	var xp := int(award.get("xp", 0))
 	var levels := int(award.get("levels", 0))
-	_xp_line.text = "+%d XP%s" % [xp, "   ·   Lv up!" if levels > 0 else ""]
+	if levels <= 0:
+		_xp_line.text = "+%d XP" % xp
+		_xp_left = 2.4
+		return
+	# OP11: "level-up must announce identity, level, unlock". The line used to
+	# read "+12 XP   ·   Lv up!" -- which announces none of the three. WHOSE
+	# level went up is the question a five-creature team makes urgent (the XP
+	# is split across everyone who fought, so "Lv up!" over a shared party
+	# strip names nobody), and the new NUMBER is the thing a player is actually
+	# tracking. Both were already in hand here: `creature.label()` and
+	# `creature.level` sit one line above and were simply not being read.
+	var line := "%s reached Lv %d" % [creature.label(), int(creature.level)]
+	# The unlock, when the same fight bought one. `trait_unlocked()` is the
+	# only thing levelling actually opens, and it turns on bond nodes rather
+	# than level -- so this is reported when it is true and the creature has a
+	# second trait to show for it, not asserted on every level.
+	var cfg: Dictionary = PROGRESSION.config()
+	var nodes := int(creature.get("bond_nodes")) if creature.get("bond_nodes") != null else 0
+	if PROGRESSION.trait_unlocked(nodes, cfg):
+		line += "   ·   trait unlocked"
+	_xp_line.text = "+%d XP   ·   %s" % [xp, line]
 	_xp_left = 2.4
 
 
