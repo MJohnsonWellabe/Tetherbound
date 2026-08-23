@@ -46,11 +46,93 @@ def new_canvas() -> Image.Image:
     return Image.new("RGBA", (S, S), CLEAR)
 
 
+def _tint_table() -> dict:
+    """Icon filename -> the RGB it should be tinted, derived from items.json.
+
+    Every one of these icons was drawn as a white silhouette, and two blind
+    rounds said the same thing about the result: "every icon is monochrome white
+    on an identical dark tile, no colour coding by kind or rarity at all",
+    against a bar whose "inventory is full-colour precisely because colour is
+    what survives a glance". This is the screen the player opens most.
+
+    The colours are NOT invented here. `data/items/items.json` already gives
+    every item a `colour`, and `autoload/item_db.gd::colour()` already parses it
+    -- `harvest_node.gd` and `key_pickup.gd` use it for world props, and the
+    inventory threw it away. So the tint is read from the same field the rest of
+    the game already agrees on, and nothing new has to be kept in sync.
+
+    Two cases, because 28 of the 55 items share an icon file with another item
+    and a file can only be one colour:
+      * used by exactly one item -> that item's own `colour`.
+      * shared -> the mean of its members' colours, which is representative
+        rather than arbitrary. A shared glyph cannot tell two items apart no
+        matter what colour it is; that is a separate defect, recorded in the
+        sheet's own SHARED flags, and it is not made worse by being coloured.
+    """
+    import json
+
+    data = json.loads((ROOT / "data/items/items.json").read_text())
+    members: dict[str, list] = {}
+    for item in data.get("items", {}).values():
+        if not isinstance(item, dict):
+            continue
+        icon = str(item.get("icon", ""))
+        raw = str(item.get("colour", "")).lstrip("#")
+        if not icon or len(raw) != 6:
+            continue
+        members.setdefault(Path(icon).name, []).append(
+            tuple(int(raw[i:i + 2], 16) for i in (0, 2, 4))
+        )
+
+    table = {}
+    for name, colours in members.items():
+        n = len(colours)
+        mean = tuple(sum(c[i] for c in colours) // n for i in range(3))
+        # Lift onto the dark tile without changing the hue. The authored colours
+        # are world-prop colours and several are very dark (`ironwood` is
+        # #4a3a2c); painted straight onto the sheet's near-black tile they would
+        # be less legible than the white they replace, which would trade one
+        # unreadable sheet for another. Scaling every channel by the same factor
+        # until the brightest reaches TINT_PEAK keeps the hue and the relative
+        # saturation exactly, and only moves the value.
+        peak = max(mean) or 1
+        scale = TINT_PEAK / peak
+        table[name] = tuple(min(255, int(round(c * scale))) for c in mean)
+    return table
+
+
+## Brightest channel every tint is lifted to. High enough to read against the
+## inventory's near-black tile, short of 255 so a tinted icon is still visibly
+## a colour rather than white with a cast.
+TINT_PEAK = 235
+
+_TINTS = None
+
+
 def save(img: Image.Image, path: Path) -> None:
+    global _TINTS
+    if _TINTS is None:
+        _TINTS = _tint_table()
+
+    tint = _TINTS.get(path.name)
+    if tint is not None:
+        # Multiply RGB, leave alpha alone: the silhouettes are drawn in flat FG
+        # white and every "ink" detail is a CLEAR-alpha cutout, so scaling the
+        # colour channels recolours the shape and leaves the cutouts and the
+        # antialiased edge exactly as they were.
+        r, g, b, a = img.split()
+        img = Image.merge("RGBA", (
+            r.point(lambda v, c=tint[0]: v * c // 255),
+            g.point(lambda v, c=tint[1]: v * c // 255),
+            b.point(lambda v, c=tint[2]: v * c // 255),
+            a,
+        ))
+
     small = img.resize((FINAL, FINAL), Image.LANCZOS)
     path.parent.mkdir(parents=True, exist_ok=True)
     small.save(path)
-    print(f"wrote {path.relative_to(ROOT)}")
+    note = "" if tint is None else "  tint #%02x%02x%02x" % tint
+    print(f"wrote {path.relative_to(ROOT)}{note}")
 
 
 def cutout_line(draw: ImageDraw.ImageDraw, xy, width=STROKE) -> None:

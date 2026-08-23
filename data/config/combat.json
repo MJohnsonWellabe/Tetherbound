@@ -99,8 +99,8 @@
     "pitch_start_deg": -25.0,
     "_comment_fov": "Narrower than exploration's 70. A wide lens this close distorts both creatures towards the edges of the frame, which is exactly where a fight with free movement puts them.",
     "fov": 62.0,
-    "_comment_shoulder": "Metres the lens slides sideways. Dead centre behind your own creature means your own creature covers the opponent, which is the one thing you must be able to see.",
-    "shoulder_offset": 1.5,
+    "_comment_shoulder": "Metres the lens slides sideways. Dead centre behind your own creature means your own creature covers the opponent, which is the one thing you must be able to see. 1.5 was the right idea at a number that had never been checked against the geometry, and three independent blind critics reported the result -- 'the fight happens between a large rump and a distant dot', and a trainer battle whose opponent is nowhere in the frame. WORK IT OUT: the arm sets back 4.6m at -25 degrees, so 4.17m of horizontal setback; the opponent holds station about 2.1m the other side of your creature. Sliding the lens sideways separates the two on screen by parallax, because your own creature is nearer the lens than the opponent is -- but only by shoulder * 2.1 / 6.27, which is 0.335 of whatever this number says. At 1.5 that bought 0.50m of separation against a body radius of roughly 0.5m: exactly zero margin, which is why tools/_capture_combat_moments.gd fired a real raycast from the real camera and found the opponent behind the ally in BOTH encounters. 2.6 buys 0.87m -- about 0.37m of daylight past the flank. Raising `height` instead does not reach: the creatures are 2.0m tall and the arithmetic needs the lens over 6m up before the sight line clears a head, which is a different game.",
+    "shoulder_offset": 2.6,
     "_comment_blend": "How fast the rig eases onto the creature when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0
   },
