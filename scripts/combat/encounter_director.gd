@@ -13,6 +13,7 @@ extends Node
 ## dropped into the real Meadows scene unchanged.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## D30: wild creatures spawn inside a level band rather than at one fixed level.
@@ -1210,6 +1211,15 @@ func _activation_radius_margin() -> float:
 func _tick_streaming() -> void:
 	if _player == null:
 		return
+	if PERF_TRACE.enabled:
+		var t0 := Time.get_ticks_usec()
+		_stream_clusters()
+		PERF_TRACE.record("wild cluster streaming", Time.get_ticks_usec() - t0)
+		return
+	_stream_clusters()
+
+
+func _stream_clusters() -> void:
 	var player_pos := _player.global_position
 	var margin := _activation_radius_margin()
 	for cluster: Dictionary in _clusters:
