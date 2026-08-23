@@ -449,7 +449,28 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
 		if to.length() <= 1.65:
-			break
+			# Close enough, and something ELSE is holding the interact line.
+			#
+			# The village stands in open meadow and the arbiter ranks by
+			# distance, so a wandering wild creature -- or any prop closer than
+			# the villager -- takes the prompt. Breaking out here made that a
+			# hard failure, which is why this segment could reach Tam on one run
+			# and not the next with no code change between them: what was
+			# standing nearby had changed.
+			#
+			# A player sidesteps and asks again. `smoke_party_count_after_catches.gd`
+			# already fixed the identical thing this way after reporting "could
+			# not engage" from 3.3m inside a 6.0m range.
+			var aside := to.cross(Vector3.UP).normalized() * 1.4
+			if _i % 2 == 1:
+				aside = -aside
+			var spot := _player.global_position + aside
+			for _j in 10:
+				await _step_toward(spot)
+			_stop_left_stick()
+			for _j in 6:
+				await _tree.physics_frame
+			continue
 		await _step_toward(target.global_position)
 	_stop_left_stick()
 	# Standing close and still not winning: give the arbiter a few frames to
