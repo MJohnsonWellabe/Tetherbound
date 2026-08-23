@@ -52,6 +52,7 @@ extends SceneTree
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
+const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
@@ -252,6 +253,27 @@ func _ready_a_tournament_team() -> bool:
 
 
 func _gather_and_build_a_home() -> bool:
+	# The village first, for the tools.
+	#
+	# Run 4 failed with "natural route requires Tam's axe before it can
+	# harvest", which was not a harness bug -- it was a real beat of Gate B this
+	# file had skipped. The plan's own wording is "build a team -> train ->
+	# gather", and gathering presupposes the tools the village hands over. A
+	# player cannot chop anything before meeting Tam either.
+	#
+	# `gate_a_npc_gather_segment.gd` walks that for real and says so in its own
+	# header: "no teleport, direct inventory grant, progression mutation, or
+	# private gameplay method stages the route". Its contract differs from the
+	# other two helpers -- it returns a bare Array of failure strings, empty on
+	# success -- so it is read on its own terms rather than through
+	# `_segment_passed()`.
+	var village: Array = await NPC_GATHER.new().run(self, _world, _game, _player, _rig)
+	if not village.is_empty():
+		for line: Variant in village:
+			_fail("village tools: %s" % str(line))
+		return false
+	_checkpoint("visited the village and came away with tools")
+
 	var route := MATERIAL_ROUTE.new()
 	var gathered: Dictionary = await route.run(self, _world, _game, _player, _rig)
 	if not _segment_passed("gather route", gathered):
