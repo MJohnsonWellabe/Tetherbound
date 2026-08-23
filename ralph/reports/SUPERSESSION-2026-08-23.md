@@ -52,6 +52,15 @@ its own tip:
 - `ralph/RUNTESTS-FILTER` — already deleted from the remote (landed and
   swept earlier in this same day's sequence).
 
+**Fourth update, same day.** `ralph/INTEGRATION-BOOKKEEPING` landed on
+`main` first (linear on top of `BAND2-FLOOR`, fast-forwarded cleanly) —
+same divergence shape repeated: `integration-W2` no longer fast-forwarded
+once it landed either, so `main` was merged back into it a second time
+(clean this pass, no conflicts) and re-pushed. `ralph/INTEGRATION-BOOKKEEPING`
+itself is now contained and safe to delete; `ralph/integration-W2` joins
+the "once it lands" list below alongside the branches its own tip already
+carries.
+
 Branch deletion remains blocked from Claude sessions at the credential
 level: `git push origin --delete` returns HTTP 403, and the GitHub MCP
 server exposes no delete-branch tool. Whoever holds owner credentials
@@ -85,6 +94,7 @@ git push origin --delete ralph/gate-d-wild-streaming
 git push origin --delete ralph/STRANDED-P3
 git push origin --delete claude/gate-a-core-verbs-8aaw7g
 git push origin --delete chatgpt/owner-playtest-2026-08-21
+git push origin --delete ralph/INTEGRATION-BOOKKEEPING
 ```
 
 Contained once `ralph/integration-W2` lands (verified by content diff against
@@ -94,6 +104,7 @@ its own tip, not just ancestry — see the third-update note above):
 git push origin --delete ralph/SITE-DRESSING
 git push origin --delete ralph/CREATURE-PRESENTATION
 git push origin --delete ralph/SITE-SHOTS
+git push origin --delete ralph/integration-W2
 ```
 
 Patch-equivalent (every commit's diff already on main under a different
