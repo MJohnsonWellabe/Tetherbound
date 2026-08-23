@@ -1,4 +1,6 @@
 {
 	"_comment": "tunable -- shiny odds (OF27). OF28 adds per-species base/shiny palettes here or in data/creatures/palettes.json; this file starts with only the roll odds because OF27 is plumbing, not colours.",
-	"shiny_chance": 0.0078
+	"shiny_chance": 0.0078,
+	"_comment_emission_scale": "CREATURE-PRESENTATION 2026-08-23. TUNABLE. The creature glbs ship self-lit -- the painted albedo is also the emission map, at full energy -- so in daylight every creature renders as its own texture plus an unshaded copy of itself. Measured on mudsnout: albedo hue 24 / sat 0.63 / value 0.37, rendered body a pale peach with the value contrast around the eyes gone. Halving it keeps the emission that makes a creature readable at dusk and in the Warrens while giving the colourways back their saturation and their faces. Consumed by creature_visual.gd::emission_scale(), applied in creature_body.gd::_swapped_material().",
+	"emission_scale": 0.5
 }

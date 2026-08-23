@@ -53,14 +53,45 @@ func _ready() -> void:
 ## build/inventory menus pause the world with the sky still visible behind
 ## them, and a clock that stops the moment a menu opens would make every menu
 ## a free way to hold off dusk forever.
+##
+## OP23-05/OP23-06 (owner ROG playtest). This used to call apply_time(preset)
+## only at the instant preset_at() crossed a keyframe boundary -- a hard snap
+## from whatever the previous preset looked like straight to the new one's
+## authored numbers, no matter how far apart they were. Golden hour to night
+## is the worst case: bright, warm and lit all the way to hour 24, then one
+## frame later the NIGHT-LIGHT tuning (ambient_energy 2.3, desaturation, the
+## whole ramp) lands at full strength with nothing eased in -- which is
+## exactly "flashed instantly instead of progressing" and exactly why night
+## reads as "too dark... worst immediately after nightfall": the numbers
+## were never wrong, arriving at them in one frame was. `_apply_blended()`
+## below reads day_cycle.gd's new interpolate_at() and re-derives sun/sky/
+## environment every BLEND_INTERVAL seconds as a continuous lerp between
+## whichever two keyframes bracket the current hour, so the whole day sweeps
+## rather than holding three fixed poses. Throttled rather than run every
+## frame: the clock moves slowly (one in-game hour is day_length_seconds/24
+## real seconds, minutes even on a short day), so recomputing this every
+## frame would burn CPU OP23-01 already called out as scarce for no visible
+## gain.
+##
+## apply_time(name) itself is UNCHANGED and still snaps exactly -- every
+## survey/capture/diagnostic tool in tools/ calls it by name expecting a
+## reproducible pinned frame, and that contract has to hold.
+const BLEND_INTERVAL := 0.2
+var _blend_accum: float = BLEND_INTERVAL
+
 func _process(delta: float) -> void:
 	if _cycle == null:
 		return
 	_elapsed_seconds += delta
 	var hour: float = _cycle.hour_at(_elapsed_seconds)
 	var preset: String = _cycle.preset_at(hour)
-	if preset != "" and preset != _time:
-		apply_time(preset)
+	if preset != "":
+		_time = preset
+	_blend_accum += delta
+	if _blend_accum < BLEND_INTERVAL:
+		return
+	_blend_accum = 0.0
+	_apply_blended(hour)
 
 
 ## Camp rest calls this (by group, not by node reference -- see GROUP above)
@@ -118,14 +149,25 @@ func apply_time(name: String) -> void:
 
 ## R5.2: world_weather.gd calls this whenever the weather changes. `delta` is
 ## one entry from data/config/weather.json's `presets` block (or {} for
-## "clear"/no override). Re-applies the CURRENT time of day immediately so
-## the new weather takes effect without waiting for the next natural preset
-## change, and so weather never has to be reapplied by hand when the clock
-## advances on its own -- apply_time() always re-layers whatever `_weather`
-## currently holds.
+## "clear"/no override). Re-applies the current look immediately so the new
+## weather takes effect without waiting for the next natural preset change,
+## and so weather never has to be reapplied by hand when the clock advances
+## on its own -- both apply_time() and _apply_blended() always re-layer
+## whatever `_weather` currently holds.
+##
+## OP23-05: re-applies through _apply_blended(), not apply_time(_time). The
+## latter snaps to the nearest NAMED preset's exact numbers -- fine before
+## the clock blended continuously, but now it would pop the whole scene back
+## to that preset every time weather rolls (every 4-8 real minutes) even
+## mid-transition, undoing the smooth sweep this same task just added. Falls
+## back to apply_time() only when there is no clock to read a live hour from
+## (e.g. a scene with WorldLook but day_cycle.gd's config failed to load).
 func set_weather(delta: Dictionary) -> void:
 	_weather = delta
-	apply_time(_time)
+	if _cycle == null:
+		apply_time(_time)
+		return
+	_apply_blended(_cycle.hour_at(_elapsed_seconds))
 
 
 ## Multiplies/overrides onto the already-merged time-of-day dicts, never onto
@@ -183,6 +225,89 @@ func _merged(section: String, over: Dictionary) -> Dictionary:
 	return base
 
 
+## OP23-05. The passive clock's own tick: blend sun/sky/environment between
+## whichever two keyframes day_cycle.gd's interpolate_at() says bracket
+## `hour`, instead of ever snapping straight to one preset's numbers.
+func _apply_blended(hour: float) -> void:
+	if _cycle == null:
+		return
+	var interp: Dictionary = _cycle.call("interpolate_at", hour)
+	var from_name: String = str(interp.get("from", DEFAULT_TIME))
+	var to_name: String = str(interp.get("to", from_name))
+	var t: float = float(interp.get("t", 0.0))
+	var times: Dictionary = _config.get("times", {})
+	var from_over: Dictionary = times.get(from_name, {})
+	var to_over: Dictionary = times.get(to_name, {})
+
+	var sun_cfg := _blend_dict(_COLOUR_KEYS.sun, _merged("sun", from_over), _merged("sun", to_over), t)
+	var sky_cfg := _blend_dict(_COLOUR_KEYS.sky, _merged("sky", from_over), _merged("sky", to_over), t)
+	var env_cfg := _blend_dict(_COLOUR_KEYS.environment, _merged("environment", from_over), _merged("environment", to_over), t)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+
+	_apply_sun(sun_cfg)
+	_apply_environment(env_cfg, sky_cfg)
+
+
+## Which keys in each merged section are hex-colour strings rather than plain
+## numbers/flags -- `_blend_dict` needs to know before it can decide HOW to
+## interpolate a key, since a colour lerped as a bare float is nonsense.
+const _COLOUR_KEYS := {
+	"sun": ["colour"],
+	"sky": ["top_colour", "horizon_colour", "ground_horizon_colour", "ground_bottom_colour"],
+	"environment": ["fog_colour", "ambient_colour"],
+}
+
+## yaw_deg wraps at +-180 -- a bare float lerp from day's 140 to golden's -66
+## would sweep the LONG way around the compass (206 degrees) instead of the
+## short way (154), which reads as the sun visibly crossing the wrong side
+## of the sky. Everything else numeric lerps as a plain float; nothing else
+## here is an angle that wraps.
+const _ANGLE_KEYS := ["yaw_deg"]
+
+
+## `a` and `b` are already-`_merged()` dicts for the same section (sun/sky/
+## environment) at the FROM and TO keyframe. Colour keys lerp as Color,
+## `yaw_deg` lerps the short way around the compass, every other numeric
+## value lerps as a plain float, and anything else (booleans, the panorama
+## path string) snaps at the midpoint -- there is no meaningful blend for
+## "is this shadow-casting" or "which texture", and every such key in this
+## project is already identical across every time-of-day preset in practice.
+func _blend_dict(colour_keys: Array, a: Dictionary, b: Dictionary, t: float) -> Dictionary:
+	var out: Dictionary = a.duplicate(true)
+	for key: String in b.keys():
+		var bv: Variant = b[key]
+		var av: Variant = a.get(key, bv)
+		if colour_keys.has(key):
+			out[key] = _as_colour(av).lerp(_as_colour(bv), t)
+		elif key in _ANGLE_KEYS and (av is float or av is int) and (bv is float or bv is int):
+			out[key] = _lerp_degrees(float(av), float(bv), t)
+		elif (av is float or av is int) and (bv is float or bv is int):
+			out[key] = lerpf(float(av), float(bv), t)
+		else:
+			out[key] = bv if t >= 0.5 else av
+	return out
+
+
+## Shortest-path lerp between two headings in degrees, wrapping through
+## +-180 rather than always sweeping in the direction of increasing value --
+## see `_ANGLE_KEYS`'s own comment for why yaw_deg specifically needs this.
+static func _lerp_degrees(a: float, b: float, t: float) -> float:
+	var diff := fmod(b - a + 540.0, 360.0) - 180.0
+	return a + diff * t
+
+
+## A blended colour arrives as a real Color (Dictionary values from
+## `_blend_dict` above); every other caller still passes art.json's own hex
+## string. Centralised so `_apply_sun/_apply_sky/_apply_environment` never
+## have to know which they were handed.
+static func _as_colour(value: Variant, fallback: String = "#ffffff") -> Color:
+	if value is Color:
+		return value
+	if value == null:
+		return Color(fallback)
+	return Color(str(value))
+
+
 func _load() -> Dictionary:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
@@ -207,7 +332,7 @@ func _apply_sun(cfg: Dictionary) -> void:
 		0.0
 	)
 	sun.light_energy = float(cfg.get("energy", 1.25))
-	sun.light_color = Color(str(cfg.get("colour", "#fff3e0")))
+	sun.light_color = _as_colour(cfg.get("colour"), "#fff3e0")
 	sun.light_angular_distance = float(cfg.get("angular_distance", 0.6))
 
 	# R5.2 tried driving this false for overcast weather (a real diffuse sky
@@ -273,10 +398,10 @@ func _apply_sky(sky: Sky, cfg: Dictionary) -> void:
 	if gradient == null:
 		gradient = ProceduralSkyMaterial.new()
 		sky.sky_material = gradient
-	gradient.sky_top_color = Color(str(cfg.get("top_colour", "#3b6f93")))
-	gradient.sky_horizon_color = Color(str(cfg.get("horizon_colour", "#b9c8cf")))
-	gradient.ground_horizon_color = Color(str(cfg.get("ground_horizon_colour", "#b9c8cf")))
-	gradient.ground_bottom_color = Color(str(cfg.get("ground_bottom_colour", "#4a5648")))
+	gradient.sky_top_color = _as_colour(cfg.get("top_colour"), "#3b6f93")
+	gradient.sky_horizon_color = _as_colour(cfg.get("horizon_colour"), "#b9c8cf")
+	gradient.ground_horizon_color = _as_colour(cfg.get("ground_horizon_colour"), "#b9c8cf")
+	gradient.ground_bottom_color = _as_colour(cfg.get("ground_bottom_colour"), "#4a5648")
 	gradient.sun_angle_max = float(cfg.get("sun_angle_max_deg", 24.0))
 	gradient.sun_curve = float(cfg.get("sun_curve", 0.18))
 	gradient.energy_multiplier = float(cfg.get("energy", 1.0))
@@ -316,7 +441,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# both means shaded ground is lit under either renderer. It is also just the
 	# more honest way to state it: "shadows are filled by this much of this
 	# colour" is a decision, and reading it off a procedural sky was never one.
-	env.ambient_light_color = Color(str(cfg.get("ambient_colour", "#9fb4c6")))
+	env.ambient_light_color = _as_colour(cfg.get("ambient_colour"), "#9fb4c6")
 	env.ambient_light_sky_contribution = float(cfg.get("ambient_sky_contribution", 0.55))
 
 	env.ssao_enabled = bool(cfg.get("ssao_enabled", true))
@@ -324,7 +449,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	env.ssao_radius = float(cfg.get("ssao_radius", 1.2))
 
 	env.fog_enabled = bool(cfg.get("fog_enabled", true))
-	env.fog_light_color = Color(str(cfg.get("fog_colour", "#c4d2d8")))
+	env.fog_light_color = _as_colour(cfg.get("fog_colour"), "#c4d2d8")
 	env.fog_density = float(cfg.get("fog_density", 0.0016))
 	# Sky affect at zero, deliberately. Fog that tints the sky produces the hard
 	# grey band the critic found across `03-rise-overlook`, where the terrain rose

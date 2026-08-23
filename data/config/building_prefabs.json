@@ -3038,6 +3038,7 @@
       "_why": "RE-MASSED 2026-08-16, owner directive (second playtest): the OF4-rebuild castle read as 'toys in a field' -- 23x17m, 3.9m walls, 6.2m tallest tower against a 1.8m player -- and the owner asked for concept-board scale (docs/reference/owner-board-2026-08-15-*.png, castle panels), rebuilt IN PLACE so the stronghold complex behind it (stronghold.json's five chambers, gauntlet and climax, all sited against this footprint's south edge) stands exactly where it was. The south curtain keeps the shipped gate line z=-8.448 for that reason. Footprint 36x40m on the wall centrelines -- the terrain chose that bound, not timidity: the Rise flank climbs +34m twenty metres west of the wall and the heightfield ends ~30m east (measured, probe grid 2026-08-16), so HEIGHT carries the scale instead: 10.2m two-course curtains at module scale 2.6, 19.4m corner towers, 14.2m twin gatehouse flankers, and a ~29m keep. Generated layout (uniform runs), authored landmarks -- the same author-time-recipe philosophy as before, with the generator's constants recorded here.",
       "_why_colliders": "The old castle had NO colliders anywhere -- you walked through the walls of the endgame landmark. Every wall run, tower and the keep now carries a box in `colliders`, the same {at,size} local-space format village.gd already consumes; landmark.gd builds the StaticBody. The gate bay is deliberately OPEN (the passage is real now, the courtyard is walkable plinth, and the gate-shadow slab is retired), and the plinth + entry ramp colliders are landmark.gd's own, since both are its geometry.",
       "_why_course_seam": "OF4-gate-arch (2026-08-13): the upper course sits at y=1.408, not the 1.549 OF4-rebuild shipped. 1.549 is WallBricks' full height INCLUDING its crenellations, and every wall variant in this kit is crenellated -- so stacking a second course on the first left the lower course's crenel notches (that module is solid to y=1.408 and open from 1.408 to 1.563) as a continuous row of daylight slots punched straight through the curtain at mid-height: in the gate-side frames it read as a dotted bright line running the whole wall, and again on the far wall seen through the gate itself. Seating the upper course at 1.408 buries those notches behind it. Costs 0.14m of wall height (3.90m -> 3.76m) and turns the lower parapet into a proud string course, which is what a two-course curtain wants to look like anyway.",
+      "_why_gate_jamb_filler": "STRONGHOLD-R2. THE VERTICAL SKY SLOT IN THE SOUTH FACE, AND WHY IT IS NOT A HOLE IN THE WALL. `gate-close` came back with a narrow strip of open sky running the full height of the frame just outside the gate's right jamb -- you could see straight through the fortress. Nothing is missing from the curtain: tools/_probe_castle_gaps.gd measured every module in the castle's own frame and the south run is continuous from x -17.99 to -2.02. The slot is PARALLAX. The gatehouse flankers stand 1.5m proud of the curtain (their south face is z -10.79, the gate block's is -9.27) and each flanker is a HOLLOW tower, so from any eye off the gate's own axis -- and the gate-close eye is off it, the bay is at x +2 and the camera at x 0 -- there is a wedge of directions that passes INSIDE the flanker's near edge (x -1.421) and OUTSIDE the gate block's (x -1.400) and meets nothing until the sky above the far wall. Measured: the wedge runs from tan 0.1534 to tan 0.1867 off the view axis, i.e. screen px 719..736 of 1280, which is exactly the slot. The four filler modules at the end of `modules` stand 0.2m NORTH of the curtain plane (z -8.248 against the run's -8.448, so they can never z-fight it) inside the flankers' own hollows, and reach x -1.0 / +5.0 -- past both jambs, closing the wedge with ~0.4m of margin where a filler in the curtain's own plane would have had 0.009m and failed on the next camera nudge. They are invisible from every other direction: the curtain hides them from the south, the flanker from the sides, and 0.2m of one pokes into the courtyard at the gatehouse's base, where a pilaster belongs anyway. The +x side gets the mirrored pair because the same wedge opens there for any eye on that side of the axis; it is closed in THIS frame only because this camera happens to sit toward -x.",
       "_why_retint": "every material in the kit's own MTLs (LightRock/DarkRock/Black/Celing/LightWood/Banner, all variants) exports at the same placeholder grey Kd (0.64,0.64,0.64) -- a real gap in this particular pack's Blender export, confirmed directly against the OBJ/MTL text, not a design choice. Retint gives each material-name slot the stone/timber/iron/heraldic tone its name implies, the same surface-name convention village.gd's own retint (MI_WindowGlass above) already uses.",
       "modules": [
         {
@@ -4456,6 +4457,54 @@
           ],
           "yaw_deg": 180.0,
           "scale": 3.0
+        },
+        {
+          "_why": "STRONGHOLD-R2 gate-jamb parallax filler, west side -- see _why_gate_jamb_filler",
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -2.997,
+            0.0,
+            -8.248
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "_why": "STRONGHOLD-R2 gate-jamb parallax filler, west side -- see _why_gate_jamb_filler",
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -2.997,
+            3.661,
+            -8.248
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "_why": "STRONGHOLD-R2 gate-jamb parallax filler, east side -- see _why_gate_jamb_filler",
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            6.997,
+            0.0,
+            -8.248
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "_why": "STRONGHOLD-R2 gate-jamb parallax filler, east side -- see _why_gate_jamb_filler",
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            6.997,
+            3.661,
+            -8.248
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
         }
       ],
       "colliders": [
@@ -4653,15 +4702,16 @@
         }
       ],
       "_why_retint_backlit": "GATE-E-STRONGHOLD-ART (2026-08-23). Every stone value in this block was raised roughly one and a half stops; the value LADDER between them is unchanged. Two blind critics called the stronghold 'untextured', 'unlit-looking', 'a flat black slab', and the cause is not a broken material path -- it is that these albedos were chosen against a LIT face and the player never sees one. The sun is authored at pitch -44/yaw -40 (data/config/art.json), which puts it in the NORTH sky; the ramp, the gate and the whole approach are on the SOUTH side (landmark.gd::_build_ramp), so the hero face of the endgame landmark is backlit at every hour the chapter is played, lit by ambient alone. Measured on main with tools/frame_stats.py: near-field luma 0.012 on `gate-close` and 0.053 on `silhouette-approach`, against the 0.49-0.60 this file's own art.json comments quote from the Palworld references -- ten to forty times under. An albedo of #786d5e under ambient-only fill lands near black no matter how correct it looks in a lit test render. The earlier pass that DARKENED these (recorded in landmark.gd's PLINTH_COLOUR history) was answering a washed-out-at-distance complaint from the era when this was a long-range wayfinding silhouette; OF13 moved the site out of long-range view entirely and landmark.gd's own header says that argument is no longer load-bearing, so the darkening it bought can be given back. `Black` is lifted off near-void for the same reason: an absolute black reads as a hole in the render rather than as a shadowed recess. Banner keeps Team Tether's reserved oxblood untouched. TUNABLE, and the first thing to re-check if the stronghold ever reads washed out from a genuinely sunlit angle.",
+      "_why_retint_panel_noise": "STRONGHOLD-R2. `DarkRock` #6b5f52 -> #8b7c6b and `Black` #221d18 -> #3a3229. The blind critique on the round-1 frames named 'noise-rectangle windows floating mid-wall, some half over edges'. They are not decals and nothing is misplaced: `WallBricks`/`TallWallBricks` carry their brick panels in DarkRock and their openings in Black, and at a stop and a half below the LightRock face those panels stopped reading as masonry and started reading as rectangles pasted onto a blank wall -- the eye sorts a high-contrast rectangle on an otherwise flat field as a separate OBJECT, not as texture. Closing the gap (DarkRock now about 0.6 of a stop under LightRock instead of ~1.5; Black lifted further off void, the same move round 1 made for the same reason) puts them back into the same surface. The value LADDER is unchanged and still holds in both directions: LightRock #a3907a > DarkRock #8b7c6b > Black #3a3229 > landmark.gd's PLINTH_COLOUR #524a41, so the foundation is still the darkest stone on the site and still grounds the mass. This does NOT fix a window that straddles a module boundary -- that is the gatehouse flanker overlapping the curtain run, and closing it needs the massing re-authored, not a colour -- it stops that window being the loudest thing on the wall. TUNABLE; if the castle ever reads flat and detail-less at range, this pair is the first place to widen again.",
       "retint": {
         "LightRock": "#a3907a",
         "LightRock.001": "#a3907a",
         "LightRock.002": "#a3907a",
-        "DarkRock": "#6b5f52",
-        "DarkRock.001": "#6b5f52",
-        "Black": "#221d18",
-        "Black.001": "#221d18",
-        "Black.002": "#221d18",
+        "DarkRock": "#8b7c6b",
+        "DarkRock.001": "#8b7c6b",
+        "Black": "#3a3229",
+        "Black.001": "#3a3229",
+        "Black.002": "#3a3229",
         "Celing": "#4a3828",
         "Celing.001": "#4a3828",
         "LightWood": "#8a6842",

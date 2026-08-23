@@ -733,6 +733,54 @@ silhouette by rescaling or re-curating what is installed. It needs an asset
 the project does not own, so it is an owner purchase decision, not work.
 ## Design questions awaiting the owner
 
+### OPEN — CREATURE-MESH-FLOURISH: three creature reads need GEOMETRY, and the hard rule forbids it
+
+**2026-08-23, CREATURE-IDENTITY-2.** The identity pass that produced this entry
+delivered the owner board's fantasy layer as paint — leaf ears, moss carpets,
+greened antler tips, storm-blue feather tips — composited onto the existing UVs
+against an anatomy map read out of each species' own glb
+(`tools/creature_anatomy_maps.py`, `tools/creature_overlays.py`). No mesh was
+touched, which is what makes that layer legal.
+
+Three items on the board are **not** reachable that way, because they are
+silhouette, and a texture cannot change a silhouette:
+
+1. **Brooktail's wave-tail.** The board draws the otter's tail as a curling
+   water-crest. The installed mesh has a straight tapered tail. Painting a
+   crest on it produces a straight tail with a crest drawn on it, which reads
+   worse than the plain tail does.
+2. **Ripplet's proportions.** The board's Water starter is stubbier and
+   larger-headed than the installed mesh, which is the difference between the
+   board's chibi read and the current one. Proportion is vertex position.
+3. **Antler geometry** — meadowhart and veridian. The board's racks fork more
+   and carry more tines than either installed rack. The greening lands
+   (`meadowhart.overlays.antler_tips`), but it greens the rack that exists.
+
+**`CLAUDE.md`'s hard rule forbids both available routes**: no new creature
+meshes for the Meadows, and no Meshy generation for creatures at all — the
+owner reaffirmed the latter on 2026-08-11 *with credits in the account*, so a
+healthy balance does not lift it. Editing the installed glbs' vertices is the
+same rule wearing a different hat: the result is a new creature mesh.
+
+**The spec already answers this, and the answer is "accept".**
+`docs/MEADOWS_PROGRESSION_SPEC.md` §"Creature art rule" says it in one line —
+*"Do not reopen creature concept design because a silhouette is imperfect"* —
+and lists the levers that are allowed instead, every one of which this pass
+used. So this entry is **not** a request for a decision the owner has not
+made. It is a record that the decision has a visible cost, filed here because
+the alternative is that every future lane comparing a render to the board
+rediscovers these same three gaps and re-argues them from scratch.
+
+The entry closes itself if the owner ever wants to spend on it: naming these
+three species as an explicit exception to the no-new-creature-mesh rule, which
+would still require owner-supplied reference art per species first. Absent
+that, the installed silhouettes are canon and the board's tail, proportion and
+antler drawings are concept licence.
+
+Nothing in the roster is blocked on this. The paint layer shipped.
+
+---
+
 ### OPEN — EV2-landmark-ceiling: `CherryBlossom_3` is the pack's ceiling, confirmed by render, not a placement lever
 
 **2026-08-14.** `CherryBlossom_3` was already established as the only tree

@@ -21,7 +21,19 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
+const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
+
+## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
+## an alpha is a bigger animal, not an attack telegraph, and combat already owns
+## red (`combat/telegraph_glow.gd`). Tunable here rather than in config because
+## these are one look, not a per-region balance number -- if the roster ever
+## wants per-species alpha colours they belong in the species table, not in a
+## global.
+const ALPHA_RIM_STRENGTH := 0.65
+const ALPHA_RIM_TINT := 0.15
+const ALPHA_AURA_COLOUR := Color("#ffd479")
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -60,6 +72,19 @@ var display_name: String = ""
 ## `set_shiny()`, never rolled here — this node draws whatever it is told,
 ## the same way it never decides its own species.
 var shiny: bool = false
+
+## CREATURE-IDENTITY-2. Whether this body is its cluster's ALPHA.
+##
+## WILD-ECOLOGY (prompt 60) already spawns cluster leaders with a level bonus
+## and a size multiplier, and `encounter_director._make_alpha` sets a meta flag
+## so a test can find one -- but nothing about an alpha's PRESENTATION differed
+## from its neighbours', so at the distance where a 1.3x size difference is
+## ambiguous (which is most distances, with no ordinary member of the same
+## species conveniently standing beside it) the player had no way to know a
+## fight was going to be harder than the last one.
+##
+## Set through `set_alpha()`, never decided here -- same rule as `shiny`.
+var alpha: bool = false
 
 var _height: float = 1.0
 var _radius: float = 0.4
@@ -176,6 +201,19 @@ func set_shiny(value: bool) -> void:
 	if shiny == value:
 		return
 	shiny = value
+	_refresh_shiny_tint()
+
+
+## CREATURE-IDENTITY-2. Mark this body as its cluster's alpha and re-dress it.
+##
+## Same shape and the same reasons as `set_shiny()` above: the director decides
+## alpha status in `_make_alpha()` AFTER the body has been built and populated,
+## so this has to work on an existing body, and it is a no-op when the status
+## has not changed so a defensive caller cannot re-swap a material every frame.
+func set_alpha(value: bool) -> void:
+	if alpha == value:
+		return
+	alpha = value
 	_refresh_shiny_tint()
 
 
@@ -405,11 +443,78 @@ func _refresh_shiny_tint() -> void:
 	## A shiny with no authored colourway falls back to OF27's placeholder
 	## tint so it is never silently indistinguishable; an ordinary creature
 	## with no vivid colourway simply keeps its shipped texture.
-	var suffix := "shiny" if shiny else "vivid"
+	##
+	## CREATURE-IDENTITY-2 adds a third: `*_alpha.png`, the cluster leader.
+	## Shiny wins over alpha when a creature is both -- a shiny is one in 128
+	## and is the rarer thing to have to recognise -- and an alpha with no
+	## authored alpha colourway falls back to the ordinary `vivid` one, so a
+	## species can gain the variant later without any code change here.
+	var suffix := "vivid"
+	if shiny:
+		suffix = "shiny"
+	elif alpha:
+		suffix = "alpha"
 	if _has_model and _swap_colourway_textures(suffix):
+		_apply_alpha_presence()
+		return
+	if _has_model and suffix == "alpha" and _swap_colourway_textures("vivid"):
+		_apply_alpha_presence()
 		return
 	if shiny:
 		_apply_variant_tint(_shiny_palette())
+	_apply_alpha_presence()
+
+
+## CREATURE-IDENTITY-2. The half of alpha presence that is not the texture:
+## a rim light on the body and a slow ring of drifting motes around it.
+##
+## The colourway (`*_alpha.png`) carries the material difference the owner board
+## asks for -- heavier stone plates on burrowback, storm-blue tips on galecrest
+## -- but it only differs on the species that have one authored, and a texture
+## difference alone is not visible against a sunlit meadow at fifty metres. The
+## rim is: BaseMaterial3D's own rim term brightens exactly the silhouette edge,
+## which is the part of an animal a player can still resolve at the distance
+## where they choose whether to walk toward it.
+##
+## Rim rather than emission because these models are already self-lit (the
+## painted albedo is wired into the emission slot, which is what
+## creatures_visual.json's `emission_scale` exists to tame) -- raising emission
+## on an alpha would brighten its whole body toward the pale wash that pass was
+## fixing, and would not touch the outline at all.
+##
+## The materials this edits are the per-species swap materials cached in
+## `_shiny_swap_materials`, so the edit is keyed by the `alpha` suffix and can
+## never leak onto an ordinary creature of the same species: an alpha that fell
+## back to the shared `vivid` material gets its own duplicate first.
+func _apply_alpha_presence() -> void:
+	if _aura != null:
+		_aura.queue_free()
+		_aura = null
+	if not alpha or shiny:
+		return
+	if _has_model:
+		_rim_light_node(_model)
+	_aura = ALPHA_AURA.attach(self, _radius * 1.5, _height, ALPHA_AURA_COLOUR)
+
+
+func _rim_light_node(node: Node) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var material := source as BaseMaterial3D
+			if not material.resource_name.ends_with("_alpha_rim"):
+				material = material.duplicate() as BaseMaterial3D
+				material.resource_name = "%s_alpha_rim" % material.resource_name
+				instance.set_surface_override_material(surface, material)
+			material.rim_enabled = true
+			material.rim = ALPHA_RIM_STRENGTH
+			material.rim_tint = ALPHA_RIM_TINT
+	for child in node.get_children():
+		_rim_light_node(child)
 
 
 ## Walks the model's surfaces looking for materials whose albedo texture has
@@ -426,6 +531,11 @@ func _swap_colourway_textures(suffix: String) -> bool:
 ## reach the two static helpers as well for no benefit.
 var _colourway: String = "vivid"
 
+## The alpha's drifting motes, freed and rebuilt whenever the body is re-dressed
+## (a model rebuild through `apply_size_multiplier` is the live case -- without
+## this the old aura would be left parented to the replaced art).
+var _aura: Node3D = null
+
 
 func _swap_node_textures(node: Node) -> bool:
 	var swapped := false
@@ -434,6 +544,19 @@ func _swap_node_textures(node: Node) -> bool:
 		var mesh: Mesh = instance.mesh
 		var surfaces := mesh.get_surface_count() if mesh != null else 0
 		for surface in surfaces:
+			# Clear any override this node already applied BEFORE reading the
+			# material back.
+			#
+			# CREATURE-IDENTITY-2 found this the hard way. `get_active_material`
+			# returns the override when one is set, so the second swap on the
+			# same body was reading the FIRST swap's output: an alpha
+			# burrowback, which is dressed `vivid` at build time and re-dressed
+			# `alpha` when the director marks it, asked for the alpha sibling of
+			# `..._base_color_vivid.png` -- a file that does not and should not
+			# exist -- found nothing, and silently stayed vivid. Clearing first
+			# makes every swap derive from the model's own shipped material, so
+			# colourways never chain.
+			instance.set_surface_override_material(surface, null)
 			var source: Material = instance.get_active_material(surface)
 			if not (source is BaseMaterial3D):
 				continue
@@ -465,6 +588,12 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	if copy.emission_enabled:
 		var shiny_emission := _texture_for(source.emission_texture, species, suffix)
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
+		# CREATURE-PRESENTATION: these materials wire the painted albedo into
+		# the emission slot at full energy, so a creature in daylight renders as
+		# its own texture plus a second unshaded copy of itself -- which is what
+		# turns a saturated mid-brown map into a pale peach animal and flattens
+		# the value contrast a face needs. Tunable in creatures_visual.json.
+		copy.emission_energy_multiplier *= VISUAL.emission_scale()
 	_shiny_swap_materials[key] = copy
 	return copy
 

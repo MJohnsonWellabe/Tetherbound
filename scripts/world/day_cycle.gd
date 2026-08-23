@@ -84,6 +84,44 @@ func preset_at(hour: float) -> String:
 	return active
 
 
+## OP23-05. The neighbouring keyframes bracketing `hour` and how far between
+## them play currently sits: {"from": name_before, "to": name_after,
+## "t": 0..1}. world_look.gd blends sun/sky/environment continuously between
+## these two rather than snapping the instant `preset_at()` crosses a
+## boundary -- the owner's ROG playtest caught the snap directly ("day/night
+## transition flashed straight to night instead of progressing") and it
+## explains OP23-06 too: NIGHT-LIGHT's own tuning (art.json) was correct for
+## a SETTLED night sky, but landing on it in one frame with no transition is
+## what "worst immediately after nightfall" describes -- the same numbers,
+## arrived at instantly instead of eased into.
+##
+## Wraps the same way `preset_at()` does. `_keyframes` is sorted by hour, so
+## walking it once and checking each keyframe against its own successor
+## (wrapping the last back to the first, +24h) finds exactly one bracket.
+func interpolate_at(hour: float) -> Dictionary:
+	if _keyframes.is_empty():
+		return {"from": "", "to": "", "t": 0.0}
+	if _keyframes.size() == 1:
+		return {"from": _keyframes[0].name, "to": _keyframes[0].name, "t": 0.0}
+	var h := fposmod(hour, 24.0)
+	var n := _keyframes.size()
+	for i in n:
+		var cur: Dictionary = _keyframes[i]
+		var nxt: Dictionary = _keyframes[(i + 1) % n]
+		var cur_hour: float = cur.hour
+		# The wrap case: the next keyframe's hour is not > this one's only when
+		# `cur` is the LAST keyframe and `nxt` is the first, past midnight.
+		var nxt_hour: float = nxt.hour if nxt.hour > cur_hour else nxt.hour + 24.0
+		var h_adj: float = h if h >= cur_hour else h + 24.0
+		if h_adj >= cur_hour and h_adj < nxt_hour:
+			var span: float = nxt_hour - cur_hour
+			var t: float = (h_adj - cur_hour) / span if span > 0.0 else 0.0
+			return {"from": cur.name, "to": nxt.name, "t": clampf(t, 0.0, 1.0)}
+	# Unreachable given the loop above covers every hour in [0, 24), but keeps
+	# this total rather than trusting that.
+	return {"from": _keyframes[-1].name, "to": _keyframes[-1].name, "t": 0.0}
+
+
 func is_dark(hour: float) -> bool:
 	var h := fposmod(hour, 24.0)
 	if dark_from_hour <= dark_to_hour:

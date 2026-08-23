@@ -44,8 +44,9 @@
   },
   "sun": {
     "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
+    "_comment_yaw_visual_light": "VISUAL-LIGHT. Was -40, which GATE-E-STRONGHOLD-ART's own investigation named exactly: -40 puts the sun in the NORTH sky (world_look.gd rotates the DirectionalLight3D so its light travels FROM the yaw direction TOWARD the opposite one -- verified with a Basis.from_euler probe, sun_dir.z > 0 at -40, i.e. north), while the chapter's whole play direction and the stronghold's hero face (landmark.gd's own comment: 'every approach to this building is on its south side') point SOUTH. Every south-facing surface the player actually walks toward -- not just the stronghold, which only got a local albedo/fire-basket workaround because 'turning the sun around... lives in the environment config another lane owns' -- was backlit at every hour of the chapter. This lane owns that file now. Flipped 180 degrees (-40 -> 140) rather than re-deriving an azimuth from scratch: it is the exact opposite direction, same elevation, so shadow length/readability (this block's own stated reason for the pitch) is untouched, and it is trivially reversible if a specific site turns out to want the sun from a third direction. Sun is now in the south sky; south-facing hero faces are front-lit. GATE-E-STRONGHOLD-ART's castle albedo/fire-basket compensation is stepped back in the same change (building_prefabs.json, landmark.gd) now that the real cause is fixed.",
     "pitch_deg": -44.0,
-    "yaw_deg": -40.0,
+    "yaw_deg": 140.0,
     "energy": 1.35,
     "colour": "#fff6e6",
     "shadow_max_distance": 220.0,

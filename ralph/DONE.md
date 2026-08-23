@@ -51,6 +51,727 @@ Verified on the merged branch before push: full suite 1362 tests / 0 failed;
 file hard-errors with exit 2, as designed; `--shard=1/4` (27 of 105 files, 327
 tests, 0 failed) — sharding and full-run behaviour both unchanged from before
 this flag existed.
+## VISUAL-LIGHT — the sun was in the wrong sky, and the day/night clock snapped instead of moving (WIND-DOWN, partially verified)
+
+`area: data/config/art.json, scripts/world/world_look.gd, scripts/world/day_cycle.gd, tests/test_day_cycle.gd, tools/_capture_day_night_transition.gd (new, scratch)`
+
+Wound down early on an owner directive to move this work to dedicated remote
+sessions mid-pass. Recorded honestly below: what shipped, what is measured,
+and what the next session must still verify before calling this converged.
+
+### 1. The sun yaw fix (confirmed lead, from GATE-E-STRONGHOLD-ART)
+
+`art.json`'s `sun` block authored `yaw_deg: -40`, which GATE-E-STRONGHOLD-ART's
+own investigation already named: a `Basis.from_euler` probe on that pitch/yaw
+puts the light source in the **north** sky (`sun_dir.z > 0`), while
+`landmark.gd`'s own comment says "every approach to this building is on its
+south side" and the chapter's whole opening/wayfinding spine runs the same
+direction. That GATE-E task explicitly declined to touch the sun ("lives in
+the environment config another lane owns") and patched around it locally with
+a raised castle albedo and the garrison's own fires. This lane owns
+`art.json` now, so the actual cause is fixed instead: `yaw_deg` flipped
+180 degrees, `-40 -> 140` — same elevation (`pitch_deg` untouched, so shadow
+length/combat readability, this block's own stated reason for a high sun, is
+unaffected), exact opposite azimuth. Trivially reversible if a specific site
+turns out to want a third direction.
+
+**Measured** (`tools/frame_stats.py`, `tools/capture_castle_lite.gd`, real
+render, this session):
+
+| frame | near-field luma, before this fix | after | reference range |
+|---|---|---|---|
+| `gate-close` | 0.144 (GATE-E's own fix, itself up from main's 0.012) | **0.453** | 0.49-0.60 |
+| `silhouette-approach` | 0.128 | **0.300** | 0.49-0.60 |
+
+Both still land under the reference range, not over — **no overbrightening**,
+so GATE-E-STRONGHOLD-ART's castle albedo ladder (`building_prefabs.json`'s
+`castle` retint) and `landmark.gd`'s `PLINTH_COLOUR` were left as-is per this
+task's own instruction ("if your sun fix overbrightens the castle, step that
+ladder back down in the same change" — it does not, so there is nothing to
+step back). A real render of `gate-close`/`silhouette-approach` after the fix
+shows a front-lit stone gate with its banners and torches visible against a
+readable blue sky — a plain visual confirmation, not run through the blind
+critic (see "not done" below).
+
+`tools/survey.gd`'s day-preset frames (`01-spawn-outward`, `02-valley-floor`,
+`04-three-quarter`) also re-rendered clean: sunlit warm grass, a saturated
+blue sky, no dusk/afternoon mismatch. `03-rise-overlook` (a wide, mostly-fog
+distant shot) still reads flat green-grey at range — plausibly the fog/aerial
+perspective layer, not the sun direction, but **not root-caused this
+session**. `05-spawn-low-sun` (the `golden` preset, whose own `sun` block was
+untouched by this change) rendered pure black twice in a row on this
+container — reproduced deterministically, not a flake, but the golden
+preset's sun config is unrelated to this edit, so this is pre-existing and
+orthogonal; flagging rather than fixing, since it was never this task's target
+and the cause (possibly the same physics/render-order class of bug the
+survey harness has hit before, per `conventions.md`'s capture traps) needs
+its own investigation.
+
+**Not done — the rest of the VISUAL-LIGHT brief.** Band4 site captures
+(`tools/_capture_band4_sites.gd`) could not complete in this container: two
+attempts timed out at 1700-2400s each mid-boot/settle under sustained
+15-25 1-min-load contention from other concurrent lanes on this shared box,
+never reaching the actual shot loop. No band4 before/after numbers exist yet.
+The blue-grey noon cast and the pond "resort-turquoise" read were diagnosed
+(prime suspect: `environment.ambient_colour` `#a8bccc`, a cool fill that
+dominates any surface still in shadow — plausible that most of the
+previously-reported "blue-grey" was simply how much of the south-facing
+ground was ambient-only lit before this fix, which the sun flip should have
+sharply reduced) but **not measured or acted on**. No blind `visual-judge`
+pass ran this session (owner/CLAUDE.md/conventions.md all require one before
+calling visual-affecting work done — explicitly still open). Water.json was
+inspected, not touched, per the task's own "prefer no change if the day
+grade alone fixes the read" — unverified either way without the band4/pond
+renders.
+
+### 2. Day/night transition snap (OP23-05/OP23-06, folded in mid-pass per coordinator)
+
+The remote Visual coordinator routed a fresh owner ROG playtest
+(`ralph/OWNER_PLAYTEST_2026-08-23.md`, branch
+`claude/game-assessment-cleanup-g6gplm`) into this lane's scope: **OP23-05**
+the day-to-night transition flashed instantly instead of progressing, and
+**OP23-06** night is back to too dark, worst immediately after nightfall.
+
+**Root cause, confirmed by reading the code, not yet confirmed by a render.**
+`world_look.gd::_process()` only ever called `apply_time(preset)` at the
+instant `day_cycle.gd::preset_at(hour)` crossed a keyframe boundary — a hard
+snap from whatever the PREVIOUS preset's numbers were straight to the new
+preset's numbers, no matter how far apart. Concretely: the world stays
+pinned at golden hour's exact bright/warm values for the entire six hours
+from 18:00 to 24:00 (including past `dark_from_hour` 20.0, where the torch
+already auto-ignites on a scene that still looks like sunset), then AT
+24:00 snaps in one frame to NIGHT-LIGHT's fully-tuned dark/desaturated
+values. `git log` on `art.json` confirms nobody has touched the night
+preset's numbers since the NIGHT-LIGHT rounds landed — OP23-06 is not a
+numeric regression, it is the same snap bug: the tuning was always correct
+for a SETTLED night sky, and landing on it with no transition is what reads
+as "too dark, worst immediately after nightfall."
+
+**Fix, landed but not yet render-verified this session:**
+
+- `day_cycle.gd`: new pure function `interpolate_at(hour)` returns the two
+  bracketing keyframes and a 0..1 blend fraction between them, wrapping past
+  midnight the same way `preset_at()` already does. Pure logic per D02 — 4
+  new tests in `test_day_cycle.gd`, all passing (`12 methods, 43 assertions,
+  0 failures`, run directly against the suite, not through `run_tests.gd`
+  which has no single-file filter — see BACKLOG's own `run_tests.gd` filter
+  item).
+- `world_look.gd::_process()` now recomputes a **continuous blend** between
+  the bracketing keyframes' sun/sky/environment every 0.2 real seconds
+  (throttled — the clock itself moves slowly, no need to blend every
+  frame, and OP23-01 already flagged ROG frame time as scarce), instead of
+  snapping only at boundaries. Colours lerp as `Color`; `yaw_deg` lerps the
+  short way around the compass (`_lerp_degrees`, since a bare float lerp
+  from day's 140 to golden's -66 would sweep the WRONG side of the sky,
+  206 degrees instead of the short 154); every other numeric value lerps as
+  a plain float; anything non-numeric (`shadow_enabled`, the panorama path)
+  snaps at the blend midpoint since there is no meaningful blend for a
+  boolean or a texture path and every such key is already identical across
+  every preset in this file today.
+- `apply_time(name)` itself is **unchanged** and still snaps exactly —
+  every survey/capture/diagnostic tool under `tools/` calls it by name
+  expecting a reproducible pinned frame, and that contract had to hold.
+- `set_weather()` now re-applies through `_apply_blended()` (reading the
+  live hour) instead of `apply_time(_time)`, which would otherwise have
+  popped the whole scene back to the nearest NAMED preset's exact numbers
+  every time weather rolls (every 4-8 real minutes) — undoing the sweep
+  mid-transition. Falls back to the old `apply_time()` path only if there
+  is no clock (`_cycle == null`).
+- Added `_as_colour(value, fallback)` so `_apply_sun`/`_apply_sky`/
+  `_apply_environment` accept either a hex string (every existing caller)
+  or a real `Color` (what the blended path now produces) — verified by
+  loading the script headless and by a throwaway script confirming `.set()`/
+  `.call()` on the underscore-named members work as expected from outside
+  the class.
+
+**What is verified:** the script loads and compiles cleanly; the new pure
+`interpolate_at()` math is unit-tested and green (including the specific
+"never snaps the instant `preset_at` changes" case); `smoke_gate_a_rest_torch`
+and `smoke_combat_camera` both still pass with the blended clock live in a
+real scene, so the torch's `is_dark()` gate (which reads `day_cycle.gd`
+directly, unaffected by this change) and the combat camera rig both still
+behave correctly across a played session.
+
+**What is NOT verified — the wind-down cut this short.** A scripted
+day-to-night sequence capture (`tools/_capture_day_night_transition.gd`,
+committed) was written to drive `world_look.gd`'s own `_elapsed_seconds` and
+`_apply_blended()` directly (not `apply_time()`, so it exercises the exact
+path a real player's clock takes) across 12 hours spanning both keyframe
+crossings and `dark_from_hour`, at one fixed viewpoint, for direct
+`frame_stats.py` comparison. It was launched but killed mid-render on the
+wind-down order before producing a single frame — **no visual confirmation
+that the transition actually reads as progressive darkening, and no
+confirmation of a navigable night floor, exist yet.** The next session
+should run it first:
+
+    xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+      --rendering-driver opengl3 --resolution 1280x800 \
+      --script tools/_capture_day_night_transition.gd
+    python3 tools/frame_stats.py shots/day_night/*.png
+
+and confirm `near_luma` decreases monotonically-ish across the hour sequence
+(no big jump at 17.9->18.1 or 23.9->0.1) and that the night-floor frames
+(20.5, 22.0, 0.1, 2.0) sit above a "can still see the ground" luma floor,
+not at 0.000 the way the pre-NIGHT-LIGHT regression once did.
+
+### For the remote Visual coordinator adopting this branch
+
+Priority order for what's left: (1) run the day/night transition capture
+above and confirm OP23-05/06 actually read as fixed, not just logically
+correct; (2) get a band4 site capture through on a less-contended window and
+measure the ghost-box/dead-olive/blue-grey claims against the sun fix; (3)
+run the required blind `visual-judge` pass across opening + band4 +
+stronghold per `conventions.md` before calling any of this "done"; (4) only
+then revisit whether the castle albedo ladder or pond water need any
+follow-up — right now neither does, by measurement.
+
+Full suite was **not** re-run this session (wind-down cut it) — the smoke
+tests named above passed, and `tests/test_day_cycle.gd`'s own suite passed
+run directly, but `tests/test_world_weather.gd` (which this task's own brief
+required to stay green) was read and reasoned about but not executed after
+the day/night change landed. Run the full suite before shipping past this
+branch.
+## CREATURE-IDENTITY-2 — the board's fantasy layer, painted onto the UVs the meshes already have
+
+`tests: smoke_arena_contain OK, smoke_art OK, run_tests.gd 1331 ok / 0 failed at wind-down (suite still running its veg/world tail on a contended box — see "Test state at hand-off" below)` · `area: tools/creature_anatomy_maps.py (new), tools/creature_overlays.py (new), tools/repaint_creature_textures.py, data/creatures/shiny_colourways.json, scripts/creatures/alpha_aura.gd (new), scripts/creatures/creature_body.gd, scripts/combat/encounter_director.gd, tests/smoke_art.gd`
+
+Round 1 (`CREATURE-PRESENTATION`) re-keyed the roster's palette, despeckled the
+photoreal Meshy albedos and halved the self-lit emission. A blind critique
+called the result **"correct but half-depth"**, and it was right: the owner
+board (`docs/reference/owner-board-2026-08-15-creature-colors.png`) does not
+draw recoloured animals. It draws animals the meadow has grown into — leaf ears
+on bramblebun, moss carpeting mudsnout's and tuskroot's shoulders and mosshell's
+shell, foliage on terrapup's and trailpup's backs, meadowhart's antler tips
+greened, storm-blue tips on galecrest's flight feathers. None of that layer
+existed. This is that layer.
+
+### Step 0 first: the red CI was inherited, not caused
+
+Round 1's CI failed `tests/smoke_arena_contain.gd` — *"burrow warrens / mouth:
+the fight's own centre ((-364.4, 4.15, 2618.2)) is not recognised as inside any
+chamber"*. **Merging current `main` fixes it, and the cause was never round 1's
+textures.** `main` gained `653f4cdc` (GATE-E/CI-BOSS, `scripts/world/built_floor.gd`)
+after this branch was cut: before it, every Warrens and Stronghold fight resolved
+its ground against the TERRAIN under the building rather than the building's own
+floor, because `ground_height_at` is discovered by walking up the tree and the
+director parents fight participants to the world root. Participants were placed
+outside the room, the arena opened at the player's position, and
+`burrow_warrens.combat_arena_bounds_at()` correctly answered "that x/z is in no
+chamber". With the merge the same fight opens at (-360.1, 4.24, 2616.6), inside
+the `mouth` footprint, and the test passes untouched — 0.5m arena against a 0.5m
+bound, plus its own reproduction of the unfixed case. Nothing in the test was
+loosened.
+
+### Anatomy, not UV rectangles
+
+`tools/creature_anatomy_maps.py` rasterises each species' own glb into a UV-space
+map of normalised position, surface normal and distance off the centre line, so
+an overlay is authored as *"the top fifth of the animal, away from the spine"*
+(an ear) or *"up-facing surfaces above the shoulder, clear of the head"* (where
+moss grows). `tools/creature_overlays.py` composites against that with three
+modes — `grow` (moss/leaf: new material keeping the host's value relief),
+`tint` (the animal's own material recoloured, **value untouched**), `shade`
+(the region's own paint pushed) — broken up by value noise sampled in MODEL
+space so a clump is not sliced at every UV seam.
+
+This is also the fix for round 1's named galecrest defect. Its blue came from a
+colourway RULE, so it landed wherever the source texture happened to be rusty —
+blotches crossing feather boundaries. The blue is now placed anatomically (the
+distal third of both wings) and applied as a `tint`, so every quill line, barb
+shadow and specular edge in the value channel survives and the colour flows
+along the feathers instead of over them.
+
+**Two bugs found by rendering, both worth knowing about:**
+
+1. **The rasteriser flipped V.** glTF's UV origin *is* the image's top-left, so
+   no flip is correct; the first version used that fact backwards. The symptom
+   is not a visible mirror — UV islands are scattered, so a flipped anatomy map
+   puts moss on a boar's snout, a leaf on a rabbit's chin and green on a deer's
+   hooves. Caught by rendering, confirmed by measurement against mosshell's
+   unmistakable tan-shell-over-green-body texture. Cost one full regeneration
+   round.
+2. **A second colourway swap read back its own first swap.**
+   `get_active_material()` returns the override, so an alpha burrowback — built
+   `vivid`, re-dressed `alpha` when the director marks it — asked for the alpha
+   sibling of `..._base_color_vivid.png`, found nothing, and silently stayed
+   ordinary. `_swap_node_textures` now clears the override before reading, so
+   colourways can never chain. `tests/smoke_art.gd` asserts it.
+
+### Alphas now look like alphas
+
+WILD-ECOLOGY already spawned cluster leaders with a level bonus and a 1.3–1.4x
+size multiplier, and nothing about them looked different — a size difference is
+only legible when an ordinary member of the same species happens to stand beside
+it. An alpha now carries a `*_alpha` colourway where one is authored
+(burrowback: heavier, darker stone plates and an older moss coat; galecrest:
+deeper storm blue reaching further up the wing), a rim light on the silhouette
+(the part that survives at the distance where the player chooses whether to
+approach — rim rather than emission, because these models are already self-lit),
+and a permanent idle aura of drifting motes (`scripts/creatures/alpha_aura.gd`).
+
+The aura is mesh-based, camera-facing, MIX-blended and physics-clocked, which is
+four lessons this repo already paid for in `impact_flash.gd` and
+`telegraph_glow.gd`. Its motes were flat quads in the first render and came back
+as pale hard-edged SQUARES; they are soft vertex-coloured fans now.
+
+**The scale multiplier was NOT touched.** It grows the collider, the hit cone's
+reach and the catch accuracy bonus together, on purpose, so raising it retunes
+combat and catching for every alpha in the chapter. The ask is recorded on
+`BACKLOG`'s `ALPHA-PRESENCE`, not made here.
+
+### One roster, and what could not be reached
+
+The two-families problem — glassy-plush chibi faces next to naturalists — turned
+out to be measurable, and the measurement is the fix. The shared finish pass
+re-stamps "the darkest 3%, but never brighter than 0.22", and **ripplet's darkest
+2.5% sits at 0.384 and galewisp's at 0.314**: both above the cap, so those two
+received *no* feature re-stamp at all while burrowback (0.043) received a full
+one. Every species now carries a `feature_max_val` measured from its own surface
+texels, so all seventeen re-stamp the same share of surface to the same shared
+dark. Paddlenewt's scalloped belly, which aliased into fishnet at thumbnail size,
+gets a `shade` overlay that reduces the scallops' local contrast rather than
+blurring them at the same frequency.
+
+**What this could not do, honestly:** isolating an iris to unify the eyes
+directly. These glbs are one mesh, one primitive, one material, so there is no
+per-eye material; and a texture-space locator is unreliable — the darkest 1% of
+every species is scattered over feet, crevices and shadow, not concentrated on
+the eyes. The shared-dark language above is what texture work can actually
+reach. A real eye pass needs either per-eye material IDs or a hand-authored eye
+mask per species.
+
+### Legendary and shinies
+
+Veridian keeps VERIDIAN-HIDE's ivory hide — no hue was touched. It gains value
+range (the underside deepened, so the silhouette is not one flat pale mass) and,
+in the EMISSIVE map only, a crown boosted and a body damped: emission is the one
+channel distance, shadow and overcast do not take away, so at range the player
+sees a pale stag with a burning green rack rather than a pale shape.
+
+`*_shiny` was regenerated through the same finish pass and the same identity
+overlays — **this closes `BACKLOG`'s `SHINY-FINISH`**. The 109MB objection was
+backwards: the finish pass's own downsample makes the regenerated set a fraction
+of what it replaced.
+
+### The blind pass still could not be run
+
+Same gap round 1 recorded, same cause: this lane's toolset has no task/sub-agent
+tool, and the only session-spawning tool available starts a container that cannot
+see this worktree. So the frames were judged against `.claude/skills/visual-judge`'s
+rubric and `docs/reference/` by the same session that made the change — which is
+exactly the weaker thing the convention exists to prevent. **A firing with a
+sub-agent tool should re-critique `shots/creature_presentation/_portraits.png`,
+`_field_thumbs.png` and `burrowback_alpha_x1.30.png` before trusting this entry's
+read.** What the self-judged rounds produced is checkable rather than assertable:
+every overlay prints the share of its species' surface it actually painted, and
+those numbers are in the spec's own comments (bramblebun's ears 9.5%, mosshell's
+shell 14.5%, burrowback's plate moss 12.2% after a first attempt came back at
+0.0%, tuskroot's mantle 19.7%, galecrest's wing tips 21.6%).
+
+### Test state at hand-off, and what is DONE vs PENDING
+
+This lane was wound down by owner directive mid-suite. Stated exactly:
+
+* **`tests/smoke_arena_contain.gd` — GREEN**, verified twice locally after the
+  merge. Step 0 is closed; the root cause is `main`'s, not this branch's, and
+  the test was not touched.
+* **`tests/smoke_art.gd` — GREEN**, including the new alpha-presence assertion.
+* **`tests/run_tests.gd` — 1331 ok, 0 failed** at the moment of wind-down, still
+  working through its vegetation/world tail on a box running nine concurrent
+  suites. Nothing this lane changed is exercised by the remaining files. CI on
+  the branch is the authority; **whoever adopts this branch should read the CI
+  run rather than this line.**
+
+**Identity overlays — DONE and rendered** (share of each species' surface
+actually painted, printed by the tool): bramblebun leaf ears 9.5% + leaf ruff
+6.9%; mosshell shell moss 14.5%; mudsnout back moss 20.6%; tuskroot mantle
+19.7% + root creep 9.8%; burrowback plate moss 12.2%; trailpup saddle 6.6%;
+terrapup leaf collar 6.6%; meadowhart antler tint 5.2% + antler leaf 1.8%;
+galecrest storm tips 21.6% + crest 9.8%; paddlenewt belly 33.6%; veridian hide
+39.1% plus emissive crown 41.6% / body damp 60.6%.
+
+**PENDING, and named rather than implied:**
+
+* **Eye unification is partial.** The shared re-stamp language landed (measured
+  per-species thresholds, so all seventeen re-stamp the same share to the same
+  dark). Direct iris work did NOT: one mesh, one material, no per-eye ID, and no
+  reliable texture-space iris locator. Needs per-eye material IDs or a
+  hand-authored eye mask per species.
+* **Alpha colourways exist for two species only** — burrowback and galecrest,
+  the two the task named. Every other species' alpha falls back to `vivid` and
+  still gets the rim and the aura, so nothing is broken; the material half is
+  simply unauthored. Adding one is a `overlays_alpha` block in
+  `data/creatures/shiny_colourways.json` and a regeneration, no code.
+* **The blind critique did not run** (see above).
+* **`ROSTER-BLUE` is untouched** and still open: seven of seventeen still read
+  blue-to-white at thumbnail size. Out of this lane's scope by its own filing.
+
+### Blocked, deliberately
+
+Brooktail's wave-tail, ripplet's proportions and both antler racks are
+SILHOUETTE, and a texture cannot change a silhouette. Filed in
+`ralph/BLOCKED.md` as `CREATURE-MESH-FLOURISH` — with the note that
+`MEADOWS_PROGRESSION_SPEC.md` already answers it ("do not reopen creature
+concept design because a silhouette is imperfect"), so the entry exists to stop
+the next lane relitigating it, not to ask for a decision that has been made.
+## VISUAL-GROUNDCOVER — chapter-wide ground-cover density, oversized-flora rescale, two band4 Ironwood landmark trees
+
+`tests: the four named scatter/veg tests green individually (test_scatter_rules.gd 27/27, test_scatter_perf_budget.gd 3/3, test_scatter_fingerprint_covers_bands.gd 3/3, test_veg_corridor.gd 6/6); test_harvest.gd 22/22 (band4 harvest.json touched); full suite NOT run this session -- see "what's unverified" below` · `area: data/config/vegetation.json, data/config/bands/band4_upper_meadows_ironwood/harvest.json, data/scatter/playground/* (re-bake), tests/test_scatter_rules.gd`
+
+ASSESSMENT_2026-08-23.md ranked emptiness the #1 blind-critique gap in every
+round ("60-90% of most frames is one flat green terrain material with
+confetti scatter... ground cover density and flower drifts are the single
+biggest lever"), alongside two named scale errors (violet flowers ~3x oversize
+at 0.5-0.8m blossoms, ~1.5m ferns) and orchard-scale (6-9m) Ironwood hero trees
+against the keyart's 15-20m landmarks. `BAND2-FLOOR` (unmerged, `cf4d25e4`) was
+in flight on the same file doing hand-sited forest-floor anchors; this lane's
+diff never touches an `anchors` array, so the two should merge cleanly.
+
+**What shipped:**
+
+1. **Corridor-wide ground-cover density.** `vegetation.json`'s
+   `corridor_bands.density_scale` (the knob every ground-cover layer's
+   `corridor_fill` multiplies against, per `scatter_rules.gd::_band_scale_at`)
+   was floored at 0.03-0.07 against the origin square's own tuned 1.0 --
+   raised roughly 1.4-1.7x per band (band1 0.07->0.11, band2 0.05->0.08, band3
+   0.03->0.05, band4 0.05->0.085, band5 0.05->0.07; band3/5 get the smallest
+   bumps -- band3 is the shortest region, band5's drain stations already thin
+   it at run time). `path_stones` gained its own `corridor_fill` (it had none
+   before -- "small stones" and a trodden-path read existed only inside the
+   origin square) with a tight 0-5m trail offset so stones sit on the path
+   itself, not spread across open ground.
+2. **Flora rescale.** `flowers` layer `scale_min/max` 0.07-0.26 -> 0.025-0.09
+   (measured with `tools/measure_models.gd`: the layer's Flower_4 models are
+   2.05-2.49m raw, so the old scale_max still put blossoms at 0.5-0.65m on the
+   taller models even though the layer's own R9.4 comment believed it had
+   already fixed this to ankle height). `bushes` layer `scale_min/max`
+   0.6-1.5 -> 0.45-1.0 (Bush_Common's old ceiling reached 2.13m -- taller than
+   the 1.8m trainer -- and Fern_1's reached ~1.13m of frond height on top of a
+   2.83m canopy footprint, the game's actual read of "~1.5m ferns").
+3. **Two band4 Ironwood landmark trees.** `harvest.json` order 4000 and 4003
+   (of the stand's five TwistedTree_4 nodes) raised from `model_scale`
+   0.42/0.36 to 0.85/0.78 -- real height ~15.9m/14.6m against TwistedTree_4's
+   measured 18.74m raw height, up from the previous 4.9-7.9m orchard-scale
+   stand. The other three nodes are untouched (modest scale variation, not a
+   uniform regrade -- `_comment_stand_d4b`'s own prior finding was that
+   uniform scale reads as scatter, not a placement, and turning all five into
+   landmarks would repeat that).
+4. **Re-baked.** `data/scatter/playground` config-fingerprint re-bake:
+   143,630 -> 223,271 placements (10 layers, 256 regions), comfortably inside
+   `test_scatter_perf_budget.gd`'s 260,000 sane ceiling (14% headroom left --
+   a further density bump belongs on a freshly-measured bake, not a guess
+   from this one).
+5. **One test fix.** `test_scatter_rules.gd::test_path_bias_of_one_lands_clumps_on_the_road`
+   duplicates the real `path_stones` layer and toggles `path_bias`; adding
+   `corridor_fill` to that layer meant both the biased and unbiased runs now
+   also draw corridor-fill instances (which don't read `path_bias` at all --
+   tested separately in `test_veg_corridor.gd`), diluting both averages and
+   breaking the test's 10x ratio assertion. Fixed by erasing `corridor_fill`
+   from the test's duplicated layer to isolate the square-only mechanism the
+   test is actually about.
+
+**What's unverified.** The blind visual-judge pass (survey render + contact
+sheet + blind sub-agent critique, `ralph/conventions.md`'s own requirement for
+visual-affecting work) did not complete this session. Three render attempts
+via `tools/survey.sh`/`survey.gd` under `xvfb-run`+`opengl3` were OOM-killed
+(exit 137, confirmed via `dmesg` against this session's own `claude-code-bash`
+memory cgroup, 14.3GB limit) or hit a one-frame renderer flake (`05-spawn-low-sun`
+came back a flat black frame, spread 0.0000, on an otherwise-clean 4/5-frame
+run) under heavy concurrent load from five-plus sibling lanes sharing this
+box (1-min load 15-35 for most of the session; ~22 concurrent Godot processes
+at peak). No `frame_stats.py` before/after deltas and no blind critique were
+obtained. `tools/_capture_band4_sites.gd`'s `ironwood-grove` shot (the direct
+verification frame for item 3 above) was never captured either. The config
+math, the model measurements (`tools/measure_models.gd`), and the four named
+scatter/veg tests are the only verification this entry can honestly claim --
+**the actual rendered result has not been looked at, by a human or a blind
+critic, and should be before this is treated as done.** Next step for
+whoever picks this up: `tools/survey.sh` (or the raw `xvfb-run ... survey.gd`
+invocation, `--headless` must NOT be combined with `--rendering-driver`)
+once the box has real headroom, then `godot --headless --path . --script
+tools/contact_sheet.gd`, then the `visual-judge` skill's blind sub-agent pass,
+iterating per `ralph/conventions.md`'s convergence rule.
+## STRONGHOLD-R2 — a road reaches the stronghold, and the gate stops being orange
+
+`tests: full suite 1362 tests, 839499 assertions, 0 failed · smoke_stronghold.gd green (2m51s) · smoke_gate_e_finale.gd green (5m56s)` · `area: data/config/terrain_playground.json, data/config/building_prefabs.json, data/config/stronghold_occupation.json, data/config/vegetation.json, scripts/world/playground_heightfield.gd, scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd, scripts/world/torch_prop.gd, tools/capture_castle_lite.gd, tools/capture_stronghold_approach.gd (new), data/terrain/playground/terrain3d_00-01.res (re-baked), data/scatter/playground/** (re-baked)`
+
+Round 2 on `GATE-E-STRONGHOLD-ART`'s frames. Round 1's own critique confirmed
+the movement (the gate went from a black mass to a lit destination, the Band 4
+ghost boxes went) and named six defects after it. This is those, in leverage
+order, plus the staging the frames were missing.
+
+### 1. There was no road. That was the whole wayfinding failure.
+
+The stronghold is the endgame landmark and nothing led to it: every wayfinding
+frame showed a fortress standing in unbroken meadow, which reads as a prop
+dropped on a lawn rather than a place people go.
+
+`paths.approaches` (new section, `terrain_playground.json`) is the road. It
+starts at (74,-41) — the exact point `paths.routes`'s "The Rise" stops, under
+its own trailhead fingerpost — and ends at (231.8,-165.4), which is
+`landmark.gd`'s ramp foot, so the painted soil runs up to the bottom of the
+ramp and the gate is the end of the road.
+
+**It joins `road_polylines()` rather than `paths.routes`, and that is not a
+formality.** `signpost.gd` draws one arm per `routes` entry on the junction
+post by the well; `OF13` moved this site out of sight of the village square on
+the owner's direct instruction so it is not known from the start, and a fifth
+arm reading "The Stronghold" in the opening minute would hand that away. Same
+reason `spokes`, `crossings` and `trail` are separate sections.
+
+**The line is measured, not drawn.** `rises.peaks[0]` (140,-90, radius 78) sits
+almost exactly between the trailhead and the gate — a straight line between
+them passes within **2.5m of that summit**, i.e. straight up the 40–52° collar
+`OF10a` already had to truncate "The Rise" against.
+`tools/_probe_stronghold_road.gd` (scratch) runs a Dijkstra over the real
+heightfield at 4m resolution, impassable above 22°, then Douglas-Peucker and
+two pinned-endpoint Chaikin passes to take the 45°-only grid corners out.
+Authored result: **worst slope 17.1°** against the player's own 45°
+`floor_max_angle`, never closer than **80.0m** to the summit — just outside the
+dome's own 78m radius, so the road contours the rise's western and southern
+foot instead of climbing it.
+
+**The last 90m are hand-set and that is the point.** The first version ran
+west-to-east along z≈-180 and stopped at the ramp foot. Correct road, useless
+one: every wayfinding eye stands due SOUTH of the gate (229.8 at z -214.4 /
+-170.4 / -162.8), the road never came within 28m of any of them, and the
+rendered frame still showed a player in unbroken grass looking at a fortress
+with a faint smudge passing behind it. A gate is approached head-on, so the
+road now swings east and comes back up the gate's own axis: it passes **3.6m**
+from the `silhouette-close` eye and **2.1m** from `silhouette-approach`'s — the
+player is standing ON it. `tools/_probe_road_leg.gd` (scratch) checked the tail
+leg by leg: worst 17.1° at (212,-202), the final 50m up the axis under 12°.
+
+**Per-route width.** `path_factor()` now reads `width`/`shoulder` off each
+road, defaulting to `paths.width`/`paths.shoulder`, so every existing route is
+bit-identical to before. The approach is **6.5m / 2.2m** against the shared
+3.0/1.5: at the village-track width it rendered as a discolouration in the
+grass rather than a road, which is the same "nothing leads there" reading one
+step on. Widening `paths.width` itself would have widened Grandpa's garden
+path. `road_polylines()` is unchanged for its other seven callers; the widths
+live in a new `road_bands()` beside it.
+
+Costs: a re-bake of terrain region `0:-1` (32s — the road is entirely inside
+one region, and `build_playground_terrain.gd` already takes `--regions=`) and a
+full scatter re-bake (57s, 143,630 → 147,003 placements, the difference being
+this road's own verge fringe and path stones).
+
+**Two real regressions the scatter caught by itself**, and both are worth
+knowing about because a new road quietly deletes whatever was standing where it
+now runs:
+
+* `OF10-remainder`'s **cairn** at the Rise road's end sat 0.11m off the new
+  road's centreline — literally in the travel lane — and the bake said so,
+  rejecting every draw ("placed 0 of 3 / 0 of 6"), which would have removed the
+  cairn from the world silently. Moved to (78.6,-44.0), 5.49m out along the
+  bisector of the fork's two free bearings, equidistant from both roads; the
+  fingerpost keeps the other side. That point stopped being the end of a road
+  and became a junction, and the two now flank it.
+* A **pair of trees** at the rise's south-west foot (`vegetation.json`,
+  `trees.anchors`, was (70,-128)) ended up 1.92m off the road, which put most
+  of its own 9m disc inside the worn band. The production seed still placed
+  both, so the bake never warned — the SUITE caught it, as "placed 0 of 2" and
+  "placed 1 of 2" inside `test_scatter_rules.gd`, which uses seeds 1/2/99.
+  Proven to be this road's doing rather than pre-existing:
+  `tools/_probe_anchor_seeds.gd` (scratch) runs those three seeds, and with
+  `terrain_playground.json` stashed out all three place both trees. Moved to
+  (60.5,-133.7) — 9.16m clear on 1.7° ground, verified clean at all three seeds.
+  Out onto the meadow rather than up the flank, because
+  `tools/_probe_anchor_clearance.gd` (scratch) measured the road's north-east
+  side at **40–50°** for 20m along there: the road is contouring the rise's own
+  collar and there is genuinely no room on that side.
+
+The second one is the general lesson: a "placed 0 of N" warning at a seed the
+production bake does not use is still a real defect, because it means whatever
+was authored there survives only by luck of the seed.
+
+### 2. Night balance: the fire had stopped being punctuation and become the weather
+
+Round 1 fixed a real bug (0.012 near luma, backlit at every hour) by putting
+the garrison's fires on the castle, and then went one step past working.
+Measured before this pass: `gate-close` at **orange 65% / red 32% and no blue
+at all** — two hue families in the entire frame — against the key art's night
+panel, which is blue ground and blue air with fire as the only warm thing in it.
+
+The fix is the light that is physically missing, not less fire. Under the
+Compatibility renderer sky radiance does not reach the terrain (`world_look.gd`
+says so in its own header), so a surface facing away from the sun gets a
+colourless ambient constant: the south face gets no blue because there is no
+blue light in the world to give it. `stronghold_occupation.json`'s new
+`sky_fill` is that missing sky bounce — five wide, shadowless omnis in the
+sky's own blue over the approach — and brazier energies came down ~35%.
+
+**Scoped to this locale on purpose.** The chapter-wide sun and ambient are one
+global tuning every biome and every combat-readability decision is set against,
+they live in `art.json`, and `NIGHT-LIGHT` has four rounds landed on them
+(`e250a2f7`, `2295dc20`, `702e3472`, `842078f5`). Reaching into that from a
+landmark's dressing file is how two lanes end up fighting over one number.
+
+Measured on `gate-close`, before this pass -> after everything in it:
+chroma **83.0% -> 28.3%**, saturation **0.51 -> 0.22**, hue families **2 -> 3**,
+near luma **0.103 -> 0.127** (round 1's gain kept and raised, not traded).
+`silhouette-approach`: blue **39% -> 64%**, orange **51% -> 22%**, chroma
+**52.5% -> 19.1%**. `silhouette-close`: near luma **0.183 -> 0.239** and a
+yellow family appearing at 13%, both of which are the road arriving in frame.
+
+### 3. The artefacts
+
+**The vertical sky slot in the curtain is parallax, not a hole.** This one is
+worth reading before touching the massing. Nothing is missing from the wall:
+`tools/_probe_castle_gaps.gd` (scratch) measured every module in the castle's
+own frame and the south run is continuous from x -17.99 to -2.02. The gatehouse
+flankers stand 1.5m proud of the curtain (south face z -10.79 against the gate
+block's -9.27) and each flanker is a **hollow** tower, so from any eye off the
+gate's axis — and `gate-close`'s is, the bay is at x +2 and the camera at x 0 —
+there is a wedge of directions that passes inside the flanker's near edge
+(x -1.421) and outside the gate block's (x -1.400) and meets nothing until the
+sky above the far wall. Measured: tan 0.1534 to 0.1867 off the view axis, i.e.
+screen px 719–736 of 1280, which is exactly the slot. Four filler wall modules
+0.2m north of the curtain plane, inside the flankers' hollows, reaching x -1.0 /
++5.0, close it with ~0.4m of margin; a filler in the curtain's own plane would
+have had 0.009m. Both sides get them — the +x side is closed in this particular
+frame only because this camera sits toward -x.
+
+**The spark beads.** `torch_prop.gd`'s ember emitter was `amount 8, lifetime
+1.0`, no randomness, no fade and gravity pointing UP — a metronome emitting one
+identical particle every 0.125s and accelerating it away forever, which draws a
+regular ladder of beads climbing off the flame with a gap under the first one.
+Fixed at the cause: `randomness 0.75` breaks the fixed spawn interval, a shorter
+lifetime keeps them in the fire's own glow, gravity now pulls down so an ember
+arcs, a scale curve fades each one out, and a 0.045m emission sphere stops eight
+sparks leaving one coordinate. This is shared with the player's torch and every
+other fire in the game, deliberately — it is the same defect everywhere.
+
+**The noise-rectangle windows.** They are not decals and nothing is misplaced:
+`WallBricks`/`TallWallBricks` carry their brick panels in `DarkRock` and their
+openings in `Black`, and at a stop and a half below the `LightRock` face those
+panels stopped reading as masonry and started reading as rectangles pasted onto
+a blank wall — the eye sorts a high-contrast rectangle on an otherwise flat
+field as a separate object. `DarkRock` #6b5f52 → #8b7c6b, `Black` #221d18 →
+#3a3229. The value ladder still holds in both directions: LightRock #a3907a >
+DarkRock #8b7c6b > Black #3a3229 > `PLINTH_COLOUR` #524a41, so the foundation is
+still the darkest stone on the site. This does **not** fix a window that
+straddles a module boundary (that is the flanker overlapping the curtain run and
+needs the massing re-authored); it stops it being the loudest thing on the wall.
+
+**The dark untextured plinth skirt.** Three things produced that reading and
+only one was colour: it carried a bare `albedo_color` with no map of any kind,
+so every pixel of a 44m-wide 6.7m-tall face was literally the same number;
+nothing broke it horizontally, so it had no scale cue at all; and its top edge
+met the castle's base as one unbroken line, so it read as a slab the castle
+stands on rather than as the base course of the same building. Now: a generated
+mottled stone map, triplanar (both boxes have no meaningful UVs), **built with
+`Image`+`FastNoiseLite` in a tight loop rather than a `NoiseTexture2D`** —
+that resource fills on a worker thread and is empty for exactly the first frames
+a scripted capture reads. Plus a proud coping course at the top and a string
+course two-thirds down, both in the castle's own `DarkRock`. The ramp shares the
+material; it is the largest single surface in `gate-close`. `PlinthBody` is
+untouched, so nothing about where a player can stand changed.
+
+**The ramp was a dead plane, and the fix had to widen it.** Not on round 1's
+list but the loudest thing left in two of three frames: 6m x 11.8m of unbroken
+single-value slab with a hard edge and nothing on it, filling the bottom third
+of `gate-close`. The key art's own stronghold panel climbs to its gate up a
+built stair with kerbs, so the ramp gets a low kerb down each side in the same
+dressed stone as the plinth courses. **The slab grew to take them**
+(`RAMP_SHOULDER`, 1.2m either side) rather than the kerbs being squeezed inside
+the old edge, because the ramp-head braziers stand 3.3m off the ramp's centre —
+0.3m PAST the old slab edge, tuned there over three rounds of the previous pass
+and quietly overhanging air. A kerb inside the old edge would have been masonry
+through the fire baskets; widening put the baskets on real ground and the kerb
+outside them. `RAMP_WIDTH` is untouched at 6.0 and still means the walked width
+nothing may stand in. Mesh only, no new collider — the slab under them is the
+collider and it only got bigger. `gate-close` near luma 0.108 → **0.127** on
+this change alone.
+
+**The merlon size disagreement was NOT fixed.** See "Not done".
+
+**The band4 ridge-crest white mesh was not investigated.** Second-path rule and
+no Band 4 render was affordable on this box — see "Not done".
+
+### 4. The frames are staged now
+
+Nothing human-sized stood in any of these three frames, so none of them could
+answer the question a landmark frame exists to answer. Round 1 answered it with
+a garrison camp (1.8m tents against a 10m curtain), which is a good cue and is
+not the same cue as a person. `capture_castle_lite.gd` now stands the real
+trainer rig (`art.json`'s block, fitted to its declared 1.80m by
+`character_model.gd` — the same build path the player's body uses) and one real
+bramblebun built through `creature.tscn` + `creature_body.gd::setup` on the
+ramp, at x -0.3 and +3.2 so neither hides the gate arch at x +2. On the ramp
+rather than the grass because two of the three eyes are already past the grass —
+`gate-close` stands at local z -18.4, on the ramp itself.
+
+Two things that cost a render each and are recorded so nobody re-learns them:
+a creature's origin is its body centre, not its feet (it rendered half-sunk;
+`_lowest_point` measures the drop rather than guessing it), and at x 4.1 the
+bramblebun's flank hung over the ramp's own edge and `gate-close`'s low eye cut
+it in half.
+
+### Not done, and why
+
+* **The blind visual-judge pass did not run, again.** `conventions.md` requires
+  it. This lane has no in-process subagent tool, and `create_session` returned
+  "the service is temporarily unavailable" on **six** attempts spread over the
+  session — the identical blocker round 1 recorded, so this is now a standing
+  infrastructure problem for visual work in this lane and not bad luck.
+  Invoking the `visual-judge` skill directly does **not** substitute: it loads
+  inline, into the context that already knows what changed, which is the one
+  thing the skill's own header says the mechanism depends on not happening.
+  **What was prepared, so the next firing can run it in one step:** the frames
+  and `_sheet.png` are current in `shots/wayfinding/`, and a scratch branch
+  `scratch/stronghold-r2-frames` (commit `2b4a257`) carries origin/main's tree
+  plus those four PNGs — `shots/` is gitignored, so that branch exists purely so
+  a spawned critic in a fresh container can see them. Spawn against it with
+  `source_url` + `source_revision`, point the critic at the four paths and
+  `docs/reference/`, and tell it nothing else.
+  Everything above is measured (`tools/frame_stats.py`, the geometry probes) or
+  is my own read of real frames. Treat these frames as **improved-and-unjudged**.
+* **The merlon size disagreement between towers.** Confirmed real and located:
+  three merlon sizes are visible in one silhouette — the curtain at module scale
+  2.6, the gatehouse flankers at 3.4, the keep's crown at 3.8 — plus a fourth,
+  the inner bailey ring at 2.0, which shows behind the flankers in
+  `silhouette-approach`. Not fixed because every candidate is a re-author, not a
+  tune: the merlons are part of each module's mesh so a uniform `scale` ties
+  crenellation size to tower size, and dropping the flankers to the curtain's
+  2.6 costs 3.3m of gatehouse height that would have to be regained by stacking,
+  which moves the measured south face the banners, the teal lamps and this
+  pass's own gate-jamb fillers are all placed against. It is a real defect and
+  it is genuinely the lowest-leverage of the six. Carrying it as a remainder
+  rather than shipping a half-measured massing change on the hero landmark.
+* **The band4 ridge-crest glitch-white mesh.** The second-path rule says confirm
+  it is real geometry before changing it, and confirming means a Band 4 render.
+  The box ran at load 12–30 with four cores, ~1GB free and five other lanes
+  capturing and testing into each other for the whole window; my own full-scene
+  capture (below) was starved out at 11 minutes without printing its first line.
+  Untouched, unconfirmed, still open.
+* **`tools/capture_stronghold_approach.gd` shipped but its frames did not.**
+  This is the real-scene version of the three viewpoints, and it exists because
+  `capture_castle_lite.gd` makes the frames lie about one specific thing:
+  it skips the vegetation scatter, so every lite frame shows the stronghold in
+  an unbroken mown lawn. A critic reading those frames will rank "the field is
+  empty" first and will be describing the capture, not the world — and this
+  task's own road gets none of its dressing there either, since the path stones
+  and the verge fringe are scatter layers. **Whoever runs the blind pass should
+  run this tool first, on an idle box, and judge `shots/wayfinding_full/`
+  instead.** Same three viewpoints, same staged actors, so the two sets are
+  comparable frame for frame.
+* **The full suite's run overlapped two of this pass's own edits, and that is
+  worth stating rather than glossing.** 1362 tests / 839,499 assertions / 0
+  failed is a real result, but the run started before the ramp kerbs landed
+  and before the tree anchor moved and the scatter re-baked, so
+  `test_scatter_rules.gd` in that run measured the OLD anchor position (its
+  'placed 0 of 2 / 1 of 2' warnings in the log are that, and it passed
+  anyway — a warning is not a failure). A wind-down order arrived before a
+  clean second run could be made. What IS verified against the final tree:
+  `tools/_probe_anchor_seeds.gd` replays exactly the three seeds
+  `test_scatter_rules.gd` uses (1, 2, 99) and all three place both trees
+  with no warning, and the production scatter bake is clean. The unit suite
+  discovers `test_*.gd` only, so the kerbs (landmark.gd) are outside it
+  entirely; `smoke_stronghold.gd` and `smoke_gate_e_finale.gd` are the tests
+  that walk that geometry and both ran green.
+* No Meshy generation was spent and no asset was added. Everything here is
+  existing kit modules, existing scripts and config.
 
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 
@@ -540,6 +1261,235 @@ genuinely blind pass on the four after-frames is still owed to this work.
   ownership, not this lane's to fix.
 - Mill yard path tiles: placement unverified by render (above).
 - A real blind (subagent) critique of the four after-frames.
+
+## CREATURE-PRESENTATION — the roster repainted for the world it stands in
+
+`tests: smoke_art + full suite` · `area: data/creatures/shiny_colourways.json, tools/repaint_creature_textures.py, scripts/creatures/creature_body.gd, scripts/creatures/creature_visual.gd, data/config/creatures_visual.json, assets/creatures/tetherbound/*/models/*_vivid.png`
+
+Two blind critics ranked creature presentation a top-3 gap against the Palworld
+bar and named four defects. All four were reachable inside the no-new-meshes
+rule, because none of them were about the meshes:
+
+**1. Colour keyed to nothing.** `shots/band3/09-wild-cluster-on-the-road.png`
+measures three Bramblebun at hue 141-148 standing on grass at hue 134-155 —
+the most common creature in Band 1, painted the colour of the ground it lives
+on, invisible until you are on top of it. The vivid pass that did that was
+authored against the owner's colour boards on a NEUTRAL GREY card, where a
+mint rabbit reads perfectly well. Six species were re-keyed off the terrain
+instead (`bramblebun` `mudsnout` `trailpup` `mosshell` `veridian` `tuskroot`,
+plus `pipwing` and `duskhush` for contrast rather than hue), and the rule is
+now written down in the spec file: the meadow owns hue 80-175, green is spent
+on ACCENTS — bramble sprigs, moss on stone plates, a legendary's crown — never
+on a coat. `repaint_creature_textures.py` prints each output's share of
+chromatic pixels left in that band, so the next author gets the number.
+
+Every board's own words survived: Bramblebun's 'Forest greens + Leafy details'
+kept the leafy details and moved the coat; Veridian's 'Verdant glow + Ancient +
+Sacred' is now three words on three parts of one animal rather than three words
+on one hue (see `VERIDIAN-HIDE` in `BACKLOG.md` — that one is an owner call and
+is filed as reversible).
+
+**2. Speckle that reads as dithering.** These are photoreal-ish Meshy albedos;
+at the forty pixels a wild creature actually occupies, their fine detail is
+noise. `repaint_creature_textures.py` grew a FINISH pass — median despeckle,
+value quantised into bounded zones, saturation ceiling, and the darkest 3% of
+the SOURCE re-stamped after the smoothing so eyes, nostrils and outlines
+survive it — plus a downsample to 1024. The roster's ordinary colourways went
+from 110MB of tracked binaries to 24MB in the same commit that improved them.
+
+**3. Faces that cannot be found.** Two causes, both fixed. A rule that pushes a
+whole animal to one hue and one saturation erases the value contrast the face
+was carrying — Brooktail (the otter at the village pond, the first water
+creature a player meets, whose eyes a critic could not locate at all) and
+Duskhush had exactly that done to them, and now get their pale muzzle and
+facial disc back. The second cause is systemic and was not visible from the
+textures: **these glbs ship self-lit.** The painted albedo is wired into the
+emission slot at full energy, so every creature in daylight renders as its own
+texture plus an unshaded copy of itself. Mudsnout's repainted albedo measures
+hue 24 / saturation 0.63 / value 0.37 and rendered as a pale peach piglet.
+`creatures_visual.json::emission_scale` (0.5, tunable) halves it in the
+material override — kept rather than removed because that emission is what
+makes a creature readable at dusk and in the Warrens.
+
+**4. Pastel blobs at distance.** Pipwing — 140 field spawns, the second most
+common creature in the chapter — was a pale grey body under pale sky-blue tips,
+two pastels a stop apart. Same scheme, contrast pushed apart: near-white body,
+deep saturated tips.
+
+**Evidence.** `tools/capture_creature_presentation.gd` is new and is the rig
+this pass needed and did not have: every species on GRASS keyed to the shipped
+frames' own measured value, under meadow light, portrait plus a gameplay-
+distance field shot, with the 1.80m trainer bar in frame.
+`tools/creature_presentation_sheet.py` builds the two sheets and prints, per
+species, the measured hue and value distance between the creature and the
+ground BEHIND IT (per row, from an empty strip of the same frame — a global
+background average scored every creature well because half its silhouette was
+being compared against sky). `shots/` is gitignored, so the four contact
+sheets and the two alpha frames are force-added into
+`shots/creature_presentation/` (`before/` holds the same two sheets from
+before the pass) and the 34 per-species frames stay local, the same way
+`shots/candidates/` was kept.
+
+**In-habitat evidence.** `tools/_probe_creature_habitat.gd` (new, nonshipping)
+shoots the two places the defects were reported from —
+`shots/creature_presentation/habitat/practice-meadow-cluster.png` (the Band 1
+Bramblebun cluster, the frame whose mint rabbits started this) and
+`habitat/pond-shoreline.png` (the otter, the frame whose eyes could not be
+found). Compare against `shots/band3/09-wild-cluster-on-the-road.png` and
+`shots/gate_a/village_pond_op21/pond-shoreline.png` in a full checkout. It
+exists because the tools that already frame these places settle 90 frames and
+then 40 more per shot: on a box shared with five rendering lanes that ran over
+half an hour without producing a single frame, twice. 24 + 10 frames produces
+a usable composition-and-colour frame in a fraction of that, and this pass
+needed colour, not fine lighting. Bramblebun's hue distance from the ground goes
+21.8 -> 64.5 degrees; Mosshell's 34.9 -> 61.3; Mudsnout's value distance 0.14
+-> 0.27 before the emission fix pulled it back to a deliberate 0.17 with the
+saturation restored.
+
+**The blind pass could not be run, and that is a gap in this entry.**
+`ralph/conventions.md` requires the critique to come from a sub-agent that does
+not know what changed. This lane had no way to spawn one: its toolset has no
+task/sub-agent tool, and the only session-spawning tool available
+(`create_session`) starts a container that cannot see this worktree and whose
+output cannot be read back from here. So the frames were judged against
+`.claude/skills/visual-judge`'s own rubric and `docs/reference/` by the same
+session that made the change, which is exactly the weaker thing the convention
+exists to prevent. **The next firing that touches creature art should re-run
+the blind critique on `shots/creature_presentation/_portraits.png` and
+`_field_thumbs.png` before trusting this entry's read.**
+
+What the self-judged pass produced, so it can be checked rather than taken:
+three rounds, each re-rendered and re-measured. Round 1 moved five species'
+hue distance from the ground (Bramblebun 21.8 -> 62.3 degrees, Mosshell 34.9
+-> 61.1, Mudsnout's value distance 0.14 -> 0.27) and was the round that found
+the Bramblebun rule was recolouring the COAT and not the sprigs. Round 2 was
+the emission finding — a defect no texture measurement would have shown, since
+the textures were already right and the renderer was adding a second copy of
+them. Round 3 was one species (Mosshell's shell read khaki where its board says
+teal; the ochre rule was claiming the shell instead of the moss on it).
+`tools/frame_stats.py` on the roster sheet before and after: hue families 2 ->
+3 (a warm family appears at 7% of chromatic pixels where there was none),
+chromatic share 31.9 -> 33.2, saturation 0.38 -> 0.39 — small numbers because
+the sheet is mostly sky and ground card, which is why the per-species
+separation table is the one to read.
+
+Defects the pass names and does NOT fix, filed rather than buried:
+`ROSTER-BLUE` (seven of seventeen creatures read blue — a set-level palette
+decision, not a per-species one), `VERIDIAN-HIDE` (the legendary's hide is an
+owner call), `SHINY-FINISH`, `ALPHA-PRESENCE`.
+
+**Alphas were checked, not changed.** `_make_alpha`'s 1.3x/1.4x does read as a
+bigger animal beside the trainer bar (`burrowback_alpha_x1.30.png`). It does
+not read as a field boss, but that is staging, not scale, and raising the
+multiplier is a gameplay change — filed as `ALPHA-PRESENCE`.
+
+**Scale was checked, not changed.** Every species' `placeholder` height matches
+its collider (`smoke_art`) and sits inside the wild canon's own scale rule
+("on average visually around the player-character scale", `docs/art/wild/20`).
+Nothing was obviously wrong against the reference sheets, and what a species
+SHOULD be is a design decision, not a presentation one.
+
+**No new assets, no Meshy, no sourced textures** — every pixel here is derived
+from the installed albedos, so `docs/ASSET_LEDGER.md` needs no new provenance
+row. The `*_shiny` colourways were deliberately not regenerated; see
+`SHINY-FINISH` in `BACKLOG.md`.
+## BAND2-FLOOR — hand-sited forest-floor dressing and bark tint variety
+
+`tests: full suite 1355 tests, 836493 assertions, 1 failed (expected/inherited)` · `branch: ralph/BAND2-FLOOR` · `area: data/config/vegetation.json`
+
+Lane brief: `ralph/lanes/OPEN_LANES_2026-08-23.md`, LANE: BAND2-FOREST-FLOOR.
+A blind critique of Band 2's forest floor found it "the same mown lawn as
+open fields -- no leaf litter, undergrowth, fallen branches, saplings" with
+"uniform salmon trunks". `docs/reviews/band2/round-05` had already
+established that the corridor's own trail-biased density fill lands near
+none of Band 2's eight `tools/survey_band2.gd` viewpoints by chance, so a
+density-scale tweak (also `vegetation.json` globals another lane -- the
+still-unlanded `ralph/VISUAL-GROUNDCOVER` -- owns) has nothing to multiply
+at the sites actually judged.
+
+### What shipped
+
+Five hand-placed anchor sites, each centred on an existing harvest-node
+cluster and matching a `survey_band2.gd` viewpoint (01-early-forest,
+the quarry-camp ridge, the Warrens' forest approach, 05-late-ridge):
+
+- `deadfall` anchors narrowed to `Mushroom_Common`/`Mushroom_Laetiporus`
+  only, never `DeadTree` -- D45/D41 already reserve standing dead wood for
+  the drained-ground grammar, and reusing it for ordinary litter would blur
+  that signal.
+- `bushes` anchors narrowed to `Fern_1`/`Plant_7`(`_Big`) for understorey
+  banked under canopy, distinct from the open-field `Bush_Common` already
+  scattered there.
+- `saplings` anchors at the layer's own default models, at 3 of the 5 sites.
+- Two `trees` anchors (early-forest, late-ridge) with a wider scale range
+  for old-growth girth beside the young saplings.
+- `trees.variant_retint` gained a `Bark_NormalTree` entry per CommonTree
+  model (previously only `Leaves_NormalTree` varied) -- the top-level
+  `retint` map gave every trunk the same tone regardless of canopy variant,
+  which is the "uniform salmon trunks" complaint exactly. Corridor-wide,
+  not Band-2-scoped (`variant_retint` is keyed by model, not by band).
+
+Verified with a terrain probe (`tools/_probe_band2_floor.gd`) before
+rendering, and a close-range capture (`tools/_capture_band2_floor_closeups.gd`,
+~10m from each site) to confirm the mushroom/fern anchors actually placed
+visible instances -- they are small enough to be sub-pixel at
+`survey_band2.gd`'s normal 30-40m framing, so the wide before/after frames
+alone could not have confirmed this.
+
+### Blind critique, round 2, and a real finding about this scatter system
+
+An independent blind critic (given only the after-frames + references, no
+knowledge of the change) named 01-early-forest-day directly: "near-identical
+canopy size/height/tint... reads as a scatter-brush pass." Tried raising the
+early-forest tree anchor's `count` 2->4 to make the old-growth stand more
+assertive -- **this measurably thinned the same frame's own midground/
+background treeline**, because `_place_anchor`'s attempt budget
+(`count * ANCHOR_ATTEMPTS_PER_INSTANCE`) draws from the layer's single
+shared RNG stream, and `_place_corridor_fill` runs after every anchor in
+that stream for the WHOLE CORRIDOR, not just Band 2. Raising `count`
+reshuffled corridor-wide tree placement and cost more coverage than the
+extra old-growth trees bought. Reverted to `count: 2`; kept the
+`scale_min`/`scale_max` widen (1.4-1.75 -> 1.55-2.0), which is RNG-safe --
+`_consider()` draws exactly one `randf_range()` per placed instance
+regardless of the range's bounds. Confirmed via `frame_stats.py`: frames
+05/07 are bit-identical before/after this revert, 02a differs only at
+noise level -- the fix is scoped to site A alone.
+
+### Not attempted (recorded, not silently dropped)
+
+- **Bark MATERIAL/texture redesign** -- the flat, undetailed bark surface
+  itself. Needs-art; no new texture generated per the project's hard rules.
+- **The `corridor_bands` density_scale mismatch**: Band 2 sits at 0.05,
+  *below* Band 1's 0.07, despite Band 2's own canon identity
+  (`docs/MEADOWS_MACRO_LAYOUT.md` §5) being the closer, denser canopy of
+  the two. This is `vegetation.json` global territory outside a band
+  lane's file ownership -- flagged for the coordinator, same as round-05's
+  own `HARVEST-ALL` finding.
+- The blind critic's other top findings (a red/maroon colour-overlay bug
+  affecting 4 of 8 frames identically in both day and night tags, total
+  absence of creatures in every frame, and distant/empty camp-shot framing
+  in 03/05) are real but pre-existing and out of scope for this lane --
+  confirmed pre-existing by rendering the true `origin/main` baseline
+  (`shots/band2_before/`) before making any change: the same red tint
+  appears identically there. Not touched.
+
+### Inherited/expected test state
+
+`test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh`
+fails, expectedly: `GATE_D_LANE_CONTRACT.md` §4's known defect --
+`scatter_bake.gd`'s fingerprint now covers this exact file, so editing it
+invalidates the committed bake and every boot falls back to computing the
+scatter fresh (~60s stall on this box). This is the coordinator's single
+re-bake to run at integration, not a band lane's -- said here plainly per
+that contract, not fixed on this branch.
+
+### Also fixed in passing
+
+`tools/_probe_band2_floor.gd` (this lane's own new scratch probe) never
+called `quit()`, so the first run idled the SceneTree indefinitely instead
+of exiting -- caught after ~2 hours of unnoticed wall-clock, fixed by
+adding `quit(0)` like every other `_probe_*.gd` in `tools/`.
+
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 

@@ -448,6 +448,97 @@
         ]
       }
     ],
+    "_comment_approaches": "STRONGHOLD-R2. Roads that join `road_polylines()` -- painted soil in the control map, no scatter on them, path stones down them, verge fringe along them -- WITHOUT adding an arm to the village junction fingerpost. Exactly the same reason `spokes`, `crossings` and `trail` are separate sections rather than more `paths.routes` entries: signpost.gd draws one arm per `routes` entry and the post by the well is only tall enough for four (see `_comment_trailheads` below). It matters more here than for a spoke: OF13 moved the stronghold out of sight of the village square on the owner's direct instruction so it is not known from the start, and a fifth arm in the square reading 'The Stronghold' would hand that away in the opening minute. The road is discovered by walking to the end of the Rise road, which is where it starts.",
+    "approaches": [
+      {
+        "id": "stronghold_approach",
+        "label": "The Stronghold",
+        "_why": "STRONGHOLD-R2. The single largest wayfinding failure the round-1 blind pass named: the stronghold is the endgame landmark and NO ROAD REACHED IT -- every wayfinding frame showed a fortress standing in unbroken meadow, which reads as a prop dropped on a lawn rather than a place people go to. This is the road, and it starts where the maintained road already stops: `paths.routes`'s 'The Rise' ends at (74,-41) under its own trailhead fingerpost (OF10-remainder), so the track carries on from that exact point rather than forking out of open grass. It ends at (231.8,-165.4), which is landmark.gd's ramp foot (PLINTH_CENTRE.x + site x = 231.8; site z -144.4 - 10 - RAMP_RUN = -165.4), so the painted soil runs up to the bottom of the ramp and the gate is the end of the road.",
+        "_comment_line": "NOT hand-drawn. `rises.peaks[0]` (140,-90, radius 78) sits almost exactly between the trailhead and the gate -- a straight line between them passes within 2.5m of that summit, i.e. straight up the 40-52 degree collar OF10a already had to truncate 'The Rise' against. tools/_probe_stronghold_road.gd (scratch, this task) runs a Dijkstra over the REAL heightfield at 4m resolution, impassable above 22 degrees, then Douglas-Peucker and two pinned-endpoint Chaikin passes to take the 45-degree-only grid corners out of the result. That produced everything down to (189,-186.5). Measured on the authored line: WORST SLOPE 17.1 degrees against the player's own 45-degree floor_max_angle, and it never comes closer than 80.0m to the rise's summit -- just outside the dome's own 78m radius, so the road contours the rise's western and southern foot instead of climbing it. Re-run the probe before moving any point; the tightest margin is on the first leg out of the trailhead.",
+        "points": [
+          [
+            74.0,
+            -41.0
+          ],
+          [
+            61.0,
+            -60.0
+          ],
+          [
+            55.0,
+            -79.8
+          ],
+          [
+            57.0,
+            -104.5
+          ],
+          [
+            60.8,
+            -116.5
+          ],
+          [
+            73.5,
+            -137.5
+          ],
+          [
+            92.2,
+            -154.8
+          ],
+          [
+            126.0,
+            -175.0
+          ],
+          [
+            154.5,
+            -183.2
+          ],
+          [
+            189.0,
+            -186.5
+          ],
+          [
+            204.0,
+            -196.0
+          ],
+          [
+            216.0,
+            -205.0
+          ],
+          [
+            226.0,
+            -210.5
+          ],
+          [
+            232.0,
+            -211.0
+          ],
+          [
+            235.5,
+            -206.0
+          ],
+          [
+            236.0,
+            -197.0
+          ],
+          [
+            235.0,
+            -186.0
+          ],
+          [
+            233.0,
+            -176.0
+          ],
+          [
+            231.8,
+            -165.4
+          ]
+        ],
+        "width": 6.5,
+        "shoulder": 2.2,
+        "_comment_tail": "THE LAST 90m ARE HAND-SET AND THAT IS THE POINT. The first version of this road ran west-to-east along z ~ -180 and stopped at the ramp foot, which is a correct road and a useless one: every wayfinding viewpoint stands DUE SOUTH of the gate (229.8,-214.4 / -170.4 / -162.8), the road never came within 28m of any of them, and the rendered frame still showed a player standing in unbroken grass looking at a fortress with a faint smudge passing behind it. A gate is approached head-on. So the road swings east and comes back up the gate's own axis: (226,-210.5)->(232,-211) passes 3.6m from the `silhouette-close` eye, and the run north from (236,-197) to the ramp foot puts the road under the `silhouette-approach` eye at 2.1m -- the player is ON it, which is what 'a road leads to the stronghold' has to mean. Probed leg by leg with tools/_probe_road_leg.gd: worst slope on the whole tail 17.1 degrees at (212,-202), and the final 50m up the axis is under 12 degrees the whole way.",
+        "_comment_width": "6.5m with a 2.2m shoulder, against `paths.width`'s 3.0/1.5 default -- the per-route override STRONGHOLD-R2 added to playground_heightfield.path_factor(). At the shared 3.0m this road rendered as a faint discolouration in the grass rather than as a road, which is the same 'nothing leads there' reading one step further on. It is also the honest width: the four `routes` entries are dirt tracks out of a village square, and this is the road an occupying army moves along. TUNABLE, but widening `paths.width` instead would widen Grandpa's garden path with it."
+      }
+    ],
     "_comment_op21_17_rise_cottage_conflict": "OP21-17, FOUND NOT FIXED. 'The Rise' road's first leg ((10,-10)->(45,-22)) passes within 0.21m of cottage_b's centre (village.json `structures`, at [21,-14]) -- well inside its own footprint half_extents [3.05,3.05] (building_aprons.footprints), i.e. a maintained road running straight through a house wall, exactly the kind of thing that makes the square not read as a believable settlement. Not fixed by this pass: a `paths.routes` polyline is baked into the ground CONTROL map offline (`build_playground_terrain.gd::_path_control`, per `paths`'s own top comment), so moving it needs a real terrain re-bake, not a data edit alone -- and every candidate detour tried by hand (bending south toward the practice-meadow fences, bending north toward cottage_a's own apron, widening either bend) traded this building conflict for a new one against a neighbour, the village square being tightly packed already. Re-siting this leg needs the bake step and a render to confirm the new line, which this pass's box (heavily contended by several other lanes' own render jobs) could not safely absorb alongside the rest of OP21-17/18/19. Left flagged rather than shipped half-verified.",
     "_comment_trailheads_of10_remainder": "OF10-remainder. Two independent blind reviews named the same defect: 'The Rise' road above just stops in open grass at its own truncated end (74,-41) -- OF10a's `flats._comment_of10_r3` apron levels the ground there but reads as too subtle at approach distance to register as an arrival. `signpost.gd`'s junction fingerpost already exists to say 'this way to X'; a trailhead is the same object with one arm instead of every route in the file, so `routes_override` was added there rather than inventing a second prop. `at` sits off the road's own centreline (village.json/SIGNPOST_AT does the same thing beside the well) so the sign has its own footing and does not stand where a player is walking. Label matches the route's own name -- 'yes, the Rise is this way' is the honest thing to say at the point the maintained road itself stops (OF10a's cliff comment: the collar is 4-6m further on, past what the 45-degree floor limit allows). TUNABLE positions.",
     "_comment_trailhead_bearing_of10_remainder_r2": "Round 2, caught by direct inspection of tools/capture_rise_approach.gd's own `road-approach` frame (eye (26,-14), looking straight at (74,-41) -- exactly the frame this item exists to fix): `points` originally reused the road's own last two waypoints verbatim, [(45,-22),(74,-41)], so the arm's bearing was nearly collinear with a player walking the road toward it. signpost.gd paints the label on the plank's two BROAD faces, perpendicular to the arm's own axis -- a viewer standing almost exactly on that axis sees the plank edge-on, and the render confirmed it: a bare thin post, no visible plank, from the one viewpoint that matters most. Rotating the arm's own destination point ~25 degrees off the road's exact line (toward the rise's foot generally, not away from it -- the new aim point sits along the flank rather than back down at the village) keeps the sign honestly 'pointing toward the Rise' while breaking the edge-on alignment for a head-on approach. A real trailhead fingerpost is hand-set at a readable angle, not laser-aligned with the trail it stands beside; this is that, not a new mechanic.",
