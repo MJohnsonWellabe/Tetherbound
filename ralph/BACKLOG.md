@@ -826,6 +826,57 @@ committed and published to Pages despite `site/README.md` telling everyone not
 to since the page was written. Untracked, and `site/img/*.import` is in
 `.gitignore` now so the rule enforces itself.
 
+**Update, 2026-08-23, third pass.** All four captures landed; `site/README.md`
+carries the per-frame detail now rather than duplicating it here. Findings
+worth keeping in this ledger:
+
+- **`village-square.jpg` was already fixed before this pass started.**
+  `capture_site_story.gd`'s own viewpoint (not `capture_site_shots.gd`'s, which
+  is still deliberately broken per item 3 above) landed on `main` in `6cdf8dc9`,
+  before this session existed. This section's "captures wanted" list and
+  `site/index.html`'s own CSS comment both still said the file was absent; both
+  were reconciled against the real committed image rather than re-derived from
+  stale prose. Evidence-backed already-fixed, `CLAUDE.md`'s own rule.
+- **`tether-site.jpg`** — first-guess camera coordinates, computed from
+  `tether_relay.json`'s own site frame rather than eyeballed, rendered clean on
+  the first Godot run. Sited on the west-run pylons: a lit pylon close in
+  frame, sagging cable to its neighbours, drained ground, the compound wall
+  and open gate behind it.
+- **The Warden** — took three renders, not one, and the failures are the
+  reusable finding. First: `focus_node: "WardenTrainer"` is
+  `stronghold_climax.gd`'s trainer *placer*, parented to the world and never
+  itself moved — the camera landed at world (0,0,0), the village, not the
+  stronghold. The body is a child of the placer, named from trainers.json's
+  own `name` field (`"Warden Aldis"` for `warden_aldis`) — that is what a
+  `focus_node` tree-walk actually needs. Second: with the right node, a wide
+  3/4 frame was mostly black void — the Warden Arena has no window and only
+  faint trim-light fill (`stronghold.gd`'s `OmniLight`s default to energy
+  0.5). Third, and shipped: a close portrait crop, which reads as a
+  deliberate low-key reveal rather than as underexposed.
+- **`opening-bedroom.jpg`** was not re-dressed, only re-verified. The loft
+  already has a real `BedTwin` and nightstand (`grandpa_house.gd`'s furniture
+  pass); the "undressed white blockout" description was of the stale
+  committed frame, not of current `main`.
+- **`camp-dusk.jpg`** — re-verified, not re-fixed. A fresh capture's sky is
+  clean; whatever produced the "two orange discs" this item originally
+  described does not reproduce now. No second `DirectionalLight3D` or second
+  sky material exists in the scene or the tool, so there was no code path to
+  fix even if it had reproduced.
+- **`weather-rain.jpg`** — re-verified, not re-shot. A fresh capture is
+  near-pixel-identical to the committed frame: real rain streaks, visible on
+  close inspection, deliberately faint by an already blind-pass-validated
+  design (`world_weather.gd`: "a faint, mostly-transparent line, not a light
+  source"). Nothing here was a capture bug.
+- **Meadows Hall approach (`.s-hall`) stays gated**, and the reason changed.
+  `STRONGHOLD-MAT` landed (`97f4ff32`, unrelated lane) — the stronghold has
+  real textured masonry now. `SKY-PLANES` has not: a fresh capture from the
+  approach viewpoint shows several large translucent quads standing directly
+  behind the hall, dominating the skyline. Its root cause
+  (`rift_collapse.gd`'s `StormWall`, at the storm_road blocker) reads as a
+  different, distant site, but the defect is visible from here too — do not
+  re-wire this figure on the strength of the root-cause location alone
+  without rendering the actual approach viewpoint again first.
+
 ### PERF-LOD — Terrain3D vegetation LOD is written, tested and deliberately switched off
 
 All ~130k vegetation instances render at LOD0 regardless of distance. `lod0_range`

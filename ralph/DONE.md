@@ -4,6 +4,46 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 
+## SITE-SHOTS — the four wanted story-page captures, all landed
+
+`area: site/`, `branch: ralph/SITE-SHOTS`
+
+`ralph/BACKLOG.md`'s SITE-SHOTS entry named four captures wanted "in value
+order": `tether-site.jpg`, a Meadows Hall/Warden frame, a re-aimed
+`village-square.jpg`, and fixes for `camp-dusk.jpg`/`weather-rain.jpg`. All
+four are resolved — three shipped as new captures, and reconciling against
+current `main` found the other two already fixed or never actually broken.
+Full per-frame detail is in `site/README.md`'s "Frames the page is currently
+missing, and why" and `ralph/BACKLOG.md`'s SITE-SHOTS third-pass update; the
+short version:
+
+- **Shipped**: `tether-site.jpg` (new, first-guess coordinates from
+  `tether_relay.json`'s own site frame rendered clean), a close Warden
+  portrait (took three renders — `focus_node` had to be the trainer body,
+  not `stronghold_climax.gd`'s placer node, and the arena's own near-zero
+  ambient meant a wide frame was mostly void), and `opening-bedroom.jpg`
+  (re-verified: the loft was already dressed, only the committed frame was
+  stale).
+- **Already fixed on `main` before this branch existed**: `village-square.jpg`
+  (`6cdf8dc9`) and `camp-dusk.jpg` (no reproduction of the old "two suns"
+  description in a fresh render, and no second light/sky-material in the
+  code that could have produced it). Both this page's own CSS comments and
+  the backlog entry were stale, not the build.
+- **Not a bug**: `weather-rain.jpg`'s faint streaks are an already
+  blind-pass-validated design choice (`world_weather.gd`'s own comment), not
+  an unfinished capture.
+- **Still gated, correctly, on a different lane's fix**: Meadows Hall
+  approach (`.s-hall`). `STRONGHOLD-MAT` landed since the backlog entry was
+  written, but a fresh capture shows `SKY-PLANES` is very much still visible
+  from this viewpoint — large translucent quads standing behind the hall.
+
+Reusable finding for whoever next writes a `focus_node` capture off a
+`trainer_npc.gd`-placed NPC: the placer node (named by whatever placed it,
+e.g. `stronghold_climax.gd`'s `"WardenTrainer"`) is not the trainer's body
+and is never itself repositioned. Find the body by the display name
+`trainers.json` gives that trainer's row.
+
+
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`

@@ -140,33 +140,51 @@ caught anything yet. Owner directive, 2026-08-22.
 ### Frames the page is currently missing, and why
 
 The same rule cuts the other way: a captured frame that misrepresents the game
-has to come off the page, even when nothing replaces it. Two did, in the story
-rewrite, and both are deleted rather than left committed-and-broken so that the
-layered fallbacks do their job and a fresh capture drops straight back in:
+has to come off the page, even when nothing replaces it.
 
-- **`opening-bedroom.jpg`** — the capture was an undressed white blockout room
-  with a bed in it, captioned "First light in Grandpa's farmhouse". The section
-  keeps the copy and has three figures instead of four until the interior is
-  dressed and re-shot. `tools/capture_site_shots.gd` still knows the viewpoint.
-- **`village-square.jpg`** — the `village-square` viewpoint in
-  `capture_site_shots.gd` puts the camera *inside a roof*: the frame is 70%
-  roof tiles. Its coordinates are unchanged here because re-aiming a camera in
-  a 3D scene is not something to guess at blind; it needs one Godot run. The
-  slot falls through to `01-spawn-outward.jpg` meanwhile.
+**SITE-SHOTS (2026-08-23) closed out the list this section used to carry.**
+`capture_site_shots.gd`'s own `village-square` viewpoint is still the one
+`capture_site_shots.gd:34-37` documents as broken (camera inside a roof) —
+that has not been touched, on purpose, per that file's own "not something to
+guess at blind" rule. But `capture_site_story.gd` carries an independently
+authored `village-square` viewpoint that does not share the bug, and a
+now-out-of-date pass of this README never noticed that the fixed one had
+already landed on `main` (`6cdf8dc9`) and shipped. `site/img/village-square.jpg`
+is real; only this file's own bookkeeping was stale.
 
-Wanted and never captured:
+- **`opening-bedroom.jpg`** — re-verified, not re-dressed. The old capture
+  really was an undressed white blockout, but `grandpa_house.gd`'s furniture
+  pass had already given the loft a real `BedTwin` and nightstand by the time
+  anyone re-shot it; a fresh capture just confirms that and puts `.s-bedroom`
+  back with four figures again.
+- **`tether-site.jpg`** — landed. A close pylon-line/cabling/drained-ground
+  frame, sited on `tether_relay.json`'s own west-run pylons through that
+  file's site frame. First-guess coordinates rendered clean.
+- **A Warden frame** — landed, close rather than wide. The Warden Arena has
+  no window and only faint trim-light fill (`stronghold.gd`'s `OmniLight`s
+  default to energy 0.5), so a wide 3/4 shot was mostly black void; a
+  portrait crop is what actually reads. A **Meadows Hall approach** frame is
+  still missing — see below.
+- **`camp-dusk.jpg`** — re-verified. Whatever produced the "two orange discs"
+  this section used to describe does not reproduce on current `main`; a fresh
+  capture's sky is clean. Left as-is rather than re-shipped for an
+  effectively-identical frame.
+- **`weather-rain.jpg`** — re-verified, not re-shot. The rain streaks in a
+  fresh capture are near-pixel-identical to the committed frame: real,
+  visible on close inspection, and deliberately faint by an already
+  blind-pass-validated design (`world_weather.gd`'s own comment: "a faint,
+  mostly-transparent line, not a light source"). "No readable rain" was
+  never a capture bug to fix; the caption already says "grey", correctly.
 
-- **`tether-site.jpg`** — a close frame of a relay site: pylon ring, cabling,
-  drained ground. `.s-tether` is already wired for it and falls through to
-  `03-rise-overlook.jpg`, which contains all three in the middle distance. This
-  is the single highest-value shot the story page does not have.
-- A **Meadows Hall approach** frame and a **Warden** frame. The road section
-  ends at both and shows neither.
+Still missing, and gated on someone else's fix rather than a capture run:
 
-Also worth a re-shoot when someone is in there: `camp-dusk.jpg` has untextured
-orange spheres floating over the horizon, and `weather-rain.jpg` is flat
-overcast with no readable rain (the caption was rewritten to say "grey" rather
-than promise rain it does not show).
+- **Meadows Hall approach** (`.s-hall`, `stronghold-approach.jpg`).
+  `STRONGHOLD-MAT` landed (`97f4ff32`) — the stronghold has real textured
+  masonry now — but `SKY-PLANES` has not, and a fresh capture from the
+  approach viewpoint shows it plainly: several large translucent grey quads
+  standing directly behind the hall, not a subtle artefact confined to the
+  storm_road blocker its root cause names. Wiring the figure back in waits
+  on that fix, not on a re-shoot.
 
 ## Colours
 
