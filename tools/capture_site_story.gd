@@ -145,6 +145,19 @@ func _build_shots() -> void:
 			"eye_xz": relay + Vector2(26.0, -26.0), "eye_h": 7.0,
 			"look_xz": relay + Vector2(7.0, -9.0), "look_h": 3.0,
 		},
+		# SITE-SHOTS: a close relay frame -- pylon line, sagging conduit and
+		# the pale drained ground under it, standing where a player on the
+		# approach actually is rather than looking down at the compound from
+		# outside its wall the way `relay-approach` does. Sited on the
+		# west_run pylons in `tether_relay.json` (local s=-18..-10, t=-22..-19,
+		# converted through that file's own site frame: world = centre +
+		# s*(0.565,-0.826) + t*(0.826,0.565)) -- the run the player has
+		# actually been following since the quarry.
+		{
+			"name": "tether-site",
+			"eye_xz": relay + Vector2(-41.7, 7.8), "eye_h": 2.3,
+			"look_xz": relay + Vector2(-15.2, -4.3), "look_h": 3.2,
+		},
 		# Meadows Hall at the distance it first reads as a destination rather
 		# than a building -- 7.6km from the village, which is the point: the
 		# old page implied it was on the ridge above the square.
@@ -167,6 +180,20 @@ func _build_shots() -> void:
 			# the animal. Looking down over the rim clears them.
 			"focus_offset": Vector3(5.0, 5.2, 5.6),
 			"focus_aim_h": 1.3,
+		},
+		# SITE-SHOTS: the Warden, in the Warden Arena chamber under Meadows
+		# Hall -- `stronghold_climax.gd` names his trainer node `WardenTrainer`
+		# and parents it to the world directly (not under the climax node),
+		# so `focus_node` finds him the same way `legendary-bound` finds the
+		# bound creature. The chamber is a closed room (stronghold.json's
+		# `warden_arena`, 24x26m, height 11m), so this frame is clear of
+		# `SKY-PLANES` -- that defect is StormWall slabs at the storm_road
+		# blocker, a different site entirely, not anything visible indoors.
+		{
+			"name": "warden",
+			"focus_node": "WardenTrainer",
+			"focus_offset": Vector3(2.6, 1.7, 3.0),
+			"focus_aim_h": 1.55,
 		},
 		{
 			"name": "mill-crossing",
