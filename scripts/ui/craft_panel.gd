@@ -40,9 +40,22 @@ const INGREDIENT_ICON_PX := 24
 ## is the hard backstop for whatever this estimate still gets wrong.
 const ROW_HEIGHT := 80
 
+## Six rows' worth of the left column visible at once, the rest reached by
+## scrolling. `known_recipe_ids()` (autoload/game_state.gd) returns every
+## recipe with no `unlocked_by` flag from the first minute -- 13 of
+## data/recipes/recipes.json's 14 entries today -- so the list zone's real
+## content height (14 * ROW_HEIGHT + separations, over 1200px) routinely
+## exceeds what fits in the panel alongside the hero/detail columns. A fixed
+## cap here is what makes `_build_list_zone`'s ScrollContainer actually bound
+## the panel's height instead of just being a scrollbar around content that
+## still forces the panel taller than the screen (same mechanism as
+## shop_panel.gd's PANEL_HEIGHT/scroll pairing).
+const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
+
 var game: Node = null
 
 var _root: Control = null
+var _list_scroll: ScrollContainer = null
 var _rows: Array[Button] = []
 var _cost_labels: Array[Label] = []
 var _recipe_ids: Array[String] = []
@@ -203,15 +216,49 @@ func _build() -> void:
 ## an orb recipe the player has never been told exists has nothing to say yet.
 func _build_list_zone() -> Control:
 	var side := VBoxContainer.new()
-	side.add_theme_constant_override("separation", 8)
 	side.custom_minimum_size = Vector2(300, 0)
+
+	# Bounded scroll, not an unbounded VBoxContainer directly in `side`: with
+	# every unlocked-by-default recipe known from the start, this list is
+	# routinely taller than LIST_VISIBLE_HEIGHT, and an unbounded column here
+	# was pushing the whole panel past the screen the same way shop_panel.gd's
+	# rows did (OF31 sweep) -- it just read as "empty" instead of "clipped"
+	# because the row-building crash below (`text_overrun_behavior`, fixed
+	# alongside this) had been leaving `_rows` empty, so nothing was tall
+	# enough to notice.
+	_list_scroll = ScrollContainer.new()
+	_list_scroll.custom_minimum_size = Vector2(300, LIST_VISIBLE_HEIGHT)
+	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	side.add_child(_list_scroll)
+
+	var rows_col := VBoxContainer.new()
+	rows_col.add_theme_constant_override("separation", 8)
+	rows_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_list_scroll.add_child(rows_col)
 
 	var db := _items()
 	for id: Variant in _known_ids():
 		var recipe_id := str(id)
 		_recipe_ids.append(recipe_id)
 		var recipe: Dictionary = db.call("recipe", recipe_id) if db != null else {}
-		side.add_child(_make_row(recipe_id, recipe))
+		rows_col.add_child(_make_row(recipe_id, recipe))
+
+	# Godot's default D-pad focus search is geometric, and it does not treat a
+	# ScrollContainer's clip boundary any differently from the edge of the
+	# screen: a row past LIST_VISIBLE_HEIGHT is excluded from the search
+	# entirely until it is actually scrolled into view -- which
+	# `ensure_control_visible` (in `_make_row`) can only do once focus has
+	# already reached that row. That deadlock silently capped D-pad Down at
+	# the sixth recipe (measured: `smoke_craft_panel_controller.gd` on Small
+	# Potion, recipe index 10). Same fix `tab_settings.gd::_link_vertical`
+	# already uses for its own scrolled debug-teleport list: chain each row to
+	# its immediate neighbours explicitly so Up/Down never has to cross the
+	# clip boundary via the spatial search at all.
+	for i in _rows.size():
+		if i > 0:
+			_rows[i].focus_neighbor_top = _rows[i].get_path_to(_rows[i - 1])
+		if i + 1 < _rows.size():
+			_rows[i].focus_neighbor_bottom = _rows[i].get_path_to(_rows[i + 1])
 
 	return side
 
@@ -294,7 +341,11 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 
 	button.pressed.connect(func() -> void: _craft(id))
 	var index := _rows.size()
-	button.focus_entered.connect(func() -> void: _select(index))
+	button.focus_entered.connect(func() -> void:
+		_select(index)
+		if _list_scroll != null:
+			_list_scroll.ensure_control_visible(button)
+	)
 	_rows.append(button)
 	return button
 

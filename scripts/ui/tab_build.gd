@@ -40,11 +40,15 @@ func build() -> void:
 	panel.add_theme_constant_override("separation", 16)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-	var title := Label.new()
-	title.text = "Build"
-	title.add_theme_font_size_override("font_size", 36)
-	panel.add_child(title)
+	# OF31 sweep, frame 16: the pause menu's own tab bar already reads "Build"
+	# immediately above this panel (`game_menu.gd`'s tab strip) -- a second
+	# "Build" heading in here was a literal duplicate, not a distinct label
+	# the way tab_map.gd's "THE MEADOWS" or tab_quest_log.gd's "QUEST LOG"
+	# read next to their own "Map"/"Quests" tab buttons. This tab has one
+	# real job (hand off to the live build menu) and nothing else to say, so
+	# there is no second heading to replace it with -- see ALIGNMENT_CENTER
+	# below for the other half of that sweep finding, the near-empty panel.
+	panel.alignment = BoxContainer.ALIGNMENT_CENTER
 
 	_free_note = Label.new()
 	_free_note.text = "Free build is on — pieces cost nothing until it is switched off in Settings."
