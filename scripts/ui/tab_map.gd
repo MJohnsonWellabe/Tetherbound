@@ -106,6 +106,16 @@ const REDRAW_MOVE_EPSILON := 2.0
 ## made 11px and 8px read as much smaller than the raw number suggests.
 ## Raised again here, proportionally larger for the header role since it
 ## measured furthest under the bar (8px vs 11px starting point, same target).
+## The callout column headings' own box, shared by the two `_draw_callout_heading`
+## calls and by `_callout_spread_top()` -- they were separate literals, which is
+## how the callouts came to be spread from a `top` that no longer cleared them.
+const HEADING_TOP := 10.0
+const HEADING_HEIGHT := 24.0
+## Blank space demanded between the heading's box and the first callout's
+## tallest glyph. Not cosmetic: at zero the two are merely adjacent, and this
+## column is drawn over a busy multi-coloured terrain bake where adjacent
+## outlined text reads as one block.
+const HEADING_CLEARANCE := 8.0
 const CANVAS_HEADING_FONT_SIZE := 30
 const CANVAS_LABEL_FONT_SIZE := 38
 
@@ -576,14 +586,37 @@ func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCou
 			"desired_y": point.y,
 		})
 
-	_spread_callouts(regions, 42.0, canvas.size.y - 24.0)
-	_spread_callouts(destinations, 42.0, canvas.size.y - 24.0)
-	_draw_callout_heading(canvas, "DISCOVERED REGIONS", Rect2(18.0, 10.0, map_rect.position.x - 42.0, 24.0), HORIZONTAL_ALIGNMENT_RIGHT)
-	_draw_callout_heading(canvas, "DESTINATIONS", Rect2(map_rect.end.x + 24.0, 10.0, canvas.size.x - map_rect.end.x - 42.0, 24.0), HORIZONTAL_ALIGNMENT_LEFT)
+	var spread_top := _callout_spread_top()
+	_spread_callouts(regions, spread_top, canvas.size.y - 24.0)
+	_spread_callouts(destinations, spread_top, canvas.size.y - 24.0)
+	_draw_callout_heading(canvas, "DISCOVERED REGIONS", Rect2(18.0, HEADING_TOP, map_rect.position.x - 42.0, HEADING_HEIGHT), HORIZONTAL_ALIGNMENT_RIGHT)
+	_draw_callout_heading(canvas, "DESTINATIONS", Rect2(map_rect.end.x + 24.0, HEADING_TOP, canvas.size.x - map_rect.end.x - 42.0, HEADING_HEIGHT), HORIZONTAL_ALIGNMENT_LEFT)
 	for callout in regions:
 		_draw_region_callout(canvas, map_rect, callout)
 	for callout in destinations:
 		_draw_destination_callout(canvas, map_rect, callout)
+
+
+## The lowest `label_y` a callout may take without its glyphs climbing into the
+## column heading above it.
+##
+## A callout's text is NOT drawn at `label_y`. `_draw_region_callout` builds a
+## 24px box starting at `label_y - 12` and takes its baseline from the bottom of
+## that box, so the top of the tallest glyph ends up at
+## `label_y + 12 - descent - ascent`. The spread used to start at a flat 42,
+## which put that top around y=15 while the heading still occupied roughly y=4
+## to y=34 -- and a blind visual-judge pass read the result exactly as it looks:
+## "DISCOVERED REGIONS" and "GRANDPA'S VILLAGE" printed through each other, and
+## "DESTINATIONS" through "GRANDPA'S HOUSE".
+##
+## Derived from the live font metrics rather than replaced with a bigger tuned
+## number, because the two sizes involved (heading 30, label 38) have both been
+## raised once already by legibility passes and a constant tuned against
+## today's pair would silently re-collide the moment either moves again.
+func _callout_spread_top() -> float:
+	var ascent := _region_font.get_ascent(CANVAS_LABEL_FONT_SIZE)
+	var descent := _region_font.get_descent(CANVAS_LABEL_FONT_SIZE)
+	return HEADING_TOP + HEADING_HEIGHT + HEADING_CLEARANCE + ascent + descent - 12.0
 
 
 func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> void:

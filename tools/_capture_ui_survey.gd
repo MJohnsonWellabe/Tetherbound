@@ -443,6 +443,24 @@ func _free_widget_stage(stage: Array) -> void:
 		(layer as CanvasLayer).queue_free()
 
 
+## Centre a standalone widget in the frame and scale it up, so a "closeup" is
+## one.
+##
+## Both widget frames used to drop the widget at a fixed offset near the corner
+## at 1:1 -- a 250x540 strip, or a 48x160 arc, alone on a 1920x1080 backdrop.
+## The stamina arc came out as a 48px sliver occupying a quarter of one percent
+## of the frame, which is not a closeup of anything and cannot be judged for
+## legibility at the 40% downscale this survey is reviewed at. Scaled and
+## centred instead, which costs no extra frames.
+##
+## `authored_size` is passed in rather than read off the node because a Control
+## that has not had a layout pass yet still reports its `size` as zero here,
+## and both of these widgets set their own size in `_build()`/`_ready()`.
+func _frame_widget(widget: Control, authored_size: Vector2, factor: float) -> void:
+	widget.scale = Vector2(factor, factor)
+	widget.position = (Vector2(root.size) - authored_size * factor) * 0.5
+
+
 ## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
 ## directly with five entries in the shapes `update_from_party()` documents,
 ## covering the states a real belt actually shows: an out/selected member,
@@ -453,8 +471,8 @@ func _shoot_party_strip_closeup() -> void:
 	var stage := _widget_stage()
 
 	var strip: Control = PARTY_STRIP.new()
-	strip.position = Vector2(80.0, 80.0)
 	stage[1].add_child(strip)
+	_frame_widget(strip, Vector2(250.0, 540.0), 1.7)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
@@ -485,8 +503,8 @@ func _shoot_stamina_arc_closeup() -> void:
 	var stage := _widget_stage()
 
 	var arc: Control = STAMINA_ARC.new()
-	arc.position = Vector2(400.0, 300.0)
 	stage[1].add_child(arc)
+	_frame_widget(arc, Vector2(48.0, 160.0), 4.0)
 	arc.call("update_stamina", 0.34, true, 0.1)
 	await _settle(6)
 	await _shoot("09-stamina-arc")
@@ -678,8 +696,28 @@ func _phase_world() -> void:
 	var map_state: RefCounted = _game.get("map")
 	var director: Node = world.get_node_or_null(^"EncounterDirector")
 	if map_state != null:
-		map_state.call("reveal_circle", Vector3(-6.0, 0.0, -13.0), 55.0)
-		for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0)]:
+		# A REPRESENTATIVE amount of exploration, not a token one. The reveal
+		# here used to be a single 55m circle in a world that runs -1024..1024
+		# on X and -512..7680 on Z (`data/config/terrain_playground.json`'s
+		# `world_bounds`) -- about a thousandth of one percent of it -- so both
+		# map instruments were photographed in a state no player who had walked
+		# anywhere would ever see. `ralph/VISUAL_LEDGER.md`'s own POPULATION
+		# rule is the same point about inventories and quest logs: an empty
+		# instrument tells a blind critic nothing about hierarchy or legibility,
+		# and round 1 duly spent findings calling the full map "a black column"
+		# and the minimap "a frame around sky". Fog IS opaque by design on
+		# unexplored ground (`tab_map.gd`'s own note on spec 16 -- the map "does
+		# not reveal everything automatically"), so the only way to photograph
+		# the fog EDGE, the baked terrain under it and the discovered-region
+		# callouts at all is to have explored something first.
+		#
+		# Walked up the road corridor from the spawn, which is where the
+		# chapter's first hour actually goes.
+		for step in 9:
+			var along := -13.0 + float(step) * 95.0
+			map_state.call("reveal_circle", Vector3(-6.0 + float(step % 3) * 18.0, 0.0, along), 110.0)
+		for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0),
+				Vector3(4.0, 0.0, 180.0), Vector3(-30.0, 0.0, 420.0), Vector3(22.0, 0.0, 640.0)]:
 			map_state.call("mark_visited", point)
 		_game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	var minimap_wild: Node3D = null
