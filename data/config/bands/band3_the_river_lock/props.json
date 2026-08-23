@@ -136,6 +136,38 @@
           "sink_m": 0.04,
           "scale": 1.0,
           "_why": "water at the watch post. Three pieces make it a post rather than a bench nobody uses"
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [241.4, 3667.3],
+          "yaw_deg": 60.0,
+          "sink_m": 0.02,
+          "scale": 0.38,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "SITE-DRESSING: the watch post's own brazier -- the D1 fire (Bonfire_Fire.obj's real `Fire` surface + ignite()), scaled down to a held checkpoint's small fire rather than a rest camp's. Set at the bench's other end from the bag, so the seat sits between fire and water the way the picket actually uses it -- this is the 'tent or brazier' the checkpoint's own camp was still missing."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [241.4, 3667.3],
+          "yaw_deg": -10.0,
+          "sink_m": 0.02,
+          "scale": 0.5,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "SITE-DRESSING: matches the brazier's own footprint, the same D1 owner-referenced ring mesh (already committed, no new generation)."
+        },
+        {
+          "model": "Banner",
+          "at": [237.6, 3679.0],
+          "yaw_deg": 36.9,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#7a2430"
+          },
+          "_why": "SITE-DRESSING: staked at the west end of the barricade, squared to the same road bearing (36.9) as the crate it stands beside. The Medieval Castle kit's own Banner module, sourced standalone (assets/buildings/quaternius_castle/Banner.obj, already installed -- no new mesh) and retinted oxblood (#7a2430) via props.gd's new `retint` key, the SAME hex value building_prefabs.json already retints the stronghold gatehouse's own banners to (data/config/building_prefabs.json, `Banner` material). Oxblood is CLAUDE.md's danger-faction accent, permitted here per the lane brief because a held Team Tether checkpoint is exactly where it belongs -- a barricade of crates reads as an obstacle; a barricade with a staked banner over it reads as a claimed position. Slight negative pitch and `sink_m` so the pole's own buried end (unmodelled) does not float above the ground plane it is driven into. ROUND 2 (self-critique against the rendered frame): the raw mesh is a bolt of cloth only, 0.70x0.66m (tools/_probe_banner.gd-style AABB check, not committed), so the original scale 0.6 rendered as a barely-visible fleck of red 27m from the checkpoint camera -- a defect this pass's own bar-question review caught and fixed rather than shipped. 2.6 gives a 1.8m-tall banner, close to the 1.8m trainer's own height and readable at the road-approach distance the checkpoint is actually judged from."
         }
       ]
     },
@@ -288,6 +320,24 @@
           "sink_m": 0.04,
           "scale": 1.0,
           "_why": "water from the race, left at the bench end"
+        },
+        {
+          "model": "Floor_UnevenBrick",
+          "at": [-140.46, 4219.83],
+          "yaw_deg": 105.0,
+          "sink_m": 0.03,
+          "scale": 0.55,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "SITE-DRESSING: the first of two flagstones laid along the bench's own facing bearing (105 deg, 'turned toward the mill door') -- the Medieval Village kit's own real-textured floor module (village.gd already builds every settlement floor from this family, so this is the same installed prop family, not a new one), standing in for the worn track the blind critic's 'no path to its own door' named. `data/config/terrain_playground.json`'s `paths`/`building_aprons` own the real ground-texture version of this and no site-dressing lane may edit that file; these are the loose-prop substitute the same way band1's fire ring stands in for a ground-wear decal it also cannot author."
+        },
+        {
+          "model": "Floor_UnevenBrick",
+          "at": [-138.72, 4219.36],
+          "yaw_deg": 105.0,
+          "sink_m": 0.03,
+          "scale": 0.55,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "SITE-DRESSING: second flagstone, closer to the mill, continuing the same bearing so the two read as one track rather than two loose tiles."
         }
       ]
     }

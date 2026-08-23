@@ -19,8 +19,17 @@ const CONFIG_PATH := "res://data/config/props.json"
 ## `data/config/bands/<band>/props.json` and merged back here.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+## SITE-DRESSING: `apply_retint` is a general-purpose material-name ->
+## colour recolour, already shipped for village.gd's building prefabs
+## (`retint` in village.json — see building_prefabs.gd's own header). It
+## needs no recipe/template state, only its own `_tinted` cache, so one
+## shared instance here gives props.json entries the same lever for the one
+## case a loose prop needs it: an oxblood Team Tether banner at an occupied
+## site, without sourcing or generating a second banner mesh.
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 
 var _placed := 0
+var _prefabs: RefCounted = null
 
 
 func build() -> void:
@@ -160,6 +169,21 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		deg_to_rad(float(spec.get("roll_deg", 0.0))))
 	root.scale = scale_vec
 	into.add_child(root)
+
+	# `retint` (optional): a material-name -> colour map, applied the same
+	# way village.gd's own building prefabs use it (building_prefabs.gd::
+	# apply_retint). Every prop here shares one prop family (D24); this is
+	# for the rare site that needs one PIECE of that shared family to read
+	# as a different faction's without sourcing or generating a second mesh
+	# -- SITE-DRESSING's oxblood Team Tether banner at the picket-hess
+	# checkpoint is the first user. Values are colour strings ("#7a2430")
+	# keyed by the mesh's own material resource_name, exactly like
+	# village.json's `retint` blocks.
+	var retint: Variant = spec.get("retint", {})
+	if retint is Dictionary and not (retint as Dictionary).is_empty():
+		if _prefabs == null:
+			_prefabs = PREFABS.new()
+		_prefabs.call("apply_retint", root, retint)
 
 	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
 	# (assets/props/quaternius_survival/Bonfire*.mtl carries Ke 0 0 0 on every

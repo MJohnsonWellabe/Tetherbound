@@ -54,6 +54,70 @@
           "sink_m": 0.02,
           "scale": 1.0,
           "_why": "leaning against the crate, pitched off vertical -- the one tool that names a patrol rather than a dig, the same lean `quarry_station`'s pickaxe uses for the same reason"
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [-233.1, 6474.3],
+          "yaw_deg": -35.0,
+          "sink_m": 0.02,
+          "scale": 0.4,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "SITE-DRESSING: the D1 trail-camp's own solved fire (Bonfire_Fire.obj's real `Fire` surface + ignite() + campfire_glow.gd's light/embers/smoke), scaled down further than band1's -- a patrol posting keeps a smaller fire than a rest camp. Sited past the crate/bag pile on the open side of the ruin, the ground a critic reading this as 'barrel/crate/bench on virgin grass' has nothing standing on."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [-233.1, 6474.3],
+          "yaw_deg": 15.0,
+          "sink_m": 0.02,
+          "scale": 0.55,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "SITE-DRESSING: the D1 fire-ring mesh (owner-referenced, already committed under assets/props/generated_camp -- no new generation), scaled to this smaller fire's own footprint the same way band1 matched it to its six-stone predecessor."
+        },
+        {
+          "model": "Stool",
+          "at": [-232.1, 6473.5],
+          "yaw_deg": 205.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "SITE-DRESSING: one seat, facing the fire across it -- the piece that turns a fire into a place someone sits rather than a lit prop. Same model band1's trail_camp already uses for its own second seat."
+        },
+        {
+          "model": "camp_tent",
+          "at": [-238.3, 6473.6],
+          "yaw_deg": -70.0,
+          "sink_m": -0.64,
+          "scale": 0.85,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "SITE-DRESSING: the D1 owner-referenced tent mesh (already committed, no new generation), scaled down from band1's 1.05 -- a patrol keeps one small shelter, not a rest camp's. Placed against the ruin behind the crate/barrel, mouth turned toward the fire so the tent and the fire read as one posting instead of two unrelated objects. `sink_m` copied from band1's own measured fix for this same mesh's raised local origin."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [-240.6, 6466.9],
+          "yaw_deg": 80.0,
+          "sink_m": 0.02,
+          "scale": 0.2,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: first of three stepping stones on the south-west approach (the capture viewpoint's own eye line, tools/_capture_band4_sites.gd `ridge-patrol-camp`) -- ground props.gd/vegetation.json cannot touch a worn-path texture, so the beaten route reads as a line of trodden stone instead. Same Rock_Medium family band1's own fire-ring arc uses; a rotation/scale distinct from its two siblings below so the line does not repeat one stone three times."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [-238.9, 6469.0],
+          "yaw_deg": 200.0,
+          "sink_m": 0.02,
+          "scale": 0.16,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: second stepping stone, midway between the approach and the fire."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [-236.9, 6470.9],
+          "yaw_deg": 320.0,
+          "sink_m": 0.02,
+          "scale": 0.23,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: third stepping stone, closing the line onto the camp's own supply pile -- the arriving path connection the ridge camp had none of."
         }
       ]
     }
