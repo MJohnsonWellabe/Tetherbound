@@ -778,3 +778,70 @@ alongside it. A single-viewpoint, single-state look-test now costs **4m40s**.
 
 The full run stays the default, and a judged round still uses it: a blind
 critique of a subset is a critique of a subset.
+
+## ROOT CAUSE 2: a partial control-map blend does not draw on this build
+
+Found while chasing "I see no difference" on the first layered-ground pass. The
+owner was right and the frames were right: the macro variation was in the data
+and not in the picture.
+
+Isolated by forcing the `drygrass` tint to pure magenta and rendering the same
+viewpoint three ways, changing nothing else:
+
+| control map written | magenta ground pixels |
+|---|---|
+| drygrass as **base**, blend 0.0 | **3.66%** |
+| drygrass as **overlay**, blend **1.0** | **3.67%** |
+| drygrass as **overlay**, blend ~0.39 | **0.00%** |
+
+The third case was not short of coverage: reading the baked control map back at
+195 points across the visible near field gave 150 of them `base=0 overlay=4`
+with blend **mean 0.394, max 0.949**. Every intermediate value drew as pure
+base.
+
+Everything upstream checked out, which is why this took a while to corner:
+`get_texture_count()` on the live Terrain3D returns **6**, and
+`get_texture_colors()` returns the magenta at index 4, so the array is built and
+the id is in range; and reading the control map back gives the right overlay id
+and blend, so the bake and the encoding are correct.
+
+**This very probably explains EV4-hillside-seam-remainder.** That item ran four
+rounds trying to get a visible soil band between grass and rock, and every round
+a fresh blind critic reported "grass goes straight to rock with nothing between
+them" / "a hard grass-to-rock boundary with no intermediate dirt material". The
+rounds blamed the tint, then the photo's saturation, then its hue direction, and
+reverted each time. But that transition is written as
+`{base: grass, overlay: soil, blend: smoothstep(...)}` — a partial blend — so
+**it could not have rendered whatever colour it was given.** By the same
+argument `colour.blend_deg`, `blend_deg_rock` and the shader's own
+`blend_sharpness` have all been tuning a channel that does not draw here.
+
+Recorded rather than fixed: making partial blends work is a Terrain3D
+shader/build question, and this lane routed around it instead.
+
+### What this lane does instead
+
+The macro layers are assigned as the **base** id behind a noise-raggedded
+threshold, never as an overlay with a partial blend:
+
+    threshold = 0.5 + (dither - 0.5) * edge_raggedness
+    if dry > threshold: base = drygrass
+
+`dither` is `path_dominant_dither`, the same coherent position-noise field
+`_blend_control_toward` already uses to spread the path pick stochastically
+across its own edge — a mechanism this renderer demonstrably does express. So
+the patch boundary is ragged and organic rather than an iso-contour, and it
+draws.
+
+### Measured result
+
+Right-hand hillside, away from the path, band-1 day frame:
+
+| | hue std | warm/dry share | green share |
+|---|---|---|---|
+| before (scatter-only) | 26.90 | **7.4%** | 80.3% |
+| after (layered ground) | 28.36 | **22.0%** | 66.4% |
+
+Three times the warm/dry ground on a hillside that previously carried one
+material. This is the first change in the whole sweep to move the ground's own
+colour composition rather than what is scattered on top of it.

@@ -365,13 +365,46 @@ func _paint_control_map(
 					var reach := float(macro_cfg.get("damp_reach", 1.1))
 					damp = (1.0 - smoothstep(water_level + 0.35, water_level + 0.35 + reach, here)) \
 						* float(macro_cfg.get("damp_max", 0.65))
-				if damp > 0.004:
-					control = {"base": int(ids["grass"]), "overlay": int(ids["damp"]), "blend": damp}
+				# GROUND-LAYERS round 2. The macro layers are assigned as the
+				# BASE id behind a noise-raggedded threshold, NOT as an overlay
+				# with a partial blend, and that is a measurement, not a
+				# preference.
+				#
+				# Measured on this Terrain3D build by forcing the drygrass tint
+				# to magenta and rendering the same viewpoint three ways:
+				#   drygrass as BASE, blend 0.0        -> 3.66% magenta ground
+				#   drygrass as OVERLAY, blend 1.0     -> 3.67% magenta ground
+				#   drygrass as OVERLAY, blend ~0.39   -> 0.00% magenta ground
+				# (that third case had blend mean 0.394 and max 0.949 across
+				# 150 of 195 sampled points in the visible near field, so it
+				# was not for want of coverage.)
+				#
+				# A partial blend value therefore does not draw here; the
+				# overlay channel only expresses itself at full weight. That is
+				# almost certainly the same wall EV4-hillside-seam-remainder
+				# hit across four rounds trying to get a visible soil band
+				# between grass and rock -- that transition is written as
+				# {base: grass, overlay: soil, blend: smoothstep(...)}, a
+				# partial blend, and every round a fresh blind critic reported
+				# "grass goes straight to rock with nothing between them" while
+				# the rounds themselves blamed the tint, then the photo's
+				# saturation, then its hue. See the lane report.
+				#
+				# So the boundary is raggedded here instead, with coherent
+				# position noise rather than a blend ramp -- the same technique
+				# `_blend_control_toward` already uses to spread the path pick
+				# stochastically across its own edge, which is a mechanism this
+				# renderer demonstrably does express.
+				var ragged := clampf(float(macro_cfg.get("edge_raggedness", 0.42)), 0.0, 1.0)
+				var dither: float = field.path_dominant_dither(world_x, world_z)
+				var threshold := 0.5 + (dither - 0.5) * ragged
+				if damp > 0.004 and damp > threshold * float(macro_cfg.get("damp_max", 0.65)):
+					control = {"base": int(ids["damp"]), "overlay": int(ids["damp"]), "blend": 0.0}
 					painted_damp_pixels += 1
 				elif ids.has("drygrass"):
 					var dry := _macro_dry(macro_drift, macro_patch, world_x, world_z, here, macro_cfg)
-					if dry > 0.004:
-						control = {"base": int(ids["grass"]), "overlay": int(ids["drygrass"]), "blend": dry}
+					if dry > threshold:
+						control = {"base": int(ids["drygrass"]), "overlay": int(ids["drygrass"]), "blend": 0.0}
 						painted_dry_pixels += 1
 			var path_weight: float = field.path_factor(world_x, world_z)
 			# EV5: the pond bed, the damp shore ring and the stream channel
