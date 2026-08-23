@@ -269,3 +269,41 @@ that banner `_outcome_left = 2.5` seconds ticked on `_process`, which under this
 harness's ~2.4s frames should expire within about two rendered frames — long
 before shot 05. It does not. That arithmetic and the photograph disagree, so the
 mechanism is not yet established and is not being written down as though it were.
+
+## 10. The projectile renders as nothing, and it is not a survey problem
+
+Round 3, blind, for the third round running: *"02-move-firing — nothing is
+firing. No projectile, no muzzle or cast effect."* By then the capture had
+already VERIFIED the opposite in its own log — `02-move-firing: projectile
+present at (33.70596, 0.196133, -39.10854)`, a live node found in the arena at
+the shutter. A node that is present and photographs as nothing is a rendering
+question, not a timing one.
+
+`move_projectile.gd` was drawn with **both** of the things `impact_flash.gd`
+rules out by name in its own header, which records what they cost:
+
+> *"With vertex-colour alpha the burst rendered as a barely-visible smudge under
+> additive blending and as NOTHING under alpha blending, which is the signature
+> of the alpha arriving at the shader near zero."*
+
+and `telegraph_glow.gd` states the other half plainly: *"MIX blend rather than
+ADD (additive renders at a fraction of its strength under the Compatibility
+renderer)"*.
+
+Both siblings were fixed and both left a comment saying why. The projectile got
+neither — the same shape as the `_process` clock it was also the last to be
+moved off. Now: `BLEND_MODE_MIX`, `no_depth_test` true (the same reversal
+`impact_flash.gd` made after a blind critic, and it matters more here because
+the bolt spends its whole flight between two bodies that are interpenetrating),
+and opacity moved from per-vertex alpha to one value on the material.
+
+**This one is not a harness defect.** `.claude/skills/visual-judge/SKILL.md`
+records that Compatibility is what the game SHIPS as of RB4/D01, so a player
+firing a ranged move has been seeing the same nothing the critics did. Of
+everything this lane has touched, it is the only finding that was costing the
+player rather than costing the survey.
+
+**Bookkeeping:** this change landed in commit `2319e077`, whose message is about
+the trainer-battle nameplate and does not mention it — a `git add -A` swept it
+in. Recorded here rather than rewritten, because the branch is pushed and a
+force-push to re-word a lane branch buys less than an accurate note costs.
