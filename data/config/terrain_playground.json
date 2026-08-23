@@ -903,6 +903,40 @@
       "_comment_reach": "HONEST LIMIT, recorded here the way SC14 recorded its own. A chord long enough to actually divide this map cannot avoid every spoke: the Meadows disc is full, and a search over every bearing and offset that keeps the village, the pond, the South Bridge, the Old Quarry, The Rise and all seven blockers clear left a far side only 17m deep -- not a region, a verge. This course takes the one cost that buys a 70m-deep, 334m-long far side: the storm road's collapsed bridge and its `Storm Country` fingerpost end up 25-40m PAST the river, visible across the water from the near bank but not reachable until the crossing opens. Every other spoke, and every named place a Band 0-2 player is sent to, stays on the near side.",
       "_comment_ow5c": "OW5C: relocated with the river to (-150,4203), matching the spine's own Band 3 waypoints (-150,4170)/(-150,4235) which straddle it. channel dimensions copied verbatim from the river course's own narrows point at this location (half_width 3.6/rim 3.4/depth 15) -- same convention the original entry used.",
       "_comment_ow5c_seam": "OW5C follow-up: nudged x by -2 (-150 -> -152) for the same reason south_bridge moved off x=0 -- -150 sits only 6m from the 16m collision-shape-tile seam at -144 (WALL1), and the crossing failed identically to south_bridge before its own fix. -152 is the true seam-to-seam midpoint (8m from both -160 and -144), the same maximal separation that fixed south_bridge."
+    },
+    {
+      "id": "sigil_gate_gorge_west",
+      "label": "Sigil Gate gorge",
+      "carve": {
+        "centre": [
+          10.0,
+          7370.8
+        ],
+        "axis_deg": 28.6,
+        "half_length": 40.0,
+        "end_fade": 14.0,
+        "half_width": 4.0,
+        "rim": 3.4,
+        "depth": 11.0
+      },
+      "_why": "GATE-D5 REQUEST 2. Prompt 66 requires that a physical barrier actually constrain travel. The three-Sigil gate was a 4.07m leaf standing on open ground -- a key-use point, not a barrier, and a player who wanted to walk around it could. These two carves are the flanking terrain that makes it real.\nTWO carves with a gap, not one trench: a single carve centred on the gate (which is what the lane's own request proposed) would cut the trench straight through the gate and sever the only route to the finale. These are centred 61m either side along the trench axis, leaving roughly 14m of uncarved causeway at the gate itself -- the same clear span south_bridge is sized to -- so the gate is the one way through and the road still goes somewhere.\naxis_deg is 28.6, NOT the 61.4 the lane's request named. 61.4 is the perpendicular measured from +z, and _prepare_carve builds its axis as Vector2.RIGHT.rotated(axis_deg), which is measured from +x. Checked against south_bridge, whose road runs almost due +z and whose axis_deg is 0. Taking 61.4 literally would have laid the trench 32.8 degrees off perpendicular, cutting the road at a slant and leaving the flanks open.\nDepth 11 against rim 3.4 is ~72 degrees of wall, past the player's 45-degree floor_max_angle -- the same arithmetic every gorge on this map is sized by. No `bridge` and no `road` key: nothing builds a deck here, the causeway is ground. gated_crossing.gd looks its entry up by id, so these two are inert to it, and road_polylines() defaults `road` to empty."
+    },
+    {
+      "id": "sigil_gate_gorge_east",
+      "label": "Sigil Gate gorge",
+      "carve": {
+        "centre": [
+          117.2,
+          7429.2
+        ],
+        "axis_deg": 28.6,
+        "half_length": 40.0,
+        "end_fade": 14.0,
+        "half_width": 4.0,
+        "rim": 3.4,
+        "depth": 11.0
+      },
+      "_why": "GATE-D5 REQUEST 2. the uphill flank, east of the road; see `sigil_gate_gorge_west`."
     }
   ],
   "_comment_drains": "D41, debuted by SD16 at the Old Quarry. Team Tether's hardware is pulling something out of the ground and the ground shows it: discoloured, desaturated earth and suppressed vegetation in a radius around every station, thinning toward the machine and healthy meadow resuming past it. This block is the ONE authored source for where that happens. `playground_heightfield.drain_factor()` reads it and returns 0..1, and all three consumers ask that one function -- the bake's colour map (a tint lerp), the bake's control map (a blend toward the dead-soil texture) and `scatter_rules.gd` (which thins each layer's placements by its own `drain_suppression`). Same contract shape as `path_factor`/`stream_factor`/`building_apron_factor`, and the same reason for it: three systems agreeing about one edge because they read one function. D41 says mild at this rung of 32's reveal ladder -- the quarry's own head station is 0.85 and the run out of it falls away to 0.5, against the relay (SE23), which is meant to be the worst thing the player has seen. Widening these radii is how a later station gets worse; a new grammar is not. ALL TUNABLE.",
@@ -990,6 +1024,94 @@
         "inner": 8.0,
         "strength": 0.72,
         "_why": "the road in, where the outer picket stands. Weakest of the three, so the damage is already visible before the compound is -- the argument for disabling the console is made on the walk up to it, without a line of dialogue"
+      },
+      {
+        "id": "approach_mouth",
+        "centre": [
+          -35.4,
+          7080.7
+        ],
+        "radius": 18.0,
+        "inner": 5.0,
+        "strength": 0.3,
+        "_why": "GATE-D5 REQUEST 1. The approach's own drained run, escalating toward the works. Mirror of the quarry run's fade-with-distance, inverted because here the source is AHEAD of the player: the ground gets worse as the Hall gets closer, so the land itself says what the player is walking into before any dialogue does. Centres are the approach pylon stations (stronghold.json::approach_pylons); the last is the works. The code that reads this shipped with the D5 lane ahead of the data deliberately, so granting it is one edit to one file."
+      },
+      {
+        "id": "approach_run_1",
+        "centre": [
+          -30.9,
+          7151.4
+        ],
+        "radius": 18.0,
+        "inner": 5.0,
+        "strength": 0.38,
+        "_why": "GATE-D5 REQUEST 1. Station 2 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "approach_run_2",
+        "centre": [
+          -26.3,
+          7222.1
+        ],
+        "radius": 18.0,
+        "inner": 5.0,
+        "strength": 0.46,
+        "_why": "GATE-D5 REQUEST 1. Station 3 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "approach_run_3",
+        "centre": [
+          -21.7,
+          7292.9
+        ],
+        "radius": 20.0,
+        "inner": 6.0,
+        "strength": 0.56,
+        "_why": "GATE-D5 REQUEST 1. Station 4 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "approach_run_4",
+        "centre": [
+          -17.1,
+          7363.6
+        ],
+        "radius": 20.0,
+        "inner": 6.0,
+        "strength": 0.66,
+        "_why": "GATE-D5 REQUEST 1. Station 5 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "approach_run_5",
+        "centre": [
+          -12.6,
+          7434.3
+        ],
+        "radius": 22.0,
+        "inner": 7.0,
+        "strength": 0.78,
+        "_why": "GATE-D5 REQUEST 1. Station 6 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "approach_run_6",
+        "centre": [
+          -8.0,
+          7505.0
+        ],
+        "radius": 24.0,
+        "inner": 8.0,
+        "strength": 0.9,
+        "_why": "GATE-D5 REQUEST 1. Station 7 of the approach run; see `approach_mouth`."
+      },
+      {
+        "id": "stronghold_works",
+        "centre": [
+          0.0,
+          7560.0
+        ],
+        "radius": 42.0,
+        "inner": 18.0,
+        "strength": 1.0,
+        "_why": "GATE-D5 REQUEST 1. Station 8 of the approach run; see `approach_mouth`."
       }
     ],
     "_comment_ow5d": "OW5D: stations 0-3 (quarry) and 4-6 (relay) moved with their structures. Re-baking the one region each falls in (and flipping tether_relay.json dead_ground.enabled once that is done) is still open -- see tether_relay.json its own comment."

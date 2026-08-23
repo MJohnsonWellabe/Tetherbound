@@ -30,13 +30,15 @@
       "id": "band4_upper_meadows_ironwood",
       "z_min": 4760.0,
       "z_max": 7000.0,
-      "density_scale": 0.03
+      "density_scale": 0.05,
+      "_why_gate_d4": "GATE-D4 REQUEST. 0.03 -> 0.05, matching bands 2 and 5. Asked for by the Band 4 lane and then arrived at independently by its blind pass, which named understorey, litter, saplings and overlapping canopy as what the ironwood stand still lacks -- all of them this scatter layer's job, none of them reachable from a band's own files. Band 4 is also the chapter's longest region at 2240m, so the floor density buys the least here per metre walked."
     },
     {
       "id": "band5_stronghold_approach",
       "z_min": 7000.0,
       "z_max": 7680.0,
-      "density_scale": 0.03
+      "density_scale": 0.05,
+      "_why_gate_d5": "GATE-D5 REQUEST 3. 0.03 -> 0.05. Not a taste call: the eight drain stations granted with it make scatter_rules REMOVE vegetation along this route at run time, so a floor-density band gets thinner here, not thicker -- and drained ground only reads as damage if healthy ground survives beside it to compare against."
     }
   ],
   "layers": {
