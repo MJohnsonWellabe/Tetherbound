@@ -182,16 +182,23 @@ func _build_shots() -> void:
 			"focus_aim_h": 1.3,
 		},
 		# SITE-SHOTS: the Warden, in the Warden Arena chamber under Meadows
-		# Hall -- `stronghold_climax.gd` names his trainer node `WardenTrainer`
-		# and parents it to the world directly (not under the climax node),
-		# so `focus_node` finds him the same way `legendary-bound` finds the
-		# bound creature. The chamber is a closed room (stronghold.json's
-		# `warden_arena`, 24x26m, height 11m), so this frame is clear of
-		# `SKY-PLANES` -- that defect is StormWall slabs at the storm_road
-		# blocker, a different site entirely, not anything visible indoors.
+		# Hall. `stronghold_climax.gd::_place_warden()` names the PLACER
+		# `WardenTrainer`, but that node is trainer_npc.gd's group container,
+		# parented to the world and left at the origin -- it is never moved,
+		# only the trainer BODY it spawns is. First cut used that name and
+		# the camera landed at world (0,0,0), which is the village, not the
+		# stronghold: the frame was a workshop doorway, not the Warden. The
+		# body is a child of the placer, named from trainers.json's own
+		# `name` field for `warden_aldis` (data/config/bands/
+		# band5_stronghold_approach/trainers.json) -- "Warden Aldis" -- which
+		# is what `_find_named`'s tree walk actually needs to match. The
+		# chamber is a closed room (stronghold.json's `warden_arena`, 24x26m,
+		# height 11m), so this frame is clear of `SKY-PLANES` -- that defect
+		# is StormWall slabs at the storm_road blocker, a different site
+		# entirely, not anything visible indoors.
 		{
 			"name": "warden",
-			"focus_node": "WardenTrainer",
+			"focus_node": "Warden Aldis",
 			"focus_offset": Vector3(2.6, 1.7, 3.0),
 			"focus_aim_h": 1.55,
 		},
