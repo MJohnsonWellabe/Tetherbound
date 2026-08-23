@@ -179,10 +179,31 @@ const THREE_QUARTER_DEG := 35.0
 ## would have cropped the far end of its own line-up off the edge of the frame
 ## -- and cropped it silently, since nothing in this tool measures whether the
 ## last slot landed inside the view.
-const LINEUP_FOV := 60.0
-const LINEUP_DIST := 22.0
-const LINEUP_CAM_HEIGHT := 2.2
-const LINEUP_LOOK_HEIGHT := 1.0
+## Shoulder-to-shoulder for the line-up only; `SPACING` still governs the
+## portraits, where a neighbour must stay outside the portrait cone.
+const LINEUP_SPACING := 1.15
+const LINEUP_FOV := 48.0
+## Derived from the spread rather than guessed, and deliberately snug.
+##
+## This was 17.0 for a ten-character cast and was raised to 22.0 when three more
+## were added -- which fixed the crop and created a worse defect a blind round
+## measured immediately: at 22 m the whole cast renders as a 58-pixel strip
+## filling under 10% of an 800px frame, so the one shot whose entire job is
+## comparing the cast at a single scale could not be read without magnifying it
+## 4x. Godot's default `KEEP_HEIGHT` means the horizontal half-angle is
+## `atan(tan(LINEUP_FOV/2) * aspect)`; at 1280x800 and a 48 deg FOV that is
+## ~35.6 deg, so the half-width is `LINEUP_DIST * 0.716`. Closing the ranks to
+## `LINEUP_SPACING` puts the cast inside 13.8 m plus a body either side, so 11.5 m
+## back gives ~16.5 m of width -- and, far more importantly, a figure now stands
+## roughly a third of the frame high instead of a fourteenth, which is the only
+## thing that makes a one-scale cast comparison actually readable.
+const LINEUP_DIST := 11.5
+## Eye level, not a raised three-quarter view. At 2.2m the camera looked DOWN on
+## the line and pushed it into the top third of the plate, leaving 40% of the
+## frame as empty floor; at roughly chest height the cast fills the frame and the
+## horizon sits behind their heads, which is also the angle a player meets them from.
+const LINEUP_CAM_HEIGHT := 1.15
+const LINEUP_LOOK_HEIGHT := 0.92
 
 
 func _init() -> void:
@@ -228,6 +249,11 @@ func _run() -> void:
 		if holder.has_method("play"):
 			holder.call("play", "idle")
 		var box: AABB = RENDER_BOUNDS.measure(holder)
+		# Feet on the ground line, not the rig's own pivot -- the same measured
+		# seating `_capture_creature_roster.gd` uses. Rigs disagree about where
+		# their origin sits, so a shared `position.y` leaves some sunk and some
+		# floating, and every height measured off the frame inherits that error.
+		holder.position.y = -box.position.y * holder.scale.y
 		holders.append(holder)
 		heights.append(box.size.y)
 
@@ -268,6 +294,17 @@ func _run() -> void:
 	if live.size() < 2:
 		print("FAIL %s: fewer than two characters staged; skipping the ruler frame" % _lineup_stem())
 	else:
+		# Close the ranks for this one frame. The portraits need SPACING wide
+		# enough that a neighbour never intrudes on a 45-degree portrait cone
+		# (3.0m), but that same spacing puts 36m between the end characters,
+		# and a camera far enough back to hold 36m renders the whole cast as a
+		# ~58px strip in an 800px frame -- which a blind round called out as
+		# making the one comparison shot unreadable without 4x magnification.
+		# Standing them shoulder to shoulder is the fix that does not trade
+		# away the portraits: the line-up wants them CLOSE.
+		for i in CAST.size():
+			if holders[i] != null:
+				(holders[i] as Node3D).position.x = i * LINEUP_SPACING
 		_frame_lineup(camera)
 		for f in LINEUP_SETTLE_FRAMES:
 			await process_frame
@@ -310,18 +347,67 @@ func _build_environment(world: Node3D) -> void:
 	env.background_color = Color(0.10, 0.11, 0.13)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.85, 0.87, 0.90)
-	env.ambient_light_energy = 2.2
+	# CALIBRATED against this stage's own floor, the same way and for the same
+	# reason as `_capture_creature_roster.gd` -- see that file's long note. This
+	# rig summed ambient 2.2 plus a 1.8 key plus a 1.0 fill, and a survey that
+	# over-exposes cannot be trusted on colour: three creature rounds spent their
+	# top finding on an over-exposure that measured 2.3x on the sibling tool.
+	# THE FLOOR IS THE TARGET: albedo (0.34,0.35,0.37) must render near
+	# (87,89,94). Re-measure it after any change here rather than eyeballing.
+	#
+	# It matters more here than anywhere, because this survey's own subject is
+	# a faction whose costume a blind round measured at 0.11-0.18 lightness. A
+	# judgement about whether near-black uniforms read is worthless taken off a
+	# stage that is not exposed correctly in the first place.
+	# Two measured passes: 2.2/1.8/1.0 gave 1.9x, 0.62/0.75/0.42 gave 1.45x,
+	# 0.43/0.52/0.29 gave 1.22x, 0.35/0.43/0.24 lands it.
+	env.ambient_light_energy = 0.35
 	env_node.environment = env
 	world.add_child(env_node)
 
+	# A GROUND PLANE and a CONTACT SHADOW, ported from
+	# `_capture_creature_roster.gd` rather than reinvented. The creature survey
+	# was told by its own blind critic that "everything floats on the pale ground
+	# like a sticker", root-caused to Godot defaulting
+	# `DirectionalLight3D.shadow_enabled` to FALSE on a bare stage while the
+	# shipped world sets it true from `art.json`, and fixed there. This tool does
+	# exactly the same job and never received the fix -- which is
+	# `ralph/VISUAL_LEDGER.md`'s own recurring lesson, stated in that file as "a
+	# fix that lives in one tool does not protect the next tool that does the
+	# same thing", recorded against six separate instances before this one.
+	#
+	# It is not cosmetic here. Without a ground line there is nothing fixing where
+	# a character's feet ARE, and the sole lines in this survey's own output
+	# genuinely disagreed -- a blind round measured the trainer's at y=745 and
+	# every Team Tether body's at y=721, 24px apart under a camera the header
+	# claims is identical. Every height read off these frames carried that error.
+	var floor_mesh := MeshInstance3D.new()
+	var plane := PlaneMesh.new()
+	# Large enough that the plane's own edge never enters a frame -- at 80m the
+	# far edge cut a visible diagonal across the portraits and read as a seam.
+	plane.size = Vector2(400.0, 400.0)
+	floor_mesh.mesh = plane
+	var floor_mat := StandardMaterial3D.new()
+	# Mid grey, not the near-black backdrop: a blind round pointed out that a
+	# near-black stage is the worst possible ground for judging the near-black
+	# Team Tether costumes this survey exists to photograph.
+	floor_mat.albedo_color = Color(0.34, 0.35, 0.37)
+	floor_mesh.material_override = floor_mat
+	world.add_child(floor_mesh)
+
 	var key := DirectionalLight3D.new()
-	key.rotation = Vector3(deg_to_rad(-25.0), deg_to_rad(-10.0), 0.0)
-	key.light_energy = 1.8
+	# -52 deg, not -25. At 25 degrees of elevation a 1.8m figure throws a shadow
+	# almost four metres long, which crossed most of the plate and read as a grey
+	# streak rather than as contact. Steeper puts the shadow under the character,
+	# where its whole job is to say "this body is standing on that ground".
+	key.rotation = Vector3(deg_to_rad(-52.0), deg_to_rad(-18.0), 0.0)
+	key.light_energy = 0.43
+	key.shadow_enabled = true
 	world.add_child(key)
 
 	var fill := DirectionalLight3D.new()
 	fill.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(170.0), 0.0)
-	fill.light_energy = 1.0
+	fill.light_energy = 0.24
 	fill.light_color = Color(0.80, 0.85, 0.95)
 	world.add_child(fill)
 
@@ -341,13 +427,44 @@ func _lineup_stem() -> String:
 
 
 func _frame_lineup(camera: Camera3D) -> void:
-	var centre_x: float = (CAST.size() - 1) * 0.5 * SPACING
+	# LINEUP_SPACING, not SPACING: the ranks are closed up before this frame, so
+	# centring on the portrait spread aims the camera at empty ground past the
+	# end of the line and crops most of the cast out of its own group shot.
+	var centre_x: float = (CAST.size() - 1) * 0.5 * LINEUP_SPACING
 	camera.fov = LINEUP_FOV
 	camera.global_position = Vector3(centre_x, LINEUP_CAM_HEIGHT, LINEUP_DIST)
 	camera.look_at(Vector3(centre_x, LINEUP_LOOK_HEIGHT, 0.0), Vector3.UP)
 
 
+## `height_m` is BURNED INTO THE FRAME, not just printed to stdout.
+##
+## A blind round had to derive every character's height by measuring silhouette
+## pixels, because this survey's own scale evidence only ever reached the
+## terminal -- and the critic reading the PNGs never sees the terminal. Criterion
+## 8 of the visual-judge rubric is entirely about scale and tells a critic to
+## measure against the 1.80 m trainer; handing it unlabelled frames makes that
+## the critic's arithmetic problem rather than the survey's answer.
+func _label(text: String) -> void:
+	if _caption == null:
+		var layer := CanvasLayer.new()
+		root.add_child(layer)
+		_caption = Label.new()
+		_caption.position = Vector2(24, 20)
+		_caption.add_theme_font_size_override("font_size", 22)
+		_caption.add_theme_color_override("font_color", Color(1, 1, 1))
+		_caption.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+		_caption.add_theme_constant_override("outline_size", 6)
+		layer.add_child(_caption)
+	_caption.text = text
+
+
+var _caption: Label = null
+
+
 func _shoot(name: String, height_m: float) -> void:
+	_label(name if height_m < 0.0 else "%s  -  %.2f m   (trainer = 1.80 m)" % [name, height_m])
+	# One extra frame so the caption is actually composited before the shutter.
+	await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	if image == null:

@@ -434,13 +434,47 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		# floor-then-identity is safe algebraically, but the energy-multiplier
 		# bump below is not, and skipping the whole block is clearer than
 		# relying on that algebra. TUNABLE.
-		const EMISSION_FLOOR_BLEND := 0.5
-		const EMISSION_FLOOR_MULTIPLIER := 1.4
+		# THE FLOOR IS NOW GENUINELY ADDITIVE, which is what this block has claimed
+		# to be since STRANDED-P3 and was not.
+		#
+		# The old implementation lerped `material.emission` -- the emission COLOUR,
+		# which Godot uses as a MULTIPLIER over `emission_texture` whenever
+		# `emission_operator` is `EMISSION_OP_MULTIPLY`. Probed directly on the
+		# built rank materials: the operator is 1 (MULTIPLY) on every one of them,
+		# inherited from the glTF import. So the "floor" raised a multiplier and
+		# the product stayed dark, for exactly the reason the comment above gives
+		# for albedo -- "a straight multiply can only ever DARKEN a source pixel,
+		# never brighten one". The floor was subject to the same law it was
+		# written to escape, and raising its blend from 0.5 to 0.72 moved the
+		# rendered uniform by about one value point, which is how it was caught.
+		#
+		# What it cost: a blind round measured every Team Tether body at 0.11-0.18
+		# lightness and reported the whole faction collapsing into
+		# "interchangeable near-black smears" at thumbnail size -- meaning the
+		# reserved oxblood the rank palettes carry was, in practice, absent from
+		# the faction it exists to identify. The grunt rig's own texture is the
+		# reason it needs a floor at all: sampled off `grunt_lod0_texture_0.png`,
+		# its dominant values sit at 14-30 out of 255.
+		#
+		# Switching the operator to ADD makes the tint reach the surface no matter
+		# how dark the texel under it is, which is the whole point. The added
+		# amount is deliberately small: enough to carry hue and lift the uniform
+		# into a value where hue survives distance, not enough to flatten the
+		# painted panels, straps and folds into one self-lit slab. Texture
+		# variation survives because the add is constant while the texture is not.
+		#
+		# Only tinted characters are affected. The gate skips any tint at
+		# luminance >= 0.95, and every non-rank tint in the game is `#ffffff`
+		# (art.json's identity multiply), so the trainer -- five independent
+		# critics' named style anchor -- Grandpa and every villager render
+		# bit-identical across this change. It reaches Team Tether and nothing
+		# else, which is exactly the scope the defect has. TUNABLE.
+		const EMISSION_FLOOR_ADD := 0.20
 		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
 		if tint_luminance < 0.95:
-			material.emission = (material.emission * colour).lerp(colour, EMISSION_FLOOR_BLEND)
-			material.emission_energy_multiplier = maxf(
-				material.emission_energy_multiplier, EMISSION_FLOOR_MULTIPLIER)
+			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+			material.emission = colour * EMISSION_FLOOR_ADD
+			material.emission_energy_multiplier = 1.0
 		else:
 			material.emission = material.emission * colour
 	_variant_materials[key] = material
