@@ -121,7 +121,16 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		return false
 	for cycle in cycles:
 		if not await _walk_to_and_activate(prompt, 1400):
-			_fail("natural controller travel could not activate %s cycle %d" % [who, cycle + 1])
+			var holder: Variant = _arbiter.call("winning_provider")
+			_fail(("natural controller travel could not activate %s cycle %d "
+				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
+				+ "means something nearer took the interact line.") % [
+				who, cycle + 1,
+				_player.global_position.distance_to(npc.global_position),
+				str((holder as Node).name) if holder is Node else "<none>",
+				str((holder as Node).get_parent().name) if holder is Node \
+					and (holder as Node).get_parent() != null else "<none>",
+				who])
 			return false
 		if not await _wait_dialogue_open(90):
 			_fail("%s cycle %d did not open dialogue" % [who, cycle + 1])
