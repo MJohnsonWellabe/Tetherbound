@@ -270,6 +270,16 @@ func _build_environment() -> void:
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(-35.0), 0.0)
 	key.light_energy = 1.6
+	# Godot defaults DirectionalLight3D.shadow_enabled to FALSE, and a bare
+	# stage that does not set it renders every subject with no contact shadow at
+	# all. A blind critic read exactly that off this survey's first run --
+	# "everything floats on the pale ground like a sticker" -- and could not tell
+	# whether it was the survey rig or the shipped renderer dropping creature
+	# shadows. It is the rig: world_look.gd sets sun.shadow_enabled from art.json
+	# defaulting to TRUE, so the real world casts them and only this stage did
+	# not. A contact shadow is also what plants a creature on the ground plane,
+	# which is half of judging its scale against the trainer.
+	key.shadow_enabled = true
 	_world.add_child(key)
 
 	# Decorative only, no collision -- both the trainer (a StaticBody3D under
@@ -399,7 +409,38 @@ func _spawn_creature(id: String, is_shiny: bool, at: Vector3) -> Node3D:
 	# physics frame, which `preview_creatures.gd` already found the hard way.
 	# Nothing here needs to move.
 	body.set_physics_process(false)
+	_seat_on_ground(body, at)
 	return body
+
+
+## Put the model's FEET on the ground line, not its pivot.
+##
+## Species models do not agree about where their origin sits -- some carry it
+## at the mesh centre, some at the sole -- so placing every body at the same
+## `global_position.y` leaves some floating and some sunk, by whatever each
+## model's own authoring happened to choose. A blind critic caught this from
+## the frames alone and named the consequence exactly: "creatures stand at
+## inconsistent depths... in the lineup Terrapup reads TALLER than the trainer,
+## which contradicts 'starter pup'. Pin every creature's pivot to the trainer's
+## ground line or the ruler lies."
+##
+## That is the whole point of this survey, so it is worth the extra measure:
+## criterion 8 asks a critic to compare each creature against a 1.80m human,
+## and a subject sunk 20cm into the floor is a subject reported 20cm short.
+## Measured in render space via `render_bounds.gd` for the same reason
+## `_measured_height()` does -- a naive node-chain measurement once blew the
+## 1.80m trainer up to 180m on a skinned rig.
+func _seat_on_ground(body: Node3D, at: Vector3) -> void:
+	var pivot: Node3D = body.get_node_or_null(^"Model") as Node3D
+	if pivot == null:
+		return
+	var box: AABB = RENDER_BOUNDS.measure(pivot)
+	if box.size == Vector3.ZERO:
+		return
+	# `measure()` reports in the pivot's own local space, so the offset it
+	# implies has to be applied through the pivot's scale to land in world units.
+	var foot: float = box.position.y * pivot.global_transform.basis.get_scale().y
+	body.global_position = Vector3(at.x, at.y - foot, at.z)
 
 
 func _capture(path: String) -> bool:
