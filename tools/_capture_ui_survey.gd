@@ -395,6 +395,46 @@ func _shoot_title_screen() -> void:
 	await _settle(2)
 
 
+## Stop the creature turntables before any shutter.
+##
+## `starter_picker.gd` and `creature_viewport.gd` both spin their model in
+## `_process` at 0.5 rad/s, which is a slow, pleasant turn at 60fps and is
+## nothing of the kind here: under software rendering a frame's `delta` is
+## about 2.4 SECONDS, so each awaited frame turns the model roughly 69 degrees
+## and a twelve-frame settle spins it more than twice round. Every pose this
+## survey has ever captured of a creature was therefore whatever angle the
+## shutter happened to land on.
+##
+## That is what a blind critic saw twice: the starter picker "presents three
+## dim, tiny renders posed facing away or side-on", and the Creatures menu is
+## "a rear three-quarter view of Terrapup... face invisible". Neither is how
+## either screen is authored. Both scripts set their model to
+## `rotation.y = 200 degrees` on build -- a front three-quarter -- and then
+## spin away from it. Freezing `_process` leaves each model exactly on the
+## authored angle, which is the pose the screens were designed around and the
+## only one a still frame can fairly judge. `ralph/VISUAL_LEDGER.md` already
+## carries the same lesson about the clock: pin it AND freeze it.
+##
+## This does not hide a defect. A player still sees the far side as it turns;
+## a still frame simply cannot say anything useful about a turntable, which is
+## the "static frames" limit `.claude/skills/visual-judge/SKILL.md` names in its
+## own honest-limits section.
+const SPINNING_PREVIEW_SCRIPTS := [
+	"res://scripts/ui/starter_picker.gd",
+	"res://scripts/ui/creature_viewport.gd",
+]
+
+
+func _freeze_preview_spinners(node: Node) -> void:
+	if node == null:
+		return
+	var script_res: Variant = node.get_script()
+	if script_res != null and str(script_res.resource_path) in SPINNING_PREVIEW_SCRIPTS:
+		node.set_process(false)
+	for child in node.get_children():
+		_freeze_preview_spinners(child)
+
+
 func _shoot_starter_picker() -> void:
 	var packed: PackedScene = load(STARTER_PICKER_SCENE)
 	if packed == null:
@@ -414,6 +454,10 @@ func _shoot_starter_picker() -> void:
 
 	var picker: CanvasLayer = packed.instantiate() as CanvasLayer
 	root.add_child(picker)
+	# Before any settle: `_ready()` has already posed each model at its
+	# authored front three-quarter, and every awaited frame after this would
+	# spin it ~69 degrees off that (see `_freeze_preview_spinners`).
+	_freeze_preview_spinners(picker)
 	picker.call("open", STARTER_SPECIES)
 	await _settle(20) # a couple seconds of turntable spin, not frame zero
 	await _shoot("02-starter-picker")
@@ -583,6 +627,9 @@ func _shoot_menu_tabs() -> void:
 		if str(menu.call("current_tab_id")) != tab_id:
 			_failures.append("%s: menu did not land on tab '%s'" % [shot_name, tab_id])
 			continue
+		# The Creatures tab mounts a `creature_viewport.gd` turntable; freeze it
+		# on the authored pose before settling, same reason as the picker.
+		_freeze_preview_spinners(menu)
 		await _settle(8)
 		await _shoot(shot_name)
 	menu.call("close")
