@@ -808,7 +808,17 @@ func _set_xp_line() -> void:
 	# than level -- so this is reported when it is true and the creature has a
 	# second trait to show for it, not asserted on every level.
 	var cfg: Dictionary = PROGRESSION.config()
-	var nodes := int(creature.get("bond_nodes")) if creature.get("bond_nodes") != null else 0
+	# GATE-E: this used to read `creature.get("bond_nodes")`, and `bond_nodes`
+	# is a METHOD on creature_instance.gd, not a property. `get()` handed back a
+	# Callable, `int(Callable)` is not a constructor, and the whole announcement
+	# died at this line with "Invalid call. Nonexistent 'int' constructor" --
+	# every trainer fight in the chapter, every time somebody levelled. The
+	# level-up line the player is meant to see was never assigned.
+	#
+	# It survived because tests/test_level_up_announcement.gd asserts on the
+	# SOURCE TEXT of this function rather than running it (prompt 33's exact
+	# false-positive shape). Found by driving four real fights end to end.
+	var nodes := int(creature.call("bond_nodes", cfg)) if creature.has_method("bond_nodes") else 0
 	if PROGRESSION.trait_unlocked(nodes, cfg):
 		line += "   ·   trait unlocked"
 	_xp_line.text = "+%d XP   ·   %s" % [xp, line]

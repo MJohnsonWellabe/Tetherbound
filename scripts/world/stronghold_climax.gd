@@ -470,6 +470,7 @@ func _hand_over_the_legendary() -> void:
 	if party != null and not bool(party.call("is_full")):
 		party.call("add", creature)
 		_set_flag(_flag("legendary_joined"))
+		_settle()
 		print("[climax] the legendary joined a belt with room on it")
 		return
 	# Full belt: the decision, through the system that already ships it.
@@ -488,7 +489,29 @@ func _ceremony_pending() -> bool:
 		var party: RefCounted = game.get("party")
 		if party != null and (party.call("members") as Array).has(_joined):
 			_set_flag(_flag("legendary_joined"))
+	if _joined != null:
+		_settle()
 	return false
+
+
+## GATE-E: the roster decision is OVER, whichever way the player answered it.
+##
+## `legendary_joined` deliberately does not answer this. A player who reaches
+## the ceremony with five they will not give up and lets the legendary walk
+## away has resolved the decision exactly as completely as one who kept it, and
+## that is a legitimate ending — CLAUDE.md's five-creature rule is the reason
+## the choice exists at all. Prompt 68's chain therefore waits on THIS flag for
+## its "resolve join/release if the roster is full" beat, because waiting on
+## `legendary_joined` would strand the player who chose the other answer on a
+## tracked objective they have already finished and can never finish again.
+##
+## Set exactly once, like every other flag in this file: `progression.set_flag`
+## is idempotent and `_advance()` leaves STAGE_CEREMONY the frame after this,
+## so a reload cannot re-run the beat.
+func _settle() -> void:
+	if _has_flag(_flag("legendary_settled")):
+		return
+	_set_flag(_flag("legendary_settled"))
 
 
 ## --- plumbing -----------------------------------------------------------------

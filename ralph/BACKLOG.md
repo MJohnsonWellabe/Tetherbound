@@ -139,6 +139,41 @@ Check the tree.
 
 ---
 
+## CI-COVERAGE-1 — 31 smoke_*.gd files exist with no CI job (non-blocking)
+
+Filed by `STRANDED-P3` while reconciling `origin/claude/gate-a-core-verbs-8aaw7g`'s
+CI-wiring commit (`a9215a1b`) against current `main`: `main` had already wired
+its own (later, differently-shaped) `verify-owner-regressions-shard` /
+`verify-gate-evidence-shard` / `verify-continuous-core-known-red` jobs closing
+most of that same gap, so `a9215a1b` itself conflicted heavily and was not
+cherry-picked whole — reopening its own already-superseded job structure would
+have thrown away `main`'s more complete version for no gain. What `a9215a1b`
+still names that `main`'s version does not: `smoke_title_new_game`,
+`smoke_save_persistence`, `smoke_gate_a_build_segment_meadows`,
+`smoke_gate_a_map_cycle`, `smoke_no_double_prompt`, `smoke_collision_streaming`
+— six Gate A checkpoint/lifecycle regressions that exist on disk and run in no
+CI job. A broader sweep of `tests/smoke_*.gd` against the current `ci.yml`
+found 25 more beyond those six: `smoke_backpack_pad_target`,
+`smoke_build_menu_footprint`, `smoke_build_menu_pad_pick`,
+`smoke_camera_probe`, `smoke_controller_catching`,
+`smoke_craft_panel_controller`, `smoke_creature_control`, `smoke_evolution`,
+`smoke_exploration_legend`, `smoke_gateb_flags`,
+`smoke_hud_handheld_legibility`, `smoke_interactable_sightline`,
+`smoke_menu_focus`, `smoke_menu_owns_dpad`, `smoke_mouse_look`,
+`smoke_name_prompt_controller`, `smoke_name_prompt_keyboard`,
+`smoke_pond_water`, `smoke_prompt_hotbar_dock`, `smoke_release`,
+`smoke_rename_pad_trigger`, `smoke_step_up`, `smoke_village_smith`,
+`smoke_village_trade`, `smoke_village_trainer`, `smoke_wake_softlock`.
+
+Not wired in this pass: none confirmed green against current `main` first
+(a red job added blind is worse than an unwired test — it wedges every branch
+behind a check nobody has seen pass), and 31 files is real re-audit scope, not
+a side effect of a CI-wiring cherry-pick. Worth a dedicated pass: run each
+against current `main`, confirm or fix it, then wire it into an existing
+shard (or the unit suite if it's cheap enough to run every commit).
+
+---
+
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
 Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by
@@ -895,6 +930,57 @@ committed and published to Pages despite `site/README.md` telling everyone not
 to since the page was written. Untracked, and `site/img/*.import` is in
 `.gitignore` now so the rule enforces itself.
 
+**Update, 2026-08-23, third pass.** All four captures landed; `site/README.md`
+carries the per-frame detail now rather than duplicating it here. Findings
+worth keeping in this ledger:
+
+- **`village-square.jpg` was already fixed before this pass started.**
+  `capture_site_story.gd`'s own viewpoint (not `capture_site_shots.gd`'s, which
+  is still deliberately broken per item 3 above) landed on `main` in `6cdf8dc9`,
+  before this session existed. This section's "captures wanted" list and
+  `site/index.html`'s own CSS comment both still said the file was absent; both
+  were reconciled against the real committed image rather than re-derived from
+  stale prose. Evidence-backed already-fixed, `CLAUDE.md`'s own rule.
+- **`tether-site.jpg`** — first-guess camera coordinates, computed from
+  `tether_relay.json`'s own site frame rather than eyeballed, rendered clean on
+  the first Godot run. Sited on the west-run pylons: a lit pylon close in
+  frame, sagging cable to its neighbours, drained ground, the compound wall
+  and open gate behind it.
+- **The Warden** — took three renders, not one, and the failures are the
+  reusable finding. First: `focus_node: "WardenTrainer"` is
+  `stronghold_climax.gd`'s trainer *placer*, parented to the world and never
+  itself moved — the camera landed at world (0,0,0), the village, not the
+  stronghold. The body is a child of the placer, named from trainers.json's
+  own `name` field (`"Warden Aldis"` for `warden_aldis`) — that is what a
+  `focus_node` tree-walk actually needs. Second: with the right node, a wide
+  3/4 frame was mostly black void — the Warden Arena has no window and only
+  faint trim-light fill (`stronghold.gd`'s `OmniLight`s default to energy
+  0.5). Third, and shipped: a close portrait crop, which reads as a
+  deliberate low-key reveal rather than as underexposed.
+- **`opening-bedroom.jpg`** was not re-dressed, only re-verified. The loft
+  already has a real `BedTwin` and nightstand (`grandpa_house.gd`'s furniture
+  pass); the "undressed white blockout" description was of the stale
+  committed frame, not of current `main`.
+- **`camp-dusk.jpg`** — re-verified, not re-fixed. A fresh capture's sky is
+  clean; whatever produced the "two orange discs" this item originally
+  described does not reproduce now. No second `DirectionalLight3D` or second
+  sky material exists in the scene or the tool, so there was no code path to
+  fix even if it had reproduced.
+- **`weather-rain.jpg`** — re-verified, not re-shot. A fresh capture is
+  near-pixel-identical to the committed frame: real rain streaks, visible on
+  close inspection, deliberately faint by an already blind-pass-validated
+  design (`world_weather.gd`: "a faint, mostly-transparent line, not a light
+  source"). Nothing here was a capture bug.
+- **Meadows Hall approach (`.s-hall`) stays gated**, and the reason changed.
+  `STRONGHOLD-MAT` landed (`97f4ff32`, unrelated lane) — the stronghold has
+  real textured masonry now. `SKY-PLANES` has not: a fresh capture from the
+  approach viewpoint shows several large translucent quads standing directly
+  behind the hall, dominating the skyline. Its root cause
+  (`rift_collapse.gd`'s `StormWall`, at the storm_road blocker) reads as a
+  different, distant site, but the defect is visible from here too — do not
+  re-wire this figure on the strength of the root-cause location alone
+  without rendering the actual approach viewpoint again first.
+
 ### PERF-LOD — Terrain3D vegetation LOD is written, tested and deliberately switched off
 
 All ~130k vegetation instances render at LOD0 regardless of distance. `lod0_range`
@@ -917,13 +1003,19 @@ bar) and never emitted either view. The world stands up fine during the run —
 tool is not broken. Box load went from 1.00 at dispatch to 8.7–12.6 within
 minutes as other lanes entered their own render phases.
 
-**The diagnosis is specific and the unblock is cheap.** The sink is not
-`vegetation.gd` (its own `build()` stays ~2.3s) but the rest of
-`playground_world.gd::_ready()` — village, trainers, quarry, relay, river,
-stronghold — none of which a vegetation-LOD comparison needs. The next attempt
-should capture from a **minimal scene containing only terrain plus vegetation**,
-and/or cut `SETTLE_FRAMES`, so the render survives partial contention instead of
-requiring a sustained idle box this environment has never provided.
+**CORRECTED 2026-08-22 — the diagnosis above was wrong.** This entry
+originally blamed `playground_world.gd::_ready()` standing up village, trainers,
+quarry, relay, river and stronghold. That was plausible and false. The real
+cause is that **`--headless` combined with `--rendering-driver opengl3` hangs
+forever**, verified on a bare `ColorRect` with no project scenes at all; drop
+`--headless`, keep `xvfb-run`, and the same script renders in under a second.
+See `ralph/conventions.md`'s art-pipeline traps for the correct invocation.
+
+The world was never the problem: one lane got through the full Meadows
+stand-up, 129,723 scattered props and a 240-frame settle in about 50 seconds on
+an idle box. **The LOD capture very likely just works once the invocation is
+fixed** — it needs no minimal scene and no reduced `SETTLE_FRAMES`. Try it
+before assuming anything else is wrong.
 
 Worth keeping in perspective: the two large measured performance wins already
 landed (the missing scatter bake, ~45x on load; the O(n^2) interaction-provider
@@ -1138,6 +1230,20 @@ ceiling, until checked) — but on the largest structure in the Meadows, legible
 from hundreds of metres. **Check `D63`'s exact failure first**: one model
 reaching the world down two code paths, only one of which warms its material.
 
+**ADDRESSED by `GATE-E-STRONGHOLD-ART` (2026-08-23), and the diagnosis above is
+wrong — worth reading before anyone re-opens it.** It is not `D63`'s failure and
+there is no unwarmed material path; `building_prefabs.gd` retints every castle
+module correctly and always has. The castle renders black because `art.json`
+puts the sun in the NORTH sky (pitch -44, yaw -40) while `landmark.gd` puts the
+gate, ramp and whole approach on the SOUTH side, so the hero face is backlit at
+every hour the chapter is played and lit by ambient fill alone — measured near
+luma 0.012 on `gate-close` against a 0.49–0.60 reference range. Fixed by raising
+the retint ladder and by giving the garrison its own fires
+(`stronghold_occupation.gd`), not by repainting. See `DONE.md`. **Remaining: the
+blind visual-judge pass could not be spawned during that lane (session service
+unavailable) — the frames are improved and unjudged, and the blind pass still
+owes this item.**
+
 ### SKY-PLANES — large translucent quads hang in the air over the stronghold
 `model: sonnet` · `tests: smoke_stronghold` · `area: visual`
 Visible in both `shots/storm_pass/01-road-approach.png` and
@@ -1146,6 +1252,44 @@ standing in the sky above and behind the stronghold, at a scale that reads from
 the whole approach. Not a subtle artefact and not previously reported.
 Unknown cause — candidates are an LOD/impostor plane, a shadow-catcher, or a
 wall mesh with a broken transform.
+
+**FIXED by `GATE-E-STRONGHOLD-ART` (2026-08-23). None of the three candidates.**
+They are `scripts/world/rift_collapse.gd`'s `StormWall_0/1/2` — the storm-road
+seam backdrop, correct material, correct transform, simply being looked at from
+1.4–2.0km away by viewpoints that did not exist when it was authored. That file
+still claims its meshes sit "outside the 512m terrain"; the 8192m corridor move
+silently ended that. Fixed with a viewing band
+(`rift_collapse.json`'s `visible_within_metres` / `fade_metres`) rather than a
+colour, applied to `FarCountry` too since it would inherit the same defect the
+moment `legendary_freed` is set. Identification tool:
+`tools/_probe_sky_slabs.gd`. If a translucent rectangle turns up on some other
+horizon, probe it the same way before assuming it is this one — `BILLBOARD-WHITE`
+below is a separate, still-open report.
+
+### STRONGHOLD-TETHER-HERO-PROPS — what this site would spend a Meshy generation on
+`model: sonnet` · `tests: smoke_stronghold` · `area: visual` · **blocked on owner reference art**
+Recorded by `GATE-E-STRONGHOLD-ART` rather than generated, because `CLAUDE.md`
+reserves Meshy for Team Tether hero objects **and never without owner-supplied
+reference art**, and there is none for any of these. Everything that lane
+shipped is installed-asset kit-bash; these are the places where that is visibly
+the ceiling rather than the choice:
+
+- **A real brazier / fire-basket.** Currently two primitives (post + bowl) with
+  `torch_prop.gd`'s billboard flame seated in it, because `assets/**` ships no
+  brand, lantern or brazier mesh at all — `torch_prop.gd`'s own header already
+  recorded that gap. It reads as a dark cup on a stem at 26m.
+- **A Team Tether gate pylon / relay mast for the gatehouse.** The teal work
+  lamps are an emissive sphere in a cylinder housing. The relay site and the
+  tether machine both have real apparatus; the fortress that Team Tether
+  actually holds has none of it on the outside.
+- **A barbican or outer-works gate for the ramp foot.** The approach reads as a
+  camp beside a ramp rather than a controlled entry. Note the terrain bound
+  recorded in the castle recipe before designing one: the Rise flank climbs
+  +34m twenty metres west of the wall and the heightfield ends ~30m east, so a
+  sprawl has to go SOUTH down the approach, not around the footprint.
+- **A hanging banner with real cloth silhouette.** The kit's `Banner.obj` is a
+  flat pennant; nine of them now hang on the south face and they read as small
+  red flags rather than as an occupying army's colours.
 
 ### BILLBOARD-WHITE — untextured white cards standing among the trees
 `model: sonnet` · `tests: smoke_playground` · `area: visual`
