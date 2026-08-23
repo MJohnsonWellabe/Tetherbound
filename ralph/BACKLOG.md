@@ -814,6 +814,25 @@ path as working. It has never run. That is the twelve-stale-harnesses finding
 one step further along — not a test asserting a dead pad map, but an entire
 evidence path nothing could execute.
 
+### VISUAL-GROUNDCOVER-remainder — the blind visual pass never ran
+`ralph/DONE.md`'s `VISUAL-GROUNDCOVER` entry raised corridor ground-cover
+density chapter-wide, rescaled oversized flowers/bushes, and landmark-scaled
+two of band4's Ironwood hero trees -- config changes and a fresh scatter bake,
+verified against the four named scatter/veg tests and `tools/measure_models.gd`
+only. **The rendered result has never been looked at**, by a human or a blind
+critic: three `tools/survey.sh` attempts this session were OOM-killed (a
+14.3GB session memory-cgroup ceiling, confirmed via `dmesg`) or hit a one-frame
+renderer flake, under 15-35 1-min load from five-plus sibling lanes sharing
+the box concurrently. `ralph/conventions.md`'s own rule -- render, then a
+blind `visual-judge` pass, before marking visual-affecting work done -- was
+not satisfied. Whoever picks this up: get a clean 5-frame `shots/` (retry
+`tools/survey.sh`/the raw `xvfb-run ... survey.gd` invocation once the box has
+real headroom -- watch memory, not just load, this session's failures were
+OOM not CPU), run `tools/contact_sheet.gd`, then the `visual-judge` skill's
+blind sub-agent, and iterate per the convergence rule. Also capture
+`tools/_capture_band4_sites.gd`'s `ironwood-grove` shot specifically, the
+direct frame for the two rescaled hero trees.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on

@@ -265,6 +265,15 @@ func test_path_bias_of_one_lands_clumps_on_the_road() -> void:
 	# collapsing to one instance at zero radius would only prove the snap
 	# point itself is on the road, not that the fix changes what ships.
 	var layer := _layer("path_stones").duplicate(true)
+	# VISUAL-GROUNDCOVER: path_stones gained its own `corridor_fill` (chapter-wide
+	# small stones along the trail, VEG-CORRIDOR's mechanism) alongside this
+	# layer's pre-existing square-only `path_bias`. `corridor_fill`'s own siting
+	# (`trail_bias`/`trail_offset_min/max`) does not read `path_bias` at all --
+	# it is tested on its own terms in test_veg_corridor.gd -- so mixing it into
+	# this test's placements dilutes both the biased and unbiased averages with
+	# the same off-centreline instances, which is not what this test measures.
+	# Isolate the SQUARE clump mechanism this test is actually about.
+	layer.erase("corridor_fill")
 
 	layer["path_bias"] = 0.0
 	var unbiased_total := 0.0
