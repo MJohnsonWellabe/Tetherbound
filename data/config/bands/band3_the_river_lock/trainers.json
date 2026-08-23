@@ -223,7 +223,8 @@
         "xp_bonus": 80
       },
       "defeat_flag": "defeated_captain_riverwatch",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     }
   ]
 }
