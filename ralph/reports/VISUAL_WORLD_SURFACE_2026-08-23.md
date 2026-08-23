@@ -425,3 +425,91 @@ scale.
 
 So the round-3 lever is grass SIZE, not more grass. It costs no instances and
 is checkable against the rubric's own scale criterion.
+
+## Round 2 blind verdict
+
+Fresh independent Fable critic, blind, told nothing about what changed. **A: no.
+B: no.** Round 2 named several defects round 1 had not, so this is not
+convergence by `ralph/conventions.md`'s rule.
+
+Asked explicitly to COUNT distinct groundcover clumps in the lower half of each
+day frame — because "sparse" and "empty" lead to different work — the answer
+was:
+
+| day frame | clumps in lower half |
+|---|---|
+| band1 opening | **0** ("pure dirt texture around the player") |
+| band2 stone-root | 2 |
+| band3 crossing | **0** on the hill around and ahead of the player |
+| band4 ironwood | **1** |
+| band5 approach | 12-15, "each isolated with a body-length of bare dirt between" |
+| water-02-river-grazing | **0** — "not one blade of geometry" |
+
+> *"The near field is empty, not sparse; the mid-field is sparse."*
+
+And the decisive framing: *"Because the camera sits behind the player, the
+lower half of every gameplay frame is this near field — so this one gap
+dominates every second of play."*
+
+### A regression this lane introduced, caught blind
+
+> *"The neon-lime cutout tufts are 2-3 stops brighter and greener than the
+> terrain they sit on, so they read as stickers, not growth."*
+
+That is round 2's `variant_retint`, and the critic is literally right.
+Measured: the four tints ran value 0.525-0.706 while
+`terrain_playground.json`'s own R9.4 comment records the ground grass
+**rendering** at value 0.199 — so the tufts were 2.6x to 3.5x the brightness
+of the surface they grow out of. Fixed in round 3 by scaling them to ~0.29-0.39:
+still lighter than the ground, because a blade catching light should be, but
+no longer a different material pasted on top of it.
+
+Worth recording as a process point: the colour_jitter removal was correct and
+necessary, but choosing replacement tints by eye against a swatch rather than
+against the ground's own *rendered* value reintroduced a visible defect in the
+same change that fixed one. The ground's rendered value was already written
+down in the file being edited.
+
+### A hypothesis this round killed
+
+Before the verdict, this lane's own measurement pointed at grass SIZE as the
+next lever: `river.reeds` uses the same meshes at scale 0.6-1.4 against the
+walk bands' 0.13-0.42, and pixel coverage per instance falls off hard with
+distance. The critic answers it directly and negatively: *"Grass tufts are
+knee-to-waist height — at the tall end for meadow grass but defensible as
+stylisation."*
+
+So grass is already at the tall end and raising it would have bought a new
+scale defect. **Not done.** Recorded because the reasoning was sound and the
+conclusion was still wrong — which is exactly what the blind pass is for.
+
+### Round 3 changes
+
+- **Tuft tints scaled down** to sit near the ground's rendered value (above).
+- **Strays cut, per_clump raised** — grass 900 -> 300 strays and 130 -> 190 per
+  clump, drygrass 380 -> 140 and 90 -> 130. Strays are the layer's uniform
+  singles and they are precisely what the critic keeps describing ("every grass
+  tuft stands alone at roughly even intervals", "scatter is one-by-one, not in
+  drifts"). Same trade R7.1-remainder already made once for the origin square.
+- **Verge raised and narrowed** — grass 6000 -> 30000 with `band` 18 -> 12,
+  drygrass 1800 -> 9000, flowers 900 -> 4000. 6000 by arc length over ~12km is
+  one instance per 2m across a 36 m2 strip, which is a rumour of a verge. The
+  narrowing is deliberate: the same instances concentrated at the worn edge read
+  as growth crowding it, spread over 18m they read as more sprinkle further out.
+  `path_standoff` still culls per side with noise, which is what keeps a dense
+  narrow fringe from becoming the planted border OF12 removed.
+- Round 3 also carries the night and golden-hour lighting changes, which were
+  committed after round 2's world had already booted and so appear in frames
+  for the first time here.
+
+**Placement trajectory, stated plainly because it is now the thing to watch:**
+143,630 -> 223,889 -> 405,101 -> **532,886**. That is 3.7x the count this
+chapter started the sweep with, and the last two rounds are this lane's. Draw
+cost is bounded per frame by `lod_range` 55m and regional batch culling rather
+than by the total, and the bake is loaded from disk rather than recomputed
+(boot `placements` went 2.0s -> 4.6s across the 217k -> 405k step), but 533k
+instances has not been measured on the Ally and should be before this goes
+further. If a performance lane needs the number back, the honest order to give
+it up in is: verge count first (it is the most recent and the most
+concentrated), then `corridor_fill.density_scale`, and NOT the siting or the
+clustering, which cost nothing and are what make the rest read.
