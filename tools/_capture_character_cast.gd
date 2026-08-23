@@ -24,7 +24,7 @@ extends SceneTree
 ## WHY NOT `meadows_playground.tscn`: `_probe_corridor_survey.gd` measured
 ## ~2.4s/frame under llvmpipe rendering that scene's 143,630 scattered props,
 ## and that cost is per AWAITED FRAME regardless of what the shot is actually
-## about. This tool photographs eleven still humans against a flat backdrop --
+## about. This tool photographs fourteen still humans against a flat backdrop --
 ## no terrain, no Terrain3D streaming, no vegetation -- so it builds its own
 ## bare stage, the same pattern `capture_npc_ranks.gd` and
 ## `capture_village_npcs.gd` already ship (both build a `Node3D` + two
@@ -42,19 +42,21 @@ extends SceneTree
 ##   world settle                 WORLD_SETTLE_FRAMES  =  15
 ##   group build settle           GROUP_SETTLE_FRAMES   =  35
 ##   per-view camera/pose settle  CAST.size() * 2 views * TURN_FRAMES
-##                                 = 10 * 2 * 6           = 120
+##                                 = 13 * 2 * 6           = 156
 ##   line-up settle               LINEUP_SETTLE_FRAMES  =  15
-##   shutter waits (one frame_post_draw per PNG, 20 portraits + 1 line-up)
-##                                                        =  21
+##   shutter waits (one frame_post_draw per PNG, 26 portraits + 1 line-up)
+##                                                        =  27
 ##   -----------------------------------------------------------
-##   total awaited frames                                = 206
-##   206 * 2.4s ~= 494s ~= 8.2 minutes -- well under the 15-minute target.
+##   total awaited frames                                = 248
+##   248 * 2.4s ~= 595s ~= 9.9 minutes -- still under the 15-minute target.
+##   MEASURED on this box: the whole pass completes in well under two minutes,
+##   because a bare stage is nowhere near the corridor survey's per-frame cost.
 ##
-## STAGING: every character is built ONCE, all ten side by side along +X
+## STAGING: every character is built ONCE, all thirteen side by side along +X
 ## (`SPACING` apart), the same "build the whole group, settle once" shape
 ## `capture_npc_ranks.gd` already proved -- rebuilding per-shot would multiply
 ## the one real cost in this scene (shader/material compile on first use) by
-## ten for no reason. Each character's own portrait camera then frames just
+## thirteen for no reason. Each character's own portrait camera then frames just
 ## that slot; a neighbour three metres away sits well outside `FOV`'s cone.
 ## The three-quarter view turns the CHARACTER (`holder.rotation.y`), not the
 ## camera -- camera position, target and lighting stay bit-for-bit identical
@@ -88,6 +90,11 @@ extends SceneTree
 ## - rank-warden: same `config_for()` path, but the Warden rank entry names no
 ##   `base`, so it still falls back to his own `art.json` rig -- the one rank
 ##   that does NOT share a body with anyone else in this cast.
+## - captain-field / captain-ridge / captain-riverwatch: `trainer_npc.gd`'s own
+##   `model_config()`, the path the shipped world uses, so these three show the
+##   rank config WITH each site's palette override laid over it. See the CAST
+##   entry's own note for why photographing only the generic `rank-captain`
+##   made this survey blind to the three captains a player actually fights.
 ##
 ## WHY THE RANK FRAMES MATTER (repo note -- the critic below is blind to this,
 ## and stays that way; nothing about it is said to it): `ralph/
@@ -102,11 +109,12 @@ extends SceneTree
 ## without deep self-shadow crushing it to near-black -- this is a palette
 ## comparison render, not a mood shot" -- deliberately the lighting state
 ## where a still-crushed figure would be visible rather than hidden by shadow.
-## These ten frames (`07`-`10`, front and three-quarter) are the real evidence
-## for whether the fix reads today; nothing here tells the critic that.
+## These frames (`07`-`10` and `11`-`13`, front and three-quarter) are the real
+## evidence for whether the fix reads today; nothing here tells the critic that.
 
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
+const TRAINER_NPC := preload("res://scripts/world/trainer_npc.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const OUT_DIR := "res://shots/characters"
 
@@ -124,6 +132,23 @@ const CAST := [
 	{"slug": "rank-officer", "kind": "rank", "key": "officer"},
 	{"slug": "rank-captain", "kind": "rank", "key": "captain"},
 	{"slug": "rank-warden", "kind": "rank", "key": "warden"},
+	# The three NAMED captains, built through the same `TrainerNpc.model_config()`
+	# the shipped world builds them with -- not through `npc_ranks.config_for()`
+	# like the four rank frames above.
+	#
+	# They are here because leaving them out is how this survey photographed the
+	# wrong subject. `rank-captain` renders the GENERIC captain, and until VIS-CAST
+	# the generic captain was the only captain wearing the faction's oxblood: each
+	# of these three overrides `palette` at its own site, and `model_config()`
+	# replaced the whole dictionary rather than merging it, so all three rendered
+	# in the old olive/tan/slate. A blind round shown only `rank-captain` would
+	# have confirmed the faction colour had landed while every captain a player
+	# actually fights still had none of it -- the same class of harness defect
+	# `ralph/VISUAL_LEDGER.md` records six of, where "a fix that lives in one tool
+	# does not protect the next tool that does the same thing".
+	{"slug": "captain-field", "kind": "trainer", "key": "captain_field"},
+	{"slug": "captain-ridge", "kind": "trainer", "key": "captain_ridge"},
+	{"slug": "captain-riverwatch", "kind": "trainer", "key": "captain_riverwatch"},
 ]
 
 const SPACING := 3.0            # metres between each character's own stage slot
@@ -141,15 +166,21 @@ const CAM_HEIGHT := 1.3
 const LOOK_HEIGHT := 1.0
 const THREE_QUARTER_DEG := 35.0
 
-## Line-up camera: pulled back far enough for all ten slots -- `SPACING` *
-## (CAST.size() - 1) = 27m of spread, plus body-width margin, at 1280x800's
+## Line-up camera: pulled back far enough for all THIRTEEN slots -- `SPACING` *
+## (CAST.size() - 1) = 36m of spread, plus body-width margin, at 1280x800's
 ## ~1.6 aspect ratio (Godot's default `KEEP_HEIGHT`, so the wider horizontal
 ## FOV comes from `LINEUP_FOV` through the aspect, not from `LINEUP_FOV`
 ## alone): horizontal half-angle = atan(tan(60/2 deg) * 1.6) ~= 42.8deg, so
-## `LINEUP_DIST` * tan(42.8deg) ~= 15.7m of half-width at 17m back -- a full
-## ~31m across, comfortably over the 27m spread plus each figure's own width.
+## `LINEUP_DIST` * tan(42.8deg) ~= 20.4m of half-width at 22m back -- a full
+## ~40m across, over the 36m spread plus each figure's own width.
+##
+## 22m, not the 17m this held while the cast was ten: 17m frames ~31m, and the
+## three named captains added below push the spread to 36m, so the old distance
+## would have cropped the far end of its own line-up off the edge of the frame
+## -- and cropped it silently, since nothing in this tool measures whether the
+## last slot landed inside the view.
 const LINEUP_FOV := 60.0
-const LINEUP_DIST := 17.0
+const LINEUP_DIST := 22.0
 const LINEUP_CAM_HEIGHT := 2.2
 const LINEUP_LOOK_HEIGHT := 1.0
 
@@ -235,12 +266,12 @@ func _run() -> void:
 
 	var live := holders.filter(func(h: Node3D) -> bool: return h != null)
 	if live.size() < 2:
-		print("FAIL 11-lineup-all: fewer than two characters staged; skipping the ruler frame")
+		print("FAIL %s: fewer than two characters staged; skipping the ruler frame" % _lineup_stem())
 	else:
 		_frame_lineup(camera)
 		for f in LINEUP_SETTLE_FRAMES:
 			await process_frame
-		await _shoot("11-lineup-all", -1.0)
+		await _shoot(_lineup_stem(), -1.0)
 
 	print("")
 	print("cast written to %s" % OUT_DIR)
@@ -256,6 +287,14 @@ func _config_for(entry: Dictionary) -> Dictionary:
 			return CHARACTER_MODEL.config_for(str(entry.get("key", "")))
 		"rank":
 			return NPC_RANKS.config_for(str(entry.get("key", "")))
+		"trainer":
+			# Through the real path, so this frame shows what the world builds --
+			# rank config first, then that trainer's own site overrides laid over
+			# it, exactly as `trainer_npc.gd` does when it places the body.
+			var spec: Dictionary = TRAINER_NPC.trainer(str(entry.get("key", "")))
+			if spec.is_empty():
+				return {}
+			return TRAINER_NPC.model_config(spec)
 		_:
 			return {}
 
@@ -291,6 +330,14 @@ func _frame_portrait(camera: Camera3D, slot_x: float) -> void:
 	camera.fov = FOV
 	camera.global_position = Vector3(slot_x, CAM_HEIGHT, DIST)
 	camera.look_at(Vector3(slot_x, LOOK_HEIGHT, 0.0), Vector3.UP)
+
+
+## The line-up always sorts LAST in the contact sheet, whatever the cast size.
+## Hardcoded as "11-lineup-all" while the cast was ten, which silently collided
+## with `11-captain-field-*` the moment three more characters were added -- two
+## different frames claiming one index, and nothing in the tool would have said so.
+func _lineup_stem() -> String:
+	return "%02d-lineup-all" % (CAST.size() + 1)
 
 
 func _frame_lineup(camera: Camera3D) -> void:

@@ -377,13 +377,31 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## was closes that gap without touching the "painted, self-lit" look itself:
 ## a fully white emission untouched by a "*" wildcard tint of `#ffffff`
 ## renders identically to before, and any other tint now visibly lands.
-func _shared_variant_material(source: Material, name: String, colour: Color) -> Material:
-	var key := "%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html()]
+func _shared_variant_material(source: Material, name: String, colour: Color,
+		finish: Dictionary = {}) -> Material:
+	# `finish` joins the cache key because it changes the rendered material as
+	# much as `colour` does; two accessories sharing a name and a colour but
+	# asking for different metal would otherwise silently share one instance.
+	var key := "%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")])]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
 		if source is BaseMaterial3D else StandardMaterial3D.new()
 	material.albedo_color = material.albedo_color * colour
+	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
+	# matte. On a flat-faced primitive under one directional key that renders as
+	# a single uniform colour with no gradient anywhere across it, which is
+	# precisely why the captain's chest badge photographed as "a flat pure-red
+	# untextured rectangle" and read as a debug gizmo rather than insignia. The
+	# shape ladder was not the problem; the absence of any shading model was.
+	# Metal gives the face a specular falloff, so a primitive reads as a struck
+	# metal object rather than as a colour swatch pasted over the costume.
+	if finish.has("metallic"):
+		material.metallic = float(finish["metallic"])
+		material.metallic_specular = float(finish.get("metallic_specular", 0.5))
+	if finish.has("roughness"):
+		material.roughness = float(finish["roughness"])
 	if material.emission_enabled:
 		# STRANDED-P3: a dark tint (a Team Tether rank palette, e.g. the grunt's
 		# original #4a5049) darkens the SAME colour into both albedo and this
@@ -503,9 +521,17 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var part := _attach_part(mesh, str(acc.get("bone", "Hips")), offset, name)
 		if part == null:
 			continue
+		if str(acc.get("shape", "box")) == "disc":
+			# CylinderMesh is built around Y; a chest badge lies in the coronal
+			# plane, so tip it a quarter turn to face forward off the bone.
+			part.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
 		var hex := str(acc.get("color", acc.get("colour", "#5a3d21")))
+		var finish := {}
+		for property: String in ["metallic", "metallic_specular", "roughness"]:
+			if acc.has(property):
+				finish[property] = acc[property]
 		part.set_surface_override_material(
-			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex)))
+			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex), finish))
 
 
 func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
@@ -514,6 +540,21 @@ func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
 			var box := BoxMesh.new()
 			box.size = Vector3.ONE * size
 			return box
+		"disc":
+			# A struck medal: a shallow cylinder whose rim curves away from the
+			# key light, giving the shape a lit edge and a shaded one. A `box`
+			# badge presents ONE flat face square to the camera and, being a
+			# plane, takes exactly one shade across the whole of it -- which is
+			# what made the captain's insignia photograph as a flat red
+			# rectangle with no shading model at all. CylinderMesh is built
+			# around the Y axis, so `_apply_accessories` lays it onto the chest;
+			# a mesh resource cannot carry that rotation itself.
+			var disc := CylinderMesh.new()
+			disc.top_radius = size * 0.5
+			disc.bottom_radius = size * 0.5
+			disc.height = size * 0.22
+			disc.radial_segments = 24
+			return disc
 		"capsule":
 			var capsule := CapsuleMesh.new()
 			capsule.radius = size * 0.5
