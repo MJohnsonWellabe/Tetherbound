@@ -181,7 +181,13 @@ const STRIKE_RESOLVE_BOUND := 60
 ## After the strike resolves, before the "move firing" shot: enough physics
 ## time for the projectile to be visibly clear of the creature that just
 ## threw it (pebble_toss travels at 26 m/s; 6 frames is ~2.6m of travel).
-const PROJECTILE_INFLIGHT_FRAMES := 6
+## Two physics ticks after the strike, not six. `MIN_TRAVEL` is 0.06s -- 3.6
+## ticks -- so a fight at close quarters lands its bolt before a six-tick wait
+## ends, and the first run with the shutter fixed reported exactly that:
+## "NO projectile alive in the arena", with the impact flash appearing one tick
+## later. Two ticks puts the bolt between a tenth and half way across at every
+## distance the arena allows.
+const PROJECTILE_INFLIGHT_FRAMES := 2
 ## From the "move firing" shot to the "hit landing" shot: the remaining
 ## flight time to a ~5m separation (`combat.json` arena.separation) at 26
 ## m/s is ~12 frames; this adds margin for the impact flash to actually be
@@ -257,6 +263,7 @@ func _run() -> void:
 
 	_leave_the_farmhouse()
 	await _ensure_ally()
+	_ensure_orbs()
 	if _director.call("ally_instance") == null:
 		print("FAIL: the player has no creature to fight with; nothing below this point can run")
 		_report()
@@ -297,9 +304,43 @@ func _leave_the_farmhouse() -> void:
 ## already makes for the same reason (`_probe_combat_hit_rate.gd`,
 ## `smoke_trainer_battle.gd`, both `_ensure_ally()`).
 func _ensure_ally() -> void:
-	if _director.call("ally_instance") != null:
+	if _director.call("ally_instance") == null:
+		await _director.call("adopt_starter", "terrapup")
+
+	# AND put it in the party, which `adopt_starter` does not do.
+	#
+	# `_spawn_ally_body()` builds `_ally` and `_ally_body` and stops there; the
+	# real opening registers the starter separately
+	# (`sequence_director.gd:1209`, `party.call("add", instance)`). So every
+	# capture that granted its creature this way photographed a HUD with five
+	# OPEN SLOT rows down the middle of a fight the player was winning -- and
+	# round 1's blind critic reported exactly that, reasonably, as a defect.
+	# The HUD was telling the truth about a state no player can ever be in.
+	var game := root.get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var instance: RefCounted = _director.call("ally_instance")
+	if party != null and instance != null and (party.call("members") as Array).is_empty():
+		party.call("add", instance)
+
+
+## Orbs, for the same reason: the satchel starts empty here.
+##
+## `throw_aim.gd` refuses to open the reticle with no orb in the satchel, so
+## `04-catching` came back uncaptured with "the capture reticle never opened" --
+## not a defect in the aim, just a player who had been given nothing to throw.
+## The real opening hands over fifteen (`give:orb_basic:15`,
+## data/dialogue/opening.json); this grants the same item the same way every
+## catching smoke test in the repo already does.
+func _ensure_orbs() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		print("FAIL: no Game autoload; cannot seed orbs and 04-catching will not open")
 		return
-	await _director.call("adopt_starter", "terrapup")
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		print("FAIL: no inventory; cannot seed orbs and 04-catching will not open")
+		return
+	inventory.call("add", "orb_basic", 5)
 
 
 ## --- encounter A: the wild fight (engagement, move firing, hit landing, catching) ---

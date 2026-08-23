@@ -146,3 +146,93 @@ tool returns before shooting if `is_fighting()` is false (line 481), so a frame
 existing means a fight was open — but the critic saw an idle NPC and a stale
 "You backed off." toast. That is not explained by the clock arithmetic above and
 is being resolved by re-running the capture and reading its own FAIL lines.
+
+---
+
+# Empirical confirmation — re-run with the harness fixed
+
+The capture was re-run after the two fixes above (`_shoot_pair` pauses the tree;
+`move_projectile.gd` moved to the physics clock). **418 frames, 8 shots written,
+0 shots failed.** The derived mechanism holds, and the frames now settle three
+of the four open questions outright.
+
+## 1. The impact flash: harness failure, PROVEN
+
+`03-hit-landing-clean.png` now shows the burst — a warm gold ring with radial
+streaks at the exact point of contact between the piloted creature's head and
+the bramblebun. Same scene, same move, same renderer as round 1, which reported
+this frame as an identical still life to 01 and 02.
+
+Nothing about the game's impact VFX changed. Only the shutter did. **Round 1's
+"no impact" was a photograph of the wrong instant**, exactly as the arithmetic
+predicted, and `impact_flash.gd` has been doing its job the whole time.
+
+The tool now also prints `03-hit-landing: impact flash present after 1 ticks`
+before it fires, so no future round has to take this on trust.
+
+## 2. The projectile: still not photographed, and the tool now says so
+
+The new self-check fired on the first run:
+
+    FAIL: 02-move-firing is being shot with NO projectile alive in the arena
+
+Moving it to the physics clock was necessary but not sufficient. The reason is
+visible in the same log: the impact flash appeared **one tick later**, so the
+bolt had already ARRIVED before the shutter. `MIN_TRAVEL` is 0.06s = 3.6 physics
+ticks, and the tool was waiting `PROJECTILE_INFLIGHT_FRAMES = 6` — the fight was
+simply at close quarters, and six ticks overshot a flight that took four.
+
+Lowered to 2, which lands between a tenth and half way across at every distance
+the arena allows. Worth stating plainly: **this frame is not yet verified.** The
+FAIL line is the harness working, not the harness fixed.
+
+## 3. The empty TEAM panel: confirmed a capture artifact, and closed
+
+`adopt_starter()` never calls `Game.party.add()`; the real opening does, at
+`sequence_director.gd:1209`. The capture now registers the starter it grants, so
+the HUD frames stop showing five OPEN SLOT rows in a fight the player is
+winning. Round 1's critic read that panel correctly — it was reporting a state
+no player can reach.
+
+## 4. `04-catching` never opened, and it was not the aim's fault
+
+    FAIL: the capture reticle never opened; 04-catching was not captured
+
+`throw_aim.gd` refuses to open the reticle with an empty satchel, and the
+capture had never given the player an orb. The real opening hands over fifteen
+(`give:orb_basic:15`). The tool now seeds them the same way every catching smoke
+test in the repo already does.
+
+## The finding this run turned from a taste call into a mechanism
+
+Round 1 said the camera "frames the wrong participant... the fight happens
+between a large rump and a distant dot." That stands, and this run explains it.
+The harness printed the same line in BOTH encounters:
+
+    note: every camera nudge tried toward this target was still blocked by the
+    ally's own body
+
+`05-trainer-battle-clean.png` is what that produces. The fight is genuinely open
+(`is_fighting()` true, and `enemy_body()` returned non-null — the tool FAILs
+loudly when it does not, and did not). **The opponent exists. The camera simply
+never gets a view of it**, and the frame is filled instead by the piloted
+creature's rear, an idle villager, and the target chevron hanging over empty
+ground.
+
+So round 1's "05-trainer-battle names an opponent that is nowhere in the frame"
+is **correct as an observation and correct as a defect** — but it is a camera
+defect, not a missing opponent and not a battle that failed to start. That is
+`scripts/combat/` work, and it is the highest-value thing this lane found:
+it is the same root cause as the "large rump and a distant dot" framing, and it
+is the reason a Tetherbound fight does not read as an event.
+
+## Still not captured
+
+`06-elite-encounter` was skipped, bounded and loudly, as designed:
+
+    FAIL: nearest wild creature to the elder's spawn is 13m away; likely the
+    wrong creature; encounter C skipped
+
+The 13m tolerance is the tool refusing to photograph a creature it cannot prove
+is the elder — the correct behaviour given this sweep's history, and a tuning
+item rather than a game finding.
