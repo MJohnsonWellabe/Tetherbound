@@ -350,6 +350,148 @@ and is never itself repositioned. Find the body by the display name
 `trainers.json` gives that trainer's row.
 
 
+## SITE-DRESSING — four sites the 2026-08-23 assessment called "props QA-placed for a screenshot"
+
+`tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands/*/props.json, scripts/world/props.gd, tests/fixtures/band_split_baseline/props.json`
+
+`ralph/ASSESSMENT_2026-08-23.md`'s blind critique named "camps reading as
+props-on-lawn (no fire ring/tent/wear/arriving path)" as one of three ranked
+gaps between these frames and the project's own references. Four named sites,
+each rendered before/after with the project's own existing capture tools
+(`tools/capture_band3_region.gd`, `tools/_capture_band4_sites.gd`,
+`tools/survey_band2.gd` — none of the three were edited; `survey_band2.gd` is
+explicitly out of this lane's scope and the other two already had the right
+viewpoints authored). Every asset used was already installed before this
+branch; nothing was sourced or generated.
+
+### One small code addition: `retint` on props.json entries
+
+`scripts/world/props.gd` gained an optional `retint` key, read the same way
+`village.gd`'s building prefabs already read it (`building_prefabs.gd::
+apply_retint`, unchanged) — a material-name -> colour map applied to a loose
+prop. `apply_retint` needed no recipe/template state, only its own `_tinted`
+cache, so one `PREFABS.new()` instance in `props.gd`, built lazily on first
+use, was the whole change. This is the lever the picket-hess banner below
+needed and the one case CLAUDE.md's "one prop family" read as "one INSTALLED
+family" actually has room for: recolouring a piece of the shared family for
+one faction's site, not sourcing or generating a second banner mesh.
+
+### band4 `ridge_patrol_camp` — fire ring, tent, seat, approach stones
+
+Was six loose gear props (crate/barrel/bag/rope/whetstone/axe) on bare grass
+— `shots/band4/ridge-patrol-camp.png` before this branch shows exactly that,
+and matches the brief's own "barrel/crate/bench on virgin grass" verbatim.
+Added the D1 trail-camp's own solved fire (`Bonfire_Fire.obj`'s real `Fire`
+surface + `ignite()` + `campfire_glow.gd`'s light/embers/smoke,
+`glow:"campfire"`) at a patrol-sized scale (0.4, smaller than band1's rest
+camp), the same owner-referenced `campfire_stone_ring` and `camp_tent`
+meshes band1 already has committed under `assets/props/generated_camp` (no
+new generation), and one `Stool` seat. Three `Rock_Medium_*` stepping stones
+(`stylized_nature`, the textured family band1's own fire-ring arc already
+uses — not `environment/nature`'s untextured placeholder rocks, per that
+band's own recorded defect) run from the capture viewpoint's own approach
+bearing onto the supply pile, standing in for the ground-wear/arriving-path
+read that `terrain_playground.json`'s path/apron system would give if a
+site-dressing lane were allowed to touch it (it is not — same DO-NOT-TOUCH
+list this lane was given, same precedent band1's own "no ground-wear decal"
+remainder already set). After: `shots/band4/ridge-patrol-camp.png` — a lit
+fire with real light/smoke, a tent, a seat, and a visible stone line leading
+in from the approach.
+
+### band3 `relay_approach_checkpoint` (picket-hess) — brazier and an oxblood banner
+
+The barricade/camp rebuild from GATE-D3 rounds 2-4 was already asymmetric
+and already had a bench/bag/bucket camp behind it (`_why_asymmetric`/
+`_why_rebuilt` in the file record why) — round 4's own blind-critique fix
+predates this branch. What it still lacked, per this lane's brief, was a
+"tent or brazier" and a Team Tether occupation signal. Added a second small
+`Bonfire_Fire`+`campfire_stone_ring` at the watch bench (0.38 scale, a held
+post's fire, smaller than the rest-camp fire) and one `Banner` (Medieval
+Castle kit, sourced standalone from `assets/buildings/quaternius_castle/
+Banner.obj`, already installed) staked at the west barricade, retinted
+oxblood `#7a2430` via the new `retint` key — the *same* hex value
+`building_prefabs.json` already retints the stronghold gatehouse's own
+banners to, so this is one danger-faction accent reused, not invented.
+CLAUDE.md's oxblood-for-danger rule and this lane's own brief both name a
+held Team Tether checkpoint as exactly where it belongs.
+
+**Caught and fixed in this same pass, not shipped and left for a critic to
+find:** the first render at `scale: 0.6` put a barely-visible fleck of red
+27m from the checkpoint's own capture viewpoint — the raw `Banner.obj` mesh
+is a 0.70x0.66m bolt of cloth with no pole, so the castle kit's own gatehouse
+scale (2.2, on 10m walls) does not transfer to a roadside stake. Raised to
+`2.6` (a 1.8m banner, close to the 1.8m trainer this project's own visual-judge
+rubric measures scale against) and re-rendered before committing either
+number. Before: `shots/band3/03-picket-hess-on-the-road.png` (pre-branch,
+matches the brief's "symmetric even-spaced barrels/crates" only in the sense
+that the barricade itself was already fixed and nothing behind it read as
+held). After (banner at 2.6): the same frame now shows a standing oxblood
+flag over the barricade gap, unmissable at the distance a player actually
+meets this checkpoint from.
+
+### band2 `quarry_station` — cut-face spoil dressing
+
+The brief's "two identical rocks at near-identical rotation... four boulders
+on a lawn" describes `vegetation.json`'s own scatter boulders at this site
+(confirmed against `shots/band2/02b-quarry-station-close-day.png`, before
+and after) — **out of this lane's file scope** (`vegetation.json`/scatter
+bake are on the DO-NOT-TOUCH list) and not this entry's to fix. What this
+entry could do, and did, is add what `props.json`'s own `quarry_station`
+cluster was missing: five `Rock_Medium_*` (`stylized_nature`) spoil/rubble
+pieces at varied rotation (55/210/340/95/165 degrees) and varied scale
+(0.22-0.55, a real size gradient rather than one boulder repeated), sited
+between the two ruined foundations and the working pile — cut-face debris a
+crew would leave, not landscaping. This is `tests/fixtures/band_split_
+baseline/props.json`'s pinned `clusters[4]` (`quarry_station`, authored
+before the band split): mirrored the same 11-prop cluster into the fixture
+per this test's own documented precedent (`test_band_content.gd`'s
+TOURNAMENT-1 comment — "mirror the change in the fixture, keep the entry at
+its index, never relax the comparison") rather than touching the test.
+
+### band3 `old_mill_yard` — a path to the door
+
+Added two `Floor_UnevenBrick` flagstones (Medieval Village kit, the same
+real-textured floor family `village.gd` already builds every settlement
+floor from — installed, not new) along the yard's own bench-facing bearing
+(105 degrees, "turned toward the mill door"), standing in for the worn-track
+read `terrain_playground.json`'s `paths`/`building_aprons` system would give
+if this lane could touch it (it cannot — same reasoning as band4's stepping
+stones above).
+
+**Not independently re-confirmed by a render.** A purpose capture
+(`tools/_capture_site_dressing.gd`, written for this one frame) aimed at the
+wrong ground — the eye/target guess landed on a cliff edge and an unrelated
+wild creature, not the yard — and chasing a second guess at the coordinates
+was cut for time rather than shipped as a false "verified" claim. The tiles'
+own placement math (offset from the bench's already-measured position along
+its own already-measured facing bearing, both authored by the GATE-D3 lane
+that built this yard) is the same kind of derivation every other entry in
+this file trusts without a render, but this one specific claim — that the
+tiles read as a path from the existing north-bank viewpoint — is unverified
+and should not be treated as more certain than that. The broken capture tool
+was deleted rather than committed half-working.
+
+### Blind critique
+
+No subagent-spawning tool was available in this lane's toolset, so the
+`visual-judge` rubric was applied directly against
+`docs/reference/tetherbound-meadows-keyart.png` by the same session that made
+the changes — not a blind pass, and not represented as one. On that basis:
+ridge_patrol_camp's fire/tent/path and the picket's banner are clear,
+specific improvements against the "props on lawn" finding; the quarry's
+"two identical rocks" complaint is unmoved because it lives in a file this
+lane cannot touch; the mill yard's path is unverified per above. One
+genuinely blind pass on the four after-frames is still owed to this work.
+
+### What is not resolved
+
+- Ground-wear/path decals proper: blocked on `terrain_playground.json`
+  ownership, same as band1's own still-open remainder.
+- The quarry's "two identical boulders" scatter defect: `vegetation.json`
+  ownership, not this lane's to fix.
+- Mill yard path tiles: placement unverified by render (above).
+- A real blind (subagent) critique of the four after-frames.
+
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
