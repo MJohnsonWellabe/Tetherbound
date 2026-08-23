@@ -54,6 +54,21 @@ const BATTLE_FRAME_LIMIT := 9000
 ## fight look identical from a frame budget alone, so they are separated here
 ## the same way.
 const CONSECUTIVE_MISS_LIMIT := 25
+## Loop iterations with NO progress of any kind before the fight is declared
+## stalled and reported with its state (prompt 34). Generously above the
+## longest legitimate quiet stretch in a fight — the 1.6s send-out beat between
+## a trainer's creatures is ~96 physics frames, and that beat counts as
+## progress anyway because the fight state changes across it.
+const STALL_FRAMES := 900
+## How far below its room's floor a fighter may be before the fight is being
+## held somewhere the room is not. Generous: the floor marker is the slab's
+## top and a body's origin sits at its feet, so a legitimate difference is
+## centimetres. The failure this catches was seven metres.
+const ROOM_FLOOR_TOLERANCE_M := 2.5
+## How often the both-fighters-in-the-room check is repeated inside a fight.
+## Cheap (two vector reads), and often enough that a body which falls out of the
+## room is named as that rather than reported later as a mysterious stall.
+const FLOOR_CHECK_EVERY := 300
 ## Physics frames one walk between two marks gets. The longest leg on the route
 ## is 32m centre to centre at 4 m/s.
 const WALK_FRAMES := 700
@@ -266,7 +281,7 @@ func _fight_the_gauntlet() -> void:
 			_fail("gauntlet trainer '%s' is not standing in the world" % id)
 			return
 		await _walk_toward(body.global_position, 3.0)
-		await _challenge_and_win(id, body)
+		await _challenge_and_win(id, body, room)
 		if not bool(_progression().call("has", str(step["flag"]))):
 			_fail("'%s' was fought but '%s' was never set" % [id, str(step["flag"])])
 			return
@@ -399,7 +414,7 @@ func _fight_the_warden() -> void:
 		_fail("the Warden was never stood up in the world")
 		return
 	await _walk_toward(body.global_position, 3.0)
-	await _challenge_and_win(WARDEN_ID, body)
+	await _challenge_and_win(WARDEN_ID, body, "warden_arena")
 	if not bool(_progression().call("has", WARDEN_FLAG)):
 		_fail("the Warden fight ended and '%s' was never set" % WARDEN_FLAG)
 		return
@@ -592,7 +607,7 @@ func _the_meadows_acknowledges_it() -> void:
 
 ## Walk up, take the challenge through the real prompt and the real
 ## conversation, then fight the whole team down.
-func _challenge_and_win(id: String, body: Node3D) -> void:
+func _challenge_and_win(id: String, body: Node3D, room: String) -> void:
 	var spec: Dictionary = TRAINERS.trainer(id)
 	if spec.is_empty():
 		_fail("trainers.json has no '%s'" % id)
@@ -622,17 +637,29 @@ func _challenge_and_win(id: String, body: Node3D) -> void:
 	if str(_director.call("trainer_battle_id")) != id:
 		_fail("the running battle is '%s', not '%s'" % [str(_director.call("trainer_battle_id")), id])
 		return
-	await _fight_to_the_end(id)
+	await _fight_to_the_end(id, room)
 
 
-func _fight_to_the_end(id: String) -> void:
+func _fight_to_the_end(id: String, room: String) -> void:
 	var frames := 0
+	var hits_at_start := _quick_hits
+	var misses_at_start := _quick_misses
+	## Prompt 34's acceptance 3 and 6: a fight that stops progressing has to
+	## fail QUICKLY, naming the state it stopped in, rather than spending the
+	## whole budget arriving at "never resolved" — which is a sentence that
+	## tells the next investigation nothing. Progress is any of: a swing landed
+	## or missed, either side's HP moved, the fight state changed, or the two
+	## bodies got closer. None of that for this many iterations is a stall.
+	var last_progress := 0
+	var was := {"gap": INF, "theirs": -1.0, "state": -1, "attacks": -1}
 	_consecutive_misses = 0
 	_manager.connect("attack_missed", _on_attack_missed)
 	_manager.connect("hit_landed", _on_hit_landed)
+	var floored := false
 	while bool(_director.call("trainer_battle_active")) and frames < BATTLE_FRAME_LIMIT:
 		frames += 1
 		if not bool(_manager.call("is_fighting")):
+			last_progress = frames
 			await physics_frame
 			continue
 		var mine: RefCounted = _manager.call("active_creature")
@@ -643,6 +670,26 @@ func _fight_to_the_end(id: String) -> void:
 		if opponent == null or ally == null:
 			await physics_frame
 			continue
+
+		# GATE-E. Both fighters have to be standing in the ROOM the fight was
+		# started in. They were not: every stronghold fight opened seven metres
+		# below its own floor, on the terrain under the building, because every
+		# placement in combat resolved the ground as the terrain (see
+		# scripts/world/built_floor.gd). Down there whether the ally can close
+		# at all depends on which side of a revetment support each body lands
+		# on — fine locally, wedged on GitHub's runner, which is exactly the
+		# shape prompt 34 describes. Checked ONCE per fight, as soon as both
+		# bodies exist, so the failure names the cause instead of the symptom.
+		#
+		# Re-checked periodically rather than only at the start: a body can also
+		# LEAVE the floor mid-fight (measured on a probe that teleported into a
+		# wall band -- the ally was at the floor on the first frame and 6.6m
+		# under it eighty frames later), and a fighter that falls out of the room
+		# halfway through is the same defect arriving late. Only the first
+		# failure is reported; after that the fight is already condemned.
+		if not floored and frames % FLOOR_CHECK_EVERY == 1:
+			floored = _both_fighters_are_in_the_room(id, room, ally, opponent)
+
 		var theirs: RefCounted = opponent.get("instance")
 		if theirs != null and theirs.hp > 6.0:
 			theirs.hp = 6.0
@@ -651,10 +698,31 @@ func _fight_to_the_end(id: String) -> void:
 		var rig := _world.get_node_or_null(^"CameraRig") as Node3D
 		if rig != null:
 			rig.set("yaw", atan2(-to.x, -to.z))
+
+		var gap := to.length()
+		var attacks := _quick_hits + _quick_misses
+		var state := int(_manager.get("state"))
+		var their_hp := float(theirs.get("hp")) if theirs != null else -1.0
+		if attacks != int(was["attacks"]) or state != int(was["state"]) \
+				or not is_equal_approx(their_hp, float(was["theirs"])) \
+				or gap < float(was["gap"]) - 0.05:
+			last_progress = frames
+		was["attacks"] = attacks
+		was["state"] = state
+		was["theirs"] = their_hp
+		was["gap"] = minf(float(was["gap"]), gap)
+
+		var reach := _floored_quick_range(ally, opponent)
+		if frames - last_progress > STALL_FRAMES:
+			_fail(_stalled_report(id, room, frames, ally, opponent, gap, reach,
+				hits_at_start, misses_at_start))
+			_disconnect_fight_signals()
+			return
+
 		# See smoke_boss.gd's own note: gating the approach on a guessed constant
 		# is what stalled `verify-boss` for two runs. The floor is recomputed
 		# from the two bodies' radii, the same way the real swing computes it.
-		if to.length() > _floored_quick_range(ally, opponent):
+		if gap > reach:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
@@ -662,7 +730,7 @@ func _fight_to_the_end(id: String) -> void:
 			await _press("combat_quick")
 			if _consecutive_misses >= CONSECUTIVE_MISS_LIMIT:
 				_fail(("the player's quick attack whiffed %d times in a row against '%s' (%.2fm away) "
-					+ "-- a real miss, not the fight stalling") % [_consecutive_misses, id, to.length()])
+					+ "-- a real miss, not the fight stalling") % [_consecutive_misses, id, gap])
 				_disconnect_fight_signals()
 				return
 		else:
@@ -670,11 +738,48 @@ func _fight_to_the_end(id: String) -> void:
 	_disconnect_fight_signals()
 	if bool(_director.call("trainer_battle_active")):
 		_fail(("'%s''s fight never resolved inside %d frames (%d quick attacks landed, %d missed, "
-			+ "%d consecutive at the end)") % [id, BATTLE_FRAME_LIMIT, _quick_hits, _quick_misses,
-			_consecutive_misses])
+			+ "%d consecutive at the end)") % [id, BATTLE_FRAME_LIMIT, _quick_hits - hits_at_start,
+			_quick_misses - misses_at_start, _consecutive_misses])
 		return
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("exploration never came back after '%s''s fight" % id)
+
+
+## The fight is happening where the player started it, not under the building.
+## Returns true once it has reported a failure, so it reports each fight's
+## first fall-through and then stops.
+func _both_fighters_are_in_the_room(id: String, room: String, ally: Node3D,
+		opponent: Node3D) -> bool:
+	if _hold == null or room == "":
+		return true
+	var floor_y: float = (_hold.call("marker", room) as Vector3).y
+	for pair: Array in [["the player's creature", ally], ["'%s''s creature" % id, opponent]]:
+		var who: String = str(pair[0])
+		var body := pair[1] as Node3D
+		var drop := floor_y - body.global_position.y
+		if drop > ROOM_FLOOR_TOLERANCE_M:
+			_fail(("%s is fighting '%s' %.1fm BELOW '%s''s floor (y=%.2f against a floor at "
+				+ "y=%.2f) -- the fight is under the building, not in the room")
+				% [who, id, drop, room, body.global_position.y, floor_y])
+			return true
+	return false
+
+
+## Everything worth knowing about a fight that stopped moving, in one line.
+func _stalled_report(id: String, room: String, frames: int, ally: Node3D, opponent: Node3D,
+		gap: float, reach: float, hits_at_start: int, misses_at_start: int) -> String:
+	var floor_y: float = (_hold.call("marker", room) as Vector3).y if _hold != null and room != "" else NAN
+	return ("'%s''s fight stopped progressing for %d iterations (%d in). "
+		+ "ally at %.1f,%.2f,%.1f; %s at %.1f,%.2f,%.1f; room floor y=%.2f; "
+		+ "flat gap %.2fm against a reach of %.2fm; dy %.2fm; quick_ready=%s; state=%d; "
+		+ "%d landed / %d missed in this fight") % [
+		id, STALL_FRAMES, frames,
+		ally.global_position.x, ally.global_position.y, ally.global_position.z,
+		opponent.name, opponent.global_position.x, opponent.global_position.y,
+		opponent.global_position.z, floor_y, gap, reach,
+		opponent.global_position.y - ally.global_position.y,
+		str(_manager.call("quick_ready")), int(_manager.get("state")),
+		_quick_hits - hits_at_start, _quick_misses - misses_at_start]
 
 
 func _disconnect_fight_signals() -> void:

@@ -34,6 +34,7 @@ const PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 ## D30: XP/bond arithmetic and named-move power, both pure data readers with
 ## no scene-tree dependency — see their own file headers.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 ## RG19-spec/D68. Winning together and being knocked out both move a
 ## creature's mood; the numbers are creature_condition.json's, not this
 ## file's.
@@ -474,11 +475,16 @@ func _place(body: Node3D, spot: Vector3) -> void:
 ## The world's own ground query, found by walking up the tree — same pattern
 ## as `creature_body._ground_height`. Not cached: this is a one-off correction at
 ## the moment a fight opens, not a per-frame lookup.
+## GATE-E: corrected upward by a BUILT floor, the same way
+## `creature_body._ground_height` is. This function is what teleports the PLAYER
+## when a fight opens, and inside the stronghold the terrain answer put them
+## seven metres under the room they engaged in -- see
+## `scripts/world/built_floor.gd`. Outside a building the answer is unchanged.
 func _ground_height(x: float, z: float) -> float:
 	var node: Node = get_parent()
 	while node != null:
 		if node.has_method("ground_height_at"):
-			return float(node.call("ground_height_at", x, z))
+			return BUILT_FLOOR.resolve(self, x, z, float(node.call("ground_height_at", x, z)))
 		node = node.get_parent()
 	return NAN
 

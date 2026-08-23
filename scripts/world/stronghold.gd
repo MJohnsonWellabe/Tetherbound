@@ -1241,13 +1241,39 @@ func door_is_open(flag: String = "") -> bool:
 ## contract burrow_warrens.gd keeps, and the reason trainers, the creature bed
 ## and anything else parented here stand on the built floor.
 func ground_height_at(x: float, z: float) -> float:
+	var built := built_floor_height_at(x, z)
+	if not is_nan(built):
+		return built
+	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
+		return float(_world.call("ground_height_at", x, z))
+	return NAN
+
+
+## GATE-E. The half of `ground_height_at()` above that says "this building
+## claims this spot, and its floor is here" -- NAN when it does not claim it,
+## with no fall-through to the meadow.
+##
+## Split out rather than duplicated so the two answers can never drift apart,
+## and made public because the callers that need it CANNOT reach the function
+## above. `ground_height_at` is discovered by walking UP the tree
+## (`creature_body._ground_height`, `combat_manager._ground_height`), and a
+## trainer's deployed creature is added to the world root by
+## `encounter_director._send_out_next_creature`, not under this node -- the same
+## parenting `combat_manager._arena_bounds` already had to work around. So every
+## body a fight places resolved the ground as the TERRAIN, and the terrain here
+## is metres under the floor:
+##
+##   elite body y=8.56  floor y=8.56  terrain y=1.37
+##   ally(75.0, 1.92, 7555.5)  foe(77.2, 2.49, 7555.5)
+##
+## That is a gauntlet fight held seven metres below the room it started in.
+## `scripts/world/built_floor.gd` is the reader; its header carries the rest.
+func built_floor_height_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
 	for rect: Array in _footprint:
 		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
 				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
 			return global_position.y + _floor_y
-	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
-		return float(_world.call("ground_height_at", x, z))
 	return NAN
 
 

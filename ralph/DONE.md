@@ -39,7 +39,11 @@ between them and the two beats after it.
    `meadows_acknowledged` is carried by every conversation in
    `meadows_freed.json`, on its FIRST line, so no villager is a required stop.
 
-### Three real defects the run found, all on `main`, none of them new
+### Four real defects the run found, all on `main`, none of them new
+
+- **Every stronghold and warrens fight was held under the building.** The one
+  that failed CI, the one the owner reported as fights "phasing outside
+  reachable arena bounds", and the biggest of the four. Its own section below.
 
 - **Every level-up in the chapter aborted its own announcement.**
   `combat_hud.gd::_set_xp_line` read `creature.get("bond_nodes")`; that is a
@@ -62,12 +66,54 @@ between them and the two beats after it.
   in it — the real world was the only place either bed defect was visible, which
   is the argument for this whole file.
 
-### Prompt 34 (boss verification flake)
+### Prompt 34 (boss verification flake) — REPRODUCED, root-caused, fixed
 
-Not reproduced. Its root cause — the approach gate assuming two bodies can close
-to a guessed 2.0m — was found and fixed on `main` before this lane, and the new
-finale test reuses the same body-radius floor for all four of its fights. Two
-consecutive green finale runs and a green `smoke_boss.gd` on a contended box.
+The first push of this branch was green locally and RED on GitHub's runner
+(CI 2169, `verify-gate-evidence-shard`): *"the elite's fight never resolved
+inside 9000 frames (5 quick attacks landed, 0 missed)"*, with every downstream
+beat cascading. Zero misses is the tell — the swing was never attempted, so this
+was never a whiff and never a budget.
+
+**Root cause, measured on a probe of the elite fight alone:**
+
+```
+elite body y=8.56   floor y=8.56   terrain y=1.37
+f0  ally(75.0, 1.92, 7555.5)  foe TrainerCreature_stronghold_elite_1(77.2, 2.49, 7555.5)
+```
+
+Every stronghold fight was being held **seven metres below its own floor**, on
+the terrain under the building, inside its 18m revetment skirt. The stronghold
+already answers `ground_height_at()` with its built floor — but that function is
+discovered by walking UP the tree, and `encounter_director._send_out_next_creature`
+adds every `TrainerCreature_*` to the WORLD ROOT, not under the room. So the
+trainer's creature, the ally (`combat_manager._place`) and the player
+(`combat_manager._place_player`) all resolved the ground as the terrain and were
+teleported under the building. `combat_manager._arena_bounds` documents that
+exact parenting for radius; nobody had applied it to height.
+
+Down there, whether the ally can close at all depends on which side of a support
+it lands on. That is the "intermittent, container-load-sensitive" behaviour
+prompt 34 describes, and it is also the mechanism behind the owner's 2026-08-21
+report: *"Stronghold and Burrow Warrens fights sometimes phasing participants
+outside reachable arena bounds and becoming effectively impossible."*
+
+**Fix:** `scripts/world/built_floor.gd` — a building that CLAIMS an x/z answers
+for its own floor; everywhere else the terrain still does. `stronghold.gd` and
+`burrow_warrens.gd` expose the claim half of their existing `ground_height_at`
+as `built_floor_height_at()` (split, not duplicated, so the two cannot drift),
+and the two combat ground queries consult it. Claim-wins rather than
+whichever-is-higher, because the stronghold stands above the terrain and the
+warrens are cut into it — a max() rule would fix one and push every warrens
+fighter through the cave roof.
+
+**Kept found:** the finale smoke now asserts both fighters are in the ROOM at
+fight start and every 300 iterations after (it caught a second case, the
+courtyard, that the first fix missed), and carries a stall watchdog that fails
+after 900 iterations of no progress with the full state — positions, floor
+height, gap, reach, dy, `quick_ready`, combat state, hits/misses — instead of
+burning the budget to reach "never resolved". That is prompt 34's acceptance 3
+and 6.
+
 The `|| retry` on `smoke_boss.gd` in `verify-combat-shard` is left alone: it is
 the shard's uniform contention policy, not a mask for this bug.
 
