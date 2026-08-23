@@ -95,12 +95,19 @@ extends Node3D
 ## beyond the route's own last room" rather than "a shape stuck against the
 ## map edge".
 ##
-## `SITE` sits at world (150.0, 7595.0): the plinth's own west edge
-## (`PLINTH_CENTRE.x - PLINTH_HALF_X` = -18 local, world x 132) clears the
-## chambers' east edge (104.2) by 27.8m -- multiples of `_wall_t`/the
-## skirt's own overhang, not a near miss -- and the plinth's own north edge
-## (world z 7629) stays 51m inside `WORLD_Z_SOUTH`. Verified against the
-## live heightfield with the same 8m-grid method `tools/_probe_stronghold.gd`
+## `SITE` sits at world (150.0, 7595.0). The hand math above (chamber
+## rectangles only) said the plinth's west edge clears the chambers' east
+## edge by ~27.8m; a real MESH AABB probe (every `MeshInstance3D` under each
+## node, composed through its transform chain, the same walk `render_bounds.
+## gd` uses for unskinned geometry) measured the two BUILT nodes instead --
+## `StrongholdSilhouette` (this castle, ramp and kerbs included) at world
+## x[131.2,172.8] z[7571.3,7629.8], `Stronghold` (the route, its own approach
+## ramp included) at world x[-39.5,105.6] z[7546.6,7607.4] -- and found a
+## real clearance of 25.7m on the X axis, the axis that actually separates
+## them (they still overlap in Z; one separating axis is sufficient for two
+## AABBs not to intersect). The castle's own north edge sits 50.3m inside
+## `WORLD_Z_SOUTH` (7680.0). Ground relief was verified against the live
+## heightfield with the same 8m-grid method `tools/_probe_stronghold.gd`
 ## used to site the stronghold itself: relief across the plinth's own
 ## footprint is +1.43m / -2.07m relative to the ground-snap point, gentler
 ## than the 2026-08-16 remass measured at the OLD site (+3.5 / -1.5) that
@@ -203,9 +210,10 @@ const PLINTH_HALF_Z := 22.0
 ## (`build()` sets only `position`), so this ramp exits toward decreasing
 ## world z regardless of `SITE` -- at the OLD site that put its foot 4m
 ## clear of the stronghold complex's own Legendary Chamber box, because the
-## two stood immediately adjacent; GATE-E2 (2026-08-23) moved `SITE` 27.8m+
-## clear of the stronghold's whole footprint (see the header block above),
-## so the ramp now lands on open ground with nothing nearby to clear.
+## two stood immediately adjacent; GATE-E2 (2026-08-23) moved `SITE` a
+## measured 25.7m clear of the stronghold's whole built footprint (see the
+## header block above), so the ramp now lands on open ground with nothing
+## nearby to clear.
 const RAMP_RUN := 11.0
 const RAMP_WIDTH := 6.0
 
