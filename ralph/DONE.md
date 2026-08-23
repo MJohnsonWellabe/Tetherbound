@@ -191,6 +191,125 @@ RANGE does not touch, so `smoke_boss`'s before/after signature is unaffected.
   brazier, a pylon or a barbican. What this site would actually use is recorded
   in `BACKLOG.md` as `STRONGHOLD-TETHER-HERO-PROPS` rather than generated.
 
+## GATE-E-LOGIC — the finale walked end to end, and the three defects that found
+
+`tests: full suite 1362 tests, 830328 assertions, 0 failed · tests/smoke_gate_e_finale.gd (new, 2 consecutive green runs, ~5m20s each) · smoke_stronghold.gd green · smoke_boss.gd green` · `area: tests/, scripts/build/creature_bed.gd, scripts/ui/combat_hud.gd, scripts/world/stronghold*.gd, data/progression/objectives.json, data/dialogue/meadows_freed.json`
+
+Prompts 69 (+34/46/67/68). **Most of the finale was already built and this
+entry should not be read as if it were not.** The Warden, the reveal readout,
+the lever, the freeing, the voluntary join, the `pending_catch` hand-off to
+R4.10's ceremony, SG44's rift, SG46's healing and the post-victory villager
+dialogue are all on `main` and all correct. What was missing was the JOIN
+between them and the two beats after it.
+
+### What was actually missing
+
+1. **Nothing walked the finale continuously.** `smoke_stronghold.gd` proves the
+   route and fights nobody, by design. `smoke_boss.gd` teleports in front of
+   the Warden with a level-1 starter. The gauntlet, the recovery point, the
+   shutter after a real fight, the walk between rooms, and everything after the
+   ceremony were covered by neither. `tests/smoke_gate_e_finale.gd` is that run:
+   arrive with a full five -> walk in from the entrance -> three gauntlet fights
+   in their own rooms -> rest a fainted creature at the recovery point -> elite
+   -> shutter lifts -> read the reveal -> Warden -> lever -> freed -> full belt
+   forces the release ceremony -> decision recorded -> region answers ->
+   post-victory villager -> objective chain terminates. Added to
+   `verify-gate-evidence-shard`.
+
+2. **The objective chain stopped one beat before the chapter did** (prompt 68's
+   last two finale lines). It ended at `legendary_freed`, so the HUD went blank
+   while the roster decision was still open and the whole payoff still unwalked.
+   Two entries added: `legendary_settled` and `meadows_acknowledged`.
+   `legendary_settled` is a NEW flag and deliberately not `legendary_joined` —
+   keeping five and letting the legendary go is a legal ending under the hard
+   cap, and keying the chain on the join would strand that player forever.
+   `meadows_acknowledged` is carried by every conversation in
+   `meadows_freed.json`, on its FIRST line, so no villager is a required stop.
+
+### Four real defects the run found, all on `main`, none of them new
+
+- **Every stronghold and warrens fight was held under the building.** The one
+  that failed CI, the one the owner reported as fights "phasing outside
+  reachable arena bounds", and the biggest of the four. Its own section below.
+
+- **Every level-up in the chapter aborted its own announcement.**
+  `combat_hud.gd::_set_xp_line` read `creature.get("bond_nodes")`; that is a
+  METHOD, so `get()` returned a Callable and `int(Callable)` killed the function
+  with "Nonexistent 'int' constructor" — the player never saw the line.
+  `test_level_up_announcement.gd` asserted on the SOURCE TEXT of that function
+  and stayed green through all of it (prompt 33's exact shape). Fixed, and the
+  test now also executes the builder.
+- **The stronghold's recovery point could not rest anything.** The authored bed
+  never got a build index, so `assign_creature()` refused every creature and
+  SG38's one pre-Warden recovery opened a panel that did nothing.
+  `creature_bed.gd` now documents its index namespace and reserves negatives for
+  authored beds.
+- **`creature_bed_built` was set on frame one of every new save**, by that same
+  bed, because `build_real()` sets the chapter's bed objective — so the
+  tournament ladder's "Build a Creature Bed" line was complete before the player
+  had a hammer. `build_real(player_built := true)` now takes the answer;
+  the stronghold passes false. `smoke_gateb_flags.gd` asserts the opposite and
+  stayed green because it builds its bed on a bare FlatWorld with no stronghold
+  in it — the real world was the only place either bed defect was visible, which
+  is the argument for this whole file.
+
+### Prompt 34 (boss verification flake) — REPRODUCED, root-caused, fixed
+
+The first push of this branch was green locally and RED on GitHub's runner
+(CI 2169, `verify-gate-evidence-shard`): *"the elite's fight never resolved
+inside 9000 frames (5 quick attacks landed, 0 missed)"*, with every downstream
+beat cascading. Zero misses is the tell — the swing was never attempted, so this
+was never a whiff and never a budget.
+
+**Root cause, measured on a probe of the elite fight alone:**
+
+```
+elite body y=8.56   floor y=8.56   terrain y=1.37
+f0  ally(75.0, 1.92, 7555.5)  foe TrainerCreature_stronghold_elite_1(77.2, 2.49, 7555.5)
+```
+
+Every stronghold fight was being held **seven metres below its own floor**, on
+the terrain under the building, inside its 18m revetment skirt. The stronghold
+already answers `ground_height_at()` with its built floor — but that function is
+discovered by walking UP the tree, and `encounter_director._send_out_next_creature`
+adds every `TrainerCreature_*` to the WORLD ROOT, not under the room. So the
+trainer's creature, the ally (`combat_manager._place`) and the player
+(`combat_manager._place_player`) all resolved the ground as the terrain and were
+teleported under the building. `combat_manager._arena_bounds` documents that
+exact parenting for radius; nobody had applied it to height.
+
+Down there, whether the ally can close at all depends on which side of a support
+it lands on. That is the "intermittent, container-load-sensitive" behaviour
+prompt 34 describes, and it is also the mechanism behind the owner's 2026-08-21
+report: *"Stronghold and Burrow Warrens fights sometimes phasing participants
+outside reachable arena bounds and becoming effectively impossible."*
+
+**Fix:** `scripts/world/built_floor.gd` — a building that CLAIMS an x/z answers
+for its own floor; everywhere else the terrain still does. `stronghold.gd` and
+`burrow_warrens.gd` expose the claim half of their existing `ground_height_at`
+as `built_floor_height_at()` (split, not duplicated, so the two cannot drift),
+and the two combat ground queries consult it. Claim-wins rather than
+whichever-is-higher, because the stronghold stands above the terrain and the
+warrens are cut into it — a max() rule would fix one and push every warrens
+fighter through the cave roof.
+
+**Kept found:** the finale smoke now asserts both fighters are in the ROOM at
+fight start and every 300 iterations after (it caught a second case, the
+courtyard, that the first fix missed), and carries a stall watchdog that fails
+after 900 iterations of no progress with the full state — positions, floor
+height, gap, reach, dy, `quick_ready`, combat state, hits/misses — instead of
+burning the budget to reach "never resolved". That is prompt 34's acceptance 3
+and 6.
+
+The `|| retry` on `smoke_boss.gd` in `verify-combat-shard` is left alone: it is
+the shard's uniform contention policy, not a mask for this bug.
+
+### Not touched
+
+Stronghold materials/sky planes (prompts 21/22, owned elsewhere). No new mesh,
+no generation, no sixth slot, no storage.
+
+
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
