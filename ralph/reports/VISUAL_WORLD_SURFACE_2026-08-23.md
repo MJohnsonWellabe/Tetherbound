@@ -266,3 +266,83 @@ is grass-free ground beside a correctly-sized path.** OF12 introduced the
 idea; the ceiling is what makes the meadow stand back a full trainer-height and
 a half from a footpath. This is the largest remaining near-field lever and it
 costs no instances.
+
+## Round 1 blind verdict
+
+Independent Fable critic, blind, given only the sheet, the frames, the
+references and the rubric, told nothing about what changed.
+
+**A (keyart): no. B (Palworld): no.**
+
+Ranked gaps, in the critic's own order:
+
+1. **"The ground plane is a bare texture; the references' ground is a
+   volume."** *"In `ground-04-band4-ironwood-day` and `water-02-river-grazing`
+   the ground is a single flat olive texture with a countable number of sprout
+   sprites — at grazing angle it dissolves into smear. This one gap accounts
+   for more of the visual distance than everything else combined."*
+   **Fourth independent critic to rank this first.**
+2. **"Nothing lives here."** No creatures in any of the 24 frames, and no
+   clutter of use — *"a house on a bald hill, no route to its door, no animal,
+   no bird, no drying rack."*
+3. **"The sky and the light do not perform."** Zero clouds in 24 frames, a
+   golden hour that turns grey, a night that turns off.
+
+Also named, in this lane: five bands share one olive-brown ground at ~35%
+value; the three water bodies read turquoise / navy-steel / milky pale-blue;
+rain leaves the world dry with no wetness or specular change; steep faces carry
+stretched heightmap texturing with no cliff material; groundcover is *"evenly
+sprinkled... reads generator, not gardener"*.
+
+**The weather fix moved but did not land.** The critic still reads cloudy, fog
+and rain as keeping *"the same hard canopy shadow masses"*. `shadow_opacity`
+0.45/0.28/0.40 was too timid — a 0.45 shadow is still a shadow. Pushed to
+0.25/0.15/0.22 in round 2.
+
+### One correction to the critique, because it changes what is blocked
+
+The critic lists under *needs art that is not in the build*: *"A grass/flower
+groundcover asset set — blades, flower clumps, scrub — nothing in any frame
+suggests one exists."*
+
+**That is wrong, and it is the most important thing to get right here.** The
+set exists and is already wired: four grass models, two dry-grass models, six
+flower and clover models, five bushes and five deadfall pieces, all in
+`assets/environment/stylized_nature/` and all referenced by `vegetation.json`.
+The critic could not see them because there were five to ten instances in
+frame, and because the bottom third of every grass blade was rendering black.
+
+So this gap is **scene-fixable, not blocked** — which is the opposite of the
+conclusion the critique would otherwise support. Recorded because a
+`BLOCKED.md` entry raised on that sentence would have been wrong and expensive.
+
+## Round 2 changes
+
+All aimed at the critic's own number one, plus the confirmed black-blade bug.
+
+- **`colour_jitter` removed from grass and drygrass**, replaced by
+  `variant_retint` (four greens, two straws). This is the black-blade fix —
+  see the root cause above. Verified by probe that the imported material's own
+  `vertex_color_use_as_albedo` is false, so removing the jitter lets it stay
+  false; and that `cull_mode` is 2 (CULL_DISABLED), so culling was never the
+  problem.
+- **`corridor_fill.density_scale` 1.0 -> 3.0 (grass) and 2.5 (drygrass).** This
+  is a per-layer multiplier applied to layers that are now trail-sited, which
+  is a different trade from the chapter-wide band-table bump that returned ~4%:
+  it multiplies where the candidates actually land. Round 1's honest result —
+  weather moved, day frames moved by hundredths — is what justifies it.
+- **`path_standoff.max` 7.0 -> 3.0 (grass), 8.0 -> 3.5 (drygrass), 5.0 -> 2.5
+  (flowers).** Reclaims up to 14m of bald ground per trail metre. OF12's noise
+  range is kept; only the ceiling comes down.
+- **`clump_radius` 10.0 -> 6.5 (grass), 12.0 -> 7.5 (drygrass).** Zero added
+  instances; ~2.4x local density; aimed at "evenly sprinkled... reads
+  generator, not gardener".
+- **`shadow_opacity` 0.45/0.28/0.40 -> 0.25/0.15/0.22.**
+
+Bake: **217,599 -> 405,101 placements.** This is the round that spends
+instances, and it does so deliberately and only on the two carpet layers, after
+a round that proved siting alone was not enough. Offline bake cost 90s -> 169s;
+run time loads the bake rather than recomputing it, so this is disk, not boot
+CPU. Worth a look on the Ally before it goes further: grass `lod_range` is 55m,
+so draw cost is bounded by what is near the camera, but 405k instances is the
+largest this scatter has been.

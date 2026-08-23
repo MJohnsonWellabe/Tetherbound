@@ -620,13 +620,15 @@
       "clumps": 110,
       "per_clump": 130,
       "_comment_clump_radius_ev3": "EV3: R7.1-remainder-2's third round named the untried lever directly -- 'a genuine density lever inside the clumps themselves (more per_clump, smaller clump_radius for tighter packing) rather than further redistributing the same instance count'. 16.0 -> 10.0 packs the same 130 instances into 39% of the area (a squared effect), so each clump reads as a dense patch of continuous cover instead of a loose scatter, with no change to the total prop count or render cost. TUNABLE.",
-      "clump_radius": 10.0,
+      "clump_radius": 6.5,
+      "_comment_clump_radius_vis_world": "VIS-WORLD round 2. 10.0 -> 6.5, and this adds NO instances -- the same per_clump count fills a disc of 133 m2 instead of 314, so local density rises ~2.4x while the map-wide total is unchanged (radius is drawn as sqrt(randf())*spread, one rng call either way, so the stream is undisturbed). Aimed squarely at the standing finding that cover \"is evenly sprinkled -- reads procedural, not placed\", confirmed again this round as \"five to ten identical sprites per frame... reads generator, not gardener\". It is the same principle R7.1-remainder already established when it CUT strays from 2000 to 900: clustering, not raw count. Tighter clumps also leave real clear ground between them, which is what makes a clearing read as a clearing. TUNABLE.",
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
       "strays": 900,
       "_comment_corridor_fill": "VEG-CORRIDOR: the primary ground cover, so this is the layer the band table's density is most visibly tuned against.",
       "_comment_corridor_fill_vis_world": "VIS-WORLD. `trail_bias` added -- this layer never had it. VEG-SITING gave trail_bias to trees/grove/saplings/deadfall/bushes and VISUAL-GROUNDCOVER gave it to path_stones, each time for the same measured reason (docs/reviews/band2/round-05: a uniform draw over a 2048m-wide box lands near none of the survey viewpoints, all of which stand ON the trail, so a density multiplier has nothing to multiply where the player actually is). The three layers that carpet the NEAR FIELD -- this one, drygrass and flowers -- were never revisited, so the primary ground cover was still drawn uniformly across 16.8 km2 while the player walks one line through it. That is why VISUAL-GROUNDCOVER's chapter-wide bump (143,630 -> 223,889 placements) measured only ~4% mean improvement: it multiplied a distribution that mostly misses the camera. This adds NO instances -- `density_scale` stays 1.0 -- it only moves where the existing candidates' clump centres land. Arithmetic for band 3 (the thinnest, density_scale 0.05) before this change: ~68 kept clumps of radius 10m over 3.24 km2, so ~0.66% of the band's ground carried a grass clump at all, and stray grass ran one tuft per ~5,800 m2. 0.65 rather than the 0.85 the tree layers use: a carpet layer concentrated as hard as a copse layer stops being a meadow and becomes a green ribbon down a bald plain, so a third of the fill deliberately stays wherever the unbiased box draw puts it. `trail_offset_min` 0 lets clump edges reach the worn dirt; `path_standoff` (0.3-7m, ~17m wavelength, per side) is what culls them there, which is the mechanism OF12 built for a raveled edge and which until now had almost no cover to ravel. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0,
+        "density_scale": 3.0,
+        "_comment_density_scale_vis_world": "VIS-WORLD round 2. 1.0 -> 3.0. This is a PER-LAYER multiplier on a layer that is now trail-sited, which is a different trade from the chapter-wide bump that failed: VISUAL-GROUNDCOVER raised the corridor_bands table for every layer at once and measured ~4% mean gain because the extra props were spread over 16.8 km2 the camera never sees. Round 1 fixed the siting and measured the honest result -- the three weather frames moved and the day frames moved by hundredths, because relocating ~373 clumps onto a 12km route is about one clump per 32m and a frame sees one of them. A fresh blind critic ranked the same defect first for the fourth time (\"the ground plane is a bare texture; the references' ground is a volume\") and asked for an order of magnitude. 3.0 is the multiplier applied where the candidates now land, so it buys walked metres rather than empty corridor. Watch the bake's own placement count and boot cost before pushing it further; the ceiling is 8.0. TUNABLE.",
         "trail_bias": 0.65,
         "trail_offset_min": 0.0,
         "trail_offset_max": 34.0
@@ -636,7 +638,8 @@
       "_comment_path_standoff_of12": "OF12: replaces path_avoid_radius 6.0, the constant exclusion circle. Holding every tuft exactly 6m off the centreline gave the meadow a ruler-straight inner edge at the same offset on BOTH sides of every path -- which is the 'two nearly straight bands flanking the path' read itself, not a cure for it; five tuning rounds of constant distances (EV3-remainder..-6) never moved that verdict. The standoff now drifts 0.3-7m with ~17m-wavelength position noise, per side of the path independently (scatter_rules.gd::path_standoff_at), so grass crowds the worn edge in one stretch and stands back in the next. min stays near zero on purpose: the path_factor gate already keeps the worn dirt itself clear. TUNABLE.",
       "path_standoff": {
         "min": 0.3,
-        "max": 7.0,
+        "max": 3.0,
+        "_comment_max_vis_world": "VIS-WORLD round 2. The painted path is 6.0m across (terrain_playground.json paths.width 3.0 plus shoulder 1.5 a side). This ceiling culled vegetation to a half-width of up to 10-11m, so the ground that READS as path was up to 20-22m -- which is exactly the blind finding that the path is \"10-20 m wide, ten trainer-heights... not a footpath\" against Palworld's 3-4m. The path was never the problem; up to 14m of it was grass-free ground beside a correctly-sized path. OF12's noise range is kept and is the right idea -- a constant radius IS the ruler-straight verge it was blamed for -- only the ceiling comes down, so the meadow still advances and retreats but no longer stands back a trainer-height and a half from a footpath. This is what lets the path read as worn THROUGH cover rather than stamped onto emptiness. TUNABLE.",
         "wavelength": 17.0,
         "salt": 1
       },
@@ -654,7 +657,14 @@
       "scale_min": 0.14,
       "scale_max": 0.42,
       "_comment_colour_jitter": "R7.1-remainder round 1's blind critic: 'a single saturated hue with no value range... nothing darker to anchor a black point'. Bigger tufts don't touch that; only colour does. Per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd).",
-      "colour_jitter": 0.22,
+      "_comment_colour_jitter_vis_world": "VIS-WORLD. REMOVED, and the reason is a confirmed bug rather than a taste call. `colour_jitter > 0` is the only thing that sets `needs_instance_colour`, and vegetation.gd::_tint_for then forces `vertex_color_use_as_albedo` ON. This pack's meshes carry a COLOR_0 vertex attribute that is a baked ambient-occlusion gradient -- decoding Grass_Common_Tall.gltf's own accessor measures mean vertex colour 0.001 at the lowest 15% of vertices against 0.962 at the highest -- and albedo_color MULTIPLIES, so forcing it into albedo rendered the bottom third of every blade solid black. That is the defect reported as 'grass tufts render BLACK on back faces'; it is NOT a culling bug (every source declares doubleSided and the imported material reads cull_mode=2, CULL_DISABLED, verified by probe). The imported material's own `vertex_color_use_as_albedo` is FALSE, also verified by probe, so removing the jitter lets it fall back to off and the blade renders its texture. The channel cannot be split: Godot routes MultiMesh per-instance colour through the same switch, so keeping the jitter and disabling the vertex colour would silently kill the jitter instead. Colour variety is recovered below by `variant_retint`, which is per-MODEL and needs no vertex colour at all. Stripping COLOR_0 by rebuilding the surface was considered and rejected: _retint's own comment records that surface_get_arrays()/add_surface_from_arrays() silently drops the importer's generated LOD chain and shadow mesh, a regression this repo has already paid for once.",
+      "_comment_variant_retint_vis_world": "VIS-WORLD. Four greens across the four grass models, replacing the per-instance jitter removed above. Keyed by model path because all four share the material name 'Grass', which is exactly the case variant_retint exists for (see the trees layer). Spread around palette.json's meadow green rather than invented: a short/tall and wide/narrow pair reading as slightly different species is more of the 'hue families' the ledger counts than one hue jittered 22% either side of itself. TUNABLE.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/Grass_Common_Short.gltf": { "Grass": "#93a851" },
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": { "Grass": "#7f9440" },
+        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf": { "Grass": "#a3b45e" },
+        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf": { "Grass": "#6f8639" }
+      },
       "clear_radius": 1.5,
       "base_scale": 1.0,
       "lod_range": 55.0,
@@ -683,12 +693,14 @@
       "clumps": 52,
       "per_clump": 90,
       "_comment_clump_radius_ev3": "EV3: same tighter-packing lever as `grass` above, same reasoning -- 19.0 -> 12.0 keeps the instance count fixed and concentrates it. TUNABLE.",
-      "clump_radius": 12.0,
+      "clump_radius": 7.5,
+      "_comment_clump_radius_vis_world": "VIS-WORLD round 2: see grass's matching entry. Kept wider than grass so the two carpets' patches do not coincide. TUNABLE.",
       "strays": 380,
       "_comment_corridor_fill": "VEG-CORRIDOR: the warm-toned ground cover fills at the band table's own rate, same as grass.",
       "_comment_corridor_fill_vis_world": "VIS-WORLD: same siting fix as grass above, and the same no-added-instances contract (`density_scale` unchanged). Weaker bias and a wider offset band than grass on purpose -- dry grass is the layer that should still read on open ground away from the route, so pulling it onto the trail as hard as the green would both thin the open meadow and stack two ground-cover layers on the same metres. Different offset reach from grass for the same reason its `path_standoff` carries a different wavelength and salt: the two carpets must not advance and retreat from the trail together. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0,
+        "density_scale": 2.5,
+        "_comment_density_scale_vis_world": "VIS-WORLD round 2: same reasoning as grass, held lower. Dry grass is the accent carpet, not the primary one, and two ground-cover layers at the same multiplier on the same trail-sited metres would stack rather than mix. TUNABLE.",
         "trail_bias": 0.55,
         "trail_offset_min": 0.0,
         "trail_offset_max": 40.0
@@ -698,7 +710,8 @@
       "_comment_path_standoff_of12": "OF12: replaces path_avoid_radius 7.0 -- see grass's matching entry for why a constant radius was itself the flanking-border mechanism. Different wavelength and salt from grass, so the two ground-cover layers do not advance and retreat from the path in lockstep. TUNABLE.",
       "path_standoff": {
         "min": 0.3,
-        "max": 8.0,
+        "max": 3.5,
+        "_comment_max_vis_world": "VIS-WORLD round 2: see grass's matching entry. Held slightly wider so the two carpets still do not share one edge distance. TUNABLE.",
         "wavelength": 23.0,
         "salt": 2
       },
@@ -715,7 +728,12 @@
       "_comment_scale": "R7.1-remainder: raised alongside grass's own scale bump (same file, same reasoning) so the two layers stay in proportion to each other.",
       "scale_min": 0.13,
       "scale_max": 0.33,
-      "colour_jitter": 0.2,
+      "_comment_colour_jitter_vis_world": "VIS-WORLD: removed for the same confirmed reason as grass above -- see that comment for the measured COLOR_0 gradient and the probe results. This layer already carries a `retint` that paints both its models straw; `variant_retint` below splits that into two straws so the removal costs no variety.",
+      "_comment_variant_retint_vis_world": "VIS-WORLD: two straws rather than one, so dry grass reads as more than a single repeated sprite now that far more of it lands where the player walks. TUNABLE.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf": { "Grass": "#e8d89a" },
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf": { "Grass": "#d6c07f" }
+      },
       "clear_radius": 2.0,
       "base_scale": 1.0,
       "lod_range": 55.0,
@@ -747,7 +765,8 @@
       "_comment_path_of12": "OF12: this layer's whole path-anchoring stack -- path_bias 0.35, path_bias_per_clump 26, path_bias_side_offset 6.0, path_bias_jitter 4.0, grown one knob per round across EV3-remainder through -4 (the full history is in DONE.md, kept there rather than here) -- is REMOVED, not retuned. Every round treated 'the flowers read as a planted border' as a parameter problem on a mechanism whose only job was to anchor flower clumps to the road, and the owner's verdict never moved: deliberately snapping a garden-accent layer to a path centreline IS planting a border, however jittered. Wildflowers are now ordinary meadow accents that reach a path only when an unbiased clump happens to land near one, gated by the same noise-varying path_standoff as grass (scatter_rules.gd::path_standoff_at) so a chance near-path clump keeps a ragged, per-side-independent edge instead of a matched pair of crescents. max is lower than grass's -- verge wildflowers genuinely hug a worn edge -- and the salt differs so flower gaps do not mirror grass gaps. TUNABLE.",
       "path_standoff": {
         "min": 0.0,
-        "max": 5.0,
+        "max": 2.5,
+        "_comment_max_vis_world": "VIS-WORLD round 2: see grass's matching entry. Verge wildflowers genuinely hug a worn edge, which this file already says, so the ceiling comes down furthest here. This is the standoff ONLY -- it is not the path anchoring OF12 removed, which stays removed. TUNABLE.",
         "wavelength": 13.0,
         "salt": 3
       },
