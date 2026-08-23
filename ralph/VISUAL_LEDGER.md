@@ -63,6 +63,56 @@ Round 2 is not convergence in either case — both named NEW defects, which is
 `ralph/conventions.md`'s definition of a round that improved. Neither domain is
 near its stopping rule.
 
+## Corrections to this ledger from later rounds
+
+Kept as corrections rather than edited away, because a ledger that quietly
+rewrites itself cannot be trusted about what it got wrong.
+
+- **The oxblood "pass" was half wrong.** Every report above records the oxblood
+  discipline as holding. VIS-SITES' critic, not told the colour means anything,
+  flagged the castle's nine banners as a friendly landmark wearing the danger
+  colour. **The banners are correct — it IS the enemy stronghold — so the
+  discipline holds and the READ fails**, because nothing else in frame says
+  whose castle it is. Reserving a colour is not the same as making the reading
+  land.
+- **D3 round 1's scale numbers were measured against a broken ruler** and are
+  superseded by round 2's (1.93x span over 17 species, not 1.6x). Two
+  individual readings reversed outright: veridian is the largest species rather
+  than common-deer-sized, and terrapup genuinely does out-mass the tank it
+  shares a mesh with.
+- **The buildable wall is not warped.** A critic's finding, disproven by raw
+  vertex data; the "diagonal lift" is an intentional Tudor V-brace. No change
+  made, and none wanted.
+
+## Findings from the parallel lanes that are NOT visual
+
+- **Three of the chapter's four gates are decorative.** VIS-SITES measured every
+  choke point across the corridor's full 2,048 m width at the player's 45 degree
+  slope limit and at the 60 degrees a ridden legendary gets. The river holds —
+  no 64 m window reaches the far bank anywhere, the cut is 11.4-21.1 m deep at
+  65-80 degrees across 188 stations, and every baked depth is within a metre of
+  the recipe, so the Old Mill Crossing is genuinely the only way over. But the
+  **South Bridge gully and both Sigil Gate gorges are 90 m and 108 m bars in a
+  2,048 m corridor** — authored correctly and walked around the end of in about
+  a minute. Routed to gameplay, not art: it affects progression pacing.
+
+## Mechanisms found that nobody had
+
+- **The fires emit no light.** Both camp fire-detail night frames are lit by
+  nothing. For a brief whose own words are "cozy and inviting", the cheapest
+  instrument in the game is switched off.
+- **There are two castles.** `landmark.gd` builds a 132-module castle with four
+  corner towers, a two-module gate and nine oxblood banners at (229.8, -144.4)
+  — **7,708 m from the stronghold the player reaches**, which is the untextured
+  blockout three critics have called "the antagonist made of nothing". Shooting
+  both in-world separates two fixes that one verdict was hiding: dressing at the
+  wrong coordinates (a const the OW5D relocation left behind) versus materials
+  not loading. A prefab survey on a bare stage cannot tell those apart.
+- **Sites need wear, not density.** "Nothing organises the ground plane...
+  until a path enters a site and the grass dies where feet go, no site will read
+  as a place." A different lever from the scatter density the corridor lane is
+  tuning.
+
 ## What recurs across independent critics
 
 The strongest signal in the sweep is agreement between critics who could not
