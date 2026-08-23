@@ -151,12 +151,12 @@ const SITES := [
 		"night": false,
 		"_why": "data/config/village.json's OW5D-relocated pond group: mill [-382,514], footbridge [-386.3,520], ranger_station [-350,507]; band1 props.json `bridge_repair_site` centroid [-391.4,521.1].",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [-352.0, 545.0], "look": [-382.0, 514.0],
-			 "_why": "down the pond route from the north-east, the side the ranger station watches from"},
+			{"label": "approach", "mode": "approach", "at": [-330.0, 492.0], "look": [-350.0, 507.0],
+			 "_why": "the pond route's own first waypoint. village.json's ranger_station entry names the route as points [-80,85] -> [-105,115] in the pre-OW5D frame; the OW5D offset is (-250,+407), so the route runs (-330,492) -> (-355,522) now. Standing at its head looks at the ranger station -- 'the first built thing between the settlement and the pond valley' in that file's own words -- with the mill beyond it.\n\nThe first draft of this eye was (-352,545) and the raycast reported no collision under it with an analytic height of -20.20 against a pond surface at -17.0: it was IN THE WATER, 38m north of the ranger station. Kept in the comment rather than silently corrected, because 'a plausible-looking coordinate 40m from the thing it names' is how this sweep has produced six frames of the wrong subject."},
 			{"label": "standing", "mode": "standing", "at": [-388.0, 526.0], "look": [-382.0, 514.0],
-			 "_why": "on the crossing itself just downstream of the footbridge, looking up at the mill's north face"},
+			 "_why": "on the crossing just downstream of the footbridge, looking up at the mill's north face. Ray-seated at -16.5 against a pond surface of -17.0, so this stands on the bank rather than in the water -- checked, because the approach eye 30m away did NOT and it would have been easy to condemn all three together."},
 			{"label": "wheel", "mode": "detail", "at": [-390.0, 512.0], "look": [-386.0, 514.0],
-			 "_why": "the mill's own local -x, where building_prefabs.json hangs the wheel over the channel. VISUAL_STRUCTURES round 1: 'the mill is not a mill -- no sails, wheel, hopper or race'. Photograph the side the wheel is supposed to be on."}
+			 "_why": "the mill's own local -x, where village.json says the wheel hangs over the stream carve (yaw_deg is 0, so local -x is world -x). The recipe contains no wheel module at all -- 78 modules, every one a wall, roof, window, corner, border or fence -- so this frame exists to show what stands there instead."}
 		]
 	},
 	{
@@ -268,6 +268,22 @@ const SITES := [
 			{"label": "courtyard", "mode": "interior", "marker": ["Stronghold", "courtyard"],
 			 "look_marker": ["Stronghold", "tether_approach"],
 			 "_why": "standing in the courtyard looking on toward the tether approach. This is where oxblood belongs and where the structures round found none. No offset, for the same reason as the warrens den: site yaw 90 rotates every local, and the marker's own Y is the floor."}
+		]
+	},
+	{
+		"id": "11-castle-landmark",
+		"night": false,
+		"_why": "The OTHER stronghold. `scripts/world/landmark.gd` builds building_prefabs.json's `castle` -- 132 modules, four corner towers, a two-module gate and nine oxblood `Banner` modules -- at RISE_CENTRE + OFFSET = (140,-90) + (89.8,-54.4) = (229.8,-144.4), two hardcoded constants from the pre-corridor world. That is 7,708 m from the stronghold the player actually reaches at (0,7560), and `castle` is referenced in exactly one file.\n\nThis site is shot for one reason: to decide which of two very different fixes the structures round's 'the castle is untextured blockout, no stone material, no crenellation, no banners' actually needs. If the castle renders CORRECTLY here, in the world, then the art is fine and the defect is siting -- a const that OW5D's relocation left behind. If it renders as untextured blockout HERE too, then its retint or its OBJ/MTL materials are not loading and that is a material bug to fix, not a coordinate. The structures survey shoots prefabs on a bare stage, so it cannot tell those two apart; this can.\n\nThe gate faces local -z (its two TallWallEntrance modules sit at local x 2.0, z -8.448, and all nine banners hang between z -9.648 and -11.8). landmark.gd sets no rotation, so local -z is world -z: the gate faces south and every eye below stands south of the site.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [231.8, -214.0], "look": [231.8, -150.0],
+			 "back": 10.0, "up": 5.0, "look_up": 8.0,
+			 "_why": "64m due south of the gate on its own axis, aimed 8m up so the towers and the keep cap at 21.7m are in frame rather than cropped at the wall line"},
+			{"label": "gate", "mode": "standing", "at": [231.8, -166.0], "look": [231.8, -152.0],
+			 "look_up": 5.0,
+			 "_why": "at the gate, eye height, where a player would stand to walk in"},
+			{"label": "banners", "mode": "detail", "at": [217.4, -172.0], "look": [217.4, -154.0],
+			 "back": 8.0, "up": 2.2, "look_up": 9.5,
+			 "_why": "the west gate flank, where four Banner modules hang at 6.4m and 13.2m. Aimed 9.5m up because a shot composed on the ground line crops the very thing it is asking about -- the oxblood the structures round went looking for and did not find."}
 		]
 	},
 ]
@@ -431,6 +447,7 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		_failures += 1
 		return
 
+	var look_up := float(shot.get("look_up", 1.6))
 	var mode: String = str(shot.get("mode", "standing"))
 	var default_rig: Dictionary = RIG.get(mode, RIG["standing"]) as Dictionary
 	var back_m := float(shot.get("back", default_rig["back"]))
@@ -448,18 +465,18 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		# the analytic heightfield under a cave is metres of solid rock.
 		var seat: float = _ground_at(eye, floor_hint) if _is_interior(floor_hint) else float(_field.height_at(eye.x, eye.y))
 		_place(eye, seat)
-		_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m)
+		_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
 		for i in ARRIVE_FRAMES:
 			await physics_frame
 
 	var ground := _ground_at(eye, floor_hint)
 	_place(eye, ground)
-	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m)
+	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
 	for i in (SETTLE_FRAMES if first else HOP_FRAMES):
 		await physics_frame
 
 	_hide_huds()
-	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m)
+	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
 	for i in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -709,11 +726,15 @@ func _place(at: Vector2, ground: float) -> void:
 
 
 func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: float,
-		up_m: float) -> void:
+		up_m: float, look_up: float) -> void:
 	_camera.global_position = Vector3(eye.x, eye_ground + up_m, eye.y)
-	# Aimed at chest height on the target rather than at its feet, so a shot
-	# that is about a building is not composed as a shot about the dirt.
-	_camera.look_at(Vector3(target.x, target_ground + 1.6, target.y), Vector3.UP)
+	# Aimed at chest height on the target by default, so a shot that is about a
+	# building is not composed as a shot about the dirt. `look_up` raises that
+	# for the shots where the subject is genuinely overhead: a 70-degree camera
+	# is about +/-23 degrees vertically, which at 20 m reaches 8.7 m, so a
+	# castle banner at 13.2 m composed on the ground line is simply not in the
+	# picture that is supposed to be asking about it.
+	_camera.look_at(Vector3(target.x, target_ground + look_up, target.y), Vector3.UP)
 
 
 ## The analytic heightfield and the streamed collision surface disagree -- by
