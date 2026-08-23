@@ -233,3 +233,39 @@ is normally this sweep's strongest signal and here it is not evidence of
 anything except that the brace reads as a defect at survey framing. If a third
 critic reports it, the useful response is to make the brace read as deliberate
 -- not to straighten it.
+
+## 9. "05-trainer-battle names an opponent that is nowhere in the frame" — half of it is a misread
+
+Three consecutive blind rounds have reported this frame, and round 3 put the
+sharpest version of it: *"the enemy plate reads 'Bramblebun Lv 2' (a wild
+creature), the centre text reads 'You backed off.', no opposing trainer or
+opposing creature is anywhere in frame."*
+
+**The nameplate is correct, and has been all along.** `practice_trainer` is Bryn,
+and `data/config/bands/band1_lower_meadows/trainers.json` gives Bryn a team of:
+
+    bramblebun  level 2
+    mudsnout    level 3
+
+So "Bramblebun Lv 2" is Bryn's own lead creature, deployed by the trainer battle
+exactly as it should be. Every critic that has seen this frame has reasonably
+inferred a stale wild-creature readout, and all three were wrong — the parenthesis
+"(a wild creature)" is the inference, not the observation. The harness agrees
+independently: encounter B logged no FAIL at any of its six gates, so
+`begin_trainer_battle()` returned true, `is_fighting()` was true, and
+`enemy_body()` was non-null.
+
+**What is genuinely wrong is that the opponent is not FRAMED**, which is the same
+camera finding as everywhere else, and the stale "You backed off." banner, which
+is a real capture-sequencing artifact carried over from encounter A's flee.
+
+Recorded because this is the single most re-reported item in the sweep and two
+thirds of it is not a defect. A fourth round should not spend a finding on the
+nameplate, and nobody should go looking for a bug in trainer-battle opponent
+selection: there isn't one.
+
+**Still unexplained, and deliberately not guessed at:** `combat_hud.gd` gives
+that banner `_outcome_left = 2.5` seconds ticked on `_process`, which under this
+harness's ~2.4s frames should expire within about two rendered frames — long
+before shot 05. It does not. That arithmetic and the photograph disagree, so the
+mechanism is not yet established and is not being written down as though it were.

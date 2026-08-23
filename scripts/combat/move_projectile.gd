@@ -87,14 +87,35 @@ func _ready() -> void:
 	_body.mesh = _mesh
 	_body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
+	# EVERY LINE HERE NOW MATCHES `impact_flash.gd::_additive()`, which is the
+	# sibling that works. This material was drawn with the exact combination that
+	# file's own header rules out by name -- additive blending AND vertex-colour
+	# alpha -- and records the result of: "the burst rendered as a barely-visible
+	# smudge under additive blending and as NOTHING under alpha blending, which
+	# is the signature of the alpha arriving at the shader near zero."
+	#
+	# That is three blind rounds of "there is no projectile" explained. The node
+	# was spawned, was on the right clock, and was VERIFIED ALIVE in the arena at
+	# the shutter by the capture's own check -- it simply did not render. And
+	# this is not a survey-only problem: `.claude/skills/visual-judge/SKILL.md`
+	# records that Compatibility is what the game SHIPS since RB4/D01, so a
+	# player firing a ranged move has been seeing the same nothing.
+	#
+	#   * MIX, not ADD -- `telegraph_glow.gd` states the reason plainly:
+	#     "additive renders at a fraction of its strength under the
+	#     Compatibility renderer".
+	#   * `no_depth_test` TRUE, the same reversal `impact_flash.gd` made after a
+	#     blind critic. It matters more here than there: the AI holds station
+	#     about 2m away, so the bolt spends its whole flight inside the space
+	#     between two bodies that are already interpenetrating.
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.vertex_color_use_as_albedo = true
 	material.disable_receive_shadows = true
-	material.no_depth_test = false
+	material.no_depth_test = true
 	_body.material_override = material
 	add_child(_body)
 	_redraw(0.0)
@@ -139,8 +160,17 @@ func _redraw(t: float) -> void:
 	var fade := 1.0 - clampf((t - 0.66) / 0.34, 0.0, 1.0)
 	if fade <= 0.0:
 		return
-	var colour := Color(_colour.r, _colour.g, _colour.b, _colour.a * fade)
-	var core := colour.lerp(Color(1, 1, 1, colour.a), 0.55)
+	# Opacity is ONE value on the material, set once per frame, for the reason
+	# `impact_flash.gd` gives: with the fade carried in per-vertex alpha there
+	# are as many places for it to arrive wrong as there are vertices. The tail
+	# gradient is unaffected -- `core` and `colour` only ever differed in RGB,
+	# and every vertex already shared one alpha, so there is nothing to lose by
+	# moving it.
+	var material := _body.material_override as StandardMaterial3D
+	if material != null:
+		material.albedo_color = Color(1.0, 1.0, 1.0, _colour.a * fade)
+	var colour := Color(_colour.r, _colour.g, _colour.b, 1.0)
+	var core := colour.lerp(Color(1.0, 1.0, 1.0, 1.0), 0.55)
 
 	match _kind:
 		"cone":
