@@ -194,7 +194,27 @@ func _opening_through_the_first_catch() -> bool:
 		_fail("opening:beat:road would not set")
 		return false
 	_note("opening:beat:road")
-	_checkpoint("opening beat granted (proven by smoke_gate_a_opening_segment.gd)")
+	# The grant has to include where the beat LEAVES the player, not just the
+	# flag it writes.
+	#
+	# Run 5 failed with "natural controller travel could not activate Tam cycle
+	# 1", and Tam stands at (8,-16) -- eighteen metres away. Distance was never
+	# the problem: the opening starts the player in bed inside Grandpa's house,
+	# and granting the flag without the walk left them indoors, trying to reach
+	# the village square through a wall. A half-granted beat is worse than a
+	# played one OR a fully granted one, because the world disagrees with the
+	# flag store about where the player is.
+	#
+	# So this puts them where the road beat ends: outside, on the village side
+	# of the house, with the ground under them resolved by the world rather than
+	# by a hand-written height (D09).
+	if _player != null:
+		_player.global_position = Vector3(6.0, _player.global_position.y + 1.0, 4.0)
+		_player.velocity = Vector3.ZERO
+		for _i in 90:
+			await physics_frame
+	_checkpoint("opening beat granted; player stands outside at %s"
+		% str(_player.global_position.round() if _player != null else Vector3.ZERO))
 	return true
 
 
