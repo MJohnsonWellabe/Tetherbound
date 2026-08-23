@@ -230,8 +230,23 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	# mid-swing, and a continuous controller route must respect that same rule.
 	if not await _wait_for_tool_idle():
 		return false
-	await _tap_action(hotbar_action)
+	# A tool slot TOGGLES. `playground_hud.gd:2228` -- "press slot, tool in hand"
+	# is an owner directive, and pressing the slot again puts the tool away, so
+	# one button is both draw and stow.
+	#
+	# This helper pressed it unconditionally, which makes the whole segment
+	# depend on what the previous beat left in hand: with the axe already
+	# equipped the press STOWS it and the check below reports "hotbar_1 quick
+	# slot did not put a visible axe in the trainer's hand (assigned=axe,
+	# game=, hold=)". Two consecutive runs of this file failed at two different
+	# points with no code change between them, which is what a toggle pressed
+	# blind looks like.
+	#
+	# A player does not press the slot when the tool is already in hand, so
+	# neither does this.
 	var hold: Node = _player.get("tool_hold")
+	if str(_game.get("equipped_tool")) != tool_id:
+		await _tap_action(hotbar_action)
 	for _i in 30:
 		if str(_game.get("equipped_tool")) == tool_id and hold != null and hold.call("prop_node") != null:
 			break
