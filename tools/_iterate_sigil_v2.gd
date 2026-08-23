@@ -13,7 +13,7 @@ func _init() -> void:
 	var across := Vector2(cos(yaw), -sin(yaw)).normalized()
 
 	for combo in [
-		[2.0, 56.0], [2.0, 57.0], [2.0, 57.5], [2.0, 58.0], [2.0, 58.5], [2.0, 60.0], [2.0, 62.0], [2.0, 65.0], [2.0, 70.0],
+		[2.0, 58.0], [2.0, 58.5], [2.0, 59.0], [2.0, 59.3], [2.0, 59.6],
 	]:
 		var end_fade: float = combo[0]
 		var hl: float = combo[1]
