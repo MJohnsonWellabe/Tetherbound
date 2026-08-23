@@ -1150,13 +1150,15 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	state_changed.emit()
 
 
-func _on_orb_missed() -> void:
+func _on_orb_missed(message: String) -> void:
 	if state != State.ACTIVE:
 		return
 	# A clean miss is not a failed catch. It costs an orb and the moment, and it
 	# gets its own message, because "you missed" and "it broke out" are different
-	# things to have just done.
-	catch_refused.emit("the orb went wide")
+	# things to have just done. The message is built by the orb's own flight --
+	# how near it came, and what ended it -- so a graze and a throw that was
+	# never close no longer read identically.
+	catch_refused.emit(message)
 	_take_camera()
 	state_changed.emit()
 

@@ -30,7 +30,12 @@ const FLASH := preload("res://scripts/combat/impact_flash.gd")
 ## the accuracy half of the catch formula reads.
 signal struck(target: Node3D, offset: float)
 ## Hit the ground, or ran out of flight time, without touching anything.
-signal missed()
+##
+## Carries HOW it missed: `closest` is the nearest the orb came to the target's
+## centre and `needed` is the distance that would have counted. The owner's
+## complaint about this mechanic was "I never know if I was close" -- a miss
+## that reports nothing but the word "wide" is why.
+signal missed(reason: String, closest: float, needed: float)
 
 enum Phase { FLYING, HANGING, DROPPING, RESTING, SEALED, DONE }
 
@@ -526,7 +531,7 @@ func _finish_with_miss() -> void:
 		_closest_at.x, _closest_at.y, _closest_at.z,
 		_ground_collider if _ground_collider != "" else "none", _life,
 	])
-	missed.emit()
+	missed.emit(_end_reason, _closest, need)
 
 
 ## The target plus everything the throw passes through.
