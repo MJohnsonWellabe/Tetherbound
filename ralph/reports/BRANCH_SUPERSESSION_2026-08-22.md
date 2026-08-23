@@ -112,3 +112,31 @@ has zero references to it and `combat_switch_left` is not in `project.godot`.
 **Left for whoever has a route to origin's refs.** One stale branch is harmless;
 a delete that reports "Everything up-to-date" after failing is not, and that is
 the part worth knowing before someone trusts the same command.
+
+---
+
+## Current branch audit — 2026-08-22 23:xx owner cleanup request
+
+The current remote branch list was rechecked against `main` and the active Gate-D
+replacement branches. The following remaining refs are also safe cleanup
+candidates; do not re-ship them:
+
+- `chatgpt/owner-playtest-2026-08-21` — PR #19 is merged; its owner-playtest content is on `main`.
+- `claude/game-assessment-cleanup-g6gplm` — direct compare shows it is an ancestor of current `main`.
+- `claude/gates-abc-verification-ne0rwx` — direct compare is **identical** to current `main`.
+- `claude/d3-setup-kf3tcf` — direct compare shows it is an ancestor of `ralph/gate-d-band3-river-relay`.
+- `claude/start-d1-odnxb2` — ancestor of `ralph/gate-d-band1-lower-meadows`.
+- `claude/start-d2-tqigvx` — ancestor of `ralph/gate-d-band2-quarry-warrens`.
+- `claude/start-d4-j5v3ax` — ancestor of `ralph/gate-d-band4-upper-meadows`.
+- `claude/start-d5-abf6zi` — ancestor of `ralph/gate-d-band5-stronghold-approach`.
+- `claude/gate-d-meadows-regions-x68est` — ancestor of `ralph/integration-D`.
+- `ralph/HUD-EMPHASIS` — already verified superseded above and still safe to delete.
+
+Do **not** delete the active `ralph/gate-d-band1-*` through `band5-*`,
+`ralph/gate-d-wild-streaming`, `ralph/integration-D`, `ralph-status`, or other
+branches with unverified unique work merely because they are older than `main`.
+
+`ralph/branch-supersession-cleanup` itself is a cleanup/reporting branch. Its
+remaining unique report is informational and overlaps this main-branch record;
+it may be removed after whoever has ref-delete capability confirms no cleanup
+job still depends on that branch.
