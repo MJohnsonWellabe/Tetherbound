@@ -21,11 +21,12 @@ extends Node3D
 ## 6.20m stacked keep, twin gatehouse flankers, a mid-wall turret, a banner)
 ## assembled through the same `building_prefabs.gd` composer `EV6`'s whole
 ## settlement already uses -- author-time recipe, not a runtime generator.
-## This file's only remaining job is siting: ground-snap at the existing
-## `RISE_CENTRE + OFFSET` site (unchanged from `OF9`/`OF13` -- moving the
-## site is a `BLOCKED.md`-class question, not this task's to decide), build
-## a stone plinth that absorbs the site's own measured terrain relief, and
-## instantiate the prefab on top of it.
+## This file's only remaining job is siting: ground-snap at `SITE`, build a
+## stone plinth that absorbs the site's own measured terrain relief, and
+## instantiate the prefab on top of it. `SITE` moved once, GATE-E2
+## (2026-08-23, owner directive "move the castle to the end") -- see the
+## history block below for why the old `RISE_CENTRE + OFFSET` site stopped
+## being correct and how the new one was derived.
 ##
 ## `building_prefabs.gd` was extended (not replaced) to load `.obj` modules
 ## as a bare `Mesh` alongside its existing `.gltf` scene path -- BG2's kit
@@ -43,26 +44,106 @@ extends Node3D
 ## visible from the village square or the Rise path -- there is no longer a
 ## long-range wayfinding frame this geometry has to win from every angle,
 ## only the two close vantages `capture_wayfinding.gd`'s `silhouette-close`
-## (~70m) and `silhouette-approach` (~26m) already use.
+## (~70m) and `silhouette-approach` (~26m) already use. (GATE-E2, 2026-08-23:
+## `SITE` moved -- see the header block below -- and that capture tool's own
+## vantage points were not re-derived by this pass, so those two distances
+## are now stale; the lighting argument they support is not.)
 
 ## ---------------------------------------------------------------------
-## History (OF4, OF9, OF13): why the site sits where it does. Unchanged by
-## this rebuild -- moving it is outside this task's authority (see D28).
+## GATE-E2 (2026-08-23, owner directive "move the castle to the end"): why
+## the site moved off the ridge above the village to a point east of the
+## stronghold's own route.
 ## ---------------------------------------------------------------------
 ##
-## `RISE_CENTRE` names the true peak of `terrain_playground.json`'s
+## OW5D (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) grew the Meadows into an
+## 11.6km corridor and moved the Sigil Gate to (63.6,7400) and
+## `stronghold.json`'s `site.at` to (0,7560) -- but `RISE_CENTRE + OFFSET`
+## below (the old `OF9`/`OF13` site, see history below) stayed on the
+## PRE-corridor map at (229.8,-144.4), 271m from the OLD Sigil Gate at
+## (130,-176). Once the corridor moved, that bearing pointed at nothing: the
+## castle stood 7.5km from the stronghold it is supposed to loom behind,
+## beside the village instead, while `ralph/reports/
+## VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md` records three blind critics
+## independently calling the ACTUAL destination (`stronghold.gd`'s route)
+## "the antagonist made of nothing" without ever finding the real castle
+## 7.5km away that would have answered the complaint.
+##
+## `SITE` was derived from the stronghold's OWN built footprint, not
+## guessed. `stronghold.json`'s five chambers, rotated by `site.yaw_deg` 90
+## around `site.at` (Godot's Y-rotation carries local +z onto world +x,
+## local +x onto world -z -- `stronghold.gd::build()`'s own `rotation.y`
+## does exactly this; nothing here reimplements it, this is the same
+## arithmetic done by hand to plan a site before probing it), gives a
+## chamber-footprint world AABB of x[-12.0, 104.2] z[7548.0, 7606.4] --
+## `legendary_chamber`, the route's actual last room, is both the DEEPEST
+## chamber (the room-progression axis, local +z, is world +x under this
+## rotation) and the most northerly one (its -32 lateral offset maps to
+## world +z), so "deeper into the stronghold" and "further along the
+## approach corridor" point in nearly the same direction here. The
+## complex's own entrance ramp and its 15 Team Tether approach pylons
+## (`stronghold.json`'s `approach_pylons.list`) sit on the OPPOSITE side,
+## converging from the southwest (world x -40..-8) onto the mouth at
+## `_mouth_outer_z()` -- so nothing built or authored occupies the ground
+## east of the chambers.
+##
+## North was ruled out first: `world_perimeter.gd`'s corridor rewrite
+## (OW5C) puts the map's own south boundary cap at `WORLD_Z_SOUTH` = 7680,
+## only 74m past the chambers' own north edge (7606) -- not enough room for
+## a 44m-deep plinth plus a real clearance margin without risking the
+## boundary wall's own collision. East has the rest of the 2048m-wide
+## corridor to work with (`world_bounds.max_x` 1024) and reads as "the mass
+## beyond the route's own last room" rather than "a shape stuck against the
+## map edge".
+##
+## `SITE` sits at world (150.0, 7595.0): the plinth's own west edge
+## (`PLINTH_CENTRE.x - PLINTH_HALF_X` = -18 local, world x 132) clears the
+## chambers' east edge (104.2) by 27.8m -- multiples of `_wall_t`/the
+## skirt's own overhang, not a near miss -- and the plinth's own north edge
+## (world z 7629) stays 51m inside `WORLD_Z_SOUTH`. Verified against the
+## live heightfield with the same 8m-grid method `tools/_probe_stronghold.gd`
+## used to site the stronghold itself: relief across the plinth's own
+## footprint is +1.43m / -2.07m relative to the ground-snap point, gentler
+## than the 2026-08-16 remass measured at the OLD site (+3.5 / -1.5) that
+## `PLINTH_TOP`/`PLINTH_BOTTOM` below are sized for, so `PLINTH_TOP` (4.2)
+## clears the new high corner with 2.77m to spare. `PLINTH_BOTTOM` needed
+## one change: at -2.5 the exposed face would have cleared the new low
+## corner by only 0.43m, under the 0.5m "reads as a built revetment, not a
+## floating slab" bar the remass itself used, so it moved to -3.0 (0.93m of
+## clearance) -- the one number this pass actually retuned; everything else
+## about the plinth is unchanged.
+##
+## There is no named rise here the way `RISE_CENTRE` named one at the old
+## site -- `terrain_playground.json`'s `rises.peaks[]` has nothing within
+## several hundred metres of (150,7595); the ground is ordinary rolling
+## corridor terrain. The plinth was never load-bearing on having a hill
+## under it -- it is a self-levelling stone podium that ground-snaps to
+## whatever is there and absorbs the local relief either way (see
+## `PLINTH_TOP`/`PLINTH_BOTTOM` above and `_build_plinth` below); the old
+## site's peak only ever supplied the visual backdrop, not the mechanism.
+const SITE := Vector2(150.0, 7595.0)
+
+## ---------------------------------------------------------------------
+## History (OF4, OF9, OF13), retired by GATE-E2 above: why the OLD site sat
+## where it did, on the pre-corridor map. Kept as a record of the reasoning,
+## not as current siting -- `RISE_CENTRE`/`OFFSET` no longer drive anything.
+## ---------------------------------------------------------------------
+##
+## `RISE_CENTRE` named the true peak of `terrain_playground.json`'s
 ## `rises.peaks[0]` (140,-90) -- kept as a reference point since
-## `capture_hillside.gd`/`OF11` anchor to the same rise -- but `OFFSET` does
+## `capture_hillside.gd`/`OF11` anchor to the same rise -- but `OFFSET` did
 ## not sit near that peak. `OF13` (the owner's direct answer to `OF9`: the
 ## stronghold must not be visible from the start, and must sit farther from
-## the village) carries the site ~105m out onto the rise's FAR (east)
+## the village) carried the site ~105m out onto the rise's FAR (east)
 ## shoulder, past the dome's own radius (78) and onto the surrounding
 ## rolling hills, computed (not guessed) from a ray-march probe against
 ## `playground_heightfield.gd::height_at` from the two vantage points
 ## `capture_wayfinding.gd` uses: at this offset, occlusion from both the
-## village-square eye and the-rise-route's second waypoint is -17.0m /
+## village-square eye and the-rise-route's second waypoint was -17.0m /
 ## -23.2m (comfortably occluded, not marginal), net distance from the
-## village-square eye 271m (up from the original site's 156.8m).
+## village-square eye 271m (up from the original site's 156.8m). Correct
+## for the pre-corridor map, and stale the moment OW5D moved the Sigil Gate
+## and the stronghold 7.5km north -- the eye these numbers occlude from is
+## not a vantage anyone approaches this landmark from any more.
 const RISE_CENTRE := Vector2(140.0, -90.0)
 const OFFSET := Vector2(89.8, -54.4)
 
@@ -89,15 +170,25 @@ const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
 ## RE-MASS 2026-08-16 (owner directive; see the castle prefab's own _why in
 ## building_prefabs.json): the plinth grew with the castle -- 40x44m,
 ## asymmetric on purpose. The SOUTH edge stays exactly where OF4-rebuild put
-## it (local z -10, world -154.4) because the stronghold complex was sited
+## it (local z -10 -- world -154.4 at the OLD site, world 7585.0 at the
+## current `SITE`, GATE-E2 below) because the stronghold complex was sited
 ## against it; all growth goes north/east/west inside the envelope the
 ## terrain probe allowed. TOP/BOTTOM re-measured over the NEW footprint
 ## (probe grid, 2026-08-16): highest relief inside it +3.5m, lowest -1.5m,
 ## so 4.2 clears the high corner and -2.5 keeps the exposed face a built
 ## revetment on the falling side. The plinth is also a real STATIC BODY now
 ## -- the whole castle was walk-through before.
+##
+## GATE-E2 (2026-08-23): `SITE` moved (see the header block above), and
+## `PLINTH_TOP`/`PLINTH_BOTTOM` were re-checked against the new footprint's
+## OWN relief rather than assumed to still fit -- they do, with margin, at
+## the new site's gentler +1.43m / -2.07m, EXCEPT `PLINTH_BOTTOM`: -2.5
+## cleared the new low corner by only 0.43m, under the 0.5m bar the
+## 2026-08-16 remass itself used for "reads as a built revetment, not a
+## floating slab", so it moved to -3.0 for a real 0.93m of clearance.
+## `PLINTH_TOP` needed no change -- 4.2 clears the new high corner by 2.77m.
 const PLINTH_TOP := 4.2
-const PLINTH_BOTTOM := -2.5
+const PLINTH_BOTTOM := -3.0
 ## Centre and half-extents of the grown footprint: x -18..+22, z -10..+34
 ## local. A margin past the new wall centrelines (x -16..+20, z -8.448..+32).
 const PLINTH_CENTRE := Vector3(2.0, 0.0, 12.0)
@@ -108,8 +199,13 @@ const PLINTH_HALF_Z := 22.0
 ## retired), and the courtyard floor is the plinth top -- which sits
 ## PLINTH_TOP above the ground, so a ramp runs down from the gate to the
 ## grass on the south side. 11m of run over 4.2m of rise is ~21 degrees,
-## comfortably under the 45 the player walks. It ends 4m clear of the
-## Legendary Chamber's box (z -169.4 world; the ramp foot reaches -165.4).
+## comfortably under the 45 the player walks. The castle has no rotation
+## (`build()` sets only `position`), so this ramp exits toward decreasing
+## world z regardless of `SITE` -- at the OLD site that put its foot 4m
+## clear of the stronghold complex's own Legendary Chamber box, because the
+## two stood immediately adjacent; GATE-E2 (2026-08-23) moved `SITE` 27.8m+
+## clear of the stronghold's whole footprint (see the header block above),
+## so the ramp now lands on open ground with nothing nearby to clear.
 const RAMP_RUN := 11.0
 const RAMP_WIDTH := 6.0
 
@@ -142,7 +238,7 @@ const PLINTH_COLOUR := Color("#524a41")
 
 
 func build(world: Node) -> void:
-	var at := RISE_CENTRE + OFFSET
+	var at := SITE
 	var ground: float = float(world.call("ground_height_at", at.x, at.y))
 	if is_nan(ground):
 		push_error("no ground under the stronghold at %.0f, %.0f" % [at.x, at.y])
@@ -537,5 +633,6 @@ func _build_gate_shadow() -> void:
 ##
 ## OF13 (owner's direct answer to `OF9`): moved the site ~105m out onto the
 ## rise's far shoulder so it is not visible from the village square or the
-## Rise path -- see the active `RISE_CENTRE`/`OFFSET` comment above, which
-## carries this history forward since the siting math is unchanged.
+## Rise path -- see the retired `RISE_CENTRE`/`OFFSET` history comment
+## above, which carried this reasoning forward until GATE-E2 (2026-08-23)
+## moved `SITE` again, onto the new corridor map.
