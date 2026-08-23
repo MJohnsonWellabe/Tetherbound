@@ -1041,9 +1041,15 @@ func _hold_the_fight_where_it_was() -> void:
 ## `eligible` is exactly the condition that decides whether the throw gets its
 ## launch assist, and `first_hit` names whatever is in the way when it does not.
 ## How close the trainer wants to be before hunting sideways for a clear line.
-## `data/config/combat.json`'s throw is good well past this; the point is that
-## a short line has less in it, not that a long one cannot be thrown.
-const THROW_RANGE_WANTED := 6.0
+##
+## Derived from the two bounds this file already has rather than picked: inside
+## `AIM_TOO_CLOSE_METRES` the camera cannot centre the reticle at all ("too
+## steep to centre"), and past `AIM_THROWABLE_METRES` the orb will not reach.
+## Halfway between is the band where both are comfortably true. GATEB-COORD
+## first set this to 6.0 and traded one flake for another -- the creature
+## wanders, six metres becomes four, and the run failed with "right-stick aim
+## could not line up the real throw reticle" instead.
+const THROW_RANGE_WANTED := (AIM_TOO_CLOSE_METRES + AIM_THROWABLE_METRES) * 0.5
 
 
 func _step_until_the_shot_is_clear() -> bool:
