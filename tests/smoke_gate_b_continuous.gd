@@ -355,7 +355,26 @@ func _note(flag_id: String, check_objective: bool = true) -> void:
 	var next := _reached.size()
 	if not check_objective or next >= LADDER.size():
 		return
-	var fragment := str((LADDER[next] as Array)[1])
+	# The next beat the player still has to DO, not simply the next row.
+	#
+	# GATEB-COORD: some beats are satisfied by the same act that satisfies the
+	# one before them. `tournament_team_ready` and `tournament_training_ready`
+	# are both written by `tournament.gd` watching the party, and a team of
+	# three at level 6 answers both in the same frame -- so the tracked line
+	# correctly skips straight past the training beat, and asserting on the
+	# very next row failed a chain that was working:
+	#
+	#   'tournament_team_ready' is set and the tracked objective reads 'Gather
+	#   wood and stone for a home.'; it should have moved on to 'Train with'
+	#
+	# `quest_log.gd` shows the first UNFINISHED Main Story entry, so that is
+	# what this compares against.
+	var row := next
+	while row < LADDER.size() and _flag(str((LADDER[row] as Array)[0])):
+		row += 1
+	if row >= LADDER.size():
+		return
+	var fragment := str((LADDER[row] as Array)[1])
 	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
 	if not tracked.contains(fragment):
 		_fail("'%s' is set and the tracked objective reads '%s'; it should have moved on to "

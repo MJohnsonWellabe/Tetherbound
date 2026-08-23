@@ -316,8 +316,8 @@
    "amount": 4,
    "label": "Strip meadow grass",
    "at": [
-    42.0,
-    -38.0
+    46.0,
+    -40.0
    ],
    "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
    "model_scale": 1.3

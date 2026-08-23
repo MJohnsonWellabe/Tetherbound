@@ -98,8 +98,20 @@ func test_roof_stances_use_the_preflighted_open_exterior_ring() -> void:
 		"the live ghost must resolve to the exact supported anchor")
 	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"rear-exterior\""),
 		"rear roofs must use the preflighted exterior ring")
-	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"front-exterior\""),
-		"front roofs must use the same exterior ring")
+	# The front pair faces the OTHER way, and that is the fix rather than a
+	# drift from it. GATEB-COORD drove this segment to a finished house for the
+	# first time and found that `HOUSE_AIM_DIRECTION` puts the front stance
+	# three metres the wrong way -- on top of the floor the completed shell
+	# encloses, which the preflight cannot detect because it runs before
+	# anything is built. The trainer circled the finished house for three full
+	# attempts trying to reach a spot inside it. The front row's exterior IS
+	# the south side, so the segment stands there and faces back; the roof
+	# ANCHOR is unchanged, because
+	# `build_snap_contract.gd::_add_supported_roofs()` corrects by the
+	# SUPPORT's yaw rather than the player's.
+	assert_true(source.contains("-HOUSE_AIM_DIRECTION,\n\t\t\t\t\"front-exterior\"")
+			or source.contains("-HOUSE_AIM_DIRECTION, \"front-exterior\""),
+		"front roofs must be aimed from their own exterior, facing back at the house")
 	assert_true(source.contains("look_right"),
 		"the exterior roof orientation must be supplied through the right stick")
 	assert_false(source.contains("_move_round_open_right_side"),

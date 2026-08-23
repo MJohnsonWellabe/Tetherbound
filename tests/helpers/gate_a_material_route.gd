@@ -57,7 +57,7 @@ const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "fiber", "amount": 4, "at": Vector2(34.0, -46.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-2.0, -20.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(24.0, -24.0)},
-	{"item": "fiber", "amount": 4, "at": Vector2(42.0, -38.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(46.0, -40.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(2.0, -30.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-10.0, -14.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(30.0, -8.0)},
@@ -175,6 +175,10 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 ## verdict, they are why one tree was abandoned -- and the transcript keeps
 ## every one of them.
 const REFUSALS_ALLOWED := 5
+## Metres of height difference from the player that still counts as "a tree I
+## can walk to". The Meadows has real hills in it and the trainer climbs
+## slopes, not cliffs.
+const WALKABLE_RISE := 6.0
 
 
 func _fill_with_live_scatter(item_id: String) -> bool:
@@ -565,6 +569,25 @@ func _nearest_live_scatter(item_id: String, refused: Array[int] = []) -> Node3D:
 			continue
 		if str(candidate.call("resource_item")) == item_id:
 			candidates.append(candidate as Node3D)
+	# Prefer a stand on ground the player can actually walk to.
+	#
+	# GATEB-COORD: "nearest" measured straight-line will happily pick a tree
+	# twenty metres UP the eastern hill once the flat ground nearby has been
+	# chopped out, and the continuous run died there -- six stands in a row,
+	# all in the same unreachable cluster:
+	#
+	#   controller could not reach live natural wood at
+	#   (104.7, 20.56, -52.6) (stopped 21.6m short)
+	#
+	# A player picks a tree they can get to. Candidates within `WALKABLE_RISE`
+	# of the player's own height are considered first, and the steep ones are
+	# only fallen back on when there is nothing level left anywhere.
+	var level: Array[Node3D] = []
+	for candidate: Node3D in candidates:
+		if absf(candidate.global_position.y - _player.global_position.y) <= WALKABLE_RISE:
+			level.append(candidate)
+	if not level.is_empty():
+		candidates = level
 	candidates.sort_custom(func(a: Node3D, b: Node3D) -> bool:
 		var a_distance := _player.global_position.distance_squared_to(a.global_position)
 		var b_distance := _player.global_position.distance_squared_to(b.global_position)
