@@ -327,17 +327,22 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
   background-size:cover;
   background-repeat:no-repeat;
 }
-/* There is no `.s-bedroom` slot any more. The only committed capture of the
-   farmhouse interior was an undressed white blockout room with a bed in it --
-   it was on this page for months captioned "First light in Grandpa's
-   farmhouse", which is exactly the kind of promise this page is not allowed to
-   make. The section keeps the copy and loses the frame until the interior is
-   dressed and re-shot (queued in ralph/BACKLOG.md, needs a Godot capture run).
+/* SITE-SHOTS: `.s-bedroom` is back. The loft the old capture showed was an
+   undressed white blockout with a bed in it, captioned "First light in
+   Grandpa's farmhouse" -- the slot was pulled rather than left
+   committed-and-broken. A fresh capture found the room is not undressed any
+   more: `grandpa_house.gd`'s furniture pass gave the loft a real BedTwin and
+   nightstand, with the window and stair rail in frame, some time before this
+   page ever said otherwise. The one honest thing still missing is the loft
+   shell's own material -- `KIT_TEXTURES` covers the exterior walls but not
+   this floor/beam/rail, so they read as flat colour up close -- and that is
+   not this frame's fault at the crop it is shown at.
    `.s-starters` is gone for a different reason: it framed three starters
    standing in a row outside the door, which was the opening's staging until
    2026-08-11 and has been wrong ever since (`SA0-orbs`,
    docs/OPENING_SEQUENCE.md). The choice is three orbs previewed indoors during
    Grandpa's briefing, and `.s-orbs` shows that instead. */
+.s-bedroom{background-image:url("img/opening-bedroom.jpg"),linear-gradient(160deg,var(--timber),#0b0e0a)}
 .s-village{background-image:url("img/village-square.jpg"),url("img/01-spawn-outward.jpg"),linear-gradient(160deg,var(--trail-wheat),var(--grass-olive))}
 /* ^ village-square.jpg is deliberately absent from the repo rather than
    committed-and-broken, so this slot resolves to the walk-out frame under it
@@ -374,13 +379,19 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
 .s-machines{background-image:url("img/relay-machines.jpg"),linear-gradient(160deg,var(--timber),var(--oxblood))}
 .s-mill{background-image:url("img/mill-crossing.jpg"),linear-gradient(160deg,var(--day-blue),var(--slate-cool))}
 .s-talk{background-image:url("img/village-talk.jpg"),url("img/village-people.jpg"),linear-gradient(160deg,var(--timber),var(--leaf-deep))}
-/* `.s-hall` has no figure on the page. The capture exists and it is an
-   untextured grey blockout standing under translucent sky-planes --
-   `STRONGHOLD-MAT` and `SKY-PLANES` in ralph/BACKLOG.md, both open. The page
-   does not show the chapter's destination until the destination has materials
-   on it; the rule holds even when the missing frame is the one you most want
-   to show. */
+/* `.s-hall` has no figure on the page. `STRONGHOLD-MAT` landed (97f4ff32,
+   see stronghold.gd's own header) -- the stronghold has real textured
+   masonry now, not the untextured grey blockout this comment used to
+   describe. `SKY-PLANES` (ralph/BACKLOG.md) is still open, but it is
+   StormWall slabs at the storm_road blocker, a different site kilometres
+   away -- see this file's own re-render notes before wiring the figure back
+   in, and judge a fresh capture rather than assuming the old defect is gone
+   just because its cause is elsewhere.
+   `.s-warden` instead frames the Warden himself, in the Warden Arena
+   chamber under the hall -- an enclosed indoor room, so it needs neither
+   defect fixed to be honest. No fallback frame exists yet. */
 .s-hall{background-image:url("img/stronghold-approach.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
+.s-warden{background-image:url("img/warden.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
 /* The starter choice as the game actually presents it: three orbs previewed
    during Grandpa's briefing, indoors. The page used to show three starters
    standing outside the door, which was the 2026-08-11 staging and has been
@@ -415,13 +426,16 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
   border-top:1px solid rgba(255,255,255,.07);
   border-bottom:1px solid rgba(255,255,255,.07);
 }
-/* The Team Tether band. Same overlook underneath, but pulled toward the
-   reserved oxblood and lit by a single teal glow, so the section reads as
-   theirs before a word of it is read. */
+/* The Team Tether band. A close relay frame -- pylon line, cabling, drained
+   ground -- pulled toward the reserved oxblood and lit by a single teal
+   glow, so the section reads as theirs before a word of it is read. Falls
+   through to the same overlook every other band uses if the capture is
+   missing (SITE-SHOTS, tools/capture_site_story.gd's "tether-site" shot). */
 .band.tether{
   background:
     radial-gradient(120% 90% at 78% 12%,rgba(63,232,196,.16),transparent 58%),
     linear-gradient(rgba(20,14,17,.90),rgba(20,14,17,.96)),
+    url("img/tether-site.jpg") center/cover fixed no-repeat,
     url("img/03-rise-overlook.jpg") center/cover fixed no-repeat;
   background-color:#140e11;
   border-top:1px solid rgba(63,232,196,.22);
@@ -548,6 +562,10 @@ footer p{margin:.4rem 0}
         <div class="shot s-village" role="img" aria-label="The village square: the well at its centre, the workshop behind it, cottages and dirt lanes running out"></div>
         <figcaption><b>The square</b>A well, a workshop, a handful of houses, and lanes that leave in every direction.</figcaption>
       </figure>
+      <figure>
+        <div class="shot s-bedroom" role="img" aria-label="The loft above Grandpa's farmhouse: a bed under the eave, a nightstand, a window looking out over the meadow"></div>
+        <figcaption><b>First light</b>You wake up here. The pack, the belt and the choice are all downstairs.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -637,6 +655,10 @@ footer p{margin:.4rem 0}
       <figure>
         <div class="shot s-mill" role="img" aria-label="The Old Mill Crossing: the mill building beside the river and the footbridge over it"></div>
         <figcaption><b>The Old Mill Crossing</b>The one authored way over the river, and it is not yours until the relay stops running.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-warden" role="img" aria-label="The Warden, standing in the arena chamber under Meadows Hall"></div>
+        <figcaption><b>The Warden</b>He believes the barriers are load-bearing, and he has an argument for it.</figcaption>
       </figure>
     </div>
   </section>
