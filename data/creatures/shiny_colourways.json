@@ -562,7 +562,7 @@
           },
           "set_hue": 33,
           "set_sat": 0.58,
-          "val_scale": 0.6
+          "val_scale": 0.48
         },
         {
           "match": {
@@ -571,24 +571,24 @@
           },
           "set_hue": 36,
           "set_sat": 0.2,
-          "val_scale": 0.56
+          "val_scale": 0.46
         }
       ],
       "overlays_shiny": [
         {
           "id": "shell_moss",
-          "_why": "Replaces the ordinary's green shell moss rather than adding to it -- same `id`, so it stands in and inherits the seed. This is the fix for the specific finding that this species' rare changed only its SKIN while its dominant feature, the shell, stayed identical, which made the pair indistinguishable from behind. The shell is the creature; if the rare does not change the shell it has not changed. Autumn rust-gold growth over a bronze shell, against the ordinary's green over teal.",
+          "_why": "Replaces the ordinary's green shell moss rather than adding to it -- same `id`, so it stands in and inherits the seed. This is the fix for the specific finding that this species' rare changed only its SKIN while its dominant feature, the shell, stayed identical, which made the pair indistinguishable from behind. The shell is the creature; if the rare does not change the shell it has not changed. Autumn rust-gold growth over a bronze shell, against the ordinary's green over teal. DARK bronze, and `relief` cut from 0.60 to 0.34, because the first attempt at a value gap did not land: `grow` composites value as `cv*(1-relief) + ramp*relief`, so at relief 0.60 more than half the painted value comes from the overlay's own noise ramp and is INDEPENDENT of whatever the colourway rules did underneath. On this species the shell is the dominant surface, so the overlay was quietly resetting the darkening the rules had applied -- the measured gap moved 0.02 to 0.04 for a rule change that should have been large. Darkening the overlay's own colour and letting more source value through is what actually moves it.",
           "where": {
             "y_min": 0.56,
             "up_min": 0.18
           },
           "mode": "grow",
-          "color": "#c46a1f",
-          "shade": "#6b3208",
+          "color": "#6b3510",
+          "shade": "#2b1304",
           "coverage": 0.55,
           "grain": 5.5,
           "softness": 0.1,
-          "relief": 0.6
+          "relief": 0.2
         }
       ],
       "vivid_comment": "CREATURE-PRESENTATION: teal shell kept, but the moss band goes warm ochre -- a water turtle whose second colour was grass-hue green was still half a Grass creature at distance",
