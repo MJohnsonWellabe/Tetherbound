@@ -133,10 +133,36 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 			return _result()
 	transcript.append("placed two supported rear roofs from short rear-exterior stances")
 
+	# The front row is aimed at from the OTHER side, facing back at the house.
+	#
+	# GATEB-COORD. Both pairs used to be placed facing `HOUSE_AIM_DIRECTION`,
+	# and for the rear row that is right -- the stance lands outside the north
+	# edge. For the FRONT row the same facing puts the stance three metres the
+	# wrong way, which is on top of the floor the shell now encloses: the
+	# trainer circled the finished house for three full attempts trying to
+	# reach a spot inside it. The front row's exterior is the south side, so
+	# that is where this stands, facing back.
+	#
+	# The roof ANCHOR does not move with the facing --
+	# `build_snap_contract.gd::_add_supported_roofs()` corrects by the
+	# SUPPORT's yaw, not the player's -- so `roof_target` is unchanged and the
+	# ghost still snaps to the same supported candidate.
+	#
+	# The crossing goes round the WEST flank, which is level ground, rather
+	# than whichever way the navigator's wall-following picks: left to itself
+	# it went round the east side, off the Practice Meadow plateau, and down
+	# onto ground four metres lower that it could not climb back up. Only the
+	# first of the pair needs it; the second is already there.
 	var front_roofs: Array[Vector3] = [floor_a + Vector3(2, 0, 0), floor_a]
+	var west_of_the_house: Array[Vector3] = [
+		floor_a + Vector3(-4, 0, 2),
+		floor_a + Vector3(-4, 0, -4),
+	]
 	for floor_target in front_roofs:
-		if not await _place_roof_from_exterior(floor_target, HOUSE_AIM_DIRECTION, "front-exterior"):
+		if not await _place_roof_from_exterior(floor_target, -HOUSE_AIM_DIRECTION,
+				"front-exterior", west_of_the_house):
 			return _result()
+		west_of_the_house = []
 	transcript.append("placed two supported front roofs from the same open exterior ring")
 
 	var wall_positions: Array[Vector3] = wall_targets.duplicate()
@@ -151,7 +177,16 @@ func run(tree: SceneTree, world: Node3D, player: CharacterBody3D, camera_rig: No
 			before_wood, _item_count("wood"), before_stone, _item_count("stone")])
 		return _result()
 
-	if not await _dismantle_aimed_wall(_outside_wall_for_camera(wall_positions, floor_a + Vector3(1, 0, 1))):
+	# The AIM points and the PLACED positions are not the same point.
+	# `wall_targets` above are the grid cells the ghost is aimed at;
+	# `build_snap_contract.gd` then seats the piece half its own thickness off
+	# that, exactly as `_planned_house_steps()` accounts for with `wall_c`. The
+	# dismantle check compares against where the wall actually STANDS, so it
+	# needs the same correction -- without it the highlight was right and the
+	# comparison was 0.11m out, which is `POSITION_EPSILON` plus a hair.
+	var wall_seat := BUILD_SNAP._thickness_correction(BUILD_SNAP.WALL_Z_CENTER, 0.0)
+	var aimed_wall := _outside_wall_for_camera(wall_positions, floor_a + Vector3(1, 0, 1))
+	if not await _dismantle_aimed_wall(aimed_wall + wall_seat):
 		return _result()
 	if not await _cancel_and_resume():
 		return _result()
@@ -390,12 +425,27 @@ func _preflight_all_planned_anchors(placer: Node) -> bool:
 	if not await _hold_the_first_floor_stance():
 		return false
 	var live_ghost := placer.get("_ghost") as Node3D
+	if live_ghost != null and bool(placer.get("_ghost_ok")) \
+			and _flat_distance(live_ghost.global_position, _preflight_first_floor) <= POSITION_EPSILON \
+			and live_ghost.global_position.distance_to(_preflight_first_floor) > POSITION_EPSILON:
+		# Same grid cell, different height. GATEB-COORD: a ground-clamped floor
+		# takes its Y from the raw point being aimed at rather than the
+		# resolved cell centre (`build_grid.gd::snap_to_grid`), and standing
+		# back on a stance is only ever good to `MOVE_EPSILON`, so the live
+		# ghost can sit a few centimetres off the one the preflight read. This
+		# ghost is where the first paid Floor is about to go, so it becomes the
+		# basis -- nothing has been spent yet, and everything downstream is
+		# derived from the floor that actually lands.
+		transcript.append("live Floor ghost re-formed %.3fm below/above the preflight anchor; "
+			% absf(live_ghost.global_position.y - _preflight_first_floor.y)
+			+ "adopting %s as the house basis" % str(live_ghost.global_position))
+		_preflight_first_floor = live_ghost.global_position
 	if live_ghost == null or not bool(placer.get("_ghost_ok")) \
 			or live_ghost.global_position.distance_to(_preflight_first_floor) > POSITION_EPSILON:
 		_fail("returning to the preflight Floor stance did not restore the green live ghost "
 			+ "(ghost %s, wanted %s, player at %s)" % [
-				str(live_ghost.global_position.round()) if live_ghost != null else "<none>",
-				str(_preflight_first_floor.round()), str(_player.global_position.round())])
+				str(live_ghost.global_position) if live_ghost != null else "<none>",
+				str(_preflight_first_floor), str(_player.global_position.round())])
 		return false
 	return true
 
@@ -579,16 +629,24 @@ func _open_the_catalogue() -> Node:
 
 ## The hammer, drawn from the quick bar. It is the build TOOL under
 ## CONTROLLER-MAP, and the village hands it over (`camp_hammer_given`) before
-## any of this segment's work is reachable in an ordinary run; a caller that
-## staged its own materials without it is given one rather than failing on a
-## gift this segment is not about.
+## any of this segment's work is reachable in an ordinary run.
+##
+## GATEB-COORD: this used to GRANT one when the caller had none, and
+## `tests/test_gate_a_build_segment_contract.gd` bans exactly that -- "reusable
+## segment must not use bypass 'inventory.call(\"add\"'". The ban is right:
+## this segment's whole claim is that every change to play state came through
+## a physical joypad event, and a satchel it filled itself is not that. Every
+## real caller already has the hammer (the village hands it over; the tail
+## smoke stages it with the other tools), so the absence of one is a caller
+## defect and is now reported as one.
 func _hammer_in_hand() -> bool:
 	if str(_game.get("equipped_tool")) == "hammer":
 		return true
 	var inventory: RefCounted = _game.get("inventory")
 	if int(inventory.call("count", "hammer")) <= 0:
-		inventory.call("add", "hammer", 1)
-		transcript.append("granted the village's hammer; the gift itself is the village segment's beat")
+		_fail("there is no hammer in the satchel; the village's gift (camp_hammer_given) "
+			+ "comes before any of this segment's work and is not this segment's to grant")
+		return false
 	var slot := int(_game.call("hotbar_slot_of", "hammer")) if _game.has_method("hotbar_slot_of") else -1
 	if slot < 0:
 		slot = HAMMER_SLOT
@@ -662,7 +720,22 @@ func _move_ghost_to(target: Vector3, aim_offset: Vector3 = Vector3.ZERO) -> bool
 	return false
 
 
-func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: String) -> bool:
+## `via` is walked before the stance, in order.
+##
+## GATEB-COORD: the front pair's exterior is on the far side of a house that is
+## by then closed with a door and three walls, so getting there means going
+## round it -- and `stick_navigator.gd` finds its way by sliding along whatever
+## it is pressed against, which took the trainer round the EAST side, off the
+## Practice Meadow plateau, and down onto ground four metres lower that it then
+## could not climb back up:
+##
+##   controller could not walk to the front-exterior exterior Roof stance
+##   (stopped 3.10m short at (35.0, -1.0, -40.0), wanted (32.0, 3.0, -40.0))
+##
+## The west flank is level, so the caller routes the crossing that way rather
+## than leaving the choice to a wall-follower that cannot see a cliff.
+func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: String,
+		via: Array[Vector3] = []) -> bool:
 	# A roof's production snap candidate needs a floor plus any adjacent wall or
 	# doorway. Build one open row at a time: this lets the player aim from that
 	# row's exterior without walking around, through, or across a closed shell.
@@ -677,6 +750,10 @@ func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: Str
 	var roof_target := Vector3(floor_target.x, floor_target.y + BUILD_SNAP.ROOF_Y, floor_target.z) + roof_c
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
 	var wanted_player := roof_target - forward * PLACE_AHEAD
+	for waypoint: Vector3 in via:
+		if not await _walk_to(waypoint, "%s Roof approach waypoint %s"
+				% [side, str(waypoint.round())], 1.0):
+			return false
 	transcript.append(("%s Roof: floor target %s -> roof anchor %s; camera forward %s; "
 		+ "stance %s; trainer starts at %s") % [side, str(floor_target.round()),
 		str(roof_target.round()), str(forward.snapped(Vector3(0.01, 0.01, 0.01))),

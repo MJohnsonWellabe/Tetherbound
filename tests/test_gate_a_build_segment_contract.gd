@@ -127,5 +127,10 @@ func test_preflight_errors_do_not_claim_a_dismantle_attempt() -> void:
 	var preflight := source.substr(source.find("func _preflight()"), source.find("func _preflight_all_planned_anchors"))
 	assert_false(preflight.contains("aimed dismantle stance"),
 		"a pre-spend route failure must not be reported as dismantle movement")
-	assert_true(source.contains("func _walk_to(target: Vector3, purpose: String)"),
+	# Matched as a PREFIX. GATEB-COORD gave `_walk_to` a third parameter (the
+	# arrival tolerance, so a walk that only needs to BE somewhere does not
+	# fail asking for 16cm), and what this assertion is for is unchanged: every
+	# caller still has to name its own purpose, because that is what turns a
+	# walk failure into a sentence that says which walk failed.
+	assert_true(source.contains("func _walk_to(target: Vector3, purpose: String"),
 		"shared controller walking must name each caller's actual purpose")

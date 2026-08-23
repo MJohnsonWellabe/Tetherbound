@@ -147,9 +147,22 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	elif not await _raise_the_house():
 		return _result()
-	if not await _place_the_creature_beds():
-		return _result()
+	# THE CAMP COMES BEFORE THE BEDS.
+	#
+	# GATEB-COORD: `home_progress.gd`'s rule for what counts as a home is a
+	# camp PLUS one floor, wall, roof and door (`progression.json`'s
+	# `home.required_pieces`) -- the camp is the bedroll the next objective
+	# tells the player to sleep at, and it is what makes the shell a home
+	# rather than a shed. So `home_built` cannot be set by raising the house
+	# alone, and this segment used to assert it there and fail with
+	#
+	#   the house went up and 'home_built' is unset
+	#
+	# after building the house perfectly. The camp is now placed straight
+	# after the shell, which is where the flag and the objective move.
 	if not await _place_the_camp():
+		return _result()
+	if not await _place_the_creature_beds():
 		return _result()
 	if not await _sleep_the_team_into_condition():
 		return _result()
@@ -195,11 +208,7 @@ func _raise_the_house() -> bool:
 		for line: Variant in (built.get("transcript", []) as Array):
 			transcript.append("house | %s" % str(line))
 		return false
-	if not _flag("home_built"):
-		_fail("the house went up and 'home_built' is unset")
-		return false
-	transcript.append("raised the small home; %s left" % _stock())
-	_objective_should_read("Creature Bed", "home_built")
+	transcript.append("raised the small home's shell; %s left" % _stock())
 	return true
 
 
@@ -284,11 +293,21 @@ func _place_the_creature_beds() -> bool:
 	return true
 
 
+## The camp, and with it the home. See `run()`'s note on why this beat -- not
+## the shell -- is where `home_built` lands.
 func _place_the_camp() -> bool:
 	_camp = await _place_fixture("camp")
 	if _camp == null:
 		return false
-	transcript.append("placed the camp the player sleeps at; %s left" % _stock())
+	if not _flag("home_built"):
+		_fail(("the shell and the camp are both standing and 'home_built' is unset; "
+			+ "home_progress.gd wants %s and the world holds %d placed pieces")
+			% [str(HOME_PROGRESS.required_pieces()),
+				(_game.get("placed_buildings") as Array).size()])
+		return false
+	transcript.append("placed the camp the player sleeps at; that makes it a home; %s left"
+		% _stock())
+	_objective_should_read("Creature Bed", "home_built")
 	return true
 
 
@@ -902,7 +921,21 @@ func _clear_of_every_offer() -> bool:
 			and _director.call("ally_body") != null:
 		await _tap(&"creature_recall")
 		await _settle(20)
-	for attempt in 6:
+	# Several headings, and a step that FAILS is still a step.
+	#
+	# GATEB-COORD: this used to walk directly away from the winner once and
+	# give up the whole build if that walk did not arrive -- which is what
+	# happened beside the authored deadwood at the Practice Meadow patch:
+	#
+	#   controller movement could not reach clear of the 'Gather deadwood'
+	#   prompt (stopped 3.8m short)
+	#
+	# Straight away from a prompt can run into the very thing that is blocking
+	# the walk, and arriving is not the point anyway -- getting OUT OF RANGE
+	# is, and a walk that only managed half its step may already have done it.
+	# So the offer is re-read after every attempt whether the walk arrived or
+	# not, and each further attempt leans further off the direct line.
+	for attempt in 8:
 		await _settle(4)
 		var offer: Dictionary = _arbiter.call("winner")
 		if not PROMPTS.is_actionable(offer):
@@ -916,9 +949,11 @@ func _clear_of_every_offer() -> bool:
 		away.y = 0.0
 		if away.length() < 0.05:
 			away = -_forward()
-		var step := _player.global_position + away.normalized() * 3.0
-		if not await _walk_to(step, "clear of the '%s' prompt" % str(offer.get("label", "")), 0.6):
-			return false
+		# Fan out: straight away first, then progressively wider either side.
+		var lean := deg_to_rad(35.0 * float((attempt + 1) / 2) * (1.0 if attempt % 2 == 0 else -1.0))
+		var heading := away.normalized().rotated(Vector3.UP, lean)
+		var step := _player.global_position + heading * 3.5
+		await _walk_to(step, "clear of the '%s' prompt" % str(offer.get("label", "")), 0.8, false)
 	_fail("could not get clear of the interact line; Build cannot be opened from here. "
 		+ "winner=%s provider=%s" % [str(_arbiter.call("winner")),
 		str((_arbiter.call("winning_provider") as Node).name)
@@ -1013,7 +1048,11 @@ func _forward() -> Vector3:
 ##
 ## The navigator slides along what it is pressed against and picks the freer
 ## side, which is what gets past a placed bed, a camp, or a house wall.
-func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON) -> bool:
+## `report_failure` false for a walk whose ARRIVING is not the point -- the
+## step-clear fan-out below only cares whether the interact line freed up, and
+## a short step that did that is a success, not a failure to record.
+func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON,
+		report_failure: bool = true) -> bool:
 	if _nav == null:
 		_nav = NAVIGATOR.new(_tree, _player, _rig, Callable(self, "_move"))
 	# From the leg's own length, not a flat number. `data/config/movement.json`
@@ -1029,6 +1068,8 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 	await _settle(3)
 	if arrived:
 		return true
+	if not report_failure:
+		return false
 	_fail("controller movement could not reach %s (stopped %.1fm short at %s)" % [
 		purpose,
 		Vector2(target.x - _player.global_position.x,

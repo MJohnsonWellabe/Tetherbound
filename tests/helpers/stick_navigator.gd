@@ -90,16 +90,63 @@ func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> voi
 	_drive = drive
 
 
+## Physics frames this will wait, in total, for locomotion to come back before
+## giving up on a leg. Ten minutes: a wild fight is the usual reason and it
+## ends on its own; anything longer is a stuck world, not a busy one.
+const HELD_FRAMES := 36000
+
+
 ## Walk to `point`, detouring around whatever is in the way. True if it arrived.
+##
+## GATEB-COORD: a leg PAUSES while the player cannot move.
+## `encounter_director.gd::_set_exploration_active()` turns
+## `locomotion_enabled` off for the whole of a fight, and a wild creature
+## picking one is the single most common thing to happen to a harness walking
+## across open meadow. Without this the walk kept pushing the stick at a body
+## that could not move, read every frame of it as a stall, escalated into
+## longer and longer sideways detours, and then -- the moment the fight
+## ended -- set off in whichever direction the last detour had chosen. That is
+## how the Gate B build segment kept finding its trainer nine metres east and
+## five metres below the stance it had already reached.
+##
+## Frames spent held do not count against the leg's budget: the budget is a
+## measure of walking, and none is being done.
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	reset()
-	for _i in budget:
+	var held := 0
+	var walked := 0
+	while walked < budget:
 		var to := point - _player.global_position
 		to.y = 0.0
 		if to.length() <= close_enough:
 			return true
+		if not _can_walk():
+			held += 1
+			if held > HELD_FRAMES:
+				return false
+			# Hands off the stick, and forget the stall this was building up:
+			# nothing that happened while the body was frozen says anything
+			# about what is in the way.
+			_drive.call(0.0, 0.0)
+			reset()
+			await _tree.physics_frame
+			continue
+		walked += 1
 		await step(point)
 	return false
+
+
+## Is the body this is driving actually able to move right now?
+##
+## Read off the player rather than passed in, because every harness in this
+## repo finds its player by exactly this method and none of them should have to
+## remember to wire up a fight check.
+func _can_walk() -> bool:
+	if _player == null or not is_instance_valid(_player):
+		return false
+	if not _player.has_method("locomotion_enabled"):
+		return true
+	return bool(_player.call("locomotion_enabled"))
 
 
 ## One physics frame of travel toward `point`. Split out so a caller can
