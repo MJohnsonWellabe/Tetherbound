@@ -69,7 +69,17 @@ func test_new_game_clears_loaded_progress_but_preserves_save_slots() -> void:
 	assert_true(game.felled_vegetation.is_empty())
 	assert_true(game.saved_player_pose.is_empty())
 	assert_true(game.progression.all_set().is_empty())
-	assert_almost_eq(game.map.discovered_fraction(), 0.0)
+	# NOT zero: the owner's 2026-08-22 §3 ruling seeds the village and the roads
+	# out of it into a fresh fog grid, so a new game legitimately starts with a
+	# little revealed. What this test is actually about is that a NEW game
+	# discards the LOADED map, so compare against a fresh state's own fraction
+	# rather than against a constant that stopped being true.
+	var pristine: RefCounted = game.map.get_script().new()
+	pristine.configure(game._map_landmarks_config())
+	assert_almost_eq(game.map.discovered_fraction(), pristine.discovered_fraction())
+	assert_true(game.map.discovered_fraction() < 0.05,
+		"a new game reveals %.2f%% of the world; the seed is the home town, not a head start"
+		% (game.map.discovered_fraction() * 100.0))
 	assert_almost_eq(game.satiety, 100.0)
 	assert_eq(game.pending_build, "")
 	assert_eq(game.pending_catch, null)

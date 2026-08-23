@@ -45,6 +45,9 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+## BAND2-63-WARRENS. The above-ground prop placer, reused underground for the
+## cave's Team Tether dressing -- see `_build_dressing()`.
+const PROPS := preload("res://scripts/world/props.gd")
 
 ## OP21-25. See `combat_arena_bounds_at()` below -- how far inside a chamber's
 ## wall FACE the fight boundary is required to sit. Clearance for a body's own
@@ -145,7 +148,10 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_approach_apron()
 	_build_lights()
 	_build_interior_area()
+	_clear_the_ground_the_cave_stands_on()
+	_build_mound()
 	_build_deposits()
+	_build_dressing()
 	_build_prize()
 	_sync_vault_door()
 
@@ -518,6 +524,322 @@ func _build_deposits() -> void:
 		node.call("setup", spec)
 
 
+## Nothing grows through a cave.
+##
+## `data/config/bands/band2_stone_and_root/vegetation.json` authors a clearing
+## at this site, and that clearing does not take effect until the Gate D
+## coordinator re-bakes the scatter -- a band clearing does not invalidate the
+## bake (GATE_D_LANE_CONTRACT.md sec4, inherited by every lane, not this one's
+## to fix). Until then the stale bake stands its trees exactly where the cave
+## now is, and the driven run proved what that costs: `tools/_probe_warrens_run.gd`
+## walked 70m from the road, reached the entrance, and stopped dead against a
+## `CommonTree_3` growing in the doorway.
+##
+## So the cave clears its own ground at build time, through
+## `vegetation.gd::clear_area()`. The radius is the authored clearing's own, so
+## the two say the same thing and the re-bake changes nothing about what the
+## player sees here -- it just does it properly, offline, for the grass too.
+func _clear_the_ground_the_cave_stands_on() -> void:
+	var radius := float(_config.get("site", {}).get("clear_radius_m", 0.0))
+	if radius <= 0.0 or _world == null or not is_instance_valid(_world):
+		return
+	var vegetation: Node = _world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	var removed := int(vegetation.call("clear_area", global_position, radius))
+	if removed > 0:
+		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius" % [
+			removed, radius])
+
+
+## The outcrop the cave stands in.
+##
+## The chambers, walls and ceiling slabs are boxes, and at this site most of
+## that mass is ABOVE ground (see `burrow_warrens.json`'s `_comment_resiting`:
+## there is no hillside here to put it in). The first capture round showed the
+## consequence plainly -- a grey rectangular slab standing in a meadow. This
+## dresses that mass into stone: boulders from the same nature family the
+## corridor is already scattered with, around the perimeter and over the roof,
+## sunk so they read as rock in the ground rather than props resting on a box.
+##
+## Deterministic, from the config's own `seed` -- the same rock stands in the
+## same place every boot, which is the promise `encounter_director.gd` makes
+## about creatures and `scatter_rules.gd` makes about grass. Nothing here has a
+## collider: the cave's own walls already stop the player, a second collision
+## shell around them would catch them on nothing visible, and a boulder that
+## is decoration should not be a place to get stuck.
+##
+## The `skip_front_m` metres in front of the mouth stay clear. An outcrop that
+## swallows its own entrance is worse than a bare box, because the box at
+## least has a visible hole in it.
+func _build_mound() -> void:
+	var mound: Dictionary = _config.get("mound", {})
+	var models: Array = mound.get("models", [])
+	if mound.is_empty() or models.is_empty() or _footprint.is_empty():
+		return
+	var loaded: Array[PackedScene] = []
+	for path: Variant in models:
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	if loaded.is_empty():
+		push_warning("the warrens mound names no model that loads; the cave stands bare")
+		return
+
+	var holder := Node3D.new()
+	holder.name = "Mound"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(mound.get("seed", 63220))
+	var sink := float(mound.get("sink_m", 1.0))
+	var tint := Color(str(mound.get("tint", "#ffffff")))
+	var skip_front := float(mound.get("skip_front_m", 9.0))
+	var mouth_z := _mouth_outer_z()
+
+	var min_x := INF
+	var min_z := INF
+	var max_x := -INF
+	var max_z := -INF
+	for rect: Array in _footprint:
+		min_x = minf(min_x, float(rect[0]) - _wall_t)
+		min_z = minf(min_z, float(rect[1]) - _wall_t)
+		max_x = maxf(max_x, float(rect[2]) + _wall_t)
+		max_z = maxf(max_z, float(rect[3]) + _wall_t)
+
+	# The perimeter, walked as four edges at a fixed spacing.
+	var spacing := maxf(float(mound.get("perimeter_spacing_m", 4.5)), 1.0)
+	var perimeter_scale: Array = mound.get("perimeter_scale", [2.6, 4.4])
+	# Two courses, because one is a hedge on the skyline with a bare grey wall
+	# under it -- the first capture round's own picture. The lower course
+	# stands on the ground the wall comes out of, the upper on the shoulder
+	# just under the roof, and between them the slab is broken all the way up.
+	var courses := maxi(int(mound.get("perimeter_courses", 1)), 1)
+	var tallest := 0.0
+	for id_value: String in _chambers:
+		tallest = maxf(tallest, float((_chambers[id_value] as Dictionary).get("height", 4.0)))
+	# The lowest course sits BELOW the floor, on the ground the plinth stands
+	# on, or the base of the wall stays a grey band under the rock -- again,
+	# the capture round's own picture.
+	var base_drop := float(mound.get("perimeter_base_drop_m", 1.6))
+	for course in courses:
+		var lift: float = -base_drop if courses <= 1 else \
+			lerpf(-base_drop, tallest - 1.0, float(course) / float(courses - 1))
+		for edge in 4:
+			var along_x := edge < 2
+			var length: float = (max_x - min_x) if along_x else (max_z - min_z)
+			var steps := maxi(int(length / spacing), 1)
+			for step in steps + 1:
+				var t := float(step) / float(steps)
+				var at := Vector3.ZERO
+				if along_x:
+					at = Vector3(lerpf(min_x, max_x, t), _floor_y + lift,
+						min_z if edge == 0 else max_z)
+				else:
+					at = Vector3(min_x if edge == 2 else max_x, _floor_y + lift,
+						lerpf(min_z, max_z, t))
+				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
+					continue
+				_place_rock(holder, loaded, rng, at, perimeter_scale, sink, tint)
+
+	_build_site_skirt(holder, mound, rng)
+
+	# And the roofs: one grid per chamber, at that chamber's own ceiling.
+	var roof_spacing := maxf(float(mound.get("roof_spacing_m", 7.0)), 1.0)
+	var roof_scale: Array = mound.get("roof_scale", [2.2, 3.8])
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var top: float = _floor_y + float(chamber.get("height", 4.0)) + 0.8
+		var steps_x := maxi(int(size.x / roof_spacing), 1)
+		var steps_z := maxi(int(size.y / roof_spacing), 1)
+		for ix in steps_x + 1:
+			for iz in steps_z + 1:
+				var at := Vector3(
+					centre.x + size.x * (float(ix) / float(steps_x) - 0.5),
+					top,
+					centre.z + size.y * (float(iz) / float(steps_z) - 0.5))
+				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
+					continue
+				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint)
+
+
+## Ground cover for the ground this site cleared.
+##
+## `_clear_the_ground_the_cave_stands_on()` takes every scattered tree, rock
+## and grass tuft inside the site radius, because otherwise they stand in the
+## cave. What it leaves is a bare ring, and the first blind pass named ground
+## density as the single loudest gap between these frames and the references.
+## So the site plants its own: broken rock and low cover banked against the
+## outcrop, thinning with distance, densest where debris and shade would put
+## it. Deterministic from the mound's own seed, and never collidable -- a
+## pebble that stops a player is a bug, and the cave's walls already do the
+## stopping that matters.
+func _build_site_skirt(holder: Node3D, mound: Dictionary, rng: RandomNumberGenerator) -> void:
+	var models: Array = mound.get("skirt_models", [])
+	var count := int(mound.get("skirt_count", 0))
+	if models.is_empty() or count <= 0:
+		return
+	var loaded: Array[PackedScene] = []
+	for path: Variant in models:
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	if loaded.is_empty():
+		return
+	var reach := float(mound.get("skirt_reach_m", 30.0))
+	var scale_range: Array = mound.get("skirt_scale", [0.7, 2.0])
+	var low := float(scale_range[0])
+	var high := float(scale_range[1])
+	var planted := 0
+	for i in count:
+		# Weighted toward the outcrop: sqrt would spread evenly over the disc,
+		# so this deliberately does NOT use it -- what reads as a rock skirt is
+		# thick at the foot of the rock and thin at the edge of the clearing.
+		var distance: float = reach * pow(rng.randf(), 1.7)
+		var angle := rng.randf() * TAU
+		var local := Vector3(sin(angle) * distance, 0.0, cos(angle) * distance)
+		# Nothing inside the cave's own footprint, and nothing in the doorway.
+		if _inside_footprint(local) or (local.z < _mouth_outer_z() + 5.0 and absf(local.x) < 4.0):
+			continue
+		var ground := _site_ground(local)
+		if is_nan(ground):
+			continue
+		var art: Node3D = loaded[rng.randi() % loaded.size()].instantiate() as Node3D
+		if art == null:
+			continue
+		art.position = Vector3(local.x, ground - 0.08, local.z)
+		art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
+		art.scale = Vector3.ONE * rng.randf_range(low, high)
+		holder.add_child(art)
+		planted += 1
+	if planted > 0:
+		print("[warrens] planted %d pieces of ground cover around the site" % planted)
+
+
+## Is this local point over one of the cave's own rooms?
+func _inside_footprint(local: Vector3) -> bool:
+	for rect: Array in _footprint:
+		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
+				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+			return true
+	return false
+
+
+## Terrain height under a LOCAL point, in this node's own local Y -- the
+## meadow outside the cave, not the cave floor.
+func _site_ground(local: Vector3) -> float:
+	if _world == null or not _world.has_method("ground_height_at"):
+		return NAN
+	var at := to_global(Vector3(local.x, 0.0, local.z))
+	var ground := float(_world.call("ground_height_at", at.x, at.z))
+	if is_nan(ground):
+		return NAN
+	return ground - global_position.y
+
+
+## One boulder. `at.y` is the height its BASE should sit around; `sink` pulls
+## it down into whatever it is standing on so there is no seam under it.
+func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGenerator,
+		at: Vector3, scale_range: Array, sink: float, tint: Color) -> void:
+	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+	if art == null:
+		return
+	var low := float(scale_range[0]) if scale_range.size() > 0 else 2.0
+	var high := float(scale_range[1]) if scale_range.size() > 1 else 3.0
+	var scale_value := rng.randf_range(low, high)
+	art.scale = Vector3.ONE * scale_value
+	art.position = Vector3(
+		at.x + rng.randf_range(-1.2, 1.2),
+		at.y - sink,
+		at.z + rng.randf_range(-1.2, 1.2))
+	art.rotation = Vector3(
+		rng.randf_range(-0.18, 0.18),
+		rng.randf_range(-PI, PI),
+		rng.randf_range(-0.18, 0.18))
+	holder.add_child(art)
+	_tint_rock(art, tint)
+
+
+## The nature pack's rocks ship a cool mint-grey. Beside this cave's own warm
+## dark stone that read, to a blind critic, as "a heap of enormous cabbages" --
+## the outcrop and the cave it dresses have to be made of the same thing. The
+## albedo is MULTIPLIED rather than replaced so the model keeps its own shading
+## and texture variation, and each source material is duplicated once and
+## cached, so a hundred boulders sharing one material still cost one.
+func _tint_rock(node: Node, tint: Color) -> void:
+	if node is MeshInstance3D:
+		var mesh_instance := node as MeshInstance3D
+		var mesh := mesh_instance.mesh
+		if mesh != null:
+			for surface in mesh.get_surface_count():
+				var source: Material = mesh_instance.get_active_material(surface)
+				if source == null:
+					continue
+				var key := "%s#%d" % [str(source.resource_path), source.get_instance_id()]
+				if not _materials.has(key):
+					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
+					if copy == null:
+						continue
+					copy.albedo_color = copy.albedo_color * tint
+					_materials[key] = copy
+				mesh_instance.set_surface_override_material(surface, _materials[key])
+	for child in node.get_children():
+		_tint_rock(child, tint)
+
+
+## The cave's authored props: crates, a barrel, a pickaxe, a bag, a tipped
+## bucket. Prompt 63's required-dungeon list asks for `evidence of Team Tether
+## activity` inside the warrens itself, and there was none down here -- the
+## band's only Team Tether trace was a prop cluster out at the ranger camp
+## spur, which a player who walks to the mouth and goes straight down never
+## sees. See `burrow_warrens.json`'s own `_comment_dressing` for what the set
+## says and why there is deliberately nothing to READ in it.
+##
+## Placed through `props.gd` rather than through this file's own `_box()`,
+## because that script already owns the two things a second implementation
+## would get wrong: the collider built from the combined mesh AABB, and the
+## `sink_m` offset that keeps a shallow-origin model from reading as floating.
+##
+## `top_level` is the whole trick. The placer needs to sit UNDER this node so
+## that `props.gd::_ground_height()`'s walk up the parent chain reaches this
+## file's `ground_height_at()` and gets the cave floor -- but `props.gd` writes
+## world metres straight into `root.position`, which a rotated parent would
+## then re-interpret as its own local space and swing the whole set off into
+## the hillside. `top_level` keeps the tree parent (so the ground lookup works)
+## while ignoring its transform (so world coordinates stay world coordinates).
+## The authored yaw is cave-local for the same reason every other position in
+## this file is, so the site's own yaw is added back on here.
+func _build_dressing() -> void:
+	var entries: Array = _config.get("dressing", [])
+	if entries.is_empty():
+		return
+	var placer: Node3D = PROPS.new()
+	placer.name = "Dressing"
+	placer.top_level = true
+	add_child(placer)
+	var site_yaw := float(_config.get("site", {}).get("yaw_deg", 0.0))
+	var index := 0
+	for entry: Variant in entries:
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = (entry as Dictionary).duplicate()
+		index += 1
+		var chamber := str(spec.get("chamber", ""))
+		if not _chambers.has(chamber):
+			push_warning("warrens dressing names chamber '%s', which does not exist" % chamber)
+			continue
+		var centre := _local_of((_chambers[chamber] as Dictionary).get("at", []))
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var world := to_global(Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
+		spec["at"] = [world.x, world.z]
+		# Unique, and readable in a remote tree: this set uses three models
+		# twice each, and same-named siblings get auto-renamed to `@Node3D@`ids.
+		spec["name"] = "%s_%s_%d" % [str(spec.get("model", "prop")), chamber, index]
+		spec["yaw_deg"] = float(spec.get("yaw_deg", 0.0)) + site_yaw
+		placer.call("place", placer, spec)
+
+
 ## The Heartstone (R4.6's evolution catalyst), in the branch chamber. One
 ## time, across saves: the flag is what stops a reload minting a second.
 func _build_prize() -> void:
@@ -637,7 +959,48 @@ func _spawn_population(director: Node) -> void:
 		})
 	if _guardian != null:
 		_guardian_seen_alive = true
+		_dress_the_guardian(guardian)
 		_markers["guardian"] = _guardian.global_position
+
+
+## What makes the thing at the bottom read as the thing at the bottom.
+##
+## Prompt 63's acceptance asks for a guardian that is `memorable, not standard
+## fight + HP`, and level 14 on an otherwise ordinary Burrowback body is
+## exactly the second thing: the engage prompt said `Engage Burrowback`, the
+## combat plate said `Burrowback`, and it stood the same height as the level-11
+## Trailpup one room back. Both changes here are PRESENTATION and are the kind
+## CLAUDE.md explicitly names as the alternative to a new mesh (D23) or an
+## invented legendary (spec Sec20).
+##
+##   * The name goes on TWO different objects because two different screens
+##     read two different things: `encounter_director.gd`'s engage prompt reads
+##     the BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the
+##     INSTANCE through `creature_instance.label()`, which prefers `nickname`
+##     and falls back to the species name. Writing the nickname rather than
+##     overwriting the instance's own `display_name` is what keeps the species
+##     underneath -- a player who CATCHES the guardian (legal, and this cave
+##     says so out loud) gets a creature called Warren Guardian that still
+##     knows it is a Burrowback. That is the bug encounter_director.gd:463
+##     already documents, not to be reintroduced here.
+##   * `art_scale` multiplies the model pivot only. The capsule, the hit cone's
+##     reach and the catch accuracy bonus are all built from species.json's
+##     `height`/`radius` by `creature_body.gd::_build_placeholder()` on
+##     purpose, so scaling the body itself would silently retune the fight;
+##     scaling the silhouette makes it bigger without touching a single number
+##     the fight is balanced on.
+func _dress_the_guardian(spec: Dictionary) -> void:
+	var nickname := str(spec.get("nickname", ""))
+	if nickname != "":
+		_guardian.set("display_name", nickname)
+		var instance: Object = _guardian.get("instance")
+		if instance != null:
+			instance.set("nickname", nickname)
+	var art_scale := float(spec.get("art_scale", 1.0))
+	if not is_equal_approx(art_scale, 1.0) and _guardian.has_method("model_pivot"):
+		var pivot: Node3D = _guardian.call("model_pivot") as Node3D
+		if pivot != null:
+			pivot.scale = Vector3.ONE * art_scale
 
 
 ## --- clearing --------------------------------------------------------------

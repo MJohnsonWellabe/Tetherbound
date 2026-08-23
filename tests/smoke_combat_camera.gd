@@ -175,21 +175,24 @@ func _prove_creature_switch_keeps_the_camera() -> void:
 
 
 func _prove_aim_cancel_returns_combat_orbit() -> void:
-	# project.godot binds combat_throw to raw button 10 (the right shoulder in
-	# Godot's enum), regardless of the UI's player-facing LB/RB labelling.
-	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	# CONTROLLER-MAP: the orb is a hotbar item thrown with X, so `interact`
+	# (raw button 2) is what opens throw aim on a pad now -- `combat_throw`
+	# kept only its keyboard F. RB, which used to carry it, is
+	# `creature_recall`, which combat_manager.gd::_flee_pressed() reads as
+	# DISENGAGE: pressing it here ended the fight instead of opening the aim.
+	await _press_button(JOY_BUTTON_X)
 	for i in 30:
 		if bool(_manager.call("is_aiming")):
 			break
 		await physics_frame
 	if not bool(_manager.call("is_aiming")):
-		_fail("physical LB did not enter throw aim despite available orbs")
+		_fail("physical X did not enter throw aim despite available orbs")
 		return
 	print("camera target in aim: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
 		_fail("throw aim did not temporarily target the trainer")
-	# throw_aim deliberately guards the same shoulder press that opened the mode
-	# for 0.15s. Wait beyond that production debounce before testing B/cancel.
+	# throw_aim deliberately guards the same press that opened the mode for
+	# 0.15s. Wait beyond that production debounce before testing B/cancel.
 	for i in 15:
 		await physics_frame
 	await _press_button(JOY_BUTTON_B)
@@ -206,14 +209,18 @@ func _prove_aim_cancel_returns_combat_orbit() -> void:
 	await _assert_raw_orbit_changes("after aim cancel")
 
 
+## CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
+## `combat_run` kept its keyboard Escape and lost its pad button;
+## `combat_manager.gd::_flee_pressed()` reads `creature_recall` (RB) instead. B
+## is `hotbar_1`/`build_cancel` now and does not end a fight.
 func _prove_combat_exit_restores_exploration() -> void:
-	await _press_button(JOY_BUTTON_B)
+	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical B did not flee from combat")
+		_fail("physical RB did not disengage from combat")
 		return
 	print("camera target on exit: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
@@ -255,7 +262,7 @@ func _prove_a_second_entry_exit_cycle() -> void:
 	for i in 20:
 		await physics_frame
 	await _assert_raw_orbit_changes("second combat cycle")
-	await _press_button(JOY_BUTTON_B)
+	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break

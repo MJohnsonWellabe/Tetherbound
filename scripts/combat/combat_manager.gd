@@ -259,6 +259,11 @@ func begin(
 	_player = player
 	_wild = wild
 	_ally_body = ally_body
+	# BP2: an orb stopped dead on your own creature and the throw was spent.
+	# The fight knows who is fighting for the trainer; `throw_aim.gd` does not,
+	# so it is told here rather than reaching for it.
+	if _throw != null and _throw.has_method("set_pass_through"):
+		_throw.call("set_pass_through", [_ally_body])
 	_camera_rig = camera_rig
 	_best_creature = best_creature
 	_party = party
@@ -702,6 +707,13 @@ func _award_victory() -> void:
 		var amount: int = award if i == _active_index else share
 		var levels_gained: int = member.gain_xp(amount, cfg)
 		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		# Prompt 67's history, recorded where the facts already are. This loop
+		# already skips a fainted member ("it did not fight"), so the same rule
+		# decides what counts as a battle fought -- one definition, one place.
+		member.set("battles_fought", int(member.get("battles_fought")) + 1)
+		if levels_gained > 0:
+			member.set("levels_gained_with_you",
+				int(member.get("levels_gained_with_you")) + levels_gained)
 		# RG19-spec/D68: everyone who was in the fight gets the mood of having
 		# won it, and a level-up is worth a little more on top. Paid to the
 		# same members the XP is, on the same rule -- a fainted party member
@@ -1138,13 +1150,15 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	state_changed.emit()
 
 
-func _on_orb_missed() -> void:
+func _on_orb_missed(message: String) -> void:
 	if state != State.ACTIVE:
 		return
 	# A clean miss is not a failed catch. It costs an orb and the moment, and it
 	# gets its own message, because "you missed" and "it broke out" are different
-	# things to have just done.
-	catch_refused.emit("the orb went wide")
+	# things to have just done. The message is built by the orb's own flight --
+	# how near it came, and what ended it -- so a graze and a throw that was
+	# never close no longer read identically.
+	catch_refused.emit(message)
 	_take_camera()
 	state_changed.emit()
 
@@ -1497,6 +1511,21 @@ func catch_chance_now() -> float:
 	return CATCH.catch_chance(
 		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(), 0.0, radius
 	)
+
+
+## The body of the creature currently being fought, or null between fights.
+##
+## Public for the same reason `encounter_director.gd::ally_body()` is: a caller
+## that needs to know where the opponent physically IS must ask the fight,
+## never search the scene tree for it. `smoke_tournament_bracket.gd` did the
+## latter -- `_world.find_child("TrainerCreature_*")` -- and `find_child`
+## returns the first match in tree order, so on the round AFTER a loss (the one
+## moment two trainer-creature bodies coexist, the previous round's still
+## queued for free) it aimed and measured against the wrong body while the live
+## opponent stood elsewhere, and the round stalled with the enemy at full HP.
+## Intermittent, because it depended on free timing.
+func enemy_body() -> Node3D:
+	return _wild
 
 
 ## Where the two fighters are, for anything that needs to frame them.

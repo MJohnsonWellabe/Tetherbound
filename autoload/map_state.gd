@@ -165,6 +165,8 @@ func configure(config: Dictionary) -> void:
 			"silhouette": bool(d.get("silhouette", false)),
 		}
 
+	_seed_starting_reveal(config.get("starting_reveal", []) as Array)
+
 	_region_defs.clear()
 	_discovered_regions.clear()
 	_current_region_id = ""
@@ -530,6 +532,37 @@ func reveal_circle(world_pos: Vector3, radius: float) -> void:
 ## Sets every cell whose center lies within `radius` of `world_pos` to
 ## visited. Returns true if anything was newly set. Iterates only the cell
 ## rectangle bounding the circle, not the full 128x128 grid.
+## The ground the player is presumed to already know, revealed before they
+## have walked a step.
+##
+## `ralph/OWNER_DIRECTIVES_2026-08-22.md` section 3: "The village and the roads
+## out of it start revealed... The player does not start blind in their own
+## home town." The fog itself was never broken -- it was working exactly as
+## OW3 built it, from zero reveal -- so a fresh save opened a black rectangle
+## with a dot on it, which is what the owner reported as "the map is currently
+## unusable" (OP21-15). The ruling was recorded in `ralph/BLOCKED.md` and then
+## never implemented: both commits that closed that entry touched only
+## `BLOCKED.md`.
+##
+## Authored in `data/config/map_landmarks.json`, not here, for the same reason
+## the landmark table is: where the village is and where its roads run is
+## content, and it will be argued with. Each entry is `{"at": [x, z],
+## "radius": m}`; a run of overlapping circles down a road reveals the road.
+## Walking still uncovers everything else exactly as before -- this only moves
+## the starting point off zero.
+func _seed_starting_reveal(entries: Array) -> void:
+	for entry: Variant in entries:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var d := entry as Dictionary
+		var at: Array = d.get("at", []) as Array
+		if at.size() < 2:
+			continue
+		_reveal_cells(
+			Vector3(float(at[0]), 0.0, float(at[1])),
+			float(d.get("radius", reveal_radius)))
+
+
 func _reveal_cells(world_pos: Vector3, radius: float) -> bool:
 	if radius <= 0.0:
 		return false

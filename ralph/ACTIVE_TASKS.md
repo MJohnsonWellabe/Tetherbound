@@ -6,6 +6,36 @@
 
 This is a compact manifest, not a replacement for `ralph/ACTIVE_GAME_PLAN.md` or `ralph/BACKLOG.md`.
 
+## STATE AS OF 2026-08-23 — read this before reconciling anything below
+
+`main` is at `3c88e0fd`, CI 2139 green on a full build (every heavy shard, not a
+docs-only skip).
+
+- **Gate A passes.** `smoke_gate_a_opening_segment.gd` runs title → catch
+  continuously on parsed joypad input. Three consecutive passes.
+- **Gate C passes.** Evidence in `ralph/reports/GATE_C_EVIDENCE_2026-08-23.md`.
+- **Gate B clears the opening and the tutorial catch**, then stops in the
+  village. It is blocked on exactly ONE thing.
+
+**The single next piece of work is village pathing.** Gate B fails at
+`could not activate Tam cycle 1 (18.3m away, arbiter winner=EncounterDirector)`.
+`_step_toward()` in `tests/helpers/gate_a_npc_gather_segment.gd` walks a
+straight line and the village has buildings in it. The fix is authored waypoints
+between the opening's exit and each villager, or a real nav query. Seven
+approaches have now been tried and tallied in `BACKLOG.md`; **none of them
+touched pathing**, and the most recent prediction (extract the opening and this
+resolves itself) shipped and is measured wrong -- the authored start is more
+faithful AND further away.
+
+Read the `CATCH-BLOCKER` entry at the top of `ralph/DONE.md` first. It is short
+and it names what is proven, what is wrong in older notes, and where to start.
+Two CATCH-FEEL diagnoses in `BACKLOG.md` are explicitly marked WRONG and kept so
+they are not repeated -- do not act on them.
+
+The RECONCILE table below predates this and is still worth reconciling for the
+owner-playtest items, but do NOT re-derive the catch or the Gate A/C evidence:
+that work is done, on `main`, and under CI.
+
 On every coordinator restart, reconcile these entries against current `main`, current owner evidence, `DONE.md`, and CI before launching work. `RECONCILE` means “determine whether this is already fixed, still broken, or partly complete.”
 
 ## Newest owner playtest — 2026-08-21 ROG Ally

@@ -147,7 +147,16 @@ func _check_the_first_day_arc(world: Node) -> void:
 	await physics_frame
 	await physics_frame
 	Input.action_release("interact")
-	for i in 10:
+	# OP21-24: with a tool in hand, an interact press on a gather node now
+	# starts the visible swing and the yield lands at the swing's MIDPOINT
+	# (`tool_hold.gd`: "the gather resolves at the midpoint so the yield lands
+	# with the impact rather than on the button press"). Ten frames is shorter
+	# than that swing, so checking there caught the node mid-animation and read
+	# it as "gathered nothing". Wait for the yield, bounded -- a node that never
+	# pays out still fails, just later.
+	for i in 90:
+		if int(inventory.call("count", item_id)) > amount_before:
+			break
 		await physics_frame
 	var gathered := int(inventory.call("count", item_id)) > amount_before
 	if not gathered:

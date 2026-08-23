@@ -43,6 +43,7 @@ const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
 const SHOP_PANEL := preload("res://scripts/ui/shop_panel.gd")
 const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
@@ -56,6 +57,12 @@ const SHOP_CREATURES := "creatures"
 ## the grant is guarded even if old/corrupt beat flags are absent.
 const OPENING_BEAT_PREFIX := "opening:beat:"
 const STARTER_GRANTED_FLAG := "opening:starter_granted"
+
+## The tier the tutorial's orb floor restocks. Named rather than derived from
+## `catch_math.best_orb()`: the floor exists to keep the opening playable, not
+## to hand out a tier the player has not earned, and at this point in the game
+## the basic orb is the only one that exists anyway.
+const TUTORIAL_ORB := "orb_basic"
 
 ## SC12/SC13. The table `battle:<trainer_id>` reads from — the same reader
 ## `trainer_npc.gd` itself uses, so a villager's challenge and a standalone
@@ -228,6 +235,7 @@ func _ready() -> void:
 
 	_manager.connect("entered", _on_combat_entered)
 	_manager.connect("exited", _on_combat_exited)
+	_manager.connect("catch_refused", _on_catch_refused)
 	_name_prompt.connect("confirmed", _on_name_confirmed)
 	_starter_picker.connect("chosen", _on_starter_picker_chosen)
 
@@ -385,6 +393,7 @@ func _process(delta: float) -> void:
 	_maybe_open_picker()
 	_maybe_open_shop()
 	_maybe_start_battle()
+	_hold_the_tutorial_orb_floor()
 
 
 ## Effects are drained in production, here, every frame.
@@ -1063,16 +1072,82 @@ func _on_combat_entered() -> void:
 	# encounter into CombatManager's narrow landed-throw assist. Checking both
 	# beat and configured species prevents another Bramblebun fought later from
 	# inheriting tutorial odds. Every other fight actively disables the policy.
-	var enemy: RefCounted = _manager.call("enemy") as RefCounted
-	var encounter_cfg := BEATS.encounter()
-	var tutorial_species := str(encounter_cfg.get("species", ""))
-	var tutorial_fight := _beat == BEATS.ENCOUNTER and enemy != null \
-			and str(enemy.get("species_id")) == tutorial_species
 	_manager.call(
 		"configure_tutorial_catch_assist",
-		tutorial_fight,
-		int(encounter_cfg.get("max_catch_failures", 1))
+		_is_tutorial_catch(),
+		int(BEATS.encounter().get("max_catch_failures", 1))
 	)
+
+
+## The other half of the tutorial's "cannot fail" promise.
+##
+## `configure_tutorial_catch_assist` bounds LANDED throws, and deliberately so —
+## a throw that never reached the creature is not a failed catch. That leaves
+## the miss unbounded, and the miss is the one that dead-ends the opening: the
+## only orbs before the road gate are Grandpa's fifteen, both resupplies (Tam's
+## recipe, the village trader) are past the gate, and the gate is past this
+## catch. Run dry and `throw_aim.gd::try_begin_aim()` refuses every further
+## press with "no orbs left" while the beat waits for a catch that can no longer
+## be attempted. There is no way out of that but a new game.
+##
+## So while THIS encounter is live, running out tops the satchel back up.
+## Deliberately hung off the refusal rather than polled: it fires exactly once
+## per dead-end, at the moment the player presses throw and nothing happens,
+## which is both the only moment it matters and the only moment they would
+## notice. The `_is_tutorial_catch()` predicate is the same beat-and-species one
+## the bound uses, so this cannot leak into any later Bramblebun.
+func _on_catch_refused(reason: String) -> void:
+	if reason != "no orbs left":
+		return
+	_hold_the_tutorial_orb_floor()
+
+
+## Keep the practice catch's satchel off empty.
+##
+## Polled rather than hung off the refusal alone. Reacting to the refusal is one
+## beat too late by construction: the refusal only fires when the player PRESSES
+## throw with nothing to throw, so the restock lands AFTER a press that visibly
+## did nothing. A dead button is the exact failure the opening is supposed not to
+## have, and `playground_hud.gd::_swing_equipped_tool()`'s own header makes the
+## same argument about the combat buttons -- a press that silently does nothing
+## reads as broken. Topping up the moment the count reaches zero means the beat
+## simply never runs dry.
+##
+## The refusal handler stays as the backstop for any drain that lands between
+## frames. Both go through here, so there is one rule and one place to change it.
+func _hold_the_tutorial_orb_floor() -> void:
+	if not _is_tutorial_catch():
+		return
+	var amount := int(BEATS.encounter().get("catch_orb_floor", 0))
+	if amount <= 0:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return
+	# Every tier counts toward the floor, for `throw_aim.gd::stock()`'s reason:
+	# a player carrying only greater orbs is not out of orbs, and handing them
+	# basic ones on top would be a restock they did not need.
+	var held := 0
+	for id: String in CATCH.orb_ids():
+		held += int(inventory.call("count", id))
+	if held >= amount:
+		return
+	inventory.call("add", TUTORIAL_ORB, amount - held)
+
+
+## Is the fight on screen the authored practice catch? Beat AND species, for the
+## reason `_on_combat_entered` gives: another Bramblebun fought later must not
+## inherit the opening's assists.
+func _is_tutorial_catch() -> bool:
+	if _beat != BEATS.ENCOUNTER or _manager == null:
+		return false
+	var enemy: RefCounted = _manager.call("enemy") as RefCounted
+	if enemy == null:
+		return false
+	return str(enemy.get("species_id")) == str(BEATS.encounter().get("species", ""))
 
 
 func _on_combat_exited(outcome: String) -> void:

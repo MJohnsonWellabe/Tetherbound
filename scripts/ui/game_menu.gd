@@ -317,6 +317,32 @@ func open(tab_id: String = "") -> bool:
 	if not _refusal_reason().is_empty():
 		return false
 
+	# BEFORE anything below makes a tab visible. The press that opens this shell
+	# is STILL DOWN, and gamepad Start is two actions at once: `game_menu` here
+	# and `backpack_drop` on the satchel tab (project.godot;
+	# data/config/menu.json's Backpack group note explains why drop sits there).
+	# The comment further down worked out one half of that collision -- that
+	# Menu must not also CLOSE the shell -- and missed this half. With anything
+	# at all in the satchel, opening the pause menu landed the player straight
+	# in a "Drop it?" confirmation on whatever slot held focus, which calls
+	# `hold_input(true)`, so their next B cancelled a drop they never asked for
+	# instead of closing the menu. A destructive verb offered unasked, one A
+	# press from deleting an item they never selected.
+	#
+	# Placement is half the fix and it took three tries to get right.
+	# `tools/_probe_pause.gd` prints the order: `_read_drop FIRED` lands BEFORE
+	# the notification when this loop sits after `select(target)` at the bottom
+	# of this function, because `select()` is what makes the tab visible and its
+	# poll runs inside that call. Arming from the tab's own closed-to-open
+	# transition was one frame later still. The other half is that the tab holds
+	# the guard until the button is RELEASED rather than for a frame count --
+	# more than one poll elapses before the press comes up, so any countdown
+	# gets out-waited.
+	for body: Variant in _bodies:
+		var node := body as Node
+		if node != null and node.has_method("notify_shell_opened"):
+			node.call("notify_shell_opened")
+
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused

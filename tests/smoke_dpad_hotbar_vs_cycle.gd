@@ -25,18 +25,34 @@ extends SceneTree
 ##
 ## `smoke_gate_a_map_cycle.gd` establishes the same real-pad-through-full-world
 ## pattern this borrows.
+##
+## RETARGETED for CONTROLLER-MAP. `ralph/OWNER_DIRECTIVES_2026-08-22.md` section
+## 1 bans hold-to-modify chords outright ("don't make a user hold a button down
+## for any action") and REVERTS the hold-LB chord this file was written around.
+## Under the owner's authored map the d-pad is hotbar 2-5 in EVERY context and
+## one LB press is the whole party-cycle verb, so the three checks below were
+## demanding the retired scheme: that a plain d-pad press cycle the party (it
+## must not), that it leave the hotbar alone (the hotbar is now its entire job),
+## and that a held-LB chord reach the bar (there is no chord any more). All
+## three failed on `main` from the merge onward, and no CI shard runs this file,
+## so nothing said so.
+##
+## The SUBJECT survives intact and is still worth having: one physical press
+## must fire exactly one world verb. That is what is asserted now, in both
+## directions -- the d-pad reaches the hotbar and never the party, LB reaches
+## the party and never the hotbar.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SETTLE_FRAMES := 300
 
-## project.godot: `combat_switch_left`/`combat_switch_right`'s physical
-## buttons -- the same ones `hotbar_2`/`hotbar_3` used to also bind.
+## project.godot: `hotbar_2` and `hotbar_4`'s physical buttons. The
+## `combat_switch_left`/`combat_switch_right` actions that used to share them
+## no longer exist -- CONTROLLER-MAP replaced the pair with one `party_cycle`.
 const DPAD_LEFT_BUTTON := 13
 const DPAD_RIGHT_BUTTON := 14
-## `hotbar_5`'s own physical button (project.godot), reused as the hold
-## modifier for `hotbar_2`/`hotbar_3` post-fix -- see
-## `scripts/ui/playground_hud.gd::HOTBAR5_CHORD_WINDOW`'s header.
+## `party_cycle`'s own physical button (project.godot). It was the hold
+## modifier for the retired chord; it is the whole cycle verb now.
 const LB_BUTTON := 9
 
 ## A tool slot equips on press ("press slot, tool in hand") with a state
@@ -44,7 +60,15 @@ const LB_BUTTON := 9
 ## `smoke_menu_owns_dpad.gd` already documents for using an equippable rather
 ## than a potion (which auto-targets and can silently no-op either way).
 const TOOL_ID := "axe"
+## A second tool, so the d-pad RIGHT check has something real to reach for.
+## Without it that press correctly equips nothing (the slot is empty) and the
+## assertion cannot tell "the d-pad does not reach slot 4" from "slot 4 holds
+## nothing", which is the shape of test this file exists to not be.
+const SECOND_TOOL_ID := "pickaxe"
 const HOTBAR2_INDEX := 1 ## hotbar_2, zero-based into Game.hotbar / HOTBAR_ACTIONS
+## hotbar_4 is d-pad RIGHT under the owner's map (project.godot, joypad 14).
+## The old file called this slot 3 because d-pad right used to be `hotbar_3`.
+const HOTBAR4_INDEX := 3
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -77,9 +101,9 @@ func _run() -> void:
 		_report()
 		return
 
-	await _check_plain_dpad_left_cycles_and_does_not_use_hotbar()
-	await _check_plain_dpad_right_cycles_and_does_not_use_hotbar()
-	await _check_lb_chord_reaches_hotbar_and_does_not_cycle()
+	await _check_plain_dpad_left_uses_hotbar_and_does_not_cycle()
+	await _check_plain_dpad_right_uses_hotbar_and_does_not_cycle()
+	await _check_lb_cycles_and_does_not_reach_the_hotbar()
 
 	_report()
 
@@ -112,90 +136,75 @@ func _stock_the_satchel() -> bool:
 		_fail("the hotbar has no slot %d to assign" % HOTBAR2_INDEX)
 		return false
 	assignments[HOTBAR2_INDEX] = TOOL_ID
+
+	inventory.call("add", SECOND_TOOL_ID, 1)
+	if int(inventory.call("count", SECOND_TOOL_ID)) < 1:
+		_fail("could not put a %s in the satchel" % SECOND_TOOL_ID)
+		return false
+	if assignments.size() <= HOTBAR4_INDEX:
+		_fail("the hotbar has no slot %d to assign" % HOTBAR4_INDEX)
+		return false
+	assignments[HOTBAR4_INDEX] = SECOND_TOOL_ID
+
 	_game.set("hotbar", assignments)
 	return true
 
 
-## THE regression. Nothing is open -- no build menu, no pause shell, no LB
-## held -- exactly the state the owner played in. A single plain d-pad-left
-## press must cycle the party and must NOT also equip the tool sitting on
-## hotbar_2. Before the fix this failed: both fired off the one press.
-func _check_plain_dpad_left_cycles_and_does_not_use_hotbar() -> void:
+## THE regression, in the owner's map. Nothing is open -- no build menu, no
+## pause shell -- exactly the state the owner played in. A single plain
+## d-pad-left press must equip the tool on `hotbar_2` and must NOT also cycle
+## the party. Before DPAD-COLLISION both fired off the one press; the map that
+## retired that defect did it by removing the directional switch actions
+## entirely, not by gating them, so this is the same guarantee stated the new
+## way round.
+func _check_plain_dpad_left_uses_hotbar_and_does_not_cycle() -> void:
 	_game.set("equipped_tool", "")
 	var before := int(_party.call("active_index"))
 	await _press_button(DPAD_LEFT_BUTTON)
 	var after := int(_party.call("active_index"))
 	var equipped := str(_game.get("equipped_tool"))
 
-	if after == before:
-		_fail("plain d-pad left did not cycle the active creature (still %d) -- party cycling is not live, so this check proves nothing" % before)
-	if not equipped.is_empty():
-		_fail("plain d-pad left ALSO equipped %s from hotbar_2 -- one press fired two world verbs (the exact DPAD-COLLISION defect)" % equipped)
-	if after != before and equipped.is_empty():
-		print("  ok    plain d-pad left: cycled the party (%d -> %d) and did not touch the hotbar" % [before, after])
+	if equipped.is_empty():
+		_fail("plain d-pad left did not equip %s from hotbar_2 -- the d-pad is hotbar 2-5 in every context now, so slot 2 is unreachable on a pad" % TOOL_ID)
+	if after != before:
+		_fail("plain d-pad left ALSO cycled the active creature (%d -> %d) -- one press fired two world verbs" % [before, after])
+	if after == before and not equipped.is_empty():
+		print("  ok    plain d-pad left: equipped %s from hotbar_2 and did not cycle the party" % equipped)
 
 
-func _check_plain_dpad_right_cycles_and_does_not_use_hotbar() -> void:
+func _check_plain_dpad_right_uses_hotbar_and_does_not_cycle() -> void:
 	_game.set("equipped_tool", "")
 	var before := int(_party.call("active_index"))
 	await _press_button(DPAD_RIGHT_BUTTON)
 	var after := int(_party.call("active_index"))
 	var equipped := str(_game.get("equipped_tool"))
 
-	if after == before:
-		_fail("plain d-pad right did not cycle the active creature (still %d)" % before)
-	if not equipped.is_empty():
-		_fail("plain d-pad right ALSO equipped %s from hotbar_3 -- one press fired two world verbs" % equipped)
-	if after != before and equipped.is_empty():
-		print("  ok    plain d-pad right: cycled the party (%d -> %d) and did not touch the hotbar" % [before, after])
+	if equipped != SECOND_TOOL_ID:
+		_fail("plain d-pad right did not equip %s from hotbar_4 (equipped '%s') -- slot 4 is unreachable on a pad" % [SECOND_TOOL_ID, equipped])
+	if after != before:
+		_fail("plain d-pad right ALSO cycled the active creature (%d -> %d) -- one press fired two world verbs" % [before, after])
+	if after == before and equipped == SECOND_TOOL_ID:
+		print("  ok    plain d-pad right: equipped %s from hotbar_4 and did not cycle the party" % equipped)
 
 
-## The other side of the same coin: `hotbar_2` must still be REACHABLE on
-## gamepad, not merely silenced. Holding LB (hotbar_5's own button) and then
-## pressing d-pad-left must equip the tool and must NOT cycle the party on
-## that same press.
-func _check_lb_chord_reaches_hotbar_and_does_not_cycle() -> void:
+## The other side of the same coin, and the half the owner's map moved. Party
+## cycling must still be REACHABLE on a pad -- one LB press, no chord -- and
+## that press must not spend a hotbar slot. This is where the old file demanded
+## a held-LB chord; the directive removed the chord, so what is checked is the
+## single press that replaced it.
+func _check_lb_cycles_and_does_not_reach_the_hotbar() -> void:
 	_game.set("equipped_tool", "")
 	var before := int(_party.call("active_index"))
-
-	var lb_down := InputEventJoypadButton.new()
-	lb_down.button_index = LB_BUTTON
-	lb_down.pressed = true
-	Input.parse_input_event(lb_down)
-	for i in 2:
-		await physics_frame
-
-	var left_down := InputEventJoypadButton.new()
-	left_down.button_index = DPAD_LEFT_BUTTON
-	left_down.pressed = true
-	Input.parse_input_event(left_down)
-	for i in 4:
-		await physics_frame
-	var left_up := InputEventJoypadButton.new()
-	left_up.button_index = DPAD_LEFT_BUTTON
-	left_up.pressed = false
-	Input.parse_input_event(left_up)
-	for i in 4:
-		await physics_frame
-
-	var lb_up := InputEventJoypadButton.new()
-	lb_up.button_index = LB_BUTTON
-	lb_up.pressed = false
-	Input.parse_input_event(lb_up)
-	for i in 8:
-		await physics_frame
-
+	await _press_button(LB_BUTTON)
 	var after := int(_party.call("active_index"))
 	var equipped := str(_game.get("equipped_tool"))
 
-	if equipped != TOOL_ID:
-		_fail("holding LB and pressing d-pad-left did not equip %s from hotbar_2 (equipped_tool %s) -- the gamepad chord does not reach the hotbar, slots 2/3 are unreachable on a pad" % [
-			TOOL_ID, "empty" if equipped.is_empty() else equipped,
-		])
-	if after != before:
-		_fail("holding LB and pressing d-pad-left ALSO cycled the active creature (%d -> %d) -- the chord press still fires two world verbs" % [before, after])
-	if equipped == TOOL_ID and after == before:
-		print("  ok    LB held + d-pad left: equipped %s from hotbar_2 and did not cycle the party" % TOOL_ID)
+	if after == before:
+		_fail("one LB press did not cycle the active creature (still %d) -- party cycling is unreachable on a pad" % before)
+	if not equipped.is_empty():
+		_fail("LB ALSO equipped %s -- one press fired two world verbs" % equipped)
+	if after != before and equipped.is_empty():
+		print("  ok    LB: cycled the party (%d -> %d) and did not touch the hotbar" % [before, after])
 
 
 func _press_button(button_index: int) -> void:

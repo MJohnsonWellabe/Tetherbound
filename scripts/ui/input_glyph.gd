@@ -267,6 +267,39 @@ static func key_name_for_action(action: String) -> String:
 ## blind usability pass on a seven-inch proxy read the auto-detected single
 ## half as "this action has no controller binding at all". Auto-detection is
 ## still the default and still right for a legend with room for one glyph.
+## The human name of an action's real joypad button, or "" if it has none.
+##
+## Only for the glyph fallback above: an action with a live pad binding and no
+## art should say which button it is, not which key it is. Covers the buttons
+## `ralph/OWNER_DIRECTIVES_2026-08-22.md`'s authored map actually uses; anything
+## outside that returns "" and falls through to the key name as before, which
+## is the honest answer for an action a pad genuinely cannot reach.
+static func pad_button_name_for_action(id: String) -> String:
+	if not InputMap.has_action(id):
+		return ""
+	for event in InputMap.action_get_events(id):
+		var button := event as InputEventJoypadButton
+		if button == null:
+			continue
+		match button.button_index:
+			JOY_BUTTON_A: return "A"
+			JOY_BUTTON_B: return "B"
+			JOY_BUTTON_X: return "X"
+			JOY_BUTTON_Y: return "Y"
+			JOY_BUTTON_LEFT_SHOULDER: return "LB"
+			JOY_BUTTON_RIGHT_SHOULDER: return "RB"
+			JOY_BUTTON_LEFT_STICK: return "L3"
+			JOY_BUTTON_RIGHT_STICK: return "R3"
+			JOY_BUTTON_START: return "Menu"
+			JOY_BUTTON_BACK: return "View"
+			JOY_BUTTON_DPAD_UP: return "D-pad up"
+			JOY_BUTTON_DPAD_DOWN: return "D-pad down"
+			JOY_BUTTON_DPAD_LEFT: return "D-pad left"
+			JOY_BUTTON_DPAD_RIGHT: return "D-pad right"
+		return ""
+	return ""
+
+
 static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_override: String = "") -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
@@ -279,6 +312,22 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_ove
 	# action id ("[BUILD_SNAP_CYCLE]"), which leaked into the build footer,
 	# and instead of the hard indexing error smoke_free_build caught.
 	if not (GLYPHS[id] as Dictionary).has(device):
+		# On a PAD, falling through to the bound KEY name is a lie: it prints a
+		# keyboard letter beside real pad glyphs, which reads as "this verb has
+		# no controller binding". A blind controller-only playtest hit exactly
+		# that on the satchel's quick-bar verb -- it rendered `J / [J]` while
+		# `backpack_drop` and `backpack_split` on the same line rendered Start
+		# and R3 -- on the one screen a pad player must use to reach the hammer
+		# and the torch. `backpack_assign` is really L3; there is simply no
+		# left-stick-press PNG in the Kenney pack.
+		#
+		# So name the pad button in text rather than borrowing the keyboard's.
+		# Text, not invented art: sourcing a glyph is an art decision and this
+		# is a correctness one.
+		if device == "gamepad":
+			var pad_name := pad_button_name_for_action(id)
+			if not pad_name.is_empty():
+				return "[%s]" % pad_name
 		return "[%s]" % key_name_for_action(id)
 	var entry: Variant = GLYPHS[id][device]
 	var files: Array = entry if entry is Array else [entry]

@@ -8,7 +8,11 @@
       "order": 3000,
       "species": "pipwing",
       "count": 3,
-      "centre": [-90.0, 0.0, 3300.0],
+      "centre": [
+        -90.0,
+        0.0,
+        3300.0
+      ],
       "radius": 20.0,
       "_why": "The first wild creatures of the region, on the spine's own western swing out of Band 2 ((0,3180) -> (-110,3290) -> (-160,3420)). Common, readable, catch_rate 0.55 and the least dangerous thing here: a team arriving at the region's expected level 10 meets the band's new strength on something it can comfortably beat, which is what makes the galecrest at the gorge later land as a step up rather than a wall."
     },
@@ -16,7 +20,11 @@
       "order": 3001,
       "species": "duskhush",
       "count": 2,
-      "centre": [-165.0, 0.0, 3430.0],
+      "centre": [
+        -165.0,
+        0.0,
+        3430.0
+      ],
       "radius": 18.0,
       "time": "night",
       "_why": "The wooded dip at the spine's westernmost point. A second nocturnal site: before this, the chapter's entire night ecology was two duskhush clusters in Bands 1 and 2, so a player travelling this region after dark saw exactly the same emptiness as by day. `time` gating is the existing schema (see the head file's _comment_conditions), not a new mechanism."
@@ -25,15 +33,28 @@
       "order": 3002,
       "species": "burrowback",
       "count": 2,
-      "centre": [275.0, 0.0, 3890.0],
+      "centre": [
+        275.0,
+        0.0,
+        3890.0
+      ],
       "radius": 18.0,
-      "_why": "Behind the Tether Relay, on the leg out of it ((350,3760) -> (280,3900)). A digging ground species in the spoil banks the relay's own excavation left -- the ecology reacting to Team Tether's presence rather than ignoring it, which is prompt 60's 'wild presence affected by drained/occupied land'."
+      "_why": "Behind the Tether Relay, on the leg out of it ((350,3760) -> (280,3900)). A digging ground species in the spoil banks the relay's own excavation left -- the ecology reacting to Team Tether's presence rather than ignoring it, which is prompt 60's 'wild presence affected by drained/occupied land'.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "The burrowback pair behind the relay at (275,3890). The relay leg is where the player first fights Team Tether in numbers, so an alpha here is the wild counterweight to that -- the meadow is not tame just because the road is contested."
     },
     {
       "order": 3003,
       "species": "mosshell",
       "count": 2,
-      "centre": [-40.0, 0.0, 4075.0],
+      "centre": [
+        -40.0,
+        0.0,
+        4075.0
+      ],
       "radius": 16.0,
       "_why": "The south bank on the approach to the crossing ((-30,4060) is a spine point). The first water species of the region and the gentler of the two: catch_rate 0.40 against brooktail's 0.45 but a slower, more approachable animal, met before the player reaches the narrows."
     },
@@ -41,7 +62,11 @@
       "order": 3004,
       "species": "brooktail",
       "count": 3,
-      "centre": [-195.0, 0.0, 4225.0],
+      "centre": [
+        -195.0,
+        0.0,
+        4225.0
+      ],
       "radius": 18.0,
       "_why": "The Old Mill Crossing narrows (the course's own half_width minimum, 3.6m at (-152,4203)) -- the one point on the critical path where the river is close enough to reach. This is the region's team-building temptation in prompt 60's sense: the corridor's best available water type, standing at the crossing every player must use, at a level (band [9,12]) that is a real argument against a member of the five rather than a curiosity. Brooktail is also on captain_riverwatch's own team, so the player meets the species as opposition and as a candidate in the same region."
     },
@@ -49,7 +74,11 @@
       "order": 3005,
       "species": "galecrest",
       "count": 2,
-      "centre": [-70.0, 0.0, 4150.0],
+      "centre": [
+        -70.0,
+        0.0,
+        4150.0
+      ],
       "radius": 22.0,
       "_why": "The gorge updraft immediately south of the crossing. Galecrest is the `aggressor` role (head file `roles`), so this is deliberately ungated and deliberately on the route: the crossing should be the moment the river country stops being scenery. Sited on the rim rather than in the trench -- the ambush happens on the approach, the same rule the head file's _comment_placement applies to the Band 1 rocky rise."
     },
@@ -57,16 +86,26 @@
       "order": 3006,
       "species": "reedwing",
       "count": 2,
-      "centre": [70.0, 0.0, 4260.0],
+      "centre": [
+        70.0,
+        0.0,
+        4260.0
+      ],
       "radius": 20.0,
-      "weather": ["rain"],
+      "weather": [
+        "rain"
+      ],
       "_why": "The north bank downstream of the crossing, in rain only. Reedwing is the `weather_gated` role and had exactly one site in the whole chapter (Band 1's pond, z=507); a player who first saw rain north of the warrens had no weather ecology to discover. Rain over a river gorge is also the least arbitrary place in the Meadows to put it."
     },
     {
       "order": 3007,
       "species": "trailpup",
       "count": 2,
-      "centre": [140.0, 0.0, 4560.0],
+      "centre": [
+        140.0,
+        0.0,
+        4560.0
+      ],
       "radius": 18.0,
       "_why": "The north leg out of the region ((160,4570) is a spine point), on the ground the player covers between the crossing and Band 4. Placed so the last 300m of the region is not the empty run-out that the whole band used to be."
     },
@@ -410,5 +449,6 @@
       "radius": 14.0,
       "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
     }
-  ]
+  ],
+  "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."
 }

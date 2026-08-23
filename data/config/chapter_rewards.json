@@ -23,7 +23,7 @@
         "coins": 20,
         "potion_small": 1
       },
-      "enables": "First coins and the first potion \u2014 the potion teaches that damage is recoverable outside a menu.",
+      "enables": "First coins and the first potion — the potion teaches that damage is recoverable outside a menu.",
       "understood_when_received": true
     },
     {
@@ -33,7 +33,7 @@
         "coin": 10,
         "potion_small": 1
       },
-      "enables": "Coins toward Mira's own store, which she keeps \u2014 the one trainer whose reward and whose sink are the same person.",
+      "enables": "Coins toward Mira's own store, which she keeps — the one trainer whose reward and whose sink are the same person.",
       "understood_when_received": true
     },
     {
@@ -53,7 +53,7 @@
         "coin": 15,
         "south_bridge_key": 1
       },
-      "enables": "The South Bridge Key \u2014 the reward IS the progression. Opens Band 2.",
+      "enables": "The South Bridge Key — the reward IS the progression. Opens Band 2.",
       "understood_when_received": true
     },
     {
@@ -75,7 +75,7 @@
         "potion_small": 2,
         "orb_basic": 3
       },
-      "enables": "Three Basic Orbs at the door of the dungeon whose field is the strongest the player has met \u2014 the means to catch what is behind him.",
+      "enables": "Three Basic Orbs at the door of the dungeon whose field is the strongest the player has met — the means to catch what is behind him.",
       "understood_when_received": true,
       "note": "Optional. Prompt 58's 'optional trainers need enough value to justify engagement'."
     },
@@ -89,7 +89,7 @@
       },
       "enables": "Rootstone for the saddle and the Greater Orb, and the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot).",
       "understood_when_received": false,
-      "note": "The Heartstone is the one reward whose use is NOT obvious on pickup \u2014 progression.json's evolution block names it but nothing says so at the moment it is taken. Left as-is: it sits in an optional branch chamber off the critical path, so a player who finds it has already chosen to explore, and spelling it out would pre-empt the evolution discovery. Flagged here rather than silently passed."
+      "note": "The Heartstone is the one reward whose use is NOT obvious on pickup — progression.json's evolution block names it but nothing says so at the moment it is taken. Left as-is: it sits in an optional branch chamber off the critical path, so a player who finds it has already chosen to explore, and spelling it out would pre-empt the evolution discovery. Flagged here rather than silently passed."
     },
     {
       "activity": "relay_picket_hess",
@@ -118,7 +118,7 @@
         "coins": 35,
         "orb_greater": 2
       },
-      "enables": "Two Greater Orbs \u2014 the first time the better orb tier arrives as a reward rather than a recipe, and the region's wild band is high enough that the difference is felt.",
+      "enables": "Two Greater Orbs — the first time the better orb tier arrives as a reward rather than a recipe, and the region's wild band is high enough that the difference is felt.",
       "understood_when_received": true
     },
     {
@@ -178,7 +178,7 @@
         "orb_basic": 3,
         "revive": 1
       },
-      "enables": "The gauntlet's coins arrive too late for Mira's store to matter, so these are consumables for the Warden fight specifically \u2014 which is the correct shape for a reward paid inside the final building.",
+      "enables": "The gauntlet's coins arrive too late for Mira's store to matter, so these are consumables for the Warden fight specifically — which is the correct shape for a reward paid inside the final building.",
       "understood_when_received": true
     },
     {
@@ -199,7 +199,7 @@
       "reward": {
         "tm": 1
       },
-      "enables": "Two Ground TMs in the opening field \u2014 team-building choice from the first hour.",
+      "enables": "Two Ground TMs in the opening field — team-building choice from the first hour.",
       "understood_when_received": true
     },
     {
@@ -218,7 +218,50 @@
       "reward": {
         "spends": "coins"
       },
-      "enables": "Nine TMs at 120-300 coins, orbs, potions, revives and seeds \u2014 the chapter's coin sink. Total coin income from required and optional trainers is 860 plus 30 starting, so a player who fights everything can afford roughly three of the expensive TMs: a real choice, not a shopping list.",
+      "enables": "Nine TMs at 120-300 coins, orbs, potions, revives and seeds — the chapter's coin sink. Total coin income from required and optional trainers is 860 plus 30 starting, so a player who fights everything can afford roughly three of the expensive TMs: a real choice, not a shopping list.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "tournament quarter-final (Mira)",
+      "required": true,
+      "reward": {
+        "coins": 20,
+        "potion_small": 2
+      },
+      "enables": "Pays the entry back and restocks the potions the three rounds will spend. The quarter is the round a player can lose and retry, so its reward has to survive being earned late.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "tournament semi-final (Tam)",
+      "required": true,
+      "reward": {
+        "coins": 25,
+        "orb_basic": 3
+      },
+      "enables": "Orbs, deliberately: the tournament is the last beat before South Bridge, and the leg past it is where a team gets its fourth and fifth creature.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "tournament final (Oskar)",
+      "required": true,
+      "reward": {
+        "coins": 40,
+        "potion_small": 3,
+        "flags": [
+          "recipe_saddle"
+        ]
+      },
+      "enables": "The chapter's transition prize. Coins and potions restock for the road; `recipe_saddle` is the real reward and the 2026-08-22 owner directive's own wording -- 'winning grants the saddle recipe, and an NPC line tells the player the mount species can be ridden'. It is the one recipe in recipes_rootstone.json carrying an unlock flag, because a prize the player already has is not a prize.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "ordinary wild fights",
+      "required": false,
+      "reward": {
+        "xp": "per data/config/progression.json xp_award",
+        "bond": 4
+      },
+      "enables": "The chapter's baseline income and the reason to fight something you are not catching. XP is split across everyone who fought (party_share 0.5), so an ordinary fight pays the whole team -- which is what makes a five-creature roster raisable at all.",
       "understood_when_received": true
     }
   ],
@@ -228,5 +271,6 @@
     "no_orphan_materials": true,
     "coin_income_covers_at_least_n_expensive_tms": 2,
     "_comment_coins": "Two rather than three so ordinary play, not completionist play, clears the bar."
-  }
+  },
+  "_comment_audit_gap_closed": "The four rows above were missing when the 2026-08-22 Gate C audit read this file against prompt 58, which names 'Tournament: coins/reward/status that makes victory feel meaningful and transitions the chapter' and 'ordinary wild fights' as required sections of the reward map. The REWARDS existed -- data/config/bands/band1_lower_meadows/trainers.json has paid all three tournament rounds since TOURNAMENT-1 -- but an audit table that omits the chapter's transition prize cannot answer the question it exists to answer. Read off the shipping data, not invented: coins 20/25/40, potions 2/-/3, orbs -/3/-, and recipe_saddle on the final's own reward.flags."
 }

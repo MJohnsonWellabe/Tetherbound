@@ -16,6 +16,9 @@ extends SceneTree
 ##     standing on the cave floor, not inside a hillside and not falling
 ##   * the chambers are ENCLOSED: pushing hard at the deepest chamber's far
 ##     wall does not leave the footprint
+##   * no ground comes through any chamber's floor
+##   * the whole route -- entrance, mouth, hall, den, branch -- can be WALKED,
+##     by the player's own controller, in one go
 ##   * the population is there and the guardian is placed at its own level
 ##   * the deep branch is blocked before the cleared flag and open after
 ##   * the Heartstone is obtainable and turns R4.6's evolution item gate on
@@ -29,6 +32,10 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
 const PUSH_FRAMES := 240
+## The walked route (`_the_route_can_be_walked`): how close counts as arrived,
+## and how long one leg may take before it has plainly run into something.
+const ARRIVED_M := 3.0
+const WALK_FRAMES := 600
 
 var _failures: Array[String] = []
 
@@ -76,6 +83,7 @@ func _run() -> void:
 	_quieten_the_residents(warrens)
 	await _the_cave_is_enclosed(world, player, warrens)
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
+	await _the_route_can_be_walked(player, warrens, progression)
 	_the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens, inventory, progression)
 	_the_story_reward_pays_once(warrens, inventory, progression)
 
@@ -103,11 +111,9 @@ func _the_cave_is_enclosed(world: Node, player: CharacterBody3D, warrens: Node3D
 	if absf(resting - floor_y) > 1.5:
 		_fail("the player settled at y=%.2f in the den, but its floor is y=%.2f" % [resting, floor_y])
 	var terrain: float = float(world.call("ground_height_at", den.x, den.z))
-	print("den floor y=%.2f, player rests at y=%.2f, hillside overhead at y=%.2f" % [
+	print("den floor y=%.2f, player rests at y=%.2f, terrain at the same spot y=%.2f" % [
 		floor_y, resting, terrain])
-	if terrain <= floor_y + 2.0:
-		_fail("the deepest chamber is not under the hill (terrain y=%.1f vs floor y=%.1f)" % [
-			terrain, floor_y])
+	_no_ground_comes_through_a_floor(world, warrens)
 
 	# Push away from the mouth, i.e. at the far wall of the last chamber.
 	var before := player.global_position
@@ -133,6 +139,152 @@ func _the_cave_is_enclosed(world: Node, player: CharacterBody3D, warrens: Node3D
 		start.distance_to(player.global_position), reached])
 	if reached > 12.0:
 		_fail("walking straight in from the entrance never reached the mouth chamber (%.1fm short)" % reached)
+
+
+## The check that would have caught BAND2-63-WARRENS a whole relocation
+## earlier, and did not exist.
+##
+## What shipped from OW5D was a cave translated onto ground nobody had probed:
+## the terrain surface ran THROUGH the hall, the player walked up it and jammed
+## against the ceiling, and the den -- guardian, clear flag, heartstone -- was
+## unreachable on foot. Every assertion in this file passed, because every one
+## of them teleports the player into the chamber it is about.
+##
+## The rule a cave has to keep is simple and does not care whether it is buried
+## in a flank or standing in a knoll of its own: at no point under a chamber
+## may the ground be BETWEEN that chamber's floor and its ceiling. Above the
+## ceiling is a buried room. Below the floor is a room standing proud on its
+## own skirt. In between is a room with a hillside in it.
+func _no_ground_comes_through_a_floor(world: Node, warrens: Node3D) -> void:
+	var config := _warrens_config()
+	var site: Dictionary = config.get("site", {})
+	var floor_y: float = warrens.global_position.y + float(site.get("floor_clearance", 0.35))
+	var worst := 0.0
+	var worst_id := ""
+	for entry: Variant in config.get("chambers", []):
+		var chamber: Dictionary = entry as Dictionary
+		var centre: Array = chamber.get("at", [0.0, 0.0])
+		var size: Array = chamber.get("size", [4.0, 4.0])
+		var ceiling: float = floor_y + float(chamber.get("height", 4.0))
+		for ix in 5:
+			for iz in 5:
+				var local := Vector3(
+					float(centre[0]) + float(size[0]) * (float(ix) / 4.0 - 0.5),
+					0.0,
+					float(centre[1]) + float(size[1]) * (float(iz) / 4.0 - 0.5))
+				var at: Vector3 = warrens.to_global(local)
+				var ground := float(world.call("ground_height_at", at.x, at.z))
+				if is_nan(ground):
+					continue
+				# How far INTO the room the ground reaches, if it does at all.
+				var into: float = minf(ground - floor_y, ceiling - ground)
+				if into > worst:
+					worst = into
+					worst_id = str(chamber.get("id", ""))
+	print("deepest the ground reaches into any chamber: %.2f m%s" % [
+		worst, "" if worst_id == "" else " (%s)" % worst_id])
+	if worst > 0.35:
+		_fail("the ground surfaces %.2fm inside the '%s' chamber; the player will walk up it"
+			% [worst, worst_id])
+
+
+## The other half of the same lesson: walk the whole thing, with the player's
+## own controller, through the doorways, in one go.
+##
+## `_push()` below drives `velocity` with `_physics_process` SUSPENDED, which is
+## correct for the wall tests it was written for and useless for this one --
+## `player_controller.gd::_try_step_up()` is what gets a CharacterBody3D over
+## the cave's own doorway sill and it runs in `_physics_process`. So this
+## presses the real `move_forward` action and steers by yawing the camera the
+## movement is relative to, which is what a player does.
+func _the_route_can_be_walked(player: CharacterBody3D, warrens: Node3D,
+		progression: RefCounted) -> void:
+	var config := _warrens_config()
+	var chambers: Dictionary = {}
+	for entry: Variant in config.get("chambers", []):
+		chambers[str((entry as Dictionary).get("id", ""))] = entry
+	await _put_down(player, warrens.call("marker", "entrance") + Vector3(0.0, 1.5, 0.0))
+	# The branch door is the one thing on this route that is SUPPOSED to stop
+	# the player, and the test above has already proved it does.
+	progression.call("set_flag", "warrens_cleared")
+	warrens.call("grant_clear_reward")
+	var walked := 0.0
+	for leg: String in ["mouth", "hall", "den", "vault"]:
+		for target: Vector3 in _doorway_then_room(warrens, config, chambers, leg):
+			walked += await _walk_to(player, warrens, target)
+		var short: float = player.global_position.distance_to(warrens.call("marker", leg))
+		if short > 3.5:
+			_fail("walking the cave never reached the '%s' chamber (stopped %.1fm short)"
+				% [leg, short])
+			return
+	print("walked the whole cave, entrance to branch chamber: %.0f m" % walked)
+
+
+## The doorway into a chamber, then the chamber. A passage's side walls overlap
+## the chamber wall they cut by `wall_thickness`, leaving a stub inside the room
+## at the corner of the doorway; a person steers round it without noticing and a
+## straight line into the far room's centre wedges on it.
+func _doorway_then_room(warrens: Node3D, config: Dictionary, chambers: Dictionary,
+		id: String) -> Array:
+	var out: Array = []
+	var room: Vector3 = warrens.call("marker", id)
+	for entry: Variant in config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		if str(passage.get("to", "")) != id or not chambers.has(str(passage.get("from", ""))):
+			continue
+		var a: Array = (chambers[str(passage.get("from", ""))] as Dictionary).get("at", [0.0, 0.0])
+		var b: Array = (chambers[id] as Dictionary).get("at", [0.0, 0.0])
+		out.append(warrens.to_global(Vector3(
+			(float(a[0]) + float(b[0])) * 0.5,
+			room.y - warrens.global_position.y,
+			(float(a[1]) + float(b[1])) * 0.5)))
+	out.append(room)
+	return out
+
+
+## Hold `move_forward` with the camera yawed at `target` until the player is
+## within `ARRIVED_M` of it or the budget runs out. Returns metres walked.
+func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3) -> float:
+	var rig: Node3D = _camera_rig(player)
+	var walked := 0.0
+	var frames := 0
+	Input.action_press("move_forward")
+	while frames < WALK_FRAMES:
+		var to_target := target - player.global_position
+		to_target.y = 0.0
+		if to_target.length() <= ARRIVED_M:
+			break
+		if rig != null:
+			# camera_rig.gd:239's own convention: the camera sits behind the
+			# direction of travel.
+			var yaw := atan2(-to_target.x, -to_target.z)
+			rig.set("yaw", yaw)
+			rig.rotation = Vector3(rig.rotation.x, yaw, 0.0)
+		var before := player.global_position
+		await physics_frame
+		walked += Vector2(player.global_position.x - before.x,
+			player.global_position.z - before.z).length()
+		frames += 1
+	Input.action_release("move_forward")
+	return walked
+
+
+func _camera_rig(player: CharacterBody3D) -> Node3D:
+	var named: Variant = player.get("_camera_rig")
+	if named is Node3D and is_instance_valid(named as Node3D):
+		return named as Node3D
+	for child in player.get_parent().get_children():
+		if child is Node3D and child.has_method("planar_basis"):
+			return child as Node3D
+	return null
+
+
+func _warrens_config() -> Dictionary:
+	var file := FileAccess.open("res://data/config/burrow_warrens.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 func _the_population_and_the_guardian_are_placed(warrens: Node3D) -> void:

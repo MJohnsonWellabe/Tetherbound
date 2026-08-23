@@ -335,6 +335,29 @@ func _spawn_creatures() -> void:
 			# members different level bands, which is what reading the body's
 			# own z would do.
 			_roll_wild_level(wild, species, rng, centre.z)
+			# GATE-D: BOTH of these landed, independently, in two lanes that
+			# could not see each other -- Band 1 authored `elder` (PW2) and
+			# Bands 2 and 3 authored `alpha` (WILD-ECOLOGY, prompt 60), each
+			# with its own descriptor key and its own function. They are the
+			# same idea and neither is redundant, because the spawn tables that
+			# already ship use both keys: dropping either silently disarms
+			# every entry that names it. Kept as two paths rather than merged
+			# into one, because the keys differ in shape and rewriting a band's
+			# data during a merge is how a region loses content nobody notices.
+			#
+			# Prompt 60: "a handful of special encounters across the chapter...
+			# a reason to win even if the player does not catch it". The
+			# cluster's FIRST member is its alpha when the entry asks for one --
+			# one per cluster, never the whole group, so the rest stays the
+			# ordinary population the band's level band describes.
+			#
+			# Presentation is scale, per CLAUDE.md: no new creature meshes for
+			# the Meadows, differentiate with "materials, textures, modest
+			# scale, animation, VFX, habitat, behavior, traits, and encounter
+			# context". An alpha is a bigger, older, higher-level individual of
+			# a species the player already knows.
+			if n == 0:
+				_make_alpha(wild, species, spawn, centre.z)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			if not elder.is_empty():
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
@@ -419,6 +442,41 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	_wild_creatures.append(wild)
 	return wild
+
+
+## Turn a rolled wild creature into its cluster's alpha, if the entry asks.
+##
+## Reads `alpha` off the spawn entry, which is optional everywhere: a cluster
+## without it is untouched and every existing band file keeps the population it
+## already had. The block carries `level_bonus` (added to whatever the band's
+## own roll produced, so an alpha is always ahead of its neighbours rather than
+## at some absolute level that would fight the curve) and `scale`.
+##
+## Deliberately additive over the rolled level rather than a fixed number:
+## `chapter_curve.json` owns how strong a region's wild are, and an alpha that
+## named its own level would drift out of the band the moment the curve moved.
+func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: float) -> void:
+	var alpha: Dictionary = spawn.get("alpha", {})
+	if alpha.is_empty():
+		return
+	var bonus := int(alpha.get("level_bonus", 0))
+	var instance: RefCounted = wild.get("instance")
+	if instance != null and bonus > 0:
+		var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
+			centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
+		instance.call("set_level", int(instance.get("level")) + bonus, cfg)
+	# Gameplay size, not node scale. `creature_body.gd::apply_size_multiplier()`
+	# grows `_height` and `_radius` and rebuilds the capsule, collider and art
+	# from them -- setting `wild.scale` would grow only the art, leaving
+	# `body_radius()` and `centre()` reporting the ordinary body, so throws that
+	# visually struck an alpha would resolve as edge hits or misses.
+	var scale := float(alpha.get("scale", 1.0))
+	if scale != 1.0 and wild.has_method("apply_size_multiplier"):
+		wild.call("apply_size_multiplier", scale)
+	# Named so a log line, a smoke test or a remote tree can pick it out of its
+	# own cluster -- the same reason the loop above indexes its ordinary names.
+	wild.name = "Alpha_%s" % species
+	wild.set_meta("alpha", true)
 
 
 ## The fixed-level counterpart to `_roll_wild_level()`. Same instance build
@@ -1403,6 +1461,13 @@ func _resolve_catch(kept: RefCounted) -> void:
 	if party == null:
 		push_error("the Game autoload has no party")
 		return
+
+	# Prompt 67's history: stamp the day it joined you, once, at the moment it
+	# does. Set here rather than at spawn because a wild creature the player
+	# never caught has no day it joined them, and this is the one path every
+	# catch takes -- the tutorial's included.
+	if int(kept.get("caught_on_day")) <= 0:
+		kept.set("caught_on_day", int(game.get("day")))
 
 	if not bool(party.call("is_full")):
 		if not bool(party.call("add", kept)):

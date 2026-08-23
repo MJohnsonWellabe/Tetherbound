@@ -63,6 +63,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 ## OW10: the one "who owns input right now" question both world-verb polls ask.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
@@ -448,6 +449,9 @@ var _minimap_baked := false
 
 var _objective_text_label: Label = null
 var _objective_eyebrow_label: Label = null
+## The whole objective panel, so `_update_objective()` can hide it when there is
+## no objective left to track. See that function's own comment.
+var _objective_block: Control = null
 var _objective_last_text := ""
 
 ## --- region banner ---------------------------------------------------------------
@@ -461,6 +465,10 @@ var _exploration_legend: PanelContainer = null
 var _exploration_legend_label: RichTextLabel = null
 var _legend_last_gamepad := false
 var _legend_last_party_revision := -999
+## Whether the contextual prompt was naming `creature_recall` when the legend
+## was last drawn. Part of the redraw key: without it a stale Call Out entry
+## would survive until the party or the input device changed.
+var _legend_last_prompt_owned_recall := false
 var _legend_was_drawn := false
 
 ## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
@@ -1610,6 +1618,7 @@ func _build_objective_block() -> void:
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
 	var block := Control.new()
 	block.name = "ObjectiveBlock"
+	_objective_block = block
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
 	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
@@ -1707,6 +1716,17 @@ func _update_objective() -> void:
 		return
 	_objective_last_text = text
 	_objective_text_label.text = text
+	# An empty tracked line means there is no objective, and a panel is not the
+	# way to say that. `quest_log.gd` returns "" once every `main` entry's flag
+	# is set -- which is the state the chapter ENDS in, after the legendary
+	# choice -- and this block was built once in `_ready()` and never hidden, so
+	# a finished game sat there with the eyebrow "MAIN STORY" over a blank line,
+	# permanently. Found by a blind cold playtest walking the whole flag chain:
+	# 25 steps, every line correct, and then a panel with nothing in it.
+	#
+	# Hidden rather than emptied, because the backing panel is the visible part.
+	if _objective_block != null:
+		_objective_block.visible = not text.strip_edges().is_empty()
 
 
 # --- region banner ---------------------------------------------------------------
@@ -1947,13 +1967,23 @@ func _update_exploration_legend() -> void:
 		return
 	var gamepad := INPUT_GLYPH.using_gamepad()
 	var revision := int(_party.get("revision")) if _party != null else -1
+	# A blind visual critic, shown only the frames, called this out: "RB Call
+	# out Biscuit" floating above a legend that also says "RB Call Out" --
+	# "same button, two labels, ten pixels apart". The legend's own comment
+	# below claims RB is "the one world verb with no other on-screen home",
+	# and that is exactly false in the moment the contextual prompt is
+	# naming it. The specific line wins; the legend is the fallback.
+	var prompt_owns_recall := _prompt_label != null \
+			and _prompt_label.text.contains("Call out")
 	if _legend_was_drawn and gamepad == _legend_last_gamepad \
-			and revision == _legend_last_party_revision:
+			and revision == _legend_last_party_revision \
+			and prompt_owns_recall == _legend_last_prompt_owned_recall:
 		return
 	_legend_was_drawn = true
 	_legend_last_gamepad = gamepad
 	_legend_last_party_revision = revision
-	_exploration_legend_label.text = _exploration_legend_text()
+	_legend_last_prompt_owned_recall = prompt_owns_recall
+	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall)
 
 
 func _exploration_legend_should_show() -> bool:
@@ -1967,7 +1997,7 @@ func _exploration_legend_should_show() -> bool:
 	return INPUT_OWNER.current(get_tree()) == null
 
 
-func _exploration_legend_text() -> String:
+func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
 	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
@@ -1980,9 +2010,13 @@ func _exploration_legend_text() -> String:
 	var entries: Array[String] = [
 		_legend_entry("map", "Map", normal),
 		_legend_entry("inventory", "Satchel", normal),
-		_legend_entry("creature_recall", "Call Out", normal),
-		_legend_entry("party_cycle", "Change Creature", change_tint),
 	]
+	# Stand down while the contextual prompt directly above is already naming
+	# this button, with the creature's actual name on it. Two labels for one
+	# button, ten pixels apart, is worse than one.
+	if not prompt_owns_recall:
+		entries.append(_legend_entry("creature_recall", "Call Out", normal))
+	entries.append(_legend_entry("party_cycle", "Change Creature", change_tint))
 	return "     ".join(entries)
 
 
@@ -2416,12 +2450,27 @@ func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = 
 ##
 ## The hotbar is already inert while the selector is open, so nothing readable
 ## is being taken away — only the drawing of it.
+##
+## The same argument, unchanged, applies to every other panel that docks along
+## this strip and owns input while it is up. A blind visual critic shown
+## `shots/ui_glyphs/dialogue-panel.png` reported it: Grandpa's conversation box
+## covers most of the hotbar and leaves slot 5 stranded to its right, with dim
+## slot ghosts reading through the panel — "either hide the hotbar during
+## dialogue or place the panel clear of it". That is OW11's own sentence about
+## the build selector, one panel along.
+##
+## `input_owner.gd::GROUP` is the right question rather than a list of panel
+## types: the contract is already "a panel that owns input while it is up joins
+## GROUP", `dialogue_panel.gd` joins it on open, and
+## `_exploration_legend_should_show()` above already stands the legend down on
+## exactly this predicate. The hotbar is inert whenever something owns input,
+## so again only the drawing of it is taken away.
 func _yield_bottom_to_build_menu() -> void:
-	var building := _build_menu_is_open()
+	var yielding := _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
 	if _hotbar_panel != null:
-		_hotbar_panel.visible = not building
+		_hotbar_panel.visible = not yielding
 	if _prompt_label != null:
-		_prompt_label.visible = not building
+		_prompt_label.visible = not yielding
 
 
 func _build_menu_is_open() -> bool:
@@ -2455,8 +2504,21 @@ func _hammer_opens_the_catalogue() -> bool:
 		return false
 	if _build_menu_is_open():
 		return false
+	# The question is whether the interact button is SPOKEN FOR, not whether any
+	# provider is drawing a line. `encounter_director.gd::_creature_control_offer()`
+	# falls back to a non-actionable status line -- "[RB] Call out <creature>" --
+	# for any player who has a creature and is standing near nothing else, which
+	# is most players most of the time. It advertises a different button and
+	# `interaction_arbiter.gd::activate()` already refuses to fire it, so the
+	# interact press is genuinely free; asking "is anything winning" made the
+	# hammer lose the button to a line that was never going to consume it.
+	#
+	# Under CONTROLLER-MAP `build_open` has no pad button, so hammer + interact
+	# is the ONLY pad route into build mode. This is the other half of the
+	# owner's "building doesn't work" report: not a fight for the button, but a
+	# forfeit to something that was not asking for it.
 	if _arbiter != null and is_instance_valid(_arbiter) \
-			and _arbiter.call("winning_provider") != null:
+			and PROMPTS.is_actionable(_arbiter.call("winner")):
 		return false
 	return true
 

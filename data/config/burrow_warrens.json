@@ -1,11 +1,14 @@
 {
   "_comment": "SD17 -- the Burrow Warrens, the Meadows' one required dungeon (MEADOWS_PROGRESSION_SPEC.md Sec3 Band 2). A COMPACT cave, not a puzzle box: five chambers, one gated side branch, aggressive Ground creatures, Rootstone in the walls, and one guardian that has to be beaten. ALL NUMBERS TUNABLE per CLAUDE.md. scripts/world/burrow_warrens.gd is the only reader.",
   "_comment_site": "`entrance.at` is world metres [x, z]; `entrance.yaw_deg` turns the cave's LOCAL +z (its depth axis) toward the rocky rise at [140,-90], so walking in walks INTO the hill. The site was measured, not guessed (a throwaway probe over data/config/terrain_playground.json's own heightfield): [70,-140] is the flattest approach of five candidates on that flank -- 8 degrees of local relief over 4m against 46-54 degrees at every candidate further up the flank, which the spawns.json header already records as unwalkable ground. Terrain along the depth axis climbs 0.3 -> 10.7 -> 20.9 -> 27.0m at 0/20/30/40m in, so the mouth chamber's roof breaks the surface as a rocky outcrop and everything past it is genuinely buried. It sits ~143m south-east of the village square, past where the deeper Meadows begins, and a short walk from the Burrowback cluster spawns.json already places at [55,-145] -- the warrens is where they come from.",
-  "_comment_floor": "The cave floor is ONE level, `floor_clearance` above the terrain height at the mouth. Everything deeper is under rising ground rather than stepped down, which is what makes a flat floor honest here. `wall_thickness`, `skirt` (how far floor slabs and walls extend BELOW the floor, so nothing floats where the hillside falls away) and `rock` colours are presentation, all tunable.",
+  "_comment_floor": "The cave floor is ONE level, `floor_clearance` above the terrain height at the mouth. What makes a flat floor honest here is no longer rising ground -- see `_comment_resiting`: there is no rising ground in this part of the Meadows, and the cave stands in a rock knoll of its own on the flattest ground within 60m. A flat floor is what that site supports; a descending one would put the ground surface inside the deeper rooms. `wall_thickness`, `skirt` (how far floor slabs and walls extend BELOW the floor, so nothing floats where the hillside falls away) and `rock` colours are presentation, all tunable.",
   "_comment_ow5d_relocation": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: `site.at` moves from (70,-140) to (-420,2470). Everything else in this file (chambers, passages, lights, spawns, deposits, prize) is authored in the SITE'S OWN LOCAL frame per `_comment_site`/`_comment_floor` above and rotates/translates with `site.at`+`site.yaw_deg` automatically, so none of it needed editing. `yaw_deg` (54.5) is left UNCHANGED -- the relocation table gives only a new position, not a new approach bearing, and re-deriving it for the new site's actual hillside would need fresh ground probing (this file's own `_comment_site` explains the original 54.5 was picked from a 5-candidate probe of the OLD flank at [140,-90], which no longer describes anything at the new site). Ground truth at the new site was NOT probed by this pass (see the OW5D report) -- flagging per the macro-layout doc's own instruction that `burrow_warrens.json`'s 10m `skirt` needs ground that will accept it. `harvest.json`'s five ironwood nodes move with this site at the same offset (-490,+2610).",
+  "_comment_resiting": "BAND2-63-WARRENS, 2026-08-22. `site.at` moves to (-357,2610) and `yaw_deg` to 315.0, from OW5D's (-420,2470)/54.5. The reason is not taste: at the OW5D site the cave could not be walked through. `tools/_probe_warrens_run.gd` drove the player in and wedged them solid at local z=27.5 against a collider named `Terrain`, five metres short of the passage to the den -- the guardian, the clear flag and the heartstone were all unreachable on foot, and `tests/smoke_warrens.gd` never saw it because it teleported the player into each chamber rather than walking between them. The cause is the one OW5D's own `_comment_ow5d_relocation` (below, kept) wrote down and left open: it translated a cave whose geometry had been measured against a specific steep flank at (70,-140) onto ground nobody had probed, and kept the bearing derived for the old flank. At (-420,2470) the ground rolls; it does not rise. `tools/_probe_warrens_site.gd` measures that chamber by chamber, and its modes rule out the obvious fixes in turn: another bearing does not clear it (`--scan`), no origin on a 25m grid out to 300m clears it (`--sites`, run from this site AND from the Old Quarry -- the best anywhere is 2.6m short of burying 4-6m ceilings), and making the cave DESCEND (`--plan`) buries the deep rooms but not the entrance, because the ground surface then cuts through the entry corridor and the player walks up it into the ceiling. There is no flank in this part of the Meadows. What works is `--mound`: stand the cave where the terrain never rises above its floor at all, so nothing intrudes anywhere, and let what shows above ground be a rock knoll with a hole in it -- which is what this file's own site comment always said the entrance was, and what `skirt` was built to hide the underside of (see `_comment_mound` for the outcrop that makes it read as stone rather than as a slab). The first such site, (-382,2510), cleared the footprint and failed the OTHER half nobody had checked: the driven run walked 30m from the road and stopped 25m short of the entrance, against a 50-degree bank. `--best` scores both at once -- footprint clear, the 40m in front of the mouth walkable, and the site kept near the spine -- and (-357,2610) at 315 degrees is its answer: clear by 0.43m, approach 6.9 degrees, 34m off the spine, sitting on the `warren_undertrail` loop that terrain_playground.json already runs past the warrens. The whole path now walks: road to entrance to mouth to hall to den to vault, 123m, 26s, measured. Everything sited against the old mouth moved with it: Pell's stand (trainers.json order 2001, 35m out on the approach), the five ironwood nodes (harvest.json), the warrens' own resident Burrowback cluster (spawns.json order 3) and the map region (map_landmarks.json). The chamber layout, sizes, spawns, deposits, dressing and prize are UNCHANGED -- they are authored in the site's own local frame and rotate with it, which is the property `_comment_site` describes. One dependency is NOT this lane's to close: the scatter still has a `CommonTree_3` standing in the new doorway, because a band clearing does not invalidate the bake (GATE_D_LANE_CONTRACT.md sec4). The clearing is authored (bands/band2_stone_and_root/vegetation.json order 2002, radius 30) and the walked evidence above was measured with the 93 scatter colliders inside it dropped, which is what the coordinator's single re-bake will do for real.",
   "site": {
-    "at": [-420.0, 2470.0],
-    "yaw_deg": 54.5,
+    "at": [-357.0, 2610.0],
+    "yaw_deg": 315.0,
+    "_comment_clear_radius": "BAND2-63-WARRENS. Matches the authored clearing in bands/band2_stone_and_root/vegetation.json (order 2002) and is applied at BUILD time by burrow_warrens.gd::_clear_the_ground_the_cave_stands_on(), because that authored clearing cannot take effect until the coordinator re-bakes (GATE_D_LANE_CONTRACT.md sec4) and until then the stale bake stands a tree in the doorway. Keep the two numbers the same: when the re-bake lands, the runtime pass has nothing left to remove and this becomes a no-op rather than a second, disagreeing opinion about where the wood stops.",
+    "clear_radius_m": 30.0,
     "floor_clearance": 0.35,
     "wall_thickness": 1.2,
     "skirt": 10.0,
@@ -13,13 +16,46 @@
     "floor_colour": "#4a423a",
     "vault_door_colour": "#6d5f4a"
   },
+  "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
+  "mound": {
+    "models": [
+      "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+    ],
+    "seed": 63220,
+    "perimeter_spacing_m": 3.0,
+    "perimeter_courses": 3,
+    "perimeter_base_drop_m": 1.6,
+    "perimeter_scale": [2.2, 3.6],
+    "roof_spacing_m": 4.5,
+    "roof_scale": [1.6, 2.8],
+    "sink_m": 1.2,
+    "_comment_skirt": "The site clears 30m of scatter so nothing stands in the cave or its doorway, and the first blind round showed the cost of that honestly: a bare lawn ring around the outcrop, in a survey whose loudest criticism was already ground density. These are the site's OWN ground cover, authored rather than scattered -- broken rock and low planting banked against the outcrop where debris and shade would actually put them, thinning outward. Same nature family the corridor already uses (D24, one nature family), deterministic from the same seed, no colliders: this is dressing, and a pebble that stops a player is a bug.",
+    "skirt_models": [
+      "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_3.gltf",
+      "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "res://assets/environment/stylized_nature/Plant_1.gltf",
+      "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
+    ],
+    "skirt_count": 260,
+    "skirt_reach_m": 30.0,
+    "skirt_scale": [0.7, 2.1],
+    "tint": "#c3bbab",
+    "skip_front_m": 6.0
+  },
+  "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
   "chambers": [
-    {"id": "mouth", "at": [0.0, 6.0], "size": [7.0, 10.0], "height": 4.2},
-    {"id": "hall", "at": [0.0, 22.0], "size": [14.0, 12.0], "height": 5.0},
-    {"id": "warren", "at": [-16.0, 22.0], "size": [10.0, 9.0], "height": 4.0},
-    {"id": "den", "at": [0.0, 40.0], "size": [16.0, 14.0], "height": 6.0},
-    {"id": "vault", "at": [15.0, 40.0], "size": [8.0, 8.0], "height": 4.0, "branch": true}
+    {"id": "mouth",  "at": [0.0, 6.0],    "size": [7.0, 10.0],  "height": 3.6},
+    {"id": "hall",   "at": [0.0, 22.0],   "size": [14.0, 12.0], "height": 4.2},
+    {"id": "warren", "at": [-16.0, 22.0], "size": [10.0, 9.0],  "height": 3.4},
+    {"id": "den",    "at": [0.0, 40.0],   "size": [16.0, 14.0], "height": 4.8},
+    {"id": "vault",  "at": [15.0, 40.0],  "size": [8.0, 8.0],   "height": 3.4, "branch": true}
   ],
   "_comment_passages": "`gated: true` is the one door in the cave: a rock slab across the den->vault passage that only lifts once `clear.flag` is set (see `guardian`). Deliberately NOT an item_gate.gd gate -- SB10's mechanism is a carried KEY operating the world, and nothing in the warrens hands out a key; the thing that opens this is having beaten the guardian, which is a fact about the world the flag store already remembers.",
   "passages": [
@@ -30,27 +66,32 @@
   ],
   "_comment_lights": "Dim on purpose. OF24 shipped a carried torch and this is the place it is supposed to matter, so these are low-energy pools that shape the chambers without lighting them -- a player who walks in without a torch should be able to find the way back out and not much else. `at` is [x, z] local plus `y` above the floor.",
   "lights": [
-    {"at": [0.0, 2.0], "y": 3.0, "energy": 0.55, "range": 9.0, "colour": "#8fa6b8"},
-    {"at": [0.0, 22.0], "y": 4.0, "energy": 0.5, "range": 13.0, "colour": "#7d8a99"},
-    {"at": [-16.0, 22.0], "y": 3.2, "energy": 0.4, "range": 10.0, "colour": "#7d8a99"},
-    {"at": [0.0, 40.0], "y": 5.0, "energy": 0.6, "range": 16.0, "colour": "#8a7f6a"},
-    {"at": [15.0, 40.0], "y": 3.2, "energy": 0.7, "range": 9.0, "colour": "#b09a6a"}
+    {"at": [0.0, 2.0],    "y": 3.0, "energy": 0.55, "range": 9.0,  "colour": "#8fa6b8"},
+    {"at": [0.0, 22.0],   "y": 3.4, "energy": 0.5,  "range": 13.0, "colour": "#7d8a99"},
+    {"at": [-16.0, 22.0], "y": 3.2, "energy": 0.4,  "range": 10.0, "colour": "#7d8a99"},
+    {"at": [0.0, 40.0],   "y": 4.0, "energy": 0.6,  "range": 16.0, "colour": "#8a7f6a"},
+    {"at": [15.0, 40.0],  "y": 3.2, "energy": 0.7,  "range": 9.0,  "colour": "#b09a6a"}
   ],
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
   "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",
+  "_comment_spawns_special": "BAND2-63. Prompt 63 asks for 'at least one optional strong/rare encounter... worth seeing even if not caught', distinct from the required guardian fight. Terrapup is wild-spawned NOWHERE else in the game -- it is offered only as one of three practice-meadow starters (`data/config/opening.json`) and otherwise appears only on trainer teams (`warrens_watch_pell` here, `relay_picket_orrin` in Band 3), none of which can be caught (CLAUDE.md). This is the one place in the whole chapter a player can ever catch one in the wild: the vault, past the guardian, next to the heartstone -- an elder animal that followed the warmth this deep and never left. Level 13 sits one below the guardian's own 14 (still well above the den's 11), so it reads as a real fight and not a formality, and it is entirely optional -- `clear.flag` already pays out the moment the guardian falls (see `_comment_clear` above), so nothing about reaching this chamber is required to finish the dungeon.",
   "spawns": [
     {"species": "mudsnout", "chamber": "mouth", "count": 1, "level": 9, "aggressive": true, "offset": [1.8, -1.5]},
     {"species": "burrowback", "chamber": "hall", "count": 2, "level": 10, "aggressive": true, "offset": [-4.0, 2.0], "spread": 4.0},
     {"species": "mudsnout", "chamber": "warren", "count": 2, "level": 10, "aggressive": true, "offset": [0.0, 0.0], "spread": 3.0},
-    {"species": "trailpup", "chamber": "den", "count": 1, "level": 11, "aggressive": true, "offset": [-5.0, -4.0]}
+    {"species": "trailpup", "chamber": "den", "count": 1, "level": 11, "aggressive": true, "offset": [-5.0, -4.0]},
+    {"species": "terrapup", "chamber": "vault", "count": 1, "level": 13, "aggressive": true, "offset": [-2.0, -1.5]}
   ],
   "_comment_guardian": "Spec Sec3 Band 2 and Sec20: a STRONG NORMAL SPECIES, explicitly not a new legendary and explicitly not a new mesh. Burrowback is the roster's highest-defence Ground creature and the animal this whole warren belongs to, so the biggest one in it is the thing at the bottom. Level is well above its own residents and above the recommended Band 2 team, TUNABLE -- it is meant to be the fight you come back for, not a wall. It can be CAUGHT rather than beaten (catching is available during wild combat, CLAUDE.md; a guardian is not trainer-owned) and either way the warrens counts as cleared -- a dungeon that can only be resolved one of the two legal ways would be a rule this game does not have.",
+  "_comment_guardian_presentation": "BAND2-63-WARRENS. Prompt 63's acceptance asks for a guardian that is \"memorable, not standard fight + HP\", and what shipped was a Burrowback at a higher number: the world prompt said `Engage Burrowback`, the combat plate said `Burrowback`, and the body was the same size as the three-metre-away residents. These two keys are presentation ONLY and deliberately so -- D23 forbids a new mesh and spec Sec20 forbids inventing a legendary, and CLAUDE.md names materials/modest scale/animation/VFX/encounter context as the differentiation that is allowed instead. `nickname` is written onto the spawned body's `display_name` (what `encounter_director.gd`'s engage prompt reads) AND the instance's `nickname` (what `creature_instance.label()` reads, so a player who CATCHES it keeps the name and the species underneath is not lost -- that is the bug encounter_director.gd:463 already documents). `art_scale` multiplies the model pivot, never the capsule: the collider, the hit cone's reach and the catch accuracy bonus are all built from species.json's `height`/`radius` on purpose (creature_body.gd::_build_placeholder), and scaling the fight instead of the silhouette would retune combat by changing a presentation number. TUNABLE.",
   "guardian": {
     "species": "burrowback",
     "level": 14,
     "chamber": "den",
     "offset": [3.0, 4.0],
-    "name": "Warren Guardian"
+    "name": "Warren Guardian",
+    "nickname": "Warren Guardian",
+    "art_scale": 1.4
   },
   "_comment_clear": "SB9's flat flag store (autoload/progression_state.gd), the same one trainer defeats, the road gate and the TM pickups already write to. `flag` is set the moment the guardian goes down; `reward` pays exactly once against it, so re-entering a cleared warrens is a walk through an empty cave, not a payout faucet. Reward shape is SC15's (`coins`/`items`/`xp_bonus`), on purpose -- the trainer payout is the same idea and a second reward format would drift from it.",
   "clear": {
@@ -63,13 +104,47 @@
     }
   },
   "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
+  "_comment_deposit_models": "BAND2-63-WARRENS round 2. These carried no `model`, and `harvest_node.gd` falls back to `_box_visual()` when a spec has none -- so every rootstone deposit in the cave rendered as an untextured pale placeholder cube. The blind critic found it twice without being told what it was looking at ('a bare placeholder box ... a placeholder block in a frame offered for judgement is a defect, twice'). Rocks from the same nature family the outcrop outside uses, at deposit scale: the seam the player breaks is now made of the stone the hill is made of.",
   "deposits": [
-    {"at": [-5.0, 20.0], "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
-    {"at": [5.5, 25.0], "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
-    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
-    {"at": [-6.0, 43.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
-    {"at": [-13.0, 24.5], "item": "stone", "amount": 4, "label": "Break out stone"}
+    {"at": [-5.0, 20.0],  "item": "rootstone", "amount": 3, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.85},
+    {"at": [5.5, 25.0],   "item": "rootstone", "amount": 3, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.75},
+    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "model_scale": 0.95},
+    {"at": [-6.0, 43.0],  "item": "rootstone", "amount": 4, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.05},
+    {"at": [-13.0, 24.5], "item": "stone",     "amount": 4, "label": "Break out stone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.9}
   ],
+  "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
+  "dressing": [
+    {"model": "FarmCrate_Empty", "chamber": "mouth", "offset": [2.3, -3.6], "yaw_deg": -25.0, "sink_m": 0.04,
+      "_why": "the first thing inside the mouth, four paces in: one empty crate, so the very first read of the cave is somebody has been carrying things out of here, before a single creature or deposit is seen"},
+    {"model": "Crate_Wooden", "chamber": "hall", "offset": [5.2, -3.6], "yaw_deg": 15.0, "sink_m": 0.06,
+      "_why": "the staging pile's anchor against the hall's east wall, well off both the mouth->den corridor at x=0 and the burrowback pair at [-4, 2] -- a load filled and never collected"},
+    {"model": "FarmCrate_Empty", "chamber": "hall", "offset": [6.0, -2.6], "yaw_deg": -40.0, "sink_m": 0.05,
+      "_why": "set touching the first crate rather than merely near it, EV7-clusters-fix's own finding: a loose arc reads as dumped, a touching pile reads as one load"},
+    {"model": "Barrel", "chamber": "hall", "offset": [4.3, -2.4], "yaw_deg": 0.0, "sink_m": 0.05,
+      "_why": "water for whoever was working the seam, kept with the load -- the detail that makes this a shift rather than a raid"},
+    {"model": "Pickaxe_Bronze", "chamber": "hall", "offset": [6.3, -4.6], "yaw_deg": 62.0, "pitch_deg": -74.0, "sink_m": 0.02,
+      "_why": "leaning off vertical against the hall wall, the one prop that names the work -- and the same tool the rootstone deposits three metres away want from the player"},
+    {"model": "Bag", "chamber": "hall", "offset": [4.5, -4.7], "yaw_deg": 130.0, "sink_m": 0.06,
+      "_why": "somebody's pack, still here: the detail that makes the site abandoned rather than merely finished, exactly as it does at the quarry station"},
+    {"model": "Crate_Wooden", "chamber": "den", "offset": [-5.6, 1.2], "yaw_deg": -70.0, "sink_m": 0.06,
+      "_why": "the deepest crate, a metre and a half from the den's own rootstone deposit and across the room from the guardian -- they got this far, they were still cutting, and then they stopped. This is what makes the animal at the bottom the reason the dig ended rather than a fight bolted onto the end of a corridor"},
+    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [-4.3, 0.2], "yaw_deg": -15.0, "roll_deg": 90.0, "sink_m": 0.03,
+      "_why": "tipped on its side beside that crate: the one prop in the cave that is not standing, so the den's pile reads as left in a hurry against the hall's, which reads as stacked"},
+    {"model": "Barrel", "chamber": "den", "offset": [-6.6, 2.4], "yaw_deg": 0.0, "sink_m": 0.05,
+      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"},
+    {"model": "Crate_Wooden", "chamber": "den", "offset": [5.4, -4.2], "yaw_deg": 25.0, "pitch_deg": 12.0, "sink_m": 0.05,
+      "_why": "BAND2-63-WARRENS round 2. The blind pass called the den bare -- 'one chest and one small scrap on an otherwise bare flat floor ... a den should show occupation'. This one is tipped and on the far side of the room from the rest, so the den reads as a place something large moves through rather than a store room"},
+    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [2.6, -5.4], "yaw_deg": 70.0, "roll_deg": 74.0, "sink_m": 0.03,
+      "_why": "round 2: knocked well clear of the pile it belongs to, in the guardian's own half of the room"},
+    {"model": "Bag", "chamber": "den", "offset": [-2.2, 5.6], "yaw_deg": -110.0, "sink_m": 0.06,
+      "_why": "round 2: dropped deepest of all, past the guardian -- whoever carried it did not come back for it"}
+  ],
+  "_comment_prize_lead": "BAND2-63-WARRENS. The pickup line carries the LEAD, not just the object. Prompt 63 asks this region to make the Mudsnout -> Tuskroot connection meaningful, and the lead was legible only to a player who happened to open the satchel and read the item description, or who owned a Mudsnout and pressed G on the creatures tab to be told `Mudsnout needs a Heartstone to evolve` (scripts/ui/tab_creatures.gd::_read_evolve, whose refusal string is where the requirement actually surfaces today). Both of those work and neither is guaranteed to happen in this region, which is where the stone is found. The line now says what the stone is FOR in the same words items.json already uses, at the one moment every player who takes it is looking at it. No rule changed: `progression.json`'s gate is still level 15 + bond 55 + heartstone, and this file does not touch it.",
   "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
   "prize": {
     "item": "heartstone",
@@ -77,6 +152,6 @@
     "offset": [0.0, 1.0],
     "label": "Take the heartstone",
     "flag": "warrens_heartstone_taken",
-    "message": "A heartstone. Warm, and beating slowly."
+    "message": "A heartstone. Warm, and beating slowly -- the kind of stone a creature is held against to finish becoming what it was already turning into."
   }
 }

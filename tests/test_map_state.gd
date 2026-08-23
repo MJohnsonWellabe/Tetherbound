@@ -18,12 +18,28 @@ const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 var map: RefCounted = null
 
 
+## The shipped landmark config, MINUS its `starting_reveal`.
+##
+## Every test in this file is about the fog MECHANISM -- does `mark_visited`
+## reveal a plausible disc, does a repeat visit change nothing, does a fresh
+## grid start empty. The owner's 2026-08-22 §3 ruling seeds the village and its
+## roads into that grid on a real save, which is correct and is not this file's
+## subject: it would silently add ~1500 already-revealed cells to every count
+## here, and did -- `test_mark_visited_reveals_a_plausible_area` measured 2742
+## cells for an 80m radius that should give ~1257.
+##
+## The seed has its own test, from both sides, in `test_map_fog.gd`. Stripping
+## it here keeps each file asking one question.
 func _config() -> Dictionary:
 	var file := FileAccess.open(LANDMARKS_PATH, FileAccess.READ)
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	return parsed if parsed is Dictionary else {}
+	if not parsed is Dictionary:
+		return {}
+	var config: Dictionary = (parsed as Dictionary).duplicate(true)
+	config.erase("starting_reveal")
+	return config
 
 
 func before_each() -> void:

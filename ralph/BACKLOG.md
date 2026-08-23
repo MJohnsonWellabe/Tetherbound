@@ -70,6 +70,616 @@ Check the tree.
 
 ---
 
+## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
+
+Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by
+reproducing something in the RUNNING game, and each is left open on purpose
+rather than half-fixed inside a verification pass. Full evidence in
+`ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md`.
+
+### CATCH-FEEL — the throw lands about a third of the time · `model: sonnet` · `tests: smoke_gate_a_opening_segment, smoke_controller_catching` · OP9 / prompt 45
+
+**CORRECTED after more runs.** Over **27** physical launches on the fixed aim
+path: **6 strikes, ~22%** — not the 36% an early 11-launch sample suggested.
+Every run now catches (3/3 after the aim fix, on launches 3, 7 and 1), so this
+no longer blocks the chapter — `catch_math.gd`'s tutorial failure bound
+guarantees the catch on the second LANDED throw. But two thirds of throws
+missing is the owner's OP9 ("current throw aiming feels bad") stated as a
+number, and the blind playtest independently reached the same place from the
+other side: at that rate Grandpa's opening 15 orbs is about two attempts, and
+nothing on the route restocks before Tam unlocks the recipe.
+
+**It is worse than an average, because the tutorial's safety net needs TWO
+landed throws.** `catch_math.gd::apply_failure_bound` guarantees the catch on
+the second LANDED throw, and `smoke_gate_a_opening_segment.gd` spends eight
+orbs. At a 22% strike rate the chance of landing at most one in eight is **45%**.
+Run-level observation matches: **3 of 5 fresh-save runs caught, 2 did not**,
+both failures reading `eight natural weakened-target launches produced 1
+strike(s), 7 miss(es), and no catch` on the FIXED aim path.
+
+So the honest state is: the aim defect is genuinely fixed, and roughly **half**
+of fresh saves still cannot complete the chapter's first taught mechanic within
+the orbs they are given. Gate B sits downstream of this beat, and the Gate A
+continuous core cannot reliably get past it either — which is why the
+build/gather/sleep segment behind it is currently unproven end to end.
+
+**Do not fix this by widening the assist reticle without playing it.** Two
+separate things were already wrong here and both were mistaken for odds tuning
+— see `dc4724b` (the aim loop drove the rig PIVOT's yaw while the aim camera
+sits offset over the shoulder) and `d1ec734` (the throw button had no pad
+binding at all, so nothing was ever launched). A third round of "raise the
+numbers" without reproducing first would be the same mistake again.
+
+### ORB-BLOCKED — your own creature eats your orbs, silently · `model: sonnet` · `tests: smoke_controller_catching`
+
+The blind playtest logged three of eight throws with `first_hit=AllyCreature`
+or `first_hit=Body` — the player's own creature and their own trainer intercept
+the orb. It is spent (`throw_aim.gd::_spend_orb()` runs before flight resolves)
+and the only feedback is the generic `"the orb went wide"` from
+`combat_manager.gd::_on_orb_missed()`. Nothing says what actually happened, so
+the mechanic reads as random. Compounds CATCH-FEEL directly.
+
+At minimum the refusal should NAME the blocker. Whether the orb should be
+refunded, or the throw should pass through the ally, is a design call.
+
+### MAP-FOG-LANDMARKS — the other half of owner directive §3 · `model: sonnet` · `tests: test_map_fog`
+
+§3 has two halves. "The village and the roads out of it start revealed" shipped
+in `GATES-ABC-VERIFY` (`map_landmarks.json`'s `starting_reveal`, pinned from
+both sides by `test_map_fog.gd`). "**Named landmarks show as icons through the
+fog** once an NPC has told the player about them" did not, and was filed rather
+than half-built: it needs a "somebody told me about this" state distinct from
+`map_state.gd`'s existing `_discovered` ("I have stood next to it"), plus the
+dialogue hooks that set it. Do not conflate the two states — the whole point is
+that a landmark can be known of and unvisited.
+
+### HUD-JUDGE-5 — five UI defects a blind critic named · `model: fable` · `tests: smoke_hud_handheld_legibility, smoke_prompt_hotbar_dock`
+
+From the blind visual pass over `shots/_diag/hud_*.png` at 1280x800, the Ally's
+own panel resolution. The sixth defect it named (the same button labelled twice)
+is fixed; these five are not:
+
+- the party panel is too transparent to stay legible over dark scenery —
+  "Ripplet Lv 1" loses contrast where the hilltop shows through, while the same
+  rows over sky read fine;
+- the objective text wraps raggedly, "creature." alone and right-aligned on its
+  own line;
+- the satiety block is clipped by its own panel: "FOOD" and "100%" run to the
+  edge with no padding, amber on amber;
+- four near-identical white-cross icons sit in hotbar slots that appear empty —
+  "if four slots are empty they should look empty, not each hold a phantom icon";
+- an unexplained underline strip under the bottom legend, read as "a progress
+  bar at 0% or a leftover debug element".
+
+It also named what WORKS and a later pass should not undo: the trainer's
+silhouette and ground contact, and the party panel's information hierarchy —
+the KO state "genuinely clear at a glance... already better than programmer UI".
+
+### LANDMARK-BLACK — the hilltop landmark renders unlit · `model: sonnet` · `tests: visual`
+
+In all four weather frames the ridge-top rock-and-tree cluster — the thing the
+opening composition points at — renders as a near-black cutout with no internal
+form, while the grass beside it is fully lit, with stair-stepped alpha edges
+distinctly cruder than the tree at frame right. The blind critic ranked it the
+second-biggest gap from the references and read it as a bug rather than a
+choice: "nothing else in the scene is that dark". Possibly a material or
+LOD/billboard fault rather than composition. D1's, but worth a look before the
+regional pass tunes anything around it.
+
+### OBJECTIVE-LEVEL-UP — level-up feedback was never driven on screen · `model: sonnet` · `tests: new`
+
+OP11 asks that a level-up announce identity, new level and any unlock. Nothing
+in this pass drove a level-up and read the resulting on-screen text, so it is
+recorded NOT VERIFIED rather than assumed. `smoke_tournament_bracket.gd` fights
+real rounds and would be a cheap place to assert it.
+
+### HUD-JUDGE-2 — the five UI defects the second blind judge named
+
+`ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md` Addendum 5. All five
+read off frames rendered AFTER the HUD lineage landed, so they are current, and
+all five are cosmetic rather than functional:
+
+- the persistent legend out-shouts the contextual prompt it sits above
+  (`exploration-prompt.png`) -- the judge's own words, "it wins a fight it
+  should lose";
+- the hotbar leaks past the dialogue panel, leaving a stray slot 5
+  (`dialogue-panel.png`);
+- `"Catch your first wild / creature."` orphans its last word, right-aligned,
+  in all seven UI frames;
+- four of five hotbar slots draw near-identical icons -- at 30% they read as
+  one item repeated;
+- `[C]` bracket-text sits beside boxed key glyphs in the same legend: two
+  visual grammars in one line, and the gray makes `[C]` read as disabled.
+
+NOT taken on the verification branch on purpose. This is HUD-EMPHASIS lineage
+work that has already been through its own blind-judge rounds; re-tuning widths,
+alignment and z-order at the end of a verification pass risks regressing what
+those rounds bought, for defects that cost the player nothing functional.
+
+Two of the judge's findings are deliberately NOT here, and the next firing
+should not re-add them from the report: the combat-prompt "text collides with
+text" was a capture artefact (fixed in `capture_ui_glyphs.gd`), and the "RB
+named twice" duplication was read off `_diag` frames rendered forty minutes
+before `f6fe2932` fixed it.
+
+### BOARD-BRACKET — the tournament board's lines do not join
+
+The names are legible and read as real village record-keeping, which is what the
+owner directive asked for. The bracket PLUMBING is wrong: round-two joins sprout
+horizontal strokes that float and never meet the semifinal cleanly, and the
+final dangles into empty panel with no slot label. The right half of the board
+is empty gray. Anyone who has seen a bracket reads this one as drawn wrong.
+
+Also from the same frame: the board FACE is a flat untextured gray-green with
+vector-crisp hairlines and the HUD's own sans-serif, inside a frame-and-posts
+that do read as carpentry. Judge's summary -- "carpentry frame, UI panel face".
+Needs a texture pass, which is small art rather than scene work.
+
+### STARTER-PORTRAITS — two of three starters face away from the camera
+
+`starter-picker.png`: Terrapup presents a readable 3/4 view, Ripplet is side-on
+with its face barely resolved, Galewisp shows its back. This is the single
+moment the game asks the player to choose a permanent companion BY APPEARANCE,
+and two thirds of the choices hide the thing being chosen. The poses differ
+again in `name-prompt.png`, so these are live renders with uncontrolled framing
+rather than authored portraits -- the fix is camera control on the picker, not
+new art. The judge rated the creature designs themselves as the strongest thing
+in the whole frame set, which makes the framing the only thing in the way.
+
+### CATCH-FEEL: the ~3% strike rate was the stale-aim harness, not the mechanic
+
+**Supersedes BOTH entries below, including the "straight reticle" one, which was
+wrong on two code facts I asserted without reading the functions involved.**
+
+What the code actually does, read this time rather than inferred:
+
+- **`launch_assist_max_distance` bounds the LEAD, not the range.** In
+  `predict_launch_point()` the clamp is `lead = predicted - centre`, then
+  `if lead.length() > max_distance`. It limits how far AHEAD of the creature's
+  centre the aim point may be pulled -- a guard against a pathological velocity
+  snapping the aim across the arena. A throw at 6m is assisted exactly as much
+  as a throw at 2m. The comparison against `flow.engage_range: 6.0` was
+  meaningless: the two numbers measure different things.
+- **The launch is already ballistic.** `_launch_direction()` returns
+  `_ballistic_direction(origin, point, ...)`, which solves the low arc that
+  LANDS on the aim point. `_aim_direction()` carries a comment recording that
+  exact fix and why. "A straight reticle aiming a ballistic orb" describes a bug
+  that was fixed before I filed it.
+
+What the measurement was. The 40-throw and 33-throw runs that produced ~3% were
+taken on the build with the stale-aim regression -- the step-aside moved the
+player AFTER the aim, so every throw was aimed from a position the player had
+already left. Fixed at `ab4ae014`. Re-run on the fixed build, the Gate A opening
+catches Bramblebun **on launch 1**, range 3.61m, assist applied, offset 0.60.
+One throw, one strike.
+
+So the eliminations below stand -- it was never the catch roll, and it was never
+the reticle geometry -- but the headline number was an artefact of my own
+harness, and the mechanism I proposed to explain it does not exist. What is
+carried forward is the instrumentation: `orb.gd` now reports each miss's closest
+approach, what it needed, and what ended the flight, and `throw_aim.gd` logs the
+throw range and launch direction at release. A future "the throw feels bad"
+report gets answered with those numbers instead of a fourth theory.
+
+Then the Gate B run found the thing that was actually broken, and it was not the
+catch at all. See the entry below.
+
+Open, honestly: the strike rate is measured on a harness aimer, not on a human
+with a thumbstick. What is now closed is the half a harness CAN answer.
+
+---
+
+### CATCH-FEEL, the real one: the trainer walks away from their own throw
+
+`throw_aim.gd::_enter_aim()` hands the trainer locomotion and `_leave_aim()`
+takes it back. A RELEASED throw goes through neither: it keeps the aim camera
+deliberately ("watching your own orb arc away is the shot") and sets `state`
+directly. So from the moment the orb leaves the hand, through the flight and
+through the whole catch resolution, the trainer is still a live walking actor.
+
+Measured in the Gate B continuous run, 2026-08-23:
+
+| | at release | at breakout |
+| --- | --- | --- |
+| trainer | z = -37.5, 3.34m from the Bramblebun | z = -20.4 |
+| wild | z = -40.2 | z = -40.3 (had not moved) |
+
+A second run caught it mid-stride: at the breakout, `movable=true`, velocity
+**5.00 m/s**, 24.38m from the wild.
+
+Every throw after that was made from twenty-five metres. At `speed` 17 under
+`gravity` 14 an orb cannot reach past v²/g -- about twenty metres -- so
+**nineteen consecutive orbs were spent on throws that were never physically
+capable of landing**, each reported to the player as the same four words: "the
+orb went wide". That is the owner's *"I never know if I was close"* exactly: the
+reticle promises, the orb falls eighteen metres short, the orb is gone.
+
+Fixed in three parts, one per half of the failure:
+
+- `_set_trainer_movable(false)` at release. The root cause -- and it also
+  restores the resolution as a shot, since the camera is in close on the orb for
+  those seconds while the trainer was jogging out of the county.
+- A locked-on throw beyond ballistic reach is refused rather than spending the
+  orb. Gated on the committed assist point, so deliberately lobbing an orb at the
+  ground in front of you is still legal.
+- A miss reports how near it came and what ended the flight, so a graze and an
+  eighteen-metre miss stop reading identically.
+
+`tests/test_throw_reach_and_miss_message.gd` pins both pure functions. The
+forensics stay in the shipping code: three wrong diagnoses came out of a miss
+that reported one word.
+
+---
+
+**Superseded, and wrong -- kept only so the mistake is not repeated.**
+
+### CATCH-FEEL root cause: a straight reticle aiming a ballistic orb
+
+**Supersedes the entry below, which was measured through a broken harness and
+drew the wrong conclusion twice.** Read this one.
+
+Two clean runs (2026-08-23, after the stale-aim regression was fixed):
+
+| | gateb21 | gateb22 |
+| --- | --- | --- |
+| throws eligible (reticle on the body, clear line) | 28 of 40 (70%) | 25 of 33 (76%) |
+| `first_hit` was the Bramblebun | **40 of 40** | **33 of 33** |
+| actual strikes | 1 | 1 |
+
+**Every single raycast hit the creature. Aim was never the problem.** Seventy-six
+percent of throws had the reticle genuinely inside the target body with clear
+line of sight, and roughly three percent landed.
+
+The mechanism, read from the code rather than guessed:
+
+- `orb.gd` is **ballistic** -- "a real projectile on a real arc", gravity 14.0,
+  and deliberately so: §15 forbids throwing without player aim and "a hitscan
+  gives nothing to aim".
+- `throw_aim.gd::launch_assist_diagnostics()`'s `eligible` means only *in front*
+  + *reticle inside body* + *raycast reaches target*. It does **not** consider
+  distance.
+- `launch_assist` is what reconciles a straight reticle with a parabola, by
+  leading the launch. It is bounded by `launch_assist_max_distance: 2.6`.
+- `combat.json`'s `flow.engage_range` is **6.0**.
+
+So past 2.6 metres the game shows a reticle sitting on the creature, then throws
+an unled parabola at it. The miss is systematic, not unlucky, and it is exactly
+the owner's *"I never know if I was close"*: the feedback says on-target and the
+orb goes elsewhere.
+
+**What is verified vs inferred.** Verified: the eligibility rates, that every
+raycast hit the target, the strike counts, that `eligible` ignores distance, and
+both config numbers. Inferred (strongly, but not directly measured): that the
+throws in these runs happened beyond 2.6m, so the assist never applied. The
+harness engages within a 6m range and does not currently log throw distance --
+**logging it is the one measurement that would close this**, and it is a
+one-line addition to `_log_launch_assist`.
+
+**The lever, if the inference holds:** raise `launch_assist_max_distance` to
+cover `engage_range`. That is not a feel judgement -- it is two configs
+disagreeing about how far away a fight is, and the assist exists precisely to
+make an aimed throw land.
+
+---
+
+**Superseded, kept because its eliminations are still true.**
+
+### CATCH-FEEL measured: the difficulty is AIM, not the roll
+
+Ninety-eight launches across the 2026-08-22/23 evidence runs, tallied by the
+reason `throw_aim.gd::launch_assist_diagnostics()` reports before each orb is
+committed:
+
+| reason | count | share |
+| --- | --- | --- |
+| `reticle_outside_body` | 51 | **52%** |
+| `eligible` | 34 | 35% |
+| `line_of_sight_blocked` | 13 | 13% |
+
+**Only about a third of throws are even eligible.** The ~22% strike rate is not
+a catch roll being unkind -- it is that half of all throws never have the
+reticle on the creature, and an eighth have something in the way. OP9 has been
+carried as "catching is too hard", which reads as a probability complaint; the
+data says it is an aiming complaint, and those have different fixes.
+
+Two shipped numbers worth the owner's eye, both in `data/config/catching.json`,
+whose own header says "ALL of it is TUNABLE... the expected feedback is
+'catching is too hard', 'aiming is fiddly', 'I never know if I was close' --
+every one of those has to be answerable by editing this file":
+
+- `launch_assist_reticle_fraction: 1.0` -- the reticle must sit inside the body
+  radius to earn any launch lead. A near miss earns nothing.
+- `launch_assist_max_distance: 2.6` -- **but `combat.json`'s `flow.engage_range`
+  is 6.0.** So the assist covers less than half the distance at which fights
+  actually happen. Past 2.6 m a player is throwing unaided at a moving target
+  through a wind-up.
+
+That mismatch is not a feel judgement, it is two configs disagreeing about how
+far away a fight is.
+
+**Deliberately not tuned here.** These runs aim by aligning the camera's forward
+vector to the body; a human aims at a reticle they can see, and the two are not
+the same aimer. A number changed on harness evidence alone would be tuning feel
+by proxy. What the owner needs is the lever and the measurement, which is what
+this entry is -- the honest next step is one owner pass with
+`launch_assist_max_distance` raised to cover the engage range, and BP2's
+interception fix already in (orbs now pass through your own creature).
+
+### DEAD-REST — `home_recovery.gd` has no production callers
+
+Found while reconciling prompt 61's "two rest semantics coexist" note. They do
+not coexist; one is dead.
+
+`scripts/creatures/home_recovery.gd::rest()` is an instant `heal_fully()` plus
+rest XP. Across the whole project it is **preloaded once and invoked never**:
+`scripts/ui/creature_bed_panel.gd:25` holds the `const`, and no line anywhere in
+`scripts/` or `autoload/` calls it. Its only callers are two TEST files --
+`tests/test_fainting.gd` (8 sites) and `tests/smoke_stronghold.gd:254`.
+
+The live path is `autoload/game_state.gd`: `_tick_creature_bed_recovery()` heals
+gradually per frame from `progression.json`'s `creature_bed.full_heal_seconds`,
+and `complete_creature_bed_rests()` pays the full-rest bonus overnight. That is
+the path `smoke_gate_a_rest_torch.gd` asserts on ("bed recovery was not
+gradual"), and it is what the stronghold's rest point actually uses, because
+`stronghold.gd::_build_recovery_point()` builds a real `CREATURE_BED`.
+
+**Why this is worth an entry rather than a deletion right now.** This is the
+same shape as the twelve stale harnesses this branch already fixed, one step
+further along: `test_fainting.gd` passes, and what it proves is that a function
+nothing calls behaves as written. `conventions.md`'s own rule -- "a test that
+passes because the feature is absent is worse than no test" -- covers this from
+the other side.
+
+`smoke_stronghold.gd:254` is the sharper case: it calls `HOME_RECOVERY.rest()`
+directly to simulate the stronghold's recovery, so it asserts against a code
+path the game does not take at that point in the chapter. It would keep passing
+if the real bed recovery broke.
+
+The work: decide whether `home_recovery.gd` is deleted (and `test_fainting.gd`'s
+eight sites retargeted at the live path) or given a real caller. Not done here
+because deleting production code and rewriting two suites is not a change to
+make at the end of a verification pass -- but it should not sit unnamed either.
+`stronghold.gd`'s comment, which claimed the reuse that was not happening, is
+corrected on this branch.
+
+### CONTINUOUS-CORE — the village/gather/build continuation has never run
+
+Gate B cannot be proven end-to-end until this passes. Everything below is
+observed, not inferred.
+
+**It is unreachable, and has been since `integration-ABC`.** The village,
+material-route and paid-build segments live inside
+`smoke_gate_a_opening_segment.gd` behind `--gate-a-continuous-core`, and **no CI
+shard has ever passed that flag**. Two worktree runs at `a22534ff` on
+2026-08-23 settled what that means:
+
+| worktree run | outcome |
+| --- | --- |
+| base harness, base gameplay | dies at boot: `required action 'combat_throw' has no physical joypad binding` |
+| CURRENT harness, base gameplay | dies at the catch: `launch 1 left the satchel empty; the opening is now a dead end` |
+
+So there is **no working baseline**. The path could not have been exercised at
+that merge by any route, which is why the axe-swing failure below cannot be
+attributed by comparison — nothing ever reached it. (The second row is also an
+independent confirmation of the orb-floor dead-end, reproduced on untouched
+base code by a harness that had never seen it.)
+
+**Where it fails now**, with the diagnostic added on this branch:
+
+```
+physical interact on the node did not start the visible axe swing
+(arbiter winner=Interactable, equipped=, prop=<null>, cooling=false)
+```
+
+Two facts in one line. The tool is **not in the player's hand** at the moment of
+the press — `equipped` is empty and `prop` is null — despite the helper's own
+check three lines earlier verifying the axe was equipped AND visible. And the
+arbiter's winner is a generic `Interactable`, not the harvest node the helper
+selected. Something takes the tool out of hand between the verification and the
+press, and the press lands on the wrong node.
+
+Ruled out already: the hammer gate (`_hammer_opens_the_catalogue` requires
+`equipped_tool == BUILD_TOOL` and returns false immediately with an axe in
+hand), and swing timing (`SWING_SECONDS` is 0.45 ≈ 27 frames against the
+helper's 8-frame tap, so a started swing would still register).
+
+### Progress 2026-08-23, and the one change that would end this
+
+**The filed defect is FIXED.** All three tools swing on this path now:
+
+```
+[swing-probe] swing_at -> true (equipped=axe)
+[swing-probe] swing_at -> true (equipped=pickaxe)
+[swing-probe] swing_at -> true (equipped=knife)
+```
+
+The blocker was not the game. `_gather_authored_node` pressed the hotbar slot
+unconditionally, and a tool slot TOGGLES (`playground_hud.gd:2228`, the owner's
+"press slot, tool in hand" directive) -- so with the tool already in hand the
+press STOWED it. Two consecutive runs failing at two different points with no
+code change between them is what named it.
+
+**What is left is not one bug.** Each beat past the swing is a beat that has
+never executed, and they surface one at a time, each costing a ~20-minute run.
+Fixed so far: the toggle, and the door helper demanding "walk within 1.65m" when
+the real condition is "walk until the world offers it, then press" (the door sat
+enabled and offerable for twenty seconds while the player walked into a wall).
+
+### CONFIRMED 2026-08-23: the extraction is REQUIRED, not preferred
+
+Three fixes were tried against the flakiness and the evidence rejected two of
+them, which is worth recording so nobody retries them:
+
+| attempt | result |
+| --- | --- |
+| toggle-aware equip | **real fix**, kept -- the swing works |
+| village-centroid start instead of an invented (6,4) | **did not fix it** -- Tam went from 20m to 11m away and still failed |
+| sidestep when something else holds the interact line | **did not fix it** -- the player never gets close enough to sidestep |
+
+The working diagnostic finally named the state:
+
+```
+could not activate Tam cycle 1 (7.7m away, arbiter winner=EncounterDirector)
+```
+
+**The arbiter is a red herring.** `prompt_arbiter.choose_index()` ranks by
+priority then distance; `_creature_control_offer()` carries priority -1, so
+Tam's ordinary offer beats it whenever Tam makes one. At 7.7m he is outside his
+prompt radius and makes none, so the EncounterDirector fallback wins by being
+the only offer in the world. The winner is a SYMPTOM of the distance, not a
+cause.
+
+**The player is stuck at 7.7m and cannot close.** Same shape as the door stuck
+at a stubbornly identical 3.6m two attempts earlier: `_step_toward()` walks a
+straight line at the target and the village has buildings in it. From a
+hand-chosen start, some targets are behind geometry; which ones depends on where
+you started, which is why five runs failed at five different beats.
+
+**So the fix is not a better coordinate -- there isn't one.** Any point chosen
+by hand is behind something for some target. The opening leaves the player on
+the authored path where straight-line walking works, and that is not a fact any
+computed centre can reproduce.
+
+**Extract the opening from `smoke_gate_a_opening_segment.gd` into a helper and
+have Gate B PLAY it.** That is now demonstrated as necessary rather than
+preferred: two principled alternatives were tried and measured, and both failed
+for the same reason. It also deletes the second definition of the opening path
+that granting created.
+
+Scope, for whoever picks it up: `_run()` lines 54-224 plus roughly twenty
+movement/input helpers, out of a 969-line file that currently PASSES. The value
+is not only Gate B -- it makes the opening a reusable segment like the village,
+material and build ones already are.
+
+---
+
+**UPDATE 2026-08-23: the extraction shipped, and it did NOT fix this.** Recorded
+because the prediction above was confident and is now measured wrong.
+
+`tests/helpers/gate_a_opening_drive.gd` exists, Gate B plays the opening
+beat-for-beat, and the tutorial catch now passes inside Gate B (launch 1 in one
+run, launch 2 in another) after the trainer-locomotion fix. The player is left
+where the game actually leaves them -- (22.0, 1.0, -28.0), on the authored path,
+exactly as this entry argued for.
+
+Tam is still unreachable. The distance went the WRONG way:
+
+```
+could not activate Tam cycle 1 (18.3m away, arbiter winner=EncounterDirector)
+```
+
+7.7m from a hand-chosen start, 18.3m from the real one. So "any point chosen by
+hand is behind something" was true, and the authored start is genuinely more
+faithful, but the conclusion drawn from it -- that faithful positioning is what
+the village travel needed -- was wrong. `_step_toward()` walks a straight line,
+the village has buildings in it, and eighteen metres of straight line through a
+village is worse than eight.
+
+**What is actually left is pathing, not positioning.** The village segment needs
+either authored waypoints between the opening's exit and each villager, or a
+real navigation query. That is a different piece of work from anything tried in
+the five attempts tallied above, and none of those attempts touched it.
+
+The catch blocker this entry was filed behind is gone; this is now purely a
+harness-travel problem on the known-red continuous-core path.
+
+---
+
+**Superseded, kept for its eliminations -- the swing is fine, the SEGMENT is flaky.**
+
+Instrumenting `tool_hold.swing()` itself settled it:
+
+```
+[tool-probe] swing STARTED with 'axe'
+[tool-probe] swing STARTED with 'pickaxe'
+[tool-probe] swing STARTED with 'knife'
+```
+
+All three started, and that run went PAST the swing and past Mira's door -- the
+beat that had blocked the two runs before it -- and failed at Oskar instead.
+
+**Across five runs with no code change between them, the segment failed at five
+different beats:** the axe swing, Mira's door twice, Tam once, Oskar once. That
+is not a defect in any of them. It is one flaky traversal, and each "bug" found
+so far past the toggle fix has been the same flakiness surfacing wherever that
+run happened to run out of budget.
+
+So the entry below is superseded: do NOT go hunting a race inside `swing()`.
+There isn't one. `swing()` refuses on exactly two conditions and the probe
+confirms it starts when asked.
+
+**What is actually wrong is upstream of all of it**, and it is the thing this
+entry already named: `smoke_gate_b_continuous.gd` GRANTS the opening and drops
+the player at a hand-picked (7, 4). Every beat after that is walked from a
+position the game never produced, on walk budgets (1200-1800 frames) tuned for
+the position it does. Some runs make it, some do not, and which beat runs out of
+budget first is luck.
+
+**The fix remains one change, not five:** extract the opening into a shared
+helper and have Gate B PLAY it. Then the player stands where the game left them,
+the budgets mean what they were tuned to mean, and this whole class evaporates.
+Chasing individual beats past that point is chasing variance.
+
+---
+
+**Superseded — the earlier read of this, kept for the eliminations it records.** Run 11 printed
+`swing_at -> true` for axe, pickaxe and knife and walked on to Mira's door. Run
+15, same code, failed at the first swing:
+
+```
+BEFORE: equipped=axe  prop=Node3D(Axe_Bronze2)
+AFTER:  equipped=axe  prop=Axe_Bronze2  is_swinging=false
+```
+
+`tool_hold.gd::swing()` refuses on exactly two conditions -- `_equipped.is_empty()`
+or `is_swinging()` -- and the diagnostic shows NEITHER holds. The tool is in
+hand, nothing is mid-swing, and the swing still did not start. It should have
+returned true, and in run 11 it did.
+
+So this is not a logic error to be found by reading; it is a race, and the next
+session should instrument INSIDE `tool_hold.swing()` and `_sync_equipped()`
+rather than re-derive the above. Note `SWING_SECONDS` is 0.45 (~27 frames)
+against the helper's 8-frame tap, so "the swing finished before the check" does
+not explain it either -- that was ruled out on 2026-08-22.
+
+**Also stuck at Mira's door** on runs that get past the swing, and the shape of
+that matters too:
+
+```
+could not reach or activate door 'Door' in 1200 frames
+(player 3.6m away, prompt enabled=true)
+```
+
+The SAME 3.6m across runs. A distance that does not shrink is the player walking
+into geometry, not walking slowly -- and the arbiter never offers the door from
+there.
+
+**The likely root is the granted opening, and that is the thing to fix.**
+`smoke_gate_b_continuous.gd` grants the opening beat rather than playing it,
+then places the player at a hand-picked (7, 4). That was flagged as a risk when
+it was taken and has now caused three position-dependent failures in a row:
+Tam unreachable, then the same at 112m after a respawn, now this door. The
+harness is approaching the village from wherever a made-up coordinate put it.
+
+So the fix is not another position tweak. It is to **extract the opening from
+`smoke_gate_a_opening_segment.gd` into a shared helper** the way the village,
+material and build segments already are, and have Gate B PLAY it. Then the
+player stands where the game left them, every time, and this whole class of
+failure cannot occur. It also removes the second definition of the opening path
+that granting created -- the exact drift this branch spent the night fixing
+twelve times over.
+
+**CI now runs it** as `verify-continuous-core-known-red` with
+`continue-on-error: true`. That is temporary and the comment there says so: a
+job that runs and reports red beats a flag nothing passes, because the failure
+is visible on every run instead of invisible forever. **Remove
+`continue-on-error` when this is fixed.**
+
+Worth stating plainly for whoever picks this up: `ralph/DONE.md` described this
+path as working. It has never run. That is the twelve-stale-harnesses finding
+one step further along — not a test asserting a dead pad map, but an entire
+evidence path nothing could execute.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on

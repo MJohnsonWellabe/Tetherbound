@@ -1363,6 +1363,348 @@ position, and that a gated-invisible member is left alone. Full suite
 `creature_body.gd`'s base-class visibility -> physics_process wiring
 already covered the gate interaction once ordered correctly in
 `_process()`.
+## CATCH-BLOCKER — the trainer walked away from their own throw
+
+`commits: 75559ecb, 4703c12c` · `tests: test_throw_reach_and_miss_message.gd (new), smoke_gate_a_opening_segment, smoke_gate_b_continuous` · `CI 2139 green, swept to main at 3c88e0fd`
+
+**Start the next session here, not at the top of ACTIVE_TASKS.** Gate A passes,
+Gate C passes, and Gate B now clears the opening and the tutorial catch. The one
+thing blocking Gate B is `CONTINUOUS-CORE`, and its diagnosis changed tonight --
+see below and in `BACKLOG.md`.
+
+**What was broken.** `throw_aim.gd::_enter_aim()` grants the trainer locomotion
+and `_leave_aim()` revokes it. A RELEASED throw goes through neither: it keeps
+the aim camera on purpose and sets `state` directly. So the trainer stayed a
+live walking actor through the flight AND the entire catch resolution. Measured
+at the breakout: `movable=true`, velocity **5.00 m/s**, 24.38m from a creature
+that had not moved. Every throw after that came from ~25m, and an orb cannot
+reach past v²/g -- about 20m -- so nineteen consecutive orbs were spent on
+throws physically incapable of landing, each reported as the same four words.
+
+**Shipped:** `_set_trainer_movable(false)` at release; a locked-on throw beyond
+ballistic reach is refused rather than spending the orb; miss messages carry the
+gap and how the flight ended. Plus permanent flight forensics in `orb.gd` and
+`throw_aim.gd`.
+
+**Two of my own earlier diagnoses are recorded in BACKLOG.md as WRONG**, kept so
+they are not repeated: "a straight reticle aiming a ballistic orb" (the launch
+was already ballistic) and the ~3% strike rate (an artefact of a stale-aim
+harness, fixed at `ab4ae014`). Both were asserted without reading the functions
+involved.
+
+**What is still open, and it is ONE thing.** Gate B now fails at the village Tam
+segment: `could not activate Tam cycle 1 (18.3m away, arbiter
+winner=EncounterDirector)`. The backlog's previous prediction -- that extracting
+the opening would fix this -- shipped and is **measured wrong**: Tam went from
+7.7m (hand-chosen start) to 18.3m (the real authored start), because
+`_step_toward()` walks a straight line and the village has buildings in it.
+**The remaining work is pathing, not positioning** -- authored waypoints between
+the opening's exit and each villager, or a real nav query. None of the six
+attempts tallied in BACKLOG.md touched pathing.
+
+`verify-continuous-core-known-red` still carries `continue-on-error`. Remove it
+when that lands.
+
+## GATE-B-CONTINUOUS — a Gate B run exists; the path it walks does not yet
+
+`tests: smoke_gate_b_continuous.gd (new), two worktree runs at a22534ff` · `area: evidence, ci`
+
+Gate B asked for one uninterrupted run. `tests/smoke_gate_b_continuous.gd` is
+that run and it is **not passing**, which is recorded here rather than left as a
+green-looking absence.
+
+**What it proves today.** A fresh save reaches the Meadows through the real
+title and the real fresh-game confirmation, driven by parsed
+`InputEventJoypadButton` events. A level-6 team of three then satisfies the
+tournament entry gate -- and the harness grants only the TEAM; `tournament.gd`
+watches the party and writes both flags itself, so a broken watch stalls there
+exactly as it would for a player.
+
+**Where it stops.** The village/tools beat, which is `CONTINUOUS-CORE` in the
+backlog. Six of the seven failures on the way there were mine, and the seventh
+was the harness working correctly -- "natural route requires Tam's axe before it
+can harvest" was a real beat of Gate B this file had skipped, since gathering
+presupposes the tools the village hands over.
+
+**The finding that outlives the harness.** Two worktree runs at `a22534ff`
+proved the continuous-core path has been unreachable since integration-ABC: the
+base harness dies at boot on `combat_throw`, and the current harness on base
+gameplay dies at the tutorial catch on an empty satchel. `--gate-a-continuous-core`
+is a flag no CI shard has ever passed. So the village, material and paid-build
+segments have never executed anywhere, while this file described that path as
+working. CI now runs it as `verify-continuous-core-known-red`, deliberately
+non-blocking and deliberately visible.
+
+**The method note worth keeping.** Every failure on this branch that got fixed
+fast was fixed by an instrumented diagnostic, not by reading the diff. The
+axe-swing assertion had never run in CI and said only "did not start the swing";
+one line of added context turned it into "arbiter winner=Interactable,
+equipped=, prop=<null>", which names two facts and rules out three suspects.
+Conversely six of my own tests were wrong tonight and every one of them checked
+SHAPE -- a field's presence, a substring, a data structure I assumed rather than
+read. The checks that caught real bugs in my work were all behavioural and all
+pre-existing: `test_save_format` found I had broken every save file,
+`test_band_content` found I had violated the band-split baseline.
+
+## GATE-C-CLOSE — audit Gate C's seven prompts, then close four of the gaps
+
+`tests: full unit suite (1300+), 4 new test files, 8-shard re-run` · `area: ecology, rest, progression, rewards, data`
+
+Continues GATES-ABC-VERIFY below. Gate C had never been checked at all, and the
+branch was being reported as "Gates A/B/C verified" on the strength of Gate A's
+evidence run alone.
+
+**Audited by three independent readers**, each told explicitly not to trust
+`DONE.md`, `BACKLOG.md`, or any doc claiming something shipped -- only actual
+data and code. Result: **three IMPLEMENTED, four PARTIAL, none absent**. The
+backbone every regional package inherits is real: `chapter_curve.json` resolves
+wild level from world z with no player scaling, 21 trainers ladder from level 2
+to 20, all 20 objectives trace individually to a real flag writer, and the
+five-creature cap is enforced in `party.gd` rather than merely documented.
+
+**The distrust instruction earned itself twice, in OPPOSITE directions.**
+`objectives.json`'s own comment calls nine tournament flags unwritten "CONTRACT"
+flags -- all nine are live. `chapter_curve.json` still calls band 2 trainerless
+with two trainers in the file beside it. In this repo **a comment asserting
+another file's state is evidence of nothing**, and that cuts both ways: it
+understates as often as it overstates.
+
+**Four gaps closed:**
+
+- **The chapter had no alpha tier.** No `alpha`/`elder`/`special`/`nest`/`rare`
+  field in any of the five band spawn files; `grep PW2` returned nothing. Four
+  alphas now, one per band from 2 on, none in band 1 (prompt 71 keeps the
+  opening meadow gentle). `level_bonus` is ADDITIVE over the region's own roll,
+  never absolute, so an alpha cannot drift out of band when the curve moves.
+- **The reward audit omitted the tournament.** The rewards had been paid since
+  TOURNAMENT-1; the audit table could not see them. Four rows, read off the
+  shipping data, with a test pinning the audited coin figure against what
+  `tournament_final_oskar` actually pays.
+- **No per-creature history**, so the release ceremony had nothing to surface.
+  Three counters (`battles_fought`, `levels_gained_with_you`, `caught_on_day`),
+  save VERSION 14. The ceremony says NOTHING when there is nothing true to say --
+  "0 battles" would be a claim about a creature a pre-14 save was not counting.
+- **Camps were buildable everywhere and worth stopping nowhere.** Bands 3-5
+  shipped `harvest.json` with `nodes: []`; 21 nodes now, sited within ~50m of
+  spawn cluster centres those bands already ship.
+
+A fifth, prompt 61's "two rest semantics coexist", **resolved rather than
+closed**: `home_recovery.rest()` has zero production callers. Filed as
+DEAD-REST, because `test_fainting.gd` passes while proving a function nothing
+calls behaves as written, and `smoke_stronghold.gd` simulates the stronghold's
+recovery through it -- so it would keep passing if the real bed recovery broke.
+
+**Two bugs this work introduced, both mine, neither caught by a test I wrote for
+it.** The alpha scaled `wild.scale` -- the ART -- while `body_radius()` and
+`centre()` kept reporting an ordinary body, so throws that visually struck a
+1.35x alpha would resolve as edge hits or misses. That is `reticle_outside_body`
+reintroduced, on the same branch that spent four rounds on it. And two invented
+values in the camp siting: `Grass_Large.gltf` does not exist, and a stone scale
+of 0.30 against a shipped 1.0.
+
+**What the next firing should take from this.** Both bugs slipped because the
+tests checked SHAPE -- is the field present, does the source contain this string
+-- which is the exact flaw the audit's own corrections section names. Everything
+that caught something real asked what CONSUMES a value: what `model_config()`
+does with `rank` (which made "6 rows missing rank" a false positive -- adding it
+would have cost seven villagers their bodies), what reads `_radius`, whether a
+model path resolves. **Write the consumer check.**
+
+Still open and named, not rounded off: species-specific shiny rates, the
+spawn-siting audit artefact, favourite-food and feeding-bond, attrition tuning.
+Gate B's continuous run is likewise unbuilt -- its segments all pass
+individually, which is weaker evidence than the segment passing.
+
+## GATES-ABC-VERIFY — verify the integration-ABC merge; twelve stale harnesses and seven real defects
+
+`tests: full unit suite, 20 smoke tests re-run on the running build, blind playtest, blind visual judge` · `area: input, ui, world, ci`
+
+Sent to reality-check `integration-ABC` (`a22534ff`) and to reconcile every
+owner-playtest finding against the RUNNING GAME rather than against the ledger.
+
+**The merge landed the game correctly and the tests not at all.** CONTROLLER-MAP
+and the HUD lineage went in, and **twelve** things that exercise them did not:
+eleven smoke harnesses still asserting the pre-remap pad map, plus
+`tools/capture_ui_glyphs.gd`, which crashed on a HUD node path OW8 moved and so
+could not render the frames `conventions.md` requires before shipping visual
+work. **46 of the 64 files in `tests/` are named by no CI job**, which is how
+all twelve shipped green. Two of them were emitting output that reads exactly
+like the owner's own bug reports reproducing on a build where the feature works.
+Two new shards (`verify-owner-regressions-shard`, `verify-gate-evidence-shard`)
+now run the eleven that matter most, and `export` waits on both.
+
+**Five real shipped defects**, each reproduced before being fixed:
+
+- **The pause menu offered to destroy an item.** Gamepad Start is `game_menu`
+  AND `backpack_drop`; the press that opens the shell was still down when the
+  satchel tab appeared, so opening the menu with anything in the satchel landed
+  the player in a "Drop it?" confirmation on the focused slot, which held the
+  shell's input and ate their next B. One stray A from losing an item they never
+  selected. Guard armed before the shell shows any tab, held until the button is
+  released — a frame countdown gets out-waited, measured.
+- **The South Bridge gully was a trap.** Its recovery volume sat 1.3km west of
+  the gully, because `gated_crossing.gd` positions AND rotates itself and then
+  parented a world-coordinate volume under itself. A blind playtest fell in and
+  held forward 52 seconds without moving.
+- **The axe never swung on a controller** (OP21-24). `use_tool` was the only
+  caller of `tool_hold.gd::swing()` and the owner's remap correctly took its pad
+  button; the swing was not removed, it was made unreachable by the device the
+  game ships on.
+- **The relay console had no gate.** `requires_flag` left empty as a seam after
+  SE25 landed, so the Tether Relay could be shut down without meeting the
+  captain, against `objectives.json`'s own beat order.
+- **The map fog ruling was never implemented.** `BLOCKED.md` recorded owner
+  directive §3 as "RESOLVED by owner ruling" and both commits that closed it
+  touched only `BLOCKED.md`, so a fresh save still opened a black rectangle.
+
+**Two defects root-caused rather than written off.** The "deterministic catch
+failure" the Gate B evidence doc handed to Gate A was two things, neither of
+them the odds: a throw button with no pad binding, and an aim loop minimising
+the rig PIVOT's yaw while the aim camera sits offset over the shoulder. That doc
+explicitly "ruled out aiming"; it was wrong, because the commit lines it quoted
+came from the throws that landed. The tournament's intermittent quarter-final
+stall was `find_child` returning the PREVIOUS round's corpse — 2 failures in 3
+before, 4 consecutive passes after.
+
+**Two more defects, found by the shards this branch added** — and the pair is
+the argument for adding them. `verify-gate-evidence-shard` and
+`verify-owner-regressions-shard` both came back RED on their first real run, on
+code this branch did not write:
+
+- **The opening could dead-end on an empty satchel.** `apply_failure_bound()`
+  keeps only half of OPENING_SEQUENCE.md's "cannot fail twice": it counts LANDED
+  throws by design, so a player who MISSES is bounded only by orb stock.
+  Grandpa gives fifteen and both resupplies (Tam's recipe, the village trader)
+  are past the road gate — which is past this catch. Run dry and
+  `try_begin_aim()` refuses every press with "no orbs left" forever while the
+  beat waits for a catch that can no longer be attempted. No exit but a new
+  game. `opening.json`'s `catch_orb_floor`, held per frame (the first attempt
+  hung it off the refusal signal and restocked one press too late, after a
+  button that visibly did nothing). `smoke_gate_a_opening_segment.gd` now
+  DRAINS to the last orb before the catch loop, so every run walks the path.
+- **The build hammer forfeited the interact button to a status line.**
+  `_hammer_opens_the_catalogue()` refused whenever ANY provider was drawing a
+  line. What wins, nearly always, is `_creature_control_offer()` — a
+  NON-ACTIONABLE line, "[RB] Call out <creature>", advertising a different
+  button, returned for any player who has a creature and stands near nothing
+  else. `interaction_arbiter.gd::activate()` already refuses to fire it, so the
+  press was free. Under CONTROLLER-MAP `build_open` has no pad button, making
+  hammer + interact the ONLY pad route into build mode: the other half of the
+  owner's "building doesn't work" report. The gate asks the arbiter's own
+  question now — is the button SPOKEN FOR.
+
+`smoke_party_count_after_catches.gd` was the third red and the GAME was right: a
+nearer prop winning a distance-ranked arbiter is correct behaviour, and the
+harness now closes in until the target is actually being offered, as its own
+header already claimed it did. That file has ONE commit, from the
+integration-ABC era, untouched by this branch — it was failing on `main` with
+nothing saying so, because it sat in no CI shard until now. **Of the reds these
+shards found, one was the game's fault and one was the test's, and nothing short
+of booting it and printing what was actually winning could tell them apart.**
+
+**What is NOT closed**, recorded in `ralph/reports/OWNER_PLAYTEST_RECONCILIATION_2026-08-22.md`:
+catch strike rate ~22% over 27 launches (OP9/prompt 45 — the dead-end is closed,
+the FEEL is not), target-hardware performance (needs an Ally), the
+landmarks-through-fog half of directive §3, level-up feedback never driven on
+screen, five HUD defects the blind judge named, OP21-17/18/19 (composition, the
+judge owns them), and OP21-26, which is now MEASURED rather than felt — 1295 m
+and 215 s village-to-South-Bridge with a 189-second stretch with nothing
+authored within 35 m, corroborated in the spawn data, and Gate B/C/D1's to fix.
+OP21-16 is addressed with its caveat kept: a blind agent walked all 25 objective
+steps, which is evidence the chain is FOLLOWABLE, not proof the opening TEACHES.
+The blind judge independently reproduced all three of `WEATHER-2`'s defects
+without being shown that entry.
+
+## BAND2-63-WARRENS — the required dungeon could not be walked through (Gate D2)
+
+`tests: run_tests.gd (1301 tests, 0 failed), smoke_warrens.gd (two new checks), smoke_traversal.gd, _probe_warrens_run.gd, _probe_warrens_site.gd` · `area: burrow warrens`
+
+The driven run found the Burrow Warrens impassable: the terrain surfaced 2.6 m
+inside the den and the player wedged five metres short of it, so the guardian,
+the clear flag and the heartstone were unreachable on foot. `smoke_warrens.gd`
+never saw it because it teleports into each chamber. Re-sited to (-357,2610)
+after measuring out the three fixes that do not work (full record in
+`ralph/BAND2_WARRENS_EVIDENCE_2026-08-23.md`), added the Team Tether evidence
+prompt 63 asks for inside the cave, named and enlarged the guardian, put the
+Tuskroot lead on the heartstone's pickup line, and closed the test gap that let
+it ship. `vegetation.gd::clear_area()` is new and lets the site clear its own
+doorway at build time; it is NOT the bake-fingerprint fix and goes quiet once
+the coordinator re-bakes. Blind visual pass: two independent rounds, both recorded. Round 1 was largely
+a verdict on the capture harness (a player parked under the world was tinting
+every frame with its own damage vignette; interiors shot with no torch in a
+cave that is dark on purpose) and found one real defect this lane had shipped
+blind: an ironwood harvest node standing in the cave doorway. Round 2, on
+fixed frames, still answers NO to both bar questions, and what it names is a
+corridor-wide material set, the guardian's creature art (which CLAUDE.md
+forbids this lane from touching) and scatter density (coordinator's). NOT
+converged, deliberately, with the remainder escalated rather than papered over.
+Density request for band 2: 0.05 -> 0.09, reversing the previous round's "no
+request" on evidence it did not have.
+
+## BAND2-63 — finished Quarry / Burrow Warrens (Gate D2)
+
+`tests: test_band_content.gd, test_band_vegetation.gd (one assertion loosened), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, smoke_warrens.gd, smoke_traversal.gd, full suite (1301 tests)` · `area: band2_stone_and_root content`
+
+Prompt 63's package, run against the baseline `tools/_probe_chapter_map.py`
+already recorded for band2 (6 wild clusters/9 creatures, 2 trainers, 2 prop
+clusters, 17 gatherables, no clearing, no rootstone comprehension check ever
+run) — see `ralph/GATE_D_LANE_CONTRACT.md` and its own baseline table.
+
+An owner directive mid-pass (2026-08-22: "you're going to need a lot more than
+24 creatures in a band... look at Pokemon density and Palworld density") raised
+the authored target from the old baseline to Pokemon/Palworld-scale ecology.
+What shipped:
+
+- **56 wild clusters, 195 creatures**, non-uniform by zone: ~80m spacing on
+  the worked quarry stone (deliberately thinner), ~30m around the Burrow
+  Warrens' own mouth (the owner's named example of where density should
+  concentrate), ~35-45m everywhere else, roughly a third of clusters off the
+  road so leaving it is rewarded. Five species (burrowback/mudsnout/trailpup/
+  meadowhart/duskhush) — recorded as deliberate in `spawns.json`'s own
+  comment, not a variety shortfall: an honest Ground identity at bulk and
+  strength, per prompt 63's own "meaningful alternatives" framed as strength
+  and numbers rather than a wider catalogue.
+- **One optional strong/rare encounter**: a level-13 Terrapup in the Burrow
+  Warrens' optional vault chamber, next to the heartstone — the one place in
+  the whole chapter a player can catch one in the wild (`burrow_warrens.json`).
+- **Team Tether evidence** at the `ranger_camp_spur` loop: a `quarry_supply_cache`
+  prop cluster (cut-stone crates, the same family the quarry's own working
+  face uses) delivering on that loop's own `_why` in `terrain_playground.json`,
+  authored since before this band had anything there.
+- **Camp/rest siting**: a buildable clearing plus a wood/fiber node at the
+  `ranger_camp` cluster, and a `map_landmarks.json` pin using the long-unused
+  `camp` icon.
+- **Third Team Tether picket** (`band2_outrider_kest`, order 2002): escalates
+  past Pell and hands the player off toward Band 3 rather than only guarding
+  the door behind him — added after a coordinator checkpoint questioned
+  whether two pickets over 1820m still held against prompt 59's "no major
+  region is simply wild traversal followed by one boss."
+- **Rootstone comprehension verified**, not just asserted: `tools/_probe_band2_cadence.py`
+  confirms every recipe in `data/recipes/recipes_rootstone.json` is craftable
+  off the first quarry visit's 5 deposits alone.
+
+Cadence, measured by the same probe: longest straight-line gap fell from what
+would have been several hundred metres at baseline to 75m, one beat every ~22m
+on average across the 1820m band.
+
+`tests/test_band_vegetation.gd::test_scatter_rules_config_carries_both_split_arrays`
+was loosened from exact-count to `>=`, matching its own sibling test's
+comparison a few lines up in the same file — a regional content pass legitimately
+adding one clearing is exactly the growth that sibling test already tolerates.
+D1 and D4 hit the identical false failure independently; the coordinator
+resolves the overlap at integration.
+
+**Known remainders, honestly**: the `quarry_supply_cache` cluster got one
+self-rendered blind-pass round (not a true isolated critic — no subagent tool
+was available in this environment) that fixed a toppled-crate silhouette but
+left the `Rope_1` prop illegible at normal camera distance, the same limitation
+the already-shipped `ranger_camp` cluster's own rope has. The band's own
+clearing addition does not take effect in the live scatter bake until the
+coordinator fixes `scatter_bake.gd`'s fingerprint and re-bakes (GATE_D_LANE_CONTRACT.md
+§4's known defect, inherited, not fixed here). Requested `density_scale` for
+band2: unchanged from 0.05 — the density problem this pass was asked to solve
+was authored wild-creature count, not scatter foliage density, and nothing in
+the driven run pointed at the vegetation layer as bare.
 
 ## CONTROLLER-MAP — the owner's authored pad map, with no held buttons
 

@@ -98,6 +98,18 @@
       ],
       "discover_radius": 25.0,
       "category": "minor"
+    },
+    {
+      "id": "band2_ranger_camp",
+      "display_name": "Abandoned Ranger Camp",
+      "icon": "camp",
+      "_comment_band2_63": "BAND2-63. The `camp` icon (assets/ui/icons/map/camp.png) has existed since the icon set shipped and no landmark has ever used it. This band's `ranger_camp` prop cluster and its matching `vegetation.json` clearing (both order 2001 in their files) are the region's one field-camp candidate (prompt 61's camp-siting brief); a `minor` pin here is the only way the map tells a player looking for a rest stop where it is, the same way `old_mill_crossing` and `tether_relay` already tell them where the chapter's other named stops are.",
+      "position": [
+        -259.0,
+        2256.5
+      ],
+      "discover_radius": 25.0,
+      "category": "minor"
     }
   ],
   "_comment_tether_relay": "SE23, spec 3 Band 3. A `major` landmark: the chapter's first mini-stronghold and the rung of 32's ladder where Team Tether becomes a place rather than a rumour, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the relay is meant to be walked into, so it appears the ordinary way, by going there. `relay` is an icon that already exists in assets/ui/icons/map/ and was drawn for exactly this. Position is the site centre data/config/relay_site.json authored and scripts/world/tether_relay.gd builds from -- if it moves, all three move together.",

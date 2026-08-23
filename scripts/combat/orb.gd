@@ -30,7 +30,12 @@ const FLASH := preload("res://scripts/combat/impact_flash.gd")
 ## the accuracy half of the catch formula reads.
 signal struck(target: Node3D, offset: float)
 ## Hit the ground, or ran out of flight time, without touching anything.
-signal missed()
+##
+## Carries HOW it missed: `closest` is the nearest the orb came to the target's
+## centre and `needed` is the distance that would have counted. The owner's
+## complaint about this mechanic was "I never know if I was close" -- a miss
+## that reports nothing but the word "wide" is why.
+signal missed(reason: String, closest: float, needed: float)
 
 enum Phase { FLYING, HANGING, DROPPING, RESTING, SEALED, DONE }
 
@@ -41,6 +46,15 @@ var _radius: float = 0.42
 var _life: float = 0.0
 var _max_life: float = 4.0
 var _target: Node3D = null
+## Bodies this orb passes THROUGH rather than stops on.
+##
+## BP2, from the 2026-08-22 blind playtest: "your own creature and trainer
+## intercept your orbs, and the orb is spent". `_hit_ground()` raycasts along
+## the step and excluded only `_target`, so an ally standing between the
+## trainer and the wild creature registered as ground -- the orb stopped dead
+## and the throw was gone. Your own creature is not cover, and a throw a player
+## aimed correctly should not be eaten by the thing fighting for them.
+var _pass_through: Array[RID] = []
 
 ## The post-strike clocks.
 var _hang_total: float = 0.45
@@ -50,6 +64,15 @@ var _shake_left: float = 0.0
 var _trail_fade: float = 1.0
 var _bounces: int = 0
 var _seal_time: float = -1.0
+
+## Flight forensics. A miss reported as one word ("miss") cannot distinguish an
+## orb that fell short from one that flew past, and CATCH-FEEL burned three
+## wrong diagnoses on that ambiguity. These record how near the orb actually
+## got and what ended the flight, so the next question is answered by a number.
+var _closest: float = INF
+var _closest_at: Vector3 = Vector3.INF
+var _end_reason: String = "unknown"
+var _ground_collider: String = ""
 
 ## How many times the orb's own radius the readable halo is drawn at, and how
 ## wide the trail gets at its head. Presentation only — the collision radius the
@@ -252,7 +275,12 @@ func _fade_trail() -> void:
 
 ## Launch. `target` is the creature this throw is aimed at; the orb only tests
 ## against that one, because a throw is at a creature, not at the world.
-func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D) -> void:
+func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D,
+		pass_through: Array = []) -> void:
+	_pass_through.clear()
+	for body: Variant in pass_through:
+		if body is CollisionObject3D and is_instance_valid(body):
+			_pass_through.append((body as CollisionObject3D).get_rid())
 	global_position = from
 	_velocity = direction.normalized() * speed
 	_target = target
@@ -291,9 +319,14 @@ func _tick_flight(delta: float) -> void:
 		_path.remove_at(0)
 	_draw_trail()
 
+	_note_closest_approach()
 	if _check_target():
 		return
-	if _life >= _max_life or _hit_ground():
+	if _life >= _max_life:
+		_end_reason = "flight_time"
+		_finish_with_miss()
+	elif _hit_ground():
+		_end_reason = "ground"
 		_finish_with_miss()
 
 
@@ -417,6 +450,18 @@ func is_resting() -> bool:
 	return _phase == Phase.RESTING or _phase == Phase.SEALED
 
 
+## The nearest the orb came to the target's centre, sampled every flight frame.
+func _note_closest_approach() -> void:
+	if _target == null or not is_instance_valid(_target):
+		return
+	var centre: Vector3 = _target.call("centre") if _target.has_method("centre") \
+		else _target.global_position
+	var offset := global_position.distance_to(centre)
+	if offset < _closest:
+		_closest = offset
+		_closest_at = global_position
+
+
 func _check_target() -> bool:
 	if _target == null or not is_instance_valid(_target) or not _target.visible:
 		return false
@@ -452,11 +497,12 @@ func _hit_ground() -> bool:
 	var from := global_position - _velocity * get_physics_process_delta_time()
 	var query := PhysicsRayQueryParameters3D.create(from, global_position)
 	query.collide_with_areas = false
-	if _target != null and _target is CollisionObject3D:
-		query.exclude = [(_target as CollisionObject3D).get_rid()]
+	query.exclude = _excluded_rids()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return false
+	var collider := hit.get("collider") as Node
+	_ground_collider = collider.name if collider != null else "unnamed"
 	global_position = hit["position"]
 	return true
 
@@ -470,12 +516,31 @@ func _ground_below(from: Vector3, to: Vector3) -> float:
 		return NAN
 	var query := PhysicsRayQueryParameters3D.create(from, to + Vector3.DOWN * _radius)
 	query.collide_with_areas = false
-	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
-		query.exclude = [(_target as CollisionObject3D).get_rid()]
+	query.exclude = _excluded_rids()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)
 
 
 func _finish_with_miss() -> void:
 	_phase = Phase.DONE
-	missed.emit()
+	var need := 0.92
+	if _target != null and is_instance_valid(_target) and _target.has_method("body_radius"):
+		need = float(_target.call("body_radius")) + _radius
+	print("catch launch: miss forensics reason=%s closest=%.2f needed=%.2f at=(%.2f, %.2f, %.2f) ground=%s life=%.2f" % [
+		_end_reason, _closest, need,
+		_closest_at.x, _closest_at.y, _closest_at.z,
+		_ground_collider if _ground_collider != "" else "none", _life,
+	])
+	missed.emit(_end_reason, _closest, need)
+
+
+## The target plus everything the throw passes through.
+##
+## One list, built in one place, used by both raycasts -- they had two copies of
+## the target-exclusion line and only one of them would have gained the ally.
+func _excluded_rids() -> Array[RID]:
+	var out: Array[RID] = []
+	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
+		out.append((_target as CollisionObject3D).get_rid())
+	out.append_array(_pass_through)
+	return out

@@ -588,6 +588,39 @@ func body_height() -> float:
 ## What counts as a clean hit on this creature. Read by the orb for collision and
 ## by the catch formula for accuracy, so a bigger creature is genuinely easier to
 ## hit and that shows up in the odds rather than only in the physics.
+## Grow this body, gameplay size and all.
+##
+## WILD-ECOLOGY alphas need to read as bigger AND fight as bigger, and those are
+## the same fact here: `_height` and `_radius` drive the capsule, the collider,
+## the hit cone's reach and -- through `body_radius()` -- the catch accuracy
+## bonus. `_build_placeholder`'s own comment says so: "Gameplay size is `height`
+## and `radius`... Art is then scaled to fit that."
+##
+## So this multiplies the gameplay size and rebuilds from it, rather than
+## setting `scale` on the node. Scaling the node was the first attempt and it is
+## wrong in a way that is invisible until someone throws an orb: the art would
+## be 35% bigger while `body_radius()` returned the unscaled value and `centre()`
+## sat low on the model, so throws that visually struck the creature would
+## resolve as edge hits or misses. That is `reticle_outside_body`, which this
+## project has already spent a debugging session on once.
+##
+## Call after `populate()`; it re-runs the sizing path over the new numbers.
+func apply_size_multiplier(multiplier: float) -> void:
+	if multiplier <= 0.0 or is_equal_approx(multiplier, 1.0):
+		return
+	_height *= multiplier
+	_radius *= multiplier
+	var shape := CapsuleShape3D.new()
+	shape.radius = _radius
+	shape.height = maxf(_height, _radius * 2.0 + 0.01)
+	_collision.shape = shape
+	_collision.position = Vector3(0.0, _height * 0.5, 0.0)
+	var look: Dictionary = SPECIES.placeholder(species_id)
+	if not _build_model(look):
+		_build_capsule(look)
+	_refresh_shiny_tint()
+
+
 func body_radius() -> float:
 	return _radius
 
