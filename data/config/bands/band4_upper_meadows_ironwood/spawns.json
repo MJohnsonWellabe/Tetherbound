@@ -35,7 +35,12 @@
         5150.0
       ],
       "radius": 20.0,
-      "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for."
+      "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "ASSESS-REDS/prompt 60's 'handful of special encounters'. The ridge pair's elder, on the exposed western high ground the region is built to be seen across -- Band 4 is where the chapter tells the player the world got harder without the player scaling with it (order 4000's own trailpup note), and a visibly bigger aggressor on the long sightline says the same thing before the fight starts."
     },
     {
       "order": 4002,

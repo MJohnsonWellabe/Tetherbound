@@ -25,7 +25,12 @@
         7255.0
       ],
       "radius": 22.0,
-      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable."
+      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable.",
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.4
+      },
+      "_why_alpha": "ASSESS-REDS/prompt 60's 'handful of special encounters'. The pack leader of the chapter's largest aggressor cluster, on the last stretch before the Hall -- a wild fight worth winning on its own terms in the same stretch the spec already asks to feel harder than the river crossing, not just Team Tether's own gauntlet."
     },
     {
       "order": 5002,
