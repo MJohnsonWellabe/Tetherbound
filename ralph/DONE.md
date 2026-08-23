@@ -3,6 +3,111 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## PERF-ROG — OP23-01, the ROG Ally frame rate: found, measured, fixed
+
+`tests: full suite, 0 failed` · `area: scripts/world/interaction_arbiter.gd,
+scripts/world/vegetation.gd, scripts/ui/playground_hud.gd,
+data/config/performance.json, tools/perf_profile.gd` · `report:
+ralph/PERF_ROG_REPORT.md`
+
+The owner's #1 SHIP blocker was "feels like ten frames per second on the ROG".
+It had a single dominant cause and it was measurable from a container after all.
+
+**`interaction_arbiter.gd::_recompute()` polled every registered prompt
+provider, every frame — 24,461 of them, to find the two in reach.** 20.35 ms
+per frame; 1,221 ms of work per wall-clock second, more than a whole CPU second
+per second, on a box far faster than an Ally. 24,398 of those providers are
+`vegetation.gd`'s gather points, one per harvestable scattered tree or rock.
+PERF-2 fixed the same population's O(n²) REGISTRATION cost at boot and left the
+O(n) POLL, which every prop the world gained made worse.
+
+Fixed with a uniform x/z grid: `Node3D` providers are filed by cell, the two
+that have no position (`encounter_director`, `riding_controller`) stay polled,
+and movement re-files through `NOTIFICATION_TRANSFORM_CHANGED` rather than
+through a per-frame position read. Results are identical, not merely similar —
+the queried cells are a strict superset of anything that could offer, and
+candidates are sorted back into registration order because `prompt_arbiter.gd`
+breaks ties on it. **20.350 -> 0.024 ms/call.**
+
+Second: **`vegetation.gd::update_collision_streaming()` tested all 22,306 solid
+placements twice a second**, 8-10 ms a sweep — a judder rather than a floor, and
+one that grows with the world. Now cell-indexed. **9.2 -> 0.3 ms/call, with
+resident-collider counts identical at all six measured sites** (166/389/13/120/
+8/68 before and after), and `tests/smoke_collision_streaming.gd` now asserts the
+indexed sweep against a brute-force pass over every placement — "the count looks
+plausible" would pass with a whole cell of walk-through trees.
+
+Per-frame CPU on the real corridor, `tools/perf_profile.gd`, six sites:
+
+| site | before | after |
+|---|---|---|
+| village | 33.15 ms | 4.67 ms |
+| band1 | 38.02 ms | 4.35 ms |
+| band2 | 34.93 ms | 4.23 ms |
+| band3 | 34.84 ms | 3.81 ms |
+| band4 | 40.24 ms | 4.04 ms |
+| stronghold | 35.94 ms | 4.50 ms |
+
+Mean 36.2 -> 4.3 ms, **-88%**. A 60fps frame has 16.7 ms: the game's own
+GDScript went from asking 2.2x a whole frame's budget every frame to 0.26x,
+before the renderer draws anything.
+
+**This is not a device frame rate and must never be quoted as one** — no
+container here has ROG hardware. It is the CPU-side work, whose SHAPE is
+hardware-independent even though its absolute cost is not.
+
+### What shipped besides the two fixes
+
+- `tools/perf_profile.gd` — the harness. Six sites on the real world,
+  per-subsystem costs measured by calling each suspect directly rather than
+  inferring a share of a total, plus `--bisect` (paired A/B/A per subtree) and
+  a ranking by work-per-second. `tools/perf_render_stats.gd` for the
+  RenderingServer counters under xvfb.
+- `data/config/performance.json` + `scripts/world/performance_config.gd` — every
+  per-frame lever in one file.
+- **A device-side overlay the owner can actually turn on.**
+  `debug_overlay_on_boot` puts the F3 readout up from the first frame (F3 does
+  not exist on a handheld, and the owner's authored controller map spends every
+  pad button with held chords banned, so a config flag is the honest answer
+  rather than a colliding binding). The readout gains a top-three-costs block
+  from `scripts/world/perf_trace.gd`, which is inert unless the readout is open.
+
+### Nothing a player sees moved
+
+`tools/capture_lod_before_after.gd`'s two required views, rendered on `main`
+(`shots/perfrog/main`, local — `shots/` is gitignored) and on this branch's shipping config
+(`shots/perfrog/branch`): the open-field long sightline is **bit-identical, 0
+differing pixels of 921,600**, and the pond view's rows 0-199 -- sky, far
+treeline, hills, the timber-framed building, every scrap of vegetation -- are
+**0.00% different**. Everything below row 200 is the pond's animated surface,
+whose wave phase differs between any two boots.
+
+### Two things deliberately NOT claimed as wins
+
+**PERF-2's commented-out LOD lines are not the lever their comment implies.**
+Wired and measured properly this time: at the authored ranges (110-260m) the
+effect on draw calls is inside noise, and forcing every range to 20m removes
+only 5-16%. Shipped as `scatter_lod_ranges`, **default false** — byte-for-byte
+today's behaviour — so a standing TODO becomes a measured negative result plus a
+lever, not another lane's re-derivation. `shots/perfrog/branch` (what ships) and
+`shots/perfrog/after` (ranges on) are vegetation-identical.
+
+**`wild_cluster_sweep` (14.5 ms/s) and `hud_process` (10.2 ms/s) were left
+alone.** Each is ~1% of a 60fps CPU second and each already does the right
+thing: the director strides by cluster (262) not by creature (909), and the
+minimap already repaints only on real movement or a fog-revision change.
+
+### The groundcover density, priced
+
+`ralph/VISUAL-GROUNDCOVER` (unlanded) raises the corridor 143,630 -> 223,271
+placements. Measured on both bakes: +15% CPU, +41% nodes, +150 MB static, +50%
+MultiMeshInstance3D, +53% prompt providers. **On `main` that density would have
+taken the arbiter to 44.65 ms/frame** — more than doubling the exact thing that
+is OP23-01. On this branch it is 0.028 ms. The density raise is affordable now
+and was not before. Its remaining costs are memory and GPU throughput inside the
+MultiMesh batches, which no container can measure; those stay owner calls and
+this branch does not change world density.
+
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
