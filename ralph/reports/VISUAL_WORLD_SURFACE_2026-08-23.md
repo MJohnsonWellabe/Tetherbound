@@ -579,3 +579,56 @@ threshold until the number flatters the change would be exactly the wrong move.
 The robust measure for the near field is the blind critic's literal clump
 count, which does not care what colour the tufts are, and that is what the
 round-3 critique is being asked for again.
+
+## Round 3, measured
+
+`frame_stats.py`, round 2 against round 3: **11 of 24 frames moved.** The
+lighting work is where it landed, and it is not marginal.
+
+| frame | chroma r2 -> r3 | saturation r2 -> r3 |
+|---|---|---|
+| band1 night | 18.47 -> **32.39** | 0.49 -> 0.65 |
+| band2 night | 8.48 -> **11.54** | 0.37 -> 0.39 |
+| band3 night | 15.47 -> **34.44** | 0.41 -> 0.44 |
+| band4 night | 12.09 -> **44.63** | 0.25 -> 0.41 |
+| band5 night | 13.90 -> 13.53 | 0.46 -> 0.53 |
+| band1 golden | 95.38 -> 93.93 | 0.52 -> **0.67** |
+| band2 golden | 80.01 -> 80.29 | 0.66 -> **0.71** |
+| band3 golden | 93.56 -> 92.06 | 0.49 -> **0.62** |
+| band5 golden | 93.39 -> 94.08 | 0.60 -> **0.75** |
+
+Every night frame's dominant hue family also flipped from chartreuse/orange to
+blue. Band 1 night reads blue 90% of chromatic pixels, against a previous
+chartreuse 73% — the numeric form of "night is now a blue night rather than a
+black void with unlit green tufts glowing in it".
+
+Day frames are essentially unchanged, as in every round.
+
+### The cover metric fell, and it was this lane's own instrument lying
+
+`tools/_cover_stats.py` reported the opposite of progress: mean 4.220% ->
+3.749%, with band 5 collapsing 2.391% -> 0.691%, back to its baseline.
+
+That is the confound this report predicted one section earlier. The metric
+requires `value > 0.22`, and round 3 deliberately DARKENED the tuft tints from
+value 0.53-0.71 to 0.29-0.39 to fix the sticker defect. Re-running the
+identical measure with the value floor at 0.10 — testing the confound, not
+replacing the metric — separates the two cleanly:
+
+| day frame | r2 | r3 |
+|---|---|---|
+| band1 | 19.931% | 19.852% |
+| band2 | 38.895% | 39.003% |
+| band3 | 23.264% | 21.645% |
+| band4 | 43.748% | 43.632% |
+| band5 | 22.324% | **22.979%** |
+
+Flat or up on four of five, band 5 included. **The cover did not go away; it
+got darker.** Only band 3 is genuinely down, by ~7%, which is the most likely
+real cost of cutting strays 900 -> 300 at the band with the thinnest density
+scale.
+
+Both numbers are recorded, and the strict-floor figure is NOT being quietly
+replaced by the flattering one. The point of keeping both is that neither is
+trustworthy alone across a change that moved colour: the robust near-field
+measure remains the blind critic's literal clump count.
