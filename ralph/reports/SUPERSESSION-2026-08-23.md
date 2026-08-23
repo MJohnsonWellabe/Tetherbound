@@ -4,6 +4,24 @@
 revision of this file split deletions into now/later; the "later"
 condition has been met, so this is now a single list.
 
+**Second update, same day, after `integration-W1` landed (main now past
+`1adfeacb`).** Re-verified against the new tip: `STRANDED-P3` and
+`ralph/gate-d-wild-streaming` are now fully contained by ancestry (their
+own tips are reachable from `main`); `ralph/GATE-E-LOGIC`'s tip commit
+(`631989e6`) is patch-equivalent to `main`'s `653f4cdc` — it was rebased
+after `main` already absorbed its content via `integration-W1`, so the two
+differ only in hash. `claude/gate-a-core-verbs-8aaw7g` moves from "keep"
+to "deletable": `STRANDED-P3` already reconciled both items it carried
+(the chop clip landed under a fresh hash — `main`'s `0aa790c4` — and the
+CI-wiring gap is now tracked precisely in `BACKLOG.md`'s `CI-COVERAGE-1`
+entry, which supersedes this branch's own version of that same list).
+`chatgpt/owner-playtest-2026-08-21` also moves to deletable: verified its
+`ralph/OWNER_PLAYTEST_2026-08-21.md` content is the same file already on
+`main` (landed via PR #19, `a2818217`), just a different commit lineage.
+Four also-green `ralph/*` branches (`BAND2-FLOOR`, `SITE-DRESSING`,
+`SITE-SHOTS`, `CREATURE-PRESENTATION`) were rebased onto this newer `main`
+and re-pushed this pass — not yet in this list pending their fresh CI.
+
 Branch deletion remains blocked from Claude sessions at the credential
 level: `git push origin --delete` returns HTTP 403, and the GitHub MCP
 server exposes no delete-branch tool. Whoever holds owner credentials
@@ -34,6 +52,9 @@ git push origin --delete ralph/gate-d-band3-river-relay
 git push origin --delete ralph/gate-d-band4-upper-meadows
 git push origin --delete ralph/gate-d-band5-stronghold-approach
 git push origin --delete ralph/gate-d-wild-streaming
+git push origin --delete ralph/STRANDED-P3
+git push origin --delete claude/gate-a-core-verbs-8aaw7g
+git push origin --delete chatgpt/owner-playtest-2026-08-21
 ```
 
 Patch-equivalent (every commit's diff already on main under a different
@@ -42,6 +63,7 @@ hash — `git cherry` reports zero unique patches):
 ```
 git push origin --delete ralph/HUD-EMPHASIS
 git push origin --delete ralph/integration-2
+git push origin --delete ralph/GATE-E-LOGIC
 ```
 
 Duplicate ref (tip identical to `claude/ralph-multi-gate-coord-4lkb0n`):
@@ -54,9 +76,7 @@ git push origin --delete ralph/render-invocation
 
 | branch | unique patches vs main | what it is |
 |---|---|---|
-| `claude/gate-a-core-verbs-8aaw7g` | 5 | OP21-24 chop-swing clip, Gate A checkpoint/lifecycle CI wiring, record of 27 smoke tests wired to no CI job. Real work; the 2026-08-23 assessment decides whether it lands or is superseded. |
 | `claude/ralph-multi-gate-coord-4lkb0n` | 1 | the `--headless` render-hang record/diagnosis correction (doc). Land or fold into assessment notes, then delete. |
-| `chatgpt/owner-playtest-2026-08-21` | 2 | original owner-playtest recording lineage. The playtest file itself IS on main under another hash; these two commits differ only in lineage. Deletable once someone confirms no other file deltas matter — left out of the delete list purely out of caution for owner-evidence branches. |
 | `scratch/render-catchup` | 1 | render-diagnostic/timing instrumentation for the capture tools; relevant to the known capture-artefact remainder. Keep until the capture-tooling pass. |
 | `ralph-status` | separate lineage | coordinator heartbeat branch; intentional, keep. |
 | `claude/game-assessment-cleanup-g6gplm` | this branch | active assessment/cleanup session. |
