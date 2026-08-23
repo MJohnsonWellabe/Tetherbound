@@ -1380,9 +1380,15 @@ func _begin_farewell(index: int) -> void:
 		# Level and bond restated at the moment of the question — the two
 		# numbers that say what is being given up, in front of the player at
 		# the exact press that gives it up.
-		_farewell_body.text = ("Lv %d, bond %d/%d. %s gives up their holder and %s takes it. " +
+		#
+		# Prompt 67 asks for the creature's HISTORY here too, and until now
+		# there was none to ask for. What it did with you is the half of the
+		# cost that level and bond do not carry: a Lv 14 creature you caught an
+		# hour ago and a Lv 14 creature that fought forty battles beside you are
+		# the same two numbers and not remotely the same decision.
+		_farewell_body.text = ("Lv %d, bond %d/%d.%s %s gives up their holder and %s takes it. " +
 			"A released creature does not come back.") % [
-			int(creature.get("level")), nodes, total, label, newcomer
+			int(creature.get("level")), nodes, total, _history_line(creature), label, newcomer
 		]
 
 	_farewell_keep.visible = true
@@ -1585,3 +1591,26 @@ func _inventory() -> RefCounted:
 func _party() -> RefCounted:
 	var game := state()
 	return game.get("party") if game != null else null
+
+
+## What this creature did with you, as one clause, or "" when there is nothing
+## honest to say.
+##
+## Empty is a real answer in two cases and both must stay silent rather than
+## print a zero: a creature caught this minute has no history, and a save from
+## before VERSION 14 was not keeping one. "0 battles" would be a claim; nothing
+## is the truth.
+func _history_line(creature: RefCounted) -> String:
+	var battles := int(creature.get("battles_fought"))
+	var day := int(creature.get("caught_on_day"))
+	var parts: Array[String] = []
+	if battles > 0:
+		parts.append("%d battle%s beside you" % [battles, "" if battles == 1 else "s"])
+	if day > 0:
+		parts.append("caught on day %d" % day)
+	var gained := int(creature.get("levels_gained_with_you"))
+	if gained > 0:
+		parts.append("%d level%s earned since" % [gained, "" if gained == 1 else "s"])
+	if parts.is_empty():
+		return ""
+	return " " + ", ".join(parts).capitalize() + "."

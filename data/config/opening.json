@@ -50,7 +50,9 @@
     "species": "bramblebun",
     "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.60), chosen for the opening's forgiving first catch.",
     "max_catch_failures": 1,
-    "_comment_catch_bound": "docs/OPENING_SEQUENCE.md says the tutorial catch cannot fail twice. This bounds only landed, otherwise-legal throws at this configured species while the opening is on its encounter beat. Physical misses, fainted targets and trained creatures never reach the roll and ordinary catches never read this value."
+    "_comment_catch_bound": "docs/OPENING_SEQUENCE.md says the tutorial catch cannot fail twice. This bounds only landed, otherwise-legal throws at this configured species while the opening is on its encounter beat. Physical misses, fainted targets and trained creatures never reach the roll and ordinary catches never read this value.",
+    "catch_orb_floor": 5,
+    "_comment_orb_floor": "The half of the promise `max_catch_failures` cannot keep. That bound counts LANDED throws on purpose -- a throw that never reached the creature is not a failed catch -- so a player who MISSES is bounded by nothing but their orb stock. Grandpa gives fifteen; the only ways to get more are Tam's recipe and the village trader, both of them past the road gate, and the road gate is past this catch. So an opening that runs dry is a hard dead-end: `throw_aim.gd::try_begin_aim()` refuses with 'no orbs left' forever while the beat waits for a catch that can no longer be attempted. Reproduced, not theorised. While this exact encounter is live, running out tops the satchel back up to this many basic orbs. TUNABLE, and deliberately not a silent infinity: it is a floor under the tutorial only -- `sequence_director.gd` applies it behind the same beat-and-species predicate as the bound above, so the moment the opening ends, running out means running out. Set to 0 to disable the floor."
   },
 
   "beats": {

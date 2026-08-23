@@ -87,7 +87,7 @@ func _run() -> void:
 			break
 		var outcomes_before := _misses + _resolutions.size()
 		var assisted_before := _assisted_launches
-		await _tap_button(JOY_BUTTON_RIGHT_SHOULDER)
+		await _tap_button(JOY_BUTTON_X)
 		for _i in 900:
 			if _assisted_launches == assisted_before \
 					and throw_launch_used_assist(_manager.call("throw_aim")):
@@ -172,7 +172,7 @@ func _naturally_weaken_target() -> bool:
 
 func _intentional_physical_miss() -> bool:
 	if not await _open_aim():
-		_fail("physical shoulder input did not open catch aim")
+		_fail("physical X did not open catch aim")
 		return false
 	var throw: Node = _manager.call("throw_aim")
 	# A lateral clearance is not a miss guarantee: a circling target can cross a
@@ -195,7 +195,7 @@ func _intentional_physical_miss() -> bool:
 	var misses_before := _misses
 	var strikes_before := _strikes
 	var resolutions_before := _resolutions.size()
-	await _tap_button(JOY_BUTTON_RIGHT_SHOULDER)
+	await _tap_button(JOY_BUTTON_X)
 	for _i in 360:
 		if _misses > misses_before:
 			if await _await_throw_ready(throw, 120):
@@ -240,9 +240,17 @@ func throw_launch_used_assist(throw: Node) -> bool:
 	return point is Vector3 and point != Vector3.INF
 
 
+## CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: the orb is
+## selected on the quick bar and thrown with X ("interact -- talk, gather,
+## chop, mine, mount, throw the selected orb"). `combat_throw` kept its
+## keyboard F and lost its pad button, and RIGHT SHOULDER -- which used to
+## carry the throw -- is now `creature_recall`, which
+## `combat_manager.gd::_flee_pressed()` reads as DISENGAGE. So every shoulder
+## press in this file was ending the fight instead of opening the aim, and the
+## file failed on `main` from the merge onward. No CI shard runs it.
 func _open_aim() -> bool:
 	for _attempt in 18:
-		await _tap_button(JOY_BUTTON_RIGHT_SHOULDER)
+		await _tap_button(JOY_BUTTON_X)
 		for _i in 6:
 			if bool(_manager.call("is_aiming")):
 				return true

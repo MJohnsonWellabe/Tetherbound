@@ -176,5 +176,74 @@
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",
   "_comment_the_old_quarry": "SD16, and D36's rule applied rather than quoted: few and LARGE. This is one region for the whole worked site -- the quarry floor, its foundations, the standing dead, and the conduit run leaving it on the stronghold bearing -- not one per feature, exactly the mistake D36 was written to correct. Its centre sits between the floor ([23,158]) and the first pylon out ([31.7,148.4]) so the map label lands over the site rather than off one edge of it, and 62m carries the whole run out to [41,121]. Separation from every existing region is comfortable: 175m to Grandpa's Village, 130m to The Pond, 205m to The Rise -- no two labels can crowd each other the way the first regions cut did. Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having crossed the South Bridge, so the name arrives at the moment the gate pays off. TUNABLE.",
   "_comment_old_mill_crossing": "SE22, spec 3 Band 3's main gate, and `major` for the reason the South Bridge is: it is the only ground link across SE21's river, so it is the thing a whole band of the chapter exists to reach, not furniture on the way somewhere else. Shares the South Bridge's `bridge` icon deliberately -- the player has already learned what that mark means and what standing at one costs. Position is the river's narrows, terrain_playground.json crossings[1].channel.centre; if that moves, this moves.",
-  "_comment_the_long_water": "SE21, and D36's rule again: few and LARGE. ONE region for the whole river -- both banks, the narrows, the mill, and the ground the water is the edge of -- not one for the crossing and another for the reach above it. Centre sits on the course itself just downstream of the Old Mill Crossing so the label lands over the water rather than off one bank, and 72m carries it up the reach to the gorge and down past the far bank the player first stands on. Separation is comfortable and was checked, not assumed: 129m to The Rise, 149m to The Old Quarry, 168m to Grandpa's Village -- no two labels can crowd each other. Discovery is by ENTERING (map_state.gd::update_region), which for this region means walking out to the water, and that is the point: the river is meant to be found by seeing it. The NAME is the one piece of world-building invented here rather than quoted from the spec (which says only 'a substantial river'); it is TUNABLE like everything else in this file and reads in the family the other three already set. MERGE NOTE (orchestrator): shipped at 72m and cut to 52m when SE21 and SE23 landed together \u2014 at 72m this region swallowed The Tether Relay's centre 59.5m away, and map_state's nearest-centre rule then depended on this file's order. 52m still carries the narrows, the Old Mill Crossing (30.5m out, the binding constraint) and the reach above it, and leaves 7.5m of clearance to the relay's centre. TUNABLE, but not upward past 59m without moving the relay."
+  "_comment_the_long_water": "SE21, and D36's rule again: few and LARGE. ONE region for the whole river -- both banks, the narrows, the mill, and the ground the water is the edge of -- not one for the crossing and another for the reach above it. Centre sits on the course itself just downstream of the Old Mill Crossing so the label lands over the water rather than off one bank, and 72m carries it up the reach to the gorge and down past the far bank the player first stands on. Separation is comfortable and was checked, not assumed: 129m to The Rise, 149m to The Old Quarry, 168m to Grandpa's Village -- no two labels can crowd each other. Discovery is by ENTERING (map_state.gd::update_region), which for this region means walking out to the water, and that is the point: the river is meant to be found by seeing it. The NAME is the one piece of world-building invented here rather than quoted from the spec (which says only 'a substantial river'); it is TUNABLE like everything else in this file and reads in the family the other three already set. MERGE NOTE (orchestrator): shipped at 72m and cut to 52m when SE21 and SE23 landed together \u2014 at 72m this region swallowed The Tether Relay's centre 59.5m away, and map_state's nearest-centre rule then depended on this file's order. 52m still carries the narrows, the Old Mill Crossing (30.5m out, the binding constraint) and the reach above it, and leaves 7.5m of clearance to the relay's centre. TUNABLE, but not upward past 59m without moving the relay.",
+  "_comment_starting_reveal": "OWNER DIRECTIVE 2026-08-22 section 3: 'The village and the roads out of it start revealed... The player does not start blind in their own home town.' The fog was never broken -- OW3 built it from zero reveal and it worked exactly as written -- but a fresh save therefore opened a black rectangle with a dot on it, which is what OP21-15 reported as 'the map is currently unusable'. The ruling was recorded in ralph/BLOCKED.md on 2026-08-22 and never implemented; both commits that closed that entry touched only BLOCKED.md. These circles are sampled every 30m along terrain_playground.json's `paths.routes` -- Band 0, the four roads that actually leave the village square -- out to 90m from the square, at 45m each so they overlap into continuous road rather than a string of dots. Deliberately bounded: 90m is 'the roads out of town', not a free look at the corridor. Everything beyond it is still walked for. autoload/map_state.gd::_seed_starting_reveal reads this.",
+  "starting_reveal": [
+    {
+      "at": [
+        10.0,
+        -10.0
+      ],
+      "radius": 70.0,
+      "_why": "the village square itself, the one place the player unambiguously knows"
+    },
+    {
+      "at": [
+        26.3,
+        -35.1
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        -11.2,
+        11.2
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        -32.4,
+        32.4
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        -53.0,
+        54.2
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        38.4,
+        -19.7
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        64.2,
+        -34.6
+      ],
+      "radius": 45.0
+    },
+    {
+      "at": [
+        -22.0,
+        -16.0
+      ],
+      "radius": 45.0,
+      "_why": "Grandpa's house -- where the player wakes up"
+    },
+    {
+      "at": [
+        27.5,
+        -16.0
+      ],
+      "radius": 45.0,
+      "_why": "the road gate the opening sends them through"
+    }
+  ]
 }

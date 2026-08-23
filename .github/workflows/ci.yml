@@ -1603,6 +1603,92 @@ jobs:
           godot --headless --path . --script tests/smoke_relay.gd
           godot --headless --path . --script tests/smoke_stronghold.gd
 
+  # THE GAP THIS CLOSES. The four shards above preserve "every smoke test from
+  # the former one-test-per-runner layout" -- but that layout never covered
+  # every smoke test. 46 of the 64 files in tests/ were named by no job at all,
+  # and the set that fell through is precisely the set written to prove the
+  # owner's own 2026-08-21 ROG playtest bugs fixed: the Load Game stall, the
+  # party count after catches, the Satchel/hotbar leak, the Build shortcut's
+  # controller ownership, the first trainer battle's camera, arena containment
+  # in the Warrens and the Stronghold, and both Gate A/B evidence runs.
+  #
+  # That is how integration-ABC shipped green with NINE harnesses either failing
+  # or asserting the pre-CONTROLLER-MAP pad map. Nothing was wrong with the
+  # game; nothing was asking. A regression nobody runs is a comment.
+  #
+  # Split across two runners rather than one so neither approaches the 22-minute
+  # ceiling: the two continuous evidence runs (the opening segment and the
+  # tournament bracket) are minutes each on their own.
+  verify-owner-regressions-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify the 2026-08-21 owner playtest regressions
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_title_load_game.gd
+          godot --headless --path . --script tests/smoke_party_count_after_catches.gd
+          godot --headless --path . --script tests/smoke_satchel_owns_hotbar.gd
+          godot --headless --path . --script tests/smoke_build_owns_creature_cycle.gd
+          godot --headless --path . --script tests/smoke_trainer_battle_camera.gd
+          godot --headless --path . --script tests/smoke_arena_contain.gd
+          godot --headless --path . --script tests/smoke_menu_open_does_not_offer_to_drop.gd
+
+  verify-gate-evidence-shard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify the Gate A and Gate B continuous evidence runs
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd
+          godot --headless --path . --script tests/smoke_gate_a_build_house.gd
+          godot --headless --path . --script tests/smoke_gate_a_rest_torch.gd
+          godot --headless --path . --script tests/smoke_post_modal_control.gd
+          godot --headless --path . --script tests/smoke_tournament_bracket.gd
+
+  # The continuous-core evidence path, run so it cannot go dark again.
+  #
+  # `--gate-a-continuous-core` gates the village/material/paid-build segments
+  # inside smoke_gate_a_opening_segment.gd, and NO shard has ever passed that
+  # flag. Two worktree runs at integration-ABC (a22534ff) on 2026-08-23 proved
+  # the path has been unreachable since that merge: the harness there dies at
+  # boot on `combat_throw`, and the current harness on that gameplay dies at the
+  # tutorial catch on an empty satchel. So these segments have never executed in
+  # CI or locally, while ralph/DONE.md described the path as working.
+  #
+  # `continue-on-error` is deliberate and TEMPORARY. It is currently RED --
+  # "physical interact on the node did not start the visible axe swing
+  # (arbiter winner=Interactable, equipped=, prop=<null>)" -- and a red required
+  # job would wedge every branch behind a path nobody has ever seen pass. A job
+  # that runs and reports red is strictly better than a flag nothing passes:
+  # the failure is visible on every run instead of invisible forever.
+  #
+  # **Remove `continue-on-error` the moment CONTINUOUS-CORE is fixed.** An
+  # ignored red job that becomes permanent scenery is the same disease as a
+  # green badge that tested nothing.
+  verify-continuous-core-known-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify the village, material and paid-build continuation (KNOWN RED)
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd -- --gate-a-continuous-core
+
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
   # The export tail was ~40% of every branch
@@ -1622,6 +1708,8 @@ jobs:
       - verify-gate-a-ui-build-shard
       - verify-combat-shard
       - verify-regions-shard
+      - verify-owner-regressions-shard
+      - verify-gate-evidence-shard
     if: |
       needs.changes.outputs.code == 'true' &&
       github.ref == 'refs/heads/main'

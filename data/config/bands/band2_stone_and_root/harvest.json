@@ -3,7 +3,7 @@
   "nodes": [
     {
       "order": 12,
-      "_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+      "_comment_sd16": "SD16, spec \u00a73 Band 2 and \u00a710: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
       "item": "rootstone",
       "amount": 2,
@@ -218,6 +218,42 @@
     },
     {
       "order": 2008,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        150.0,
+        1565.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2009,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        205.0,
+        1690.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2010,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        -420.0,
+        2440.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2011,
       "_comment_camp": "BAND2-63, prompt 61's camp-siting checklist: a field camp wants 'nearby basic wood/stone/fiber availability'. The `ranger_camp` clearing (vegetation.json order 2001, -259,2256.5) had none within 250m -- the nearest stone was the order 2002 pair, 300m+ back down the spur. A wood node right at the camp means a player who stops here to build a bed does not have to leave the clearing to feed it.",
       "item": "wood",
       "amount": 4,
@@ -227,10 +263,11 @@
         2249.0
       ],
       "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
-      "model_scale": 0.24
+      "model_scale": 0.24,
+      "_comment_renumber": "BAND2-63-WARRENS merge: authored on this lane as order 2008, which main independently used for a fiber node while this branch was out. `order` is identity and neither may take the other's, so the later-merged entry moves -- this one. Nothing about the node itself changed."
     },
     {
-      "order": 2009,
+      "order": 2012,
       "item": "fiber",
       "amount": 4,
       "label": "Strip meadow grass",
@@ -240,7 +277,8 @@
       ],
       "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
       "model_scale": 1.3,
-      "_why": "same camp-siting reasoning as the wood node above -- a build needs fiber as often as it needs wood, and this is the only field camp in the band"
+      "_why": "same camp-siting reasoning as the wood node above -- a build needs fiber as often as it needs wood, and this is the only field camp in the band",
+      "_comment_renumber": "BAND2-63-WARRENS merge: authored on this lane as order 2009, which main independently used for a fiber node while this branch was out. `order` is identity and neither may take the other's, so the later-merged entry moves -- this one. Nothing about the node itself changed."
     }
   ]
 }

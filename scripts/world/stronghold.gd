@@ -960,7 +960,19 @@ func _drum(parent: Node3D, node_name: String, radius: float, height: float, base
 
 ## SG38's recovery opportunity: R4.8's creature bed, the object the player has
 ## already met at home, standing past the elite and before the Warden. Same
-## panel, same `home_recovery.rest`, same rest XP -- reusing it is the point.
+## object, same panel, same recovery -- reusing it is the point.
+##
+## It is a REAL bed (`build_real()`), so it recovers through the live path:
+## `game_state.gd::_tick_creature_bed_recovery()` heals gradually per frame and
+## `complete_creature_bed_rests()` pays the full-rest bonus overnight.
+##
+## This comment used to say "same `home_recovery.rest`, same rest XP". That was
+## wrong in a way worth naming: `home_recovery.gd::rest()` is an INSTANT
+## `heal_fully()`, it has no production callers anywhere in the project (its only
+## callers are `tests/test_fainting.gd` and `tests/smoke_stronghold.gd`, which
+## call it directly), and this file never called it. The stronghold reuses the
+## bed, which is the better half of the claim -- the prose just named the wrong
+## mechanism, and named a dead one.
 func _build_recovery_point() -> void:
 	var spec: Dictionary = _config.get("recovery", {})
 	var id := str(spec.get("chamber", ""))

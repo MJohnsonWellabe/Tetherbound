@@ -185,10 +185,30 @@ func _exercise_bed(cycle: int) -> void:
 func _exercise_world_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 80.0))
 	var before := _placed_total()
-	await _tap("build_open")
+	# CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Build
+	# hammer is the same pattern: select it, press interact, you are in build
+	# mode. `build_open` loses its button." It is keyboard-only now, so tapping
+	# it on a pad opened nothing and this reported Build as broken. Equip the
+	# hammer and press interact, which is `playground_hud.gd::
+	# _hammer_opens_the_catalogue()` -- the real player route.
+	_game.set("equipped_tool", "hammer")
+	for _i in 4:
+		await process_frame
+	await _tap("interact")
 	var build_menu := await _wait_open_group("build_menu")
+	# Diagnosed BEFORE the hammer goes away: read after the cleanup below, every
+	# report would open with "equipped_tool is '', not the hammer" and describe
+	# this harness tidying up rather than the failure it is reporting.
+	var refusal := "" if build_menu != null else _why_the_hammer_was_refused()
+	# Put the hammer away whatever happened next. Left in hand, every later
+	# `interact` in this stress loop opens the catalogue instead of talking to
+	# Bram or using the bed -- `playground_hud.gd::_hammer_opens_the_catalogue()`
+	# reads the equipped tool, not a mode flag.
+	_game.set("equipped_tool", "")
 	if build_menu == null:
-		_fail("world Build cycle %d: build_open opened nothing" % (cycle + 1))
+		_fail("world Build cycle %d: the hammer + interact opened nothing%s" % [
+			cycle + 1, refusal,
+		])
 		return
 	await _tap("ui_accept")
 	await _finish_placement("world Build cycle %d" % (cycle + 1), before)
@@ -197,9 +217,9 @@ func _exercise_world_build(cycle: int) -> void:
 func _exercise_pause_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 110.0))
 	var before := _placed_total()
-	await _tap("menu_cancel")
-	if not bool(_menu.call("is_open")) or not paused:
-		_fail("pause Build cycle %d: B did not open main menu" % (cycle + 1))
+	await _tap("game_menu")
+	if not await _settles(func() -> bool: return bool(_menu.call("is_open")) and paused):
+		_fail("pause Build cycle %d: Menu did not open main menu" % (cycle + 1))
 		return
 	var guard := 0
 	while str(_menu.call("current_tab_id")) != "build" and guard < 8:
@@ -287,12 +307,17 @@ func _pause_round_trip(context: String) -> void:
 	if paused or INPUT_OWNER.current(self) != null:
 		_fail("%s: cannot begin pause check (%s)" % [context, _diagnostics()])
 		return
-	await _tap("menu_cancel")
-	if not bool(_menu.call("is_open")) or not paused:
-		_fail("%s: B could not reopen pause (%s)" % [context, _diagnostics()])
+	# CONTROLLER-MAP: "Menu | game menu", "B | hotbar 1" and, in a menu, back.
+	# B never OPENED the pause shell after the remap -- `game_menu` is button 6
+	# (Menu/Start) and `menu_cancel` is B, so this asked the wrong button to
+	# open and then reported the shell as broken. Open on Menu, back out on B,
+	# which is the round trip a player actually makes.
+	await _tap("game_menu")
+	if not await _settles(func() -> bool: return bool(_menu.call("is_open")) and paused):
+		_fail("%s: Menu could not reopen pause (%s)" % [context, _diagnostics()])
 		return
 	await _tap("menu_cancel")
-	if bool(_menu.call("is_open")) or paused:
+	if not await _settles(func() -> bool: return not bool(_menu.call("is_open")) and not paused):
 		_fail("%s: B could not close pause (%s)" % [context, _diagnostics()])
 		return
 	await _control_returned(context + " recovery")
@@ -319,6 +344,27 @@ func _tap(action: String) -> void:
 	Input.parse_input_event(up)
 	for i in 5:
 		await process_frame
+
+
+## Wait, bounded, for a tapped press to actually take effect.
+##
+## Asserting on the frame immediately after the release is a race, and it is
+## the reason this file reported "B could not close pause" against a shell that
+## demonstrably opens and closes cleanly: `tools/_probe_pause.gd` drove the
+## same two physical buttons through the same live InputMap and got
+## open=true/paused=true then open=false/paused=false, twice running. The shell
+## is PROCESS_MODE_ALWAYS and closes on its own `_process` turn, which is not
+## guaranteed to be inside the five frames `_tap` happened to wait.
+##
+## Still fails if the state never arrives -- this waits for a verdict, it does
+## not assume one. A pause menu that genuinely would not close still fails here,
+## just after 90 frames instead of 5.
+func _settles(predicate: Callable) -> bool:
+	for _i in 90:
+		if bool(predicate.call()):
+			return true
+		await process_frame
+	return false
 
 
 func _pad_button_for(action: String) -> int:
@@ -431,3 +477,41 @@ func _report() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+## Which of `_hammer_opens_the_catalogue()`'s refusals is live.
+##
+## "Opened nothing" names a symptom shared by five different causes, and this
+## harness exists to catch the one where a closed modal never gave the world its
+## input back. Reporting the cause is the difference between a failure that says
+## where to look and one that starts another investigation from scratch.
+func _why_the_hammer_was_refused() -> String:
+	var hud: Node = _world.find_child("PlaygroundHUD", true, false) if _world != null else null
+	if hud == null:
+		return " (no PlaygroundHUD in the scene)"
+	var reasons: Array[String] = []
+	if str(_game.get("equipped_tool")) != "hammer":
+		reasons.append("equipped_tool is '%s', not the hammer" % str(_game.get("equipped_tool")))
+	var arbiter: Object = hud.get("_arbiter")
+	if arbiter != null and is_instance_valid(arbiter):
+		if not bool(arbiter.call("enabled")):
+			reasons.append("the interaction arbiter is DISABLED (a modal never released the world)")
+		else:
+			var winner: Variant = arbiter.call("winning_provider")
+			if winner != null:
+				var label := str(winner)
+				if winner is Node:
+					var node := winner as Node
+					label = "%s (%s)" % [str(node.name), str(node.get_class())]
+					var owner_body := node.get_parent()
+					if owner_body != null:
+						label += " under %s" % str(owner_body.name)
+				reasons.append("the prompt provider %s is winning the interact button" % label)
+	var owner_node: Variant = INPUT_OWNER.current(self)
+	if owner_node != null:
+		reasons.append("INPUT_OWNER is still held by %s" % str(owner_node))
+	if bool(_game.get("pending_build") != ""):
+		reasons.append("pending_build is already armed as '%s'" % str(_game.get("pending_build")))
+	if reasons.is_empty():
+		return " (and none of the known refusals is live -- the press itself did not land)"
+	return " (" + "; ".join(reasons) + ")"

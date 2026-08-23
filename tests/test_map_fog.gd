@@ -56,3 +56,68 @@ func test_discovered_ground_stays_fully_visible_on_both_screens() -> void:
 		var colour: Color = consts.get("FOG_DISCOVERED", Color(1, 1, 1, 1))
 		assert_eq(colour.a, 0.0,
 			"%s's FOG_DISCOVERED must be fully transparent (got alpha=%.2f)" % [path, colour.a])
+
+
+## --- the starting reveal (owner directive 2026-08-22 section 3) -------------
+##
+## "The village and the roads out of it start revealed... The player does not
+## start blind in their own home town."
+##
+## The two halves have to be asserted together, because each one alone is
+## satisfiable by the wrong answer: "something is revealed" is satisfied by
+## revealing the whole map, and "most of the map is hidden" is satisfied by
+## revealing nothing, which is the state this directive was written about. The
+## owner's ruling was recorded in ralph/BLOCKED.md on 2026-08-22 and then never
+## implemented -- both commits that closed that entry touched only BLOCKED.md,
+## so a fresh save kept opening a black rectangle. Nothing failed, because
+## nothing asked.
+
+const MAP_STATE := preload("res://autoload/map_state.gd")
+const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
+
+
+func _fresh_map() -> RefCounted:
+	var state: RefCounted = MAP_STATE.new()
+	var file := FileAccess.open(LANDMARKS_PATH, FileAccess.READ)
+	assert_true(file != null, "map_landmarks.json is missing")
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "map_landmarks.json did not parse as a dictionary")
+	state.call("configure", parsed as Dictionary)
+	return state
+
+
+func test_a_fresh_save_starts_with_the_village_and_its_roads_revealed() -> void:
+	var state := _fresh_map()
+	# The village square, and a point out along each of Band 0's four roads.
+	# These are read from the same authored routes the seed is sampled from, so
+	# moving a road moves the assertion with it rather than stranding it.
+	var known := [
+		Vector3(10.0, 0.0, -10.0),    # the square
+		Vector3(-18.0, 0.0, -15.0),   # west, toward Grandpa's house
+		Vector3(30.0, 0.0, -40.0),    # south-east
+		Vector3(-32.0, 0.0, 32.0),    # north-west, toward the pond
+		Vector3(45.0, 0.0, -22.0),    # east, toward the road gate
+	]
+	for at: Vector3 in known:
+		assert_true(bool(state.call("is_discovered", at)),
+			"a fresh save leaves (%.0f, %.0f) dark; the owner's 2026-08-22 ruling is that the village and the roads out of it start revealed" % [at.x, at.z])
+
+
+func test_the_starting_reveal_does_not_hand_over_the_rest_of_the_chapter() -> void:
+	var state := _fresh_map()
+	# Everything the player has to actually travel to. If a future widening of
+	# the seed swallows these, the map has gone back to "reveals everything
+	# automatically", which spec sec16 forbids outright.
+	var unwalked := [
+		Vector3(0.0, 0.0, 1330.0),    # the South Bridge
+		Vector3(350.0, 0.0, 3760.0),  # the Tether Relay
+		Vector3(0.0, 0.0, 7560.0),    # Meadows Hall
+	]
+	for at: Vector3 in unwalked:
+		assert_false(bool(state.call("is_discovered", at)),
+			"a fresh save already reveals (%.0f, %.0f); the starting reveal is the village and its roads, not the chapter" % [at.x, at.z])
+	var fraction := float(state.call("discovered_fraction"))
+	assert_true(fraction > 0.0,
+		"a fresh save reveals nothing at all -- this is the black-rectangle state the owner reported as OP21-15")
+	assert_true(fraction < 0.05,
+		"a fresh save reveals %.1f%% of the world; the seed is meant to be the home town, not a head start" % (fraction * 100.0))

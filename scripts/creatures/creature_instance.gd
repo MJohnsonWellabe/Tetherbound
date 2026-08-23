@@ -98,6 +98,22 @@ var xp: int = 0
 ## data/config/progression.json, not here.
 var bond: int = 0
 
+## --- history ----------------------------------------------------------------
+##
+## FIVE-CREATURE-PRESSURE (prompt 67) asks the release ceremony to surface "battle
+## history / time together", and the 2026-08-22 Gate C audit found there was
+## nothing to surface: the only time-ish field on this class was
+## `rested_seconds_left`. A five-creature cap is supposed to make giving one up
+## cost something, and it cannot cost anything if the game cannot say what the
+## creature did.
+##
+## Deliberately three small counters rather than an event log. What the ceremony
+## needs is one honest sentence -- "forty-one battles, caught on day 3" -- and a
+## log would be a save-size problem in service of a line nobody reads.
+var battles_fought: int = 0
+var caught_on_day: int = 0
+var levels_gained_with_you: int = 0
+
 ## Ids into data/moves/moves.json (scripts/creatures/move_db.gd resolves them to
 ## something a fight or a menu can show). Empty string is a legitimate value —
 ## a species with no `moves` entry, or a hand-built definition in a test —

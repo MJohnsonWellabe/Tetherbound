@@ -26,6 +26,30 @@ const STARTER_PICKER := "res://scripts/ui/starter_picker.gd"
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 
 const OUT_DIR := "res://shots/ui_glyphs"
+
+## OW8 moved the exploration prompt into the shared bottom dock -- "the prompt
+## and the hotbar share one container, so neither can be laid into the other".
+## This tool still asked for `Root/Prompt`, got null, and then assigned
+## `.visible` on it, which aborted the whole capture with "Invalid assignment
+## of property 'visible' ... on a base object of type 'null instance'". So the
+## glyph frames the visual-judge pass wants have not been renderable since that
+## merge, and nothing said so -- a capture tool is not a test and no shard runs
+## it. `playground_hud.gd`'s own `_prompt_label` is the authority for this path.
+## The COMBAT HUD kept its own `Root/Prompt`; only the exploration one moved.
+const EXPLORATION_PROMPT := ^"Root/BottomDock/Prompt"
+
+## The persistent legend, which is a SIBLING of the prompt in the same dock.
+##
+## It has to be hidden alongside the prompt when the combat frame is staged.
+## `playground_hud.gd::_exploration_legend_should_show()` already returns false
+## while `_combat_is_running()`, so in a real fight a player never sees the
+## legend and the combat prompt together -- but this tool fakes the fight by
+## setting `combat.visible = true` without one running, so the legend stays up
+## and the two draw over each other. A blind visual critic shown that frame
+## reported the overprint as the single most severe defect in the set, which is
+## correct about the pixels and wrong about the game. Hidden here so the frame
+## shows what is actually on screen during a fight.
+const EXPLORATION_LEGEND := ^"Root/BottomDock/ExplorationLegend"
 const SETTLE_FRAMES := 300
 const POSE_FRAMES := 6
 
@@ -66,13 +90,13 @@ func _run() -> void:
 	if hud != null:
 		if combat != null:
 			combat.visible = false
-		var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
+		var prompt_label: RichTextLabel = hud.get_node_or_null(EXPLORATION_PROMPT) as RichTextLabel
 		if prompt_label != null:
 			for i in 30:
 				await physics_frame
 			await _shoot("exploration-prompt", written, failures)
 		else:
-			failures.append("exploration-prompt: HUD has no Root/Prompt RichTextLabel")
+			failures.append("exploration-prompt: HUD has no RichTextLabel at %s" % EXPLORATION_PROMPT)
 	else:
 		failures.append("exploration-prompt: no PlaygroundHUD in the scene")
 
@@ -84,7 +108,25 @@ func _run() -> void:
 	if combat != null:
 		combat.visible = true
 		if hud != null:
-			hud.get_node_or_null(^"Root/Prompt").visible = false
+			# Stop the HUD's own poll FIRST, for the same reason the combat HUD's
+			# is stopped below. `playground_hud.gd::_update_exploration_legend()`
+			# and its prompt sibling both recompute `.visible` every frame from
+			# `_combat_is_running()`, and no fight is running here -- so hiding
+			# them and then waiting 30 frames for the shot hands them 30 chances
+			# to turn themselves straight back on. The first version of this fix
+			# set `.visible = false` without this line and changed nothing at all
+			# in the rendered frame.
+			hud.set_process(false)
+			var explore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
+			if explore_prompt != null:
+				explore_prompt.visible = false
+			var explore_legend: Control = hud.get_node_or_null(EXPLORATION_LEGEND) as Control
+			if explore_legend != null:
+				explore_legend.visible = false
+			else:
+				failures.append("combat-prompt: no %s to hide; the staged frame will "
+					% EXPLORATION_LEGEND + "show the legend under the combat prompt, "
+					+ "which is a capture artifact and not what a fight looks like")
 		var combat_prompt: RichTextLabel = combat.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if combat_prompt != null:
 			# combat_hud.gd's own _process polls _director.call("prompt") every
@@ -98,7 +140,15 @@ func _run() -> void:
 			failures.append("combat-prompt: no Root/Prompt RichTextLabel on CombatHUD")
 		combat.visible = false
 		if hud != null:
-			hud.get_node_or_null(^"Root/Prompt").visible = true
+			var restore_prompt: Control = hud.get_node_or_null(EXPLORATION_PROMPT) as Control
+			if restore_prompt != null:
+				restore_prompt.visible = true
+			var restore_legend: Control = hud.get_node_or_null(EXPLORATION_LEGEND) as Control
+			if restore_legend != null:
+				restore_legend.visible = true
+			# Back on, and the HUD resumes owning its own visibility -- every
+			# later frame in this run needs the real, polled behaviour.
+			hud.set_process(true)
 	else:
 		failures.append("combat-prompt: no CombatHUD in the scene (skipping)")
 

@@ -35,7 +35,12 @@
         5150.0
       ],
       "radius": 20.0,
-      "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for."
+      "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for.",
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.35
+      },
+      "_why_alpha": "The galecrest at (-410,5150), up where the Ironwood band starts. Band 4 is the last stretch before the captains and the level band is [11,14]; an alpha at +4 is a genuine check on whether the team is ready for what the road becomes."
     },
     {
       "order": 4002,
@@ -98,5 +103,6 @@
       "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit."
     }
   ],
-  "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here."
+  "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",
+  "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."
 }

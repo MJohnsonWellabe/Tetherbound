@@ -22,7 +22,9 @@ signal aim_entered()
 signal aim_exited()
 ## The orb landed on the target. `offset` is metres off centre of mass.
 signal orb_struck(target: Node3D, offset: float)
-signal orb_missed()
+## The orb landed nowhere. Carries the sentence to show the player, because
+## "the orb went wide" was printed for every miss regardless of what happened.
+signal orb_missed(message: String)
 ## A throw was refused, with a reason the HUD can show. "I pressed it and
 ## nothing happened" is otherwise indistinguishable from a dropped input.
 signal throw_refused(reason: String)
@@ -37,6 +39,11 @@ const AIM_REACH := 12.0
 var state: State = State.IDLE
 
 var _player: Node3D = null
+## Bodies a thrown orb passes through instead of stopping on -- BP2's "your own
+## creature and trainer intercept your orbs, and the orb is spent". Pushed in by
+## `combat_manager.gd` when the fight gets its ally, because this node knows the
+## trainer and the target but has no reason to know who is fighting for them.
+var _pass_through: Array[Node3D] = []
 var _target: Node3D = null
 var _camera_rig: Node = null
 var _orb: Node3D = null
@@ -372,10 +379,53 @@ func _hide_preview() -> void:
 ## direction from the hand to that point. The reticle is a promise, and this is
 ## what keeps it.
 func _release() -> void:
+	# A throw that cannot physically arrive is not a throw, and it must not cost
+	# an orb.
+	#
+	# Found in the Gate B continuous run, 2026-08-23. After a breakout the fight
+	# stayed armed while the creature ended up twenty-five metres away, and the
+	# game happily took the press every time: reticle ON the body, `eligible`,
+	# launch assist applied -- and the orb hit the ground eighteen metres short,
+	# because at `speed` 17 under `gravity` 14 the furthest a thrown orb can
+	# reach is v²/g, about twenty metres. Nineteen consecutive orbs were spent
+	# on throws that were never capable of landing.
+	#
+	# That is the owner's "I never know if I was close" at its worst: the
+	# reticle is a promise this file makes everywhere else, and here the game
+	# was showing it over a target the orb could not physically get to.
+	#
+	# Gated on the committed assist point rather than on the target's distance,
+	# so it refuses only when the player is genuinely LOCKED ON to a creature
+	# out of reach. Deliberately lobbing an orb at the ground in front of you is
+	# still a legal throw.
+	if _committed_assist_point != Vector3.INF:
+		var hand := _player.global_position + Vector3.UP * _spawn_height
+		if not within_ballistic_reach(hand, _committed_assist_point, _speed, _gravity):
+			print("catch launch: refused out_of_range distance=%.2f max=%.2f" % [
+				hand.distance_to(_committed_assist_point), _speed * _speed / maxf(_gravity, 0.01),
+			])
+			throw_refused.emit("too far to throw — get closer")
+			_leave_aim()
+			return
 	if not _spend_orb():
 		_leave_aim()
 		return
 	state = State.THROWN
+	# The throw is out of your hands, so the trainer stops being one.
+	#
+	# `_enter_aim()` hands the trainer locomotion and `_leave_aim()` takes it
+	# back, but a RELEASED throw goes through neither: it keeps the aim camera
+	# on purpose ("watching your own orb arc away is the shot") and sets state
+	# directly. So the trainer stayed a live walking actor through the flight
+	# AND the whole catch resolution -- and the Gate B run of 2026-08-23 caught
+	# what that costs. Trainer at z=-37.5 when the orb left their hand, 3.34m
+	# from the Bramblebun; trainer at z=-20.4 by the breakout, seventeen metres
+	# away, while the creature had not moved at all. Every subsequent throw was
+	# then made from twenty-five metres, out of the orb's physical range.
+	#
+	# It also breaks the resolution as a shot: the camera is in close on the
+	# orb for those seconds and the trainer was jogging out of the county.
+	_set_trainer_movable(false)
 	# The preview is a promise about a throw that has now been made. Left
 	# undrawn-but-visible, its last frame — the arc line and the landing disc —
 	# hung frozen in the world through the flight and the whole catch
@@ -387,8 +437,12 @@ func _release() -> void:
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 	_released_assist_point = _committed_assist_point
-	print("catch launch: release assist=%s predicted=%s" % [
+	var throw_range := -1.0
+	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
+		throw_range = origin.distance_to(_target.call("centre"))
+	print("catch launch: release assist=%s predicted=%s range=%.2f from=(%.2f, %.2f, %.2f) dir=(%.2f, %.2f, %.2f)" % [
 		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+		throw_range, origin.x, origin.y, origin.z, forward.x, forward.y, forward.z,
 	])
 
 	_despawn_orb()
@@ -396,7 +450,14 @@ func _release() -> void:
 	_player.get_parent().add_child(_orb)
 	_orb.connect("struck", _on_struck)
 	_orb.connect("missed", _on_missed)
-	_orb.call("launch", origin, forward, _speed, _target)
+	# The trainer goes in the list here rather than at the call site: the orb
+	# leaves the trainer's own hand, so without this a throw could register as
+	# hitting the person who threw it.
+	var ignore: Array[Node3D] = [_player]
+	for body: Node3D in _pass_through:
+		if body != null and is_instance_valid(body):
+			ignore.append(body)
+	_orb.call("launch", origin, forward, _speed, _target, ignore)
 	# The trainer throws rather than standing there. Their model is on a child
 	# node, so this reaches past the body to the thing that animates.
 	var body: Node = _player.get_node_or_null(^"Model")
@@ -657,6 +718,24 @@ static func predict_launch_point(
 ## CharacterBody3D keeps a small downward velocity while grounded to maintain
 ## contact. Catch prediction is planar: that bookkeeping must never be treated
 ## as a falling target during the release windup.
+## Whether an orb launched at `speed` under `gravity` can physically LAND on
+## `point`. This is the same discriminant `ballistic_direction()` solves: when
+## it goes negative there is no launch angle that reaches, and that function
+## quietly falls back to the straight line -- which drops short by however far
+## out of range the point was. Nothing used to ask the question before spending
+## the orb.
+static func within_ballistic_reach(
+	origin: Vector3, point: Vector3, speed: float, gravity: float
+) -> bool:
+	var flat := Vector2(point.x - origin.x, point.z - origin.z)
+	var reach := flat.length()
+	if reach < 0.01:
+		return true
+	var rise := point.y - origin.y
+	var s2 := speed * speed
+	return s2 * s2 - gravity * (gravity * reach * reach + 2.0 * rise * s2) >= 0.0
+
+
 static func launch_target_velocity(body_velocity: Vector3) -> Vector3:
 	return Vector3(body_velocity.x, 0.0, body_velocity.z)
 
@@ -676,14 +755,34 @@ func _on_struck(target: Node3D, offset: float) -> void:
 	orb_struck.emit(target, offset)
 
 
-func _on_missed() -> void:
+func _on_missed(reason: String, closest: float, needed: float) -> void:
 	state = State.IDLE
 	_cooldown = _throw_cooldown
-	print("catch launch: miss assist=%s predicted=%s" % [
+	print("catch launch: miss assist=%s predicted=%s reason=%s closest=%.2f" % [
 		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+		reason, closest,
 	])
 	_despawn_orb()
-	orb_missed.emit()
+	orb_missed.emit(miss_message(reason, closest, needed))
+
+
+## What a miss tells the player.
+##
+## Static and pure so the wording is testable without a flight. Every branch
+## carries the gap in metres: the difference between a throw that grazed and a
+## throw that was never near is the whole of "am I getting better at this", and
+## the old single string erased it.
+static func miss_message(reason: String, closest: float, needed: float) -> String:
+	if closest == INF or closest < 0.0:
+		return "the orb went wide"
+	var gap := maxf(0.0, closest - needed)
+	if gap <= 0.35:
+		return "so close — %.1fm wide" % gap
+	if reason == "ground":
+		return "the orb hit the ground — %.1fm wide" % gap
+	if reason == "flight_time":
+		return "the orb sailed past — %.1fm wide" % gap
+	return "the orb went wide — %.1fm" % gap
 
 
 func _despawn_orb() -> void:
@@ -700,3 +799,11 @@ func resting_orb() -> Node3D:
 
 func clear_orb() -> void:
 	_despawn_orb()
+
+
+## Who this trainer's orbs fly past. Set by `combat_manager.gd` each fight.
+func set_pass_through(bodies: Array) -> void:
+	_pass_through.clear()
+	for body: Variant in bodies:
+		if body is Node3D and is_instance_valid(body):
+			_pass_through.append(body as Node3D)

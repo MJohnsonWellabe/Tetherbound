@@ -75,6 +75,7 @@ const USE_ACTION := "interact"
 
 ## Discard the focused stack, after a confirm -- destructive, so it gets one.
 const DROP_ACTION := "backpack_drop"
+
 ## Halve the focused stack into the first empty slot. Non-destructive (both
 ## halves stay in the satchel), so unlike Use and Drop this applies on the
 ## same press with no picker or confirm.
@@ -92,6 +93,11 @@ const SPLIT_ACTION := "backpack_split"
 ## the three backpack verbs; `tests/test_controls.gd` fails the build if two
 ## of them collide again.
 const ASSIGN_ACTION := "backpack_assign"
+
+## True while `backpack_drop` must be ignored because the press still down is
+## the one that opened the shell. Cleared when that button is RELEASED, not
+## after N frames -- see `notify_shell_opened()`.
+var _ignore_drop_until_release: bool = false
 
 var _grid: GridContainer = null
 var _summary: Label = null
@@ -751,10 +757,29 @@ func revision() -> int:
 	return 0
 
 
+## The shell just opened, on the press that is still down.
+##
+## `game_menu.gd::open()` calls this; see its own comment for the collision.
+## An earlier attempt had this tab notice the closed-to-open transition inside
+## `poll()` instead, and that armed the guard one frame too late -- the drop
+## confirmation was already up, which `tools/_probe_pause.gd` showed by reading
+## `_confirming` directly (0, the focused slot) rather than inferring from the
+## shell's deaf flag. Being told beats noticing.
+func notify_shell_opened() -> void:
+	_ignore_drop_until_release = true
+
+
 func poll() -> void:
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
+	# Held until the opening press is physically released. A frame countdown was
+	# tried first and is not enough: `tools/_probe_pause.gd` shows `_read_drop`
+	# firing with the counter already spent, because more than one poll elapses
+	# between the shell opening and the button coming back up. "Not until they
+	# let go" is the only version of this guard that cannot be out-waited.
+	if _ignore_drop_until_release and not Input.is_action_pressed(DROP_ACTION):
+		_ignore_drop_until_release = false
 	_read_use()
 	_read_drop()
 	_read_split()
@@ -1321,6 +1346,24 @@ func _read_drop() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
 	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
+		return
+	# `backpack_drop` and `game_menu` are the SAME physical button -- gamepad
+	# Start (project.godot; data/config/menu.json's Backpack group note explains
+	# why drop moved there). game_menu.gd's own comment worked out one half of
+	# that collision, that Menu must not also CLOSE the shell, and missed the
+	# other half: the press that OPENS the shell is still down when this tab
+	# becomes visible, so opening the pause menu with anything at all in the
+	# satchel dropped the player straight into a "Drop it?" confirmation on
+	# whatever slot happened to hold focus -- and, because that confirmation
+	# calls `menu.hold_input(true)`, ate their next B putting it away instead of
+	# closing the menu. Reproduced with tools/_probe_pause.gd: on a stocked
+	# satchel the shell opens `deaf=true` and B leaves it open.
+	#
+	# A destructive verb offered without being asked for, one A press from
+	# deleting an item the player never selected. Same guard shape the shell
+	# already uses against the mirror case (`suppress_reopen`) and
+	# `dialogue_panel.gd::OPEN_GUARD_FRAMES` uses against its own.
+	if _ignore_drop_until_release:
 		return
 	if not Input.is_action_just_pressed(DROP_ACTION):
 		return

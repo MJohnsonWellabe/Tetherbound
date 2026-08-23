@@ -149,8 +149,19 @@ func _exercise_repeated_torch() -> void:
 		_fail("Player has no production torch/tool-hold nodes")
 		return
 
+	# CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Torch is
+	# a tool that lives in the bar ('torch doesn't need a button')."
+	# `torch_place` kept its keyboard key and lost its pad binding, so tapping
+	# it here failed the InputMap lookup outright and every torch assertion
+	# below fell over behind it. The torch is drawn and stowed the way every
+	# other tool is: assigned to a quick slot and toggled with that slot's
+	# button (`playground_hud.gd::_use_hotbar_slot`).
+	if not bool(_game.call("assign_hotbar", 0, "torch")):
+		_fail("could not put the torch on the quick bar, which is how it is drawn now")
+		return
+
 	for cycle in TORCH_CYCLES:
-		await _tap("torch_place")
+		await _tap("hotbar_1")
 		for i in 8:
 			await physics_frame
 		var prop := torch.call("prop_node") as Node3D
@@ -173,7 +184,7 @@ func _exercise_repeated_torch() -> void:
 				or torch.get_children().filter(func(child: Node) -> bool: return child.name == &"TorchOmni").size() != 1:
 			_fail("torch cycle %d: duplicate light nodes accumulated" % (cycle + 1))
 
-		await _tap("torch_place")
+		await _tap("hotbar_1")
 		for i in 8:
 			await physics_frame
 		if not str(_game.get("equipped_tool")).is_empty() or not str(hold.call("equipped")).is_empty():

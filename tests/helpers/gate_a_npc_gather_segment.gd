@@ -11,7 +11,12 @@ extends RefCounted
 ## - travel is by the player's left stick, including through real doors;
 ## - Tam's production dialogue is the only source of the tools;
 ## - the Satchel's focused controller UI assigns the quick slots;
-## - harvesting uses `use_tool`, never a direct gather call;
+## - harvesting uses the PAD's own gather button, never a direct gather call.
+##   That is `interact` (X) since CONTROLLER-MAP: the owner's map gives X
+##   "talk, gather, chop, mine", and `use_tool` kept only its mouse button.
+##   Pressing `use_tool` here meant this segment could never run on a pad at
+##   all -- `_required_pad_actions_exist()` failed the whole Gate A continuous
+##   core on it -- and, worse, it hid that X gathered without ever swinging;
 ## - no teleport, direct inventory grant, progression mutation, or private
 ##   gameplay method stages the route.
 ##
@@ -116,7 +121,16 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		return false
 	for cycle in cycles:
 		if not await _walk_to_and_activate(prompt, 1400):
-			_fail("natural controller travel could not activate %s cycle %d" % [who, cycle + 1])
+			var holder: Variant = _arbiter.call("winning_provider")
+			_fail(("natural controller travel could not activate %s cycle %d "
+				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
+				+ "means something nearer took the interact line.") % [
+				who, cycle + 1,
+				_player.global_position.distance_to(npc.global_position),
+				str((holder as Node).name) if holder is Node else "<none>",
+				str((holder as Node).get_parent().name) if holder is Node \
+					and (holder as Node).get_parent() != null else "<none>",
+				who])
 			return false
 		if not await _wait_dialogue_open(90):
 			_fail("%s cycle %d did not open dialogue" % [who, cycle + 1])
@@ -225,8 +239,23 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	# mid-swing, and a continuous controller route must respect that same rule.
 	if not await _wait_for_tool_idle():
 		return false
-	await _tap_action(hotbar_action)
+	# A tool slot TOGGLES. `playground_hud.gd:2228` -- "press slot, tool in hand"
+	# is an owner directive, and pressing the slot again puts the tool away, so
+	# one button is both draw and stow.
+	#
+	# This helper pressed it unconditionally, which makes the whole segment
+	# depend on what the previous beat left in hand: with the axe already
+	# equipped the press STOWS it and the check below reports "hotbar_1 quick
+	# slot did not put a visible axe in the trainer's hand (assigned=axe,
+	# game=, hold=)". Two consecutive runs of this file failed at two different
+	# points with no code change between them, which is what a toggle pressed
+	# blind looks like.
+	#
+	# A player does not press the slot when the tool is already in hand, so
+	# neither does this.
 	var hold: Node = _player.get("tool_hold")
+	if str(_game.get("equipped_tool")) != tool_id:
+		await _tap_action(hotbar_action)
 	for _i in 30:
 		if str(_game.get("equipped_tool")) == tool_id and hold != null and hold.call("prop_node") != null:
 			break
@@ -249,9 +278,46 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if message != null:
 		message.text = ""
 		message.visible = false
-	await _tap_action(&"use_tool")
+	# Sampled BEFORE the press, because the failure below reports an empty
+	# `equipped` and the check twelve lines above proved it was full. Only the
+	# press sits between them, so which side of it the tool leaves on is the
+	# whole question -- and an after-the-fact sample cannot answer it.
+	var equipped_before := str(_game.get("equipped_tool"))
+	# `is_instance_valid`, not `== null`. A FREED object is neither reliably
+	# equal to null nor safe to `str()`, and the check twelve lines above uses
+	# `!= null` -- so a prop freed between the equip and the press would pass
+	# that guard and then read as null here, which is exactly the contradiction
+	# this sample exists to resolve.
+	var prop_raw: Variant = hold.call("prop_node")
+	var prop_before := "<null>"
+	if prop_raw != null:
+		prop_before = "<freed>" if not is_instance_valid(prop_raw) \
+			else "%s(%s)" % [str(prop_raw.get_class()), str(prop_raw.name)]
+	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
-		_fail("physical Use Tool did not start the visible %s swing" % tool_id)
+		# Say WHY, not just that. This assertion has never once run in CI --
+		# `--gate-a-continuous-core` is a flag no shard passes -- so the first
+		# time it fired, on 2026-08-23, it reported a bare "did not start the
+		# swing" about a path with no working baseline to compare against.
+		#
+		# The three things that decide this: who won the interact button (a
+		# nearer prop takes a distance-ranked arbiter), whether the tool is
+		# still in hand at the moment of the press, and whether a swing was
+		# already running and refused the new one.
+		var winner: Variant = _arbiter.call("winning_provider") if _arbiter != null else null
+		_fail(("physical interact on the node did not start the visible %s swing "
+			+ "(arbiter winner=%s, equipped=%s, prop=%s, cooling=%s, node=%s)") % [
+			tool_id,
+			str(winner.name) if winner is Node else "<none>",
+			str(_game.get("equipped_tool")),
+			str(hold.call("prop_node")),
+			str(hold.call("is_swinging")),
+			str(node.name) if node != null else "<null>"])
+		_fail("  ...and BEFORE the press: equipped=%s prop=%s | winner parent=%s" % [
+			equipped_before,
+			prop_before,
+			str((winner as Node).get_parent().name) if winner is Node \
+				and (winner as Node).get_parent() != null else "<none>"])
 		return false
 	for _i in 90:
 		if int(inventory.call("count", item_id)) > before and message != null and message.visible:
@@ -300,22 +366,46 @@ func _nearest_authored_node(item_id: String) -> Node3D:
 	return best
 
 
+## Four ways to fail and, until now, one bare `false` for all of them.
+##
+## This has never run in CI (`--gate-a-continuous-core` is a flag no shard
+## passes), so the first time it fired it reported "could not naturally enter
+## Mira's building" about a door nobody has watched. Each branch says which one
+## it was, for the same reason the swing assertion now does: on this path a
+## symptom without a cause costs a twenty-minute run to re-derive.
 func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	var prompt := door.get_node_or_null(^"Prompt") as Node3D
 	if prompt == null:
+		_fail("door '%s' has no Prompt child; nothing can open it" % door.name)
 		return false
 	if not bool(door.call("is_open")):
 		if not await _walk_to_and_activate(prompt, 1200):
+			var winner: Variant = _arbiter.call("winning_provider")
+			_fail(("could not reach or activate door '%s' in 1200 frames "
+				+ "(player %.1fm away at %s, door at %s, prompt enabled=%s, "
+				+ "arbiter winner=%s). A distance that does not shrink across "
+				+ "runs is the player walking into geometry, not walking slowly.") % [
+				door.name, _player.global_position.distance_to(door.global_position),
+				str(_player.global_position.round()), str(door.global_position.round()),
+				str(prompt.get("enabled")) if prompt.has_method("get") else "?",
+				str((winner as Node).name) if winner is Node else "<none>"])
 			return false
 		for _i in 45:
 			if bool(door.call("is_open")):
 				break
 			await _tree.process_frame
 	if not bool(door.call("is_open")):
+		_fail("door '%s' was activated and did not open within 45 frames" % door.name)
 		return false
 	var inward := inside_target - door.global_position
 	inward.y = 0.0
-	return await _walk_toward(door.global_position + inward.normalized() * 2.2, 600, 0.7)
+	var step := door.global_position + inward.normalized() * 2.2
+	if not await _walk_toward(step, 600, 0.7):
+		_fail(("opened door '%s' but could not walk the 2.2m inward to %s "
+			+ "(stopped %.1fm short)") % [
+			door.name, str(step.round()), _player.global_position.distance_to(step)])
+		return false
+	return true
 
 
 func _exit_through(door: Node3D, inside_target: Vector3) -> bool:
@@ -349,15 +439,72 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 	return null
 
 
+## Walk until the world OFFERS the thing, then press.
+##
+## Not "walk to within 1.65m, then press". A player presses when the prompt
+## appears, and how far away that happens is the interactable's business -- some
+## reach further than others, and a doorway's own frame can stop you closing the
+## last metre. The distance-first version reported "could not reach or activate
+## door 'Door' in 1200 frames (player 3.6m away, prompt enabled=true)": twenty
+## seconds of walking into a wall while the door sat there, offerable, unpressed.
+##
+## So the offer is the success condition and the distance is only the fallback
+## for something that is not currently winning.
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
-	if not await _walk_toward(target.global_position, budget, 1.65):
-		return false
+	for _i in budget:
+		if _arbiter.call("winning_provider") == target:
+			await _tap_action(&"interact")
+			return true
+		var to := target.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() <= 1.65:
+			# Close enough, and something ELSE is holding the interact line.
+			#
+			# The village stands in open meadow and the arbiter ranks by
+			# distance, so a wandering wild creature -- or any prop closer than
+			# the villager -- takes the prompt. Breaking out here made that a
+			# hard failure, which is why this segment could reach Tam on one run
+			# and not the next with no code change between them: what was
+			# standing nearby had changed.
+			#
+			# A player sidesteps and asks again. `smoke_party_count_after_catches.gd`
+			# already fixed the identical thing this way after reporting "could
+			# not engage" from 3.3m inside a 6.0m range.
+			var aside := to.cross(Vector3.UP).normalized() * 1.4
+			if _i % 2 == 1:
+				aside = -aside
+			var spot := _player.global_position + aside
+			for _j in 10:
+				await _step_toward(spot)
+			_stop_left_stick()
+			for _j in 6:
+				await _tree.physics_frame
+			continue
+		await _step_toward(target.global_position)
+	_stop_left_stick()
+	# Standing close and still not winning: give the arbiter a few frames to
+	# settle before giving up, which is what the previous version did and is
+	# still right once the walking is over.
 	for _i in 30:
 		if _arbiter.call("winning_provider") == target:
 			await _tap_action(&"interact")
 			return true
 		await _tree.physics_frame
 	return false
+
+
+## One frame of stick toward a point. Split out of `_walk_toward` so the loop
+## above can interleave walking with checking what the world is offering.
+func _step_toward(point: Vector3) -> void:
+	var to := point - _player.global_position
+	to.y = 0.0
+	var basis: Basis = _rig.call("planar_basis")
+	var local := basis.inverse() * to.normalized()
+	Input.action_press(&"move_forward", clampf(-local.z, 0.0, 1.0))
+	Input.action_press(&"move_back", clampf(local.z, 0.0, 1.0))
+	Input.action_press(&"move_right", clampf(local.x, 0.0, 1.0))
+	Input.action_press(&"move_left", clampf(-local.x, 0.0, 1.0))
+	await _tree.physics_frame
 
 
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
@@ -379,7 +526,19 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> boo
 
 
 func _prove_movement_resumed() -> bool:
-	if _tree.paused or INPUT_OWNER.current(_tree) != null or not bool(_player.call("locomotion_enabled")):
+	# Say WHICH of the four ways this fails. "Movement stayed dead" covers a
+	# paused tree, a stale input owner, a cleared locomotion flag and a player
+	# who simply could not walk anywhere, and those are four different bugs
+	# with four different fixes -- the caller used to report them identically.
+	if _tree.paused:
+		print("movement dead: the scene tree is still paused")
+		return false
+	var owner_node: Variant = INPUT_OWNER.current(_tree)
+	if owner_node != null:
+		print("movement dead: input still owned by %s" % str(owner_node))
+		return false
+	if not bool(_player.call("locomotion_enabled")):
+		print("movement dead: locomotion_enabled is false")
 		return false
 	# Try four physical directions because a villager counter or wall can block
 	# one without implying dead world input.  This is ordinary walking, not a
@@ -397,6 +556,9 @@ func _prove_movement_resumed() -> bool:
 		if Vector2(_player.global_position.x - before.x,
 				_player.global_position.z - before.z).length() >= 0.3:
 			return true
+	print("movement dead: locomotion is live but four stick directions moved the player nowhere from (%.2f, %.2f, %.2f)" % [
+		_player.global_position.x, _player.global_position.y, _player.global_position.z,
+	])
 	return false
 
 
@@ -474,7 +636,7 @@ func _event_for(action: StringName, pressed: bool) -> InputEvent:
 
 func _required_pad_actions_exist() -> bool:
 	for action: StringName in [&"inventory", &"backpack_assign", &"ui_up", &"ui_down",
-			&"ui_left", &"ui_right", &"menu_cancel", &"interact", &"use_tool",
+			&"ui_left", &"ui_right", &"menu_cancel", &"interact",
 			&"hotbar_1", &"hotbar_2", &"hotbar_3"]:
 		if _event_for(action, true) == null:
 			_fail("required action '%s' has no physical joypad binding" % action)

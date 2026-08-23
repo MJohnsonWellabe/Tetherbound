@@ -76,6 +76,10 @@ func _run() -> void:
 		return
 	# A fresh station, whatever a save left behind.
 	progression.call("set_flag", str(relay.call("console_flag")), false)
+	# The shipped console now gates on the relay captain (see below). The
+	# one-way test is about the console, not the gate, so grant the captain
+	# here rather than teaching that test about a second subject.
+	progression.call("set_flag", "relay_captain_defeated")
 
 	var stats: Dictionary = relay.call("stats")
 	print("relay stands at %s: %s" % [stats.get("centre"), stats])
@@ -258,16 +262,25 @@ func _the_console_is_one_way(relay: Node3D, progression: RefCounted) -> void:
 		_fail("the flag did not survive a second press")
 
 
-## The `requires_flag` seam SE25 will set. Exercised by setting it on the
-## built node, because the shipped config deliberately leaves it EMPTY while
-## SE25 is unmerged — a gate on a flag nothing in this branch can set would be
-## a station the player cannot finish. The mechanism ships tested either way.
+## The `requires_flag` gate, in two halves.
+##
+## SE25 has landed, so the first half is no longer hypothetical: assert the
+## SHIPPED config actually names the relay captain. This was the gap — the
+## mechanism was tested with an invented flag while `tether_relay.json` left
+## `requires_flag` empty, so the console shipped open and a player could shut
+## the relay down without ever meeting the captain, in defiance of
+## objectives.json's own beat order (captain -> captive -> relay). A test that
+## only ever exercises a flag it made up cannot see that.
 func _the_console_can_be_gated(relay: Node3D, progression: RefCounted) -> void:
 	var flag: String = str(relay.call("console_flag"))
-	progression.call("set_flag", flag, false)
 	var config: Dictionary = relay.get("_config")
 	var console: Dictionary = (config.get("apparatus", {}) as Dictionary).get("console", {})
-	var restore := str(console.get("requires_flag", ""))
+	var shipped_gate := str(console.get("requires_flag", ""))
+	if shipped_gate != "relay_captain_defeated":
+		_fail("the shipped console gates on '%s'; objectives.json orders the captain before the relay, so it must gate on 'relay_captain_defeated'" % shipped_gate)
+
+	progression.call("set_flag", flag, false)
+	var restore := shipped_gate
 	console["requires_flag"] = "smoke_relay_gate"
 
 	if bool(relay.call("disable_relay")):

@@ -138,6 +138,12 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	if game == null:
 		push_error("no Game autoload; chopped %s into nothing" % _item_id)
 		return
+	# OP21-24, same rule as harvest_node.gd: a press with the axe or pickaxe
+	# in hand swings it, and the swing resolves back into `gather()` with the
+	# prop that swung -- so the tree falls to a visible chop rather than to a
+	# silent prompt. Bare hands and out-of-reach nodes fall through unchanged.
+	if equipped_tool == null and HARVEST_LOGIC.swing_answers_the_prompt(self, game):
+		return
 	var inventory: RefCounted = game.get("inventory")
 	var items: RefCounted = game.get("items")
 	if items == null or inventory == null:

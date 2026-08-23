@@ -15,10 +15,23 @@ extends SceneTree
 ##
 ## CONTROLLER-MAP moved party cycling to LB, so the d-pad no longer reaches the
 ## encounter director at all. This test is kept and retargeted rather than
-## deleted: what it actually proves is that a d-pad press with the build menu
-## open reaches the MENU and not the world, and `hotbar_2` is still on d-pad
-## left, so the ownership question is unchanged. Its companion
+## deleted: what it actually proves is that a press with the build menu open
+## reaches the MENU and not the world, and `hotbar_2` is still on d-pad left,
+## so the ownership question is unchanged. Its companion
 ## `smoke_menu_owns_dpad.gd` proves the hotbar half from the other side.
+##
+## That retarget was only HALF applied when CONTROLLER-MAP landed. The control
+## case below still pressed d-pad left and demanded that it cycle the active
+## creature -- the exact binding
+## `ralph/OWNER_DIRECTIVES_2026-08-22.md` section 1 removed, and whose removal
+## is the whole point of the remap ("the d-pad is hotbar 2-5 in every context
+## including combat"). So this file failed on `main` from the moment the merge
+## landed, asserting the banned map. No CI shard runs it, so nothing said so.
+##
+## The control case now presses LB, which is where cycling actually lives, and
+## the build-menu half checks BOTH buttons: LB must not cycle while the
+## catalogue is up (the owner's map gives LB/RB to catalogue category in build
+## mode), and the d-pad must move grid focus rather than the world.
 ##
 ## A single physical press is sent, not two synthetic actions independently,
 ## because the whole defect is that ONE press used to fire both. Sending it
@@ -40,6 +53,11 @@ const SETTLE_FRAMES := 300
 ## Godot's built-in ui_left also fires on. One press must reach both actions
 ## for this test to mean anything -- see the header.
 const DPAD_LEFT_BUTTON := 13
+
+## project.godot: `party_cycle` is joypad button 9 (LB). One press cycles, in
+## the field and mid-fight alike -- CONTROLLER-MAP retired D32's directional
+## pair, which is what freed the d-pad for the hotbar.
+const PARTY_CYCLE_BUTTON := 9
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -69,7 +87,7 @@ func _run() -> void:
 		_report()
 		return
 
-	await _check_dpad_left_cycles_with_no_menu_open()
+	await _check_party_cycle_works_with_no_menu_open()
 	await _check_build_menu_owns_the_same_press()
 	_report()
 
@@ -92,15 +110,16 @@ func _seed_party() -> bool:
 
 ## The leak this is about is a real, working cycle firing at the wrong time.
 ## A dead binding would make the build-menu check below pass for entirely the
-## wrong reason, so prove the press actually cycles first, with no menu up.
-func _check_dpad_left_cycles_with_no_menu_open() -> void:
+## wrong reason, so prove the press actually cycles first, with no menu up --
+## on LB, which is where CONTROLLER-MAP put cycling.
+func _check_party_cycle_works_with_no_menu_open() -> void:
 	var before := int(_party.call("active_index"))
-	await _press_dpad_left()
+	await _press_button(PARTY_CYCLE_BUTTON)
 	var after := int(_party.call("active_index"))
 	if after == before:
-		_fail("with no menu up, d-pad left did not cycle the active creature (still %d) -- the build-menu check below would prove nothing" % before)
+		_fail("with no menu up, LB did not cycle the active creature (still %d) -- the build-menu check below would prove nothing" % before)
 		return
-	print("  ok    no menu: d-pad left cycled the active creature (%d -> %d)" % [before, after])
+	print("  ok    no menu: LB cycled the active creature (%d -> %d)" % [before, after])
 
 
 func _check_build_menu_owns_the_same_press() -> void:
@@ -163,6 +182,19 @@ func _check_build_menu_owns_the_same_press() -> void:
 	else:
 		print("  ok    build menu open: d-pad left moved grid focus (%d -> %d)" % [cell_index_before, cells.find(focus_after)])
 
+	# The other half of the same ownership question. The owner's map gives
+	# LB/RB to catalogue CATEGORY while building, so the one button that does
+	# cycle creatures in the field must not cycle them here either.
+	var cycle_before := int(_party.call("active_index"))
+	await _press_button(PARTY_CYCLE_BUTTON)
+	var cycle_after := int(_party.call("active_index"))
+	if cycle_after != cycle_before:
+		_fail("build menu open: LB still cycled the active creature (%d -> %d) -- Build does not own the shoulder buttons" % [
+			cycle_before, cycle_after,
+		])
+	else:
+		print("  ok    build menu open: LB did not cycle the active creature")
+
 	menu.call("close")
 	for i in SETTLE_FRAMES:
 		await process_frame
@@ -173,14 +205,18 @@ func _check_build_menu_owns_the_same_press() -> void:
 ## press resolve to `hotbar_2` (project.godot override) AND the built-in
 ## `ui_left` Control focus reads, exactly as it does on the ROG Ally.
 func _press_dpad_left() -> void:
+	await _press_button(DPAD_LEFT_BUTTON)
+
+
+func _press_button(button_index: int) -> void:
 	var down := InputEventJoypadButton.new()
-	down.button_index = DPAD_LEFT_BUTTON
+	down.button_index = button_index
 	down.pressed = true
 	Input.parse_input_event(down)
 	for i in 4:
 		await physics_frame
 	var up := InputEventJoypadButton.new()
-	up.button_index = DPAD_LEFT_BUTTON
+	up.button_index = button_index
 	up.pressed = false
 	Input.parse_input_event(up)
 	for i in 8:
