@@ -61,6 +61,22 @@ extends SceneTree
 ## single worst thing a capture tool can do here is the 45-minute wait on a
 ## moment that never came that an earlier harness already paid for once.
 ##
+## A RESIDUAL RISK THIS SCRIPT CANNOT FIX FROM HERE. `impact_flash.gd`'s own
+## header already documents one instance of a pattern worth watching for
+## again: an effect timed on `_process(delta)` — real wall-clock render-frame
+## time, not the physics tick — can complete its entire lifetime inside a
+## SINGLE frame under this harness's ~2.4s-per-frame software rendering, and
+## be gone before any shutter this script fires. `impact_flash.gd` was moved
+## to `_physics_process` for exactly that reason (see its own comment).
+## `move_projectile.gd` (the quick attack's travel/bolt) was NOT — it is still
+## `_process`-driven — and `scripts/player/camera_rig.gd`'s own follow/look
+## (`_follow()`, `_apply_look()`) are `_process`-driven too. If a future
+## capture sheet still shows a dead projectile or a camera that is not where
+## the aim math (verified correct, headlessly, against the real fight) says
+## it should be, that class of bug — not this script's aim/timing — is where
+## to look next; it is a source fix, not something this photographer can wait
+## or re-aim its way around.
+##
 ## SHOT LIST (12 PNGs — six moments, each shot twice):
 ##   01-engagement          — player creature and wild creature squared up,
 ##                             the instant a wild fight opens
@@ -276,7 +292,7 @@ func _run_wild_encounter() -> void:
 		return
 
 	var ally: Node3D = _director.call("ally_body") as Node3D
-	_aim_camera(ally.global_position, wild.global_position)
+	_aim_camera_clear(ally.global_position, wild.global_position, ally)
 	await _shoot_pair("01-engagement")
 
 	var attempt := 0
@@ -288,7 +304,7 @@ func _run_wild_encounter() -> void:
 		if ally == null or wild == null or not is_instance_valid(wild):
 			print("FAIL: the ally body or the wild creature disappeared mid-attempt")
 			break
-		_aim_camera(ally.global_position, wild.global_position)
+		_aim_camera_clear(ally.global_position, wild.global_position, ally)
 		var result := await _throw_a_quick_attack()
 		if result.is_empty():
 			print("FAIL: quick attack %d/%d did not resolve within %d frames (no signal)" % [
@@ -305,14 +321,14 @@ func _run_wild_encounter() -> void:
 			break
 		ally = _director.call("ally_body") as Node3D
 		if ally != null and is_instance_valid(wild):
-			_aim_camera(ally.global_position, wild.global_position)
+			_aim_camera_clear(ally.global_position, wild.global_position, ally)
 		await _shoot_pair("02-move-firing")
 
 		await _await_physics(IMPACT_SETTLE_FRAMES, "impact settle")
 		if bool(_manager.call("is_fighting")) and is_instance_valid(wild):
 			ally = _director.call("ally_body") as Node3D
 			if ally != null:
-				_aim_camera(ally.global_position, wild.global_position)
+				_aim_camera_clear(ally.global_position, wild.global_position, ally)
 			await _shoot_pair("03-hit-landing")
 		else:
 			print("FAIL: the fight ended before the hit-reaction frame could be photographed")
@@ -439,15 +455,38 @@ func _run_trainer_encounter() -> void:
 		print("FAIL: begin_trainer_battle() returned false; encounter B skipped")
 		return
 
+	# `combat_manager.gd::enemy_body()`, never a `find_child("TrainerCreature_*")`
+	# scene-tree search — that search's own header names it a known-bad pattern
+	# by citing a real incident it caused ("aimed and measured against the
+	# wrong body while the live opponent stood elsewhere"). It happens to find
+	# the right node on a lone, fresh battle like this one, but it is still the
+	# wrong tool for "where the fight actually is", and the fight itself
+	# exposes the right accessor for exactly this reason.
+	#
+	# Aimed here, the moment the opponent exists, rather than only once at the
+	# very end of the settle wait: the yaw set by the teleport above pointed at
+	# the TRAINER's pre-fight spot, which `_place_fighters()` can leave facing
+	# a good deal of the way round from where the deployed creature actually
+	# ends up (the creature deploys toward the player, coming from roughly the
+	# opposite side of the trainer the approach walk faced). Aiming immediately
+	# gives the camera the whole settle window to arrive on the right bearing
+	# instead of a couple of render-settle frames.
+	var ally: Node3D = _director.call("ally_body") as Node3D
+	var opponent: Node3D = _manager.call("enemy_body") as Node3D
+	if ally != null and opponent != null:
+		_aim_camera_clear(ally.global_position, opponent.global_position, ally)
+
 	await _await_physics(ENGAGE_SETTLE_FRAMES, "trainer-battle camera settle")
 	if not bool(_manager.call("is_fighting")):
 		print("FAIL: the trainer battle never actually opened a fight; 05-trainer-battle was not captured")
 		return
 
-	var ally: Node3D = _director.call("ally_body") as Node3D
-	var opponent: Node3D = _world.find_child("TrainerCreature_*", true, false) as Node3D
+	ally = _director.call("ally_body") as Node3D
+	opponent = _manager.call("enemy_body") as Node3D
 	if ally != null and opponent != null:
-		_aim_camera(ally.global_position, opponent.global_position)
+		_aim_camera_clear(ally.global_position, opponent.global_position, ally)
+	else:
+		print("FAIL: no live opponent body after the trainer battle opened; 05-trainer-battle may be aimed at nothing")
 	await _shoot_pair("05-trainer-battle")
 
 	await _flee_if_fighting()
@@ -490,7 +529,7 @@ func _run_elite_encounter() -> void:
 
 	var ally: Node3D = _director.call("ally_body") as Node3D
 	if ally != null:
-		_aim_camera(ally.global_position, wild.global_position)
+		_aim_camera_clear(ally.global_position, wild.global_position, ally)
 	await _shoot_pair("06-elite-encounter")
 
 	await _flee_if_fighting()
@@ -531,6 +570,46 @@ func _aim_camera(from: Vector3, to: Vector3) -> void:
 	if dir.length() < 0.01:
 		return
 	_rig.set("yaw", atan2(-dir.x, -dir.z))
+
+
+## `_aim_camera` alone only answers "what direction"; it does not check
+## whether the camera can actually SEE `to` from there. That was never wrong
+## at the arena's authored separation (`combat.json` arena.separation, 5m),
+## but a wild or trainer creature's own combat AI keeps closing distance
+## through the settle wait every shot here already has to spend on the camera
+## glide (`ENGAGE_SETTLE_FRAMES`) -- a real fight was measured sitting at
+## ~2m by the time these shots fire, not 5m. At 2m a dead-behind yaw points
+## the target straight through the ally's own collider: confirmed with an
+## actual physics raycast from the camera's real position (not assumed) —
+## `camera->wild` hit the ally's own `CharacterBody3D`, which is exactly the
+## "same still life" a blind critic would see, whatever is or is not
+## happening to the creature that is hidden behind it. A player would nudge
+## the stick to see around their own creature; this tries that nudge and
+## VERIFIES it cleared rather than hoping it did.
+func _aim_camera_clear(from: Vector3, to: Vector3, avoid: Node3D) -> void:
+	_aim_camera(from, to)
+	if avoid == null or not is_instance_valid(avoid) or _world == null:
+		return
+	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return
+	var space: PhysicsDirectSpaceState3D = _world.get_world_3d().direct_space_state
+	var side := to - from
+	side.y = 0.0
+	if side.length() < 0.01:
+		return
+	side = side.normalized().rotated(Vector3.UP, PI * 0.5)
+	for offset in [0.0, 1.6, -1.6, 2.8, -2.8]:
+		if offset != 0.0:
+			_aim_camera(from + side * offset, to)
+			camera = _rig.get_node_or_null(^"Camera3D") as Camera3D
+			if camera == null:
+				return
+		var query := PhysicsRayQueryParameters3D.create(camera.global_position, to)
+		var hit: Dictionary = space.intersect_ray(query)
+		if hit.is_empty() or hit.get("collider") != avoid:
+			return
+	print("note: every camera nudge tried toward this target was still blocked by the ally's own body")
 
 
 ## Press the interact button until a fight opens, bounded. The wild bodies
