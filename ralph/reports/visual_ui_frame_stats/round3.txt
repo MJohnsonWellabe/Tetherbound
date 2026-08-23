@@ -1,0 +1,51 @@
+frame                                sky%  horiz  hue  chrom% vspread    sat   nearL     seam    hit%
+
+frames
+-----------------------------------------------------------------------------------------------------
+01-title.png                          0.0   0.00    4  10.488    0.61   0.51   0.212 0.197@648  0.000
+                                     cyan 68%, green 18%, blue 8%, yellow 6%
+02-starter-picker.png                 0.0   0.00    2   6.402    0.62   0.39   0.142 0.103@105  0.222
+                                     green 93%, orange 6%
+03-name-prompt.png                    0.0   0.00    1  86.589    0.33   0.48   0.133 0.139@934  0.201
+                                     blue 100%
+04-dialogue-panel.png                16.1   0.16    4  21.751    0.94   0.52   0.138 0.248@774  0.102
+                                     chartreuse 46%, blue 29%, cyan 12%, green 5%
+05-hud-exploration.png               16.1   0.16    3  22.169    0.95   0.57   0.135 0.205@984  0.111
+                                     chartreuse 38%, blue 33%, cyan 19%
+06-hud-input-glyphs.png              16.1   0.16    3  21.964    0.95   0.57   0.135 0.205@984  0.090
+                                     chartreuse 38%, blue 32%, cyan 19%
+07-minimap.png                       16.1   0.16    3  22.016    0.95   0.57   0.135 0.206@984  0.114
+                                     chartreuse 38%, blue 33%, cyan 20%
+08-party-strip.png                    0.0   0.00    0   0.000    0.00   0.20   0.088 0.000@1    0.000
+09-stamina-arc.png                    0.0   0.00    1   0.000    0.01   0.20   0.088 0.016@194  0.000
+                                     cyan 100%
+10-combat-hud.png                     8.8   0.09    5  24.560    0.66   0.49   0.224 0.124@201  0.023
+                                     chartreuse 32%, yellow 20%, blue 18%, cyan 15%
+11-capture-reticle.png               26.3   0.26    5  10.523    0.64   0.62   0.164 0.090@362  0.016
+                                     chartreuse 47%, blue 31%, cyan 8%, green 7%
+12-menu-backpack.png                  0.0   0.00    3  83.261    0.88   0.43   0.136 0.310@224  0.049
+                                     blue 86%, cyan 7%, green 6%
+13-menu-creatures.png                 0.0   0.00    4  64.438    0.91   0.41   0.127 0.310@224  0.951
+                                     blue 57%, cyan 27%, green 7%, orange 6%
+14-menu-map.png                       0.0   0.00    3  74.796    0.74   0.42   0.120 0.310@224  0.000
+                                     blue 79%, cyan 12%, green 8%
+15-menu-quest-log.png                 0.0   0.00    3  61.617    0.38   0.43   0.120 0.310@224  0.000
+                                     blue 64%, cyan 27%, green 8%
+16-menu-build.png                     0.0   0.00    3  80.855    0.44   0.44   0.120 0.488@566  0.000
+                                     blue 85%, green 8%, cyan 7%
+17-menu-save.png                      0.0   0.00    3  69.961    0.31   0.43   0.120 0.310@224  0.000
+                                     blue 73%, cyan 18%, green 8%
+18-menu-settings.png                  0.0   0.00    3  59.021    0.64   0.42   0.120 0.310@224  0.022
+                                     blue 63%, cyan 29%, green 8%
+19-craft-panel.png                    0.0   0.00    3  34.501    0.69   0.60   0.043 0.123@877  0.000
+                                     blue 59%, cyan 25%, chartreuse 9%
+20-shop-panel.png                     0.0   0.00    3  34.274    0.56   0.60   0.055 0.103@970  0.019
+                                     blue 61%, cyan 22%, chartreuse 11%
+21-storage-panel.png                  0.0   0.00    4  30.274    0.56   0.63   0.043 0.096@366  0.000
+                                     blue 63%, cyan 18%, chartreuse 12%, yellow 5%
+22-swap-panel.png                     0.0   0.00    4  28.517    0.33   0.63   0.043 0.106@453  0.000
+                                     blue 60%, cyan 21%, chartreuse 12%, yellow 5%
+23-creature-bed-panel.png             0.0   0.00    4  26.066    0.31   0.66   0.043 0.110@436  0.011
+                                     blue 64%, chartreuse 18%, cyan 10%, yellow 6%
+_sheet.png                            0.0   0.00    4  11.237    0.49   0.30   0.086 0.414@371  0.017
+                                     blue 50%, cyan 18%, chartreuse 15%, green 12%
