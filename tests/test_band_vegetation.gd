@@ -82,14 +82,27 @@ func test_scatter_rules_config_carries_both_split_arrays() -> void:
 	# The real caller merges via config(), not load_config() directly -- this
 	# proves the two-call merge in scatter_rules.gd actually wires both arrays
 	# into one dictionary rather than the second call clobbering the first.
+	#
+	# GATE-D4/prompt 65: was `assert_eq` against the pre-split baseline count,
+	# which only ever held while every band file matched the original
+	# unsplit file exactly -- true by construction until a lane actually used
+	# the mechanism GATE_D_LANE_CONTRACT.md section 4 invites ("add your
+	# clearings normally"). Band 4's new watchtower-spur and field-camp
+	# clearings (data/config/bands/band4_upper_meadows_ironwood/vegetation.json)
+	# are genuinely NEW entries past the baseline, exactly like the sibling
+	# `test_merged_arrays_are_identical_to_the_pre_split_file` above already
+	# expects (`merged.size() >= want_array.size()`) -- this test used a
+	# stricter, uncoordinated check on the same data and broke on the first
+	# real content addition rather than on drift. Loosened to match its own
+	# sibling's contract: at least the baseline, never fewer.
 	SCATTER_RULES._config = {}
 	var config := SCATTER_RULES.config()
 	var baseline := _read_json(BASELINE_PATH)
 	for array_key: String in SPLIT_KEYS:
 		var want: Array = baseline.get(array_key, []) as Array
 		var got: Array = config.get(array_key, []) as Array
-		assert_eq(got.size(), want.size(),
-			"scatter_rules.config()'s '%s' has %d entries, expected %d" % [array_key, got.size(), want.size()])
+		assert_true(got.size() >= want.size(),
+			"scatter_rules.config()'s '%s' has %d entries, expected at least %d" % [array_key, got.size(), want.size()])
 	SCATTER_RULES._config = {}
 
 

@@ -3,6 +3,297 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-D4b — the Upper Meadows package's unfinished half: a second clean suite, riding proved on the real route, and a camp pad where the ironwood is cut
+
+`tests: tests/run_tests.gd (full, 1301/0), tools/_run_d4_tests_fast.gd (95/0), tests/smoke_riding.gd, tools/_probe_ow5_walk.gd, tools/_probe_band4_sites.gd, tools/_probe_chapter_map.py, tools/_capture_band4_sites.gd` · `area: content, band4`
+
+The GATE-D4 entry below shipped the region and named four things it had not
+finished. This item closes three of them and hands the fourth on with the
+frames it was missing.
+
+**1. The second full-suite run, properly.** The record below is honest that
+only one full run ever completed, with the two failures it then fixed, and
+that the confirming rerun was started and killed under a box running a dozen
+concurrent Godot processes. Run alone on this container, **three times over
+this item's life — 1301 tests, 714810 assertions, 0 failed, every time**, the
+last of them on the final tree. The 117-test D4 set (which includes
+`test_harvest.gd`'s real glTF loads, the tests that actually read the re-sited
+stand) is green on every intermediate state as well.
+
+**2. Riding pays off, measured on the real route rather than argued from the
+multiplier.** `smoke_riding.gd` passes end to end on current head: refused
+without the saddle (and the prompt names what is missing), mounted by the
+ordinary interact press, **10.00 m/s live against the trainer's 5.00 m/s
+walk**, camera on the mount, dismounted visible and grounded, survives the
+mount being freed mid-ride, refused mid-fight. The legendary's tier is intact
+above it (x2.80, no tack, 60-degree ground).
+
+What that is worth *here* was then driven, not assumed:
+`tools/_probe_ow5_walk.gd --mode=spine --z_from=4760 --z_to=7000 --speed=10`
+put a real Player body through the whole band at mount speed — **20/20
+waypoints, 3427.8 m walked on the real polyline, 0 m skipped, 0
+unrecoverable wedges, no falls, 352 s of simulated time**. Against the walked
+run's 11.4 minutes for the same polyline, the band is **5.9 minutes mounted**.
+Prompt 65 asks for riding to become genuinely useful without turning the
+creature into a dead combat slot: the useful half is a 2240 m region that
+halves, and the density below it was authored for exactly that speed. Nothing
+was changed to achieve this — it is the verification the prompt asked for
+before building, and it found nothing to build.
+
+The one wedge site is the same one the walked run logged, at (169.3, 5589.7):
+Captain Halder's own body, not terrain. It ESCAPED at mount speed as it did on
+foot.
+
+**3. A camp pad in the ironwood stand — `vegetation.json` clearings[4002].**
+The gap the package left in its own camp/home rhythm. Crafting only happens at
+a campfire or workbench (`craft_panel.gd`'s header; `build_placer.gd` opens
+the panel at a placed station and nowhere else), and the five ironwood nodes
+are cut at z~5010-5075 while the only pad authored for a camp was
+clearings[4001] at z=6040 — a kilometre up the road, with home ~5 km back the
+other way. So the tier this band exists to introduce could be gathered and not
+spent. clearings[4002] is flat ground beside the stand, 15-45 m from the
+nodes: **h=0.85 m, 1.26 m of spread, worst local slope 9.9 degrees over a 6 m
+pad**, the flattest of six candidates measured with `_probe_band4_sites.gd`
+(the six are now in that probe). It builds nothing — the Camp is the player's,
+on their own wood/stone/fiber — it only keeps scatter off ground flat enough
+to place one. Same known limitation as the other two clearings, per the lane
+contract: `scatter_bake.gd::config_fingerprint()` does not hash a band's
+`vegetation.json`, so this pad is authored correctly and is not reflected in
+the served bake until the coordinator's single re-bake.
+
+**4. The blind visual pass, run for the first time on this lane.** Both earlier
+attempts stalled for 10+ minutes rendering the 272-creature world and were
+killed; alone on this container it completed. Five frames in `shots/band4/`
+plus `_sheet.png` — the ironwood grove, the new ironwood camp pad, the ridge
+patrol camp, the watchtower spur (the wide read of ruin-and-garrison the close
+camp frame cannot show) and the field camp clearing — judged by an independent
+critic given the sheet, the individual frames and `docs/reference/`, and
+nothing about the code or what had changed, per `ralph/conventions.md`.
+
+It answered **no** to both bar questions. What it named that belongs to this
+lane was fixed in round 1 and re-rendered:
+
+- *"`ironwood-grove` does not read as a grove — four isolated trees on open
+  lawn"* and *"constant scale at even intervals ... a scatter pass, not a
+  placement"*. Both true: five nodes 35-70 m apart in a rough line at
+  model_scale 0.28-0.32. Re-sited into a clustered stand (four-tree core inside
+  ~15 m, a fifth carrying the group south), scales spread to 0.26-0.42, every
+  position re-measured. See `harvest.json`'s own `_comment_stand_d4b`.
+- *"the tree mass at the right edge of `ironwood-grove` is cut by the frame with
+  nothing leading into it"*. The grove shot is reframed onto the stand with the
+  old-growth behind it as mid-ground mass.
+
+Round 2, on the re-rendered frames, judged blind again and told the stand was
+still *"scattered instances of a repeated asset"* — and its reasons found a
+real bug this lane had inherited without noticing:
+
+- *"Oxblood has leaked onto friendly scenery — the red ironwood canopies are
+  the largest saturated red mass anywhere in the survey"*, and *"the same asset
+  is two different colours in adjacent frames"*. One bug, and **the repo
+  already knew it**: `vegetation.json`'s `grove` layer carries R9.4's own note
+  that `Leaves_TwistedTree_C.png` is RGB(167,23,23) — *"THE RED LEAK, found by
+  two independent blind reviews eleven days apart"* — and retextures those
+  leaves green so the meadow's biggest trees are not blood red.
+  `harvest_node.gd::_material_fixups_for_model()` applies that same layer data
+  to a harvest node **by model path**, and the `grove` layer lists only
+  `TwistedTree_2` and `_4`. A node built from `_1` or `_3` gets no fixup and
+  renders the pack's raw crimson. This stand was authored from `_2`, `_1` and
+  `_3` — one stand in two colours, with the red half on the one hue spec §21
+  reserves for Team Tether. Re-authored across `_2` and `_4` only, keeping two
+  forms and the scale spread. **This is the third independent blind review to
+  find the same red**, which is the argument for the two follow-ups it opens,
+  neither of them this lane's file: **band2's five ironwood nodes carry the
+  identical leak**, and a harvest node whose model no scatter layer lists
+  silently gets no material fixup at all.
+- Round 2 also opened with a defect round 1 never named and no band content can
+  cause: **the trainer renders as a solid black cut-out** in `ridge-patrol-camp`
+  and `watchtower-spur`, with correctly lit wooden props a metre away in the
+  same frame. It called the game's cast "a black speck" and said the owner's
+  Palworld bar cannot be evaluated at all from these frames. That belongs to
+  whoever owns character materials/lighting, and it is the loudest thing in
+  this survey.
+
+Round 3, on frames re-rendered after the crimson fix, confirmed the red was
+gone and found the **same class of defect one variant along**. It read the
+stand as *"bone-white trunks under near-black desaturated canopies ...
+blight/dead-forest/enemy-territory language, not friendly wilderness"*, and
+said a player who walked into the grove *"would reasonably assume they had
+crossed into hostile ground"*. Cause, again in data the repo already had: the
+`grove` layer's `variant_retint` is a deliberate three-step family —
+`TwistedTree_2` takes `#325f3c`, a deep dark green, `TwistedTree_4` takes
+`#c4d696`, a pale yellow-green. Across a scattered wood those steps average
+into one canopy; across a five-tree stand, three dark trees and two pale ones
+are two species. All five nodes now take the pale variant, and the 0.26-0.42
+scale spread does the differentiating that model choice was doing badly. The
+grey bark stays deliberately: `Bark_TwistedTree` is untouched by any layer and
+is what separates an ironwood from the terracotta-trunked trees around it —
+species identity carried by the trunk rather than by a canopy in the wrong
+palette.
+
+Round 4, on frames re-rendered after the variant fix, is the round that moved a
+measured axis. Asked the same three questions round 3 answered, blind:
+
+- *does it read as one species?* — **yes**, where round 3 said no. *"The five
+  mid-distance trees share a slender pale trunk, a narrow vertical canopy
+  silhouette and matched height ... visibly distinct from the terracotta-trunked
+  broad-canopy trees."*
+- *does it read as a deliberately placed stand rather than scatter?* — still
+  **no**. Its reasons are specific and none of them is a coordinate: *"no
+  clearing, no understory, no saplings, no fallen wood, and no ground change
+  beneath the trees — the grass runs under them unbroken and identical to the
+  grass 50 m away ... a stand needs a canopy that overlaps, a shadow pool on
+  the ground, and litter under it."*
+- *does any hue read as hostile or blighted?* — still **yes**, but for a
+  different reason than round 3's: no longer the canopy, now *"the ironwood
+  trunks are a desaturated bone/pale grey ... the visual language of a blighted
+  stand"*, plus the bald tan splat behind them reading as scorched earth.
+
+Both survivors have named owners and neither is a band file. Understorey,
+litter, saplings and a canopy dense enough to overlap are the scatter layer's
+(`data/config/vegetation.json`) — the same density request this lane already
+has outstanding, arriving from a fourth direction. The bone-grey trunk is
+`Bark_TwistedTree`, a shared texture **no band file can retint**: `harvest_node.gd`
+can only apply retints a scatter layer already declares, and the `grove` layer
+declares leaf keys only. The tan splat is `terrain_playground.json`.
+
+**Four rounds, and the honest stop condition.** `conventions.md` stops a blind
+pass after two consecutive rounds that name no new defect. That is not what
+happened here and this entry will not claim it: every round named new defects,
+and round 4 was still moving one — species identity went from no to yes on it.
+The pass is stopped instead because **the defects still standing against this
+content are not in this lane's files** — scatter density, ambient light and
+exposure, a cloudless sky, distant-LOD instances rendering white, the storm
+wall's viewing angles, and a character material that renders the trainer as a
+black cut-out. Each round's findings that WERE band content were fixed inside
+it — the crimson, then the dark variant, then the stand's own geometry — and
+every fix was re-rendered and re-judged blind, four renders and four critics. What the last
+round could not move on this content, no edit to
+`bands/band4_upper_meadows_ironwood/` can move.
+
+Most of what it named is **not this lane's to fix, and is recorded here as
+evidence rather than quietly dropped**:
+
+- **Density is the critic's own number-one finding**, unprompted: *"these
+  frames are not sparser than Palworld, they have effectively no vegetation
+  layer at all — sparse props sitting on a lawn"*, and *"vegetation density is
+  the largest single win — this alone moves frames 2 and 3 from greybox to
+  game"*. That is `data/config/vegetation.json`, a coordinator file.
+- **Pale translucent panels over the horizon in three frames**, which it read
+  as *"unlit or untextured billboard quads that failed to resolve"*. At 62
+  degrees they are forty pixels wide, so `_capture_band4_sites.gd` gained an
+  optional per-shot field of view and two 22-degree frames, and
+  `tools/_probe_d4_panels.gd` (new) walked the built world to name them:
+  **`RiftCollapse/StormWall`** — three QuadMeshes 360-460 m wide and 122-190 m
+  tall at z 7870-7968, unshaded and alpha-blended by
+  `rift_collapse.gd::_slab_material()`. The critic was right about what it saw
+  and the geometry is deliberate: that file's own header calls the slabs "a
+  painted horizon" that "has to look like the sky it stands in", and down a
+  spoke road, framed by terrain, they do. From Band 4's open pasture 1.4-1.9 km
+  south they are three overlapping grey rectangles with hard vertical corners
+  standing over a bare ridge. **A whole region can see the chapter's north
+  backdrop from an angle it was never composed for** — a real finding, not band
+  content, and `rift_collapse.gd` is not this lane's file.
+- Scale defects in the **scatter layer's own models** (violet flower clusters
+  as wide as the 1.80 m trainer is tall, a bromeliad at ~2.5x his height, both
+  in `ridge-patrol-camp`), one mid-tone value range, a high noon sun with no
+  terrain form, no cloud layer, and no landmark family — every one of them
+  shared config or art that is not in the build.
+
+The outstanding `density_scale` request stands unchanged: **0.05 for band4**,
+up from the chapter floor of 0.03, matching band2. The captures are the
+first direct evidence for it — the ironwood stand renders as a handful of
+isolated trees on open grass.
+
+## GATE-D4 — Upper Meadows / Ironwood, populated and given a material tier
+
+`tests: test_band_content.gd, test_band_vegetation.gd (1 assertion loosened, see below), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, tools/_probe_chapter_map.py, tools/_probe_band4_sites.gd (new), tools/_probe_ow5_walk.gd, tools/_gen_band4_density.py (new)` · `area: content, band4`
+
+Prompt 65's own baseline for this band was 2 trainers, 8 wild clusters (18
+creatures), zero authored gatherables and zero prop clusters across 2240m —
+the longest region in the chapter, called "the barren search" by an earlier
+pass that had already tried once. This item:
+
+- **Ironwood, for real, in Band 4.** Five nodes in the old-growth pocket on
+  the western swing (`harvest.json`) — Band 4's whole material tier had
+  existed only as five nodes sited around the Burrow Warrens, a Band 2 site.
+  `recipes_ironwood.json`'s four recipes (Prime Orb, both tool reinforcements,
+  the Ridge Tonic) now have a source inside their own region.
+- **A special encounter.** First authored as a wild Tuskroot; caught by
+  `tests/test_spawns_data.gd::test_no_evolved_form_spawns_wild` before it
+  shipped — Tuskroot is Mudsnout's own evolved form and a wild one would let a
+  player skip the Heartstone bond gate. Replaced with Terrapup, one of exactly
+  three species (with Ripplet and Galewisp) that spawn nowhere else in the
+  whole chapter — a real "never seen this before" moment rather than a
+  reskinned common creature.
+- **A third trainer.** `patrol_ridgeline`, an optional Team Tether grunt on
+  the watchtower spur (rank `grunt`, Warden rig per `npc_ranks.json` — no new
+  mesh), with a matching prop-dressing cluster (`ridge_patrol_camp`) built
+  from the same furniture family `quarry_station`/`ranger_camp` already use.
+  Gives the region's "ruined watch / occupation traces" and "Team Tether
+  patrol camps" identity beats an actual site instead of just spec prose.
+- **A field-camp clearing** on the eastern loop between the two captains
+  (`vegetation.json`, new file for this band) and two new map regions ("The
+  Ironwood Grove", "The Ridgeline Watch", append-only in `map_landmarks.json`)
+  for legibility.
+- **Density, mid-package, from a direct owner directive**: 18 creatures over
+  2240m measured against Pokemon/Palworld/Valheim density and found barren by
+  an order of magnitude. New target ~55-75 clusters / 200-300 creatures,
+  non-uniform (dense old-growth/pasture, thinner ridge), a third or so off the
+  painted route as habitat pockets so the band's own loops
+  (`wind_ridge_traverse`, `high_pasture_loop`, `watchtower_spur`) are worth
+  walking. Landed at **76 clusters / 272 creatures**. Generated by
+  `tools/_gen_band4_density.py` rather than hand-placed one at a time — at
+  this count that is the honest use of authoring time, not a shortcut; the
+  script and its rationale stay in the repo for the next lane that needs the
+  same shape. The boot/frame cost of this many live wild creatures is real and
+  is **not this item's problem** — the owner is dispatching a dedicated
+  distance-activation lane for `encounter_director.gd`/`wild_creature.gd`,
+  which this item did not touch.
+
+**Test file change, done loudly per the lane contract**:
+`test_band_vegetation.gd::test_scatter_rules_config_carries_both_split_arrays`
+asserted the merged clearings/footprints arrays were `==` the pre-split
+baseline count. That only ever held because no lane had yet used the
+mechanism `GATE_D_LANE_CONTRACT.md` section 4 explicitly invites ("add your
+clearings normally") — its own sibling test in the same file already used
+`>=` for exactly this reason. Loosened to match; this band's two new
+clearings are the first real content past the baseline, not a bug.
+
+Known and unfixed, per the lane contract: `scatter_bake.gd`'s
+`config_fingerprint()` does not hash a band's own `vegetation.json`, so this
+band's two new clearings do not by themselves invalidate the current scatter
+bake — that is the coordinator's fix and single re-bake, not this item's.
+
+Full suite ran clean once at 1301 tests / 2 failed (the two above, both fixed
+here) before the density pass; a 95-test targeted rerun after both fixes
+(`test_band_content`, `test_band_vegetation`, `test_spawns_data`,
+`test_trainers_data`, `test_chapter_curve`, `test_chapter_content_map`) came
+back 0 failed. A second full-suite rerun was started to reconfirm end to end
+but not waited on to completion — this shared box was running a dozen-plus
+concurrent Godot processes across every sibling Gate D lane's own test runs,
+and `test_harvest.gd`'s real-glTF-loading tests alone (already proven green
+against this exact `harvest.json` in the first full run) were taking minutes
+per assertion under that load. Reported honestly rather than claimed as a
+second clean run that did not actually finish.
+
+`tools/_probe_ow5_walk.gd --mode=spine --z_from=4760 --z_to=7000` drove the
+real Player through the whole band: 20/20 waypoints reached, 3436m walked
+(the real polyline, not the z-span), one recoverable wedge (walking into
+Captain Halder's own standing body, not a terrain defect), no falls, 11.4
+walked minutes at foot speed. The z-projected longest gap between any two
+authored points of interest fell from 370m (after the first content pass) to
+under 92m after the density pass.
+
+Requested `density_scale` for band4: 0.05, up from the chapter-floor 0.03 this
+band currently sits at (matching band2's own value). Reasoning: the old-growth
+pocket now carries five ironwood harvest nodes, a solitary Terrapup, a night
+Duskhush pocket and a dense trailpup/galecrest population at the chapter
+floor's scatter density, which under-dresses exactly the ground the new
+content asks a player to linger on. Not requested higher than band2's 0.05 --
+the wind ridge and high pasture are meant to read as open ground per spec
+Band 4's own regional identity, and a denser scatter there would fight that
+on purpose.
+
 ## D5 / BAND5-CONTENT — an approach that points at the stronghold
 
 `tests: test_stronghold_data.gd, test_trainers_data.gd, test_item_gate.gd, smoke_stronghold.gd` · `area: world/band5`

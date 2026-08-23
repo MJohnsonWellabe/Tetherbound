@@ -187,6 +187,22 @@
         "That's the third. The Hall approach reads all three or it reads none — no bargaining with a lock.",
         "Go on up. I hope you're right about whatever you think is in there."
       ]
+    },
+    "patrol_ridgeline_challenge": {
+      "speaker": "Tether Patrol",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Ridge road's not on the closed list, but that doesn't mean you're waved through.",
+        "Halder and Vess get the paperwork. I get the ones who wander off it."
+      ]
+    },
+    "patrol_ridgeline_defeated": {
+      "speaker": "Tether Patrol",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Fine. You're not the one I was posted to stop anyway.",
+        "Watch the ruin overhead — something's denned in it that isn't ours."
+      ]
     }
   },
   "_comment_stronghold": "SG38. The three stronghold gauntlet trainers. Same two-or-three-line rule as everyone above -- the fight is the content. What they say is Sec33's Warden read down the ladder: none of them is gloating, all three would rather the player stopped, and Keeper Hald says outright that the Warden wants to be understood rather than obeyed. None of them reveals what the machine is; that is SG40's, inside the stronghold and nowhere earlier.",

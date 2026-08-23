@@ -171,6 +171,26 @@
         4200.0
       ],
       "radius": 52.0
+    },
+    {
+      "id": "the_ironwood_grove",
+      "display_name": "The Ironwood Grove",
+      "_why": "GATE-D4/prompt 65. Band 4 had zero named regions -- the whole 2240m had nothing on the map past The Long Water. This is the old-growth pocket on the western swing (bands/band4_upper_meadows_ironwood's own harvest.json order 4000-4004, spawns.json order 4000/4007/4008): the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place rather than three unrelated pins. Landform name, no icon, same pattern as `the_rise`/`the_pond` above -- a discovered AREA, not a built structure with a pin. Centre sits between the grove's own harvest cluster and the trailpup/tuskroot/duskhush spawns it shares ground with; 60m carries all of them. Separation checked: 881m from The Long Water, comfortably clear.",
+      "centre": [
+        -345.0,
+        5060.0
+      ],
+      "radius": 60.0
+    },
+    {
+      "id": "the_ridgeline_watch",
+      "display_name": "The Ridgeline Watch",
+      "_why": "GATE-D4/prompt 65. The watchtower spur: captain_ridge, the new optional patrol trainer and its camp dressing (trainers.json order 4000, props.json order 4000), and the resident galecrest (spawns.json order 4010) -- the 'ruined watch/occupation traces' and 'Team Tether patrol camps' spec Band 4 names as regional identity, given a name on the map the same way The Tether Relay was in Band 3. Landform-plus-occupation name, no icon, same pattern as the region entries above it. Centre sits between captain_ridge (-280,6460) and the patrol site (-235,6470); 55m carries both without reaching the high pasture loop's own Meadowhart herd 230m south. Separation checked: 1433m from The Ironwood Grove.",
+      "centre": [
+        -250.0,
+        6490.0
+      ],
+      "radius": 55.0
     }
   ],
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",
