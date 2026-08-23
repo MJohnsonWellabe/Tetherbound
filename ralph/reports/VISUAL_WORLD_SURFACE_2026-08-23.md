@@ -513,3 +513,69 @@ further. If a performance lane needs the number back, the honest order to give
 it up in is: verge count first (it is the most recent and the most
 concentrated), then `corridor_fill.density_scale`, and NOT the siting or the
 clustering, which cost nothing and are what make the rest read.
+
+## Why four rounds of density have not filled "the empty near field"
+
+The single most useful thing found in this pass, and it is geometry, not art.
+
+The ground camera sits 2.0m up, 2.2m behind the player, aimed at a point 4.5m
+ahead at ground level, FOV 70. So the horizontal span of the frame at a given
+distance ahead is `2 * d * tan(35deg)`:
+
+| distance ahead | frame spans | painted path (6.0m) as % of frame width |
+|---|---|---|
+| 3m | 4.2m | **143%** |
+| 5m | 7.0m | **86%** |
+| 8m | 11.2m | 54% |
+| 12m | 16.8m | 36% |
+| 20m | 28.0m | 21% |
+
+**The bottom third of every ground frame is the path, by construction.** At 3m
+ahead the path is wider than the frame. No quantity of groundcover placed
+*beside* the path can ever appear there, which is why a blind critic counting
+clumps in the lower half returns 0 and 1 while the placement count goes
+143,630 -> 532,886 and the mid-field visibly fills in.
+
+This reframes the standing #1 finding. "The near field is empty" is true, and
+three of the four things that would fix it are not density:
+
+1. **The painted path is 6.0m wide** — `paths.width` 3.0 plus `paths.shoulder`
+   1.5 on each side. The width is right; the shoulder doubles it. Against
+   Palworld's 3-4m footpath and the 1.80m trainer, 6.0m is already over the
+   bar before any vegetation standoff is added. Narrowing `shoulder` is the
+   most direct fix and it is in this lane's file — but it is consumed by the
+   TERRAIN bake (`build_playground_terrain.gd` writes `data/terrain/`, which
+   this lane does not own and other lanes read), so it is a cross-lane change,
+   not a scatter change. Flagged, not made.
+2. **Cover has to encroach ONTO the worn dirt**, not merely up to it. That is
+   the owner's own framing — "Palworld wears its paths THROUGH cover" — and it
+   is reachable from this lane: `path_standoff.min`/`max` and
+   `path_edge_jitter` together decide how often a tuft survives inside the worn
+   zone. Round 2 took the standoff ceiling 7.0 -> 3.0; the remaining move is
+   letting the floor reach 0 and raising the jitter so tufts genuinely stand in
+   the dirt line rather than stopping politely at its edge.
+3. **The capture framing itself is worth questioning.** This tool aims at a
+   point 4.5m ahead precisely because that is "the half of frame a walking
+   player actually looks at" — which is right, and is why the survey is
+   valuable. But a survey whose lower third is definitionally path will keep
+   returning "the near field is empty" no matter what grows in the meadow, and
+   three critics have now spent their top finding on it. A second ground
+   viewpoint per band, standing a few metres OFF the trail, would let the same
+   rubric distinguish "the meadow is bald" from "the path is wide". Not changed
+   mid-pass — changing the camera between rounds would invalidate every
+   before/after in this report — but it is the first thing the next pass should
+   do.
+
+## A second measurement caveat, against this lane's own tool
+
+`tools/_cover_stats.py` keys on saturated green above a value floor. Round 3
+deliberately DARKENED the tuft tints to fix the sticker defect, so the same
+tufts now score lower on that metric while looking better. Band 1 reads
+7.003% -> 6.886% across a change that visibly added cover.
+
+That is the same class of flaw this report criticises in `nearL`, in this
+lane's own instrument, and it is recorded rather than tuned away: adjusting the
+threshold until the number flatters the change would be exactly the wrong move.
+The robust measure for the near field is the blind critic's literal clump
+count, which does not care what colour the tufts are, and that is what the
+round-3 critique is being asked for again.
