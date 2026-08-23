@@ -44,6 +44,43 @@ further back renders clean. The repro is the viewpoint's own coordinates.
 D3 raised that frame's eye to 3.0m so the checkpoint stays judgeable while the
 artefact stands — so a later reader will see a workaround, not a fix.
 
+## 1b. The Old Mill Crossing is impassable — OPEN, and a progression blocker
+
+`smoke_traversal` on `main` (CI run 2156, `b923e202`, the first full run on main
+since the Gate D landing):
+
+    traversal FAIL: could not cross the open the Old Mill Crossing
+                    (only 4.2m past the gap)
+
+The crossing is the chapter's Band 3 → Band 4 gate. If a player cannot cross it
+unlocked, the corridor stops there, so this outranks everything else in this
+file.
+
+Not fixed by `a8ed4f0c` ("ASSESS-REDS"), which closed the other three failures
+from that same run. It is still red.
+
+**Ruled out, so nobody repeats it:**
+
+- **Not the terrain.** `data/config/terrain_playground.json` and the baked
+  `data/terrain/` are byte-identical to the commit where this same test passed
+  locally. Verified with `git diff` over both paths.
+- **Not the Gate D5 Sigil gorge.** That carve is at z≈7400; the crossing is at
+  z≈4200, and the terrain rebuild it forced changed 11 of 64 regions.
+- **Not scatter blocking the deck.** Zero placements of any layer stand within
+  20m of (-152, 4200), measured against the committed bake.
+
+**What is known:** it arrived with the D1/D2 merges, which also pulled newer
+`main` code into the bundle — `creature_body.gd`, `game_state.gd`,
+`save_game.gd`, `sequence_director.gd` and others changed in that window. The
+test's own output says the player reaches +4.2m past the gap and stops, which is
+a body that is moving and then blocked, not a body that never started.
+
+**Next step for whoever takes it:** run `tests/smoke_traversal.gd` against
+`a22534ff` (pre-Gate-D) to establish whether this predates the landing at all.
+The last full CI run on `main` before 2156 was long enough ago that "it was
+green before" is an assumption, not a fact — run 2149 on `main` was a
+markdown-only skip.
+
 ## 2. The capture tooling needs a pass of its own — FIVE artefacts, three lanes
 
 Five separate defects were reported this run as problems with the *game* and
