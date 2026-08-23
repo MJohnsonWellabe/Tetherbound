@@ -934,13 +934,19 @@ bar) and never emitted either view. The world stands up fine during the run —
 tool is not broken. Box load went from 1.00 at dispatch to 8.7–12.6 within
 minutes as other lanes entered their own render phases.
 
-**The diagnosis is specific and the unblock is cheap.** The sink is not
-`vegetation.gd` (its own `build()` stays ~2.3s) but the rest of
-`playground_world.gd::_ready()` — village, trainers, quarry, relay, river,
-stronghold — none of which a vegetation-LOD comparison needs. The next attempt
-should capture from a **minimal scene containing only terrain plus vegetation**,
-and/or cut `SETTLE_FRAMES`, so the render survives partial contention instead of
-requiring a sustained idle box this environment has never provided.
+**CORRECTED 2026-08-22 — the diagnosis above was wrong.** This entry
+originally blamed `playground_world.gd::_ready()` standing up village, trainers,
+quarry, relay, river and stronghold. That was plausible and false. The real
+cause is that **`--headless` combined with `--rendering-driver opengl3` hangs
+forever**, verified on a bare `ColorRect` with no project scenes at all; drop
+`--headless`, keep `xvfb-run`, and the same script renders in under a second.
+See `ralph/conventions.md`'s art-pipeline traps for the correct invocation.
+
+The world was never the problem: one lane got through the full Meadows
+stand-up, 129,723 scattered props and a 240-frame settle in about 50 seconds on
+an idle box. **The LOD capture very likely just works once the invocation is
+fixed** — it needs no minimal scene and no reduced `SETTLE_FRAMES`. Try it
+before assuming anything else is wrong.
 
 Worth keeping in perspective: the two large measured performance wins already
 landed (the missing scatter bake, ~45x on load; the O(n^2) interaction-provider

@@ -115,11 +115,19 @@ lanes update it to match their own work it can no longer detect accidental
 drift — the "test that passes because the feature is absent" failure
 `ralph/conventions.md` names outright.
 
-**Needs one decision, centrally**: either lanes stop editing it and the test is
-reshaped so legitimate content edits do not force a fixture change, or the
-fixture is explicitly redefined as tracking-current rather than frozen and the
-test's claims are narrowed to match. D3's rewrite also re-escaped `§` to
-`§` throughout, which is formatting churn either way.
+**DECIDED 2026-08-23 (coordinator ruling, recorded here and in the test
+header):** the fixture is redefined as a **tracked mirror**, not a frozen
+original. The "pinned forever" reading died when the corridor itself was
+re-laid (OW5D spine) — the pre-split world no longer exists as a target,
+and re-freezing would mean reverting owner-directed sitings. What the test
+still catches, and now explicitly claims, is **accidental** identity drift:
+the live band configs and the mirror must agree entry-for-entry, so a
+dropped, duplicated, or reordered entry still fails. The cost of a
+**deliberate** identity move is making it twice — live config AND mirror,
+in the same commit, each carrying a `_why_*` rationale — and that
+double-write friction is the mechanism that forces intent. An identity-key
+edit to the mirror without a matching same-commit live edit and rationale
+is a defect. (D3's `§` re-escape was formatting churn; ignore.)
 
 ## 7. The bark retint, deliberately not changed
 
