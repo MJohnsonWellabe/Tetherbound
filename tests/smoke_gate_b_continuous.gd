@@ -52,6 +52,7 @@ extends SceneTree
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
+const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
@@ -91,10 +92,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_started_ms = Time.get_ticks_msec()
-	if not await _boot_a_fresh_game():
-		_finish()
-		return
-	if not await _opening_through_the_first_catch():
+	if not await _play_the_opening():
 		_finish()
 		return
 	if not await _through_the_road_gate():
@@ -118,107 +116,52 @@ func _run() -> void:
 
 ## --- the run ------------------------------------------------------------------
 
-func _boot_a_fresh_game() -> bool:
-	if str(ProjectSettings.get_setting("application/run/main_scene", "")) != TITLE_SCENE:
-		_fail("configured main scene is not the production title")
+func _play_the_opening() -> bool:
+	# PLAYED, not granted.
+	#
+	# This file used to set the road-beat flag and stand the player at a
+	# hand-picked coordinate. Five runs then failed at five DIFFERENT beats --
+	# the axe swing, Mira's door twice, Tam, Oskar -- because `_step_toward()`
+	# walks a straight line, the village has buildings in it, and from any
+	# invented start SOME target sits behind geometry. Which one depended on
+	# where the grant put the player, so the failures looked random and were
+	# not.
+	#
+	# Two principled alternatives were measured before this: the village
+	# centroid computed from the villagers' own data (Tam went from 20m to 11m
+	# and it still failed) and sidestepping when something else held the interact
+	# line (the player never gets close enough to sidestep). Both are recorded
+	# in ralph/BACKLOG.md so they are not retried.
+	#
+	# `gate_a_opening_drive.gd` is the same drive `smoke_gate_a_opening_segment.gd`
+	# runs, extracted so both play it rather than two files each knowing how.
+	# The player ends where the game actually leaves them, which is the one
+	# position no computed coordinate reproduces.
+	var opening: Dictionary = await OPENING_DRIVE.new().run(self)
+	for line: Variant in (opening.get("transcript", []) as Array):
+		_checkpoint("opening | %s" % str(line))
+	if not bool(opening.get("passed", false)):
+		for line: Variant in (opening.get("failures", []) as Array):
+			_fail("opening: %s" % str(line))
 		return false
-	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
-	root.add_child(title)
-	current_scene = title
-	await process_frame
-	var focused := root.get_viewport().gui_get_focus_owner() as Button
-	if focused == null:
-		_fail("the title screen focused nothing; a pad player could not start")
-		return false
-	await _tap("ui_accept")
-	# The fresh-game confirmation, which a returning player meets every time.
-	await process_frame
-	var confirm := root.get_viewport().gui_get_focus_owner() as Button
-	if confirm != null and confirm.text.to_lower().contains("fresh"):
-		await _tap("ui_accept")
-	# Same wait Gate A's harness uses: the world REPLACES current_scene, and the
-	# transition genuinely takes over a thousand frames on a cold boot. A
-	# 900-frame budget timed out here and reported it as "never reached the
-	# Meadows world", which was this file being impatient, not the game failing.
-	for _i in 2400:
-		if current_scene != null and current_scene.scene_file_path == WORLD_SCENE:
-			_world = current_scene
-			break
-		await process_frame
-	if _world != null:
-		for _i in 300:
-			await physics_frame
-	if _world == null:
-		_fail("Start New Game never reached the Meadows world")
-		return false
-	_game = root.get_node_or_null(^"Game")
-	if _game == null:
-		_fail("no Game autoload after the world loaded")
+	_world = opening.get("world") as Node
+	_game = opening.get("game") as Node
+	_player = opening.get("player") as CharacterBody3D
+	_rig = opening.get("rig") as Node3D
+	if _world == null or _game == null or _player == null:
+		_fail("the opening passed and handed back no world/game/player")
 		return false
 	_progression = _game.get("progression")
-	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
-	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
-	if _player == null or _progression == null:
-		_fail("world booted without a player or a progression store")
+	if _progression == null:
+		_fail("no progression store after the opening")
 		return false
-	_checkpoint("fresh game running in the Meadows")
-	return true
-
-
-## Beats 1-8, delegated to the harness that already proves them.
-##
-## `smoke_gate_a_opening_segment.gd` drives title-through-catch with parsed
-## controller input and is in `verify-gate-evidence-shard`. Re-driving those
-## beats here would be a second definition of the same path, and the two would
-## drift. This asserts the STATE that segment leaves behind, which is what the
-## rest of Gate B actually consumes.
-func _opening_through_the_first_catch() -> bool:
-	# The one beat this file does NOT play, and the reason is worth stating
-	# rather than hiding behind a granted flag.
-	#
-	# `smoke_gate_a_opening_segment.gd` drives title-through-catch with parsed
-	# controller input, and getting it reliable took four rounds on 2026-08-22:
-	# the ally knocking the target out cold, killing it outright, fainting, and
-	# a boulder in the throw line. Re-driving those beats here would be a second
-	# definition of the hardest path in the game, and the two would drift --
-	# which is precisely how twelve harnesses on this branch ended up asserting
-	# a pad map that no longer existed.
-	#
-	# So the opening is proven by its own harness, in the SAME CI shard
-	# (`verify-gate-evidence-shard` runs both), and this file starts from the
-	# state that harness leaves. That makes Gate B's evidence two runs rather
-	# than one process, which is a real limitation and is recorded as one in
-	# `ralph/reports/`. Everything from the road gate onward IS continuous here.
-	_progression.call("set_flag", "opening:beat:road")
 	if not _flag("opening:beat:road"):
-		_fail("opening:beat:road would not set")
+		_fail("the opening completed and 'opening:beat:road' is unset")
 		return false
 	_note("opening:beat:road")
-	# The grant has to include where the beat LEAVES the player, not just the
-	# flag it writes.
-	#
-	# Run 5 failed with "natural controller travel could not activate Tam cycle
-	# 1", and Tam stands at (8,-16) -- eighteen metres away. Distance was never
-	# the problem: the opening starts the player in bed inside Grandpa's house,
-	# and granting the flag without the walk left them indoors, trying to reach
-	# the village square through a wall. A half-granted beat is worse than a
-	# played one OR a fully granted one, because the world disagrees with the
-	# flag store about where the player is.
-	#
-	# So this puts them where the road beat ends: outside, on the village side
-	# of the house, with the ground under them resolved by the world rather than
-	# by a hand-written height (D09).
-	if _player != null:
-		var stand := _village_centre()
-		_player.global_position = Vector3(
-			stand.x, _player.global_position.y + 1.0, stand.y)
-		_player.velocity = Vector3.ZERO
-		for _i in 90:
-			await physics_frame
-	_checkpoint("opening beat granted; player stands outside at %s"
-		% str(_player.global_position.round() if _player != null else Vector3.ZERO))
+	_checkpoint("opening played; player stands where the game left them, at %s"
+		% str(_player.global_position.round()))
 	return true
-
 
 func _through_the_road_gate() -> bool:
 	_progression.call("set_flag", "road_gate_open")
@@ -539,45 +482,3 @@ func _segment_passed(label: String, result: Dictionary) -> bool:
 	for line: Variant in (result.get("transcript", []) as Array):
 		print("  %s | %s" % [label, str(line)])
 	return false
-
-
-## Where the village actually is, from the village's own data.
-##
-## The first version of this stood the player at a hand-picked (6, 4) and every
-## later beat was then walked from a coordinate the game never produces. Across
-## five runs the segment failed at five DIFFERENT beats -- the axe swing, Mira's
-## door twice, Tam, Oskar -- with no code change between them, because the walk
-## budgets (1200-1800 frames) are tuned for where the opening really leaves the
-## player and which beat ran out of them first was luck.
-##
-## This is not the full fix; that is to extract the opening and PLAY it, which
-## `ralph/BACKLOG.md` records under CONTINUOUS-CORE. But it removes the invented
-## number, which is the specific thing that made the budgets meaningless.
-## Averaging the hub villagers' own authored positions puts the player among the
-## people the segment then walks to -- Tam goes from 20m away to 11m -- and it
-## stays right if the village is ever moved, which a literal would not.
-##
-## Halda and anyone else outside the hub are excluded by the same radius the
-## village is authored within; including them would drag the centre toward
-## whoever happens to stand furthest out.
-func _village_centre() -> Vector2:
-	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
-	if file == null:
-		return Vector2(11.8, -5.2)
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not (parsed is Dictionary):
-		return Vector2(11.8, -5.2)
-	var sum := Vector2.ZERO
-	var count := 0
-	for entry: Variant in (parsed as Dictionary).get("villagers", []):
-		if not (entry is Dictionary):
-			continue
-		var raw: Array = (entry as Dictionary).get("position", [])
-		if raw.size() < 2:
-			continue
-		var at := Vector2(float(raw[0]), float(raw[1]))
-		if absf(at.x) > 40.0 or absf(at.y) > 40.0:
-			continue
-		sum += at
-		count += 1
-	return (sum / float(count)) if count > 0 else Vector2(11.8, -5.2)
