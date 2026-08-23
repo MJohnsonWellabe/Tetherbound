@@ -408,11 +408,28 @@ func test_the_relay_trainers_are_placed_by_the_trainer_placer() -> void:
 			"'%s' names a placed_by; nothing would stand them up at the relay" % id)
 
 
-## SE23 is not built yet, and the one thing that keeps these four and the
-## captive on the same patch of ground when it is, is that every position is
-## derived from relay_site.json's single authored centre. This is that promise,
+## SE23 is not built yet, and the one thing that keeps the compound's own cast
+## on the same patch of ground when it is, is that every position is derived
+## from relay_site.json's single authored centre. This is that promise,
 ## written down: if somebody moves the site, this fails until they move the
 ## cast with it.
+##
+## GATE-D3, 2026-08-22: this used to check all four RELAY_IDS against the
+## site's own 26m compound radius, which is exactly the failure prompt 64
+## named — "the route should not jump from wilderness directly into the
+## four-person relay gauntlet" is what an 18m cluster inside one small radius
+## produces. Hess and Orrin are pickets on the open approach road now, well
+## outside the walled compound on purpose, so they get their own generous
+## bound (COMPACT_SITE_IDS keeps the strict compound check for Dell and
+## Vance, who are still meant to read as one small assault together with the
+## captive). APPROACH_RADIUS_M is not "unlimited" — 200m still catches an
+## actual data slip (a picket left in the wrong band entirely) while covering
+## the real authored distance (Hess ~140m out, Orrin ~90m out, both along the
+## spine road that leads to the site, not off in the woods).
+const COMPACT_SITE_IDS := ["relay_officer_dell", "relay_captain"]
+const APPROACH_PICKET_IDS := ["relay_picket_hess", "relay_picket_orrin"]
+const APPROACH_RADIUS_M := 200.0
+
 func test_every_relay_position_sits_inside_the_authored_site() -> void:
 	var site: Dictionary = _relay_site().get("site", {})
 	assert_false(site.is_empty(), "relay_site.json names no site; SE23 has no coordinate to adopt")
@@ -423,12 +440,18 @@ func test_every_relay_position_sits_inside_the_authored_site() -> void:
 	var centre := Vector2(float(at[0]), float(at[1]))
 	var radius := float(site.get("radius", 0.0))
 	assert_true(radius > 0.0, "relay_site.json's site has no radius")
-	for id: String in RELAY_IDS:
+	for id: String in COMPACT_SITE_IDS:
 		var pos: Array = TRAINERS.trainer(id).get("position", [])
 		var here := Vector2(float(pos[0]), float(pos[1]))
 		assert_true(here.distance_to(centre) <= radius,
 			"'%s' stands %.1fm from the relay site centre, outside its own %.0fm radius" % [
 				id, here.distance_to(centre), radius])
+	for id: String in APPROACH_PICKET_IDS:
+		var pos: Array = TRAINERS.trainer(id).get("position", [])
+		var here := Vector2(float(pos[0]), float(pos[1]))
+		assert_true(here.distance_to(centre) <= APPROACH_RADIUS_M,
+			"'%s' stands %.1fm from the relay site centre, outside the %.0fm approach bound" % [
+				id, here.distance_to(centre), APPROACH_RADIUS_M])
 	for entry: Variant in (_relay_site().get("people", []) as Array):
 		var pos: Array = (entry as Dictionary).get("position", [])
 		var here := Vector2(float(pos[0]), float(pos[1]))

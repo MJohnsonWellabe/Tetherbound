@@ -1,4 +1,127 @@
 {
-  "_comment": "BAND-SPLIT. Band-local nodes for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
-  "nodes": []
+  "_comment": "BAND-SPLIT. Band-local nodes for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_why_this_was_empty": "GATE-D3. This file existed with an empty `nodes` array, which the Gate D lane contract names directly: 1580m of river country with nothing to pick up, the largest single gap in the band. Prompt 64: 'River/relay route needs useful gathering and rewards consistent with current tier. Do not let faction content erase the survival/crafting loop.' Twelve nodes, the same four-material spread band1's own harvest.json set out (`_comment_amounts` there: a camp costs 12 wood / 8 stone / 10 fiber), so a player who reaches the region's flat clearing (vegetation.json order 3000) with an empty satchel can actually gather enough to make camp there rather than needing to have hauled materials the whole way from the Warrens.",
+  "_comment_siting": "Positions measured against the real heightfield with a scratch probe (tools/_probe_band3.gd, deleted before ship -- not a committed tool, the same one-off shape _probe_relay.gd already is). Spread across the whole 1580m rather than clustered at either end: the western swing out of Band 2, the approach into the relay, the crossing itself, and the run north out of the region toward Band 4 -- so gathering is a reason to stop the whole way through, not just at the seams.",
+  "nodes": [
+    {
+      "order": 3000,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-140.0, 3250.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the western swing out of Band 2, alongside the region's first wild cluster"
+    },
+    {
+      "order": 3001,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-40.0, 3350.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "the wooded dip at the spine's westernmost point, near the night duskhush site"
+    },
+    {
+      "order": 3002,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-180.0, 3460.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why": "loose scree off the same rise the spine skirts before turning east"
+    },
+    {
+      "order": 3003,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-90.0, 3500.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "the last gathering before the ground starts climbing into the relay approach"
+    },
+    {
+      "order": 3004,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [150.0, 3630.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "on the approach leg before the spine bends into the relay road, a stone's throw from the new camp clearing (vegetation.json order 3000)"
+    },
+    {
+      "order": 3005,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [270.0, 3820.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "on the relay's own back leg, out past the compound -- a reason to keep exploring after the captain rather than just doubling back"
+    },
+    {
+      "order": 3006,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [300.0, 3860.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "beside the burrowback cluster in the relay's own spoil banks"
+    },
+    {
+      "order": 3007,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-70.0, 4030.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the approach to the Old Mill Crossing, on the south bank"
+    },
+    {
+      "order": 3008,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-90.0, 4260.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "downstream of the crossing on the near-bank walk, clear of the gorge's own carved edge"
+    },
+    {
+      "order": 3009,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-120.0, 4280.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "_why": "river-worn stone along the same near-bank walk"
+    },
+    {
+      "order": 3010,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [80.0, 4420.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "past the crossing, on the run north -- the region's back half had nothing at all before this pass"
+    },
+    {
+      "order": 3011,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [190.0, 4600.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the last stretch before Band 4, by the trailpup cluster that closes the region out"
+    }
+  ]
 }

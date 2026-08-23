@@ -16,11 +16,19 @@ extends SceneTree
 ## files into `res://shots` and disturbing the standing survey:
 ##
 ##   godot --headless --path . --script tools/contact_sheet.gd -- \
-##     --dir=res://shots/band5_approach --out=res://shots/band5_approach/_sheet.png
+##     --dir=res://shots/band5_approach
+##   godot --headless --path . --script tools/contact_sheet.gd -- \
+##     --dir=shots/band3 --out=res://shots/band3/_sheet.png
 ##
-## Added by the D5 lane, which had twelve day/night frames of one region to put
-## in front of the blind critic and no way to sheet them without clobbering the
-## five survey shots the skill's own instructions expect to find here.
+## The D3 and D5 lanes each added this independently, within hours, for the same
+## reason: both had a region's worth of frames to put in front of the blind
+## critic and no way to sheet them without clobbering the five survey shots the
+## visual-judge skill expects to find in `res://shots`. This is the union of the
+## two. `--dir` accepts a path with or without the `res://` prefix and with or
+## without a trailing slash (D3's normalisation, because a lane WILL pass one of
+## each), and defaults the sheet to `<dir>/_sheet.png` so the common case needs
+## one flag. `--out` overrides that explicitly (D5's), and wins regardless of
+## argument order.
 const DEFAULT_SHOTS_DIR := "res://shots"
 const DEFAULT_OUT_PATH := "res://shots/_sheet.png"
 
@@ -34,11 +42,21 @@ const BACKGROUND := Color(0.07, 0.08, 0.09, 1.0)
 
 
 func _init() -> void:
+	var explicit_out := ""
 	for argument in OS.get_cmdline_user_args():
-		if argument.begins_with("--dir="):
-			_shots_dir = argument.substr("--dir=".length())
-		elif argument.begins_with("--out="):
-			_out_path = argument.substr("--out=".length())
+		var parts := argument.split("=", true, 1)
+		var key := parts[0].lstrip("-")
+		if parts.size() < 2:
+			continue
+		if key == "dir":
+			_shots_dir = "res://%s" % parts[1].trim_prefix("res://").trim_suffix("/")
+			_out_path = "%s/_sheet.png" % _shots_dir
+		elif key == "out":
+			explicit_out = parts[1]
+	# Applied after the loop so `--out` wins whichever side of `--dir` it was
+	# passed on; `--dir` sets a default out as a side effect.
+	if explicit_out != "":
+		_out_path = explicit_out
 	var paths := _frame_paths()
 	if paths.is_empty():
 		push_error("no frames in %s; run tools/survey.sh first" % _shots_dir)

@@ -58,21 +58,6 @@ const BANDS := [
 ## disagree about by a metre is a different, much smaller problem.
 const UNDERGROUND_M := 5.0
 
-## GATE-D, after the fix: a steady ONE creature in band2_stone_and_root reads as
-## ~8m under and does not go away. It is not a defect and should not be chased.
-## `data/config/burrow_warrens.json` hand-places four residents inside the
-## Warrens' chambers, and a cave is by definition below the surface this probe
-## compares against (`ground_height_at` is the analytic HEIGHTFIELD, which knows
-## nothing about carved interiors). Those creatures are also deliberately exempt
-## from distance activation -- `encounter_director.gd`'s streaming keys clusters
-## from `spawns.json`, and a hand-placed creature has no cluster, which reads as
-## "never deactivated", which is correct for a dungeon.
-##
-## So the honest reading of this probe's output is: any band showing tens of
-## creatures underground, or a depth that grows between the 60/240/600-frame
-## samples, is the free-fall defect. One creature at a fixed ~8m in band2 is the
-## Warrens, and it was there before the density work and will be there after.
-
 var _samples := [60, 240, 600]
 
 

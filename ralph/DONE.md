@@ -3,6 +3,191 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-D3 round 2 — the River / Tether Relay, driven and blind-judged
+
+`tests: full suite (1301 tests, 715475 assertions, 0 failed)` · `area: band3_the_river_lock` · `branch: claude/d3-setup-kf3tcf`
+
+The round `ralph/lanes/START_D3.md` asked for: a real driven run, a real blind
+visual pass with an independent critic, and prompt 64's remaining acceptance
+items verified. Full write-up in `ralph/GATE_D3_EVIDENCE_2026-08-22.md`.
+
+**Three of the previous round's conclusions did not survive being played.**
+
+**The wild population is under the map.** 137 of Band 3's 155 creatures are
+190-200m below the terrain and still falling; band4 and band5 are at 100%.
+`creature_body.gd` applies gravity on any frame `is_on_floor()` is false, and
+Terrain3D builds collision around the CAMERA -- a creature spawned four
+kilometres from the player never gets a floor. `_stand_on_ground` succeeds and
+reports nothing, so "155 creatures authored" and "the region plays empty" were
+both true at once. `tools/_probe_wild_grounding.gd` reproduces it in one boot.
+NOT this band's to fix and no spawns.json can help a body with no floor: it is
+the coordinator's distance-activation/streaming lane. Until it lands, the
+owner's density directive has bought this band ~18 creatures a player can meet.
+
+**The river gorge is not in the terrain the player walks.** The authored
+channel is 10-15m deep; the body rests 14-22m higher than the heightfield says
+inside it, and the blind critic independently reported a flat plain with a grey
+strip on it. The river still GATES the region (a body walked at the bank stops
+and does not cross), so progression is intact -- what is missing is the
+landmark. Terrain and the bake are coordinator-owned; reported, not touched.
+
+**Dead travel is 632m, not the 81m computed from config** -- Captain Oreth to
+the north exit, the last third of the region. Most of it closes on its own once
+the creatures are on the ground, which is why no spawn was moved: authoring
+around that bug would bake it in.
+
+**Fixed here, in this band's own files, each found by evidence.** The relay
+approach checkpoint WEDGED the driven player body -- three props 0.4m and 1.2m
+from the road centreline -- and the blind critic independently said nothing
+there reads as a picket; rebuilt as a barrier line across the road with a 6.4m
+walk-through gap plus a watch post off the verge. `old_mill_crossing_gear` was
+101m from the crossing it names; re-sited to the south landing with a workbench
+and anvil. `old_mill_yard` (new, order 3004) answers the critic's "prop dropped
+on grass" reading of the mill.
+
+**Verified, not assumed.** The objective chain reads correctly through the
+whole region from `/root/Game`'s own quest_log: arriving from the Warrens the
+HUD says "Defeat the Relay Captain", and each victory beat advances it through
+the captive, the console and the crossing to Band 4's captains. Team Tether
+escalation walks in rank order. The relay is a real compound, not four NPCs on
+a lawn.
+
+**Checked and NOT raised:** Captain Vance is L11-12 with his officer at L10 and
+`captain_riverwatch` past the crossing at L13-16, which reads at first like the
+region's set-piece boss being its third-hardest fight. It is not a defect --
+`chapter_curve.json`'s own band3 tuning note authors this ladder by name ("the
+relay's four-fight ladder (8, 9, 10, 11-12) is the densest trainer run in the
+chapter"), and Riverwatch's 13-16 is the band-exit gate matching band4. Vance
+is the story climax, Riverwatch the difficulty gate, deliberately. An earlier
+draft of the evidence file proposed a curve change here; it was withdrawn
+before shipping, because authoring the curve to fit content is exactly what the
+lane contract forbids.
+
+**Requested `density_scale` for band3: 0.06** (from the 0.03 floor, against
+band2's 0.05 and band1's 0.07). Near-ground cover was the critic's first-ranked
+gap against the Palworld bar in both rounds. Reported per the lane contract, not
+edited.
+
+**Tools committed** so none of this has to be re-derived:
+`_probe_band3_driven.gd` (the driven run; it separates 12 authored gatherables
+from 2,412 scatter pickables, which is the difference between a real cadence
+number and zero dead travel in an empty field), `_probe_wild_grounding.gd`,
+`capture_band3_region.gd` (nine frames, carrying the two capture bugs the
+previous round found and lost with its container), and `--dir=` on
+`contact_sheet.gd`.
+
+**Blind pass did not converge** -- round 2 named new defects. Every band-scoped
+one is fixed; the rest is shared (ground cover, cloudless sky, the trainer's
+black silhouette, tree scale, terrain material streaking on steep faces, unused
+Team Tether oxblood). A third round is worth running once the density request
+and the streaming fix land.
+
+## GATE-D3 — the River / Tether Relay finished as a populated region
+
+`tests: test_band_content.gd, test_band_vegetation.gd, test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, smoke_relay.gd, smoke_relay_station.gd` · `area: band3_the_river_lock` · `branch: ralph/gate-d-band3-river-relay`
+
+Prompt 64. Band 3 (z 3180-4760) went from 0 authored gatherables, 0 prop
+clusters, and a four-person relay gauntlet crammed into an 18m span, to a
+region with something to pick up, something built in it, and a picket line
+the player actually walks into rather than meets all at once.
+
+**Gathering** (`bands/band3_the_river_lock/harvest.json`): 12 nodes
+(wood/stone/fiber/berries) spread the region's whole length, so a player who
+reaches the new camp clearing can gather enough to build a camp there rather
+than hauling materials from the Warrens.
+
+**Prop clusters** (`bands/band3_the_river_lock/props.json`, 4 clusters): a
+rest/staging spot (`riverwatch_rest`) on the flattest ground measured
+anywhere in the band; a Team Tether checkpoint (`relay_approach_checkpoint`,
+crates and a coiled line, no trainer) short of Hess, the first physical sign
+of the faction before the fighting starts; `relay_station`, the yard clutter
+`tether_relay.json`'s own comment had been asking for since SE23; and
+`old_mill_crossing_gear` at the crossing itself.
+
+**Camp siting**: `bands/band3_the_river_lock/vegetation.json` (new) adds one
+clearing at the rest spot. Per the Gate D lane contract §4, the scatter-bake
+fingerprint does not hash band vegetation files, so this clearing will not
+actually clear anything until the coordinator's re-bake — flagged, not
+worked around.
+
+**The picket line**: Hess and Orrin moved off the compact 26m site radius
+(where all four relay trainers stood within 18m of each other) onto the
+spine road itself, 140m and ~70m short of the site centre. Dell and Vance are
+unchanged — Vance's position is fixed, it gates SE27's rescue. Team Tether
+now builds before the compact assault instead of all four landing in one
+span. `test_trainers_data.gd`'s site-radius check is split accordingly
+(strict bound for the compound occupants, a generous approach bound for the
+two pickets) — the previous version enforced the exact shape prompt 64 names
+as the failure.
+
+**Wild density**: raised from 8 clusters/18 creatures to 50 clusters/155
+creatures per the owner's 2026-08-22 directive (Valheim/Palworld-comparable
+density, 38-50 clusters / 140-210 creatures per band). Every original
+cluster and the habitat rule (air owns the gorge, water sits at the
+reachable crossing, ground works the relay's spoil) is unchanged; 41 more
+clusters walk the same logic every 40-46m along the corridor with lateral
+offsets. `encounter_director.gd` has no distance-based activation yet, so a
+boot/frame-time cost from this density is expected and is the coordinator's
+dedicated streaming lane to fix, not this band's. One new cluster
+(`near_bank_river_walk`, an already-authored detour loop that had nothing on
+it) is the region's optional content.
+
+**Test-file changes**: `test_band_vegetation.gd`'s exact-size check against
+the frozen pre-split fixture had never been exercised against a real
+post-split clearing addition until this one — relaxed to the same `>=`
+tolerance its sibling per-entry test already uses. Both baseline fixtures
+(`trainers.json`, `vegetation.json`) are mirrored to the real content per
+`test_band_content.gd`'s own TOURNAMENT-1 precedent for a deliberate
+identity change.
+
+**Verified, not rebuilt**: the captive rescue, relay console disable, and
+Old Mill Crossing restoration chain (`relay_captain_defeated` ->
+`captive_rescued` -> `mill_bridge_gear` -> `mill_crossing_restored`) was
+already fully wired on `main` and needed no changes — `smoke_relay.gd` and
+`smoke_relay_station.gd` both pass clean against the new picket positions.
+
+**Driven-run cadence** (analytical probe against the real authored spine,
+not a live walk — `smoke_relay.gd`/`smoke_relay_station.gd` already drive
+real input through the site itself): 50 wild clusters, 5 trainers, 12
+harvest nodes, 4 prop clusters across the 1580m band. Longest dead-travel
+gap at a 35m reach is 81m, right at the region's own north exit (z
+4663->4744) into Band 4. The river crossing zone (z 3980-4260) carries 32
+wild creatures and 0 trainers — the ecology is not erased by the faction
+content on either side of it.
+
+**Visual pass**: 6 frames rendered for the new prop clusters and picket
+spacing (`riverwatch_rest`, `relay_approach_checkpoint`, the Hess picket on
+the road, the relay yard, the mill crossing gear, and a wide approach shot).
+Two real capture-tool bugs were found and fixed before the frames were
+usable: the world's day-cycle clock and weather kept advancing through the
+multi-viewpoint pass and needed freezing before the settle loop, not after
+it (frames 3-6 rendered a red dusk wash until fixed), and parking the camera
+rig's player 500m below the terrain (the existing `capture_prop_clusters.gd`
+convention) reads as fully submerged to `water.gd`'s hazard check and ramps
+in a red warning overlay over its grace period — parked above the terrain
+instead. No genuinely blind third-party critic was available in this
+session (no subagent/Task tool), so the pass is this session's own critical
+read against `docs/reference/tetherbound-meadows-keyart.png` and the
+Palworld reference set, not a blind one — recorded honestly as a limit
+rather than claimed as the real thing. Findings: ground/prop density reads
+sparse against both references (this band sits at the chapter's floor
+`density_scale` of 0.03, a coordinator-owned value — no request made this
+pass, existing content read acceptably at that density); the relay's outer
+wall (frame 04) is a plain grey stone slab with no visible Team Tether
+oxblood accent from that angle, though the material exists elsewhere in
+`tether_relay.json`; the mill-crossing-gear frame (05) is too wide, the
+props read small against the frame. None of these are new defects specific
+to this pass's own content (the wall material and terrain density are
+shared/coordinator territory); the wide framing on frame 05 is a capture-tool
+choice, not a content defect, and was not re-shot given time spent on the
+two capture bugs above.
+
+Not done: the two capture-tool bugs found here (day/weather clock racing a
+multi-viewpoint pass; player-park-underground tripping the submersion
+hazard) exist in every other capture tool using the same conventions
+(`capture_prop_clusters.gd` and others); not fixed there — out of band3's
+ownership and this pass did not touch shared tools.
+
 ## GATE-D4b — the Upper Meadows package's unfinished half: a second clean suite, riding proved on the real route, and a camp pad where the ironwood is cut
 
 `tests: tests/run_tests.gd (full, 1301/0), tools/_run_d4_tests_fast.gd (95/0), tests/smoke_riding.gd, tools/_probe_ow5_walk.gd, tools/_probe_band4_sites.gd, tools/_probe_chapter_map.py, tools/_capture_band4_sites.gd` · `area: content, band4`
