@@ -624,8 +624,12 @@
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
       "strays": 900,
       "_comment_corridor_fill": "VEG-CORRIDOR: the primary ground cover, so this is the layer the band table's density is most visibly tuned against.",
+      "_comment_corridor_fill_vis_world": "VIS-WORLD. `trail_bias` added -- this layer never had it. VEG-SITING gave trail_bias to trees/grove/saplings/deadfall/bushes and VISUAL-GROUNDCOVER gave it to path_stones, each time for the same measured reason (docs/reviews/band2/round-05: a uniform draw over a 2048m-wide box lands near none of the survey viewpoints, all of which stand ON the trail, so a density multiplier has nothing to multiply where the player actually is). The three layers that carpet the NEAR FIELD -- this one, drygrass and flowers -- were never revisited, so the primary ground cover was still drawn uniformly across 16.8 km2 while the player walks one line through it. That is why VISUAL-GROUNDCOVER's chapter-wide bump (143,630 -> 223,889 placements) measured only ~4% mean improvement: it multiplied a distribution that mostly misses the camera. This adds NO instances -- `density_scale` stays 1.0 -- it only moves where the existing candidates' clump centres land. Arithmetic for band 3 (the thinnest, density_scale 0.05) before this change: ~68 kept clumps of radius 10m over 3.24 km2, so ~0.66% of the band's ground carried a grass clump at all, and stray grass ran one tuft per ~5,800 m2. 0.65 rather than the 0.85 the tree layers use: a carpet layer concentrated as hard as a copse layer stops being a meadow and becomes a green ribbon down a bald plain, so a third of the fill deliberately stays wherever the unbiased box draw puts it. `trail_offset_min` 0 lets clump edges reach the worn dirt; `path_standoff` (0.3-7m, ~17m wavelength, per side) is what culls them there, which is the mechanism OF12 built for a raveled edge and which until now had almost no cover to ravel. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 1.0,
+        "trail_bias": 0.65,
+        "trail_offset_min": 0.0,
+        "trail_offset_max": 34.0
       },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment and bushes' matching entry above -- the village well is where four routes converge, and every ground-cover layer's exclusion edge fans out from it together. TUNABLE.",
       "path_edge_jitter": 0.5,
@@ -637,8 +641,9 @@
         "salt": 1
       },
       "_comment_verge_of12": "OF12 round 2: a blind critic on the standoff-only build named the verge beside every path 'the baldest ground in the frame, when it should be the densest' -- with the constant exclusions gone, nothing GREW near the routes either (this stretch of map has almost no grass clumps by seed). The fringe strings extra tufts along the routes by arc length, densest just off the dirt edge, and the standoff noise above culls it stretch by stretch -- see scatter_rules.gd::_place_verge for why that cannot become the planted border again. TUNABLE.",
+      "_comment_verge_vis_world": "VIS-WORLD: the primary carpet's own fringe. The fringe is the only mechanism that puts cover at the worn edge itself, and at its old count it could not read: 2400 instances distributed by arc length over the ~12km authored route network is one per 5.0m of trail, spread across a 18m band on BOTH sides -- a spacing no viewer perceives as a verge. Raised 2400 -> 6000 (+3600 instances, 1.6% of the 223,889 the chapter already places), and every one of them lands on the walked route rather than on the 16.8 km2 of corridor the camera never sees. This is deliberately NOT the chapter-wide density lever VISUAL-GROUNDCOVER already pushed for ~4% mean gain; the broad trailside cover comes from `corridor_fill.trail_bias` above at no instance cost, and this only thickens the metre or two either side of the dirt that the standoff noise ravels. TUNABLE.",
       "verge": {
-        "count": 2400,
+        "count": 6000,
         "inner": 1.5,
         "band": 18.0
       },
@@ -681,8 +686,12 @@
       "clump_radius": 12.0,
       "strays": 380,
       "_comment_corridor_fill": "VEG-CORRIDOR: the warm-toned ground cover fills at the band table's own rate, same as grass.",
+      "_comment_corridor_fill_vis_world": "VIS-WORLD: same siting fix as grass above, and the same no-added-instances contract (`density_scale` unchanged). Weaker bias and a wider offset band than grass on purpose -- dry grass is the layer that should still read on open ground away from the route, so pulling it onto the trail as hard as the green would both thin the open meadow and stack two ground-cover layers on the same metres. Different offset reach from grass for the same reason its `path_standoff` carries a different wavelength and salt: the two carpets must not advance and retreat from the trail together. TUNABLE.",
       "corridor_fill": {
-        "density_scale": 1.0
+        "density_scale": 1.0,
+        "trail_bias": 0.55,
+        "trail_offset_min": 0.0,
+        "trail_offset_max": 40.0
       },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment and bushes' matching entry above -- the village well is where four routes converge, and every ground-cover layer's exclusion edge fans out from it together. TUNABLE.",
       "path_edge_jitter": 0.35,
@@ -694,8 +703,9 @@
         "salt": 2
       },
       "_comment_verge_of12": "OF12 round 2: see grass's matching entry. Dry straw is the scruffy half of a real verge; slightly wider band than grass so the warm tone feathers further out. TUNABLE.",
+      "_comment_verge_vis_world": "VIS-WORLD: the scruffy warm half of the same fringe. The fringe is the only mechanism that puts cover at the worn edge itself, and at its old count it could not read: 700 instances distributed by arc length over the ~12km authored route network is one per 17.1m of trail, spread across a 20m band on BOTH sides -- a spacing no viewer perceives as a verge. Raised 700 -> 1800 (+1100 instances, 0.5% of the 223,889 the chapter already places), and every one of them lands on the walked route rather than on the 16.8 km2 of corridor the camera never sees. This is deliberately NOT the chapter-wide density lever VISUAL-GROUNDCOVER already pushed for ~4% mean gain; the broad trailside cover comes from `corridor_fill.trail_bias` above at no instance cost, and this only thickens the metre or two either side of the dirt that the standoff noise ravels. TUNABLE.",
       "verge": {
-        "count": 700,
+        "count": 1800,
         "inner": 1.5,
         "band": 20.0
       },
@@ -742,8 +752,9 @@
         "salt": 3
       },
       "_comment_verge_of12": "OF12 round 2: verge wildflowers, the classic path-margin plant. NOT the removed path_bias returning under a new name: path_bias anchored whole 78-instance clump discs to the centreline (a bed), while these are individual draws strung along the arc, thinned by the standoff noise per side, mixed in among the grass fringe. TUNABLE.",
+      "_comment_verge_vis_world": "VIS-WORLD: verge wildflowers -- raised here rather than via trail_bias BECAUSE OF12 removed this layer's path anchoring outright and that verdict stands: an arc-strung, standoff-thinned fringe is not the 78-instance clump disc snapped to a centreline that the owner rejected as a planted border. The fringe is the only mechanism that puts cover at the worn edge itself, and at its old count it could not read: 340 instances distributed by arc length over the ~12km authored route network is one per 35.3m of trail, spread across a 14m band on BOTH sides -- a spacing no viewer perceives as a verge. Raised 340 -> 900 (+560 instances, 0.3% of the 223,889 the chapter already places), and every one of them lands on the walked route rather than on the 16.8 km2 of corridor the camera never sees. This is deliberately NOT the chapter-wide density lever VISUAL-GROUNDCOVER already pushed for ~4% mean gain; the broad trailside cover comes from `corridor_fill.trail_bias` above at no instance cost, and this only thickens the metre or two either side of the dirt that the standoff noise ravels. TUNABLE.",
       "verge": {
-        "count": 340,
+        "count": 900,
         "inner": 1.5,
         "band": 14.0
       },
