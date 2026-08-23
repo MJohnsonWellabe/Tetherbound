@@ -1110,7 +1110,7 @@ func _begin_held(index: int) -> void:
 	if menu != null:
 		menu.call("hold_input", true)
 		menu.call("override_footer",
-			"{menu_confirm} / A  Put it down        {menu_cancel} / B  Put it back")
+			"A / {menu_confirm}  Put it down        B / {menu_cancel}  Put it back")
 	say("Holding %s. Press a satchel slot to move it, or a quick slot to bind it." % _stack_label(index))
 
 
@@ -1376,7 +1376,7 @@ func _read_drop() -> void:
 
 	_confirming = _focused
 	menu.call("hold_input", true)
-	menu.call("override_footer", "{menu_confirm} / A  Drop it        {menu_cancel} / B  Cancel")
+	menu.call("override_footer", "A / {menu_confirm}  Drop it        B / {menu_cancel}  Cancel")
 	_content_row.visible = false
 	_confirm_panel.visible = true
 	_refresh_confirm_panel()
