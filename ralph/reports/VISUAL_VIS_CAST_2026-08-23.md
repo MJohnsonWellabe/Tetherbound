@@ -153,8 +153,22 @@ near-black insignia findable on a dark green coat.
    rendered torso by 1–5 points per channel — not a difference a player can see.
    Real per-site separation needs a dial that is not the faction colour.
 4. Warden cape lining renders as a translucent membrane (alpha/material
-   artifact). Villager male's right sock carries an orange emissive scribble —
-   76 pixels of UV-seam bleed, present in both views, therefore in the asset.
+   artifact).
+5. **The villager male's sock artefact is a MESH interpenetration, not a texture
+   bug** — diagnosed here because two rounds have now called it "an orange
+   emissive scribble" and a repaint would not have touched it. `villager_male_lod0.glb`
+   carries TWO meshes, `char1` (the body, 14,257 verts, `Material_1`/`texture_0`)
+   and a separate `trousers` (3,741 verts, `Trousers`/`trousers_tex`). The
+   sock belongs to the body mesh. `texture_0` contains **zero** orange pixels
+   (`r>170, g 70-175, b<95, r-b>110` matches 0 of 4,194,304), so nothing painted
+   on the sock is orange — but the streaks measure (191,127,64) in the render
+   against the trousers leather's (204,132,67) in its own texture. It is the
+   trouser hem showing through the sock. Both materials are self-lit
+   (`emissiveFactor [1,1,1]` with an emissive texture each), which is why the
+   overlap reads as bright flame-like streaks rather than as a dull clip, and
+   it appears on one leg only, which points at the idle pose rather than at
+   the modelling. **Fix is a mesh or skinning correction on the trousers hem,
+   or a depth/priority change on that material — not a repaint.**
 
 ---
 
