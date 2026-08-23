@@ -311,7 +311,28 @@ func _paint_control_map(
 	var painted_wet_pixels := 0
 	var painted_apron_pixels := 0
 	var painted_drain_pixels := 0
+	var painted_dry_pixels := 0
+	var painted_damp_pixels := 0
 	var water_level: float = field.water_level()
+
+	# GROUND-LAYERS: the two macro-variation noise fields. Built here rather
+	# than on the heightfield because nothing else needs them -- this is a
+	# question about which MATERIAL a pixel wears, not about its shape, and
+	# keeping it out of the heightfield keeps the scatter bake's own config
+	# fingerprint honest about what it depends on.
+	var macro_cfg: Dictionary = config.get("macro", {})
+	var macro_drift := FastNoiseLite.new()
+	var macro_patch := FastNoiseLite.new()
+	var macro_seed := int(macro_cfg.get("seed", 20260823))
+	macro_drift.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	macro_drift.seed = macro_seed
+	macro_drift.frequency = float(macro_cfg.get("drift_frequency", 0.0055))
+	macro_patch.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	# A different seed, not merely a different frequency: two octaves of one
+	# seed share their zero crossings, so the patches would sit centred inside
+	# the drifts and the whole field would read as one shape with a halo.
+	macro_patch.seed = macro_seed + 977
+	macro_patch.frequency = float(macro_cfg.get("patch_frequency", 0.019))
 	for pixel_z in size_z:
 		var world_z := origin_z + pixel_z * spacing
 		for pixel_x in size_x:
@@ -327,6 +348,31 @@ func _paint_control_map(
 			var band_slope: float = slope + field.rock_bias_deg(world_x, world_z)
 			var control := _control_for(
 				band_slope, colour_cfg, ids, _band_blend(field, world_x, world_z, colour_cfg))
+			# GROUND-LAYERS. Macro material variation, applied ONLY where the
+			# slope pick left this pixel on unblended grass. Above
+			# soil_slope_deg the hillside transition owns the overlay slot and
+			# has to keep it -- there is one blend per pixel and the slope
+			# read is the more important of the two. On flat meadow that slot
+			# was idle (`{grass, soil, 0.0}`), which is what makes this free.
+			#
+			# Damp wins over dry where both apply, for the obvious reason.
+			# Both are applied BEFORE the apron/drain/path passes below so all
+			# three still override where their own weight is stronger.
+			if float(control["blend"]) <= 0.001 and int(control["base"]) == int(ids["grass"]):
+				var here: float = field.height_at(world_x, world_z)
+				var damp := 0.0
+				if ids.has("damp") and not is_nan(water_level):
+					var reach := float(macro_cfg.get("damp_reach", 1.1))
+					damp = (1.0 - smoothstep(water_level + 0.35, water_level + 0.35 + reach, here)) \
+						* float(macro_cfg.get("damp_max", 0.65))
+				if damp > 0.004:
+					control = {"base": int(ids["grass"]), "overlay": int(ids["damp"]), "blend": damp}
+					painted_damp_pixels += 1
+				elif ids.has("drygrass"):
+					var dry := _macro_dry(macro_drift, macro_patch, world_x, world_z, here, macro_cfg)
+					if dry > 0.004:
+						control = {"base": int(ids["grass"]), "overlay": int(ids["drygrass"]), "blend": dry}
+						painted_dry_pixels += 1
 			var path_weight: float = field.path_factor(world_x, world_z)
 			# EV5: the pond bed, the damp shore ring and the stream channel
 			# swap to the same dedicated Ground030 dirt/pebble texture the
@@ -375,6 +421,8 @@ func _paint_control_map(
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
+	print("  control map: dry-grass macro variation on %d pixels, damp shore band on %d pixels" %
+		[painted_dry_pixels, painted_damp_pixels])
 	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), drained ground in soil (%d pixels), auto-shader off" %
 		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels, painted_apron_pixels, painted_drain_pixels])
 
@@ -492,6 +540,52 @@ func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary, dit
 ## parameterised by the texture being blended toward — EV6-remainder-polish
 ## reuses it verbatim for the worked-soil apron around each building
 ## footprint, which blends toward `soil` where a path blends toward `path`.
+## GROUND-LAYERS. How dry this pixel's grass is, 0..1, as a blend weight for the
+## `drygrass` overlay.
+##
+## Two independent noise fields plus a mild elevation term:
+##
+## - `drift` is the ~180m "you are crossing into a drier stretch" scale. It
+##   carries most of the weight because it is the only one of the three a player
+##   walking at ground level actually reads as a place changing around them.
+## - `patch` is the ~53m "this hollow is greener" scale, mixed in at
+##   `patch_weight` to break the drift's own edges up so they do not read as
+##   soft-edged continents.
+## - elevation bleaches ridges and keeps hollows green, which is both true of
+##   real grassland and what stops the pattern reading as arbitrary. Held to a
+##   minority share (`height_influence`) because variation that tracks the
+##   landform exactly reads as a contour map, which is a different wrong answer.
+##
+## `dry_gain` then pushes the midtones apart so the field spends more of its
+## area committed to green or to dry and less in the middle, and `dry_max` caps
+## the result below 1.0 so no pixel ever fully abandons the meadow grass. Both
+## are what separate "one biome with weather in it" from "two biomes with a
+## seam".
+func _macro_dry(
+	drift: FastNoiseLite, patch: FastNoiseLite,
+	x: float, z: float, height: float, cfg: Dictionary
+) -> float:
+	# FastNoiseLite returns -1..1; both are remapped to 0..1 before mixing so a
+	# negative patch cannot cancel a positive drift into a false zero.
+	var a := drift.get_noise_2d(x, z) * 0.5 + 0.5
+	var b := patch.get_noise_2d(x, z) * 0.5 + 0.5
+	var patch_weight := clampf(float(cfg.get("patch_weight", 0.42)), 0.0, 1.0)
+	var mixed := lerpf(a, b, patch_weight)
+
+	var lift := clampf(float(cfg.get("height_influence", 0.35)), 0.0, 1.0)
+	if lift > 0.0:
+		var low := float(cfg.get("height_low", -20.0))
+		var high := float(cfg.get("height_high", 12.0))
+		mixed = lerpf(mixed, smoothstep(low, high, height), lift)
+
+	# Centre on 0.5, scale, recentre: gain above 1.0 spreads the midtones toward
+	# both ends without moving the mean, so the proportion of dry ground stays
+	# roughly what the noise gave and only its contrast changes.
+	var gain := maxf(0.01, float(cfg.get("dry_gain", 1.4)))
+	var shaped := clampf((mixed - 0.5) * gain + 0.5, 0.0, 1.0)
+	return shaped * clampf(float(cfg.get("dry_max", 0.72)), 0.0, 1.0)
+
+
 func _blend_control_toward(natural: Dictionary, weight: float, tex: int, dither: float) -> Dictionary:
 	if weight >= 0.999:
 		return {"base": tex, "overlay": tex, "blend": 0.0}
@@ -520,6 +614,13 @@ func _texture_ids(entries: Array) -> Dictionary:
 	var ids := {"grass": by_name["grass"], "soil": by_name["soil"], "rock": by_name["rock"]}
 	if by_name.has("path"):
 		ids["path"] = by_name["path"]
+	# GROUND-LAYERS: both optional, same contract as `path` above. A textures
+	# list without them bakes exactly what it baked before -- slope bands and
+	# paths, no macro variation and no damp shore -- rather than failing.
+	if by_name.has("drygrass"):
+		ids["drygrass"] = by_name["drygrass"]
+	if by_name.has("damp"):
+		ids["damp"] = by_name["damp"]
 	return ids
 
 
