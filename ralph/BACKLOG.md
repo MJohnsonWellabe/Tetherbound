@@ -43,6 +43,123 @@ just screenshots.
 
 ---
 
+## VIS-UI-remainder — what D2 (HUD + menus) left open after three blind rounds (2026-08-23)
+
+Branch `ralph/VIS-UI`. Reports: `ralph/reports/VISUAL_UI_2026-08-23.md` (round 1),
+`ralph/reports/VISUAL_UI_2026-08-23-round2.md` (rounds 2 and 3). Measured axes
+per round: `ralph/reports/visual_ui_frame_stats/`.
+
+**Not converged.** Round 3 named new defects and moved a measured axis on 17 of
+24 frames, so `ralph/conventions.md`'s stopping rule is not met in either half.
+This is a handover, not a convergence record.
+
+`tests:` smoke_menu.gd, smoke_settings.gd, smoke_exploration_legend.gd,
+smoke_combat.gd, smoke_prompt_hotbar_dock.gd, smoke_hud_handheld_legibility.gd,
+smoke_craft_panel_controller.gd, smoke_village_trade.gd, test_name_entry.gd.
+
+### In this lane's files, ready to fix
+
+- **`VIS-UI-r1` — `08-party-strip` renders an empty frame.** `model: sonnet`.
+  ROOT CAUSE FOUND, fix NOT applied. `party_strip.gd::_ready()` captures
+  `_rest_position = position` at mount, and every later `_reveal()` (which
+  `set_pinned(true)` calls) snaps `position` back to that captured value — so
+  the capture tool's own `position` assignment lasts only until the strip
+  reveals, then returns to the frame's top-left corner. The tool must call the
+  widget's `set_rest_position()` instead, which snaps immediately while the
+  strip is still invisible. NOTE: an earlier commit on this branch blamed
+  `Control.scale` pivot maths for the same symptom. **That diagnosis was wrong**
+  and is corrected in the round-2 report; do not re-derive from it.
+- **`VIS-UI-r2` — `09-stamina-arc` reads as a bracket, not a meter.** `model: sonnet`.
+  The arc's unfilled track is a dark neutral designed to sit over the lit world;
+  the capture backdrop is near-black (0.08), so the empty half of the instrument
+  is invisible. Lift the two widget-closeup backdrops to a mid value that
+  competes with neither end of what the widget draws.
+- **`VIS-UI-r3` — the combat HUD still collides with itself.** `model: sonnet`.
+  Frames 10 and 11, bottom-left: the active-creature plate composites over the
+  roster's fifth row ("Tuskroot" over a ghosted "Terrapup", "Lv 1" over "Lv 3"),
+  its HP bar runs under the mini-bar and its rounded end pokes past the roster's
+  right edge, and an "Energy" label floats under the pile. `combat_hud.gd`'s
+  `_party_strip_position()` now computes from AllyPanel's real `offset_top`, so
+  the remaining overlap is the plate's own height or the strip's row count, not
+  the stale constant that was fixed.
+- **`VIS-UI-r4` — the dialogue panel does not hide the world HUD.** `model: sonnet`.
+  Frame 04: "RB — Call out Terrapup" ghosts under the dialogue panel's top edge
+  with Grandpa's line over it. The five station panels were wired to
+  `input_owner.gd::set_world_hud_visible()`; `dialogue_panel.gd` was not.
+  Check first whether hiding the HUD during dialogue is wanted — it is a
+  conversation, not a menu — and if so wire it the same way.
+- **`VIS-UI-r5` — text truncates mid-word with no ellipsis, four frames.**
+  `model: sonnet`. `19-craft-panel` ("Ironwood Haft (Axe", "3 Ironwood (have 0),
+  1 Ro.."), `20-shop-panel` (every TM name beheaded — the name column lost width
+  when prices were given their own column), `13-menu-creatures` (a line clipped
+  mid-glyph by the bottom of the screen, no footer). The shop list's last
+  visible row is also cut mid-icon with no scroll affordance.
+- **`VIS-UI-r6` — the trainer prints through the station panels.** `model: sonnet`.
+  Frames 19-22: the player stands centre-screen behind the translucent panel and
+  reads as a dark torso inside the UI. Dim, blur, or step the camera aside.
+  Appeared only once these panels started being captured over the real world.
+- **`VIS-UI-r7` — four button-prompt languages in one game.** `model: sonnet`.
+  Plain text on the title, coloured Xbox circles on 02/03/11/23, monochrome
+  pills on the world HUD (with a coloured X mixed into the grey-pill ability
+  panel in frame 10), keycaps beside bracket-text "[C]" in frame 06, text-only
+  footers in 12-18. The device and the ORDER are now consistent; the GLYPH STYLE
+  is not. One style, applied everywhere.
+
+### Needs an owner decision or art that is not in the build
+
+- **`VIS-UI-r8` — the quickbar's d-pad badges read as red first-aid crosses.**
+  Every individual-direction d-pad glyph in the vendored and raw Kenney packs
+  (Default, Double, `_outline`, `_round`, Xbox and Gamecube) uses the same
+  plus-sign-with-one-differentiated-arm convention, and none reads as a
+  direction at true render size. The red is Kenney's generic active tint but
+  collides with this project's DANGER token anyway. `Generic/` has no d-pad art;
+  using the keyboard arrow keycaps on a gamepad badge would misrepresent the
+  device. **No suitable asset exists.** Needs owner-supplied direction art.
+- **`VIS-UI-r9` — `kenney_future` clashes with the body sans.** The display face
+  on "DISCOVERED REGIONS" and "BOND 0/100" reads as sci-fi against a cozy meadow
+  fiction, and it is the declared project font in `ui_tokens.gd`. Replacing it
+  is art direction plus a licence entry, not a lane's call. (Its capital N was
+  already unusable at marker size and the minimap now draws a needle instead.)
+- **`VIS-UI-r10` — the map renders discovered ground as unlit black.** Fog on
+  unexplored ground is correct per spec 16 and is NOT the defect. What a
+  surveyed region looks like once revealed is: it comes back a featureless black
+  strip. Whether that is a `map_baker.gd` output problem or a missing map
+  treatment needs deciding before it is coded.
+
+### Belongs to other domains — recorded here only so it is not lost
+
+- **The wild creature wears the starter's body.** "Bramblebun" in frames 10/11
+  is the same mesh and same mossy-plate material as the player's Terrapup, with
+  an actual rabbit standing next to it. A blind critic called this a
+  creature-identity failure in a game named after its creatures. **D3's**, and it
+  is the strongest single finding of the round.
+- **The combat roster degrades creatures to flat colour chips** while the
+  exploration HUD draws painted thumbnails from the same data. The roster fix
+  landed for the Creatures tab; combat's own roster still uses chips. D2/D3 seam.
+- **A hard-edged black shadow wedge with no visible caster** owns the lower third
+  of frames 04-07 and 19-23, interior fully unlit; frames 19-23 also put a
+  dusk sky over daylight-lit terrain, and there is a rectangular pit with
+  pure-black walls that nothing explains. **D7 (ground/lighting).**
+- **The world under the HUD is empty** — one tree, five grass tufts, floating
+  planter trays. **D1.**
+- **`smoke_combat_camera.gd` fails** at "the second production encounter would
+  not start". Verified PRE-EXISTING by stashing this lane's four combat-adjacent
+  files and reproducing the identical failure without them. An EncounterDirector
+  re-engagement path, untouched by this lane.
+
+### Harness notes for whoever renders next
+
+- `tools/contact_sheet.gd` lays 23 frames into a grid with entire empty rows
+  between them, which makes the whole-set comparison the visual-judge skill asks
+  for harder than it should be.
+- Frames 05, 06 and 07 are near-identical camera duplicates spending three slots
+  documenting one screen.
+- The survey now shoots eleven previously world-less screens over the real
+  world and runs about 26 minutes. Do not re-render mid-edit: three renders were
+  discarded this session because code landed after the shutter, and judging a
+  stale set corrupts the convergence measurement.
+
+
 ## Filed by CREATURE-PRESENTATION (2026-08-23)
 
 Left open on purpose by the creature-presentation pass rather than half-done

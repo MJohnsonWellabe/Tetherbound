@@ -230,3 +230,76 @@ sufficient for anything that sets a property by name.
 ### Measured baseline
 
 `shots/_rounds/ui-round2/frame_stats.txt`. Round 3 is rendering against it.
+
+
+# Round 3
+
+Same harness, same rubric, a fresh Fable critic, 23 frames, blind, 40% downscale.
+**(a) belongs to the keyart world — no. (b) same kind of game as Palworld —
+yes, narrowly.**
+
+**Not converged, in either half of the rule.** The critic named fifteen defects,
+most of them new, and `tools/frame_stats.py` moved a measured axis on 17 of 24
+frames between rounds 2 and 3. Both halves of `ralph/conventions.md`'s stopping
+condition fail, so this lane hands over mid-pass rather than converged.
+
+A note on those numbers so nobody reads them as a palette change: the large
+chroma drops on the menu and station-panel frames are the harness becoming
+honest. Those screens used to be captured with no world loaded — a flat navy
+backdrop measuring as 100% blue — and are now shot over real terrain.
+
+## What round 3 fixed, and what it exposed
+
+Round 3's own fixes held: the shop panel now fits the viewport with its footer
+visible and its prices in an aligned column; the map's callout headings no
+longer print through their entries; the pause menu hides both world HUD layers;
+combat's roster no longer sits inside its own ally panel's stale coordinates;
+the naming grid's digits are contiguous; the minimap draws a needle instead of a
+capital N that had no diagonal at 19px.
+
+Making the capture honest immediately found a real shipping bug that the
+dishonest capture had been hiding for the whole sweep: **the exploration HUD
+drew straight over all five station panels** — every bench, chest, shop and bed
+in the game. There was never a frame of it because those panels had only ever
+been photographed with no world, and therefore no HUD, behind them.
+
+## Two errors this lane made, recorded because they are the useful part
+
+**1. A confidently-published wrong diagnosis.** The round-2 commit
+"the UI survey photographed a keyboard, and painted over two widgets" and its
+successor blamed `08-party-strip`'s clipping on `Control.scale` multiplying
+about the pivot while `position` stayed unscaled. That is not what was
+happening. `party_strip.gd::_ready()` captures `_rest_position = position` at
+mount time, and every `_reveal()` — which `set_pinned(true)` calls — snaps
+`position` back to that captured value. The harness set `position` after the
+node was already in the tree, so the assignment lasted exactly until the strip
+revealed itself and then returned to the frame's top-left corner. Both the
+round-2 "clipped party row" and the round-3 "frame 08 is a black rectangle" are
+that one cause. The scale theory was plausible, went into a commit message as
+fact, and was wrong; `VIS-UI-r1` in `BACKLOG.md` carries the real cause and says
+not to re-derive from the commit.
+
+**2. `--check-only` proves syntax, not behaviour.** Already recorded above for
+the craft ellipsis. It emptied an entire recipe list while the file
+parse-checked clean, and a blind critic reported the result as a design defect
+two rounds later.
+
+Both errors share a shape worth naming: **a fix that was verified by the wrong
+instrument.** A parse check that cannot see a property name, and a frame read
+that confirmed a widget "drew" without checking WHERE. The sweep's standing
+lesson has been that a harness can photograph the wrong subject; these two say
+the same thing about verification.
+
+## Standing count of capture artefacts in this domain
+
+Eight, of which round 3 added the last two: the layer-0 backdrop painting over
+the widget; the keyboard-pinned device; the null `current_scene` (minimap,
+world map, combat state, and the pause menu's own HUD hiding, all at once); the
+combat camera never following the player into the fight; eleven screens shot
+with no world behind them; and the creature turntables spinning ~69 degrees per
+awaited frame under software rendering, which cost the critic two separate
+findings about creatures "posed facing away".
+
+Every one was diagnosed by experiment. That ratio — eight artefacts against the
+genuine defects listed in `BACKLOG.md` under `VIS-UI-remainder` — is the single
+most useful number this domain has produced.
