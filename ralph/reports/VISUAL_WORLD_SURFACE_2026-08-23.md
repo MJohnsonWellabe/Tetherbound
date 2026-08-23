@@ -346,3 +346,25 @@ run time loads the bake rather than recomputing it, so this is disk, not boot
 CPU. Worth a look on the Ally before it goes further: grass `lod_range` is 55m,
 so draw cost is bounded by what is near the camera, but 405k instances is the
 largest this scatter has been.
+
+## The empty world is not a camera problem — for another lane
+
+The round-1 critic ranked *"nothing lives here"* second overall and said
+plainly that the frames could not distinguish two causes: *"if the world is
+empty because there is nothing to spawn rather than nowhere to point the
+camera... the survey should [tell me]."*
+
+Answered, by reading rather than by shooting again: **there is no ambient
+overworld wildlife in the corridor.** `EncounterDirector` is present in
+`scenes/world/meadows_playground.tscn`, but the only caller of its
+`spawn_wild()` anywhere in `scripts/` is `burrow_warrens.gd` — the dungeon.
+Nothing populates the open field, so a capture that stands the player on the
+trail at five viewpoints has nothing to photograph however long it waits, and
+the ground capture does carry the player to every seat precisely so that
+player-driven spawning would work if it existed.
+
+So this is not a defect in this lane's harness and it is not tunable from any
+file this lane owns. It is a content/systems gap: against `palworld-01`,
+`-02` and `-03`, which all carry creatures in the midground, and against the
+project's own key art, which puts a creature beside the trainer. Recorded here
+for the coordinator rather than acted on.
