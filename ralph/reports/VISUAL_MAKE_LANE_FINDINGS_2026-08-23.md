@@ -1,0 +1,104 @@
+# VIS-MAKE lane — findings established from code, round 2 in flight
+
+Findings that came out of reading what the game actually references, in the
+pattern `ralph/VISUAL_LEDGER.md` already uses for these: each is a defect a
+player meets, recorded so a blind round is not spent rediscovering it. Each
+names the file and the number.
+
+## 1. The fight collapses to 2.1 m, and that is why the camera photographs a rump
+
+Round 1 said the combat camera "frames the wrong participant... the fight
+happens between a large rump and a distant dot." That is correct, and it is not
+a camera-placement taste call — it falls out of three numbers in
+`data/config/combat.json` that were each reasonable alone:
+
+| key | value | what it does |
+|---|---|---|
+| `enemy.preferred_range` | **2.1 m** | where the AI closes to and holds |
+| `camera.distance` | **4.6 m** | how far behind the ally the camera sits |
+| `camera.shoulder_offset` | **1.5 m** | how far off-centre it is |
+| `arena.separation` | 5.0 m | **initial placement only** — not held |
+
+The ally therefore sits about 69% of the way along the camera's sight line to
+the opponent (4.6 of 6.7 m), dead centre, and at 4.6 m a creature-sized body
+subtends more angle than a 1.5 m shoulder offset moves it. The opponent is
+behind the player's own creature by construction, for the whole fight.
+
+This is measured, not inferred. `tools/_capture_combat_moments.gd`'s
+`_aim_camera_clear()` fires a real physics ray from the camera's real position
+and tries five lateral yaw nudges (0, ±1.6, ±2.8 m) before giving up; it
+printed `every camera nudge tried toward this target was still blocked by the
+ally's own body` in **both** encounters of the latest run. `_aim_camera()` only
+sets the rig's yaw — it never moves or overrides the camera — so these frames
+are the real `CameraRig` a player looks through, doing what it does in play.
+
+`arena.separation` being 5.0 m while the AI holds 2.1 m is worth naming
+separately: the arena is authored for a fight at roughly twice the distance the
+fight is actually had at.
+
+**Not fixed in this commit, deliberately.** Round 2's renders were already in
+flight when this was established, and changing the thing being measured
+mid-measurement is how a round stops being evidence. It is the first fix queued
+behind the round-2 verdict.
+
+## 2. Every item has an authored colour, and the inventory throws it away
+
+Round 1: *"Every icon is monochrome white on an identical dark tile. No colour
+coding by kind, rarity or anything else — Palworld's inventory is full-colour
+precisely because colour is what survives a glance."* True, and the reason is
+narrower and more fixable than "the icons need art":
+
+- **`data/items/items.json` already gives every item a `colour`** — `coin`
+  `#d9b64a`, `wood` `#7a5a35`, `axe` `#5c6b73`, `ironwood` `#4a3a2c`, and so on
+  for all 55.
+- **`autoload/item_db.gd:137` already exposes it** as `colour(id) -> Color`.
+- **Two callers use it** — `harvest_node.gd:251` and `key_pickup.gd:166`, both
+  world props.
+- **The inventory does not.** `tools/gen_item_icons.py` draws every glyph with
+  a single constant, `FG = (242, 245, 242)`, and nothing in the UI modulates
+  the result.
+
+So the colour coding the critic asked for is already authored, already parsed,
+already reachable through a public accessor, and discarded at the one screen
+the player opens most. That is a smaller job than it was reported as.
+
+## 3. There is no hammer mesh and no rod mesh in the build
+
+`items.json` gives `hammer` a `held_model` of
+`quaternius_survival/Axe.obj` — the player swings a visible axe to build. The
+inventory of what could replace it is short and worth having on record:
+
+    assets/props/quaternius_survival/   Axe.obj  Knife.obj  Backpack.obj  Bonfire.obj
+    assets/props/quaternius_fantasy/    Axe_Bronze.gltf  Pickaxe_Bronze.gltf
+
+A repo-wide search for `*hammer*`, `*mallet*`, `*sledge*`, `*rod*` and `*fish*`
+returns **icons only**. So the hammer is not a lazy pick from a set that had a
+hammer in it; there is nothing to point it at, and D24 forbids sourcing a new
+prop family for one tool.
+
+Two things are still wrong with the current choice and both are fixable without
+a new asset. It is the SURVIVAL pack's axe while every other tool is the FANTASY
+pack's — a different art family in the same hand — and its own mesh is ~1.4 m
+tall, which at 1.80 m human scale is enormous. `scripts/player/tool_hold.gd`
+supports `held_offset` and `held_rotation_deg` but **no `held_scale`**, so the
+size cannot currently be corrected from data at all.
+
+`fishing_rod` has `held_model: ""` and equips nothing. That is honest — its own
+blurb is "For water that doesn't exist yet" — so `held-fishing_rod` containing
+no rod is the capture correctly photographing an item that has no model, not a
+defect to fix by inventing one.
+
+## 4. The second oxblood leak, root-caused
+
+Recorded in full in the commit that added the audit. In short: `world-ironwood`
+is built from `TwistedTree_1`, which appears in **no** `vegetation.json` scatter
+layer, and `harvest_node.gd::_material_fixups_for_model()` matches by model
+path — so the node gets neither `retexture` nor `retint` and renders
+`Leaves_TwistedTree_C.png` raw, RGB(167,23,23).
+
+`band2_stone_and_root/harvest.json`'s five ironwood nodes still use `_1`/`_2`/
+`_3` and carry the same leak. Band 4 root-caused this, fixed its own nodes, and
+flagged band 2's as unfixed; those are other lanes' files and are untouched
+here. `tools/_capture_item_art.gd` now audits every world node against the
+scatter layers and names the ones that get no fixup, so the fourth blind review
+does not have to find it a fourth time.
