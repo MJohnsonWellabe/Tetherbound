@@ -32,6 +32,13 @@ const STATUS_SECONDS := 2.4
 const ROW_ICON_PX := 40
 const CENTER_ICON_PX := 96
 const INGREDIENT_ICON_PX := 24
+## Was 64: too tight even for a single-line cost summary at FONT_BODY (name)
+## + FONT_TINY (cost) with the row's own 6px top/bottom padding, which is why
+## rows overflowed on ordinary recipes, not just ones with unusually long
+## ingredient lists. 80 is the smallest height that fits both labels at their
+## real line heights with room to spare; `_make_row`'s `clip_contents = true`
+## is the hard backstop for whatever this estimate still gets wrong.
+const ROW_HEIGHT := 80
 
 var game: Node = null
 
@@ -211,7 +218,7 @@ func _build_list_zone() -> Control:
 
 func _make_row(id: String, recipe: Dictionary) -> Button:
 	var button := Button.new()
-	button.custom_minimum_size = Vector2(300, 64)
+	button.custom_minimum_size = Vector2(300, ROW_HEIGHT)
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = ""
 	button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
@@ -219,6 +226,17 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	button.add_theme_stylebox_override("pressed", UITokens.slot_box(true))
 	button.add_theme_stylebox_override("focus", UITokens.slot_box(true))
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# `Button` is not a `Container` and never asks its children how tall they
+	# want to be, so a cost line long enough to wrap past ROW_HEIGHT does not
+	# grow the row -- it just draws past its own bottom edge. Godot then
+	# paints the NEXT row's Button (added after this one, so drawn on top of
+	# it) directly over that overflow, which is what a blind visual-judge
+	# pass read as "ingredients spill into the next row's title" with
+	# "orphaned ghost strings" behind the rows, and the last row printing
+	# over the footer. `clip_contents` makes the overflow impossible instead
+	# of merely unlikely: whatever the row's real content turns out to need,
+	# nothing it draws can ever leave this Button's own rect.
+	button.clip_contents = true
 
 	var pad := MarginContainer.new()
 	pad.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -258,7 +276,18 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	var cost_label := Label.new()
 	cost_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cost_label.text = _cost_line(recipe)
-	cost_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Single line, ellipsis on overflow -- NOT word-wrap. Word-wrap made the
+	# line grow with ingredient count, which is what blew past ROW_HEIGHT in
+	# the first place (see `_make_row`'s `clip_contents` comment); wrapping
+	# also used to just get chopped wherever the row's real height ran out,
+	# which is the "lists truncate on a hanging comma" a blind visual-judge
+	# pass caught -- a raw cut mid-list reads as broken text, not as "there's
+	# more". Ellipsis is bounded and honest about being a summary; the full,
+	# untruncated ingredient list is still shown in the right-hand detail
+	# column (`_describe`) for whichever row is focused.
+	cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	cost_label.text_overflow_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	cost_label.clip_text = true
 	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)

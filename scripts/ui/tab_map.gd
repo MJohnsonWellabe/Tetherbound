@@ -226,11 +226,8 @@ func build() -> void:
 	_controls_label.scroll_active = false
 	_controls_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_controls_label.add_theme_font_size_override("normal_font_size", CANVAS_HEADING_FONT_SIZE + 2)
-	_controls_label.text = "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
-		INPUT_GLYPH.icon("map_zoom_out", 24),
-		INPUT_GLYPH.icon("map_zoom_in", 24),
-	]
 	add_child(_controls_label)
+	_refresh_controls_label()
 
 	_legend_row = HBoxContainer.new()
 	_legend_row.add_theme_constant_override("separation", 22)
@@ -249,9 +246,26 @@ func revision() -> int:
 	return 0
 
 
+## `icon()` auto-detects the CURRENT device every call, but a Label only
+## repaints when its `.text` is reassigned. Setting this once in `build()`
+## froze it on whichever device was live the moment the tab opened -- switch
+## from pad to keyboard (or back) with the map already open and the zoom
+## glyphs kept showing the device that was live at open time, the same
+## staleness class `dialogue_panel.gd::_draw()` (called every `_process()`
+## frame) exists to avoid for its own Continue/Close prompt. Called once from
+## `build()` and once every `poll()` tick so this label tracks live input the
+## same way every other glyph-bearing prompt in the menu does.
+func _refresh_controls_label() -> void:
+	_controls_label.text = "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
+		INPUT_GLYPH.icon("map_zoom_out", 24),
+		INPUT_GLYPH.icon("map_zoom_in", 24),
+	]
+
+
 func poll() -> void:
 	if _canvas == null:
 		return
+	_refresh_controls_label()
 	_read_navigation_input()
 	_follow_player_if_not_panned()
 
