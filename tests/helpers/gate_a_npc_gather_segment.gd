@@ -526,7 +526,19 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> boo
 
 
 func _prove_movement_resumed() -> bool:
-	if _tree.paused or INPUT_OWNER.current(_tree) != null or not bool(_player.call("locomotion_enabled")):
+	# Say WHICH of the four ways this fails. "Movement stayed dead" covers a
+	# paused tree, a stale input owner, a cleared locomotion flag and a player
+	# who simply could not walk anywhere, and those are four different bugs
+	# with four different fixes -- the caller used to report them identically.
+	if _tree.paused:
+		print("movement dead: the scene tree is still paused")
+		return false
+	var owner_node: Variant = INPUT_OWNER.current(_tree)
+	if owner_node != null:
+		print("movement dead: input still owned by %s" % str(owner_node))
+		return false
+	if not bool(_player.call("locomotion_enabled")):
+		print("movement dead: locomotion_enabled is false")
 		return false
 	# Try four physical directions because a villager counter or wall can block
 	# one without implying dead world input.  This is ordinary walking, not a
@@ -544,6 +556,9 @@ func _prove_movement_resumed() -> bool:
 		if Vector2(_player.global_position.x - before.x,
 				_player.global_position.z - before.z).length() >= 0.3:
 			return true
+	print("movement dead: locomotion is live but four stick directions moved the player nowhere from (%.2f, %.2f, %.2f)" % [
+		_player.global_position.x, _player.global_position.y, _player.global_position.z,
+	])
 	return false
 
 
