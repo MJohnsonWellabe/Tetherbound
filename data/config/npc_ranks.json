@@ -9,9 +9,9 @@
     "grunt": {
       "label": "Grunt",
       "base": "grunt",
-      "_comment_palette": "Warmest-of-the-family but lowest VALUE of the three ranks on this rig (luminance ~0.52, R:G:B roughly 1.3:1:1) -- kept above STRANDED-P3's ~0.5 floor (see palette_crush note below) so the emission-floor fix still reads as a visible warm tint rather than crushing back toward black, while staying the darkest/least-adorned of the three as the escalating-value ladder this file has always used.",
+      "_comment_palette": "Dark oxblood, the lowest value of the three ranks. These three hexes were desaturated pinks (#a27d7d/#bb9090/#d4a3a3) for as long as the emission floor was a MULTIPLY, because a dark tint crushed both channels toward black and the only defence was to keep luminance high. The floor is additive now, which removes that constraint completely -- a dark, saturated tint is guaranteed a visible floor regardless of how dark the texel under it is -- so the palette can be the reserved colour instead of a pale relative of it. A blind round measured the previous pass at saturation 0.20-0.24 and value 0.25-0.31 against the UNRANKED archetype's 0.19, and named the consequence exactly: applying a rank made the uniform LIGHTER and greyer than standard issue, so 'the standard issue body looks more elite than every rank above it'. Ranks now sit at or below the archetype in value and well above it in saturation, which is the right direction for a uniform.",
       "palette": {
-        "*": "#a27d7d"
+        "*": "#5e2b2f"
       },
       "_comment_palette_crush": "STRANDED-P3, confirmed game bug (kept for the mechanism, not the old hex -- see character_model.gd's `_shared_variant_material` for the actual fix): a straight albedo*colour multiply can only ever DARKEN a source pixel, and this rig's shared material also copies the same rank colour into the self-lit emission channel, so a dark tint crushes both channels toward black at once. character_model.gd's ADDITIVE emission floor (lerp toward the tint colour whenever tint luminance < 0.95) is what actually keeps a dark uniform legible; this hex is chosen with headroom above that floor's comfortable range on top, not as a substitute for it.",
       "badge": {
@@ -32,9 +32,9 @@
     "officer": {
       "label": "Officer",
       "base": "grunt",
-      "_comment_palette": "Same warm family as grunt, one value step up (luminance ~0.60) -- the secondary cue underneath the badge's own shape/colour/size change.",
+      "_comment_palette": "Same oxblood family, one value step up -- the secondary cue underneath the badge's own shape/colour/size change. See grunt's note for why these three moved off pale pink.",
       "palette": {
-        "*": "#bb9090"
+        "*": "#7a373a"
       },
       "badge": {
         "shape": "sphere",
@@ -54,9 +54,9 @@
     "captain": {
       "label": "Captain",
       "base": "grunt",
-      "_comment_palette": "Brightest/warmest of the three grunt-rig ranks (luminance ~0.68) -- the value ladder's own top, one step below the Warden's untouched full-original finish.",
+      "_comment_palette": "Brightest of the three grunt-rig ranks and the top of the value ladder, still darker and far more saturated than the unranked archetype. See grunt's note.",
       "palette": {
-        "*": "#d4a3a3"
+        "*": "#98474a"
       },
       "_comment_badge_shape": "VIS-CAST. The box this replaces was itself a fix -- 'officer and captain differ by 26 points in one colour channel and nothing else' -- and it solved that and introduced a worse defect the next blind round photographed: a 13cm cube presents ONE flat face square to the camera, a plane takes exactly one shade across the whole of it under a single key, and the accessory material was a default StandardMaterial3D at roughness 1.0 with no metal, so the result had no gradient anywhere on it. It rendered as a flat pure-red untextured rectangle pasted over the chest straps -- a debug gizmo again, in a new shape. Three things change together, because none of them is sufficient alone: the shape becomes a `disc` (a struck medal, whose rim curves away from the key so the silhouette is lit on one edge and shaded on the other), the material gets real metal (character_model.gd's `finish` block) so the face carries a specular falloff instead of one flat value, and the size drops from 0.13 to 0.095 -- 13cm is a placard, not insignia. The colour also comes off full saturation, because a pure hue chip is the other half of why it read as UI rather than as an object on a costume. The rank ladder is unchanged in kind: stud, bigger stud, medal, and the Warden's larger polished medal in the literal reserved hex.",
       "badge": {

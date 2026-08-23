@@ -275,6 +275,22 @@ func _run() -> void:
 		var height_m: float = heights[i]
 		var stem := "%02d-%s" % [i + 1, slug]
 
+		# ONLY the subject is visible for its own portrait.
+		#
+		# Every character stands `SPACING` apart on one stage and the key light
+		# is a directional at -52 degrees, so each figure throws a shadow several
+		# metres along the ground -- straight into its neighbour's portrait frame.
+		# A blind round measured a hard-edged intruding shadow in 24 of 28 frames
+		# and, correctly, called it a bug in the shot. The tell was in the
+		# exception list: the only portraits WITHOUT it were the trainer's, and
+		# the trainer is slot 0, the one character with no neighbour to his left.
+		#
+		# Hiding the rest costs nothing -- they are already built, and staging
+		# them all once is still what avoids re-paying the shader compile per
+		# shot, which is the whole reason the group is built up front.
+		for other in holders:
+			if other != null:
+				(other as Node3D).visible = (other == holder)
 		holder.rotation.y = 0.0
 		_frame_portrait(camera, slot_x)
 		for f in TURN_FRAMES:
@@ -287,8 +303,11 @@ func _run() -> void:
 		await _shoot("%s-threequarter" % stem, height_m)
 
 		# Reset for the line-up below, which wants every figure facing the
-		# same way the portraits opened on.
+		# same way the portraits opened on, and visible again.
 		holder.rotation.y = 0.0
+		for other in holders:
+			if other != null:
+				(other as Node3D).visible = true
 
 	var live := holders.filter(func(h: Node3D) -> bool: return h != null)
 	if live.size() < 2:

@@ -469,7 +469,10 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		# critics' named style anchor -- Grandpa and every villager render
 		# bit-identical across this change. It reaches Team Tether and nothing
 		# else, which is exactly the scope the defect has. TUNABLE.
-		const EMISSION_FLOOR_ADD := 0.20
+		# 0.30, raised alongside the move to genuinely dark oxblood palettes: the
+		# add is `colour * EMISSION_FLOOR_ADD`, so a darker tint contributes a
+		# smaller floor and needs a larger coefficient to stay legible.
+		const EMISSION_FLOOR_ADD := 0.30
 		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
 		if tint_luminance < 0.95:
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
