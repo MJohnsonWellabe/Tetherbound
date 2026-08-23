@@ -14,9 +14,11 @@ frames it was missing.
 **1. The second full-suite run, properly.** The record below is honest that
 only one full run ever completed, with the two failures it then fixed, and
 that the confirming rerun was started and killed under a box running a dozen
-concurrent Godot processes. Run alone on this container: **1301 tests, 714810
-assertions, 0 failed.** The 95-test targeted set is green too, including
-against this item's own new clearing.
+concurrent Godot processes. Run alone on this container, **three times over
+this item's life — 1301 tests, 714810 assertions, 0 failed, every time**, the
+last of them on the final tree. The 117-test D4 set (which includes
+`test_harvest.gd`'s real glTF loads, the tests that actually read the re-sited
+stand) is green on every intermediate state as well.
 
 **2. Riding pays off, measured on the real route rather than argued from the
 multiplier.** `smoke_riding.gd` passes end to end on current head: refused
@@ -110,6 +112,35 @@ real bug this lane had inherited without noticing:
   Palworld bar cannot be evaluated at all from these frames. That belongs to
   whoever owns character materials/lighting, and it is the loudest thing in
   this survey.
+
+Round 3, on frames re-rendered after the crimson fix, confirmed the red was
+gone and found the **same class of defect one variant along**. It read the
+stand as *"bone-white trunks under near-black desaturated canopies ...
+blight/dead-forest/enemy-territory language, not friendly wilderness"*, and
+said a player who walked into the grove *"would reasonably assume they had
+crossed into hostile ground"*. Cause, again in data the repo already had: the
+`grove` layer's `variant_retint` is a deliberate three-step family —
+`TwistedTree_2` takes `#325f3c`, a deep dark green, `TwistedTree_4` takes
+`#c4d696`, a pale yellow-green. Across a scattered wood those steps average
+into one canopy; across a five-tree stand, three dark trees and two pale ones
+are two species. All five nodes now take the pale variant, and the 0.26-0.42
+scale spread does the differentiating that model choice was doing badly. The
+grey bark stays deliberately: `Bark_TwistedTree` is untouched by any layer and
+is what separates an ironwood from the terracotta-trunked trees around it —
+species identity carried by the trunk rather than by a canopy in the wrong
+palette.
+
+**Three rounds, and the honest stop condition.** `conventions.md` stops a blind
+pass after two consecutive rounds that name no new defect. That is not what
+happened here and this entry will not claim it: every round named new defects.
+The pass is stopped instead because **the defects still standing against this
+content are not in this lane's files** — scatter density, ambient light and
+exposure, a cloudless sky, distant-LOD instances rendering white, the storm
+wall's viewing angles, and a character material that renders the trainer as a
+black cut-out. Each round's findings that WERE band content were fixed inside
+it, twice, and both fixes were re-rendered and re-judged blind. What the last
+round could not move on this content, no edit to
+`bands/band4_upper_meadows_ironwood/` can move.
 
 Most of what it named is **not this lane's to fix, and is recorded here as
 evidence rather than quietly dropped**:
