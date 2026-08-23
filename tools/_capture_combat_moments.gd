@@ -61,21 +61,42 @@ extends SceneTree
 ## single worst thing a capture tool can do here is the 45-minute wait on a
 ## moment that never came that an earlier harness already paid for once.
 ##
-## A RESIDUAL RISK THIS SCRIPT CANNOT FIX FROM HERE. `impact_flash.gd`'s own
-## header already documents one instance of a pattern worth watching for
-## again: an effect timed on `_process(delta)` — real wall-clock render-frame
-## time, not the physics tick — can complete its entire lifetime inside a
-## SINGLE frame under this harness's ~2.4s-per-frame software rendering, and
-## be gone before any shutter this script fires. `impact_flash.gd` was moved
-## to `_physics_process` for exactly that reason (see its own comment).
-## `move_projectile.gd` (the quick attack's travel/bolt) was NOT — it is still
-## `_process`-driven — and `scripts/player/camera_rig.gd`'s own follow/look
-## (`_follow()`, `_apply_look()`) are `_process`-driven too. If a future
-## capture sheet still shows a dead projectile or a camera that is not where
-## the aim math (verified correct, headlessly, against the real fight) says
-## it should be, that class of bug — not this script's aim/timing — is where
-## to look next; it is a source fix, not something this photographer can wait
-## or re-aim its way around.
+## THE CLOCKS, AND WHY THIS TOOL PAUSES TO SHOOT. Resolved 2026-08-23, after a
+## blind round reported "02-move-firing is titled as the firing moment, and
+## there is no firing in it... put 01, 02 and 03 side by side and they are the
+## same still life three times" against a game that has had projectile, impact
+## and telegraph VFX all along.
+##
+## The cause was this tool, not the fight. One llvmpipe frame at 1280x800 is
+## ~2.4s of `_process` delta and at most 8 physics ticks, so `_shoot_pair`'s two
+## RENDER_SETTLE_FRAMES waits cost more animation time than the entire life of
+## every effect in a fight: the impact flash is 0.34s, a bolt at most 0.42s, an
+## attack or hit clip about a second. The moment was always over before the
+## shutter opened, and no wait value could have fixed it -- the settle waits
+## alone outlived every one of them.
+##
+## Two fixes, and they are different in kind:
+##   * `_shoot_pair` now PAUSES the tree for the shutter. Rendering is
+##     independent of the pause, so the frames still draw while the effect stays
+##     exactly where it is, at zero simulated cost. This is the general fix and
+##     it is what makes a sub-second event photographable at all here.
+##   * `move_projectile.gd` was moved from `_process` to `_physics_process`, so
+##     it is finally on the same clock as the two siblings that were moved for
+##     this reason years of comments ago (`impact_flash.gd:136`,
+##     `telegraph_glow.gd`). Nothing changes on real hardware.
+##
+## Still `_process`-driven and worth knowing about: `scripts/player/camera_rig.gd`'s
+## own follow/look (`_follow()`, `_apply_look()`). This tool sets the camera
+## transform directly through `_aim_camera_clear()` rather than waiting for the
+## rig to settle, and the pause freezes the rig too, so the shot lands where it
+## was aimed. If a future sheet shows a camera somewhere the aim math does not
+## predict, that is where to look.
+##
+## 02 and 03 now also VERIFY their own subject: `_live_effect()` checks that a
+## projectile / an impact flash is actually alive in the arena at the shutter,
+## and prints a FAIL naming the problem when it is not. Six times in this sweep
+## a survey photographed something other than its subject; a tool that is about
+## to write a PNG called "the projectile in flight" can afford to check.
 ##
 ## SHOT LIST (12 PNGs — six moments, each shot twice):
 ##   01-engagement          — player creature and wild creature squared up,
@@ -166,6 +187,14 @@ const PROJECTILE_INFLIGHT_FRAMES := 6
 ## m/s is ~12 frames; this adds margin for the impact flash to actually be
 ## on screen rather than photographed one frame early.
 const IMPACT_SETTLE_FRAMES := 20
+## The bolt's whole flight plus margin, in physics ticks: the impact flash is
+## spawned off `arrived`, so this bounds "wait for the burst to exist" rather
+## than guessing when it will. Bounded and FAILs loudly, per requirement 5/6 --
+## an earlier harness in this sweep burned 45 minutes on a moment that never came.
+const FLASH_WAIT_BOUND := 40
+## How far into the 0.34s burst to shoot. The ring expands from zero radius, so
+## its first tick is not a picture of anything.
+const FLASH_BITE_FRAMES := 4
 ## Let `player_quick.recovery` (0.22-0.24s, ~13-15 frames) finish so
 ## `_action == Action.READY` before the aim button is pressed — pressing
 ## Throw during recovery is silently ignored by `_read_player_input()`.
@@ -315,6 +344,12 @@ func _run_wild_encounter() -> void:
 			continue
 		landed = true
 
+		# `hit_landed` is emitted on the SAME physics tick that launches the
+		# bolt (`combat_manager.gd::_resolve_player_strike`), so the wait below
+		# starts at t=0 of the flight. pebble_toss travels 9m at 26 m/s = 0.35s
+		# = ~21 physics ticks, so six ticks puts the bolt around a third of the
+		# way across -- genuinely mid-flight, at any engagement distance the
+		# arena allows.
 		await _await_physics(PROJECTILE_INFLIGHT_FRAMES, "projectile in flight")
 		if not bool(_manager.call("is_fighting")):
 			print("FAIL: the fight ended before the projectile could be photographed")
@@ -322,9 +357,35 @@ func _run_wild_encounter() -> void:
 		ally = _director.call("ally_body") as Node3D
 		if ally != null and is_instance_valid(wild):
 			_aim_camera_clear(ally.global_position, wild.global_position, ally)
+		var bolt := _live_effect("move_projectile.gd")
+		if bolt == null:
+			print("FAIL: 02-move-firing is being shot with NO projectile alive in the arena; the frame will not show what its name says")
+		else:
+			print("02-move-firing: projectile present at %s" % str((bolt as Node3D).global_position))
 		await _shoot_pair("02-move-firing")
 
-		await _await_physics(IMPACT_SETTLE_FRAMES, "impact settle")
+		# The burst does not exist yet: `_resolve_player_strike` defers it to
+		# the bolt's own `arrived` signal so the flash goes off where and when
+		# the blow lands. So wait for the flash to EXIST rather than counting a
+		# fixed number of frames at it -- the old fixed 20-tick wait expired at
+		# the same instant a 0.34s burst did, which is why round 1's
+		# 03-hit-landing was the same still life as 01 and 02.
+		var flash: Node = null
+		var waited_for_flash := 0
+		while flash == null and waited_for_flash < FLASH_WAIT_BOUND:
+			waited_for_flash += 1
+			_frame_count += 1
+			await physics_frame
+			if not bool(_manager.call("is_fighting")):
+				break
+			flash = _live_effect("impact_flash.gd")
+		if flash == null:
+			print("FAIL: no impact flash appeared within %d ticks; 03-hit-landing cannot show a blow landing" % FLASH_WAIT_BOUND)
+		else:
+			print("03-hit-landing: impact flash present after %d ticks" % waited_for_flash)
+			# A few ticks into the burst rather than on its first frame: the
+			# ring starts at zero radius and reads as nothing at t=0.
+			await _await_physics(FLASH_BITE_FRAMES, "letting the burst open")
 		if bool(_manager.call("is_fighting")) and is_instance_valid(wild):
 			ally = _director.call("ally_body") as Node3D
 			if ally != null:
@@ -674,6 +735,30 @@ func _press(action: String) -> void:
 ## toggling HUD visibility between the two shots does not let the moment
 ## drift out from under them.
 func _shoot_pair(name: String) -> void:
+	# THE TREE IS PAUSED FOR THE WHOLE PAIR. Without this the shutter cannot
+	# photograph any sub-second event, and every visual event in a Tetherbound
+	# fight is sub-second by design -- which is exactly how round 1 came back
+	# with "02-move-firing is titled as the firing moment and there is no
+	# firing in it" for a game that has had projectile, impact and telegraph
+	# VFX all along.
+	#
+	# The arithmetic, because it is not close: one llvmpipe frame at 1280x800
+	# is ~2.4s of `_process` delta and at most 8 physics ticks (Godot's
+	# `max_physics_steps_per_frame` default; project.godot overrides neither).
+	# The two RENDER_SETTLE_FRAMES waits below therefore used to cost ~4.8s of
+	# animation time and ~0.27s of simulated time BEFORE the first shot -- more
+	# than the entire life of the impact flash (0.34s), the projectile (<=0.42s)
+	# and any attack or hit clip. The moment was always over before the shutter
+	# opened.
+	#
+	# Paused, those waits cost zero simulated time: rendering is independent of
+	# the tree pause, so the frames still draw, the effect stays exactly where
+	# it was, and the HUD and clean shots become genuinely the SAME moment --
+	# which is what this function's own header has always claimed and, before
+	# this, was not true either (they were ~0.27s of simulated time apart).
+	var was_paused := paused
+	paused = true
+
 	await _await_process(RENDER_SETTLE_FRAMES, "render settle (hud) for %s" % name)
 	await _screenshot("%s/%s-hud.png" % [OUT_DIR, name])
 
@@ -688,6 +773,31 @@ func _shoot_pair(name: String) -> void:
 	for child: Variant in saved.keys():
 		if is_instance_valid(child):
 			(child as CanvasLayer).visible = bool(saved[child])
+
+	paused = was_paused
+
+
+## Is one of the fight's own effect nodes alive right now?
+##
+## `combat_manager.gd` adds every effect as a DIRECT child of the arena
+## (`_resolve_player_strike` -> `PROJECTILE.launch(host, ...)`, `_flash_at` ->
+## `FLASH.burst`), so this is a one-level scan of a handful of nodes, not a walk
+## of a 143k-prop world.
+##
+## This exists so the capture can ANSWER ITS OWN QUESTION. Six times in this
+## sweep a survey photographed something other than its subject and a blind
+## critic spent findings on it. A tool that is about to write a PNG called
+## "the projectile in flight" can cheaply check whether a projectile is in
+## flight, and say so in its own log either way.
+func _live_effect(script_file: String) -> Node:
+	var arena: Node3D = _manager.call("arena") as Node3D
+	if arena == null:
+		return null
+	for child in arena.get_children():
+		var script: Variant = child.get_script()
+		if script != null and str(script.resource_path).ends_with(script_file):
+			return child
+	return null
 
 
 func _screenshot(path: String) -> void:

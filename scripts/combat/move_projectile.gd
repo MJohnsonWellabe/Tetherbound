@@ -100,7 +100,21 @@ func _ready() -> void:
 	_redraw(0.0)
 
 
-func _process(delta: float) -> void:
+## The PHYSICS clock, not `_process`, and for the reason `impact_flash.gd:136`
+## and `telegraph_glow.gd` both already record in their own headers: a
+## sub-second effect driven by real frame time is gone inside a SINGLE frame
+## under the software renderer every visual verdict on this project is made
+## with. The arithmetic for this one: a flight is clamped to `MAX_TRAVEL`
+## 0.42s, and one llvmpipe frame at 1280x800 is ~2.4s of `_process` delta, so
+## the first tick after launch put `t` at 5.7, clamped to 1.0, and freed the
+## node before it was ever presented. Both siblings were moved for this; this
+## one was left behind, and `tools/_capture_combat_moments.gd`'s own header
+## predicted the consequence before a blind critic reported it as "there is no
+## firing in the firing frame".
+##
+## Nothing changes on real hardware: physics runs at 60Hz there too, so a 0.42s
+## bolt is ~25 frames of travel either way.
+func _physics_process(delta: float) -> void:
 	if _done:
 		return
 	_elapsed += delta
