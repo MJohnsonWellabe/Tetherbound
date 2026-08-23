@@ -200,11 +200,15 @@ func _build_shots() -> void:
 			"name": "warden",
 			"focus_node": "Warden Aldis",
 			# First render (offset (2.6,1.7,3.0)) put the camera behind him --
-			# `facing_deg: 180` in stronghold_climax.json turned out to face
-			# the OPPOSITE way from that offset. Flipped to stand roughly
-			# where the entrance he watches actually is.
-			"focus_offset": Vector3(-2.2, 1.6, -2.6),
-			"focus_aim_h": 1.5,
+			# `facing_deg: 180` in stronghold_climax.json faces the OPPOSITE
+			# way from that offset. Second render (flipped, -2.2,1.6,-2.6)
+			# had his face, but the arena has no window and only faint
+			# trim-light fill (stronghold.gd's OmniLights default to energy
+			# 0.5) -- most of the wide 3/4 frame was black void around him.
+			# Pulled in close for a portrait crop instead: less empty room
+			# in frame, more of his own lit surfaces filling it.
+			"focus_offset": Vector3(-0.95, 0.7, -1.15),
+			"focus_aim_h": 1.6,
 		},
 		{
 			"name": "mill-crossing",

@@ -344,9 +344,13 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
    Grandpa's briefing, and `.s-orbs` shows that instead. */
 .s-bedroom{background-image:url("img/opening-bedroom.jpg"),linear-gradient(160deg,var(--timber),#0b0e0a)}
 .s-village{background-image:url("img/village-square.jpg"),url("img/01-spawn-outward.jpg"),linear-gradient(160deg,var(--trail-wheat),var(--grass-olive))}
-/* ^ village-square.jpg is deliberately absent from the repo rather than
-   committed-and-broken, so this slot resolves to the walk-out frame under it
-   and picks the intended shot back up the moment one is captured. */
+/* ^ village-square.jpg is real -- a re-shoot already landed on `main`
+   (6cdf8dc9) with the square, the well, cottages and a villager, clear of
+   the roof `capture_site_shots.gd`'s own (still-broken, deliberately
+   unfixed) viewpoint puts the camera inside. SITE-SHOTS re-verified this
+   frame rather than re-deriving it from a stale ralph/BACKLOG.md entry that
+   never got reconciled after the fix shipped -- the walk-out fallback below
+   it is only for a checkout that predates that commit. */
 .s-combat{background-image:url("img/02-arena-opens.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
 .s-aim{background-image:url("img/aim-arc.jpg"),linear-gradient(160deg,var(--day-blue),var(--dusk))}
 .s-strike{background-image:url("img/06-charged-attack-lands.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
