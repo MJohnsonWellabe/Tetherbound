@@ -102,3 +102,39 @@ flagged band 2's as unfixed; those are other lanes' files and are untouched
 here. `tools/_capture_item_art.gd` now audits every world node against the
 scatter layers and names the ones that get no fixup, so the fourth blind review
 does not have to find it a fourth time.
+
+## 5. The player's creature bed is a human twin bed, and a better asset is installed
+
+Round 1: *"The creature bed is a human single bed with a headboard, white pillow
+and blue blanket: if the player's five companions get this, it reads as a naming
+error."* Confirmed at source — `scripts/build/creature_bed.gd:19`:
+
+    const MESH_PATH := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
+
+It is literally a twin bed from a furniture pack.
+
+This is the same shape of finding as the ledger's grunt-rig entry — the thing
+that would fix it is already in the build and referenced by nothing that needs
+it:
+
+- **`assets/props/generated_camp/camp_bed.glb`** is installed and textured: a
+  raised camp bed with a lashed log frame, stuffed mattress and pillow,
+  generated from an **owner-supplied reference board**
+  (`docs/art/reference/owner-board-2026-08-23-camp-set.png`, recorded in
+  `docs/ASSET_LEDGER.md`). `band1_lower_meadows/props.json:339` already places
+  it in the world as `"model": "camp_bed"`.
+- **`assets/props/kenney_survival/bedroll.glb`** is vendored, and
+  `scripts/build/camp.gd:20-21` carries its own note that the camp shipped with
+  "an indoor bed frame standing in for a bedroll... A real bedroll is now
+  vendored."
+
+So the player's buildables are furnished from a generic furniture pack while a
+purpose-made, owner-referenced camp set sits installed beside them. No new
+asset, no generation and no D24 exception is needed to close the gap.
+
+**What this does not settle:** neither a camp bed nor a bedroll is a creature
+*nest*, and no nest, basket or straw-bed mesh exists anywhere in the build. So
+"the creature bed does not read as a creature's" is only partly reachable by
+re-pointing a path — the rest is an asset that is not in the build, which is the
+split the visual-judge rubric asks for and a `BLOCKED.md` candidate rather than
+something tuning reaches.
