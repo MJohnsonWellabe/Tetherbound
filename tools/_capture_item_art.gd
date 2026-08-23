@@ -172,8 +172,15 @@ const WORLD_NODES: Array[Dictionary] = [
 ## exploration rig, per the brief: the same eye and target for all 7 tools is
 ## what makes a comically large or small one a defect visible in a still
 ## rather than an artefact of a different framing per shot.
-const CAM_EYE := Vector3(1.9, 1.55, -2.3)
-const CAM_TARGET := Vector3(0.0, 0.95, 0.0)
+## The held-tool vantage, in the TRAINER'S OWN frame rather than world space --
+## see `_shoot_held_tools`. Forward-and-right of them, at chest height, looking
+## at the hand rather than the face: the question this set exists to answer is
+## "what is in the hand and how big is it", and only one side of a person can
+## answer it.
+const CAM_FORWARD := 2.1
+const CAM_RIGHT := 1.3
+const CAM_EYE_HEIGHT := 1.35
+const CAM_LOOK_HEIGHT := 0.95
 const CAM_FOV := 42.0
 
 ## Fixed vantage for every world-node shot: the player stands `NODE_AHEAD`
@@ -635,12 +642,40 @@ func _shoot_held_tools(db: RefCounted, stage: Dictionary) -> void:
 	var player: Node3D = stage["player"]
 	var game: Node = stage["game"]
 
+	# FRONT-RIGHT THREE-QUARTER, DERIVED FROM THE RIG'S OWN FACING.
+	#
+	# The fixed world-space eye this used to carry sat BEHIND the trainer, and
+	# round 1's critic reported every held tool as "STOWED on the back or hip,
+	# not in hand" and threw the whole set out. Re-shot and checked: the tool is
+	# bone-attached to `RightHand` correctly and always was -- `tool_hold.gd`'s
+	# lookup finds it, because `trainer_lod0.glb` really does carry a `RightHand`
+	# bone. What the frame showed was a backpack, and an arm hanging at the side
+	# with the axe head half-occluded by the leg behind it. From behind, a tool
+	# held in a relaxed hand is indistinguishable from a tool holstered on a hip,
+	# and the critic was right that the set could not answer its own question.
+	#
+	# Computed from the player's own basis rather than hardcoded, so it cannot go
+	# stale if the stage's spawn yaw ever changes: `-basis.z` is Godot's forward,
+	# `basis.x` is the trainer's right, and the tool is in the RIGHT hand -- so
+	# standing forward-and-right of them puts the hand nearest the camera and
+	# unoccluded, with the body behind it rather than in front.
+	# `+basis.z`, NOT Godot's usual `-basis.z` forward. Measured, not assumed:
+	# the first reframe used `-basis.z` and the re-shot sheet still came back
+	# showing the backpack, so this rig's model faces the opposite way from the
+	# node convention. `right` flips with it, since a 180-degree yaw takes both
+	# axes.
+	var facing := player.global_basis.z
+	var right := -player.global_basis.x
 	camera.fov = CAM_FOV
-	camera.global_position = CAM_EYE
-	camera.look_at(CAM_TARGET, Vector3.UP)
+	camera.global_position = player.global_position \
+		+ facing * CAM_FORWARD \
+		+ right * CAM_RIGHT \
+		+ Vector3.UP * CAM_EYE_HEIGHT
+	camera.look_at(player.global_position + Vector3.UP * CAM_LOOK_HEIGHT, Vector3.UP)
 
 	print("")
 	print("[held] trainer is %.2fm tall; a believable tool reads well under 100%% of that on its longest axis" % TRAINER_HEIGHT_M)
+	print("[held] camera stands forward-right of the trainer so the RIGHT hand is nearest and unoccluded")
 
 	for tool_id in TOOL_SHOTS:
 		# The tool reaches the hand exactly the way it does in play: the Game
