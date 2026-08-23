@@ -477,6 +477,16 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 	# own cluster -- the same reason the loop above indexes its ordinary names.
 	wild.name = "Alpha_%s" % species
 	wild.set_meta("alpha", true)
+	# CREATURE-IDENTITY-2: and now it LOOKS like one. Until this, an alpha
+	# differed from its neighbours only by level and by a size multiplier that
+	# is unreadable unless an ordinary member of the same species happens to be
+	# standing beside it -- so the player met a harder fight with no warning
+	# available before the first exchange. `creature_body.set_alpha()` swaps to
+	# the `*_alpha` colourway where one is authored, rims the silhouette and
+	# starts the idle aura. Called AFTER the size multiplier above, because that
+	# rebuilds the art and would otherwise discard the dressing.
+	if wild.has_method("set_alpha"):
+		wild.call("set_alpha", true)
 
 
 ## The fixed-level counterpart to `_roll_wild_level()`. Same instance build

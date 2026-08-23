@@ -65,6 +65,17 @@ field boss gets. That is scene work, not texture work, and it was out of this
 lane's scope. Either answer is defensible; the current one is cheap and
 reversible (`data/creatures/shiny_colourways.json`, `veridian.vivid_rules`).
 
+### ✅ SHINY-FINISH — CLOSED 2026-08-23 by CREATURE-IDENTITY-2
+
+The identity pass had to regenerate the whole roster anyway (the board's
+overlay layer belongs to the animal, not to one colourway), so `*_shiny` went
+through the same finish pass and the same identity overlays as `*_vivid`. A
+shiny bramblebun now has leaf ears; it did not before. The 109MB objection
+turned out to be backwards: the finish pass's own `output_size` downsample
+means the regenerated shiny set is a fraction of what it replaced.
+
+The original entry, for its reasoning:
+
 ### SHINY-FINISH — the rare colourways never got the finish pass · `model: sonnet` · `tests: smoke_art`
 
 `tools/repaint_creature_textures.py` now carries a finish pass (despeckle,
@@ -109,6 +120,25 @@ thing — a field boss owns the clearing. Raising the multiplier is a GAMEPLAY
 change (`_make_alpha` grows the collider with the art, on purpose), so it is
 not a presentation lane's call; if an alpha is supposed to be an event, the
 work is encounter staging and framing, not a bigger number.
+
+**Updated 2026-08-23 by CREATURE-IDENTITY-2 — the presentation half is now
+done, and the ask above still stands.** An alpha now carries three things it
+did not: an `*_alpha` colourway where one is authored (burrowback's heavier,
+darker stone plates and an older moss coat; galecrest's deeper storm blue
+reaching further up the wing), a rim light on the silhouette, and a permanent
+idle aura of drifting motes (`scripts/creatures/alpha_aura.gd`, wired from
+`encounter_director._make_alpha`, asserted by `tests/smoke_art.gd`). That
+closes the "same-sized animal with a label" half: an alpha is now recognisable
+before the first exchange, at the distance where a 1.3x size difference is not.
+
+What is NOT closed, and is still not a presentation lane's call: **whether the
+1.3x/1.4x multiplier itself should rise.** It grows the collider, the hit
+cone's reach and the catch accuracy bonus together, on purpose
+(`creature_body.apply_size_multiplier`'s own comment), so raising it retunes
+combat and catching for every alpha in the chapter. If the owner wants an alpha
+to own its clearing the way a Palworld field boss does, that is a deliberate
+gameplay change plus encounter staging — a decision, then a balance pass, not a
+number a texture lane may edit. Filed here rather than made.
 
 ---
 

@@ -91,6 +91,9 @@ import sys
 from PIL import Image, ImageFilter
 import numpy as np
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creature_overlays import apply_overlays  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPEC_PATH = os.path.join(ROOT, "data", "creatures", "shiny_colourways.json")
 CREATURES = os.path.join(ROOT, "assets", "creatures", "tetherbound")
@@ -305,7 +308,7 @@ def terrain_share(rgb):
     return float(((h >= lo) & (h <= hi) & chromatic).sum() / chromatic.sum())
 
 
-def repaint(src_path, rules, dst_path, finish=None):
+def repaint(src_path, rules, dst_path, finish=None, species=None, overlays=None):
     img = Image.open(src_path).convert("RGBA")
     arr = np.asarray(img).astype(np.float64) / 255.0
     h, s, v = rgb_to_hsv(arr)
@@ -328,19 +331,31 @@ def repaint(src_path, rules, dst_path, finish=None):
             new_v = np.where(mask, np.clip(v * float(rule["val_scale"]), 0, 1), new_v)
     rgb = hsv_to_rgb(new_h, np.clip(new_s, 0, 1), np.clip(new_v, 0, 1))
     rgb = finish_pass(rgb, v, finish or {})
-    share = terrain_share(rgb)
     out = np.concatenate([np.clip(rgb, 0, 1), arr[..., 3:4]], axis=-1)
     image = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), "RGBA")
 
-    # Downsample last. It is also the cheapest despeckle there is -- four
-    # source texels averaged into one -- and it takes the checked-in colourway
-    # set from ~110MB to a fraction of that, which matters because every one of
-    # these is a tracked binary in a repo that already carries 619MB of art.
+    # Downsample BEFORE the overlays, not after. It is also the cheapest
+    # despeckle there is -- four source texels averaged into one -- and it takes
+    # the checked-in colourway set from ~110MB to a fraction of that, which
+    # matters because every one of these is a tracked binary in a repo that
+    # already carries 619MB of art. Overlays then composite at the shipped
+    # resolution against an anatomy map rasterised to match, so a leaf edge is
+    # as crisp as the output allows instead of being softened by a resample it
+    # never needed to survive.
     size = int((finish or {}).get("output_size", 0) or 0)
     if size and size < image.width:
         image = image.resize((size, size), Image.LANCZOS)
+
+    notes = []
+    if overlays and species:
+        arr2 = np.asarray(image).astype(np.float64) / 255.0
+        painted, notes = apply_overlays(arr2[..., :3], species, overlays, image.width)
+        merged = np.concatenate([painted, arr2[..., 3:4]], axis=-1)
+        image = Image.fromarray((np.clip(merged, 0, 1) * 255).astype(np.uint8), "RGBA")
+
+    share = terrain_share(np.asarray(image).astype(np.float64)[..., :3] / 255.0)
     image.save(dst_path, optimize=True)
-    return dst_path, share
+    return dst_path, share, notes
 
 
 def variant_path(src_path, suffix):
@@ -373,19 +388,48 @@ def main():
         if "finish" in spec[species]:
             override = spec[species]["finish"]
             finish = dict(finish, **override) if override else {}
-        for suffix, key in (("shiny", "rules"), ("vivid", "vivid_rules")):
+        # Three colourways per species: `rules` -> *_shiny (the rare variant),
+        # `vivid_rules` -> *_vivid (the ORDINARY creature, OF28's repaint off
+        # naturalistic mud toward the board's palette) and, new in
+        # CREATURE-IDENTITY-2, `alpha_rules` -> *_alpha, the cluster leader
+        # WILD-ECOLOGY already spawns bigger and stronger but which looked
+        # exactly like its neighbours. An alpha with no rules of its own
+        # inherits the vivid ones, so a species can declare only the overlay
+        # difference (heavier plates, storm-blue tips) and nothing else.
+        for suffix, key in (("shiny", "rules"), ("vivid", "vivid_rules"),
+                            ("alpha", "alpha_rules")):
             if only and suffix != only:
                 continue
             rules = spec[species].get(key)
+            if not rules and suffix == "alpha" and spec[species].get("overlays_alpha"):
+                rules = spec[species].get("vivid_rules")
             if not rules:
                 continue
+            # The identity layer (board: leaf ears, moss carpets, greened
+            # antler tips) belongs to the ANIMAL, not to one colourway, so every
+            # colourway gets it; `overlays_<suffix>` then adds or replaces what
+            # is specific to that variant.
+            overlays = list(spec[species].get("overlays", []))
+            overlays += list(spec[species].get("overlays_%s" % suffix, []))
             done = {}
             for kind, src in textures.items():
                 if src in done:  # emissive may share the base image
                     dst, share = done[src]
                 else:
-                    dst, share = repaint(src, rules, variant_path(src, suffix), finish)
+                    # A species whose emissive is its OWN image (veridian) can
+                    # carry overlays that exist only in the glow -- which is how
+                    # the legendary's crown separates from a green meadow at a
+                    # hundred metres without repainting its hide green again
+                    # (BACKLOG VERIDIAN-HIDE). Where emissive and albedo are the
+                    # same file this list is simply never reached.
+                    extra = spec[species].get("overlays_emissive", []) \
+                        if kind == "emissive" else []
+                    dst, share, notes = repaint(
+                        src, rules, variant_path(src, suffix), finish,
+                        species=species, overlays=overlays + list(extra))
                     done[src] = (dst, share)
+                    for note in notes:
+                        print("   overlay: %s" % note)
                 print("%s: %s -> %s (%.0f%% of chromatic pixels in the terrain hue band)"
                       % (species, kind, os.path.relpath(dst, ROOT), share * 100))
 

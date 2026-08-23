@@ -306,6 +306,76 @@ func _a_colourway_species_swaps_textures_not_tints() -> void:
 
 	shiny.queue_free()
 
+	_an_alpha_reads_differently_from_its_own_species()
+
+
+## CREATURE-IDENTITY-2's own "done when": a cluster ALPHA must be visibly a
+## different animal from an ordinary member of the same species, in the render
+## and not only in the level table.
+##
+## WILD-ECOLOGY gave alphas a level bonus and a size multiplier and nothing
+## else, and a 1.3x size difference is only legible when an ordinary member of
+## the same species happens to be standing beside it -- which, off the road, it
+## is not. So the presentation carries three things and this asserts all three,
+## because each one alone has a failure mode that the other two hide:
+##
+##   * the `*_alpha` colourway (burrowback's heavier plates), which is the
+##     only one of the three that can be authored per species;
+##   * the rim light, which is what survives at the distance the player decides
+##     whether to approach -- and which is the piece that still works on a
+##     species with no alpha colourway authored;
+##   * the idle aura, which is the piece that reads while the animal is doing
+##     nothing at all.
+##
+## Asserting only "something differs" would pass on any one of the three and
+## let the other two rot, which is the shape of the assertion this project has
+## already been burned by (`assert_true(x or not x)`, conventions.md).
+func _an_alpha_reads_differently_from_its_own_species() -> void:
+	var plain: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	plain.set_script(CREATURE_BODY)
+	root.add_child(plain)
+	plain.call("setup", "burrowback", false)
+	plain.set_physics_process(false)
+
+	var alpha: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	alpha.set_script(CREATURE_BODY)
+	root.add_child(alpha)
+	alpha.call("setup", "burrowback", false)
+	alpha.call("set_alpha", true)
+	alpha.set_physics_process(false)
+
+	var plain_mat := _first_material(plain.call("model_pivot") as Node3D)
+	var alpha_mat := _first_material(alpha.call("model_pivot") as Node3D)
+	if plain_mat == null or alpha_mat == null \
+			or not plain_mat is BaseMaterial3D or not alpha_mat is BaseMaterial3D:
+		_fail("alpha check: could not read a material off a plain and an alpha burrowback")
+	else:
+		var plain_base := plain_mat as BaseMaterial3D
+		var alpha_base := alpha_mat as BaseMaterial3D
+		var albedo_path := alpha_base.albedo_texture.resource_path \
+			if alpha_base.albedo_texture != null else ""
+		if not albedo_path.ends_with("_alpha.png"):
+			_fail(("alpha check: burrowback has an authored alpha colourway but its alpha body " +
+				"renders %s -- the *_alpha.png swap in creature_body._refresh_shiny_tint did not " +
+				"happen") % (albedo_path if albedo_path != "" else "<no albedo texture>"))
+		elif not alpha_base.rim_enabled:
+			_fail("alpha check: the alpha burrowback's material has no rim -- the silhouette " +
+				"brightening is the only part of alpha presence that survives at the distance " +
+				"where the player chooses whether to approach")
+		elif plain_base.rim_enabled:
+			_fail("alpha check: an ORDINARY burrowback also renders with a rim; the alpha " +
+				"dressing leaked onto the shared per-species material and now every one of them " +
+				"reads as a leader")
+		elif alpha.get_node_or_null(^"AlphaAura") == null:
+			_fail("alpha check: the alpha burrowback has no AlphaAura child -- the idle effect " +
+				"is what marks a leader that is standing still and doing nothing")
+		else:
+			print("  alpha presence   burrowback alpha: *_alpha.png + rim %.2f + idle aura"
+				% alpha_base.rim)
+
+	plain.queue_free()
+	alpha.queue_free()
+
 
 ## The first material an actual mesh renders with, walking down from a model
 ## pivot -- reuses `_mesh_instances()`'s own recursive walk rather than

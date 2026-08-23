@@ -174,6 +174,15 @@ func _run() -> void:
 			creature.call("setup", species)
 			if index == 1:
 				creature.call("apply_size_multiplier", multiplier)
+				# CREATURE-IDENTITY-2: an alpha is no longer only a size.
+				# `set_alpha` swaps to the `*_alpha` colourway where one is
+				# authored, rims the silhouette and starts the idle aura, and
+				# this frame is the only place those three can be judged
+				# against the ordinary animal standing next to them. Called
+				# AFTER the multiplier for the same reason the encounter
+				# director does: the multiplier rebuilds the art.
+				if creature.has_method("set_alpha"):
+					creature.call("set_alpha", true)
 			creature.global_position = Vector3(float(offsets[index]), 0.0, 0.0)
 			creature.set_physics_process(false)
 			creature.rotation.y = deg_to_rad(15.0)
