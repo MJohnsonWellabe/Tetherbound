@@ -96,6 +96,10 @@ const OUT_DIR := "res://shots/items"
 ## to know it, which is the same class of error as photographing an empty world
 ## and calling the region empty. 2800 clears the measured 2479 with room for
 ## the layout to grow by a row or two before anyone has to think about it again.
+## Applied by this tool to its own window (see `_shoot_icon_sheet`) rather than
+## left to the caller's `--resolution`, which is what cropped the sheet for two
+## consecutive blind rounds. 2800 clears the content's measured 2479px with room
+## for the set to grow, and the guard prints the real number every run.
 const RESOLUTION := Vector2i(1440, 2800)
 
 const ICON_COLUMNS := 10
@@ -465,8 +469,23 @@ func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> vo
 	#
 	# The window is now forced to RESOLUTION above, so this should always fit;
 	# it stays as a check because the content grows with the item count.
+	# `get_combined_minimum_size()`, NOT `size`. The VBox lives inside a
+	# PRESET_FULL_RECT MarginContainer, so its `size` is stretched to whatever
+	# the viewport happens to be and measuring it told us about the window
+	# rather than about the content -- which is why raising the height once made
+	# the "content" appear to grow with it. The combined minimum size is the
+	# intrinsic height of the tiles and headers, and it does not move when the
+	# window does.
+	#
+	# Measured, the content is 2479px -- which means the 2800 this file already
+	# carried was ALWAYS tall enough, and the cropped sheets both blind rounds
+	# judged were never a height problem at all. They were a caller problem: the
+	# window came from `--resolution`, and a run reusing this repo's standard
+	# 1280x800 capture invocation cropped the sheet while the old guard,
+	# comparing against the constant, printed "fits". The window is now forced
+	# above, so the flag cannot get this wrong again.
+	var content_h: float = vbox.get_combined_minimum_size().y + 60.0
 	var viewport_h: float = float(root.size.y)
-	var content_h: float = vbox.size.y + 60.0
 	if content_h > viewport_h:
 		print("WARN icon sheet content measures %.0fpx tall inside a %.0fpx viewport -- bottom rows ARE clipped and every icon finding from this sheet covers only part of the set; raise RESOLUTION.y or ICON_COLUMNS" % [
 			content_h, viewport_h])
