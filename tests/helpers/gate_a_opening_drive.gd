@@ -456,6 +456,19 @@ func _catch_with_real_throws() -> bool:
 			_fail("could not find a spot with a clear line to the Bramblebun "
 				+ "after launch %d" % launches)
 			return false
+		# Re-aim AFTER moving, and this is not optional.
+		#
+		# `_step_until_the_shot_is_clear()` strafes to get a rock out of the
+		# line, which moves the player -- and the aim taken above was for where
+		# the player used to stand. Throwing on a stale aim is a guaranteed
+		# `reticle_outside_body`, and it is exactly what the first version of
+		# this did: strike rates fell from a measured 22% to 1-2 strikes per
+		# 30-40 launches once the step-aside landed, which is the signature of
+		# aiming and then walking away from the aim.
+		if not await _aim_camera_at(_wild, 360):
+			_fail("right-stick aim could not line up after stepping clear on "
+				+ "launch %d" % launches)
+			return false
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
