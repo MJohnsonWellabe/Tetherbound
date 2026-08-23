@@ -290,6 +290,68 @@ func _print_static_findings(db: RefCounted, ids: Array, icon_users: Dictionary) 
 			continue
 		print("  NO WORLD NODE  %-14s kind=resource but no entry in any data/config/bands/*/harvest.json -- never seen growing" % id)
 
+	print("")
+	print("[static audit] harvest-node material fixups -- the red-leak check:")
+	var scattered := _scatter_models()
+	if scattered.is_empty():
+		print("  UNKNOWN  data/config/vegetation.json unreadable; fixup coverage NOT checked")
+	else:
+		var leaked := 0
+		for spec in WORLD_NODES:
+			var model := str(spec.get("model", ""))
+			if scattered.has(model):
+				continue
+			leaked += 1
+			print("  NO MATERIAL FIXUP  %-12s %s is listed in NO vegetation.json layer, so this node renders the vendored pack's RAW texture -- no `retexture`, no `retint`" % [
+				str(spec.get("item")), model.get_file()])
+		if leaked == 0:
+			print("  all %d world nodes are built from models a scatter layer covers" % WORLD_NODES.size())
+
+
+## Every model path any `data/config/vegetation.json` scatter layer lists.
+##
+## Read here because `harvest_node.gd::_material_fixups_for_model()` matches BY
+## MODEL PATH: a harvest node built from a model no layer mentions silently gets
+## neither the layer's `retexture` nor its `retint`, and renders whatever the
+## vendored pack shipped. That is not a hypothetical failure mode -- it is the
+## mechanism behind the red ironwood canopy that independent blind reviews have
+## now reported THREE times (band4_upper_meadows_ironwood/harvest.json's
+## `_comment_red_leak_d4b` records the first two, and the whole-game item pass
+## found it again on `world-ironwood`). `Leaves_TwistedTree_C.png` is
+## RGB(167,23,23), and TwistedTree_1 and _3 are in no layer, so a node authored
+## from either one wears a saturated crimson canopy -- on a FRIENDLY gatherable,
+## in the hue `data/config/palette.json` reserves for Team Tether and nothing
+## else.
+##
+## The check is here rather than in the fix because this tool photographs the
+## game as it is: the model below is copied verbatim from the game's own config
+## and MUST stay that way, or the capture stops being evidence. So the tool
+## reports the defect instead of hiding it, and the fourth blind review does not
+## have to spend a finding rediscovering it.
+func _scatter_models() -> Dictionary:
+	var out: Dictionary = {}
+	var file := FileAccess.open("res://data/config/vegetation.json", FileAccess.READ)
+	if file == null:
+		return out
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return out
+	var layers: Variant = (parsed as Dictionary).get("layers", {})
+	if not layers is Dictionary:
+		return out
+	for key in (layers as Dictionary).keys():
+		var layer: Variant = (layers as Dictionary)[key]
+		if not layer is Dictionary:
+			continue
+		var models: Variant = (layer as Dictionary).get("models", [])
+		if models is Array:
+			for m: Variant in (models as Array):
+				out[str(m)] = true
+		var single := str((layer as Dictionary).get("model", ""))
+		if single != "":
+			out[single] = true
+	return out
+
 
 ## --- phase 1: the icon sheet -------------------------------------------------
 
