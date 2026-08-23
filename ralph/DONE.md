@@ -3,6 +3,137 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATEB-TAIL — Gate B's tail, driven on its own, and the five things that were wrong with it
+
+`branch: ralph/GATEB-TAIL` · `area: tests/helpers/gate_b_tail_segment.gd (new),
+tests/smoke_gate_b_tail.gd (new), tests/helpers/gate_a_build_segment.gd,
+tests/smoke_gate_b_continuous.gd` · **INCOMPLETE — see "Where it stops" below.
+No production code changed; every fix here is in the harness or in what the
+evidence run ASSERTS.**
+
+### Why this exists
+
+`tests/smoke_gate_b_continuous.gd` is Gate B's evidence and plays the chapter
+opening in one pass. It has never got past Mira's door — another lane owns that
+walk — so **nothing downstream of the village had ever executed inside it**.
+Every beat after the village was going to fail one per thirty-minute run once
+the pathing landed. This lane went and ran the tail on its own instead, from a
+synthesized post-village state, and found five defects in about six cycles.
+
+### What was actually wrong
+
+**1. The closing assertion could not pass, and the run consumed its own
+objective.** `_assert_the_whole_ladder_was_walked()` demanded an EMPTY tracked
+objective line. `quest_log.gd::tracked_text()` returns "" only when every Main
+Story entry is done, and `data/progression/objectives.json` carries eleven more
+after Gate B (Burrow Warrens through `meadows_acknowledged`). So the assertion
+was unsatisfiable on any save short of the whole chapter. Worse, the last thing
+the run did before reaching it was `set_flag("south_bridge_open")` itself —
+which consumes the one objective `ralph/ACTIVE_GAME_PLAN.md` says Gate B ends
+POINTING at ("objective to leave for South Bridge"). Gate B now ends on
+`tournament_won` plus a tracked line that reads South Bridge; opening the bridge
+is Gate C's first beat.
+
+**2. Nothing checked that the objective line moved.** The LADDER's second column
+has always carried the fragment the tracked line should show while each beat is
+current, and `_note()` ignored it — a beat could fire its flag with the HUD
+frozen. `_note()` now asserts the line moved on to the next beat, and the tail
+segment does the same at each of its own four beats.
+
+**3. `build_open` has no pad button any more, and the build segment still
+pressed it.** CONTROLLER-MAP retired it; `playground_hud.gd::
+_hammer_opens_the_catalogue()` says in its own words that "hammer + interact is
+the ONLY pad route into build mode". `gate_a_build_segment.gd::_select_piece()`
+tapped `build_open`, whose only remaining binding is keyboard B, so
+`_tap_action` failed the InputMap lookup and Build never opened. **Every
+controller build segment in this repo has been failing on this**, including
+`smoke_gate_a_build_segment_meadows.gd`.
+
+**4. The catalogue's category cycle moved to LB/RB and the segment still pressed
+the trigger.** `build_menu.gd` reads `menu_tab_left`/`menu_tab_right` and notes
+that "the rotate actions used to double as category". Both helpers pressed
+`build_rotate_right`, so **nothing outside the first category could be selected
+at all** — measured directly: "could not reach 'creature_bed' through controller
+catalogue navigation".
+
+**5. The hammer forfeits Interact to the creature that is standing next to
+you.** `_hammer_opens_the_catalogue()` refuses whenever anything actionable is
+winning arbitration. With an ally deployed, `encounter_director.gd::
+_creature_control_offer()`'s "Put <name> away" is the winning line and it
+FOLLOWS the player — there is no standing clear of it. Measured: six attempts to
+step away, the same offer every time, Build never opened. The tail now recalls
+the creature first, which is what a player does. **This one is worth a
+production look by whoever picks this up**: if that offer reads as actionable to
+the hammer gate, a controller player with their creature out cannot open Build
+in the open field, which is the shape of the owner's original "building doesn't
+work" report.
+
+### Two findings about the CHAPTER, not the harness
+
+**The authored gather budget is exact, and it buys ONE creature bed.**
+`gate_a_material_route.gd`'s TARGET_STOCK is 57 wood / 42 stone / 18 fiber. The
+tail spent it and finished on **0 / 0 / 0**: house 39/34/0, creature bed 6/0/8,
+camp 12/8/10. Nothing spare. But `tournament.gd::condition_ready()` wants the
+`min_party_size` STRONGEST entrants — three — to be RESTED, and
+`creature_bed.gd` holds exactly one occupant. So with the authored budget the
+team is rested one creature per night over three nights (rest keeps for
+`stays_rested_minutes`, 45), or the player gathers more and builds three beds.
+The tail plays the three-night version. Nobody has ruled on which of those the
+chapter intends; `ralph/DONE.md`'s own R2.8 entry quotes GAME_DESIGN.md as "one
+bed per owned pal", which points at three beds and a bigger gather.
+
+**A long run arrives at the marshal HUNGRY.** `nourishment` drains 1.1/minute of
+REAL time for every party member, from a start of 70/100 against a `fed_at` of
+0.55. A thirty-minute continuous run drains 33 points and lands under the gate,
+so a player who did everything the chapter asked would be refused entry for a
+meter that ran down while they walked. The tail feeds the entrants berries
+before the sign-up. Whether that drain rate is right for a 3–4 hour first clear
+is a tuning question for the owner, not a harness one.
+
+### Where it stops
+
+Run in iteration mode (`GATEB_TAIL_SKIP_HOUSE=1`, which registers the house
+instead of raising it and says so in its own output), the tail currently gets
+through:
+
+* staging a post-village state — team of three at level 6, tools and hammer on
+  the quick bar, the gather route's exact stock;
+* **the creature bed, placed for real through the build menu and the placer**
+  (`creature_bed_built` set by the placement, materials 18/8/18 → 12/8/10);
+* **the camp, placed the same way** (→ 0/0/0);
+* the bed panel's own assignment of a creature to that bed.
+
+It then **fails walking to the camp's "Rest until morning" prompt**: "controller
+movement could not reach the camp bedroll". Not diagnosed. The two obvious
+candidates are the walk target being the prompt node's own position (inside the
+camp's collision) rather than a stance beside it, and `MOVE_FRAME_LIMIT`.
+
+So **the nights, the entry gate, the sign-up, the three fought rounds and the
+South Bridge hand-off are written and unproven.** They are in
+`tests/helpers/gate_b_tail_segment.gd` and have never executed. Treat that half
+as a plan, not as evidence.
+
+The full-house path (no `GATEB_TAIL_SKIP_HOUSE`) has also never completed: the
+run before this one was staged at the Village Square route entry and the player
+could not move a centimetre in any of eight headings, `on_floor` true,
+`locomotion_enabled` true, nothing owning input, tree unpaused —
+`ground_height_at()` answers for the TERRAIN and the square has fourteen
+structures on it, so a body put at terrain+1 there is wedged inside one. The
+staging now DROPS the player in from six metres up; that change is untested.
+
+### Not verified
+
+* `tests/smoke_gate_b_continuous.gd` was NOT re-run — it now calls the tail
+  segment and its head was not exercised on this branch.
+* The full unit suite was NOT run.
+* Locomotion in both build helpers was switched from a parsed
+  `InputEventJoypadMotion` to `Input.action_press(action, strength)` — the idiom
+  `gate_a_npc_gather_segment.gd` (the one segment that reaches its targets) has
+  always used. `Input.get_vector` was measured reading `(0.0, -1.0)` under the
+  polled form; the parsed form was never measured at that call site, so this is
+  an alignment with what works rather than a proven fix. Buttons stay parsed
+  events — docs/HANDOFF.md §10's rule is unchanged.
+
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd (new), scripts/world/rift_collapse.gd, data/config/building_prefabs.json, data/config/stronghold_occupation.json (new), data/config/rift_collapse.json`

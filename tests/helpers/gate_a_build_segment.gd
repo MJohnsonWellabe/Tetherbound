@@ -13,6 +13,10 @@ const BUILD_MENU_GROUP := &"build_menu"
 const PLACED_GROUP := &"placed_building"
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const PLACE_AHEAD := 3.0
+## Where the hammer goes if the caller has not already put it somewhere, and
+## the quick-bar buttons in slot order.
+const HAMMER_SLOT := 3
+const HOTBAR_ACTIONS: Array[StringName] = [&"hotbar_1", &"hotbar_2", &"hotbar_3", &"hotbar_4"]
 const POSITION_EPSILON := 0.08
 const MOVE_EPSILON := 0.16
 const MOVE_FRAME_LIMIT := 360
@@ -289,11 +293,8 @@ func _planned_house_steps(floor_a: Vector3) -> Array[Dictionary]:
 
 
 func _select_piece(id: String) -> bool:
-	await _tap_action(&"build_open")
-	await _settle(10)
-	var menu := _open_build_menu()
+	var menu := await _open_the_catalogue()
 	if menu == null:
-		_fail("Build did not open from the parsed controller build_open press")
 		return false
 
 	for category_try in 5:
@@ -322,10 +323,82 @@ func _select_piece(id: String) -> bool:
 				_fail("Build catalogue stayed open after selecting %s" % id)
 				return false
 			return true
-		await _tap_action(&"build_rotate_right")
+		# CONTROLLER-MAP moved the catalogue's category cycle off the rotate
+		# triggers and onto LB/RB. `build_menu.gd` reads `menu_tab_left`/
+		# `menu_tab_right` and says so in its own comment: "the rotate actions
+		# used to double as category ... a trigger that also changed category
+		# would be the wrong thing". This helper was still pressing
+		# `build_rotate_right`, so nothing outside the first category could be
+		# selected at all -- measured: "could not reach 'creature_bed' through
+		# controller catalogue navigation".
+		await _tap_action(&"menu_tab_right")
 		await _settle(8)
 	_fail("could not reach %s through controller category/cell navigation" % id)
 	return false
+
+
+## Open the build catalogue the way a CONTROLLER actually can.
+##
+## `build_open` lost its pad button to the owner's fourteen-button map
+## (CONTROLLER-MAP; `playground_hud.gd::_hammer_opens_the_catalogue` says so in
+## its own words: "hammer + interact is the ONLY pad route into build mode").
+## This helper still tapped `build_open`, which has nothing but a keyboard B
+## bound to it -- so `_tap_action` failed the InputMap lookup and every
+## controller build segment reported "Build did not open from the parsed
+## controller build_open press". The menu was fine; the harness was pressing a
+## button the pad no longer has.
+##
+## The keyboard action is still preferred when it HAS a pad binding, so this
+## goes back to one press the day the map changes again.
+func _open_the_catalogue() -> Node:
+	if _open_build_menu() != null:
+		return _open_build_menu()
+	if _joy_binding_for(&"build_open") != null:
+		await _tap_action(&"build_open")
+	else:
+		if not await _hammer_in_hand():
+			return null
+		await _tap_action(&"interact")
+	await _settle(12)
+	var menu := _open_build_menu()
+	if menu == null:
+		_fail("Build did not open from the controller's own route into the catalogue")
+	return menu
+
+
+## The hammer, drawn from the quick bar. It is the build TOOL under
+## CONTROLLER-MAP, and the village hands it over (`camp_hammer_given`) before
+## any of this segment's work is reachable in an ordinary run; a caller that
+## staged its own materials without it is given one rather than failing on a
+## gift this segment is not about.
+func _hammer_in_hand() -> bool:
+	if str(_game.get("equipped_tool")) == "hammer":
+		return true
+	var inventory: RefCounted = _game.get("inventory")
+	if int(inventory.call("count", "hammer")) <= 0:
+		inventory.call("add", "hammer", 1)
+		transcript.append("granted the village's hammer; the gift itself is the village segment's beat")
+	var slot := int(_game.call("hotbar_slot_of", "hammer")) if _game.has_method("hotbar_slot_of") else -1
+	if slot < 0:
+		slot = HAMMER_SLOT
+		if not bool(_game.call("assign_hotbar", slot, "hammer")):
+			_fail("the hammer could not be put on the quick bar, which is how build mode is entered")
+			return false
+	await _tap_action(HOTBAR_ACTIONS[slot])
+	await _settle(8)
+	if str(_game.get("equipped_tool")) != "hammer":
+		_fail("the quick-bar press did not put the hammer in hand; build mode cannot be opened")
+		return false
+	return true
+
+
+func _joy_binding_for(action: StringName) -> InputEvent:
+	if not InputMap.has_action(action):
+		return null
+	for event in InputMap.action_get_events(action):
+		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			return event
+	return null
 
 
 func _place_current(expected_id: String) -> Variant:
@@ -419,15 +492,16 @@ func _turn_camera_toward(world_direction: Vector3) -> bool:
 		var forward := -(_camera_rig.call("planar_basis") as Basis).z
 		var flat := Vector2(forward.x, forward.z).normalized()
 		if flat.dot(wanted) >= 0.995:
-			_parse_axis(_look_x_axis, 0.0)
+			_release_look()
 			return true
 		# The camera applies a positive look-right axis as a rightward yaw. The
 		# signed planar cross product tells the parsed controller which physical
 		# direction closes the remaining angle; no transform is written here.
 		var turn_right := -Vector3(forward.x, 0.0, forward.z).cross(world_direction).y > 0.0
-		_parse_axis(_look_x_axis, (1.0 if turn_right else -1.0) * _look_x_sign)
+		_release_look()
+		Input.action_press(&"look_right" if turn_right else &"look_left", 1.0)
 		await _tree.physics_frame
-	_parse_axis(_look_x_axis, 0.0)
+	_release_look()
 	_fail("controller right stick could not orient the roof camera toward the exterior ring")
 	return false
 
@@ -643,11 +717,9 @@ func _item_count(id: String) -> int:
 	return int(_game.get("inventory").call("count", id))
 
 
-func _parse_axis(axis: JoyAxis, value: float) -> void:
-	var event := InputEventJoypadMotion.new()
-	event.axis = axis
-	event.axis_value = value
-	Input.parse_input_event(event)
+func _release_look() -> void:
+	Input.action_release(&"look_right")
+	Input.action_release(&"look_left")
 
 
 func _resolve_move_bindings() -> void:
@@ -672,13 +744,33 @@ func _joy_motion_for(action: StringName) -> InputEventJoypadMotion:
 	return null
 
 
+## LOCOMOTION is polled, so it is driven by polling.
+##
+## `player_controller.gd::_apply_movement()` and `camera_rig.gd` both read
+## `Input.get_vector(...)`, and a synthesized `InputEventJoypadMotion` fed
+## through `Input.parse_input_event()` does not reach that poll in a headless
+## run: measured on `main` at the Village Square route entry, with the stick
+## "held" in all eight compass directions, the player moved 0.00m every time
+## while `locomotion_enabled` was true, nothing owned input and the tree was
+## not paused. Every walk in this segment failed as "controller could not walk
+## to ...", which reads as a blocked route and was a press that never arrived.
+##
+## `gate_a_npc_gather_segment.gd` -- the one segment that does reach its
+## targets -- has always used `Input.action_press()` with a strength for
+## exactly this. docs/HANDOFF.md §10's rule is unchanged and still applies to
+## everything else in this file: a poll cannot move Control focus or activate a
+## Button, so BUTTONS stay parsed events (`_tap_action`) and only the two
+## polled analogue sticks change.
 func _parse_move_stick(x: float, y: float) -> void:
-	_parse_axis(_move_x_axis, x * _move_x_sign)
-	_parse_axis(_move_y_axis, y * _move_y_sign)
+	Input.action_press(&"move_right", clampf(x, 0.0, 1.0))
+	Input.action_press(&"move_left", clampf(-x, 0.0, 1.0))
+	Input.action_press(&"move_back", clampf(y, 0.0, 1.0))
+	Input.action_press(&"move_forward", clampf(-y, 0.0, 1.0))
 
 
 func _release_move_stick() -> void:
-	_parse_move_stick(0.0, 0.0)
+	for action: StringName in [&"move_right", &"move_left", &"move_back", &"move_forward"]:
+		Input.action_release(action)
 
 
 func _settle(frames: int) -> void:
