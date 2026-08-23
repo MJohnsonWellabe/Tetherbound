@@ -1106,6 +1106,7 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 	await physics_frame
 	if bool(gate.call("is_open")):
 		failures.append("the Sigil Gate opened without any Sigils")
+	await _dismiss_dialogue()
 	if bool(progression.call("has", "hall_approach_open")):
 		failures.append("trying the locked Sigil Gate set its open flag anyway")
 
@@ -1133,6 +1134,7 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 	if not bool(gate.call("is_open")):
 		failures.append("the Sigil Gate stayed shut with all three Sigils in the satchel")
 		return
+	await _dismiss_dialogue()
 	for id: String in playground_world_gd().SIGIL_ITEM_IDS:
 		if int(inventory.call("count", id)) != 0:
 			failures.append("'%s' was not consumed opening the Sigil Gate" % id)
@@ -1214,6 +1216,24 @@ func _carve_near_edge(carve: Dictionary, gate_xz: Vector2, across: Vector2) -> f
 ## travel, the player got -- the same "how far past the gap" convention
 ## `_walk_at_the_bridge` uses, so a positive number always means "got
 ## through" regardless of which side or offset produced it.
+## Trying either gate SPEAKS -- `road_gate.gd::_try` calls `_say()`, which opens
+## the dialogue panel -- and a modal panel captures input, so every
+## `Input.action_press("move_forward")` after it does nothing.
+##
+## That is what made every Sigil walk report exactly its own start position
+## while the South Bridge and Old Mill Crossing walks in the same run reached
+## +22.8m and +23.6m. The gate was never blocking the player; the conversation
+## was. Read as "the finale cannot be crossed", which is the most alarming thing
+## a traversal test can say, and it was this file's own doing.
+func _dismiss_dialogue() -> void:
+	var panel := root.get_tree().get_first_node_in_group("dialogue_panel")
+	if panel == null:
+		return
+	if bool(panel.call("is_open")):
+		panel.call("close")
+		await physics_frame
+
+
 func _walk_at_the_sigil_gate(world: Node, player: CharacterBody3D, camera_rig: Node3D,
 		gate_xz: Vector2, across: Vector2, along: Vector2, offset: float, forward: bool) -> float:
 	var travel: Vector2 = along if forward else -along
@@ -1230,6 +1250,7 @@ func _walk_at_the_sigil_gate(world: Node, player: CharacterBody3D, camera_rig: N
 		print("      (start %+.1fm off centre sits %.1fm below the gate -- inside a gorge, not on the causeway; skipped)" % [
 			offset, gate_ground - ground])
 		return -INF
+	await _dismiss_dialogue()
 	player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.y)
 	player.velocity = Vector3.ZERO
 	var outward := Vector3(travel.x, 0.0, travel.y)
