@@ -83,6 +83,7 @@ glb, then the same repaint applies. creature_body.gd swaps textures via
 material override either way, so the glb itself is NEVER modified (no new
 meshes, no re-import churn).
 """
+import collections
 import json
 import os
 import struct
@@ -409,8 +410,24 @@ def main():
             # antler tips) belongs to the ANIMAL, not to one colourway, so every
             # colourway gets it; `overlays_<suffix>` then adds or replaces what
             # is specific to that variant.
-            overlays = list(spec[species].get("overlays", []))
-            overlays += list(spec[species].get("overlays_%s" % suffix, []))
+            #
+            # "or replaces" is what this comment always claimed and what the
+            # concatenation below never did: a variant entry reusing a base
+            # entry's `id` REPLACES it, and only a genuinely new id appends.
+            # Without this a rare variant that recolours the animal's existing
+            # growth gets BOTH -- trailpup's shiny came back carrying green moss
+            # AND orange moss at once, because `ember_growth` appended alongside
+            # `moss_saddle` instead of standing in for it. Matching ids also
+            # means the replacement inherits the seed, since creature_overlays
+            # seeds its noise from (species, id): the rare's growth then lands on
+            # exactly the patches the ordinary's does, which is what makes it
+            # read as the same plant in a different season rather than as a
+            # second, differently-shaped plant.
+            overlays = collections.OrderedDict(
+                (o["id"], o) for o in spec[species].get("overlays", []))
+            for entry in spec[species].get("overlays_%s" % suffix, []):
+                overlays[entry["id"]] = entry
+            overlays = list(overlays.values())
             done = {}
             for kind, src in textures.items():
                 if src in done:  # emissive may share the base image

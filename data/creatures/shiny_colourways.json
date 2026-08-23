@@ -77,15 +77,15 @@
       }
     },
     "burrowback": {
-      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the violet is gone -- the base ALREADY matches the board, so the vivid only warms the cream, mosses the plate mid-tones, and leaves the charcoal alone. Shiny: cornflower-blue stripes, unchanged.",
+      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the plates go COOLER and greyer and the moss goes heavier, because this species shares one badger mesh with terrapup and paint is the only axis left to separate them -- terrapup takes warm earth and heavy leaf, burrowback takes cold stone and moss. Shiny: REBUILT off cornflower blue. Both species' shinies were blue badgers with white face stripes and a blind round could not tell them apart; this one moves to pale marble plates over a charcoal-violet body, which is a VALUE and pattern read rather than another hue in the same family.",
       "rules": [
         {
           "match": {
             "sat_max": 0.28,
             "val_min": 0.55
           },
-          "set_hue": 218,
-          "set_sat": 0.62
+          "set_sat": 0.05,
+          "val_scale": 1.18
         },
         {
           "match": {
@@ -93,26 +93,29 @@
             "val_min": 0.28,
             "val_max": 0.55
           },
-          "set_hue": 218,
-          "set_sat": 0.35
+          "set_hue": 265,
+          "set_sat": 0.14,
+          "val_scale": 0.86
         },
         {
           "match": {
             "val_max": 0.28
           },
-          "set_hue": 225,
-          "set_sat": 0.3
+          "set_hue": 272,
+          "set_sat": 0.3,
+          "val_scale": 0.7
         }
       ],
-      "vivid_comment": "drab brown/grey -> violet-black with warm cream stripes",
+      "vivid_comment": "Was: warm cream + mossed mid-tones, which read as the same warm animal terrapup already is on the same mesh. Now cold grey stone across all three bands -- the board's plates are grey rock, not warm hide, and cold-vs-warm is the strongest separation two creatures sharing one silhouette can be given.",
       "vivid_rules": [
         {
           "match": {
             "sat_max": 0.3,
             "val_min": 0.55
           },
-          "set_hue": 45,
-          "set_sat": 0.14
+          "set_hue": 210,
+          "set_sat": 0.07,
+          "val_scale": 1.02
         },
         {
           "match": {
@@ -120,8 +123,9 @@
             "val_min": 0.3,
             "val_max": 0.55
           },
-          "set_hue": 95,
-          "set_sat": 0.18
+          "set_hue": 205,
+          "set_sat": 0.12,
+          "val_scale": 0.92
         },
         {
           "match": {
@@ -131,22 +135,24 @@
             ],
             "sat_min": 0.1
           },
-          "sat_scale": 1.1
+          "set_hue": 200,
+          "set_sat": 0.14,
+          "val_scale": 0.9
         }
       ],
       "overlays": [
         {
           "id": "plate_moss",
-          "_why": "Board: 'Stone plates + Moss + Ancient'. Sparse moss in the seams of the back plates -- an old animal, not a mossy one.",
+          "_why": "Board: 'Stone plates + Moss + Ancient', and the board's burrowback carries a LOT of moss between the plates -- the shipped 0.42 read as a moss strip rather than an old armoured animal, which a blind round named. Heavier, and reaching further down the flank, because the moss is the warm accent holding an otherwise entirely cold-grey creature together.",
           "where": {
-            "y_min": 0.55,
-            "z_max": 0.62,
-            "up_min": 0.3
+            "y_min": 0.46,
+            "z_max": 0.66,
+            "up_min": 0.18
           },
           "mode": "grow",
           "color": "#4f8a2f",
           "shade": "#234519",
-          "coverage": 0.42,
+          "coverage": 0.62,
           "grain": 6.0,
           "softness": 0.1,
           "relief": 0.65
@@ -191,7 +197,7 @@
       }
     },
     "terrapup": {
-      "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents -- Natural, grounded feel'): warm earth, modest saturation -- the first pass's x1.7 crank made it copper-loud, which is not 'grounded'. Shiny: frost pup, unchanged.",
+      "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents'): warm earth, modest saturation, now carrying the board's real amount of leaf growth. Shiny: frost pup -- KEPT blue, and burrowback's shiny is the one that moved, because the starter is the creature a player sees for the whole game and its rare variant is the one worth keeping memorable.",
       "rules": [
         {
           "match": {
@@ -243,19 +249,19 @@
       "overlays": [
         {
           "id": "leaf_collar",
-          "_why": "Board: the Ground starter wears a leaf collar and shoulder foliage. z_max keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
+          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from the burrowback it shares a mesh with. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
           "where": {
-            "y_min": 0.52,
+            "y_min": 0.4,
             "z_max": 0.58,
-            "up_min": 0.05
+            "up_min": -0.05
           },
           "mode": "grow",
           "color": "#63a437",
           "shade": "#2c5822",
-          "coverage": 0.45,
-          "grain": 6.0,
+          "coverage": 0.74,
+          "grain": 5.0,
           "softness": 0.1,
-          "relief": 0.55
+          "relief": 0.6
         }
       ],
       "finish": {
@@ -300,7 +306,7 @@
       }
     },
     "galewisp": {
-      "_comment": "Base: pale cyan + soft yellow. Vivid (board: 'Clean whites + Sky blues -- Ethereal, wind-kissed'): cools go sky, yellows bleach toward white instead of the first pass's gold push. Shiny: lavender-violet, unchanged.",
+      "_comment": "Base: pale silver air starter. Vivid: the board's white + gold (see vivid_comment). Shiny: storm violet, now genuinely distinct because the ordinary bird stopped being blue -- and carrying white lightning tips so the rare reads by pattern as well as hue.",
       "rules": [
         {
           "match": {
@@ -324,29 +330,36 @@
           "sat_scale": 0.55
         }
       ],
-      "vivid_comment": "washed cyan -> luminous sky + gold",
+      "overlays_shiny": [
+        {
+          "id": "storm_flash",
+          "_why": "The rare's pattern: white lightning tips on the distal wing, which the ordinary white-and-gold bird has nowhere to put. Without this the shiny was a flat hue rotation of the same silhouette.",
+          "where": {
+            "lateral_min": 0.6,
+            "y_min": 0.42
+          },
+          "mode": "tint",
+          "color": "#f2eaff",
+          "sat_floor": 0.12,
+          "softness": 0.12
+        }
+      ],
+      "vivid_comment": "CREATURE-IDENTITY-3: the board paints this starter white/silver with GOLD wing and crest markings. The shipped vivid set hue 200 and desaturated the warms, which put the Air starter into the same white-and-blue family as pipwing, galecrest and reedwing -- four birds a blind round could not tell apart on the sheet. Gold is the board's own answer and it is the one warm accent no other bird in the roster carries.",
       "vivid_rules": [
         {
           "match": {
-            "hue": [
-              140,
-              250
-            ],
-            "sat_min": 0.04
+            "sat_min": 0.16
           },
-          "set_hue": 200,
-          "sat_scale": 1.3
+          "set_hue": 45,
+          "set_sat": 0.6,
+          "val_scale": 1.02
         },
         {
           "match": {
-            "hue": [
-              35,
-              75
-            ],
-            "sat_min": 0.12
+            "sat_max": 0.16
           },
-          "sat_scale": 0.45,
-          "val_scale": 1.06
+          "set_sat": 0.045,
+          "val_scale": 1.12
         }
       ],
       "finish": {
@@ -606,23 +619,8 @@
       }
     },
     "galecrest": {
-      "_comment": "Base: rust red-orange raptor. Vivid (board: 'White + blue + Noble'): saturated rust becomes slate-blue feathering, pale rust bleaches white -- an eagle, not the first pass's ember hawk. Shiny: SWAPPED ROLES with the old vivid -- the golden-ember look becomes the rare, because a storm-white shiny beside a white-bodied ordinary is invisible.",
+      "_comment": "Base: rust red-orange raptor. Vivid (board: 'White + blue + Noble'): saturated rust becomes teal-blue feathering, pale rust bleaches white, and the crest goes GOLD the way the board draws it. Shiny: REBUILT as a storm-dark eagle. The previous shiny was a brighter rust, and a blind round called the rarity inverted -- 'the shiny is natural brown plumage while the normal is the exotic white-and-blue one; the rare looks more common than the common.' Swapping the two was rejected: the board defines the ORDINARY bird as the white-and-blue noble, so a swap would contradict the owner's own reference. Instead the RARE moves to the one reading that outranks a noble white bird -- near-black storm plumage with electric tips.",
       "rules": [
-        {
-          "match": {
-            "hue": [
-              0,
-              60
-            ],
-            "sat_min": 0.12
-          },
-          "set_hue": 32,
-          "sat_scale": 1.7,
-          "val_scale": 1.08
-        }
-      ],
-      "vivid_comment": "dull rust -> bright ember",
-      "vivid_rules": [
         {
           "match": {
             "hue": [
@@ -631,8 +629,9 @@
             ],
             "sat_min": 0.35
           },
-          "set_hue": 215,
-          "set_sat": 0.42
+          "set_hue": 237,
+          "set_sat": 0.5,
+          "val_scale": 0.46
         },
         {
           "match": {
@@ -642,8 +641,33 @@
             ],
             "sat_min": 0.12
           },
-          "set_sat": 0.12,
-          "val_scale": 1.12
+          "set_sat": 0.14,
+          "val_scale": 0.42
+        }
+      ],
+      "vivid_comment": "Teal rather than the old flat slate 215: the board's wing feathers are blue-GREEN, and teal is what separates this bird from pipwing's pale blue at thumbnail size.",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
+            "sat_min": 0.35
+          },
+          "set_hue": 193,
+          "set_sat": 0.5
+        },
+        {
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
+            "sat_min": 0.12
+          },
+          "set_sat": 0.1,
+          "val_scale": 1.14
         }
       ],
       "overlays": [
@@ -660,17 +684,17 @@
           "softness": 0.12
         },
         {
-          "id": "crest_slate",
-          "_why": "The head crest picks up the same blue at half strength, which is what ties the wing tips to the bird instead of leaving them as two blue flags.",
+          "id": "crest_gold",
+          "_why": "The board draws this crest and the legs GOLD, not blue. The old overlay put the wing's own slate on the crest as well, which left the bird reading as one blue note and cost it the warm accent the board gives it. Gold is also the only warm on any bird in the roster once galewisp takes its own.",
           "where": {
             "y_min": 0.8,
             "lateral_max": 0.3
           },
           "mode": "tint",
-          "color": "#4a78c8",
+          "color": "#e0b23c",
           "sat_floor": 0.45,
           "softness": 0.1,
-          "strength": 0.5
+          "strength": 0.7
         }
       ],
       "overlays_alpha": [
@@ -688,6 +712,20 @@
           "val_scale": 0.88
         }
       ],
+      "overlays_shiny": [
+        {
+          "id": "storm_charge",
+          "_why": "The rare's pattern against a near-black body: electric cyan on the distal wing. This is what makes the shiny outrank the ordinary noble bird instead of reading as a duller version of it.",
+          "where": {
+            "lateral_min": 0.58,
+            "y_min": 0.4
+          },
+          "mode": "tint",
+          "color": "#7fe8ff",
+          "sat_floor": 0.55,
+          "softness": 0.12
+        }
+      ],
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.178,
@@ -695,7 +733,7 @@
       }
     },
     "duskhush": {
-      "_comment": "Base: grey-teal nocturne. Vivid (board: 'Midnight tones + Glowing accents'): the first pass's twilight indigo matches the board and stays, saturation pulled just off neon. Shiny: plum-magenta, unchanged.",
+      "_comment": "Base: grey-teal nocturne. Vivid: the board's dark plum (see vivid_comment). Shiny: REBUILT -- was plum-magenta 305, which the corrected plum vivid collides with, and which was one of the seven-of-seventeen shinies that all landed on pink/coral ('rare = turn it pink' is a filter language, not a design language). Now a midnight-blue body carrying ice-blue frost barring the ordinary bird does not have, so the rare reads by PATTERN and value, not by hue rotation.",
       "rules": [
         {
           "match": {
@@ -705,19 +743,48 @@
             ],
             "sat_min": 0.08
           },
-          "set_hue": 305,
-          "sat_scale": 1.2
+          "set_hue": 228,
+          "set_sat": 0.38,
+          "val_scale": 0.5
         },
         {
           "match": {
             "sat_max": 0.15,
             "val_min": 0.3
           },
-          "set_hue": 300,
-          "set_sat": 0.18
+          "set_hue": 200,
+          "set_sat": 0.07,
+          "val_scale": 1.2
         }
       ],
-      "vivid_comment": "CREATURE-PRESENTATION: twilight indigo body kept, but the owl gets its pale facial disc back -- 0.55/0.6 on both bands left one black mass with no face and no silhouette",
+      "overlays_shiny": [
+        {
+          "id": "frost_bars",
+          "_why": "The rare's pattern, not its hue: ice-blue barring down the distal wing where the ordinary duskhush carries nothing. `tint` keeps every quill line and barb shadow in the value channel, so this reads as frost ON feathers rather than a blue decal across them.",
+          "where": {
+            "lateral_min": 0.55,
+            "y_min": 0.38
+          },
+          "mode": "tint",
+          "color": "#9fd8f5",
+          "sat_floor": 0.35,
+          "softness": 0.13
+        },
+        {
+          "id": "frost_disc",
+          "_why": "The facial disc picks the same ice up at half strength -- what ties the wing barring to the bird instead of leaving it as two pale flags.",
+          "where": {
+            "y_min": 0.82,
+            "lateral_max": 0.34
+          },
+          "mode": "tint",
+          "color": "#c8e9fb",
+          "sat_floor": 0.3,
+          "softness": 0.1,
+          "strength": 0.5
+        }
+      ],
+      "vivid_comment": "CREATURE-IDENTITY-3: the board paints this owl DARK PLUM with a pale cream facial disc; the shipped vivid was indigo 250 with a x1.45 brightening on every low-saturation region, which bleached the whole bird to pale lavender -- a blind round named it directly against the board. The x1.45 is the actual bleach and is gone. Body goes to plum 291 and DOWN in value; the disc keeps its own brightening but warm and modest, so the face still reads without the body following it up. This is also the roster's only dark-value creature -- everything else is mid-value pastel, which is a measurable part of why the sheet reads flat.",
       "vivid_rules": [
         {
           "match": {
@@ -727,18 +794,18 @@
             ],
             "sat_min": 0.06
           },
-          "set_hue": 250,
-          "sat_scale": 1.2,
-          "val_scale": 0.8
+          "set_hue": 291,
+          "sat_scale": 1.25,
+          "val_scale": 0.62
         },
         {
           "match": {
             "sat_max": 0.15,
             "val_min": 0.3
           },
-          "set_hue": 224,
+          "set_hue": 40,
           "set_sat": 0.1,
-          "val_scale": 1.45
+          "val_scale": 1.16
         }
       ],
       "finish": {
@@ -796,62 +863,67 @@
       }
     },
     "reedwing": {
-      "_comment": "Base: mixed teal/green/straw wader. Vivid (board: 'Blue + white + Reed accents'): cools go teal-blue, pales go white, straws STAY reed -- the first pass's spring green traded the wader's water read away. Shiny: flamingo, unchanged.",
+      "_comment": "Base: pale waterbird. Vivid: the board's deep-blue crane (see vivid_comment). Shiny: REBUILT off pink -- it was hue 335, one of the seven-of-seventeen shinies that all landed on pink/coral. Copper-gold over a cream breast instead: no other bird in the roster is gold-BODIED (galewisp is white with gold accents), and it is the hardest possible read against the navy ordinary.",
       "rules": [
         {
           "match": {
             "hue": [
-              70,
-              230
+              25,
+              65
             ],
-            "sat_min": 0.1
+            "sat_min": 0.3
           },
-          "set_hue": 335,
-          "sat_scale": 1.15
+          "set_hue": 40,
+          "set_sat": 0.9,
+          "val_scale": 1.05
         },
         {
           "match": {
-            "hue": [
-              30,
-              70
-            ],
-            "sat_min": 0.2
+            "sat_max": 0.14,
+            "val_min": 0.45
           },
-          "set_hue": 44,
-          "sat_scale": 1.15
+          "set_hue": 40,
+          "set_sat": 0.12,
+          "val_scale": 1.1
+        },
+        {
+          "match": {
+            "sat_min": 0.08
+          },
+          "set_hue": 32,
+          "set_sat": 0.72,
+          "val_scale": 0.95
         }
       ],
-      "vivid_comment": "muddled -> spring green + gold",
+      "vivid_comment": "CREATURE-IDENTITY-3: the board paints a deep-blue crane -- saturated navy wings, a white breast and a yellow beak. The shipped vivid mixed a warm 45 across the body with a 205 blue at only x1.4 saturation, which is the pale washed blue-grey a blind round read as 'a domestic duck'. The mesh is a duck and stays one (CLAUDE.md: no new creature meshes for the Meadows) -- but a saturated navy waterbird with a white breast is a different animal at thumbnail size from a pale grey-blue farmyard one, and that half is paint's to fix. Beak rule runs FIRST because first match wins per pixel and the beak is inside the body's own warm band.",
       "vivid_rules": [
         {
           "match": {
             "hue": [
-              30,
-              70
+              25,
+              65
             ],
-            "sat_min": 0.15
+            "sat_min": 0.3
           },
           "set_hue": 45,
-          "sat_scale": 1.2
+          "set_sat": 0.85,
+          "val_scale": 1.05
         },
         {
           "match": {
-            "sat_max": 0.12,
-            "val_min": 0.55
+            "sat_max": 0.14,
+            "val_min": 0.45
           },
-          "sat_scale": 0.7,
-          "val_scale": 1.06
+          "set_sat": 0.05,
+          "val_scale": 1.12
         },
         {
           "match": {
-            "hue": [
-              70,
-              230
-            ],
             "sat_min": 0.08
           },
-          "set_hue": 205,
-          "sat_scale": 1.4
+          "set_hue": 222,
+          "set_sat": 0.62,
+          "val_scale": 0.78
         }
       ],
       "finish": {
@@ -861,7 +933,7 @@
       }
     },
     "bramblebun": {
-      "_comment": "Embedded-texture species. Base: golden bunny. Vivid (board: 'Forest greens + Leafy details'): CREATURE-PRESENTATION 2026-08-23 re-keyed this off the terrain. The previous pass painted the whole coat leaf-green and the result is the frame that reached the owner -- shots/band3/09-wild-cluster-on-the-road.png, three mint rabbits at hue 141-148 standing on grass at hue 134-155, invisible until you are on top of them, on the single most common creature in Band 1. The board's own words survive intact: the LEAFY DETAILS (the bramble sprigs and flowers, the most saturated pixels in the map) stay forest green, and the coat goes warm hazel, which is 100 degrees of hue and a value step away from the meadow. Shiny: REAUTHORED to snow-white -- the first render showed the old mint shiny beside the new leafy vivid as two greens, which fails the owner's 'genuinely different colourway' rule. A snow bunny against a forest one cannot be mistaken at any distance.",
+      "_comment": "Base: brown rabbit, cream chest, green bramble growth. Vivid: the board's leafy rabbit. Shiny: REBUILT -- the old rule was `set_sat 0.06, val_scale 1.18` and nothing else, i.e. bleach the animal white. That is not a colourway, it is the absence of one, and it is why this shiny reads as a rendering fault rather than a rare. Now a dark bramble variant: near-black coat with deep CRIMSON bramble where the ordinary carries green.",
       "rules": [
         {
           "match": {
@@ -871,8 +943,51 @@
             ],
             "sat_min": 0.1
           },
-          "set_sat": 0.06,
-          "val_scale": 1.18
+          "set_hue": 12,
+          "set_sat": 0.16,
+          "val_scale": 0.4
+        },
+        {
+          "match": {
+            "sat_max": 0.1,
+            "val_min": 0.5
+          },
+          "set_hue": 15,
+          "set_sat": 0.1,
+          "val_scale": 0.85
+        }
+      ],
+      "overlays_shiny": [
+        {
+          "id": "leaf_ears",
+          "_why": "The rare's pattern: the ear sprigs and the back ruff turn deep crimson against a near-black coat, on the SAME predicates as the green ones so it reads as the same plant in a different season. Shares the ordinary variant's overlay id on purpose: an `overlays_shiny` entry reusing a base id REPLACES that base entry rather than stacking on it, and inherits its noise seed, so this growth lands on exactly the patches the green one does instead of the rare wearing both colours of foliage at once.",
+          "where": {
+            "y_min": 0.8,
+            "lateral_min": 0.28
+          },
+          "mode": "grow",
+          "color": "#b0223a",
+          "shade": "#4d0f1c",
+          "coverage": 0.82,
+          "grain": 6.0,
+          "softness": 0.1,
+          "relief": 0.55
+        },
+        {
+          "id": "leaf_ruff",
+          "_why": "The back ruff turned with the ears. Shares the ordinary variant's overlay id on purpose: an `overlays_shiny` entry reusing a base id REPLACES that base entry rather than stacking on it, and inherits its noise seed, so this growth lands on exactly the patches the green one does instead of the rare wearing both colours of foliage at once.",
+          "where": {
+            "y_min": 0.42,
+            "y_max": 0.72,
+            "up_min": 0.1
+          },
+          "mode": "grow",
+          "color": "#961e33",
+          "shade": "#420d18",
+          "coverage": 0.62,
+          "grain": 6.0,
+          "softness": 0.1,
+          "relief": 0.55
         }
       ],
       "vivid_comment": "CREATURE-PRESENTATION: leaf-green COAT -> warm hazel coat, green kept as the bramble accent it was named for",
@@ -920,7 +1035,7 @@
         },
         {
           "id": "leaf_ruff",
-          "_why": "Board: 'leafy details' -- sprigs through the shoulder fur, not a solid cape. Low coverage on purpose: it should read as growth caught in the coat.",
+          "_why": "Board: the ruff of leaves across the back and haunches is one of this species' two signatures and 0.3 left barely a fleck of it. The ears (0.82 above) survived; the body growth did not.",
           "where": {
             "y_min": 0.42,
             "y_max": 0.72,
@@ -929,7 +1044,7 @@
           "mode": "grow",
           "color": "#5f9c33",
           "shade": "#2a5220",
-          "coverage": 0.3,
+          "coverage": 0.62,
           "grain": 7.0,
           "softness": 0.1,
           "relief": 0.6
@@ -997,7 +1112,7 @@
       }
     },
     "trailpup": {
-      "_comment": "Embedded-texture species. Base: sandy tan pup with a darker back stripe and dark-tipped tail. Vivid (board: 'Tan + moss'): modest tan, value untouched so the stripe and tip survive. Shiny: deep fox-red, moved off the old h14 that sat 19 degrees from the old vivid.",
+      "_comment": "Base: grey-brown wolf pup. Vivid: warm coat under the board's leaf growth. Shiny: REBUILT -- was hue 6 at x1.6 saturation against a hue 22/35 ordinary, so the rare was a slightly redder version of the common and read as neither rare nor different. Now a charcoal coat carrying EMBER-orange growth where the ordinary carries green: same animal, inverted season, and a value read rather than a hue nudge.",
       "rules": [
         {
           "match": {
@@ -1007,8 +1122,44 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 6,
-          "sat_scale": 1.6
+          "set_hue": 25,
+          "set_sat": 0.12,
+          "val_scale": 0.42
+        }
+      ],
+      "overlays_shiny": [
+        {
+          "id": "moss_saddle",
+          "_why": "The rare's pattern: the same anatomical growth the ordinary carries in green, burning orange against a charcoal coat. Placed on the SAME predicates as the green so it reads as the identical plant turned, not as a different decal. Shares the ordinary variant's overlay id on purpose: an `overlays_shiny` entry reusing a base id REPLACES that base entry rather than stacking on it, and inherits its noise seed, so this growth lands on exactly the patches the green one does instead of the rare wearing both colours of foliage at once.",
+          "where": {
+            "y_min": 0.44,
+            "z_min": 0.12,
+            "z_max": 0.68,
+            "up_min": 0.12
+          },
+          "mode": "grow",
+          "color": "#e0762a",
+          "shade": "#7a2f10",
+          "coverage": 0.66,
+          "grain": 5.0,
+          "softness": 0.1,
+          "relief": 0.6
+        },
+        {
+          "id": "leaf_ruff",
+          "_why": "The throat ruff turned with the rest of it. Shares the ordinary variant's overlay id on purpose: an `overlays_shiny` entry reusing a base id REPLACES that base entry rather than stacking on it, and inherits its noise seed, so this growth lands on exactly the patches the green one does instead of the rare wearing both colours of foliage at once.",
+          "where": {
+            "y_min": 0.5,
+            "y_max": 0.82,
+            "z_min": 0.55
+          },
+          "mode": "grow",
+          "color": "#eb8a33",
+          "shade": "#83370f",
+          "coverage": 0.6,
+          "grain": 5.5,
+          "softness": 0.1,
+          "relief": 0.55
         }
       ],
       "vivid_comment": "CREATURE-PRESENTATION: the mid-tone band was moss green on a canine that spends its life standing in grass; it is now the darker earth-brown dorsal the base texture already implies",
@@ -1042,20 +1193,36 @@
       "overlays": [
         {
           "id": "moss_saddle",
-          "_why": "Board: 'Tan + moss'. A saddle over the back between shoulder and haunch, clear of the head (z<0.72) so the face stays the face.",
+          "_why": "Board: growth over the shoulders and down the flank, not a saddle patch. 0.52 over a y_min of 0.58 put it all on the spine, which is why a blind round found 'almost none' of the board's foliage in the render.",
           "where": {
-            "y_min": 0.58,
-            "z_min": 0.2,
-            "z_max": 0.62,
-            "up_min": 0.3
+            "y_min": 0.44,
+            "z_min": 0.12,
+            "z_max": 0.68,
+            "up_min": 0.12
           },
           "mode": "grow",
           "color": "#5b9433",
           "shade": "#2a4f1f",
-          "coverage": 0.52,
+          "coverage": 0.66,
           "grain": 6.0,
           "softness": 0.1,
           "relief": 0.6
+        },
+        {
+          "id": "leaf_ruff",
+          "_why": "The board's signature on this species is a broad green RUFF at the throat and chest -- the one thing that separates a leafy wolf pup from an ordinary one at silhouette size. The saddle above never reached it because it sits forward of the shoulder, at high z.",
+          "where": {
+            "y_min": 0.5,
+            "y_max": 0.82,
+            "z_min": 0.55
+          },
+          "mode": "grow",
+          "color": "#67a838",
+          "shade": "#2f5d24",
+          "coverage": 0.6,
+          "grain": 5.5,
+          "softness": 0.1,
+          "relief": 0.55
         }
       ],
       "finish": {
