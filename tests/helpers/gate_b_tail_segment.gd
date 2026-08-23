@@ -546,6 +546,8 @@ func _enter_the_tournament() -> bool:
 
 func _fight_the_bracket() -> bool:
 	_stand_on_the_tournament_ground()
+	if not await _call_out_a_creature():
+		return false
 	for entry: Variant in TOURNAMENT.rounds():
 		if not await _fight_and_win(entry as Dictionary):
 			return false
@@ -560,6 +562,35 @@ func _fight_the_bracket() -> bool:
 		return false
 	transcript.append("won the bracket; the saddle pattern is known")
 	return true
+
+
+## A creature has to be STANDING THERE before a round can start.
+##
+## GATEB-COORD: `encounter_director.gd::can_challenge()` refuses outright when
+## `_ally_body` is null -- "a battle that began with the player having nothing
+## to fight with would suspend exploration and never give it back" -- and this
+## segment reached the arena with its team in the player's pocket. The marshal
+## played her whole conversation and nothing happened:
+##
+##   'tournament_quarter' closed and no Quarter-final battle started
+##
+## The verb is the recall button, the same one a player presses walking up to
+## any fight, so that is what is pressed. Not a call to
+## `summon_active_creature()`: the button is the thing being proven.
+func _call_out_a_creature() -> bool:
+	if _director.call("ally_body") != null:
+		return true
+	await _tap(&"creature_recall")
+	for _i in 180:
+		if _director.call("ally_body") != null:
+			transcript.append("called out %s for the bracket"
+				% str((_party.call("active") as RefCounted).call("label")))
+			await _settle(30)
+			return true
+		await _tree.physics_frame
+	_fail("the recall button would not put a creature on the ground at the arena; "
+		+ "`can_challenge()` refuses every round without one")
+	return false
 
 
 func _stand_on_the_tournament_ground() -> void:
