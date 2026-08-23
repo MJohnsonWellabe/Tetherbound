@@ -105,6 +105,71 @@ shard (or the unit suite if it's cheap enough to run every commit).
 
 ---
 
+## STRONGHOLD-R2-remainder — three things round 2 on the stronghold frames left open (2026-08-23)
+
+Filed by `STRONGHOLD-R2` (see `ralph/DONE.md` for what it did fix and the
+measurements). Each of these is left open on purpose rather than half-done.
+
+### STRONGHOLD-BLIND-PASS — the blind critique still has not run on this site · `model: fable` · `tests: visual`
+
+**This is the blocking one, and it is infrastructure, not art.**
+`conventions.md` requires a blind critic for visual-affecting work. Two
+consecutive lanes on this site could not spawn one: `create_session` returned
+"the service is temporarily unavailable" on every attempt (round 1 recorded it,
+round 2 tried six times across a whole session), and this lane has no
+in-process subagent tool. Invoking the `visual-judge` skill directly is not a
+substitute — it loads inline, into a context that already knows what changed,
+which is exactly what its own header says the mechanism depends on not
+happening.
+
+**Everything a critic needs is already staged, so this is one step when the
+spawn service is up:**
+
+1. On an idle box (1-minute load under 8), run
+   `tools/capture_stronghold_approach.gd` — the REAL-scene version of the three
+   viewpoints. Judge `shots/wayfinding_full/`, not `shots/wayfinding/`:
+   `capture_castle_lite.gd` skips the vegetation scatter, so its frames show the
+   stronghold in an unbroken mown lawn and a critic will correctly rank "the
+   field is empty" first while describing the capture rather than the world.
+2. Sheet them (`tools/contact_sheet.gd -- --dir=res://shots/wayfinding_full`).
+3. Spawn a critic against a scratch branch carrying the PNGs — `shots/` is
+   gitignored, so a fresh container cannot otherwise see them.
+   `scratch/stronghold-r2-frames` (commit `3b0250d`) is round 2's, built as
+   origin/main's tree plus the four lite PNGs; rebuild it the same way with the
+   full-scene set. Point the critic at the frames and `docs/reference/` and tell
+   it nothing else.
+
+Until that runs, treat round 2's frames as **improved-and-unjudged**. The
+improvement is measured (`tools/frame_stats.py` deltas are in `DONE.md`);
+whether it is any GOOD is the question that has not been asked.
+
+### STRONGHOLD-MERLONS — three merlon sizes in one silhouette · `model: fable` · `tests: smoke_stronghold, visual`
+
+Named by round 1's critique, confirmed and located by round 2, not fixed. The
+castle shows the curtain's crenellations at module scale **2.6**, the gatehouse
+flankers' at **3.4** and the keep's crown at **3.8** in the same frame, plus a
+fourth size — the inner bailey ring at **2.0** — showing behind the flankers in
+`silhouette-approach`.
+
+Not fixed because every candidate is a re-author rather than a tune. Merlons are
+part of each module's mesh and `building_prefabs.json` carries one uniform
+`scale` per module, so crenellation size is welded to tower size. Dropping the
+flankers to the curtain's 2.6 costs 3.3m of gatehouse height, which has to be
+regained by stacking a second course — and that moves the measured south face
+(z -10.79) that the flanker banners, the two teal work lamps and
+`STRONGHOLD-R2`'s own gate-jamb filler modules are all placed against, plus the
+flanker colliders. Doable, but it is a massing change on the hero landmark and
+wants its own pass with `tools/_probe_castle_gaps.gd` re-run after it.
+
+### BAND4-RIDGE-WHITE — the glitch-white mesh on the band4 ridge crest · `model: sonnet` · `tests: visual`
+
+Untouched and unconfirmed. The second-path rule says confirm it is real geometry
+and not a capture artefact before changing anything, and confirming it means a
+Band 4 render. Round 2's box ran at load 12–30 on four cores with ~1GB free and
+five other lanes capturing and testing into each other; its own full-scene
+capture was starved out at 11 minutes without printing a line. Needs an idle box
+and one render, then either a fix or a note that the capture invented it.
+
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
 Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by

@@ -128,10 +128,10 @@
           "max_slope_deg": 25.0
         },
         {
-          "_why": "south-west foot: just a pair, so the line is not continuous",
+          "_why": "south-west foot: just a pair, so the line is not continuous STRONGHOLD-R2: moved (70,-128) -> (60.5,-133.7). `paths.approaches`'s stronghold road contours the rise's south-west foot and passed 1.92m from the old centre, putting most of this anchor's own 9m disc inside the road's worn band -- measured, not assumed: with the road, seed 1 placed 0 of 2 and seed 99 placed 1 of 2; with the road stashed out, all three seeds the suite uses placed both (tools/_probe_anchor_seeds.gd, this task). The production seed still placed both either way, which is exactly why it is worth moving rather than leaving: a pair of trees that survives on one seed and vanishes on the next is a trap for whoever next reseeds. The new centre is 9.16m clear of every road on 1.7-degree ground; the road's own NE side is the rise's 40-50 degree collar and has no room at all, so the move is out onto the meadow rather than up the flank. Still a pair at the foot, still not a continuous line.",
           "at": [
-            70.0,
-            -128.0
+            60.5,
+            -133.7
           ],
           "radius": 9.0,
           "count": 2,
@@ -853,10 +853,10 @@
           "sink": 0.2
         },
         {
-          "_why": "OF10-remainder: a cairn at the Rise road's own end (74,-41) -- approach-distance mass for the levelled apron that's there already (`flats._comment_of10_r3`) but reads as too subtle to see from a distance. This layer's own `min_slope_deg` (6.0) exists to keep the meadow scatter off flat grass, which is exactly the ground the apron levels for -- overridden to 0 for these draws only so a deliberately built pile can stand on deliberately flat ground. Offset ~2.5m off the road's own centreline, the opposite shoulder from the trailhead signpost (see paths.trailheads in terrain_playground.json), so the two flank the endpoint rather than sitting on top of each other. The block: two or three stones large enough to read as stacked, not scattered.",
+          "_why": "OF10-remainder: a cairn at the Rise road's own end (74,-41) -- approach-distance mass for the levelled apron that's there already (`flats._comment_of10_r3`) but reads as too subtle to see from a distance. This layer's own `min_slope_deg` (6.0) exists to keep the meadow scatter off flat grass, which is exactly the ground the apron levels for -- overridden to 0 for these draws only so a deliberately built pile can stand on deliberately flat ground. Offset ~2.5m off the road's own centreline, the opposite shoulder from the trailhead signpost (see paths.trailheads in terrain_playground.json), so the two flank the endpoint rather than sitting on top of each other. The block: two or three stones large enough to read as stacked, not scattered. STRONGHOLD-R2: moved (72.6,-43.1) -> (78.6,-44.0). This point stopped being the END of the road: `paths.approaches`'s stronghold road now leaves the same junction heading south-south-west, and the old cairn centre sat 0.11m off ITS centreline -- literally in the new travel lane, and the scatter bake said so, rejecting every draw ('placed 0 of 3 / 0 of 6'), so the cairn silently vanished from the world the moment the road landed. The new centre sits 5.49m out along the bisector of the fork's two free bearings, equidistant from both roads, so the 2.3m skirt still clears the 3.0m worn band on either one; the trailhead fingerpost keeps the opposite side (6.0m away) and the two now flank a JUNCTION rather than a dead end.",
           "at": [
-            72.6,
-            -43.1
+            78.6,
+            -44.0
           ],
           "radius": 1.1,
           "count": 3,
@@ -867,10 +867,10 @@
           "sink": 0.4
         },
         {
-          "_why": "OF10-remainder: the cairn's skirt of smaller stones, same centre, wider radius",
+          "_why": "OF10-remainder: the cairn's skirt of smaller stones, same centre, wider radius STRONGHOLD-R2: moved (72.6,-43.1) -> (78.6,-44.0). This point stopped being the END of the road: `paths.approaches`'s stronghold road now leaves the same junction heading south-south-west, and the old cairn centre sat 0.11m off ITS centreline -- literally in the new travel lane, and the scatter bake said so, rejecting every draw ('placed 0 of 3 / 0 of 6'), so the cairn silently vanished from the world the moment the road landed. The new centre sits 5.49m out along the bisector of the fork's two free bearings, equidistant from both roads, so the 2.3m skirt still clears the 3.0m worn band on either one; the trailhead fingerpost keeps the opposite side (6.0m away) and the two now flank a JUNCTION rather than a dead end.",
           "at": [
-            72.6,
-            -43.1
+            78.6,
+            -44.0
           ],
           "radius": 2.3,
           "count": 6,

@@ -207,13 +207,11 @@ func _build_plinth() -> void:
 	plinth.name = "Plinth"
 	var box := BoxMesh.new()
 	box.size = Vector3(PLINTH_HALF_X * 2.0, PLINTH_TOP - PLINTH_BOTTOM, PLINTH_HALF_Z * 2.0)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = PLINTH_COLOUR
-	mat.roughness = 0.95
-	box.material = mat
+	box.material = _stone_material(PLINTH_COLOUR)
 	plinth.mesh = box
 	plinth.position = PLINTH_CENTRE + Vector3(0.0, (PLINTH_TOP + PLINTH_BOTTOM) * 0.5, 0.0)
 	add_child(plinth)
+	_build_plinth_courses()
 
 	# The courtyard floor and the foundation the player can stand against.
 	var body := StaticBody3D.new()
@@ -225,6 +223,126 @@ func _build_plinth() -> void:
 	body.add_child(shape)
 	add_child(body)
 	body.position = plinth.position
+
+
+## STRONGHOLD-R2. Two proud bands around the plinth, and the mottled stone the
+## plinth and ramp are now made of.
+##
+## The round-1 frames put the whole foundation on screen as ONE flat rectangle
+## of a single value, ~20m wide and 6.7m tall, running the full width of every
+## approach frame -- the blind critique's "dark untextured plinth skirt". Three
+## separate things produce that reading and only one of them is colour:
+##
+##   1. it carried a bare `albedo_color` with no map of any kind, so every
+##      pixel of it is literally the same number (`_stone_material` below);
+##   2. nothing broke it horizontally, so there is no scale cue on it at all
+##      -- a 6.7m face and a 0.7m face look identical when both are blank;
+##   3. its top edge met the castle's own base as one unbroken line, so the
+##      foundation read as a slab the castle was standing ON rather than as
+##      the base course of the same building.
+##
+## The coping takes (3) -- a capping course proud of the face, which is what
+## the top of a real revetment is -- and the string course takes (2). Both are
+## drawn in the castle's own `DarkRock` retint rather than in `PLINTH_COLOUR`,
+## so the ladder round 3 established (foundation darkest, walls lighter) still
+## holds face-to-face while the BANDS are lighter than the face they stand on,
+## which is how a dressed stone course reads against rubble.
+##
+## Visual only. `PlinthBody` above is untouched and still spans the plinth's
+## full authored footprint, so nothing here changes where a player can stand;
+## the bands are proud of that footprint by 0.25m, which is inside the 0.93m
+## apron the plinth already has south of the wall centrelines.
+const COPING_PROUD := 0.25
+const COPING_HEIGHT := 0.55
+const STRING_PROUD := 0.15
+const STRING_HEIGHT := 0.30
+## Where the string course sits below the coping. Chosen so the face is cut
+## into two unequal bands (roughly 2:1) rather than halved -- a halved wall
+## reads as a mistake, an unequal split reads as construction.
+const STRING_DROP := 2.4
+## `building_prefabs.json`'s `castle` retint, `DarkRock`. Named here rather
+## than loaded: this is one colour off one recipe, and landmark.gd already
+## carries PLINTH_COLOUR the same way. If that retint moves, move this with it.
+const COURSE_COLOUR := Color("#6b5f52")
+
+
+func _build_plinth_courses() -> void:
+	var bands := [
+		{"name": "PlinthCoping", "proud": COPING_PROUD, "height": COPING_HEIGHT,
+			"centre_y": PLINTH_TOP - COPING_HEIGHT * 0.5},
+		{"name": "PlinthStringCourse", "proud": STRING_PROUD, "height": STRING_HEIGHT,
+			"centre_y": PLINTH_TOP - COPING_HEIGHT - STRING_DROP - STRING_HEIGHT * 0.5},
+	]
+	for entry: Variant in bands:
+		var spec: Dictionary = entry
+		var proud: float = float(spec["proud"])
+		var band := MeshInstance3D.new()
+		band.name = str(spec["name"])
+		var box := BoxMesh.new()
+		box.size = Vector3(
+			PLINTH_HALF_X * 2.0 + proud * 2.0,
+			float(spec["height"]),
+			PLINTH_HALF_Z * 2.0 + proud * 2.0)
+		box.material = _stone_material(COURSE_COLOUR)
+		band.mesh = box
+		band.position = PLINTH_CENTRE + Vector3(0.0, float(spec["centre_y"]), 0.0)
+		add_child(band)
+
+
+## A stone surface with an actual albedo map on it.
+##
+## The map is generated here rather than loaded or hung off a `NoiseTexture2D`:
+## `NoiseTexture2D` fills on a worker thread and is empty for the first frames
+## after it is created, which is exactly the window a scripted capture or a
+## headless test reads the scene in -- a texture that is correct a second later
+## is not correct for the frame that gets saved. This is 64x64 samples in a
+## tight loop, deterministic, finished before the function returns.
+##
+## `TRIPLANAR` because the plinth and the bands are boxes with no meaningful
+## UVs: without it the grain stretches to the size of each face and a 44m face
+## and a 0.55m band would be wearing the same four pixels.
+const STONE_TEXTURE_SIZE := 64
+## Metres per tile of the generated grain. Small enough that a 40m plinth face
+## carries visible variation, large enough that the mottle does not alias into
+## noise at the 70m `silhouette-close` range.
+const STONE_TEXTURE_METRES := 3.0
+## How far the mottle swings either side of the base colour. Deliberately
+## small -- this is meant to stop the surface being one literal number, not to
+## turn the foundation into camouflage.
+const STONE_MOTTLE := 0.13
+
+
+func _stone_material(colour: Color) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = colour
+	mat.albedo_texture = _stone_texture()
+	mat.roughness = 0.95
+	mat.uv1_triplanar = true
+	mat.uv1_scale = Vector3.ONE / STONE_TEXTURE_METRES
+	return mat
+
+
+var _stone_texture_cache: ImageTexture = null
+
+
+func _stone_texture() -> ImageTexture:
+	if _stone_texture_cache != null:
+		return _stone_texture_cache
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = 20260823
+	noise.frequency = 0.06
+	noise.fractal_octaves = 3
+	var image := Image.create_empty(
+		STONE_TEXTURE_SIZE, STONE_TEXTURE_SIZE, false, Image.FORMAT_RGB8)
+	for y in STONE_TEXTURE_SIZE:
+		for x in STONE_TEXTURE_SIZE:
+			# `albedo_texture` MULTIPLIES `albedo_color`, so the neutral value
+			# here is 1.0 and the mottle rides either side of it.
+			var value: float = 1.0 + noise.get_noise_2d(float(x), float(y)) * STONE_MOTTLE
+			image.set_pixel(x, y, Color(value, value, value))
+	_stone_texture_cache = ImageTexture.create_from_image(image)
+	return _stone_texture_cache
 
 
 ## The prefab's own collider list (the {at,size} local-space format
@@ -265,11 +383,11 @@ func _build_ramp() -> void:
 	body.name = "GateRamp"
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
-	box.size = Vector3(RAMP_WIDTH, 0.8, length)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = PLINTH_COLOUR
-	mat.roughness = 0.95
-	box.material = mat
+	box.size = Vector3(RAMP_WIDTH + RAMP_SHOULDER * 2.0, 0.8, length)
+	# Same generated stone as the plinth (STRONGHOLD-R2): the ramp fills the
+	# bottom third of `gate-close` on its own, and a flat single-value slab
+	# that close to the eye is the largest untextured surface in the frame.
+	box.material = _stone_material(PLINTH_COLOUR)
 	mesh.mesh = box
 	body.add_child(mesh)
 	var shape := CollisionShape3D.new()
@@ -282,6 +400,57 @@ func _build_ramp() -> void:
 	# to the grass at z -10-RAMP_RUN. Gate bay sits at local x +2.
 	body.position = Vector3(2.0, PLINTH_TOP - rise * 0.5 - 0.2, -10.0 - RAMP_RUN * 0.5)
 	body.rotation.x = -angle
+	_build_ramp_kerbs(body, length)
+
+
+## STRONGHOLD-R2. A low kerb down each side of the ramp.
+##
+## The ramp is 6m wide and 11.8m long and it fills the bottom third of
+## `gate-close` and a quarter of `silhouette-approach` as one unbroken plane
+## with a hard edge and nothing on it. The key art's own stronghold panel
+## approaches its gate up a built stair with kerbs and a parapet; this is the
+## cheapest honest version of that, and it is what stops the causeway reading as
+## a ramp asset dropped in front of a castle asset.
+##
+## Children of the ramp body, so they inherit its rotation and can never
+## disagree with the slope. `MESH ONLY` — no collider of their own; the slab
+## under them is the collider, and it grew rather than the walked width
+## shrinking, so nothing a player could stand on before is lost.
+##
+## THE SLAB IS NOW WIDER THAN `RAMP_WIDTH` AND THAT IS DELIBERATE. `RAMP_WIDTH`
+## is still 6.0 and still means what `stronghold_occupation.json` says it means:
+## the walked width, which nothing is allowed inside. `RAMP_SHOULDER` is the
+## verge either side of it, and it exists because the ramp-head braziers stand
+## at local x -1.3 / +5.3 — i.e. 3.3m off the ramp's own centre, 0.3m PAST the
+## old slab edge, tuned there over three rounds of the previous pass and
+## overhanging air. Widening the slab puts them on real ground and leaves room
+## for the kerb outside them; narrowing the kerb to fit inside the old edge
+## would have put masonry through the fire baskets instead. Drawn in
+## `COURSE_COLOUR`, the same dressed stone as the plinth's coping and string
+## course, so the approach and the foundation read as one construction.
+const RAMP_SHOULDER := 1.2
+const KERB_WIDTH := 0.5
+const KERB_HEIGHT := 1.0
+## The kerb's own centre, from the ramp's centreline. Seated on the slab's outer
+## edge, with its inner face at 3.7 — clear of the brazier bowls, whose widest
+## point reaches 3.625.
+const KERB_CENTRE_X := 3.95
+## The kerb's centre relative to the deck's own centre plane. The slab is 0.8m
+## thick and centred on the body, so its top face is at +0.4; this seats the
+## kerb's bottom inside the slab and leaves it standing 0.45m proud.
+const KERB_CENTRE_Y := 0.35
+
+
+func _build_ramp_kerbs(body: Node3D, length: float) -> void:
+	for side in [-1.0, 1.0]:
+		var kerb := MeshInstance3D.new()
+		kerb.name = "RampKerb_%s" % ("west" if side < 0.0 else "east")
+		var box := BoxMesh.new()
+		box.size = Vector3(KERB_WIDTH, KERB_HEIGHT, length)
+		box.material = _stone_material(COURSE_COLOUR)
+		kerb.mesh = box
+		kerb.position = Vector3(side * KERB_CENTRE_X, KERB_CENTRE_Y, 0.0)
+		body.add_child(kerb)
 
 
 ## The far end of the gate passage: a plain dark slab standing across the

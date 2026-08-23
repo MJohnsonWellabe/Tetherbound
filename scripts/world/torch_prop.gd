@@ -103,19 +103,43 @@ func _build_flame() -> void:
 func _build_embers() -> void:
 	var particles := GPUParticles3D.new()
 	particles.name = "Embers"
-	particles.amount = 8
-	particles.lifetime = 1.0
+	# STRONGHOLD-R2: this was `amount = 8, lifetime = 1.0` with no randomness
+	# and no fade, which is a metronome — one particle every 0.125s, all with
+	# the same upward acceleration, so the emitter drew a perfectly regular
+	# ladder of identical beads climbing away from the flame with a visible gap
+	# between the flame and the first one. The blind critique on the stronghold
+	# frames named it exactly that: "detached spark-bead particle strings above
+	# braziers". Four changes, and none of them is "more particles":
+	#   * `randomness` breaks the fixed spawn interval, which is what makes the
+	#     ladder a ladder;
+	#   * a shorter lifetime keeps the embers inside the fire's own glow
+	#     instead of sending them 1m up on their own;
+	#   * gravity now pulls DOWN, so an ember decelerates and arcs the way a
+	#     spark off a fire does, rather than accelerating away forever;
+	#   * a scale curve fades each one to nothing, so they die out instead of
+	#     vanishing at full brightness at the top of the string.
+	particles.amount = 14
+	particles.lifetime = 0.62
+	particles.randomness = 0.75
 	particles.local_coords = false
 	particles.position = Vector3(0.0, FLAME_HEIGHT, 0.0)
 
 	var process_material := ParticleProcessMaterial.new()
 	process_material.direction = Vector3(0.0, 1.0, 0.0)
-	process_material.spread = 20.0
-	process_material.initial_velocity_min = 0.22
-	process_material.initial_velocity_max = 0.48
-	process_material.gravity = Vector3(0.0, 0.4, 0.0)
-	process_material.scale_min = 0.4
-	process_material.scale_max = 0.9
+	process_material.spread = 32.0
+	process_material.initial_velocity_min = 0.30
+	process_material.initial_velocity_max = 0.75
+	process_material.gravity = Vector3(0.0, -0.55, 0.0)
+	process_material.damping_min = 0.4
+	process_material.damping_max = 1.1
+	process_material.scale_min = 0.5
+	process_material.scale_max = 1.0
+	process_material.scale_curve = _ember_fade_curve()
+	# A small emission sphere rather than a point: eight sparks leaving the
+	# exact same coordinate is the other half of why the string reads as one
+	# object instead of as a shower.
+	process_material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	process_material.emission_sphere_radius = 0.045
 	particles.process_material = process_material
 
 	var quad := QuadMesh.new()
@@ -135,6 +159,20 @@ func _build_embers() -> void:
 
 	add_child(particles)
 	particles.emitting = true
+
+
+## Full size for the first third of an ember's life, then down to nothing.
+## `scale_curve` wants a CurveTexture, not a Curve, and the curve has to be
+## baked before the texture is read or the first frames sample an empty curve.
+func _ember_fade_curve() -> CurveTexture:
+	var curve := Curve.new()
+	curve.add_point(Vector2(0.0, 0.85))
+	curve.add_point(Vector2(0.3, 1.0))
+	curve.add_point(Vector2(1.0, 0.0))
+	curve.bake()
+	var texture := CurveTexture.new()
+	texture.curve = curve
+	return texture
 
 
 func _billboard_quad(size: float, colour: Color, inner_hold: float, emission_energy: float) -> MeshInstance3D:
