@@ -3,6 +3,55 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## RUNTESTS-FILTER — `--only=` selector for run_tests.gd, and why CI run 2180 was red
+
+`tests: full suite 1362 tests, 830325 assertions, 0 failed` · `area: tests/run_tests.gd`
+
+`ralph/RUNTESTS-FILTER`'s own CI run (2180, commit b63ecc6) came back red, but not
+because of anything in its diff. Merged `origin/main` (integration-W1, +101 files,
+no conflicts) and re-ran everything to find the actual cause rather than trusting
+either "red" or "green" at face value:
+
+- **`verify-unit-tests` (all four shards) passed on the original commit, before
+  any merge.** The `--only=`/`--shard=` harness change never broke sharding or
+  collection — it was never the suspect it looked like.
+- **`verify-continuous-core-known-red` failing is not a bug.** That job carries
+  `continue-on-error: true` specifically because CONTINUOUS-CORE has never
+  passed (see its own comment in `ci.yml`); its failure doesn't gate the run.
+- **`verify-owner-regressions-shard` was the real red**, on
+  `smoke_party_count_after_catches.gd`: "could not engage the real wild body...
+  the winning prompt is Interactable, not the target" on the second catch
+  (`Wild_bramblebun_0_2`). Ran this smoke test standalone, twice in a row, on
+  the identical merged commit with zero code changes in between: **PASS, then
+  FAIL**, both times stalling on the same creature. `encounter_director.gd`
+  seeds each wild spawn's placement RNG deterministically
+  (`hash("wild_spawn_%d" % order)`), so this isn't a random-position issue —
+  it's some other non-determinism (most likely physics/movement drift over the
+  ~1500-2000 frame walk-and-sidestep sequence `_close_in_until_offered()` runs)
+  that occasionally lands the player close enough to a neighbouring prop that
+  the arbiter's correct nearest-wins behaviour (established in the
+  `Gate C` / integration-ABC entry above this one) never resolves onto the
+  creature within the harness's 40-attempt budget. Confirmed unrelated to this
+  branch: that file has had one commit since the integration-ABC era, this
+  branch touches only `tests/run_tests.gd`, and the job doesn't invoke
+  `run_tests.gd` at all — it runs smoke scripts directly.
+
+**Left un-"fixed" deliberately**: chasing genuine simulation non-determinism
+down to its source is a different, larger job than this lane owns, and the
+test's own header already documents `_close_in_until_offered()` as bounded/
+best-effort. Flagging it here rather than papering over it — a future CI run
+landing red on `verify-owner-regressions-shard` with this exact message is
+this same pre-existing flake, not a new regression, unless the failing
+creature/behaviour differs.
+
+Verified on the merged branch before push: full suite 1362 tests / 0 failed;
+`--only=test_harvest.gd` (22 of 105 files, 22 tests, 0 failed);
+`--only=test_harvest.gd::test_gather_with_the_right_tool_pays_the_full_amount`
+(1 of 105 files, 1 test, 0 failed); `--only=` against a selector matching no
+file hard-errors with exit 2, as designed; `--shard=1/4` (27 of 105 files, 327
+tests, 0 failed) — sharding and full-run behaviour both unchanged from before
+this flag existed.
+
 ## GATEB-PATH — the village pathing blocker is fixed; the continuous run now stalls three beats later
 
 `branch: ralph/GATEB-PATH` · `area: tests/helpers/stick_navigator.gd (new), tests/helpers/gate_a_npc_gather_segment.gd, tests/helpers/gate_a_material_route.gd, tests/helpers/gate_a_opening_drive.gd, tests/helpers/gate_a_build_segment.gd, tests/smoke_gate_b_continuous.gd, tools/_probe_village_route.gd + _probe_harvest_arbiter.gd + _probe_scatter_fill.gd (new probes)`
@@ -648,6 +697,104 @@ genuinely blind pass on the four after-frames is still owed to this work.
   ownership, not this lane's to fix.
 - Mill yard path tiles: placement unverified by render (above).
 - A real blind (subagent) critique of the four after-frames.
+
+## BAND2-FLOOR — hand-sited forest-floor dressing and bark tint variety
+
+`tests: full suite 1355 tests, 836493 assertions, 1 failed (expected/inherited)` · `branch: ralph/BAND2-FLOOR` · `area: data/config/vegetation.json`
+
+Lane brief: `ralph/lanes/OPEN_LANES_2026-08-23.md`, LANE: BAND2-FOREST-FLOOR.
+A blind critique of Band 2's forest floor found it "the same mown lawn as
+open fields -- no leaf litter, undergrowth, fallen branches, saplings" with
+"uniform salmon trunks". `docs/reviews/band2/round-05` had already
+established that the corridor's own trail-biased density fill lands near
+none of Band 2's eight `tools/survey_band2.gd` viewpoints by chance, so a
+density-scale tweak (also `vegetation.json` globals another lane -- the
+still-unlanded `ralph/VISUAL-GROUNDCOVER` -- owns) has nothing to multiply
+at the sites actually judged.
+
+### What shipped
+
+Five hand-placed anchor sites, each centred on an existing harvest-node
+cluster and matching a `survey_band2.gd` viewpoint (01-early-forest,
+the quarry-camp ridge, the Warrens' forest approach, 05-late-ridge):
+
+- `deadfall` anchors narrowed to `Mushroom_Common`/`Mushroom_Laetiporus`
+  only, never `DeadTree` -- D45/D41 already reserve standing dead wood for
+  the drained-ground grammar, and reusing it for ordinary litter would blur
+  that signal.
+- `bushes` anchors narrowed to `Fern_1`/`Plant_7`(`_Big`) for understorey
+  banked under canopy, distinct from the open-field `Bush_Common` already
+  scattered there.
+- `saplings` anchors at the layer's own default models, at 3 of the 5 sites.
+- Two `trees` anchors (early-forest, late-ridge) with a wider scale range
+  for old-growth girth beside the young saplings.
+- `trees.variant_retint` gained a `Bark_NormalTree` entry per CommonTree
+  model (previously only `Leaves_NormalTree` varied) -- the top-level
+  `retint` map gave every trunk the same tone regardless of canopy variant,
+  which is the "uniform salmon trunks" complaint exactly. Corridor-wide,
+  not Band-2-scoped (`variant_retint` is keyed by model, not by band).
+
+Verified with a terrain probe (`tools/_probe_band2_floor.gd`) before
+rendering, and a close-range capture (`tools/_capture_band2_floor_closeups.gd`,
+~10m from each site) to confirm the mushroom/fern anchors actually placed
+visible instances -- they are small enough to be sub-pixel at
+`survey_band2.gd`'s normal 30-40m framing, so the wide before/after frames
+alone could not have confirmed this.
+
+### Blind critique, round 2, and a real finding about this scatter system
+
+An independent blind critic (given only the after-frames + references, no
+knowledge of the change) named 01-early-forest-day directly: "near-identical
+canopy size/height/tint... reads as a scatter-brush pass." Tried raising the
+early-forest tree anchor's `count` 2->4 to make the old-growth stand more
+assertive -- **this measurably thinned the same frame's own midground/
+background treeline**, because `_place_anchor`'s attempt budget
+(`count * ANCHOR_ATTEMPTS_PER_INSTANCE`) draws from the layer's single
+shared RNG stream, and `_place_corridor_fill` runs after every anchor in
+that stream for the WHOLE CORRIDOR, not just Band 2. Raising `count`
+reshuffled corridor-wide tree placement and cost more coverage than the
+extra old-growth trees bought. Reverted to `count: 2`; kept the
+`scale_min`/`scale_max` widen (1.4-1.75 -> 1.55-2.0), which is RNG-safe --
+`_consider()` draws exactly one `randf_range()` per placed instance
+regardless of the range's bounds. Confirmed via `frame_stats.py`: frames
+05/07 are bit-identical before/after this revert, 02a differs only at
+noise level -- the fix is scoped to site A alone.
+
+### Not attempted (recorded, not silently dropped)
+
+- **Bark MATERIAL/texture redesign** -- the flat, undetailed bark surface
+  itself. Needs-art; no new texture generated per the project's hard rules.
+- **The `corridor_bands` density_scale mismatch**: Band 2 sits at 0.05,
+  *below* Band 1's 0.07, despite Band 2's own canon identity
+  (`docs/MEADOWS_MACRO_LAYOUT.md` §5) being the closer, denser canopy of
+  the two. This is `vegetation.json` global territory outside a band
+  lane's file ownership -- flagged for the coordinator, same as round-05's
+  own `HARVEST-ALL` finding.
+- The blind critic's other top findings (a red/maroon colour-overlay bug
+  affecting 4 of 8 frames identically in both day and night tags, total
+  absence of creatures in every frame, and distant/empty camp-shot framing
+  in 03/05) are real but pre-existing and out of scope for this lane --
+  confirmed pre-existing by rendering the true `origin/main` baseline
+  (`shots/band2_before/`) before making any change: the same red tint
+  appears identically there. Not touched.
+
+### Inherited/expected test state
+
+`test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh`
+fails, expectedly: `GATE_D_LANE_CONTRACT.md` §4's known defect --
+`scatter_bake.gd`'s fingerprint now covers this exact file, so editing it
+invalidates the committed bake and every boot falls back to computing the
+scatter fresh (~60s stall on this box). This is the coordinator's single
+re-bake to run at integration, not a band lane's -- said here plainly per
+that contract, not fixed on this branch.
+
+### Also fixed in passing
+
+`tools/_probe_band2_floor.gd` (this lane's own new scratch probe) never
+called `quit()`, so the first run idled the SceneTree indefinitely instead
+of exiting -- caught after ~2 hours of unnoticed wall-clock, fixed by
+adding `quit(0)` like every other `_probe_*.gd` in `tools/`.
+
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
