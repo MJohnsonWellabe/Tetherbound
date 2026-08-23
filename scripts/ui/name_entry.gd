@@ -30,14 +30,31 @@ const SPACE := " "
 ## once in the whole game is a thing to explain rather than a thing to use.
 ##
 ## Rows may be ragged; the cursor clamps to the row it is on.
+##
+## DIGITS GET THEIR OWN ROW, and the raggedness that costs is deliberate.
+## They used to be poured into the spare cells at the ends of the two rows the
+## alphabet does not fill -- 26 letters across 10-wide rows leaves four over
+## twice -- which scattered 0-9 across three non-adjacent places: 0-3 at the
+## end of the third row, 4-7 at the end of the sixth, 8-9 at the start of the
+## last. A blind visual-judge pass put it plainly: "finding a character is a
+## hunt." Nothing about that arrangement is guessable, and this grid is the one
+## the player drives with a d-pad, once per creature, for the whole game.
+##
+## Each case now runs A-J / K-T / U-Z, so where a letter lives follows from the
+## alphabet alone, and the two six-cell rows are the price. `_desired_column`
+## below already exists precisely so a ragged row does not drag the cursor left
+## on the way past, so the raggedness costs nothing in navigation -- and a short
+## row that is short for an obvious reason reads better than a full row with
+## four digits stapled to the end of it.
 const ROWS := [
 	["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
 	["K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"],
-	["U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3"],
+	["U", "V", "W", "X", "Y", "Z"],
 	["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
 	["k", "l", "m", "n", "o", "p", "q", "r", "s", "t"],
-	["u", "v", "w", "x", "y", "z", "4", "5", "6", "7"],
-	["8", "9", "-", "'", SPACE, BACKSPACE, DONE],
+	["u", "v", "w", "x", "y", "z"],
+	["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+	["-", "'", SPACE, BACKSPACE, DONE],
 ]
 
 var text: String = ""

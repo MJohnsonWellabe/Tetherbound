@@ -167,14 +167,21 @@ func _check_pad_trigger_opens_a_prefilled_prompt_and_renames() -> void:
 		_fail("ui_down/ui_right/menu_confirm are missing a joypad binding -- cannot reach Done on a pad")
 		return
 
-	# The grid opens at (row 0, col 0); Done sits at the last cell of the
-	# last, 7-wide row (scripts/ui/name_entry.gd::ROWS) -- six downs, six
-	# rights, deliberately never touching a letter cell so the buffer stays
-	# exactly "Buddy" and the assertion below is about the CONFIRM path, not
-	# a second edit.
-	for i in 6:
+	# The grid opens at (row 0, col 0); Done sits at the last cell of the last
+	# row. The counts are DERIVED from `scripts/ui/name_entry.gd::ROWS` rather
+	# than written out, because they were written out -- "six downs, six
+	# rights" against a 7-row grid whose last row was 7 wide -- and went stale
+	# the moment that grid changed shape, failing this test on the confirm
+	# assertion while the navigation was what had actually moved. The route
+	# still deliberately never touches a letter cell, so the buffer stays
+	# exactly "Buddy" and the assertions below are about the CONFIRM path
+	# rather than a second edit.
+	var entry_rows: Array = load("res://scripts/ui/name_entry.gd").ROWS
+	var last_row: int = entry_rows.size() - 1
+	var last_column: int = (entry_rows[last_row] as Array).size() - 1
+	for i in last_row:
 		await _pad(down_button)
-	for i in 6:
+	for i in last_column:
 		await _pad(right_button)
 
 	await _pad(confirm_button)
