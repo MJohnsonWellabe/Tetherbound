@@ -472,7 +472,15 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		# 0.30, raised alongside the move to genuinely dark oxblood palettes: the
 		# add is `colour * EMISSION_FLOOR_ADD`, so a darker tint contributes a
 		# smaller floor and needs a larger coefficient to stay legible.
-		const EMISSION_FLOOR_ADD := 0.30
+		# 0.06, down from 0.30. The floor's job shrank dramatically once the
+		# faction colour moved into the rig's own texture: it no longer has to
+		# manufacture a colour on a near-black surface, only to keep the very
+		# darkest folds from crushing. At 0.30 it was adding the same absolute
+		# amount to the blacks and the mids alike, which halved the texture's
+		# 7.5x contrast ratio and produced the "washed, blacks lifted to grey"
+		# reading a blind round gave the whole ranked cast. An additive floor is
+		# the right tool for a crushing shadow and the wrong tool for a palette.
+		const EMISSION_FLOOR_ADD := 0.06
 		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
 		if tint_luminance < 0.95:
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
