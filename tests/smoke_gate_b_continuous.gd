@@ -209,7 +209,9 @@ func _opening_through_the_first_catch() -> bool:
 	# of the house, with the ground under them resolved by the world rather than
 	# by a hand-written height (D09).
 	if _player != null:
-		_player.global_position = Vector3(6.0, _player.global_position.y + 1.0, 4.0)
+		var stand := _village_centre()
+		_player.global_position = Vector3(
+			stand.x, _player.global_position.y + 1.0, stand.y)
 		_player.velocity = Vector3.ZERO
 		for _i in 90:
 			await physics_frame
@@ -537,3 +539,45 @@ func _segment_passed(label: String, result: Dictionary) -> bool:
 	for line: Variant in (result.get("transcript", []) as Array):
 		print("  %s | %s" % [label, str(line)])
 	return false
+
+
+## Where the village actually is, from the village's own data.
+##
+## The first version of this stood the player at a hand-picked (6, 4) and every
+## later beat was then walked from a coordinate the game never produces. Across
+## five runs the segment failed at five DIFFERENT beats -- the axe swing, Mira's
+## door twice, Tam, Oskar -- with no code change between them, because the walk
+## budgets (1200-1800 frames) are tuned for where the opening really leaves the
+## player and which beat ran out of them first was luck.
+##
+## This is not the full fix; that is to extract the opening and PLAY it, which
+## `ralph/BACKLOG.md` records under CONTINUOUS-CORE. But it removes the invented
+## number, which is the specific thing that made the budgets meaningless.
+## Averaging the hub villagers' own authored positions puts the player among the
+## people the segment then walks to -- Tam goes from 20m away to 11m -- and it
+## stays right if the village is ever moved, which a literal would not.
+##
+## Halda and anyone else outside the hub are excluded by the same radius the
+## village is authored within; including them would drag the centre toward
+## whoever happens to stand furthest out.
+func _village_centre() -> Vector2:
+	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
+	if file == null:
+		return Vector2(11.8, -5.2)
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return Vector2(11.8, -5.2)
+	var sum := Vector2.ZERO
+	var count := 0
+	for entry: Variant in (parsed as Dictionary).get("villagers", []):
+		if not (entry is Dictionary):
+			continue
+		var raw: Array = (entry as Dictionary).get("position", [])
+		if raw.size() < 2:
+			continue
+		var at := Vector2(float(raw[0]), float(raw[1]))
+		if absf(at.x) > 40.0 or absf(at.y) > 40.0:
+			continue
+		sum += at
+		count += 1
+	return (sum / float(count)) if count > 0 else Vector2(11.8, -5.2)
