@@ -3,6 +3,14 @@
 `branch: ralph/PERF-ROG` · `owner report: ralph/OWNER_PLAYTEST_2026-08-23.md`
 · `harness: tools/perf_profile.gd` · `2026-08-23`
 
+Every measurement below was taken against `main` at `a8ed4f0`, whose bake holds
+143,630 placements. `BAND2-FLOOR` landed a re-bake while this branch was in
+flight (144,456, +0.6%) and is merged in; nothing here is sensitive to a
+difference that size, and the two fixes are structural rather than
+density-tuned. Re-confirmed on the merged tree at that bake: village 5.03 ms
+and band4 3.64 ms process time, arbiter 0.026 / 0.010 ms/call, collision sweep
+0.882 / 0.252 ms/call — same shape, same conclusions.
+
 The owner's words were "feels like ten frames per second", and OP23-01 is the
 chapter's #1 SHIP blocker. No container in this project has ROG Ally hardware,
 so **nothing in this report is a device frame rate and nothing here should ever
@@ -271,8 +279,9 @@ set true.
 ## Tests
 
 `godot --headless --path . --script tests/run_tests.gd` —
-**1355 tests, 830,269 assertions, 0 failed**, the same count `ASSESS-REDS`
-recorded on `main`.
+**1362 tests, 836,552 assertions, 0 failed** on the merged tree, the same count
+`RUNTESTS-FILTER` recorded on `main`. (Before merging `main`'s seven new tests
+in: 1355 / 830,269 / 0 failed, matching `ASSESS-REDS`.)
 
 ## Reproducing any of this
 

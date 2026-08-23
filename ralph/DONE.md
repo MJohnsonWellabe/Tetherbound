@@ -640,7 +640,7 @@ adding `quit(0)` like every other `_probe_*.gd` in `tools/`.
 
 ## PERF-ROG — OP23-01, the ROG Ally frame rate: found, measured, fixed
 
-`tests: full suite, 0 failed` · `area: scripts/world/interaction_arbiter.gd,
+`tests: full suite 1362 tests, 836552 assertions, 0 failed` · `area: scripts/world/interaction_arbiter.gd,
 scripts/world/vegetation.gd, scripts/ui/playground_hud.gd,
 data/config/performance.json, tools/perf_profile.gd` · `report:
 ralph/PERF_ROG_REPORT.md`
