@@ -105,6 +105,49 @@ shard (or the unit suite if it's cheap enough to run every commit).
 
 ---
 
+## Phase -1.9 — what the Gate F full-chapter pass found (2026-08-23)
+
+Filed by the `GATE-F` coordinator. Evidence:
+`ralph/GATE_F_EVIDENCE_2026-08-23.md`; instruments
+`tools/gate_f_chapter_run.py` and `tools/_probe_gate_f_corridor.gd`. Each item
+below was measured on the running game or in the shipped data, not inferred.
+
+Nothing here blocks the chapter. Gate F's one hard blocker is Gate B's
+continuous head, which belongs to `ralph/GATEB-PATH` and is already tracked.
+
+### BAND2-THIN — Stone & Root is the chapter's quiet band · `model: sonnet` · `tests: _probe_gate_f_corridor` · QUALITY
+
+Four independent measurements agree, and none of them individually fails a
+threshold — which is why this is one entry and not four:
+
+- sparsest cadence in the chapter: **36.6 points of interest per km**, against a
+  49.6 chapter average and band 5's 81.4;
+- fewest distinct wild species: **4** (Burrowback, Meadowhart, Mudsnout,
+  Trailpup), against 8/9/6/5 in the other bands and 12 chapter-wide;
+- **seven of the chapter's eighteen** 100 m-plus intervals;
+- the single worst gap anywhere in the corridor: **165 m**, at 4,782 m along,
+  broken by a berry cluster.
+
+165 m is ~41 seconds at walk pace, so this is not dead travel and must not be
+fixed as if it were. It is the stretch a player is most likely to call the quiet
+one. Band 2's own lane should rule whether that is deliberate breathing room
+before the Warrens or a hole — the corridor probe reprints all four numbers in
+one run.
+
+### CURVE-DOC-STALE — the curve doc plans against a corridor that no longer exists · `model: sonnet` · `tests: none (doc)` · POLISH
+
+`docs/MEADOWS_PROGRESSION_CURVE.md` §6 ("Deliberately left to the regional
+packages") still says **"Band 3 and Band 5 have zero wild spawns; Band 4 has one
+Meadowhart cluster ... Half the corridor has no creatures in it"** and **"Band 2
+has no trainers at all"**.
+
+Measured on `main` 2026-08-23 by walking the corridor: band 3 has **91** wilds
+and **5** trainers, band 4 **184** wilds and **2** trainers, band 5 **48** wilds
+and **3** trainers, band 2 **2** trainers. D3/D4/D5 landed the ecology after
+that section was written. The section is stale in the project's favour, which is
+the dangerous direction: a future lane reading it would plan to build content
+that already exists. Rewrite §6 against the corridor probe's output.
+
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
 Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by
