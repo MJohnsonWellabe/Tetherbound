@@ -16,7 +16,30 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 ## on the real interaction the objective names.
 const CREATURE_BED_FLAG := "creature_bed_built"
 
-const MESH_PATH := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
+## The camp set's own bed, not the furniture pack's twin bed.
+##
+## `Bed_Twin1.gltf` is a human single bed -- headboard, footboard, white pillow,
+## blue quilt -- and two independent blind critics said the same thing about it
+## without being told what it was for: "a human bed labelled creature bed", and
+## "if the player's five companions get this, it reads as a naming error".
+##
+## `generated_camp/camp_bed.glb` is already installed, already textured, already
+## placed in the world by `band1_lower_meadows/props.json`, and was generated
+## from an OWNER-SUPPLIED reference board
+## (`docs/art/reference/owner-board-2026-08-23-camp-set.png`,
+## `docs/ASSET_LEDGER.md`). A lashed log frame with a stuffed mattress belongs to
+## this game; a bedroom suite does not. No new asset, no generation, and CLAUDE.md's
+## reuse-what-is-installed rule is the reason to prefer it rather than an exception to it.
+##
+## HONEST ABOUT WHAT THIS DOES NOT FIX: a camp bed is still not a NEST. There is
+## no basket, nest, cushion or straw-bed mesh anywhere in the build -- checked --
+## so "the creature bed does not read as a creature's" is only partly reachable by
+## changing a path. The rest is art that is not in the build, recorded as such in
+## `ralph/reports/VISUAL_MAKE_LANE_FINDINGS_2026-08-23.md` rather than claimed here.
+##
+## Raw size is 1.23 x 0.41 x 1.90m (that stand's own note), so it needs no scaling
+## and REST_ANCHOR's 0.42m still lands on the mattress rather than inside it.
+const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
 const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
 
 ## GATE-E: the bed-index namespace, written down because two kinds of bed now

@@ -194,3 +194,42 @@ sheet's non-background pixels, visibly-coloured pixels went from **0% to 55.8%**
 and hue families present from **0 to 10**. That is a measured movement on the
 axis round 1 and round 2 both complained about, which is what
 `ralph/conventions.md` counts as a round that improved.
+
+## 8. Two findings round 2 made that must NOT be actioned as stated
+
+Recorded because both are cases where doing what the critic literally asked
+would re-introduce a defect an earlier critic already had fixed. This sweep has
+paid for that once; the wall is the standing example.
+
+**The glowing windows are a fix, not a bug — but they are a fix with half its
+logic missing.** Round 2: *"every glazed window in the set is a uniformly
+glowing white pane, lit like night windows in a daytime scene, with no interior
+behind."* True. But `data/config/building_prefabs.json` carries its own reason
+for that, in eight prefabs, at `energy` 0.85:
+
+> `"_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own
+> 'most of what makes a building look inhabited', same colour grandpa_house.gd
+> uses"`
+
+So two blind critics have given **opposite** verdicts on the same feature: one
+said black panes made the buildings look uninhabited, the next said lit panes at
+midday look wrong. Both are right, and turning the emission down from the JSON
+would simply walk back to the first complaint.
+
+The actual fix is neither value — it is that the emission is **unconditional**.
+It needs to follow the clock, which lives in `scripts/world/building_prefabs.gd`
+(`emission_enabled` / `emission_energy_multiplier`, lines 341-343), **outside
+this lane's files**. Flagged, deliberately not half-fixed from the data side.
+
+**The buildable wall was re-reported, and is still not a defect.** Round 2:
+*"the top plate slants (left end higher) with a dark gap under it... the bottom
+diagonal brace is sliced off mid-member at the panel border."* This is the
+finding that was DISPROVEN earlier today by pulling raw vertex data: the panel is
+a clean 2x3 m rectangle, the diagonal is the intentional Tudor V-brace, and the
+"black gap" is wood-grain AO. No change was made then and none is made now.
+
+Worth recording that it recurred, because "an independent critic said it again"
+is normally this sweep's strongest signal and here it is not evidence of
+anything except that the brace reads as a defect at survey framing. If a third
+critic reports it, the useful response is to make the brace read as deliberate
+-- not to straighten it.
