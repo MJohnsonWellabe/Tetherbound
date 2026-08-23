@@ -78,8 +78,20 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 
 	# Tam first: all four tools must enter through the one-time production
 	# conversation before the Satchel route has anything to assign.
-	if not await _visit_villager("Tam", "", 1):
+	# TWICE. GATEB-COORD: `village_npcs.json` gives Tam two one-time gift
+	# branches in order -- `village_tam_tools` (which sets `tam_tools_given`)
+	# and then `village_tam_orbs` (which sets `recipe_orb_basic`) -- and one
+	# conversation only fires the first. `recipe_orb_basic` is what unlocks the
+	# Foreman's hammer below, so a single visit left the chapter with no way
+	# into build mode at all. Exactly two: with both flags set his next branch
+	# is `village_tam_challenge`, which is a fight and not this segment's beat.
+	if not await _visit_villager("Tam", "", 2):
 		return _failures
+	for flag_id in ["tam_tools_given", "recipe_orb_basic"]:
+		if not _progression_has(flag_id):
+			_fail("two conversations with Tam and '%s' is unset; his gift branches are "
+				% flag_id + "what the Foreman's hammer and the orb recipe wait on")
+			return _failures
 	for tool_id in ["axe", "pickaxe", "knife", "torch"]:
 		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
 			_fail("Tam's completed dialogue did not leave exactly one %s in the Satchel" % tool_id)
@@ -158,7 +170,13 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		_fail("%s has no enabled production greeting prompt" % who)
 		return false
 	for cycle in cycles:
-		if not await _walk_to_and_activate(prompt, 1400):
+		# 1400 frames is 23 seconds of walking, which is fine for a villager a
+		# few metres away and short for one on the other side of the village --
+		# the Foreman stands at (0, -6) and Oskar at (22, -6), with the well,
+		# two cottages and a wagon between them. Derived from the leg.
+		if not await _walk_to_and_activate(prompt,
+				maxi(1400, 600 + int(_player.global_position.distance_to(
+					prompt.global_position) * 120.0))):
 			var holder: Variant = _arbiter.call("winning_provider")
 			_fail(("natural controller travel could not activate %s cycle %d "
 				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
@@ -525,9 +543,49 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 ##
 ## So the offer is the success condition and the distance is only the fallback
 ## for something that is not currently winning.
+## GATEB-COORD: pauses while the player cannot move, and starts over rather
+## than spending one budget in one attempt.
+##
+## A wild creature picking a fight freezes locomotion
+## (`encounter_director.gd::_set_exploration_active()`), and a walker that
+## keeps pushing at a frozen body reads every frame as a stall and then sets
+## off in a stale detour direction when the fight ends. The Quarry Foreman
+## stands beside the inn, so getting to him means going round it -- and one
+## 1400-frame attempt from a navigator boxed into a corner stays boxed in:
+##
+##   natural controller travel could not activate Quarry Foreman cycle 1
+##   (7.0m away, arbiter winner=EncounterDirector under MeadowsPlayground)
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
+	for attempt in 3:
+		if await _one_approach(target, budget):
+			return true
+		_stop_left_stick()
+		for _i in 30:
+			await _tree.physics_frame
+	return false
+
+
+## Frames spent held do NOT count against the budget, for the same reason
+## `stick_navigator.gd::walk_to()` says: the budget measures walking, and a
+## fight that freezes the body for twenty seconds is not twenty seconds of
+## failing to get somewhere. Counting them spent the whole allowance waiting
+## and then reported the villager as unreachable from twenty-nine metres away.
+func _one_approach(target: Node3D, budget: int) -> bool:
 	_nav.reset()
-	for _i in budget:
+	var walked := 0
+	var held := 0
+	while walked < budget:
+		if not _nav.can_walk():
+			# Hands off while a fight owns the body; nothing learned during it
+			# says anything about what is in the way.
+			held += 1
+			if held > 36000:
+				return false
+			_stop_left_stick()
+			_nav.reset()
+			await _tree.physics_frame
+			continue
+		walked += 1
 		if _arbiter.call("winning_provider") == target:
 			await _tap_action(&"interact")
 			return true

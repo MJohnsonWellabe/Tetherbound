@@ -134,7 +134,7 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 		to.y = 0.0
 		if to.length() <= close_enough:
 			return true
-		if not _can_walk():
+		if not can_walk():
 			held += 1
 			if held > HELD_FRAMES:
 				return false
@@ -150,12 +150,15 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	return false
 
 
-## Is the body this is driving actually able to move right now?
+## Is the body this is driving actually able to move right now? Public, because
+## a caller that drives `step()` itself -- `gate_a_npc_gather_segment.gd` walks
+## up to a villager one frame at a time so it can watch the interact line --
+## needs the same answer and must not have its own copy of it.
 ##
 ## Read off the player rather than passed in, because every harness in this
 ## repo finds its player by exactly this method and none of them should have to
 ## remember to wire up a fight check.
-func _can_walk() -> bool:
+func can_walk() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
 	if not _player.has_method("locomotion_enabled"):

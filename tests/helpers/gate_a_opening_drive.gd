@@ -1040,11 +1040,24 @@ func _hold_the_fight_where_it_was() -> void:
 ## Reads the game's own pre-launch verdict rather than guessing at geometry:
 ## `eligible` is exactly the condition that decides whether the throw gets its
 ## launch assist, and `first_hit` names whatever is in the way when it does not.
+## How close the trainer wants to be before hunting sideways for a clear line.
+## `data/config/combat.json`'s throw is good well past this; the point is that
+## a short line has less in it, not that a long one cannot be thrown.
+const THROW_RANGE_WANTED := 6.0
+
+
 func _step_until_the_shot_is_clear() -> bool:
 	var throw: Node = _combat.call("throw_aim")
 	if throw == null or not throw.has_method("launch_assist_diagnostics"):
 		return true
-	for attempt in 12:
+	# GATEB-COORD: twenty-four, not twelve, and the sidestep widens as it goes.
+	#
+	# The wild creature is WANDERING while this looks for a line, so the spot
+	# that clears the shot moves too; a fixed twelve identical 3m strafes ran
+	# out mid-search often enough to fail whole thirty-minute runs on the
+	# opening's second launch. A player keeps circling until they can see the
+	# thing, and each step out is a little wider than the last.
+	for attempt in 24:
 		var report: Dictionary = throw.call("launch_assist_diagnostics")
 		if bool(report.get("eligible", false)):
 			return true
@@ -1060,18 +1073,31 @@ func _step_until_the_shot_is_clear() -> bool:
 			if await _aim_at_wild(240):
 				continue
 			print("re-aim on the creature itself failed (%s); stepping aside" % reason)
-		# Strafe rather than close in: the reticle problems here are things
-		# STANDING BETWEEN the trainer and the creature, and sideways is what
-		# clears a line that forward does not.
+		# CLOSE FIRST, strafe second.
+		#
+		# GATEB-COORD: sideways is what clears a line past something standing
+		# in it, and that reasoning is right -- but it was being applied from
+		# twenty and thirty metres out, where the meadow puts a boulder or a
+		# tree in almost every line and one strafe simply swaps which one. The
+		# shortest line has the least in it, so distance is closed until the
+		# creature is within `THROW_RANGE_WANTED` and only then is the search
+		# sideways. This flake cost two whole thirty-minute continuous runs on
+		# the opening's second launch.
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		var sideways := to.cross(Vector3.UP).normalized()
-		if attempt % 2 == 1:
-			sideways = -sideways
-		var step := _player.global_position + sideways * 3.0
-		if to.length() > 7.0:
-			step += to.normalized() * 2.5
-		print("shot blocked by %s (%s); stepping aside" % [blocked_by, reason])
+		var step := Vector3.ZERO
+		if to.length() > THROW_RANGE_WANTED:
+			step = _player.global_position \
+				+ to.normalized() * minf(to.length() - THROW_RANGE_WANTED + 1.0, 8.0)
+			print("shot blocked by %s (%s) from %.1fm; closing in" % [
+				blocked_by, reason, to.length()])
+		else:
+			var sideways := to.cross(Vector3.UP).normalized()
+			if attempt % 2 == 1:
+				sideways = -sideways
+			step = _player.global_position + sideways * (2.0 + 0.5 * float(attempt / 2))
+			print("shot blocked by %s (%s) from %.1fm; stepping aside" % [
+				blocked_by, reason, to.length()])
 		await _drive_body_toward(_player, step, 26)
 		_stop_left_stick()
 		for _i in 6:
