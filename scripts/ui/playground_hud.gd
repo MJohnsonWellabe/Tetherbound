@@ -1817,6 +1817,13 @@ func _process(delta: float) -> void:
 	# bar visibility is actually in place, or it is always one frame stale.
 	_reflow_left_stack()
 	_update_party_strip()
+	# AFTER `_update_party_strip()`, not alongside `_yield_bottom_to_build_menu()`
+	# above: `_update_party_strip()` can call `party_strip.gd::show_strip()` on
+	# any frame the roster actually changes (a catch, a level, a faint), which
+	# sets the widget's own `.visible = true` again — running the combat yield
+	# first would have that overwrite this frame's hide the instant anything
+	# in the party moved. Running last gives this the final word every frame.
+	_yield_left_stack_to_combat_hud()
 	_update_objective()
 	_update_region_banner()
 	_update_exploration_legend()
@@ -2204,6 +2211,37 @@ func _combat_is_aiming() -> bool:
 	return combat != null and combat.has_method("is_aiming") and bool(combat.call("is_aiming"))
 
 
+## Stands down the two exploration widgets that `combat_hud.gd` draws its own
+## copy of for the length of a fight: `_creature_block` (this HUD's "ACTIVE
+## COMPANION" plate -- name, level, HP, energy) and `_party_strip` (this HUD's
+## own `party_strip.gd` mount, headed "TEAM n / 5"). `combat_hud.gd` mounts a
+## SECOND, independent `party_strip.gd` instance of its own (`_party_strip` in
+## that file, built in its `_ready()`) for mid-fight switching, and draws the
+## active creature's name/level/HP/energy again in `AllyPanel` (`_draw_ally()`)
+## -- so leaving this HUD's versions up named the same creature in three
+## places on screen at once and let combat's higher `UITokens.LAYER_COMBAT`
+## CanvasLayer win the pixels, exactly the frame a blind critic captured
+## (`shots/ui/10-combat-hud.png`: "TEAM 5/5" printing straight through a
+## companion panel's own "120 / 120"). The minimap and objective block have no
+## equivalent anywhere in `combat_hud.gd` and are deliberately left out of this
+## function -- hiding them would take away information combat never replaces.
+##
+## Plain `.visible` writes, not a fade: `_creature_block` is a bare `Control`
+## with no animation of its own, and `party_strip.gd::_process` already
+## early-returns its fade-timer bookkeeping whenever `not visible`
+## (`if _pinned or not visible: return`), so forcing it off here cannot fight
+## the widget's own reveal/hide tween -- it simply pauses mid-state and picks
+## up again once this sets `.visible = true` back on the frame the fight ends,
+## which is also the frame `_update_creature_block()`/`_update_party_strip()`
+## next redraw real content into both, so nothing stale is left showing.
+func _yield_left_stack_to_combat_hud() -> void:
+	var combat := _combat_is_running()
+	if _creature_block != null:
+		_creature_block.visible = not combat
+	if _party_strip != null:
+		_party_strip.visible = not combat
+
+
 func _use_hotbar_slot(slot_index: int) -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var db: RefCounted = _game.get("items")
@@ -2474,12 +2512,49 @@ func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = 
 ## `_exploration_legend_should_show()` above already stands the legend down on
 ## exactly this predicate. The hotbar is inert whenever something owns input,
 ## so again only the drawing of it is taken away.
+##
+## Also the one place both `_prompt_label.text` writers (`_ready()`'s seed and
+## `_on_prompt_changed()`) get read back every frame, which is what makes this
+## the right spot for the emptiness check below rather than a second one at
+## each write site -- a write site added later would silently miss a
+## duplicated check the way `input_owner.gd`'s header describes for the
+## hotbar leak. A blind critic caught the failure of having no check at all:
+## `_prompt_label` carries its own backing plate (`prompt_box` above) so that
+## the contextual line reads over grass instead of floating bare -- but
+## `fit_content` only collapses the TEXT to zero height when `text` is empty,
+## not the plate's own `content_margin_top`/`bottom`, so an empty prompt still
+## drew an unlabelled 800x12 pill bottom-centre of every frame with nothing to
+## say. Gating on `not text.is_empty()` here removes the plate exactly when
+## there is no line for it to hold, without touching `text` itself --
+## `_exploration_legend_should_show()`'s recall check and the legend text
+## builder both still read `_prompt_label.text` to know whether the prompt
+## currently owns "Call out", and clearing the string instead of hiding the
+## node would have broken both of those reads.
+##
+## The hotbar half of the swap also covers `_combat_is_running()` now, folded
+## into the same `_hotbar_panel.visible` write rather than a second function
+## racing this one for the same node -- whichever ran second would win and
+## silently undo the other's answer. `combat_hud.gd` draws its own move grid
+## and `Orbs N` readout (`_grid_panel`/`_orbs`) directly over this HUD's
+## bottom-right corner on its own higher `UITokens.LAYER_COMBAT` CanvasLayer,
+## a real overlap a blind critic caught (`shots/ui/10-combat-hud.png`:
+## hotbar slot chips and "Orbs 10" compositing through the move grid).
+## CONTROLLER-MAP still routes hotbar presses through the d-pad in a fight
+## ("stays live... reachable mid-fight") -- that is `_read_hotbar_input()`'s
+## own gate (`_world_input_allowed(false, true)`), unrelated to this node's
+## `visible` flag, and PlaygroundHUD's `_process` keeps running through a
+## fight (combat does not pause the tree) so the poll is unaffected by the
+## panel going undrawn. Only the SAME thing OW11 already took away for the
+## build menu -- the drawing -- goes with it here; the prompt is left out of
+## this combat branch because it already carries its own combat dedup
+## (`_prompt_belongs_to_combat()` blanks its text once the fight owns it),
+## and the emptiness check just above already hides the plate for that case.
 func _yield_bottom_to_build_menu() -> void:
 	var yielding := _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
 	if _hotbar_panel != null:
-		_hotbar_panel.visible = not yielding
+		_hotbar_panel.visible = not yielding and not _combat_is_running()
 	if _prompt_label != null:
-		_prompt_label.visible = not yielding
+		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
 
 
 func _build_menu_is_open() -> bool:
