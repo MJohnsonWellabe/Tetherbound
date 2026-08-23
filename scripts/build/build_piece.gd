@@ -53,7 +53,7 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	_model = scene.instantiate() as Node3D
 	_model.scale = model_scale
 	add_child(_model)
-	BUILD_MATERIAL_FINISH.apply(_model, mesh_path)
+	BUILD_MATERIAL_FINISH.apply(_model)
 	if not light.is_empty():
 		_build_light(light)
 	if not solid:

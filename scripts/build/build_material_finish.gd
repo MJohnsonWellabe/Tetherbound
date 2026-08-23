@@ -31,32 +31,55 @@ extends RefCounted
 ## kit material name this file knows about; anything not listed here (only
 ## `MI_WindowGlass` today) is left exactly as imported, since a window pane
 ## reading as glass is correct, not a defect.
+##
+## VISUAL-CORRIDOR fix (2026-08-23): `MI_RoundTiles` used to carry
+## `"albedo": Color(0.62, 0.48, 0.42)` here -- a BUILD-KIT-2 desaturate-toward-
+## terracotta pass answering an even older "bright glossy salmon plastic"
+## critique. Multiplied against `T_RoundTiles_BaseColor.png`'s own warm
+## orange-brown (measured ~(180,85,48) sRGB, `tools/_probe_roof_mat.gd`-style
+## direct pixel sample), that 0.62/0.48/0.42 multiply lands around sRGB
+## (144,60,28) -- a dark, saturated red-brown close enough to
+## `building_prefabs.json`'s own `"Banner": "#7a2430"` (Team Tether's
+## authored oxblood) that a blind critic read the buildable roof as wearing
+## the enemy's colour ("23-roof.png ... dark, glazed, oxblood red ... sitting
+## in exactly the colour band the project reserves for Team Tether danger").
+## `data/config/building_prefabs.json`'s cottage/farmhouse/workshop recipes
+## never retint `MI_RoundTiles` at all (only the inn does, deliberately, to
+## read as a different building) -- village roofs are this SAME glTF module
+## at its native imported colour, confirmed by comparing
+## `shots/structures/02-cottage_a.png` (bright, warm, correct orange-red
+## terracotta, no override) against the old `23-roof.png` (dark oxblood) from
+## the same capture tool and lighting rig. Dropping the `albedo` key here
+## restores that native colour -- `apply()` below only sets
+## `flat.albedo_color` when a finish entry HAS an `"albedo"` key, so a
+## duplicated material with none keeps the imported (1,1,1,1) multiplier,
+## i.e. the plain texture, the same "actual value" every cottage roof
+## already shows. `roughness`/`specular` stay set (still killing the
+## texture-driven shine BUILD-KIT-2's header describes) since that part of
+## the earlier fix was never the reported defect -- only the invented colour
+## was.
 const FINISH := {
 	"MI_Plaster": {"roughness": 0.92, "specular": 0.22},
 	"MI_WoodTrim": {"roughness": 0.72, "specular": 0.28},
-	"MI_RoundTiles": {"roughness": 0.80, "specular": 0.18, "albedo": Color(0.62, 0.48, 0.42)},
+	"MI_RoundTiles": {"roughness": 0.80, "specular": 0.18},
 	"MI_UnevenBrick": {"roughness": 0.85, "specular": 0.20},
 	"MI_RockTrim": {"roughness": 0.85, "specular": 0.20},
 }
 
-## BUILD-KIT-3: the roof mesh's ridge cap is a SECOND surface on the same
-## glTF, sharing `MI_WoodTrim` with every wall's exterior timber trim (see
-## `tools/diag_roof_wall_bounds.gd`'s sibling, not shipped, which listed
-## `Roof_RoundTile_2x1.gltf`'s two surfaces as `MI_RoundTiles`/`MI_WoodTrim`).
-## `MI_WoodTrim`'s own entry above stays bright orange on purpose -- that is
-## correct on a wall's cross-brace -- so a blanket recolour there would fix
-## the ridge cap and break every wall in the same stroke. The blind critic's
-## #4 defect ("ridge caps are a different material from the roof they cap...
-## flat bright almost-plastic orange against darker saturated terracotta
-## tile beneath") is scoped to the roof mesh specifically, so this overrides
-## the SAME surface only when the mesh being finished is the roof, by mesh
-## path rather than by node name (glTF import can rename nodes on collision,
-## the path cannot). Close to `MI_RoundTiles`' own tile tone above rather
-## than identical to it -- a ridge cap is still a capping course, not the
-## flat field tile, so a little contrast is correct; a different family of
-## colour (raw orange) was the actual defect.
-const ROOF_RIDGE_TRIM := {"roughness": 0.80, "specular": 0.18, "albedo": Color(0.56, 0.40, 0.34)}
-const ROOF_MESH_PATH := "res://assets/buildings/quaternius_medieval/Roof_RoundTile_2x1.gltf"
+## VISUAL-CORRIDOR fix: BUILD-KIT-3 used to override the roof mesh's ridge
+## cap (`MI_WoodTrim`, shared with every wall's exterior timber trim) to a
+## bespoke darker tone "close to `MI_RoundTiles`' own tile tone" -- i.e.
+## close to the invented oxblood-adjacent colour this file no longer
+## applies. That override existed to fix a contrast mismatch between the
+## ridge and a tile that had been artificially darkened; now that the tile
+## is back to its native colour (see `FINISH["MI_RoundTiles"]` above), the
+## mismatch it was answering no longer exists -- `shots/structures/
+## 02-cottage_a.png`'s own ridge cap is plain `MI_WoodTrim` with no
+## roof-specific override and reads fine against its native-colour tile. The
+## ridge cap on a buildable roof now falls through to `MI_WoodTrim`'s own
+## generic entry above (same matte finish every wall's trim gets), so it
+## matches the village roofs it sits beside instead of inventing a second
+## red.
 
 ## BUILD-KIT-3: blind critic's #3 defect -- "horizontal and diagonal timbers
 ## cross the room at roughly waist height near corners and in front of the
@@ -73,8 +96,9 @@ const ROOF_MESH_PATH := "res://assets/buildings/quaternius_medieval/Roof_RoundTi
 ## open leaf is seen from both sides in normal play, and `CULL_BACK` on it
 ## would make the leaf disappear depending which side the camera is on. A
 ## blanket `MI_WoodTrim` cull change would fix the brace and break the door
-## in the same stroke -- the same shape of mistake `ROOF_RIDGE_TRIM` above
-## avoids for colour.
+## in the same stroke -- the same shape of mistake the roof's ridge-cap
+## comment above avoids for colour (a fix scoped to what actually needs it,
+## not a blanket change to every user of the shared material name).
 ##
 ## So this is scoped to the WALL MESH INSTANCE by name, not to the material:
 ## only `Wall_Plaster_Straight`/`Wall_Plaster_Door_Flat`'s own combined mesh
@@ -88,8 +112,7 @@ const WALL_MESH_NAMES := {
 }
 
 
-static func apply(model: Node3D, mesh_path: String = "") -> void:
-	var is_roof := mesh_path == ROOF_MESH_PATH
+static func apply(model: Node3D) -> void:
 	for mesh_instance in _mesh_instances(model):
 		var mesh := mesh_instance.mesh
 		if mesh == null:
@@ -102,8 +125,6 @@ static func apply(model: Node3D, mesh_path: String = "") -> void:
 			var std := mat as StandardMaterial3D
 			var is_wood_trim := std.resource_name == "MI_WoodTrim"
 			var finish: Variant = FINISH.get(std.resource_name, null)
-			if is_roof and is_wood_trim:
-				finish = ROOF_RIDGE_TRIM
 			if finish == null and not (is_wall_mesh and is_wood_trim):
 				continue
 			var flat := std.duplicate() as StandardMaterial3D
