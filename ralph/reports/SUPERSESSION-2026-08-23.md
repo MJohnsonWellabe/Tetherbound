@@ -22,6 +22,36 @@ Four also-green `ralph/*` branches (`BAND2-FLOOR`, `SITE-DRESSING`,
 `SITE-SHOTS`, `CREATURE-PRESENTATION`) were rebased onto this newer `main`
 and re-pushed this pass — not yet in this list pending their fresh CI.
 
+**Third update, same day.** `ralph/BAND2-FLOOR` landed on `main` via sweep
+(its scatter-perf-budget test needed a re-bake first — done directly on the
+branch, `scripts/world/bake_playground_scatter.gd`, 144456 placements/115
+drained, 256 regions — then it went green and swept). A separate lane
+independently built `ralph/integration-W2` (SITE-DRESSING +
+CREATURE-PRESENTATION + SITE-SHOTS-diagnosis + RUNTESTS-FILTER, off the
+prior main tip) with its own correct BAND2-FLOOR-rebake finding; since
+BAND2-FLOOR landed first and the two branches had diverged, `integration-W2`
+no longer fast-forwarded — merged `main` back into it (clean except one
+`ralph/DONE.md` append conflict, kept both sections) and re-pushed. Its one
+CI red (`verify-regions-shard`, Burrow Warrens `vault`-chamber walk failing
+by 0.3m over a 3.5m threshold) reproduced clean on an isolated local run of
+the exact failing commit — a flake, not a regression; a job rerun confirmed
+it. Once `integration-W2` lands, verified by content diff (not just
+`git cherry`, which misreports across merge-commit-shaped histories) against
+its own tip:
+
+- `ralph/SITE-DRESSING`, `ralph/CREATURE-PRESENTATION`, `ralph/STRANDED-P3` —
+  zero unique commits; fully contained, now safe to delete.
+- `ralph/SITE-SHOTS` — `git diff ... -- site/` is empty (no content
+  difference at all); the remaining raw diff is pure deletions of content
+  added to `main` after this branch's base, the same stale-base artifact
+  already diagnosed for `GATE-E-LOGIC`. Fully superseded, safe to delete.
+- `ralph/GATE-E-LOGIC` — both substantive commits are present in
+  `integration-W2`'s ancestry under their original `main` hashes
+  (`9d1377ad`, `653f4cdc`); the remaining diff is the same stale-base
+  deletion artifact. Fully superseded, safe to delete.
+- `ralph/RUNTESTS-FILTER` — already deleted from the remote (landed and
+  swept earlier in this same day's sequence).
+
 Branch deletion remains blocked from Claude sessions at the credential
 level: `git push origin --delete` returns HTTP 403, and the GitHub MCP
 server exposes no delete-branch tool. Whoever holds owner credentials
@@ -55,6 +85,15 @@ git push origin --delete ralph/gate-d-wild-streaming
 git push origin --delete ralph/STRANDED-P3
 git push origin --delete claude/gate-a-core-verbs-8aaw7g
 git push origin --delete chatgpt/owner-playtest-2026-08-21
+```
+
+Contained once `ralph/integration-W2` lands (verified by content diff against
+its own tip, not just ancestry — see the third-update note above):
+
+```
+git push origin --delete ralph/SITE-DRESSING
+git push origin --delete ralph/CREATURE-PRESENTATION
+git push origin --delete ralph/SITE-SHOTS
 ```
 
 Patch-equivalent (every commit's diff already on main under a different
