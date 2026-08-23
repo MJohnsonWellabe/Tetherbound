@@ -3,6 +3,54 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## RUNTESTS-FILTER — `--only=` selector for run_tests.gd, and why CI run 2180 was red
+
+`tests: full suite 1362 tests, 830325 assertions, 0 failed` · `area: tests/run_tests.gd`
+
+`ralph/RUNTESTS-FILTER`'s own CI run (2180, commit b63ecc6) came back red, but not
+because of anything in its diff. Merged `origin/main` (integration-W1, +101 files,
+no conflicts) and re-ran everything to find the actual cause rather than trusting
+either "red" or "green" at face value:
+
+- **`verify-unit-tests` (all four shards) passed on the original commit, before
+  any merge.** The `--only=`/`--shard=` harness change never broke sharding or
+  collection — it was never the suspect it looked like.
+- **`verify-continuous-core-known-red` failing is not a bug.** That job carries
+  `continue-on-error: true` specifically because CONTINUOUS-CORE has never
+  passed (see its own comment in `ci.yml`); its failure doesn't gate the run.
+- **`verify-owner-regressions-shard` was the real red**, on
+  `smoke_party_count_after_catches.gd`: "could not engage the real wild body...
+  the winning prompt is Interactable, not the target" on the second catch
+  (`Wild_bramblebun_0_2`). Ran this smoke test standalone, twice in a row, on
+  the identical merged commit with zero code changes in between: **PASS, then
+  FAIL**, both times stalling on the same creature. `encounter_director.gd`
+  seeds each wild spawn's placement RNG deterministically
+  (`hash("wild_spawn_%d" % order)`), so this isn't a random-position issue —
+  it's some other non-determinism (most likely physics/movement drift over the
+  ~1500-2000 frame walk-and-sidestep sequence `_close_in_until_offered()` runs)
+  that occasionally lands the player close enough to a neighbouring prop that
+  the arbiter's correct nearest-wins behaviour (established in the
+  `Gate C` / integration-ABC entry above this one) never resolves onto the
+  creature within the harness's 40-attempt budget. Confirmed unrelated to this
+  branch: that file has had one commit since the integration-ABC era, this
+  branch touches only `tests/run_tests.gd`, and the job doesn't invoke
+  `run_tests.gd` at all — it runs smoke scripts directly.
+
+**Left un-"fixed" deliberately**: chasing genuine simulation non-determinism
+down to its source is a different, larger job than this lane owns, and the
+test's own header already documents `_close_in_until_offered()` as bounded/
+best-effort. Flagging it here rather than papering over it — a future CI run
+landing red on `verify-owner-regressions-shard` with this exact message is
+this same pre-existing flake, not a new regression, unless the failing
+creature/behaviour differs.
+
+Verified on the merged branch before push: full suite 1362 tests / 0 failed;
+`--only=test_harvest.gd` (22 of 105 files, 22 tests, 0 failed);
+`--only=test_harvest.gd::test_gather_with_the_right_tool_pays_the_full_amount`
+(1 of 105 files, 1 test, 0 failed); `--only=` against a selector matching no
+file hard-errors with exit 2, as designed; `--shard=1/4` (27 of 105 files, 327
+tests, 0 failed) — sharding and full-run behaviour both unchanged from before
+this flag existed.
 ## GATEB-PATH — the village pathing blocker is fixed; the continuous run now stalls three beats later
 
 `branch: ralph/GATEB-PATH` · `area: tests/helpers/stick_navigator.gd (new), tests/helpers/gate_a_npc_gather_segment.gd, tests/helpers/gate_a_material_route.gd, tests/helpers/gate_a_opening_drive.gd, tests/helpers/gate_a_build_segment.gd, tests/smoke_gate_b_continuous.gd, tools/_probe_village_route.gd + _probe_harvest_arbiter.gd + _probe_scatter_fill.gd (new probes)`
