@@ -609,6 +609,18 @@ func _phase_world() -> void:
 		return
 	var world: Node = packed.instantiate()
 	root.add_child(world)
+	# `current_scene` is what `playground_hud.gd::_ensure_minimap_baked()` reads
+	# to find the world -- `get_tree().get_current_scene()`, guarded by
+	# `has_method("ground_height_at")`. Adding the world as a plain child of
+	# `root` leaves `current_scene` null, so that guard returned early every
+	# frame, `map_baker.gd::bake_cached()` never ran, the minimap's terrain
+	# texture stayed null and the widget drew its frame, fog and markers over
+	# the live 3D view with no map under them. The round-1 blind critic read
+	# that as "the minimap is a frame around sky with no terrain or road"
+	# (`05-hud-exploration`, `07-minimap`) and as an empty instrument rather
+	# than an unbaked one. One assignment, because a scene that is in the tree
+	# but not the current scene is a state no real play session is ever in.
+	current_scene = world
 	for i in BOOT_FRAMES:
 		await physics_frame
 	print("[world] boot settled")
@@ -718,6 +730,21 @@ func _phase_world() -> void:
 			await _settle(12)
 
 			var wild: Node3D = director.call("wild_creature") as Node3D
+			# The survey's own camera is the current one (`make_current()`
+			# above) and was framed for the EXPLORATION shot, tens of metres
+			# from this cluster -- it is not carried along by teleporting the
+			# player, and the rig's camera that `_aim_at` steers is neither
+			# current nor processing. So both combat frames were shot from the
+			# old vantage, and `combat_hud.gd::_update_capture_reticle()` --
+			# which unprojects the wild creature through
+			# `get_viewport().get_camera_3d()` and gives up when the target is
+			# outside that frustum -- had nothing to place a ring on. The
+			# round-1 critic recorded `11-capture-reticle` as having no
+			# reticle; the reticle was working and the camera was pointed
+			# somewhere else.
+			if wild != null:
+				_frame_combat(camera, player, wild)
+				await _settle(6)
 			if wild == null:
 				_failures.append("10-combat-hud: no practice-role wild creature near the cluster")
 			else:
@@ -736,6 +763,7 @@ func _phase_world() -> void:
 					await _settle(12)
 					if bool(manager.call("is_aiming")):
 						_aim_at(rig, wild)
+						_frame_combat(camera, player, wild)
 						await _settle(6)
 						await _shoot("11-capture-reticle")
 					else:
@@ -767,6 +795,27 @@ func _cluster_centre(director: Node, role: String, fallback: Vector3) -> Vector3
 ## same shape `capture_ui_final.gd::_aim_at` uses -- close enough for a
 ## legible reticle frame; this is a screenshot, not a real thrown orb, so no
 ## launch-assist precision is needed.
+## Put the survey's current camera behind the player and looking at the
+## creature being fought, so both combat frames photograph the fight rather
+## than the vantage the exploration shot was framed from -- and so the HUD's
+## own reticle, which unprojects the target through whichever camera is
+## current, has the target on screen to place a ring on.
+##
+## Over-the-shoulder from behind the player, offset along the player->wild
+## axis, matching the three-quarter framing the exploration shot uses.
+func _frame_combat(camera: Camera3D, player: Node3D, wild: Node3D) -> void:
+	if camera == null or player == null or wild == null:
+		return
+	var target: Vector3 = wild.call("centre") if wild.has_method("centre") else wild.global_position
+	var along := target - player.global_position
+	along.y = 0.0
+	if along.length() < 0.01:
+		along = Vector3(0.0, 0.0, -1.0)
+	along = along.normalized()
+	camera.global_position = player.global_position - along * 5.5 + Vector3.UP * 2.6
+	camera.look_at((player.global_position + target) * 0.5 + Vector3.UP, Vector3.UP)
+
+
 func _aim_at(rig: Node, wild: Node3D) -> void:
 	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null:
