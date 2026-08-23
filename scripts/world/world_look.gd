@@ -186,6 +186,11 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 		sun_cfg["angular_distance"] = float(sun_over["angular_distance"])
 	if sun_over.has("shadow_enabled"):
 		sun_cfg["shadow_enabled"] = bool(sun_over["shadow_enabled"])
+	# VIS-WORLD: see _apply_sun's own comment -- the weather presets' existing
+	# angular_distance overrides are a no-op under Compatibility, so this is
+	# the key that lets an overcast preset actually soften its own light.
+	if sun_over.has("shadow_opacity"):
+		sun_cfg["shadow_opacity"] = float(sun_over["shadow_opacity"])
 
 	var sky_over: Dictionary = _weather.get("sky", {})
 	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour"]:
@@ -361,6 +366,28 @@ func _apply_sun(cfg: Dictionary) -> void:
 	sun.shadow_normal_bias = float(cfg.get("shadow_normal_bias", 1.4))
 	sun.shadow_bias = float(cfg.get("shadow_bias", 0.06))
 	sun.shadow_blur = float(cfg.get("shadow_blur", 1.0))
+	# VIS-WORLD. The overcast lever that actually reaches this renderer.
+	#
+	# Three independent blind critics named the same thing: weather changes
+	# particles but not light -- "sun shadows stay identically sharp and long
+	# under clear, cloudy, fog and rain", and "overcast with crisp directional
+	# shadows is a contradiction the eye catches instantly". All three weather
+	# presets were already ASKING for soft shadows: cloudy and rain set
+	# angular_distance 3.0, fog 2.5. None of it did anything, because
+	# light_angular_distance is one of the two properties this function's own
+	# comment above records as a no-op under Compatibility -- which is the
+	# renderer the game ships (RB4/D01). So the presets carried the right
+	# intent through a property that cannot express it, and the defect
+	# survived every round that looked at the config and saw a soft-shadow
+	# number sitting there.
+	#
+	# shadow_opacity is not a filtering feature -- it scales how much the
+	# shadow term darkens, so it works where blur and angular distance do
+	# not. It is also the one that steps around R5.2's trap recorded above:
+	# the shadow map still EXISTS, so Terrain3D never sees the missing-shadow
+	# case that rendered the whole ground as fully occluded. A faint shadow
+	# is what overcast actually looks like; no shadow blanks the terrain.
+	sun.shadow_opacity = float(cfg.get("shadow_opacity", 1.0))
 
 
 ## An image sky if the time of day names one, the procedural gradient otherwise.

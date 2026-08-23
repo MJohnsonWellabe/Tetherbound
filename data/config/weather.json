@@ -18,7 +18,9 @@
       "weight": 1.2,
       "sun": {
         "energy_mult": 0.6,
-        "angular_distance": 3.0
+        "angular_distance": 3.0,
+        "_comment_shadow_opacity_vis_world": "VIS-WORLD. `angular_distance` above is a NO-OP under the Compatibility renderer the game ships (world_look.gd::_apply_sun's own comment; EV4-textures-lighting-remainder catalogued it). So this preset has been asking for a soft shadow and getting a razor-sharp one, which is what three independent blind critics reported as 'weather changes particles, not light'. angular_distance is kept rather than deleted: it is correct intent a future renderer would honour. shadow_opacity scales the shadow term itself and does reach this renderer. It is deliberately NOT shadow_enabled:false -- R5.2 tried that and Terrain3D rendered the whole ground as fully occluded, so the shadow map has to keep existing. Overcast keeps a discernible sun direction, so this is faint, not gone. TUNABLE.",
+        "shadow_opacity": 0.45
       },
       "sky": {
         "top_colour": "#5f7386",
@@ -37,7 +39,9 @@
       "weight": 0.8,
       "sun": {
         "energy_mult": 0.7,
-        "angular_distance": 2.5
+        "angular_distance": 2.5,
+        "_comment_shadow_opacity_vis_world": "VIS-WORLD. `angular_distance` above is a NO-OP under the Compatibility renderer the game ships (world_look.gd::_apply_sun's own comment; EV4-textures-lighting-remainder catalogued it). So this preset has been asking for a soft shadow and getting a razor-sharp one, which is what three independent blind critics reported as 'weather changes particles, not light'. angular_distance is kept rather than deleted: it is correct intent a future renderer would honour. shadow_opacity scales the shadow term itself and does reach this renderer. It is deliberately NOT shadow_enabled:false -- R5.2 tried that and Terrain3D rendered the whole ground as fully occluded, so the shadow map has to keep existing. The lowest of the three: in real fog the directional term is almost entirely scattered out. TUNABLE.",
+        "shadow_opacity": 0.28
       },
       "sky": {
         "top_colour": "#7b95a0",
@@ -56,7 +60,9 @@
       "weight": 1.0,
       "sun": {
         "energy_mult": 0.5,
-        "angular_distance": 3.0
+        "angular_distance": 3.0,
+        "_comment_shadow_opacity_vis_world": "VIS-WORLD. `angular_distance` above is a NO-OP under the Compatibility renderer the game ships (world_look.gd::_apply_sun's own comment; EV4-textures-lighting-remainder catalogued it). So this preset has been asking for a soft shadow and getting a razor-sharp one, which is what three independent blind critics reported as 'weather changes particles, not light'. angular_distance is kept rather than deleted: it is correct intent a future renderer would honour. shadow_opacity scales the shadow term itself and does reach this renderer. It is deliberately NOT shadow_enabled:false -- R5.2 tried that and Terrain3D rendered the whole ground as fully occluded, so the shadow map has to keep existing. Between cloudy and fog; this file already treats rain as 'cloudy, and now it is raining'. TUNABLE.",
+        "shadow_opacity": 0.4
       },
       "sky": {
         "top_colour": "#546877",
