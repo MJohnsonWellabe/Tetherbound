@@ -49,7 +49,12 @@ static func config_for(rank: String) -> Dictionary:
 	var cfg := base.duplicate(true)
 	if rank_entry.has("palette"):
 		cfg["palette"] = rank_entry["palette"]
-	if rank_entry.has("badge"):
+	# `badges` (an ordered list, back to front) or the single legacy `badge`.
+	# The list exists so a rank can layer a rim behind its own face -- a ring and
+	# a disc read as insignia where a lone disc read as a decal.
+	if rank_entry.has("badges"):
+		cfg["accessories"] = rank_entry["badges"]
+	elif rank_entry.has("badge"):
 		cfg["accessories"] = [rank_entry["badge"]]
 	return cfg
 

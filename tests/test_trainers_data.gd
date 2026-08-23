@@ -545,17 +545,33 @@ func test_every_captain_uses_the_real_captain_rank_with_its_own_accent() -> void
 		accents.append(accent)
 
 
-## The rank's own badge survives the accent. `model_config` overwrites the
-## palette wholesale, so a captain who lost the captain badge would read as an
-## officer wearing a different coat.
+## The rank's own badge survives the accent — a captain who lost the captain
+## badge would read as an officer wearing a different coat.
+##
+## VIS-CAST amended the SHAPE of this check, not its strength. It asserted
+## `accessories.size() == 1`, which was a proxy for "the badge is there" back
+## when a rank could only carry one accessory. Ranks now carry a `badges` STACK
+## (a brass rim seated behind the badge face, `data/config/npc_ranks.json`), so
+## the size assertion started failing on a change that does not remove anything.
+## The check now says what its own comment always said it was for: the rank
+## badge must be PRESENT. It still fails if the badge is dropped, replaced, or
+## overwritten by a site's own accessories — which is the failure it exists to
+## catch — and it no longer fails merely because a rank gained a rim.
+##
+## `model_config` also no longer overwrites `palette` wholesale; it merges per
+## surface. The old wording is corrected here because a stale test comment is
+## how the next reader learns the wrong thing about the code it guards.
 func test_the_captain_badge_survives_the_regional_accent() -> void:
 	for id: String in CAPTAINS:
 		var cfg := TRAINERS.model_config(TRAINERS.trainer(id))
 		var accessories: Array = cfg.get("accessories", [])
-		assert_eq(accessories.size(), 1,
-			"'%s' resolves to a body with no rank badge" % id)
-		assert_eq(str((accessories[0] as Dictionary).get("name", "")), "badge",
-			"'%s' wears something other than the rank badge" % id)
+		assert_false(accessories.is_empty(),
+			"'%s' resolves to a body with no accessories at all" % id)
+		var names: Array[String] = []
+		for entry: Variant in accessories:
+			names.append(str((entry as Dictionary).get("name", "")))
+		assert_true(names.has("badge"),
+			"'%s' resolves to a body with no rank badge; it wears %s" % [id, str(names)])
 
 
 ## §3: "roughly 10-16 entering this band -- tunable, and never player-scaled."

@@ -14,20 +14,22 @@
         "*": "#5e2b2f"
       },
       "_comment_palette_crush": "STRANDED-P3, confirmed game bug (kept for the mechanism, not the old hex -- see character_model.gd's `_shared_variant_material` for the actual fix): a straight albedo*colour multiply can only ever DARKEN a source pixel, and this rig's shared material also copies the same rank colour into the self-lit emission channel, so a dark tint crushes both channels toward black at once. character_model.gd's ADDITIVE emission floor (lerp toward the tint colour whenever tint luminance < 0.95) is what actually keeps a dark uniform legible; this hex is chosen with headroom above that floor's comfortable range on top, not as a substitute for it.",
-      "badge": {
-        "shape": "sphere",
-        "size": 0.055,
-        "color": "#6e4a4c",
-        "bone": "Spine02",
-        "offset": [
-          0.0,
-          0.1,
-          0.124
-        ],
-        "name": "badge",
-        "metallic": 0.55,
-        "roughness": 0.45
-      }
+      "badges": [
+        {
+          "shape": "sphere",
+          "size": 0.055,
+          "color": "#6e4a4c",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.124
+          ],
+          "name": "badge",
+          "metallic": 0.55,
+          "roughness": 0.45
+        }
+      ]
     },
     "officer": {
       "label": "Officer",
@@ -36,20 +38,36 @@
       "palette": {
         "*": "#7a373a"
       },
-      "badge": {
-        "shape": "sphere",
-        "size": 0.075,
-        "color": "#9c4a44",
-        "bone": "Spine02",
-        "offset": [
-          0.0,
-          0.1,
-          0.118
-        ],
-        "name": "badge",
-        "metallic": 0.65,
-        "roughness": 0.38
-      }
+      "badges": [
+        {
+          "shape": "ring",
+          "size": 0.1065,
+          "color": "#c8a54e",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.114
+          ],
+          "name": "badge_rim",
+          "metallic": 0.9,
+          "roughness": 0.22
+        },
+        {
+          "shape": "sphere",
+          "size": 0.075,
+          "color": "#9c4a44",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.118
+          ],
+          "name": "badge",
+          "metallic": 0.65,
+          "roughness": 0.38
+        }
+      ]
     },
     "captain": {
       "label": "Captain",
@@ -59,41 +77,74 @@
         "*": "#98474a"
       },
       "_comment_badge_shape": "VIS-CAST. The box this replaces was itself a fix -- 'officer and captain differ by 26 points in one colour channel and nothing else' -- and it solved that and introduced a worse defect the next blind round photographed: a 13cm cube presents ONE flat face square to the camera, a plane takes exactly one shade across the whole of it under a single key, and the accessory material was a default StandardMaterial3D at roughness 1.0 with no metal, so the result had no gradient anywhere on it. It rendered as a flat pure-red untextured rectangle pasted over the chest straps -- a debug gizmo again, in a new shape. Three things change together, because none of them is sufficient alone: the shape becomes a `disc` (a struck medal, whose rim curves away from the key so the silhouette is lit on one edge and shaded on the other), the material gets real metal (character_model.gd's `finish` block) so the face carries a specular falloff instead of one flat value, and the size drops from 0.13 to 0.095 -- 13cm is a placard, not insignia. The colour also comes off full saturation, because a pure hue chip is the other half of why it read as UI rather than as an object on a costume. The rank ladder is unchanged in kind: stud, bigger stud, medal, and the Warden's larger polished medal in the literal reserved hex.",
-      "badge": {
-        "shape": "disc",
-        "size": 0.095,
-        "color": "#b8443a",
-        "bone": "Spine02",
-        "offset": [
-          0.0,
-          0.1,
-          0.138
-        ],
-        "name": "badge",
-        "metallic": 0.75,
-        "roughness": 0.3
-      }
+      "badges": [
+        {
+          "shape": "ring",
+          "size": 0.1349,
+          "color": "#d8b45c",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.134
+          ],
+          "name": "badge_rim",
+          "metallic": 0.9,
+          "roughness": 0.22
+        },
+        {
+          "shape": "disc",
+          "size": 0.095,
+          "color": "#b8443a",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.138
+          ],
+          "name": "badge",
+          "metallic": 0.75,
+          "roughness": 0.3
+        }
+      ]
     },
     "warden": {
       "label": "Warden",
-      "badge": {
-        "shape": "disc",
-        "size": 0.105,
-        "color": "#332228",
-        "bone": "Spine02",
-        "offset": [
-          0.0,
-          0.1,
-          0.156
-        ],
-        "name": "badge",
-        "metallic": 0.88,
-        "roughness": 0.16
-      },
       "_comment": "No `base` key -- the only rank that does NOT reuse the grunt rig, and no palette override either: his own board-16 painted finish (D49's rebuild) is the reference-authored look and stays untouched, the same call this file made before NP2-grunt-wire. Sphere again rather than a fourth new shape, back at the top of the same size ladder (largest, 0.16) the other three climb -- the thing that makes him unmistakably the top of the chain is now his OWN body, not a bigger gizmo.",
-      "_comment_oxblood_top": "The one badge that carries the literal `tether_oxblood` hex (#332228) rather than a warm-red relative of it -- the Warden sits at the top of the same faction the reserved colour belongs to, so his own insignia is where the exact stronghold-banner colour actually appears, and everything below him is visibly in that colour's family without repeating it exactly. VIS-CAST keeps the hex and fixes what it cost: #332228 is near-black, his board-16 coat is dark green, and a matte near-black sphere on dark cloth is invisible at any distance a player meets him from. It is now a POLISHED disc (metallic 0.88, roughness 0.16) -- a specular highlight reads against dark cloth even when the base colour does not, so the reserved colour stays exactly the reserved colour and the insignia is still findable. The alternative, brightening the hex, would have spent the one place in the game where the banner colour appears literally."
+      "_comment_oxblood_top": "The one badge that carries the literal `tether_oxblood` hex (#332228) rather than a warm-red relative of it -- the Warden sits at the top of the same faction the reserved colour belongs to, so his own insignia is where the exact stronghold-banner colour actually appears, and everything below him is visibly in that colour's family without repeating it exactly. VIS-CAST keeps the hex and fixes what it cost: #332228 is near-black, his board-16 coat is dark green, and a matte near-black sphere on dark cloth is invisible at any distance a player meets him from. It is now a POLISHED disc (metallic 0.88, roughness 0.16) -- a specular highlight reads against dark cloth even when the base colour does not, so the reserved colour stays exactly the reserved colour and the insignia is still findable. The alternative, brightening the hex, would have spent the one place in the game where the banner colour appears literally.",
+      "badges": [
+        {
+          "shape": "ring",
+          "size": 0.1491,
+          "color": "#e0c070",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.152
+          ],
+          "name": "badge_rim",
+          "metallic": 0.9,
+          "roughness": 0.22
+        },
+        {
+          "shape": "disc",
+          "size": 0.105,
+          "color": "#332228",
+          "bone": "Spine02",
+          "offset": [
+            0.0,
+            0.1,
+            0.156
+          ],
+          "name": "badge",
+          "metallic": 0.88,
+          "roughness": 0.16
+        }
+      ]
     }
   },
   "_comment_scale": "Every human rig (trainer/Grandpa/Warden/grunt) sits under an Armature node with a flat 0.01 scale -- HANDOFF.md sec6's 'centimetre-unit skeleton under a 0.01 Armature node with x100 inverse binds', the same bug that produced the giant-player fit issue. character_model.gd's _attach_part() sets a placeholder's `position` as a LOCAL child of a BoneAttachment3D inside that scaled chain, so both `offset` and `size` below are in that same shrunk local space, not real metres: a size of 13.0 here renders as a 0.13m sphere in the actual game world, and an offset of 30 along one axis moves it 0.30m in world space. Measured directly (offset [30,0,0]/[0,30,0]/[0,0,30] each moved the attached part almost exactly 0.30m along the matching WORLD axis with no rotation to account for), not guessed -- confirmed the shared _attach_part() mechanism NP1's hair also uses has this same scale, so hair's own tiny offset (0.08) is likely rendering at ~0.0008m, effectively invisible too. Left untouched here rather than fixed for everyone: changing hair's placement is a real, currently-unverified visual change outside NP2's scope, not a call to make inside this item.",
-  "_comment_badge_scale": "Badge sizes and offsets are METRES -- character_model.gd's own default (`acc.get(\"size\", 0.12)`) is the giveaway: 12cm is what a chest badge should be. The values above are already in that space; see `_comment_badge_offset` above for how the current `offset` numbers were actually derived (measured per rig, not guessed) and what defect that fixes."
+  "_comment_badge_scale": "Badge sizes and offsets are METRES -- character_model.gd's own default (`acc.get(\"size\", 0.12)`) is the giveaway: 12cm is what a chest badge should be. The values above are already in that space; see `_comment_badge_offset` above for how the current `offset` numbers were actually derived (measured per rig, not guessed) and what defect that fixes.",
+  "_comment_badge_rim": "VIS-CAST round 4. `badges` is an ordered list, back to front, replacing the single `badge` key -- npc_ranks.gd reads either. It exists because a blind round called the chest badge 'a flat, unshaded, borderless dark-red ellipse... a paint splat or a debug decal', and named the fix in the same breath: these characters' CAP badge is already a proper gold ring-and-dot device, so the bare disc below it read as unfinished by comparison. Officer, captain and Warden now carry a brass `ring` seated a few millimetres behind their own face, which gives the chest the same ring-and-dot reading and adds a curved rim catching the key from a different angle than the flat face does. The GRUNT keeps a bare stud with no rim -- the rim is itself a rank signal, and the lowest rank should not have one."
 }

@@ -558,7 +558,7 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var part := _attach_part(mesh, str(acc.get("bone", "Hips")), offset, name)
 		if part == null:
 			continue
-		if str(acc.get("shape", "box")) == "disc":
+		if str(acc.get("shape", "box")) in ["disc", "ring"]:
 			# CylinderMesh is built around Y; a chest badge lies in the coronal
 			# plane, so tip it a quarter turn to face forward off the bone.
 			part.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
@@ -577,6 +577,20 @@ func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
 			var box := BoxMesh.new()
 			box.size = Vector3.ONE * size
 			return box
+		"ring":
+			# The rim of a struck medal. A blind round named the chest badge "a
+			# flat, unshaded, borderless dark-red ellipse... it reads as a paint
+			# splat or a debug decal", and pointed at the fix in the same
+			# sentence: these characters' CAP badge is a proper gold ring-and-dot
+			# device, and the bare blob below it looks unfinished by comparison.
+			# A torus laid in the coronal plane behind a `disc` gives the chest
+			# badge that same ring-and-dot reading, with a curved rim that
+			# catches the key from a different angle than the flat face does.
+			var ring := TorusMesh.new()
+			ring.inner_radius = size * 0.40
+			ring.outer_radius = size * 0.50
+			ring.rings = 24
+			return ring
 		"disc":
 			# A struck medal: a shallow cylinder whose rim curves away from the
 			# key light, giving the shape a lit edge and a shaded one. A `box`
