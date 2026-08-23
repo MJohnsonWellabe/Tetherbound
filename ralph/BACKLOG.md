@@ -43,6 +43,74 @@ just screenshots.
 
 ---
 
+## VIS-MAKE-remainder — whole-game visual sweep, builds/items/combat lane (2026-08-23)
+
+Branch `ralph/VIS-MAKE`, four blind rounds. Converged on nothing: every round
+named new defects, so by `conventions.md`'s rule every round improved. Final
+verdicts — combat A **no** / B **no**, structures A **no** / B **no**, items
+last judged at round 3 A **no** / B **yes-narrow**. Reports:
+`ralph/reports/VISUAL_MAKE_*` and `VISUAL_COMBAT_CAPTURE_MECHANISM_2026-08-23.md`.
+
+**The open item that matters most, with the next test already named:**
+
+- **Combatants rest at collider contact, and `body_clearance` is not the lever.**
+  Measured, printed by the capture at every shot: centres sit at **1.36 m**,
+  exactly `mine + theirs`, where `body_clearance: 2.75` should give 3.74 m — and
+  below even the raw 2.1 m. Raised twice against this defect now (1.35 -> 1.8 by
+  feel, 1.8 -> 2.75 with arithmetic) and the measured gap did not move either
+  time. Hypothesis with an obvious test: the ALLY is lunging into the opponent
+  (`_resolve_player_strike` applies `add_impulse(facing, lunge 3.6)` every
+  strike) rather than the opponent closing — consistent with 01-engagement, the
+  only pre-attack frame, being the only one not at contact. Fix is in
+  `scripts/combat/`, not in config. **Do not raise `body_clearance` a third time.**
+
+**Fixable, scoped, not done:**
+
+- **The structures survey stage** — a blank green plane under a flat sky with a
+  smeared black horizon band in all 56 frames. The blind critic: *"a grounded
+  terrain material, a real sky, and killing the black horizon band — this alone
+  changes all 56 frames."* Cheapest large win in D5; `tools/_capture_structures.gd`.
+- **Icon colour coding by KIND.** Icons are now tinted from `items.json`'s own
+  authored colours (0% -> 55.8% coloured pixels, 0 -> 10 hue families), but the
+  round-3 critic's point stands: the authored colours cluster earthy, so
+  *category* is still not encoded and 28 of 55 items still share a glyph.
+- **`22-door-close` crops the 1.80 m ruler to a sliver**, and `11-castle-close`
+  is a featureless plane — about a fifth of the reframed close shots still fail
+  their brief.
+- **Window emissive must follow the clock**, not be turned down. It is R9.4's own
+  fix for "black panes look uninhabited"; two critics now hold opposite views of
+  the same feature. Needs `scripts/world/building_prefabs.gd` — another lane.
+
+**Blocked on art that is not in the build (checked, not assumed):**
+
+- **A creature bed.** Repointing it from a furniture-pack twin bed to the camp
+  set's `camp_bed.glb` did NOT work — the blind critic read the replacement as
+  human furniture too. There is no nest, basket, cushion or straw-bed mesh
+  anywhere in the build. Owner-supplied reference art required.
+- A castle (still untextured blockout), mill machinery, real gate leaves, a well
+  shaft, a hammer mesh, a fishing-rod mesh, and a style pass on the Bramblebun.
+
+**Do NOT re-fix (disproven, with evidence):**
+
+- The buildable wall is not warped — clean 2x3 m panel, intentional Tudor
+  V-brace, wood-grain AO. Re-reported by round 2 and still not a defect.
+- `05-trainer-battle`'s "Bramblebun Lv 2" nameplate is CORRECT — that is Bryn's
+  own lead creature (`band1_lower_meadows/trainers.json`). Three rounds have
+  misread it as a stale wild readout.
+- Combat VFX exist and fire. Projectile, impact burst, telegraph ring, attack
+  and hit clips are all built and wired; three rounds of "there is no
+  projectile" were a shutter that could not photograph a sub-second event, plus
+  a material bug (additive blend + vertex-colour alpha, both of which
+  `impact_flash.gd` rules out by name). Both now fixed.
+
+**Cross-lane, flagged not touched:** band 2's five ironwood nodes still use
+`TwistedTree_1/_2/_3`, which no `vegetation.json` layer lists, so
+`harvest_node.gd`'s by-model-path fixup never fires and the canopy renders raw
+RGB(167,23,23) on a friendly gatherable. The item capture now audits and names
+this every run. Also: `smoke_combat_camera` fails on `ralph/VISUAL-CORRIDOR`
+itself ("the second production encounter would not start") — pre-existing, not
+in CI's list.
+
 ## Filed by CREATURE-PRESENTATION (2026-08-23)
 
 Left open on purpose by the creature-presentation pass rather than half-done

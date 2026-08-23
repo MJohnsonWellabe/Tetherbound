@@ -873,6 +873,29 @@ func _shoot_pair(name: String) -> void:
 	# it was, and the HUD and clean shots become genuinely the SAME moment --
 	# which is what this function's own header has always claimed and, before
 	# this, was not true either (they were ~0.27s of simulated time apart).
+	# The separation, printed with every shot.
+	#
+	# Four rounds of critiques turned on whether the two creatures were inside
+	# each other, and four rounds answered it by looking at pixels -- including
+	# this lane, twice. The fight knows the number; it costs one line to say it,
+	# and it converts "they look like they are overlapping" into something that
+	# can be checked against `combat.json`'s own arithmetic.
+	if _manager != null and bool(_manager.call("is_fighting")):
+		var a: Node3D = _director.call("ally_body") as Node3D
+		var e: Node3D = _manager.call("enemy_body") as Node3D
+		if a != null and e != null and is_instance_valid(a) and is_instance_valid(e):
+			var flat_a := a.global_position
+			var flat_e := e.global_position
+			flat_a.y = 0.0
+			flat_e.y = 0.0
+			var gap := flat_a.distance_to(flat_e)
+			var bodies := 0.0
+			if a.has_method("body_radius"):
+				bodies += float(a.call("body_radius"))
+			if e.has_method("body_radius"):
+				bodies += float(e.call("body_radius"))
+			print("[spacing] %s: centres %.2fm apart (combined body radii %.2fm)" % [name, gap, bodies])
+
 	var was_paused := paused
 	paused = true
 
