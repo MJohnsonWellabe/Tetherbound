@@ -28,6 +28,7 @@ extends RefCounted
 ##   OBJECTIVE to leave for the South Bridge, not on the bridge already open.
 
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
@@ -62,7 +63,13 @@ const PLACE_AHEAD := 3.0
 ## How close a walk has to get. Loose enough that the stick's own minimum
 ## strength does not oscillate around the target for the whole frame budget.
 const MOVE_EPSILON := 0.35
-const MOVE_FRAME_LIMIT := 900
+## The floor under a leg's frame budget (`_walk_to()` derives the rest from the
+## leg's own length). GATEB-COORD raised it from 900: fifteen seconds is plenty
+## of walking in open meadow and nothing like enough around the build patch,
+## where three creature beds, a camp and a house now stand within a few metres
+## of each other and the navigator spends most of its frames sliding round
+## them rather than closing on the target.
+const MOVE_FRAME_LIMIT := 3600
 
 ## The tournament ground. `trainers.json`'s own vetted-clear practice spot, the
 ## same one `smoke_tournament_bracket.gd` fights on and for the same reason:
@@ -93,6 +100,9 @@ var _bed: Node3D
 var _beds: Array[Node3D] = []
 ## Offsets from `FIXTURE_SPOTS` that already carry something.
 var _spent_spots: Array = []
+## Travel, built lazily because the bindings it needs are resolved after
+## `run()` starts. See `stick_navigator.gd`.
+var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
 var _camp: Node3D
 var _felled := 0
 var _exit_connected := false
@@ -384,8 +394,9 @@ func _assign_to_bed(index: int) -> bool:
 	if panel == null:
 		_fail("interacting with the creature bed opened no rest panel")
 		return false
-	for _step in index:
-		await _tap(&"ui_down")
+	if not await _focus_the_row_for(panel, index):
+		await _tap(&"menu_cancel")
+		return false
 	await _tap(&"ui_accept")
 	await _settle(6)
 	var creature: RefCounted = _party.call("at", index)
@@ -399,6 +410,50 @@ func _assign_to_bed(index: int) -> bool:
 		_fail("the creature-bed panel left the world paused")
 		return false
 	return true
+
+
+## Move the panel's focus onto the row for party slot `index`, on the d-pad.
+##
+## GATEB-COORD. This used to press `ui_down` exactly `index` times from
+## wherever the panel opened, which is only right when the panel opens on row
+## 0. It does not, once a creature is already asleep: `creature_bed_panel.gd`
+## builds one row per party slot and DISABLES a creature that is resting in
+## another bed, then focuses "the first row that can actually act". So with
+## three beds (owner directive 2026-08-23 §1) the second bed's panel opens
+## already on slot 1, one press of down lands on slot 2, and the run put the
+## wrong creature to bed and said so:
+##
+##   the bed panel's own A press did not put party slot 1 to bed
+##
+## Reading the focused row and stepping until it is the wanted one is what a
+## player does, and it does not care where the panel opened.
+func _focus_the_row_for(panel: Node, index: int) -> bool:
+	var rows: Array = panel.get("_rows")
+	if rows.is_empty() or index >= rows.size():
+		_fail("the creature bed panel offered %d rows; party slot %d has none"
+			% [rows.size(), index])
+		return false
+	var wanted := rows[index] as Button
+	if wanted.disabled:
+		_fail(("the creature bed panel's row for party slot %d is disabled ('%s'); "
+			+ "with one bed per entrant every slot should still be choosable")
+			% [index, wanted.text.strip_edges()])
+		return false
+	for _step in rows.size() * 2:
+		if _focused_row(panel) == index:
+			return true
+		await _tap(&"ui_down")
+		await _settle(4)
+	_fail("could not move the bed panel's focus onto party slot %d; it sits on %d"
+		% [index, _focused_row(panel)])
+	return false
+
+
+func _focused_row(panel: Node) -> int:
+	var viewport := panel.get_viewport()
+	if viewport == null:
+		return -1
+	return (panel.get("_rows") as Array).find(viewport.gui_get_focus_owner())
 
 
 func _sleep_at_camp() -> bool:
@@ -913,20 +968,41 @@ func _forward() -> Vector3:
 	return -(_rig.call("planar_basis") as Basis).z
 
 
+## Travel through `stick_navigator.gd`, like every other continuous harness.
+##
+## GATEB-COORD. This used to point the stick at the target and hold it, which
+## is the exact walker GATEB-PATH replaced everywhere else -- and it failed
+## here for the same reason it failed at Mira's door: the Meadows has no
+## navmesh, so "walk toward the point" means "walk into whatever is between
+## here and the point". With three creature beds down around the build patch
+## (owner directive 2026-08-23 §1) the beds are now obstacles to each other,
+## and the straight walk to the second one stopped dead against the first:
+##
+##   controller movement could not reach the creature bed 2
+##
+## The navigator slides along what it is pressed against and picks the freer
+## side, which is what gets past a placed bed, a camp, or a house wall.
 func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON) -> bool:
-	for _frame in MOVE_FRAME_LIMIT:
-		var delta := Vector3(target.x - _player.global_position.x, 0.0,
-			target.z - _player.global_position.z)
-		if delta.length() <= close_enough:
-			_release_move()
-			await _settle(3)
-			return true
-		var strength := clampf(delta.length() / 0.9, 0.32, 1.0)
-		var local := (_rig.call("planar_basis") as Basis).inverse() * delta.normalized() * strength
-		_move(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
-		await _tree.physics_frame
+	if _nav == null:
+		_nav = NAVIGATOR.new(_tree, _player, _rig, Callable(self, "_move"))
+	# From the leg's own length, not a flat number. `data/config/movement.json`
+	# walks the trainer at 5 m/s, so a metre is about 12 physics frames; the
+	# multiple leaves room for the detours the navigator spends getting round
+	# what is in the way. A flat 900 frames is fifteen seconds, which is fine
+	# for a bed three metres away and nothing like enough for the walk back
+	# across the build patch.
+	var budget := maxi(MOVE_FRAME_LIMIT,
+		240 + int(_player.global_position.distance_to(target) * 60.0))
+	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
 	_release_move()
-	_fail("controller movement could not reach %s" % purpose)
+	await _settle(3)
+	if arrived:
+		return true
+	_fail("controller movement could not reach %s (stopped %.1fm short at %s)" % [
+		purpose,
+		Vector2(target.x - _player.global_position.x,
+			target.z - _player.global_position.z).length(),
+		str(_player.global_position.round())])
 	return false
 
 

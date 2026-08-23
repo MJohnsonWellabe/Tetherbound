@@ -154,15 +154,42 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 	return true
 
 
+## Close the shortfall by chopping real scatter, and DO NOT let one awkward
+## stand end the chapter.
+##
+## GATEB-COORD. The Meadows scatters 24,325 harvestable stands and they grow in
+## thickets a metre or two apart. Two things follow, both measured in
+## `tools/_probe_scatter_fill.gd`:
+##
+##   * the interact line flickers between neighbours, so a press aimed at one
+##     stand lands on the one beside it -- `_press_and_confirm()` is the
+##     answer to that, and it recovers most of them by stepping round;
+##   * some stands simply will not settle. Six approaches from six angles and
+##     the arbiter still hands the button to a neighbour or publishes nothing.
+##
+## A player meets the second one and chops a different tree. So does this. A
+## refused stand is remembered, skipped, and the next nearest is walked to;
+## only `REFUSALS_ALLOWED` in a row means something is actually wrong with
+## harvesting rather than with one awkward trunk. Failures recorded during a
+## tolerated skip are rolled back off `failures` -- they are not the run's
+## verdict, they are why one tree was abandoned -- and the transcript keeps
+## every one of them.
+const REFUSALS_ALLOWED := 5
+
+
 func _fill_with_live_scatter(item_id: String) -> bool:
 	var required := int(TARGET_STOCK[item_id])
 	var trips := 0
+	var refused: Array[int] = []
+	var in_a_row := 0
 	while _count(item_id) < required:
-		var node := _nearest_live_scatter(item_id)
+		var node := _nearest_live_scatter(item_id, refused)
 		if node == null:
 			_fail("no live natural %s scatter remains at %d/%d; authored route cannot fund the required paid build" % [
 				item_id, _count(item_id), required])
 			return false
+		var node_id := node.get_instance_id()
+		var failures_before := failures.size()
 		var before := _count(item_id)
 		# The stand's position, taken while the stand still exists.
 		#
@@ -181,19 +208,34 @@ func _fill_with_live_scatter(item_id: String) -> bool:
 		# default spawn, which is inside GrandpaHouse, and so never got far
 		# enough to chop anything.
 		var at := node.global_position
-		if not await _walk_to(at, 1.65, _travel_budget(at)):
+		var reached: bool = await _walk_to(at, 1.65, _travel_budget(at))
+		if not reached:
 			_fail("controller could not reach live natural %s at %s (stopped %.1fm short)" % [
 				item_id, at, _player.global_position.distance_to(at)])
-			return false
-		if not await _harvest_node(node, item_id, false):
-			return false
-		var gained := _count(item_id) - before
-		if gained <= 0:
+		elif not await _harvest_node(node, item_id, false):
+			pass  # `_harvest_node` has already said why, on `failures`.
+		elif _count(item_id) - before <= 0:
 			_fail("natural %s at %s paid no inventory after production chop/pickup" % [item_id, at])
+		else:
+			trips += 1
+			in_a_row = 0
+			transcript.append("scatter %s +%d at (%.2f, %.2f); %d/%d" % [
+				item_id, _count(item_id) - before, at.x, at.z, _count(item_id), required])
+			continue
+		# This stand refused. Abandon it and walk to another one.
+		in_a_row += 1
+		refused.append(node_id)
+		var why := str(failures[failures.size() - 1]) if failures.size() > failures_before \
+			else "no reason recorded"
+		if in_a_row > REFUSALS_ALLOWED:
+			_fail(("%d live %s stands in a row refused to be harvested, the last at %s. "
+				+ "That is not one awkward trunk, it is harvesting. Last reason: %s")
+				% [in_a_row, item_id, at, why])
 			return false
-		trips += 1
-		transcript.append("scatter %s +%d at (%.2f, %.2f); %d/%d" % [
-			item_id, gained, at.x, at.z, _count(item_id), required])
+		failures.resize(failures_before)
+		transcript.append("live %s at (%.1f, %.1f) would not be harvested (%s); "
+			% [item_id, at.x, at.z, why] + "walking to another stand (%d/%d tolerated)"
+			% [in_a_row, REFUSALS_ALLOWED])
 	transcript.append("natural %s deficit closed with %d live scatter stops" % [item_id, trips])
 	return true
 
@@ -503,10 +545,16 @@ func _is_unspent(node: Node3D) -> bool:
 	return prompt == null or bool(prompt.get("enabled"))
 
 
-func _nearest_live_scatter(item_id: String) -> Node3D:
+## `refused` carries the instance ids of stands already abandoned this fill --
+## see `_fill_with_live_scatter()`. Without it the loop would walk straight
+## back to the nearest one, which is precisely the stand that just would not
+## answer, forever.
+func _nearest_live_scatter(item_id: String, refused: Array[int] = []) -> Node3D:
 	var candidates: Array[Node3D] = []
 	for candidate: Node in _tree.get_nodes_in_group("harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
+			continue
+		if refused.has(candidate.get_instance_id()):
 			continue
 		var script := candidate.get_script() as Script
 		if script == null or script.resource_path != VEGETATION_POINT_PATH:

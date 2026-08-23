@@ -102,6 +102,15 @@ func _run() -> void:
 	print("PROBE wood fill %s in %.1fs; satchel wood=%d" % [
 		"OK" if ok else "FAILED", (Time.get_ticks_msec() - started) / 1000.0,
 		int(inventory.call("count", "wood"))])
+	if ok:
+		# The route does stone straight after wood, and stone is a different
+		# mesh family with a different felled form -- a wood-only probe cannot
+		# speak for it.
+		var stone_started := Time.get_ticks_msec()
+		ok = await route._fill_with_live_scatter("stone")
+		print("PROBE stone fill %s in %.1fs; satchel stone=%d" % [
+			"OK" if ok else "FAILED", (Time.get_ticks_msec() - stone_started) / 1000.0,
+			int(inventory.call("count", "stone"))])
 	for line: Variant in (route.get("transcript") as Array):
 		print("PROBE | %s" % str(line))
 	for line: Variant in (route.get("failures") as Array):

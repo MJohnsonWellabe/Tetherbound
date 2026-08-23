@@ -25,14 +25,20 @@ extends SceneTree
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Exactly what `tests/helpers/gate_a_material_route.gd` gathers. Granting more
 ## than the authored route supplies would hide a budget that does not cover the
-## house, the bed and the camp.
-const GRANTED_STOCK := {"wood": 57, "stone": 42, "fiber": 18}
+## house, the beds and the camp -- so it is READ from that file rather than
+## copied, and cannot drift away from it.
+##
+## OWNER DIRECTIVE 2026-08-23 §1 raised it from 57/42/18 to 69/42/34: three
+## creature beds, one per entrant, instead of the single bed the old budget
+## bought.
+const GRANTED_STOCK := MATERIAL_ROUTE.TARGET_STOCK
 ## Tam's three tools and the Foreman's hammer (`camp_hammer_given`), on the
 ## quick bar. The hammer is not decoration: CONTROLLER-MAP retired
 ## `build_open`'s pad button, so hammer-in-hand plus Interact is the only way a
