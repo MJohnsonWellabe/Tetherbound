@@ -162,3 +162,107 @@ where a survey photographed something other than its subject.
    on the warrens entrance mark — an authored coordinate holding an NPC,
    exactly the trap the corridor survey documented — and said nothing useful
    about it.
+
+## Round 1 blind verdict — Fable, per OWNER_DIRECTIVES_2026-08-22 §5
+
+**A (keyart world): no. B (Palworld kind): no.**
+
+Sheet: `shots/locations/_sheet.png`, 45 frames, eleven sites. The critic read
+the rubric, the sheet, 24 frames individually, all five Palworld references and
+the keyart board, and was told nothing about what changed or what anyone hoped
+to hear.
+
+### The three gaps it ranked
+
+1. **Nothing organises the ground plane.** *"In every reference, the ground
+   itself records habitation… In `01-village-twins-day` and
+   `10-stronghold-approach-day`, buildings and props sit on untouched uniform
+   lawn with no path in, no wear, no enclosure, no ground-material response at
+   all. Until a path enters a site and the grass dies where feet go, no site
+   will read as a place."* This is the locations-lane form of the standing
+   density finding, and it is sharper: the problem is not how much grass there
+   is, it is that the ground does not respond to the site standing on it.
+2. **Whole sites are still blockout, in frame.** The stronghold gate, the
+   waystop's raw grey cliff, the relay plaza's tiling brick slabs. *"No Palworld
+   reference contains a single unfinished surface. The bar images are finished
+   pictures; a third of this survey is not."*
+3. **Night and interior lighting is absence, not mood** — and the specific
+   mechanism is new: **the fires emit no light.** `08-ridge-camp-fire-night` is
+   *"pure black with an unlit campfire"*; `05-relay-camp-fire-night`'s fire is
+   *"a faint smudge behind crates; the scene is lit by nothing."* For a brief
+   whose words are "cozy and inviting", *"the single cheapest coziness
+   instrument in the toolbox is switched off."*
+
+### What it found blind that this pass had already found in the data
+
+Recorded because independent agreement is the strongest signal available here.
+
+- **The mill has no wheel.** *"The shot named 'wheel' contains no wheel. The
+  mill has no water wheel from any surveyed angle. The site's defining prop is
+  missing from the site."* Reached from the frames alone, with no access to the
+  recipe that proves it — 78 modules, not one of them a wheel.
+- **The stronghold gate is an untextured box** — *"a featureless dark cobble
+  box with a black hole for a gate, no banners, no Tether identity, standing
+  beside greybox"* — against the keyart's stronghold panel, which it calls
+  *"the widest single gap in the survey."*
+
+### One finding that reverses a standing assumption
+
+The oxblood rule has been treated as passing. The critic, not told the colour
+means anything, flagged it in the opposite direction:
+
+> *"the castle — apparently a friendly landmark — flies near-identical dark-red
+> pennants on every tower. If oxblood means danger, the castle is currently
+> announcing it."*
+
+Its nine `Banner` modules are retinted `#7a2430`. That is correct **if** the
+castle is Team Tether's. It is the enemy stronghold — so the banners are right
+and the READ is wrong, because nothing else in the frame says whose castle it
+is. Worth having: the colour discipline is holding, and it is doing no work
+without a faction silhouette beside it.
+
+### Its answer to the extra question — which site is worth being in
+
+> *"The mill pond (02), on the strength of `02-mill-pond-approach-day` — and it
+> is the only one."*
+
+Because it has *"enclosure (the tree line cups the clearing), a focal building
+with a reason to exist, a foreground that rewards standing there, water as an
+edge, and terrain that slopes you toward the subject. It is composed like a
+place."* And it survives *"despite its defects — dead flat cyan water and a
+mill with no wheel — which tells you how far structure alone carries a site."*
+
+**That frame is the one this pass re-shot** after the first attempt seated its
+eye at −18.4 m against a pond surface of −17.0 and photographed the bottom of
+the pond. The single best frame in the survey existed only because the raycast
+said so in the log and the coordinate was re-derived from the route the config
+already names.
+
+Runner-up: `01-village-standing-day`, *"the one frame with genuine site
+grammar — signpost cluster, well plaza, ivy on the wall, two facades forming a
+street corner, a villager in the middle distance. This is authored."* That is
+independent corroboration of the structures round's `28-village-close`
+finding, from a different frame of the same square.
+
+### This survey's own harness defects, found by the critic
+
+Five of forty-five frames do not show their subject, and that is this tool's
+fault, not the world's:
+
+1. `07-mill-crossing-yard-day` — camera at a grazing angle to bare terrain.
+   *"The detail shot of this site shows no site."*
+2. `08-ridge-camp-fire-day` — *"90% sky with the fire, the trainer, and the NPC
+   all cut off at the bottom edge — the 'fire' detail shot of this site
+   literally does not contain the fire."*
+3. `06-relay-apparatus-day` — ~70% empty sky.
+4. `05-relay-camp-fire-day` — *"the NPC interpenetrates the trainer — two
+   characters standing inside each other."* `_clear_of_bodies()` protects the
+   PLAYER's seat; it does not stop an NPC from standing where the player was
+   put afterwards.
+5. `11-castle-landmark-approach-day` — a foreground tree fills the right of
+   frame (noted here; the castle is still legible).
+
+The `detail` rig aims 1.6 m above the target's ground from 5 m back, which
+composes a shot about the dirt when the subject is a fire on the ground or an
+apparatus on a 10 m deck. Round 2 must fix the rig before it re-judges the
+sites, or it will re-photograph its own framing.
