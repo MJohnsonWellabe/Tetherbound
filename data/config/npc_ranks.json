@@ -5,8 +5,9 @@
   "ranks": {
     "grunt": {
       "label": "Grunt",
+      "_comment_palette_crush": "STRANDED-P3, confirmed game bug: the original #4a5049 (luminance ~0.30) crushed Hess to a near-black silhouette on the band3 picket road, through character_model.gd's _shared_variant_material, which multiplies the SAME rank colour into both albedo_color and the shared self-lit emission channel (the NP2 fix documented on that function) -- so a dark rank tint darkens both channels at once instead of only shading the surface. Raising this hex ALONE (round 1: luminance ~0.30 -> ~0.55, same drab olive hue) did not fix the actual render -- confirmed by a real capture, not assumed -- because a straight multiply can only ever darken a source pixel; wherever the rig's own painted emission texture is already near-black (a dark uniform panel), texture*colour stays near-black no matter how bright colour is. The real fix is in character_model.gd itself: an ADDITIVE emission floor (lerp toward the tint colour, the same shape as severed_spokes.gd's tether_oxblood fix) that guarantees a visible glow regardless of how dark the source pixel started. This hex is kept at the round-1 brightened value anyway -- still the DARKEST of the three ranks below the Warden, since the chest badge (not body brightness) is the primary rank marker per this file's own _comment_badge -- but the palette value was never the load-bearing part of the actual fix.",
       "palette": {
-        "*": "#4a5049"
+        "*": "#868f85"
       },
       "badge": {
         "shape": "sphere",
@@ -23,8 +24,9 @@
     },
     "officer": {
       "label": "Officer",
+      "_comment_palette_crush": "STRANDED-P3: same crush family as grunt above (see its _comment_palette_crush) -- #6d7d6a was luminance ~0.47, below the ~0.6+ this rig's fused single material needs to avoid reading as an unlit/black figure once emission darkens alongside albedo. Raised to luminance ~0.60, still visibly brighter than grunt's ~0.55 and darker than captain's untouched #b0a271 (~0.63), preserving the escalating body-brightness ladder underneath the badge.",
       "palette": {
-        "*": "#6d7d6a"
+        "*": "#8d9e8a"
       },
       "badge": {
         "shape": "sphere",

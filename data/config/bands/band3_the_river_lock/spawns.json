@@ -349,9 +349,10 @@
       "order": 3037,
       "species": "galecrest",
       "count": 4,
-      "centre": [-152.0, 0.0, 4220.5],
-      "radius": 18.0,
-      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the river gorge and the Old Mill Crossing."
+      "centre": [-152.0, 0.0, 4235.0],
+      "radius": 8.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the river gorge and the Old Mill Crossing.",
+      "_comment_stranded_p3_deck_clearance": "STRANDED-P3, 2026-08-23. The original centre/radius (z=4220.5, r=18.0) put this cluster's own spawn disc up to 17.5-18.5m from the crossing's centre (4203) -- inside it, since the disc's radius exceeds that distance -- so a galecrest's home point could land directly on the deck (x=-152 is the crossing's own x), and `wild_creature.gd`'s wander_radius (7.0, data/config/combat.json) could carry it there even when home missed narrowly. Reproduced directly (`tools/_probe_mill_stall.gd`): `smoke_traversal.gd`'s Old Mill Crossing walk stopped dead at depth 7.06m/11.0m needed, blocked on `get_slide_collision()` by `Wild_galecrest_3037_1` standing on the deck -- the same `body-blocks-the-only-route` shape `WALL1` found at Captain Halder (`data/config/spawns.json`'s own `_comment_galecrest_wall1`). Deterministic per-boot spawn RNG (seeded from `order`) meant the four galecrest always start in the same places, but `wild_creature.gd::_wander()`'s own RNG advances on real elapsed frames, so how many wander decisions had fired by the time a test (or a player) reached the crossing varied run to run -- explaining why this only sometimes blocked the crossing rather than always. This crossing is Band 3's ONLY route across the river (D46); a wild creature blocking it is a real softlock risk, not just test flakiness. Moved deeper onto the far bank (same x, +14.5m z) and the radius shrunk from 18.0 to 8.0 so even worst-case home placement PLUS a full wander_radius excursion (18-8-7=... using the new numbers: 4235-8-7=4220) stays 9m clear of the far landing (4211) and 6m clear of the walk test's own target point (4214) -- same aggressor-guards-the-crossing intent GATE-D3 authored, now guaranteed clear of the one path across the river the way that pass already kept every new cluster 20m+/24m+ clear of trainer arenas and existing clusters for the same 'nothing here contests a fight's footing' reason."
     },
     {
       "order": 3038,

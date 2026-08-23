@@ -31,12 +31,17 @@ extends "res://tests/test_case.gd"
 ## why they moved. Nothing else in the fixtures has been touched, and the
 ## identity keys above are still pinned forever.
 ##
-## The fixtures are deliberately frozen copies and NOT a golden file to be
-## regenerated. Every assertion below is scoped to the first `baseline.size()`
-## entries, so content authored after the split appends past them and this stays
-## green -- while the entries that existed at the split, and the indices they
-## occupy, are pinned forever. That is exactly the property five agents
-## authoring five bands need: nobody else's new content can move yours.
+## POLICY, amended 2026-08-23 (ralph/GATE_D_REMAINDERS.md §6): the fixtures
+## are a TRACKED MIRROR, not a frozen original. The pre-split world stopped
+## existing as a target when the corridor was re-laid (OW5D), so "pinned
+## forever" is no longer the claim. The claim is: live configs and this
+## mirror must agree entry-for-entry, so ACCIDENTAL drift -- a dropped,
+## duplicated, or reordered entry -- still fails here. A DELIBERATE identity
+## move must be made twice, live config and mirror in the same commit, each
+## with a `_why_*` rationale; a mirror edit without its matching live edit
+## is a defect. Every assertion below is scoped to the first
+## `baseline.size()` entries, so content authored after the split appends
+## past them and this stays green -- nobody else's new content can move yours.
 ##
 ## "Frozen" means frozen against ACCIDENT, not against the owner. TOURNAMENT-1
 ## is the first deliberate edit to a pinned entry: the 2026-08-22 owner
