@@ -1187,6 +1187,23 @@ func _check_the_quarry(world: Node, player: CharacterBody3D, failures: Array[Str
 
 ## One walk at the crossing from the village side, returning how far past the
 ## gully's centreline the player ended up.
+##
+## STRANDED-P3 CI investigation (2026-08-23): `verify-core-verb-shard` failed
+## this exact walk at the Old Mill Crossing twice on GitHub's runners (+6.5m,
+## then +8.5m past the gap, both short of `BRIDGE_CROSSED_M`), while the South
+## Bridge (identical function, identical teleport-then-walk shape) passed on
+## the same runs at its own historical margin. Root-caused, not guessed: a
+## GATE-D3 wild-density cluster (`data/config/bands/band3_the_river_lock/
+## spawns.json` order 3037, four `galecrest`) was centred close enough to the
+## crossing, with a wide enough spawn/wander reach, that a creature could
+## stand ON the deck -- reproduced directly with `tools/_probe_mill_stall.gd`,
+## which caught the walk stalled at depth 7.06m, blocked by
+## `get_slide_collision()` naming `Wild_galecrest_3037_1` as the collider. The
+## fix is the spawn table (moved deeper onto the far bank, radius shrunk so
+## even a full wander excursion stays clear of the crossing) -- see that
+## entry's own `_comment_stranded_p3_deck_clearance` and
+## `ralph/GATE_D_REMAINDERS.md` §8. Nothing in this walk needed to change; kept
+## as it was before this investigation.
 func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> float:
 	var start: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
 	var target: Vector2 = bridge.call("far_point", BRIDGE_START_BACK)
