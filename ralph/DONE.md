@@ -4,6 +4,9 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 
+## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
+
+`tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
 
 ## STRANDED-P3 — landed the chop clip, fixed dark Team Tether NPCs, fixed the survey_band2 capture bug
 
@@ -68,6 +71,53 @@ defect (the swing never STARTS in that one flaky smoke-test scenario --
 fixed, already tracked in BACKLOG.md and untouched here).
 
 
+`ralph/ASSESSMENT_2026-08-23.md` (P2) named 3 real content gaps as the suite's
+only failures. All 3 fixed as data, no code changes:
+
+### Map fog: fresh-save starting reveal (owner ruling 2026-08-22)
+
+`map_state.gd::_seed_starting_reveal()` already read a `starting_reveal` array
+off `map_landmarks.json` and already worked — it was just never populated, so
+a fresh save opened fully dark (OP21-15's "black rectangle"). Added 9 seed
+circles in `map_landmarks.json` covering the village square and the first leg
+of each of Band 0's four dirt roads (Grandpa's House, Practice Meadow, The
+Pond, The Rise), sited on the same `paths.routes` polylines
+`terrain_playground.json` authors those roads from. `discovered_fraction()`
+on the fresh save comes out ~0.12% of the world — comfortably inside
+`test_map_fog.gd`'s `<0.05` (5%) ceiling and above its `>0.0` floor. The two
+`FOG_UNDISCOVERED`/`FOG_DISCOVERED` opacity assertions in the same file were
+already passing on `main` before this branch — that half of the OW3 fix had
+already landed.
+
+### band4 harvest.json: wood/stone/fiber alongside ironwood
+
+Band 4 fielded 5 harvest nodes, all `ironwood` — a camp/creature-bed
+(`buildables.json`) needs wood+stone+fiber too, so the band could not pay for
+a rest point from its own ground. Added 6 nodes (orders 4005-4010, this
+band's own reserved 4000-4999 range) sited near the band's two existing camp
+clearings (`vegetation.json` clearings 4001/4002): 2 wood/stone/fiber near
+the ironwood-grove camp pad, 2 near the eastern captain-to-captain camp pad.
+Positions measured with a scratch probe following `tools/_probe_band4_sites.gd`'s
+own pattern (worst local slope 5.3-9.1 degrees over a 2m pad, flattest of
+several candidates per material, all clear of their camp clearing's own
+reveal radius); the probe itself was not committed, matching how the earlier
+GATE-D4 probes describe their own throwaway siting scripts. Models reuse
+`DeadTree_2`/`Rock_Medium_1`/`Rock_Medium_2`/`Plant_7_Big`, already used
+elsewhere in the chapter.
+
+### wild_alphas: 2 -> 4 across the chapter
+
+Prompt 60 asks for "a handful"; the chapter had exactly 2 (band2, band3).
+`encounter_director.gd::_make_alpha()` already implements the full contract
+correctly (additive `level_bonus`, `apply_size_multiplier` rather than node
+scale, `set_meta`) — this was a data gap only. Added `alpha`/`_why_alpha` to
+one existing cluster each in band4 (order 4001, the western-ridge galecrest
+pair) and band5 (order 5001, the approach's largest aggressor pack, 3
+galecrest) — both `level_bonus` 3-4 and `scale` 1.3-1.4, inside the test's
+[1,6]/(1.0,1.6] ranges. Band1 untouched, per prompt 71's gentle-opening rule.
+
+No code changes; all three were content-only. Branched from `origin/main` at
+`b923e202`.
 
 ## BAND1-D1 round 6 — final camp state: tent kept, fire reverted, wrap-up per owner directive
 

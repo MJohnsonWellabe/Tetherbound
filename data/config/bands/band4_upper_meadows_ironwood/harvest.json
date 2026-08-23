@@ -48,6 +48,66 @@
       "at": [-339.0, 5060.0],
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.29
+    },
+    {
+      "order": 4005,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-300.0, 5090.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "ASSESS-REDS/test_camp_supply_reaches_every_band: band4's own harvest.json fielded ironwood only, so a camp or creature bed (buildables.json, which charges wood/stone/fiber alongside ironwood-tier materials) could not be paid for from this band's own ground. Sited 30m east of the ironwood camp pad (vegetation.json clearings order 4002, at (-330,5090)) so the rest point can actually be resupplied from beside itself -- MEASURED with tools/_probe_band4_sites.gd's own pattern (h=-3.71m, worst local slope 5.3 degrees over a 2m pad, the flattest of five wood candidates walked around the grove's eastern edge)."
+    },
+    {
+      "order": 4006,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-360.0, 5105.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why": "ASSESS-REDS. Same ironwood camp pad, 33m out on the grove's northern rim -- MEASURED (h=0.39m, worst local slope 5.4 degrees over a 2m pad, the flattest of four stone candidates)."
+    },
+    {
+      "order": 4007,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [-305.0, 5075.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "ASSESS-REDS. Same ironwood camp pad, 29m out toward the trailpup cluster (spawns.json order 4000) -- MEASURED (h=-1.87m, worst local slope 9.1 degrees over a 2m pad, the flattest of four fiber candidates that still clears the camp clearing's own 12m radius)."
+    },
+    {
+      "order": 4008,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [385.0, 6020.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "ASSESS-REDS. The eastern loop's own field-camp clearing (vegetation.json clearings order 4001, at (400,6040), between captain_field and captain_ridge) had the same gap -- ironwood-only band, no local wood/stone/fiber. Sited 25m southwest of the pad, clear of its 15m clearing radius -- MEASURED (h=-2.14m, worst local slope 8.1 degrees over a 2m pad)."
+    },
+    {
+      "order": 4009,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [380.0, 6060.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "ASSESS-REDS. Same eastern camp pad, 28m out on the loop's northern side -- MEASURED (h=-4.71m, worst local slope 7.2 degrees over a 2m pad)."
+    },
+    {
+      "order": 4010,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [410.0, 6010.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "ASSESS-REDS. Same eastern camp pad, 32m out toward the burrowback cluster (spawns.json order 4009) that already dresses this stop -- MEASURED (h=-1.24m, worst local slope 6.1 degrees over a 2m pad, the flattest of four fiber candidates)."
     }
   ]
 }

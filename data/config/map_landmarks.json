@@ -3,6 +3,18 @@
   "_comment_reveal_radius_ow3": "OW3 raised this 45 -> 80. TUNABLE. With fog fully opaque again (tab_map.gd/minimap.gd), 45m revealed a ribbon barely wider than the road, which is what made an honest fog read as \"nothing but black\" the last time it was opaque. Widening the reveal is the lever that keeps the fog truthful without the map being a void; darkening or lightening the fog itself is the lever that has now been swung three times.",
   "reveal_radius": 80.0,
   "minimap_span_m": 90.0,
+  "_comment_starting_reveal": "ralph/OWNER_DIRECTIVES_2026-08-22.md section 3: 'The village and the roads out of it start revealed... The player does not start blind in their own home town.' map_state.gd::_seed_starting_reveal already existed and reads this array; it was only ever empty, so a fresh save opened a black rectangle (OP21-15). Each entry is a fog circle seeded before the player takes a step, sited on the SAME `paths.routes` polylines terrain_playground.json authors the village's four dirt roads from (Grandpa's House, Practice Meadow, The Pond, The Rise) -- so a road move carries this reveal with it rather than stranding it. One circle at the square plus two per route (a midpoint and the route's own end) covers the road corridor without reaching past it; `discovered_fraction` on the current 2048x8192m world comes out under 0.2%, nowhere near spec sec16's 'does not reveal everything automatically' line. TUNABLE.",
+  "starting_reveal": [
+    { "at": [10.0, -10.0], "radius": 50.0, "_why": "the village square itself" },
+    { "at": [-4.0, -13.0], "radius": 20.0, "_why": "Grandpa's House road, midpoint" },
+    { "at": [-18.0, -15.0], "radius": 25.0, "_why": "Grandpa's House road, end (also covers the grandpa_house landmark)" },
+    { "at": [18.0, -24.0], "radius": 20.0, "_why": "Practice Meadow road, midpoint" },
+    { "at": [30.0, -40.0], "radius": 25.0, "_why": "Practice Meadow road, end" },
+    { "at": [-14.0, 14.0], "radius": 20.0, "_why": "The Pond road, first leg" },
+    { "at": [-45.0, 45.0], "radius": 25.0, "_why": "The Pond road, second leg" },
+    { "at": [45.0, -22.0], "radius": 20.0, "_why": "The Rise road, midpoint (also road_gate approach)" },
+    { "at": [74.0, -41.0], "radius": 20.0, "_why": "The Rise road, walkable end (OF10a's truncation point)" }
+  ],
   "landmarks": [
     {
       "id": "grandpa_house",
