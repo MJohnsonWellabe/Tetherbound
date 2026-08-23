@@ -121,8 +121,40 @@ func _resolve_frame() -> bool:
 ## yawed off it by `yaw_deg`, facing back down the road at the player. No
 ## collider, no shadow, no lighting — this is a painted horizon and it has to
 ## look like the sky it stands in rather than like a lit object in a field.
+##
+## GATE-E-STRONGHOLD-ART (2026-08-23) — WHY EVERY SLAB NOW CARRIES A VIEWING
+## RANGE. This file's own header above still claims every mesh sits "260–460m
+## out ... outside the 512m terrain". The first half is true and the second
+## half quietly stopped being true: the world moved to the 8192m corridor, the
+## storm road's seam went with it to z≈7513, and the Meadows now has thousands
+## of metres of open sightline pointing straight at these quads from places
+## that are not the seam. Band 4 is one of them. `shots/band4/far-panels-
+## north.png` shows three pale translucent rectangles standing on the horizon,
+## and `tools/_probe_sky_slabs.gd` (this task) named them: StormWall_0/1/2, at
+## 1943–2005m from that viewpoint, inside the capture camera's own 2000m far
+## plane and dead ahead of it. The same probe finds them 1414–1557m off the
+## `ridge-patrol-camp` and `watchtower-spur` viewpoints.
+##
+## At the seam the effect works — 365–461m out, each slab subtending ~26° of
+## sky, an overlapping wall of weather with no land past it, exactly what it
+## was authored to be. At 2km the identical quad subtends 5–8°, and the fog it
+## is (correctly) drawn through blends roughly two thirds of the way to
+## `fog_colour` at that range, so a slate storm wall becomes a small, pale,
+## hard-edged translucent box floating over a hillside. Nothing is broken in
+## the material or the transform; the geometry is simply being seen from
+## outside the vantage it is a painting for.
+##
+## So the fix is a placement contract rather than a colour: a slab is drawn
+## only within the band it was authored for, and fades rather than pops at the
+## edge of it. `visible_within_metres`/`fade_metres` in rift_collapse.json are
+## the tunables. This is deliberately applied to BOTH groups — `FarCountry` is
+## at zero alpha until the flag, so it has never been seen misbehaving, but it
+## is the same quads at the same place and would inherit the same defect the
+## moment the Warden falls.
 func _build_group(group_name: String, slabs: Array, into: Array[MeshInstance3D],
 		alphas: Array[float], scale: float) -> void:
+	var visible_within := float(_config.get("visible_within_metres", 0.0))
+	var fade := maxf(float(_config.get("fade_metres", 0.0)), 0.0)
 	var holder := Node3D.new()
 	holder.name = group_name
 	add_child(holder)
@@ -147,6 +179,15 @@ func _build_group(group_name: String, slabs: Array, into: Array[MeshInstance3D],
 		# Far enough that the engine's own culling would otherwise argue with
 		# a 400m quad whose origin sits behind the camera's far plane check.
 		instance.extra_cull_margin = maxf(width, height)
+		# The viewing band, measured from the slab's own centre. Godot fades
+		# across [end - margin, end], so `visible_within_metres` is where the
+		# slab has fully gone and `fade_metres` is how long it takes to get
+		# there. Zero (or unset) keeps the old always-drawn behaviour.
+		if visible_within > 0.0:
+			instance.visibility_range_end = visible_within
+			instance.visibility_range_end_margin = minf(fade, visible_within)
+			instance.visibility_range_fade_mode = \
+				GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		var authored := clampf(float(slab.get("alpha", 0.9)), 0.0, 1.0)
 		var colour := Color(str(slab.get("colour", "#39404f")))
 		colour.a = authored * scale

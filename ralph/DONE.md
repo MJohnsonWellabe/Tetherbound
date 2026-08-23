@@ -3,6 +3,544 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## RUNTESTS-FILTER — `--only=` selector for run_tests.gd, and why CI run 2180 was red
+
+`tests: full suite 1362 tests, 830325 assertions, 0 failed` · `area: tests/run_tests.gd`
+
+`ralph/RUNTESTS-FILTER`'s own CI run (2180, commit b63ecc6) came back red, but not
+because of anything in its diff. Merged `origin/main` (integration-W1, +101 files,
+no conflicts) and re-ran everything to find the actual cause rather than trusting
+either "red" or "green" at face value:
+
+- **`verify-unit-tests` (all four shards) passed on the original commit, before
+  any merge.** The `--only=`/`--shard=` harness change never broke sharding or
+  collection — it was never the suspect it looked like.
+- **`verify-continuous-core-known-red` failing is not a bug.** That job carries
+  `continue-on-error: true` specifically because CONTINUOUS-CORE has never
+  passed (see its own comment in `ci.yml`); its failure doesn't gate the run.
+- **`verify-owner-regressions-shard` was the real red**, on
+  `smoke_party_count_after_catches.gd`: "could not engage the real wild body...
+  the winning prompt is Interactable, not the target" on the second catch
+  (`Wild_bramblebun_0_2`). Ran this smoke test standalone, twice in a row, on
+  the identical merged commit with zero code changes in between: **PASS, then
+  FAIL**, both times stalling on the same creature. `encounter_director.gd`
+  seeds each wild spawn's placement RNG deterministically
+  (`hash("wild_spawn_%d" % order)`), so this isn't a random-position issue —
+  it's some other non-determinism (most likely physics/movement drift over the
+  ~1500-2000 frame walk-and-sidestep sequence `_close_in_until_offered()` runs)
+  that occasionally lands the player close enough to a neighbouring prop that
+  the arbiter's correct nearest-wins behaviour (established in the
+  `Gate C` / integration-ABC entry above this one) never resolves onto the
+  creature within the harness's 40-attempt budget. Confirmed unrelated to this
+  branch: that file has had one commit since the integration-ABC era, this
+  branch touches only `tests/run_tests.gd`, and the job doesn't invoke
+  `run_tests.gd` at all — it runs smoke scripts directly.
+
+**Left un-"fixed" deliberately**: chasing genuine simulation non-determinism
+down to its source is a different, larger job than this lane owns, and the
+test's own header already documents `_close_in_until_offered()` as bounded/
+best-effort. Flagging it here rather than papering over it — a future CI run
+landing red on `verify-owner-regressions-shard` with this exact message is
+this same pre-existing flake, not a new regression, unless the failing
+creature/behaviour differs.
+
+Verified on the merged branch before push: full suite 1362 tests / 0 failed;
+`--only=test_harvest.gd` (22 of 105 files, 22 tests, 0 failed);
+`--only=test_harvest.gd::test_gather_with_the_right_tool_pays_the_full_amount`
+(1 of 105 files, 1 test, 0 failed); `--only=` against a selector matching no
+file hard-errors with exit 2, as designed; `--shard=1/4` (27 of 105 files, 327
+tests, 0 failed) — sharding and full-run behaviour both unchanged from before
+this flag existed.
+
+## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
+
+`tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd (new), scripts/world/rift_collapse.gd, data/config/building_prefabs.json, data/config/stronghold_occupation.json (new), data/config/rift_collapse.json`
+
+Prompts `21-STRONGHOLD-MAT` and `22-SKY-PLANES`, plus the stronghold half of
+`ralph/ASSESSMENT_2026-08-23.md`'s round-2 blind critique ("an untextured
+toy-scale blockout (~30m), bannerless, unlit-looking, no Tether presence" /
+"untextured grey ghost boxes on 4 of 7 band4 horizons").
+
+### The stronghold was not untextured. It was unlit, and that is measurable.
+
+The first thing worth recording is that **`21-STRONGHOLD-MAT`'s own hypothesis
+was wrong, and so was mine for the first hour.** There is no broken material
+path, no null material, no builder bypassing the palette. `building_prefabs.gd`
+retints every castle module correctly and always has.
+
+What is actually wrong is an argument between two files that have never been
+read together:
+
+* `data/config/art.json` authors the sun at **pitch -44, yaw -40** — the north
+  sky.
+* `landmark.gd` puts the gate, the ramp and the entire approach on the castle's
+  **south** side, because that is where the road and the Legendary Chamber are.
+
+So the hero face of the endgame landmark is **backlit at every hour the chapter
+is ever played**, and everything a player looks at walking in is lit by ambient
+fill alone. Measured on `main` with `tools/frame_stats.py`:
+
+| frame | near-field luma, main | reference range (art.json's own quote) |
+|---|---|---|
+| `gate-close` | **0.012** | 0.49 – 0.60 |
+| `silhouette-approach` | **0.053** | 0.49 – 0.60 |
+
+Ten to forty times under. No albedo survives that. A stone colour chosen against
+a lit test render lands at near-black when the surface it is on never sees the
+sun, which is exactly what the earlier pass that DARKENED this castle's retint
+(recorded in `landmark.gd`'s `PLINTH_COLOUR` history) walked into — it was
+answering a washed-out-at-distance complaint from the era when this was a
+long-range wayfinding silhouette, and `OF13` moved the site out of long-range
+view entirely. `landmark.gd`'s own header already says that argument stopped
+being load-bearing; the darkening it bought could be given back.
+
+**Turning the sun around was deliberately NOT done here.** It is one global
+value every biome, frame and combat-readability decision in the game is tuned
+against, and it lives in the environment config another lane owns. Two fixes
+were used instead, and both are inside this lane's scope:
+
+1. **Albedo.** Every stone value in the `castle` retint raised about a stop and
+   a half, ladder unchanged (`LightRock` #786d5e→#a3907a, `DarkRock`
+   #463f37→#6b5f52, `Black` #18140f→#221d18, `Celing`, `LightWood`). The plinth
+   followed it (#332e28→#524a41) and is still darker than the wall's darkest
+   stone, so round 3's "foundation grounds the mass" relationship is preserved,
+   not undone. Team Tether's oxblood is untouched.
+2. **The garrison's own fires.** A fortress held by an army, facing away from
+   the sun, is lit by the people holding it. That is `stronghold_occupation.gd`
+   below, and it is the honest fix rather than a cheat.
+
+Result: `gate-close` near luma **0.012 → 0.144** (12x), `silhouette-approach`
+**0.053 → 0.128** (2.4x), value spread on `gate-close` **0.38 → 0.52**.
+
+### It was genuinely bannerless, and the two banners that existed were inside a wall
+
+`tools/_probe_castle_geometry.gd` (scratch) instantiates the prefab and reads
+the real per-module AABBs back instead of trusting the recipe's own `_why`
+prose. It found the two shipped gatehouse banners at z -9.648 hanging on
+`LargeSquareTowerBricks` at scale 3.4, whose measured south face is at
+**z -10.79** — they have been buried in the masonry since the day they were
+authored. **Neither blind critic who called this castle "bannerless" was wrong
+about what was on screen.** Fixed, plus seven more: four down the south curtain
+run, one on each south corner tower, one on the keep.
+
+Measured extents, for whoever dresses this next (local frame, castle base =
+plinth top = y 4.2): curtain top **13.97**, outer face **-9.07**; gatehouse
+flankers top **18.4**, south face **-10.79**; south corner towers top **23.6**,
+south face **-11.19**; keep top **33.6**; plinth top **4.2**, south edge
+**-10.0**, leaving a 0.93m apron. They are in
+`stronghold_occupation.json`'s `_comment_measured` too.
+
+### `stronghold_occupation.gd` — presentation only, no collider, no flag
+
+Fire baskets at the gate, on the ramp head, along the parapet, down the ramp's
+own verges and at the checkpoint; Team Tether work lamps in the reserved teal on
+the gatehouse, in the gate passage and on the keep's crown; and a garrison camp
+running ~30m along the base of the south wall — tents, bedroll, firewood, a
+stone-ring fire, oxblood-marked crates, barrels, rope — with more clutter on the
+courtyard slab inside the gate.
+
+Nothing generated, no new asset. Flames are `torch_prop.gd`'s existing billboard
+geometry **with its stick freed** and seated on a two-primitive iron basket; the
+camp is `generated_camp` / `kenney_survival` / `quaternius_fantasy` props
+`props.gd` already places elsewhere; banners are the castle kit's own
+`Banner.obj`. The camp is also the answer to "toy-scale": a 1.8m tent beside a
+10m curtain is the scale cue an untextured wall cannot give on its own. **The
+footprint was not changed** — the terrain probe recorded in the castle recipe
+bounds it (the Rise flank climbs +34m twenty metres west, the heightfield ends
+~30m east), and height already carries the scale.
+
+Nothing is inside the ramp's own 6m walked width. `smoke_stronghold` passes
+unchanged — it exercises `stronghold.gd`'s five-space route, which is a
+different building sited south of this one and is untouched.
+
+### Six rounds of my own iteration before the blind pass, all of them earned
+
+Recorded because each was a real defect a render caught and reading the config
+would not have: round 1 hung braziers in mid-air and glued crates to the outside
+of a wall (numbers inferred from prose, hence the geometry probe); round 2 left
+a row of black mushrooms on sticks (a 0.78m handheld brand scaled 2.6x is 2.8m
+of bare pole out of a bowl) and a translucent grey smoke plume up the right
+third of the hero shot — the same reading this task is elsewhere REMOVING from
+the Band 4 horizons, so that camp's smoke column is dropped; round 3 turned the
+whole fortress orange (energy 6.0 / range 20) and washed the south curtain
+sickly green with teal at range 11, which breaks the reservation as surely as
+painting something friendly teal would; rounds 4–6 dialled fire back to
+punctuation, halved the teal reach twice, and respaced the ramp baskets after
+`tools/_probe_occupation.gd` measured one landing **2.06m** from the
+`gate-close` eye, which is where the black bowl filling that frame's corner came
+from.
+
+### SKY-PLANES: named, and it is not a broken transform
+
+`shots/band4/far-panels-north.png`'s three pale translucent rectangles are
+`scripts/world/rift_collapse.gd`'s **`StormWall_0/1/2`**, proven by
+`tools/_probe_sky_slabs.gd` — 1943–2005m from that viewpoint, inside the
+capture camera's own 2000m far plane and dead ahead of it, and 1414–1557m off
+`ridge-patrol-camp` and `watchtower-spur`.
+
+Nothing is broken in the material or the transform. `rift_collapse.gd`'s own
+header still asserts every mesh sits "260–460m out ... outside the 512m
+terrain"; the first half is true and **the second half quietly stopped being
+true when the world moved to the 8192m corridor** and the seam went with it to
+z≈7513. At the seam the effect works — 365–461m out, each slab subtending ~26°
+of sky, a wall of weather with no land past it. At 2km the identical quad
+subtends 5–8° and the fog it is correctly drawn through blends roughly two
+thirds of the way to `fog_colour`, so a slate storm wall becomes a small, pale,
+hard-edged translucent box on a hillside.
+
+So the fix is a **placement contract, not a colour**: `visible_within_metres`
+1150 / `fade_metres` 250 in `rift_collapse.json`, applied to both groups.
+Proven visually as well as analytically: `shots/band4/ridge-patrol-camp.png`
+re-shot from the identical viewpoint is the same frame with the pale
+rectangles simply absent, and `tools/frame_stats.py` over the four Band 4
+frames that re-rendered moves nothing except that frame's value spread
+(0.60 → 0.63, which is what removing three pale sky quads does) — every other
+axis identical to three decimals, so nothing else in Band 4 was disturbed.
+
+The two frames the assessment named by name, `far-panels-east` and
+`far-panels-north`, were **not** re-shot: the seven-shot Band 4 capture was
+killed four frames in (those two are last in its dict), and the coordinator
+then held all renders — the box was at load ~29 with five lanes capturing into
+each other and one lane had written zero frames in 32 minutes. Re-shooting them
+is cheap when the box is free: `tools/_capture_far_panels.gd` (scratch, this
+task) is the same two viewpoints and the same 22-degree lens with the other
+five dropped. It is worth doing, but the finding does not rest on it —
+`ridge-patrol-camp` is a same-viewpoint A/B on the identical defect, and
+`tools/_probe_sky_slabs.gd` covers all seven Band 4 sightlines analytically
+(nearest 1414m, against a 1150m cull) without a renderer at all.
+Chosen off the storm road's own length rather than picked round — the road runs
+z 7000→7513, so a player stepping onto its far end stands ~919m from the nearest
+slab and must still see the wall they have walked toward all chapter; full
+opacity holds to 900m, fades to nothing by 1150m, with ~260m of margin under the
+1414m nearest Band 4 sightline. Re-probed: every Band 4 sightline culled, the
+seam view untouched. `FarCountry` gets it too — it is at zero alpha until
+`legendary_freed` and would have inherited the identical defect the moment the
+Warden fell. `horizon()`/`_cover()` read `instance.visible`, which a visibility
+RANGE does not touch, so `smoke_boss`'s before/after signature is unaffected.
+
+### Not done, and why
+
+* **The blind visual-judge pass did not run.** `conventions.md` requires it and
+  I could not spawn the critic: this lane has no in-process subagent tool, and
+  every `create_session` attempt returned "the service is temporarily
+  unavailable". The six rounds of iteration above are **my own** reads of real
+  frames, which is explicitly not the same thing. The frames and the sheet are
+  built and current; **the next firing on this branch should run the blind pass
+  before this is called done**, against `shots/wayfinding/_sheet.png` and the
+  three frames, with `docs/reference/`. Treat the frames as
+  improved-and-unjudged, not as passed. Both remaining pieces of work — that
+  blind pass and the two `far-panels-*` frames — are render-bound, so check
+  `uptime` first: the coordinator's standing rule this weekend is not to start
+  a capture unless the 1-minute load average is under 8. It was 10.2 and
+  falling when this branch was pushed.
+* `GATE-E-LOGIC` had not landed on `origin/main` at branch time (no
+  `tests/smoke_gate_e_finale.gd` present), so it was not run.
+* No Meshy generation was spent. `CLAUDE.md` reserves it for Team Tether hero
+  objects **with owner-supplied reference art**, and there is none for a
+  brazier, a pylon or a barbican. What this site would actually use is recorded
+  in `BACKLOG.md` as `STRONGHOLD-TETHER-HERO-PROPS` rather than generated.
+
+## GATE-E-LOGIC — the finale walked end to end, and the three defects that found
+
+`tests: full suite 1362 tests, 830328 assertions, 0 failed · tests/smoke_gate_e_finale.gd (new, 2 consecutive green runs, ~5m20s each) · smoke_stronghold.gd green · smoke_boss.gd green` · `area: tests/, scripts/build/creature_bed.gd, scripts/ui/combat_hud.gd, scripts/world/stronghold*.gd, data/progression/objectives.json, data/dialogue/meadows_freed.json`
+
+Prompts 69 (+34/46/67/68). **Most of the finale was already built and this
+entry should not be read as if it were not.** The Warden, the reveal readout,
+the lever, the freeing, the voluntary join, the `pending_catch` hand-off to
+R4.10's ceremony, SG44's rift, SG46's healing and the post-victory villager
+dialogue are all on `main` and all correct. What was missing was the JOIN
+between them and the two beats after it.
+
+### What was actually missing
+
+1. **Nothing walked the finale continuously.** `smoke_stronghold.gd` proves the
+   route and fights nobody, by design. `smoke_boss.gd` teleports in front of
+   the Warden with a level-1 starter. The gauntlet, the recovery point, the
+   shutter after a real fight, the walk between rooms, and everything after the
+   ceremony were covered by neither. `tests/smoke_gate_e_finale.gd` is that run:
+   arrive with a full five -> walk in from the entrance -> three gauntlet fights
+   in their own rooms -> rest a fainted creature at the recovery point -> elite
+   -> shutter lifts -> read the reveal -> Warden -> lever -> freed -> full belt
+   forces the release ceremony -> decision recorded -> region answers ->
+   post-victory villager -> objective chain terminates. Added to
+   `verify-gate-evidence-shard`.
+
+2. **The objective chain stopped one beat before the chapter did** (prompt 68's
+   last two finale lines). It ended at `legendary_freed`, so the HUD went blank
+   while the roster decision was still open and the whole payoff still unwalked.
+   Two entries added: `legendary_settled` and `meadows_acknowledged`.
+   `legendary_settled` is a NEW flag and deliberately not `legendary_joined` —
+   keeping five and letting the legendary go is a legal ending under the hard
+   cap, and keying the chain on the join would strand that player forever.
+   `meadows_acknowledged` is carried by every conversation in
+   `meadows_freed.json`, on its FIRST line, so no villager is a required stop.
+
+### Four real defects the run found, all on `main`, none of them new
+
+- **Every stronghold and warrens fight was held under the building.** The one
+  that failed CI, the one the owner reported as fights "phasing outside
+  reachable arena bounds", and the biggest of the four. Its own section below.
+
+- **Every level-up in the chapter aborted its own announcement.**
+  `combat_hud.gd::_set_xp_line` read `creature.get("bond_nodes")`; that is a
+  METHOD, so `get()` returned a Callable and `int(Callable)` killed the function
+  with "Nonexistent 'int' constructor" — the player never saw the line.
+  `test_level_up_announcement.gd` asserted on the SOURCE TEXT of that function
+  and stayed green through all of it (prompt 33's exact shape). Fixed, and the
+  test now also executes the builder.
+- **The stronghold's recovery point could not rest anything.** The authored bed
+  never got a build index, so `assign_creature()` refused every creature and
+  SG38's one pre-Warden recovery opened a panel that did nothing.
+  `creature_bed.gd` now documents its index namespace and reserves negatives for
+  authored beds.
+- **`creature_bed_built` was set on frame one of every new save**, by that same
+  bed, because `build_real()` sets the chapter's bed objective — so the
+  tournament ladder's "Build a Creature Bed" line was complete before the player
+  had a hammer. `build_real(player_built := true)` now takes the answer;
+  the stronghold passes false. `smoke_gateb_flags.gd` asserts the opposite and
+  stayed green because it builds its bed on a bare FlatWorld with no stronghold
+  in it — the real world was the only place either bed defect was visible, which
+  is the argument for this whole file.
+
+### Prompt 34 (boss verification flake) — REPRODUCED, root-caused, fixed
+
+The first push of this branch was green locally and RED on GitHub's runner
+(CI 2169, `verify-gate-evidence-shard`): *"the elite's fight never resolved
+inside 9000 frames (5 quick attacks landed, 0 missed)"*, with every downstream
+beat cascading. Zero misses is the tell — the swing was never attempted, so this
+was never a whiff and never a budget.
+
+**Root cause, measured on a probe of the elite fight alone:**
+
+```
+elite body y=8.56   floor y=8.56   terrain y=1.37
+f0  ally(75.0, 1.92, 7555.5)  foe TrainerCreature_stronghold_elite_1(77.2, 2.49, 7555.5)
+```
+
+Every stronghold fight was being held **seven metres below its own floor**, on
+the terrain under the building, inside its 18m revetment skirt. The stronghold
+already answers `ground_height_at()` with its built floor — but that function is
+discovered by walking UP the tree, and `encounter_director._send_out_next_creature`
+adds every `TrainerCreature_*` to the WORLD ROOT, not under the room. So the
+trainer's creature, the ally (`combat_manager._place`) and the player
+(`combat_manager._place_player`) all resolved the ground as the terrain and were
+teleported under the building. `combat_manager._arena_bounds` documents that
+exact parenting for radius; nobody had applied it to height.
+
+Down there, whether the ally can close at all depends on which side of a support
+it lands on. That is the "intermittent, container-load-sensitive" behaviour
+prompt 34 describes, and it is also the mechanism behind the owner's 2026-08-21
+report: *"Stronghold and Burrow Warrens fights sometimes phasing participants
+outside reachable arena bounds and becoming effectively impossible."*
+
+**Fix:** `scripts/world/built_floor.gd` — a building that CLAIMS an x/z answers
+for its own floor; everywhere else the terrain still does. `stronghold.gd` and
+`burrow_warrens.gd` expose the claim half of their existing `ground_height_at`
+as `built_floor_height_at()` (split, not duplicated, so the two cannot drift),
+and the two combat ground queries consult it. Claim-wins rather than
+whichever-is-higher, because the stronghold stands above the terrain and the
+warrens are cut into it — a max() rule would fix one and push every warrens
+fighter through the cave roof.
+
+**Kept found:** the finale smoke now asserts both fighters are in the ROOM at
+fight start and every 300 iterations after (it caught a second case, the
+courtyard, that the first fix missed), and carries a stall watchdog that fails
+after 900 iterations of no progress with the full state — positions, floor
+height, gap, reach, dy, `quick_ready`, combat state, hits/misses — instead of
+burning the budget to reach "never resolved". That is prompt 34's acceptance 3
+and 6.
+
+The `|| retry` on `smoke_boss.gd` in `verify-combat-shard` is left alone: it is
+the shard's uniform contention policy, not a mask for this bug.
+
+### Not touched
+
+Stronghold materials/sky planes (prompts 21/22, owned elsewhere). No new mesh,
+no generation, no sixth slot, no storage.
+
+
+## SITE-SHOTS — the four wanted story-page captures, all landed
+
+`area: site/`, `branch: ralph/SITE-SHOTS`
+
+`ralph/BACKLOG.md`'s SITE-SHOTS entry named four captures wanted "in value
+order": `tether-site.jpg`, a Meadows Hall/Warden frame, a re-aimed
+`village-square.jpg`, and fixes for `camp-dusk.jpg`/`weather-rain.jpg`. All
+four are resolved — three shipped as new captures, and reconciling against
+current `main` found the other two already fixed or never actually broken.
+Full per-frame detail is in `site/README.md`'s "Frames the page is currently
+missing, and why" and `ralph/BACKLOG.md`'s SITE-SHOTS third-pass update; the
+short version:
+
+- **Shipped**: `tether-site.jpg` (new, first-guess coordinates from
+  `tether_relay.json`'s own site frame rendered clean), a close Warden
+  portrait (took three renders — `focus_node` had to be the trainer body,
+  not `stronghold_climax.gd`'s placer node, and the arena's own near-zero
+  ambient meant a wide frame was mostly void), and `opening-bedroom.jpg`
+  (re-verified: the loft was already dressed, only the committed frame was
+  stale).
+- **Already fixed on `main` before this branch existed**: `village-square.jpg`
+  (`6cdf8dc9`) and `camp-dusk.jpg` (no reproduction of the old "two suns"
+  description in a fresh render, and no second light/sky-material in the
+  code that could have produced it). Both this page's own CSS comments and
+  the backlog entry were stale, not the build.
+- **Not a bug**: `weather-rain.jpg`'s faint streaks are an already
+  blind-pass-validated design choice (`world_weather.gd`'s own comment), not
+  an unfinished capture.
+- **Still gated, correctly, on a different lane's fix**: Meadows Hall
+  approach (`.s-hall`). `STRONGHOLD-MAT` landed since the backlog entry was
+  written, but a fresh capture shows `SKY-PLANES` is very much still visible
+  from this viewpoint — large translucent quads standing behind the hall.
+
+Reusable finding for whoever next writes a `focus_node` capture off a
+`trainer_npc.gd`-placed NPC: the placer node (named by whatever placed it,
+e.g. `stronghold_climax.gd`'s `"WardenTrainer"`) is not the trainer's body
+and is never itself repositioned. Find the body by the display name
+`trainers.json` gives that trainer's row.
+
+
+## SITE-DRESSING — four sites the 2026-08-23 assessment called "props QA-placed for a screenshot"
+
+`tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands/*/props.json, scripts/world/props.gd, tests/fixtures/band_split_baseline/props.json`
+
+`ralph/ASSESSMENT_2026-08-23.md`'s blind critique named "camps reading as
+props-on-lawn (no fire ring/tent/wear/arriving path)" as one of three ranked
+gaps between these frames and the project's own references. Four named sites,
+each rendered before/after with the project's own existing capture tools
+(`tools/capture_band3_region.gd`, `tools/_capture_band4_sites.gd`,
+`tools/survey_band2.gd` — none of the three were edited; `survey_band2.gd` is
+explicitly out of this lane's scope and the other two already had the right
+viewpoints authored). Every asset used was already installed before this
+branch; nothing was sourced or generated.
+
+### One small code addition: `retint` on props.json entries
+
+`scripts/world/props.gd` gained an optional `retint` key, read the same way
+`village.gd`'s building prefabs already read it (`building_prefabs.gd::
+apply_retint`, unchanged) — a material-name -> colour map applied to a loose
+prop. `apply_retint` needed no recipe/template state, only its own `_tinted`
+cache, so one `PREFABS.new()` instance in `props.gd`, built lazily on first
+use, was the whole change. This is the lever the picket-hess banner below
+needed and the one case CLAUDE.md's "one prop family" read as "one INSTALLED
+family" actually has room for: recolouring a piece of the shared family for
+one faction's site, not sourcing or generating a second banner mesh.
+
+### band4 `ridge_patrol_camp` — fire ring, tent, seat, approach stones
+
+Was six loose gear props (crate/barrel/bag/rope/whetstone/axe) on bare grass
+— `shots/band4/ridge-patrol-camp.png` before this branch shows exactly that,
+and matches the brief's own "barrel/crate/bench on virgin grass" verbatim.
+Added the D1 trail-camp's own solved fire (`Bonfire_Fire.obj`'s real `Fire`
+surface + `ignite()` + `campfire_glow.gd`'s light/embers/smoke,
+`glow:"campfire"`) at a patrol-sized scale (0.4, smaller than band1's rest
+camp), the same owner-referenced `campfire_stone_ring` and `camp_tent`
+meshes band1 already has committed under `assets/props/generated_camp` (no
+new generation), and one `Stool` seat. Three `Rock_Medium_*` stepping stones
+(`stylized_nature`, the textured family band1's own fire-ring arc already
+uses — not `environment/nature`'s untextured placeholder rocks, per that
+band's own recorded defect) run from the capture viewpoint's own approach
+bearing onto the supply pile, standing in for the ground-wear/arriving-path
+read that `terrain_playground.json`'s path/apron system would give if a
+site-dressing lane were allowed to touch it (it is not — same DO-NOT-TOUCH
+list this lane was given, same precedent band1's own "no ground-wear decal"
+remainder already set). After: `shots/band4/ridge-patrol-camp.png` — a lit
+fire with real light/smoke, a tent, a seat, and a visible stone line leading
+in from the approach.
+
+### band3 `relay_approach_checkpoint` (picket-hess) — brazier and an oxblood banner
+
+The barricade/camp rebuild from GATE-D3 rounds 2-4 was already asymmetric
+and already had a bench/bag/bucket camp behind it (`_why_asymmetric`/
+`_why_rebuilt` in the file record why) — round 4's own blind-critique fix
+predates this branch. What it still lacked, per this lane's brief, was a
+"tent or brazier" and a Team Tether occupation signal. Added a second small
+`Bonfire_Fire`+`campfire_stone_ring` at the watch bench (0.38 scale, a held
+post's fire, smaller than the rest-camp fire) and one `Banner` (Medieval
+Castle kit, sourced standalone from `assets/buildings/quaternius_castle/
+Banner.obj`, already installed) staked at the west barricade, retinted
+oxblood `#7a2430` via the new `retint` key — the *same* hex value
+`building_prefabs.json` already retints the stronghold gatehouse's own
+banners to, so this is one danger-faction accent reused, not invented.
+CLAUDE.md's oxblood-for-danger rule and this lane's own brief both name a
+held Team Tether checkpoint as exactly where it belongs.
+
+**Caught and fixed in this same pass, not shipped and left for a critic to
+find:** the first render at `scale: 0.6` put a barely-visible fleck of red
+27m from the checkpoint's own capture viewpoint — the raw `Banner.obj` mesh
+is a 0.70x0.66m bolt of cloth with no pole, so the castle kit's own gatehouse
+scale (2.2, on 10m walls) does not transfer to a roadside stake. Raised to
+`2.6` (a 1.8m banner, close to the 1.8m trainer this project's own visual-judge
+rubric measures scale against) and re-rendered before committing either
+number. Before: `shots/band3/03-picket-hess-on-the-road.png` (pre-branch,
+matches the brief's "symmetric even-spaced barrels/crates" only in the sense
+that the barricade itself was already fixed and nothing behind it read as
+held). After (banner at 2.6): the same frame now shows a standing oxblood
+flag over the barricade gap, unmissable at the distance a player actually
+meets this checkpoint from.
+
+### band2 `quarry_station` — cut-face spoil dressing
+
+The brief's "two identical rocks at near-identical rotation... four boulders
+on a lawn" describes `vegetation.json`'s own scatter boulders at this site
+(confirmed against `shots/band2/02b-quarry-station-close-day.png`, before
+and after) — **out of this lane's file scope** (`vegetation.json`/scatter
+bake are on the DO-NOT-TOUCH list) and not this entry's to fix. What this
+entry could do, and did, is add what `props.json`'s own `quarry_station`
+cluster was missing: five `Rock_Medium_*` (`stylized_nature`) spoil/rubble
+pieces at varied rotation (55/210/340/95/165 degrees) and varied scale
+(0.22-0.55, a real size gradient rather than one boulder repeated), sited
+between the two ruined foundations and the working pile — cut-face debris a
+crew would leave, not landscaping. This is `tests/fixtures/band_split_
+baseline/props.json`'s pinned `clusters[4]` (`quarry_station`, authored
+before the band split): mirrored the same 11-prop cluster into the fixture
+per this test's own documented precedent (`test_band_content.gd`'s
+TOURNAMENT-1 comment — "mirror the change in the fixture, keep the entry at
+its index, never relax the comparison") rather than touching the test.
+
+### band3 `old_mill_yard` — a path to the door
+
+Added two `Floor_UnevenBrick` flagstones (Medieval Village kit, the same
+real-textured floor family `village.gd` already builds every settlement
+floor from — installed, not new) along the yard's own bench-facing bearing
+(105 degrees, "turned toward the mill door"), standing in for the worn-track
+read `terrain_playground.json`'s `paths`/`building_aprons` system would give
+if this lane could touch it (it cannot — same reasoning as band4's stepping
+stones above).
+
+**Not independently re-confirmed by a render.** A purpose capture
+(`tools/_capture_site_dressing.gd`, written for this one frame) aimed at the
+wrong ground — the eye/target guess landed on a cliff edge and an unrelated
+wild creature, not the yard — and chasing a second guess at the coordinates
+was cut for time rather than shipped as a false "verified" claim. The tiles'
+own placement math (offset from the bench's already-measured position along
+its own already-measured facing bearing, both authored by the GATE-D3 lane
+that built this yard) is the same kind of derivation every other entry in
+this file trusts without a render, but this one specific claim — that the
+tiles read as a path from the existing north-bank viewpoint — is unverified
+and should not be treated as more certain than that. The broken capture tool
+was deleted rather than committed half-working.
+
+### Blind critique
+
+No subagent-spawning tool was available in this lane's toolset, so the
+`visual-judge` rubric was applied directly against
+`docs/reference/tetherbound-meadows-keyart.png` by the same session that made
+the changes — not a blind pass, and not represented as one. On that basis:
+ridge_patrol_camp's fire/tent/path and the picket's banner are clear,
+specific improvements against the "props on lawn" finding; the quarry's
+"two identical rocks" complaint is unmoved because it lives in a file this
+lane cannot touch; the mill yard's path is unverified per above. One
+genuinely blind pass on the four after-frames is still owed to this work.
+
+### What is not resolved
+
+- Ground-wear/path decals proper: blocked on `terrain_playground.json`
+  ownership, same as band1's own still-open remainder.
+- The quarry's "two identical boulders" scatter defect: `vegetation.json`
+  ownership, not this lane's to fix.
+- Mill yard path tiles: placement unverified by render (above).
+- A real blind (subagent) critique of the four after-frames.
+
 ## TUTORIAL-CHAIN — OP23-04: the opening is a guided one-step-at-a-time chain
 
 `area: data/progression/objectives.json, scripts/world/quest_log.gd, scripts/ui/tab_quest_log.gd, scripts/ui/input_glyph.gd, scripts/build/home_progress.gd, scripts/build/build_placer.gd, scripts/world/tournament.gd`
@@ -154,11 +692,72 @@ updated for the same reason.
 
 Branched from `origin/main` at `a8ed4f0`.
 
-
-
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
+
+## STRANDED-P3 — landed the chop clip, fixed dark Team Tether NPCs, fixed the survey_band2 capture bug
+
+`tests: tests/smoke_art.gd OK, tests/smoke_playground.gd OK` · `area: player/tool_hold, characters/character_model, tools/survey_band2, data/config`
+
+Three items on branch `ralph/STRANDED-P3`.
+
+**1. Landed OP21-24 (the chop clip).** Cherry-picked `19d7d4a5` from
+`origin/claude/gate-a-core-verbs-8aaw7g` (one conflict in `tool_hold.gd` --
+both sides added a new field, merged trivially) and `a36fc5a6` (CI coverage
+backlog note, reworked below rather than applied as-is). The trainer now
+authors and swings a real two-handed overhead chop instead of borrowing the
+throw clip; verified by re-running `tests/smoke_playground.gd`
+(`_a_swing_plays_the_chop_and_lands_on_its_impact_frame`), which is OK and
+reports `chop swing: role=chop clip=chop impact at 0.73 of 0.625s (want
+~0.60)` mid-swing (the trailing print reads `clip=idle` because it fires
+after the poll loop, once the one-shot has already reverted -- a display
+quirk, not a bug; role/clip were asserted correctly earlier in the same
+check). `a9215a1b` (the branch's own CI-wiring commit for this and other
+Gate A checkpoints) conflicted heavily against `main`'s own later, more
+complete `verify-owner-regressions-shard` / `verify-gate-evidence-shard` /
+`verify-continuous-core-known-red` jobs and was not cherry-picked whole --
+see BACKLOG.md's `CI-COVERAGE-1` for what it and a broader sweep still found
+unwired.
+
+**2. Dark Team Tether NPCs, confirmed with real renders, not asserted.**
+grunt's rank palette (`#4a5049`, luminance ~0.30) crushed Hess to a
+near-black silhouette on the band3 picket road via
+`character_model.gd::_shared_variant_material`, which multiplies the rank
+colour into both `albedo_color` and the shared self-lit emission channel at
+once. A first-round fix that only raised the palette hex (to luminance
+~0.55) and scaled `emission_energy_multiplier` up for dark tints still
+rendered almost solid black once actually captured -- a straight multiply
+can only ever darken a source pixel, and wherever the rig's painted emission
+texture is already near-black, no tint brightness or energy scalar rescues
+a value that was already zero. Fixed with an ADDITIVE emission floor
+(`lerp()` the tinted emission toward the tint colour, gated to skip every
+`#ffffff` identity tint so villagers are untouched), the same shape as
+`severed_spokes.gd::_tether_material()`'s tether_oxblood fix. Re-rendered:
+Hess now reads with visible brown leather and blue-grey uniform detail, not
+a flat cutout. `npc_ranks.json`'s grunt/officer hexes stay at their
+round-1-brightened values (still the darkest pair below captain/warden) even
+though the real fix turned out to be in `character_model.gd`, not the data.
+
+**3. SURVEY_BAND2 capture bug.** Ported `capture_band3_region.gd`'s two
+established fixes into `tools/survey_band2.gd`: pin weather to clear and
+stop both `WorldLook`/`WorldWeather` processing before the per-viewpoint
+loop (the day/night clock was racing the settle/pose waits across 8
+viewpoints and rolling day frames toward dusk before capture), and park the
+actor-less viewpoints' `Player` above ground instead of 500m under it
+(`water.gd` reads that as fully submerged and ramps a red drowning vignette
+over the whole frame -- the actual source of the reported crimson, already
+diagnosed once in `capture_band3_region.gd`'s own header comment 3).
+Verified with a fresh `survey_band2.gd` run: all 8 frames wrote clean,
+`04-warrens-mouth-day.png` is genuine daylight, and the night frames read as
+blue dusk with a lit pylon, not submerged-red.
+
+Not done: the 31-file `CI-COVERAGE-1` backlog item (non-blocking, filed for a
+dedicated pass) and the pre-existing, unrelated `CONTINUOUS-CORE` axe-swing
+defect (the swing never STARTS in that one flaky smoke-test scenario --
+`equipped=""`, `prop=<null>` -- a different bug from the chop clip this item
+fixed, already tracked in BACKLOG.md and untouched here).
+
 
 `ralph/ASSESSMENT_2026-08-23.md` (P2) named 3 real content gaps as the suite's
 only failures. All 3 fixed as data, no code changes:

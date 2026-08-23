@@ -1,0 +1,96 @@
+{
+  "_comment": "GATE-E-STRONGHOLD-ART (2026-08-23). Team Tether's occupation of the castle on the ridge, as dressing. Two blind critics reading the same frames called the stronghold 'bannerless, unlit-looking, no Tether presence' against key art whose fortress is a sprawling OCCUPIED complex, and this file is the half of that answer that is not stone colour: the fires that are actually burning on it, the machinery bolted to it, and the checkpoint camp its garrison keeps at the foot of the ramp.",
+
+  "_comment_frame": "Every coordinate is LOCAL to landmark.gd's own node -- the same frame data/config/building_prefabs.json's `castle` modules already use, so a number here can be read straight against a module there. `ground: true` means 'ignore y and sit on the terrain'; `plinth: true` means 'sit on the courtyard slab'.",
+
+  "_comment_measured": "THESE HEIGHTS AND DEPTHS ARE MEASURED, NOT INFERRED. Round 1 of this task placed everything off the castle recipe's own `_why` prose and got braziers hanging in mid-air, banners buried inside the towers they were meant to hang on, and a crate and a barrel floating off the wall face -- all four visible in the round-1 frames. `tools/_probe_castle_geometry.gd` (scratch, this task) instantiates the prefab and reads the real per-module AABBs back. What it found, in this file's local frame (castle base = plinth top = y 4.2):\n  * two-course south curtain: top y 13.97, outer face z -9.07, inner face z -7.83\n  * gatehouse flankers (LargeSquareTowerBricks, scale 3.4): top y 18.4, south face z -10.79\n  * south corner towers (PointyTower, scale 3.6): top y 23.6, south face z -11.19\n  * keep: top y 33.6\n  * plinth (landmark.gd's own): top y 4.2, south edge z -10.0, so there is a 0.93m apron between the curtain's outer face and the drop\nAnything placed south of z -10.0 is over open air and must carry `ground: true`.",
+
+  "_comment_why_fire": "THE FIRES ARE NOT DECORATION, THEY ARE THE FIX. The sun is authored into the north sky (art.json, pitch -44 / yaw -40) and this castle's gate, ramp and entire approach face south, so the hero view of the endgame landmark is backlit every hour of the chapter -- measured near-field luma 0.012 on `gate-close`, against 0.49-0.60 in the project's own reference frames. Raising the stone albedo (building_prefabs.json's castle `retint`) lifts the ambient-only fill; these lights are the other half, and the honest one: a held fortress at dusk-facing-north is lit by its garrison, not by the sun.",
+
+  "_comment_teal_reach": "ROUND 3: every teal lamp had its range roughly halved and its energy cut. Round 2 ran them at range 11 off a 10m curtain and the frames came back with the south wall washed sickly green over most of its area -- which breaks the reservation as surely as painting something friendly teal would: if teal covers half the fortress it stops meaning `Team Tether machinery is live HERE`. A work lamp should read as a bright point with a small pool around it, so the emissive lens carries the colour and the light barely touches the stone. ROUND 5 halved the reach again: at range 4.5 the gatehouse flankers still carried visible green patches a third of their own width.",
+  "_comment_reserved": "`tether_lamps` are palette.json's reserved tether_teal (#3fe8c4) and appear ONLY on Team Tether hardware that is live -- the same reservation stronghold.json's conduits and tether_relay.gd's pylons already keep. Nothing friendly, natural or neutral in this file is teal. The oxblood is likewise Team Tether's alone; the crates below carry it because they are Tether's crates.",
+
+  "braziers": [
+    {
+      "_why": "The gate pair, standing in the bay just inside the curtain's inner face (z -7.83). These are the single most load-bearing pair in the file -- `gate-close` is the frame that measured 0.012 near luma, and it is aimed straight down this axis.",
+      "at": [-1.7, 4.2, -7.0], "scale": 1.5, "energy": 2.6, "range": 12.0
+    },
+    { "at": [5.7, 4.2, -7.0], "scale": 1.5, "energy": 2.6, "range": 12.0 },
+
+    {
+      "_why": "The ramp head, on the 0.93m apron between the curtain face and the plinth's south edge, flanking the ramp's own 6m width (x -1..+5). What the player walks between, and what puts a lit edge on the ramp's stone from the approach.",
+      "at": [-1.9, 4.2, -9.55], "scale": 1.4, "energy": 2.6, "range": 13.0
+    },
+    { "at": [5.9, 4.2, -9.55], "scale": 1.4, "energy": 2.6, "range": 13.0 },
+
+    {
+      "_why": "The parapet run, seated ON the measured wall walk (y 13.97) rather than the 14.4 round 1 guessed, which left them hanging. Small on purpose -- their job is a rhythm of warm points along the skyline at 10m up, telling the eye the wall is manned, not lighting the ground from there.",
+      "at": [-12.4, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0
+    },
+    { "at": [-6.6, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
+    { "at": [10.6, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
+    { "at": [16.4, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
+
+    {
+      "_why": "ROUND 5: the processional way. Four baskets standing ON the ramp's own verges, at x -1.3 and +5.3 -- just outboard of its 6m walked width (x -1..+5), so the route is not narrowed -- with `ramp: true` reading their height off the ramp's own slope. `gate-close` is shot from ON this ramp looking up it, and through four rounds its lower two thirds stayed the darkest thing in the set: every fire in the file was either mounted at plinth height ABOVE the ramp or standing on the grass beside it, and neither reaches a surface that faces the sky but never the sun. A lit way up to a held gate is also the right image, not just the readable one. ROUND 6 respaced them to z -11.6 and -15.2 after `tools/_probe_occupation.gd` measured the lower pair landing 2.06m from the `gate-close` eye, which is where the black bowl filling that frame's corner came from -- the pairs now bracket the ramp's upper half and the checkpoint's own baskets hold its foot.",
+      "at": [-1.3, 0.0, -11.6], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true
+    },
+    { "at": [5.3, 0.0, -11.6], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
+    { "at": [-1.3, 0.0, -15.2], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
+    { "at": [5.3, 0.0, -15.2], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
+
+    {
+      "_why": "ROUND 3: the pair standing on the GRASS either side of the ramp, half way down its run. Rounds 1 and 2 lit the wall and left the ramp itself black -- `gate-close` is shot from ON the ramp looking up it, and after round 2 its whole lower half still measured as an absence. A light mounted at plinth height (y 4.2) cannot reach the roadbed dropping away below it; one standing on the roadbed can. These also give the plinth's own south face -- the dark band under the curtain in every approach frame -- something to be lit by. Clear of the ramp's 6m width (x -1..+5) on both sides. ROUND 4 cut this from four baskets to two and roughly halved every fire in the file: round 3 ran the gate pair at energy 6.0 / range 20 and turned the entire fortress orange, which trades one wrong reading (a black slab) for another (a stone castle that looks like it is on fire). The stone's own albedo carries the base value; fire is punctuation on it. ROUND 5 also walked this pair out to the ramp FOOT (z -22) -- at z -17 the eastern basket sat 1.4m in front of the `gate-close` camera and filled the corner of the frame with a black bowl.",
+      "at": [-3.6, 0.0, -22.0], "scale": 1.3, "energy": 2.6, "range": 13.0, "ground": true
+    },
+    { "at": [7.6, 0.0, -22.0], "scale": 1.3, "energy": 2.6, "range": 13.0, "ground": true }
+  ],
+
+  "tether_lamps": [
+    {
+      "_why": "Work lamps bolted to the gatehouse flankers' SOUTH faces (measured z -10.79, so the housing sits proud at -10.95 instead of buried inside the tower the way round 1's -9.9 was). The reserved teal, the colour that at distance can only mean Team Tether machinery is live here.",
+      "at": [-3.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.34
+    },
+    { "at": [7.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.34 },
+    {
+      "_why": "Inside the gate passage, so the way in glows teal from the dark rather than reading as a bricked niche -- the exact complaint OF4-gate-arch recorded about this opening, answered with light instead of the shadow slab it retired.",
+      "at": [2.0, 6.6, -7.6], "energy": 1.4, "range": 3.5, "lens": 0.28
+    },
+    {
+      "_why": "The keep's crown, at its measured top (y 33.6). The tallest live thing on the site, and the one piece of Team Tether visible over the curtain from the whole approach.",
+      "at": [2.0, 33.0, 20.0], "energy": 1.6, "range": 5.0, "lens": 0.5
+    }
+  ],
+
+  "_comment_camp": "THE CHECKPOINT AT THE FOOT OF THE RAMP, and why it is this big. The ramp lands on the grass at local z -21 on the gate axis x +2. Nothing below is inside x -1..+5, which is the ramp's own width, so the walked route is untouched. This is also the layer the frames were missing most: a 1.8m tent and a knee-high crate against a 10m curtain are the scale cue an untextured wall cannot give on its own, which is a large part of why blind readers called a 36x40m fortress with a 29m keep 'toy-scale'. Round 2 widened it deliberately -- the camp now runs ~30m along the base of the south wall rather than sitting in one tidy clump, because 'sprawling occupied complex' is a thing you read from the spread of the occupation, not from the fortress alone.",
+  "camp": [
+    { "_why": "West wing: the garrison's tents and its fire.", "model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-7.5, -22.5], "yaw_deg": 24.0, "scale": 1.0, "ground": true },
+    { "model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-13.0, -19.5], "yaw_deg": -38.0, "scale": 0.92, "ground": true },
+    { "model": "campfire_stone_ring", "dir": "res://assets/props/generated_camp", "at": [-9.6, -19.4], "yaw_deg": 0.0, "scale": 1.0, "ground": true, "fire": true },
+    { "model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [-11.4, -17.6], "yaw_deg": -40.0, "scale": 1.0, "ground": true },
+    { "model": "bedroll", "dir": "res://assets/props/kenney_survival", "at": [-7.2, -20.4], "yaw_deg": 70.0, "scale": 1.0, "ground": true },
+    { "model": "Crate_Wooden", "at": [-15.6, -16.4], "yaw_deg": 16.0, "scale": 1.0, "ground": true, "tint": "#5a2a2e" },
+    { "model": "Barrel", "at": [-14.4, -15.2], "yaw_deg": 0.0, "scale": 1.0, "ground": true },
+
+    { "_why": "East wing: Tether's supply dump, oxblood-marked. Stacked rather than scattered, because a stack reads as somebody put it there and a scatter reads as debris.", "model": "Crate_Wooden", "at": [8.0, -20.4], "yaw_deg": 12.0, "scale": 1.0, "ground": true, "tint": "#5a2a2e" },
+    { "model": "Crate_Wooden", "at": [8.9, -21.5], "yaw_deg": -22.0, "scale": 1.0, "ground": true, "tint": "#5a2a2e" },
+    { "_why": "The third crate rides on top of the other two -- `lift` is metres above whatever surface the entry was snapped to.", "model": "Crate_Wooden", "at": [8.4, -20.9], "yaw_deg": 40.0, "scale": 0.95, "ground": true, "lift": 0.62, "tint": "#5a2a2e" },
+    { "model": "Barrel", "at": [10.6, -19.4], "yaw_deg": 0.0, "scale": 1.0, "ground": true },
+    { "model": "Barrel", "at": [11.4, -20.7], "yaw_deg": 30.0, "scale": 1.0, "ground": true },
+    { "model": "FarmCrate_Empty", "at": [7.2, -18.0], "yaw_deg": -14.0, "scale": 1.0, "ground": true },
+    { "model": "Rope_1", "at": [9.6, -17.8], "yaw_deg": 55.0, "scale": 1.0, "ground": true },
+    { "model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [14.4, -19.0], "yaw_deg": 52.0, "scale": 0.95, "ground": true },
+    { "model": "Crate_Wooden", "at": [16.2, -16.2], "yaw_deg": -30.0, "scale": 1.0, "ground": true, "tint": "#5a2a2e" },
+    { "model": "Barrel", "at": [17.4, -17.4], "yaw_deg": 0.0, "scale": 1.0, "ground": true },
+
+    { "_why": "Working clutter INSIDE the courtyard, north of the curtain's inner face (z -7.83) so it stands on the plinth rather than hanging off it -- round 1's z -11.6 put these over open air and they rendered stuck to the outside of the wall. Seen through the gate arch from the approach, and underfoot the moment the player walks in.", "model": "Crate_Wooden", "at": [-5.2, -6.2], "yaw_deg": 8.0, "scale": 1.0, "plinth": true, "tint": "#5a2a2e" },
+    { "model": "Barrel", "at": [-6.6, -5.6], "yaw_deg": 0.0, "scale": 1.0, "plinth": true },
+    { "model": "Crate_Wooden", "at": [10.8, -6.0], "yaw_deg": -18.0, "scale": 1.0, "plinth": true, "tint": "#5a2a2e" },
+    { "model": "FarmCrate_Empty", "at": [12.2, -5.0], "yaw_deg": 24.0, "scale": 1.0, "plinth": true }
+  ],
+
+  "camp_fire_light": {
+    "_comment": "The checkpoint fire, on the grass below the ramp. campfire_glow.gd owns its own energy and flicker; only the range is set from here, because an energy written here would be overwritten on the glow's next frame.",
+    "range": 13.0
+  }
+}

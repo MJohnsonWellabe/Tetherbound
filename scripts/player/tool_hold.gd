@@ -55,9 +55,22 @@ const HAND_BONE_CANDIDATES := ["Hand.R", "hand.R", "RightHand", "mixamorig:Right
 const SWING_REACH := 3.2
 const SWING_ARC_DEGREES := 110.0
 
-## Seconds a swing takes. The gather resolves at the midpoint so the yield lands
-## with the impact rather than on the button press. TUNABLE.
-const SWING_SECONDS := 0.45
+## Seconds a swing takes, and where in it the axe is actually IN the wood.
+##
+## These are properties of the authored clip, not free parameters, so they live
+## next to it in `art.json`'s `trainer.tool_swing` block and these constants are
+## only the fallback for a caller with no config (a bare test rig, a capture
+## scene with no `Game` autoload). `animate_humanoid.py::author_chop()` runs 15
+## frames at 24 fps and keys the impact pose at frame 9: 0.625s, 0.6 through.
+##
+## OP21-24. The old numbers were 0.45s resolving at exactly the halfway point,
+## which was right for the throw clip this swing used to borrow and wrong for a
+## chop: the gather landed while the axe was still travelling down, and the
+## swing state expired 0.175s before the clip finished, cutting the body back
+## to idle mid-arc. Both are why the owner reported the hit and the visible
+## action were not the same event.
+const SWING_SECONDS := 0.625
+const SWING_IMPACT_FRACTION := 0.6
 
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
@@ -74,15 +87,21 @@ var _swing_resolved: bool = true
 ## prompt, that node is what the axe hits -- see `swing_at()` for why this
 ## does not go back through the cone search.
 var _swing_target: Node = null
+## Clip timing, read once from `art.json` and falling back to the constants
+## above. Cached rather than re-read per swing: a chop is a per-press action and
+## a file read per press is a hitch on the handheld.
+var _swing_seconds: float = SWING_SECONDS
+var _swing_impact_fraction: float = SWING_IMPACT_FRACTION
+var _timing_loaded: bool = false
 
 
 func _process(delta: float) -> void:
 	_sync_equipped()
 	if _swing_left > 0.0:
 		_swing_left -= delta
-		# Resolved at the midpoint, once -- the impact, not the press and not
-		# the recovery.
-		if not _swing_resolved and _swing_left <= SWING_SECONDS * 0.5:
+		# Resolved once, on the clip's own impact frame -- not the press, not
+		# the recovery, and (OP21-24) not an arbitrary halfway point.
+		if not _swing_resolved and _swing_left <= _swing_seconds * (1.0 - _swing_impact_fraction):
 			_swing_resolved = true
 			_resolve_swing()
 
@@ -136,10 +155,40 @@ func swing_at(node: Node) -> bool:
 func swing() -> bool:
 	if _equipped.is_empty() or is_swinging():
 		return false
-	_swing_left = SWING_SECONDS
+	_load_timing()
+	_swing_left = _swing_seconds
 	_swing_resolved = false
 	swing_started.emit()
 	return true
+
+
+## How long a swing runs, so the body can commit to the chop clip for exactly
+## that long. Public because `player_controller.gd` forwards it to
+## `trainer_model.gd::play_tool_swing()` on `swing_started`.
+func swing_seconds() -> float:
+	_load_timing()
+	return _swing_seconds
+
+
+func _load_timing() -> void:
+	if _timing_loaded:
+		return
+	_timing_loaded = true
+	var file := FileAccess.open("res://data/config/art.json", FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return
+	var trainer: Variant = (parsed as Dictionary).get("trainer", {})
+	if not trainer is Dictionary:
+		return
+	var timing: Variant = (trainer as Dictionary).get("tool_swing", {})
+	if not timing is Dictionary:
+		return
+	_swing_seconds = maxf(0.05, float((timing as Dictionary).get("seconds", SWING_SECONDS)))
+	_swing_impact_fraction = clampf(
+		float((timing as Dictionary).get("impact_fraction", SWING_IMPACT_FRACTION)), 0.0, 1.0)
 
 
 ## --- what is in the hand ---------------------------------------------------

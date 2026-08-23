@@ -161,6 +161,18 @@
       "flag_id": "legendary_freed",
       "label": "Shut down what Team Tether built under the Hall.",
       "_why": "Deliberately does not name what the machine holds -- see _comment_no_spoilers. `legendary_freed` is the flag the climax already sets; only the wording here is new."
+    },
+    {
+      "id": "settle_the_roster",
+      "flag_id": "legendary_settled",
+      "label": "Settle who walks with you.",
+      "_why": "GATE-E, prompt 68's finale line 'resolve join/release if roster is full'. The chapter's last decision is a decision and the HUD should say so while it is open. Waits on `legendary_settled` (scripts/world/stronghold_climax.gd::_settle) rather than `legendary_joined`, because BOTH answers finish this beat: five creatures the player will not give up is a legitimate ending under CLAUDE.md's hard cap, and keying this on the join would leave that player permanently tracking an objective they have already answered. Worded without naming what is offered -- see _comment_no_spoilers."
+    },
+    {
+      "id": "see_what_changed",
+      "flag_id": "meadows_acknowledged",
+      "label": "Go back through the Meadows and see what changed.",
+      "_why": "GATE-E, prompt 68's last finale line ('surface the post-Warden world-state acknowledgment / next-world hint without entering Biome 2') and prompt 69's 'post-win acknowledgment'. SG46 already wrote the words (data/dialogue/meadows_freed.json) and SG44/SG46 already change the world; what was missing was the one line that sends the player back out to meet them, so the ending is a walk home through a healed region rather than a fade after the last flag. Completed by ANY of those post-victory conversations -- each carries `flag:meadows_acknowledged` -- so the villagers, the foreman and the traveller at the storm road all satisfy it and none of them is a required stop. This is the chapter's last main entry on purpose: the tracked line goes empty after it, which quest_log.gd's own header documents as the finished state, and D23 forbids the next one from existing here."
     }
   ],
   "local": [
