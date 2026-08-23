@@ -98,3 +98,58 @@ provisional** — the 1.4 m songbird chick, the 1.6× span across seventeen
 species, the legendary-equals-common-deer reading. The findings that do not
 depend on ground contact — the two-art-packs split, the twin collisions, the
 pink shinies, alpha-as-scale — stand on their own.
+
+---
+
+# D3 creatures — round 2, on the fixed rig
+
+Fresh critic, fresh frames, shadows on and every creature seated on the ground
+line. **A — no (as a set). B — no.** A moved DOWN from round 1's narrow yes, and
+the reason is not that the roster got worse: this critic read
+`docs/reference/owner-board-2026-08-15-creature-colors.png` and compared, which
+round 1 never did.
+
+## The finding that outranks the verdict: the renders contradict the owner's board
+
+| species | the board paints | the build renders |
+|---|---|---|
+| terrapup | a small leafy **puppy** | a 2.2 m badger |
+| burrowback | rock-plate **shell armour** | a moss strip, no shell |
+| brooktail | a signature **water-swirl tail** | a plain flat beaver tail |
+| ripplet | a quadruped **axolotl-dragon** with fin frills | a glossy bipedal chipmunk with a droplet decal |
+| reedwing | an elegant blue **crane** | a domestic duck, 1.8 m, eye to eye with the trainer |
+| duskhush | dark **plum** | pale lavender |
+| trailpup / bramblebun | leaf and bramble growth | almost none of it survives |
+
+Several of these are the species' *identifying* feature: burrowback's shell is
+the one thing separating it from terrapup, and **they share one badger mesh**.
+The consequence the critic drew: *"a player cannot tell their shiny starter from
+a shiny Burrowback across a meadow"*, and *"recoloring cannot make the starter a
+different species from the tank; only geometry can."*
+
+Lightening duskhush off the board's plum also cost the roster its **only
+dark-value creature** — everything else is mid-value pastel, which is a
+measurable part of why the sheet reads flat.
+
+**Galecrest's rarity is inverted:** the "shiny" is natural brown hawk plumage
+while the normal is the exotic white-and-blue one. The rare looks more common
+than the common.
+
+## What the rig fix bought
+
+Round 1's two harness defects are confirmed closed, in the critic's own words:
+*"Grounding shadows are present everywhere; nothing floats. Good."* and the
+harness is now cited as an asset — *"identical camera and ruler in every frame is
+exactly what made the scale and mesh-sharing findings checkable."*
+
+The re-measured roster: **1.35 m (pipwing) to 2.60 m (veridian), a 1.93x span
+over 17 species.** Round 1's "barely 1.6x" was measured against the lying ruler
+and was wrong in detail — but its conclusion survives the correction. There is
+still no small tier: the smallest creature in the game is a metre-tall rabbit,
+the "chick" is 1.3 m, and the duck is eye to eye with the trainer. Two scale
+readings did change: veridian is now the largest species rather than
+common-deer-sized, and terrapup at 2.2 m genuinely does out-mass burrowback,
+the tank it shares a mesh with.
+
+**On the box today:** veridian, with galewisp as runner-up. *"The toon family's
+material quality is honestly competitive."*
