@@ -57,6 +57,31 @@ three flat colours, and a trim system whose only two kinds are `band` and
 `pillar` -- no merlons, no banners, verified in `_build_trim()`'s own match
 statement.
 
+**Both castles were photographed, and the frames settle which fix this needs.**
+The structures survey shoots prefabs on a bare stage, so its verdict could not
+distinguish "the model is bad" from "the model is fine and is standing
+somewhere else". Two frames from this pass do.
+
+`10-stronghold-approach-day` — the stronghold the player walks 7.5 km to
+reach, from 110 m out on its own gate axis: **two flat grey slabs on a green
+hill.** No silhouette, no towers, no gate read, no crenellation, no colour. The
+larger slab is a featureless pale plane with a hard vertical edge against the
+sky. `10-stronghold-gate-day` puts the 1.80 m trainer at the threshold: the
+wall is one unbroken near-black rectangle with a plain rectangular hole punched
+in it — no arch, no lintel, no doors, no flanking mass, nothing on top. The
+approach ramp beside it carries a properly textured cobble material that reads
+far better than any wall in the frame, so the build is not short of a stone
+texture; the walls are not using one.
+
+`11-castle-landmark-approach-day` — the castle at (229.8, −144.4), from 64 m
+out on ITS gate axis: **crenellated curtain walls with visible merlons, two
+towers under conical roofs, an arched gate with a door leaf, braziers lit
+either side of it, red banners on the wall face, and the occupation camp's
+crates at its foot.** Warm cream masonry that reads as stone.
+
+Same build, same renderer, same afternoon. The art is not missing and it is not
+bad. It is 7,708 m from the place that needs it.
+
 This is the same shape as D7's finding that "the build owns a better ground
 than the one the five bands use", and it re-frames the lane's largest item.
 Both of the structures round's stronghold verdicts —
