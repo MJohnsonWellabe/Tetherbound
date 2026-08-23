@@ -254,6 +254,12 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if message != null:
 		message.text = ""
 		message.visible = false
+	# Sampled BEFORE the press, because the failure below reports an empty
+	# `equipped` and the check twelve lines above proved it was full. Only the
+	# press sits between them, so which side of it the tool leaves on is the
+	# whole question -- and an after-the-fact sample cannot answer it.
+	var equipped_before := str(_game.get("equipped_tool"))
+	var prop_before: Variant = hold.call("prop_node")
 	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
 		# Say WHY, not just that. This assertion has never once run in CI --
@@ -274,6 +280,11 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 			str(hold.call("prop_node")),
 			str(hold.call("is_swinging")),
 			str(node.name) if node != null else "<null>"])
+		_fail("  ...and BEFORE the press: equipped=%s prop=%s | winner parent=%s" % [
+			equipped_before,
+			"<null>" if prop_before == null else str(prop_before),
+			str((winner as Node).get_parent().name) if winner is Node \
+				and (winner as Node).get_parent() != null else "<none>"])
 		return false
 	for _i in 90:
 		if int(inventory.call("count", item_id)) > before and message != null and message.visible:

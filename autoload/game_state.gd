@@ -22,6 +22,7 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 ## RG19-spec/D68. Rested/fed/happy, ticked here for every party member.
 const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
@@ -611,19 +612,33 @@ func complete_creature_bed_rests() -> int:
 	if party == null:
 		return 0
 	var cfg := CREATURE_PROGRESSION.config()
-	var rest_xp := CREATURE_PROGRESSION.rest_xp(cfg)
+	# `rest_xp` is read by `home_recovery.rest()` from the same config; only the
+	# bond half is paid here, because bond is what the BED adds over an ordinary
+	# rest (RG19-spec/D68).
 	var rest_bond := CREATURE_PROGRESSION.rest_bond(cfg)
 	var completed := 0
 	for i in party.call("size"):
 		var creature: RefCounted = party.call("at", i)
 		if creature == null or not bool(creature.get("resting")):
 			continue
-		creature.call("heal_fully")
+		# What a completed rest does to a CREATURE lives in one place.
+		#
+		# These two lines used to be `heal_fully()` plus a `gain_xp(rest_xp)`
+		# written out here, which is exactly what `home_recovery.rest()` already
+		# did -- and that helper had no production callers at all, so the project
+		# carried two definitions of "resting heals you and pays rest XP" with
+		# only the duplicate running. `tests/test_fainting.gd` proved the copy
+		# nothing called, and `smoke_stronghold.gd` simulated the stronghold's
+		# recovery through it, so both would have kept passing if this loop
+		# broke.
+		#
+		# The BED-specific state below stays here, because it is about the bed
+		# rather than about resting: which slot the creature was in, and that it
+		# is no longer occupying one.
+		HOME_RECOVERY.rest(creature, cfg)
 		creature.set("rested", true)
 		creature.set("resting", false)
 		creature.set("rest_bed_index", -1)
-		if rest_xp > 0:
-			creature.call("gain_xp", rest_xp, cfg)
 		if rest_bond > 0:
 			creature.call("gain_bond", rest_bond, cfg)
 		# RG19-spec/D68: the night in the bed is what "well rested" means, and
