@@ -3,6 +3,77 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-F — the chapter chained into one record, and the probe that mis-timed it by an hour
+
+`tests: full suite 1362 tests, 836549 assertions, 0 failed` · `smokes: gate_e_finale, warrens, relay, riding, stronghold, tournament_bracket` · `area: tools/gate_f_chapter_run.py, tools/_probe_gate_f_corridor.gd, tools/_probe_pacing.py`
+
+Prompt 70's instrument did not exist. Gate B's continuous smoke proved the
+opening, five per-band probes proved five regions, the Gate E finale smoke
+proved the ending — and each of those passing says nothing about the joins,
+which is where a 3–4 hour chapter fails. `tools/gate_f_chapter_run.py` runs the
+three segments in player order and writes one timestamped record under
+`ralph/reports/gate-f-run-<stamp>/`; `--only` runs a subset, because the method
+law is focused segment probes. The whole chapter is **10.8 min** of harness wall
+time, so it is cheap enough to iterate on — that was the main worry going in and
+it turned out unfounded.
+
+`tools/_probe_gate_f_corridor.gd` walks the corridor as ONE boot. The five band
+spines chain end to end in `terrain_playground.json`, so the route is read from
+that file rather than transcribed, and `seen` plus the running dead-walk counter
+are carried ACROSS the band handoffs — the interval no per-band probe can see,
+because every band lane tuned its own interior and nobody owned the seams.
+
+**Corridor result: there is no dead travel in this chapter.** 11,519 m, 571
+points of interest (503 wild, 14 trainers, 51 harvest, 2 TMs, 1 key), median gap
+8 m, **worst stretch meeting nothing new 165 m** (~41 s), **zero intervals over
+250 m**, and **0 of 909 wild bodies underground** — GATE-D's regrounding holds
+chapter-wide.
+
+**The SHIP fix: `_probe_pacing.py` was charging a 13,934 m phantom detour.** Its
+meadowhart loop assigned on every match with no `break` and no distance
+comparison, so it kept whichever cluster was LAST in the merged spawn table —
+`(-165, 7345)`, the far end of the corridor — when the species has 17 clusters
+and several sit a few hundred metres from the Old Quarry where the saddle is
+actually crafted. Nobody walks past sixteen meadowharts to catch the
+seventeenth. Resolved nearest-to-the-player at the saddle beat: band 2 travel
+39 → 10 min, chapter travel 54 → 25 min, floor 2.53 → **2.04 h**, projected
+first completion 5.06 → **4.08 h**. Gate F's judgement of the 3–4 hour condition
+rested entirely on that number and it was wrong by an hour. No test asserts the
+probe's output, so nothing was masking it.
+
+**Two apparent findings were checked and are NOT defects** — recording them so
+the next lane does not re-file them. Wild levels reading above a band's declared
+`wild_band` are alphas: `_make_alpha()` adds `level_bonus` on top of the roll by
+design, and there are four alpha clusters (z=2900, 3890, 5150, 7255). Band 1's
+two over-ceiling creatures are the corridor probe's own seam bleed — both are
+5–9 m from the band 2 boundary inside its 30 m notice radius, rolling band 2's
+band. Band 1's field is 2–6 exactly as declared, and band 1 has no alpha.
+Likewise the corridor's "zero rest structures" is correct and not a finding: the
+chapter has exactly one rest structure and the player builds it, the authored
+camps are dressing, and the band files say so themselves. The real property is
+pinned by `test_camp_supply_reaches_every_band.gd`, green in all five bands.
+
+**`ralph/ASSESSMENT_2026-08-23.md` is stale in the project's favour on four
+points**, all re-measured: its 4 red tests are green; SHIP BLOCKER 2 (band 4
+harvest) is closed; SHIP BLOCKER 3 ("Gate E does not exist") is closed and the
+finale passes end to end — Warden, legendary, `'Kettle'` released for the belt of
+five, 115 plants back / 17 tether lights out / 4 patrols withdrawn, post-win
+acknowledgment, objective chain terminated; alphas are 4 not 2. Its SHIP BLOCKER
+1 stands.
+
+**What the next firing needs to know.** Gate F is NOT closed and the chapter has
+still never been run end to end by anyone, because the head is red: on `main` it
+stalls at Mira's door (reproduced here, `player 3.6m away ... arbiter
+winner=EncounterDirector`), and `ralph/GATEB-PATH`'s own commit `a6c64bf8` says
+it still fails past that at the live scatter fill. When that branch lands,
+`python3 tools/gate_f_chapter_run.py` closes the loop in one command, and the
+save hand-off between segments (designed, not built — it edits
+`smoke_gate_b_continuous.gd`, which GATEB-PATH owns) can land with it. 11 of §6's
+fifteen conditions are met on measured evidence; 1 blocked on Gate B, 1 marginal
+(pacing, 2% over), 1 unprovable without an Ally, and the full-corridor visual
+pass belongs to the VISUAL lane. Evidence:
+`ralph/GATE_F_EVIDENCE_2026-08-23.md`. Filed: `BAND2-THIN` (QUALITY),
+`CURVE-DOC-STALE` (POLISH).
 ## GATEB-COORD — Gate B's continuous evidence passes
 
 `tests: smoke_gate_b_continuous.gd PASS, smoke_gate_b_tail.gd PASS, full suite
@@ -965,6 +1036,209 @@ genuinely blind pass on the four after-frames is still owed to this work.
   ownership, not this lane's to fix.
 - Mill yard path tiles: placement unverified by render (above).
 - A real blind (subagent) critique of the four after-frames.
+
+## BAND2-FLOOR — hand-sited forest-floor dressing and bark tint variety
+
+`tests: full suite 1355 tests, 836493 assertions, 1 failed (expected/inherited)` · `branch: ralph/BAND2-FLOOR` · `area: data/config/vegetation.json`
+
+Lane brief: `ralph/lanes/OPEN_LANES_2026-08-23.md`, LANE: BAND2-FOREST-FLOOR.
+A blind critique of Band 2's forest floor found it "the same mown lawn as
+open fields -- no leaf litter, undergrowth, fallen branches, saplings" with
+"uniform salmon trunks". `docs/reviews/band2/round-05` had already
+established that the corridor's own trail-biased density fill lands near
+none of Band 2's eight `tools/survey_band2.gd` viewpoints by chance, so a
+density-scale tweak (also `vegetation.json` globals another lane -- the
+still-unlanded `ralph/VISUAL-GROUNDCOVER` -- owns) has nothing to multiply
+at the sites actually judged.
+
+### What shipped
+
+Five hand-placed anchor sites, each centred on an existing harvest-node
+cluster and matching a `survey_band2.gd` viewpoint (01-early-forest,
+the quarry-camp ridge, the Warrens' forest approach, 05-late-ridge):
+
+- `deadfall` anchors narrowed to `Mushroom_Common`/`Mushroom_Laetiporus`
+  only, never `DeadTree` -- D45/D41 already reserve standing dead wood for
+  the drained-ground grammar, and reusing it for ordinary litter would blur
+  that signal.
+- `bushes` anchors narrowed to `Fern_1`/`Plant_7`(`_Big`) for understorey
+  banked under canopy, distinct from the open-field `Bush_Common` already
+  scattered there.
+- `saplings` anchors at the layer's own default models, at 3 of the 5 sites.
+- Two `trees` anchors (early-forest, late-ridge) with a wider scale range
+  for old-growth girth beside the young saplings.
+- `trees.variant_retint` gained a `Bark_NormalTree` entry per CommonTree
+  model (previously only `Leaves_NormalTree` varied) -- the top-level
+  `retint` map gave every trunk the same tone regardless of canopy variant,
+  which is the "uniform salmon trunks" complaint exactly. Corridor-wide,
+  not Band-2-scoped (`variant_retint` is keyed by model, not by band).
+
+Verified with a terrain probe (`tools/_probe_band2_floor.gd`) before
+rendering, and a close-range capture (`tools/_capture_band2_floor_closeups.gd`,
+~10m from each site) to confirm the mushroom/fern anchors actually placed
+visible instances -- they are small enough to be sub-pixel at
+`survey_band2.gd`'s normal 30-40m framing, so the wide before/after frames
+alone could not have confirmed this.
+
+### Blind critique, round 2, and a real finding about this scatter system
+
+An independent blind critic (given only the after-frames + references, no
+knowledge of the change) named 01-early-forest-day directly: "near-identical
+canopy size/height/tint... reads as a scatter-brush pass." Tried raising the
+early-forest tree anchor's `count` 2->4 to make the old-growth stand more
+assertive -- **this measurably thinned the same frame's own midground/
+background treeline**, because `_place_anchor`'s attempt budget
+(`count * ANCHOR_ATTEMPTS_PER_INSTANCE`) draws from the layer's single
+shared RNG stream, and `_place_corridor_fill` runs after every anchor in
+that stream for the WHOLE CORRIDOR, not just Band 2. Raising `count`
+reshuffled corridor-wide tree placement and cost more coverage than the
+extra old-growth trees bought. Reverted to `count: 2`; kept the
+`scale_min`/`scale_max` widen (1.4-1.75 -> 1.55-2.0), which is RNG-safe --
+`_consider()` draws exactly one `randf_range()` per placed instance
+regardless of the range's bounds. Confirmed via `frame_stats.py`: frames
+05/07 are bit-identical before/after this revert, 02a differs only at
+noise level -- the fix is scoped to site A alone.
+
+### Not attempted (recorded, not silently dropped)
+
+- **Bark MATERIAL/texture redesign** -- the flat, undetailed bark surface
+  itself. Needs-art; no new texture generated per the project's hard rules.
+- **The `corridor_bands` density_scale mismatch**: Band 2 sits at 0.05,
+  *below* Band 1's 0.07, despite Band 2's own canon identity
+  (`docs/MEADOWS_MACRO_LAYOUT.md` §5) being the closer, denser canopy of
+  the two. This is `vegetation.json` global territory outside a band
+  lane's file ownership -- flagged for the coordinator, same as round-05's
+  own `HARVEST-ALL` finding.
+- The blind critic's other top findings (a red/maroon colour-overlay bug
+  affecting 4 of 8 frames identically in both day and night tags, total
+  absence of creatures in every frame, and distant/empty camp-shot framing
+  in 03/05) are real but pre-existing and out of scope for this lane --
+  confirmed pre-existing by rendering the true `origin/main` baseline
+  (`shots/band2_before/`) before making any change: the same red tint
+  appears identically there. Not touched.
+
+### Inherited/expected test state
+
+`test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh`
+fails, expectedly: `GATE_D_LANE_CONTRACT.md` §4's known defect --
+`scatter_bake.gd`'s fingerprint now covers this exact file, so editing it
+invalidates the committed bake and every boot falls back to computing the
+scatter fresh (~60s stall on this box). This is the coordinator's single
+re-bake to run at integration, not a band lane's -- said here plainly per
+that contract, not fixed on this branch.
+
+### Also fixed in passing
+
+`tools/_probe_band2_floor.gd` (this lane's own new scratch probe) never
+called `quit()`, so the first run idled the SceneTree indefinitely instead
+of exiting -- caught after ~2 hours of unnoticed wall-clock, fixed by
+adding `quit(0)` like every other `_probe_*.gd` in `tools/`.
+
+## PERF-ROG — OP23-01, the ROG Ally frame rate: found, measured, fixed
+
+`tests: full suite 1362 tests, 836552 assertions, 0 failed` · `area: scripts/world/interaction_arbiter.gd,
+scripts/world/vegetation.gd, scripts/ui/playground_hud.gd,
+data/config/performance.json, tools/perf_profile.gd` · `report:
+ralph/PERF_ROG_REPORT.md`
+
+The owner's #1 SHIP blocker was "feels like ten frames per second on the ROG".
+It had a single dominant cause and it was measurable from a container after all.
+
+**`interaction_arbiter.gd::_recompute()` polled every registered prompt
+provider, every frame — 24,461 of them, to find the two in reach.** 20.35 ms
+per frame; 1,221 ms of work per wall-clock second, more than a whole CPU second
+per second, on a box far faster than an Ally. 24,398 of those providers are
+`vegetation.gd`'s gather points, one per harvestable scattered tree or rock.
+PERF-2 fixed the same population's O(n²) REGISTRATION cost at boot and left the
+O(n) POLL, which every prop the world gained made worse.
+
+Fixed with a uniform x/z grid: `Node3D` providers are filed by cell, the two
+that have no position (`encounter_director`, `riding_controller`) stay polled,
+and movement re-files through `NOTIFICATION_TRANSFORM_CHANGED` rather than
+through a per-frame position read. Results are identical, not merely similar —
+the queried cells are a strict superset of anything that could offer, and
+candidates are sorted back into registration order because `prompt_arbiter.gd`
+breaks ties on it. **20.350 -> 0.024 ms/call.**
+
+Second: **`vegetation.gd::update_collision_streaming()` tested all 22,306 solid
+placements twice a second**, 8-10 ms a sweep — a judder rather than a floor, and
+one that grows with the world. Now cell-indexed. **9.2 -> 0.3 ms/call, with
+resident-collider counts identical at all six measured sites** (166/389/13/120/
+8/68 before and after), and `tests/smoke_collision_streaming.gd` now asserts the
+indexed sweep against a brute-force pass over every placement — "the count looks
+plausible" would pass with a whole cell of walk-through trees.
+
+Per-frame CPU on the real corridor, `tools/perf_profile.gd`, six sites:
+
+| site | before | after |
+|---|---|---|
+| village | 33.15 ms | 4.67 ms |
+| band1 | 38.02 ms | 4.35 ms |
+| band2 | 34.93 ms | 4.23 ms |
+| band3 | 34.84 ms | 3.81 ms |
+| band4 | 40.24 ms | 4.04 ms |
+| stronghold | 35.94 ms | 4.50 ms |
+
+Mean 36.2 -> 4.3 ms, **-88%**. A 60fps frame has 16.7 ms: the game's own
+GDScript went from asking 2.2x a whole frame's budget every frame to 0.26x,
+before the renderer draws anything.
+
+**This is not a device frame rate and must never be quoted as one** — no
+container here has ROG hardware. It is the CPU-side work, whose SHAPE is
+hardware-independent even though its absolute cost is not.
+
+### What shipped besides the two fixes
+
+- `tools/perf_profile.gd` — the harness. Six sites on the real world,
+  per-subsystem costs measured by calling each suspect directly rather than
+  inferring a share of a total, plus `--bisect` (paired A/B/A per subtree) and
+  a ranking by work-per-second. `tools/perf_render_stats.gd` for the
+  RenderingServer counters under xvfb.
+- `data/config/performance.json` + `scripts/world/performance_config.gd` — every
+  per-frame lever in one file.
+- **A device-side overlay the owner can actually turn on.**
+  `debug_overlay_on_boot` puts the F3 readout up from the first frame (F3 does
+  not exist on a handheld, and the owner's authored controller map spends every
+  pad button with held chords banned, so a config flag is the honest answer
+  rather than a colliding binding). The readout gains a top-three-costs block
+  from `scripts/world/perf_trace.gd`, which is inert unless the readout is open.
+
+### Nothing a player sees moved
+
+`tools/capture_lod_before_after.gd`'s two required views, rendered on `main`
+(`shots/perfrog/main`, local — `shots/` is gitignored) and on this branch's shipping config
+(`shots/perfrog/branch`): the open-field long sightline is **bit-identical, 0
+differing pixels of 921,600**, and the pond view's rows 0-199 -- sky, far
+treeline, hills, the timber-framed building, every scrap of vegetation -- are
+**0.00% different**. Everything below row 200 is the pond's animated surface,
+whose wave phase differs between any two boots.
+
+### Two things deliberately NOT claimed as wins
+
+**PERF-2's commented-out LOD lines are not the lever their comment implies.**
+Wired and measured properly this time: at the authored ranges (110-260m) the
+effect on draw calls is inside noise, and forcing every range to 20m removes
+only 5-16%. Shipped as `scatter_lod_ranges`, **default false** — byte-for-byte
+today's behaviour — so a standing TODO becomes a measured negative result plus a
+lever, not another lane's re-derivation. `shots/perfrog/branch` (what ships) and
+`shots/perfrog/after` (ranges on) are vegetation-identical.
+
+**`wild_cluster_sweep` (14.5 ms/s) and `hud_process` (10.2 ms/s) were left
+alone.** Each is ~1% of a 60fps CPU second and each already does the right
+thing: the director strides by cluster (262) not by creature (909), and the
+minimap already repaints only on real movement or a fog-revision change.
+
+### The groundcover density, priced
+
+`ralph/VISUAL-GROUNDCOVER` (unlanded) raises the corridor 143,630 -> 223,271
+placements. Measured on both bakes: +15% CPU, +41% nodes, +150 MB static, +50%
+MultiMeshInstance3D, +53% prompt providers. **On `main` that density would have
+taken the arbiter to 44.65 ms/frame** — more than doubling the exact thing that
+is OP23-01. On this branch it is 0.028 ms. The density raise is affordable now
+and was not before. Its remaining costs are memory and GPU throughput inside the
+MultiMesh batches, which no container can measure; those stay owner calls and
+this branch does not change world density.
+
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
