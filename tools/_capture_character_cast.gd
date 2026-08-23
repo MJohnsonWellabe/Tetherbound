@@ -384,8 +384,9 @@ func _build_environment(world: Node3D) -> void:
 	# judgement about whether near-black uniforms read is worthless taken off a
 	# stage that is not exposed correctly in the first place.
 	# Two measured passes: 2.2/1.8/1.0 gave 1.9x, 0.62/0.75/0.42 gave 1.45x,
-	# 0.43/0.52/0.29 gave 1.22x, 0.35/0.43/0.24 lands it.
-	env.ambient_light_energy = 0.35
+	# 0.43/0.52/0.29 gave 1.22x, 0.35/0.43/0.24 landed it; lifting the backdrop
+	# drifted it to 1.25 so 0.28/0.34/0.19 re-lands it. Re-measure after ANY change here.
+	env.ambient_light_energy = 0.28
 	env_node.environment = env
 	world.add_child(env_node)
 
@@ -425,13 +426,13 @@ func _build_environment(world: Node3D) -> void:
 	# streak rather than as contact. Steeper puts the shadow under the character,
 	# where its whole job is to say "this body is standing on that ground".
 	key.rotation = Vector3(deg_to_rad(-52.0), deg_to_rad(-18.0), 0.0)
-	key.light_energy = 0.43
+	key.light_energy = 0.34
 	key.shadow_enabled = true
 	world.add_child(key)
 
 	var fill := DirectionalLight3D.new()
 	fill.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(170.0), 0.0)
-	fill.light_energy = 0.24
+	fill.light_energy = 0.19
 	fill.light_color = Color(0.80, 0.85, 0.95)
 	world.add_child(fill)
 

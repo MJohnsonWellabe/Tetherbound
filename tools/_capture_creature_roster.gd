@@ -313,18 +313,19 @@ func _build_environment() -> void:
 	# where a neutral stage wants ~1.0.
 	#
 	# Set in two measured passes: 1.5/1.6 gave 2.3x, 0.55/0.85 gave 1.26x,
-	# 0.44/0.68 lands it. The values below are set so the floor renders at its own albedo. THE FLOOR
+	# 0.44/0.68 landed it at 1.0; adding the rim light below pushed it back to 1.31,
+	# so 0.35/0.55 re-lands it WITH the rim. The floor is the target, always. The values below are set so the floor renders at its own albedo. THE FLOOR
 	# IS THE CALIBRATION TARGET: if a change here makes it drift off (77,84,77)
 	# again, the survey is lying about colour and every verdict taken from it
 	# inherits the error. Re-measure it, do not eyeball it.
-	env.ambient_light_energy = 0.44
+	env.ambient_light_energy = 0.35
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env_node.environment = env
 	_world.add_child(env_node)
 
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(-35.0), 0.0)
-	key.light_energy = 0.68
+	key.light_energy = 0.55
 	# Godot defaults DirectionalLight3D.shadow_enabled to FALSE, and a bare
 	# stage that does not set it renders every subject with no contact shadow at
 	# all. A blind critic read exactly that off this survey's first run --
