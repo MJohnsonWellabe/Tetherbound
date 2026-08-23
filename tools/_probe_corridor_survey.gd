@@ -152,14 +152,29 @@ func _run() -> void:
 	_look = _world.get_node_or_null(^"WorldLook")
 	_weather = _world.get_node_or_null(^"WorldWeather")
 
+	# `--only=<substring>` re-shoots just the viewpoints whose name matches,
+	# into the same directory, leaving every other frame alone. This exists
+	# because a survey's frames are not all invalidated together: when two of
+	# twelve viewpoints turned out to be seated on top of a captain, re-running
+	# the whole corridor to replace two frames would have cost an hour of
+	# software rendering to redo ten frames that were already correct.
+	var only := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.substr(7)
+	if only != "":
+		print("[corridor] --only=%s: re-shooting matching viewpoints only" % only)
+
 	await _pin("day")
 	for entry: Variant in VIEWPOINTS:
-		await _shoot(entry as Array, "day")
+		var shot: Array = entry as Array
+		if only == "" or only in str(shot[0]):
+			await _shoot(shot, "day")
 
 	await _pin("night")
 	for entry: Variant in VIEWPOINTS:
 		var shot: Array = entry as Array
-		if str(shot[0]) in NIGHT:
+		if str(shot[0]) in NIGHT and (only == "" or only in str(shot[0])):
 			await _shoot(shot, "night")
 
 	print("")
