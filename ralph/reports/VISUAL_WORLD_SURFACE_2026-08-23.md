@@ -916,3 +916,86 @@ becomes an input: the smoke test asked for H88.0/S0.440/V0.550 and produced
 H88.2/S0.441/V0.550, with a measured seam error of 0.0025 (tileability is exact
 by construction — all variation is band-limited noise synthesised in the
 frequency domain, which is periodic on the sampling grid).
+
+## The ground rebuild's first blind verdict, and the round-2 work order
+
+**A: no. B: no.** But the critique moved onto different ground than any previous
+round, and its measurements are worth keeping.
+
+Measured on the rebuilt ground: grass H 76-79 / S 56-61% / V 50-60; path
+H 43-45 / S 36-40% / V 72-78. Against its own reference samples — key art sunlit
+meadow H 65-68, palworld-02 grass H 65-67, palworld-02 path H 43.
+
+Its four findings, ranked:
+
+1. **The splat grid is visible wherever the camera rises.** Stair-stepped path
+   edges in every elevated frame carrying a path, checkerboard dry patches in
+   band 4, rectangular grass tiles on the band-1 cliff. Called a
+   data-resolution/edge-dithering bug rather than an art choice.
+2. **One flat noise carpet with no authored detail at any scale** — no
+   centimetre detail underfoot (reads as defocus at player height), one uniform
+   mottle for kilometres, macro variation in only two of five bands.
+3. **Paths 2-4x too wide**, covering 42-64% of the ground frame against ~26-35%
+   measured identically on palworld-02, whose walked trail is 2-3m.
+4. **Grass hue ~10-12 degrees too green** — "the most fixable single number in
+   this report".
+
+### Two things the planning pass found that the critique had not
+
+**The hue dispute is settled against the original direction.** The ground spec
+set meadow grass at H 77; the critique said 65-68. Re-sampling all three sources
+independently: key art median H 59 (p10-p90 37-75), palworld-02 mid-field H 65,
+critique's samples 65-68. *Nothing sampled in any reference meadow exceeds 68,
+and the game renders 77-79.* The spec's own acceptance test — eyedropper the lit
+ground and tune albedo until it matches — was failing by ~11 degrees regardless
+of how 77 was derived. Moved to **66**, the conservative end of the cluster.
+
+**The verge shoulder was thinner than a texel, which is why the path fix
+underperformed.** With the old numbers the dirt edge sat at 2.21m from the
+centreline and the verge band ran 2.21m to 2.58m — a **0.37m strip against a 2m
+texel pitch.** The intended grass -> gold -> dirt staircase therefore almost
+never landed a single texel anywhere, and the eye got exactly the one-step cliff
+the staircase exists to prevent. Neither the critique nor this lane had spotted
+it; it came out of working the geometry rather than looking at frames.
+
+### Why the earlier jitter underperformed, and what will still be visible
+
+The threshold jitter added in the previous round used `path_dominant_dither`, a
+coherent field with a ~6.7m wavelength sampled at the 2m control pitch. At that
+ratio it moves whole RUNS of texels together, so a threshold contour still traces
+long aligned staircases — it perturbs which run flips, not whether runs form.
+Two changes address it: a 50/50 mix with a per-texel hash (already at texel
+pitch, so it cannot alias, converting residual runs into a single-texel fringe),
+and moving the path edge wobble out of threshold space into METRE space, because
+threshold jitter on a 0-1 field mathematically cannot move a boundary a full
+texel — it would need +-0.7.
+
+**Stated plainly, because it will be asked again:** the boundary is still built
+of 2m squares and always will be on this splat. After these changes it should
+read as a ragged one-texel fringe with a couple of metres of width wander rather
+than as a grid, but a viewer looking for the 2m cell will still find it on long
+diagonals. Removing it entirely needs a higher-resolution control map or
+shader-level boundary blending, and this build offers neither.
+
+### The blur tension, ruled
+
+The surface was deliberately kept low-detail on the design's own reasoning that
+~60% of the underfoot read comes from scattered props. Prop density was sparse —
+a blind count returned 0-2 clumps in the lower half of frame for bands 1-4. The
+ruling: **both, weighted toward props.** "The theory was never falsified — it was
+never funded." Surface fine octaves come up modestly; the trail-sited scatter
+layers come up substantially, with an explicit acceptance criterion of 8-12
+countable clumps in the lower half of the band-1 and band-3 player-height frames.
+
+### Deliberately not done
+
+- No new splat surfaces for per-band identity: every surface added multiplies
+  the 2m boundary problem. Per-band character is a colour-map grade instead.
+- No chase of the references' full value range in the texture: their bottom
+  decile is cast prop shadow, not albedo, and pushing octave amplitude that far
+  recreates the camouflage-noise failure this rebuild undid.
+- No depth-graded aerial perspective: Godot's single-colour depth fog cannot
+  rotate hue with distance. The fog colour shift is the whole of what the
+  current model can express; a shader grade is separate work.
+- No further attempt at partial splat blends, and no sun changes. Both closed by
+  measurement.
