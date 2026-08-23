@@ -736,3 +736,45 @@ one ground-cover layer still carrying no `retint` at all, which means
 `albedo_color` stays pure white and the layer renders its source textures
 unmodified at full brightness while grass and drygrass are now tinted down
 toward the terrain. Fixed in round 4.
+
+## WARNING: the committed terrain is a PARTIAL bake — do not ship this branch as-is
+
+`data/terrain/playground` currently holds **4 of 64 regions baked with the new
+layered material** (`(-1,0)`, `(0,0)`, `(0,3)`, `(0,4)` — the ground around the
+band-1 and band-2 viewpoints) and 60 regions still carrying the pre-GROUND-LAYERS
+bake. The two do not agree about which texture a flat meadow pixel wears, so
+there is a hard material seam at every boundary between them.
+
+This is deliberate and it is iteration state, not a finished bake. A full bake
+is 64 regions at ~36s each, about 43 minutes; the partial bake of the four
+regions a look-test actually photographs takes 2m24s. Re-tuning the macro
+variation and re-shooting on the full map would have cost 43 minutes per turn
+of the crank for frames that only ever show four regions.
+
+**Before this branch is merged or judged as a whole, run the full bake:**
+
+    godot --headless --path . --script scripts/world/build_playground_terrain.gd
+
+with no `--regions=`, then re-bake the scatter and re-import. Until then, treat
+any frame outside those four regions as showing the OLD ground.
+
+## Iteration cost, and the tooling that was already there
+
+Recorded because it is the largest avoidable cost this pass paid.
+
+`build_playground_terrain.gd` has taken `-- --regions=col:row,...` since it was
+written, and its own header says so. This lane read that header, understood the
+partial-bake design well enough to summarise it, and then ran full 64-region
+bakes anyway. Measured difference on the same change: **2m24s against ~43
+minutes.**
+
+`tools/_capture_ground_and_sky.gd` had no equivalent, so every look at a
+one-line material change cost a 528-frame, ~35-minute survey. `--only=` was
+ported to it from `_probe_corridor_survey.gd`, which has carried it for a
+while and whose own comment already explains the reasoning ("re-running the
+whole corridor to replace two frames would have cost an hour of software
+rendering to redo ten frames that were already correct"). Added `--states=`
+alongside it. A single-viewpoint, single-state look-test now costs **4m40s**.
+
+The full run stays the default, and a judged round still uses it: a blind
+critique of a subset is a critique of a subset.

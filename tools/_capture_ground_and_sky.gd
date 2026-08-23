@@ -268,24 +268,62 @@ func _run() -> void:
 		_look.set_process(false)
 		_look.set_physics_process(false)
 
+	# `--only=<substring>` shoots just the viewpoints whose name matches, and
+	# `--states=<a,b,...>` just the named time/weather states, into the same
+	# directory, leaving every other frame alone. Ported from
+	# _probe_corridor_survey.gd, which has carried `--only` for a while, for a
+	# reason this tool paid for the hard way: a full pass here is 528 awaited
+	# frames, ~35 minutes of software rendering, and a look-test on ONE change
+	# to the ground material does not need 24 frames of five bands at three
+	# times of day plus three weather states plus three water bodies. The
+	# terrain bake beside it already took `--regions=` for exactly this reason
+	# and this tool not taking the equivalent is what made a two-minute
+	# question cost forty.
+	#
+	# The full run is still the default and is still what a judged round uses:
+	# a blind critique of a subset is a critique of a subset.
+	var only := ""
+	var states := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.substr("--only=".length())
+		elif arg.begins_with("--states="):
+			states = arg.substr("--states=".length())
+	var wanted_states := PackedStringArray()
+	if states != "":
+		wanted_states = states.split(",", false)
+	if only != "" or states != "":
+		print("[ground] PARTIAL capture -- only=%s states=%s" % [
+			"*" if only == "" else only, "*" if states == "" else states])
+
 	for band_index in GROUND_VIEWPOINTS.size():
 		var entry: Array = GROUND_VIEWPOINTS[band_index]
+		if only != "" and not (only in str(entry[0])):
+			continue
 		var pos := await _arrive_ground(entry)
 		for state: Variant in GROUND_STATES:
-			await _shoot_ground_state(pos, state as Array)
+			if _state_wanted(state as Array, wanted_states):
+				await _shoot_ground_state(pos, state as Array)
 		if band_index == WEATHER_VIEWPOINT_INDEX:
 			for state: Variant in WEATHER_STATES:
-				await _shoot_ground_state(pos, state as Array)
+				if _state_wanted(state as Array, wanted_states):
+					await _shoot_ground_state(pos, state as Array)
 
-	# Reset to day/clear before the water section -- the last ground state
-	# shot may have left the world at night, in rain, or both.
-	_apply_state("day", "clear")
-	for i in STATE_SETTLE_FRAMES:
-		await physics_frame
+	# The water section is a viewpoint set like any other, so `--only` filters
+	# it the same way rather than always paying for three more bodies.
+	if only == "" or "water" in only or "pond" in only or "river" in only or "stream" in only:
+		# Reset to day/clear before the water section -- the last ground state
+		# shot may have left the world at night, in rain, or both.
+		_apply_state("day", "clear")
+		for i in STATE_SETTLE_FRAMES:
+			await physics_frame
 
-	await _capture_pond()
-	await _capture_river()
-	await _capture_stream()
+		if only == "" or "pond" in only or only == "water":
+			await _capture_pond()
+		if only == "" or "river" in only or only == "water":
+			await _capture_river()
+		if only == "" or "stream" in only or only == "water":
+			await _capture_stream()
 
 	print("")
 	print("ground and water capture written to %s" % OUT_DIR)
@@ -363,6 +401,17 @@ func _arrive_ground(entry: Array) -> Dictionary:
 
 	print("[ground] arrived %-28s eye(%.0f, %.1f, %.0f)" % [name, eye_xz.x, eye_ground, eye_xz.y])
 	return {"name": name, "eye_xz": eye_xz, "cam_xz": cam_xz, "target_xz": target_xz}
+
+
+## True when `state` should be shot given `--states=`. An empty filter wants
+## everything, which keeps the default run byte-identical to what it was before
+## this filter existed. Matches on the frame SUFFIX (`day`, `golden`, `night`,
+## `cloudy`, ...) because that is the name the filenames carry and therefore the
+## name a caller already knows.
+func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
+	if wanted.is_empty():
+		return true
+	return str(state[0]) in wanted
 
 
 func _shoot_ground_state(pos: Dictionary, state: Array) -> void:
