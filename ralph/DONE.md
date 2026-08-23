@@ -3,6 +3,48 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## CATCH-BLOCKER — the trainer walked away from their own throw
+
+`commits: 75559ecb, 4703c12c` · `tests: test_throw_reach_and_miss_message.gd (new), smoke_gate_a_opening_segment, smoke_gate_b_continuous` · `CI 2139 green, swept to main at 3c88e0fd`
+
+**Start the next session here, not at the top of ACTIVE_TASKS.** Gate A passes,
+Gate C passes, and Gate B now clears the opening and the tutorial catch. The one
+thing blocking Gate B is `CONTINUOUS-CORE`, and its diagnosis changed tonight --
+see below and in `BACKLOG.md`.
+
+**What was broken.** `throw_aim.gd::_enter_aim()` grants the trainer locomotion
+and `_leave_aim()` revokes it. A RELEASED throw goes through neither: it keeps
+the aim camera on purpose and sets `state` directly. So the trainer stayed a
+live walking actor through the flight AND the entire catch resolution. Measured
+at the breakout: `movable=true`, velocity **5.00 m/s**, 24.38m from a creature
+that had not moved. Every throw after that came from ~25m, and an orb cannot
+reach past v²/g -- about 20m -- so nineteen consecutive orbs were spent on
+throws physically incapable of landing, each reported as the same four words.
+
+**Shipped:** `_set_trainer_movable(false)` at release; a locked-on throw beyond
+ballistic reach is refused rather than spending the orb; miss messages carry the
+gap and how the flight ended. Plus permanent flight forensics in `orb.gd` and
+`throw_aim.gd`.
+
+**Two of my own earlier diagnoses are recorded in BACKLOG.md as WRONG**, kept so
+they are not repeated: "a straight reticle aiming a ballistic orb" (the launch
+was already ballistic) and the ~3% strike rate (an artefact of a stale-aim
+harness, fixed at `ab4ae014`). Both were asserted without reading the functions
+involved.
+
+**What is still open, and it is ONE thing.** Gate B now fails at the village Tam
+segment: `could not activate Tam cycle 1 (18.3m away, arbiter
+winner=EncounterDirector)`. The backlog's previous prediction -- that extracting
+the opening would fix this -- shipped and is **measured wrong**: Tam went from
+7.7m (hand-chosen start) to 18.3m (the real authored start), because
+`_step_toward()` walks a straight line and the village has buildings in it.
+**The remaining work is pathing, not positioning** -- authored waypoints between
+the opening's exit and each villager, or a real nav query. None of the six
+attempts tallied in BACKLOG.md touched pathing.
+
+`verify-continuous-core-known-red` still carries `continue-on-error`. Remove it
+when that lands.
+
 ## GATE-B-CONTINUOUS — a Gate B run exists; the path it walks does not yet
 
 `tests: smoke_gate_b_continuous.gd (new), two worktree runs at a22534ff` · `area: evidence, ci`
