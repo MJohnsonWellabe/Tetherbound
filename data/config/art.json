@@ -324,5 +324,25 @@
     },
     "animation_libraries": [],
     "_comment_neck": "`graft_head.py --drop` exists because of this character. The first install had a neck the owner called `comically long`: the body's own neck stump and the grafted bust's neck stack up, and neither --overlap nor --head-fraction shortens that -- overlap moves the CUT, so raising it keeps MORE neck and negative values lift the head clean off the shoulders. --drop translates the placed head down into the collar. 0.45 head-heights is what put his jaw on the fur."
+  },
+  "grunt": {
+    "_comment": "NP2-grunt-wire. `assets/characters/grunt/grunt_lod0.glb` was imported and sitting on disk with nothing in data/config or scripts pointing at it -- docs/art/HUMANOID_ASSET_INVENTORY.md already lists it as the 'Reusable Team Tether rank-and-file archetype' and its own rule 4 says to use this rig for ordinary Team Tether personnel rather than repainting a civilian. This block is what actually wires it in: without a top-level art.json key, CHARACTER_MODEL.config_for('grunt') returns empty and npc_ranks.gd has nothing but the Warden's own rig to build a rank ladder on -- which is exactly the bug a blind pass caught ('four rank frames, one body, one coat, one face').",
+    "model": "res://assets/characters/grunt/grunt_lod0.glb",
+    "_comment_height": "Measured, not assumed -- tools/_capture_character_cast.gd's own GRUNT_CFG comment records the raw .glb measuring close to the trainer's ruler height; 1.80m matches that and CLAUDE.md's stated human scale.",
+    "height": 1.80,
+    "model_yaw": 0.0,
+    "_comment_clips": "Read off the raw glTF JSON chunk on disk, not guessed: `animations` is `[\"idle\",\"walk\",\"sprint\",\"jump\",\"throw\"]` over `Armature`/`Hips`/`Spine02`/`Head` bones -- the same clip set and bone names every other wired human rig carries, baked through the same animate_humanoid.py pipeline. No `chop`: this rig never gathers.",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
   }
 }

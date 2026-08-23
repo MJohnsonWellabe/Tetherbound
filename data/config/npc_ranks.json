@@ -1,60 +1,68 @@
 {
-  "_comment": "Team Tether rank palettes (spec sec36), on top of NP1's palette and accessory mechanisms. CLAUDE.md/D24: human NPCs reuse the trainer, Grandpa and Warden rigs, never a new mesh. NP4's Team Tether Grunt base exists (assets_raw/grunt/textured/model.glb) but has no path into the game yet -- NP4-rig (area: art, lane: art) has to rig/animate/install it first. Until then the only faction-appropriate rig actually installed is the Warden's, so every rank below reuses his geometry.",
-  "_comment_single_material": "All three of today's human rigs carry exactly one fused material (character_model.gd's own _apply_palette comment), and that material's emission channel (a full-white self-lit copy of the same painted texture, fixed alongside this item so palette tints are visible at all -- see character_model.gd's _shared_variant_material) means a body-only palette can shift how BRIGHT the same outfit reads, never a genuinely different colour family. A first pass using body brightness alone (grunt darkest, warden full original) did not survive blind review: it read as a lighting gradient, not a rank system -- 'someone duplicated a mesh four times and nudged an exposure value.'",
-  "_comment_badge": "So the real rank marker is a chest badge (NP1's existing 'accessories' mechanism -- a placeholder primitive on its own material, independent of the body palette, per CLAUDE.md's Prototyping section) that escalates in BOTH colour and size: plain grey and small for the grunt, up through bronze, brass and the Warden's own largest, richest gold. The body brightness ladder stays as a secondary cue underneath it, not the primary one.",
+  "_comment": "Team Tether rank palettes (spec sec36), on top of NP1's palette and accessory mechanisms. CLAUDE.md/D24: human NPCs reuse an installed rig, never a new mesh. NP2-grunt-wire: grunt/officer/captain now build on `assets/characters/grunt/grunt_lod0.glb` (wired into art.json's `grunt` key by this same item) rather than the Warden's own rig -- a blind visual pass rejected the old ladder outright ('the four antagonist rank frames are not four characters, they are the Warden's exact mesh, costume and pose four times'), and the SAME critique named the second cost of that shortcut: reusing the boss's own body for his subordinates makes the boss stop being unique the moment the player has already fought three 'captains' wearing his face. The Warden keeps his own rig below -- he is the only rank with no `base` override -- specifically so meeting him still reads as meeting someone new.",
+  "_comment_single_material": "All of today's human rigs, the grunt included (confirmed directly against the imported .glb: one MeshInstance3D, one surface, one 'Material_1'), carry exactly one fused material (character_model.gd's own _apply_palette comment), and that material's emission channel (a full-white self-lit copy of the same painted texture, fixed alongside this item so palette tints are visible at all -- see character_model.gd's _shared_variant_material) means a body-only palette can shift how BRIGHT the same outfit reads, never a genuinely different colour family. A first pass using body brightness alone (grunt darkest, warden full original) did not survive blind review: it read as a lighting gradient, not a rank system -- 'someone duplicated a mesh four times and nudged an exposure value.'",
+  "_comment_badge": "So the real rank marker is a chest badge (NP1's existing 'accessories' mechanism -- a placeholder primitive on its own material, independent of the body palette, per CLAUDE.md's Prototyping section) that escalates in colour, size AND shape. A second blind pass on the ORANGE-family badges (grunt grey, officer/captain both orange, 26 points apart in one channel) rejected that too: 'this reads as a debug gizmo left in the shot... officer and captain differ by 26 points in one colour channel and nothing else.' Shape now differs adjacent-rank to adjacent-rank (grunt: sphere, officer: capsule, captain: box, warden: sphere again but the largest and alone on his own body) so no two ranks can be told apart by squinting at a single RGB channel; colour still escalates too, but as a second lever, not the only one.",
+  "_comment_oxblood": "The same pass named a faction-identity gap on top of the rank-ladder one: 'the Warden and his ranks wear dark green and gold -- the same olive-green family as Grandpa's vest and the villager female's jacket... nothing on any antagonist costume carries the oxblood accent that would tie them to the stronghold's banners.' `data/config/palette.json`'s own `_reserved` comment says `tether_oxblood` (#332228) is meant for exactly this: 'Team Tether banners, equipment AND UNIFORMS, never on friendly or neutral elements.' Grunt/officer/captain's body palette below is a warm rose-red family multiplied onto the grunt rig's own dark tactical texture (never onto a friendly rig -- the reserved colour stays off Grandpa, the trainer and every villager, all of which keep their own established tints untouched), and every badge below sits in that same warm-red family rather than orange, with the Warden's own badge set to the literal reserved hex -- the one place in the ladder where the exact stronghold-banner colour appears, at the top of the same chain of command it marks.",
+  "_comment_badge_offset": "NP2-grunt-wire also fixes the floating badge itself. The OLD offset ([0, 0.30, 0.25] from the Spine02 bone) was authored with no measurement behind it and put the sphere roughly 60% of the way from Spine02 to the Head bone -- near the throat/collar, not the chest -- and 0.25m forward of a bone whose own body surface sits at roughly 0.14-0.16m forward at THAT height once the actual mesh is sampled: the sphere's near edge alone cleared the coat, so the whole badge hung in open air in front of it ('reads as a debug gizmo left in the shot... it visibly hovers detached'). Every offset below was derived by building each rig headless (no render needed -- `_shared/render_bounds.gd`'s own fit maths plus a raw vertex sample of the body mesh near the target height, both plain CPU geometry) and reading the ACTUAL bone position and chest depth off it, not assumed: `y=0.10` sits roughly a fifth of the way from Spine02 to Head on both rigs (upper chest, well short of the collar), and each `z` is that rig's own measured chest-forward extent at that height, pulled back by roughly 60% of the badge's own radius so the sphere/capsule/box sits mostly EMBEDDED in the coat with only its own front third or so proud of the surface -- a worn pin, not a hovering ball. Bigger badges (captain, warden) therefore show a slightly bigger visible bump than grunt's, which is the intended reading: the badge gets both larger and more physically present as rank rises.",
   "ranks": {
     "grunt": {
       "label": "Grunt",
-      "_comment_palette_crush": "STRANDED-P3, confirmed game bug: the original #4a5049 (luminance ~0.30) crushed Hess to a near-black silhouette on the band3 picket road, through character_model.gd's _shared_variant_material, which multiplies the SAME rank colour into both albedo_color and the shared self-lit emission channel (the NP2 fix documented on that function) -- so a dark rank tint darkens both channels at once instead of only shading the surface. Raising this hex ALONE (round 1: luminance ~0.30 -> ~0.55, same drab olive hue) did not fix the actual render -- confirmed by a real capture, not assumed -- because a straight multiply can only ever darken a source pixel; wherever the rig's own painted emission texture is already near-black (a dark uniform panel), texture*colour stays near-black no matter how bright colour is. The real fix is in character_model.gd itself: an ADDITIVE emission floor (lerp toward the tint colour, the same shape as severed_spokes.gd's tether_oxblood fix) that guarantees a visible glow regardless of how dark the source pixel started. This hex is kept at the round-1 brightened value anyway -- still the DARKEST of the three ranks below the Warden, since the chest badge (not body brightness) is the primary rank marker per this file's own _comment_badge -- but the palette value was never the load-bearing part of the actual fix.",
+      "base": "grunt",
+      "_comment_palette": "Warmest-of-the-family but lowest VALUE of the three ranks on this rig (luminance ~0.52, R:G:B roughly 1.3:1:1) -- kept above STRANDED-P3's ~0.5 floor (see palette_crush note below) so the emission-floor fix still reads as a visible warm tint rather than crushing back toward black, while staying the darkest/least-adorned of the three as the escalating-value ladder this file has always used.",
       "palette": {
-        "*": "#868f85"
+        "*": "#a27d7d"
       },
+      "_comment_palette_crush": "STRANDED-P3, confirmed game bug (kept for the mechanism, not the old hex -- see character_model.gd's `_shared_variant_material` for the actual fix): a straight albedo*colour multiply can only ever DARKEN a source pixel, and this rig's shared material also copies the same rank colour into the self-lit emission channel, so a dark tint crushes both channels toward black at once. character_model.gd's ADDITIVE emission floor (lerp toward the tint colour whenever tint luminance < 0.95) is what actually keeps a dark uniform legible; this hex is chosen with headroom above that floor's comfortable range on top, not as a substitute for it.",
       "badge": {
         "shape": "sphere",
         "size": 0.07,
-        "color": "#5c6b73",
+        "color": "#7a5658",
         "bone": "Spine02",
         "offset": [
           0.0,
-          0.3,
-          0.25
+          0.10,
+          0.12
         ],
         "name": "badge"
       }
     },
     "officer": {
       "label": "Officer",
-      "_comment_palette_crush": "STRANDED-P3: same crush family as grunt above (see its _comment_palette_crush) -- #6d7d6a was luminance ~0.47, below the ~0.6+ this rig's fused single material needs to avoid reading as an unlit/black figure once emission darkens alongside albedo. Raised to luminance ~0.60, still visibly brighter than grunt's ~0.55 and darker than captain's untouched #b0a271 (~0.63), preserving the escalating body-brightness ladder underneath the badge.",
+      "base": "grunt",
+      "_comment_palette": "Same warm family as grunt, one value step up (luminance ~0.60) -- the secondary cue underneath the badge's own shape/colour/size change.",
       "palette": {
-        "*": "#8d9e8a"
+        "*": "#bb9090"
       },
       "badge": {
-        "shape": "sphere",
-        "size": 0.1,
-        "color": "#a6672f",
+        "shape": "capsule",
+        "size": 0.10,
+        "color": "#a5453e",
         "bone": "Spine02",
         "offset": [
           0.0,
-          0.3,
-          0.25
+          0.10,
+          0.11
         ],
         "name": "badge"
       }
     },
     "captain": {
       "label": "Captain",
+      "base": "grunt",
+      "_comment_palette": "Brightest/warmest of the three grunt-rig ranks (luminance ~0.68) -- the value ladder's own top, one step below the Warden's untouched full-original finish.",
       "palette": {
-        "*": "#b0a271"
+        "*": "#d4a3a3"
       },
+      "_comment_badge_shape": "Round-2 finding: 'officer and captain differ by 26 points in one colour channel and nothing else... this reads as a debug gizmo.' Officer is a capsule (a bar/pip), captain is a box (a plate) -- a different silhouette, not just a brighter version of the same sphere, on top of the colour and size steps both ranks already carried.",
       "badge": {
-        "shape": "sphere",
+        "shape": "box",
         "size": 0.13,
-        "color": "#c2661e",
+        "color": "#c23b30",
         "bone": "Spine02",
         "offset": [
           0.0,
-          0.3,
-          0.25
+          0.10,
+          0.10
         ],
         "name": "badge"
       }
@@ -64,18 +72,19 @@
       "badge": {
         "shape": "sphere",
         "size": 0.16,
-        "color": "#9c2b3a",
+        "color": "#332228",
         "bone": "Spine02",
         "offset": [
           0.0,
-          0.3,
-          0.25
+          0.10,
+          0.11
         ],
         "name": "badge"
       },
-      "_comment": "No palette override -- his own board-06 painted finish is already the richest tier. Only the badge is added, at the top of the same escalating language the other three use. Round-2 blind review: gold-on-gold made captain and Warden collapse into the same badge at a glance ('the color plateau between rank 3 and rank 4'). Shifted the Warden's own badge to a red/crimson family instead of a brighter gold -- data/config/palette.json's tether_oxblood is reserved for exactly this ('Team Tether banners, equipment and uniforms, never on friendly or neutral elements'), and the Warden IS the top of that same faction, so a red accent both solves the collision and uses the project's own reserved colour correctly rather than inventing an unrelated one."
+      "_comment": "No `base` key -- the only rank that does NOT reuse the grunt rig, and no palette override either: his own board-16 painted finish (D49's rebuild) is the reference-authored look and stays untouched, the same call this file made before NP2-grunt-wire. Sphere again rather than a fourth new shape, back at the top of the same size ladder (largest, 0.16) the other three climb -- the thing that makes him unmistakably the top of the chain is now his OWN body, not a bigger gizmo.",
+      "_comment_oxblood_top": "The one badge that carries the literal `tether_oxblood` hex (#332228) rather than a warm-red relative of it -- the Warden sits at the top of the same faction the reserved colour belongs to, so his own insignia is where the exact stronghold-banner colour actually appears, and everything below him is visibly in that colour's family without repeating it exactly."
     }
   },
-  "_comment_scale": "Every human rig (trainer/Grandpa/Warden) sits under an Armature node with a flat 0.01 scale -- HANDOFF.md sec6's 'centimetre-unit skeleton under a 0.01 Armature node with x100 inverse binds', the same bug that produced the giant-player fit issue. character_model.gd's _attach_part() sets a placeholder's `position` as a LOCAL child of a BoneAttachment3D inside that scaled chain, so both `offset` and `size` below are in that same shrunk local space, not real metres: a size of 13.0 here renders as a 0.13m sphere in the actual game world, and an offset of 30 along one axis moves it 0.30m in world space. Measured directly (offset [30,0,0]/[0,30,0]/[0,0,30] each moved the attached part almost exactly 0.30m along the matching WORLD axis with no rotation to account for), not guessed -- confirmed the shared _attach_part() mechanism NP1's hair also uses has this same scale, so hair's own tiny offset (0.08) is likely rendering at ~0.0008m, effectively invisible too. Left untouched here rather than fixed for everyone: changing hair's placement is a real, currently-unverified visual change outside NP2's scope, not a call to make inside this item.",
-  "_comment_badge_scale": "Badge sizes and offsets are METRES, and were authored 100x too large -- size 7.0 to 16.0 with an offset of [0,30,25]. character_model.gd's own default (`acc.get(\"size\", 0.12)`) is the giveaway: 12cm is what a chest badge should be. Applied as metres, the grunt wore a 3.5m-RADIUS sphere thirty metres above his own head, and the ladder made it worse with rank -- the Warden's was 8m. The owner saw them from across the valley and asked what the balls on the stronghold were. Divided by 100 here, which preserves the intended escalation exactly (7cm grunt -> 16cm warden) and puts the badge on the chest."
+  "_comment_scale": "Every human rig (trainer/Grandpa/Warden/grunt) sits under an Armature node with a flat 0.01 scale -- HANDOFF.md sec6's 'centimetre-unit skeleton under a 0.01 Armature node with x100 inverse binds', the same bug that produced the giant-player fit issue. character_model.gd's _attach_part() sets a placeholder's `position` as a LOCAL child of a BoneAttachment3D inside that scaled chain, so both `offset` and `size` below are in that same shrunk local space, not real metres: a size of 13.0 here renders as a 0.13m sphere in the actual game world, and an offset of 30 along one axis moves it 0.30m in world space. Measured directly (offset [30,0,0]/[0,30,0]/[0,0,30] each moved the attached part almost exactly 0.30m along the matching WORLD axis with no rotation to account for), not guessed -- confirmed the shared _attach_part() mechanism NP1's hair also uses has this same scale, so hair's own tiny offset (0.08) is likely rendering at ~0.0008m, effectively invisible too. Left untouched here rather than fixed for everyone: changing hair's placement is a real, currently-unverified visual change outside NP2's scope, not a call to make inside this item.",
+  "_comment_badge_scale": "Badge sizes and offsets are METRES -- character_model.gd's own default (`acc.get(\"size\", 0.12)`) is the giveaway: 12cm is what a chest badge should be. The values above are already in that space; see `_comment_badge_offset` above for how the current `offset` numbers were actually derived (measured per rig, not guessed) and what defect that fixes."
 }

@@ -1,10 +1,11 @@
 extends SceneTree
 
 ## Capture the four Team Tether ranks side by side, for the visual critic loop
-## (`NP2`). Grunt, officer and captain are the Warden's rig with `npc_ranks.gd`'s
-## palette laid over it; the Warden himself renders with his own unmodified
-## `art.json` entry, as the top of the rank ladder every other tone is judged
-## against.
+## (`NP2`). NP2-grunt-wire: grunt, officer and captain now build on the grunt
+## rig (`art.json`'s `grunt` block) with `npc_ranks.gd`'s palette and badge
+## laid over it; the Warden himself is still the one rank with no `base`
+## override, so he renders with his own unmodified `art.json` entry, as the
+## top of the rank ladder every other tone is judged against.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" \
 ##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \

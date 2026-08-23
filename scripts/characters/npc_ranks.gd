@@ -3,13 +3,20 @@ extends RefCounted
 ## Team Tether rank palettes (`NP2`, spec §36) — static lookups, same shape as
 ## `character_model.gd`'s own `config_for`.
 ##
-## Every rank reuses the Warden's rig (the only faction-appropriate body
-## installed today; see `data/config/npc_ranks.json`'s own comment on why),
-## with the rank's own body palette (if any) and chest badge accessory laid
-## over his base config. The badge, not the body tone, carries the rank read —
-## a blind visual pass rejected a body-brightness-only ladder as reading like
-## an exposure slider rather than a rank system. `config_for()` returns a dict
-## ready for `CharacterModel.build_from_config()` directly.
+## NP2-grunt-wire: grunt/officer/captain build on `art.json`'s `grunt` block
+## (each rank entry's own `base` key, `data/config/npc_ranks.json`), not the
+## Warden's rig — a blind visual pass rejected the old all-ranks-on-the-Warden
+## ladder on two counts at once: the four rank frames read as one character
+## repainted four times, AND reusing the boss's own body for his subordinates
+## meant the boss himself stopped being unique. The Warden is the one rank
+## with no `base` override, so `config_for("warden")` still falls back to
+## `WARDEN_KEY` below — he is the only one who does not share a rig with
+## anyone. The rank's own body palette (if any) and chest badge accessory are
+## laid over whichever base that rank names. The badge, not the body tone, is
+## still the primary rank read — a blind visual pass rejected a body-
+## brightness-only ladder as reading like an exposure slider rather than a
+## rank system. `config_for()` returns a dict ready for
+## `CharacterModel.build_from_config()` directly.
 
 const RANKS_PATH := "res://data/config/npc_ranks.json"
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
@@ -22,10 +29,11 @@ static func rank_ids() -> Array:
 	return ranks.keys()
 
 
-## The Warden's own base config (model, height, clips) with the named rank's
-## palette (if any) and badge accessory laid over it. Empty if the rank or the
-## Warden's own config is missing, so a caller can fail loudly rather than
-## build a rankless body.
+## The rank's own base config (model, height, clips — `art.json`, chosen by
+## the rank entry's own `base` key, defaulting to the Warden's if the rank
+## names none) with that rank's palette (if any) and badge accessory laid over
+## it. Empty if the rank, or its base config, is missing, so a caller can fail
+## loudly rather than build a rankless body.
 static func config_for(rank: String) -> Dictionary:
 	var ranks: Dictionary = _read().get("ranks", {})
 	var entry: Variant = ranks.get(rank, {})
@@ -33,7 +41,8 @@ static func config_for(rank: String) -> Dictionary:
 		return {}
 	var rank_entry := entry as Dictionary
 
-	var base := CHARACTER_MODEL.config_for(WARDEN_KEY)
+	var base_key := str(rank_entry.get("base", WARDEN_KEY))
+	var base := CHARACTER_MODEL.config_for(base_key)
 	if base.is_empty():
 		return {}
 

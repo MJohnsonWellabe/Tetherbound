@@ -33,9 +33,11 @@ extends SceneTree
 ##
 ## FRAME BUDGET, counted directly against the constants below, at the
 ## PESSIMISTIC 2.4s/frame corridor-survey rate (this stage is dramatically
-## lighter -- six distinct human meshes total, the four rank variants reuse
-## the Warden's -- so the real rate should beat this by a wide margin; the
-## arithmetic below is the worst case, not the expectation):
+## lighter -- seven distinct human meshes total (trainer/grandpa/warden/
+## villager-male/villager-female/grunt, the rank frames all reuse either the
+## grunt or the Warden's own rig, NP2-grunt-wire) -- so the real rate should
+## beat this by a wide margin; the arithmetic below is the worst case, not the
+## expectation):
 ##
 ##   world settle                 WORLD_SETTLE_FRAMES  =  15
 ##   group build settle           GROUP_SETTLE_FRAMES   =  35
@@ -73,23 +75,19 @@ extends SceneTree
 ##   look (keeper: unmodified `#ffffff` tint; farmer: the base tint plus its
 ##   own hair colour) rather than one of the other personas' extra palette
 ##   tweaks.
-## - grunt-archetype: `assets/characters/grunt/grunt_lod0.glb` is imported and
-##   sits on disk, but NOTHING in `data/config/` or `scripts/` references
-##   `assets/characters/grunt` -- confirmed by grep. It has no `art.json` key
-##   to read, so `GRUNT_CFG` below is built directly, not guessed: the raw
-##   glTF JSON chunk was parsed off disk and its `animations` array reads
-##   `["idle","walk","sprint","jump","throw"]` with `Armature`/`Hips`/
-##   `Spine02`/`Head` bones present -- the same clip set and bone names every
-##   wired rig carries, so this is the same rig baked through the same
-##   pipeline, just never plugged into a config. Height is set to the
-##   trainer's own 1.80m (CLAUDE.md's stated human ruler) for lack of any
-##   other authored value; this is a CAPTURE-ONLY convenience, not a data
-##   change, and is not written back to any config file.
-## - rank-grunt / rank-officer / rank-captain / rank-warden: `npc_ranks.gd`'s
-##   `config_for()`, which is the WARDEN'S OWN RIG with that rank's body
-##   palette and chest-badge accessory laid over it (`npc_ranks.json`'s own
-##   comment: no faction-specific body exists yet, so every rank reuses his
-##   geometry regardless of the orphaned grunt archetype above).
+## - grunt-archetype: NP2-grunt-wire added `art.json`'s own `grunt` block, so
+##   this is now `art.json`'s own top-level entry like trainer/grandpa/warden
+##   above, not a hand-built stand-in -- it shows the rig's unranked, un-tinted
+##   painted finish, the same reference every rank-grunt/officer/captain frame
+##   below is judged against.
+## - rank-grunt / rank-officer / rank-captain: `npc_ranks.gd`'s `config_for()`,
+##   which is now the GRUNT rig (each rank entry's own `base` key) with that
+##   rank's body palette and chest badge laid over it -- NP2-grunt-wire moved
+##   these three off the Warden's own body onto the faction's actual
+##   rank-and-file archetype.
+## - rank-warden: same `config_for()` path, but the Warden rank entry names no
+##   `base`, so it still falls back to his own `art.json` rig -- the one rank
+##   that does NOT share a body with anyone else in this cast.
 ##
 ## WHY THE RANK FRAMES MATTER (repo note -- the critic below is blind to this,
 ## and stays that way; nothing about it is said to it): `ralph/
@@ -112,28 +110,16 @@ const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const OUT_DIR := "res://shots/characters"
 
-## See the header's "grunt-archetype" note for where every field here came
-## from -- read off the raw .glb, not assumed.
-const GRUNT_CFG := {
-	"model": "res://assets/characters/grunt/grunt_lod0.glb",
-	"height": 1.80,
-	"model_yaw": 0.0,
-	"clips": {
-		"idle": "idle", "walk": "walk", "sprint": "sprint",
-		"jump": "jump", "throw": "throw"
-	}
-}
-
 ## Left to right in the line-up, and the order everything else below iterates
-## in. `kind` says which of the three config sources `_config_for()` should
-## read; `key` is that source's own lookup key (unused for "raw").
+## in. `kind` says which of the two config sources `_config_for()` should
+## read; `key` is that source's own lookup key.
 const CAST := [
 	{"slug": "trainer", "kind": "config", "key": "trainer"},
 	{"slug": "grandpa", "kind": "config", "key": "grandpa"},
 	{"slug": "warden", "kind": "config", "key": "warden"},
 	{"slug": "villager-male", "kind": "config", "key": "villager_keeper"},
 	{"slug": "villager-female", "kind": "config", "key": "villager_farmer"},
-	{"slug": "grunt-archetype", "kind": "raw", "key": ""},
+	{"slug": "grunt-archetype", "kind": "config", "key": "grunt"},
 	{"slug": "rank-grunt", "kind": "rank", "key": "grunt"},
 	{"slug": "rank-officer", "kind": "rank", "key": "officer"},
 	{"slug": "rank-captain", "kind": "rank", "key": "captain"},
@@ -261,18 +247,15 @@ func _run() -> void:
 	quit(0)
 
 
-## Which of the three config sources this cast entry reads from. Never a
-## guess: "config" and "rank" both go through the game's own lookup code
-## (`character_model.gd`, `npc_ranks.gd`); "raw" is the one archetype with no
-## wired config, documented in the header above.
+## Which of the two config sources this cast entry reads from. Never a guess:
+## both go through the game's own lookup code (`character_model.gd`,
+## `npc_ranks.gd`).
 func _config_for(entry: Dictionary) -> Dictionary:
 	match str(entry.get("kind", "")):
 		"config":
 			return CHARACTER_MODEL.config_for(str(entry.get("key", "")))
 		"rank":
 			return NPC_RANKS.config_for(str(entry.get("key", "")))
-		"raw":
-			return GRUNT_CFG.duplicate(true)
 		_:
 			return {}
 
