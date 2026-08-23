@@ -26,8 +26,8 @@
             0.124
           ],
           "name": "badge",
-          "metallic": 0.55,
-          "roughness": 0.45
+          "metallic": 0.1,
+          "roughness": 0.42
         }
       ]
     },
@@ -50,8 +50,8 @@
             0.114
           ],
           "name": "badge_rim",
-          "metallic": 0.9,
-          "roughness": 0.22
+          "metallic": 0.15,
+          "roughness": 0.3
         },
         {
           "shape": "sphere",
@@ -64,8 +64,8 @@
             0.118
           ],
           "name": "badge",
-          "metallic": 0.65,
-          "roughness": 0.38
+          "metallic": 0.08,
+          "roughness": 0.34
         }
       ]
     },
@@ -89,8 +89,8 @@
             0.134
           ],
           "name": "badge_rim",
-          "metallic": 0.9,
-          "roughness": 0.22
+          "metallic": 0.15,
+          "roughness": 0.28
         },
         {
           "shape": "disc",
@@ -103,7 +103,7 @@
             0.138
           ],
           "name": "badge",
-          "metallic": 0.75,
+          "metallic": 0.1,
           "roughness": 0.3
         }
       ]
@@ -111,7 +111,7 @@
     "warden": {
       "label": "Warden",
       "_comment": "No `base` key -- the only rank that does NOT reuse the grunt rig, and no palette override either: his own board-16 painted finish (D49's rebuild) is the reference-authored look and stays untouched, the same call this file made before NP2-grunt-wire. Sphere again rather than a fourth new shape, back at the top of the same size ladder (largest, 0.16) the other three climb -- the thing that makes him unmistakably the top of the chain is now his OWN body, not a bigger gizmo.",
-      "_comment_oxblood_top": "The one badge that carries the literal `tether_oxblood` hex (#332228) rather than a warm-red relative of it -- the Warden sits at the top of the same faction the reserved colour belongs to, so his own insignia is where the exact stronghold-banner colour actually appears, and everything below him is visibly in that colour's family without repeating it exactly. VIS-CAST keeps the hex and fixes what it cost: #332228 is near-black, his board-16 coat is dark green, and a matte near-black sphere on dark cloth is invisible at any distance a player meets him from. It is now a POLISHED disc (metallic 0.88, roughness 0.16) -- a specular highlight reads against dark cloth even when the base colour does not, so the reserved colour stays exactly the reserved colour and the insignia is still findable. The alternative, brightening the hex, would have spent the one place in the game where the banner colour appears literally.",
+      "_comment_oxblood_top": "The Warden's badge is the top of the reserved-colour chain, and it has now failed legibility twice for the same reason: `tether_oxblood` (#332228) is very nearly black, his board-16 coat is dark green, and a dark badge on dark cloth is not an insignia. The first attempt kept the literal hex and added metallic to make it catch light -- which made it WORSE, because Godot's Compatibility path has no reflection source on a bare stage, so metallic suppressed the diffuse term and returned literal RGB 0,0,0. A blind round called it 'a solid black hole in the chest, the loudest single defect in the survey'.\n\nSo the face lifts to #5a3742 -- the reserved colour's own hue and family, raised in value until it reads against a dark coat -- and the exact reserved hex now lives where it can be seen instead of where it disappears. The brass ring behind it does the rest of the work. A colour reserved for a faction has to be VISIBLE on that faction to mean anything; a black disc on a black coat reserves nothing.",
       "badges": [
         {
           "shape": "ring",
@@ -124,13 +124,13 @@
             0.152
           ],
           "name": "badge_rim",
-          "metallic": 0.9,
-          "roughness": 0.22
+          "metallic": 0.18,
+          "roughness": 0.24
         },
         {
           "shape": "disc",
           "size": 0.105,
-          "color": "#332228",
+          "color": "#5a3742",
           "bone": "Spine02",
           "offset": [
             0.0,
@@ -138,8 +138,8 @@
             0.156
           ],
           "name": "badge",
-          "metallic": 0.88,
-          "roughness": 0.16
+          "metallic": 0.1,
+          "roughness": 0.34
         }
       ]
     }

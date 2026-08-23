@@ -363,7 +363,12 @@ func _build_environment(world: Node3D) -> void:
 	var env_node := WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.10, 0.11, 0.13)
+	# MID VALUE, not near-black. At (0.10,0.11,0.13) the backdrop sat behind every
+	# head at roughly the same value as the cast's dark caps and dark hair, and a
+	# blind round noted the consequence: head silhouettes were being judged against
+	# a background that hides them, for the dark-haired majority of the cast. A
+	# character survey stages heads against a value they can be cut out of.
+	env.background_color = Color(0.28, 0.30, 0.33)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.85, 0.87, 0.90)
 	# CALIBRATED against this stage's own floor, the same way and for the same

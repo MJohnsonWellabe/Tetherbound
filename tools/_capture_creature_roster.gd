@@ -337,6 +337,23 @@ func _build_environment() -> void:
 	key.shadow_enabled = true
 	_world.add_child(key)
 
+	# A low RIM from behind, so a dark creature can never fall below its own
+	# backdrop. A blind round measured galecrest's rare at mean luminance 43
+	# against a 56 backdrop -- "a black cutout; eyes, feather pattern, everything
+	# gone, the least readable frame on the sheet" -- and brooktail did the same
+	# thing earlier. Those are art problems and are fixed in the colourways, but
+	# the STAGE should not be the reason a legitimately dark creature becomes
+	# unjudgeable: a roster is allowed dark members, and the survey has to be able
+	# to photograph them. A rim separates a dark silhouette from a dark ground
+	# without touching the exposure the floor is calibrated to -- it is aimed away
+	# from the camera and carries no shadow, so it adds an edge and nothing else.
+	var rim := DirectionalLight3D.new()
+	rim.rotation = Vector3(deg_to_rad(-18.0), deg_to_rad(158.0), 0.0)
+	rim.light_energy = 0.5
+	rim.light_color = Color(0.86, 0.90, 1.0)
+	rim.shadow_enabled = false
+	_world.add_child(rim)
+
 	# Decorative only, no collision -- both the trainer (a StaticBody3D under
 	# npc_body.gd, no gravity) and every creature (physics_process frozen
 	# below, the same fix preview_creatures.gd uses for a CharacterBody3D
