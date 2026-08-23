@@ -353,6 +353,33 @@ func test_the_captain_outranks_his_trainers_and_is_outranked_by_the_warden() -> 
 		"the captain's badge is not smaller than the Warden's; he must read as visibly below him")
 
 
+## NP2-grunt-wire's own invariant: grunt/officer/captain build on the grunt
+## rig, and the Warden is the one rank that does NOT share a body with anyone
+## else. A blind pass rejected the old ladder specifically because all four
+## ranks resolved to the same `model` path (the Warden's) -- this asserts the
+## fixed shape directly rather than trusting the badge/palette checks above to
+## imply it, since none of those actually read `model`.
+func test_the_ladder_builds_on_the_grunt_rig_and_the_warden_keeps_his_own() -> void:
+	var lower_ranks := ["grunt", "officer", "captain"]
+	var lower_model := ""
+	for rank: String in lower_ranks:
+		var cfg := NPC_RANKS.config_for(rank)
+		var model := str(cfg.get("model", ""))
+		assert_true(model.contains("grunt"),
+			"'%s' should build on the grunt rig; got model '%s'" % [rank, model])
+		if lower_model == "":
+			lower_model = model
+		else:
+			assert_eq(model, lower_model,
+				"'%s' and its fellow lower ranks should share one rig" % rank)
+
+	var warden_model := str(NPC_RANKS.config_for("warden").get("model", ""))
+	assert_true(warden_model.contains("warden"),
+		"the Warden rank should build on his own rig; got model '%s'" % warden_model)
+	assert_ne(warden_model, lower_model,
+		"the Warden must not share a model with grunt/officer/captain -- that is the exact bug ('the Warden's exact mesh... four times') this item fixes")
+
+
 func test_the_relay_teams_are_levelled_for_band_3() -> void:
 	for id: String in RELAY_IDS:
 		var spec := TRAINERS.trainer(id)
