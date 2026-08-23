@@ -284,11 +284,24 @@ func _run() -> void:
 	# a blind critique of a subset is a critique of a subset.
 	var only := ""
 	var states := ""
+	# `--elevated=<metres>` raises the camera and pitches it down at ground a
+	# proportional distance ahead, writing `<name>-<state>-high.png` beside the
+	# normal frame. This exists because the standing ground framing is
+	# deliberately a WALKING player's view -- 2.0m up, aimed 4.5m ahead -- and
+	# at that height everything past about twenty metres compresses into a thin
+	# band. That is the right camera for judging what a player looks at and the
+	# wrong one for judging macro ground variation, which happens over tens of
+	# metres and can only be seen from above. Three rounds of ground-material
+	# work were judged from a camera that could not show the thing being
+	# changed.
+	var elevated := 0.0
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
 			only = arg.substr("--only=".length())
 		elif arg.begins_with("--states="):
 			states = arg.substr("--states=".length())
+		elif arg.begins_with("--elevated="):
+			elevated = float(arg.substr("--elevated=".length()))
 	var wanted_states := PackedStringArray()
 	if states != "":
 		wanted_states = states.split(",", false)
@@ -304,6 +317,8 @@ func _run() -> void:
 		for state: Variant in GROUND_STATES:
 			if _state_wanted(state as Array, wanted_states):
 				await _shoot_ground_state(pos, state as Array)
+				if elevated > 0.0:
+					await _shoot_elevated(pos, state as Array, elevated)
 		if band_index == WEATHER_VIEWPOINT_INDEX:
 			for state: Variant in WEATHER_STATES:
 				if _state_wanted(state as Array, wanted_states):
@@ -408,6 +423,28 @@ func _arrive_ground(entry: Array) -> Dictionary:
 ## this filter existed. Matches on the frame SUFFIX (`day`, `golden`, `night`,
 ## `cloudy`, ...) because that is the name the filenames carry and therefore the
 ## name a caller already knows.
+## The same seat, shot from `height` metres up looking down at ground ahead.
+## The player is NOT moved -- it stays standing where the walking shot put it,
+## so the 1.80m ruler is still in frame and the scale question is still
+## answerable from this angle. Target distance scales with height so the pitch
+## stays around 30 degrees whatever height is asked for: steep enough to show
+## the ground plane as a plane, shallow enough to keep the horizon and sky in
+## frame, because a straight-down shot answers "is there variation" while
+## throwing away "does it read as a place".
+func _shoot_elevated(pos: Dictionary, state: Array, height: float) -> void:
+	_hide_huds()
+	var cam_xz: Vector2 = pos["cam_xz"]
+	var target_xz: Vector2 = pos["target_xz"]
+	var forward := (target_xz - cam_xz).normalized()
+	var ahead: Vector2 = cam_xz + forward * (height * 1.7)
+	_camera.global_position = Vector3(cam_xz.x, _surface(cam_xz) + height, cam_xz.y)
+	_camera.look_at(Vector3(ahead.x, _surface(ahead), ahead.y), Vector3.UP)
+	for i in POSE_FRAMES:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	_capture("%s-%s-high" % [pos["name"], str(state[0])])
+
+
 func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
 	if wanted.is_empty():
 		return true

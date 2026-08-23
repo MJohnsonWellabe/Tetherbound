@@ -845,3 +845,74 @@ Right-hand hillside, away from the path, band-1 day frame:
 Three times the warm/dry ground on a hillside that previously carried one
 material. This is the first change in the whole sweep to move the ground's own
 colour composition rather than what is scattered on top of it.
+
+## The macro variation belongs in the COLOUR map, not the control map
+
+Round 2 put macro dryness in the control map as a base-id assignment behind a
+noise threshold, because a partial control blend was measured not to draw. That
+rendered — and the newly added elevated camera showed immediately why it was
+still wrong.
+
+**Control ids cannot interpolate.** Each control pixel covers 2m x 2m and names
+one surface, so every cell is wholly one texture or wholly the other and the
+patch boundaries render as hard rectangular steps. At player height the grazing
+angle hides it completely; from 38m up the meadow reads as a checkerboard.
+
+An independent blind critic, given the elevated frames and told nothing, ranked
+this **first of three** and reached the same conclusion unprompted:
+
+> "In every one of the five -high frames the boundaries between ground tones are
+> axis-aligned square blocks with stair-stepped edges — unmistakably a
+> low-resolution splat/control map being sampled with nearest-neighbour (or
+> per-cell) filtering, at a cell size of roughly 2–4 m... This reads as a
+> rendering/material bug, not an art choice, and it should be treated as one:
+> fix the sampling/blending before judging the splat art itself, because right
+> now the blocks are all you can see."
+
+The colour map has no such limit: it is a continuous per-pixel RGB multiply,
+sampled with ordinary filtering, so a value written per 2m pixel arrives on
+screen as a smooth gradient. Every other broad ground effect in this bake — the
+wet shore, the building aprons, the drained ground — is already a colour lerp
+for that reason, and none of them steps. The dry variation moved there and the
+meadow grid is gone.
+
+The damp band stays a control-map material swap: a wet shore genuinely is a
+different surface rather than a tint of the same one, and it is a narrow contour
+where the step reads as a shoreline rather than as a grid.
+
+**The rocky hillside is still blocky, and that is the same bug.** The
+grass/soil/rock slope transition is written as a partial control blend, so it
+cannot fade — which is almost certainly what defeated EV4-hillside-seam-remainder
+across four rounds.
+
+## The ground had to start over, and this is the arithmetic
+
+The same critic's second-ranked finding was the ground's value and saturation:
+measured at V 0.14-0.33 / S 0.78-0.94 across the frames against V 0.40-0.78 /
+S 0.36-0.50 across the references — *"the world reads overcast-dusk under a blue
+sky"* — and its needs-art list named *"a stylised painterly ground albedo set
+(the current photo-soil texture is wrong in kind, not in settings — the
+centimetre speckle is baked into the texture, and no material setting removes
+it)"*.
+
+That is provable rather than a matter of taste. `albedo_color` MULTIPLIES, so
+every channel of a tint is capped at 1.0 and can only ever LOWER a channel.
+Grass008's mean is RGB(0.393, 0.516, **0.168**). Solving for the tints that would
+reach the reference palettes:
+
+| target | required tint | reachable |
+|---|---|---|
+| key-art meadow (H60 S0.50 V0.45) | (1.145, 0.872, **1.340**) | no |
+| Palworld field (H54 S0.43 V0.62) | (1.577, 1.149, **2.105**) | no |
+
+Both need more blue than the photograph has. **The reference palette is
+unreachable from this source at any settings.** Five rounds of tint work and
+three in-place pixel-editing scripts were spent on a problem the source
+material could not solve.
+
+So the ground surfaces are now GENERATED to a numeric specification
+(`tools/art_pipeline/make_stylised_ground.py`) rather than sourced. The palette
+becomes an input: the smoke test asked for H88.0/S0.440/V0.550 and produced
+H88.2/S0.441/V0.550, with a measured seam error of 0.0025 (tileability is exact
+by construction — all variation is band-limited noise synthesised in the
+frequency domain, which is periodic on the sampling grid).

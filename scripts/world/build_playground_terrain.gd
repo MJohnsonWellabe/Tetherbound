@@ -179,6 +179,24 @@ func _run() -> void:
 ## caller can fold them into a whole-run total. Identical work per pixel
 ## whether this is called once for the whole world or once per region — see
 ## this file's region-set header comment for why that is safe.
+## GROUND-LAYERS. The two macro-variation noise fields, built identically
+## wherever they are needed so the colour pass and the control pass cannot drift
+## apart. Separate seeds rather than two octaves of one: two octaves share their
+## zero crossings, so the patches would sit centred inside the drifts and the
+## whole field would read as one shape with a halo.
+func _macro_noise(cfg: Dictionary) -> Array:
+	var drift := FastNoiseLite.new()
+	var patch := FastNoiseLite.new()
+	var seed_value := int(cfg.get("seed", 20260823))
+	drift.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	drift.seed = seed_value
+	drift.frequency = float(cfg.get("drift_frequency", 0.0055))
+	patch.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	patch.seed = seed_value + 977
+	patch.frequency = float(cfg.get("patch_frequency", 0.019))
+	return [drift, patch]
+
+
 func _bake_region(
 	field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
 	texture_step: float, rock_step: float, spacing: float, rect: Dictionary, data: Object
@@ -196,6 +214,10 @@ func _bake_region(
 	var steep_samples := 0
 	var water_level: float = field.water_level()
 
+	var macro_cfg: Dictionary = config.get("macro", {})
+	var macro_pair := _macro_noise(macro_cfg)
+	var macro_drift: FastNoiseLite = macro_pair[0]
+	var macro_patch: FastNoiseLite = macro_pair[1]
 	for pixel_z in size_z:
 		var world_z := origin_z + pixel_z * spacing
 		for pixel_x in size_x:
@@ -221,6 +243,35 @@ func _bake_region(
 			# colour agrees with the soil texture the control map swaps in
 			# below — the same both-halves treatment the wet shore gets. Before
 			# the wet lerp on purpose: a stream bank stays wet, not dug.
+			# GROUND-LAYERS round 3. Macro dryness lives HERE, in the colour
+			# map, and not in the control map, and that is a measurement.
+			#
+			# Round 2 put it in the control map as a base-id assignment behind a
+			# noise threshold, because a partial control BLEND was measured not
+			# to draw on this build (see _paint_control_map). That worked, and
+			# an elevated frame showed why it was still wrong: control ids
+			# cannot interpolate, so every 2m control cell is wholly one texture
+			# or wholly the other and the patch boundaries render as hard
+			# rectangular steps. Invisible from a 2m player camera, obvious from
+			# 38m up -- which is the entire reason the elevated shot exists.
+			#
+			# The colour map has no such limit. It is a continuous per-pixel
+			# albedo multiply sampled with normal texture filtering, so a value
+			# written per 2m pixel arrives on screen as a smooth gradient. Every
+			# other broad ground effect in this bake -- the wet shore, the
+			# building aprons, the drained ground -- is already a colour lerp
+			# for the same reason, and none of them steps.
+			#
+			# Placed before those three so all of them still override it: a
+			# worked apron, a wet bank and dying ground each say something more
+			# specific than "this stretch is drier".
+			if not macro_cfg.is_empty():
+				var dry_here := _macro_dry(macro_drift, macro_patch, world_x, world_z, height, macro_cfg)
+				if dry_here > 0.0:
+					ground = ground.lerp(
+						Color(str(macro_cfg.get("dry_tint", "#d0bd7a"))),
+						dry_here * float(macro_cfg.get("dry_colour_strength", 0.85)))
+
 			var apron: float = field.building_apron_factor(world_x, world_z)
 			if apron > 0.0:
 				var soil_tint := Color(str(colour_cfg.get("soil", "#d1b37e")))
@@ -321,18 +372,9 @@ func _paint_control_map(
 	# keeping it out of the heightfield keeps the scatter bake's own config
 	# fingerprint honest about what it depends on.
 	var macro_cfg: Dictionary = config.get("macro", {})
-	var macro_drift := FastNoiseLite.new()
-	var macro_patch := FastNoiseLite.new()
-	var macro_seed := int(macro_cfg.get("seed", 20260823))
-	macro_drift.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	macro_drift.seed = macro_seed
-	macro_drift.frequency = float(macro_cfg.get("drift_frequency", 0.0055))
-	macro_patch.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	# A different seed, not merely a different frequency: two octaves of one
-	# seed share their zero crossings, so the patches would sit centred inside
-	# the drifts and the whole field would read as one shape with a halo.
-	macro_patch.seed = macro_seed + 977
-	macro_patch.frequency = float(macro_cfg.get("patch_frequency", 0.019))
+	var macro_pair := _macro_noise(macro_cfg)
+	var macro_drift: FastNoiseLite = macro_pair[0]
+	var macro_patch: FastNoiseLite = macro_pair[1]
 	for pixel_z in size_z:
 		var world_z := origin_z + pixel_z * spacing
 		for pixel_x in size_x:
@@ -395,17 +437,20 @@ func _paint_control_map(
 				# `_blend_control_toward` already uses to spread the path pick
 				# stochastically across its own edge, which is a mechanism this
 				# renderer demonstrably does express.
-				var ragged := clampf(float(macro_cfg.get("edge_raggedness", 0.42)), 0.0, 1.0)
+				# GROUND-LAYERS round 3: the DRY variation moved out of here
+				# and into the colour map -- see the colour pass for the
+				# measurement that forced it. What is left is the damp band,
+				# which stays a real material swap because a wet shore genuinely
+				# is a different surface and not merely a different tint of the
+				# same one, and because it is a narrow contour at the waterline
+				# where the step is short and reads as a shoreline rather than
+				# as a grid.
+				var ragged := clampf(float(macro_cfg.get("edge_raggedness", 0.06)), 0.0, 1.0)
 				var dither: float = field.path_dominant_dither(world_x, world_z)
 				var threshold := 0.5 + (dither - 0.5) * ragged
-				if damp > 0.004 and damp > threshold * float(macro_cfg.get("damp_max", 0.65)):
+				if ids.has("damp") and damp > 0.004 and damp > threshold * float(macro_cfg.get("damp_max", 0.65)):
 					control = {"base": int(ids["damp"]), "overlay": int(ids["damp"]), "blend": 0.0}
 					painted_damp_pixels += 1
-				elif ids.has("drygrass"):
-					var dry := _macro_dry(macro_drift, macro_patch, world_x, world_z, here, macro_cfg)
-					if dry > threshold:
-						control = {"base": int(ids["drygrass"]), "overlay": int(ids["drygrass"]), "blend": 0.0}
-						painted_dry_pixels += 1
 			var path_weight: float = field.path_factor(world_x, world_z)
 			# EV5: the pond bed, the damp shore ring and the stream channel
 			# swap to the same dedicated Ground030 dirt/pebble texture the
