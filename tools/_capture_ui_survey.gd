@@ -189,6 +189,7 @@ func _run() -> void:
 		return
 
 	_seed_game_state()
+	_pin_owner_device()
 
 	await _phase_standalone()
 	await _phase_world()
@@ -197,6 +198,31 @@ func _run() -> void:
 
 
 # --- shared plumbing ---------------------------------------------------------
+
+## Pin the survey to the device the owner actually holds.
+##
+## `game_state.gd` initialises `_last_input_was_gamepad` to
+## `not Input.get_connected_joypads().is_empty()`, so on the ROG Ally -- whose
+## pad is an always-connected XInput device -- the game draws gamepad glyphs
+## from its first frame, before the player has touched anything. Under
+## `xvfb-run` no joypad is connected at all, so that same line initialises the
+## flag to FALSE and every glyph in the survey renders its keyboard half.
+##
+## That is a harness artefact with real cost: the round-1 blind critic read the
+## resulting keycaps as CLAUDE.md's "Controller first" hard rule being violated
+## across the whole interface, and the single largest finding in that report was
+## spent on a device the owner's hardware never presents. The survey has to
+## photograph the Ally, not the empty virtual display.
+##
+## Pinned once here rather than per-frame so it covers BOTH phases -- the
+## standalone panels and the world-anchored HUD -- and cannot wear off partway
+## the way an unfrozen clock pin does (`ralph/VISUAL_LEDGER.md`, "Pin the clock
+## AND freeze it"). `06-hud-input-glyphs` still flips to the keyboard form for
+## one frame, so the sheet keeps showing both halves of every dual binding.
+func _pin_owner_device() -> void:
+	_game.set("_last_input_was_gamepad", true)
+
+
 
 
 ## One seeding pass, reused by every standalone panel and (because `Game` is
@@ -380,13 +406,24 @@ func _shoot_dialogue_panel() -> void:
 	await _settle(2)
 
 
-## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
-## directly with five entries in the shapes `update_from_party()` documents,
-## covering the states a real belt actually shows: an out/selected member,
-## an ordinary healthy one, one worn down, one fainted (KO badge), one
-## resting. A close standalone frame reads its hierarchy far more legibly
-## than a corner of a 1920x1080 exploration shot would.
-func _shoot_party_strip_closeup() -> void:
+## The staging both standalone widget closeups mount into: a backdrop layer and,
+## ABOVE IT, a layer for the widget itself.
+##
+## The two layers are what this helper exists for. Both closeups used to put the
+## backdrop in a `CanvasLayer` at layer 0 and parent the widget straight to
+## `root`, and a `CanvasLayer` at layer 0 draws OVER root's own default canvas --
+## so the full-screen backdrop painted across the very widget it was meant to sit
+## behind. `08-party-strip` and `09-stamina-arc` came back as solid near-black
+## frames, and the round-1 blind critic spent a finding on them ("both are
+## failures someone must own before this set can be called a survey of every HUD
+## element"). Nothing was wrong with either widget: parented into a layer above
+## the backdrop, `party_strip.gd` draws its header, five rows, portraits, HP bars
+## and KO/REST tags exactly as written, and `stamina_arc.gd` draws its arc.
+##
+## Ordering is explicit here rather than left to default-canvas semantics,
+## because "which draws first, a CanvasLayer(0) or a Control parented to root"
+## is precisely the question that got this wrong once already.
+func _widget_stage() -> Array:
 	var backdrop_layer := CanvasLayer.new()
 	backdrop_layer.layer = 0
 	root.add_child(backdrop_layer)
@@ -395,9 +432,29 @@ func _shoot_party_strip_closeup() -> void:
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	backdrop_layer.add_child(backdrop)
 
+	var widget_layer := CanvasLayer.new()
+	widget_layer.layer = 1
+	root.add_child(widget_layer)
+	return [backdrop_layer, widget_layer]
+
+
+func _free_widget_stage(stage: Array) -> void:
+	for layer in stage:
+		(layer as CanvasLayer).queue_free()
+
+
+## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
+## directly with five entries in the shapes `update_from_party()` documents,
+## covering the states a real belt actually shows: an out/selected member,
+## an ordinary healthy one, one worn down, one fainted (KO badge), one
+## resting. A close standalone frame reads its hierarchy far more legibly
+## than a corner of a 1920x1080 exploration shot would.
+func _shoot_party_strip_closeup() -> void:
+	var stage := _widget_stage()
+
 	var strip: Control = PARTY_STRIP.new()
 	strip.position = Vector2(80.0, 80.0)
-	root.add_child(strip)
+	stage[1].add_child(strip)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
@@ -416,7 +473,7 @@ func _shoot_party_strip_closeup() -> void:
 	await _settle(8)
 	await _shoot("08-party-strip")
 	strip.queue_free()
-	backdrop_layer.queue_free()
+	_free_widget_stage(stage)
 	await _settle(2)
 
 
@@ -425,22 +482,16 @@ func _shoot_party_strip_closeup() -> void:
 ## mid-sprint. Mid-value and draining puts it in the warning colour tier
 ## (`WARNING_BELOW`), which is more informative than a full or empty arc.
 func _shoot_stamina_arc_closeup() -> void:
-	var backdrop_layer := CanvasLayer.new()
-	backdrop_layer.layer = 0
-	root.add_child(backdrop_layer)
-	var backdrop := ColorRect.new()
-	backdrop.color = Color(0.08, 0.09, 0.10)
-	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop_layer.add_child(backdrop)
+	var stage := _widget_stage()
 
 	var arc: Control = STAMINA_ARC.new()
 	arc.position = Vector2(400.0, 300.0)
-	root.add_child(arc)
+	stage[1].add_child(arc)
 	arc.call("update_stamina", 0.34, true, 0.1)
 	await _settle(6)
 	await _shoot("09-stamina-arc")
 	arc.queue_free()
-	backdrop_layer.queue_free()
+	_free_widget_stage(stage)
 	await _settle(2)
 
 
@@ -597,14 +648,17 @@ func _phase_world() -> void:
 	await _settle(12)
 	await _shoot("05-hud-exploration")
 
-	# Input glyphs: the bottom-dock legend redraws in gamepad-button form the
-	# moment `Game._last_input_was_gamepad` is true -- same flip
-	# `capture_ui_suite.gd` uses -- so this is the real legend in its other
-	# real state, not a mocked-up glyph sheet.
-	_game.set("_last_input_was_gamepad", true)
+	# Input glyphs: every other frame in this survey is pinned to the pad
+	# (`_pin_owner_device`, the Ally's own default), so the state this frame
+	# exists to show is the OTHER one -- the same legend redrawn in keycap form
+	# for a desktop player, which `Game._last_input_was_gamepad` flips to live.
+	# The flip is restored immediately: the pin is the survey's baseline, and a
+	# frame that left it off would silently hand every later screen back to the
+	# keyboard half this capture was corrected to stop showing.
+	_game.set("_last_input_was_gamepad", false)
 	await _settle(6)
 	await _shoot("06-hud-input-glyphs")
-	_game.set("_last_input_was_gamepad", false)
+	_game.set("_last_input_was_gamepad", true)
 
 	# Minimap: a broad reveal plus a nearby wild creature, same seeding
 	# `capture_minimap.gd` uses, so the rim clamp, fog edge and creature
