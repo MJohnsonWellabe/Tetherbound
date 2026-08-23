@@ -366,24 +366,32 @@ func _run() -> void:
 		if _world.get_node_or_null(NodePath(node_name)) == null:
 			print("WARN site node %s is not in the tree" % node_name)
 
-	var only := ""
+	# `--only=` takes a COMMA-SEPARATED list, not one substring. A survey's
+	# frames are not all invalidated together -- this run's first pass left
+	# exactly two sites needing another shutter out of eleven, and matching one
+	# substring would have meant two full boots to fix them.
+	var only: Array[String] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
-			only = arg.substr(7)
-	if only != "":
-		print("[locations] --only=%s: re-shooting matching sites only" % only)
+			for piece: String in arg.substr(7).split(",", false):
+				var trimmed := piece.strip_edges()
+				if trimmed != "":
+					only.append(trimmed)
+	if not only.is_empty():
+		print("[locations] --only=%s: re-shooting matching sites only" % ", ".join(only))
 
 	await _pin("day")
 	for entry: Variant in SITES:
 		var site: Dictionary = entry as Dictionary
-		if only == "" or only in str(site["id"]):
+		if _selected(only, str(site["id"])):
 			await _shoot_site(site, "day")
 
-	await _pin("night")
-	for entry: Variant in SITES:
-		var site: Dictionary = entry as Dictionary
-		if bool(site.get("night", false)) and (only == "" or only in str(site["id"])):
-			await _shoot_site(site, "night")
+	if _any_night(only):
+		await _pin("night")
+		for entry: Variant in SITES:
+			var site: Dictionary = entry as Dictionary
+			if bool(site.get("night", false)) and _selected(only, str(site["id"])):
+				await _shoot_site(site, "night")
 
 	print("")
 	print("locations survey: %d frames written, %d failed, into %s" % [
@@ -392,6 +400,26 @@ func _run() -> void:
 	print("density and silhouette are trustworthy; frame times are not a")
 	print("performance measurement.")
 	quit(0 if _failures == 0 else 1)
+
+
+func _selected(only: Array[String], site_id: String) -> bool:
+	if only.is_empty():
+		return true
+	for want: String in only:
+		if want in site_id:
+			return true
+	return false
+
+
+## Skip the night pin entirely when nothing selected shoots at night -- it is
+## 30 awaited frames, and a targeted re-shoot of two daylight sites should not
+## pay a minute to pin a clock it never uses.
+func _any_night(only: Array[String]) -> bool:
+	for entry: Variant in SITES:
+		var site: Dictionary = entry as Dictionary
+		if bool(site.get("night", false)) and _selected(only, str(site["id"])):
+			return true
+	return false
 
 
 ## Pin the clock to `time`, then STOP both clocks. Order matters and freezing
