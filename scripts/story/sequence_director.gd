@@ -649,6 +649,21 @@ func _refresh_lockout() -> void:
 	# Handing them back here every frame would undo what the encounter director
 	# and the combat manager just did to them.
 	if fighting:
+		# OP23-02 (owner playtest 2026-08-23): "battle start takes the camera,
+		# can't see." `trainer_npc.gd::_on_conversation_finished` opens a fight
+		# SYNCHRONOUSLY the instant the challenge dialogue's `finished` signal
+		# fires -- `panel` and `fighting` can both change on the exact same
+		# frame, unlike Mira's village path (`_maybe_start_battle()`'s own
+		# per-frame poll, which only opens a fight once `panel` has already
+		# read false for a frame). When that lands, this function would have
+		# hit the early `return` below without ever undoing the LAST frame's
+		# `set_process(false)` from the still-open dialogue -- the rig's idle
+		# tick (stick look AND follow both live there) stays off for the
+		# fight's entire duration, a frozen camera rather than a misframed one.
+		# A fight always wants the rig processing; there is no modal case for
+		# combat the way there is for a dialogue box.
+		if _camera_rig != null and is_instance_valid(_camera_rig):
+			_camera_rig.set_process(true)
 		return
 	if _player.has_method("set_locomotion_enabled"):
 		_player.call("set_locomotion_enabled", not modal)

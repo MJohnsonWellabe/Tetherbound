@@ -860,14 +860,33 @@ func _build_interior_area() -> void:
 	add_child(area)
 
 
+## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle
+## start takes the camera, can't see." This Area3D's `body_entered`/
+## `body_exited` used to hand the rig back to the player UNCONDITIONALLY --
+## with no regard for whether `CombatManager` had just taken it for a fight
+## (`combat_manager.gd::_take_camera()`). The two events are not
+## synchronized: nothing stops the whole-building overlap notification from
+## landing the same window a gauntlet trainer's challenge closes, and
+## `outer_works`' trainer sits close enough to the entrance that a player
+## crossing the threshold and starting that fight in the same beat is an
+## ordinary way to play, not an edge case. When that race lands, this handler
+## fires AFTER `_take_camera()` and silently reassigns the rig to the player
+## body, mid-fight -- exactly "battle start takes the camera, can't see."
+## Guarded the same way `_arena_bounds()` already asks a room for state: a
+## fight owns the camera for its own duration, this Area3D only otherwise.
+func _combat_owns_the_camera() -> bool:
+	var manager: Node = _world.get_node_or_null(^"CombatManager") if _world != null else null
+	return manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting"))
+
+
 func _on_body_entered(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
 
 
 func _on_body_exited(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, {})
 

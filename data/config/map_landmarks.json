@@ -4,16 +4,17 @@
   "reveal_radius": 80.0,
   "minimap_span_m": 90.0,
   "_comment_starting_reveal": "ralph/OWNER_DIRECTIVES_2026-08-22.md section 3: 'The village and the roads out of it start revealed... The player does not start blind in their own home town.' map_state.gd::_seed_starting_reveal already existed and reads this array; it was only ever empty, so a fresh save opened a black rectangle (OP21-15). Each entry is a fog circle seeded before the player takes a step, sited on the SAME `paths.routes` polylines terrain_playground.json authors the village's four dirt roads from (Grandpa's House, Practice Meadow, The Pond, The Rise) -- so a road move carries this reveal with it rather than stranding it. One circle at the square plus two per route (a midpoint and the route's own end) covers the road corridor without reaching past it; `discovered_fraction` on the current 2048x8192m world comes out under 0.2%, nowhere near spec sec16's 'does not reveal everything automatically' line. TUNABLE.",
+  "_comment_starting_reveal_op23_03": "OP23-03 (owner playtest 2026-08-23): the reveal above passed test_map_fog's '>0%' floor at ~0.12% of the world and still read as 'the map is still a black rectangle' -- correct on a fresh-save full-map view, where these circles are specks against a 2048x8192m corridor, and the fix the 2026-08-22 ruling above already asked for (VISIBLY revealed village + roads) needed a bigger lever than the floor test alone caught. Tripled every radius (village 50->150, each 20->60, each 25->75): the raw sum-of-circles area goes from ~20,028m^2 to ~180,252m^2, but these circles overlap along each road, so the actual measured `discovered_fraction` lands at ~0.6% -- still a real ~5x jump over the old ~0.12% seed, reading as one connected revealed corridor around the village rather than nine faint dots, while staying comfortably under the 5% ceiling test_map_fog also enforces (spec sec16: 'does not reveal everything automatically'). TUNABLE.",
   "starting_reveal": [
-    { "at": [10.0, -10.0], "radius": 50.0, "_why": "the village square itself" },
-    { "at": [-4.0, -13.0], "radius": 20.0, "_why": "Grandpa's House road, midpoint" },
-    { "at": [-18.0, -15.0], "radius": 25.0, "_why": "Grandpa's House road, end (also covers the grandpa_house landmark)" },
-    { "at": [18.0, -24.0], "radius": 20.0, "_why": "Practice Meadow road, midpoint" },
-    { "at": [30.0, -40.0], "radius": 25.0, "_why": "Practice Meadow road, end" },
-    { "at": [-14.0, 14.0], "radius": 20.0, "_why": "The Pond road, first leg" },
-    { "at": [-45.0, 45.0], "radius": 25.0, "_why": "The Pond road, second leg" },
-    { "at": [45.0, -22.0], "radius": 20.0, "_why": "The Rise road, midpoint (also road_gate approach)" },
-    { "at": [74.0, -41.0], "radius": 20.0, "_why": "The Rise road, walkable end (OF10a's truncation point)" }
+    { "at": [10.0, -10.0], "radius": 150.0, "_why": "the village square itself" },
+    { "at": [-4.0, -13.0], "radius": 60.0, "_why": "Grandpa's House road, midpoint" },
+    { "at": [-18.0, -15.0], "radius": 75.0, "_why": "Grandpa's House road, end (also covers the grandpa_house landmark)" },
+    { "at": [18.0, -24.0], "radius": 60.0, "_why": "Practice Meadow road, midpoint" },
+    { "at": [30.0, -40.0], "radius": 75.0, "_why": "Practice Meadow road, end" },
+    { "at": [-14.0, 14.0], "radius": 60.0, "_why": "The Pond road, first leg" },
+    { "at": [-45.0, 45.0], "radius": 75.0, "_why": "The Pond road, second leg" },
+    { "at": [45.0, -22.0], "radius": 60.0, "_why": "The Rise road, midpoint (also road_gate approach)" },
+    { "at": [74.0, -41.0], "radius": 60.0, "_why": "The Rise road, walkable end (OF10a's truncation point)" }
   ],
   "landmarks": [
     {

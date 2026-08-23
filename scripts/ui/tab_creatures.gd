@@ -145,6 +145,7 @@ var _detail_hp: Label = null
 var _detail_stats: Label = null
 var _detail_appraisal: Label = null
 var _detail_traits: Label = null
+var _detail_trait_desc: Label = null
 var _detail_xp: Label = null
 var _detail_xp_bar: ProgressBar = null
 var _move_quick_icon: TextureRect = null
@@ -490,6 +491,13 @@ func _build_detail() -> Control:
 	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_detail_traits.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	panel.add_child(_detail_traits)
+
+	_detail_trait_desc = Label.new()
+	_detail_trait_desc.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_trait_desc.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_detail_trait_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_trait_desc.custom_minimum_size = Vector2(320, 0)
+	panel.add_child(_detail_trait_desc)
 
 	_detail_xp = Label.new()
 	_detail_xp.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -880,6 +888,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_stats.text = ""
 		_detail_appraisal.text = ""
 		_detail_traits.text = ""
+		_detail_trait_desc.text = ""
 		_detail_xp.text = ""
 		_detail_xp_bar.value = 0.0
 		_move_quick_name.text = ""
@@ -939,11 +948,16 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))
 	if primary == "":
 		_detail_traits.text = ""
+		_detail_trait_desc.text = ""
 	elif secondary == "":
 		_detail_traits.text = "Trait: %s" % str(_traits.call("display_name", primary))
+		_detail_trait_desc.text = str(_traits.call("description", primary))
 	else:
 		_detail_traits.text = "Traits: %s, %s" % [
 			str(_traits.call("display_name", primary)), str(_traits.call("display_name", secondary))
+		]
+		_detail_trait_desc.text = "%s  //  %s" % [
+			str(_traits.call("description", primary)), str(_traits.call("description", secondary))
 		]
 
 	var xp: int = int(creature.get("xp"))

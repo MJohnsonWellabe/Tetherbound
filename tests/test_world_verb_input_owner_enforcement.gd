@@ -239,6 +239,10 @@ const ACTION_CONTEXT := {
 	# with nothing else open.
 	"jump": "exploration",
 	"sprint": "exploration",
+	# OP23-13: gated by INPUT_OWNER the same way jump/sprint are
+	# (`player_controller.gd::_toggle_auto_run()`), a single press flips
+	# `Game.auto_run` rather than reading held.
+	"auto_run": "exploration",
 	"interact": "exploration",
 	"inventory": "exploration",
 	"map": "exploration",

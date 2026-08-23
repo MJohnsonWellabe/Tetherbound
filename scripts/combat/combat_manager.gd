@@ -114,6 +114,17 @@ var _ally_body: Node3D = null
 var _camera_rig: Node = null
 var _arena: Node3D = null
 
+## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
+## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
+## same question at the same point rather than at `_ally_body`'s own
+## position -- a fighter placed near a wall (`_place_fighters()`, `deploy_offset`/
+## `separation`) can end up a hair OUTSIDE a small room's rect even though
+## the arena itself was correctly clamped to fit inside it, which read the
+## room as "open" (`_arena_bounds()` returns -1.0 for a point outside every
+## rect) and left the flat, uncollided shoulder offset in place exactly
+## where the room is tightest.
+var _arena_centre: Vector3 = Vector3.ZERO
+
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
 var _pending_move: Dictionary = {}
@@ -344,6 +355,7 @@ func _open_arena() -> void:
 	_arena.name = "CombatArena"
 	_player.get_parent().add_child(_arena)
 	var centre := _midpoint(cfg)
+	_arena_centre = centre
 	var bound := _arena_bounds(centre)
 	if bound > 0.0:
 		cfg["radius"] = minf(float(cfg.get("radius", 11.0)), bound)
@@ -498,7 +510,51 @@ func _ground_height(x: float, z: float) -> float:
 func _take_camera() -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", _ally_body, MATH.config().get("camera", {}))
+	_camera_rig.call("set_target", _ally_body, _combat_camera_profile())
+
+
+## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle
+## start takes the camera, can't see." `data/config/combat.json`'s flat
+## profile ships a `shoulder_offset` of 1.5m -- a raw, uncollided sideways
+## shift of the follow target (`camera_rig.gd::_follow()`, only `spring_length`
+## itself is shape-cast against geometry). The open meadow Mira fights in has
+## nothing nearby for that shift to push the rig through; a Stronghold
+## gauntlet room does, and the fix `stronghold.gd::INTERIOR_PROFILE` already
+## applies while exploring the SAME rooms was never extended to combat.
+##
+## Reuses `_arena_bounds()` -- the exact "how much space can this room afford
+## here" query `_open_arena()` already asks to keep a knocked-back fighter
+## from being teleported through a wall (OP21-25) -- rather than adding a
+## second per-room camera query. Checked at every fighter/arena point this
+## manager already tracks (`_arena_centre`, `_player`, `_wild`,
+## `_ally_body`), not just one: `_midpoint()`'s deploy-offset math can push
+## the arena's own centre a hair past a small room's far wall even when the
+## room clamped the arena's radius correctly, and a fighter placed near that
+## same wall can land just outside the rect too -- either alone would read a
+## genuinely tight room as "open" (`_arena_bounds()` returns -1.0 for a point
+## no rect contains) and leave the flat, uncollided shoulder offset in place
+## exactly where a wall is closest. The SMALLEST clearance any of those
+## points gets from a real chamber wins; a village fight (no rect claims any
+## of them) gets the flat profile completely unchanged.
+func _combat_camera_profile() -> Dictionary:
+	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
+	if _arena == null:
+		return profile
+	var points: Array[Vector3] = [_arena_centre]
+	for body in [_player, _wild, _ally_body]:
+		if body is Node3D:
+			points.append((body as Node3D).global_position)
+	var clearance := -1.0
+	for at in points:
+		var here := _arena_bounds(at)
+		if here >= 0.0 and (clearance < 0.0 or here < clearance):
+			clearance = here
+	if clearance < 0.0:
+		return profile
+	profile["shoulder_offset"] = 0.0
+	var distance := float(profile.get("distance", 4.6))
+	profile["distance"] = minf(distance, maxf(1.5, clearance))
+	return profile
 
 
 func _release_camera() -> void:
