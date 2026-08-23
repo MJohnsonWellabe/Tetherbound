@@ -209,6 +209,7 @@ func _shoot(shot: Array, suffix: String) -> void:
 	var eye: Vector2 = shot[1]
 	var target: Vector2 = shot[2]
 	var toward := (target - eye).normalized()
+	eye = _clear_of_bodies(eye, toward, _surface(eye))
 	var back := eye - toward * BACK
 
 	# Pass one: the analytic seat, so Terrain3D has somewhere to stream to.
@@ -243,6 +244,70 @@ func _shoot(shot: Array, suffix: String) -> void:
 		return
 	print("  %-22s %-5s eye(%.0f, %.1f, %.0f)  %d creatures within 160m" % [
 		name, suffix, eye.x, ground, eye.y, _creatures_near(Vector3(eye.x, ground, eye.y))])
+
+
+## Trainer and villager bodies (`npc_body.gd`) are STATIC capsule colliders
+## parked dead-centre on their own authored `position` -- and two of this
+## survey's own viewpoints turn out to equal that exact coordinate: band4's
+## ironwood and ridge captains sit at (170,5590) and (-280,6460)
+## (`data/config/bands/band4_upper_meadows_ironwood/trainers.json`), the same
+## points `VIEWPOINTS` above names for "08-band4-ironwood" and "09-band4-
+## ridge". A player capsule spawned centred on another capsule has no lateral
+## escape vector, so Godot's depenetration shoves it straight UP the shared
+## axis instead of sideways -- which is exactly the "trainer standing on the
+## NPC's head" a blind critic flagged in three frames. No walking player ever
+## produces that: nobody centres themselves ON the person they are about to
+## fight (`trainer_npc.gd`'s PROMPT_RADIUS keeps the challenge prompt ~4m off,
+## and the fastest way to a trainer's exact tile is a straight walk-in, which
+## the collider itself blocks well before the centres coincide). This is the
+## harness choosing an occupied seat, not the game misbehaving -- so step the
+## seat aside before framing rather than photograph the harness's own mistake.
+func _clear_of_bodies(eye: Vector2, toward: Vector2, ground: float) -> Vector2:
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	if space == null:
+		return eye
+	# Perpendicular to the view line, so a step aside barely changes the shot.
+	var aside := Vector2(-toward.y, toward.x).normalized()
+	for attempt in 4:
+		var candidate := eye if attempt == 0 else eye + aside * 2.0 * float(attempt)
+		var query := PhysicsShapeQueryParameters3D.new()
+		var capsule := CapsuleShape3D.new()
+		capsule.radius = 0.6
+		capsule.height = 2.6
+		query.shape = capsule
+		query.transform = Transform3D(Basis(), Vector3(candidate.x, ground + 1.3, candidate.y))
+		query.collide_with_bodies = true
+		query.collide_with_areas = false
+		if _player != null:
+			query.exclude = [_player.get_rid()]
+		var blocker := ""
+		for hit: Dictionary in space.intersect_shape(query, 4):
+			var body: Node = hit.get("collider") as Node
+			if body == null or _under_terrain(body):
+				continue
+			blocker = body.name
+			break
+		if blocker == "":
+			if attempt > 0:
+				print("  NOTE (%.0f,%.0f) was occupied by an NPC body; landing moved %.1fm aside" % [
+					eye.x, eye.y, (candidate - eye).length()])
+			return candidate
+	return eye
+
+
+## Terrain3D's own collision is a StaticBody3D too, and the occupancy
+## capsule's lower edge can graze a slope. Only a body OUTSIDE the Terrain
+## node counts as something worth stepping around.
+func _under_terrain(body: Node) -> bool:
+	var terrain: Node = _world.get_node_or_null(^"Terrain")
+	if terrain == null:
+		return false
+	var node: Node = body
+	while node != null:
+		if node == terrain:
+			return true
+		node = node.get_parent()
+	return false
 
 
 func _place(at: Vector2, ground: float) -> void:
