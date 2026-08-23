@@ -367,7 +367,44 @@ Fixed so far: the toggle, and the door helper demanding "walk within 1.65m" when
 the real condition is "walk until the world offers it, then press" (the door sat
 enabled and offerable for twenty seconds while the player walked into a wall).
 
-**The swing is INTERMITTENT, and that is the open question.** Run 11 printed
+### Resolved 2026-08-23: the swing is fine. The SEGMENT is flaky.
+
+Instrumenting `tool_hold.swing()` itself settled it:
+
+```
+[tool-probe] swing STARTED with 'axe'
+[tool-probe] swing STARTED with 'pickaxe'
+[tool-probe] swing STARTED with 'knife'
+```
+
+All three started, and that run went PAST the swing and past Mira's door -- the
+beat that had blocked the two runs before it -- and failed at Oskar instead.
+
+**Across five runs with no code change between them, the segment failed at five
+different beats:** the axe swing, Mira's door twice, Tam once, Oskar once. That
+is not a defect in any of them. It is one flaky traversal, and each "bug" found
+so far past the toggle fix has been the same flakiness surfacing wherever that
+run happened to run out of budget.
+
+So the entry below is superseded: do NOT go hunting a race inside `swing()`.
+There isn't one. `swing()` refuses on exactly two conditions and the probe
+confirms it starts when asked.
+
+**What is actually wrong is upstream of all of it**, and it is the thing this
+entry already named: `smoke_gate_b_continuous.gd` GRANTS the opening and drops
+the player at a hand-picked (7, 4). Every beat after that is walked from a
+position the game never produced, on walk budgets (1200-1800 frames) tuned for
+the position it does. Some runs make it, some do not, and which beat runs out of
+budget first is luck.
+
+**The fix remains one change, not five:** extract the opening into a shared
+helper and have Gate B PLAY it. Then the player stands where the game left them,
+the budgets mean what they were tuned to mean, and this whole class evaporates.
+Chasing individual beats past that point is chasing variance.
+
+---
+
+**Superseded — the earlier read of this, kept for the eliminations it records.** Run 11 printed
 `swing_at -> true` for axe, pickaxe and knife and walked on to Mira's door. Run
 15, same code, failed at the first swing:
 
