@@ -553,6 +553,38 @@ material and build ones already are.
 
 ---
 
+**UPDATE 2026-08-23: the extraction shipped, and it did NOT fix this.** Recorded
+because the prediction above was confident and is now measured wrong.
+
+`tests/helpers/gate_a_opening_drive.gd` exists, Gate B plays the opening
+beat-for-beat, and the tutorial catch now passes inside Gate B (launch 1 in one
+run, launch 2 in another) after the trainer-locomotion fix. The player is left
+where the game actually leaves them -- (22.0, 1.0, -28.0), on the authored path,
+exactly as this entry argued for.
+
+Tam is still unreachable. The distance went the WRONG way:
+
+```
+could not activate Tam cycle 1 (18.3m away, arbiter winner=EncounterDirector)
+```
+
+7.7m from a hand-chosen start, 18.3m from the real one. So "any point chosen by
+hand is behind something" was true, and the authored start is genuinely more
+faithful, but the conclusion drawn from it -- that faithful positioning is what
+the village travel needed -- was wrong. `_step_toward()` walks a straight line,
+the village has buildings in it, and eighteen metres of straight line through a
+village is worse than eight.
+
+**What is actually left is pathing, not positioning.** The village segment needs
+either authored waypoints between the opening's exit and each villager, or a
+real navigation query. That is a different piece of work from anything tried in
+the five attempts tallied above, and none of those attempts touched it.
+
+The catch blocker this entry was filed behind is gone; this is now purely a
+harness-travel problem on the known-red continuous-core path.
+
+---
+
 **Superseded, kept for its eliminations -- the swing is fine, the SEGMENT is flaky.**
 
 Instrumenting `tool_hold.swing()` itself settled it:
