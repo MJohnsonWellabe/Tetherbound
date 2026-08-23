@@ -367,7 +367,28 @@ Fixed so far: the toggle, and the door helper demanding "walk within 1.65m" when
 the real condition is "walk until the world offers it, then press" (the door sat
 enabled and offerable for twenty seconds while the player walked into a wall).
 
-**Currently stuck at Mira's door**, and the shape of it matters:
+**The swing is INTERMITTENT, and that is the open question.** Run 11 printed
+`swing_at -> true` for axe, pickaxe and knife and walked on to Mira's door. Run
+15, same code, failed at the first swing:
+
+```
+BEFORE: equipped=axe  prop=Node3D(Axe_Bronze2)
+AFTER:  equipped=axe  prop=Axe_Bronze2  is_swinging=false
+```
+
+`tool_hold.gd::swing()` refuses on exactly two conditions -- `_equipped.is_empty()`
+or `is_swinging()` -- and the diagnostic shows NEITHER holds. The tool is in
+hand, nothing is mid-swing, and the swing still did not start. It should have
+returned true, and in run 11 it did.
+
+So this is not a logic error to be found by reading; it is a race, and the next
+session should instrument INSIDE `tool_hold.swing()` and `_sync_equipped()`
+rather than re-derive the above. Note `SWING_SECONDS` is 0.45 (~27 frames)
+against the helper's 8-frame tap, so "the swing finished before the check" does
+not explain it either -- that was ruled out on 2026-08-22.
+
+**Also stuck at Mira's door** on runs that get past the swing, and the shape of
+that matters too:
 
 ```
 could not reach or activate door 'Door' in 1200 frames
