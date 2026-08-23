@@ -45,8 +45,16 @@ const FOOD_ITEM := "berries"
 ## the house itself is raised on. Tried in order; the first one whose LIVE
 ## ghost reads green wins, so a house footprint that shifts by a metre does not
 ## turn into a placement failure with no diagnosis.
+## Candidate offsets from the build patch, tried in order until a LIVE ghost
+## reads green at one. Beds carry far more candidates than camps because THREE
+## of them go down (owner directive 2026-08-23 §1) and each one spends a spot:
+## with four candidates and three beds, a single red ghost would end the run.
 const FIXTURE_SPOTS := {
-	"creature_bed": [Vector2(-5.0, 0.0), Vector2(-5.0, 3.0), Vector2(-7.0, -2.0), Vector2(0.0, -5.0)],
+	"creature_bed": [
+		Vector2(-5.0, 0.0), Vector2(-5.0, 3.0), Vector2(-7.0, -2.0), Vector2(0.0, -5.0),
+		Vector2(-8.0, 2.0), Vector2(-3.0, -6.0), Vector2(-9.0, -5.0), Vector2(-2.0, 5.0),
+		Vector2(-10.0, 0.0), Vector2(-6.0, 6.0), Vector2(-11.0, -3.0), Vector2(-4.0, 8.0),
+	],
 	"camp": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 }
 const BUILD_PATCH_XZ := BUILD_SEGMENT.BUILD_PATCH_XZ
@@ -80,6 +88,11 @@ var _manager: Node
 var _director: Node
 var _arbiter: Node
 var _bed: Node3D
+## One per entrant (owner directive 2026-08-23 §1). `_bed` stays as the first
+## of them so the panel-driving helpers keep one obvious default.
+var _beds: Array[Node3D] = []
+## Offsets from `FIXTURE_SPOTS` that already carry something.
+var _spent_spots: Array = []
 var _camp: Node3D
 var _felled := 0
 var _exit_connected := false
@@ -124,7 +137,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	elif not await _raise_the_house():
 		return _result()
-	if not await _place_the_creature_bed():
+	if not await _place_the_creature_beds():
 		return _result()
 	if not await _place_the_camp():
 		return _result()
@@ -234,14 +247,29 @@ func _stand_in_the_house_that_was_granted() -> bool:
 
 ## --- 2/3: the bed and the camp, out of what the gather route supplies ---------
 
-func _place_the_creature_bed() -> bool:
-	_bed = await _place_fixture("creature_bed")
-	if _bed == null:
-		return false
-	if not _flag("creature_bed_built"):
-		_fail("a creature bed was placed by the player and 'creature_bed_built' is unset")
-		return false
-	transcript.append("placed a creature bed through the build menu; %s left" % _stock())
+## OWNER DIRECTIVE 2026-08-23 §1: three creature beds before the tournament,
+## one per entrant.
+##
+## `tournament.gd::condition_ready()` asks the `min_party_size` STRONGEST
+## entrants to be rested and `creature_bed.gd` holds exactly one occupant, so
+## one bed meant three consecutive nights to field a team -- which is what this
+## segment used to play. Three beds is one night, and the raised gather budget
+## (`gate_a_material_route.gd::TARGET_STOCK`, 69/42/34) is what pays for them.
+func _place_the_creature_beds() -> bool:
+	var wanted := TOURNAMENT.required_party_size()
+	for index in wanted:
+		var bed := await _place_fixture("creature_bed")
+		if bed == null:
+			_fail("only %d of %d creature beds went up; the owner directive is one bed "
+				% [_beds.size(), wanted] + "per entrant and the gather budget pays for them")
+			return false
+		_beds.append(bed)
+		if not _flag("creature_bed_built"):
+			_fail("a creature bed was placed by the player and 'creature_bed_built' is unset")
+			return false
+	_bed = _beds[0]
+	transcript.append("placed %d creature beds through the build menu, one per entrant; %s left"
+		% [_beds.size(), _stock()])
 	_objective_should_read("Sleep until", "creature_bed_built")
 	return true
 
@@ -259,6 +287,11 @@ func _place_the_camp() -> bool:
 func _place_fixture(id: String) -> Node3D:
 	var spots: Array = FIXTURE_SPOTS.get(id, [Vector2.ZERO])
 	for offset: Variant in spots:
+		# Three beds means this runs three times, and a spot that already holds
+		# one is not a candidate for the next -- its ghost would read red and
+		# cost a whole walk to find that out.
+		if _spent_spots.has(offset):
+			continue
 		var at: Vector2 = BUILD_PATCH_XZ + (offset as Vector2)
 		var target := Vector3(at.x, _player.global_position.y, at.y)
 		if not await _stow_piece():
@@ -282,6 +315,7 @@ func _place_fixture(id: String) -> Node3D:
 			if before.has(node):
 				continue
 			if str(node.get_meta("building_id", "")) == id:
+				_spent_spots.append(offset)
 				await _stow_piece()
 				return node as Node3D
 		_fail("a green %s ghost at %s placed nothing" % [id, at])
@@ -292,15 +326,16 @@ func _place_fixture(id: String) -> Node3D:
 
 ## --- 4: the nights ------------------------------------------------------------
 
-## One bed, one creature per night. `condition_ready()` asks the
-## `min_party_size` STRONGEST entrants to be rested, and `creature_bed.gd`
-## holds exactly one occupant, so the authored gather budget (one bed, one
-## camp -- `gate_a_material_route.gd`'s own TARGET_STOCK) pays for the team's
-## condition over consecutive nights rather than in one. A player who would
-## rather do it in one night builds more beds; both are the same mechanic and
-## neither is a grant.
+## Every entrant into its own bed, then ONE night.
+##
+## OWNER DIRECTIVE 2026-08-23 §1. This used to put one creature to bed, sleep,
+## and repeat -- three nights to field three rested entrants, because the
+## authored budget bought a single bed. With three beds the team goes to bed
+## together and the chapter costs one night, which is what the tournament's own
+## "come back rested" is asking for.
 func _sleep_the_team_into_condition() -> bool:
 	var wanted := TOURNAMENT.required_party_size()
+	var entrants: Array[RefCounted] = []
 	for index in wanted:
 		var creature: RefCounted = _party.call("at", index)
 		if creature == null:
@@ -308,19 +343,24 @@ func _sleep_the_team_into_condition() -> bool:
 			return false
 		if not await _assign_to_bed(index):
 			return false
-		var day_before := int(_game.get("day"))
-		if not await _sleep_at_camp():
-			return false
-		if int(_game.get("day")) != day_before + 1:
-			_fail("a night at the camp did not advance the day (%d -> %d)"
-				% [day_before, int(_game.get("day"))])
-			return false
+		entrants.append(creature)
+	var day_before := int(_game.get("day"))
+	if not await _sleep_at_camp():
+		return false
+	if int(_game.get("day")) != day_before + 1:
+		_fail("a night at the camp did not advance the day (%d -> %d)"
+			% [day_before, int(_game.get("day"))])
+		return false
+	for index in entrants.size():
+		var creature := entrants[index]
 		if not bool(creature.get("rested")):
-			_fail("%s slept in the creature bed through the night and did not come out rested"
-				% str(creature.call("label")))
+			_fail(("%s slept in its own creature bed through the night and did not come out "
+				+ "rested; %d beds were placed for %d entrants")
+				% [str(creature.call("label")), _beds.size(), wanted])
 			return false
-		transcript.append("night %d: %s rested (%s)" % [index + 1,
+		transcript.append("bed %d: %s rested (%s)" % [index + 1,
 			str(creature.call("label")), CONDITION.label(creature, CONDITION.config())])
+	transcript.append("one night in three beds put the whole team in condition")
 	if not _flag("player_slept_at_home"):
 		_fail("the player slept at their own camp and 'player_slept_at_home' is unset")
 		return false
@@ -328,12 +368,16 @@ func _sleep_the_team_into_condition() -> bool:
 	return true
 
 
+## `index` selects both the party slot AND the bed it sleeps in: one bed per
+## entrant is the whole point of the directive, and re-using bed 0 three times
+## would put the same occupant to bed three times over.
 func _assign_to_bed(index: int) -> bool:
-	var prompt := _bed.get_node_or_null(^"Interactable") as Node3D
+	var bed: Node3D = _beds[index] if index < _beds.size() else _bed
+	var prompt := bed.get_node_or_null(^"Interactable") as Node3D
 	if prompt == null:
 		_fail("the placed creature bed has no interaction prompt")
 		return false
-	if not await _walk_to_prompt(prompt, "creature bed"):
+	if not await _walk_to_prompt(prompt, "creature bed %d" % (index + 1)):
 		return false
 	await _tap(&"interact")
 	var panel := await _wait_for_panel("creature_bed_panel.gd")
@@ -662,12 +706,11 @@ func _wait_for_panel(script_tail: String) -> Node:
 func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 	if not await _stow_piece():
 		return false
-	# The hammer has to leave the hand first. Under CONTROLLER-MAP the same
-	# Interact button opens the build catalogue while the hammer is equipped
-	# and nothing actionable is winning arbitration
-	# (`playground_hud.gd::_hammer_opens_the_catalogue`), so walking up to a bed
-	# with the hammer still out is a coin flip between resting a creature and
-	# reopening Build.
+	# The hammer has to leave the hand first, and since OWNER DIRECTIVE
+	# 2026-08-23 §3 that is not a precaution but a requirement: Build OWNS
+	# Interact while the hammer is out, so walking up to a bed or a bedroll
+	# with the hammer still equipped reopens the catalogue every time rather
+	# than sometimes. `_stow_hammer()` is what a player does about it.
 	if not await _stow_hammer():
 		return false
 	if not await _walk_to(prompt.global_position, "the %s" % what, 1.4):

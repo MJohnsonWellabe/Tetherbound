@@ -17,10 +17,27 @@ extends RefCounted
 ## loaded Meadow has the claimed economy.
 
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const HARVEST_NODE_PATH := "res://scripts/world/harvest_node.gd"
 const VEGETATION_POINT_PATH := "res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
-const TARGET_STOCK := {"wood": 57, "stone": 42, "fiber": 18}
+## What the first day has to come home with.
+##
+## OWNER DIRECTIVE 2026-08-23 §1, "three creature beds before the tournament":
+## house 39 wood / 34 stone (the twelve-piece sequence
+## `gate_a_build_segment.gd` raises), THREE creature beds at 6 wood / 8 fiber
+## each, and the camp at 12 wood / 8 stone / 10 fiber
+## (`data/items/buildables.json`). 69 / 42 / 34.
+##
+## It used to be 57 / 42 / 18, which bought exactly ONE bed -- and
+## `tournament.gd::condition_ready()` wants the `min_party_size` strongest
+## entrants RESTED while `creature_bed.gd` holds exactly one occupant, so one
+## bed meant three consecutive nights to field a team. The extra wood and
+## fiber are authored NEAR THE VILLAGE (`data/config/bands/
+## band1_lower_meadows/harvest.json`, orders 1020-1027) rather than found
+## further out, because the directive is about what the first day's own loop
+## can pay for.
+const TARGET_STOCK := {"wood": 69, "stone": 42, "fiber": 34}
 const TOOL_ACTION := {"wood": &"hotbar_1", "stone": &"hotbar_2", "fiber": &"hotbar_3"}
 const TOOL_ID := {"wood": "axe", "stone": "pickaxe", "fiber": "knife"}
 const AUTHORED_ROUTE: Array[Dictionary] = [
@@ -28,12 +45,22 @@ const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "wood", "amount": 4, "at": Vector2(26.0, -44.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(44.0, -24.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(-8.0, 8.0)},
+	# The three-bed raise (owner directive 2026-08-23 §1), authored at
+	# `band1_lower_meadows/harvest.json` orders 1020-1027 and walked here.
+	{"item": "wood", "amount": 4, "at": Vector2(6.0, -34.0)},
+	{"item": "wood", "amount": 4, "at": Vector2(36.0, -16.0)},
+	{"item": "wood", "amount": 4, "at": Vector2(-14.0, -8.0)},
 	{"item": "stone", "amount": 3, "at": Vector2(22.0, -34.0)},
 	{"item": "stone", "amount": 3, "at": Vector2(52.0, -30.0)},
 	{"item": "stone", "amount": 3, "at": Vector2(-18.0, 6.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(12.0, -22.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(34.0, -46.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-2.0, -20.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(24.0, -24.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(42.0, -38.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(2.0, -30.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(-10.0, -14.0)},
+	{"item": "fiber", "amount": 4, "at": Vector2(30.0, -8.0)},
 	# The two Gate-A fiber stops are deliberately on ordinary open-spine travel.
 	{"item": "fiber", "amount": 4, "at": Vector2(-5.0, 141.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-168.0, 312.0)},
@@ -87,7 +114,9 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if not _stock_is_sufficient():
 		_fail("natural harvest route ended below paid-house/rest target: %s" % _stock_snapshot())
 	else:
-		transcript.append("natural material invariant met: %s (need wood 57, stone 42, fiber 18)" % _stock_snapshot())
+		transcript.append("natural material invariant met: %s (need wood %d, stone %d, fiber %d)" % [
+			_stock_snapshot(), int(TARGET_STOCK["wood"]), int(TARGET_STOCK["stone"]),
+			int(TARGET_STOCK["fiber"])])
 	return _result()
 
 
@@ -135,20 +164,36 @@ func _fill_with_live_scatter(item_id: String) -> bool:
 				item_id, _count(item_id), required])
 			return false
 		var before := _count(item_id)
-		if not await _walk_to(node.global_position, 1.65, _travel_budget(node.global_position)):
+		# The stand's position, taken while the stand still exists.
+		#
+		# GATEB-COORD: `vegetation_harvest_point.gd` FREES ITSELF once it is
+		# spent, and every line below used to re-read `node.global_position`
+		# after the chop that spends it. The first successful scatter trip
+		# therefore died on
+		#
+		#   Invalid access to property 'global_position' on a base object of
+		#   type 'previously freed'  (gate_a_material_route.gd:150)
+		#
+		# in the TRANSCRIPT line -- the harvest had worked and paid its wood.
+		# That is the real reason Gate B's continuous run stops in the wood
+		# fill. It is not a travel failure; nothing had ever measured it,
+		# because `tools/_probe_scatter_fill.gd` drove the fill from the
+		# default spawn, which is inside GrandpaHouse, and so never got far
+		# enough to chop anything.
+		var at := node.global_position
+		if not await _walk_to(at, 1.65, _travel_budget(at)):
 			_fail("controller could not reach live natural %s at %s (stopped %.1fm short)" % [
-				item_id, node.global_position,
-				_player.global_position.distance_to(node.global_position)])
+				item_id, at, _player.global_position.distance_to(at)])
 			return false
 		if not await _harvest_node(node, item_id, false):
 			return false
 		var gained := _count(item_id) - before
 		if gained <= 0:
-			_fail("natural %s at %s paid no inventory after production chop/pickup" % [item_id, node.global_position])
+			_fail("natural %s at %s paid no inventory after production chop/pickup" % [item_id, at])
 			return false
 		trips += 1
 		transcript.append("scatter %s +%d at (%.2f, %.2f); %d/%d" % [
-			item_id, gained, node.global_position.x, node.global_position.z, _count(item_id), required])
+			item_id, gained, at.x, at.z, _count(item_id), required])
 	transcript.append("natural %s deficit closed with %d live scatter stops" % [item_id, trips])
 	return true
 
@@ -182,21 +227,32 @@ func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
 	# checking who holds the line can go somewhere else entirely and report back
 	# as a swing that credited nothing. `gate_a_npc_gather_segment.gd` learned
 	# the same thing at Tam and now says the winner in its own failures.
+	# Read once, up here, while the node is certainly alive. GATEB-COORD: the
+	# swing below SPENDS the stand and `vegetation_harvest_point.gd` frees a
+	# spent stand, so every `node.global_position` after the press was a read
+	# through a dangling reference -- see the fill loop's own note.
+	var at := node.global_position
 	var node_prompt := node.get_node_or_null(^"Interactable") as Node3D
 	if node_prompt != null:
-		await _stand_where_it_wins(node_prompt, node.global_position)
-	await _tap_action(&"interact")
+		await _stand_where_it_wins(node_prompt, at)
+		# The press has to land ON this stand, not on whichever neighbour is
+		# nearest by the time the button is read -- see `_press_and_confirm()`.
+		if not await _press_and_confirm(node_prompt):
+			_fail(_why_the_swing_paid_nothing(node, node_prompt, item_id, at))
+			return false
+	else:
+		await _tap_action(&"interact")
 	if authored:
 		if await _wait_for_inventory_gain(item_id, before, 120):
 			return true
-		_fail(_why_the_swing_paid_nothing(node, node_prompt, item_id))
+		_fail(_why_the_swing_paid_nothing(node, node_prompt, item_id, at))
 		return false
 	# Scatter stands are a two-stage production verb: physical tool swing chops,
 	# then the same player picks up the visible felled pile. Never call either
 	# stage directly, and never assume a swing is itself an inventory grant.
-	var pile := await _wait_for_felled_pickup(node.global_position, item_id, 180)
+	var pile := await _wait_for_felled_pickup(at, item_id, 180)
 	if pile == null:
-		_fail("visible %s swing created no public felled pickup near %s" % [item_id, node.global_position])
+		_fail(_why_no_pile_appeared(node, node_prompt, item_id, at))
 		return false
 	if not await _walk_to(pile.global_position, 1.5, 300):
 		_fail("controller could not reach its felled %s pickup" % item_id)
@@ -205,29 +261,169 @@ func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
 	if prompt == null or not await _stand_where_it_wins(prompt, pile.global_position, 1.0):
 		_fail("felled %s pickup never offered the production Pick up prompt" % item_id)
 		return false
-	await _tap_action(&"interact")
+	var pile_at := pile.global_position
+	if not await _press_and_confirm(prompt):
+		_fail(_why_the_swing_paid_nothing(pile, prompt, item_id, pile_at))
+		return false
 	if await _wait_for_inventory_gain(item_id, before, 240):
 		return true
-	_fail(_why_the_swing_paid_nothing(pile, prompt, item_id))
+	_fail(_why_the_swing_paid_nothing(pile, prompt, item_id, pile_at))
 	return false
 
 
 ## Why a pressed swing credited nothing. Four different bugs used to arrive as
 ## one line reading "wood action produced no visible inventory gain".
-func _why_the_swing_paid_nothing(node: Node3D, node_prompt: Node3D, item_id: String) -> String:
+## Why a chop left no pile to pick up. GATEB-COORD: this used to be the bare
+## line "visible wood swing created no public felled pickup near <point>",
+## which cannot distinguish the four things it can mean -- the stand was never
+## struck (the button went somewhere else), the stand was struck and is still
+## standing (it had more stock in it), the pile exists but landed outside the
+## 3m the search allows, or nothing spawned at all. All four want different
+## fixes, so all four are now named.
+func _why_no_pile_appeared(node, node_prompt, item_id: String,
+		at: Vector3) -> String:
+	var alive := node != null and is_instance_valid(node)
+	var nearest: Node3D = null
+	var nearest_distance := INF
+	for candidate: Node in _tree.get_nodes_in_group("harvestable"):
+		if not candidate is Node3D or not candidate.has_method("resource_item"):
+			continue
+		var script := candidate.get_script() as Script
+		if script == null or script.resource_path != FELLED_RESOURCE_PATH:
+			continue
+		if not candidate.is_inside_tree() or candidate.is_queued_for_deletion():
+			continue
+		var distance := at.distance_to((candidate as Node3D).global_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest = candidate as Node3D
 	var winner: Variant = _arbiter.call("winning_provider")
 	var hold: Node = _player.get("tool_hold")
+	return ("%s chop left no felled pickup within 3m of %s (stand=%s, "
+		+ "nearest felled %s=%s, player %.2fm from the stand, equipped=%s, "
+		+ "swinging=%s, arbiter winner=%s offering %s, wanted=%s)") % [
+		item_id, at,
+		("still standing with %s left" % str(node.call("resource_amount"))) if alive
+			else "spent and freed",
+		item_id,
+		("%s at %.1fm" % [str(nearest.name), nearest_distance]) if nearest != null
+			else "<none anywhere in the world>",
+		_player.global_position.distance_to(at),
+		str(_game.get("equipped_tool")),
+		str(hold.call("is_swinging")) if hold != null else "<no ToolHold>",
+		_who(winner),
+		str(_arbiter.call("winner")),
+		_who(node_prompt)]
+
+
+## `at` is passed in rather than read off `node`: this is the failure path of a
+## press that may have spent -- and so freed -- the very node it is reporting
+## about, and a diagnostic that crashes tells you nothing.
+func _why_the_swing_paid_nothing(node, node_prompt, item_id: String,
+		at: Vector3) -> String:
+	var winner: Variant = _arbiter.call("winning_provider")
+	var hold: Node = _player.get("tool_hold")
+	var alive := node != null and is_instance_valid(node)
 	return ("%s swing credited nothing (arbiter winner=%s offering %s, wanted=%s, %.2fm away, "
 		+ "equipped=%s, prop=%s, swinging=%s, node stock=%s)") % [
 		item_id,
-		str((winner as Node).name) if winner is Node else "<none>",
+		_who(winner),
 		str(_arbiter.call("winner")),
-		str(node_prompt.name) if node_prompt != null else "<no Interactable child>",
-		_player.global_position.distance_to(node.global_position),
+		_who(node_prompt),
+		_player.global_position.distance_to(at),
 		str(_game.get("equipped_tool")),
 		str(hold.call("prop_node")) if hold != null else "<no ToolHold>",
 		str(hold.call("is_swinging")) if hold != null else "<no ToolHold>",
-		str(node.call("resource_amount"))]
+		str(node.call("resource_amount")) if alive else "<stand spent and freed>"]
+
+
+## Half a metre sideways, a different angle each time.
+##
+## The circle `_stand_where_it_wins()` walks is the same idea; this is the
+## smaller version for a prompt that has already been reached and is only
+## occluded, so it does not throw away the approach to start again.
+func _step_aside_from(around: Vector3, attempt: int) -> void:
+	var angle := TAU * (float(attempt) + 0.5) / 6.0
+	var spot := around + Vector3(cos(angle), 0.0, sin(angle)) * 1.4
+	await _walk_to(spot, 0.7, 240)
+	for _i in 12:
+		await _tree.physics_frame
+
+
+## What the prompt's own line-of-sight ray runs into, if anything.
+##
+## `interactable.gd::_has_line_of_sight()` withdraws an offer entirely when
+## solid geometry stands between the prompt and the player's eye, and it is
+## silent about it -- an offer that is refused for this reason looks exactly
+## like a prompt that is out of range or disabled. In a chopped-over grove the
+## occluder is nearly always a neighbouring trunk, and naming it is the
+## difference between "the arbiter went quiet" and a fact.
+func _what_blocks_sight_to(target: Vector3) -> String:
+	var world := _player.get_world_3d()
+	var space := world.direct_space_state if world != null else null
+	if space == null:
+		return "no space state to test sight with"
+	var eye := _player.global_position + Vector3.UP * 1.6
+	var query := PhysicsRayQueryParameters3D.create(target + Vector3.UP * 0.5, eye)
+	query.collide_with_areas = false
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return "sight to it is clear"
+	var collider: Variant = hit.get("collider")
+	var where: Vector3 = hit.get("position", Vector3.ZERO)
+	var owner := "<?>"
+	if collider is Node:
+		var parent := (collider as Node).get_parent()
+		owner = "%s/%s" % [str(parent.name) if parent != null else "?",
+			str((collider as Node).name)]
+	return "sight to it is blocked by %s at (%.1f, %.1f, %.1f)" % [
+		owner, where.x, where.y, where.z]
+
+
+## The state of the interact line, for a wait that timed out.
+##
+## GATEB-COORD: "it reads ''" is what this used to say, and an EMPTY line is
+## not the same fact as a line held by something else -- `interaction_arbiter.gd`
+## publishes nothing at all while `_enabled` is false (a conversation, a naming
+## prompt or a fade, per `sequence_director.gd::_refresh_lockout`) or while an
+## `input_owner.gd` panel is up, and those are not situations more pressing of
+## the button will fix.
+func _why_the_line_is_quiet() -> String:
+	var enabled := bool(_arbiter.call("enabled")) if _arbiter.has_method("enabled") else true
+	var owner: Variant = INPUT_OWNER.current(_tree)
+	var manager := _world.get_node_or_null(^"CombatManager")
+	var fighting := manager != null and manager.has_method("is_fighting") \
+		and bool(manager.call("is_fighting"))
+	return "arbiter enabled=%s, reads '%s' held by %s, input owner=%s, fighting=%s, paused=%s" % [
+		str(enabled), str(_arbiter.call("prompt")),
+		_who(_arbiter.call("winning_provider")),
+		_who(owner) if owner != null else "<none>",
+		str(fighting), str(_tree.paused)]
+
+
+## A prompt's IDENTITY, not its class name.
+##
+## GATEB-COORD: every prompt in the world is a node called "Interactable", so
+## "arbiter winner=Interactable, wanted=Interactable" -- which is what these
+## diagnostics used to print -- cannot say whether the button went to the pile
+## being reported on or to the one two metres away. The instance id and the
+## world position can.
+func _who(node: Variant) -> String:
+	# `is_instance_valid` FIRST: `node is Node` on a freed instance is itself
+	# an error ("Left operand of 'is' is a previously freed instance"), and
+	# every caller here is a path where the node may well have just been spent.
+	if not node is Object or not is_instance_valid(node as Object):
+		return "<freed or none>"
+	if not node is Node:
+		return "<none>"
+	var as_node := node as Node
+	var where := ""
+	if as_node is Node3D:
+		var p: Vector3 = (as_node as Node3D).global_position
+		where = " @(%.1f, %.1f)" % [p.x, p.z]
+	return "%s#%d%s" % [as_node.name, as_node.get_instance_id(), where]
 
 
 ## Put the right tool in hand -- and press NOTHING if it is already there.
@@ -424,6 +620,111 @@ func _clear_a_statement_off_the_button() -> bool:
 	for _i in 30:
 		await _tree.physics_frame
 	return true
+
+
+## Press `interact` AT `prompt`, and know whether it landed there.
+##
+## GATEB-COORD. The scatter fill's ninth trip failed with
+##
+##   wood chop left no felled pickup within 3m of (-116.2, 8.1, 321.8)
+##   (stand=still standing with 3 left, nearest felled wood=@Node3D@29943 at
+##   3.9m, ...)
+##
+## and the arbiter's own activation log named the reason: the press fired
+## `Interactable#1135129693963 @(-115.5, 319.1)` -- a DIFFERENT stand, 2.8m
+## away. The stand we wanted was still standing with its stock untouched, and
+## the pile the press really made landed 3.9m off, just outside the search.
+##
+## `_wait_for_prompt()` had already returned true, and it was not lying: it
+## returns the instant our prompt wins, and in a dense grove the stands are a
+## metre or two apart, so the winner flips back to a neighbour while the press
+## is still in flight. Confirming the winner and pressing are two different
+## moments, and only the second one matters.
+##
+## So: stop walking, wait for our prompt to hold the line for `HOLD_FRAMES`
+## CONSECUTIVE frames, then press while watching the arbiter's own `activated`
+## signal, and report which provider actually fired. A player does the same
+## thing -- they stop, see the prompt settle, and press.
+##
+## The hold is the whole check; standing still is something this DOES rather
+## than something it waits for. A first cut also demanded `velocity` under
+## 0.05 m/s and that rejected presses which had been working: a body on the
+## meadow's slopes keeps a little drift indefinitely, so the run got six trips
+## instead of ten. Eight consecutive frames of the same winner already proves
+## the distances have stopped moving, which is the thing that matters.
+const HOLD_FRAMES := 8
+
+
+## INSTANCE IDS, not object references, all the way through. A press that
+## works SPENDS the stand, `vegetation_harvest_point.gd` frees a spent stand,
+## and the prompt goes with it -- so by the time this checks what fired, the
+## thing it wanted is very often already gone. A freed reference cannot be
+## compared, passed to a typed parameter, or even asked `is Node` without an
+## error, and the first cut of this function did all three: it reported "press
+## 1 meant for  went to " about a chop that had worked perfectly.
+func _press_and_confirm(prompt: Node3D) -> bool:
+	var wanted_id := prompt.get_instance_id()
+	var wanted := _who(prompt)
+	var fired: Array[int] = []
+	var watch := func(provider: Object) -> void: fired.append(provider.get_instance_id())
+	_arbiter.connect("activated", watch)
+	var landed := false
+	var around := prompt.global_position
+	for attempt in 6:
+		_release_move()
+		if not await _prompt_holds_the_line(wanted_id):
+			transcript.append("%s never held the interact line for %d frames running (%s, %s); "
+				% [wanted, HOLD_FRAMES, _why_the_line_is_quiet(), _what_blocks_sight_to(around)]
+				+ "moving round it")
+			# MOVE, do not just wait. A line that will not settle is a line
+			# something is standing in -- `interactable.gd::_has_line_of_sight()`
+			# refuses an offer through geometry, and in a dense grove the thing
+			# in the way is a neighbouring trunk that is not going anywhere.
+			# Pressing harder from the same spot cannot fix that; walking round
+			# is what a player does and what `_stand_where_it_wins()` is for.
+			if not is_instance_valid(prompt):
+				break
+			await _step_aside_from(around, attempt)
+			continue
+		fired.clear()
+		await _tap_action(&"interact")
+		for _i in 12:
+			if not fired.is_empty():
+				break
+			await _tree.physics_frame
+		if fired.has(wanted_id):
+			landed = true
+			break
+		if fired.is_empty():
+			transcript.append("press %d at %s activated nothing; settling and pressing again"
+				% [attempt + 1, wanted])
+		else:
+			transcript.append("press %d meant for %s went to %s; settling and pressing again"
+				% [attempt + 1, wanted, _who(instance_from_id(fired[0]))])
+		for _i in 20:
+			await _tree.physics_frame
+	_arbiter.disconnect("activated", watch)
+	return landed
+
+
+## Our prompt has held the interact line for `HOLD_FRAMES` running, with the
+## player standing still. Both halves matter: a winner sampled on one frame is
+## the thing that was already wrong, and a player still sliding is a player
+## whose distances are still changing.
+func _prompt_holds_the_line(wanted_id: int) -> bool:
+	var held := 0
+	for _i in 180:
+		var winner: Variant = _arbiter.call("winning_provider")
+		var winner_id := (winner as Object).get_instance_id() \
+			if winner is Object and is_instance_valid(winner as Object) else 0
+		if winner_id == wanted_id:
+			held += 1
+			if held >= HOLD_FRAMES:
+				return true
+		else:
+			held = 0
+		await _tree.physics_frame
+	return false
 
 
 func _wait_for_prompt(prompt: Node3D, frames: int) -> bool:
