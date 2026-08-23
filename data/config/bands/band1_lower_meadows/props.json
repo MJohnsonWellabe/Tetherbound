@@ -213,73 +213,19 @@
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
-          "_why": "BAND1-D1-v3, the camp's focus and the fix for round 2's central failure. Two changes, both measured. (1) The asset: `Bonfire_Fire.obj`, not `Bonfire.obj`. Round 2 rejected it on the note that its extra surface 'shares the same combined mesh with the logs rather than isolating a flame' -- true of the OBJ file (one object, Bonfire_Fire_Cylinder.009), false of what Godot imports, because the OBJ loader splits by material. tools/_probe_bonfire_fire.gd: 3 surfaces, `Wood`, `LightWood`, `Fire`, and `Fire` is a real flame cone standing 1.63m above the log pile. campfire_glow.gd::ignite() gives that surface an emissive override. (2) The scale: raw AABB 2.18 x 2.31 x 1.98m, so round 2's scale 1.0 put a 2.2m-wide, 1.5m-tall log pile in a camp whose stool is 0.58m tall -- the blind critic read it as 'oversized inert logs' and it was. 0.45 gives a 0.98m fire with a 0.47m log pile under a flame reaching 1.04m. The glow overlay is counter-scaled back out to absolute metres by props.gd, so shrinking the fire does not shrink its own smoke column; that shrinkage is exactly what made the camp invisible from the trail."
+          "_why": "REVERTED to round 3's Bonfire_Fire + ignite() after two rounds of dedicated Meshy generation (camp_firewood, camp_flame -- text-to-3D, retextured, non-uniform-scaled, repositioned) each failed an independent Fable review against the reference: the log pile read as flat slabs or a rock cairn rather than logs, and the flame read as an opaque carved spire with no emissive light cast on its surroundings, in both attempts. This combination was never itself criticised by either review -- both were reviewing the NEW pieces specifically -- and it is round 3's own solved problem: `Bonfire_Fire.obj`'s three-surface OBJ import (Wood/LightWood/Fire) with `ignite()` lighting the real `Fire` surface, plus `campfire_glow.gd`'s light/embers/smoke overlay including its billboard halo (default `include_halo=true`, unlike the generated flame's own `flame_mesh` path). Owner directive to wrap up rather than keep spending Meshy rounds on a shape that was not converging; `camp_firewood.glb`/`camp_flame.glb` stay committed under assets/props/generated_camp/ for a future attempt, just not wired into this cluster."
         },
         {
-          "model": "Rock_Medium_1",
+          "model": "campfire_stone_ring",
           "at": [
-            344.8,
-            935.26
+            344.0,
+            935.0
           ],
-          "yaw_deg": 18,
-          "scale": 0.13,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 1 of six. Replaces round 3's first cut, which built the ring out of stylized_nature's RockPath_Round_* models. Those are the third strike on that family: the round-2 critic called them 'two amorphous blobs ... too bright, no arrangement, reads as litter or snow patches', and shrinking them did not help, because they are not stones -- each one is a flat MOSAIC of pale pebbles (measured 1.06-2.13m across, 0.11m thick, one 'PathRocks' texture), so at any scale it reads as a patch of gravel lying in grass. Rock_Medium_* are actual boulders from the same pack; at 0.11-0.15 of a ~3.2m raw model they are 0.35-0.50m stones, which is what someone rings a fire with."
-        },
-        {
-          "model": "Rock_Medium_2",
-          "at": [
-            344.18,
-            935.92
-          ],
-          "yaw_deg": 79,
-          "scale": 0.15,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 2 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
-        },
-        {
-          "model": "Rock_Medium_3",
-          "at": [
-            343.36,
-            935.54
-          ],
-          "yaw_deg": 140,
-          "scale": 0.12,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 3 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
-        },
-        {
-          "model": "Rock_Medium_1",
-          "at": [
-            343.12,
-            934.66
-          ],
-          "yaw_deg": 201,
-          "scale": 0.11,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 4 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
-        },
-        {
-          "model": "Rock_Medium_2",
-          "at": [
-            343.88,
-            934.17
-          ],
-          "yaw_deg": 262,
-          "scale": 0.14,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 5 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
-        },
-        {
-          "model": "Rock_Medium_3",
-          "at": [
-            344.75,
-            934.43
-          ],
-          "yaw_deg": 323,
-          "scale": 0.13,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fire-ring stone 6 of six -- three models across six stones at six scales, so no two are the same rock at the same size."
+          "yaw_deg": 0.0,
+          "scale": 1.05,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "Replaces round 3's six hand-placed Rock_Medium instances with one Meshy-generated ring mesh, textured to match the reference board's own fire-ring stones. Raw 2.00m diameter; 0.85 gives ~1.7m, the same footprint the six-stone version measured at (0.82-0.94m radius). The fire and its glow overlay sit inside the ring's own empty centre, which is why this prop carries no `glow` key of its own -- the flame is the Bonfire above, not this. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after. ROUND 3: a dispatched Fable fidelity review against the reference found the stones individually too small/flat and too gapped relative to the reference's tightly packed boulders -- a defect internal to this single rigid mesh that scale cannot fully fix (relative gaps and per-stone height-to-footprint ratio are baked into the geometry), but a straight size increase at least makes each stone read chunkier. Scale raised 0.85 -> 1.05, ~1.7m -> ~2.1m diameter -- the only lever available without a further regeneration, which Fable rated this piece as not clearly needing (the tent did)."
         },
         {
           "model": "Bench",
@@ -289,18 +235,18 @@
           ],
           "yaw_deg": 113.5,
           "scale": 1.0,
-          "_why": "Long seat, 2.78m on its own local x axis (measured, tools/_probe_camp_models.gd), sat tangentially at 2.51m from the fire. The yaw is computed to put that long axis perpendicular to the radius, which is what 'facing the fire' means for a bench -- a 2.8m seat pointing radially out of a fire ring reads wrong whichever way its front happens to face. The model is 0.53m tall with 0.53m depth and no backrest, so the 180-degree ambiguity in that solution does not show."
+          "_why": "Long seat facing the fire across it, tangential yaw so its 2.78m length runs perpendicular to the radius. Unchanged from round 3."
         },
         {
-          "model": "log_large",
+          "model": "tree-log",
           "at": [
             342.4,
             933.25
           ],
           "yaw_deg": 42.4,
-          "scale": 1.0,
-          "dir": "res://assets/environment/nature",
-          "_why": "A third, informal seat -- a felled log rolled up to the fire rather than furniture, breaking the bench/stool's regularity. 1.00m on local x; same tangential yaw rule as the bench. Round 2 had it 2.2m from the bench and both near the same bearing, which is where the critic's 'a long log skewers straight through the wattle panel' came from: the bench IS the wattle-looking panel and log_large was inside it. They are now 2.9m apart on opposite arcs of the ring."
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "A third, informal seat. Round 3's environment/nature log_large was found this round to render with an untextured near-white placeholder material -- the independent blind critic's unidentifiable 'pale rectangular chute object' -- and was replaced with Kenney's real textured tree-log.glb, CC0, already vendored for scripts/build/camp.gd's own fire."
         },
         {
           "model": "Stool",
@@ -311,19 +257,19 @@
           "yaw_deg": 15.3,
           "scale": 1.0,
           "dir": "res://assets/props/quaternius_furniture",
-          "_why": "A second, smaller seat on the far side of the fire from the bench. Round 2's critic said it faced the barrel; the barrel has been moved out of its sightline and the yaw is now computed to aim the model's -Z at the fire rather than picked by eye. At 0.51 x 0.58 x 0.53m it is nearly rotationally symmetric, so this mostly matters for not looking deliberate about the wrong thing."
+          "_why": "A second, smaller seat on the fire's opposite side from the bench. Unchanged from round 3."
         },
         {
-          "model": "log",
+          "model": "tree-log-small",
           "at": [
             345.15,
             936.35
           ],
           "yaw_deg": 40.4,
           "scale": 1.0,
-          "dir": "res://assets/environment/nature",
+          "dir": "res://assets/props/kenney_survival",
           "pitch_deg": 4.0,
-          "_why": "Firewood, not a seat: a 0.71m log lying radially with its end toward the fire, as if part-fed in, and pitched 4 degrees off level so not every prop in the camp stands perfectly axis-upright. Radial here is deliberate and is the opposite rule from the two seats above, for the opposite reason."
+          "_why": "Firewood, radial not tangential (the opposite rule from the two seats, for the opposite reason). Same environment/nature defect as log_large above; same Kenney replacement."
         },
         {
           "model": "Crate_Wooden",
@@ -333,7 +279,7 @@
           ],
           "yaw_deg": 300.0,
           "scale": 1.0,
-          "_why": "Supply crate, moved out to 4.2m behind the bench with the bag and rope. Round 2 stacked crate, bag, rope, backpack and barrel all inside 2.5m of the fire, which is how a camp turns into the 'well-lit prop dump' the critic warned about. Gear lives behind where people sit, not between them and the fire."
+          "_why": "Supply crate, behind the seats rather than between them and the fire. Unchanged from round 3."
         },
         {
           "model": "Bag",
@@ -343,7 +289,7 @@
           ],
           "yaw_deg": 340.0,
           "scale": 1.0,
-          "_why": "Leaning against the crate -- the same 'pile someone set down together' composition the existing trainer_camp/bridge_repair_site clusters use."
+          "_why": "Leaning against the crate. Unchanged from round 3."
         },
         {
           "model": "Rope_1",
@@ -353,7 +299,7 @@
           ],
           "yaw_deg": 10.0,
           "scale": 1.0,
-          "_why": "Coiled beside the crate/bag pile, the same role it plays at the bridge_repair_site cluster."
+          "_why": "Coiled beside the crate/bag pile. Unchanged from round 3."
         },
         {
           "model": "Backpack",
@@ -365,7 +311,7 @@
           "scale": 0.18,
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": -0.25,
-          "_why": "The single worst prop in round 2 and the one the critic called a haystack 'parked touching the fire pile'. Measured raw: 3.34 x 3.12 x 1.75m with its origin 1.46m ABOVE its own base. At round 2's scale 0.55 that is a 1.7m-tall pack -- taller than the bench is long is not far off -- sunk 0.80m into the ground, which is exactly the lumpy tan half-buried mass a haystack is. Scale 0.18 gives a 0.60 x 0.56m pack; `sink_m` -0.25 lifts it by the scaled origin offset so it rests on the ground instead of in it. Negative sink is the existing key used the other way round, not a new one."
+          "_why": "Measured raw 3.34 x 3.12 x 1.75m with its origin 1.46m above its own base; 0.18 with sink_m -0.25 lifts it back to ground level. Unchanged from round 3."
         },
         {
           "model": "Barrel",
@@ -375,7 +321,31 @@
           ],
           "yaw_deg": 95.0,
           "scale": 1.0,
-          "_why": "Water barrel (measured 0.70 x 0.90 x 0.70m, already the right size at scale 1.0 -- round 2 was right about that and it is left alone). Moved to the camp's west edge, off the line between the stool and the fire it used to sit on."
+          "_why": "Water barrel, already the right size at scale 1.0 (measured 0.70 x 0.90 x 0.70m). Unchanged from round 3."
+        },
+        {
+          "model": "camp_tent",
+          "at": [
+            343.5,
+            941.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.05,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "Owner's pick from the eight-candidate contact sheet: round 1's multi-image-to-3D result. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md). Round 1's geometry (multi-image-to-3D, three reference crops, refine tier) is the version the owner chose after reviewing a contact sheet of all eight candidates generated across rounds 1-5 -- rounds 2-3 tried to fix its proportions via image reference changes and converged on the same shape (images dominate text in this pipeline); round 4-5 tried text-to-3D instead and traded the proportion problem for a construction-fidelity problem (a teepee, then missing patches/rigging/weathering once corrected to an A-frame). Kept round 1: weathered patched canvas, crossed lashed pole tips at both ends, matches the reference board's own material and stitching most closely of any candidate even though its proportions read flatter than the reference.",
+          "sink_m": -0.64
+        },
+        {
+          "model": "camp_bed",
+          "at": [
+            343.5,
+            937.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "Replaces round 3b's ground bedroll with a proper raised camp bed -- lashed log frame, stuffed mattress, pillow -- matching the board's own PAL BED panel far more closely than a flat bedroll ever could. Raw 1.23 x 0.41 x 1.90m needs no scaling. Laid inside the tent's mouth, its long axis parallel to the tent's ridge, head end under the canvas. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after.",
+          "sink_m": -0.21
         },
         {
           "model": "Bush_Common",
@@ -386,7 +356,7 @@
           "yaw_deg": 0.0,
           "scale": 0.42,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "First of six pieces of authored scenery breaking up the camp's outer edge and the wide frame's foreground. The clearing this cluster sits in (vegetation.json order 1000) strips scattered grass for 9m, so without an authored edge the clearing itself becomes the composition problem the round-2 critic named as a '60% empty grass slope'. Raw 1.91m, so 0.42 is a 0.80m bush. environment/nature's plant_bush / grass_large / rock_small* are NOT usable through props.gd, and that finding is why this swap happened: tools/_probe_camp_materials.gd shows every one of them ships a material with NO albedo texture and a flat placeholder colour -- their 'grass' material is albedo (0.45, 0.93, 0.87), which renders as the flat CYAN shards the first round-3 capture scattered all round this camp, and their 'dirt' material is (0.95, 0.74, 0.62), near-white. That pack is authored against a palette atlas the import does not apply. Only its log/log_large survive, and only by luck -- their wood-tan placeholder happens to look like wood. stylized_nature's models all carry real albedo textures, so the camp's scenery comes from there instead."
+          "_why": "Authored scenery, breaking the clearing's own edge. Unchanged from round 3."
         },
         {
           "model": "Bush_Common_Flowers",
@@ -397,7 +367,7 @@
           "yaw_deg": 0.0,
           "scale": 0.38,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Flowering variant at the camp's west edge beyond the gear pile -- the same silhouette carrying different colour, rather than a second identical bush."
+          "_why": "Second bush, west edge. Unchanged from round 3."
         },
         {
           "model": "Fern_1",
@@ -408,7 +378,7 @@
           "yaw_deg": 0.0,
           "scale": 0.26,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Fern south of the stool. Raw 2.83m across and only 0.84m tall, so 0.26 gives a 0.74m low spreading clump -- a different SHAPE from the bushes, not a third round mass."
+          "_why": "Low fern, different silhouette from the bushes. Unchanged from round 3."
         },
         {
           "model": "Grass_Wide_Tall",
@@ -419,54 +389,21 @@
           "yaw_deg": 0.0,
           "scale": 0.5,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Tall grass tuft on the trail side, in the near foreground of the approach view. 1.15 x 1.61m raw -> 0.58 x 0.81m."
+          "_why": "Tall grass tuft, trail-side foreground. Unchanged from round 3."
         },
         {
           "model": "Clover_1",
           "at": [
-            340.6,
-            938.6
+            340.9,
+            932.6
           ],
           "yaw_deg": 0.0,
           "scale": 0.55,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "Low clover clump south-west, at ground level where the bushes are not, so the camp's edge is not all one height. Moved 1.4m west of its first position to clear the tent's footprint."
-        },
-        {
-          "model": "Rock_Medium_2",
-          "at": [
-            347.9,
-            933.6
-          ],
-          "yaw_deg": 25.0,
-          "scale": 0.22,
-          "dir": "res://assets/environment/stylized_nature",
-          "_why": "A single larger boulder on the trail side, 0.67m -- bigger than the fire-ring stones so the two read as different things, and something for the eye to land on between the trail and the fire."
-        },
-        {
-          "model": "tent-canvas",
-          "at": [
-            343.5,
-            939.4
-          ],
-          "yaw_deg": -6.5,
-          "scale": 3.5,
-          "dir": "res://assets/props/kenney_survival",
-          "_why": "The shelter, and the prop that unblocks this camp's acceptance line. Two independent blind critics landed on the same gap -- nothing here said anyone SLEPT here -- and BAND1-D1 round 3 first parked it in ralph/BLOCKED.md as needing owner-supplied reference art. That was wrong, and the owner said so: CLAUDE.md forbids GENERATING without reference art, while 'Asset work' explicitly permits SOURCING a candidate asset. Kenney's Survival Kit (CC0 1.0, docs/ASSET_LEDGER.md) ships a tent, three bedrolls and a fire pit. Chosen over Quaternius's own Survival pack, which is the five models already vendored here (Axe, Backpack, Bonfire, Bonfire_Fire, Knife) and has no shelter. Verified in-engine before placement (tools/_probe_kenney_survival.gd): every surface carries a real `colormap` albedo texture, which is exactly the check environment/nature failed earlier this round. Authored small -- raw 0.56 x 0.49 x 0.56m -- so scale 3.5 gives a 1.96m one-person tent, sized against the 0.90m barrel and the 2.78m bench beside it rather than by eye. Sited BEYOND the fire on the camp's south arc, not on its north-west one: the first cut put it north-west, where it stood on ground 0.30m above the fire (measured) and, from all three authored viewpoints, sat between the camera and the camp instead of behind it. From here it is a silhouette behind the flame in the close view and behind the smoke column on the road approach, and it never occludes the glow that is what actually carries at range. Yaw was tested both ways against the render rather than trusted from the maths: at +90 the tent presents a closed canvas wall to the camp and the bedroll disappears behind it; at the computed face-the-fire value the open gable and the bedroll inside it both read. A shelter you cannot see into is a shed."
-        },
-        {
-          "model": "bedroll",
-          "at": [
-            343.1,
-            938.6
-          ],
-          "yaw_deg": 166.0,
-          "scale": 3.0,
-          "dir": "res://assets/props/kenney_survival",
-          "_why": "The bedroll, laid at the tent's mouth with its long axis pointing out toward the fire. The tent carries the silhouette at distance; this is the detail that does the same work up close, where a canvas shape alone still reads as equipment rather than as somebody's night. Raw 0.31 x 0.12 x 0.61m with its long axis on local z, so scale 3.0 gives 0.93 x 0.36 x 1.83m -- a real bedroll's footprint. `bedroll-frame` and `bedroll-packed` were vendored alongside it and are unused for now: a packed roll is what a traveller carries, not what an occupied camp leaves out."
+          "_why": "Low clover clump, moved slightly from round 3's position to stay clear of the relocated tent/bed pair's footprint."
         }
       ],
-      "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it: 0.29m of relief across 8m, 7.8m from the trail's (300,880)-(370,950) leg. A camp is a place someone chose to stop; the ground has to look like a reason to choose it."
+      "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it. Round 5 (blind-critic follow-up + owner-directed Meshy generation) swapped the fire ring, tent and bed for owner-referenced generated assets and fixed the environment/nature untextured-material defect the critic's 'unidentifiable pale rectangular object' finding traced back to (log_large)."
     },
     {
       "order": 1010,

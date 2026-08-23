@@ -5,6 +5,206 @@ shipped, the commit, and anything the next firing should know.
 
 
 
+
+
+## BAND1-D1 round 6 — final camp state: tent kept, fire reverted, wrap-up per owner directive
+
+`tests: full suite 1301 tests, 714654 assertions, 0 failed` · `area: content/band1, scripts/world, tools/art_pipeline`
+
+Continuation of round 5's owner-directed Meshy generation, closing it out per the
+owner's explicit "wrap it up so we can get to main". Net result: the tent and
+bed and stone ring from round 5 stay; a dedicated attempt to also generate the
+fire's own logs and flame did not converge across two more rounds and was
+reverted to the proven round-3 combination.
+
+### Owner reviewed the eight tent candidates directly
+
+A contact sheet (`shots/camp_candidates/_tent_contact_sheet.png`) of every tent
+attempt across rounds 1-5 was sent for a direct choice rather than another
+round of my own judgement. **The owner picked round 1's original result** --
+the very first multi-image-to-3D generation, task `01a02c2f-fe7d-7b4b-aac1-`
+`8f74-7ebc-bde9-7e50d000f4fc` -- over every later attempt aimed at fixing its
+proportions. Kept as-is. Round 5's `sink_m: -0.64` grounding fix (below) still
+applies to it.
+
+### A real placement bug, not a mesh defect
+
+Investigating the owner's "the bed is missing a bottom portion" report found
+`props.json` had never set `sink_m` for `camp_tent`/`camp_bed`, and both
+meshes' local origins sit well above their own geometric base -- `sink_m` (0.21m
+bed, 0.64m tent) was missing, the exact same compensation the Backpack entry
+already needed. Fixed; both now sit flush with the ground, confirmed against
+Bench/Stool with a new probe, `tools/_probe_bed_float.gd`. The bed's visibly
+raised legs the owner asked for came from this fix, not from any mesh change --
+two more prompt-only regeneration rounds aimed at "taller legs" moved the AABB
+by millimetres while this one placement fix visibly lifted the whole bed.
+
+### The fire: two more rounds, then reverted
+
+Owner: "the wood and the fire looks like a toy" (their multi-select: the Kenney
+seat-logs and the campfire_glow.gd billboard flame). Investigated as a
+compositional fix -- generate the fire's own logs and flame as separate
+pieces (seven earlier attempts already established one combined ring+logs+
+flame mesh never holds all three), light the flame mesh from its own baked
+texture (`campfire_glow.gd::ignite_mesh`, new), make it translucent per a
+later owner note ("somehow be translucent like a real fire").
+
+Two dispatched Fable reviews of the result, back to back, both failed it:
+first pass called the log pile "a rock pile... reads as a cairn, not
+firewood" and the flame "a separate solid object... no translucency, no
+emissive glow". Owner-directed reshape (non-uniform scale, "half as tall,
+twice as wide" -- `props.gd` gained a `scale_xyz` override for this, since a
+single `scale` number cannot express a shape correction) improved the
+silhouette but a second Fable pass still failed both: the pile now read as
+"flat slabs... pancakes", the flame still "an opaque carved spire... no light
+cast on its surroundings".
+
+**Per the owner's "wrap it up" directive, reverted the fire's wood and flame to
+round 3's proven combination** -- `Bonfire_Fire.obj` + `ignite()` + full
+`campfire_glow.gd` including its billboard halo -- which neither Fable review
+was ever evaluating and which nothing in this round found fault with.
+`camp_firewood.glb`/`camp_flame.glb` stay committed under
+`assets/props/generated_camp/` for a future attempt; they are simply not wired
+into this cluster. The Kenney seat-logs beside the fire (`tree-log`/
+`tree-log-small`, the other half of the "toy" complaint) were not addressed
+this round -- flagged below, not silently dropped.
+
+### Two real code fixes surfaced along the way
+
+- **`campfire_glow.gd::_meshes()` had the exact shared-default-array bug** this
+  session's own throwaway probes hit and documented (`func f(into: Array = [])`
+  evaluates its default once and shares it across every call, exactly like
+  Python) -- in shipped code this time, not a tool script. A second `ignite()`
+  call in one running game (a second lit fire) would have accumulated every
+  earlier prop's meshes into one growing array. Fixed.
+- **Emission energy tuned for a small surface, reapplied to a whole mesh,
+  clipped to blown-out white** -- the identical failure mode this file's own
+  round-3 comment already recorded for `Bonfire_Fire`'s `Fire` surface at
+  energy 3.2, reproduced by `ignite_mesh` at 1.4 over a much larger flame
+  sculpt's screen area. Lowered to 0.5 for whole-mesh ignition; kept 1.4 for
+  the original single-surface case.
+
+### What is not resolved
+
+- **The Kenney seat-logs** (`tree-log`/`tree-log-small`) were explicitly named
+  as toy-like alongside the flame and were not swapped this round -- scope cut
+  to close out per the wrap-up directive.
+- `camp_firewood`/`camp_flame` are generated, textured, committed, and unused.
+  A future attempt has real material to start from (Meshy's log-pile-alone and
+  flame-alone generations were both individually well-formed at the
+  candidate-picker stage; it was the in-scene lighting/scale/placement pass
+  that never converged in the time available) rather than starting from
+  nothing.
+- No independent blind judgement of the final `shots/trail_camp/` frames --
+  every round this session has said this and it remains true.
+- Total Meshy spend this session: ~700 of 4200 credits (balance 3500 as of the
+  last `check`).
+
+## BAND1-D1 round 5 — owner-directed Meshy generation for the trail camp's tent, bed and fire ring
+
+`tests: full suite` · `area: content/band1, art_pipeline, tools`
+
+The independent blind critic dispatched after round 3b answered **no on both
+bar questions**. Its top finding: "the camp is placed, not inhabited" — no
+worn ground, a floating bench, a tilted tent, and an unidentifiable "pale
+rectangular object... the second largest prop in the camp".
+
+Investigating that object before touching anything else found a real defect:
+it was `log_large`, from `environment/nature`, and BAND1-D1 round 3's own
+record — "log/log_large survive, and only by luck" — was **wrong**. Never
+actually rendered and checked, only inferred from a material colour dump.
+`tools/_probe_log_large.gd` (now folded into `_probe_generated_camp.gd`'s
+sibling checks) confirmed `log_large`'s materials are `woodBark`/`woodInner`,
+`tex=false`, near-white — the same untextured-placeholder defect as the rest
+of that pack, not an exception to it. Swapped for Kenney's `tree-log`/
+`tree-log-small.glb` (CC0, already vendored this session), isolation-tested by
+removing one model at a time and re-rendering until the object vanished.
+
+### The owner corrected a second wrong call
+
+Reporting the critic's verdict, this session's own summary said the sleep
+prop and a proper fire pit needed owner-supplied reference art before
+anything more could be done. The owner supplied it — a reference board for a
+tent, campfire and bed — and pointed at `CLAUDE.md`'s actual rule: Meshy is
+reserved for Team Tether hero objects, but **the prerequisite that rule
+exists to enforce is owner-supplied reference art, and this now has it.**
+Recorded rather than silently done: `tools/art_pipeline/meshy.py`'s `PROPS`
+set now carries `camp_tent`, `camp_fire_pit`, `camp_bed` alongside the three
+hero objects, with a comment explaining why this is an explicit owner
+decision and not a routine spend.
+
+**The reference board's bed panel carried another game's trademark** — a
+paw-print emblem and a leaf icon on the blanket and pillow. Both were
+Gaussian-blurred out of the crops under
+`assets/creatures/tetherbound/camp_bed/reference/` before anything was
+submitted, and `NEGATIVE_CAMP_BED` bans logos/emblems/text as a second, belt-
+and-braces guard. The archived board itself
+(`docs/art/reference/owner-board-2026-08-23-camp-set.png`) keeps the marks —
+same convention board 15 already sets for the tether machine's occupant:
+crop/scrub what actually reaches the generator, keep the source honest.
+
+### What came back
+
+Preview tier (3 candidates each, untextured — form only) found the tent and
+bed converged quickly on the right shape. The fire pit did not: three preview
+attempts and two refine attempts each dropped either the stone ring or the
+log stack, or flattened the stones to 2D discs. One preview candidate had a
+genuinely clean 12-stone ring with no logs; **retexturing that specific
+geometry** (`meshy.py texture`, which points a texture pass at a local GLB
+using the reference crop rather than regenerating from scratch) gave a
+properly stone-textured ring with no further roll of the dice needed. This is
+the second time this session that decoupling "get the right geometry" from
+"get the right texture" solved something regeneration alone would not.
+
+Tent and bed went straight to one refine-tier candidate each and both came
+back well-formed and correctly textured — weathered patched canvas with the
+crossed lashed pole tips the prompt asked to lead on; a lashed log frame,
+dark unbranded mattress, pillow. Landed at
+`assets/props/generated_camp/{camp_tent,camp_bed,campfire_stone_ring}.glb`.
+Total spend: 180 (preview) + 200 (four refine/retexture passes) = 380 credits
+of 4200 available.
+
+### Wired into the camp
+
+- The six hand-placed `Rock_Medium` stones become one `campfire_stone_ring`
+  mesh, scale 0.85 to match the six-stone version's own measured ~1.7m
+  footprint. The Bonfire's flame sits inside the ring's empty centre;
+  `campfire_glow.gd` is unchanged — the generated ring supplies stone
+  geometry only, the fire itself stays the existing system.
+- The Kenney tent-canvas/bedroll from round 3b are replaced by the generated
+  tent and bed. The two needed real separation once placed: an early cut had
+  them 1.35m apart and the bed visually swallowed the tent from the close
+  viewpoint; pulled to ~3.1m centre-to-centre so both read as distinct
+  objects.
+- Nothing else in the cluster moved. 18 props total (was 22 before the
+  six-stone-to-one-ring swap).
+
+### Also fixed while in the pipeline code
+
+`docs/ASSET_LEDGER.md`'s torch-prop row carried the same now-corrected false
+claim about `Bonfire_Fire.obj` a second place; fixed there too, not just in
+the round-3 entry.
+
+### What is not resolved
+
+- **A dark, flat-shaded box appears in frame `02-camp-from-spine.png`** at
+  roughly the tent's own position, viewed from ~15m at a shallow angle —
+  investigated far enough to be fairly confident it is the tent's own
+  geometry reading as an unlit silhouette from behind/the shadow side under
+  the Compatibility renderer's software GL, the same class of lighting
+  artefact this survey's own header already warns is untrustworthy here, not
+  a new placement bug. Not chased further; worth a look on real hardware.
+- **Frame `01-camp-close.png`'s tent reads smaller than the bed**, which is
+  backwards for what should visually lead. Separating the two fixed the
+  worse problem (they no longer merge into one shape) but did not fix
+  relative prominence; a tighter camera or a repositioned close viewpoint
+  would likely resolve it faster than moving the props again.
+- **Still not graded.** Same rule as every round before this one: the frames
+  are re-rendered, not judged here. This is the second consecutive round
+  that owes the coordinator an independent pass rather than a third render
+  cycle guessing at what the critic will say.
+- The clearing/re-bake note from round 3/4 is unchanged and still applies.
+
 ## BAND1-D1 round 4 — the evidence run, band1's two optional draws, and four tests that were right
 
 `tests: full suite 1301 tests, 714654 assertions, 0 failed` · `area: content/band1, creatures, tools`

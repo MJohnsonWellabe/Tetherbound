@@ -105,6 +105,17 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		return
 
 	var scale_factor := float(spec.get("scale", 1.0))
+	# `scale_xyz` (optional, [sx, sy, sz]): a non-uniform override for
+	# `scale`. Round 4's firewood pile needed to go "half as tall, twice as
+	# wide" against its own generated proportions -- a shape correction no
+	# single uniform number can express -- and every other placement math
+	# below (collider box, sink) already worked in a full Vector3, so this
+	# is the one line that needed to stop assuming uniform scale rather than
+	# a new mechanism.
+	var scale_xyz_raw: Variant = spec.get("scale_xyz", null)
+	var scale_vec: Vector3 = (Vector3(float(scale_xyz_raw[0]), float(scale_xyz_raw[1]), float(scale_xyz_raw[2]))
+		if scale_xyz_raw is Array and (scale_xyz_raw as Array).size() == 3
+		else Vector3.ONE * scale_factor)
 	root.name = model
 	# `sink_m` (optional, default 0): extra downward offset below the sampled
 	# ground height. Most of the pack's models embed only a few centimetres at
@@ -127,7 +138,7 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 		deg_to_rad(float(spec.get("yaw_deg", 0.0))),
 		deg_to_rad(float(spec.get("roll_deg", 0.0))))
-	root.scale = Vector3.ONE * scale_factor
+	root.scale = scale_vec
 	into.add_child(root)
 
 	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
@@ -144,12 +155,25 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	# and shrinking a 4.6m smoke column by the same factor is exactly what
 	# made the camp unfindable from the trail. The glow's sizes are absolute
 	# metres; the prop's scale is the prop's business.
+	# `"flame_mesh"` (round 5 follow-up): the prop IS a whole generated flame
+	# sculpt (camp_flame.glb), not a log pile with one small Fire surface --
+	# `ignite_mesh` lights every surface from its own baked texture instead
+	# of one named one, and the light/embers/smoke overlay is built without
+	# its billboard halo, since a real flame mesh under it made the halo
+	# redundant rather than additive (see campfire_glow.gd's own comment on
+	# `include_halo`).
 	var glow := str(spec.get("glow", ""))
 	if glow == "campfire":
 		var lit := CAMPFIRE_GLOW.ignite(root)
 		if lit == 0:
 			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
 		var overlay: Node3D = CAMPFIRE_GLOW.new()
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
+	elif glow == "flame_mesh":
+		CAMPFIRE_GLOW.ignite_mesh(root, 0.5, true)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(false)
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
 		root.add_child(overlay)
@@ -175,7 +199,7 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	body.name = "%s_Collision" % model
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = aabb.size * scale_factor
+	box.size = aabb.size * scale_vec
 	shape.shape = box
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)

@@ -84,9 +84,19 @@ var _light: OmniLight3D = null
 var _light_time := 0.0
 
 
-func _init() -> void:
+## `include_halo` (default true, unchanged for every existing caller):
+## BAND1-D1, owner directive after seeing the assembled camp -- "the wood and
+## the fire looks like a toy". The billboard halo was built to compensate for
+## `Bonfire_Fire.obj`'s own `Fire` surface being small and mesh-thin; it was
+## never meant to sit over a full, dedicated flame sculpt. `trail_camp` now
+## carries `camp_flame.glb`, a real generated flame mesh (`ignite_mesh` below
+## lights it), so its caller passes `false` here -- two overlapping "flame"
+## representations, a mesh AND a billboard, is closer to the toy look than
+## either alone.
+func _init(include_halo: bool = true) -> void:
 	name = "CampfireGlow"
-	_build_halo()
+	if include_halo:
+		_build_halo()
 	_build_light()
 	_build_embers()
 	_build_smoke()
@@ -127,12 +137,73 @@ static func ignite(prop: Node) -> int:
 	return lit
 
 
-static func _meshes(node: Node, into: Array[MeshInstance3D] = []) -> Array[MeshInstance3D]:
+## No default `into` parameter here, deliberately. GDScript evaluates a
+## default Array argument ONCE and shares that same instance across every
+## call, exactly like Python's mutable-default-argument trap -- so a second
+## `ignite()` call in the same running game (a second campfire, a save with
+## more than one lit fire) would silently accumulate every previous prop's
+## meshes into this one array and return a growing, wrong count. Found this
+## exact bug in a throwaway probe script the same session this file's
+## `camp_flame` support was added; worth fixing here too since this one ships.
+## For a whole flame SCULPT (`camp_flame.glb`), as opposed to `ignite()`
+## above, which lights one named surface on a prop that is mostly something
+## else. Every surface here already carries its own baked warm-to-hot
+## gradient texture from the Meshy retexture pass (dark base, bright tip), so
+## this boosts emission from each surface's OWN albedo/texture rather than
+## overriding to one flat colour -- flattening it would throw away the
+## gradient that is most of why the mesh reads as fire instead of as a
+## carved wooden ornament, which is exactly what it read as before the
+## colour reference for that retexture pass was fixed to a flame-only crop.
+##
+## `energy` defaults far lower than `ignite()`'s `FIRE_EMISSION_ENERGY`
+## because it is not the same situation scaled up: this file's own round-3
+## note already recorded that 3.2 clipped a small Fire SURFACE to a white
+## cone under this renderer's flat tonemap, and 1.4 was the fix for that
+## surface's screen area. A whole flame SCULPT covers many times the screen
+## area a Bonfire's Fire surface does, so the same 1.4 multiplied over that
+## much more area clipped just as white, in the real outdoor sun this file's
+## own isolated grey-backdrop test rig does not reproduce -- caught only once
+## this was placed in the actual meadow scene and rendered under real sky
+## light, not in the flat-lit candidate-picker rig. `emission` is also kept
+## as the texture's own warm tone rather than white, so even a clipped pixel
+## clips toward orange instead of toward white.
+## `translucent` (owner: "somehow be translucent like a real fire" -- a solid
+## opaque flame sculpt reads as a carved ornament sitting beside the logs
+## rather than a fire consuming them, however good its texture is). Alpha
+## blend at a fixed opacity rather than anything fancier: this is a static
+## mesh, not a shader, and the goal is "you can see the logs' own silhouette
+## faintly through it," which a flat alpha already gives.
+static func ignite_mesh(node: Node, energy: float = 0.5, translucent: bool = false) -> void:
+	for instance in _meshes(node):
+		var mesh: Mesh = instance.mesh
+		if mesh == null:
+			continue
+		for i in mesh.get_surface_count():
+			var source := mesh.surface_get_material(i) as StandardMaterial3D
+			var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
+			material.emission_enabled = true
+			if material.emission_texture == null and material.albedo_texture != null:
+				material.emission_texture = material.albedo_texture
+			material.emission = FIRE_EMISSION
+			material.emission_energy_multiplier = energy
+			if translucent:
+				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				material.albedo_color.a = 0.72
+				material.cull_mode = BaseMaterial3D.CULL_DISABLED
+			instance.set_surface_override_material(i, material)
+
+
+static func _meshes(node: Node) -> Array[MeshInstance3D]:
+	var into: Array[MeshInstance3D] = []
+	_collect_meshes(node, into)
+	return into
+
+
+static func _collect_meshes(node: Node, into: Array[MeshInstance3D]) -> void:
 	if node is MeshInstance3D:
 		into.append(node as MeshInstance3D)
 	for child in node.get_children():
-		_meshes(child, into)
-	return into
+		_collect_meshes(child, into)
 
 
 func _build_halo() -> void:
