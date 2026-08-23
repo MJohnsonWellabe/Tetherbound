@@ -632,3 +632,107 @@ Both numbers are recorded, and the strict-floor figure is NOT being quietly
 replaced by the flattering one. The point of keeping both is that neither is
 trustworthy alone across a change that moved colour: the robust near-field
 measure remains the blind critic's literal clump count.
+
+## ROOT CAUSE: the day-lit character is an emissive material, not a lighting bug
+
+**This is the most valuable finding in the pass and it is not in this lane's
+files.** Four independent blind critics across three sweeps have reported the
+same thing in almost the same words — *"the trainer renders at near-daylight
+brightness against pitch black"*, *"pasted onto black paper"*, *"lit by a
+different rig than the world"*, *"reads as composited in"* — and every attempt
+to fix it has been a lighting change, because everyone reasonably assumed it
+was a lighting problem. It is not.
+
+**Every one of the six production humanoid rigs has `emissiveFactor = [1,1,1]`
+with an emissive texture that is its own diffuse map.**
+
+Probed on the imported material:
+
+```
+'Material_1' shading=1(per_pixel) emission_on=true emission=(1,1,1,1) energy=1.00
+```
+
+And in the source `.glb`, for all six:
+
+| rig | emissiveFactor |
+|---|---|
+| trainer_lod0.glb | [1, 1, 1] |
+| grandpa_lod0.glb | [1, 1, 1] |
+| grunt_lod0.glb | [1, 1, 1] |
+| warden_lod0.glb | [1, 1, 1] |
+| villager_male_lod0.glb | [1, 1, 1] x2 |
+| villager_female_lod0.glb | [1, 1, 1] x2 |
+
+The trainer's `emissiveTexture` is index 0 and its `baseColorTexture` is index
+1 — *different texture entries pointing at the same image*. Decoded and
+measured, both resolve to `texture_0`, 2048x2048, mean 0.2891, max 0.796, 99.5%
+of texels above 0.05. It is the full diffuse map, not a small glow mask.
+
+**Emission is not affected by scene lighting.** It is added after the lighting
+term, so no ambient value, no exposure, no time-of-day preset and no
+adjustment_saturation can dim it. That is the whole explanation for a defect
+three sweeps have circled:
+
+- It is why the character stays bright while the world goes dark, at night and
+  at golden hour.
+- It is why this lane's night rework — which measurably moved every night
+  frame's chroma (band 4: 12.09 -> 44.63) and flipped the palette to blue —
+  made the WORLD read as night while a fresh critic still said the character
+  looked day-lit. Both observations are correct and they are not in conflict.
+- It is almost certainly why the grunt's armband reads as *"a flat pure-red
+  untextured quad that ignores lighting"* in day and *"salmon-pink"* at golden:
+  an emissive surface does not shade, it only shifts with the tonemap.
+
+Almost certainly an export/import artefact — many exporters write
+`emissiveFactor` [1,1,1] alongside an emissive texture slot, and the whole cast
+shares it, which is the signature of a pipeline setting rather than an art
+decision.
+
+**The fix is one of two things, neither in this lane:** strip `emissiveFactor`
+from the six character `.glb` files, or set `emission_enabled = false` when
+character materials are built in code. `tools/_char_probe.gd` is left in the
+repo as the check — it prints shading mode, emission and albedo per surface for
+any rig, so the fix can be verified rather than assumed.
+
+Flagged for the coordinator as the root cause of the standing NIGHT-LIGHT
+backlog item. **Nothing this lane can do to `art.json` will fix it**, and any
+future round that tries to solve it with ambient or exposure is chasing a
+lighting explanation for a material property.
+
+## `shadow_opacity` is honoured under Compatibility — verified, with a caveat
+
+Round 3's critic still reported *"the same crisp sun shadows"* under cloudy,
+fog and rain, which is a direct challenge to this lane's weather fix. Tested
+rather than argued, with `tools/_so_probe.gd`: a bare scene — one plane, one
+box, one DirectionalLight, no project content — rendered twice under
+`--rendering-driver opengl3`, differing only in `shadow_opacity` 1.0 vs 0.0.
+
+Result: **max per-pixel difference 163, 3,399 pixels changed.** The property
+reaches this renderer. The fix is real and the commit that claimed it was
+correct.
+
+**But the critic is also right, and the distinction matters.** `shadow_opacity`
+changes how DARK a shadow is; it does nothing to how SHARP its edge is. Edge
+softening on this tier needs `shadow_blur` or `light_angular_distance`, and
+both are the documented no-ops. So an overcast frame currently has a *fainter*
+razor-edged shadow, which is a quieter version of the same contradiction rather
+than a resolution of it.
+
+Since crispness cannot be bought at this tier, the honest remaining lever is to
+take the darkness far enough down that the edge stops carrying information.
+Round 4 takes cloudy/fog/rain to 0.08/0.05/0.07 from 0.25/0.15/0.22. This is
+still not `shadow_enabled: false`, which R5.2 proved blanks Terrain3D.
+
+## Vegetation is NOT emissive — checked, so the glow is this lane's to fix
+
+The round-3 critic read the agave in `water-03-stream-grazing` as *"lit like an
+item pickup"* and the white flower sprites in the pond frames as *"full-bright,
+floating confetti"*. Given what the character rigs turned out to be, that
+warranted the same check: **all 46 `.gltf` files in
+`assets/environment/stylized_nature/` carry zero emission.**
+
+So the glow is albedo, not emission, and it is this lane's. `flowers` is the
+one ground-cover layer still carrying no `retint` at all, which means
+`albedo_color` stays pure white and the layer renders its source textures
+unmodified at full brightness while grass and drygrass are now tinted down
+toward the terrain. Fixed in round 4.
