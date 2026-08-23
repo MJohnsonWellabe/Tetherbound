@@ -130,15 +130,43 @@ is what separates an ironwood from the terracotta-trunked trees around it —
 species identity carried by the trunk rather than by a canopy in the wrong
 palette.
 
-**Three rounds, and the honest stop condition.** `conventions.md` stops a blind
+Round 4, on frames re-rendered after the variant fix, is the round that moved a
+measured axis. Asked the same three questions round 3 answered, blind:
+
+- *does it read as one species?* — **yes**, where round 3 said no. *"The five
+  mid-distance trees share a slender pale trunk, a narrow vertical canopy
+  silhouette and matched height ... visibly distinct from the terracotta-trunked
+  broad-canopy trees."*
+- *does it read as a deliberately placed stand rather than scatter?* — still
+  **no**. Its reasons are specific and none of them is a coordinate: *"no
+  clearing, no understory, no saplings, no fallen wood, and no ground change
+  beneath the trees — the grass runs under them unbroken and identical to the
+  grass 50 m away ... a stand needs a canopy that overlaps, a shadow pool on
+  the ground, and litter under it."*
+- *does any hue read as hostile or blighted?* — still **yes**, but for a
+  different reason than round 3's: no longer the canopy, now *"the ironwood
+  trunks are a desaturated bone/pale grey ... the visual language of a blighted
+  stand"*, plus the bald tan splat behind them reading as scorched earth.
+
+Both survivors have named owners and neither is a band file. Understorey,
+litter, saplings and a canopy dense enough to overlap are the scatter layer's
+(`data/config/vegetation.json`) — the same density request this lane already
+has outstanding, arriving from a fourth direction. The bone-grey trunk is
+`Bark_TwistedTree`, a shared texture **no band file can retint**: `harvest_node.gd`
+can only apply retints a scatter layer already declares, and the `grove` layer
+declares leaf keys only. The tan splat is `terrain_playground.json`.
+
+**Four rounds, and the honest stop condition.** `conventions.md` stops a blind
 pass after two consecutive rounds that name no new defect. That is not what
-happened here and this entry will not claim it: every round named new defects.
+happened here and this entry will not claim it: every round named new defects,
+and round 4 was still moving one — species identity went from no to yes on it.
 The pass is stopped instead because **the defects still standing against this
 content are not in this lane's files** — scatter density, ambient light and
 exposure, a cloudless sky, distant-LOD instances rendering white, the storm
 wall's viewing angles, and a character material that renders the trainer as a
 black cut-out. Each round's findings that WERE band content were fixed inside
-it, twice, and both fixes were re-rendered and re-judged blind. What the last
+it — the crimson, then the dark variant, then the stand's own geometry — and
+every fix was re-rendered and re-judged blind, four renders and four critics. What the last
 round could not move on this content, no edit to
 `bands/band4_upper_meadows_ironwood/` can move.
 
