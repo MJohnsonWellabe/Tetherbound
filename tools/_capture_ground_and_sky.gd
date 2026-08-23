@@ -21,9 +21,9 @@ extends SceneTree
 ## `xvfb-run` for the virtual display, `--rendering-driver opengl3` for a real
 ## renderer, and no `--headless` flag at all.
 ##
-## THREE CORRECTIONS REUSED FROM tools/_probe_corridor_survey.gd, because that
-## tool is the union of three earlier tools' hard-won bugs and this one needs
-## all three too:
+## FOUR CORRECTIONS REUSED FROM tools/_probe_corridor_survey.gd, because that
+## tool is the union of several earlier tools' hard-won bugs and this one
+## needs all of them too:
 ##
 ## 1. Pin the clock AND FREEZE both WorldLook/WorldWeather -- a pin that is
 ##    not frozen wears off across a multi-viewpoint pass and the later frames
@@ -35,6 +35,14 @@ extends SceneTree
 ##    heightfield alone -- the two disagree by up to 22m near the river
 ##    channel, and seating a camera on the analytic value can bury it inside
 ##    the terrain and photograph the underside of the ground.
+## 4. VISUAL-CORRIDOR fix: step the seat aside with `_clear_of_bodies()`
+##    before placing the player at an authored coordinate -- an authored
+##    ground/bank point can land dead-centre on an NPC capsule or a
+##    scattered rock prop's collider, and a player capsule spawned centred
+##    on another body has no lateral escape vector, so Godot's depenetration
+##    shoves it straight UP the shared axis instead of sideways. See
+##    `_clear_of_bodies`'s own comment (ported from corridor's, which
+##    diagnosed this first) for the full mechanism.
 ##
 ## What this tool does NOT need from that one: corridor's SETTLE_FRAMES exists
 ## so the encounter director can populate wild creatures around a player who
@@ -135,10 +143,28 @@ const GRAZE_TANGENT := 22.0       # grazing shot looks ALONG the shore, not acro
 ## (its own per-shot collision-raycast log is the evidence) -- `aim` here
 ## only supplies the walking DIRECTION; the actual look target is much
 ## nearer than that corridor tool's own horizon-framed target.
+##
+## VISUAL-CORRIDOR fix (2026-08-23): band3's entry used to carry
+## `Vector2(230.0, 3670.0) -> Vector2(350.0, 3760.0)` under the name
+## "river-lock" -- but that exact coordinate pair is
+## `_probe_corridor_survey.gd::VIEWPOINTS`' own `"05-band3-relay"` entry, a
+## Team Tether checkpoint (a campfire, crates, a red flag, a "Relay Approach
+## Loop" signpost -- confirmed directly in `shots/ground/ground-03-band3-
+## river-lock-day.png`), nowhere near water. `band3_the_river_lock/`'s own
+## directory name is the region's title, not a literal landmark, so this
+## survey needs to reach the region's actual river feature -- that is
+## corridor's OWN separate, correctly-named `"06-band3-crossing"` entry
+## (`Vector2(-152.0, 4170.0) -> Vector2(-100.0, 4350.0)`, sitting right on
+## `terrain_playground.json`'s river course at the Old Mill Crossing narrows,
+## course index 8: `[-152, 4203]`). This was a copy-paste of the wrong one of
+## corridor's two band3 viewpoints, not a bad coordinate invented from
+## scratch -- swapped in here rather than picking a third point, and the
+## label renamed to match corridor's own name for it so nothing calls a
+## relay checkpoint a river again.
 const GROUND_VIEWPOINTS := [
 	["ground-01-band1-opening",   Vector2(8.0, 90.0),      Vector2(-40.0, 180.0)],
 	["ground-02-band2-stone-root", Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
-	["ground-03-band3-river-lock", Vector2(230.0, 3670.0), Vector2(350.0, 3760.0)],
+	["ground-03-band3-crossing",  Vector2(-152.0, 4170.0), Vector2(-100.0, 4350.0)],
 	["ground-04-band4-ironwood",   Vector2(170.0, 5590.0), Vector2(450.0, 5860.0)],
 	["ground-05-band5-approach",   Vector2(0.0, 7000.0),   Vector2(0.0, 7560.0)],
 ]
@@ -395,7 +421,30 @@ func _capture_river() -> void:
 	# An interior point, well clear of both ends and of the Old Mill Crossing
 	# narrows (SE22) -- an open reach of channel, not the one place the
 	# river is deliberately pinched to a footbridge's width.
-	var idx := clampi(course.size() / 2, 1, course.size() - 2)
+	#
+	# VISUAL-CORRIDOR fix: `course.size() / 2` was the actual index picker,
+	# and for this file's own 19-point course that integer-divides to 9 --
+	# `[-152, 4203], half_width 3.6`, dead centre of the SAME Old Mill
+	# Crossing narrows this comment already says to avoid (course indices
+	# 6-10 all pinch to half_width 3.6-7.0, against 10-13 everywhere else).
+	# A blind critic saw the result: "water-02-river-grazing contains NO
+	# water at all -- it is a grass hillside and the top of a building" (the
+	# Mill itself, whose barrels/crates are also what "water-02-river-eye"
+	# ends up staring at instead of open water). The comment's own intent
+	# was always "widest reach nearest the middle", never "the middle
+	# index" -- so pick by width now: the interior point with the largest
+	# `half_width`, ties broken toward whichever is closer to the course's
+	# midpoint index, which keeps the "an open reach... not the narrows"
+	# reasoning true regardless of how this JSON's own point spacing changes
+	# later.
+	var mid := course.size() / 2
+	var idx := clampi(mid, 1, course.size() - 2)
+	var best_width := -1.0
+	for i in range(1, course.size() - 1):
+		var w := float((course[i] as Dictionary).get("half_width", 10.0))
+		if w > best_width or (is_equal_approx(w, best_width) and absi(i - mid) < absi(idx - mid)):
+			best_width = w
+			idx = i
 	var at_pt: Dictionary = course[idx]
 	var prev_pt: Dictionary = course[idx - 1]
 	var next_pt: Dictionary = course[idx + 1]
@@ -458,9 +507,21 @@ func _capture_stream() -> void:
 
 
 func _arrive_water(name: String, bank: Vector2, look_at_xz: Vector2) -> Dictionary:
-	var away := (bank - look_at_xz).normalized()
-	if away == Vector2.ZERO:
-		away = Vector2(0.0, -1.0)
+	var toward := (look_at_xz - bank).normalized()
+	if toward == Vector2.ZERO:
+		toward = Vector2(0.0, 1.0)
+	# VISUAL-CORRIDOR fix: the same occupied-seat hazard `_arrive_ground`
+	# steps around (see its own comment) -- but here the blocker is as
+	# likely to be a scattered rock/harvest-point prop as an NPC capsule.
+	# `_clear_of_bodies` already excludes only Terrain3D's own collision,
+	# never a specific body TYPE, so it catches both for free. This is the
+	# confirmed cause of "water-03-stream-eye has the camera at the
+	# trainer's side while he reaches into a giant unlit near-black
+	# box-rock": the authored stream `bank` point lands close enough to a
+	# scattered boulder prop that the player's own capsule ends up touching
+	# it, the same way a ground viewpoint could land on an NPC.
+	bank = _clear_of_bodies(bank, toward, _surface(bank))
+	var away := -toward
 	var cam_xz := bank + away * WATER_BACK
 
 	_place(bank, _field.height_at(bank.x, bank.y))
@@ -498,6 +559,7 @@ func _shoot_water_eye(pos: Dictionary) -> void:
 func _shoot_water_grazing(pos: Dictionary, level: float) -> void:
 	var bank: Vector2 = pos["bank"]
 	var away: Vector2 = pos["away"]
+	var look_at_xz: Vector2 = pos["look_at"]
 	var tangent := Vector2(-away.y, away.x)
 	var graze_xz: Vector2 = bank - away * GRAZE_TOWARD_WATER
 	var graze_ground := _surface(graze_xz)
@@ -505,7 +567,29 @@ func _shoot_water_grazing(pos: Dictionary, level: float) -> void:
 	# water plane either -- a grazing shot standing head-height above the
 	# surface is just the eye shot again.
 	var cam_h: float = maxf(level + 0.35, graze_ground + 0.15)
-	var target_xz: Vector2 = bank + tangent * GRAZE_TANGENT
+
+	# VISUAL-CORRIDOR fix: `tangent` used to pick ONE fixed 90-degree
+	# rotation of `away` with no way to know whether THAT side of the shore
+	# stays wet for the next `GRAZE_TANGENT` metres or curves inland -- a
+	# blind critic caught the failure on the pond ("almost no water -- a
+	# sliver in the far right corner") and the river (no water at all).
+	# `_surface()` already answers "is this point wet": water itself carries
+	# no collision, so a raycast over the water body hits the carved BED
+	# below `level`, while dry ground reads at or above it. Try both
+	# along-shore directions and keep whichever lands lower (wetter) at the
+	# full distance, rather than trusting a single blind rotation.
+	var far_pos := bank + tangent * GRAZE_TANGENT
+	var far_neg := bank - tangent * GRAZE_TANGENT
+	if _surface(far_neg) < _surface(far_pos):
+		tangent = -tangent
+	var target_far: Vector2 = bank + tangent * GRAZE_TANGENT
+	# Even the wetter side can still curve away over that stretch (a bend,
+	# an inlet) -- blending 35% of the way back toward the water's own
+	# centre keeps the water body the actual subject of the shot without
+	# giving up the shallow, along-the-shore angle that makes this framing
+	# different from the eye shot (a full blend TO centre would just be the
+	# eye shot again).
+	var target_xz: Vector2 = target_far.lerp(look_at_xz, 0.35)
 	var target_ground := _surface(target_xz)
 
 	_hide_huds()
