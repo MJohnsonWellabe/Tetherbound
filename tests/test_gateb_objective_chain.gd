@@ -17,15 +17,28 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 ## (flag to set, a substring expected in the label BEFORE that flag is set --
 ## i.e. what the tracked line reads while this step is still outstanding).
 ## In objectives.json's own file order.
+## TUTORIAL-CHAIN (OP23-04) re-authored the ladder and this list with it: two
+## new rungs (Tam's tools, feeding the team) and the bed rung now completing on
+## the THIRD bed rather than the first, per the owner's 2026-08-23 directives.
+## The rungs either side of them are unchanged, wording included, so this stays
+## a diff of the ladder rather than a rewrite of the check.
+##
+## `creature_bed_built` and `creature_bed_built_2` are deliberately NOT rows
+## here: they fill the rung's 1/3 counter without completing it, which
+## `tests/test_quest_log.gd::test_the_bed_rung_reads_a_count_and_is_done_only_
+## on_the_last_bed` is the check for. A row here means "this flag moves the
+## tracked line", and those two do not -- that is the point of the count.
 const CHAIN := [
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
+	["tam_tools_given", "Tam"],
 	["tournament_team_ready", "tournament"],
 	["tournament_training_ready", "Train with"],
 	["home_materials_gathered", "Gather wood"],
 	["home_built", "small home"],
-	["creature_bed_built", "Creature Bed"],
+	["creature_bed_built_3", "Creature Bed"],
 	["player_slept_at_home", "Sleep until"],
+	["tournament_team_fed", "Feed your team"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
 	["south_bridge_open", "South Bridge"],

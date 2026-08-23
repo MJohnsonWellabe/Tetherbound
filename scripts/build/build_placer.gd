@@ -641,6 +641,12 @@ func _place(game: Node, armed: String) -> void:
 	# is the only way an out-of-order build (structure piece before the last
 	# required one) still gets recognised the moment it becomes true.
 	HOME_PROGRESS.maybe_set_home_built(game)
+	# OP23-04 / owner directive 2026-08-23: three Creature Beds, one per
+	# tournament entrant. Called here rather than from `creature_bed.gd` because
+	# the count is read off `placed_buildings` and the bed node is spawned
+	# BEFORE `register_building` above -- from inside the bed, its own placement
+	# has not been recorded yet and every count would be one short.
+	HOME_PROGRESS.maybe_set_creature_beds(game)
 
 
 ## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called
@@ -680,6 +686,10 @@ func restore_from_game(game: Node) -> void:
 	# before this flag existed must resolve to it being done, not stuck
 	# re-asking for a home that is already standing.
 	HOME_PROGRESS.maybe_set_home_built(game)
+	# And the same for the bed count, for the same reason: a save written
+	# before the three-bed rung existed, with three beds already standing,
+	# must load into "3/3" rather than being told to go and build them again.
+	HOME_PROGRESS.maybe_set_creature_beds(game)
 
 
 ## R3.1-remainder. The reverse of the `state_data` half of restore: called by

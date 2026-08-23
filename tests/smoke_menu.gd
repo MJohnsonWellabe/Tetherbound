@@ -34,6 +34,10 @@ const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const CONTROLLER_SAVE_DIR := "user://controller_ui_smoke_saves/"
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+## TUTORIAL-CHAIN (OP23-04): the quest-log tab check asks the SAME reader the
+## tab itself asks, so "the menu and the HUD agree" is a real comparison rather
+## than this file restating the chain.
+const QUEST_LOG_FOR_MENU := preload("res://scripts/world/quest_log.gd")
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
@@ -1096,8 +1100,25 @@ func _check_backpack_move_and_quick_bar() -> void:
 
 
 ## SB11: the quest log tab reads the same flag store the HUD's tracked line
-## does, and shows the one authored Main Story objective as OPEN before its
-## flag is set.
+## does, and shows the current Main Story objective as OPEN before its flag is
+## set.
+##
+## TUTORIAL-CHAIN (OP23-04) changed what "shows" means here, and this check
+## with it. The tab used to render every entry in objectives.json -- which is
+## the owner's report ("never fronting the full list") in the menu rather than
+## on the HUD -- and this check found the road-gate row by its text among them.
+## The tab now renders the guided view: what is done, plus the ONE rung the
+## player is on, and nothing after it.
+##
+## So the check moved from "the road-gate row is somewhere in the list" to the
+## three properties the guided view actually promises, all derived from the
+## authored file rather than restated here:
+##   * the open row is the SAME step `quest_log.gd::tracked_text()` reports,
+##     so the menu and the HUD cannot disagree about where the player is;
+##   * nothing past it is drawn;
+##   * that row carries its `how` guidance line underneath.
+## It is strictly more than the old check proved, on a fresh save where exactly
+## one rung is open.
 func _check_quest_log_tab() -> void:
 	var tabs: Array = _menu.get("_tabs")
 	var index := -1
@@ -1119,25 +1140,57 @@ func _check_quest_log_tab() -> void:
 		_fail("quest log's Main Story list drew no rows")
 		return
 
-	# GATE B grew the main chain from two entries to twelve, and the road gate
-	# is no longer the first of them. This check was never about position --
-	# it is about the tab actually rendering the authored chain and reading a
-	# flag's real state -- so it finds the row by its own text rather than
-	# assuming it is row 0, which the next inserted beat would break again.
-	var road_gate_row: Label = null
+	var progression: RefCounted = _game.get("progression")
+	if progression == null:
+		_fail("Game has no progression state; cannot check the quest log tab")
+		return
+	var log_reader: RefCounted = QUEST_LOG_FOR_MENU.new()
+	var tracked := str(log_reader.call("tracked_text", progression))
+	if tracked.is_empty():
+		_fail("nothing is tracked at all; this check needs one open objective")
+		return
+
+	# Every OPEN row on the panel. There must be exactly one, and it must be
+	# the step the HUD is tracking.
+	var open_rows: Array[Label] = []
 	for child: Node in main_list.get_children():
 		var row: Label = child as Label
-		if row != null and row.text.find("gate") != -1:
-			road_gate_row = row
-			break
-	if road_gate_row == null:
-		_fail("quest log's Main Story list does not show the road-gate objective")
-	elif road_gate_row.text.begins_with("✓"):
-		_fail("the road-gate objective reads done before its flag is set")
-	else:
-		print("quest log tab shows the road-gate objective, correctly open (row %d of %d)" % [
-			road_gate_row.get_index(), main_list.get_child_count()
-		])
+		if row != null and row.text.begins_with("▸"):
+			open_rows.append(row)
+	if open_rows.size() != 1:
+		_fail("the quest log shows %d open objectives; the guided chain shows exactly one"
+			% open_rows.size())
+		return
+	if open_rows[0].text.find(tracked) == -1:
+		_fail("the quest log's open row is '%s' and the HUD is tracking '%s'; the menu "
+			% [open_rows[0].text, tracked] + "and the HUD disagree about where the player is")
+		return
+	# Nothing after it. The row order is the chain order, so the open row being
+	# the last OBJECTIVE row is the whole of "the full list is never fronted".
+	var last_objective := -1
+	for child: Node in main_list.get_children():
+		var row: Label = child as Label
+		if row != null and (row.text.begins_with("▸") or row.text.begins_with("✓")):
+			last_objective = row.get_index()
+	if last_objective != open_rows[0].get_index():
+		_fail("the quest log lists objectives past the one the player is on; the guided "
+			+ "chain must never front the full list")
+		return
+	# And the guidance line under it -- the concrete action and the button,
+	# which is the half of OP23-04 a label alone cannot carry.
+	var hint := str(log_reader.call("tracked_hint", progression))
+	var drawn_hint := false
+	for child: Node in main_list.get_children():
+		var row: Label = child as Label
+		if row != null and child.get_index() > open_rows[0].get_index() \
+				and row.text.strip_edges() == hint:
+			drawn_hint = true
+	if not hint.is_empty() and not drawn_hint:
+		_fail("the open objective's guidance line ('%s') is not drawn under it" % hint)
+		return
+	print("quest log tab shows the guided chain: %d row(s), open on \"%s\", hint \"%s\"" % [
+		main_list.get_child_count(), tracked, hint
+	])
 
 
 ## Save is the only tab whose advertised A action writes outside the running

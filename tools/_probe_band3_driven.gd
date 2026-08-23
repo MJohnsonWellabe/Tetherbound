@@ -288,10 +288,17 @@ func _add_interest(kind: String, id: String, pos: Vector3, kinds: Dictionary) ->
 ## the arrival state: `quest_log.gd` tracks the FIRST unfinished entry, so a
 ## run that skips the opening still reports "Catch your first wild creature"
 ## and tells you nothing about this region.
+## TUTORIAL-CHAIN (OP23-04) added Tam's tools and a feed rung to the opening
+## ladder and made the bed rung a count of three, so a player standing in
+## Band 3 has walked those too -- listed here for the same reason the rest are:
+## a probe whose HUD still points at the village is a probe telling you about
+## the wrong region.
 const ARRIVAL_FLAGS := [
-	"opening:beat:road", "road_gate_open", "tournament_team_ready",
+	"opening:beat:road", "road_gate_open", "tam_tools_given",
+	"tournament_team_ready",
 	"tournament_training_ready", "home_materials_gathered", "home_built",
-	"creature_bed_built", "player_slept_at_home", "tournament_entered",
+	"creature_bed_built", "creature_bed_built_2", "creature_bed_built_3",
+	"player_slept_at_home", "tournament_team_fed", "tournament_entered",
 	"tournament_won", "south_bridge_open", "warrens_cleared",
 ]
 ## What the relay actually pays, in the order `smoke_relay.gd` proves they

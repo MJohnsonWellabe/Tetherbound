@@ -70,6 +70,57 @@ Check the tree.
 
 ---
 
+## OPEN, HANDED OVER 2026-08-23 by TUTORIAL-CHAIN (OP23-04)
+
+### GATEB-BED-BUDGET — three beds must be affordable near the village · `model: sonnet` · `tests: smoke_gate_b_continuous` · owner directive 2026-08-23 §1
+
+**Owned by the Gate B lane** (`ralph/GATEB-PATH` lineage), not by
+TUTORIAL-CHAIN. The guided chain now TEACHES three Creature Beds, one per
+tournament entrant, and its bed rung reads `n/3`; whether the authored gather
+budget near the village can PAY for three is the other half of the same
+directive and it currently cannot.
+
+Measured from `data/items/buildables.json` and `data/config/progression.json`'s
+`home.required_pieces`:
+
+| | wood | stone | fiber |
+|---|---|---|---|
+| home (camp + floor + wall + roof + door) | 27 | 17 | 10 |
+| home + 1 bed | 33 | 17 | **18** |
+| home + 3 beds | **45** | **17** | **34** |
+| authored near-village budget today | 57 | 42 | 18 |
+
+Wood and stone already cover three beds. **Fiber is the only binding
+constraint** — 18 authored against 34 needed — which is exactly why today's
+budget "buys exactly one" as the directive says. **+16 fiber is the floor, not
+the comfortable number**: Basic Orbs cost 2 fiber each and a player is crafting
+them on the same rungs. Bushes yield fiber chapter-wide at `harvest_fraction`
+0.2 (`vegetation.json`), so authored nodes are not the only source — but the
+authored budget is the number the directive names, and a player who does not
+know bushes pay fiber is the player this rung exists for.
+
+`smoke_gate_b_continuous.gd` registers its three beds directly rather than
+paying for them, so it stays green either way; the budget shows up in the
+natural-route segment, not in the ladder assertion.
+
+### OBJECTIVE-HINT-ON-HUD — the guidance line has no home on screen · `model: sonnet` · `tests: smoke_menu, test_quest_log` · OP23-04 / OP23-09
+
+`quest_log.gd::tracked_hint()` is written and tested and nothing draws it. The
+opening's guidance ("`{interact}` to take the key, then `{interact}` at the
+gate") is currently visible only in the quest-log tab, so a player who never
+opens the menu gets the objective's WHAT and not its HOW.
+
+Not skipped, measured: the HUD's objective block is `OBJECTIVE_MAX_WIDTH` (420)
+wide at a `HUD_READABLE_FONT_SIZE` (38) floor its own header fought a blind
+critic to win — about twenty characters to a line — so a hint naming an action
+AND a button is four or five lines and takes that block from 170px to nearly
+300, on a HUD OP23-09 reports as already taking far too much screen. This wants
+doing AFTER OP23-09 re-proportions that corner, by whoever does. Shortening the
+hints until they fit is not the fix — the teaching is the point of them.
+Measure the wrapped height first.
+
+---
+
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
 Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by
