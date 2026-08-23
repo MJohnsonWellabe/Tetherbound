@@ -13,6 +13,7 @@ const BUILD_MENU_GROUP := &"build_menu"
 const PLACED_GROUP := &"placed_building"
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PLACE_AHEAD := 3.0
 ## Where the hammer goes if the caller has not already put it somewhere, and
 ## the quick-bar buttons in slot order.
@@ -220,7 +221,30 @@ func _preflight_all_planned_anchors(placer: Node) -> bool:
 	if not await _stow_piece_for_travel():
 		return false
 	var planned: Array[Dictionary] = []
-	for step: Dictionary in _planned_house_steps(_preflight_first_floor):
+	# The plan is REBASED on the first floor this preflight itself resolves.
+	#
+	# GATEB-COORD. `_preflight_first_floor` is read off the LIVE ghost, from
+	# wherever the player happened to be standing when the patch was reached,
+	# and `build_grid.gd::snap_to_grid(raw, ground_y)` takes a ground-clamped
+	# piece's height from the raw point being aimed at rather than from the
+	# resolved cell centre. So the same cell resolves a little differently from
+	# a different stance, and every expectation derived from that first reading
+	# was out by that difference -- most visibly on the door, which correctly
+	# snapped to a floor edge and inherited the floor's real height:
+	#
+	#   planned door ghost resolves to (36.0, -1.261, -38.889) instead of
+	#   (36.0, -1.126, -38.889) (off by 0.135: xz 0.000, snapped_to_neighbour=true)
+	#
+	# The four floors agreed with each other to the millimetre; only the basis
+	# was stale. Rebasing on step 0's own resolved position makes the whole plan
+	# internally consistent, and every anchor after it snaps to a neighbour and
+	# inherits its height exactly -- so the check below stays exact rather than
+	# being loosened around the discrepancy.
+	var steps := _planned_house_steps(_preflight_first_floor)
+	var index := -1
+	while index + 1 < steps.size():
+		index += 1
+		var step: Dictionary = steps[index]
 		if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
 			return false
 		var id := str(step.get("id", ""))
@@ -238,8 +262,28 @@ func _preflight_all_planned_anchors(placer: Node) -> bool:
 			_fail("planned %s anchor at %s is not green before spending: %s" % [id, target, str(preview.get("reason", "no ground"))])
 			return false
 		var resolved: Vector3 = preview.position
+		if index == 0:
+			# Step 0 IS the basis. Adopt what it actually resolved to and
+			# rebuild every expectation from it, including the one the paid
+			# sequence will use.
+			if resolved.distance_to(target) > POSITION_EPSILON:
+				transcript.append(("rebased the house plan on the preflight's own first "
+					+ "floor: %s rather than the live ghost's %s") % [str(resolved), str(target)])
+				_preflight_first_floor = resolved
+				steps = _planned_house_steps(resolved)
+				target = (steps[0] as Dictionary).get("position", resolved)
 		if resolved.distance_to(target) > POSITION_EPSILON:
-			_fail("planned %s ghost resolves to %s instead of %s" % [id, resolved, target])
+			_fail(("planned %s ghost resolves to %s instead of %s (off by %.3f: "
+				+ "xz %.3f, y %.3f). snapped_to_neighbour=%s, stance wanted %s and the "
+				+ "player stands at %s (%.3f off), so the raw preview point was %s")
+				% [id, resolved, target, resolved.distance_to(target),
+					Vector2(resolved.x - target.x, resolved.z - target.z).length(),
+					absf(resolved.y - target.y),
+					str(preview.get("snapped_to_neighbour", false)),
+					str(stance.round()), str(_player.global_position.round()),
+					Vector2(stance.x - _player.global_position.x,
+						stance.z - _player.global_position.z).length(),
+					str(raw)])
 			return false
 		if require_structural != bool(preview.get("structural", false)):
 			_fail("planned %s anchor structural=%s, expected %s" % [id, str(preview.get("structural", false)), str(require_structural)])
@@ -341,6 +385,36 @@ func _select_piece(id: String) -> bool:
 	return false
 
 
+## Everything `playground_hud.gd::_world_input_allowed()` reads, in one line.
+func _world_input_state() -> String:
+	var arbiter := _tree.get_first_node_in_group(&"interaction_arbiter")
+	var manager := _world.get_node_or_null(^"CombatManager")
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	return "fighting=%s, trainer_battle=%s, arbiter enabled=%s, input owner=%s, paused=%s" % [
+		str(manager != null and bool(manager.call("is_fighting"))),
+		str(director != null and bool(director.call("trainer_battle_active"))),
+		str(arbiter == null or bool(arbiter.call("enabled"))),
+		str(INPUT_OWNER.current(_tree) != null),
+		str(_tree.paused)]
+
+
+## True once nothing is swallowing world hotkeys. False means it never cleared.
+func _wait_until_the_world_will_hear_a_press() -> bool:
+	var arbiter := _tree.get_first_node_in_group(&"interaction_arbiter")
+	var manager := _world.get_node_or_null(^"CombatManager")
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	for _i in 5400:
+		var busy := (manager != null and bool(manager.call("is_fighting"))) \
+			or (director != null and bool(director.call("trainer_battle_active"))) \
+			or (arbiter != null and not bool(arbiter.call("enabled"))) \
+			or INPUT_OWNER.current(_tree) != null
+		if not busy:
+			return true
+		await _tree.physics_frame
+	_fail("the world never stopped swallowing hotkeys (%s)" % _world_input_state())
+	return false
+
+
 ## Open the build catalogue the way a CONTROLLER actually can.
 ##
 ## `build_open` lost its pad button to the owner's fourteen-button map
@@ -354,19 +428,65 @@ func _select_piece(id: String) -> bool:
 ##
 ## The keyboard action is still preferred when it HAS a pad binding, so this
 ## goes back to one press the day the map changes again.
+## GATEB-COORD: retried, and only after the world will actually hear the press.
+##
+## `playground_hud.gd::_read_world_hotkeys()` is gated by
+## `_world_input_allowed()`, which refuses while a fight is running, while the
+## interaction arbiter is asleep (a conversation, a naming prompt, a fade) or
+## while a panel owns input. The Practice Meadow patch is open meadow with wild
+## creatures in it, so a creature engaging the player as the segment reaches
+## the patch swallowed the only pad route into build mode -- intermittently,
+## and reported as the bare line "Build did not open", with the arbiter winner
+## reading <none> because a fight silences it too.
+##
+## A player waits for the fight to end and presses again. So does this.
 func _open_the_catalogue() -> Node:
 	if _open_build_menu() != null:
 		return _open_build_menu()
-	if _joy_binding_for(&"build_open") != null:
-		await _tap_action(&"build_open")
-	else:
-		if not await _hammer_in_hand():
+	for attempt in 4:
+		# The armed ghost has to be stowed FIRST. On the pad `build_place` and
+		# `interact` are the same physical X (project.godot: joypad button 2),
+		# so with a piece armed the press that would reopen the catalogue puts
+		# another floor down instead -- and `build_placer.gd` disables the
+		# interaction arbiter for the duration, which makes
+		# `_world_input_allowed()` refuse the hammer route outright. The
+		# keyboard's `build_open` has its own carve-out for this (BUILD-FLOW:
+		# "Start reopens the dedicated catalogue while a ghost remains armed");
+		# the pad's answer is the one a player has, which is to cancel with B
+		# and press X again.
+		if not await _stow_piece_for_travel():
 			return null
-		await _tap_action(&"interact")
-	await _settle(12)
+		if not await _wait_until_the_world_will_hear_a_press():
+			break
+		if _joy_binding_for(&"build_open") != null:
+			await _tap_action(&"build_open")
+		else:
+			if not await _hammer_in_hand():
+				return null
+			await _tap_action(&"interact")
+		await _settle(30)
+		if _open_build_menu() != null:
+			return _open_build_menu()
+		transcript.append("Build did not open on press %d (%s); waiting and pressing again"
+			% [attempt + 1, _world_input_state()])
+		await _settle(90)
 	var menu := _open_build_menu()
 	if menu == null:
-		_fail("Build did not open from the controller's own route into the catalogue")
+		# GATEB-COORD: say WHO took the button. `_hammer_opens_the_catalogue()`
+		# forfeits the interact press to any ACTIONABLE arbiter winner, so a
+		# wandering creature's "Engage" or a nearby harvest node's "Chop" is
+		# enough to swallow the only pad route into build mode -- and it is
+		# nondeterministic, which is exactly the shape of failure a bare
+		# "Build did not open" cannot be diagnosed from.
+		var arbiter := _tree.get_first_node_in_group(&"interaction_arbiter")
+		var who: Variant = arbiter.call("winning_provider") if arbiter != null else null
+		_fail(("Build did not open from the controller's own route into the catalogue "
+			+ "(equipped=%s, arbiter winner=%s offering %s, %s)")
+			% [str(_game.get("equipped_tool")),
+				str((who as Node).name) if who is Node and is_instance_valid(who as Object)
+					else "<none>",
+				str(arbiter.call("winner")) if arbiter != null else "<no arbiter>",
+				_world_input_state()])
 	return menu
 
 
@@ -423,21 +543,35 @@ func _place_current(expected_id: String) -> Variant:
 	return _record_position(record)
 
 
+## GATEB-COORD: through `stick_navigator.gd`, like `_walk_to()` beside it.
+##
+## This was the segment's second straight-line walker, and it is the one that
+## runs while the house is going UP -- so by the time it walks to the first
+## wall's stance there are four placed floors standing between it and the
+## target. It stopped dead against them:
+##
+##   controller movement could not line the ghost up with (32.0, 0.264, -41.0)
+##
+## The precision is unchanged: the navigator is asked for the same
+## `MOVE_EPSILON`, because where the player stands is what decides where the
+## ghost lands.
 func _move_ghost_to(target: Vector3, aim_offset: Vector3 = Vector3.ZERO) -> bool:
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
 	var wanted_player := target + aim_offset - forward * PLACE_AHEAD
-	for frame in MOVE_FRAME_LIMIT:
-		var delta := Vector3(wanted_player.x - _player.global_position.x, 0, wanted_player.z - _player.global_position.z)
-		if delta.length() <= MOVE_EPSILON:
-			_release_move_stick()
-			await _settle(3)
-			return true
-		var strength := clampf(delta.length() / 0.9, 0.32, 1.0)
-		var local := (_camera_rig.call("planar_basis") as Basis).inverse() * delta.normalized() * strength
-		_parse_move_stick(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
-		await _tree.physics_frame
+	if _nav == null:
+		_nav = NAVIGATOR.new(_tree, _player, _camera_rig, _parse_move_stick)
+	var budget := maxi(MOVE_FRAME_LIMIT,
+		240 + int(_player.global_position.distance_to(wanted_player) * 60.0))
+	var arrived: bool = await _nav.walk_to(wanted_player, budget, MOVE_EPSILON)
 	_release_move_stick()
-	_fail("controller movement could not line the ghost up with %s" % target)
+	await _settle(3)
+	if arrived:
+		return true
+	_fail("controller movement could not line the ghost up with %s (wanted to stand at %s, "
+		% [target, str(wanted_player.round())] + "stopped %.2fm short at %s)" % [
+			Vector2(wanted_player.x - _player.global_position.x,
+				wanted_player.z - _player.global_position.z).length(),
+			str(_player.global_position.round())])
 	return false
 
 
