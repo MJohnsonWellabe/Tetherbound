@@ -23,6 +23,14 @@ var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
 var _path_dominant := FastNoiseLite.new()
+## GROUND-REBUILD round 2 / C2. Metres of edge wobble for `path_factor`'s
+## fade band, read once here from `macro.path_wobble_metres` rather than
+## looked up per pixel: this function runs once per terrain texel AND per
+## scatter candidate, so a Dictionary/config lookup inside it would be a real
+## per-call cost repeated over the whole bake. Defaults to `shoulder * 0.5`
+## (the old hard-coded scale) when the config key is absent, so an
+## unconfigured route is unchanged.
+var _path_wobble_metres := -1.0
 var _outcrop := FastNoiseLite.new()
 var _outcrop_detail := FastNoiseLite.new()
 var _ridge := FastNoiseLite.new()
@@ -141,8 +149,25 @@ func _init(config: Dictionary = {}) -> void:
 	_path_edge.seed = seed_value + 2
 	_path_edge.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	_path_edge.fractal_type = FastNoiseLite.FRACTAL_FBM
-	_path_edge.frequency = 0.05
+	# GROUND-REBUILD round 2 / C2: 0.05 -> 0.07. Threshold-space jitter
+	# (macro.path_edge_jitter) mathematically cannot move a control-map
+	# boundary a full 2m texel -- it would need +-0.7 on a 0-1 field, well
+	# past its own severs-the-trail ceiling -- so decorrelating the 2m
+	# staircase needs the edge to wander in METRES instead (see
+	# `_path_wobble_metres` below). 0.07 gives a ~14m wavelength, which is 7
+	# samples per wavelength at the 2m control pitch the bake paints at --
+	# safely above the aliasing floor that produced the staircase in the
+	# first place.
+	_path_edge.frequency = 0.07
 	_path_edge.fractal_octaves = 1
+
+	# GROUND-REBUILD round 2 / C2. `path_factor` is called once per terrain
+	# texel AND per scatter candidate, so this reads `macro.path_wobble_metres`
+	# once here rather than doing a Dictionary lookup per call. -1.0 is a
+	# sentinel meaning "not configured" -- `shoulder` varies per road band, so
+	# the fallback (`shoulder * 0.5`, the old hard-coded scale) can only be
+	# resolved per-call inside `path_factor` itself, not here.
+	_path_wobble_metres = float(_config.get("macro", {}).get("path_wobble_metres", -1.0))
 
 	# EV4-textures: `_path_control` (build_playground_terrain.gd) has to
 	# collapse the slope-driven grass/soil/rock blend to a single "dominant"
@@ -1089,7 +1114,15 @@ func path_factor(x: float, z: float) -> float:
 		for i in line.size() - 1:
 			nearest = minf(nearest, _segment_distance(spot, line[i], line[i + 1]))
 		var shoulder: float = band["shoulder"]
-		var wobble := _path_edge.get_noise_2d(x, z) * shoulder * 0.5
+		# C2: wobble amplitude in METRES, not threshold units -- a threshold-
+		# space jitter (macro.path_edge_jitter, applied at the control-map
+		# paint step) cannot move this boundary a full 2m texel, since that
+		# would need +-0.7 on a 0-1 field. Only a metre-space wobble like this
+		# one can actually decorrelate the 2m staircase. `_path_wobble_metres`
+		# is read once in `_init`, not here, because this runs once per
+		# terrain texel and per scatter candidate.
+		var wobble_metres: float = _path_wobble_metres if _path_wobble_metres >= 0.0 else shoulder * 0.5
+		var wobble := _path_edge.get_noise_2d(x, z) * wobble_metres
 		var edge_start: float = maxf(0.0, float(band["half"]) + wobble)
 		best = maxf(best, 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest))
 		if best >= 1.0:

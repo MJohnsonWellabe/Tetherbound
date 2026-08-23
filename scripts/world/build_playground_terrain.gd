@@ -389,7 +389,25 @@ func _paint_control_map(
 			var slope: float = field.slope_degrees_at(
 				world_x, world_z, _band_step(field, world_x, world_z, texture_step, rock_step))
 			var band_slope: float = slope + field.rock_bias_deg(world_x, world_z)
-			var slope_dither: float = field.path_dominant_dither(world_x, world_z)
+			# GROUND-REBUILD C1, extended to the slope threshold as well.
+			#
+			# The worker applying C1 left this site alone because the order
+			# named the damp cut, the verge cut, the path thresholds and the
+			# _blend_control_toward dithers, and not this one -- correctly, in
+			# that it flagged the gap rather than widening its own scope. But
+			# C1's whole purpose was to fix all THREE shapes of the visible
+			# grid at their shared root, and the third shape is the rectangular
+			# grass tiles a blind critic found on the band-1 cliff face. Those
+			# come from exactly this threshold: a high-variance slope field
+			# crossing a fixed cut, aliased against the 2m texel pitch.
+			#
+			# Same 50/50 mix for the same reason as the other four sites: the
+			# coherent field has a ~6.7m wavelength sampled at 2m pitch, so it
+			# moves whole runs of texels together and a contour still traces
+			# aligned staircases; a per-texel hash is already at texel pitch and
+			# cannot alias.
+			var slope_hash := absf(fmod(sin(float(pixel_x) * 12.9898 + float(pixel_z) * 78.233) * 43758.5453, 1.0))
+			var slope_dither: float = 0.5 * float(field.path_dominant_dither(world_x, world_z)) + 0.5 * slope_hash
 			var control := _control_for(
 				band_slope, colour_cfg, ids, _band_blend(field, world_x, world_z, colour_cfg),
 				slope_dither, float(config.get("macro", {}).get("slope_raggedness", 1.6)))
@@ -525,7 +543,12 @@ func _paint_control_map(
 				painted_drain_pixels += 1
 				var drain_weight: float = drain * float(config.get("drains", {}).get("control_strength", 0.7))
 				if drain_weight > worn and drain_weight > apron:
-					var drain_dither: float = field.path_dominant_dither(world_x, world_z)
+					# GROUND-REBUILD round 2: same 50/50 coherent+hash dither as the
+					# apron blend just above -- the coherent field's ~6.7m
+					# wavelength against a 2m control pitch aliases into aligned
+					# texel runs, and the per-texel hash breaks that alignment.
+					var drain_hash := absf(fmod(sin(float(pixel_x) * 12.9898 + float(pixel_z) * 78.233) * 43758.5453, 1.0))
+					var drain_dither: float = 0.5 * float(field.path_dominant_dither(world_x, world_z)) + 0.5 * drain_hash
 					control = _blend_control_toward(control, drain_weight, int(ids["soil"]), drain_dither)
 			if worn > 0.0:
 				# GROUND-REBUILD. Threshold, not blend -- and this is a bug fix,
@@ -549,7 +572,14 @@ func _paint_control_map(
 				# ~13-point value steps instead of one 27-point cliff, which is
 				# what a trampled shoulder actually looks like -- so the hard 2m
 				# quantisation reads as wear rather than as a mask error.
-				var dither: float = field.path_dominant_dither(world_x, world_z)
+				# GROUND-REBUILD round 2: same 50/50 coherent+hash dither as the
+				# damp/verge cut above, applied to the path core/shoulder
+				# comparison itself -- this is the boundary the checkerboard
+				# critique was most about, since it is also authored at exactly
+				# this 2m control pitch against the coherent field's ~6.7m
+				# wavelength.
+				var hash_dither := absf(fmod(sin(float(pixel_x) * 12.9898 + float(pixel_z) * 78.233) * 43758.5453, 1.0))
+				var dither: float = 0.5 * float(field.path_dominant_dither(world_x, world_z)) + 0.5 * hash_dither
 				var jitter := (dither - 0.5) * float(macro_cfg.get("path_edge_jitter", 0.20))
 				var core := float(macro_cfg.get("path_core", 0.55)) + jitter
 				var shoulder_at := float(macro_cfg.get("path_shoulder", 0.16)) + jitter
