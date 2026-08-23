@@ -21,6 +21,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -464,6 +465,12 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	if copy.emission_enabled:
 		var shiny_emission := _texture_for(source.emission_texture, species, suffix)
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
+		# CREATURE-PRESENTATION: these materials wire the painted albedo into
+		# the emission slot at full energy, so a creature in daylight renders as
+		# its own texture plus a second unshaded copy of itself -- which is what
+		# turns a saturated mid-brown map into a pale peach animal and flattens
+		# the value contrast a face needs. Tunable in creatures_visual.json.
+		copy.emission_energy_multiplier *= VISUAL.emission_scale()
 	_shiny_swap_materials[key] = copy
 	return copy
 

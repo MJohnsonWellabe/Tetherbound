@@ -4,6 +4,91 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 
+## CREATURE-PRESENTATION — the roster repainted for the world it stands in
+
+`tests: smoke_art + full suite` · `area: data/creatures/shiny_colourways.json, tools/repaint_creature_textures.py, scripts/creatures/creature_body.gd, scripts/creatures/creature_visual.gd, data/config/creatures_visual.json, assets/creatures/tetherbound/*/models/*_vivid.png`
+
+Two blind critics ranked creature presentation a top-3 gap against the Palworld
+bar and named four defects. All four were reachable inside the no-new-meshes
+rule, because none of them were about the meshes:
+
+**1. Colour keyed to nothing.** `shots/band3/09-wild-cluster-on-the-road.png`
+measures three Bramblebun at hue 141-148 standing on grass at hue 134-155 —
+the most common creature in Band 1, painted the colour of the ground it lives
+on, invisible until you are on top of it. The vivid pass that did that was
+authored against the owner's colour boards on a NEUTRAL GREY card, where a
+mint rabbit reads perfectly well. Six species were re-keyed off the terrain
+instead (`bramblebun` `mudsnout` `trailpup` `mosshell` `veridian` `tuskroot`,
+plus `pipwing` and `duskhush` for contrast rather than hue), and the rule is
+now written down in the spec file: the meadow owns hue 80-175, green is spent
+on ACCENTS — bramble sprigs, moss on stone plates, a legendary's crown — never
+on a coat. `repaint_creature_textures.py` prints each output's share of
+chromatic pixels left in that band, so the next author gets the number.
+
+Every board's own words survived: Bramblebun's 'Forest greens + Leafy details'
+kept the leafy details and moved the coat; Veridian's 'Verdant glow + Ancient +
+Sacred' is now three words on three parts of one animal rather than three words
+on one hue (see `VERIDIAN-HIDE` in `BACKLOG.md` — that one is an owner call and
+is filed as reversible).
+
+**2. Speckle that reads as dithering.** These are photoreal-ish Meshy albedos;
+at the forty pixels a wild creature actually occupies, their fine detail is
+noise. `repaint_creature_textures.py` grew a FINISH pass — median despeckle,
+value quantised into bounded zones, saturation ceiling, and the darkest 3% of
+the SOURCE re-stamped after the smoothing so eyes, nostrils and outlines
+survive it — plus a downsample to 1024. The roster's ordinary colourways went
+from 110MB of tracked binaries to 24MB in the same commit that improved them.
+
+**3. Faces that cannot be found.** Two causes, both fixed. A rule that pushes a
+whole animal to one hue and one saturation erases the value contrast the face
+was carrying — Brooktail (the otter at the village pond, the first water
+creature a player meets, whose eyes a critic could not locate at all) and
+Duskhush had exactly that done to them, and now get their pale muzzle and
+facial disc back. The second cause is systemic and was not visible from the
+textures: **these glbs ship self-lit.** The painted albedo is wired into the
+emission slot at full energy, so every creature in daylight renders as its own
+texture plus an unshaded copy of itself. Mudsnout's repainted albedo measures
+hue 24 / saturation 0.63 / value 0.37 and rendered as a pale peach piglet.
+`creatures_visual.json::emission_scale` (0.5, tunable) halves it in the
+material override — kept rather than removed because that emission is what
+makes a creature readable at dusk and in the Warrens.
+
+**4. Pastel blobs at distance.** Pipwing — 140 field spawns, the second most
+common creature in the chapter — was a pale grey body under pale sky-blue tips,
+two pastels a stop apart. Same scheme, contrast pushed apart: near-white body,
+deep saturated tips.
+
+**Evidence.** `tools/capture_creature_presentation.gd` is new and is the rig
+this pass needed and did not have: every species on GRASS keyed to the shipped
+frames' own measured value, under meadow light, portrait plus a gameplay-
+distance field shot, with the 1.80m trainer bar in frame.
+`tools/creature_presentation_sheet.py` builds the two sheets and prints, per
+species, the measured hue and value distance between the creature and the
+ground BEHIND IT (per row, from an empty strip of the same frame — a global
+background average scored every creature well because half its silhouette was
+being compared against sky). Before/after sheets and per-species frames are in
+`shots/creature_presentation/`. Bramblebun's hue distance from the ground goes
+21.8 -> 64.5 degrees; Mosshell's 34.9 -> 61.3; Mudsnout's value distance 0.14
+-> 0.27 before the emission fix pulled it back to a deliberate 0.17 with the
+saturation restored.
+
+**Alphas were checked, not changed.** `_make_alpha`'s 1.3x/1.4x does read as a
+bigger animal beside the trainer bar (`burrowback_alpha_x1.30.png`). It does
+not read as a field boss, but that is staging, not scale, and raising the
+multiplier is a gameplay change — filed as `ALPHA-PRESENCE`.
+
+**Scale was checked, not changed.** Every species' `placeholder` height matches
+its collider (`smoke_art`) and sits inside the wild canon's own scale rule
+("on average visually around the player-character scale", `docs/art/wild/20`).
+Nothing was obviously wrong against the reference sheets, and what a species
+SHOULD be is a design decision, not a presentation one.
+
+**No new assets, no Meshy, no sourced textures** — every pixel here is derived
+from the installed albedos, so `docs/ASSET_LEDGER.md` needs no new provenance
+row. The `*_shiny` colourways were deliberately not regenerated; see
+`SHINY-FINISH` in `BACKLOG.md`.
+
+
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
