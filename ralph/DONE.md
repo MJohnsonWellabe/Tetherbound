@@ -3,6 +3,187 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## VISUAL-LIGHT — the sun was in the wrong sky, and the day/night clock snapped instead of moving (WIND-DOWN, partially verified)
+
+`area: data/config/art.json, scripts/world/world_look.gd, scripts/world/day_cycle.gd, tests/test_day_cycle.gd, tools/_capture_day_night_transition.gd (new, scratch)`
+
+Wound down early on an owner directive to move this work to dedicated remote
+sessions mid-pass. Recorded honestly below: what shipped, what is measured,
+and what the next session must still verify before calling this converged.
+
+### 1. The sun yaw fix (confirmed lead, from GATE-E-STRONGHOLD-ART)
+
+`art.json`'s `sun` block authored `yaw_deg: -40`, which GATE-E-STRONGHOLD-ART's
+own investigation already named: a `Basis.from_euler` probe on that pitch/yaw
+puts the light source in the **north** sky (`sun_dir.z > 0`), while
+`landmark.gd`'s own comment says "every approach to this building is on its
+south side" and the chapter's whole opening/wayfinding spine runs the same
+direction. That GATE-E task explicitly declined to touch the sun ("lives in
+the environment config another lane owns") and patched around it locally with
+a raised castle albedo and the garrison's own fires. This lane owns
+`art.json` now, so the actual cause is fixed instead: `yaw_deg` flipped
+180 degrees, `-40 -> 140` — same elevation (`pitch_deg` untouched, so shadow
+length/combat readability, this block's own stated reason for a high sun, is
+unaffected), exact opposite azimuth. Trivially reversible if a specific site
+turns out to want a third direction.
+
+**Measured** (`tools/frame_stats.py`, `tools/capture_castle_lite.gd`, real
+render, this session):
+
+| frame | near-field luma, before this fix | after | reference range |
+|---|---|---|---|
+| `gate-close` | 0.144 (GATE-E's own fix, itself up from main's 0.012) | **0.453** | 0.49-0.60 |
+| `silhouette-approach` | 0.128 | **0.300** | 0.49-0.60 |
+
+Both still land under the reference range, not over — **no overbrightening**,
+so GATE-E-STRONGHOLD-ART's castle albedo ladder (`building_prefabs.json`'s
+`castle` retint) and `landmark.gd`'s `PLINTH_COLOUR` were left as-is per this
+task's own instruction ("if your sun fix overbrightens the castle, step that
+ladder back down in the same change" — it does not, so there is nothing to
+step back). A real render of `gate-close`/`silhouette-approach` after the fix
+shows a front-lit stone gate with its banners and torches visible against a
+readable blue sky — a plain visual confirmation, not run through the blind
+critic (see "not done" below).
+
+`tools/survey.gd`'s day-preset frames (`01-spawn-outward`, `02-valley-floor`,
+`04-three-quarter`) also re-rendered clean: sunlit warm grass, a saturated
+blue sky, no dusk/afternoon mismatch. `03-rise-overlook` (a wide, mostly-fog
+distant shot) still reads flat green-grey at range — plausibly the fog/aerial
+perspective layer, not the sun direction, but **not root-caused this
+session**. `05-spawn-low-sun` (the `golden` preset, whose own `sun` block was
+untouched by this change) rendered pure black twice in a row on this
+container — reproduced deterministically, not a flake, but the golden
+preset's sun config is unrelated to this edit, so this is pre-existing and
+orthogonal; flagging rather than fixing, since it was never this task's target
+and the cause (possibly the same physics/render-order class of bug the
+survey harness has hit before, per `conventions.md`'s capture traps) needs
+its own investigation.
+
+**Not done — the rest of the VISUAL-LIGHT brief.** Band4 site captures
+(`tools/_capture_band4_sites.gd`) could not complete in this container: two
+attempts timed out at 1700-2400s each mid-boot/settle under sustained
+15-25 1-min-load contention from other concurrent lanes on this shared box,
+never reaching the actual shot loop. No band4 before/after numbers exist yet.
+The blue-grey noon cast and the pond "resort-turquoise" read were diagnosed
+(prime suspect: `environment.ambient_colour` `#a8bccc`, a cool fill that
+dominates any surface still in shadow — plausible that most of the
+previously-reported "blue-grey" was simply how much of the south-facing
+ground was ambient-only lit before this fix, which the sun flip should have
+sharply reduced) but **not measured or acted on**. No blind `visual-judge`
+pass ran this session (owner/CLAUDE.md/conventions.md all require one before
+calling visual-affecting work done — explicitly still open). Water.json was
+inspected, not touched, per the task's own "prefer no change if the day
+grade alone fixes the read" — unverified either way without the band4/pond
+renders.
+
+### 2. Day/night transition snap (OP23-05/OP23-06, folded in mid-pass per coordinator)
+
+The remote Visual coordinator routed a fresh owner ROG playtest
+(`ralph/OWNER_PLAYTEST_2026-08-23.md`, branch
+`claude/game-assessment-cleanup-g6gplm`) into this lane's scope: **OP23-05**
+the day-to-night transition flashed instantly instead of progressing, and
+**OP23-06** night is back to too dark, worst immediately after nightfall.
+
+**Root cause, confirmed by reading the code, not yet confirmed by a render.**
+`world_look.gd::_process()` only ever called `apply_time(preset)` at the
+instant `day_cycle.gd::preset_at(hour)` crossed a keyframe boundary — a hard
+snap from whatever the PREVIOUS preset's numbers were straight to the new
+preset's numbers, no matter how far apart. Concretely: the world stays
+pinned at golden hour's exact bright/warm values for the entire six hours
+from 18:00 to 24:00 (including past `dark_from_hour` 20.0, where the torch
+already auto-ignites on a scene that still looks like sunset), then AT
+24:00 snaps in one frame to NIGHT-LIGHT's fully-tuned dark/desaturated
+values. `git log` on `art.json` confirms nobody has touched the night
+preset's numbers since the NIGHT-LIGHT rounds landed — OP23-06 is not a
+numeric regression, it is the same snap bug: the tuning was always correct
+for a SETTLED night sky, and landing on it with no transition is what reads
+as "too dark, worst immediately after nightfall."
+
+**Fix, landed but not yet render-verified this session:**
+
+- `day_cycle.gd`: new pure function `interpolate_at(hour)` returns the two
+  bracketing keyframes and a 0..1 blend fraction between them, wrapping past
+  midnight the same way `preset_at()` already does. Pure logic per D02 — 4
+  new tests in `test_day_cycle.gd`, all passing (`12 methods, 43 assertions,
+  0 failures`, run directly against the suite, not through `run_tests.gd`
+  which has no single-file filter — see BACKLOG's own `run_tests.gd` filter
+  item).
+- `world_look.gd::_process()` now recomputes a **continuous blend** between
+  the bracketing keyframes' sun/sky/environment every 0.2 real seconds
+  (throttled — the clock itself moves slowly, no need to blend every
+  frame, and OP23-01 already flagged ROG frame time as scarce), instead of
+  snapping only at boundaries. Colours lerp as `Color`; `yaw_deg` lerps the
+  short way around the compass (`_lerp_degrees`, since a bare float lerp
+  from day's 140 to golden's -66 would sweep the WRONG side of the sky,
+  206 degrees instead of the short 154); every other numeric value lerps as
+  a plain float; anything non-numeric (`shadow_enabled`, the panorama path)
+  snaps at the blend midpoint since there is no meaningful blend for a
+  boolean or a texture path and every such key is already identical across
+  every preset in this file today.
+- `apply_time(name)` itself is **unchanged** and still snaps exactly —
+  every survey/capture/diagnostic tool under `tools/` calls it by name
+  expecting a reproducible pinned frame, and that contract had to hold.
+- `set_weather()` now re-applies through `_apply_blended()` (reading the
+  live hour) instead of `apply_time(_time)`, which would otherwise have
+  popped the whole scene back to the nearest NAMED preset's exact numbers
+  every time weather rolls (every 4-8 real minutes) — undoing the sweep
+  mid-transition. Falls back to the old `apply_time()` path only if there
+  is no clock (`_cycle == null`).
+- Added `_as_colour(value, fallback)` so `_apply_sun`/`_apply_sky`/
+  `_apply_environment` accept either a hex string (every existing caller)
+  or a real `Color` (what the blended path now produces) — verified by
+  loading the script headless and by a throwaway script confirming `.set()`/
+  `.call()` on the underscore-named members work as expected from outside
+  the class.
+
+**What is verified:** the script loads and compiles cleanly; the new pure
+`interpolate_at()` math is unit-tested and green (including the specific
+"never snaps the instant `preset_at` changes" case); `smoke_gate_a_rest_torch`
+and `smoke_combat_camera` both still pass with the blended clock live in a
+real scene, so the torch's `is_dark()` gate (which reads `day_cycle.gd`
+directly, unaffected by this change) and the combat camera rig both still
+behave correctly across a played session.
+
+**What is NOT verified — the wind-down cut this short.** A scripted
+day-to-night sequence capture (`tools/_capture_day_night_transition.gd`,
+committed) was written to drive `world_look.gd`'s own `_elapsed_seconds` and
+`_apply_blended()` directly (not `apply_time()`, so it exercises the exact
+path a real player's clock takes) across 12 hours spanning both keyframe
+crossings and `dark_from_hour`, at one fixed viewpoint, for direct
+`frame_stats.py` comparison. It was launched but killed mid-render on the
+wind-down order before producing a single frame — **no visual confirmation
+that the transition actually reads as progressive darkening, and no
+confirmation of a navigable night floor, exist yet.** The next session
+should run it first:
+
+    xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+      --rendering-driver opengl3 --resolution 1280x800 \
+      --script tools/_capture_day_night_transition.gd
+    python3 tools/frame_stats.py shots/day_night/*.png
+
+and confirm `near_luma` decreases monotonically-ish across the hour sequence
+(no big jump at 17.9->18.1 or 23.9->0.1) and that the night-floor frames
+(20.5, 22.0, 0.1, 2.0) sit above a "can still see the ground" luma floor,
+not at 0.000 the way the pre-NIGHT-LIGHT regression once did.
+
+### For the remote Visual coordinator adopting this branch
+
+Priority order for what's left: (1) run the day/night transition capture
+above and confirm OP23-05/06 actually read as fixed, not just logically
+correct; (2) get a band4 site capture through on a less-contended window and
+measure the ghost-box/dead-olive/blue-grey claims against the sun fix; (3)
+run the required blind `visual-judge` pass across opening + band4 +
+stronghold per `conventions.md` before calling any of this "done"; (4) only
+then revisit whether the castle albedo ladder or pond water need any
+follow-up — right now neither does, by measurement.
+
+Full suite was **not** re-run this session (wind-down cut it) — the smoke
+tests named above passed, and `tests/test_day_cycle.gd`'s own suite passed
+run directly, but `tests/test_world_weather.gd` (which this task's own brief
+required to stay green) was read and reasoned about but not executed after
+the day/night change landed. Run the full suite before shipping past this
+branch.
+
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd (new), scripts/world/rift_collapse.gd, data/config/building_prefabs.json, data/config/stronghold_occupation.json (new), data/config/rift_collapse.json`
