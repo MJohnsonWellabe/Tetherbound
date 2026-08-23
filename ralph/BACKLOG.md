@@ -226,6 +226,47 @@ rather than authored portraits -- the fix is camera control on the picker, not
 new art. The judge rated the creature designs themselves as the strongest thing
 in the whole frame set, which makes the framing the only thing in the way.
 
+### CATCH-FEEL measured: the difficulty is AIM, not the roll
+
+Ninety-eight launches across the 2026-08-22/23 evidence runs, tallied by the
+reason `throw_aim.gd::launch_assist_diagnostics()` reports before each orb is
+committed:
+
+| reason | count | share |
+| --- | --- | --- |
+| `reticle_outside_body` | 51 | **52%** |
+| `eligible` | 34 | 35% |
+| `line_of_sight_blocked` | 13 | 13% |
+
+**Only about a third of throws are even eligible.** The ~22% strike rate is not
+a catch roll being unkind -- it is that half of all throws never have the
+reticle on the creature, and an eighth have something in the way. OP9 has been
+carried as "catching is too hard", which reads as a probability complaint; the
+data says it is an aiming complaint, and those have different fixes.
+
+Two shipped numbers worth the owner's eye, both in `data/config/catching.json`,
+whose own header says "ALL of it is TUNABLE... the expected feedback is
+'catching is too hard', 'aiming is fiddly', 'I never know if I was close' --
+every one of those has to be answerable by editing this file":
+
+- `launch_assist_reticle_fraction: 1.0` -- the reticle must sit inside the body
+  radius to earn any launch lead. A near miss earns nothing.
+- `launch_assist_max_distance: 2.6` -- **but `combat.json`'s `flow.engage_range`
+  is 6.0.** So the assist covers less than half the distance at which fights
+  actually happen. Past 2.6 m a player is throwing unaided at a moving target
+  through a wind-up.
+
+That mismatch is not a feel judgement, it is two configs disagreeing about how
+far away a fight is.
+
+**Deliberately not tuned here.** These runs aim by aligning the camera's forward
+vector to the body; a human aims at a reticle they can see, and the two are not
+the same aimer. A number changed on harness evidence alone would be tuning feel
+by proxy. What the owner needs is the lever and the measurement, which is what
+this entry is -- the honest next step is one owner pass with
+`launch_assist_max_distance` raised to cover the engage range, and BP2's
+interception fix already in (orbs now pass through your own creature).
+
 ### DEAD-REST — `home_recovery.gd` has no production callers
 
 Found while reconciling prompt 61's "two rest semantics coexist" note. They do
