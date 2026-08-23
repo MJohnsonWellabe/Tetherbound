@@ -52,7 +52,19 @@ signal activated()
 
 ## Metres. Generous by default: a prompt that only appears when you are inside
 ## the body reads as a prompt that does not work.
-@export var radius: float = 3.6
+##
+## PERF-ROG: written through a setter because the arbiter's spatial index sizes
+## its cell query from the largest radius any provider has declared. A radius
+## widened after registration (`tournament.gd` sets one directly) has to reach
+## the index, or that prompt could fall outside the queried cells and silently
+## stop offering. The setter runs during `_init` too, before there is an
+## arbiter -- `reindex()` ignores a provider it has never seen, which is what
+## makes that safe.
+@export var radius: float = 3.6:
+	set(value):
+		radius = value
+		if _arbiter != null and is_instance_valid(_arbiter):
+			_arbiter.call("reindex", self)
 
 ## Off means no offer at all — not a greyed one. The starters exist in the world
 ## before the choice is unlocked, and a visible "Choose Terrapup" the button
@@ -83,7 +95,21 @@ var _arbiter: Node = null
 
 
 func _ready() -> void:
+	# PERF-ROG: the arbiter files this prompt into a spatial grid by position,
+	# so it has to hear about a move. Godot's own transform notification is the
+	# right mechanism: a prompt bolted to a walking NPC re-files itself the
+	# frame it actually moves, and the ~24,400 gather points bolted to
+	# scattered trees -- which never move -- cost nothing at all, which polling
+	# their positions every frame emphatically did not.
+	set_notify_transform(true)
 	_attach()
+
+
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_TRANSFORM_CHANGED:
+		return
+	if _arbiter != null and is_instance_valid(_arbiter):
+		_arbiter.call("reindex", self)
 
 
 ## Find the arbiter and register. Through the group rather than an exported

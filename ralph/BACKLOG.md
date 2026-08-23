@@ -385,6 +385,99 @@ Band 4 render. Round 2's box ran at load 12–30 on four cores with ~1GB free an
 five other lanes capturing and testing into each other; its own full-scene
 capture was starved out at 11 minutes without printing a line. Needs an idle box
 and one render, then either a fix or a note that the capture invented it.
+## Phase -1.9 — what PERF-ROG left open (2026-08-23)
+
+`OP23-01` itself is closed (`ralph/DONE.md`, `ralph/PERF_ROG_REPORT.md`): the
+CPU cause was `interaction_arbiter.gd` polling 24,461 prompt providers a frame,
+and per-frame CPU is down 88% across six corridor sites. What follows is what
+that measurement pass could NOT settle, stated as numbers rather than as
+worries.
+
+### PERF-ROG-GPU — the half of OP23-01 no container can answer · `model: sonnet` · `tests: none (device evidence)`
+
+The CPU half is fixed and measured. The GPU half is not, and cannot be from
+here: under the Compatibility renderer `RENDER_TOTAL_DRAW_CALLS_IN_FRAME` and
+`RENDER_TOTAL_PRIMITIVES_IN_FRAME` count MultiMesh BATCHES in the frustum, not
+the instances inside them, and this box rasterises in software, so its frame
+times mean nothing for fill rate. What we can say: 22,109 MultiMeshInstance3D,
+1,605 MB static, 5,789 draw calls at the worst measured view.
+
+**The next owner playtest should produce numbers, not adjectives.** Set
+`debug_overlay_on_boot: true` in `data/config/performance.json`, build, play,
+photograph the readout at the village, in Band 4 and at the stronghold. The
+top-three-costs block names what to fix next; `fps` / `frame ms` / `draw calls`
+say whether anything is left to fix at all.
+
+### PERF-ROG-MEMORY — 1.6 GB of static memory for one chapter · `model: sonnet` · `tests: new`
+
+`tools/perf_profile.gd` reports 1,605 MB static and 89,137 nodes on `main`'s
+bake; `ralph/VISUAL-GROUNDCOVER`'s takes that to 1,755 MB and 126,037 nodes. The
+Ally shares 16 GB with its GPU. Not measured as a problem, and NOT to be
+"optimised" on suspicion — but it is the number that decides whether the density
+raise, the wild population and the chapter's prop budget can all grow again, and
+nothing currently watches it. A budget assertion in the test suite (the shape
+`test_scatter_perf_budget.gd` already uses for placement count) would.
+
+### PERF-ROG-WILD-BOOT — 909 creature bodies built at boot, never despawned · `model: sonnet` · `tests: smoke_playground`
+
+Not a per-frame cost: STREAM-D's cluster activation works, 8-15 tick at any
+site, and only 41 of 939 AnimationPlayers advance. It is a boot-time and memory
+cost, and it is the number that grows if wild density rises again.
+`encounter_director.gd::_spawn_creatures()`'s own header already names this as
+deliberately untouched. Recorded so the next density directive is priced before
+it lands, not after.
+
+### PERF-ROG-LOD-REMAINDER — the visibility-range lever, measured and parked · `model: sonnet` · `tests: none`
+
+`scatter_lod_ranges` is wired and gated in `data/config/performance.json`,
+**default false**. Measured: at the authored 110-260m ranges it changes draw
+calls by less than noise; forcing every range to 20m removes only 5-16%. It is
+real and it is small. It would become worth something with a genuine low-poly
+LOD1 mesh per scatter model to fall back to and a `shadow_impostor` pointed at
+it — which needs meshes this chapter is not allowed to generate (CLAUDE.md).
+Re-measure with `tools/perf_render_stats.gd` before spending anything here.
+## Phase -1.9b — what the Gate F full-chapter pass found (2026-08-23)
+
+Filed by the `GATE-F` coordinator. Evidence:
+`ralph/GATE_F_EVIDENCE_2026-08-23.md`; instruments
+`tools/gate_f_chapter_run.py` and `tools/_probe_gate_f_corridor.gd`. Each item
+below was measured on the running game or in the shipped data, not inferred.
+
+Nothing here blocks the chapter. Gate F's one hard blocker is Gate B's
+continuous head, which belongs to `ralph/GATEB-PATH` and is already tracked.
+
+### BAND2-THIN — Stone & Root is the chapter's quiet band · `model: sonnet` · `tests: _probe_gate_f_corridor` · QUALITY
+
+Four independent measurements agree, and none of them individually fails a
+threshold — which is why this is one entry and not four:
+
+- sparsest cadence in the chapter: **36.6 points of interest per km**, against a
+  49.6 chapter average and band 5's 81.4;
+- fewest distinct wild species: **4** (Burrowback, Meadowhart, Mudsnout,
+  Trailpup), against 8/9/6/5 in the other bands and 12 chapter-wide;
+- **seven of the chapter's eighteen** 100 m-plus intervals;
+- the single worst gap anywhere in the corridor: **165 m**, at 4,782 m along,
+  broken by a berry cluster.
+
+165 m is ~41 seconds at walk pace, so this is not dead travel and must not be
+fixed as if it were. It is the stretch a player is most likely to call the quiet
+one. Band 2's own lane should rule whether that is deliberate breathing room
+before the Warrens or a hole — the corridor probe reprints all four numbers in
+one run.
+
+### CURVE-DOC-STALE — the curve doc plans against a corridor that no longer exists · `model: sonnet` · `tests: none (doc)` · POLISH
+
+`docs/MEADOWS_PROGRESSION_CURVE.md` §6 ("Deliberately left to the regional
+packages") still says **"Band 3 and Band 5 have zero wild spawns; Band 4 has one
+Meadowhart cluster ... Half the corridor has no creatures in it"** and **"Band 2
+has no trainers at all"**.
+
+Measured on `main` 2026-08-23 by walking the corridor: band 3 has **91** wilds
+and **5** trainers, band 4 **184** wilds and **2** trainers, band 5 **48** wilds
+and **3** trainers, band 2 **2** trainers. D3/D4/D5 landed the ecology after
+that section was written. The section is stale in the project's favour, which is
+the dangerous direction: a future lane reading it would plan to build content
+that already exists. Rewrite §6 against the corridor probe's output.
 
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
