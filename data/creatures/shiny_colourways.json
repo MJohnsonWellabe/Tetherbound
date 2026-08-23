@@ -41,19 +41,24 @@
           "sat_scale": 1.1
         }
       ],
-      "vivid_comment": "grey-teal -> jewel emerald-teal",
+      "vivid_comment": "BRIGHT CYAN-TURQUOISE, per the board, and pushed further from ripplet's cobalt than the shipped 210 was: this is the light, tropical one of the three water species, and it needs to be readable as that at thumbnail size rather than as 'the middle blue'.",
       "vivid_rules": [
         {
           "match": {
-            "hue": [
-              100,
-              250
-            ],
-            "sat_min": 0.06
+            "sat_min": 0.08
           },
-          "set_hue": 210,
-          "sat_scale": 1.55,
-          "val_scale": 1.03
+          "set_hue": 186,
+          "set_sat": 0.62,
+          "val_scale": 1.06
+        },
+        {
+          "match": {
+            "sat_max": 0.08,
+            "val_min": 0.5
+          },
+          "set_hue": 45,
+          "set_sat": 0.08,
+          "val_scale": 1.05
         }
       ],
       "overlays": [
@@ -77,15 +82,16 @@
       }
     },
     "burrowback": {
-      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the plates go COOLER and greyer and the moss goes heavier, because this species and terrapup are two different meshes of the SAME ARCHETYPE -- a badger-shaped quadruped at similar mass, which is why a blind round read them as one animal and mistakenly reported them as one mesh (they differ in vertex count, bounds and POSITION data; no two species here share a mesh file). Paint is therefore not powerless the way 'only geometry can' implied -- terrapup takes warm earth and heavy leaf, burrowback takes cold stone and moss. Shiny: REBUILT off cornflower blue. Both species' shinies were blue badgers with white face stripes and a blind round could not tell them apart; this one moves to pale marble plates over a charcoal-violet body, which is a VALUE and pattern read rather than another hue in the same family.",
+      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the plates go COOLER and greyer and the moss goes heavier, because this species and terrapup are two different meshes of the SAME ARCHETYPE -- a badger-shaped quadruped at similar mass, which is why a blind round read them as one animal and mistakenly reported them as one mesh (they differ in vertex count, bounds and POSITION data; no two species here share a mesh file). Paint is therefore not powerless the way 'only geometry can' implied -- terrapup takes warm earth and heavy leaf, burrowback takes cold stone and moss. Shiny: REBUILT off cornflower blue. Both species' shinies were blue badgers with white face stripes and a blind round could not tell them apart; it went to pale marble over charcoal-violet -- and that collided with this same round's OTHER fix, which took the ORDINARY burrowback to cold grey stone. Two grey badgers; a blind round called the pair 'the same frame twice'. Moved again, the other way: WARM bronze-gold plates over a deep charcoal body. The ordinary is now the coldest creature in the roster and its rare is a warm one, which is a temperature read as well as a value read and survives distance in a way two greys cannot.",
       "rules": [
         {
           "match": {
             "sat_max": 0.28,
             "val_min": 0.55
           },
-          "set_sat": 0.05,
-          "val_scale": 1.18
+          "set_hue": 38,
+          "set_sat": 0.52,
+          "val_scale": 1.02
         },
         {
           "match": {
@@ -93,17 +99,17 @@
             "val_min": 0.28,
             "val_max": 0.55
           },
-          "set_hue": 265,
-          "set_sat": 0.14,
-          "val_scale": 0.86
+          "set_hue": 30,
+          "set_sat": 0.44,
+          "val_scale": 0.8
         },
         {
           "match": {
             "val_max": 0.28
           },
-          "set_hue": 272,
+          "set_hue": 25,
           "set_sat": 0.3,
-          "val_scale": 0.7
+          "val_scale": 0.55
         }
       ],
       "vivid_comment": "Was: warm cream + mossed mid-tones, which read as the same warm animal terrapup already is on the same mesh. Now cold grey stone across all three bands -- the board's plates are grey rock, not warm hide, and cold-vs-warm is the strongest separation two creatures of one archetype can be given without touching geometry.",
@@ -285,18 +291,24 @@
           "sat_scale": 1.2
         }
       ],
-      "vivid_comment": "pale teal -> vivid aqua",
+      "vivid_comment": "COBALT, per the board -- deep and properly saturated, not the pale sky blue that made this species, paddlenewt and brooktail measure within ~20 RGB of each other and read as one animal at 30% size. Hue moves off 206 toward 224 and saturation goes up rather than down: the three water species are separated by hue family and by value, because a shade difference inside one blue is the first thing distance and overcast take away.",
       "vivid_rules": [
         {
           "match": {
-            "hue": [
-              140,
-              230
-            ],
-            "sat_min": 0.06
+            "sat_min": 0.1
           },
-          "set_hue": 206,
-          "sat_scale": 1.5
+          "set_hue": 224,
+          "set_sat": 0.66,
+          "val_scale": 0.86
+        },
+        {
+          "match": {
+            "sat_max": 0.1,
+            "val_min": 0.45
+          },
+          "set_hue": 40,
+          "set_sat": 0.07,
+          "val_scale": 1.02
         }
       ],
       "finish": {
@@ -344,22 +356,48 @@
           "softness": 0.12
         }
       ],
-      "vivid_comment": "CREATURE-IDENTITY-3: the board paints this starter white/silver with GOLD wing and crest markings. The shipped vivid set hue 200 and desaturated the warms, which put the Air starter into the same white-and-blue family as pipwing, galecrest and reedwing -- four birds a blind round could not tell apart on the sheet. Gold is the board's own answer and it is the one warm accent no other bird in the roster carries.",
+      "vivid_comment": "WHITE BODY, GOLD TIPS -- and the gold moves from a colourway RULE to an anatomical OVERLAY, which is the actual correction. The board paints a white/silver starter with gold ear and wing tips; a rule matching on saturation cannot say 'tips', so it gilded every saturated texel and produced a bird soaked in yellow all over. A blind round read the result as the ordinary and the rare having swapped places, since the shiny still wore the board's white. Same lesson `_comment_overlays` already records for galecrest's round-1 patches: placement is anatomy, never a colour band.",
       "vivid_rules": [
         {
           "match": {
-            "sat_min": 0.16
+            "sat_min": 0.06
           },
-          "set_hue": 45,
-          "set_sat": 0.6,
-          "val_scale": 1.02
+          "set_sat": 0.05,
+          "val_scale": 1.1
         },
         {
           "match": {
-            "sat_max": 0.16
+            "sat_max": 0.06
           },
-          "set_sat": 0.045,
+          "set_sat": 0.03,
           "val_scale": 1.12
+        }
+      ],
+      "overlays": [
+        {
+          "id": "gold_tips",
+          "_why": "The board's gold, where the board actually puts it: the distal ends of both ears and both wings. `tint` so every fur and feather line in the value channel survives underneath it.",
+          "where": {
+            "lateral_min": 0.55,
+            "y_min": 0.55
+          },
+          "mode": "tint",
+          "color": "#e6be49",
+          "sat_floor": 0.55,
+          "softness": 0.12
+        },
+        {
+          "id": "gold_crest",
+          "_why": "A half-strength touch of the same gold on the crown, which is what ties the ear and wing tips together instead of leaving them as separate flags.",
+          "where": {
+            "y_min": 0.84,
+            "lateral_max": 0.32
+          },
+          "mode": "tint",
+          "color": "#eccb63",
+          "sat_floor": 0.5,
+          "softness": 0.1,
+          "strength": 0.45
         }
       ],
       "finish": {
@@ -512,7 +550,7 @@
       }
     },
     "mosshell": {
-      "_comment": "Base: green/yellow-green turtle. Vivid (board: 'Teal shell + Moss growth'; canon: primary read is WATER): the greens go teal, the yellow-greens stay moss -- the first pass pushed everything green, which is exactly the Grass read the canon forbids. Shiny: autumn ember, unchanged.",
+      "_comment": "Base: green/yellow-green turtle. Vivid (board: 'Teal shell + Moss growth'; canon: primary read is WATER): the greens go teal, the yellow-greens stay moss -- the first pass pushed everything green, which is exactly the Grass read the canon forbids. Shiny: REBUILT. Hue 16 over this species' pale texels produced pink-white flesh with red seams, which a blind round read as 'an albino with bleeding joints -- raw/sickly rather than rare'. Warm BRONZE shell instead, with the pale regions taken down and warmed so they read as old polished plate rather than skin. Was: autumn ember, unchanged.",
       "rules": [
         {
           "match": {
@@ -522,8 +560,18 @@
             ],
             "sat_min": 0.12
           },
-          "set_hue": 16,
-          "sat_scale": 1.15
+          "set_hue": 33,
+          "set_sat": 0.58,
+          "val_scale": 0.82
+        },
+        {
+          "match": {
+            "sat_max": 0.14,
+            "val_min": 0.55
+          },
+          "set_hue": 36,
+          "set_sat": 0.2,
+          "val_scale": 0.78
         }
       ],
       "vivid_comment": "CREATURE-PRESENTATION: teal shell kept, but the moss band goes warm ochre -- a water turtle whose second colour was grass-hue green was still half a Grass creature at distance",
@@ -589,27 +637,38 @@
           "sat_scale": 0.85
         }
       ],
-      "vivid_comment": "CREATURE-PRESENTATION: same river blue, lifted two stops and desaturated so the otter has a face again",
+      "vivid_comment": "DEEP NAVY, per the board -- the dark one of the three water species, and the one carrying bright water-cyan only in its tail rather than over the whole body. The shipped rules brightened it (val_scale 1.3/1.35) into the same pale band as the other two. The board's brooktail is a near-indigo animal with a single bright signature, which is also how it earns a value slot the roster does not otherwise have. The tail SHAPE is geometry and is recorded in ralph/BLOCKED.md; the colour half is this.",
       "vivid_rules": [
         {
           "match": {
-            "sat_max": 0.3,
-            "val_min": 0.45
+            "sat_min": 0.08
           },
-          "set_sat": 0.08,
-          "val_scale": 1.3
+          "set_hue": 231,
+          "set_sat": 0.58,
+          "val_scale": 0.66
         },
         {
           "match": {
-            "hue": [
-              15,
-              70
-            ],
-            "sat_min": 0.1
+            "sat_max": 0.08,
+            "val_min": 0.5
           },
-          "set_hue": 202,
-          "set_sat": 0.45,
-          "val_scale": 1.35
+          "set_hue": 220,
+          "set_sat": 0.1,
+          "val_scale": 0.92
+        }
+      ],
+      "overlays": [
+        {
+          "id": "water_tail",
+          "_why": "The board's signature on this species is a bright water-swirl TAIL against a dark body. The swirl itself is geometry this mesh does not have, but the bright-tail-on-dark-animal read is colour, and that is the half worth having: low y, away from the centre line, so it lands on the tail rather than the hindquarters.",
+          "where": {
+            "y_max": 0.34,
+            "z_max": 0.3
+          },
+          "mode": "tint",
+          "color": "#37d7f0",
+          "sat_floor": 0.6,
+          "softness": 0.1
         }
       ],
       "finish": {
@@ -830,30 +889,31 @@
           "val_scale": 1.05
         }
       ],
-      "vivid_comment": "CREATURE-PRESENTATION: same grey-and-blue scheme, pushed apart -- pastel on pastel is what makes this one a tiny colourless smudge at distance",
+      "vivid_comment": "CREAM AND PALE BLUE, per the board. The shipped vivid set hue 214 at 0.75 saturation -- a deep blue that made this chick and reedwing read as 'small blue bird' and 'slightly bigger blue bird' at thumbnail size, which a blind round named. The board's pipwing is the CREAM one and its reedwing is the blue one; this restores that split, and the blue survives as a face and crest marking rather than as a coat.",
       "vivid_rules": [
         {
           "match": {
-            "hue": [
-              25,
-              75
-            ],
-            "sat_min": 0.45
+            "sat_min": 0.3
           },
-          "set_hue": 214,
-          "set_sat": 0.75,
-          "val_scale": 0.72
+          "set_hue": 205,
+          "set_sat": 0.34,
+          "val_scale": 1.05
         },
         {
           "match": {
-            "hue": [
-              25,
-              75
-            ],
-            "sat_min": 0.1
+            "sat_min": 0.06
           },
+          "set_hue": 44,
+          "set_sat": 0.13,
+          "val_scale": 1.12
+        },
+        {
+          "match": {
+            "sat_max": 0.06
+          },
+          "set_hue": 44,
           "set_sat": 0.06,
-          "val_scale": 1.16
+          "val_scale": 1.14
         }
       ],
       "finish": {
@@ -863,7 +923,7 @@
       }
     },
     "reedwing": {
-      "_comment": "Base: pale waterbird. Vivid: the board's deep-blue crane (see vivid_comment). Shiny: REBUILT off pink -- it was hue 335, one of the seven-of-seventeen shinies that all landed on pink/coral. Copper-gold over a cream breast instead: no other bird in the roster is gold-BODIED (galewisp is white with gold accents), and it is the hardest possible read against the navy ordinary.",
+      "_comment": "Base: pale waterbird. Vivid: the board's deep-blue crane (see vivid_comment). Shiny: REBUILT off pink -- it was hue 335, one of the seven-of-seventeen shinies that all landed on pink/coral. It went to copper-gold, and a blind round then found that gold colliding with pipwing's own gold rare AND with galewisp's ordinary -- three yellow birds. Moved again, to WHITE-AND-CRIMSON: a pale bird with deep red flight feathers and a crimson crown, which nothing else in the roster wears, reads unmistakably rarer than the navy ordinary, and stays clear of both the blue cluster and the gold one.",
       "rules": [
         {
           "match": {
@@ -873,26 +933,25 @@
             ],
             "sat_min": 0.3
           },
-          "set_hue": 40,
-          "set_sat": 0.9,
-          "val_scale": 1.05
+          "set_hue": 350,
+          "set_sat": 0.72,
+          "val_scale": 0.82
         },
         {
           "match": {
             "sat_max": 0.14,
             "val_min": 0.45
           },
-          "set_hue": 40,
-          "set_sat": 0.12,
-          "val_scale": 1.1
+          "set_sat": 0.04,
+          "val_scale": 1.14
         },
         {
           "match": {
             "sat_min": 0.08
           },
-          "set_hue": 32,
-          "set_sat": 0.72,
-          "val_scale": 0.95
+          "set_hue": 353,
+          "set_sat": 0.6,
+          "val_scale": 0.72
         }
       ],
       "vivid_comment": "CREATURE-IDENTITY-3: the board paints a deep-blue crane -- saturated navy wings, a white breast and a yellow beak. The shipped vivid mixed a warm 45 across the body with a 205 blue at only x1.4 saturation, which is the pale washed blue-grey a blind round read as 'a domestic duck'. The mesh is a duck and stays one (CLAUDE.md: no new creature meshes for the Meadows) -- but a saturated navy waterbird with a white breast is a different animal at thumbnail size from a pale grey-blue farmyard one, and that half is paint's to fix. Beak rule runs FIRST because first match wins per pixel and the beak is inside the body's own warm band.",
@@ -933,7 +992,7 @@
       }
     },
     "bramblebun": {
-      "_comment": "Base: brown rabbit, cream chest, green bramble growth. Vivid: the board's leafy rabbit. Shiny: REBUILT -- the old rule was `set_sat 0.06, val_scale 1.18` and nothing else, i.e. bleach the animal white. That is not a colourway, it is the absence of one, and it is why this shiny reads as a rendering fault rather than a rare. Now a dark bramble variant: near-black coat with deep CRIMSON bramble where the ordinary carries green.",
+      "_comment": "Base: brown rabbit, cream chest, green bramble growth. Vivid: the board's leafy rabbit. Shiny: REBUILT -- the old rule was `set_sat 0.06, val_scale 1.18` and nothing else, i.e. bleach the animal white. That is not a colourway, it is the absence of one, and it is why this shiny reads as a rendering fault rather than a rare. The first rebuild took it to a near-black coat with crimson bramble, and a blind round found that WORSE -- 'a drab grey wild rabbit with pink decals; it reads MORE common than the ordinary', because a dark wild rabbit is the most ordinary animal on the sheet. Inverted: a pale SILVER-WHITE coat carrying deep crimson bramble. White-on-red is the rarest-reading combination available that no other species holds, and against the ordinary's warm russet it separates on value, hue and temperature at once.",
       "rules": [
         {
           "match": {
@@ -943,18 +1002,17 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 12,
-          "set_sat": 0.16,
-          "val_scale": 0.4
+          "set_hue": 30,
+          "set_sat": 0.05,
+          "val_scale": 1.22
         },
         {
           "match": {
             "sat_max": 0.1,
-            "val_min": 0.5
+            "val_min": 0.4
           },
-          "set_hue": 15,
-          "set_sat": 0.1,
-          "val_scale": 0.85
+          "set_sat": 0.03,
+          "val_scale": 1.18
         }
       ],
       "overlays_shiny": [
@@ -966,8 +1024,8 @@
             "lateral_min": 0.28
           },
           "mode": "grow",
-          "color": "#b0223a",
-          "shade": "#4d0f1c",
+          "color": "#b81f38",
+          "shade": "#5a0d1a",
           "coverage": 0.82,
           "grain": 6.0,
           "softness": 0.1,
@@ -982,8 +1040,8 @@
             "up_min": 0.1
           },
           "mode": "grow",
-          "color": "#961e33",
-          "shade": "#420d18",
+          "color": "#9c1a2f",
+          "shade": "#5a0d1a",
           "coverage": 0.62,
           "grain": 6.0,
           "softness": 0.1,
@@ -1246,7 +1304,7 @@
           "sat_scale": 1.15
         }
       ],
-      "vivid_comment": "CREATURE-PRESENTATION: verdant CROWN over a pale ancient hide, instead of a wholly green stag standing in green",
+      "vivid_comment": "CHARCOAL HIDE, EMERALD VEINS. The board paints the legendary as a near-black animal lit from inside; the shipped vivid took the hide to val_scale 1.32 and a blind round measured the result as a uniformly bright jade deer and said it reads 'green deer', not 'legendary'. The emissive crown overlays were already authored and the same round reported nothing in the survey looked emissive at all -- which is what a glow does when there is no dark value anywhere for it to glow against. The veins keep their saturation and their brightness; the HIDE goes dark, which is the half that was wrong. This also gives the roster a second genuinely dark creature alongside duskhush.",
       "vivid_rules": [
         {
           "match": {
@@ -1256,9 +1314,9 @@
             ],
             "sat_min": 0.42
           },
-          "set_hue": 132,
-          "set_sat": 0.72,
-          "val_scale": 1.1
+          "set_hue": 140,
+          "set_sat": 0.82,
+          "val_scale": 1.05
         },
         {
           "match": {
@@ -1268,9 +1326,9 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 46,
-          "set_sat": 0.12,
-          "val_scale": 1.32
+          "set_hue": 150,
+          "set_sat": 0.1,
+          "val_scale": 0.34
         }
       ],
       "overlays": [

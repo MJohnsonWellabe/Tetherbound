@@ -49,8 +49,8 @@ work open) · `converged` (two flat rounds, remainder recorded).
 |---|---|---|---|---|---|
 | D1 | Regions / corridor, bands 1-5 | `_probe_corridor_survey.gd` | 2 | no · no | yes-narrow · yes-"trying" |
 | D2 | HUD + every menu screen | `_capture_ui_survey.gd` | 1 | no | no |
-| D3 | Creatures — 17 species, shinies, alpha | `_capture_creature_roster.gd` | 2 | yes-narrow · **no** | no · no |
-| D4 | Characters — 6 rigs, Team Tether ranks | `_capture_character_cast.gd` | 1 | no | no |
+| D3 | Creatures — 17 species, shinies, alpha | `_capture_creature_roster.gd` | 3 | yes-narrow · no · **no** | no · no · **yes-"trying"** |
+| D4 | Characters — 6 rigs, Team Tether ranks | `_capture_character_cast.gd` | 2 | no · **no** | no · **no** |
 | D5 | Buildings — 18 prefabs + player builds | `_capture_structures.gd` | 1 | no | no |
 | D6 | Items — 55 tools/consumables/gatherables | `_capture_item_art.gd` | 1 | no | no |
 | D7 | Ground / terrain / water / weather | `_capture_ground_and_sky.gd` | 1 | no | no |
@@ -59,9 +59,12 @@ work open) · `converged` (two flat rounds, remainder recorded).
 **Every domain in the game has now been judged blind at least once.** Reports:
 `ralph/reports/VISUAL_*_2026-08-23.md`.
 
-Round 2 is not convergence in either case — both named NEW defects, which is
-`ralph/conventions.md`'s definition of a round that improved. Neither domain is
-near its stopping rule.
+No domain has converged. Every round so far has named NEW defects, which is
+`ralph/conventions.md`'s definition of a round that improved, so none is near
+its stopping rule. D3 round 3 and D4 round 2 (`ralph/reports/
+VISUAL_VIS_CAST_2026-08-23.md`) both named several, and D3 round 3 additionally
+moved bar question B up to "yes, trying to be the same kind of game" while
+keeping A at no.
 
 ## What recurs across independent critics
 
@@ -105,8 +108,42 @@ findings on it each time.
 6. UI: two element frames came back blank, and the survey wrote zero frames on
    its first run because it read the `Game` autoload before the tree mounted it.
 
+7. **Characters: the cast stage had no ground plane and no shadows at all**, and
+   the creature tool's own fix for exactly that (#2 above) was never ported. Sole
+   lines disagreed by 24px under a camera the tool's header calls identical, so
+   every height a critic derived from those frames carried that error. Also: the
+   heights the tool measures were printed to STDOUT and never into the frame,
+   leaving the rubric's whole scale criterion as the critic's arithmetic problem;
+   and the line-up frame rendered the entire cast as a 58-pixel strip in an 800px
+   plate. All fixed by VIS-CAST.
+8. **Creatures: one front-on camera**, while several species carry their board
+   signature on the BACK — and every `overlays` entry selecting on `up_min` puts
+   growth on upward-facing surfaces by definition. Raising terrapup's leaf
+   coverage tripled its green texels (3.8% -> 11.3%) and barely moved the
+   front-on frame. A rear three-quarter view is now shot for every species.
+9. **THE EXPENSIVE ONE. Both stages were over-exposing every lit subject, the
+   creature stage by a measured 2.3x**, and THREE consecutive blind creature
+   rounds spent their top-ranked finding on the result -- "the roster floats in
+   high-key pastel", "25-50% of body highlight regions clipped to pure white",
+   a duskhush called "candy lavender" whose own texture measures mean 65.6.
+
+   The art was never pastel; the photograph was. The proof is inside every frame
+   and costs one line to check: the BACKDROP is `BG_COLOR` and unlit and rendered
+   at exactly its authored (51,56,61), while the FLOOR carries albedo
+   (0.30,0.33,0.30), should land near (77,84,77), and rendered at (174,200,184).
+   Unlit exact, lit 2.3x out. Cause was addition: ambient 1.5 at a near-white
+   colour is ~1.17 before a 1.6 key adds ~0.91, and creature materials are
+   self-lit on top of that.
+
+   **Every capture stage in this sweep contains a known-albedo surface. Measure
+   it before trusting a single colour verdict taken off that stage.** Both cast
+   and roster tools now document their floor as the calibration target.
+
 The pattern: **a fix that lives in one tool does not protect the next tool that
-does the same thing.** Ported helpers, not per-tool patches.
+does the same thing.** Ported helpers, not per-tool patches. And the newer
+pattern #9 adds: a survey that is not exposure-calibrated is not photographing
+the wrong subject, it is photographing the right subject wrongly, which is
+harder to notice and costs whole rounds.
 
 ## Findings the capture pass has already produced
 
@@ -169,3 +206,20 @@ player meets, recorded here so a blind round is not spent rediscovering it.
   multi-viewpoint pass and the late frames come back in a dusk wash.
 - **Never `--headless` with a real rendering driver.** It hangs forever with no
   error, and leaves zombie processes that then cause real contention.
+- **A capture stage must be exposure-calibrated against a known-albedo surface
+  before it is asked a colour question.** Three creature rounds were spent on a
+  2.3x over-exposure. One line of arithmetic against the stage's own floor
+  detects it.
+- **`character_model.gd`'s emission floor is ADDITIVE now and was not before.**
+  It lerped the emission COLOUR, which Godot uses as a multiplier over
+  `emission_texture` while `emission_operator` is MULTIPLY -- so it could only
+  darken, the exact law it was written to escape. Team Tether rendered at
+  0.11-0.18 lightness because of it.
+- **Terrapup and burrowback do NOT share a mesh** (a round-2 finding, checked and
+  false: 15,616 vs 17,204 verts, different bounds and POSITION bytes; no two
+  species in the roster share a mesh file). They share an ARCHETYPE, which is a
+  casting problem and not beyond paint.
+- **The owner's creature board is a COLOUR AND MATERIAL REFRESH**, not a
+  commission. Its own header says "Use existing meshes/rigs/animations" and its
+  implementation notes say "Keep silhouettes and anatomy the same". Read every
+  "the board paints a different animal" finding against that.
