@@ -22,6 +22,10 @@ const HOTBAR_ACTIONS: Array[StringName] = [&"hotbar_1", &"hotbar_2", &"hotbar_3"
 const POSITION_EPSILON := 0.08
 const MOVE_EPSILON := 0.16
 const MOVE_FRAME_LIMIT := 360
+## The floor under a walk's frame budget once there is a building in the way.
+## Sixty seconds: the navigator spends most of a leg round a house sliding
+## along its walls rather than closing on the target.
+const WALK_FRAME_FLOOR := 3600
 
 ## The Practice Meadow's authored clearing, centred at (30,-40). It has a
 ## 16m vegetation exclusion and the ordinary village route ends here via
@@ -192,12 +196,44 @@ func _preflight() -> bool:
 		_fail("controller arrival did not leave the player grounded on the documented Meadows patch")
 		return false
 
+	# FACE THE AUTHORED DIRECTION BEFORE THE GHOST IS READ.
+	#
+	# GATEB-COORD. The ghost forms `PLACE_AHEAD` metres along the CAMERA's
+	# forward, and until now the camera was left wherever the walk to the patch
+	# happened to end -- so the whole house landed somewhere different on every
+	# run, five or six metres from the documented clearing as often as not. That
+	# is what made this segment fail differently every time it was driven: one
+	# run could not reach a front-roof stance because the house had drifted onto
+	# ground that falls away five metres (the player stood at y=-2.0 trying to
+	# reach a stance at y=3.0), the next could not highlight a wall.
+	#
+	# `HOUSE_AIM_DIRECTION` is the direction `_planned_house_steps()` is already
+	# written for -- its own comment says "this exact house sequence's roofs all
+	# resolve at yaw 0". Facing it here is what makes that true rather than
+	# hoped for, and puts the house on the authored, vetted patch every run.
+	if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+		return false
+
 	# The green, live Floor ghost seeds the whole no-spend plan. It is armed
 	# through the public catalogue and read only as the placer's rendered legality
 	# state; no test-side build transaction occurs.
 	if not await _select_piece("floor"):
 		return false
 	await _settle(8)
+	# STAND ON THE PATCH AGAIN, facing the authored direction, before the ghost
+	# is read.
+	#
+	# GATEB-COORD. Opening the catalogue is not instantaneous: it waits for the
+	# world to stop swallowing hotkeys, and what swallows them out here is a
+	# wild creature picking a fight. A fight moves the player. So the arrival
+	# checks above could pass, a Bramblebun could engage, and the ghost that
+	# seeds the ENTIRE house plan would then form from wherever the fight left
+	# the trainer standing -- which is why consecutive runs put the house at
+	# (28,-48), (30,-44), (34,-36) and (36,-38) from the same authored patch,
+	# and why one of them ended up trying to reach a roof stance across a
+	# five-metre drop.
+	if not await _stand_on_the_patch_facing_the_house():
+		return false
 	var placer := _tree.get_first_node_in_group(&"build_placer")
 	var ghost := placer.get("_ghost") as Node3D if placer != null else null
 	if placer == null or ghost == null or not bool(placer.get("_ghost_ok")):
@@ -208,6 +244,48 @@ func _preflight() -> bool:
 		return false
 	transcript.append("walked by controller to the Practice Meadow patch; all twelve planned anchors were green/reachable before spending")
 	return true
+
+
+## The stance the first paid Floor is placed from, re-established and held.
+func _hold_the_first_floor_stance() -> bool:
+	for attempt in 3:
+		if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+			return false
+		var forward := -(_camera_rig.call("planar_basis") as Basis).z
+		var stance := _preflight_first_floor - forward * PLACE_AHEAD
+		if not await _walk_to(stance, "preflight Floor stance (attempt %d)" % (attempt + 1)):
+			return false
+		await _settle(12)
+		if _flat_distance(_player.global_position, stance) <= MOVE_EPSILON * 2.0:
+			return true
+		transcript.append("something moved the trainer off the first Floor stance (%s); "
+			% str(_player.global_position.round()) + "walking back")
+	_fail("could not hold the first Floor stance long enough to read its ghost")
+	return false
+
+
+## Back to the documented patch centre, facing `HOUSE_AIM_DIRECTION`. Both
+## halves are re-established rather than assumed: whatever moved the player
+## also turned the camera with them.
+func _stand_on_the_patch_facing_the_house() -> bool:
+	var patch := Vector3(BUILD_PATCH_XZ.x, _player.global_position.y, BUILD_PATCH_XZ.y)
+	for attempt in 3:
+		# The requirement is the patch, not a pinpoint: `_preflight()` accepts
+		# `BUILD_PATCH_APPROACH_EPSILON`, so asking the navigator for 16cm here
+		# would fail on ground that is perfectly good to build from.
+		if not await _walk_to(patch, "documented build patch centre",
+				BUILD_PATCH_APPROACH_EPSILON * 0.8):
+			return false
+		if not await _turn_camera_toward(HOUSE_AIM_DIRECTION):
+			return false
+		await _settle(12)
+		if _flat_distance(_player.global_position, patch) <= BUILD_PATCH_APPROACH_EPSILON:
+			return true
+		transcript.append("something moved the trainer off the build patch (%s); walking back"
+			% str(_player.global_position.round()))
+	_fail("could not stand on the documented build patch to read the first ghost; "
+		+ "the trainer keeps being moved off it (now at %s)" % str(_player.global_position.round()))
+	return false
 
 
 func _preflight_all_planned_anchors(placer: Node) -> bool:
@@ -304,11 +382,20 @@ func _preflight_all_planned_anchors(placer: Node) -> bool:
 		return false
 	if not await _select_piece("floor"):
 		return false
-	await _settle(8)
+	# And stand there AGAIN. GATEB-COORD: arming through the catalogue waits
+	# out whatever is swallowing hotkeys, and out here that is a wild creature
+	# picking a fight -- which moves the player, and with them the ghost. Every
+	# ghost read in this file re-establishes its stance after arming for the
+	# same reason; this was the last one that did not.
+	if not await _hold_the_first_floor_stance():
+		return false
 	var live_ghost := placer.get("_ghost") as Node3D
 	if live_ghost == null or not bool(placer.get("_ghost_ok")) \
 			or live_ghost.global_position.distance_to(_preflight_first_floor) > POSITION_EPSILON:
-		_fail("returning to the preflight Floor stance did not restore the green live ghost")
+		_fail("returning to the preflight Floor stance did not restore the green live ghost "
+			+ "(ghost %s, wanted %s, player at %s)" % [
+				str(live_ghost.global_position.round()) if live_ghost != null else "<none>",
+				str(_preflight_first_floor.round()), str(_player.global_position.round())])
 		return false
 	return true
 
@@ -560,7 +647,7 @@ func _move_ghost_to(target: Vector3, aim_offset: Vector3 = Vector3.ZERO) -> bool
 	var wanted_player := target + aim_offset - forward * PLACE_AHEAD
 	if _nav == null:
 		_nav = NAVIGATOR.new(_tree, _player, _camera_rig, _parse_move_stick)
-	var budget := maxi(MOVE_FRAME_LIMIT,
+	var budget := maxi(WALK_FRAME_FLOOR,
 		240 + int(_player.global_position.distance_to(wanted_player) * 60.0))
 	var arrived: bool = await _nav.walk_to(wanted_player, budget, MOVE_EPSILON)
 	_release_move_stick()
@@ -590,10 +677,28 @@ func _place_roof_from_exterior(floor_target: Vector3, inward: Vector3, side: Str
 	var roof_target := Vector3(floor_target.x, floor_target.y + BUILD_SNAP.ROOF_Y, floor_target.z) + roof_c
 	var forward := -(_camera_rig.call("planar_basis") as Basis).z
 	var wanted_player := roof_target - forward * PLACE_AHEAD
+	transcript.append(("%s Roof: floor target %s -> roof anchor %s; camera forward %s; "
+		+ "stance %s; trainer starts at %s") % [side, str(floor_target.round()),
+		str(roof_target.round()), str(forward.snapped(Vector3(0.01, 0.01, 0.01))),
+		str(wanted_player.round()), str(_player.global_position.round())])
 	if not await _walk_to(wanted_player, "%s exterior Roof stance" % side):
 		_fail("controller could not reach the %s exterior Roof stance" % side)
 		return false
 	if not await _select_piece("roof"):
+		return false
+	# STAND THERE AGAIN. GATEB-COORD: opening the catalogue waits for the world
+	# to stop swallowing hotkeys, and out here that means waiting out a wild
+	# creature's fight -- which moves the player. The stance was reached and
+	# then abandoned, and the ghost, which forms `PLACE_AHEAD` along the camera
+	# from wherever the trainer now is, resolved six metres and five vertical
+	# metres away from the anchor it was supposed to snap to:
+	#
+	#   rear-exterior exterior Roof ghost resolved to (38.0, -1.606, -40.0)
+	#   instead of supported anchor (32.0, 3.590, -42.558)
+	if not await _walk_to(wanted_player, "%s exterior Roof stance (after arming)" % side):
+		_fail("controller could not hold the %s exterior Roof stance" % side)
+		return false
+	if not await _turn_camera_toward(inward):
 		return false
 	if not await _assert_live_roof_ghost(roof_target, side):
 		return false
@@ -674,11 +779,7 @@ func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 	# travel is complete; selecting Wall spends nothing until Place is pressed.
 	if not await _select_piece("wall"):
 		return false
-	await _settle(8)
-	var highlighted := _highlighted_placed_piece()
-	if highlighted == null or str(highlighted.get_meta("building_id", "")) != "wall" \
-			or _flat_distance(highlighted.global_position, target_position) > POSITION_EPSILON:
-		_fail("construction aim did not visibly highlight the intended wall before Y")
+	if not await _aim_until_the_wall_lights_up(target_position, forward):
 		return false
 	await _tap_action(&"build_dismantle")
 	await _settle(6)
@@ -694,6 +795,89 @@ func _dismantle_aimed_wall(target_position: Vector3) -> bool:
 		return false
 	transcript.append("highlighted and dismantled one aimed wall; exact refund and every neighbour verified")
 	return true
+
+
+## Shuffle until the intended wall is the one the placer is highlighting.
+##
+## GATEB-COORD. `build_placer.gd` decides what to dismantle by what the player
+## is AIMED at, and the stance this walks to is only good to `MOVE_EPSILON` --
+## 16cm, which over a two-metre aim is about four and a half degrees and is
+## easily the difference between this wall, its neighbour, and nothing at all.
+## One press from one spot reported the whole house a failure:
+##
+##   construction aim did not visibly highlight the intended wall before Y
+##
+## A player edges over until the piece lights up. Four stand-off distances are
+## tried along the same approach line, so the aim changes without the segment
+## walking round to a different face and dismantling a different wall.
+func _aim_until_the_wall_lights_up(target_position: Vector3, forward: Vector3) -> bool:
+	var last := "nothing highlighted"
+	for stand_off: float in [2.0, 1.6, 2.4, 1.3]:
+		if not await _walk_to(target_position - forward * stand_off,
+				"aimed dismantle stance %.1fm out" % stand_off):
+			return false
+		# LOOK at it, from where the player actually ended up.
+		# `build_placer.gd::_update_dismantle_target()` casts from the camera
+		# through the centre of the screen, so the highlight follows the
+		# CAMERA, not the stance -- and after walking the roof ring the rig is
+		# not necessarily still facing the wall the stance was computed from.
+		var to_wall := target_position - _player.global_position
+		to_wall.y = 0.0
+		if to_wall.length() > 0.2 and not await _turn_camera_toward(to_wall):
+			return false
+		await _settle(12)
+		var highlighted := _highlighted_placed_piece()
+		if highlighted != null and str(highlighted.get_meta("building_id", "")) == "wall" \
+				and _flat_distance(highlighted.global_position, target_position) <= POSITION_EPSILON:
+			return true
+		last = ("nothing highlighted (%s)" % _what_the_dismantle_ray_hits()) \
+			if highlighted == null else \
+			"highlighted the %s at %s, %.2fm from the intended wall" % [
+				str(highlighted.get_meta("building_id", "?")),
+				str(highlighted.global_position.round()),
+				_flat_distance(highlighted.global_position, target_position)]
+		transcript.append("dismantle aim from %.1fm out: %s" % [stand_off, last])
+	var eye := -(_camera_rig.call("planar_basis") as Basis).z
+	_fail(("construction aim did not visibly highlight the intended wall at %s before Y, "
+		+ "from any of four stand-off distances; last attempt %s. Player at %s, camera "
+		+ "planar forward %s, %d pieces standing")
+		% [str(target_position.round()), last, str(_player.global_position.round()),
+			str(eye.snapped(Vector3(0.01, 0.01, 0.01))),
+			_tree.get_nodes_in_group(PLACED_GROUP).size()])
+	return false
+
+
+## The ray `build_placer.gd::_update_dismantle_target()` casts, and what it
+## runs into first.
+##
+## GATEB-COORD: that function decides what is highlighted by casting from the
+## CAMERA through the centre of the screen, with no exclusions -- so in a
+## third-person world the player's own body is a candidate for stopping it, and
+## so is any creature standing between the camera and the wall. "Nothing
+## highlighted" cannot distinguish those from a ray that reached nothing at
+## all, and they want different answers.
+func _what_the_dismantle_ray_hits() -> String:
+	var viewport := _tree.root.get_viewport()
+	var camera := viewport.get_camera_3d() if viewport != null else null
+	if camera == null:
+		return "no current Camera3D; the placer cannot cast at all"
+	var centre := viewport.get_visible_rect().size * 0.5
+	var from := camera.project_ray_origin(centre)
+	var to := from + camera.project_ray_normal(centre) * 40.0
+	var query := PhysicsRayQueryParameters3D.create(from, to)
+	query.collide_with_areas = false
+	var hit := _world.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return "the screen-centre ray from %s hits nothing in 40m" % str(from.round())
+	var collider: Variant = hit.get("collider")
+	var chain: Array[String] = []
+	var node := collider as Node
+	while node != null and chain.size() < 4:
+		chain.append("%s%s" % [str(node.name),
+			"[placed]" if node.is_in_group(PLACED_GROUP) else ""])
+		node = node.get_parent()
+	return "the screen-centre ray from %s hits %s at %s" % [
+		str(from.round()), " < ".join(chain), str((hit.get("position") as Vector3).round())]
 
 
 func _cancel_and_resume() -> bool:
@@ -728,14 +912,46 @@ func _cancel_and_resume() -> bool:
 ## road runs past two fence runs (`data/config/village.json`, at [14,-20] and
 ## [19.5,-25.5], both "along the practice-meadow path"), and a straight stick
 ## vector between waypoints has no way past a fence post it happens to meet.
-func _walk_to(target: Vector3, purpose: String) -> bool:
+## GATEB-COORD: the budget comes from the leg, and the floor under it is
+## generous on purpose. `MOVE_FRAME_LIMIT` on its own is six seconds, which is
+## fine walking to an empty patch and nowhere near enough once the house is
+## standing: the front-roof stances are on the far side of a building this
+## segment has just put up, so getting there means walking AROUND four walls
+## with a navigator that finds its way by sliding along them.
+## `close_enough` defaults to the tight `MOVE_EPSILON` because most call sites
+## here are placing a ghost, and where the player stands is what decides where
+## the ghost lands. Walks that only need to BE somewhere pass their own, looser
+## value -- asking for 16cm when 50 will do is how a walk fails on a pebble.
+##
+## Retried from a clean navigator state, up to three times. `stick_navigator.gd`
+## picks which way to slide once per side and then commits, so an attempt that
+## has orbited itself into a corner will keep orbiting; starting over re-runs
+## the free-space probe from wherever it ended up, which is usually somewhere
+## the first attempt could not see from.
+func _walk_to(target: Vector3, purpose: String,
+		close_enough: float = MOVE_EPSILON) -> bool:
 	if _nav == null:
 		_nav = NAVIGATOR.new(_tree, _player, _camera_rig, _parse_move_stick)
-	var arrived: bool = await _nav.walk_to(target, MOVE_FRAME_LIMIT, MOVE_EPSILON)
-	_release_move_stick()
-	if not arrived:
-		_fail("controller could not walk to the %s" % purpose)
-	return arrived
+	for attempt in 3:
+		var budget := maxi(WALK_FRAME_FLOOR,
+			240 + int(_player.global_position.distance_to(target) * 60.0))
+		_nav.reset()
+		var arrived: bool = await _nav.walk_to(target, budget, close_enough)
+		_release_move_stick()
+		if arrived:
+			return true
+		transcript.append("attempt %d at the %s stopped %.2fm short at %s; starting over" % [
+			attempt + 1, purpose,
+			Vector2(target.x - _player.global_position.x,
+				target.z - _player.global_position.z).length(),
+			str(_player.global_position.round())])
+		await _settle(30)
+	_fail("controller could not walk to the %s (stopped %.2fm short at %s, wanted %s)" % [
+		purpose,
+		Vector2(target.x - _player.global_position.x,
+			target.z - _player.global_position.z).length(),
+		str(_player.global_position.round()), str(target.round())])
+	return false
 
 
 func _tap_action(action: StringName) -> void:
