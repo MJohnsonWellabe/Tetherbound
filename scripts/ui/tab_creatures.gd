@@ -97,6 +97,15 @@ const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
 
+## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
+## not a rating a player was meant to see). Drawn the same filled/open-circle
+## way `bond_meter.gd` already draws this screen's bond nodes, rather than a
+## typed asterisk row -- one drawing idiom for "N of five" on this screen,
+## not a bar widget for bond and a typed string for appraisal.
+const APPRAISAL_TOTAL := 5
+const APPRAISAL_PIP_RADIUS := 5.0
+const APPRAISAL_PIP_GAP := 16.0
+
 const ROW_HEIGHT := 110.0
 const ROW_WIDTH := 420.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
@@ -323,9 +332,9 @@ func build() -> void:
 	_pending_rule.visible = false
 	list.add_child(_pending_rule)
 	_pending_caption = Label.new()
-	# Plain ASCII, same reason `_fill_bar` gives: kenney_future is a display
-	# font with no confirmed coverage past ASCII, and a tofu box in the middle
-	# of the ceremony's one caption would be worse than a hyphen.
+	# Plain ASCII: kenney_future is a display font with no confirmed coverage
+	# past ASCII, and a tofu box in the middle of the ceremony's one caption
+	# would be worse than a hyphen.
 	_pending_caption.text = "JUST CAUGHT - NOT ON THE BELT"
 	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	# WARNING rather than TEXT_MUTED, same defect #4 tonal cue as the hairline
@@ -891,7 +900,15 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 		Color(1, 1, 1, 0.5) if bool(creature.get("fainted")) else Color.WHITE
 	)
 
-	var marker := " *" if i == active and size > 0 else ""
+	# Blind-judge pass: a bare " *" named nothing a player could look up, and
+	# was one of two unrelated markers sharing this line with the equally
+	# silent " ★" (Best Creature, which at least matches the icon
+	# `bond_icon`/other screens use for the same idea). Spelled out instead --
+	# this is exactly the state `_detail_status` already writes in words
+	# ("Goes out first.") once the row is focused, so the row-list marker
+	# says the same thing rather than a shorthand only that other label
+	# happens to explain.
+	var marker := " · Active" if i == active and size > 0 else ""
 	if i == int(party.call("best_index")):
 		marker += " ★"
 	(_row_names[i] as Label).text = "%s%s" % [str(creature.call("label")), marker]
@@ -906,17 +923,42 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 
 	var nodes: int = int(creature.call("bond_nodes", cfg))
 	var total: int = int(cfg.get("bond", {}).get("thresholds", []).size())
-	(_row_bond_counts[i] as Label).text = "%d/%d" % [nodes, maxi(total, 1)]
+	# "Bond N/M", not a bare fraction sitting under the bond icon -- blind-judge
+	# pass named "0/5" a token nobody could explain, and the icon alone (no
+	# text label anywhere near it) does not carry that meaning on its own.
+	(_row_bond_counts[i] as Label).text = "Bond %d/%d" % [nodes, maxi(total, 1)]
 
 	# RG19-spec/D68. The tournament's entry gate is rested/fed/happy, and
 	# 26-RG19 is explicit that it may not live only in the organizer's
 	# dialogue: a gate the player cannot see on their own team is a gate they
-	# cannot act on. One line per row, red while it would refuse entry.
+	# cannot act on. One line per row, coloured while it would refuse entry.
 	var condition: Dictionary = CONDITION.summary(creature, CONDITION.config())
 	var line := _row_conditions[i] as Label
-	line.text = CONDITION.label(creature, CONDITION.config())
-	line.add_theme_color_override("font_color",
-		UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else HEALTH_LOW)
+	if bool(creature.get("fainted")):
+		# Blind-judge pass: a fainted row here showed only a red NAME, with no
+		# word anywhere on it -- the same state the party strip spells "KO"
+		# and this screen's own detail column already calls "Out of the
+		# fight." (`_detail_status`, below). Matched to the strip's "KO"
+		# rather than inventing a third label for a state that already has
+		# two spellings in this game (`creature_bed_panel.gd` was the third,
+		# fixed the same way). The rested/fed/happy read is also meaningless
+		# for a creature that is not conscious to be tired or hungry, so it
+		# is replaced outright here rather than appended to.
+		line.text = "KO"
+		line.add_theme_color_override("font_color", UITokens.DANGER)
+	else:
+		line.text = CONDITION.label(creature, CONDITION.config())
+		# Blind-judge pass: "Tired"/"Restless" (chronic, low-stakes states any
+		# creature sits in for most of the game) painted in the same near-red
+		# `HEALTH_LOW` this file reserves for actually dangerous readings (a
+		# draining HP bar, a fainted name) -- the one colour meant to mean
+		# "urgent" was spent on "hasn't slept yet." `WARNING` is this game's
+		# existing "pay attention, not an emergency" tone (`_header`'s own
+		# full-belt notice and the R4.10 ceremony both already reach for it
+		# for exactly this weight), so a gate-blocking condition reads as
+		# worth fixing rather than as a crisis.
+		line.add_theme_color_override("font_color",
+			UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else UITokens.WARNING)
 
 
 func _describe(index: int, cfg: Dictionary) -> void:

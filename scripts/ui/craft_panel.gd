@@ -286,7 +286,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	# untruncated ingredient list is still shown in the right-hand detail
 	# column (`_describe`) for whichever row is focused.
 	cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	cost_label.text_overflow_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	cost_label.clip_text = true
 	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	text_col.add_child(cost_label)
