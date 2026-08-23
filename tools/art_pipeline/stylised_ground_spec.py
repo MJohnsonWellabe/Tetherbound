@@ -44,17 +44,28 @@ SPEC = {
     # ---------------------------------------------------------------- grass --
     "meadow_grass": dict(
         seed=20260823,
-        hue=77.0, sat=0.47, val=0.43,
-        renders_at=(77.0, 0.50, 0.48),
+        # A1: rendered H 76-79 vs three independent reference samples (key art,
+        # palworld-02) clustering at H 65-68; 66 is the conservative end.
+        hue=66.0, sat=0.47, val=0.43,
+        renders_at=(66.0, 0.50, 0.48),
         tile_metres=5.0,
+        # A2: in-patch value range rendered ~38-72 against far wider reference
+        # grounds, reading as one flat dye lot; amplitudes raised at all bands.
         octaves=[
-            (1.2, 2.5, 0.08),    # growth-density blobs; the 5-30m read
-            (0.25, 0.50, 0.06),  # clump texture
-            (0.06, 0.12, 0.03),  # blade suggestion, NOT drawn blades
+            (1.2, 2.5, 0.12),    # growth-density blobs; the 5-30m read
+            (0.25, 0.50, 0.09),  # clump texture
+            (0.06, 0.12, 0.05),  # blade suggestion, NOT drawn blades
         ],
-        hue_drift_deg=4.0,       # bright cells toward 60, dark toward 90
-        sat_drift=0.03,
-        normal_strength=3.0,     # ~2mm apparent relief; no per-blade grain
+        # A3: no authored detail at any scale -- discrete decimetre features are
+        # structure that pure octave noise cannot supply.
+        spots=[(10, 0.18, 0.40, -0.10, 8.0, 0.05)],
+        spot_relief=0.03,
+        # A4: hue spread p10-p90 was ~10 degrees against ~35 in the key art.
+        hue_drift_deg=7.0,       # bright cells toward 60, dark toward 90
+        sat_drift=0.05,
+        # A5: no centimetre-scale light response underfoot, contributing to an
+        # out-of-focus reading at player height.
+        normal_strength=4.5,     # ~2mm apparent relief; no per-blade grain
         note="the default ground; the calm green everything else reads against",
     ),
 
@@ -64,15 +75,20 @@ SPEC = {
         # texture statistics, which is what lets a hard 2m boundary read as the
         # same meadow drying out rather than as two materials meeting.
         seed=20260824,
-        hue=55.0, sat=0.46, val=0.54,
-        renders_at=(55.0, 0.49, 0.61),
+        # A6: with meadow moving to 66, a verge at 55 sits only 11 degrees away
+        # and stops reading as a distinct dried state; 50 restores a 16-degree
+        # gap and lands nearer palworld-02's sun-dried grass at H 46.
+        hue=50.0, sat=0.46, val=0.54,
+        renders_at=(50.0, 0.49, 0.61),
         tile_metres=5.0,
+        # A7: in-patch value range renders far narrower than reference grounds;
+        # amplitudes raised at all bands, band bounds unchanged.
         octaves=[
-            (1.2, 2.5, 0.08),
-            (0.25, 0.50, 0.08),  # raised vs meadow: drier, patchier, more straw
-            (0.06, 0.12, 0.03),
+            (1.2, 2.5, 0.11),
+            (0.25, 0.50, 0.10),  # raised vs meadow: drier, patchier, more straw
+            (0.06, 0.12, 0.05),
         ],
-        hue_drift_deg=6.0,       # spans roughly 45-65
+        hue_drift_deg=8.0,       # spans roughly 45-65
         sat_drift=0.04,
         normal_strength=3.0,
         note="worn/dry gold: path shoulders, village surrounds, dry crests",
@@ -84,17 +100,20 @@ SPEC = {
         hue=38.0, sat=0.41, val=0.68,
         renders_at=(38.0, 0.43, 0.75),
         tile_metres=4.0,
+        # A8: the path fills 40%+ of ground frames while carrying only eight
+        # pebbles per 4m tile, reading as an airbrushed wash at walking
+        # distance; stipple amplitude and stone count/relief raised.
         octaves=[
             (0.8, 2.0, 0.07),    # compaction blotches
-            (0.04, 0.10, 0.05),  # pebble and clod stipple, round features only
+            (0.05, 0.14, 0.08),  # pebble and clod stipple, round features only
         ],
         hue_drift_deg=3.0,
         sat_drift=0.02,
         # Embedded stones: count, min/max diameter in metres, then the value,
         # hue and saturation deltas that pull them into the rock family.
-        spots=[(8, 0.06, 0.15, 0.10, 9.0, -0.30)],
-        spot_relief=0.05,
-        normal_strength=4.0,
+        spots=[(22, 0.06, 0.18, 0.10, 9.0, -0.30)],
+        spot_relief=0.08,
+        normal_strength=5.0,
         note="packed earth; the brightest ground so routes read from a hilltop",
     ),
 

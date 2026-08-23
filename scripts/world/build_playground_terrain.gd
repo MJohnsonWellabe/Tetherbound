@@ -449,7 +449,16 @@ func _paint_control_map(
 				# where the step is short and reads as a shoreline rather than
 				# as a grid.
 				var ragged := clampf(float(macro_cfg.get("edge_raggedness", 0.06)), 0.0, 1.0)
-				var dither: float = field.path_dominant_dither(world_x, world_z)
+				# GROUND-REBUILD round 2. `path_dominant_dither` is coherent noise
+				# at a ~6.7m wavelength, sampled here at the 2m control pitch --
+				# it therefore moves whole RUNS of texels together, and a
+				# threshold contour driven only by it still traces long aligned
+				# staircases along the damp/verge cut. A hash evaluated once per
+				# texel is already at texel pitch and cannot alias, so mixing it
+				# 50/50 with the coherent field converts residual staircase runs
+				# into a stochastic single-texel fringe instead of a drawn line.
+				var hash_dither := absf(fmod(sin(float(pixel_x) * 12.9898 + float(pixel_z) * 78.233) * 43758.5453, 1.0))
+				var dither: float = 0.5 * float(field.path_dominant_dither(world_x, world_z)) + 0.5 * hash_dither
 				var threshold := 0.5 + (dither - 0.5) * ragged
 				if ids.has("damp") and damp > 0.004 and damp > threshold * float(macro_cfg.get("damp_max", 0.65)):
 					control = {"base": int(ids["damp"]), "overlay": int(ids["damp"]), "blend": 0.0}
@@ -495,7 +504,13 @@ func _paint_control_map(
 			if apron > 0.0:
 				painted_apron_pixels += 1
 				if apron > worn:
-					var apron_dither: float = field.path_dominant_dither(world_x, world_z)
+					# GROUND-REBUILD round 2: 50/50 mix with a per-texel hash, same
+					# reason as the damp/verge cut above -- the coherent field alone
+					# aliases into aligned runs of texels at this 2m sampling pitch,
+					# and only a texel-pitch hash can break a run down to single
+					# texels rather than merely relabelling which pixels form it.
+					var apron_hash := absf(fmod(sin(float(pixel_x) * 12.9898 + float(pixel_z) * 78.233) * 43758.5453, 1.0))
+					var apron_dither: float = 0.5 * float(field.path_dominant_dither(world_x, world_z)) + 0.5 * apron_hash
 					control = _blend_control_toward(control, apron, int(ids["soil"]), apron_dither)
 			# D41/SD16: the drained ground swaps toward the same dead soil the
 			# aprons use -- a station kills the ground cover, it does not lay a
