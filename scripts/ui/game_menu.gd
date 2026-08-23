@@ -793,10 +793,28 @@ func _find_combat(node: Node) -> Node:
 ## Silently does nothing with no current scene or no HUD in it -- the menu-only
 ## boot screen and every headless tool/test that never loads a world scene
 ## still need open()/close() to work.
+## Both world HUD layers, not just the exploration one.
+##
+## `combat_hud.gd` is a SECOND CanvasLayer mounted beside `PlaygroundHUD` in
+## `meadows_playground.tscn`, and it draws its own prompt line -- the
+## `encounter_director.gd` offer, "Call out Biscuit" / "Put Biscuit away" --
+## whenever that director owns the active prompt, fight or no fight. Hiding
+## only `PlaygroundHUD` therefore left that line printing through the pause
+## menu's own dim, which a blind visual-judge pass read off the map frame as
+## the menu failing to hide the HUD beneath it. It was hiding the HUD; there
+## were two.
+##
+## Named explicitly rather than found by group because adding a group means
+## editing the world scene and `combat_hud.tscn`, which are not this file's to
+## change. If a third world HUD layer is ever added, it must be added here too
+## -- and if that happens more than once, a group is the right answer, for
+## exactly the reason `input_owner.gd`'s header gives about per-caller gates
+## drifting out of sync.
 func _set_world_hud_visible(value: bool) -> void:
 	var world := get_tree().get_current_scene()
 	if world == null:
 		return
-	var hud := world.get_node_or_null(^"PlaygroundHUD")
-	if hud != null:
-		hud.visible = value
+	for layer_path in [^"PlaygroundHUD", ^"CombatHUD"]:
+		var hud := world.get_node_or_null(layer_path)
+		if hud != null:
+			hud.visible = value

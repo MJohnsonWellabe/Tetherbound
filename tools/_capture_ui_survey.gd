@@ -280,7 +280,20 @@ func _seed_game_state() -> void:
 		save_system.call("save", _game, 2)
 
 
-func _shoot(name: String) -> void:
+## `crop`, when it has a positive area, saves only that rectangle of the frame.
+## Used by the two standalone widget closeups: a 250x540 strip or a 48x160 arc
+## alone on a 1920x1080 backdrop is not a closeup of anything and cannot be
+## judged for legibility at the 40% downscale this survey is reviewed at.
+##
+## Cropping rather than SCALING the widget, which was the previous attempt and
+## was worse than the problem: `Control.scale` multiplies about the pivot and
+## leaves `position` unscaled, so the strip rendered from the frame's corner
+## and its fifth row was cut off by the bottom screen edge -- a blind critic
+## duly reported "the fifth party row is cut mid-glyph by the bottom screen
+## edge", which was the harness's doing and not the widget's. A crop cannot
+## misplace anything: the widget draws at its authored 1:1 size, exactly as the
+## game draws it, and only the saved PNG is smaller.
+func _shoot(name: String, crop: Rect2i = Rect2i()) -> void:
 	for i in 6:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -289,6 +302,17 @@ func _shoot(name: String) -> void:
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
 		return
+	if crop.size.x > 0 and crop.size.y > 0:
+		var bounds := Rect2i(0, 0, image.get_width(), image.get_height())
+		var clipped := crop.intersection(bounds)
+		if clipped.size.x <= 0 or clipped.size.y <= 0:
+			_failures.append("%s: crop %s falls outside the %s frame" % [name, crop, bounds.size])
+			return
+		if clipped != crop:
+			# Silently saving a smaller rectangle than asked for is how a
+			# clipped widget gets mistaken for a clipped WIDGET.
+			_failures.append("%s: crop %s was clamped to %s by the frame edge" % [name, crop, clipped])
+		image = image.get_region(clipped)
 	var path := "%s/%s.png" % [OUT_DIR, name]
 	var error := image.save_png(path)
 	if error != OK:
@@ -320,19 +344,42 @@ func _finish() -> void:
 # --- phase 1: everything Game.menu() mounts with no world in the tree -------
 
 
+## Screens with genuinely nothing behind them, plus the two widget closeups
+## which are deliberately shot on a plain backdrop so the widget itself can be
+## inspected.
+##
+## WHAT MOVED OUT OF HERE, and why it had to. The pause tabs, the five fixture
+## panels and the dialogue panel used to be shot here, with no world scene
+## loaded, purely because that is faster. A blind critic caught what that
+## actually produced: "this is the only pause tab that shows the dimmed world
+## behind the panel; frames 12, 13, 15-18 sit on opaque flat navy. One of those
+## two behaviours is wrong" -- and separately, of the fixture panels, "frames
+## 19-23 also sit on a flat colour void despite being opened while standing in
+## the world at a bench/shop/chest/bed", and of the dialogue frame, "the entire
+## screen behind the dialogue panel is one flat untextured blue... If this is a
+## real story beat, the world is missing."
+##
+## All three readings are correct about the picture and wrong about the game,
+## which is this survey's fault and not the interface's. A player never opens
+## the satchel, a chest or a conversation with a flat colour behind it; there
+## is always a world back there, dimmed. Photographing eleven screens against a
+## background the game never shows made the one screen that WAS honest -- the
+## map tab, which has to load the world for its terrain bake -- look like the
+## odd one out. They are all shot over the real world now, which is the seventh
+## time in this sweep a survey was photographing something other than its
+## subject.
+##
+## The cost is real and was checked before spending it: eleven more screens
+## with `meadows_playground.tscn` in the tree, at roughly 14 awaited frames
+## each, is about 154 frames -- some six minutes at the measured software rate.
+## That buys eleven frames that show what the player sees instead of eleven
+## that do not.
 func _phase_standalone() -> void:
 	await _shoot_title_screen()
 	await _shoot_starter_picker()
 	await _shoot_name_prompt()
-	await _shoot_dialogue_panel()
 	await _shoot_party_strip_closeup()
 	await _shoot_stamina_arc_closeup()
-	await _shoot_menu_tabs()
-	await _shoot_craft_panel()
-	await _shoot_shop_panel()
-	await _shoot_storage_panel()
-	await _shoot_swap_panel()
-	await _shoot_creature_bed_panel()
 
 
 func _shoot_title_screen() -> void:
@@ -443,22 +490,19 @@ func _free_widget_stage(stage: Array) -> void:
 		(layer as CanvasLayer).queue_free()
 
 
-## Centre a standalone widget in the frame and scale it up, so a "closeup" is
-## one.
-##
-## Both widget frames used to drop the widget at a fixed offset near the corner
-## at 1:1 -- a 250x540 strip, or a 48x160 arc, alone on a 1920x1080 backdrop.
-## The stamina arc came out as a 48px sliver occupying a quarter of one percent
-## of the frame, which is not a closeup of anything and cannot be judged for
-## legibility at the 40% downscale this survey is reviewed at. Scaled and
-## centred instead, which costs no extra frames.
+## Place a standalone widget at its authored size and hand back the rectangle
+## `_shoot` should crop to: the widget plus an even margin of backdrop.
 ##
 ## `authored_size` is passed in rather than read off the node because a Control
-## that has not had a layout pass yet still reports its `size` as zero here,
-## and both of these widgets set their own size in `_build()`/`_ready()`.
-func _frame_widget(widget: Control, authored_size: Vector2, factor: float) -> void:
-	widget.scale = Vector2(factor, factor)
-	widget.position = (Vector2(root.size) - authored_size * factor) * 0.5
+## that has not had a layout pass yet reports its `size` as zero here, and both
+## of these widgets set their own size in `_build()`/`_ready()`.
+func _place_widget(widget: Control, authored_size: Vector2, margin: float) -> Rect2i:
+	var origin := ((Vector2(root.size) - authored_size) * 0.5).floor()
+	widget.position = origin
+	return Rect2i(
+		Vector2i(origin - Vector2(margin, margin)),
+		Vector2i(authored_size + Vector2(margin, margin) * 2.0)
+	)
 
 
 ## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
@@ -472,7 +516,7 @@ func _shoot_party_strip_closeup() -> void:
 
 	var strip: Control = PARTY_STRIP.new()
 	stage[1].add_child(strip)
-	_frame_widget(strip, Vector2(250.0, 540.0), 1.7)
+	var strip_crop := _place_widget(strip, Vector2(250.0, 540.0), 60.0)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
@@ -489,7 +533,7 @@ func _shoot_party_strip_closeup() -> void:
 	strip.call("update_from_party", entries, 0, true)
 	strip.call("set_pinned", true) # stays revealed; no fade timer to race against the shutter
 	await _settle(8)
-	await _shoot("08-party-strip")
+	await _shoot("08-party-strip", strip_crop)
 	strip.queue_free()
 	_free_widget_stage(stage)
 	await _settle(2)
@@ -504,10 +548,10 @@ func _shoot_stamina_arc_closeup() -> void:
 
 	var arc: Control = STAMINA_ARC.new()
 	stage[1].add_child(arc)
-	_frame_widget(arc, Vector2(48.0, 160.0), 4.0)
+	var arc_crop := _place_widget(arc, Vector2(48.0, 160.0), 90.0)
 	arc.call("update_stamina", 0.34, true, 0.1)
 	await _settle(6)
-	await _shoot("09-stamina-arc")
+	await _shoot("09-stamina-arc", arc_crop)
 	arc.queue_free()
 	_free_widget_stage(stage)
 	await _settle(2)
@@ -746,6 +790,17 @@ func _phase_world() -> void:
 		await _settle(6)
 	else:
 		_failures.append("14-menu-map: Game.menu() not reachable")
+
+	# The rest of the menu, and every panel the player opens standing at a
+	# fixture, over the same real world -- see `_phase_standalone`'s header for
+	# what these looked like when they were shot with nothing behind them.
+	await _shoot_dialogue_panel()
+	await _shoot_menu_tabs()
+	await _shoot_craft_panel()
+	await _shoot_shop_panel()
+	await _shoot_storage_panel()
+	await _shoot_swap_panel()
+	await _shoot_creature_bed_panel()
 
 	# Combat HUD + capture reticle: one real fight serves both. Teleport
 	# straight into the "practice" spawn cluster and enter combat through
