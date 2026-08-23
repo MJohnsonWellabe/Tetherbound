@@ -80,6 +80,25 @@ Regenerating is one command — `python3 tools/repaint_creature_textures.py
 confirm no shiny collided with its own species' new vivid. Do it when a shiny
 is next in shot.
 
+### ROSTER-BLUE — seven of seventeen creatures are blue · `model: sonnet` · `tests: smoke_art`
+
+Found while judging the finished roster sheet as a set rather than species by
+species (`shots/creature_presentation/_field_thumbs.png`). Ripplet, Paddlenewt,
+Brooktail, Reedwing, Galewisp, Galecrest and Pipwing all read blue-to-white at
+thumbnail size. Nothing is wrong with any one of them — each matches its own
+board — but the boards were authored one creature at a time, and Water and Air
+were both handed the same half of the colour wheel. Against
+`docs/reference/palworld-0*.jpg`, where a field of Pals is a field of clearly
+different colours, seven blues is a roster that reads as three animals.
+
+The Ground half is now warm (hazel, russet, tan, charcoal, ivory) so the
+overall spread is better than it was, and this is the remaining half. It is
+also NOT a per-species fix: it needs somebody to lay all seventeen out and
+decide which two or three move — most likely the Air trio, which has no water
+to justify blue and could take a slate/bronze/white split instead. That is a
+one-sitting palette decision by someone allowed to overrule an individual
+board, not a tuning job.
+
 ### ALPHA-PRESENCE — 1.3x reads, but it is the ceiling · `model: sonnet` · no action yet
 
 Verified in frame beside the 1.80m trainer bar

@@ -66,11 +66,46 @@ distance field shot, with the 1.80m trainer bar in frame.
 species, the measured hue and value distance between the creature and the
 ground BEHIND IT (per row, from an empty strip of the same frame — a global
 background average scored every creature well because half its silhouette was
-being compared against sky). Before/after sheets and per-species frames are in
-`shots/creature_presentation/`. Bramblebun's hue distance from the ground goes
+being compared against sky). `shots/` is gitignored, so the four contact
+sheets and the two alpha frames are force-added into
+`shots/creature_presentation/` (`before/` holds the same two sheets from
+before the pass) and the 34 per-species frames stay local, the same way
+`shots/candidates/` was kept. Bramblebun's hue distance from the ground goes
 21.8 -> 64.5 degrees; Mosshell's 34.9 -> 61.3; Mudsnout's value distance 0.14
 -> 0.27 before the emission fix pulled it back to a deliberate 0.17 with the
 saturation restored.
+
+**The blind pass could not be run, and that is a gap in this entry.**
+`ralph/conventions.md` requires the critique to come from a sub-agent that does
+not know what changed. This lane had no way to spawn one: its toolset has no
+task/sub-agent tool, and the only session-spawning tool available
+(`create_session`) starts a container that cannot see this worktree and whose
+output cannot be read back from here. So the frames were judged against
+`.claude/skills/visual-judge`'s own rubric and `docs/reference/` by the same
+session that made the change, which is exactly the weaker thing the convention
+exists to prevent. **The next firing that touches creature art should re-run
+the blind critique on `shots/creature_presentation/_portraits.png` and
+`_field_thumbs.png` before trusting this entry's read.**
+
+What the self-judged pass produced, so it can be checked rather than taken:
+three rounds, each re-rendered and re-measured. Round 1 moved five species'
+hue distance from the ground (Bramblebun 21.8 -> 62.3 degrees, Mosshell 34.9
+-> 61.1, Mudsnout's value distance 0.14 -> 0.27) and was the round that found
+the Bramblebun rule was recolouring the COAT and not the sprigs. Round 2 was
+the emission finding — a defect no texture measurement would have shown, since
+the textures were already right and the renderer was adding a second copy of
+them. Round 3 was one species (Mosshell's shell read khaki where its board says
+teal; the ochre rule was claiming the shell instead of the moss on it).
+`tools/frame_stats.py` on the roster sheet before and after: hue families 2 ->
+3 (a warm family appears at 7% of chromatic pixels where there was none),
+chromatic share 31.9 -> 33.2, saturation 0.38 -> 0.39 — small numbers because
+the sheet is mostly sky and ground card, which is why the per-species
+separation table is the one to read.
+
+Defects the pass names and does NOT fix, filed rather than buried:
+`ROSTER-BLUE` (seven of seventeen creatures read blue — a set-level palette
+decision, not a per-species one), `VERIDIAN-HIDE` (the legendary's hide is an
+owner call), `SHINY-FINISH`, `ALPHA-PRESENCE`.
 
 **Alphas were checked, not changed.** `_make_alpha`'s 1.3x/1.4x does read as a
 bigger animal beside the trainer bar (`burrowback_alpha_x1.30.png`). It does
