@@ -623,7 +623,7 @@
       }
     },
     "brooktail": {
-      "_comment": "Base: warm brown otter. Vivid (board: 'Cool blues + White accents'): the river blue the first pass chose already matches the board and stays; the pale chest now bleaches toward white. CREATURE-PRESENTATION 2026-08-23: a blind critic could not locate this creature's EYES in the village pond frame (shots/gate_a/village_pond_op21/pond-shoreline.png) -- sat 1.4x on a dark base turned an otter with a pale muzzle and a dark eye into one uniform navy mass, at the pond where the player meets their first water creature. The chest/muzzle band now catches everything down to value 0.45 and bleaches properly, the body sits a full stop brighter at pinned saturation, and the finish pass re-stamps the eyes. Shiny: midnight indigo, unchanged.",
+      "_comment": "Base: blue-grey otter. Vivid: dark chestnut with a bright cyan water tail (see vivid_comment -- owner directive took this species off blue). Shiny: violet, which still reads as the rare against a warm dark ordinary and is now the only place any blue-violet appears on this animal.",
       "rules": [
         {
           "match": {
@@ -637,37 +637,37 @@
           "sat_scale": 0.85
         }
       ],
-      "vivid_comment": "DEEP NAVY, per the board -- the dark one of the three water species, and the one carrying bright water-cyan only in its tail rather than over the whole body. The shipped rules brightened it (val_scale 1.3/1.35) into the same pale band as the other two. The board's brooktail is a near-indigo animal with a single bright signature, which is also how it earns a value slot the roster does not otherwise have. The tail SHAPE is geometry and is recorded in ralph/BLOCKED.md; the colour half is this.",
+      "vivid_comment": "DARK CHESTNUT BODY, BRIGHT WATER TAIL. Owner directive, 2026-08-23, shown the roster: 'you should repaint the otter to not be blue... just too many are that similar shade of blue.' That overrides the board on this species, and it is the right call -- the board paints brooktail deep blue, but it also paints ripplet, paddlenewt, reedwing, pipwing and galecrest with blue in them, and a board read one card at a time does not show what the roster looks like as a set. Four blues is a board; six is a smear.\n\nChestnut is the choice because it does the most work at once. The species keeps its DARK value slot, which is the thing the roster is shortest of and which the previous navy was carrying. It reads as a real otter, which this mesh is. And putting a warm body under the bright cyan `water_tail` overlay makes that tail the only cool note on the animal, so the board's actual signature -- a water swirl at the back of a dark creature -- reads HARDER than it did when the whole otter was already blue. Deliberately deeper and redder than the roster's existing warm browns (terrapup's copper-amber, mudsnout's orange, trailpup, meadowhart, tuskroot): at this value it does not join that group either.",
       "vivid_rules": [
         {
           "match": {
             "sat_min": 0.08
           },
-          "set_hue": 231,
-          "set_sat": 0.58,
-          "val_scale": 0.66
+          "set_hue": 16,
+          "set_sat": 0.52,
+          "val_scale": 0.6
         },
         {
           "match": {
             "sat_max": 0.08,
             "val_min": 0.5
           },
-          "set_hue": 220,
-          "set_sat": 0.1,
-          "val_scale": 0.92
+          "set_hue": 28,
+          "set_sat": 0.14,
+          "val_scale": 0.86
         }
       ],
       "overlays": [
         {
           "id": "water_tail",
-          "_why": "The board's signature on this species is a bright water-swirl TAIL against a dark body. The swirl itself is geometry this mesh does not have, but the bright-tail-on-dark-animal read is colour, and that is the half worth having: low y, away from the centre line, so it lands on the tail rather than the hindquarters.",
+          "_why": "The board's signature on this species is a bright water-swirl TAIL. The swirl itself is geometry this mesh does not have, but the bright-tail-on-dark-animal read is colour, and after the owner's 2026-08-23 direction took the body off blue this overlay is the ONLY cool colour on the creature -- which is what the board was actually drawing. Low y, away from the centre line, so it lands on the tail rather than the hindquarters.",
           "where": {
             "y_max": 0.34,
             "z_max": 0.3
           },
           "mode": "tint",
           "color": "#37d7f0",
-          "sat_floor": 0.6,
+          "sat_floor": 0.72,
           "softness": 0.1
         }
       ],
@@ -889,15 +889,15 @@
           "val_scale": 1.05
         }
       ],
-      "vivid_comment": "CREAM AND PALE BLUE, per the board. The shipped vivid set hue 214 at 0.75 saturation -- a deep blue that made this chick and reedwing read as 'small blue bird' and 'slightly bigger blue bird' at thumbnail size, which a blind round named. The board's pipwing is the CREAM one and its reedwing is the blue one; this restores that split, and the blue survives as a face and crest marking rather than as a coat.",
+      "vivid_comment": "CREAM AND A HINT OF PALE BLUE, per the board. The shipped vivid set hue 214 at 0.75 saturation -- a deep blue that made this chick and reedwing read as 'small blue bird' and 'slightly bigger blue bird' at thumbnail size, which a blind round named. The board's pipwing is the CREAM one and its reedwing is the blue one. The remaining blue is a FACE AND CREST marking at low saturation, not a coat, and it was pulled down again (0.34 -> 0.20) under the owner's 2026-08-23 direction that too much of the roster sits in one shade of blue -- this bird should read as a cream chick with cool markings, never as another blue one.",
       "vivid_rules": [
         {
           "match": {
             "sat_min": 0.3
           },
           "set_hue": 205,
-          "set_sat": 0.34,
-          "val_scale": 1.05
+          "set_sat": 0.2,
+          "val_scale": 1.06
         },
         {
           "match": {
