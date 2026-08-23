@@ -26,3 +26,12 @@ Each brief states what is already done on that branch, what decisions are
 settled and should not be reopened, and what is genuinely left. They are written
 to be accurate about uncertainty: where a lane's own account was never written
 or was self-graded, the brief says so rather than presenting it as verified.
+
+## Status, 2026-08-23
+
+D3, D4 and D5 are **done and merged** — their briefs above describe the state
+they started from, not where they finished. For what is still open in those
+three, and what is closed, read `ralph/GATE_D_REMAINDERS.md` instead of the
+START files.
+
+D1 and D2 are still live. Their START files remain current.

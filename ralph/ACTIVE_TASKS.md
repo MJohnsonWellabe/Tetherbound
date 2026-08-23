@@ -117,6 +117,24 @@ For environment changes, capture at least one open-field view and one lush pond-
 
 After the 2026-08-21 owner playtest, Gate A evidence must also include the target-hardware/controller/map/build/camera/party-count/village/pond/lighting/submersion/load-game/gathering-presentation/combat-containment checks defined in `ralph/OWNER_PLAYTEST_2026-08-21.md`.
 
+## Gate D — D3, D4 and D5 landed 2026-08-23
+
+`ralph/GATE_D_REMAINDERS.md` is the current record of what is still open in
+those three regions, and what is closed so nobody re-investigates it. Read it
+before picking up any Gate D work.
+
+The three regions' content is on `main` via `ralph/integration-D`, together with
+the engine work they were all blocked behind: distance activation for wild
+creatures, and the fix for every creature in the chapter falling through the
+terrain. D1 (Lower Meadows) and D2 (Quarry/Warrens) are still in their own
+sessions and are not covered by that file.
+
+The one item to read first is the capture tooling. Five defects this run were
+reported as problems with the game and traced to the capture path, across three
+lanes that could not see each other's work. Until it gets a pass of its own, a
+defect seen only in a survey frame has to be reproduced through a second path
+before anyone acts on it.
+
 ## Gate C — backbone recorded 2026-08-22
 
 `ralph/GATE_C_EVIDENCE.md` records Gate C's owning prompts (57, 58, 59, 60, 61,
