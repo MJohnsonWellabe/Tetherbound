@@ -43,7 +43,25 @@ const FADE_SPEED := 2.2
 ## calm-but-present bar); this one dims the whole `Root` at once, the same
 ## way `combat_hud.gd` dims its own enemy plate and move grid for the same
 ## reason.
-const AIM_FADE_ALPHA := 0.35
+##
+## Fully to zero, not a partial dim -- was 0.35 (DEFECT 2, blind visual
+## review of `shots/ui/11-capture-reticle.png`: "the minimap and MAIN STORY
+## panel are ghosted to near-zero opacity but still occupy their space --
+## outlines and unreadable remnants over the mountain... this state reads as
+## a rendering bug"). `combat_hud.gd::_draw_grid()` already drew the same
+## conclusion for its own enemy plate, in words: "a 35%-alpha plate over open
+## sky read as 'a broken grey ghost', not 'temporarily de-emphasised'" --
+## true there because the enemy plate has translucent backing over open sky,
+## and true here for the same reason: the minimap and objective block are
+## also translucent panels over open sky/terrain, so a 0.35 multiply left
+## their borders and text legible enough to read as broken, not quiet. This
+## HUD's own bars/hotbar have no equivalent readable-but-shouldn't-be state
+## at 0.35 (a blind critic never flagged them), but there is no reason to
+## keep one corner of the fade at a value another part of this same codebase
+## already proved reads as a rendering bug -- one target for the whole `Root`,
+## same as before, just the target combat_hud.gd already picked for the
+## identical shape of widget.
+const AIM_FADE_ALPHA := 0.0
 const AIM_FADE_SPEED := 4.0
 
 const READOUT_INTERVAL := 0.1
@@ -1663,7 +1681,16 @@ func _build_objective_block() -> void:
 	# height) -- see this function's own header.
 	_objective_text_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	# LEFT, not RIGHT (DEFECT 4b, blind visual review of
+	# `shots/ui/10-combat-hud.png` and `shots/ui/07-minimap.png`): quest text
+	# genuinely long enough to wrap ("Restore the Old Mill Crossing.") right-
+	# aligns each wrapped line independently, so a short trailing word like
+	# "Crossing." lands flush against the right edge with a wide gap of empty
+	# space to its left -- reading as a stray fragment floating apart from the
+	# line above it, not the end of a wrapped sentence. Left alignment gives
+	# every wrapped line the same starting edge, which is what actually makes
+	# it read as one continuing sentence instead of a widow.
+	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	block.add_child(_objective_text_label)
 
@@ -2211,35 +2238,62 @@ func _combat_is_aiming() -> bool:
 	return combat != null and combat.has_method("is_aiming") and bool(combat.call("is_aiming"))
 
 
-## Stands down the two exploration widgets that `combat_hud.gd` draws its own
-## copy of for the length of a fight: `_creature_block` (this HUD's "ACTIVE
-## COMPANION" plate -- name, level, HP, energy) and `_party_strip` (this HUD's
-## own `party_strip.gd` mount, headed "TEAM n / 5"). `combat_hud.gd` mounts a
-## SECOND, independent `party_strip.gd` instance of its own (`_party_strip` in
-## that file, built in its `_ready()`) for mid-fight switching, and draws the
-## active creature's name/level/HP/energy again in `AllyPanel` (`_draw_ally()`)
-## -- so leaving this HUD's versions up named the same creature in three
-## places on screen at once and let combat's higher `UITokens.LAYER_COMBAT`
-## CanvasLayer win the pixels, exactly the frame a blind critic captured
-## (`shots/ui/10-combat-hud.png`: "TEAM 5/5" printing straight through a
-## companion panel's own "120 / 120"). The minimap and objective block have no
-## equivalent anywhere in `combat_hud.gd` and are deliberately left out of this
-## function -- hiding them would take away information combat never replaces.
+## Stands down the whole left stack -- `_creature_block`, `_party_strip`, and
+## `_vitals_cluster` -- for the length of a fight.
+##
+## `_creature_block` ("ACTIVE COMPANION" -- name, level, HP, energy) and
+## `_party_strip` ("TEAM n / 5") are here because `combat_hud.gd` draws its
+## own copy of both: a second, independent `party_strip.gd` mount for
+## mid-fight switching, and the active creature's name/level/HP/energy again
+## in `AllyPanel` (`_draw_ally()`). Leaving this HUD's versions up named the
+## same creature in three places on screen at once and let combat's higher
+## `UITokens.LAYER_COMBAT` CanvasLayer win the pixels, exactly the frame a
+## blind critic captured (`shots/ui/10-combat-hud.png`: "TEAM 5/5" printing
+## straight through a companion panel's own "120 / 120").
+##
+## `_vitals_cluster` (the player's own HP/FOOD, bottom-left) joins them here
+## now too -- DEFECT 1, the worst-ranked finding in the same critique. It
+## does not have a `combat_hud.gd` twin the way the other two do; the reason
+## it stood down anyway is the geometry, not duplication: `vitals_position()`
+## places it in the exact bottom-left corner `combat_hud.gd` needs for its
+## own `AllyPanel`/`PartyStrip`, so leaving it up let a ghosted "100 / 100"
+## and "FOOD 100%" print straight through combat's roster
+## (`shots/ui/10-combat-hud.png`, `shots/ui/11-capture-reticle.png`). CLAUDE.md
+## is explicit that the human never fights -- creature combat is real-time
+## and directly piloted, and nothing in a fight can move the trainer's own
+## HP -- so nothing this cluster shows is actually ABOUT the fight on screen;
+## satiety keeps draining in the background regardless, same as it does
+## through a menu, a conversation, or a build session, none of which keep
+## this cluster up either. Relocating it instead of hiding it was considered
+## and rejected: the only screen corner combat leaves clear (bottom-right) is
+## already `combat_hud.gd`'s own move grid, so a rework big enough to find it
+## a genuinely free corner is a lot more risk than folding it into a stand-down
+## mechanism its two neighbours already use correctly.
+##
+## The minimap and objective block have no equivalent anywhere in
+## `combat_hud.gd` AND sit in a screen corner combat's own UI never reaches
+## (top-right) -- neither problem `_vitals_cluster` has -- so they stay
+## deliberately out of this function; hiding them would take away information
+## combat never replaces, for a collision that does not exist.
 ##
 ## Plain `.visible` writes, not a fade: `_creature_block` is a bare `Control`
-## with no animation of its own, and `party_strip.gd::_process` already
-## early-returns its fade-timer bookkeeping whenever `not visible`
-## (`if _pinned or not visible: return`), so forcing it off here cannot fight
-## the widget's own reveal/hide tween -- it simply pauses mid-state and picks
-## up again once this sets `.visible = true` back on the frame the fight ends,
-## which is also the frame `_update_creature_block()`/`_update_party_strip()`
-## next redraw real content into both, so nothing stale is left showing.
+## with no animation of its own, `_vitals_cluster` only ever animates its own
+## `modulate.a` (`_update_vitals_cluster`'s idle fade), never `.visible`, and
+## `party_strip.gd::_process` already early-returns its fade-timer bookkeeping
+## whenever `not visible` (`if _pinned or not visible: return`), so forcing it
+## off here cannot fight the widget's own reveal/hide tween -- it simply
+## pauses mid-state and picks up again once this sets `.visible = true` back
+## on the frame the fight ends, which is also the frame
+## `_update_creature_block()`/`_update_party_strip()`/`_update_vitals_cluster()`
+## next redraw real content into all three, so nothing stale is left showing.
 func _yield_left_stack_to_combat_hud() -> void:
 	var combat := _combat_is_running()
 	if _creature_block != null:
 		_creature_block.visible = not combat
 	if _party_strip != null:
 		_party_strip.visible = not combat
+	if _vitals_cluster != null:
+		_vitals_cluster.visible = not combat
 
 
 func _use_hotbar_slot(slot_index: int) -> void:

@@ -574,7 +574,21 @@ func _draw_dot(centre: Vector2, r: float, colour: Color) -> void:
 func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: Color) -> void:
 	if _font == null:
 		return
-	const MARGIN := 3.0
+	# DEFECT 3 (blind visual review, `shots/ui/07-minimap.png`): "the
+	# waypoint distance '256 m' is clipped by the minimap's own right
+	# border, cutting the 'm' in half." Not `clip_contents` -- the old
+	# MARGIN (3.0) already kept the clamp inside the Control's own `size`,
+	# so `clip_contents` never touched it. The real cause is draw order:
+	# `_draw()` calls `_draw_objective()` (this text) BEFORE `_draw_frame()`
+	# paints the ring, and `_draw_frame()`'s ring border is `RING_WIDTH` (8px)
+	# thick, painted inward from the widget's edge -- so a label clamped to
+	# within 3px of that edge sits UNDER where the ring gets painted on TOP
+	# of it one call later, and the ring's own opaque colour bites into
+	# whatever glyph was sitting in that outer band. Clamping to at least
+	# `RING_WIDTH` clear of the edge keeps every label's clamped box entirely
+	# outside the ring's painted footprint, so nothing drawn afterward can
+	# cut into it.
+	const MARGIN := RING_WIDTH + 3.0
 	var text_size := _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	var top_left := centre - text_size * 0.5
 	top_left.x = clampf(top_left.x, MARGIN, maxf(MARGIN, size.x - text_size.x - MARGIN))

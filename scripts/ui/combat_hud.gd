@@ -56,19 +56,29 @@ const VERB_DIMMED := Color("8b9184")
 const CELL_DIMMED := Color(0.55, 0.55, 0.55, 1.0)
 const CELL_READY := Color(1.0, 1.0, 1.0, 1.0)
 
-## Screen slot for `PartyStrip`, which sits directly above the creature block (`AllyPanel`, whose top edge is 206px off the
-## bottom of a 1080-tall canvas — see `combat_hud.tscn`'s own offsets) with
-## generous headroom: `PARTY_STRIP.ROW_SIZE`'s 56px is a MINIMUM, not the
-## real rendered height — a row's two-line name/level stack plus its
-## `MarginContainer` padding measured taller than that in a real capture, and
-## the first version of this file placed the strip only 10px above the creature
-## block, which overlapped it outright. 430px of clearance covers five rows
-## at up to ~80px each plus separation with room to spare.
+## Horizontal inset for `PartyStrip`, matching `AllyPanel`'s own left inset
+## (`combat_hud.tscn`'s `offset_left = 56.0`) so the two columns line up.
+const SWITCH_PANEL_X := 56.0
+
+## Clear space kept between the party strip's bottom row and `AllyPanel`'s
+## real top edge.
 ##
-## It was shared with the switch selector until CONTROLLER-MAP removed that
-## widget; spec §9.4's "party_strip mounted ABOVE this block... pinned visible
-## while a switch is available/being chosen" is now the strip's job alone.
-const SWITCH_PANEL_POS := Vector2(56.0, 380.0)
+## Used to be a single hand-measured rest position, `Vector2(56.0, 380.0)`,
+## justified by a comment claiming "430px of clearance covers five rows at
+## up to ~80px each" against `AllyPanel`'s top (874px on a 1080-tall canvas).
+## Both numbers were already wrong the day they were written —
+## `PARTY_STRIP.ROW_SIZE.y` is 96, not ~80, and 380 to 874 is 494px, not
+## 430 — and `party_strip.gd`'s own row height grew again since (56 -> 96,
+## HUD-EMPHASIS) without anything here noticing: real `TOTAL_HEIGHT` is 540,
+## so the fixed 380 sat the strip's bottom row 46px INSIDE `AllyPanel`. That
+## is the exact defect a blind visual review caught (DEFECT 1b,
+## `shots/ui/10-combat-hud.png`: a half-hidden second panel between
+## Brooktail and Tuskroot, a cut-off "Ener…" label bleeding past the strip's
+## own right edge). `_party_strip_position()` below replaces the guess with
+## real numbers — `AllyPanel`'s actual anchored offset and the strip's own
+## actually-measured `size.y` — so the two can only agree from here on, not
+## merely agree on the day someone last did the arithmetic by hand.
+const SWITCH_PANEL_GAP := 24.0
 
 @export var manager_path: NodePath
 @export var director_path: NodePath
@@ -99,9 +109,10 @@ var _was_resolving_catch: bool = false
 var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 
 ## The always-on party strip (spec 9.4). Built in code, mounted at
-## `SWITCH_PANEL_POS`.
+## `_party_strip_position()`.
 var _party_strip: Control = null
 
+@onready var _root: Control = $Root
 @onready var _enemy_panel: PanelContainer = $Root/EnemyPanel
 @onready var _enemy_eyebrow: Label = $Root/EnemyPanel/EnemyVBox/Eyebrow
 @onready var _enemy_name: Label = $Root/EnemyPanel/EnemyVBox/Name
@@ -120,7 +131,8 @@ var _party_strip: Control = null
 
 @onready var _go_text: Label = $Root/GoText
 
-@onready var _orbs: Label = $Root/OrbsLabel
+@onready var _orbs_panel: PanelContainer = $Root/OrbsPanel
+@onready var _orbs: Label = $Root/OrbsPanel/OrbsLabel
 @onready var _grid_panel: PanelContainer = $Root/GridPanel
 
 @onready var _cell_quick: PanelContainer = $Root/GridPanel/Grid/CellQuick
@@ -166,12 +178,24 @@ func _ready() -> void:
 	_enemy_panel.add_theme_stylebox_override("panel", _quiet_panel_box())
 	_ally_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_grid_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# `slot_box()`, not `panel_box()`: this plate is 36px tall and `panel_box()`'s
+	# 16px content margin on every side would leave 4px for the text itself.
+	# `slot_box()` carries no content margin, so the short "Orbs N" string just
+	# needs the box tall enough to hold it (already true here), not a smaller
+	# margin hand-tuned to fit.
+	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
 	_party_strip = PARTY_STRIP.new()
-	_party_strip.position = SWITCH_PANEL_POS
 	$Root.add_child(_party_strip)
+	# `set_rest_position()`, not a plain `.position` write: the strip is not
+	# visible yet (`party_strip.gd::_ready()` leaves it hidden), so this both
+	# snaps `.position` now and records the real `_rest_position` the widget's
+	# own reveal/hide tweens target later — a bare `.position` write here would
+	# leave `_rest_position` at its `_ready()`-time default and every later
+	# reveal would animate back to the wrong spot.
+	_party_strip.call("set_rest_position", _party_strip_position())
 
 	_build_orb_cluster()
 
@@ -270,7 +294,7 @@ func _show_fight(visible_now: bool) -> void:
 	_enemy_panel.visible = visible_now
 	_ally_panel.visible = visible_now
 	_go_text.visible = visible_now
-	_orbs.visible = visible_now
+	_orbs_panel.visible = visible_now
 	if not visible_now:
 		_grid_panel.visible = false
 		_aim_row.visible = false
@@ -429,7 +453,7 @@ func _draw_grid() -> void:
 		# (D31). Nothing left for this row to say while aiming.
 		_aim_row.visible = false
 		_aim_row.text = ""
-		_orbs.visible = false
+		_orbs_panel.visible = false
 		_draw_orb_cluster(orbs)
 		# Hidden, not dimmed (blind visual review: a 35%-alpha plate over open
 		# sky read as "a broken grey ghost", not "temporarily de-emphasised").
@@ -643,10 +667,31 @@ func _refuse_switch() -> void:
 	_miss_left = 1.2
 
 
+## `AllyPanel`'s real top edge minus the strip's own real measured height
+## minus `SWITCH_PANEL_GAP`, in the CURRENT canvas's own coordinates —
+## `_root.size.y`, not an assumed 1080, the same "derive from the real
+## canvas size" fix `playground_hud.gd::_reflow_left_stack()` already applies
+## to this exact left-column-above-a-bottom-anchored-panel shape (its own
+## header has the derivation for why the Ally's stretched canvas is not
+## always 1080 tall). `_ally_panel.offset_top` is negative (bottom-anchored,
+## `combat_hud.tscn`), so adding it to the canvas height gives the panel's
+## real top in pixels.
+func _party_strip_position() -> Vector2:
+	var ally_top: float = _root.size.y + _ally_panel.offset_top
+	var strip_h: float = _party_strip.size.y if _party_strip != null else 0.0
+	return Vector2(SWITCH_PANEL_X, ally_top - strip_h - SWITCH_PANEL_GAP)
+
+
 ## Refresh the always-on party strip, pinned while a switch is available.
 func _update_party_strip() -> void:
 	if _party_strip == null:
 		return
+	# Cheap every frame (one Vector2 subtraction) and safe to call while the
+	# strip is mid-reveal — `set_rest_position()` only snaps `.position` when
+	# the widget is not currently visible, so this can never yank it out from
+	# under its own tween (same contract `playground_hud.gd`'s identical call
+	# already relies on).
+	_party_strip.call("set_rest_position", _party_strip_position())
 	var entries := _party_entries()
 	var active_index: int = int(_manager.get("_active_index")) if _manager != null else 0
 	_party_strip.call("update_from_party", entries, active_index)
