@@ -4,10 +4,28 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/run_tests.gd
 ##   godot --headless --path . --script tests/run_tests.gd -- --shard=1/2
+##   godot --headless --path . --script tests/run_tests.gd -- --only=veg_corridor
+##   godot --headless --path . --script tests/run_tests.gd -- --only=test_veg_corridor.gd::test_specific_case
 ##
 ## Discovers every `test_*.gd` under res://tests/, instantiates it, and runs
 ## every method whose name starts with `test_`. Exits non-zero on any failure so
 ## CI fails the push rather than the owner finding it by playing.
+##
+## ## Filtering a run to specific tests
+##
+## `--only=` takes a comma-separated list of selectors. Each selector is a
+## substring match against a test file's name, optionally followed by
+## `::<method-substring>` to also narrow which `test_*` methods in that file
+## run. `--only=veg_corridor` runs every method in every file whose name
+## contains "veg_corridor"; `--only=test_veg_corridor.gd::test_specific_case`
+## additionally narrows to methods containing "test_specific_case". A selector
+## that matches no file is a hard error, same reasoning as `--shard` below: a
+## typo'd `--only` that quietly ran the whole suite would read as "everything
+## passed" when nothing you asked for actually ran.
+##
+## `--only` and `--shard` compose: `--only` narrows the file list first, then
+## `--shard` slices what's left. Passing neither runs every file exactly as
+## before this flag existed.
 ##
 ## ## Sharding
 ##
@@ -31,11 +49,28 @@ extends SceneTree
 
 const TESTS_DIR := "res://tests"
 
+## Parsed `--only=` selectors, each `{"file": String, "method": String}` with
+## `method` empty meaning "every method in this file". Empty array means no
+## `--only` was passed, so every downstream filter is a no-op.
+var _only_selectors: Array = []
+
+## Set by `_apply_only`/`_apply_shard` right before `quit(2)` on a malformed or
+## empty-matching flag. `quit()` only *requests* a shutdown -- `_init` keeps
+## running afterward -- so without this, the unconditional `quit(1 if failed >
+## 0 else 0)` at the end of `_init` overwrites exit code 2 with 0 on every
+## invalid-flag run and the "hard error" documented above silently isn't one.
+var _aborted := false
+
 
 func _init() -> void:
 	var files := _find_tests(TESTS_DIR)
 	files.sort()
+	files = _apply_only(files)
+	if _aborted:
+		return
 	files = _apply_shard(files)
+	if _aborted:
+		return
 
 	var total := 0
 	var failed := 0
@@ -63,7 +98,7 @@ func _init() -> void:
 			continue
 		var file_name := path.get_file()
 
-		for method in _test_methods(script):
+		for method in _filter_methods(file_name, _test_methods(script)):
 			total += 1
 			instance.failures.clear()
 			instance.before_each()
@@ -90,6 +125,79 @@ func _init() -> void:
 	quit(1 if failed > 0 else 0)
 
 
+## Returns `files` narrowed to those matching a `--only=` selector, or every
+## file unchanged when no `--only` was passed after a `--` separator. A
+## selector that matches nothing is a hard error, same reasoning as
+## `--shard`'s range check: silently running the whole suite on a typo would
+## look identical to a passing filtered run.
+func _apply_only(files: Array[String]) -> Array[String]:
+	var empty: Array[String] = []
+	var spec := ""
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--only="):
+			spec = argument.substr("--only=".length())
+	if spec == "":
+		return files
+
+	for raw_selector in spec.split(","):
+		var pieces := raw_selector.split("::")
+		var file_part: String = pieces[0]
+		var method_part: String = pieces[1] if pieces.size() > 1 else ""
+		if file_part == "":
+			push_error("--only selector '%s' has no file part" % raw_selector)
+			_aborted = true
+			quit(2)
+			return empty
+		_only_selectors.append({"file": file_part, "method": method_part})
+
+	var matched: Array[String] = []
+	for path in files:
+		var file_name := path.get_file()
+		for selector in _only_selectors:
+			if file_name.contains(selector["file"]):
+				matched.append(path)
+				break
+
+	if matched.is_empty():
+		push_error("--only=%s matched no test files" % spec)
+		_aborted = true
+		quit(2)
+		return empty
+
+	print("only %s: %d of %d test files" % [spec, matched.size(), files.size()])
+	return matched
+
+
+## Returns `methods` narrowed to whichever `--only=` selectors matched
+## `file_name`, if any of them also carry a `::method` part. A file only
+## reaches this once `_apply_only` has already matched it against at least
+## one selector, so an empty `applicable` here is unreachable in practice; the
+## fallback still returns `methods` unfiltered rather than nothing, matching
+## how a file-only selector (no `::method`) behaves.
+func _filter_methods(file_name: String, methods: Array[String]) -> Array[String]:
+	if _only_selectors.is_empty():
+		return methods
+
+	var applicable: Array = []
+	for selector in _only_selectors:
+		if file_name.contains(selector["file"]):
+			applicable.append(selector)
+	if applicable.is_empty():
+		return methods
+
+	for selector in applicable:
+		if selector["method"] == "":
+			return methods
+
+	var out: Array[String] = []
+	for method in methods:
+		for selector in applicable:
+			if method.contains(selector["method"]):
+				out.append(method)
+				break
+	return out
+
+
 ## Returns the caller's slice of `files`, or all of them when no `--shard=I/N`
 ## was passed after a `--` separator. A malformed or out-of-range value is a
 ## hard error rather than a silent full run: a shard flag that quietly stopped
@@ -109,6 +217,7 @@ func _apply_shard(files: Array[String]) -> Array[String]:
 	var parts := spec.split("/")
 	if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 		push_error("--shard expects I/N, for example --shard=1/2; got '%s'" % spec)
+		_aborted = true
 		quit(2)
 		return empty
 
@@ -116,6 +225,7 @@ func _apply_shard(files: Array[String]) -> Array[String]:
 	var count := int(parts[1])
 	if count < 1 or index < 1 or index > count:
 		push_error("--shard=%d/%d is out of range" % [index, count])
+		_aborted = true
 		quit(2)
 		return empty
 

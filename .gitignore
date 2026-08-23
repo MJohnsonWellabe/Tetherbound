@@ -46,3 +46,6 @@ __pycache__/
 # website and get published to Pages. site/README.md has said not to commit
 # these since the page was written -- they were committed anyway.
 site/img/*.import
+
+# throwaway lane capture/probe scripts, by convention run-and-deleted, never shipped
+tools/_scratch_*

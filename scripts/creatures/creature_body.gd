@@ -22,6 +22,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -870,12 +871,19 @@ func place_on_ground(target: Vector3) -> bool:
 ## Discovered rather than injected so a creature can be dropped into any scene: a
 ## world that offers `ground_height_at` is used, and one that does not falls
 ## through to the ray without anybody having to wire anything.
+## GATE-E: corrected upward by a BUILT floor when a building stands over the
+## same spot. The terrain under the stronghold's five spaces is metres below
+## the floor the player walks in on, and a creature placed by the terrain
+## answer lands under the building -- see `scripts/world/built_floor.gd` for
+## the measurement and what it cost the finale. Outside a building
+## `BUILT_FLOOR.resolve` returns the terrain answer unchanged, so nothing in
+## the open meadow moves.
 func _ground_height(x: float, z: float) -> float:
 	if _ground_source == null or not is_instance_valid(_ground_source):
 		_ground_source = _find_ground_source()
 	if _ground_source == null:
 		return NAN
-	return float(_ground_source.call("ground_height_at", x, z))
+	return BUILT_FLOOR.resolve(self, x, z, float(_ground_source.call("ground_height_at", x, z)))
 
 
 func _find_ground_source() -> Node:

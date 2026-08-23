@@ -68,6 +68,7 @@ const OFFSET := Vector2(89.8, -54.4)
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const CASTLE_PREFAB := "castle"
+const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
 
 ## OF4-rebuild: a probe against the live heightfield at this exact site
 ## (script, this task -- not re-committed) found ~2.3m of relief across the
@@ -127,7 +128,17 @@ const RAMP_WIDTH := 6.0
 ## grounding it. Darkened again here, below the wall's own darkest retint
 ## (DarkRock #463f37), to restore "foundation reads darkest, walls lighter
 ## above it" -- the ordinary value hierarchy a real base course has.
-const PLINTH_COLOUR := Color("#332e28")
+##
+## GATE-E-STRONGHOLD-ART (2026-08-23): raised #332e28 -> #524a41, in step with
+## the castle's own retint (building_prefabs.json, `castle`, which carries the
+## full measurement). The relationship round 3 established is deliberately
+## PRESERVED, not undone: the plinth is still darker than the wall's darkest
+## stone (`DarkRock`, now #6b5f52), so the foundation still grounds the mass
+## instead of floating on it. What changed is that both ends of that ladder
+## moved up together, because the whole ladder was sitting in the castle's own
+## permanent shadow -- the ramp and plinth in `gate-close` measured a near-
+## field luma of 0.012, which is not a dark foundation, it is an absence.
+const PLINTH_COLOUR := Color("#524a41")
 
 
 func build(world: Node) -> void:
@@ -164,6 +175,26 @@ func build(world: Node) -> void:
 
 	_build_castle_colliders(prefabs)
 	_build_ramp()
+	_build_occupation(world)
+
+
+## GATE-E-STRONGHOLD-ART (2026-08-23): the site is HELD, and until this pass
+## nothing in the frame said so. `stronghold_occupation.gd`'s own header
+## carries the full reasoning; the short version is that two blind critics
+## independently called this castle bannerless, unlit-looking and empty of
+## Team Tether, and that the "unlit" half of that is a real measured defect
+## rather than an impression -- `art.json` puts the sun in the north sky and
+## every approach to this building is on its south side, so the hero face is
+## backlit at every hour the chapter is played and was rendering at a near-
+## field luma of 0.012.
+##
+## Presentation only: no collider, no interaction, no flag, no navigation, and
+## nothing inside the ramp's own 6m width. It is built LAST, after the castle
+## and the ramp, so it can be deleted wholesale without disturbing either.
+func _build_occupation(world: Node) -> void:
+	var occupation: Node3D = OCCUPATION.new()
+	add_child(occupation)
+	occupation.call("build", world, PLINTH_TOP, position, RAMP_RUN)
 
 
 ## A simple vertical-faced stone podium the whole castle stands on --

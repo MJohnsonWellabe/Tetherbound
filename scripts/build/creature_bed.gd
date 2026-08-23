@@ -19,9 +19,28 @@ const CREATURE_BED_FLAG := "creature_bed_built"
 const MESH_PATH := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
 const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
 
+## GATE-E: the bed-index namespace, written down because two kinds of bed now
+## share it and only one of them is in the build store.
+##
+##   >= 0  a slot in `Game.placed_buildings` -- a bed the PLAYER placed. These
+##         are renumbered when something earlier is dismantled
+##         (`build_placer.gd`'s `rest_bed_index > removed_index` loop).
+##   -1    UNASSIGNED: not placed anywhere, and the state a bare `new()` is in.
+##   <= -2 an AUTHORED bed that belongs to a fixed piece of the world and is in
+##         no build store, so nothing ever renumbers it. The dismantle loop
+##         only ever decrements indices ABOVE a removed one, and a removed one
+##         is always >= 0, so a negative index is untouched by construction.
+##
+## This exists because the stronghold's recovery point had no index at all: it
+## was left at -1, `assign_creature()` refused every creature on `_build_index
+## < 0`, and the chapter's one pre-Warden recovery opportunity opened a panel
+## that could not rest anything. Measured on a real boot, not inferred.
+const UNASSIGNED := -1
+const AUTHORED_STRONGHOLD_REST := -2
+
 static var _panel: CanvasLayer = null
 var _piece: Node3D = null
-var _build_index: int = -1
+var _build_index: int = UNASSIGNED
 var _rest_body: Node3D = null
 var _last_occupant: int = -2
 
@@ -32,7 +51,16 @@ func build_ghost() -> void:
 	_piece.call("build_ghost", MESH_PATH)
 
 
-func build_real() -> void:
+## `player_built` is what decides whether this placement answers the chapter's
+## "Build a creature bed" objective.
+##
+## GATE-E: it defaults to true, which is every existing caller
+## (`build_placer.gd`, i.e. the player placing one), and the stronghold's
+## authored recovery point passes false. It had to: that bed is built with the
+## world at boot, so on `main` `creature_bed_built` was set on frame one of a
+## brand-new save and the tournament ladder's bed objective was complete before
+## the player had a hammer. Measured on a fresh boot, not inferred.
+func build_real(player_built: bool = true) -> void:
 	_piece = BUILD_PIECE.new()
 	add_child(_piece)
 	_piece.call("build_real", MESH_PATH)
@@ -42,6 +70,8 @@ func build_real() -> void:
 	prompt.call("configure", "Rest a Creature", 2.6, true)
 	prompt.connect("activated", _on_rest)
 	add_child(prompt)
+	if not player_built:
+		return
 	var game := get_node_or_null(^"/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression != null:
@@ -63,7 +93,7 @@ func build_index() -> int:
 
 
 func occupant_index() -> int:
-	if _build_index < 0:
+	if _build_index == UNASSIGNED:
 		return -1
 	var game := get_node_or_null(^"/root/Game")
 	var party: RefCounted = game.get("party") if game != null else null
@@ -78,7 +108,7 @@ func occupant_index() -> int:
 
 
 func assign_creature(index: int) -> bool:
-	if _build_index < 0 or occupant_index() >= 0:
+	if _build_index == UNASSIGNED or occupant_index() >= 0:
 		return false
 	var game := get_node_or_null(^"/root/Game")
 	var party: RefCounted = game.get("party") if game != null else null

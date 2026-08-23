@@ -79,6 +79,8 @@
     "warden_defeated": "defeated_warden",
     "legendary_freed": "legendary_freed",
     "legendary_joined": "legendary_joined",
+    "legendary_settled": "legendary_settled",
+    "_comment_legendary_settled": "GATE-E. `legendary_joined` records that the freed creature ended up on the belt; this records only that the roster DECISION is over, which is a different fact and the one prompt 68's objective chain has to wait on. A player with five they will not give up may let the legendary walk away, and that is a finished ending rather than an unfinished objective -- see stronghold_climax.gd::_settle() for why the chain cannot key on `legendary_joined`.",
     "gate": "defeated_warden",
     "_comment_gate": "The machine refuses to be touched until the Warden has fallen. Sec28's order is not optional and this is the one place a player could otherwise walk around it -- the Legendary Chamber is through the Warden Arena, and a player who sprints past him would otherwise reach the machine with the boss still standing."
   }

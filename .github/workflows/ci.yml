@@ -1683,6 +1683,19 @@ jobs:
           godot --headless --path . --script tests/smoke_gate_a_rest_torch.gd
           godot --headless --path . --script tests/smoke_post_modal_control.gd
           godot --headless --path . --script tests/smoke_tournament_bracket.gd
+          # GATE-E. The chapter's FINALE, walked continuously in one boot with a
+          # full five: in from the entrance, the three gauntlet fights, the
+          # recovery point, the elite, the shutter, the reveal, the Warden, the
+          # lever, the release ceremony a full belt forces, the region's
+          # response, and the post-victory acknowledgment that ends the
+          # objective chain. smoke_stronghold.gd proves the route and fights
+          # nobody; smoke_boss.gd starts at the Warden with a level-1 starter.
+          # The seams between them were covered by nothing, and driving them
+          # end to end found three real defects on main (the level-up
+          # announcement aborting mid-string, the recovery point unable to
+          # accept a creature, and `creature_bed_built` set on frame one of a
+          # new save by the stronghold's own authored bed).
+          godot --headless --path . --script tests/smoke_gate_e_finale.gd
 
   # The continuous-core evidence path, run so it cannot go dark again.
   #
