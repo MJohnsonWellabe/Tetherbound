@@ -261,6 +261,7 @@ Verified on the merged branch before push: full suite 1362 tests / 0 failed;
 file hard-errors with exit 2, as designed; `--shard=1/4` (27 of 105 files, 327
 tests, 0 failed) — sharding and full-run behaviour both unchanged from before
 this flag existed.
+
 ## GATEB-PATH — the village pathing blocker is fixed; the continuous run now stalls three beats later
 
 `branch: ralph/GATEB-PATH` · `area: tests/helpers/stick_navigator.gd (new), tests/helpers/gate_a_npc_gather_segment.gd, tests/helpers/gate_a_material_route.gd, tests/helpers/gate_a_opening_drive.gd, tests/helpers/gate_a_build_segment.gd, tests/smoke_gate_b_continuous.gd, tools/_probe_village_route.gd + _probe_harvest_arbiter.gd + _probe_scatter_fill.gd (new probes)`
