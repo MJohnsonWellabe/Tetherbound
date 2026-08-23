@@ -383,17 +383,20 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
 .s-machines{background-image:url("img/relay-machines.jpg"),linear-gradient(160deg,var(--timber),var(--oxblood))}
 .s-mill{background-image:url("img/mill-crossing.jpg"),linear-gradient(160deg,var(--day-blue),var(--slate-cool))}
 .s-talk{background-image:url("img/village-talk.jpg"),url("img/village-people.jpg"),linear-gradient(160deg,var(--timber),var(--leaf-deep))}
-/* `.s-hall` has no figure on the page. `STRONGHOLD-MAT` landed (97f4ff32,
-   see stronghold.gd's own header) -- the stronghold has real textured
-   masonry now, not the untextured grey blockout this comment used to
-   describe. `SKY-PLANES` (ralph/BACKLOG.md) is still open, but it is
-   StormWall slabs at the storm_road blocker, a different site kilometres
-   away -- see this file's own re-render notes before wiring the figure back
-   in, and judge a fresh capture rather than assuming the old defect is gone
-   just because its cause is elsewhere.
-   `.s-warden` instead frames the Warden himself, in the Warden Arena
-   chamber under the hall -- an enclosed indoor room, so it needs neither
-   defect fixed to be honest. No fallback frame exists yet. */
+/* `.s-hall` has no figure on the page, still. `STRONGHOLD-MAT` landed
+   (97f4ff32) -- the stronghold has real textured masonry now, not the
+   untextured grey blockout this comment used to describe -- but a fresh
+   SITE-SHOTS capture from the approach viewpoint judged `SKY-PLANES` clean
+   and found the opposite: several large translucent grey quads standing
+   directly behind the hall, dominating the skyline, not a subtle defect
+   confined to the far-off storm_road blocker its root cause names. Wiring
+   the figure back in waits on that, still.
+   `.s-warden` frames the Warden himself instead, close, in the Warden Arena
+   chamber under the hall -- an enclosed indoor room with no sky in shot, so
+   it needed neither defect fixed. It needed its own fix: the chamber has no
+   window and only faint trim-light fill (stronghold.gd's OmniLights default
+   to energy 0.5), so a portrait crop is what actually reads in it -- a wide
+   shot was mostly black void around him. */
 .s-hall{background-image:url("img/stronghold-approach.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
 .s-warden{background-image:url("img/warden.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
 /* The starter choice as the game actually presents it: three orbs previewed
