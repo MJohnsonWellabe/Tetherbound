@@ -259,7 +259,16 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	# press sits between them, so which side of it the tool leaves on is the
 	# whole question -- and an after-the-fact sample cannot answer it.
 	var equipped_before := str(_game.get("equipped_tool"))
-	var prop_before: Variant = hold.call("prop_node")
+	# `is_instance_valid`, not `== null`. A FREED object is neither reliably
+	# equal to null nor safe to `str()`, and the check twelve lines above uses
+	# `!= null` -- so a prop freed between the equip and the press would pass
+	# that guard and then read as null here, which is exactly the contradiction
+	# this sample exists to resolve.
+	var prop_raw: Variant = hold.call("prop_node")
+	var prop_before := "<null>"
+	if prop_raw != null:
+		prop_before = "<freed>" if not is_instance_valid(prop_raw) \
+			else "%s(%s)" % [str(prop_raw.get_class()), str(prop_raw.name)]
 	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
 		# Say WHY, not just that. This assertion has never once run in CI --
@@ -282,7 +291,7 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 			str(node.name) if node != null else "<null>"])
 		_fail("  ...and BEFORE the press: equipped=%s prop=%s | winner parent=%s" % [
 			equipped_before,
-			"<null>" if prop_before == null else str(prop_before),
+			prop_before,
 			str((winner as Node).get_parent().name) if winner is Node \
 				and (winner as Node).get_parent() != null else "<none>"])
 		return false

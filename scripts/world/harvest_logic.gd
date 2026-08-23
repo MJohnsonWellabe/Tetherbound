@@ -94,17 +94,25 @@ static func gather(item_id: String, base_amount: int, inventory: RefCounted, ite
 ## yield it replaced.
 static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
 	if node == null or game == null:
+		print("[swing-probe] refused: node=%s game=%s" % [str(node), str(game)])
 		return false
 	if str(game.get("equipped_tool")).is_empty():
+		print("[swing-probe] refused: equipped_tool is empty")
 		return false
 	var player := game.call("find_player") as Node3D
 	if player == null:
+		print("[swing-probe] refused: find_player() returned null")
 		return false
 	var hold: Node3D = player.get("tool_hold")
 	if hold == null or not hold.has_method("swing_at"):
+		print("[swing-probe] refused: hold=%s has_swing_at=%s"
+			% [str(hold), str(hold != null and hold.has_method("swing_at"))])
 		return false
 	if bool(hold.call("is_swinging")):
 		# Already mid-swing: that swing resolves on its own and will gather
 		# something itself. Yielding here as well would double the press.
 		return true
-	return bool(hold.call("swing_at", node))
+	var started := bool(hold.call("swing_at", node))
+	print("[swing-probe] swing_at -> %s (equipped=%s)"
+		% [str(started), str(game.get("equipped_tool"))])
+	return started
