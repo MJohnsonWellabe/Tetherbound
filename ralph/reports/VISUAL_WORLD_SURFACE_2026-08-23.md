@@ -999,3 +999,87 @@ countable clumps in the lower half of the band-1 and band-3 player-height frames
   current model can express; a shader grade is separate work.
 - No further attempt at partial splat blends, and no sun changes. Both closed by
   measurement.
+
+## Round 2 overshot on one number, and how it was caught
+
+Applied as ordered, the round measured **verge grass at 35.7-39.0% of the region
+against the 14% the art direction asks for**, and the meadow rendered as sand.
+
+Two changes compounded in the same direction. `verge_cut` came down 0.62 -> 0.58
+to get dry patches into the three bands that had none, while `dry_gain` went
+1.4 -> 1.9 to steepen the dryness distribution. Each is defensible alone; a
+steeper distribution *and* a lower cut together push far more of the field past
+it. **The two are not independent, and nothing in the work order said so.**
+
+Corrected to `verge_cut` **0.70** — above the pre-round 0.62 rather than back to
+it, because the steeper `dry_gain` is being kept and a steeper distribution needs
+a higher cut for the same coverage. Re-measured: **10.3-10.9%**.
+
+Worth recording as process, not just as a number: this was caught in the bake's
+own printed percentage within seconds of the bake finishing, before any frame was
+rendered. The percentage print was added one round earlier for exactly this
+reason. Every other overshoot in this sweep cost a full render round to notice.
+When a knob's effect is countable, count it in the bake.
+
+## State at handover
+
+**Where the ground stands.** Rebuilt from scratch on six generated surfaces; no
+photographic scan remains in the terrain texture list. Measured against the
+references on the last full five-band capture: grass H 77.9 S 0.521 V 0.560 and
+path H 43.9 S 0.396 V 0.744, where the pre-rebuild ground measured grass
+S 0.701 V 0.285 and path S 0.770 V 0.339. Round 2 then moved grass hue to 66 on
+three independent re-samples, raised the surface detail budget from 2.0/3.7/5.7%
+to 3.4/6.0/9.1% of base value, roughly doubled trail-sited scatter density,
+narrowed paths so the verge shoulder is a real texel-wide strip for the first
+time, and de-aliased all five control-map thresholds.
+
+**Not yet rendered.** The round-2 changes have been baked into the two band-1
+regions and measured, but no frame has been captured since the `verge_cut`
+correction. The last images in evidence are the pre-correction ones showing the
+sandy overshoot. **First action next session: capture band 1 and look, before
+anything else is changed.**
+
+**The terrain is a PARTIAL bake.** Ten of 64 regions carry the rebuilt ground;
+the other 54 still carry the old photographic surfaces, and the two disagree
+about what a flat meadow pixel is. There is a hard material seam at every
+boundary between them. Before this branch merges or is judged as a whole:
+
+    godot --headless --path . --script scripts/world/build_playground_terrain.gd
+    godot --headless --path . --script scripts/world/bake_playground_scatter.gd
+    godot --headless --path . --import
+
+with no `--regions=` on the first. That full bake is ~43 minutes; the partial
+one a look-test needs is 2-3 minutes, which is why the branch is in this state.
+
+**Open, in rough priority order.**
+
+1. Verify the `verge_cut` correction on a frame, then re-shoot all five bands
+   and put them to a fresh blind critic.
+2. Per-band ground identity (C3 in the work order) is specified in full —
+   five z-ranged colour grades with 150m feathering — and not implemented. It is
+   deliberately a colour-map grade rather than five more splat surfaces, because
+   every surface added multiplies the 2m boundary problem.
+3. `forest_floor` is generated, wired and unplaced. It needs canopy-driven
+   placement, which needs the terrain bake to know where the oaks are — the
+   scatter runs in a separate pass, so this is real integration work, not a
+   number.
+4. The rock/verge slope boundary still shows some blockiness on steep faces.
+   Reduced by the hash dither, not eliminated. This is the residue of the
+   engine-level limit below.
+
+**Two engine-level limits that bound everything above, both measured.**
+
+- *A partial control blend does not draw.* Verified three ways with a magenta
+  test texture. This is why the ground is built from hard 2m assignments with
+  dithered thresholds instead of blended transitions, and it is what defeated
+  four rounds of EV4-hillside-seam-remainder before this sweep. A viewer looking
+  for the 2m cell will still find it on long diagonals. Removing it entirely
+  needs a higher-resolution control map or shader-level boundary blending.
+- *The colour map can only darken.* Terrain3D multiplies by it. Anything that
+  must read lighter than the meadow has to be a real surface in the splat, which
+  is the whole reason `verge_grass` exists as a texture rather than as a tint.
+
+**Outside this lane, unfixed, and worth routing.** Nothing populates the open
+corridor: `spawn_wild()`'s only caller in `scripts/` is the Burrow Warrens
+dungeon, so a survey that stands the player on the trail has nothing to
+photograph. Two blind critics have ranked the resulting emptiness second overall.
