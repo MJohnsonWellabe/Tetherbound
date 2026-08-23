@@ -161,10 +161,23 @@ jobs:
     #
     # The shard is round-robin, not contiguous -- see tests/run_tests.gd for
     # why the alphabetical tail must not be allowed to stack into one job.
+    #
+    # GATE-D: two shards -> four. Shard 1 of two was killed at the 12-minute
+    # ceiling on the Gate D bundle -- "Run tests" ran 10m58s and the job died,
+    # reported as cancelled, taking five green jobs down with it. Shard 2 of the
+    # same run finished in 2m24s, so the split was not halving the work; it was
+    # putting almost all of it in one job. Round-robin spreads the alphabet, not
+    # the COST, and Gate D raised the corridor's scatter from 129k to 143k
+    # placements, which lands on the handful of tests that load the whole bake.
+    #
+    # Four shards, and deliberately not a raised ceiling: this file's own note
+    # above says raising it only moves the cliff, and that note was written
+    # after the ceiling had already been raised once and clipped again the same
+    # evening.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3, 4]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -256,7 +269,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/2
+            -- --shard=${{ matrix.shard }}/4
 
   verify-playground:
     runs-on: ubuntu-latest
