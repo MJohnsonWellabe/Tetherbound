@@ -3,6 +3,145 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATEB-COORD — Gate B's continuous evidence passes
+
+`tests: smoke_gate_b_continuous.gd PASS, smoke_gate_b_tail.gd PASS, full suite
+1362 tests / 0 failed` · `branch: ralph/GATEB-PATH` · adopts and closes
+`ralph/GATEB-PATH` and `ralph/GATEB-TAIL`
+
+**GATE B PASSES.** A fresh save walks all ten Gate B objectives, in order, from
+the title screen to the South Bridge: wake, Grandpa, starter, the tutorial
+catch, the village, the gather route, the house, the camp, three creature beds,
+the nights, the marshal's entry gate, three fought rounds, and the objective
+that hands the chapter to Gate C.
+
+### The two handoff branches
+
+Merged together with `origin/main` into one working branch, `ralph/GATEB-PATH`
+kept as the ship branch. Both sat one commit off the same base. Their only real
+overlap was `smoke_gate_b_continuous.gd`: the house moved to GATEB-TAIL's
+`gate_b_tail_segment.gd` (which owns `home_built` and everything after it) and
+GATEB-PATH's walk back from the gather route to the Village Square stayed,
+because that is exactly where the build segment insists on starting.
+
+### The owner's three directives
+
+`ralph/OWNER_DIRECTIVES_2026-08-23.md`, all three implemented.
+
+**§1, three creature beds.** The gatherable budget is raised NEAR THE VILLAGE --
+eight new authored stops on the practice-path loop the first day already walks
+(+12 wood, +20 fiber, band1 orders 1020-1027) -- and `TARGET_STOCK` goes
+57/42/18 to 69/42/34: house 39/34, three beds at 6 wood + 8 fiber each, camp
+12/8/10. The tail places three beds and sleeps the team in ONE night instead of
+one bed over three.
+
+**§2, keep the satiety drain.** Unchanged. The tail feeds the entrants before
+sign-up and now after every night.
+
+**§3, Build wins while the hammer is out.** Measured first
+(`tools/_probe_hammer_gate.gd`), because the handoff note named the wrong
+provider:
+
+```
+RidingController   Ride Meadowhart        d=2.78  prio=0  actionable=true
+EncounterDirector  Put Meadowhart away    d=0.00  prio=-1 actionable=false
+WINNER: 'Ride Meadowhart' -> the hammer gate would FORFEIT the interact press
+```
+
+The line the hammer loses to is `riding_controller.gd`'s ACTIONABLE "Ride", not
+the "Put away" line, which is built `actionable: false` and which
+`_hammer_opens_the_catalogue()` already ignores. Both stand down while the
+hammer is out (`scripts/build/build_hold.gd` asks that question once), the
+exploration legend takes the verb back beside Change Creature -- the
+party-cycle button the directive names -- and says "Put Away" or "Call Out"
+according to whether the creature is actually there. Mounted is carved out.
+`tests/smoke_build_wins_while_hammer_is_out.gd` pins all four cases.
+
+### Two PRODUCTION bugs, not harness ones
+
+**Dismantle could not target anything.**
+`build_placer.gd::_update_dismantle_target()` casts from the camera through the
+centre of the screen with no exclusions, and this is a third-person camera --
+that line goes straight through the trainer. From four stand-off distances with
+a whole house in front of the player, every one:
+
+```
+the screen-centre ray from (30, 4, -35) hits Player < MeadowsPlayground
+```
+
+So aim-at-a-piece-and-press-Y reached nothing the trainer stood between the
+camera and, which is everything worth aiming at. The player's own body and any
+deployed creature are excluded now; anything else solid still stops the ray.
+
+**Build was unusable in the open field** -- §3 above.
+
+### The blocker the handoff pointed at was not the blocker
+
+`ralph/DONE.md`'s GATEB-PATH entry reads "stopped 46.9m short" as evidence about
+hill climbing. It is not. `tools/_probe_scatter_fill.gd` drove the fill from the
+DEFAULT SPAWN, and the default spawn is inside GrandpaHouse --
+`tools/_probe_stuck_point.gd` names the collider on every side of it. That
+number was the player failing to get out of the bedroom, not the failure the
+continuous run hits, which has been outdoors for twenty minutes by then.
+
+Standing the probe where the authored route really ends found the actual defect
+in a minute: `gate_a_material_route.gd` read `node.global_position` AFTER the
+chop that spends the stand, and `vegetation_harvest_point.gd` frees a spent
+stand. The first successful scatter trip died on a previously-freed instance, in
+a TRANSCRIPT line, about a harvest that had worked.
+
+Past that: presses landing on neighbouring trees (the arbiter's own activation
+log named a chop firing `Interactable @(-115.5, 319.1)` for a press aimed at
+(-116.2, 321.8)), stands that will not settle from any angle (abandoned and
+skipped now, like a player chopping a different tree), and "nearest" picking
+trees twenty metres up a hill.
+
+### What the run found once it got past the village
+
+* **The Village Square route entry was the WELL.**
+  `BUILD_ROUTE_XZ.front()` was (10, -10) with a 0.75m tolerance and
+  `village.json` puts the well at exactly (10, -10). Three approaches from
+  three directions stopped 7.8m, 4.3m and 7.5m short of a point no body can
+  occupy. Moved three metres south onto the apron; the continuous run and the
+  tail's staging both READ that constant now.
+* **The village never handed over the hammer.** The segment visited Tam, Oskar,
+  Mira and Bram -- not the Quarry Foreman, who gives it. And Tam is TWO
+  conversations: `village_tam_tools`, then `village_tam_orbs`, whose
+  `recipe_orb_basic` is what unlocks the Foreman's gift. Nothing noticed
+  because the build segment used to grant itself a hammer, which breaks its own
+  contract against inventory bypasses. Both fixed; the hammer goes on quick
+  slot 4 through the Satchel UI and the torch stays in the bag.
+* **`home_built` needs the CAMP.** `home_progress.gd`'s rule is a camp plus a
+  floor, wall, roof and door, so raising the shell was never going to set it.
+  The camp is placed before the beds now.
+* **The house landed somewhere different every run.** The ghost forms
+  `PLACE_AHEAD` along the CAMERA's forward, the camera was never turned to
+  `HOUSE_AIM_DIRECTION` first, and opening the catalogue waits out whatever is
+  swallowing hotkeys -- which out there is a wild creature picking a fight,
+  which MOVES the player. Every ghost read re-establishes its stance and aim
+  after arming now.
+* **The front roof pair was aimed from inside the finished shell.** Its
+  exterior is the south side; the preflight cannot see this because it runs
+  before anything is built.
+* **The navigator could not see a hole.** Its obstacle probe is a horizontal
+  ray, so open air read as the freest direction and detours slid off the
+  Practice Meadow plateau -- the trainer at y=-2.0 reaching for a stance at
+  y=3.0, on terrain it could not climb back. It casts DOWN a step ahead now and
+  treats a drop over 1.2m as blocked. It also PAUSES while `locomotion_enabled`
+  is false, and held frames do not count against a leg's budget.
+
+### For whoever picks this up
+
+* **The probe-first method is the point, and so is checking what a probe is
+  actually staging.** The one that mattered here was staging its player inside
+  a house and nobody had looked.
+* **Four findings are open in `ralph/BACKLOG.md` as GATEB-FINDINGS**, none
+  blocking: the ground-sample jitter in `build_grid.gd::snap_to_grid`, an owner
+  ruling wanted on how far Build's Interact priority should reach (it does NOT
+  currently beat an NPC or a harvest node), the night a fainted creature costs,
+  and the gather route's dead-travel for Gate F to measure.
+* **Gate F is unblocked.** Both production bugs above would have hit it.
+
 ## RUNTESTS-FILTER — `--only=` selector for run_tests.gd, and why CI run 2180 was red
 
 `tests: full suite 1362 tests, 830325 assertions, 0 failed` · `area: tests/run_tests.gd`

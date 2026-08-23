@@ -358,6 +358,7 @@ func _catch_with_real_throws() -> bool:
 		return false
 	_checkpoint("satchel drained to %d orb(s) so the empty case is on the real path" % drained)
 	var launches := 0
+	var blocked_lines := 0
 	var restocked := false
 	var refusals := 0
 	var re_engages := 0
@@ -470,10 +471,28 @@ func _catch_with_real_throws() -> bool:
 		# orb is committed, so the player-true move is available: see that the
 		# shot is blocked, step somewhere it is not, look again. Throwing anyway
 		# spends an orb into a rock, which no player does twice.
+		# A blocked line is not a failed run.
+		#
+		# GATEB-COORD: this was the dominant flake in Gate B's continuous
+		# evidence -- two thirty-minute runs died here, on the opening's first
+		# and second launch, because a search for a clear shot ran out while
+		# the Bramblebun wandered. A player who cannot see the thing does not
+		# put the controller down; they walk somewhere else and look again.
+		# So does this. The loop's own launch bound is what ends the beat, and
+		# `_fight_until_catchable()` at the top keeps the creature catchable
+		# while it goes on.
 		if not await _step_until_the_shot_is_clear():
-			_fail("could not find a spot with a clear line to the Bramblebun "
-				+ "after launch %d" % launches)
-			return false
+			blocked_lines += 1
+			print("no clear line after launch %d (%d so far); moving and looking again"
+				% [launches, blocked_lines])
+			if blocked_lines > BLOCKED_LINES_ALLOWED:
+				_fail(("could not find a spot with a clear line to the Bramblebun %d times "
+					+ "running after launch %d; the shot is not being blocked by one rock")
+					% [blocked_lines, launches])
+				return false
+			await _wander_for_a_new_angle()
+			continue
+		blocked_lines = 0
 		# Re-aim AFTER moving, and this is not optional.
 		#
 		# `_step_until_the_shot_is_clear()` strafes to get a rock out of the
@@ -1040,6 +1059,31 @@ func _hold_the_fight_where_it_was() -> void:
 ## Reads the game's own pre-launch verdict rather than guessing at geometry:
 ## `eligible` is exactly the condition that decides whether the throw gets its
 ## launch assist, and `first_hit` names whatever is in the way when it does not.
+## Consecutive launches that may find no clear line before the beat is called
+## broken. Generous on purpose: one blocked line is ordinary meadow, and the
+## creature moves between every attempt.
+const BLOCKED_LINES_ALLOWED := 8
+
+
+## Walk somewhere genuinely different and look again. Not a strafe -- the
+## strafing inside `_step_until_the_shot_is_clear()` has already been tried and
+## exhausted by the time this runs.
+func _wander_for_a_new_angle() -> void:
+	if not is_instance_valid(_wild):
+		return
+	var to := _wild.global_position - _player.global_position
+	to.y = 0.0
+	if to.length() < 0.05:
+		to = Vector3.FORWARD
+	# A quarter turn around the creature, at a comfortable throwing radius.
+	var around := to.normalized().rotated(Vector3.UP, PI * 0.5) * THROW_RANGE_WANTED
+	await _drive_body_toward(_player, _wild.global_position + around, 90)
+	_stop_left_stick()
+	for _i in 10:
+		await _tree.physics_frame
+	await _aim_camera_at(_wild, 240)
+
+
 ## How close the trainer wants to be before hunting sideways for a clear line.
 ##
 ## Derived from the two bounds this file already has rather than picked: inside
