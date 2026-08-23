@@ -156,10 +156,11 @@
       "centre": [
         -2.4,
         0.0,
-        35.2
+        62.0
       ],
-      "radius": 14.2,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~55m arc, 15m lateral, left side of the spine."
+      "radius": 8.0,
+      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~55m arc, 15m lateral, left side of the spine.",
+      "_comment_stranded_p3_walk_clearance": "STRANDED-P3, 2026-08-23. Same class of bug as data/config/bands/band3_the_river_lock/spawns.json's order 3037 (see that entry): the original centre/radius (z=35.2, r=14.2) reached to z=49.4 before wild_creature.gd's own 7.0m wander_radius (data/config/combat.json) was even added, and smoke_traversal.gd's basic four-direction walk near spawn happens to cross near z=40 on its move_left leg -- reproduced directly (tools/_probe_spawn_wedge.gd, the same frame-by-frame replay tools/_probe_mill_stall.gd used for the mill): the walk's own `get_slide_collision()` named `Wild_bramblebun_1006_3` as the collider, and on CI (run 2170) the contact was square-on long enough to trip the sustained-wedge check ('player got wedged ... at move_left at (-8, 40)') where a local run only grazed past it. Moved further out along z and the radius shrunk (35.2/14.2 -> 62.0/8.0) so even a full wander excursion (62-8-7=47) stays 7m clear of the walk's z~40 line, while keeping the same left-of-the-spine siting the density pass intended."
     },
     {
       "order": 1007,

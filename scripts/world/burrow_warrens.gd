@@ -1126,13 +1126,31 @@ func branch_is_open() -> bool:
 ## overhead. Outside the footprint it defers to the world, so a creature that
 ## wanders out of the mouth is handed back to the meadow cleanly.
 func ground_height_at(x: float, z: float) -> float:
+	var built := built_floor_height_at(x, z)
+	if not is_nan(built):
+		return built
+	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
+		return float(_world.call("ground_height_at", x, z))
+	return NAN
+
+
+## GATE-E. This building's own floor over `(x, z)`, or NAN where it does not
+## claim the spot -- the half of `ground_height_at()` with no fall-through.
+##
+## Split out and public for the reason `stronghold.gd`'s copy is: the bodies a
+## FIGHT places are added to the world root rather than under this node
+## (`encounter_director._send_out_next_creature`), so they discover the
+## terrain's `ground_height_at` by walking up and never reach this one. The
+## stronghold is where that was measured and it is the same code here, which is
+## the other half of the owner's 2026-08-21 report -- "Stronghold and Burrow
+## Warrens fights sometimes phasing participants outside reachable arena bounds
+## and becoming effectively impossible". `scripts/world/built_floor.gd` reads it.
+func built_floor_height_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
 	for rect: Array in _footprint:
 		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
 				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
 			return global_position.y + _floor_y
-	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
-		return float(_world.call("ground_height_at", x, z))
 	return NAN
 
 

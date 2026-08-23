@@ -44,6 +44,43 @@ further back renders clean. The repro is the viewpoint's own coordinates.
 D3 raised that frame's eye to 3.0m so the checkpoint stays judgeable while the
 artefact stands — so a later reader will see a workaround, not a fix.
 
+## 1b. The Old Mill Crossing is impassable — OPEN, and a progression blocker
+
+`smoke_traversal` on `main` (CI run 2156, `b923e202`, the first full run on main
+since the Gate D landing):
+
+    traversal FAIL: could not cross the open the Old Mill Crossing
+                    (only 4.2m past the gap)
+
+The crossing is the chapter's Band 3 → Band 4 gate. If a player cannot cross it
+unlocked, the corridor stops there, so this outranks everything else in this
+file.
+
+Not fixed by `a8ed4f0c` ("ASSESS-REDS"), which closed the other three failures
+from that same run. It is still red.
+
+**Ruled out, so nobody repeats it:**
+
+- **Not the terrain.** `data/config/terrain_playground.json` and the baked
+  `data/terrain/` are byte-identical to the commit where this same test passed
+  locally. Verified with `git diff` over both paths.
+- **Not the Gate D5 Sigil gorge.** That carve is at z≈7400; the crossing is at
+  z≈4200, and the terrain rebuild it forced changed 11 of 64 regions.
+- **Not scatter blocking the deck.** Zero placements of any layer stand within
+  20m of (-152, 4200), measured against the committed bake.
+
+**What is known:** it arrived with the D1/D2 merges, which also pulled newer
+`main` code into the bundle — `creature_body.gd`, `game_state.gd`,
+`save_game.gd`, `sequence_director.gd` and others changed in that window. The
+test's own output says the player reaches +4.2m past the gap and stops, which is
+a body that is moving and then blocked, not a body that never started.
+
+**Next step for whoever takes it:** run `tests/smoke_traversal.gd` against
+`a22534ff` (pre-Gate-D) to establish whether this predates the landing at all.
+The last full CI run on `main` before 2156 was long enough ago that "it was
+green before" is an assumption, not a fact — run 2149 on `main` was a
+markdown-only skip.
+
 ## 2. The capture tooling needs a pass of its own — FIVE artefacts, three lanes
 
 Five separate defects were reported this run as problems with the *game* and
@@ -115,11 +152,19 @@ lanes update it to match their own work it can no longer detect accidental
 drift — the "test that passes because the feature is absent" failure
 `ralph/conventions.md` names outright.
 
-**Needs one decision, centrally**: either lanes stop editing it and the test is
-reshaped so legitimate content edits do not force a fixture change, or the
-fixture is explicitly redefined as tracking-current rather than frozen and the
-test's claims are narrowed to match. D3's rewrite also re-escaped `§` to
-`§` throughout, which is formatting churn either way.
+**DECIDED 2026-08-23 (coordinator ruling, recorded here and in the test
+header):** the fixture is redefined as a **tracked mirror**, not a frozen
+original. The "pinned forever" reading died when the corridor itself was
+re-laid (OW5D spine) — the pre-split world no longer exists as a target,
+and re-freezing would mean reverting owner-directed sitings. What the test
+still catches, and now explicitly claims, is **accidental** identity drift:
+the live band configs and the mirror must agree entry-for-entry, so a
+dropped, duplicated, or reordered entry still fails. The cost of a
+**deliberate** identity move is making it twice — live config AND mirror,
+in the same commit, each carrying a `_why_*` rationale — and that
+double-write friction is the mechanism that forces intent. An identity-key
+edit to the mirror without a matching same-commit live edit and rationale
+is a defect. (D3's `§` re-escape was formatting churn; ignore.)
 
 ## 7. The bark retint, deliberately not changed
 
@@ -133,6 +178,97 @@ target of ~RGB(95,82,72), chosen so bark survives the cool ambient that the
 ground-legibility fix depends on. Changing it moves every twisted oak in the
 chapter on the evidence of one blind critique of one ironwood stand. It belongs
 to the full-corridor visual pass, where it can be judged against the chapter.
+
+## 8. The Old Mill Crossing is CI-only impassable — a pre-existing main defect, not caused by STRANDED-P3
+
+`verify-core-verb-shard` failed `smoke_traversal.gd` twice on GitHub's runners
+for `ralph/STRANDED-P3` (runs 2166/2168): "could not cross the open the Old
+Mill Crossing (only 6.5m / 8.5m past the gap)" — short of `BRIDGE_CROSSED_M`
+(11.0m). The South Bridge, same test, same shared walk function
+(`_walk_at_the_bridge`), passed both times at its own historical margin
+(+22.8m).
+
+**Not caused by STRANDED-P3's own diff.** That branch's changes against `main`
+are OP21-24's chop-clip timing (`tool_hold.gd`'s swing-resolution fraction,
+`trainer_model.gd`'s per-role loop flag, `art.json`'s `tool_swing` block) and
+this branch's own dark-Team-Tether-NPC emission floor
+(`character_model.gd::_shared_variant_material`). None of those touch
+movement speed, acceleration, the crossing's own code
+(`gated_crossing.gd`/`mill_crossing.gd`), or terrain. Both are one-time
+per-material/per-swing costs, not per-frame movement gates, and no swing ever
+happens during this walk.
+
+**Already a known, pre-existing `main` defect**, separately found and recorded
+by `ralph/gate-d-mill-crossing-note` (CI run 2156, on bare `main`, before
+OP21-24 or STRANDED-P3 existed): the identical walk failed there too, reaching
+only +4.2m. That session ruled out the terrain data itself (config and baked
+terrain byte-identical to a passing commit), the D5 Sigil gorge (3200m away),
+and scatter (nothing within 20m of the deck).
+
+**Root-caused, not guessed — first attempt at a local repro passed at
++23.6m** (matching the crossing's own historical margin, `ralph/BACKLOG.md`'s
+`RIVER-GATE` entry, +23.7m), so a first pass of this file recorded a
+"CI-only, streaming-race" theory and a test-harness pre-warm as a hedge.
+**That theory was wrong and the hedge was reverted.** A second local run,
+under the same sibling-session CPU contention this box carries all day,
+reproduced the exact CI shape directly (+9.2m, short of `BRIDGE_CROSSED_M`) —
+proof the failure is real and timing-sensitive, not CI-platform-specific.
+`tools/_probe_mill_stall.gd` (a frame-by-frame `_walk_at_the_bridge` replay
+logging `get_slide_collision()` on every low-velocity frame, the same method
+`tools/_probe_wedge_seam.gd` used for `WALL1`) caught it directly: the walk
+stalls dead at depth 7.06m, blocked by a collider named
+`Wild_galecrest_3037_1`.
+
+**The cause: a wild creature standing on the crossing's own deck.**
+`data/config/bands/band3_the_river_lock/spawns.json`'s order 3037 — GATE-D3's
+2026-08-22 density pass, "the aggressor role... the river gorge and the Old
+Mill Crossing" — centred a 4-galecrest cluster at `(-152.0, 4220.5)`, radius
+18.0. The crossing's own centre is `(-152.0, 4203)` — the SAME x, i.e. the
+deck's own line — only 17.5m from the cluster centre, so the 18m spawn disc
+already reached half a metre past the crossing's centreline before
+`wild_creature.gd`'s own 7.0m `wander_radius` (`data/config/combat.json`) is
+even added. Spawn placement is deterministic (seeded from `order`), but
+`_wander()`'s own RNG advances on real elapsed frames — so how many wander
+decisions a galecrest had taken by the time anything reached the crossing
+varied run to run, which is exactly why this only sometimes blocked it rather
+than always. GATE-D3's own text says every new cluster was kept 20m+/24m+
+clear of trainer arenas and existing clusters "so nothing here contests a
+fight's footing" — the same rule, just never applied to this one
+crossing, Band 3's only route across the river (`D46`). A wild creature
+parked on the only bridge is a real softlock risk for a player, not only a
+test flake.
+
+**Fixed in the spawn table**, not the test: order 3037 moved deeper onto the
+far bank (same x, `4220.5 → 4235.0`) and its radius shrunk (`18.0 → 8.0`), so
+even a worst-case home placement plus a full wander excursion
+(`4235 − 8 − 7 = 4220`) stays 9m clear of the far landing and 6m clear of the
+walk test's own target point — see that entry's own
+`_comment_stranded_p3_deck_clearance`. `_walk_at_the_bridge` itself needed no
+change and was reverted to its pre-investigation form. Confirmed: three
+consecutive local runs all reached the historical +23.5-23.6m margin after
+the spawn-table fix, with no other change to the walk.
+
+**Same bug class, second location — CI run 2170.** Fixing the galecrest
+cluster made the Old Mill Crossing itself pass on CI, but the same shard then
+failed `smoke_traversal.gd`'s OTHER wild-body check: the basic four-direction
+walk near spawn, "player got wedged ... at move_left at (-8, 40)" (move_back
+had ended at `(60.0, -7.4, 39.9)`, so move_left's constant-z leg runs near
+z≈40). Same method, same result:
+`data/config/bands/band1_lower_meadows/spawns.json`'s order 1006 — a
+BAND1-D1-DENSITY bramblebun cluster from the same 2026-08-22 owner directive,
+centred `(-2.4, 35.2)` radius 14.2 — reached to z=49.4 before wander, well
+past the walk's z≈40 line. `tools/_probe_spawn_wedge.gd` (the same
+frame-by-frame replay as `_probe_mill_stall.gd`) caught it directly:
+`get_slide_collision()` named `Wild_bramblebun_1006_3` as the collider,
+glancing on one local run and (per CI) square-on enough elsewhere to trip the
+sustained-wedge check. Fixed the same way: moved further along z and shrunk
+the radius (`35.2/14.2 → 62.0/8.0`) so a full wander excursion still clears
+z≈40 by 7m, keeping the density pass's own "left of the spine" siting intent.
+Two for two — every wild cluster this investigation has actually walked into
+was sited without checking it against a route or test walk that happens to
+cross nearby; a third may exist unfound. `smoke_traversal.gd`'s own
+four-direction walk and both crossing walks are the only routes verified
+clear so far.
 
 ---
 

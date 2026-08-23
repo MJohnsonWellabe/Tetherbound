@@ -4,13 +4,17 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
-## ACTIVE TEMPORARY OVERLAY — Weekend Meadows Sprint
+## CURRENT STATE — post-sprint assessment, 2026-08-23
 
-For work performed during the 2026-08-21 through 2026-08-23 weekend push, read and follow:
+The weekend sprint overlay (`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md`)
+is **retired**; its window ended 2026-08-23 and its output is on `main`.
 
-`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md`
-
-That file changes priority, parallelization, and checkpoint cadence in order to reach a full playable Meadows chapter by Sunday night. **It does not remove or weaken any canonical gate, owner-playtest, backlog, or detailed-prompt requirement.**
+Current ground truth is `ralph/ASSESSMENT_2026-08-23.md` — a full
+evidence reconciliation of every gate against the landed `main`. The
+current work manifest derived from it is `ralph/ACTIVE_TASKS.md`
+(packages P1–P6, ending at the Gate F integration playthrough). Read
+those two before selecting any work; do not re-derive verdicts they
+already carry evidence for.
 
 ## 1. Read order
 
@@ -18,7 +22,7 @@ A fresh coordinator or lane should establish context in this order:
 
 1. `CLAUDE.md` — hard rules and agent contract.
 2. `docs/TETHERBOUND_GAME_VISION.md` — what the finished Meadows game is supposed to feel like.
-3. `ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md` — active temporary production-sprint overlay.
+3. `ralph/ASSESSMENT_2026-08-23.md` — evidence ground truth for every gate.
 4. `ralph/ACTIVE_GAME_PLAN.md` — gameplay gates and regional execution order.
 5. `ralph/ACTIVE_TASKS.md` — compact current work manifest for the active gate.
 6. newest `ralph/OWNER_PLAYTEST_*.md` first — newest owner-play evidence wins where old wording/tests conflict; read older owner playtests only as needed for history/context.
@@ -34,7 +38,7 @@ Do **not** cold-read all of `BACKLOG.md`, `DONE.md`, or every prompt file. They 
 Read `ralph/COORDINATED_RUN.md` after the files above. The coordinator:
 
 - reconciles the active gate against current `main`;
-- applies the active weekend SHIP BLOCKER / QUALITY BLOCKER / POLISH prioritization;
+- applies the SHIP BLOCKER / QUALITY BLOCKER / POLISH prioritization from ACTIVE_TASKS;
 - keeps the full fresh-save Meadows chapter as the critical path;
 - chooses the highest-impact incomplete work;
 - launches 3–5 non-conflicting lanes when useful;
@@ -58,7 +62,7 @@ Read `ralph/PROMPT.md` after the files above. A lane:
 
 ## 3. How work is selected
 
-`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md` decides **weekend production priority and safe parallelization**.
+`ralph/ACTIVE_TASKS.md` (packages P1–P6, derived from the 2026-08-23 assessment) decides **current production priority and safe parallelization**.
 
 `ralph/ACTIVE_GAME_PLAN.md` decides **canonical gameplay gate/package ownership and acceptance order**.
 
@@ -110,7 +114,7 @@ The canonical Meadows build progresses:
 → **Gate E — Stronghold / Warden / legendary finale**
 → **Gate F — full 3–4 hour Meadows integration playthrough**.
 
-For the weekend sprint, implementation may overlap across gates where dependencies/file ownership are safe, but a gate is not declared passed until its canonical evidence criteria are met.
+Implementation may overlap across gates where dependencies/file ownership are safe, but a gate is not declared passed until its canonical evidence criteria are met.
 
 The stop condition is not an empty task list. It is a complete Meadows chapter that passes the vision and Prompt 70.
 

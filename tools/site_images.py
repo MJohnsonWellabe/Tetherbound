@@ -89,13 +89,24 @@ MAPPING = [
     ("shots/story/storm-road.png",             "site/img/storm-road.jpg",              960),
     ("shots/story/relay-approach.png",         "site/img/relay-approach.jpg",          960),
     ("shots/story/relay-machines.png",         "site/img/relay-machines.jpg",          960),
-    # NOT on the page: the stronghold currently renders as an untextured grey
-    # blockout under translucent sky-planes (STRONGHOLD-MAT, SKY-PLANES). The
-    # mapping stays so a textured re-shoot lands in the slot that is already
-    # wired for it.
+    # SITE-SHOTS: close pylon-line/cabling/drained-ground frame, standing
+    # where the player actually walks rather than looking down at the
+    # compound wall the way relay-approach.jpg does. Feeds .band.tether's
+    # own background layer (site/index.html), not a .shots figure.
+    ("shots/story/tether-site.png",            "site/img/tether-site.jpg",             1280),
+    # STRONGHOLD-MAT landed (97f4ff32): the stronghold now has real textured
+    # masonry. SKY-PLANES is still open, but it is StormWall slabs at the
+    # storm_road blocker (rift_collapse.gd) -- a different site kilometres
+    # away -- not anything this viewpoint, 210m south of Meadows Hall on its
+    # own approach corridor, has ever been shown to catch. Re-enable only
+    # after actually judging a fresh render; do not assume clean from the
+    # coordinates alone.
     # ("shots/story/stronghold-approach.png",  "site/img/stronghold-approach.jpg",     960),
     ("shots/story/legendary-bound.png",        "site/img/legendary-bound.jpg",        1280),
     ("shots/story/mill-crossing.png",          "site/img/mill-crossing.jpg",           960),
+    # SITE-SHOTS: the Warden, in the Warden Arena chamber -- an enclosed
+    # room, so this frame does not depend on SKY-PLANES being fixed outside.
+    ("shots/story/warden.png",                 "site/img/warden.jpg",                  960),
     # The starter choice as the game presents it -- three orbs previewed during
     # the briefing, indoors (`SA0-orbs`). tools/capture_starter_picker.gd.
     ("shots/_diag/starter_picker_default.png", "site/img/starter-orbs.jpg",            960),

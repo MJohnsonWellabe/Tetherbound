@@ -385,7 +385,46 @@ func _shared_variant_material(source: Material, name: String, colour: Color) -> 
 		if source is BaseMaterial3D else StandardMaterial3D.new()
 	material.albedo_color = material.albedo_color * colour
 	if material.emission_enabled:
-		material.emission = material.emission * colour
+		# STRANDED-P3: a dark tint (a Team Tether rank palette, e.g. the grunt's
+		# original #4a5049) darkens the SAME colour into both albedo and this
+		# self-lit emission at once, so the two channels that were supposed to
+		# keep a figure legible in shade both crush toward black together
+		# instead of one backstopping the other -- confirmed on Hess reading
+		# as a near-silhouette against the band3 meadow.
+		#
+		# A first fix here (raising the palette's own luminance, plus scaling
+		# `emission_energy_multiplier` up when the tint is dark) still rendered
+		# Hess almost entirely black -- because a straight multiply can only
+		# ever DARKEN a source pixel, never brighten one. Wherever the rig's
+		# own painted emission texture is already near-zero (a dark uniform
+		# panel, a shadowed fold), `texture * colour` stays near-zero no
+		# matter how bright `colour` is, and no energy multiplier rescues a
+		# value that was already zero going in.
+		#
+		# Fixed the same way `severed_spokes.gd::_tether_material()` handles
+		# its own always-dark oxblood: an ADDITIVE floor, not a multiplier.
+		# `lerp()` toward the tint colour guarantees the emission is never
+		# darker than a fraction of the tint itself, regardless of what the
+		# source pixel started at -- a near-black source region floors at
+		# `colour * EMISSION_FLOOR_BLEND`, while a source region that was
+		# already bright keeps most of its own painted variation.
+		#
+		# Gated on the tint actually being dark: every non-rank tint in the
+		# game is `#ffffff` (art.json's identity multiply, after the villager
+		# tint saga this same file's NP6 comment documents), and this floor
+		# must stay a no-op there -- `colour.lerp(colour, x) == colour`, so
+		# floor-then-identity is safe algebraically, but the energy-multiplier
+		# bump below is not, and skipping the whole block is clearer than
+		# relying on that algebra. TUNABLE.
+		const EMISSION_FLOOR_BLEND := 0.5
+		const EMISSION_FLOOR_MULTIPLIER := 1.4
+		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
+		if tint_luminance < 0.95:
+			material.emission = (material.emission * colour).lerp(colour, EMISSION_FLOOR_BLEND)
+			material.emission_energy_multiplier = maxf(
+				material.emission_energy_multiplier, EMISSION_FLOOR_MULTIPLIER)
+		else:
+			material.emission = material.emission * colour
 	_variant_materials[key] = material
 	return material
 

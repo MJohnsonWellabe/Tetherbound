@@ -87,3 +87,66 @@ func test_the_threshold_actually_gates_the_unlock() -> void:
 		"trait_unlocked() reports true one node BELOW the configured threshold")
 	assert_true(PROGRESSION.trait_unlocked(required, cfg),
 		"trait_unlocked() reports false AT the configured threshold")
+
+
+## --- GATE-E: the half that was never RUN --------------------------------------
+##
+## Every test above reads the source TEXT of `_set_xp_line()` and none of them
+## calls it, which is exactly prompt 33's false-positive shape -- and it cost
+## exactly what that costs. The unlock clause read `creature.get("bond_nodes")`;
+## `bond_nodes` is a METHOD on creature_instance.gd rather than a property, so
+## `get()` handed back a Callable, `int(Callable)` is not a constructor, and the
+## function aborted there -- on every level-up, in every fight in the chapter.
+## All three source assertions above stayed green through it, because the source
+## still SAID `creature.label()`, `creature.level` and `trait_unlocked`.
+##
+## Found by driving four real trainer fights end to end
+## (tests/smoke_gate_e_finale.gd). This is the cheap regression that keeps it
+## found: the builder is actually executed, with a real creature and a real
+## award, and the line it produces is read back.
+
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+
+
+class FakeManager extends Node:
+	var last_xp_award: Dictionary = {}
+	var creature: RefCounted = null
+
+	func active_creature() -> RefCounted:
+		return creature
+
+
+func _line_for(levels: int) -> String:
+	var creature: RefCounted = TRAINERS.creature_for({"species": "mudsnout", "level": 12})
+	assert_true(creature != null, "no mudsnout in species.json; the announcement cannot be built")
+	if creature == null:
+		return ""
+	var manager := FakeManager.new()
+	manager.creature = creature
+	manager.last_xp_award = {creature.call("label"): {"xp": 12, "levels": levels}}
+
+	var hud: Object = load(HUD_PATH).new()
+	var label := Label.new()
+	hud.set("_manager", manager)
+	hud.set("_xp_line", label)
+	hud.call("_set_xp_line")
+	var text: String = label.text
+	label.free()
+	hud.free()
+	manager.free()
+	return text
+
+
+func test_the_level_up_line_is_actually_produced_when_the_builder_runs() -> void:
+	var line := _line_for(1)
+	assert_false(line.is_empty(),
+		"running _set_xp_line() on a real level-up produced no text at all; the builder "
+		+ "aborted part-way and the player sees nothing")
+	assert_true(line.contains("+12 XP"),
+		"the produced level-up line does not report the XP: '%s'" % line)
+	assert_true(line.contains("reached Lv"),
+		"the produced level-up line does not name the creature and its new level: '%s'" % line)
+
+
+func test_an_ordinary_award_still_produces_the_plain_xp_line() -> void:
+	assert_eq(_line_for(0), "+12 XP")
