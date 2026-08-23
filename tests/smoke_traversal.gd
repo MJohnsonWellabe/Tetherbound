@@ -978,6 +978,12 @@ func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array
 ## -- a seal that also blocks the finale once the player has earned it would
 ## be a worse bug than the leak it replaced, and nothing else in the chapter
 ## re-tests this gate once it is open.
+## The causeway `tools/_probe_crossings.gd` measured still open after the two
+## gorge diagonals were extended to the world edges: uncarved ground whose only
+## barrier is the gate leaf. Any collider narrower than this gates nothing.
+const SIGIL_CAUSEWAY_MIN_X := 57.0
+const SIGIL_CAUSEWAY_MAX_X := 70.0
+
 const SIGIL_GATE_START_BACK := 12.0
 const SIGIL_GATE_WALK_FRAMES := 420
 ## Same reasoning as BRIDGE_BLOCKED_M: a locked approach should stop at
@@ -1012,11 +1018,50 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 	if prompt == null:
 		failures.append("the Sigil Gate has no Interactable; it cannot be tried at all")
 		return
-	var shape: CollisionShape3D = gate.get_node_or_null(^"GateCollision/CollisionShape3D") as CollisionShape3D
+	# Found BY TYPE, not by node path. `road_gate.gd` creates its shape with
+	# `CollisionShape3D.new()` and never names it, so the auto-assigned name is
+	# not reliably the literal "CollisionShape3D" a path assumes -- and the
+	# earlier path-based lookup here reported "the Sigil Gate has no box
+	# collider; nothing would ever stop a player at it" about a collider that is
+	# present, enabled and correctly sited at (63.6, 7400).
+	# `tools/_probe_sigil_gate_body.gd` measured it: GateCollision, BoxShape3D,
+	# disabled=false, world-x 61.8..65.4. A test that says a real barrier is
+	# absent is worse than no test, because the fix it invites is to build a
+	# second one.
+	var body: Node = gate.get_node_or_null(^"GateCollision")
+	var shape: CollisionShape3D = null
+	if body != null:
+		for child in body.get_children():
+			if child is CollisionShape3D:
+				shape = child as CollisionShape3D
+				break
 	var box: BoxShape3D = shape.shape as BoxShape3D if shape != null else null
 	if box == null:
 		failures.append("the Sigil Gate has no box collider; nothing would ever stop a player at it")
 		return
+	if shape.disabled:
+		failures.append("the Sigil Gate's collider is disabled before anyone opens it")
+		return
+
+	# THE ASSERTION THAT ACTUALLY MATTERS, and the one nobody had made.
+	# `tools/_probe_crossings.gd` proved the two gorge diagonals seal everything
+	# except a causeway at world-x 57..70 -- thirteen metres of uncarved ground
+	# whose only barrier is this leaf. The leaf covers 3.6m of it. A player
+	# walks around the side, which is exactly the failure `south_bridge.gd`'s
+	# own history already records: "any deck the rails do not cover can be
+	# stepped onto from the side, and a gate inboard of that gap gates nothing."
+	# The leaf is yawed, so its WORLD-X extent decides this, not its own width.
+	var yaw := shape.global_rotation.y
+	var scaled: Vector3 = box.size * shape.global_transform.basis.get_scale()
+	var half_x: float = absf(scaled.x * cos(yaw)) * 0.5 + absf(scaled.z * sin(yaw)) * 0.5
+	var leaf_min := shape.global_position.x - half_x
+	var leaf_max := shape.global_position.x + half_x
+	if leaf_min > SIGIL_CAUSEWAY_MIN_X + 0.5 or leaf_max < SIGIL_CAUSEWAY_MAX_X - 0.5:
+		failures.append(
+			("the Sigil Gate leaf spans world-x %.1f..%.1f but the causeway it must close is %.1f..%.1f"
+				+ " -- %.1fm of open ground beside it, which a player simply walks around") % [
+				leaf_min, leaf_max, SIGIL_CAUSEWAY_MIN_X, SIGIL_CAUSEWAY_MAX_X,
+				maxf(0.0, leaf_min - SIGIL_CAUSEWAY_MIN_X) + maxf(0.0, SIGIL_CAUSEWAY_MAX_X - leaf_max)])
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		failures.append("no Game autoload; the Sigil Gate has no inventory or flag store to read")
