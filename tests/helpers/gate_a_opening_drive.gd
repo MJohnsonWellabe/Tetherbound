@@ -241,7 +241,12 @@ func _collect_world_nodes() -> bool:
 	_combat.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _catch_results.append(success))
 	var throw: Node = _combat.call("throw_aim")
 	throw.connect("orb_struck", func(_target: Node3D, _offset: float) -> void: _throw_strikes += 1)
-	throw.connect("orb_missed", func() -> void: _throw_misses += 1)
+	# `orb_missed` carries the sentence the player is shown ("so close -- 0.2m
+	# wide", "the orb hit the ground -- 18.0m wide"). Printed rather than
+	# dropped: a run that misses is exactly the run whose reason matters.
+	throw.connect("orb_missed", func(message: String) -> void:
+		_throw_misses += 1
+		print("throw missed: %s" % message))
 	return true
 
 
