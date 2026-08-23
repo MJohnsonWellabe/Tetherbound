@@ -261,11 +261,53 @@ approach, what it needed, and what ended the flight, and `throw_aim.gd` logs the
 throw range and launch direction at release. A future "the throw feels bad"
 report gets answered with those numbers instead of a fourth theory.
 
-Open, honestly: this is now measured on a harness aimer, not on a human with a
-thumbstick. The owner's *"I never know if I was close"* is a FEEDBACK complaint
-and survives independently of the strike rate -- a miss currently tells the
-player nothing about how near it came. That is a real, separable piece of work
-and it is not fixed by this entry.
+Then the Gate B run found the thing that was actually broken, and it was not the
+catch at all. See the entry below.
+
+Open, honestly: the strike rate is measured on a harness aimer, not on a human
+with a thumbstick. What is now closed is the half a harness CAN answer.
+
+---
+
+### CATCH-FEEL, the real one: the trainer walks away from their own throw
+
+`throw_aim.gd::_enter_aim()` hands the trainer locomotion and `_leave_aim()`
+takes it back. A RELEASED throw goes through neither: it keeps the aim camera
+deliberately ("watching your own orb arc away is the shot") and sets `state`
+directly. So from the moment the orb leaves the hand, through the flight and
+through the whole catch resolution, the trainer is still a live walking actor.
+
+Measured in the Gate B continuous run, 2026-08-23:
+
+| | at release | at breakout |
+| --- | --- | --- |
+| trainer | z = -37.5, 3.34m from the Bramblebun | z = -20.4 |
+| wild | z = -40.2 | z = -40.3 (had not moved) |
+
+A second run caught it mid-stride: at the breakout, `movable=true`, velocity
+**5.00 m/s**, 24.38m from the wild.
+
+Every throw after that was made from twenty-five metres. At `speed` 17 under
+`gravity` 14 an orb cannot reach past v²/g -- about twenty metres -- so
+**nineteen consecutive orbs were spent on throws that were never physically
+capable of landing**, each reported to the player as the same four words: "the
+orb went wide". That is the owner's *"I never know if I was close"* exactly: the
+reticle promises, the orb falls eighteen metres short, the orb is gone.
+
+Fixed in three parts, one per half of the failure:
+
+- `_set_trainer_movable(false)` at release. The root cause -- and it also
+  restores the resolution as a shot, since the camera is in close on the orb for
+  those seconds while the trainer was jogging out of the county.
+- A locked-on throw beyond ballistic reach is refused rather than spending the
+  orb. Gated on the committed assist point, so deliberately lobbing an orb at the
+  ground in front of you is still legal.
+- A miss reports how near it came and what ended the flight, so a graze and an
+  eighteen-metre miss stop reading identically.
+
+`tests/test_throw_reach_and_miss_message.gd` pins both pure functions. The
+forensics stay in the shipping code: three wrong diagnoses came out of a miss
+that reported one word.
 
 ---
 

@@ -342,6 +342,7 @@ func _catch_with_real_throws() -> bool:
 	_checkpoint("satchel drained to %d orb(s) so the empty case is on the real path" % drained)
 	var launches := 0
 	var restocked := false
+	var refusals := 0
 	var re_engages := 0
 	# Generous, not unbounded: with the floor in place the opening never refuses
 	# a throw, so the only honest reason to stop is that catching is broken.
@@ -472,6 +473,7 @@ func _catch_with_real_throws() -> bool:
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
+		var orbs_before := _orbs_held()
 		await _tap_action(THROW_ACTION)
 		launches += 1
 		# A launch is not a landed throw. Wait first for the projectile's physical
@@ -494,6 +496,30 @@ func _catch_with_real_throws() -> bool:
 			print("physical launch %d went wide; retrying after a real miss" % launches)
 			continue
 		if _throw_strikes <= strikes_before:
+			# A REFUSED throw is not a broken launch.
+			#
+			# `throw_aim.gd::_release()` now declines a locked-on throw the orb
+			# cannot physically reach (past v^2/g, about 20m) rather than
+			# spending the orb on it. The refusal costs nothing, so the satchel
+			# is the tell: no orb left the bag, so no orb was thrown, and there
+			# is no strike or miss coming to wait for. The player's answer to
+			# "too far to throw" is to close the distance, so that is what this
+			# does -- reporting it as a broken launch is how this read before
+			# the game learned to refuse.
+			if _orbs_held() == orbs_before:
+				print("launch %d refused (nothing spent); closing the distance" % launches)
+				launches -= 1
+				refusals += 1
+				if refusals > 8:
+					_fail("the throw was refused %d times; the trainer never got "
+						+ "within the orb's range of the Bramblebun" % refusals)
+					return false
+				var toward := _wild.global_position
+				await _drive_body_toward(_player, toward, 220)
+				_stop_left_stick()
+				for _i in 6:
+					await _tree.physics_frame
+				continue
 			_fail("physical launch %d produced no strike or miss outcome" % launches)
 			return false
 		for _i in 900:
