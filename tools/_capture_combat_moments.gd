@@ -114,7 +114,6 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/combat"
-const MATH := preload("res://scripts/combat/combat_math.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 const BOOT_FRAMES := 90
@@ -581,7 +580,7 @@ func _flee_if_fighting() -> void:
 ## put it in a frame that has already run.
 func _press(action: String) -> void:
 	Input.action_press(action)
-	await _await_physics(1, "press %s" % action)
+	await _await_physics(2, "press %s" % action)
 	Input.action_release(action)
 	await _await_physics(1, "release %s" % action)
 

@@ -46,45 +46,48 @@ extends SceneTree
 ## HUD elements (exploration HUD, input-glyph legend, minimap, combat HUD,
 ## the capture reticle) load the world, and they share exactly ONE boot.
 ##
-## The arithmetic, added up from the constants actually used below (world
-## phase only -- see the note above for why the standalone phase is not
-## charged at the same rate):
+## The arithmetic, added up from the actual `_settle()`/`_shoot()` constants
+## in the world phase below (`_phase_world`) -- every one of these frames has
+## `meadows_playground.tscn` in the tree, so every one is charged at the
+## measured 2.4s/frame:
 ##
-##   boot                                                    90
-##   camera placement + settle                               15
-##   party-strip pin + HUD settle                             15
-##   shoot 05-hud-exploration (pose)                           6
-##   gamepad-glyph toggle settle + shoot 06                  8+6
-##   minimap reveal settle + shoot 07                         8+6
-##   menu open (map tab) transition                            8
-##   map-bake settle -- proven number, not guessed: this is the
-##     SAME wait `capture_map_tab.gd`'s own header measured after
-##     a shorter wait came back a blank white square                90
-##   shoot 14-menu-map (pose)                                  8
-##   menu close settle                                         8
-##   combat: teleport into practice cluster + settle          15
-##   _start_fight + settle                                    15
-##   shoot 10-combat-hud (pose)                                6
-##   _try_throw + aim-camera settle                           15
-##   aim-at-target + settle                                    6
-##   shoot 11-capture-reticle (pose)                           6
+##   boot (BOOT_FRAMES)                                       90
+##   camera placement settle                                  12
+##   party-strip pin + HUD settle                              12
+##   shoot 05-hud-exploration (6 pose + shutter)                6
+##   gamepad-glyph toggle settle + shoot 06                    12
+##   minimap reveal settle + shoot 07                          12
+##   menu open (map tab) transition                             6
+##   map-bake settle -- proven number, not guessed: the exact
+##     wait `capture_map_tab.gd`'s own header measured after a
+##     shorter one came back a blank white square                 90
+##   shoot 14-menu-map + menu close settle                     12
+##   combat: teleport into practice cluster + settle           12
+##   _start_fight + settle                                     12
+##   shoot 10-combat-hud                                        6
+##   _try_throw + aim-camera settle                            12
+##   aim-at-target + settle + shoot 11-capture-reticle          12
 ##   ------------------------------------------------------------
-##   TOTAL                                                   331 frames
+##   TOTAL                                                    306 frames
 ##
-##   331 * 2.4s  ~=  794s  ~=  13.2 minutes  -- world phase alone.
+##   306 * 2.4s  =  734s  ~=  12.2 minutes  -- world phase alone.
 ##
-## The eighteen standalone shots (title, starter picker, name prompt,
+## The seventeen standalone shots (title, starter picker, name prompt,
 ## dialogue, party-strip closeup, stamina-arc closeup, six pause tabs, five
-## fixture panels) run with NO world scene in the tree at any point, so they
-## are not drawing the Meadows and are not measured at the 2.4s/frame figure
-## above -- that figure is specifically the cost of the compatibility
-## renderer drawing 143,630 props, and none of these eighteen frames ask it to
-## draw any. Unmeasured in THIS repo, so stated honestly rather than invented:
-## each is budgeted at 6-15 settle frames below (about 170 frames total), a
-## plain Control tree or a single small SubViewport creature preview at most,
-## which on any renderer is a fraction of a full-world frame. Even at a
-## pessimistic tenth of the world rate that adds ~40s. Total run: well inside
-## the ~15 minute budget this task sets.
+## fixture panels) sum to 276 more awaited frames (`_phase_standalone`), but
+## NONE of them has `meadows_playground.tscn` in the tree -- so none is
+## drawing the 143,630-prop scatter the 2.4s/frame figure above is the cost
+## of, and charging them at that rate would be wrong, not conservative.
+## Unmeasured in THIS repo, so stated honestly rather than invented: each
+## frame here draws a plain Control tree, or at most a couple of small
+## SubViewports (the starter picker's three orb turntables, the Creatures
+## tab's one creature preview) -- a tiny fraction of the world's geometry on
+## any renderer. Even in the worst case of no speed-up at all, 276 more
+## frames at the world rate is ~11 more minutes, for a hard ceiling of ~23
+## minutes total; in the ordinary case of a UI-only frame actually being
+## faster to draw than a 143k-prop one, the real total lands close to the
+## world phase's own 12.2 minutes, comfortably inside the ~15 minute budget
+## this task sets.
 ##
 ## POPULATION. An empty inventory or an empty quest log tells a blind critic
 ## nothing about hierarchy or legibility (this task's brief, point 4), so
@@ -304,7 +307,7 @@ func _shoot_title_screen() -> void:
 		return
 	var screen: Control = packed.instantiate() as Control
 	root.add_child(screen)
-	await _settle(15)
+	await _settle(12)
 	await _shoot("01-title")
 	screen.queue_free()
 	await _settle(2)
@@ -330,7 +333,7 @@ func _shoot_starter_picker() -> void:
 	var picker: CanvasLayer = packed.instantiate() as CanvasLayer
 	root.add_child(picker)
 	picker.call("open", STARTER_SPECIES)
-	await _settle(30) # a few seconds of turntable spin, not frame zero
+	await _settle(20) # a couple seconds of turntable spin, not frame zero
 	await _shoot("02-starter-picker")
 	picker.queue_free()
 	backdrop_layer.queue_free()
@@ -345,7 +348,7 @@ func _shoot_name_prompt() -> void:
 	var namer: CanvasLayer = packed.instantiate() as CanvasLayer
 	root.add_child(namer)
 	namer.call("open", "Terrapup")
-	await _settle(10)
+	await _settle(8)
 	await _shoot("03-name-prompt")
 	namer.queue_free()
 	await _settle(2)
@@ -359,7 +362,7 @@ func _shoot_dialogue_panel() -> void:
 	var dialogue: CanvasLayer = packed.instantiate() as CanvasLayer
 	root.add_child(dialogue)
 	if bool(dialogue.call("start", "grandpa_house")):
-		await _settle(10)
+		await _settle(8)
 		await _shoot("04-dialogue-panel")
 		dialogue.call("close")
 	else:
@@ -401,7 +404,7 @@ func _shoot_party_strip_closeup() -> void:
 	]
 	strip.call("update_from_party", entries, 0, true)
 	strip.call("set_pinned", true) # stays revealed; no fade timer to race against the shutter
-	await _settle(10)
+	await _settle(8)
 	await _shoot("08-party-strip")
 	strip.queue_free()
 	backdrop_layer.queue_free()
@@ -458,7 +461,7 @@ func _shoot_menu_tabs() -> void:
 		if str(menu.call("current_tab_id")) != tab_id:
 			_failures.append("%s: menu did not land on tab '%s'" % [shot_name, tab_id])
 			continue
-		await _settle(10)
+		await _settle(8)
 		await _shoot(shot_name)
 	menu.call("close")
 	await _settle(2)
@@ -574,7 +577,7 @@ func _phase_world() -> void:
 	camera.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) + 3.4, eye_xz.y)
 	player.global_position = Vector3(-15.0, field.height_at(-15.0, -1.0) + 0.4, -1.0)
 	camera.look_at(player.global_position + Vector3.UP, Vector3.UP)
-	await _settle(15)
+	await _settle(12)
 
 	# The party seeded in `_seed_game_state()` is already `Game.party` --
 	# `PlaygroundHUD` reads that same singleton, so it needs no reseeding
@@ -582,7 +585,7 @@ func _phase_world() -> void:
 	var strip: Variant = hud.get("_party_strip")
 	if strip != null and strip is Object and (strip as Object).has_method("set_pinned"):
 		strip.call("set_pinned", true)
-	await _settle(15)
+	await _settle(12)
 	await _shoot("05-hud-exploration")
 
 	# Input glyphs: the bottom-dock legend redraws in gamepad-button form the
@@ -590,7 +593,7 @@ func _phase_world() -> void:
 	# `capture_ui_suite.gd` uses -- so this is the real legend in its other
 	# real state, not a mocked-up glyph sheet.
 	_game.set("_last_input_was_gamepad", true)
-	await _settle(8)
+	await _settle(6)
 	await _shoot("06-hud-input-glyphs")
 	_game.set("_last_input_was_gamepad", false)
 
@@ -604,10 +607,12 @@ func _phase_world() -> void:
 		for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0)]:
 			map_state.call("mark_visited", point)
 		_game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
-	var minimap_wild: Node3D = director.call("wild_creature") as Node3D if director != null else null
+	var minimap_wild: Node3D = null
+	if director != null:
+		minimap_wild = director.call("wild_creature") as Node3D
 	if minimap_wild != null:
 		minimap_wild.global_position = player.global_position + Vector3(20.0, 0.0, 0.0)
-	await _settle(8)
+	await _settle(6)
 	await _shoot("07-minimap")
 
 	# Map tab: needs the world for `map_baker.gd`'s live Terrain3D bake.
@@ -618,14 +623,14 @@ func _phase_world() -> void:
 	# frame samples it).
 	if menu != null:
 		menu.call("open", "map")
-		await _settle(8)
+		await _settle(6)
 		if str(menu.call("current_tab_id")) == "map":
 			await _settle(90)
 			await _shoot("14-menu-map")
 		else:
 			_failures.append("14-menu-map: menu did not land on the map tab")
 		menu.call("close")
-		await _settle(8)
+		await _settle(6)
 	else:
 		_failures.append("14-menu-map: Game.menu() not reachable")
 
@@ -647,14 +652,14 @@ func _phase_world() -> void:
 				cluster.x, float(world.call("ground_height_at", cluster.x, cluster.z)) + 1.0, cluster.z
 			)
 			player.velocity = Vector3.ZERO
-			await _settle(15)
+			await _settle(12)
 
 			var wild: Node3D = director.call("wild_creature") as Node3D
 			if wild == null:
 				_failures.append("10-combat-hud: no practice-role wild creature near the cluster")
 			else:
 				director.call("_start_fight", wild)
-				await _settle(15)
+				await _settle(12)
 				if not bool(manager.call("is_fighting")):
 					_failures.append("10-combat-hud: _start_fight did not enter combat")
 				else:
@@ -665,7 +670,7 @@ func _phase_world() -> void:
 					# `combat_manager.gd`'s own handler for the throw input, not
 					# a shortcut invented here.
 					manager.call("_try_throw")
-					await _settle(15)
+					await _settle(12)
 					if bool(manager.call("is_aiming")):
 						_aim_at(rig, wild)
 						await _settle(6)
