@@ -367,7 +367,55 @@ Fixed so far: the toggle, and the door helper demanding "walk within 1.65m" when
 the real condition is "walk until the world offers it, then press" (the door sat
 enabled and offerable for twenty seconds while the player walked into a wall).
 
-### Resolved 2026-08-23: the swing is fine. The SEGMENT is flaky.
+### CONFIRMED 2026-08-23: the extraction is REQUIRED, not preferred
+
+Three fixes were tried against the flakiness and the evidence rejected two of
+them, which is worth recording so nobody retries them:
+
+| attempt | result |
+| --- | --- |
+| toggle-aware equip | **real fix**, kept -- the swing works |
+| village-centroid start instead of an invented (6,4) | **did not fix it** -- Tam went from 20m to 11m away and still failed |
+| sidestep when something else holds the interact line | **did not fix it** -- the player never gets close enough to sidestep |
+
+The working diagnostic finally named the state:
+
+```
+could not activate Tam cycle 1 (7.7m away, arbiter winner=EncounterDirector)
+```
+
+**The arbiter is a red herring.** `prompt_arbiter.choose_index()` ranks by
+priority then distance; `_creature_control_offer()` carries priority -1, so
+Tam's ordinary offer beats it whenever Tam makes one. At 7.7m he is outside his
+prompt radius and makes none, so the EncounterDirector fallback wins by being
+the only offer in the world. The winner is a SYMPTOM of the distance, not a
+cause.
+
+**The player is stuck at 7.7m and cannot close.** Same shape as the door stuck
+at a stubbornly identical 3.6m two attempts earlier: `_step_toward()` walks a
+straight line at the target and the village has buildings in it. From a
+hand-chosen start, some targets are behind geometry; which ones depends on where
+you started, which is why five runs failed at five different beats.
+
+**So the fix is not a better coordinate -- there isn't one.** Any point chosen
+by hand is behind something for some target. The opening leaves the player on
+the authored path where straight-line walking works, and that is not a fact any
+computed centre can reproduce.
+
+**Extract the opening from `smoke_gate_a_opening_segment.gd` into a helper and
+have Gate B PLAY it.** That is now demonstrated as necessary rather than
+preferred: two principled alternatives were tried and measured, and both failed
+for the same reason. It also deletes the second definition of the opening path
+that granting created.
+
+Scope, for whoever picks it up: `_run()` lines 54-224 plus roughly twenty
+movement/input helpers, out of a 969-line file that currently PASSES. The value
+is not only Gate B -- it makes the opening a reusable segment like the village,
+material and build ones already are.
+
+---
+
+**Superseded, kept for its eliminations -- the swing is fine, the SEGMENT is flaky.**
 
 Instrumenting `tool_hold.swing()` itself settled it:
 
