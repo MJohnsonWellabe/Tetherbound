@@ -3,6 +3,23 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## BAND2-63-WARRENS — the required dungeon could not be walked through (Gate D2)
+
+`tests: run_tests.gd (1301 tests, 0 failed), smoke_warrens.gd (two new checks), smoke_traversal.gd, _probe_warrens_run.gd, _probe_warrens_site.gd` · `area: burrow warrens`
+
+The driven run found the Burrow Warrens impassable: the terrain surfaced 2.6 m
+inside the den and the player wedged five metres short of it, so the guardian,
+the clear flag and the heartstone were unreachable on foot. `smoke_warrens.gd`
+never saw it because it teleports into each chamber. Re-sited to (-357,2610)
+after measuring out the three fixes that do not work (full record in
+`ralph/BAND2_WARRENS_EVIDENCE_2026-08-23.md`), added the Team Tether evidence
+prompt 63 asks for inside the cave, named and enlarged the guardian, put the
+Tuskroot lead on the heartstone's pickup line, and closed the test gap that let
+it ship. `vegetation.gd::clear_area()` is new and lets the site clear its own
+doorway at build time; it is NOT the bake-fingerprint fix and goes quiet once
+the coordinator re-bakes. Blind visual pass: seven frames in `shots/warrens_63/`,
+deliberately unjudged — the coordinator dispatches the critic.
+
 ## BAND2-63 — finished Quarry / Burrow Warrens (Gate D2)
 
 `tests: test_band_content.gd, test_band_vegetation.gd (one assertion loosened), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, smoke_warrens.gd, smoke_traversal.gd, full suite (1301 tests)` · `area: band2_stone_and_root content`
