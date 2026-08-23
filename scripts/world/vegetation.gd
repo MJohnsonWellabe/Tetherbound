@@ -38,6 +38,8 @@ extends Node3D
 ## streaming with the corridor is explicit unfinished work, not solved here.
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd")
 ## RG9: the felled/downed pickup a chop stands where a tree or rock stood.
@@ -194,6 +196,30 @@ var _next_mesh_id: int = 0
 ## being a surprise-corner problem long before this), not derived from a
 ## measurement.
 const COLLISION_STREAM_RADIUS := 100.0
+
+## PERF-ROG / OP23-01: the grid `_stream_batch()` walks instead of every solid
+## placement in the world.
+##
+## `update_collision_streaming()` used to iterate EVERY placement of EVERY
+## collision batch on every call -- 22,306 of them today, twice a second
+## (`playground_world.gd::COLLISION_STREAM_INTERVAL`). Measured by
+## `tools/perf_profile.gd` at 8-10ms per sweep on this box, which is not a
+## frame-rate floor but is a judder the player feels twice a second, and it
+## grows with every prop the world gains. Placements are filed by cell at
+## `_add_collision()` time and the sweep visits only the cells the bubble
+## actually covers.
+##
+## The result is placement-for-placement identical. A cell outside the
+## bubble's bounding BOX cannot hold a placement inside the bubble's
+## RADIUS, so skipping it can never leave a collider unbuilt; a cell that
+## has just left the box has every shape in it removed, exactly as the old
+## full sweep would have. Only the placements the old loop would have
+## examined and left alone are skipped.
+##
+## Tunable in `data/config/performance.json`. Cell size trades cells-walked
+## against placements-per-cell; anything well under the bubble radius is
+## sane.
+const COLLISION_STREAM_CELL := 32.0
 
 ## One entry per `_add_collision()` call: `body` (the StaticBody3D that holds
 ## whatever is currently resident), `radius` (the layer's shape radius,
@@ -790,23 +816,21 @@ func _make_mesh_asset(model_path: String) -> Object:
 	# should visibly thin at ordinary play distances -- see that file's own
 	# `_comment_lod`.
 	#
-	# NOT WIRED IN YET. This task built `tools/capture_lod_before_after.gd`
-	# to render the required before/after (lush pond-side pocket + an
-	# open-field long sightline, per ralph/ACTIVE_GAME_PLAN.md's own visual
-	# contract) and could not get it to complete: three attempts, each
-	# 18-25+ minutes of sustained ~92% single-core CPU with nothing to show,
-	# on a box whose `uptime` load average sat at 5-8 the whole time (this
-	# worktree is one of several concurrent Ralph lanes sharing it tonight).
-	# The boot-phase print above shows vegetation.gd's OWN build() is fast
-	# (~2.3s clean) -- the wall-clock sink is the REST of playground_world.gd's
-	# `_ready()` (water/village/trainers/quarry/relay/river/stronghold, none
-	# of it this file's scope) under that contention, not this change. So the
-	# two lines below are commented out not because they are believed risky,
-	# but because "render the change and verify the approved composition
-	# survives" is a hard requirement this task could not satisfy tonight,
-	# and shipping a visual-affecting change unverified is worse than
-	# shipping the config and the capture tool ready for the next lane (or
-	# this one, on a quieter box) to flip on and actually look at.
+	# WIRED IN by PERF-ROG (OP23-01), 2026-08-23. PERF-2 left these two lines
+	# commented out because it could not render the before/after its own
+	# visual contract required -- three attempts, 18-25 minutes each, on a box
+	# carrying several concurrent Ralph lanes. It was right not to ship a
+	# visual-affecting change it could not look at. On an idle box the same
+	# `tools/capture_lod_before_after.gd` completes in about six minutes, so
+	# PERF-ROG rendered both required views (lush pond-side pocket, open-field
+	# long sightline) before and after and put them in front of a blind
+	# critic. See `ralph/PERF_ROG_REPORT.md` for the frames and the ruling.
+	#
+	# Why a performance task cares: without these, every one of the corridor's
+	# 143k (soon 223k) scatter instances renders with Terrain3D's class-default
+	# visibility range, i.e. no distance culling at all, across 22,109
+	# MultiMeshInstance3D nodes. That is the single largest RENDER-side lever
+	# the chapter has, and it was configured, commented and switched off.
 	#
 	# `shadow_impostor` is separately NOT configured even once enabled: it
 	# points the SHADOW_LOD_ID render pass at a lower-poly LOD INDEX to cast
@@ -816,11 +840,14 @@ func _make_mesh_asset(model_path: String) -> Object:
 	# meshes/Meshy for the Meadows), so left at its class default rather
 	# than pointed at the same single mesh for no effect. An explicitly
 	# named remainder for whoever adds a real low-poly LOD1.
-	# TODO(PERF-2): render tools/capture_lod_before_after.gd's before/after,
-	# confirm the pond-side pocket and open-field contrast survive, then
-	# uncomment the two lines below.
-	# asset.set("lod0_range", float(layer_cfg.get("lod_range", 220.0)))
-	# asset.set("fade_margin", float(layer_cfg.get("lod_fade_margin", 30.0)))
+	# Gated so the two states can be MEASURED against each other rather than
+	# argued about: `tools/perf_profile.gd --mode=render` boots the same world
+	# twice, once with this on and once off, and reports the RenderingServer's
+	# own draw-call and primitive counts for each. The blind visual pass and
+	# the perf claim both rest on that comparison; see ralph/PERF_ROG_REPORT.md.
+	if bool(PERF_CONFIG.config().get("scatter_lod_ranges", true)):
+		asset.set("lod0_range", float(layer_cfg.get("lod_range", 220.0)))
+		asset.set("fade_margin", float(layer_cfg.get("lod_fade_margin", 30.0)))
 	return asset
 
 
@@ -997,11 +1024,20 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		"radius": radius,
 		"placements": placements,
 		"resident": resident,
+		# PERF-ROG: cell -> the indices of this batch's placements that fall in
+		# it, so the streaming sweep never walks the whole batch again. Filled
+		# by `_reindex_batch_cells()` just below, and rebuilt by it whenever a
+		# placement is removed (which shifts every higher index).
+		"cells": {},
+		# Which cells the last sweep considered inside the bubble, so a cell
+		# that has just left it can be cleared without rescanning the batch.
+		"streamed": {},
 		# BAND2-63-WARRENS: the model this batch was built from, so
 		# `clear_area()` can ask `_mesh_id_for()` which instances to remove.
 		# Nothing else reads it.
 		"model": model_path,
 	}
+	_reindex_batch_cells(batch)
 	_collision_batches.append(batch)
 	_solid += placements.size()
 	_stream_batch(_collision_batches[-1], Vector3.ZERO)
@@ -1039,8 +1075,44 @@ func _add_collision(model_path: String, placements: Array) -> void:
 ## when the bubble only has to be right within a fraction of a second of the
 ## player actually approaching).
 func update_collision_streaming(center: Vector3) -> void:
+	if not PERF_TRACE.enabled:
+		for batch: Dictionary in _collision_batches:
+			_stream_batch(batch, center)
+		return
+	var t0 := Time.get_ticks_usec()
 	for batch: Dictionary in _collision_batches:
 		_stream_batch(batch, center)
+	PERF_TRACE.record("scatter collision streaming", Time.get_ticks_usec() - t0)
+
+
+func _stream_cell(spot: Vector3) -> Vector2i:
+	return Vector2i(int(floorf(spot.x / COLLISION_STREAM_CELL)), int(floorf(spot.z / COLLISION_STREAM_CELL)))
+
+
+## (Re)file a batch's placements by cell.
+##
+## Rebuilt rather than patched after a removal because `harvest_permanently()`
+## and `clear_area()` both `remove_at()` out of `placements`, which shifts every
+## index above the hole -- and the index is what the cell buckets hold. A
+## rebuild is O(batch), a chop is rare, and a stale index would silently leave a
+## felled tree's collider standing or a standing tree's collider unbuilt, which
+## is exactly the class of bug this whole file's comments are made of.
+func _reindex_batch_cells(batch: Dictionary) -> void:
+	var placements: Array = batch["placements"]
+	var cells: Dictionary = {}
+	for i in placements.size():
+		var spot: Vector3 = (placements[i] as Dictionary)["position"]
+		var cell := _stream_cell(spot)
+		var bucket: PackedInt32Array = cells.get(cell, PackedInt32Array())
+		bucket.append(i)
+		cells[cell] = bucket
+	batch["cells"] = cells
+	# Residency is per placement and is unchanged by a re-file, but `streamed`
+	# names cells and a removed placement can empty one. Cleared so the next
+	# sweep re-establishes it from the cells that actually still exist; the
+	# only cost is that one sweep does no eviction, and the placements it would
+	# have evicted are re-tested by the sweep after it.
+	batch["streamed"] = {}
 
 
 func _stream_batch(batch: Dictionary, center: Vector3) -> void:
@@ -1048,19 +1120,45 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 	var placements: Array = batch["placements"]
 	var resident: Array = batch["resident"]
 	var shape_radius: float = batch["radius"]
+	var cells: Dictionary = batch["cells"]
+	var streamed: Dictionary = batch["streamed"]
 	var radius_sq := COLLISION_STREAM_RADIUS * COLLISION_STREAM_RADIUS
-	for i in placements.size():
-		var placement: Dictionary = placements[i]
-		var spot: Vector3 = placement["position"]
-		var within := spot.distance_squared_to(center) <= radius_sq
-		var has_shape: bool = resident[i] != null
-		if within and not has_shape:
-			var node := _make_collision_shape(placement, shape_radius)
-			resident[i] = node
-			body.add_child(node)
-		elif not within and has_shape:
-			(resident[i] as CollisionShape3D).queue_free()
-			resident[i] = null
+
+	# Every cell the bubble's bounding box touches. `reach` is in cells, and
+	# the +1 is not slack: a cell is included when any part of it is in the
+	# box, and the box edge lands inside a cell rather than on its boundary.
+	var reach := int(ceilf(COLLISION_STREAM_RADIUS / COLLISION_STREAM_CELL)) + 1
+	var centre_cell := _stream_cell(center)
+	var want: Dictionary = {}
+	for dx in range(-reach, reach + 1):
+		for dz in range(-reach, reach + 1):
+			var cell := Vector2i(centre_cell.x + dx, centre_cell.y + dz)
+			if not cells.has(cell):
+				continue
+			want[cell] = true
+			for i: int in (cells[cell] as PackedInt32Array):
+				var placement: Dictionary = placements[i]
+				var spot: Vector3 = placement["position"]
+				var within := spot.distance_squared_to(center) <= radius_sq
+				var has_shape: bool = resident[i] != null
+				if within and not has_shape:
+					var node := _make_collision_shape(placement, shape_radius)
+					resident[i] = node
+					body.add_child(node)
+				elif not within and has_shape:
+					(resident[i] as CollisionShape3D).queue_free()
+					resident[i] = null
+
+	# Cells the bubble has just left. Everything in them is out of range by
+	# construction, so this only ever removes.
+	for cell: Vector2i in streamed.keys():
+		if want.has(cell):
+			continue
+		for i: int in (cells[cell] as PackedInt32Array):
+			if resident[i] != null:
+				(resident[i] as CollisionShape3D).queue_free()
+				resident[i] = null
+	batch["streamed"] = want
 
 
 ## One prop's collider, split out of `_add_collision` unchanged -- COLL1 did
@@ -1103,6 +1201,25 @@ func collision_resident_count() -> int:
 	return n
 
 
+## PERF-ROG: how many collidable placements are within COLLISION_STREAM_RADIUS
+## of `center`, computed by brute force over every placement in the world.
+##
+## This is the definition `_stream_batch()` used to implement directly and now
+## implements through a cell index. Nothing in the game calls it -- it exists so
+## `tests/smoke_collision_streaming.gd` can assert the indexed sweep and the
+## exhaustive one agree, which is the only check that can actually catch a
+## cell-indexing bug (a whole cell of walk-through trees still leaves plenty of
+## other colliders resident, so a count-looks-plausible test would pass).
+func collidable_within(center: Vector3) -> int:
+	var radius_sq := COLLISION_STREAM_RADIUS * COLLISION_STREAM_RADIUS
+	var n := 0
+	for batch: Dictionary in _collision_batches:
+		for placement: Dictionary in (batch["placements"] as Array):
+			if (placement["position"] as Vector3).distance_squared_to(center) <= radius_sq:
+				n += 1
+	return n
+
+
 ## How many collidable placements exist in total, world-wide, in every batch
 ## whose StaticBody3D name starts with `prefix` -- e.g. "Rock_" or "Pebble_".
 ## Independent of streaming state; see `force_collision_resident()` below.
@@ -1140,6 +1257,15 @@ func force_collision_resident(prefix: String) -> void:
 				var node := _make_collision_shape(placements[i], batch["radius"])
 				resident[i] = node
 				body.add_child(node)
+		# PERF-ROG: the streaming sweep now only clears cells it has seen, so a
+		# force-streamed batch has to declare every cell it just filled or the
+		# next sweep would leave the far ones resident forever. Tests are the
+		# only caller, but a test that force-streams and then walks the player
+		# somewhere else must still see the bubble behave.
+		var all_cells: Dictionary = {}
+		for cell: Vector2i in (batch["cells"] as Dictionary).keys():
+			all_cells[cell] = true
+		batch["streamed"] = all_cells
 
 
 ## Which layer a model belongs to. Models are grouped by mesh for drawing, so the
@@ -1390,6 +1516,7 @@ func _remove_collision_instance(key: String) -> void:
 		placements.remove_at(i)
 		resident.remove_at(i)
 		_solid = maxi(0, _solid - 1)
+		_reindex_batch_cells(batch)
 		return
 
 
@@ -1525,6 +1652,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 	for batch: Dictionary in _collision_batches:
 		var placements: Array = batch["placements"]
 		var resident: Array = batch["resident"]
+		var dropped := 0
 		for i in range(placements.size() - 1, -1, -1):
 			var placement: Dictionary = placements[i]
 			var spot: Vector3 = placement["position"]
@@ -1543,6 +1671,9 @@ func clear_area(centre: Vector3, radius: float) -> int:
 				_harvest_nodes.erase(key)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
+			dropped += 1
+		if dropped > 0:
+			_reindex_batch_cells(batch)
 	_placed = maxi(0, _placed - removed)
 	return removed
 
