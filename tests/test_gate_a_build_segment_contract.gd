@@ -44,7 +44,7 @@ func test_reusable_segment_enters_and_preflights_the_documented_patch_before_spe
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
 	assert_true(source.contains("BUILD_PATCH_XZ := Vector2(30.0, -40.0)"),
 		"the authored Practice Meadow clearing must be the documented patch")
-	assert_true(source.contains("Vector2(10.0, -10.0), # Village Square"),
+	assert_true(source.contains("Vector2(10.0, -13.0), # Village Square"),
 		"the reusable route must begin at the real-exploration Village Square entry")
 	assert_true(source.contains("Vector2(18.0, -24.0), # Practice Meadow road bend"),
 		"the route must follow the authored road bend instead of a settlement diagonal")
@@ -72,7 +72,7 @@ func test_mechanical_fixture_is_not_misrepresented_as_canonical_evidence() -> vo
 		"the injected mechanical wrapper must stay honestly labelled")
 	assert_true(wrapper.contains("Wrapper-only fixture placement"),
 		"fixture positioning must remain visibly scoped outside the reusable controller segment")
-	assert_true(wrapper.contains("ROUTE_ENTRY_XZ := Vector2(10.0, -10.0)"),
+	assert_true(wrapper.contains("ROUTE_ENTRY_XZ := Vector2(10.0, -13.0)"),
 		"the mechanical wrapper must stage only at the named route entry")
 	assert_true(wrapper.contains("This is not canonical positioning"),
 		"the wrapper must disclose that its route-entry staging is noncanonical")

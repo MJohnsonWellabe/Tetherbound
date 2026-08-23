@@ -39,7 +39,20 @@ const BUILD_PATCH_APPROACH_EPSILON := 0.55
 ## the Village Square. From there it follows the authored Practice Meadow road,
 ## never a fixture-only diagonal across settlement collision.
 const BUILD_ROUTE_XZ: Array[Vector2] = [
-	Vector2(10.0, -10.0), # Village Square
+	# BESIDE the well, not on top of it.
+	#
+	# GATEB-COORD: this was (10, -10) with a 0.75m tolerance, and
+	# `data/config/village.json` puts the WELL at exactly (10, -10) -- a solid
+	# stone curb, two posts and a canopy. So the entry this segment demands the
+	# caller reach "through ordinary exploration" was a point no body can
+	# occupy, and the Gate B continuous run proved it: three approaches from
+	# three directions, stopping 7.8m, 4.3m and 7.5m away, circling a target
+	# they could see and could never stand on.
+	#
+	# The square is the paved apron where the four paths meet, not the well
+	# head. Three metres south of it is on that apron, clear of every
+	# structure, and on the way to the Practice Meadow road bend.
+	Vector2(10.0, -13.0), # Village Square, on the apron south of the well
 	Vector2(18.0, -24.0), # Practice Meadow road bend
 	BUILD_PATCH_XZ, # Practice Meadow clearing
 ]

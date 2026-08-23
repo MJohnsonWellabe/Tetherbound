@@ -56,6 +56,9 @@ const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+## Read from the build segment rather than repeated here, so the walk back
+## and the place it has to arrive at cannot drift apart.
+const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd").BUILD_ROUTE_XZ[0]
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 
@@ -451,23 +454,61 @@ func _tap(action: StringName) -> void:
 ## The walk back from the gather route to the Village Square, on the left stick
 ## and around whatever the Meadow has put in the way (`stick_navigator.gd`).
 ##
-## `gate_a_build_segment.gd::BUILD_ROUTE_XZ.front()` is the square at (10, -10)
+## `gate_a_build_segment.gd::BUILD_ROUTE_XZ.front()` is the square
 ## and it wants the player within `BUILD_ROUTE_ENTRY_EPSILON` (0.75m) of it, so
 ## the walk finishes tighter than that before handing over.
+## GATEB-COORD: approached along the open ground south-east of the settlement,
+## and retried, rather than aimed straight at from wherever the gather route
+## ended.
+##
+## The village stands fourteen structures deep and the square is in the middle
+## of it. A single straight leg from the north walked into the cottages and
+## stopped there:
+##
+##   could not walk back to the Village Square from the gather route
+##   (stopped 7.9m away at (17.0, 1.0, -6.0))
+##
+## -- wedged between buildings, seven metres from a target it could see. The
+## waypoints come in off the Practice Meadow road instead, which is the way a
+## player who has just walked that road arrives, and each leg gets three tries
+## from a clean navigator state because `stick_navigator.gd` commits to a side
+## once it picks one and an attempt that has boxed itself in will stay boxed in.
 func _walk_back_to_the_square() -> bool:
-	var square := Vector3(10.0, _player.global_position.y, -10.0)
+	var y := _player.global_position.y
+	var legs: Array = [
+		[Vector3(30.0, y, -40.0), 2.5, "the Practice Meadow clearing"],
+		[Vector3(18.0, y, -24.0), 2.0, "the Practice Meadow road bend"],
+		[Vector3(BUILD_ROUTE_ENTRY.x, y, BUILD_ROUTE_ENTRY.y), 0.5, "the Village Square"],
+	]
 	var nav = NAVIGATOR.new(self, _player, _rig, _send_stick)
-	var arrived: bool = await nav.walk_to(square, 12000, 0.5)
-	_send_stick(0.0, 0.0)
-	for _i in 10:
-		await physics_frame
-	if not arrived:
-		_fail("could not walk back to the Village Square from the gather route "
-			+ "(stopped %.1fm away at %s)" % [
-				Vector2(_player.global_position.x - 10.0,
-					_player.global_position.z + 10.0).length(),
+	for leg: Variant in legs:
+		var target: Vector3 = (leg as Array)[0]
+		var close_enough: float = (leg as Array)[1]
+		var what: String = str((leg as Array)[2])
+		var arrived := false
+		for attempt in 3:
+			nav.reset()
+			var here := _player.global_position
+			target.y = here.y
+			arrived = await nav.walk_to(target, 900 + int(here.distance_to(target) * 60.0),
+				close_enough)
+			_send_stick(0.0, 0.0)
+			for _i in 10:
+				await physics_frame
+			if arrived:
+				break
+			_checkpoint("attempt %d back to %s stopped %.1fm short at %s; starting over" % [
+				attempt + 1, what,
+				Vector2(target.x - _player.global_position.x,
+					target.z - _player.global_position.z).length(),
 				str(_player.global_position.round())])
-		return false
+		if not arrived:
+			_fail("could not walk back to %s from the gather route (stopped %.1fm away at %s)"
+				% [what,
+					Vector2(target.x - _player.global_position.x,
+						target.z - _player.global_position.z).length(),
+					str(_player.global_position.round())])
+			return false
 	_checkpoint("walked back to the Village Square for the build")
 	return true
 

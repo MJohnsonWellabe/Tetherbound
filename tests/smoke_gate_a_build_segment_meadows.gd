@@ -13,7 +13,9 @@ const SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const SETTLE_FRAMES := 300
 ## Wrapper-only fixture entry. The reusable segment then walks the documented
 ## Village Square -> Practice Meadow road by parsed controller input.
-const ROUTE_ENTRY_XZ := Vector2(10.0, -10.0)
+## Matches `gate_a_build_segment.gd::BUILD_ROUTE_XZ.front()` -- south of the
+## well, which stands on (10, -10) and cannot be stood on. See that file.
+const ROUTE_ENTRY_XZ := Vector2(10.0, -13.0)
 
 
 func _init() -> void:

@@ -26,6 +26,7 @@ extends SceneTree
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
+const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -48,7 +49,11 @@ const TOOLS := {"axe": &"hotbar_1", "pickaxe": &"hotbar_2", "knife": &"hotbar_3"
 ## `gate_a_build_segment.gd` insists the paid segment begins at the Village
 ## Square route entry, reached by ordinary exploration. The walk is granted
 ## here; the road from there to the build patch is still walked.
-const VILLAGE_SQUARE := Vector2(10.0, -10.0)
+## Read from the build segment, which is the thing that insists on it.
+## GATEB-COORD: this used to be (10, -10) -- the WELL's own position, per
+## `data/config/village.json`. Dropping a player onto a well head is exactly
+## how this file's own note below describes a staged player ending up wedged.
+const VILLAGE_SQUARE := BUILD_SEGMENT.BUILD_ROUTE_XZ[0]
 ## Metres above the terrain the staged player is dropped from. See the drop
 ## itself for why they are dropped rather than placed.
 const DROP_HEIGHT := 6.0
