@@ -364,6 +364,7 @@ func _paint_control_map(
 	var painted_drain_pixels := 0
 	var painted_dry_pixels := 0
 	var painted_damp_pixels := 0
+	var painted_verge_pixels := 0
 	var water_level: float = field.water_level()
 
 	# GROUND-LAYERS: the two macro-variation noise fields. Built here rather
@@ -388,8 +389,10 @@ func _paint_control_map(
 			var slope: float = field.slope_degrees_at(
 				world_x, world_z, _band_step(field, world_x, world_z, texture_step, rock_step))
 			var band_slope: float = slope + field.rock_bias_deg(world_x, world_z)
+			var slope_dither: float = field.path_dominant_dither(world_x, world_z)
 			var control := _control_for(
-				band_slope, colour_cfg, ids, _band_blend(field, world_x, world_z, colour_cfg))
+				band_slope, colour_cfg, ids, _band_blend(field, world_x, world_z, colour_cfg),
+				slope_dither, float(config.get("macro", {}).get("slope_raggedness", 1.6)))
 			# GROUND-LAYERS. Macro material variation, applied ONLY where the
 			# slope pick left this pixel on unblended grass. Above
 			# soil_slope_deg the hillside transition owns the overlay slot and
@@ -451,6 +454,27 @@ func _paint_control_map(
 				if ids.has("damp") and damp > 0.004 and damp > threshold * float(macro_cfg.get("damp_max", 0.65)):
 					control = {"base": int(ids["damp"]), "overlay": int(ids["damp"]), "blend": 0.0}
 					painted_damp_pixels += 1
+				elif ids.has("soil"):
+					# GROUND-REBUILD: dry patches are a real SURFACE, not a tint.
+					# The colour map can only ever darken (Terrain3D multiplies
+					# by it), so a sun-bleached patch -- which has to read
+					# LIGHTER than the meadow around it -- cannot be a colour
+					# effect at all. It has to be verge grass in the splat.
+					# The colour-map dryness stays as well, doing the half of
+					# the job it can do: dimming and warming the ground between
+					# the patches so they do not sit on a flat field.
+					var dry_here := _macro_dry(macro_drift, macro_patch, world_x, world_z, here, macro_cfg)
+					# An ABSOLUTE cut on the dryness field, jittered by the same
+					# coherent noise that ravels every other boundary here. It
+					# was briefly a fraction of the dither threshold, which put
+					# the cut near the middle of the distribution and turned 95%
+					# of the region into verge -- the art direction asks for 14%.
+					# Calibrate this against the printed percentage, not by eye.
+					var cut := float(macro_cfg.get("verge_cut", 0.62)) \
+						+ (dither - 0.5) * ragged * 0.30
+					if dry_here > cut:
+						control = {"base": int(ids["soil"]), "overlay": int(ids["soil"]), "blend": 0.0}
+						painted_dry_pixels += 1
 			var path_weight: float = field.path_factor(world_x, world_z)
 			# EV5: the pond bed, the damp shore ring and the stream channel
 			# swap to the same dedicated Ground030 dirt/pebble texture the
@@ -489,18 +513,52 @@ func _paint_control_map(
 					var drain_dither: float = field.path_dominant_dither(world_x, world_z)
 					control = _blend_control_toward(control, drain_weight, int(ids["soil"]), drain_dither)
 			if worn > 0.0:
+				# GROUND-REBUILD. Threshold, not blend -- and this is a bug fix,
+				# not a style change.
+				#
+				# `path_factor` returns 1.0 inside the path's own half-width and
+				# falls to 0 across its shoulder, and `_blend_control_toward`
+				# then set base=path for ANY weight above zero, expecting the
+				# partial blend to carry the falloff. Partial blends are
+				# measured not to draw on this build, so base won everywhere and
+				# every pixel the falloff touched rendered as FULL path. Paths
+				# have therefore been drawing at roughly half+shoulder instead of
+				# half -- about double their authored width. That is the
+				# "6-8m wide, a motorway for foot traffic" blind critics have
+				# reported against a 1.80m player, and it is the same
+				# non-rendering blend that produced the checkerboard meadow and
+				# defeated the hillside soil band. Third instance of one cause.
+				#
+				# Replaced with the art direction's own staircase: path core,
+				# then a verge-grass shoulder, then meadow. The eye sees two
+				# ~13-point value steps instead of one 27-point cliff, which is
+				# what a trampled shoulder actually looks like -- so the hard 2m
+				# quantisation reads as wear rather than as a mask error.
 				var dither: float = field.path_dominant_dither(world_x, world_z)
-				control = _path_control(control, worn, ids, dither)
-				if path_weight > 0.0:
-					painted_path_pixels += 1
+				var jitter := (dither - 0.5) * float(macro_cfg.get("path_edge_jitter", 0.20))
+				var core := float(macro_cfg.get("path_core", 0.55)) + jitter
+				var shoulder_at := float(macro_cfg.get("path_shoulder", 0.16)) + jitter
+				if worn >= core:
+					control = {"base": int(ids.get("path", ids["soil"])),
+						"overlay": int(ids.get("path", ids["soil"])), "blend": 0.0}
+					if path_weight > 0.0:
+						painted_path_pixels += 1
+				elif worn >= shoulder_at:
+					# The shoulder is verge grass, never bare dirt: dirt here is
+					# what made path and "generic worn area" the same material and
+					# let the route dissolve at ground level.
+					control = {"base": int(ids["soil"]), "overlay": int(ids["soil"]), "blend": 0.0}
+					painted_verge_pixels += 1
 			var pos := Vector3(world_x, 0.0, world_z)
 			data.call("set_control_base_id", pos, control["base"])
 			data.call("set_control_overlay_id", pos, control["overlay"])
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map: dry-grass macro variation on %d pixels, damp shore band on %d pixels" %
-		[painted_dry_pixels, painted_damp_pixels])
+	var total_px := float(maxi(1, size_x * size_z))
+	print("  control map: verge dry %.1f%%, path %.1f%%, path shoulder %.1f%%, damp %.1f%% (target 14 / 4 / -- / 1)" %
+		[painted_dry_pixels / total_px * 100.0, painted_path_pixels / total_px * 100.0,
+		painted_verge_pixels / total_px * 100.0, painted_damp_pixels / total_px * 100.0])
 	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), drained ground in soil (%d pixels), auto-shader off" %
 		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels, painted_apron_pixels, painted_drain_pixels])
 
@@ -711,7 +769,8 @@ func _texture_ids(entries: Array) -> Dictionary:
 ## soil, then a soil->rock ramp, then rock. Any pixel is always on exactly one
 ## of those five, matching `_ground_colour`'s own `smoothstep` windows band for
 ## band rather than approximating them.
-func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary, blend_deg: float) -> Dictionary:
+func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary, blend_deg: float,
+		dither: float = 0.5, ragged: float = 0.0) -> Dictionary:
 	var soil_at := float(cfg.get("soil_slope_deg", 24.0))
 	var rock_at := float(cfg.get("rock_slope_deg", 38.0))
 	var blend := maxf(0.001, blend_deg)
@@ -720,14 +779,30 @@ func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary, blend_
 	var soil: int = ids["soil"]
 	var rock: int = ids["rock"]
 
-	if slope_degrees <= soil_at:
-		return {"base": grass, "overlay": soil, "blend": 0.0}
-	if slope_degrees < soil_at + blend:
-		return {"base": grass, "overlay": soil, "blend": smoothstep(soil_at, soil_at + blend, slope_degrees)}
-	if slope_degrees <= rock_at:
-		return {"base": soil, "overlay": rock, "blend": 0.0}
-	if slope_degrees < rock_at + blend:
-		return {"base": soil, "overlay": rock, "blend": smoothstep(rock_at, rock_at + blend, slope_degrees)}
+	# GROUND-REBUILD. One surface per pixel, chosen against a slope threshold
+	# that is JITTERED by coherent position noise -- not a partial blend across
+	# a transition band.
+	#
+	# The band this replaces returned {base: grass, overlay: soil, blend:
+	# smoothstep(...)} through the whole transition, and partial blends are
+	# measured not to draw on this build, so `base` won and the "band" was
+	# always a hard line at the point base flipped. That is why
+	# EV4-hillside-seam-remainder could never make a soil band appear across
+	# four rounds: it was retuning the colour of a surface that was never being
+	# mixed in. It also produced the blocky green cells scattered over rock
+	# faces -- a noisy slope field crossing a fixed threshold aliases into
+	# isolated 2m squares.
+	#
+	# `blend_deg` keeps its meaning as the WIDTH of the transition, but it now
+	# sets how far the threshold wanders rather than how far two textures mix,
+	# so a wider setting still gives a softer-looking edge. The jitter is
+	# coherent noise, not per-pixel random, so the boundary ravels into an
+	# organic edge instead of dissolving into salt-and-pepper.
+	var wander := (dither - 0.5) * blend * ragged
+	if slope_degrees < soil_at + wander:
+		return {"base": grass, "overlay": grass, "blend": 0.0}
+	if slope_degrees < rock_at + wander:
+		return {"base": soil, "overlay": soil, "blend": 0.0}
 	return {"base": rock, "overlay": rock, "blend": 0.0}
 
 
