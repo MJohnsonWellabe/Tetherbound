@@ -127,6 +127,7 @@ func build(world: Node, plinth_top: float, site_origin: Vector3,
 		return
 	_plinth_top = plinth_top
 	_ramp_run = ramp_run
+	_build_sky_fill()
 	_build_braziers(world, site_origin)
 	_build_tether_lamps()
 	_build_camp(world, plinth_top, site_origin)
@@ -146,6 +147,48 @@ func _process(delta: float) -> void:
 		var phase := _time * FLICKER_SPEED + float(i) * 1.7
 		var wave := (sin(phase) + sin(phase * 0.37)) * 0.5
 		light.light_energy = _base_energy[i] * (1.0 + FLICKER_AMOUNT * wave)
+
+
+## --- sky ----------------------------------------------------------------------
+
+## STRONGHOLD-R2. The cool half of the gate's light. See
+## `stronghold_occupation.json`'s `_comment_sky_fill` for why this is here and
+## not in `art.json`; the short version is that the Compatibility renderer
+## gives a shadowed surface a colourless ambient constant, so the one thing a
+## backlit face never receives is the sky's own blue, and round 1's fires left
+## `gate-close` reading as two hue families with no blue in it at all.
+##
+## NOT tracked by `_track`: these are not fire and must not flicker. A
+## flickering sky is worse than no sky.
+const SKY_FILL_COLOUR := Color("#6f93c4")
+
+
+func _build_sky_fill() -> void:
+	var entries: Array = _config.get("sky_fill", []) as Array
+	if entries.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "SkyFill"
+	add_child(holder)
+	var index := 0
+	for entry: Variant in entries:
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = entry
+		var light := OmniLight3D.new()
+		light.name = "SkyFill_%d" % index
+		light.light_color = SKY_FILL_COLOUR
+		light.light_energy = float(spec.get("energy", 0.7))
+		light.omni_range = float(spec.get("range", 30.0))
+		# Shadowless on purpose. A wide fill that casts shadows would draw a
+		# second, contradictory set of shadow directions across the same wall
+		# the sun already shadows, and it costs a shadow map per light on a
+		# platform (ROG Ally) where the whole point of this being four omnis
+		# rather than a second directional light is that it stays cheap.
+		light.shadow_enabled = false
+		light.position = _vec3(spec.get("at", [0.0, 0.0, 0.0]))
+		holder.add_child(light)
+		index += 1
 
 
 ## --- fire ---------------------------------------------------------------------
@@ -305,7 +348,13 @@ func _build_tether_lamps() -> void:
 		glass.albedo_color = TETHER_TEAL
 		glass.emission_enabled = true
 		glass.emission = TETHER_TEAL
-		glass.emission_energy_multiplier = 2.4
+		# STRONGHOLD-R2: 2.4 -> 1.15. At 2.4 the lens clipped past white in
+		# every frame it appears in, so the one object on this site whose whole
+		# job is to be RECOGNISABLY TEAL rendered as a flat pale disc with a
+		# dark ring round it -- a coin stuck on the tower, not a lamp, and not
+		# the reserved colour either. Emission that blows out loses its hue
+		# first; keeping it just under the clip is what makes the colour read.
+		glass.emission_energy_multiplier = 1.15
 		sphere.material = glass
 		lens.mesh = sphere
 		lamp.add_child(lens)

@@ -26,11 +26,24 @@ extends SceneTree
 ## than a clean convergence -- keep this around for whoever resumes that
 ## pass; delete it once the remainder is actually closed and nobody needs
 ## this verification path again. Not a permanent addition to tools/.
+##
+## STRONGHOLD-R2: READ THIS BEFORE PUTTING THESE FRAMES IN FRONT OF A CRITIC.
+## Skipping the vegetation layer is the right call for judging the castle's own
+## geometry and materials, and it makes the frames LIE about the ground: every
+## frame this tool writes shows the stronghold standing in an unbroken mown
+## lawn, because the ~130k scatter instances that would put grass, stones, verge
+## fringe and path stones on that ground are exactly what it does not build. A
+## blind critic reading these will rank "the field is empty" first and will be
+## describing this tool rather than the world. `tools/capture_stronghold_
+## approach.gd` is the same three viewpoints in the real scene, for that.
 
 const WORLD_SCRIPT := preload("res://scripts/world/playground_world.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
+const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const OUT_DIR := "res://shots/wayfinding"
 const DATA_DIR := "res://data/terrain/playground"
 
@@ -70,8 +83,112 @@ const VIEWPOINTS := [
 ]
 
 
+## STRONGHOLD-R2. Nothing human-sized stood anywhere in these three frames, so
+## none of them could answer the question a landmark frame exists to answer:
+## how big is it? The round-1 pass already named this as the reason a 36x40m
+## fortress with a 29m keep reads as a toy, and answered it with a garrison
+## camp — 1.8m tents against a 10m curtain. That is a good cue and it is not
+## the same cue as a PERSON, and it is the person the critic can measure
+## against without being told a number.
+##
+## So: the real trainer rig (`art.json`'s `trainer` block, fitted to its
+## declared 1.80m by `character_model.gd` — the same build path the player's
+## own body uses, not a stand-in capsule) and one real creature from the
+## roster, built through `creature.tscn` + `creature_body.gd::setup` exactly
+## the way `tools/preview_creatures.gd` and `encounter_director.gd` build one.
+##
+## They stand ON THE RAMP rather than on the grass. The grass in front of the
+## ramp is behind two of the three cameras (`gate-close`'s eye is at local
+## z -18.4, which is on the ramp itself), so an actor placed there is either
+## out of frame or 2m from the lens. On the ramp all three viewpoints see them
+## at a usable distance: ~5m for `gate-close`, ~13m for `silhouette-approach`,
+## ~57m for `silhouette-close`.
+##
+## Local coordinates, landmark frame. The ramp runs x -1..+5 and z -10..-21,
+## `_ramp_y` below is `stronghold_occupation.gd`'s own formula. The trainer
+## sits at x -0.3 and the creature at x +3.2, either side of the walked width,
+## so neither of them stands in front of the gate arch (local x +2) and hides
+## the thing the frame is of.
+const ACTORS_LOCAL_Z := -13.6
+const TRAINER_LOCAL_X := -0.3
+## 4.1 put the bramblebun's flank over the ramp's own left edge (the deck runs
+## x -1..+5), and from `gate-close`'s low eye the edge cut it in half. 3.2
+## stands it fully on the deck and still clears the gate axis at x +2.
+const CREATURE_LOCAL_X := 3.2
+## `spawns.json`'s Meadows starter. Any roster species answers the scale
+## question; this one is the first creature the chapter actually gives you.
+const CREATURE_SPECIES := "bramblebun"
+
+## landmark.gd's own RAMP_RUN / PLINTH_TOP. Duplicated here rather than read
+## off the instance because they are `const` on that script and this is a
+## capture tool, not gameplay — but if the ramp is ever retuned and the actors
+## start floating, this pair is why.
+const RAMP_RUN := 11.0
+const PLINTH_TOP := 4.2
+const RAMP_TOP_Z := -10.0
+
+
 func _init() -> void:
 	_run()
+
+
+## The lowest y any visible mesh under `node` reaches, in `node`'s own space.
+## Negative for a body whose origin sits above its feet. Zero when nothing has
+## a mesh yet, which is the safe answer: the actor stays where it was put.
+func _lowest_point(node: Node, xform: Transform3D = Transform3D.IDENTITY) -> float:
+	var lowest := 0.0
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var box: AABB = xform * (node as MeshInstance3D).mesh.get_aabb()
+		lowest = minf(lowest, box.position.y)
+	for child in node.get_children():
+		var next := xform
+		if child is Node3D:
+			next = xform * (child as Node3D).transform
+		lowest = minf(lowest, _lowest_point(child, next))
+	return lowest
+
+
+func _ramp_y(z: float) -> float:
+	var foot := RAMP_TOP_Z - RAMP_RUN
+	return PLINTH_TOP * clampf((z - foot) / RAMP_RUN, 0.0, 1.0)
+
+
+func _stage_actors(stage: Node3D, landmark: Node3D) -> void:
+	var base: Vector3 = landmark.position
+	var ramp_y := _ramp_y(ACTORS_LOCAL_Z)
+	# The ramp deck's own top face: the box is 0.8m thick and its centre is
+	# 0.2m below the slope line (landmark.gd::_build_ramp), so the surface a
+	# body stands on is 0.2m above `_ramp_y`.
+	var deck := ramp_y + 0.2
+
+	var trainer: Node3D = CHARACTER_MODEL.new()
+	trainer.name = "ScaleTrainer"
+	stage.add_child(trainer)
+	if not trainer.call("build", "trainer"):
+		push_warning("no trainer model; the scale frames have no ruler in them")
+	trainer.position = base + Vector3(TRAINER_LOCAL_X, deck, ACTORS_LOCAL_Z)
+	# Facing the gate, which is what somebody walking up a ramp is doing.
+	trainer.rotation.y = 0.0
+
+	var creature: Node3D = CREATURE_SCENE.instantiate()
+	creature.name = "ScaleCreature"
+	creature.set_script(CREATURE_BODY)
+	stage.add_child(creature)
+	creature.call("setup", CREATURE_SPECIES)
+	# A creature's origin is its BODY centre, not its feet -- `creature.tscn` is
+	# a CharacterBody3D whose capsule is built around the origin from
+	# species.json. Round 1 of this staging put the origin on the deck and the
+	# bramblebun rendered half-sunk into the ramp. Lift by however far its own
+	# art actually hangs below the origin, measured rather than guessed, so
+	# this keeps working for any species.
+	var drop := _lowest_point(creature)
+	creature.position = base + Vector3(
+		CREATURE_LOCAL_X, deck - drop, ACTORS_LOCAL_Z + 0.9)
+	creature.rotation.y = deg_to_rad(-20.0)
+	# A CharacterBody3D with no floor under it (the ramp's collider is real, but
+	# nothing here waits for it) falls out of frame during the settle. Same
+	# freeze `preview_creatures.gd` needed for the same reason.
+	creature.set_physics_process(false)
 
 
 func _run() -> void:
@@ -173,7 +290,9 @@ func _run() -> void:
 	landmark.name = "StrongholdSilhouette"
 	stage.add_child(landmark)
 	landmark.call("build", world)
-	print("[lite] landmark built, settling")
+	print("[lite] landmark built, staging actors")
+	_stage_actors(stage, landmark)
+	print("[lite] actors staged, settling")
 
 	for i in SETTLE_FRAMES:
 		await physics_frame

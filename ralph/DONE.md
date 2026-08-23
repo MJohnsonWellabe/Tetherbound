@@ -491,6 +491,287 @@ invocation, `--headless` must NOT be combined with `--rendering-driver`)
 once the box has real headroom, then `godot --headless --path . --script
 tools/contact_sheet.gd`, then the `visual-judge` skill's blind sub-agent pass,
 iterating per `ralph/conventions.md`'s convergence rule.
+## STRONGHOLD-R2 — a road reaches the stronghold, and the gate stops being orange
+
+`tests: full suite 1362 tests, 839499 assertions, 0 failed · smoke_stronghold.gd green (2m51s) · smoke_gate_e_finale.gd green (5m56s)` · `area: data/config/terrain_playground.json, data/config/building_prefabs.json, data/config/stronghold_occupation.json, data/config/vegetation.json, scripts/world/playground_heightfield.gd, scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd, scripts/world/torch_prop.gd, tools/capture_castle_lite.gd, tools/capture_stronghold_approach.gd (new), data/terrain/playground/terrain3d_00-01.res (re-baked), data/scatter/playground/** (re-baked)`
+
+Round 2 on `GATE-E-STRONGHOLD-ART`'s frames. Round 1's own critique confirmed
+the movement (the gate went from a black mass to a lit destination, the Band 4
+ghost boxes went) and named six defects after it. This is those, in leverage
+order, plus the staging the frames were missing.
+
+### 1. There was no road. That was the whole wayfinding failure.
+
+The stronghold is the endgame landmark and nothing led to it: every wayfinding
+frame showed a fortress standing in unbroken meadow, which reads as a prop
+dropped on a lawn rather than a place people go.
+
+`paths.approaches` (new section, `terrain_playground.json`) is the road. It
+starts at (74,-41) — the exact point `paths.routes`'s "The Rise" stops, under
+its own trailhead fingerpost — and ends at (231.8,-165.4), which is
+`landmark.gd`'s ramp foot, so the painted soil runs up to the bottom of the
+ramp and the gate is the end of the road.
+
+**It joins `road_polylines()` rather than `paths.routes`, and that is not a
+formality.** `signpost.gd` draws one arm per `routes` entry on the junction
+post by the well; `OF13` moved this site out of sight of the village square on
+the owner's direct instruction so it is not known from the start, and a fifth
+arm reading "The Stronghold" in the opening minute would hand that away. Same
+reason `spokes`, `crossings` and `trail` are separate sections.
+
+**The line is measured, not drawn.** `rises.peaks[0]` (140,-90, radius 78) sits
+almost exactly between the trailhead and the gate — a straight line between
+them passes within **2.5m of that summit**, i.e. straight up the 40–52° collar
+`OF10a` already had to truncate "The Rise" against.
+`tools/_probe_stronghold_road.gd` (scratch) runs a Dijkstra over the real
+heightfield at 4m resolution, impassable above 22°, then Douglas-Peucker and
+two pinned-endpoint Chaikin passes to take the 45°-only grid corners out.
+Authored result: **worst slope 17.1°** against the player's own 45°
+`floor_max_angle`, never closer than **80.0m** to the summit — just outside the
+dome's own 78m radius, so the road contours the rise's western and southern
+foot instead of climbing it.
+
+**The last 90m are hand-set and that is the point.** The first version ran
+west-to-east along z≈-180 and stopped at the ramp foot. Correct road, useless
+one: every wayfinding eye stands due SOUTH of the gate (229.8 at z -214.4 /
+-170.4 / -162.8), the road never came within 28m of any of them, and the
+rendered frame still showed a player in unbroken grass looking at a fortress
+with a faint smudge passing behind it. A gate is approached head-on, so the
+road now swings east and comes back up the gate's own axis: it passes **3.6m**
+from the `silhouette-close` eye and **2.1m** from `silhouette-approach`'s — the
+player is standing ON it. `tools/_probe_road_leg.gd` (scratch) checked the tail
+leg by leg: worst 17.1° at (212,-202), the final 50m up the axis under 12°.
+
+**Per-route width.** `path_factor()` now reads `width`/`shoulder` off each
+road, defaulting to `paths.width`/`paths.shoulder`, so every existing route is
+bit-identical to before. The approach is **6.5m / 2.2m** against the shared
+3.0/1.5: at the village-track width it rendered as a discolouration in the
+grass rather than a road, which is the same "nothing leads there" reading one
+step on. Widening `paths.width` itself would have widened Grandpa's garden
+path. `road_polylines()` is unchanged for its other seven callers; the widths
+live in a new `road_bands()` beside it.
+
+Costs: a re-bake of terrain region `0:-1` (32s — the road is entirely inside
+one region, and `build_playground_terrain.gd` already takes `--regions=`) and a
+full scatter re-bake (57s, 143,630 → 147,003 placements, the difference being
+this road's own verge fringe and path stones).
+
+**Two real regressions the scatter caught by itself**, and both are worth
+knowing about because a new road quietly deletes whatever was standing where it
+now runs:
+
+* `OF10-remainder`'s **cairn** at the Rise road's end sat 0.11m off the new
+  road's centreline — literally in the travel lane — and the bake said so,
+  rejecting every draw ("placed 0 of 3 / 0 of 6"), which would have removed the
+  cairn from the world silently. Moved to (78.6,-44.0), 5.49m out along the
+  bisector of the fork's two free bearings, equidistant from both roads; the
+  fingerpost keeps the other side. That point stopped being the end of a road
+  and became a junction, and the two now flank it.
+* A **pair of trees** at the rise's south-west foot (`vegetation.json`,
+  `trees.anchors`, was (70,-128)) ended up 1.92m off the road, which put most
+  of its own 9m disc inside the worn band. The production seed still placed
+  both, so the bake never warned — the SUITE caught it, as "placed 0 of 2" and
+  "placed 1 of 2" inside `test_scatter_rules.gd`, which uses seeds 1/2/99.
+  Proven to be this road's doing rather than pre-existing:
+  `tools/_probe_anchor_seeds.gd` (scratch) runs those three seeds, and with
+  `terrain_playground.json` stashed out all three place both trees. Moved to
+  (60.5,-133.7) — 9.16m clear on 1.7° ground, verified clean at all three seeds.
+  Out onto the meadow rather than up the flank, because
+  `tools/_probe_anchor_clearance.gd` (scratch) measured the road's north-east
+  side at **40–50°** for 20m along there: the road is contouring the rise's own
+  collar and there is genuinely no room on that side.
+
+The second one is the general lesson: a "placed 0 of N" warning at a seed the
+production bake does not use is still a real defect, because it means whatever
+was authored there survives only by luck of the seed.
+
+### 2. Night balance: the fire had stopped being punctuation and become the weather
+
+Round 1 fixed a real bug (0.012 near luma, backlit at every hour) by putting
+the garrison's fires on the castle, and then went one step past working.
+Measured before this pass: `gate-close` at **orange 65% / red 32% and no blue
+at all** — two hue families in the entire frame — against the key art's night
+panel, which is blue ground and blue air with fire as the only warm thing in it.
+
+The fix is the light that is physically missing, not less fire. Under the
+Compatibility renderer sky radiance does not reach the terrain (`world_look.gd`
+says so in its own header), so a surface facing away from the sun gets a
+colourless ambient constant: the south face gets no blue because there is no
+blue light in the world to give it. `stronghold_occupation.json`'s new
+`sky_fill` is that missing sky bounce — five wide, shadowless omnis in the
+sky's own blue over the approach — and brazier energies came down ~35%.
+
+**Scoped to this locale on purpose.** The chapter-wide sun and ambient are one
+global tuning every biome and every combat-readability decision is set against,
+they live in `art.json`, and `NIGHT-LIGHT` has four rounds landed on them
+(`e250a2f7`, `2295dc20`, `702e3472`, `842078f5`). Reaching into that from a
+landmark's dressing file is how two lanes end up fighting over one number.
+
+Measured on `gate-close`, before this pass -> after everything in it:
+chroma **83.0% -> 28.3%**, saturation **0.51 -> 0.22**, hue families **2 -> 3**,
+near luma **0.103 -> 0.127** (round 1's gain kept and raised, not traded).
+`silhouette-approach`: blue **39% -> 64%**, orange **51% -> 22%**, chroma
+**52.5% -> 19.1%**. `silhouette-close`: near luma **0.183 -> 0.239** and a
+yellow family appearing at 13%, both of which are the road arriving in frame.
+
+### 3. The artefacts
+
+**The vertical sky slot in the curtain is parallax, not a hole.** This one is
+worth reading before touching the massing. Nothing is missing from the wall:
+`tools/_probe_castle_gaps.gd` (scratch) measured every module in the castle's
+own frame and the south run is continuous from x -17.99 to -2.02. The gatehouse
+flankers stand 1.5m proud of the curtain (south face z -10.79 against the gate
+block's -9.27) and each flanker is a **hollow** tower, so from any eye off the
+gate's axis — and `gate-close`'s is, the bay is at x +2 and the camera at x 0 —
+there is a wedge of directions that passes inside the flanker's near edge
+(x -1.421) and outside the gate block's (x -1.400) and meets nothing until the
+sky above the far wall. Measured: tan 0.1534 to 0.1867 off the view axis, i.e.
+screen px 719–736 of 1280, which is exactly the slot. Four filler wall modules
+0.2m north of the curtain plane, inside the flankers' hollows, reaching x -1.0 /
++5.0, close it with ~0.4m of margin; a filler in the curtain's own plane would
+have had 0.009m. Both sides get them — the +x side is closed in this particular
+frame only because this camera sits toward -x.
+
+**The spark beads.** `torch_prop.gd`'s ember emitter was `amount 8, lifetime
+1.0`, no randomness, no fade and gravity pointing UP — a metronome emitting one
+identical particle every 0.125s and accelerating it away forever, which draws a
+regular ladder of beads climbing off the flame with a gap under the first one.
+Fixed at the cause: `randomness 0.75` breaks the fixed spawn interval, a shorter
+lifetime keeps them in the fire's own glow, gravity now pulls down so an ember
+arcs, a scale curve fades each one out, and a 0.045m emission sphere stops eight
+sparks leaving one coordinate. This is shared with the player's torch and every
+other fire in the game, deliberately — it is the same defect everywhere.
+
+**The noise-rectangle windows.** They are not decals and nothing is misplaced:
+`WallBricks`/`TallWallBricks` carry their brick panels in `DarkRock` and their
+openings in `Black`, and at a stop and a half below the `LightRock` face those
+panels stopped reading as masonry and started reading as rectangles pasted onto
+a blank wall — the eye sorts a high-contrast rectangle on an otherwise flat
+field as a separate object. `DarkRock` #6b5f52 → #8b7c6b, `Black` #221d18 →
+#3a3229. The value ladder still holds in both directions: LightRock #a3907a >
+DarkRock #8b7c6b > Black #3a3229 > `PLINTH_COLOUR` #524a41, so the foundation is
+still the darkest stone on the site. This does **not** fix a window that
+straddles a module boundary (that is the flanker overlapping the curtain run and
+needs the massing re-authored); it stops it being the loudest thing on the wall.
+
+**The dark untextured plinth skirt.** Three things produced that reading and
+only one was colour: it carried a bare `albedo_color` with no map of any kind,
+so every pixel of a 44m-wide 6.7m-tall face was literally the same number;
+nothing broke it horizontally, so it had no scale cue at all; and its top edge
+met the castle's base as one unbroken line, so it read as a slab the castle
+stands on rather than as the base course of the same building. Now: a generated
+mottled stone map, triplanar (both boxes have no meaningful UVs), **built with
+`Image`+`FastNoiseLite` in a tight loop rather than a `NoiseTexture2D`** —
+that resource fills on a worker thread and is empty for exactly the first frames
+a scripted capture reads. Plus a proud coping course at the top and a string
+course two-thirds down, both in the castle's own `DarkRock`. The ramp shares the
+material; it is the largest single surface in `gate-close`. `PlinthBody` is
+untouched, so nothing about where a player can stand changed.
+
+**The ramp was a dead plane, and the fix had to widen it.** Not on round 1's
+list but the loudest thing left in two of three frames: 6m x 11.8m of unbroken
+single-value slab with a hard edge and nothing on it, filling the bottom third
+of `gate-close`. The key art's own stronghold panel climbs to its gate up a
+built stair with kerbs, so the ramp gets a low kerb down each side in the same
+dressed stone as the plinth courses. **The slab grew to take them**
+(`RAMP_SHOULDER`, 1.2m either side) rather than the kerbs being squeezed inside
+the old edge, because the ramp-head braziers stand 3.3m off the ramp's centre —
+0.3m PAST the old slab edge, tuned there over three rounds of the previous pass
+and quietly overhanging air. A kerb inside the old edge would have been masonry
+through the fire baskets; widening put the baskets on real ground and the kerb
+outside them. `RAMP_WIDTH` is untouched at 6.0 and still means the walked width
+nothing may stand in. Mesh only, no new collider — the slab under them is the
+collider and it only got bigger. `gate-close` near luma 0.108 → **0.127** on
+this change alone.
+
+**The merlon size disagreement was NOT fixed.** See "Not done".
+
+**The band4 ridge-crest white mesh was not investigated.** Second-path rule and
+no Band 4 render was affordable on this box — see "Not done".
+
+### 4. The frames are staged now
+
+Nothing human-sized stood in any of these three frames, so none of them could
+answer the question a landmark frame exists to answer. Round 1 answered it with
+a garrison camp (1.8m tents against a 10m curtain), which is a good cue and is
+not the same cue as a person. `capture_castle_lite.gd` now stands the real
+trainer rig (`art.json`'s block, fitted to its declared 1.80m by
+`character_model.gd` — the same build path the player's body uses) and one real
+bramblebun built through `creature.tscn` + `creature_body.gd::setup` on the
+ramp, at x -0.3 and +3.2 so neither hides the gate arch at x +2. On the ramp
+rather than the grass because two of the three eyes are already past the grass —
+`gate-close` stands at local z -18.4, on the ramp itself.
+
+Two things that cost a render each and are recorded so nobody re-learns them:
+a creature's origin is its body centre, not its feet (it rendered half-sunk;
+`_lowest_point` measures the drop rather than guessing it), and at x 4.1 the
+bramblebun's flank hung over the ramp's own edge and `gate-close`'s low eye cut
+it in half.
+
+### Not done, and why
+
+* **The blind visual-judge pass did not run, again.** `conventions.md` requires
+  it. This lane has no in-process subagent tool, and `create_session` returned
+  "the service is temporarily unavailable" on **six** attempts spread over the
+  session — the identical blocker round 1 recorded, so this is now a standing
+  infrastructure problem for visual work in this lane and not bad luck.
+  Invoking the `visual-judge` skill directly does **not** substitute: it loads
+  inline, into the context that already knows what changed, which is the one
+  thing the skill's own header says the mechanism depends on not happening.
+  **What was prepared, so the next firing can run it in one step:** the frames
+  and `_sheet.png` are current in `shots/wayfinding/`, and a scratch branch
+  `scratch/stronghold-r2-frames` (commit `2b4a257`) carries origin/main's tree
+  plus those four PNGs — `shots/` is gitignored, so that branch exists purely so
+  a spawned critic in a fresh container can see them. Spawn against it with
+  `source_url` + `source_revision`, point the critic at the four paths and
+  `docs/reference/`, and tell it nothing else.
+  Everything above is measured (`tools/frame_stats.py`, the geometry probes) or
+  is my own read of real frames. Treat these frames as **improved-and-unjudged**.
+* **The merlon size disagreement between towers.** Confirmed real and located:
+  three merlon sizes are visible in one silhouette — the curtain at module scale
+  2.6, the gatehouse flankers at 3.4, the keep's crown at 3.8 — plus a fourth,
+  the inner bailey ring at 2.0, which shows behind the flankers in
+  `silhouette-approach`. Not fixed because every candidate is a re-author, not a
+  tune: the merlons are part of each module's mesh so a uniform `scale` ties
+  crenellation size to tower size, and dropping the flankers to the curtain's
+  2.6 costs 3.3m of gatehouse height that would have to be regained by stacking,
+  which moves the measured south face the banners, the teal lamps and this
+  pass's own gate-jamb fillers are all placed against. It is a real defect and
+  it is genuinely the lowest-leverage of the six. Carrying it as a remainder
+  rather than shipping a half-measured massing change on the hero landmark.
+* **The band4 ridge-crest glitch-white mesh.** The second-path rule says confirm
+  it is real geometry before changing it, and confirming means a Band 4 render.
+  The box ran at load 12–30 with four cores, ~1GB free and five other lanes
+  capturing and testing into each other for the whole window; my own full-scene
+  capture (below) was starved out at 11 minutes without printing its first line.
+  Untouched, unconfirmed, still open.
+* **`tools/capture_stronghold_approach.gd` shipped but its frames did not.**
+  This is the real-scene version of the three viewpoints, and it exists because
+  `capture_castle_lite.gd` makes the frames lie about one specific thing:
+  it skips the vegetation scatter, so every lite frame shows the stronghold in
+  an unbroken mown lawn. A critic reading those frames will rank "the field is
+  empty" first and will be describing the capture, not the world — and this
+  task's own road gets none of its dressing there either, since the path stones
+  and the verge fringe are scatter layers. **Whoever runs the blind pass should
+  run this tool first, on an idle box, and judge `shots/wayfinding_full/`
+  instead.** Same three viewpoints, same staged actors, so the two sets are
+  comparable frame for frame.
+* **The full suite's run overlapped two of this pass's own edits, and that is
+  worth stating rather than glossing.** 1362 tests / 839,499 assertions / 0
+  failed is a real result, but the run started before the ramp kerbs landed
+  and before the tree anchor moved and the scatter re-baked, so
+  `test_scatter_rules.gd` in that run measured the OLD anchor position (its
+  'placed 0 of 2 / 1 of 2' warnings in the log are that, and it passed
+  anyway — a warning is not a failure). A wind-down order arrived before a
+  clean second run could be made. What IS verified against the final tree:
+  `tools/_probe_anchor_seeds.gd` replays exactly the three seeds
+  `test_scatter_rules.gd` uses (1, 2, 99) and all three place both trees
+  with no warning, and the production scatter bake is clean. The unit suite
+  discovers `test_*.gd` only, so the kerbs (landmark.gd) are outside it
+  entirely; `smoke_stronghold.gd` and `smoke_gate_e_finale.gd` are the tests
+  that walk that geometry and both ran green.
+* No Meshy generation was spent and no asset was added. Everything here is
+  existing kit modules, existing scripts and config.
 
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 

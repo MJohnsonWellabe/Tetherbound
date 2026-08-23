@@ -10,55 +10,76 @@
   "_comment_teal_reach": "ROUND 3: every teal lamp had its range roughly halved and its energy cut. Round 2 ran them at range 11 off a 10m curtain and the frames came back with the south wall washed sickly green over most of its area -- which breaks the reservation as surely as painting something friendly teal would: if teal covers half the fortress it stops meaning `Team Tether machinery is live HERE`. A work lamp should read as a bright point with a small pool around it, so the emissive lens carries the colour and the light barely touches the stone. ROUND 5 halved the reach again: at range 4.5 the gatehouse flankers still carried visible green patches a third of their own width.",
   "_comment_reserved": "`tether_lamps` are palette.json's reserved tether_teal (#3fe8c4) and appear ONLY on Team Tether hardware that is live -- the same reservation stronghold.json's conduits and tether_relay.gd's pylons already keep. Nothing friendly, natural or neutral in this file is teal. The oxblood is likewise Team Tether's alone; the crates below carry it because they are Tether's crates.",
 
+  "_comment_sky_fill": "STRONGHOLD-R2. THE COUNTERWEIGHT TO THE FIRE, AND WHY IT LIVES HERE RATHER THAN IN art.json. Round 1 fixed a real bug -- this castle's hero face is backlit at every hour and measured 0.012 near luma -- by putting the garrison's own fires on it. That worked (0.012 -> 0.103 on `gate-close`) and then went one step past working: with fourteen warm omnis and nothing cool anywhere, `tools/frame_stats.py` reads `gate-close` as orange 65% / red 32% and NO BLUE AT ALL. Two hue families in the whole frame. Against `docs/reference/tetherbound-meadows-keyart.png`, whose night language is blue ground and blue air with fire as the only warm thing in it, that is the wrong picture: the fire stopped being punctuation and became the weather. The honest fix is the light that is physically missing, not less fire. Under the Compatibility renderer sky radiance does not reach the terrain (world_look.gd's own header says so), so a surface facing away from the sun receives a flat ambient constant and none of the sky's colour -- the south face of this castle gets no blue because there is no blue light in the world to give it. These are that missing sky bounce, as a handful of wide, weak, SHADOWLESS omnis over the approach. They are deliberately local: the chapter-wide sun and ambient are one global tuning every biome and every combat-readability decision is set against, they live in data/config/art.json, and the NIGHT-LIGHT lane has landed four rounds of work on them -- reaching into that from a landmark's dressing file is how two lanes end up fighting over one number. Brazier energies were cut ~35% in the same pass so the two read as fire against sky rather than as two floods. TUNABLE: `colour` is the sky's own blue rather than a stylised teal, because teal is reserved (see _comment_reserved) and a blue fill that drifts toward it would quietly break that reservation across the whole site.",
+  "sky_fill": [
+    {
+      "_why": "Over the gate, high and south of it -- the direction the open sky actually is from the hero face. Range 46 covers the south curtain, both flankers, the ramp and the ground the player walks in on, which is the whole of what `gate-close` and `silhouette-approach` see.",
+      "at": [2.0, 26.0, -30.0], "energy": 2.4, "range": 50.0
+    },
+    {
+      "_why": "Low and close over the ramp itself. The ramp and plinth fill the bottom third of `gate-close` and the high fill above is nearly edge-on to them, so on its own it leaves the one surface the eye is standing on as the warmest thing in frame.",
+      "at": [2.0, 9.0, -26.0], "energy": 1.9, "range": 30.0
+    },
+    {
+      "_why": "The two curtain flanks, so the wall does not fall off into a single warm value either side of the gatehouse.",
+      "at": [-14.0, 18.0, -22.0], "energy": 1.4, "range": 32.0
+    },
+    { "at": [18.0, 18.0, -22.0], "energy": 1.4, "range": 32.0 },
+    {
+      "_why": "ROUND 2b. The two fills above still left `gate-close` at red 55% / orange 41% and no blue: that frame's eye stands ON the ramp at local z -18.4, and everything it sees below the arch is ramp deck within a few metres of the four ramp braziers and 11m+ from the nearest cool source, so the inverse-square argument was simply won by the fire. This one sits over the ramp's own lower half, close enough to be the dominant light on the surface the player is standing on. It is the last one: past this the arch stops reading warm at all, which is the opposite mistake.",
+      "at": [2.0, 6.5, -19.0], "energy": 2.1, "range": 20.0
+    }
+  ],
+
   "braziers": [
     {
       "_why": "The gate pair, standing in the bay just inside the curtain's inner face (z -7.83). These are the single most load-bearing pair in the file -- `gate-close` is the frame that measured 0.012 near luma, and it is aimed straight down this axis.",
-      "at": [-1.7, 4.2, -7.0], "scale": 1.5, "energy": 2.6, "range": 12.0
+      "at": [-1.7, 4.2, -7.0], "scale": 1.5, "energy": 1.69, "range": 10.2
     },
-    { "at": [5.7, 4.2, -7.0], "scale": 1.5, "energy": 2.6, "range": 12.0 },
+    { "at": [5.7, 4.2, -7.0], "scale": 1.5, "energy": 1.69, "range": 10.2 },
 
     {
       "_why": "The ramp head, on the 0.93m apron between the curtain face and the plinth's south edge, flanking the ramp's own 6m width (x -1..+5). What the player walks between, and what puts a lit edge on the ramp's stone from the approach.",
-      "at": [-1.9, 4.2, -9.55], "scale": 1.4, "energy": 2.6, "range": 13.0
+      "at": [-1.9, 4.2, -9.55], "scale": 1.4, "energy": 1.69, "range": 11.0
     },
-    { "at": [5.9, 4.2, -9.55], "scale": 1.4, "energy": 2.6, "range": 13.0 },
+    { "at": [5.9, 4.2, -9.55], "scale": 1.4, "energy": 1.69, "range": 11.0 },
 
     {
       "_why": "The parapet run, seated ON the measured wall walk (y 13.97) rather than the 14.4 round 1 guessed, which left them hanging. Small on purpose -- their job is a rhythm of warm points along the skyline at 10m up, telling the eye the wall is manned, not lighting the ground from there.",
-      "at": [-12.4, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0
+      "at": [-12.4, 13.97, -8.6], "scale": 1.25, "energy": 1.3, "range": 7.6
     },
-    { "at": [-6.6, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
-    { "at": [10.6, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
-    { "at": [16.4, 13.97, -8.6], "scale": 1.25, "energy": 2.0, "range": 9.0 },
+    { "at": [-6.6, 13.97, -8.6], "scale": 1.25, "energy": 1.3, "range": 7.6 },
+    { "at": [10.6, 13.97, -8.6], "scale": 1.25, "energy": 1.3, "range": 7.6 },
+    { "at": [16.4, 13.97, -8.6], "scale": 1.25, "energy": 1.3, "range": 7.6 },
 
     {
       "_why": "ROUND 5: the processional way. Four baskets standing ON the ramp's own verges, at x -1.3 and +5.3 -- just outboard of its 6m walked width (x -1..+5), so the route is not narrowed -- with `ramp: true` reading their height off the ramp's own slope. `gate-close` is shot from ON this ramp looking up it, and through four rounds its lower two thirds stayed the darkest thing in the set: every fire in the file was either mounted at plinth height ABOVE the ramp or standing on the grass beside it, and neither reaches a surface that faces the sky but never the sun. A lit way up to a held gate is also the right image, not just the readable one. ROUND 6 respaced them to z -11.6 and -15.2 after `tools/_probe_occupation.gd` measured the lower pair landing 2.06m from the `gate-close` eye, which is where the black bowl filling that frame's corner came from -- the pairs now bracket the ramp's upper half and the checkpoint's own baskets hold its foot.",
-      "at": [-1.3, 0.0, -11.6], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true
+      "at": [-1.3, 0.0, -11.6], "scale": 1.25, "energy": 1.56, "range": 9.3, "ramp": true
     },
-    { "at": [5.3, 0.0, -11.6], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
-    { "at": [-1.3, 0.0, -15.2], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
-    { "at": [5.3, 0.0, -15.2], "scale": 1.25, "energy": 2.4, "range": 11.0, "ramp": true },
+    { "at": [5.3, 0.0, -11.6], "scale": 1.25, "energy": 1.56, "range": 9.3, "ramp": true },
+    { "at": [-1.3, 0.0, -15.2], "scale": 1.25, "energy": 1.56, "range": 9.3, "ramp": true },
+    { "at": [5.3, 0.0, -15.2], "scale": 1.25, "energy": 1.56, "range": 9.3, "ramp": true },
 
     {
       "_why": "ROUND 3: the pair standing on the GRASS either side of the ramp, half way down its run. Rounds 1 and 2 lit the wall and left the ramp itself black -- `gate-close` is shot from ON the ramp looking up it, and after round 2 its whole lower half still measured as an absence. A light mounted at plinth height (y 4.2) cannot reach the roadbed dropping away below it; one standing on the roadbed can. These also give the plinth's own south face -- the dark band under the curtain in every approach frame -- something to be lit by. Clear of the ramp's 6m width (x -1..+5) on both sides. ROUND 4 cut this from four baskets to two and roughly halved every fire in the file: round 3 ran the gate pair at energy 6.0 / range 20 and turned the entire fortress orange, which trades one wrong reading (a black slab) for another (a stone castle that looks like it is on fire). The stone's own albedo carries the base value; fire is punctuation on it. ROUND 5 also walked this pair out to the ramp FOOT (z -22) -- at z -17 the eastern basket sat 1.4m in front of the `gate-close` camera and filled the corner of the frame with a black bowl.",
-      "at": [-3.6, 0.0, -22.0], "scale": 1.3, "energy": 2.6, "range": 13.0, "ground": true
+      "at": [-3.6, 0.0, -22.0], "scale": 1.3, "energy": 1.69, "range": 11.0, "ground": true
     },
-    { "at": [7.6, 0.0, -22.0], "scale": 1.3, "energy": 2.6, "range": 13.0, "ground": true }
+    { "at": [7.6, 0.0, -22.0], "scale": 1.3, "energy": 1.69, "range": 11.0, "ground": true }
   ],
 
   "tether_lamps": [
     {
       "_why": "Work lamps bolted to the gatehouse flankers' SOUTH faces (measured z -10.79, so the housing sits proud at -10.95 instead of buried inside the tower the way round 1's -9.9 was). The reserved teal, the colour that at distance can only mean Team Tether machinery is live here.",
-      "at": [-3.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.34
+      "at": [-3.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.22
     },
-    { "at": [7.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.34 },
+    { "at": [7.6, 12.6, -10.95], "energy": 1.2, "range": 3.0, "lens": 0.22 },
     {
       "_why": "Inside the gate passage, so the way in glows teal from the dark rather than reading as a bricked niche -- the exact complaint OF4-gate-arch recorded about this opening, answered with light instead of the shadow slab it retired.",
-      "at": [2.0, 6.6, -7.6], "energy": 1.4, "range": 3.5, "lens": 0.28
+      "at": [2.0, 6.6, -7.6], "energy": 1.4, "range": 3.5, "lens": 0.20
     },
     {
       "_why": "The keep's crown, at its measured top (y 33.6). The tallest live thing on the site, and the one piece of Team Tether visible over the curtain from the whole approach.",
-      "at": [2.0, 33.0, 20.0], "energy": 1.6, "range": 5.0, "lens": 0.5
+      "at": [2.0, 33.0, 20.0], "energy": 1.6, "range": 5.0, "lens": 0.34
     }
   ],
 
