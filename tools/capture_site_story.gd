@@ -199,8 +199,12 @@ func _build_shots() -> void:
 		{
 			"name": "warden",
 			"focus_node": "Warden Aldis",
-			"focus_offset": Vector3(2.6, 1.7, 3.0),
-			"focus_aim_h": 1.55,
+			# First render (offset (2.6,1.7,3.0)) put the camera behind him --
+			# `facing_deg: 180` in stronghold_climax.json turned out to face
+			# the OPPOSITE way from that offset. Flipped to stand roughly
+			# where the entrance he watches actually is.
+			"focus_offset": Vector3(-2.2, 1.6, -2.6),
+			"focus_aim_h": 1.5,
 		},
 		{
 			"name": "mill-crossing",
