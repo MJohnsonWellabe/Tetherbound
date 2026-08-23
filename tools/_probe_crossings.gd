@@ -457,33 +457,50 @@ func _flood(min_x: float, max_x: float, min_z: float, max_z: float,
 ## column.
 func _column_scan(min_x: float, max_x: float, min_z: float, max_z: float,
 		limit_deg: float, who: String) -> void:
-	var rise := tan(deg_to_rad(limit_deg)) * CELL
 	var cols := int((max_x - min_x) / CELL) + 1
 	var open_cols: Array[int] = []
 	var gentlest := 1e9
 	var gentlest_x := 0.0
+	var limit_tan := tan(deg_to_rad(limit_deg))
 	for i in cols:
 		var x := min_x + float(i) * CELL
-		var worst := 0.0
-		var previous := NAN
+		var steepest := 0.0
 		var z := min_z
+		var blocked := false
 		while z <= max_z:
-			var h := _baked(Vector2(x, z))
-			if not is_nan(h):
-				if not is_nan(previous):
-					worst = maxf(worst, absf(h - previous))
-				previous = h
+			var spot := Vector2(x, z)
+			var h := _baked(spot)
+			var east := _baked(spot + Vector2(CELL, 0.0))
+			var west := _baked(spot - Vector2(CELL, 0.0))
+			var north := _baked(spot + Vector2(0.0, CELL))
+			var south := _baked(spot - Vector2(0.0, CELL))
+			if is_nan(h) or is_nan(east) or is_nan(west) or is_nan(north) or is_nan(south):
+				# A sample off the end of the baked world is NOT flat ground.
+				# Skipping it left the outermost columns never evaluated, so
+				# they fell through as "walkable" and this scan reported 1 m and
+				# 3 m holes at x -1024 and x 1022..1024 with a "gentlest grade
+				# 0.00" beside them -- a zero gradient at the world edge being
+				# the tell. Treat the edge as blocked; the windowed scan already
+				# did, which is why it said SEALED while this said otherwise.
+				blocked = true
+			else:
+				var dx := (east - west) / (2.0 * CELL)
+				var dz := (north - south) / (2.0 * CELL)
+				var grade := sqrt(dx * dx + dz * dz)
+				steepest = maxf(steepest, grade)
+				if grade > limit_tan:
+					blocked = true
 			z += CELL
-		if worst < gentlest:
-			gentlest = worst
+		if steepest < gentlest:
+			gentlest = steepest
 			gentlest_x = x
-		if worst <= rise:
+		if not blocked:
 			open_cols.append(i)
 	print("")
-	print("COLUMN SCAN, %s: all %d columns at %.1f m, step limit %.2f m/m" % [
-		who, cols, CELL, rise])
-	print("  Gentlest column anywhere: worst step %.2f m/m (%.0f deg) at x %.0f." % [
-		gentlest, gentlest, rad_to_deg(atan(gentlest / CELL)), gentlest_x])
+	print("COLUMN SCAN, %s: all %d columns at %.1f m, standable when grade <= %.2f" % [
+		who, cols, CELL, tan(deg_to_rad(limit_deg))])
+	print("  Gentlest column anywhere: steepest grade %.2f (%.0f deg) at x %.0f." % [
+		gentlest, rad_to_deg(atan(gentlest)), gentlest_x])
 	if open_cols.is_empty():
 		print("  NO straight-across column exists anywhere on the span.")
 		print("  Any route the windowed scan found is therefore a DIAGONAL one,")
@@ -541,6 +558,38 @@ func _profile(xs: Array, min_z: float, max_z: float, limit_deg: float) -> void:
 			"YES -- no barrier here" if worst <= rise else "no"])
 
 
+## Is the GROUND ITSELF standable here? This is the criterion Godot actually
+## applies and the one the first four runs of this probe got wrong.
+##
+## `CharacterBody3D.is_on_floor()` compares the contact SURFACE NORMAL against
+## `floor_max_angle`. It does not care which direction you approached from. So
+## a 70-degree face is not walkable in any direction -- you cannot switchback
+## down it, because every cell of it is a slide.
+##
+## The earlier fills tested a PATH GRADIENT instead: "is the height difference
+## between these two adjacent cells within the limit". On a planar steep slope
+## that test passes for any step taken near the contour, so it happily walked
+## routes diagonally down a 70-degree wall and reported 1,509 m of the river's
+## 2,048 m span passable -- next to column profiles showing 65-80 degree walls
+## at every x, which is exactly the contradiction that should have been read as
+## "the measurement is wrong" and not as a finding.
+##
+## Local gradient by central difference, both axes, one sample either side.
+func _standable(at: Vector2, limit_tan: float) -> bool:
+	var h := _baked(at)
+	if is_nan(h):
+		return false
+	var east := _baked(at + Vector2(CELL, 0.0))
+	var west := _baked(at - Vector2(CELL, 0.0))
+	var north := _baked(at + Vector2(0.0, CELL))
+	var south := _baked(at - Vector2(0.0, CELL))
+	if is_nan(east) or is_nan(west) or is_nan(north) or is_nan(south):
+		return false
+	var dx := (east - west) / (2.0 * CELL)
+	var dz := (north - south) / (2.0 * CELL)
+	return sqrt(dx * dx + dz * dz) <= limit_tan
+
+
 ## Where the barrier is actually passable. Slide a window along x and run the
 ## same fill CONFINED to it: a route that leaves the window does not count, so
 ## a single hole at one end can no longer make the whole length read as open.
@@ -587,18 +636,20 @@ func _connects(left: float, right: float, min_z: float, max_z: float,
 	var cols := int((right - left) / CELL) + 1
 	var rows := int((max_z - min_z) / CELL) + 1
 	var rise := tan(deg_to_rad(limit_deg)) * CELL
-	var height := PackedFloat32Array()
-	height.resize(cols * rows)
+	var limit_tan := tan(deg_to_rad(limit_deg))
+	var walkable := PackedByteArray()
+	walkable.resize(cols * rows)
 	for j in rows:
 		var z := min_z + float(j) * CELL
 		for i in cols:
-			height[j * cols + i] = _baked(Vector2(left + float(i) * CELL, z))
+			walkable[j * cols + i] = 1 if _standable(
+				Vector2(left + float(i) * CELL, z), limit_tan) else 0
 	var seen := PackedByteArray()
 	seen.resize(cols * rows)
 	var queue := PackedInt32Array()
 	for i in cols:
 		var index := (rows - 1) * cols + i
-		if is_nan(height[index]):
+		if walkable[index] == 0:
 			continue
 		seen[index] = 1
 		queue.append(index)
@@ -616,11 +667,7 @@ func _connects(left: float, right: float, min_z: float, max_z: float,
 			if ni < 0 or ni >= cols or nj < 0 or nj >= rows:
 				continue
 			var next := nj * cols + ni
-			if seen[next] == 1:
-				continue
-			if is_nan(height[next]) or is_nan(height[index]):
-				continue
-			if absf(height[next] - height[index]) > rise:
+			if seen[next] == 1 or walkable[next] == 0:
 				continue
 			seen[next] = 1
 			queue.append(next)
