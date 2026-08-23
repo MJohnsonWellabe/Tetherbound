@@ -1006,13 +1006,13 @@
           7370.8
         ],
         "axis_deg": 28.6,
-        "half_length": 40.0,
+        "half_length": 45.0,
         "end_fade": 14.0,
         "half_width": 4.0,
         "rim": 3.4,
         "depth": 11.0
       },
-      "_why": "GATE-D5 REQUEST 2. Prompt 66 requires that a physical barrier actually constrain travel. The three-Sigil gate was a 4.07m leaf standing on open ground -- a key-use point, not a barrier, and a player who wanted to walk around it could. These two carves are the flanking terrain that makes it real.\nTWO carves with a gap, not one trench: a single carve centred on the gate (which is what the lane's own request proposed) would cut the trench straight through the gate and sever the only route to the finale. These are centred 61m either side along the trench axis, leaving roughly 14m of uncarved causeway at the gate itself -- the same clear span south_bridge is sized to -- so the gate is the one way through and the road still goes somewhere.\naxis_deg is 28.6, NOT the 61.4 the lane's request named. 61.4 is the perpendicular measured from +z, and _prepare_carve builds its axis as Vector2.RIGHT.rotated(axis_deg), which is measured from +x. Checked against south_bridge, whose road runs almost due +z and whose axis_deg is 0. Taking 61.4 literally would have laid the trench 32.8 degrees off perpendicular, cutting the road at a slant and leaving the flanks open.\nDepth 11 against rim 3.4 is ~72 degrees of wall, past the player's 45-degree floor_max_angle -- the same arithmetic every gorge on this map is sized by. No `bridge` and no `road` key: nothing builds a deck here, the causeway is ground. gated_crossing.gd looks its entry up by id, so these two are inert to it, and road_polylines() defaults `road` to empty."
+      "_why": "GATE-D5 REQUEST 2. Prompt 66 requires that a physical barrier actually constrain travel. The three-Sigil gate was a 4.07m leaf standing on open ground -- a key-use point, not a barrier, and a player who wanted to walk around it could. These two carves are the flanking terrain that makes it real.\nTWO carves with a gap, not one trench: a single carve centred on the gate (which is what the lane's own request proposed) would cut the trench straight through the gate and sever the only route to the finale. These are centred 61m either side along the trench axis, leaving an uncarved causeway at the gate itself, sized to the gate's own leaf rather than to south_bridge's clear span -- so the gate is the one way through and the road still goes somewhere.\naxis_deg is 28.6, NOT the 61.4 the lane's request named. 61.4 is the perpendicular measured from +z, and _prepare_carve builds its axis as Vector2.RIGHT.rotated(axis_deg), which is measured from +x. Checked against south_bridge, whose road runs almost due +z and whose axis_deg is 0. Taking 61.4 literally would have laid the trench 32.8 degrees off perpendicular, cutting the road at a slant and leaving the flanks open.\nDepth 11 against rim 3.4 is ~72 degrees of wall, past the player's 45-degree floor_max_angle -- the same arithmetic every gorge on this map is sized by. No `bridge` and no `road` key: nothing builds a deck here, the causeway is ground. gated_crossing.gd looks its entry up by id, so these two are inert to it, and road_polylines() defaults `road` to empty.\n'DO THE SIGIL GATE LIKE THE BRIDGE' (owner directive). `_probe_sigil_gate_body.gd` measured `GateCollision`'s live world-x span as 61.8..65.4 -- a 3.6m leaf -- while `half_length` 40 left the zero-depth causeway at world-x ~57.4..69.8, 9.4m wider than the leaf on each side: a gate inboard of the actual gap, gating nothing (south_bridge.gd's own history). `half_length` is the FULL-DEPTH extent; `end_fade` (unchanged, 14.0) fades beyond it to zero depth, so the causeway edge sits at `half_length + end_fade` measured along axis_deg 28.6 from `centre`. Solving `half_length + end_fade` for the zero-depth point to land on the leaf's own west edge (world-x 61.8): (61.8-10.0)/cos(28.6deg) = 58.999, so half_length = 58.999-14.0 = 44.999, rounded to 45.0 -- the causeway now closes at world-x ~61.80, matching the leaf, not south_bridge's 14m span (that number belonged to the OLD lane's-request framing quoted above; this gate is sized to its own already-correct leaf instead, per the newer owner directive). Checked against `sigil_gate_gorge_east` and both `_wing` entries (neither touched): the new full-depth inward corner (49.5,7392.4) stays ~28m clear of east's own inward corner (77.7,7407.6), and the new outward corner (-29.5,7349.3) plus its 14m fade stays well inside `sigil_gate_gorge_west_wing`'s already-overlapping coverage (that wing reaches to x=+5), so nothing here creates a new seam."
     },
     {
       "id": "sigil_gate_gorge_east",
@@ -1023,13 +1023,13 @@
           7429.2
         ],
         "axis_deg": 28.6,
-        "half_length": 40.0,
+        "half_length": 45.0,
         "end_fade": 14.0,
         "half_width": 4.0,
         "rim": 3.4,
         "depth": 11.0
       },
-      "_why": "GATE-D5 REQUEST 2. the uphill flank, east of the road; see `sigil_gate_gorge_west`."
+      "_why": "GATE-D5 REQUEST 2. the uphill flank, east of the road; see `sigil_gate_gorge_west`. `half_length` 40 -> 45.0 for the same reason and by the same arithmetic as that entry's own note: (65.4-117.2)/cos(28.6deg) = -58.999 solves the zero-depth point onto the leaf's own east edge (world-x 65.4), so half_length = 58.999-14.0 = 44.999, rounded to 45.0."
     },
     {
       "id": "sigil_gate_gorge_west_wing",
