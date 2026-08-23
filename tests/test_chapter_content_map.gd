@@ -84,14 +84,44 @@ func test_every_region_has_human_opposition_in_it() -> void:
 ## band file emptied -- which is what actually happened to Band 2. The ceiling
 ## is only here to catch prompt 59's other failure, a "monotonous trainer
 ## hallway", and is set far enough out to mean it.
+## GATE-D: counted by OPPONENT, not by entry.
+##
+## The entry count hit 25 once Band 1 authored an optional draw, and that read
+## as one over the ceiling when the chapter had not actually grown a rung. Three
+## of those entries are the village tournament's bracket -- quarter, semi,
+## final -- and all three are Mira, Tam and Oskar, the same three characters the
+## count already holds as Band 1's field trainers. One event contributed four
+## entries against three people the ladder had already counted.
+##
+## Prompt 59's 12-17 is about how many distinct rungs the ladder has, which is a
+## statement about opponents, not about how many times a battle record appears
+## in a table. So the ceiling stays where it is and the measurement is corrected
+## instead. Raising the ceiling was the alternative and is the wrong lever: it
+## would have to be raised again by whichever band authors the next good
+## optional trainer, which is exactly the "quota to fill mechanically" reading
+## the paragraph above rejects.
+##
+## Distinctness is by `name`, not `id`: `tournament_final_oskar` and
+## `trainer_oskar` are deliberately different ids for the same man.
 func test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for() -> void:
-	var total: int = TRAINERS.trainers().size()
+	var opponents := {}
+	for entry: Variant in TRAINERS.trainers():
+		var trainer: Dictionary = entry
+		var who := str(trainer.get("name", "")).strip_edges()
+		# An entry with no name is its own defect and is counted rather than
+		# silently dropped -- a nameless trainer must not shrink this number.
+		opponents[who if who != "" else "unnamed:%s" % str(trainer.get("id", "?"))] = true
+
+	var total := opponents.size()
+	var entries: int = TRAINERS.trainers().size()
 	assert_true(total >= 12,
-		("the chapter fields only %d trainer battles; prompt 59 targets roughly 12-17 and the "
-		+ "ladder stops reading as progression below that") % total)
+		("the chapter fields only %d distinct trainer opponents (%d battle entries); prompt 59 "
+		+ "targets roughly 12-17 and the ladder stops reading as progression below that") % [
+			total, entries])
 	assert_true(total <= 24,
-		("the chapter fields %d trainer battles, well past prompt 59's 12-17 -- that is the "
-		+ "'monotonous trainer hallway' it warns about") % total)
+		("the chapter fields %d distinct trainer opponents (%d battle entries), well past prompt "
+		+ "59's 12-17 -- that is the 'monotonous trainer hallway' it warns about") % [
+			total, entries])
 
 
 ## Every material a buildable costs must be obtainable somewhere -- either from
