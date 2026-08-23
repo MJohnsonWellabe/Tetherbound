@@ -47,14 +47,57 @@ work open) · `converged` (two flat rounds, remainder recorded).
 
 | # | Domain | Capture tool | Status | Last verdict |
 |---|---|---|---|---|
-| D1 | Regions / the corridor, bands 1-5, day+night | `tools/_probe_corridor_survey.gd` | in-flight | — |
-| D2 | HUD + every menu screen | (to author) | open | — |
-| D3 | Creatures — 17 species, shinies, alphas, legendary | `tools/preview_creatures.gd` (extend) | open | — |
-| D4 | Characters — 6 rigs, Team Tether ranks | (to author) | open | — |
-| D5 | Buildings — 18 prefabs + player builds | `tools/capture_buildings.gd` (extend) | open | — |
-| D6 | Items — 55 tools/consumables/gatherables | (to author) | open | — |
-| D7 | Ground / terrain / water / weather | (to author) | open | — |
-| D8 | Combat presentation | (to author) | open | — |
+| D1 | Regions / the corridor, bands 1-5, day+night | `tools/_probe_corridor_survey.gd` | captured, awaiting blind pass | — |
+| D2 | HUD + every menu screen | (being authored) | open | — |
+| D3 | Creatures — 17 species, shinies, alphas | `tools/_capture_creature_roster.gd` | tool ready, parse-checked | — |
+| D4 | Characters — 6 rigs, Team Tether ranks | `tools/_capture_character_cast.gd` | tool ready, parse-checked | — |
+| D5 | Buildings — 18 prefabs + player builds | `tools/_capture_structures.gd` | tool ready, parse-checked | — |
+| D6 | Items — 55 tools/consumables/gatherables | `tools/_capture_item_art.gd` | tool ready, parse-checked | — |
+| D7 | Ground / terrain / water / weather | `tools/_capture_ground_and_sky.gd` | tool ready, parse-checked | — |
+| D8 | Combat presentation | (being authored) | open | — |
+
+## Findings the capture pass has already produced
+
+These came out of authoring the tools — reading what the game actually
+references — and none of them needed a critic to see. Each is a defect a
+player meets, recorded here so a blind round is not spent rediscovering it.
+
+- **Every Team Tether character is a repainted Warden.** `npc_ranks.gd`
+  hardcodes his rig as the base body for grunt, officer, captain and Warden
+  alike, and `npc_ranks.json`'s own comment says that was a stopgap "until the
+  only faction-appropriate rig actually installed is the Warden's". One IS
+  installed: `assets/characters/grunt/grunt_lod0.glb` is imported, sits on
+  disk, and is listed by `docs/art/HUMANOID_ASSET_INVENTORY.md` — which
+  CLAUDE.md makes authoritative — as a "reusable Team Tether rank-and-file
+  archetype", under a rule that says to use the grunt family for ordinary
+  Team Tether personnel "rather than repainting a civilian and calling it a
+  grunt". Nothing in `data/config/` or `scripts/` references it. This is the
+  root of a defect two blind rounds have already circled in other words: the
+  rank ladder reads as "someone duplicated a mesh four times and nudged an
+  exposure value", and no palette tuning fixes four copies of one body. The
+  antagonist faction the player fights for a whole chapter has one silhouette.
+- **The hammer is an axe.** `items.json` gives `hammer` a `held_model` of
+  `quaternius_survival/Axe.obj`. The player swings a visible axe to build.
+- **The hoe is a pickaxe, twice over.** `hoe` draws `Pickaxe_Bronze.gltf`, the
+  same mesh as `pickaxe`, AND uses `pickaxe.png` as its icon — indistinguishable
+  in the hand and in the backpack. The fishing rod equips nothing at all.
+  (`hoe`'s mesh reuse is a documented D24 stand-in; the icon collision and the
+  hammer are not flagged anywhere as deliberate, and both are visible during
+  the game's core verbs.)
+- **Half the inventory is visually duplicated.** 28 of 55 items share an icon
+  with at least one other item. `potion_small.png` covers 7 (the small potion,
+  three elixirs, three tonics), `tm_charged.png` covers 9 TMs, `stone.png`
+  covers stone/rootstone/heartstone. Rubric criterion 1 asks what is still
+  identifiable at 30%; for half the inventory the answer is "the wrong item".
+- **There is no alpha creature ART.** "Alpha" is purely
+  `creature_body.apply_size_multiplier()` — a scale field. No elite creature
+  material exists anywhere in `scripts/creatures/` or the band spawn tables.
+  An alpha is a normal creature that is bigger.
+- **The chapter has one colour.** Measured across the 12-frame day corridor:
+  eleven of twelve frames carry exactly three hue families, and the same three
+  every time — blue, chartreuse, yellow. That is the numeric form of the
+  standing "palette incoherence" finding, and the baseline any groundcover or
+  lighting change has to move.
 
 ## Standing facts a round should not re-derive
 
