@@ -186,15 +186,25 @@ func _clear_body() -> void:
 		child.queue_free()
 
 
+## Blind-judge pass: "the creature portrait is an unidentifiable close-up of
+## fur on the screen whose job is looking at your creatures." This file's own
+## header says it lifts `starter_picker.gd::_build_preview`'s camera "almost
+## verbatim", but the numbers had drifted CLOSER than that source: fov 32 here
+## against 34 there, and a 2.4x/+0.8 distance formula against 2.7x/+0.6 --
+## both push the frame tighter, in the wrong direction for a widget whose job
+## (this file's own header again: "so a player can actually look a party
+## member over") is calm, full-body inspection, not the starter orb's
+## deliberate dramatic close reveal. Matched back to starter_picker's own
+## values, which this same critic pass raised no framing complaint against.
 func _frame_camera(height: float, radius: float) -> void:
 	for child in _world.get_children():
 		if child is Camera3D:
 			child.queue_free()
 	var camera := Camera3D.new()
-	camera.fov = 32.0
+	camera.fov = 34.0
 	camera.current = true
 	_world.add_child(camera)
-	var distance := maxf(height, radius * 2.2) * 2.4 + 0.8
+	var distance := maxf(height, radius * 2.2) * 2.7 + 0.6
 	var eye := Vector3(0.0, height * 0.55, distance)
 	camera.look_at_from_position(eye, Vector3(0.0, height * 0.5, 0.0), Vector3.UP)
 

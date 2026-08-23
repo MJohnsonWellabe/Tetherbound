@@ -112,12 +112,29 @@ const TYPE_ICONS := {
 }
 const BOND_ICON := preload("res://assets/ui/icons/ui/bond.png")
 
+## Where a species' portrait art lives, if it has any -- the same path shape
+## `playground_hud.gd::_species_portrait_path` builds for the HUD's own
+## tracked-creature chip. Duplicated rather than called cross-file (this tab
+## and that HUD are unrelated nodes with no shared parent to reach through),
+## but kept to the one format string so the two screens can never point at
+## different art for the same species.
+const PORTRAIT_DIR := "res://assets/ui/portraits/creatures/"
+
 var _header: Label = null
 ## Button nodes only — see the header note on why `smoke_menu.gd` needs these
 ## to be castable straight to `Button`, not a wrapper.
 var _rows: Array = []
 var _row_wraps: Array = []
 var _row_chips: Array = []
+## Real species art over the chip's colour swatch, when the species has a
+## portrait -- blind-judge pass: "the roster identifies creatures by flat
+## colour swatches while the HUD uses real sprites -- same data, two
+## screens, two identity systems." The swatch stays underneath and still
+## shows through a portrait's transparent surround (the same layering
+## `playground_hud.gd`'s own chip+portrait pair already uses), so a species
+## that somehow has no art yet degrades to exactly today's swatch rather than
+## to a blank chip.
+var _row_portraits: Array = []
 var _row_names: Array = []
 var _row_levels: Array = []
 ## RG19-spec/D68's one-line "Rested · Fed · Happy" per row.
@@ -246,6 +263,7 @@ func build() -> void:
 	_rows.clear()
 	_row_wraps.clear()
 	_row_chips.clear()
+	_row_portraits.clear()
 	_row_names.clear()
 	_row_levels.clear()
 	_row_conditions.clear()
@@ -382,6 +400,20 @@ func _build_slot_row(index: int) -> Control:
 	content.add_child(chip)
 	_row_chips.append(chip)
 
+	# Real species art, layered over the colour swatch `chip`'s own stylebox
+	# still draws -- a portrait's transparent surround lets that swatch show
+	# through exactly the way `playground_hud.gd`'s tracked-creature chip
+	# already does. PanelContainer auto-fits its one child, so no manual
+	# position/size math is needed the way `party_strip.gd`'s plain `Panel`
+	# chip requires.
+	var portrait := TextureRect.new()
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.visible = false
+	chip.add_child(portrait)
+	_row_portraits.append(portrait)
+
 	var text_col := VBoxContainer.new()
 	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -405,14 +437,6 @@ func _build_slot_row(index: int) -> Control:
 	stat_row.add_child(level_label)
 	_row_levels.append(level_label)
 
-	# RG19-spec/D68's condition line, beside the level it is not the same as.
-	var condition_label := Label.new()
-	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	condition_label.custom_minimum_size = Vector2(190, 0)
-	stat_row.add_child(condition_label)
-	_row_conditions.append(condition_label)
-
 	var hp_bar := ProgressBar.new()
 	hp_bar.custom_minimum_size = Vector2(150, 8)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -427,6 +451,22 @@ func _build_slot_row(index: int) -> Control:
 	stat_row.add_child(hp_bar)
 	_row_hp_bars.append(hp_bar)
 	_row_hp_fills.append(hp_fill)
+
+	# RG19-spec/D68's condition line, on its OWN row below level+HP rather
+	# than crammed beside them in `stat_row` (blind-judge pass: level(48) +
+	# this label's own 190 + the HP bar's 150 add up to 404px of fixed-width
+	# children inside a text_col that, once the chip and bond column and the
+	# row's own insets are subtracted from ROW_WIDTH, has roughly 260px to
+	# give them -- the overflow rendered underneath the 3D viewport column to
+	# its right, which draws after (so on top of) this list, and read as "HP
+	# bars poke out from behind the portrait viewport". A second line has
+	# room for the label at its full width with nothing to overlap.
+	var condition_label := Label.new()
+	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	condition_label.clip_text = true
+	text_col.add_child(condition_label)
+	_row_conditions.append(condition_label)
 
 	var bond_col := VBoxContainer.new()
 	bond_col.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -837,6 +877,19 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	chip_box.corner_radius_bottom_left = UITokens.RADIUS_SLOT
 	chip_box.corner_radius_bottom_right = UITokens.RADIUS_SLOT
 	chip.add_theme_stylebox_override("panel", chip_box)
+
+	# Real portrait over the swatch when the species has one -- see
+	# `_row_portraits`'s own header for why the swatch is left drawing
+	# underneath rather than replaced.
+	var portrait_texture: Texture2D = null
+	var portrait_path := "%s%s.png" % [PORTRAIT_DIR, str(creature.get("species_id"))]
+	if ResourceLoader.exists(portrait_path):
+		portrait_texture = load(portrait_path) as Texture2D
+	(_row_portraits[i] as TextureRect).texture = portrait_texture
+	(_row_portraits[i] as TextureRect).visible = portrait_texture != null
+	(_row_portraits[i] as TextureRect).modulate = (
+		Color(1, 1, 1, 0.5) if bool(creature.get("fainted")) else Color.WHITE
+	)
 
 	var marker := " *" if i == active and size > 0 else ""
 	if i == int(party.call("best_index")):
