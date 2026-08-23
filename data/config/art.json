@@ -119,7 +119,8 @@
         "fog_colour": "#e8b784",
         "fog_density": 0.0016,
         "_comment_ambient_ev8": "EV8. Was 1.15. A blind pass on the low-sun frame called the ground 'crushed almost to black' against a still-saturated sky -- the shadow side was losing terrain form entirely rather than reading as evening mood. TUNABLE -- the cool tint stays deliberately (real golden-hour fill from open sky reads cool against a warm key), only the amount lifted.",
-        "ambient_energy": 1.5,
+        "_comment_ambient_vis_world": "VIS-WORLD. ambient_energy 1.5 -> 0.85. The cool tint stays -- real golden-hour fill from open sky IS cool against a warm key, and this file's own EV8 comment is right about that -- but at 1.5 it ran at full DAYTIME strength, so a cool blue-grey fill was washing the warm key out across the whole frame. A blind critic read the result exactly: 'the sun is a white fuzzy disc, the light is grey, and the ground goes muddier and LESS saturated than midday'. Golden hour that desaturates is the wrong way round. Cutting the fill, not the key, is what lets the warm sun read. TUNABLE.",
+        "ambient_energy": 0.85,
         "ambient_colour": "#8f9ec4",
         "ambient_sky_contribution": 0.45,
         "exposure": 1.0
@@ -137,26 +138,29 @@
         "shadow_normal_bias": 1.4
       },
       "sky": {
-        "top_colour": "#0a1330",
-        "horizon_colour": "#1c2740",
-        "ground_horizon_colour": "#141b2c",
+        "_comment_top_colour_vis_world": "VIS-WORLD. Night measured sky 0.0% and horizon 0.00 in all five night frames, every round: the sky was indistinguishable from the ground, so there was no horizon at all. That is not a judgement call -- frame_stats.sky_mask classifies sky as blue-band hue with value > 0.35, and #0a1330's value is 0.19, so no night pixel could ever qualify. Raised so the sky sits ABOVE the land in value, which is what a real night looks like and what the key art's night panel does (navy with readable silhouettes). The ground is deliberately NOT raised with it -- see exposure below. TUNABLE.",
+      "top_colour": "#1b2d5c",
+        "horizon_colour": "#3d5285",
+        "ground_horizon_colour": "#1a2338",
         "ground_bottom_colour": "#05070c",
-        "sun_angle_max_deg": 10.0,
-        "sun_curve": 0.4,
-        "energy": 0.45,
+        "sun_angle_max_deg": 14.0,
+        "sun_curve": 0.35,
+        "energy": 0.75,
         "_comment_panorama": "Explicitly empty. The base `sky` block above names day.hdr; _merged() layers this dict on top of that one, so without this the night preset would silently inherit the DAY panorama instead of falling back to the procedural gradient.",
         "panorama": ""
       },
       "environment": {
         "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#1c2740) above, same reasoning as the day and golden presets.",
-        "fog_colour": "#1c2740",
+        "fog_colour": "#31446f",
         "fog_density": 0.0011,
-        "ambient_energy": 2.3,
+        "_comment_ambient_energy_vis_world": "VIS-WORLD. 2.3 -> 1.5, paired with the exposure cut below, and this is the fix for 'the character is pasted onto black paper'. Ambient multiplies albedo uniformly, so a large ambient lift raises whatever has the brightest albedo in frame by the most -- the trainer -- while the terrain, whose grass albedo R9.4 deliberately took down to value 0.199, barely moves. Every round that tried to fix night by brightening it was widening the very gap it was trying to close. The brightness now comes from the SKY colours above, which lift the background without touching what the light does to the character. TUNABLE.",
+        "ambient_energy": 1.5,
         "ambient_colour": "#2a3b6e",
         "ambient_sky_contribution": 0.2,
-        "exposure": 2.0,
+        "_comment_exposure_vis_world": "VIS-WORLD. 2.0 -> 1.2. Day runs 0.6, so night was being pushed 3.3x harder than day in post on top of a 2.3 ambient -- a night preset whose main mechanism was 'turn everything up', which is why three blind passes in a row reported a day-lit character against a black world. TUNABLE.",
+        "exposure": 1.2,
         "adjustment_enabled": true,
-        "adjustment_saturation": 0.55,
+        "adjustment_saturation": 0.72,
         "adjustment_contrast": 1.08
       }
     }
