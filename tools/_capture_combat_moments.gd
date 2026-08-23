@@ -641,26 +641,59 @@ func _run_trainer_encounter() -> void:
 ## this is the one wild creature standing exactly at its authored centre —
 ## no scatter to search.
 const ELDER_CENTRE := Vector3(-490.0, 0.0, 555.0)
+## How far off its own centre the elder may be found, and the scale that proves
+## it is the elder anyway. `wander_radius` is 1.5m, so a few metres of settle
+## drift is normal and 13m is somebody else; `elder.body_scale` is 1.35, and no
+## ordinary band-1 mosshell is scaled up at all.
+const ELDER_TOLERANCE_M := 6.0
+const ELDER_MIN_SCALE := 1.2
 
 
 func _run_elite_encounter() -> void:
 	print("")
 	print("=== encounter C: elite encounter (elder mosshell, band 1) ===")
+	# STAND THE PLAYER THERE FIRST, THEN LOOK.
+	#
+	# This searched before teleporting, and skipped every run with "nearest wild
+	# creature to the elder's spawn is 13m away; likely the wrong creature". The
+	# elder's own spawn entry gives it `wander_radius: 1.5`, so it cannot BE 13m
+	# from its centre -- which means it had not spawned yet and the search found
+	# somebody else entirely. `ralph/VISUAL_LEDGER.md` carries the reason as a
+	# standing fact: "a capture with the player parked away from the shot
+	# photographs an empty world, because creature spawning is driven off the
+	# player." The tool was asking who was standing in a clearing it had not
+	# arrived at.
+	await _teleport_player_near(ELDER_CENTRE, FAR_TELEPORT_SETTLE_FRAMES)
+
 	var wild := _find_nearest_wild(ELDER_CENTRE)
 	if wild == null:
-		print("FAIL: no wild creature found at the elder mosshell's spawn point; encounter C skipped")
+		print("FAIL: no wild creature at the elder mosshell's spawn point even after standing there; encounter C skipped")
 		return
-	if wild.global_position.distance_to(ELDER_CENTRE) > 5.0:
-		print("FAIL: nearest wild creature to the elder's spawn is %.0fm away; likely the wrong creature; encounter C skipped" % wild.global_position.distance_to(ELDER_CENTRE))
-		return
+
+	# Identity, not proximity. The elder is the one mosshell in Band 1 carrying
+	# `elder.body_scale` 1.35, and checking for that is what the rest of this
+	# tool already does for the projectile and the impact flash: confirm the
+	# subject is present rather than infer it from where the camera is pointed.
+	# Six times in this sweep a survey photographed the wrong thing; a distance
+	# threshold is exactly the kind of inference that produced those.
+	var scale := 1.0
+	if wild.has_method("body_scale"):
+		scale = float(wild.call("body_scale"))
+	elif wild.get("body_scale") != null:
+		scale = float(wild.get("body_scale"))
+	var offset := wild.global_position.distance_to(ELDER_CENTRE)
 
 	var display_name := "?"
 	var instance: Variant = wild.get("instance")
 	if instance != null:
 		display_name = str(instance.get("display_name"))
-	print("found '%s' at %s" % [display_name, wild.global_position])
+	print("found '%s' at %s (%.1fm off the elder's centre, body_scale %.2f)" % [
+		display_name, wild.global_position, offset, scale])
 
-	await _teleport_player_near(wild.global_position, FAR_TELEPORT_SETTLE_FRAMES)
+	if offset > ELDER_TOLERANCE_M and scale < ELDER_MIN_SCALE:
+		print("FAIL: nearest creature is %.0fm off the elder's centre AND is not scaled like an elder (%.2f < %.2f); this is not the elder, so 06-elite-encounter is NOT shot rather than shot at the wrong creature" % [
+			offset, scale, ELDER_MIN_SCALE])
+		return
 	if not await _engage(wild):
 		print("FAIL: could not engage the elder mosshell; 06-elite-encounter was not captured")
 		return
