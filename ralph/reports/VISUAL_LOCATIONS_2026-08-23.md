@@ -41,6 +41,22 @@ from `BoxMesh` primitives under three flat colours (`stone #6a6157`,
 
 **The two are 7,708 m apart.** `castle` is referenced in exactly one file.
 
+**And so is every piece of stronghold dressing.**
+`scripts/world/stronghold_occupation.gd` is referenced by exactly one file --
+`landmark.gd` -- so `stronghold_occupation.json`'s **14 braziers, 4 tether
+lamps, 5 sky-fill lights and a 21-prop occupation camp** are all attached to
+the legacy castle too. Their coordinates are in that castle's own local frame,
+which is checkable at a glance: a brazier sits at local `[-1.7, 4.2, -7.0]` and
+a tether lamp at `[-3.6, 12.6, -10.95]`, against the castle's own gate-flank
+`Banner` at `[-3.6, 10.5, -11.0]` -- the same x, a metre and a half apart in z.
+
+So the fortress a player never sees has stone, crenellation, nine oxblood
+banners, fourteen lit braziers, four faction lamps and an enemy camp pitched
+outside it. The fortress they walk 7.5 km to fight in has five box rooms,
+three flat colours, and a trim system whose only two kinds are `band` and
+`pillar` -- no merlons, no banners, verified in `_build_trim()`'s own match
+statement.
+
 This is the same shape as D7's finding that "the build owns a better ground
 than the one the five bands use", and it re-frames the lane's largest item.
 Both of the structures round's stronghold verdicts —
