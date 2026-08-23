@@ -65,3 +65,4 @@ func _init() -> void:
 		["D late-ridge (survey05)", 70.0, 2965.0],
 	]:
 		_report(str(c[0]), float(c[1]), float(c[2]), 6.0)
+	quit(0)
