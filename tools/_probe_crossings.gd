@@ -241,6 +241,10 @@ func _report_river(min_x: float, max_x: float) -> void:
 	_scan_windows(min_x, max_x, lo, hi, LIMIT_PLAYER, "player (45 deg)")
 	print("")
 	_scan_windows(min_x, max_x, lo, hi, LIMIT_MOUNT, "ridden legendary (60 deg)")
+	_profile([-1000.0, -900.0, -800.0, -620.0, -440.0, -280.0, -152.0, 0.0,
+		200.0, 400.0, 620.0, 860.0, 1000.0], lo, hi, LIMIT_PLAYER)
+	_column_scan(min_x, max_x, lo, hi, LIMIT_PLAYER, "player (45 deg)")
+	_column_scan(min_x, max_x, lo, hi, LIMIT_MOUNT, "ridden legendary (60 deg)")
 
 
 ## --- the south gully --------------------------------------------------------
@@ -436,6 +440,105 @@ func _flood(min_x: float, max_x: float, min_z: float, max_z: float,
 	print("  and means only 'the far bank is one connected surface'. The first")
 	print("  run of this probe reported 2,047 of 2,049 columns on exactly that")
 	print("  artifact, next to cross-sections measuring 69-80 degree walls.")
+
+
+## Every column across the barrier, not the thirteen `_profile` samples. Asks
+## the one question with no path-finding ambiguity in it: at this x, can you
+## walk straight across, every 1 m step inside the limit?
+##
+## This exists because `_profile` and `_scan_windows` disagreed and neither
+## could settle it. Thirteen hand-picked columns all said "no" while the scan
+## called 1,509 m of the span passable -- and both can be true at once, because
+## the heightfield lays flats, building aprons and path corridors over the
+## carve AFTER it, so a road that meets the channel can leave a walkable notch
+## between two sampled columns. A notch is a hole in the wall. A route that
+## merely meanders diagonally down one flank and up the other is a longer walk
+## but still a crossing. Telling those apart needs every column, so: every
+## column.
+func _column_scan(min_x: float, max_x: float, min_z: float, max_z: float,
+		limit_deg: float, who: String) -> void:
+	var rise := tan(deg_to_rad(limit_deg)) * CELL
+	var cols := int((max_x - min_x) / CELL) + 1
+	var open_cols: Array[int] = []
+	var gentlest := 1e9
+	var gentlest_x := 0.0
+	for i in cols:
+		var x := min_x + float(i) * CELL
+		var worst := 0.0
+		var previous := NAN
+		var z := min_z
+		while z <= max_z:
+			var h := _baked(Vector2(x, z))
+			if not is_nan(h):
+				if not is_nan(previous):
+					worst = maxf(worst, absf(h - previous))
+				previous = h
+			z += CELL
+		if worst < gentlest:
+			gentlest = worst
+			gentlest_x = x
+		if worst <= rise:
+			open_cols.append(i)
+	print("")
+	print("COLUMN SCAN, %s: all %d columns at %.1f m, step limit %.2f m/m" % [
+		who, cols, CELL, rise])
+	print("  Gentlest column anywhere: worst step %.2f m/m (%.0f deg) at x %.0f." % [
+		gentlest, gentlest, rad_to_deg(atan(gentlest / CELL)), gentlest_x])
+	if open_cols.is_empty():
+		print("  NO straight-across column exists anywhere on the span.")
+		print("  Any route the windowed scan found is therefore a DIAGONAL one,")
+		print("  not a notch: a longer walk down one flank and up the other.")
+		return
+	var runs := _runs(open_cols, min_x)
+	print("  %d column(s) / %.0f m walk straight across -- these are HOLES:" % [
+		open_cols.size(), float(open_cols.size()) * CELL])
+	for run: String in runs:
+		print("    " + run)
+
+
+## The check that arbitrates when the cross-sections and the windowed scan
+## disagree, which they did on the first windowed run: transects reported
+## 69-80 degree walls at x -800, -620 and -440, and the scan called all three
+## passable. Both cannot be true, and neither number on its own says which is
+## wrong -- a transect reports the STEEPEST step it found, which says nothing
+## about whether a gentle way down exists somewhere else in the same cut, and
+## the scan reports connectivity without showing the ground it walked.
+##
+## So print the ground. One column of terrain straight across the barrier, at
+## 1 m, with the fill's own criterion applied to it: is every step in this
+## column inside the limit? A column that is walkable end to end is a place the
+## river does not block at all, and no argument about wall angles survives it.
+func _profile(xs: Array, min_z: float, max_z: float, limit_deg: float) -> void:
+	var rise := tan(deg_to_rad(limit_deg)) * CELL
+	print("")
+	print("COLUMN PROFILES across the barrier at %.0f deg (step limit %.2f m/m)" % [
+		limit_deg, rise])
+	print("%-8s %-9s %-9s %-9s %-9s %s" % [
+		"x", "min", "max", "worst step", "at z", "column walkable straight across?"])
+	print("-------------------------------------------------------------------------------")
+	for entry: Variant in xs:
+		var x := float(entry)
+		var lowest := 1e9
+		var highest := -1e9
+		var worst := 0.0
+		var worst_z := 0.0
+		var previous := NAN
+		var z := min_z
+		while z <= max_z:
+			var h := _baked(Vector2(x, z))
+			if not is_nan(h):
+				lowest = minf(lowest, h)
+				highest = maxf(highest, h)
+				if not is_nan(previous):
+					var step := absf(h - previous)
+					if step > worst:
+						worst = step
+						worst_z = z
+				previous = h
+			z += CELL
+		print("%-8.0f %-9.1f %-9.1f %-9.2f %-9.0f %s" % [
+			x, lowest, highest, worst, worst_z,
+			"YES -- no barrier here" if worst <= rise else "no"])
 
 
 ## Where the barrier is actually passable. Slide a window along x and run the
