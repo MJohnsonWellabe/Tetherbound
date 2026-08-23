@@ -164,4 +164,69 @@ Measured baseline for the convergence rule:
 
 ## Round 2 blind verdict
 
-Pending — appended below when the critic reports.
+One Fable critic, 23 frames, blind, judged at 40% downscale.
+**(a) belongs to the keyart world — no. (b) reads as the same kind of game as
+Palworld — yes, narrowly.**
+
+Round 2 is NOT convergence. The critic named fifteen defects, most of them new,
+which is `ralph/conventions.md`'s own definition of a round that improved.
+
+What it ranked worst, and what came of each:
+
+1. **Combat's left column was three things in one place.** Real, and two
+   distinct bugs. The player vitals cluster was still drawn under combat's
+   roster, and combat's OWN party strip sat 46px inside its OWN ally panel --
+   `SWITCH_PANEL_POS` was a hand-measured constant that went stale when
+   `party_strip.gd`'s row height grew 56 -> 96 in a later pass. Both fixed.
+2. **The map is chrome around a void, and the HUD prints through the menu.**
+   The HUD half was real and was NOT the exploration HUD: `combat_hud.gd` is a
+   second CanvasLayer drawing `encounter_director.gd`'s prompt, and the menu
+   only hid the first one. Fixed. The critic also caught that the map tab was
+   the only one with a world behind it -- the other eleven screens were shot
+   with no world loaded at all. Fixed in the harness.
+3. **The shop panel overflows the screen.** Real, four separate problems: no
+   height bound at all, unpaginated rows, prices placed with hand-typed spaces,
+   and no feedback that with Coin: 0 every row is unaffordable. All fixed.
+4. **Clipped text.** The party-strip row cut mid-glyph was THIS LANE's own
+   regression, introduced in round 2 by scaling the widget to fill the frame:
+   `Control.scale` multiplies about the pivot and leaves `position` unscaled.
+   The minimap's "256 m" was real -- the label was drawn before the 8px ring
+   that then painted over it. Both fixed.
+5. **Hotbar d-pad glyphs read as red first-aid crosses.** Real, and NOT fixed.
+   Every individual-direction d-pad glyph in the vendored and raw Kenney packs
+   uses the same plus-sign-with-one-arm convention and none reads as a
+   direction at true size. No suitable asset exists and none was generated.
+   Recorded as a remainder.
+6. **The creatures tab.** The identical status line on all five creatures was
+   checked and is NOT a bug -- five creatures on a fresh save legitimately share
+   seed values. Red on chronic states, ASCII "Appraisal [***--]", and the
+   unexplainable "Terrapup *" / "0/5" were all real and are fixed.
+7. **One state, three vocabularies.** Real. KO/red-name/"fainted" converged on
+   KO; "Escape" vs "Esc" normalised at the one shared source both read through.
+   Dialogue-on-X vs menus-on-A was checked and deliberately left: `interact` and
+   `menu_confirm` are separately bound and a conversation continuing on the verb
+   that started it is grammar, not drift.
+
+Not acted on, with reasons: the `kenney_future` display-font clash (art
+direction, needs owner direction and a licence entry); the world's emptiness,
+the starter-picker staging, the portrait art style and the title illustration
+(other domains, and partly art that is not in the build).
+
+### The process lesson this round paid for
+
+**`--check-only` does not validate that a property exists.** The round-2 craft
+fix set `cost_label.text_overflow_behavior`; Godot 4 spells it
+`text_overrun_behavior`. The file parse-checked clean, shipped, and the unknown
+property threw mid-`_make_row()` -- which aborted the function, returned null,
+and silently emptied the ENTIRE craft recipe list. The blind critic then
+reported the craft panel as "~60% empty", a defect this lane had created two
+commits earlier while believing it had verified the change.
+
+Parse-checking proves syntax. It does not prove behaviour, and on this project
+the only things that would have caught this were a test asserting the property
+took effect, or a render. Treat `--check-only` as necessary and never
+sufficient for anything that sets a property by name.
+
+### Measured baseline
+
+`shots/_rounds/ui-round2/frame_stats.txt`. Round 3 is rendering against it.
