@@ -88,7 +88,15 @@ const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 
 const OUT_DIR := "res://shots/items"
-const RESOLUTION := Vector2i(1440, 2200)
+## Tall enough for all 55 items plus their 11 kind headings. The first run
+## measured its own content at 2479px inside a 2200px viewport and said so
+## rather than writing a silently truncated sheet -- the bottom rows, which are
+## where the TMs and key items sit, were simply not in the frame. A critic
+## shown that sheet would have been judging a partial inventory without any way
+## to know it, which is the same class of error as photographing an empty world
+## and calling the region empty. 2800 clears the measured 2479 with room for
+## the layout to grow by a row or two before anyone has to think about it again.
+const RESOLUTION := Vector2i(1440, 2800)
 
 const ICON_COLUMNS := 10
 const ICON_TILE := Vector2(120.0, 150.0)
