@@ -373,23 +373,52 @@ func _sleep_the_team_into_condition() -> bool:
 		if not await _assign_to_bed(index):
 			return false
 		entrants.append(creature)
-	var day_before := int(_game.get("day"))
-	if not await _sleep_at_camp():
-		return false
-	if int(_game.get("day")) != day_before + 1:
-		_fail("a night at the camp did not advance the day (%d -> %d)"
-			% [day_before, int(_game.get("day"))])
-		return false
-	for index in entrants.size():
-		var creature := entrants[index]
-		if not bool(creature.get("rested")):
-			_fail(("%s slept in its own creature bed through the night and did not come out "
-				+ "rested; %d beds were placed for %d entrants")
-				% [str(creature.call("label")), _beds.size(), wanted])
+	# A NIGHT, and another one if the team is still not in condition.
+	#
+	# GATEB-COORD. "Rested, fed and happy" is three separate things and only
+	# the first is bought by a bed. Happiness starts at 55 against a gate of 60
+	# (`data/config/creature_condition.json`), a completed rest is worth +12
+	# and a FAINT is worth -12 -- and a creature fainting is an ordinary thing
+	# to happen during a long build in open meadow. Feeding is worth +8 but
+	# `CONDITION.feed()` refuses a creature that is already fed, so a full,
+	# rested, unhappy creature has nothing left that helps it:
+	#
+	#   a team ... is still not in condition: ["Terrapup is unhappy."]
+	#
+	# What a player does when the marshal turns them away is go home and sleep
+	# again, so that is what this does. Recorded in `ralph/BACKLOG.md` as a
+	# chapter finding too: one bad fight costs a night.
+	for night in 3:
+		var day_before := int(_game.get("day"))
+		if not await _sleep_at_camp():
 			return false
-		transcript.append("bed %d: %s rested (%s)" % [index + 1,
-			str(creature.call("label")), CONDITION.label(creature, CONDITION.config())])
-	transcript.append("one night in three beds put the whole team in condition")
+		if int(_game.get("day")) != day_before + 1:
+			_fail("a night at the camp did not advance the day (%d -> %d)"
+				% [day_before, int(_game.get("day"))])
+			return false
+		for index in entrants.size():
+			var creature := entrants[index]
+			if not bool(creature.get("rested")):
+				_fail(("%s slept in its own creature bed through the night and did not come "
+					+ "out rested; %d beds were placed for %d entrants")
+					% [str(creature.call("label")), _beds.size(), wanted])
+				return false
+			transcript.append("night %d, bed %d: %s (%s)" % [night + 1, index + 1,
+				str(creature.call("label")), CONDITION.label(creature, CONDITION.config())])
+		_feed_the_team()
+		if bool(TOURNAMENT.condition_ready(_party)):
+			transcript.append("%d night(s) in %d beds put the whole team in condition"
+				% [night + 1, _beds.size()])
+			break
+		if night == 2:
+			_fail("three nights in a bed each, fed after every one, and the team is still "
+				+ "not in condition: %s" % str(TOURNAMENT.readiness_report(_party)))
+			return false
+		transcript.append("the team is not in condition yet (%s); back to bed"
+			% str(TOURNAMENT.readiness_report(_party)))
+		for index in entrants.size():
+			if not await _assign_to_bed(index):
+				return false
 	if not _flag("player_slept_at_home"):
 		_fail("the player slept at their own camp and 'player_slept_at_home' is unset")
 		return false

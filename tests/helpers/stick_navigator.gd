@@ -58,6 +58,20 @@ const DETOURS_PER_SIDE := 3
 ## the ground, and only as far as a detour would actually walk.
 const PROBE_HEIGHT := 1.0
 const PROBE_REACH := 3.0
+## How far ahead the GROUND is checked before sliding that way, and the drop
+## that counts as a cliff rather than a step down.
+##
+## GATEB-COORD. The free-space probe above is a horizontal ray: it can see a
+## wall and is completely blind to a hole. So a detour would cheerfully slide
+## off the edge of the Practice Meadow plateau, and the walker would spend the
+## rest of its budget four metres below the target trying to climb terrain it
+## cannot climb -- the Gate B build segment failed that way over and over,
+## reporting its trainer at y=-2.0 while the stance it wanted sat at y=3.0.
+## A side whose ground falls away by more than `SAFE_DROP` is treated as
+## blocked, exactly like a wall, because for a walker it is worse than one.
+const GROUND_LOOK_AHEAD := 2.0
+const SAFE_DROP := 1.2
+const GROUND_PROBE_DEPTH := 8.0
 ## Metres from the target at which the stick eases off, and the smallest
 ## deflection it eases to. Full stick into a target measured in centimetres
 ## overshoots and oscillates around it; `gate_a_build_segment.gd` stops within
@@ -155,10 +169,18 @@ func step(point: Vector3) -> void:
 	var to := point - _player.global_position
 	to.y = 0.0
 	if _detour_left > 0:
-		_detour_left -= 1
-		_push(_detour)
-		await _tree.physics_frame
-		return
+		# Stop sliding the moment the ground ahead stops being ground. The side
+		# was checked when the detour began, but a slide is several metres long
+		# and an edge can arrive part-way along it.
+		if _drops_away(_detour):
+			_detour_left = 0
+			_side = -_side
+			_side_detours = 0
+		else:
+			_detour_left -= 1
+			_push(_detour)
+			await _tree.physics_frame
+			return
 	var gap := to.length()
 	if gap < _gap - PROGRESS:
 		_gap = gap
@@ -207,13 +229,42 @@ func _begin_detour(to: Vector3) -> void:
 	_detour_left = DETOUR_FRAMES + (_side_detours - 1) * DETOUR_GROWTH
 
 
-## +1 or -1: which perpendicular has more room in it. A tie goes to +1 rather
-## than to a coin flip, so a failing run reproduces frame for frame.
+## +1 or -1: which perpendicular is the better way to slide. A tie goes to +1
+## rather than to a coin flip, so a failing run reproduces frame for frame.
+##
+## A drop beats free space. GATEB-COORD: open air reads as the freest possible
+## direction to a horizontal ray, so without checking the ground first the
+## probe actively PREFERS walking off a ledge.
 func _freer_side(to: Vector3) -> float:
 	var side := to.normalized().cross(Vector3.UP).normalized()
+	var right_drops := _drops_away(side)
+	var left_drops := _drops_away(-side)
+	if right_drops != left_drops:
+		return -1.0 if right_drops else 1.0
 	if _free_space(-side) > _free_space(side) + 0.2:
 		return -1.0
 	return 1.0
+
+
+## Does the ground fall away by more than `SAFE_DROP` a step in `direction`?
+## True also when there is no ground within `GROUND_PROBE_DEPTH` at all, which
+## is the same answer for a walker and a cheaper one to be wrong about.
+func _drops_away(direction: Vector3) -> bool:
+	var world := _player.get_world_3d()
+	var space := world.direct_space_state if world != null else null
+	if space == null:
+		return false
+	var foot := _player.global_position
+	var ahead := foot + direction.normalized() * GROUND_LOOK_AHEAD + Vector3.UP * PROBE_HEIGHT
+	var query := PhysicsRayQueryParameters3D.create(ahead,
+		ahead + Vector3.DOWN * GROUND_PROBE_DEPTH)
+	query.collide_with_areas = false
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return true
+	return foot.y - (hit.get("position") as Vector3).y > SAFE_DROP
 
 
 ## Metres of clear space in `direction`, capped at `PROBE_REACH`.
