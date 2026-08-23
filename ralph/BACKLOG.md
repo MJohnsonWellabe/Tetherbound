@@ -263,6 +263,58 @@ make at the end of a verification pass -- but it should not sit unnamed either.
 `stronghold.gd`'s comment, which claimed the reuse that was not happening, is
 corrected on this branch.
 
+### CONTINUOUS-CORE — the village/gather/build continuation has never run
+
+Gate B cannot be proven end-to-end until this passes. Everything below is
+observed, not inferred.
+
+**It is unreachable, and has been since `integration-ABC`.** The village,
+material-route and paid-build segments live inside
+`smoke_gate_a_opening_segment.gd` behind `--gate-a-continuous-core`, and **no CI
+shard has ever passed that flag**. Two worktree runs at `a22534ff` on
+2026-08-23 settled what that means:
+
+| worktree run | outcome |
+| --- | --- |
+| base harness, base gameplay | dies at boot: `required action 'combat_throw' has no physical joypad binding` |
+| CURRENT harness, base gameplay | dies at the catch: `launch 1 left the satchel empty; the opening is now a dead end` |
+
+So there is **no working baseline**. The path could not have been exercised at
+that merge by any route, which is why the axe-swing failure below cannot be
+attributed by comparison — nothing ever reached it. (The second row is also an
+independent confirmation of the orb-floor dead-end, reproduced on untouched
+base code by a harness that had never seen it.)
+
+**Where it fails now**, with the diagnostic added on this branch:
+
+```
+physical interact on the node did not start the visible axe swing
+(arbiter winner=Interactable, equipped=, prop=<null>, cooling=false)
+```
+
+Two facts in one line. The tool is **not in the player's hand** at the moment of
+the press — `equipped` is empty and `prop` is null — despite the helper's own
+check three lines earlier verifying the axe was equipped AND visible. And the
+arbiter's winner is a generic `Interactable`, not the harvest node the helper
+selected. Something takes the tool out of hand between the verification and the
+press, and the press lands on the wrong node.
+
+Ruled out already: the hammer gate (`_hammer_opens_the_catalogue` requires
+`equipped_tool == BUILD_TOOL` and returns false immediately with an axe in
+hand), and swing timing (`SWING_SECONDS` is 0.45 ≈ 27 frames against the
+helper's 8-frame tap, so a started swing would still register).
+
+**CI now runs it** as `verify-continuous-core-known-red` with
+`continue-on-error: true`. That is temporary and the comment there says so: a
+job that runs and reports red beats a flag nothing passes, because the failure
+is visible on every run instead of invisible forever. **Remove
+`continue-on-error` when this is fixed.**
+
+Worth stating plainly for whoever picks this up: `ralph/DONE.md` described this
+path as working. It has never run. That is the twelve-stale-harnesses finding
+one step further along — not a test asserting a dead pad map, but an entire
+evidence path nothing could execute.
+
 ## Phase -1.7 — what the blind critics found once Gate A's defects were fixed (2026-08-22)
 
 These are remainder items recorded per `conventions.md` rather than iterated on

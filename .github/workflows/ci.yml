@@ -1655,6 +1655,40 @@ jobs:
           godot --headless --path . --script tests/smoke_post_modal_control.gd
           godot --headless --path . --script tests/smoke_tournament_bracket.gd
 
+  # The continuous-core evidence path, run so it cannot go dark again.
+  #
+  # `--gate-a-continuous-core` gates the village/material/paid-build segments
+  # inside smoke_gate_a_opening_segment.gd, and NO shard has ever passed that
+  # flag. Two worktree runs at integration-ABC (a22534ff) on 2026-08-23 proved
+  # the path has been unreachable since that merge: the harness there dies at
+  # boot on `combat_throw`, and the current harness on that gameplay dies at the
+  # tutorial catch on an empty satchel. So these segments have never executed in
+  # CI or locally, while ralph/DONE.md described the path as working.
+  #
+  # `continue-on-error` is deliberate and TEMPORARY. It is currently RED --
+  # "physical interact on the node did not start the visible axe swing
+  # (arbiter winner=Interactable, equipped=, prop=<null>)" -- and a red required
+  # job would wedge every branch behind a path nobody has ever seen pass. A job
+  # that runs and reports red is strictly better than a flag nothing passes:
+  # the failure is visible on every run instead of invisible forever.
+  #
+  # **Remove `continue-on-error` the moment CONTINUOUS-CORE is fixed.** An
+  # ignored red job that becomes permanent scenery is the same disease as a
+  # green badge that tested nothing.
+  verify-continuous-core-known-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Verify the village, material and paid-build continuation (KNOWN RED)
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd -- --gate-a-continuous-core
+
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
   # The export tail was ~40% of every branch

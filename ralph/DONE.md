@@ -3,6 +3,47 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-B-CONTINUOUS — a Gate B run exists; the path it walks does not yet
+
+`tests: smoke_gate_b_continuous.gd (new), two worktree runs at a22534ff` · `area: evidence, ci`
+
+Gate B asked for one uninterrupted run. `tests/smoke_gate_b_continuous.gd` is
+that run and it is **not passing**, which is recorded here rather than left as a
+green-looking absence.
+
+**What it proves today.** A fresh save reaches the Meadows through the real
+title and the real fresh-game confirmation, driven by parsed
+`InputEventJoypadButton` events. A level-6 team of three then satisfies the
+tournament entry gate -- and the harness grants only the TEAM; `tournament.gd`
+watches the party and writes both flags itself, so a broken watch stalls there
+exactly as it would for a player.
+
+**Where it stops.** The village/tools beat, which is `CONTINUOUS-CORE` in the
+backlog. Six of the seven failures on the way there were mine, and the seventh
+was the harness working correctly -- "natural route requires Tam's axe before it
+can harvest" was a real beat of Gate B this file had skipped, since gathering
+presupposes the tools the village hands over.
+
+**The finding that outlives the harness.** Two worktree runs at `a22534ff`
+proved the continuous-core path has been unreachable since integration-ABC: the
+base harness dies at boot on `combat_throw`, and the current harness on base
+gameplay dies at the tutorial catch on an empty satchel. `--gate-a-continuous-core`
+is a flag no CI shard has ever passed. So the village, material and paid-build
+segments have never executed anywhere, while this file described that path as
+working. CI now runs it as `verify-continuous-core-known-red`, deliberately
+non-blocking and deliberately visible.
+
+**The method note worth keeping.** Every failure on this branch that got fixed
+fast was fixed by an instrumented diagnostic, not by reading the diff. The
+axe-swing assertion had never run in CI and said only "did not start the swing";
+one line of added context turned it into "arbiter winner=Interactable,
+equipped=, prop=<null>", which names two facts and rules out three suspects.
+Conversely six of my own tests were wrong tonight and every one of them checked
+SHAPE -- a field's presence, a substring, a data structure I assumed rather than
+read. The checks that caught real bugs in my work were all behavioural and all
+pre-existing: `test_save_format` found I had broken every save file,
+`test_band_content` found I had violated the band-split baseline.
+
 ## GATE-C-CLOSE — audit Gate C's seven prompts, then close four of the gaps
 
 `tests: full unit suite (1300+), 4 new test files, 8-shard re-run` · `area: ecology, rest, progression, rewards, data`
