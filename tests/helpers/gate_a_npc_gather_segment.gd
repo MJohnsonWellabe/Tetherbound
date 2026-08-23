@@ -425,15 +425,51 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 	return null
 
 
+## Walk until the world OFFERS the thing, then press.
+##
+## Not "walk to within 1.65m, then press". A player presses when the prompt
+## appears, and how far away that happens is the interactable's business -- some
+## reach further than others, and a doorway's own frame can stop you closing the
+## last metre. The distance-first version reported "could not reach or activate
+## door 'Door' in 1200 frames (player 3.6m away, prompt enabled=true)": twenty
+## seconds of walking into a wall while the door sat there, offerable, unpressed.
+##
+## So the offer is the success condition and the distance is only the fallback
+## for something that is not currently winning.
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
-	if not await _walk_toward(target.global_position, budget, 1.65):
-		return false
+	for _i in budget:
+		if _arbiter.call("winning_provider") == target:
+			await _tap_action(&"interact")
+			return true
+		var to := target.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() <= 1.65:
+			break
+		await _step_toward(target.global_position)
+	_stop_left_stick()
+	# Standing close and still not winning: give the arbiter a few frames to
+	# settle before giving up, which is what the previous version did and is
+	# still right once the walking is over.
 	for _i in 30:
 		if _arbiter.call("winning_provider") == target:
 			await _tap_action(&"interact")
 			return true
 		await _tree.physics_frame
 	return false
+
+
+## One frame of stick toward a point. Split out of `_walk_toward` so the loop
+## above can interleave walking with checking what the world is offering.
+func _step_toward(point: Vector3) -> void:
+	var to := point - _player.global_position
+	to.y = 0.0
+	var basis: Basis = _rig.call("planar_basis")
+	var local := basis.inverse() * to.normalized()
+	Input.action_press(&"move_forward", clampf(-local.z, 0.0, 1.0))
+	Input.action_press(&"move_back", clampf(local.z, 0.0, 1.0))
+	Input.action_press(&"move_right", clampf(local.x, 0.0, 1.0))
+	Input.action_press(&"move_left", clampf(-local.x, 0.0, 1.0))
+	await _tree.physics_frame
 
 
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:

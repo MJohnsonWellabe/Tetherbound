@@ -37,6 +37,11 @@ const AIM_REACH := 12.0
 var state: State = State.IDLE
 
 var _player: Node3D = null
+## Bodies a thrown orb passes through instead of stopping on -- BP2's "your own
+## creature and trainer intercept your orbs, and the orb is spent". Pushed in by
+## `combat_manager.gd` when the fight gets its ally, because this node knows the
+## trainer and the target but has no reason to know who is fighting for them.
+var _pass_through: Array[Node3D] = []
 var _target: Node3D = null
 var _camera_rig: Node = null
 var _orb: Node3D = null
@@ -396,7 +401,14 @@ func _release() -> void:
 	_player.get_parent().add_child(_orb)
 	_orb.connect("struck", _on_struck)
 	_orb.connect("missed", _on_missed)
-	_orb.call("launch", origin, forward, _speed, _target)
+	# The trainer goes in the list here rather than at the call site: the orb
+	# leaves the trainer's own hand, so without this a throw could register as
+	# hitting the person who threw it.
+	var ignore: Array[Node3D] = [_player]
+	for body: Node3D in _pass_through:
+		if body != null and is_instance_valid(body):
+			ignore.append(body)
+	_orb.call("launch", origin, forward, _speed, _target, ignore)
 	# The trainer throws rather than standing there. Their model is on a child
 	# node, so this reaches past the body to the thing that animates.
 	var body: Node = _player.get_node_or_null(^"Model")
@@ -700,3 +712,11 @@ func resting_orb() -> Node3D:
 
 func clear_orb() -> void:
 	_despawn_orb()
+
+
+## Who this trainer's orbs fly past. Set by `combat_manager.gd` each fight.
+func set_pass_through(bodies: Array) -> void:
+	_pass_through.clear()
+	for body: Variant in bodies:
+		if body is Node3D and is_instance_valid(body):
+			_pass_through.append(body as Node3D)

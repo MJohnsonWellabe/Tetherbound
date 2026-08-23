@@ -259,6 +259,11 @@ func begin(
 	_player = player
 	_wild = wild
 	_ally_body = ally_body
+	# BP2: an orb stopped dead on your own creature and the throw was spent.
+	# The fight knows who is fighting for the trainer; `throw_aim.gd` does not,
+	# so it is told here rather than reaching for it.
+	if _throw != null and _throw.has_method("set_pass_through"):
+		_throw.call("set_pass_through", [_ally_body])
 	_camera_rig = camera_rig
 	_best_creature = best_creature
 	_party = party

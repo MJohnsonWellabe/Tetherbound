@@ -41,6 +41,15 @@ var _radius: float = 0.42
 var _life: float = 0.0
 var _max_life: float = 4.0
 var _target: Node3D = null
+## Bodies this orb passes THROUGH rather than stops on.
+##
+## BP2, from the 2026-08-22 blind playtest: "your own creature and trainer
+## intercept your orbs, and the orb is spent". `_hit_ground()` raycasts along
+## the step and excluded only `_target`, so an ally standing between the
+## trainer and the wild creature registered as ground -- the orb stopped dead
+## and the throw was gone. Your own creature is not cover, and a throw a player
+## aimed correctly should not be eaten by the thing fighting for them.
+var _pass_through: Array[RID] = []
 
 ## The post-strike clocks.
 var _hang_total: float = 0.45
@@ -252,7 +261,12 @@ func _fade_trail() -> void:
 
 ## Launch. `target` is the creature this throw is aimed at; the orb only tests
 ## against that one, because a throw is at a creature, not at the world.
-func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D) -> void:
+func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D,
+		pass_through: Array = []) -> void:
+	_pass_through.clear()
+	for body: Variant in pass_through:
+		if body is CollisionObject3D and is_instance_valid(body):
+			_pass_through.append((body as CollisionObject3D).get_rid())
 	global_position = from
 	_velocity = direction.normalized() * speed
 	_target = target
@@ -452,8 +466,7 @@ func _hit_ground() -> bool:
 	var from := global_position - _velocity * get_physics_process_delta_time()
 	var query := PhysicsRayQueryParameters3D.create(from, global_position)
 	query.collide_with_areas = false
-	if _target != null and _target is CollisionObject3D:
-		query.exclude = [(_target as CollisionObject3D).get_rid()]
+	query.exclude = _excluded_rids()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return false
@@ -470,8 +483,7 @@ func _ground_below(from: Vector3, to: Vector3) -> float:
 		return NAN
 	var query := PhysicsRayQueryParameters3D.create(from, to + Vector3.DOWN * _radius)
 	query.collide_with_areas = false
-	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
-		query.exclude = [(_target as CollisionObject3D).get_rid()]
+	query.exclude = _excluded_rids()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)
 
@@ -479,3 +491,15 @@ func _ground_below(from: Vector3, to: Vector3) -> float:
 func _finish_with_miss() -> void:
 	_phase = Phase.DONE
 	missed.emit()
+
+
+## The target plus everything the throw passes through.
+##
+## One list, built in one place, used by both raycasts -- they had two copies of
+## the target-exclusion line and only one of them would have gained the ally.
+func _excluded_rids() -> Array[RID]:
+	var out: Array[RID] = []
+	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
+		out.append((_target as CollisionObject3D).get_rid())
+	out.append_array(_pass_through)
+	return out
