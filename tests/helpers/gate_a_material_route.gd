@@ -144,9 +144,16 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 		# invariant, not a synthetic replacement, decides sufficiency.
 		transcript.append("authored %s at %s was already spent; continuing from real satchel stock" % [item_id, expected])
 		return true
-	if not await _walk_to(node.global_position, 1.65, _travel_budget(node.global_position)):
+	# Same rule as the live-scatter fill: the CENTRE is not the test, the prompt
+	# is. An authored stop's model can be wider than the 1.65m this asks for --
+	# the fiber stand at (24, -24) stopped the walk 2.1m out and the run called
+	# a perfectly harvestable stop unreachable. `_harvest_node()` below decides,
+	# and says why when it cannot.
+	var stop_at := node.global_position
+	if not await _walk_to(stop_at, 1.65, _travel_budget(stop_at)) \
+			and _player.global_position.distance_to(stop_at) > WITHIN_REACH:
 		_fail("controller could not reach authored %s at %s (stopped %.1fm short)" % [
-			item_id, expected, _player.global_position.distance_to(node.global_position)])
+			item_id, expected, _player.global_position.distance_to(stop_at)])
 		return false
 	if not await _harvest_node(node, item_id, true):
 		return false
@@ -179,6 +186,11 @@ const REFUSALS_ALLOWED := 5
 ## can walk to". The Meadows has real hills in it and the trainer climbs
 ## slopes, not cliffs.
 const WALKABLE_RISE := 6.0
+## Close enough to a stand to be worth pressing at, even when the walk could
+## not reach its centre. `interactable.gd`'s own prompt radii on harvest nodes
+## sit between 2.4m and 4m, so a player stopped by the far side of a boulder is
+## still well inside the offer.
+const WITHIN_REACH := 4.5
 
 
 func _fill_with_live_scatter(item_id: String) -> bool:
@@ -212,10 +224,22 @@ func _fill_with_live_scatter(item_id: String) -> bool:
 		# default spawn, which is inside GrandpaHouse, and so never got far
 		# enough to chop anything.
 		var at := node.global_position
+		# Getting to the CENTRE is not the test; getting to the PROMPT is.
+		#
+		# GATEB-COORD: the stone fill stopped 3.4m short of six boulders in a
+		# row. A stand's `global_position` is the middle of its own collider,
+		# and a big rock is wider than the 1.65m this asks for -- so the walk
+		# can never "arrive" however well it is working. What decides whether a
+		# harvest is possible is whether the node's own prompt wins the interact
+		# line from where the player is standing, and `_harvest_node()` already
+		# establishes that and says so when it cannot. So a short walk goes on
+		# to try the harvest, and only a walk that ended a long way off is
+		# called a travel failure.
 		var reached: bool = await _walk_to(at, 1.65, _travel_budget(at))
-		if not reached:
+		var short_by := _player.global_position.distance_to(at)
+		if not reached and short_by > WITHIN_REACH:
 			_fail("controller could not reach live natural %s at %s (stopped %.1fm short)" % [
-				item_id, at, _player.global_position.distance_to(at)])
+				item_id, at, short_by])
 		elif not await _harvest_node(node, item_id, false):
 			pass  # `_harvest_node` has already said why, on `failures`.
 		elif _count(item_id) - before <= 0:

@@ -86,6 +86,29 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 			return _failures
 	_checkpoint("Tam handed over axe, pickaxe, knife and torch through dialogue")
 
+	# The Foreman, and the hammer.
+	#
+	# GATEB-COORD: the chapter cannot be built without one -- CONTROLLER-MAP
+	# retired `build_open`'s pad button, so hammer-in-hand plus Interact is the
+	# ONLY route a controller has into build mode -- and this segment, which is
+	# the village beat, never collected it. Nothing noticed because
+	# `gate_a_build_segment.gd` used to GRANT itself a hammer when the caller
+	# had none; with that bypass removed (it breaks that file's own contract
+	# against inventory shortcuts) the continuous run stopped dead at the house:
+	#
+	#   there is no hammer in the satchel; the village's gift
+	#   (camp_hammer_given) comes before any of this segment's work
+	#
+	# `village_npcs.json` gates the Foreman's gift on `recipe_orb_basic`, which
+	# is TAM's second flag, so this has to come after Tam and does.
+	if not await _visit_villager("Quarry Foreman", "", 1):
+		return _failures
+	if int((_game.get("inventory") as RefCounted).call("count", "hammer")) < 1:
+		_fail("the Foreman's completed dialogue left no hammer in the Satchel; "
+			+ "camp_hammer_given=%s" % str(_progression_has("camp_hammer_given")))
+		return _failures
+	_checkpoint("the Foreman handed over the build hammer through dialogue")
+
 	if not await _assign_tools_in_satchel():
 		return _failures
 	if not await _gather_authored_node("wood", "axe", "hotbar_1"):
@@ -108,6 +131,11 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 
 	_checkpoint("five NPC/modal exits and three equipped-tool gathers returned world control")
 	return _failures
+
+
+func _progression_has(flag_id: String) -> bool:
+	var progression: RefCounted = _game.get("progression")
+	return progression != null and bool(progression.call("has", flag_id))
 
 
 func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) -> bool:
@@ -193,7 +221,16 @@ func _assign_tools_in_satchel() -> bool:
 	# Assign in reverse quick-slot order.  The one-button assignment verb walks
 	# an item through slot 1, 2, ...; reverse order prevents a later walk from
 	# overwriting an earlier tool on its way to its destination.
-	for spec: Array in [["torch", 3], ["knife", 2], ["pickaxe", 1], ["axe", 0]]:
+	# GATEB-COORD: the HAMMER takes quick slot 4, not the torch.
+	#
+	# It is the one tool the chapter cannot proceed without -- CONTROLLER-MAP
+	# retired `build_open`'s pad button, so hammer-in-hand plus Interact is the
+	# only route a controller has into build mode, and
+	# `gate_a_build_segment.gd::HOTBAR_ACTIONS` reaches slots 1-4 only. The
+	# torch stays in the Satchel, where OW12 already put it: it is equipped the
+	# same way any other tool is and Gate B never asks for it, whereas a house
+	# with no hammer on the bar is a chapter that stops.
+	for spec: Array in [["hammer", 3], ["knife", 2], ["pickaxe", 1], ["axe", 0]]:
 		var item_id := str(spec[0])
 		var destination := int(spec[1])
 		var inventory_slot := int(inventory.call("find_slot", item_id))

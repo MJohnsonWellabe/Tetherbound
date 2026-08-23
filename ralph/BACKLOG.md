@@ -43,38 +43,63 @@ just screenshots.
 
 ---
 
-## GATEB-TAIL-REMAINDER — Gate B's tail is written and half-proven (opened 2026-08-23)
+## GATEB-TAIL-REMAINDER — CLOSED 2026-08-23 by GATEB-COORD
 
-`branch: ralph/GATEB-TAIL` · see `ralph/DONE.md`'s GATEB-TAIL entry for the five
-defects already found and fixed, and for the two CHAPTER findings (the gather
-budget buys exactly one creature bed; a thirty-minute run arrives at the marshal
-hungry).
+`branch: ralph/GATEB-PATH` · see `ralph/DONE.md`'s GATEB-COORD entry.
 
-`tests/smoke_gate_b_tail.gd` drives Gate B's tail from a synthesized
-post-village state so a defect in it costs minutes rather than a whole
-continuous run. In iteration mode it currently reaches the creature bed and the
-camp — both PLACED for real through the build menu, with the gather route's
-exact stock spent to zero — and the bed panel's own assignment. What is left:
+All six threads are answered. Threads 1-4 are fixed and proven: the tail runs
+end to end with the REAL twelve-piece controller house, and the continuous run
+and the full unit suite were both re-run. Thread 5 was diagnosed and the
+handoff note had the wrong culprit — the line the hammer gate loses to is
+`riding_controller.gd`'s ACTIONABLE "Ride <name>", not the non-actionable "Put
+<name> away" the gate already ignores; fixed under the owner's §3 ruling and
+pinned by `tests/smoke_build_wins_while_hammer_is_out.gd`. Thread 6 was ruled
+on by the owner: three beds and a bigger gather.
 
-1. **It fails walking to the camp's "Rest until morning" prompt.** Undiagnosed.
-   Suspect `_walk_to_prompt()` targeting the prompt node's own position rather
-   than a stance beside it.
-2. **The nights, the entry gate, the sign-up, the three fought rounds and the
-   South Bridge hand-off have never executed.** They are written in
-   `tests/helpers/gate_b_tail_segment.gd`. Treat them as a plan.
-3. **The full-house path has never completed.** Staging at the Village Square
-   now drops the player in from six metres rather than placing them at terrain
-   height (they were wedged inside village geometry); untested.
-4. **`tests/smoke_gate_b_continuous.gd` was not re-run** after being rewired to
-   call the tail segment, and the full unit suite was not run on this branch.
-5. **Worth a production look:** with a creature deployed, the "Put <name> away"
-   offer wins arbitration and the hammer gate forfeits Interact to it, so a
-   controller player may not be able to open Build in the open field at all.
-   The tail works around it by recalling the creature first. That is the shape
-   of the owner's original "building doesn't work" report.
-6. **Owner ruling wanted:** three creature beds and a bigger gather, or one bed
-   and three nights? `condition_ready()` needs the three strongest entrants
-   rested and a bed holds one.
+## GATEB-FINDINGS — what driving Gate B for real turned up (opened 2026-08-23)
+
+`branch: ralph/GATEB-PATH` · none of these blocks Gate B; all are worth a
+decision or a task of their own.
+
+1. **A floor's height depends on exactly where the player stood.**
+   `build_grid.gd::snap_to_grid(raw, ground_y)` takes a ground-clamped piece's
+   height from the RAW point being aimed at rather than from the resolved cell
+   centre, so the same grid cell previews and places a few centimetres
+   differently from two different stances. Harmless for one piece, visible as
+   a stepped floor across four, and it forced two rebases in
+   `gate_a_build_segment.gd`'s preflight. Sampling the ground at the resolved
+   cell centre would remove it — a change to the live ghost's own maths, so it
+   wants its own task and its own regression pass. `model: sonnet`
+   `tests: test_build_grid.gd, test_build_placer_preview.gd, smoke_free_build.gd`
+
+2. **Build still loses Interact to a harvest node.** OWNER DIRECTIVE
+   2026-08-23 §3 was implemented as written — the player's own deployed
+   creature stands down while the hammer is out, and Build owns the button. It
+   deliberately did NOT go further: an NPC or a harvest stand still wins, so
+   `playground_hud.gd::_hammer_opens_the_catalogue()` forfeits, and a player
+   who wants to build next to a tree has to step away from it first. The Gate B
+   tail hit this beside the authored deadwood at the Practice Meadow patch and
+   works around it by stepping clear. Going further would mean Grandpa no
+   longer answers a player with a hammer in hand, which is a bigger call than
+   the directive makes and is banned from being invented — **owner ruling
+   wanted.** `model: sonnet`
+
+3. **One fainted creature costs a night.** "Rested, fed and happy" is three
+   things and a bed buys only the first. Happiness starts at 55 against a gate
+   of 60 (`data/config/creature_condition.json`), a completed rest is +12 and a
+   FAINT is -12, and `CONDITION.feed()` refuses a creature that is already fed
+   — so a creature knocked out during an ordinary build session arrives full,
+   rested and unhappy with nothing left that helps it, and the marshal turns
+   the whole team away. The tail sleeps a second night, which works and reads
+   fine. Whether a player should have any other way to cheer a creature up
+   (petting, a favourite food, a won fight) is a design question. `model: fable`
+
+4. **The gather route is the chapter's longest dead-travel stretch.** The wood
+   fill alone closes its shortfall in ~18 scatter stops, and the authored route
+   still ends at (-168, 312) — a 300m round trip north for two fiber stops.
+   Gate F should measure this against
+   `docs/MEADOWS_PROGRESSION_CURVE.md` before it is called acceptable pacing.
+   `model: sonnet`
 
 ## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
 
