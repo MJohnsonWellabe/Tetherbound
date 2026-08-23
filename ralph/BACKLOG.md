@@ -304,6 +304,54 @@ Ruled out already: the hammer gate (`_hammer_opens_the_catalogue` requires
 hand), and swing timing (`SWING_SECONDS` is 0.45 ≈ 27 frames against the
 helper's 8-frame tap, so a started swing would still register).
 
+### Progress 2026-08-23, and the one change that would end this
+
+**The filed defect is FIXED.** All three tools swing on this path now:
+
+```
+[swing-probe] swing_at -> true (equipped=axe)
+[swing-probe] swing_at -> true (equipped=pickaxe)
+[swing-probe] swing_at -> true (equipped=knife)
+```
+
+The blocker was not the game. `_gather_authored_node` pressed the hotbar slot
+unconditionally, and a tool slot TOGGLES (`playground_hud.gd:2228`, the owner's
+"press slot, tool in hand" directive) -- so with the tool already in hand the
+press STOWED it. Two consecutive runs failing at two different points with no
+code change between them is what named it.
+
+**What is left is not one bug.** Each beat past the swing is a beat that has
+never executed, and they surface one at a time, each costing a ~20-minute run.
+Fixed so far: the toggle, and the door helper demanding "walk within 1.65m" when
+the real condition is "walk until the world offers it, then press" (the door sat
+enabled and offerable for twenty seconds while the player walked into a wall).
+
+**Currently stuck at Mira's door**, and the shape of it matters:
+
+```
+could not reach or activate door 'Door' in 1200 frames
+(player 3.6m away, prompt enabled=true)
+```
+
+The SAME 3.6m across runs. A distance that does not shrink is the player walking
+into geometry, not walking slowly -- and the arbiter never offers the door from
+there.
+
+**The likely root is the granted opening, and that is the thing to fix.**
+`smoke_gate_b_continuous.gd` grants the opening beat rather than playing it,
+then places the player at a hand-picked (7, 4). That was flagged as a risk when
+it was taken and has now caused three position-dependent failures in a row:
+Tam unreachable, then the same at 112m after a respawn, now this door. The
+harness is approaching the village from wherever a made-up coordinate put it.
+
+So the fix is not another position tweak. It is to **extract the opening from
+`smoke_gate_a_opening_segment.gd` into a shared helper** the way the village,
+material and build segments already are, and have Gate B PLAY it. Then the
+player stands where the game left them, every time, and this whole class of
+failure cannot occur. It also removes the second definition of the opening path
+that granting created -- the exact drift this branch spent the night fixing
+twelve times over.
+
 **CI now runs it** as `verify-continuous-core-known-red` with
 `continue-on-error: true`. That is temporary and the comment there says so: a
 job that runs and reports red beats a flag nothing passes, because the failure

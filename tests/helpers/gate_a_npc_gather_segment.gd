@@ -371,10 +371,15 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 		return false
 	if not bool(door.call("is_open")):
 		if not await _walk_to_and_activate(prompt, 1200):
+			var winner: Variant = _arbiter.call("winning_provider")
 			_fail(("could not reach or activate door '%s' in 1200 frames "
-				+ "(player %.1fm away, prompt enabled=%s)") % [
+				+ "(player %.1fm away at %s, door at %s, prompt enabled=%s, "
+				+ "arbiter winner=%s). A distance that does not shrink across "
+				+ "runs is the player walking into geometry, not walking slowly.") % [
 				door.name, _player.global_position.distance_to(door.global_position),
-				str(prompt.get("enabled")) if prompt.has_method("get") else "?"])
+				str(_player.global_position.round()), str(door.global_position.round()),
+				str(prompt.get("enabled")) if prompt.has_method("get") else "?",
+				str((winner as Node).name) if winner is Node else "<none>"])
 			return false
 		for _i in 45:
 			if bool(door.call("is_open")):
