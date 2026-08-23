@@ -226,6 +226,57 @@ rather than authored portraits -- the fix is camera control on the picker, not
 new art. The judge rated the creature designs themselves as the strongest thing
 in the whole frame set, which makes the framing the only thing in the way.
 
+### CATCH-FEEL root cause: a straight reticle aiming a ballistic orb
+
+**Supersedes the entry below, which was measured through a broken harness and
+drew the wrong conclusion twice.** Read this one.
+
+Two clean runs (2026-08-23, after the stale-aim regression was fixed):
+
+| | gateb21 | gateb22 |
+| --- | --- | --- |
+| throws eligible (reticle on the body, clear line) | 28 of 40 (70%) | 25 of 33 (76%) |
+| `first_hit` was the Bramblebun | **40 of 40** | **33 of 33** |
+| actual strikes | 1 | 1 |
+
+**Every single raycast hit the creature. Aim was never the problem.** Seventy-six
+percent of throws had the reticle genuinely inside the target body with clear
+line of sight, and roughly three percent landed.
+
+The mechanism, read from the code rather than guessed:
+
+- `orb.gd` is **ballistic** -- "a real projectile on a real arc", gravity 14.0,
+  and deliberately so: §15 forbids throwing without player aim and "a hitscan
+  gives nothing to aim".
+- `throw_aim.gd::launch_assist_diagnostics()`'s `eligible` means only *in front*
+  + *reticle inside body* + *raycast reaches target*. It does **not** consider
+  distance.
+- `launch_assist` is what reconciles a straight reticle with a parabola, by
+  leading the launch. It is bounded by `launch_assist_max_distance: 2.6`.
+- `combat.json`'s `flow.engage_range` is **6.0**.
+
+So past 2.6 metres the game shows a reticle sitting on the creature, then throws
+an unled parabola at it. The miss is systematic, not unlucky, and it is exactly
+the owner's *"I never know if I was close"*: the feedback says on-target and the
+orb goes elsewhere.
+
+**What is verified vs inferred.** Verified: the eligibility rates, that every
+raycast hit the target, the strike counts, that `eligible` ignores distance, and
+both config numbers. Inferred (strongly, but not directly measured): that the
+throws in these runs happened beyond 2.6m, so the assist never applied. The
+harness engages within a 6m range and does not currently log throw distance --
+**logging it is the one measurement that would close this**, and it is a
+one-line addition to `_log_launch_assist`.
+
+**The lever, if the inference holds:** raise `launch_assist_max_distance` to
+cover `engage_range`. That is not a feel judgement -- it is two configs
+disagreeing about how far away a fight is, and the assist exists precisely to
+make an aimed throw land.
+
+---
+
+**Superseded, kept because its eliminations are still true.**
+
 ### CATCH-FEEL measured: the difficulty is AIM, not the roll
 
 Ninety-eight launches across the 2026-08-22/23 evidence runs, tallied by the
