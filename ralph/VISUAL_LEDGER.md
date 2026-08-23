@@ -63,6 +63,45 @@ Round 2 is not convergence in either case — both named NEW defects, which is
 `ralph/conventions.md`'s definition of a round that improved. Neither domain is
 near its stopping rule.
 
+## The pattern that explains four separate defects: metallic in this renderer
+
+Named here because it has now been diagnosed from scratch four times, each time
+as a colour problem, and each time it was the same thing.
+
+**The Compatibility renderer has no reflection probe and, on a bare capture
+stage, no sky. A metallic surface therefore has nothing to reflect. High
+metallic suppresses the diffuse term and returns almost nothing.** It is never
+a sheen here; it is either a mirror of whatever IS in the sky, or a hole.
+
+- **Ice-blue foundations** under seven buildings: `MI_RockTrim` ships with no
+  `metallicFactor`, so glTF's spec default of 1.0 applies — full metal,
+  mirroring the sky, reading as chrome. Diagnosed as a colour choice twice
+  before the third pass found the missing factor.
+- **`MI_Plaster`** — the same missing-factor shape, found independently by two
+  different headers in this codebase.
+- **The Warden's badge became a literal black hole**: metallic 0.88 on the
+  near-black reserved hex returns RGB 0,0,0. A blind critic called it "the
+  loudest single defect in the survey" and correctly read it as a missing
+  material. Metallic now 0.10-0.18; roughness alone gives the sheen that was
+  actually wanted.
+
+**Check for a metallic value before treating any "wrong colour" as a colour.**
+
+## The oxblood story, third correction
+
+`tether_oxblood` `#332228` has now failed legibility twice — once as a matte
+near-black disc invisible on a dark green coat, once as a metallic black hole —
+and preserving the hex exactly was the wrong instinct both times.
+
+> *"A colour reserved for a faction has to be VISIBLE on that faction to mean
+> anything; a black disc on a black coat reserves nothing."*
+
+It lifts to `#5a3742`: the reserved colour's own hue and family, raised until it
+reads. This supersedes both earlier entries here — the original "the discipline
+holds" reading, and the VIS-SITES correction that the discipline holds while the
+READ fails. The rule is not "reserve the hex", it is "reserve the identity, and
+make it legible where it is worn."
+
 ## Corrections to this ledger from later rounds
 
 Kept as corrections rather than edited away, because a ledger that quietly
