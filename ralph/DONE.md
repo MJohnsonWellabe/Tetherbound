@@ -3,6 +3,703 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+
+
+
+
+## BAND1-D1 round 6 — final camp state: tent kept, fire reverted, wrap-up per owner directive
+
+`tests: full suite 1301 tests, 714654 assertions, 0 failed` · `area: content/band1, scripts/world, tools/art_pipeline`
+
+Continuation of round 5's owner-directed Meshy generation, closing it out per the
+owner's explicit "wrap it up so we can get to main". Net result: the tent and
+bed and stone ring from round 5 stay; a dedicated attempt to also generate the
+fire's own logs and flame did not converge across two more rounds and was
+reverted to the proven round-3 combination.
+
+### Owner reviewed the eight tent candidates directly
+
+A contact sheet (`shots/camp_candidates/_tent_contact_sheet.png`) of every tent
+attempt across rounds 1-5 was sent for a direct choice rather than another
+round of my own judgement. **The owner picked round 1's original result** --
+the very first multi-image-to-3D generation, task `01a02c2f-fe7d-7b4b-aac1-`
+`8f74-7ebc-bde9-7e50d000f4fc` -- over every later attempt aimed at fixing its
+proportions. Kept as-is. Round 5's `sink_m: -0.64` grounding fix (below) still
+applies to it.
+
+### A real placement bug, not a mesh defect
+
+Investigating the owner's "the bed is missing a bottom portion" report found
+`props.json` had never set `sink_m` for `camp_tent`/`camp_bed`, and both
+meshes' local origins sit well above their own geometric base -- `sink_m` (0.21m
+bed, 0.64m tent) was missing, the exact same compensation the Backpack entry
+already needed. Fixed; both now sit flush with the ground, confirmed against
+Bench/Stool with a new probe, `tools/_probe_bed_float.gd`. The bed's visibly
+raised legs the owner asked for came from this fix, not from any mesh change --
+two more prompt-only regeneration rounds aimed at "taller legs" moved the AABB
+by millimetres while this one placement fix visibly lifted the whole bed.
+
+### The fire: two more rounds, then reverted
+
+Owner: "the wood and the fire looks like a toy" (their multi-select: the Kenney
+seat-logs and the campfire_glow.gd billboard flame). Investigated as a
+compositional fix -- generate the fire's own logs and flame as separate
+pieces (seven earlier attempts already established one combined ring+logs+
+flame mesh never holds all three), light the flame mesh from its own baked
+texture (`campfire_glow.gd::ignite_mesh`, new), make it translucent per a
+later owner note ("somehow be translucent like a real fire").
+
+Two dispatched Fable reviews of the result, back to back, both failed it:
+first pass called the log pile "a rock pile... reads as a cairn, not
+firewood" and the flame "a separate solid object... no translucency, no
+emissive glow". Owner-directed reshape (non-uniform scale, "half as tall,
+twice as wide" -- `props.gd` gained a `scale_xyz` override for this, since a
+single `scale` number cannot express a shape correction) improved the
+silhouette but a second Fable pass still failed both: the pile now read as
+"flat slabs... pancakes", the flame still "an opaque carved spire... no light
+cast on its surroundings".
+
+**Per the owner's "wrap it up" directive, reverted the fire's wood and flame to
+round 3's proven combination** -- `Bonfire_Fire.obj` + `ignite()` + full
+`campfire_glow.gd` including its billboard halo -- which neither Fable review
+was ever evaluating and which nothing in this round found fault with.
+`camp_firewood.glb`/`camp_flame.glb` stay committed under
+`assets/props/generated_camp/` for a future attempt; they are simply not wired
+into this cluster. The Kenney seat-logs beside the fire (`tree-log`/
+`tree-log-small`, the other half of the "toy" complaint) were not addressed
+this round -- flagged below, not silently dropped.
+
+### Two real code fixes surfaced along the way
+
+- **`campfire_glow.gd::_meshes()` had the exact shared-default-array bug** this
+  session's own throwaway probes hit and documented (`func f(into: Array = [])`
+  evaluates its default once and shares it across every call, exactly like
+  Python) -- in shipped code this time, not a tool script. A second `ignite()`
+  call in one running game (a second lit fire) would have accumulated every
+  earlier prop's meshes into one growing array. Fixed.
+- **Emission energy tuned for a small surface, reapplied to a whole mesh,
+  clipped to blown-out white** -- the identical failure mode this file's own
+  round-3 comment already recorded for `Bonfire_Fire`'s `Fire` surface at
+  energy 3.2, reproduced by `ignite_mesh` at 1.4 over a much larger flame
+  sculpt's screen area. Lowered to 0.5 for whole-mesh ignition; kept 1.4 for
+  the original single-surface case.
+
+### What is not resolved
+
+- **The Kenney seat-logs** (`tree-log`/`tree-log-small`) were explicitly named
+  as toy-like alongside the flame and were not swapped this round -- scope cut
+  to close out per the wrap-up directive.
+- `camp_firewood`/`camp_flame` are generated, textured, committed, and unused.
+  A future attempt has real material to start from (Meshy's log-pile-alone and
+  flame-alone generations were both individually well-formed at the
+  candidate-picker stage; it was the in-scene lighting/scale/placement pass
+  that never converged in the time available) rather than starting from
+  nothing.
+- No independent blind judgement of the final `shots/trail_camp/` frames --
+  every round this session has said this and it remains true.
+- Total Meshy spend this session: ~700 of 4200 credits (balance 3500 as of the
+  last `check`).
+
+## BAND1-D1 round 5 — owner-directed Meshy generation for the trail camp's tent, bed and fire ring
+
+`tests: full suite` · `area: content/band1, art_pipeline, tools`
+
+The independent blind critic dispatched after round 3b answered **no on both
+bar questions**. Its top finding: "the camp is placed, not inhabited" — no
+worn ground, a floating bench, a tilted tent, and an unidentifiable "pale
+rectangular object... the second largest prop in the camp".
+
+Investigating that object before touching anything else found a real defect:
+it was `log_large`, from `environment/nature`, and BAND1-D1 round 3's own
+record — "log/log_large survive, and only by luck" — was **wrong**. Never
+actually rendered and checked, only inferred from a material colour dump.
+`tools/_probe_log_large.gd` (now folded into `_probe_generated_camp.gd`'s
+sibling checks) confirmed `log_large`'s materials are `woodBark`/`woodInner`,
+`tex=false`, near-white — the same untextured-placeholder defect as the rest
+of that pack, not an exception to it. Swapped for Kenney's `tree-log`/
+`tree-log-small.glb` (CC0, already vendored this session), isolation-tested by
+removing one model at a time and re-rendering until the object vanished.
+
+### The owner corrected a second wrong call
+
+Reporting the critic's verdict, this session's own summary said the sleep
+prop and a proper fire pit needed owner-supplied reference art before
+anything more could be done. The owner supplied it — a reference board for a
+tent, campfire and bed — and pointed at `CLAUDE.md`'s actual rule: Meshy is
+reserved for Team Tether hero objects, but **the prerequisite that rule
+exists to enforce is owner-supplied reference art, and this now has it.**
+Recorded rather than silently done: `tools/art_pipeline/meshy.py`'s `PROPS`
+set now carries `camp_tent`, `camp_fire_pit`, `camp_bed` alongside the three
+hero objects, with a comment explaining why this is an explicit owner
+decision and not a routine spend.
+
+**The reference board's bed panel carried another game's trademark** — a
+paw-print emblem and a leaf icon on the blanket and pillow. Both were
+Gaussian-blurred out of the crops under
+`assets/creatures/tetherbound/camp_bed/reference/` before anything was
+submitted, and `NEGATIVE_CAMP_BED` bans logos/emblems/text as a second, belt-
+and-braces guard. The archived board itself
+(`docs/art/reference/owner-board-2026-08-23-camp-set.png`) keeps the marks —
+same convention board 15 already sets for the tether machine's occupant:
+crop/scrub what actually reaches the generator, keep the source honest.
+
+### What came back
+
+Preview tier (3 candidates each, untextured — form only) found the tent and
+bed converged quickly on the right shape. The fire pit did not: three preview
+attempts and two refine attempts each dropped either the stone ring or the
+log stack, or flattened the stones to 2D discs. One preview candidate had a
+genuinely clean 12-stone ring with no logs; **retexturing that specific
+geometry** (`meshy.py texture`, which points a texture pass at a local GLB
+using the reference crop rather than regenerating from scratch) gave a
+properly stone-textured ring with no further roll of the dice needed. This is
+the second time this session that decoupling "get the right geometry" from
+"get the right texture" solved something regeneration alone would not.
+
+Tent and bed went straight to one refine-tier candidate each and both came
+back well-formed and correctly textured — weathered patched canvas with the
+crossed lashed pole tips the prompt asked to lead on; a lashed log frame,
+dark unbranded mattress, pillow. Landed at
+`assets/props/generated_camp/{camp_tent,camp_bed,campfire_stone_ring}.glb`.
+Total spend: 180 (preview) + 200 (four refine/retexture passes) = 380 credits
+of 4200 available.
+
+### Wired into the camp
+
+- The six hand-placed `Rock_Medium` stones become one `campfire_stone_ring`
+  mesh, scale 0.85 to match the six-stone version's own measured ~1.7m
+  footprint. The Bonfire's flame sits inside the ring's empty centre;
+  `campfire_glow.gd` is unchanged — the generated ring supplies stone
+  geometry only, the fire itself stays the existing system.
+- The Kenney tent-canvas/bedroll from round 3b are replaced by the generated
+  tent and bed. The two needed real separation once placed: an early cut had
+  them 1.35m apart and the bed visually swallowed the tent from the close
+  viewpoint; pulled to ~3.1m centre-to-centre so both read as distinct
+  objects.
+- Nothing else in the cluster moved. 18 props total (was 22 before the
+  six-stone-to-one-ring swap).
+
+### Also fixed while in the pipeline code
+
+`docs/ASSET_LEDGER.md`'s torch-prop row carried the same now-corrected false
+claim about `Bonfire_Fire.obj` a second place; fixed there too, not just in
+the round-3 entry.
+
+### What is not resolved
+
+- **A dark, flat-shaded box appears in frame `02-camp-from-spine.png`** at
+  roughly the tent's own position, viewed from ~15m at a shallow angle —
+  investigated far enough to be fairly confident it is the tent's own
+  geometry reading as an unlit silhouette from behind/the shadow side under
+  the Compatibility renderer's software GL, the same class of lighting
+  artefact this survey's own header already warns is untrustworthy here, not
+  a new placement bug. Not chased further; worth a look on real hardware.
+- **Frame `01-camp-close.png`'s tent reads smaller than the bed**, which is
+  backwards for what should visually lead. Separating the two fixed the
+  worse problem (they no longer merge into one shape) but did not fix
+  relative prominence; a tighter camera or a repositioned close viewpoint
+  would likely resolve it faster than moving the props again.
+- **Still not graded.** Same rule as every round before this one: the frames
+  are re-rendered, not judged here. This is the second consecutive round
+  that owes the coordinator an independent pass rather than a third render
+  cycle guessing at what the critic will say.
+- The clearing/re-bake note from round 3/4 is unchanged and still applies.
+
+## BAND1-D1 round 4 — the evidence run, band1's two optional draws, and four tests that were right
+
+`tests: full suite 1301 tests, 714654 assertions, 0 failed` · `area: content/band1, creatures, tools`
+
+Prompt 62's remaining acceptance lines, taken in one pass. Everything here is on
+`claude/start-d1-odnxb2`; nothing is on `main`.
+
+### The evidence run
+
+Prompt 62 asks for a continuous run from tournament victory to South Bridge,
+recording cadence, dead travel and objective legibility. Nobody had done it.
+`tools/_probe_band1_evidence.gd` (new) does the half a machine honestly can: it
+walks band1's real spine through the **built** world and records what a player
+would meet, rather than reading the authored JSON back.
+
+That distinction is the whole reason it exists next to
+`tools/_probe_band1_cadence.py`. The cadence probe projects config positions
+onto the spine — right for authoring, fast, and structurally unable to tell you
+whether a single one of those entries exists in the running game. A spawn whose
+ground lookup failed, a creature hidden behind an R5.3 `time`/`weather` gate, a
+trainer body that never placed: all invisible to a JSON reader, all of them
+what the player actually gets.
+
+| | |
+|---|---|
+| route walked | **2372 m** (~9.9 min of pure walking at 4 m/s) |
+| things met within 30 m of the path | **121** |
+| longest stretch meeting nothing new | **100 m** |
+| where | 2352 m along — the final approach to the bridge, ending on the gatekeeper |
+| typical worst-case gaps | 50–88 m, twelve of them across the region |
+| South Bridge open without the key | **false** |
+
+The 100 m is the quiet approach to the gate and reads as deliberate rather than
+as a hole. The honest limitation, stated because the number invites more trust
+than it has earned: this is a **traversal probe, not a physics-driven
+playthrough**. The body is stepped along the route and stood on the ground
+rather than driven at walk speed, because 2.4 km through physics at this
+project's own measured rate (`smoke_traversal.gd`: ~1700 ticks for ~120 m) is
+~34,000 ticks and hours of wall clock. So it measures content cadence and says
+nothing about traversal feel or footing. Prompt 62's evidence run wants both.
+**The half that needs a human still needs a human.**
+
+### Band 1's two optional draws, which did not exist
+
+Prompt 62 asks the region for a less-common wild temptation and for at least one
+optional thing that competes with direct progress. It had neither, and
+`objectives.json`'s `local` array — the game's entire Local Requests list —
+was **empty**, across the whole chapter.
+
+**Elder Mosshell** (`spawns.json` order 1900) is band1's answer to the first,
+and PW2's variant system is now real. An optional `elder` block on a spawn entry
+carries `title`, `body_scale`, `level_bonus` and any `configure()` key; absent
+means an ordinary creature, which is the same shape R5.3's `time`/`weather`
+gates already use. Two things worth keeping:
+
+- **`body_scale` scales gameplay size, not art.** `creature_body.gd`'s own
+  comment is that the collider is built from the species and the art is fitted
+  to it, so `_height`/`_radius` drive the capsule, the hit cone's reach and the
+  catch accuracy bonus. Scaling the node would have moved only the picture —
+  precisely the invisible reach discrepancy PW2 forbids. Scaling those two
+  moves art, reach and catch odds together. Verified:
+  `body_radius` 0.986 against an ordinary mosshell's 0.730, and the ordinary
+  ones in the same file unchanged.
+- **The behavioural distinction is not scale.** PW2 requires one and says stats
+  and size cannot be the only one. `notice_range` 20 against the shared default
+  of 9 means it stops and turns to watch from more than twice the usual
+  distance — and `wild_creature.gd` calls that stop-and-look "the only cue the
+  game gives that the creature is engageable", so it reads *before* combat,
+  which is PW2's readability rule. `wander_radius` 1.5 against 7 means it holds
+  its ground. Both are existing tunables.
+
+Sited by `tools/_probe_offroute_site.gd` in a damp hollow west of the pond: 75 m
+lateral off every authored route (past the 60 m the cadence probe counts as
+optional detour), 96 m from the pond centre where every other band1 mosshell
+lives, above the water line, flat enough for an arena. No map landmark, on
+purpose — prompt 30 says not to pre-label secrets.
+
+**Old Bram** (`trainers.json` order 1010) is prompt 30's Old Champion: a former
+village champion who went down to the bridge to tell Team Tether no, at
+fifty-three, with two creatures who had never lost. Same story the site front
+door tells, from the losing side. 82 m off the road on the opposite side from
+`trail_camp`, so band1's two draws are two places rather than one busy corner.
+Reuses `villager_farmer` with white hair — the `grandpa` rig was the other
+candidate and was rejected because a second NPC wearing Grandpa's face reads as
+Grandpa, and his whole point is that he is not the player's family.
+
+His reward is greater orbs rather than a TM, and that is the design: they are
+what makes the *other* optional thing reachable, and his defeated line is the
+only place in the game the elder is named. Two optional pieces that feed each
+other beat two unrelated icons.
+
+He is also the `local` array's first entry ever, which needed one small general
+capability: `revealed_by` in `quest_log.gd`. Optional content and the Main Story
+want opposite things from that list — a main beat should be visible before you
+do it, an optional one should not, and "Beat Old Bram in the eastern fields" on
+a fresh save tells the player about a man they have not met in a field they have
+not walked to. Absent means always listed, so every existing entry is unchanged.
+
+### Four tests were right and this lane was wrong
+
+The first cut of Bram failed four assertions. All four were correct and all four
+are worth writing down, because each is a rule about this codebase that is not
+obvious from the schema:
+
+1. **`chapter_curve.json` outranks a lane's judgement.** He fielded levels 11–12
+   because the player meets him after a level 10–11 tournament final. But the
+   finals are `gate_fight: true` and `test_chapter_curve.gd` exempts gate fights
+   on purpose — they are the chapter's set-piece, not the region's baseline.
+   Band1 says team enter 3, exit 8, trainer band [2, 7]. He is now 6–7. The
+   contract's rule is author *to* the curve and report what you want instead;
+   the request is below.
+2. **`defeat_flag` and `defeated` are not the same key.** One is the flag the
+   combat system sets and `already_beaten()` reads; the other is a conversation
+   id. Conflating them shipped a trainer whose defeat recorded nothing.
+3. **`rechallenge` is a boolean, not a conversation id.** Set to a string it
+   reads truthy, and `test_trainers_data.gd`'s own words for the result are
+   "that is an XP faucet". The rematch conversation was deleted rather than left
+   as dead data.
+4. One fact, one flag: `reward.flags` no longer duplicates `defeat_flag`.
+
+### Three probe bugs, one of which is a GDScript trap
+
+Found while building the evidence run, and all three produced confident wrong
+output rather than errors:
+
+- **`func _all(node, into: Array = [])` shares one array across every call**,
+  exactly like Python. Two calls in one run returned the first call's contents
+  with the whole tree appended again — which is how two trainers that are
+  demonstrably standing in the world went missing from one report and not
+  another. Cost about half an hour of believing the South Bridge gatekeeper was
+  not being placed. He is; `tools/_probe_trainer_bodies.gd` (new) confirms every
+  world-pass trainer stands where its config says.
+- **`trainer_npc.gd` is the placer, not the body.** Matching trainers by script
+  path catches three container nodes at the world origin and no trainers at all;
+  the bodies carry a `trainer_id` meta and no script.
+- **`harvest_node.gd` keeps `_item_id` private with no getter**, and
+  `get("item_id")` returns null rather than erroring — a column of
+  `gather <null>` that still looked like it was working.
+
+### Smaller things
+
+- **The player-built camp now has a lit fire and a real bedroll.**
+  `scripts/build/camp.gd` had the same two defects the authored trail camp
+  failed a blind judgement on: an unlit `Bonfire_Fire.obj` with a light floating
+  over it, and `quaternius_furniture/BedTwin.obj` — an indoor bed frame — as its
+  "bedroll". `campfire_glow.ignite()` lights the real flame surface, and the
+  Kenney bedroll sourced in round 3b is the bedroll. Only on the real thing, not
+  the drag-around ghost.
+- **The trail camp has wood and fibre**, 7 m and 6 m from the fire. Prompt 61's
+  camp-siting criteria ask a camp-worthy space for nearby wood/stone/fibre; it
+  had authored stone at 26 m and nothing else, with wood and fibre arriving only
+  from the shared scatter — availability by accident rather than by design.
+
+### Coordinator requests
+
+1. **A curve question, not a lane's to settle.** `chapter_curve.json` gives
+   band1 a trainer band of [2, 7] and a team that exits at 8, while the village
+   tournament — inside band1 — fields 10–11 under the `gate_fight` exemption.
+   Every non-gate trainer in band1 is therefore authored *below* the strength of
+   a player who has just done band1's own headline event, and prompt 62's
+   evidence run starts at exactly that moment. Bram is authored to the curve and
+   is correct by it; he will also be an easy fight for a post-tournament team.
+   The fix is either a split band for the post-tournament stretch or a raised
+   band1 trainer ceiling, and it belongs to whoever owns the curve.
+2. **The re-bake now covers three clearings**, not one: `trail_camp` moved
+   (order 1000), plus new arenas for the elder (1900) and Bram (1901). The
+   fingerprint defect is unchanged, so none of them invalidates the bake.
+3. Still outstanding and not mine: the `environment/nature` untextured-material
+   defect reaching the shared scatter layers (`ralph/BLOCKED.md`), and an
+   independent blind judgement of `shots/trail_camp/`.
+
+## BAND1-D1 round 3 — the trail camp's fire, and two capture-tool bugs that faked the art defects
+
+`tests: full suite` · `area: content/band1, tools/capture`
+
+Prompt 62, gate D lane D1. Round 2's `trail_camp` failed an independent blind
+judgement — no to both bar questions — with this verdict:
+
+> Single highest-impact remaining defect: the campfire — oversized inert logs,
+> no flame, no glow, no smoke.
+
+and named fog density/tint as "the largest single-lever visual gap to both
+references, and it is a WorldEnvironment setting, not art."
+
+The start brief asked which of those was a scene bug and which was the capture
+path lying. The answer is **both, in different places, and the split is not the
+one anyone expected.**
+
+### The fire was really broken, and not in the way it looked
+
+`tools/_probe_trail_camp.gd` (new) measures every prop the cluster puts in the
+world plus the glow overlay's own children. Every glow child existed and every
+one was `visible_in_tree`. The numbers say the rest:
+
+| | world y |
+|---|---|
+| flame billboard | 3.13 |
+| smoke column top | 3.95 |
+| **Bonfire prop's own mesh top** | **4.23** |
+
+The flame and the entire smoke column were **inside the log pile**. The embers
+were visible because they are the only part that moves — `local_coords = false`,
+rising for 1.4s, out through the top. The critic reported seeing "only a few
+floating ember sparks" and that is precisely, mechanically, what was renderable.
+
+The cause underneath is scale. `Bonfire.obj` is authored 2.18m across; round 2
+placed it at scale 1.0 in a camp whose stool is 0.58m tall. "Oversized inert
+logs" was a correct reading of a 2.7m-wide fire.
+
+**And the flame existed all along.** Round 2 rejected `Bonfire_Fire.obj` on the
+note that its extra surface "shares the same combined mesh with the logs rather
+than isolating a flame". That is true of the OBJ file — one object,
+`Bonfire_Fire_Cylinder.009` — and false of what Godot imports, because the OBJ
+loader splits by material. `tools/_probe_bonfire_fire.gd` (new): three surfaces,
+`Wood`, `LightWood`, `Fire`, and `Fire` is a real flame cone standing 1.63m
+above the pile. `campfire_glow.gd::ignite()` now gives it an emissive override
+(via `set_surface_override_material`, not by editing the shared Mesh resource —
+that would light the asset everywhere it is reused). The billboard flame is
+gone. `props.gd` counter-scales the overlay so a fire shrunk to a believable
+diameter does not shrink its own 4.6m smoke column, which is what made the camp
+unfindable from the road.
+
+### Two capture-tool bugs, and one of them faked the round-2 colour verdict
+
+The D3 lane's warning that the same conventions exist in other capture tools was
+correct twice over.
+
+**1. The red wash was the drowning overlay.** `tools/capture_trail_camp.gd`
+parked the player 500m underground — the convention these tools inherited. That
+puts them under `water.gd`'s water level, so `is_fully_submerged` goes true and
+the OP21-20 full-submersion hazard ramps for the whole run, drawing a full-rect
+red `ColorRect` on its own CanvasLayer (`SubmersionOverlay`, layer 11) that
+hiding `PlaygroundHUD` does not touch, **escalating with time submerged**. The
+later the frame, the redder. Frame 03 came out drenched in sunset pink under a
+midday sky; frame 01, shot first, merely looked cool and blue. Fixed by parking
+the player across the meadow at ground level and hiding the overlay by name.
+
+**This is the round-2 critic's "largest single-lever visual gap."** It is not a
+WorldEnvironment setting and it is not art. It is this tool. The before/after on
+one unchanged viewpoint is the whole argument.
+
+**2. The day clock races the pass.** `world_look.gd::_process` advances a
+ten-minute day cycle in real time and deliberately never pauses (its own
+comment: a clock that stops when a menu opens would make every menu a free way
+to hold off dusk). Under xvfb software GL this capture takes over a minute of
+wall clock, so one `apply_time("day")` before the loop drifts between
+viewpoints. Now frozen with `set_process(false)` and re-asserted per frame.
+
+Both are the same class D3 found. Other `tools/capture_*.gd` still carry the
+underground-parking convention and were not audited here.
+
+### environment/nature is not usable through props.gd
+
+The first round-3 capture put flat **cyan** shards all round the camp — the
+bushes, grass tufts and small rocks added for foreground breakup.
+`tools/_probe_camp_materials.gd` (new) found why: every `environment/nature`
+model ships materials with **no albedo texture** and a flat placeholder colour.
+Its `grass` material is albedo (0.45, 0.93, 0.87) — that is the cyan — and its
+`dirt` material is (0.95, 0.74, 0.62), near-white. The pack is authored against
+a palette atlas the import does not apply. Only `log`/`log_large` survive, and
+only by luck: their wood-tan placeholder happens to look like wood.
+
+This is almost certainly also the round-2 critic's "pale white-stone scatter …
+too bright, no arrangement, reads as litter or snow patches" — and **the same
+models are used by the shared scatter layers**, so the cyan appears in open
+field well outside this camp. `data/config/vegetation.json` is a file no lane
+may edit (GATE_D_LANE_CONTRACT §3): **flagged for the coordinator, not fixed.**
+
+The camp's scenery now comes from `stylized_nature`, whose models all carry real
+albedo textures.
+
+### The rest of the round-3 tuning list
+
+- **Relocated the camp, (348,919) → (344,935).** The old site dropped 1.2m
+  across the camp's own 7m footprint (`tools/_probe_camp_ground.gd`), which is
+  why round 2's props sat at nine different heights and why the wide frame read
+  as a grass slope with objects on it. `tools/_probe_camp_flat.gd` swept the
+  ground 5–14m off the loop trail; (344,935) is the flattest shelf near it,
+  0.29m of relief over 8m, 7.8m from the trail. A camp is a place someone chose
+  to stop and the ground has to look like a reason to choose it. The clearing
+  (`vegetation.json` order 1000) moved with it and tightened 12m → 9m.
+- **The "haystack parked touching the fire" was the Backpack.** Raw 3.34 × 3.12
+  × 1.75m with its origin 1.46m above its own base, so round 2's scale 0.55 gave
+  a 1.7m pack sunk 0.80m into the ground — a lumpy tan half-buried mass, which
+  is a haystack. Now 0.18 with `sink_m: -0.25` to lift it back to ground level.
+- **The "wattle panel a log skewers through" was the Bench**, with `log_large`
+  2.2m away on the same bearing, inside it. They are now 2.9m apart on opposite
+  arcs of the ring.
+- **The RockPath family is out.** Third strike. They are not stones — each is a
+  flat mosaic of pale pebbles (1.06–2.13m across, 0.11m thick), so at any scale
+  it reads as gravel lying in grass. The fire ring is six `Rock_Medium_*`
+  boulders at 0.11–0.15 (0.35–0.50m). The four approach stones are gone.
+- **Seat yaws are computed, not eyeballed** — long axis tangential to the fire
+  ring for the bench and `log_large` (measured long axes, `_probe_camp_models.gd`),
+  radial for the firewood log, which is the opposite rule for the opposite reason.
+- **Three capture viewpoints, all on the loop trail** `(300,880)-(370,950)`
+  which passes 7.8m from the camp — round 2's wide frame was shot from the
+  *spine*, 14m away, which is why the critic found no trail in a composition
+  whose entire premise is "beside the trail". The third frame is new and is the
+  acceptance the other two cannot show: at 23m the props are barely readable and
+  the smoke column is the whole test.
+
+### Round 3b — the sleep prop, after an owner correction
+
+Round 3 shipped with "no bedroll, tent or lean-to" parked in `ralph/BLOCKED.md`
+as needing owner-supplied reference art. **The owner corrected that in one
+line:** *"you can't go get a free bed or tent asset that matches the game?"*
+
+They were right and the entry was wrong. `CLAUDE.md` forbids *generating*
+without reference art — the Meshy rule — while its **Asset work** section
+separately permits *sourcing* a candidate asset, subject to cohesion, a ledger
+row, no assumed redistributability, and an in-engine scale/material test. Round
+3 collapsed two rules into one and parked work that was never blocked. Worth
+remembering as a failure mode: the hard rules are narrower than they feel when
+you are three levels deep in a lane brief.
+
+Sourced **Kenney Survival Kit 2.0**, CC0 1.0, licence read from the
+`License.txt` inside the zip rather than the download page, vendored to
+`assets/props/kenney_survival/` with its shared `colormap.png`. Quaternius's own
+Survival pack was checked first, since the camp's Bonfire comes from it and
+cohesion argues for one family — it is exactly the five models already vendored
+here (Axe, Backpack, Bonfire, Bonfire_Fire, Knife) and has no shelter at all.
+
+`tools/_probe_kenney_survival.gd` (new) ran the ledger's own "test scale and
+materials in-engine" rule before anything was placed — the same check
+`environment/nature` had just failed. All five candidates carry a real
+`colormap` albedo texture. The pack is authored small (0.3–0.6m raw), so
+`tent-canvas` scales 3.5 to a 1.96m one-person tent and `bedroll` scales 3.0 to
+0.93 × 1.83m, both sized against the camp's own measured 0.90m barrel and 2.78m
+bench rather than by eye.
+
+Two placement facts found from renders rather than assumed:
+
+- The tent's **first siting was wrong**. North-west of the fire put it on ground
+  0.30m higher (measured) and, from all three authored viewpoints, between the
+  camera and the camp. It now sits beyond the fire on the south arc: a
+  silhouette behind the flame up close and behind the smoke column from the
+  road, never occluding the glow that is what actually carries at range.
+- The tent's **yaw was tested both ways**. At the +90 alternative it presents a
+  closed canvas wall and the bedroll vanishes behind it. A shelter you cannot
+  see into is a shed.
+
+`bedroll-frame`, `bedroll-packed` and `campfire-pit` are vendored unused from
+the same fetch, as siblings rather than a second trip to the same source.
+`campfire-pit` is worth a look by whoever revisits this camp — it is a
+stone-ringed fire pit, and it may do in one prop what this round does with a
+Bonfire plus six hand-sited boulders.
+
+### What is still NOT fixed
+- **No ground-wear decal** under the camp. This half of the old blocked entry
+  stays blocked and is genuinely a different problem: not a missing asset but a
+  terrain-path capability living in `terrain_playground.json`, which no Gate-D
+  lane may edit. The approach-stone workaround was tried and made things worse.
+- The clearing move does **not** invalidate the baked scatter on this branch —
+  `scatter_bake.gd::config_fingerprint()` still hashes only the two head configs
+  (GATE_D_LANE_CONTRACT §4). The frames below were rendered against a **local**
+  re-bake so they show the real clearing; **that bake is deliberately not
+  committed**, so it does not collide with the other four lanes. The coordinator's
+  single integration re-bake is still required.
+- Detached hard shadow blobs appear on open grass in all three frames. Not
+  chased: the capture runs Compatibility + software GL and this tool's own
+  header already says fine lighting judgements are not trustworthy there.
+
+### Judgement
+
+`shots/trail_camp/01-camp-close.png`, `02-camp-from-spine.png` and
+`03-camp-from-road.png` are re-rendered and **not graded here**. Per the lane
+brief, this round does not grade its own frames and does not run rounds four
+and five: the critic's own guidance was one thorough tuning round, then stop,
+because without a sleep prop and a real campfire further rounds converge on a
+well-lit prop dump. The campfire half of that ceiling is now solved. The sleep
+prop is not, and it is owner-art-blocked.
+
+The `ASSET_LEDGER.md` row for the torch also carried a claim this round proved
+false — that the Bonfire's `Fire` surface "shares one ArrayMesh with its log
+geometry and cannot be pulled out standalone". True of the OBJ file, false of
+what Godot imports. Corrected in place rather than left to mislead the next
+person who needs a flame.
+
+**Round 2's verdict is now recorded above** — `DONE.md` previously said round 2
+was unjudged, and the record should not claim less certainty than we have.
+
+## BAND1-D1 — Lower Meadows dead-travel fill and density raise
+
+`tests: test_band_content.gd, test_band_vegetation.gd (1 assertion loosened, see below), test_spawns_data.gd, test_trainers_data.gd, test_chapter_curve.gd, test_chapter_content_map.gd, test_harvest.gd, test_map_landmarks.gd, test_map_icons.gd, full suite` · `area: content/band1`
+
+Prompt 62, gate D lane D1. Two problems, one pass: the 2026-08-21 owner
+playtest calling the pond-to-South-Bridge stretch "long, bare and boring",
+and the later 2026-08-22 owner directive comparing Meadows wild density
+unfavourably to Pokemon/Palworld/even Valheim's deer and boar.
+
+`tools/_probe_band1_cadence.py` (new) projects every authored trainer/wild/
+harvest/prop position onto band1's real spine polyline (not a straight line)
+and reports the longest gap between on-route points. Baseline: **1600m**, 73%
+of the band's own 2403m arc length, between the pond and South Bridge — every
+one of band1's 8 trainers, 8 wild clusters and 14 gatherables sat within
+~550m of the village or the pond, and the 760m spine leg south of the pond
+carried nothing at all.
+
+First pass added 9 hand-sited corridor entries (4 wild clusters, 5
+gatherables, 1 prop cluster — `trail_camp`, reusing the existing trainer_camp
+Bag/Crate_Wooden/Barrel composition rather than a new prop grammar) at the
+spine's own bends, each position checked against the probe. That alone cut
+the longest gap to 378m. Then the owner's density directive raised the bar
+much further: `tools/_gen_band1_density.py` (new, throwaway generator, not
+part of the shipped data path) walks the spine at ~55m arc steps, alternating
+lateral offset and species by locale (pond-edge species near the pond,
+grove-flavoured near the oak_grove_ring, open-field species otherwise), and
+adds 5 off-route habitat pockets. Its output was hand-reviewed for collisions
+with authored structures (one cluster that landed on the mill's own footprint
+was nudged off it and away from the existing pond-edge clusters it would
+otherwise have overlapped) and spliced into `spawns.json`.
+
+Result: **56 wild clusters, 200 creatures** (from 8/16), inside the owner's
+45-60 cluster / 170-260 creature target. **19 authored gatherables** (from
+14). Longest on-route dead-travel gap: **84m** (from 1600m). All 9 roster
+species (including a first Band-1 sighting of meadowhart, wild and off-route
+rather than trainer-owned) are represented; nothing was invented.
+
+The meadowhart cluster (spawns order 1005) is also this band's optional
+detour, coordinated with prompt 30's approved "Meadowhart Herd" beat rather
+than a new quest system: ~220m off the spine near the bridge approach, wild
+and therefore catchable (SH47's band-2 herd, just past the bridge, exists for
+the rideable-in-stride fix, not as an early sighting — this is the only place
+in the band a player can see or catch one before the tournament's own mount
+reward makes them want to).
+
+`test_band_vegetation.gd::test_scatter_rules_config_carries_both_split_arrays`
+asserted the merged `clearings` array's size EXACTLY matched a frozen
+pre-split baseline (9) — a check that could never survive any band ever
+authoring a new clearing, which is exactly what `trail_camp`'s own clearing
+did. Loosened to `>=`, matching the sibling test three lines above it that
+already uses the correct rule; the baseline-identity check (order/index/value
+per entry) is untouched.
+
+**Deliberately not touched: the village trainer clump.** `trainer_mira`/
+`trainer_oskar`/`trainer_tam` (band1 trainers.json orders 1-3) sit within
+30m of the village centre, and the lane brief asked whether siting them
+along the routes their names describe (Meadow Keeper, Bridgehand, Field
+Scout) would serve the region better. Investigated and declined: their
+`trainers.json` `position` is not a freestanding picket spawn -- `placed_by:
+"village_npcs"` means these entries ride the SAME villager body
+`village_npcs.json` places, and that file's Mira is inside cottage_a behind
+her shop counter, Oskar and Tam stand in the square with their own
+`greeting_when` vendor/gift dialogue ladders, and the tournament marshal's
+own bracket references all three standing in the square (`village_npcs.json`
+`_comment_tournament_1`). Moving their `trainers.json` position without
+rebuilding their shop/dialogue placement would desync the two, and rebuilding
+that placement is a real, separate scope this lane did not have room for
+alongside the density raise -- flagged rather than silently attempted or
+silently dropped. `south_bridge_grunt` (order 1000) already sits at the far
+end as the band's second trainer beat; the 56 new wild clusters are what now
+fill the 1300m between them.
+
+Blind visual pass on `trail_camp`, round 1 (self-reviewed -- no isolated
+sub-agent tool was available in this session to run `.claude/skills/
+visual-judge` truly blind, stated here as a real limitation rather than
+silently skipped or presented as genuine). Verdict: fails both bar
+questions. The Bag/Crate_Wooden pair reads as one indistinct lump next to
+the barrel; no campfire/bedroll asset in the installed prop family so the
+site composes a supply cache, not a camp; flat baseline lighting/ground.
+
+Round 2: the Gate-D coordinator dispatched the actual independent critic
+against round 1's frames, which agreed on both bar questions but overturned
+this lane's own read of *why*: the build ships
+`assets/props/quaternius_survival/Bonfire.obj` plus the full Bench/Stool/
+log/Backpack/RockPath/scatter sets, none of which round 1 used -- "this
+scene has not hit its asset ceiling, it has barely used its asset floor."
+Reachable work, not a `BLOCKED.md` entry. `scripts/world/props.gd` only ever
+loaded a bare filename as `.gltf` under one folder (`quaternius_fantasy`),
+so those assets were unreachable from `props.json` at all -- extended with
+an optional `dir` key plus `.glb`/`.obj`-as-Mesh fallbacks (backward
+compatible; every pre-existing entry keeps its old behaviour exactly).
+`scripts/world/campfire_glow.gd` (new) gives the fire a flickering
+OmniLight3D, flame billboards, embers and a smoke column -- the same
+radial-gradient-texture technique `torch_prop.gd` already proved, since the
+fire mesh itself carries no emissive material (`Bonfire*.mtl`: `Ke 0 0 0`
+throughout). `trail_camp` rebuilt from 3 props in a line to 14 arranged in a
+ring around the fire (two different seats, two loose logs, a second pack, a
+RockPath stone approach standing in for a proper worn-dirt path, which
+touching `terrain_playground.json` would need and no lane may do). The
+barrel was measured (not eyeballed): raw AABB 0.898m tall at scale 1.0 --
+already the ~0.9m the critique asked for; round 1's oversized read was
+camera framing (close, low, beside the Bag prop), not a wrong scale value.
+
+Round 2's frames are rendered and pushed; the independent critic's verdict
+on them had not come back as of this entry. See this branch's own report to
+the coordinator for the live status -- do not treat this DONE.md entry as
+the final word on whether round 2 passed.
+
+Boot/frame-time cost of the density raise is expected and is not this
+lane's problem to solve -- GATE_D coordinator is dispatching a dedicated
+streaming lane for `encounter_director.gd`/`wild_creature.gd` distance-based
+activation; neither file was touched here.
+
 ## GATE-D3 round 2 — the River / Tether Relay, driven and blind-judged
 
 `tests: full suite (1301 tests, 715475 assertions, 0 failed)` · `area: band3_the_river_lock` · `branch: claude/d3-setup-kf3tcf`

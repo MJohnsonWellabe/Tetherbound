@@ -18,6 +18,7 @@ const CONFIG_PATH := "res://data/config/props.json"
 ## BAND-SPLIT. The `clusters` array is cut per corridor band under
 ## `data/config/bands/<band>/props.json` and merged back here.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 
 var _placed := 0
 
@@ -47,13 +48,52 @@ func placed() -> int:
 
 func _place(into: Node3D, spec: Dictionary) -> void:
 	var model := str(spec.get("model", ""))
-	var path := "%s/%s.gltf" % [PROPS_DIR, model]
-	if not ResourceLoader.exists(path):
-		push_error("prop missing: %s" % path)
-		return
-	var packed: PackedScene = load(path) as PackedScene
-	if packed == null:
-		push_error("prop failed to load as a scene: %s" % path)
+	# `dir` (optional, default PROPS_DIR): BAND1-D1. Every prop cluster before
+	# this pass only ever named a bare quaternius_fantasy filename, so that
+	# stays the default and every existing entry is untouched. A cluster that
+	# needs an asset from a different installed pack (quaternius_survival's
+	# Bonfire, quaternius_furniture's Stool, stylized_nature's RockPath/scatter
+	# props, quaternius_castle's Banner) names its own `dir` instead of forcing
+	# every band onto one folder or duplicating assets into quaternius_fantasy.
+	# This is CLAUDE.md's "one prop family" read as one INSTALLED prop family
+	# (nothing new is generated or sourced), not one folder.
+	var dir := str(spec.get("dir", PROPS_DIR))
+	var gltf_path := "%s/%s.gltf" % [dir, model]
+	var glb_path := "%s/%s.glb" % [dir, model]
+	var obj_path := "%s/%s.obj" % [dir, model]
+
+	var root: Node3D = null
+	if ResourceLoader.exists(gltf_path):
+		var packed: PackedScene = load(gltf_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % gltf_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(glb_path):
+		# .glb is the same glTF format as .gltf, just binary -- the corridor's
+		# own environment/nature kit (log.glb, grass_*.glb) ships this way.
+		var packed: PackedScene = load(glb_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % glb_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(obj_path):
+		# OBJ ships as a bare Mesh, not a scene -- the same fallback
+		# building_prefabs.gd::_build_template already uses for the castle
+		# kit (its own comment: "the castle kit ships OBJ+MTL, not glTF").
+		# Wrapped in a MeshInstance3D so the rest of this function (the
+		# combined-AABB collider build below) sees the same node shape a
+		# glTF scene's root would give it.
+		var mesh: Mesh = load(obj_path) as Mesh
+		if mesh == null:
+			push_error("prop failed to load as a mesh: %s" % obj_path)
+			return
+		var mi := MeshInstance3D.new()
+		mi.name = model
+		mi.mesh = mesh
+		root = mi
+	else:
+		push_error("prop missing: %s (looked for .gltf/.glb/.obj under %s)" % [model, dir])
 		return
 
 	var at: Array = spec.get("at", [0.0, 0.0])
@@ -65,7 +105,17 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		return
 
 	var scale_factor := float(spec.get("scale", 1.0))
-	var root: Node3D = packed.instantiate()
+	# `scale_xyz` (optional, [sx, sy, sz]): a non-uniform override for
+	# `scale`. Round 4's firewood pile needed to go "half as tall, twice as
+	# wide" against its own generated proportions -- a shape correction no
+	# single uniform number can express -- and every other placement math
+	# below (collider box, sink) already worked in a full Vector3, so this
+	# is the one line that needed to stop assuming uniform scale rather than
+	# a new mechanism.
+	var scale_xyz_raw: Variant = spec.get("scale_xyz", null)
+	var scale_vec: Vector3 = (Vector3(float(scale_xyz_raw[0]), float(scale_xyz_raw[1]), float(scale_xyz_raw[2]))
+		if scale_xyz_raw is Array and (scale_xyz_raw as Array).size() == 3
+		else Vector3.ONE * scale_factor)
 	root.name = model
 	# `sink_m` (optional, default 0): extra downward offset below the sampled
 	# ground height. Most of the pack's models embed only a few centimetres at
@@ -88,8 +138,45 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 		deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 		deg_to_rad(float(spec.get("yaw_deg", 0.0))),
 		deg_to_rad(float(spec.get("roll_deg", 0.0))))
-	root.scale = Vector3.ONE * scale_factor
+	root.scale = scale_vec
 	into.add_child(root)
+
+	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
+	# (assets/props/quaternius_survival/Bonfire*.mtl carries Ke 0 0 0 on every
+	# surface) reads as unlit cargo, not a fire, and is invisible as a landmark
+	# from any distance. `"campfire"` is the only value read today: it lights
+	# the mesh's own `Fire` surface if it has one, and attaches the light,
+	# ember and smoke overlay `campfire_glow.gd` owns.
+	#
+	# The overlay is counter-scaled out of `root`'s own scale on purpose.
+	# BAND1-D1 round 2 shipped the opposite rule ("entries using this should
+	# keep scale_factor at 1.0") and it was wrong twice over: the Bonfire is
+	# authored at 2.2m across, so a believable campfire MUST be scaled down,
+	# and shrinking a 4.6m smoke column by the same factor is exactly what
+	# made the camp unfindable from the trail. The glow's sizes are absolute
+	# metres; the prop's scale is the prop's business.
+	# `"flame_mesh"` (round 5 follow-up): the prop IS a whole generated flame
+	# sculpt (camp_flame.glb), not a log pile with one small Fire surface --
+	# `ignite_mesh` lights every surface from its own baked texture instead
+	# of one named one, and the light/embers/smoke overlay is built without
+	# its billboard halo, since a real flame mesh under it made the halo
+	# redundant rather than additive (see campfire_glow.gd's own comment on
+	# `include_halo`).
+	var glow := str(spec.get("glow", ""))
+	if glow == "campfire":
+		var lit := CAMPFIRE_GLOW.ignite(root)
+		if lit == 0:
+			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
+		var overlay: Node3D = CAMPFIRE_GLOW.new()
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
+	elif glow == "flame_mesh":
+		CAMPFIRE_GLOW.ignite_mesh(root, 0.5, true)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(false)
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect(root, meshes)
@@ -112,7 +199,7 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	body.name = "%s_Collision" % model
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = aabb.size * scale_factor
+	box.size = aabb.size * scale_vec
 	shape.shape = box
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)

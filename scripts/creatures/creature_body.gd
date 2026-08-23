@@ -178,10 +178,28 @@ func set_shiny(value: bool) -> void:
 	_refresh_shiny_tint()
 
 
+## PW2 (BAND1-D1). An individual's gameplay size as a multiple of its
+## species' own, for alpha/elder variants: 1.0 is an ordinary creature.
+##
+## It scales `_height` and `_radius` TOGETHER, before the capsule is built,
+## which is the only correct place for it. PW2's own rule is "do not alter
+## hitboxes merely because visual scale changes unless current creature
+## collision already derives safely from scale" -- and the note below is why
+## scaling the art instead would break exactly that: the collider, the hit
+## cone's reach and the catch accuracy bonus all read `_height`/`_radius`, and
+## `_fit()` then scales the model to match. Scale those two and the art, the
+## reach and the catch odds all move together. Scale the node and only the
+## picture changes, which is the invisible discrepancy PW2 forbids.
+##
+## Must be set BEFORE `populate()`; afterwards the capsule already exists.
+var body_scale: float = 1.0
+
+
 func _build_placeholder() -> void:
 	var look: Dictionary = SPECIES.placeholder(species_id)
-	_height = float(look.get("height", 1.0))
-	_radius = float(look.get("radius", 0.4))
+	var size_factor: float = maxf(body_scale, 0.01)
+	_height = float(look.get("height", 1.0)) * size_factor
+	_radius = float(look.get("radius", 0.4)) * size_factor
 	# How long a body may be for its width, as a multiple of its collider
 	# diameter. Per species because it is a fact about the animal: a triceratops
 	# is genuinely several times longer than it is wide and a frog is not.

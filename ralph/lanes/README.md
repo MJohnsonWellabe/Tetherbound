@@ -27,6 +27,8 @@ settled and should not be reopened, and what is genuinely left. They are written
 to be accurate about uncertainty: where a lane's own account was never written
 or was self-graded, the brief says so rather than presenting it as verified.
 
+
+
 ## Status, 2026-08-23
 
 D3, D4 and D5 are **done and merged** — their briefs above describe the state

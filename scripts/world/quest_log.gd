@@ -57,6 +57,25 @@ func _entries(source: Array, progression: RefCounted) -> Array:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
+		# `revealed_by` (optional, BAND1-D1): the entry does not exist for the
+		# player until that flag is set. Absent means always listed, which is
+		# every entry that existed before this and every Main Story beat, so
+		# nothing already in the file changes.
+		#
+		# It exists because optional content and the Main Story want opposite
+		# things from this list. A main beat should be visible before you do
+		# it -- that is the whole point of a tracked objective. An optional
+		# one should not: prompt 30's rule is that some optional content is
+		# discoverable through curiosity rather than a quest giver and that
+		# secrets are not pre-labelled from game start, and an entry reading
+		# "Beat the Old Champion" on a fresh save tells the player about a man
+		# they have not met, in a field they have not walked to. This panel's
+		# own empty state says "Nothing outstanding right now", which is a
+		# promise that what is listed is something the player actually knows
+		# about.
+		var revealed_by := str(entry.get("revealed_by", ""))
+		if not revealed_by.is_empty() and not bool(progression.call("has", revealed_by)):
+			continue
 		var flag_id := str(entry.get("flag_id", ""))
 		var done := not flag_id.is_empty() and bool(progression.call("has", flag_id))
 		out.append({"label": _label(entry, progression), "done": done})

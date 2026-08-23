@@ -137,7 +137,19 @@ HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "g
 ## nonsense for a tower. The dominant drift risk for "energy pylon" is the
 ## real-world steel lattice transmission tower, so that family is banned by
 ## name.
-PROPS = {"tether_pylon", "relay_apparatus", "tether_machine"}
+## BAND1-D1 owner directive, 2026-08-23: three camp furniture props, added to
+## the three Team Tether hero objects CLAUDE.md otherwise reserves Meshy for.
+## The reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png)
+## is owner-supplied and satisfies the actual gate ("never spend a Meshy
+## generation without owner-supplied reference art") — the "hero objects only"
+## line exists to stop an autonomous Ralph firing from spending speculatively,
+## not to block the owner directing a specific generation themselves. Recorded
+## here rather than silently treated as routine, per CLAUDE.md's "ask instead
+## of inventing" — this is the owner having already answered, not this file
+## deciding on its own.
+PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
+         "camp_tent", "camp_fire_pit", "camp_bed",
+         "camp_firewood", "camp_flame"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -146,6 +158,16 @@ NEGATIVE_PROP = ("realistic electrical transmission tower, steel lattice, metal 
                  "creature, character, human figure, weapon, tree, building, "
                  "noisy surface detail, wet plastic shading, text, watermark, "
                  "multiple objects")
+
+## The reference board's bed panel carries a paw-print emblem and a leaf icon
+## on its blanket/pillow — another game's trademark, not this project's. Both
+## were blurred out of the crops under assets/creatures/tetherbound/camp_bed/
+## reference/ before they ever reached this file, but a negative prompt is
+## cheap belt-and-braces against the generator inferring a similar mark from
+## the surrounding stitching/border shapes that survived the blur.
+NEGATIVE_CAMP_BED = (NEGATIVE_PROP + ", logo, emblem, brand mark, insignia, "
+                     "paw print, animal silhouette icon, trademarked symbol, "
+                     "text, lettering")
 
 ## Meshy's documented ceiling for /openapi/v2/text-to-3d prompts, counted on
 ## the final string including the STYLE suffix. image-to-3d does not enforce it.
@@ -174,6 +196,8 @@ NEGATIVE_MACHINE = (NEGATIVE_PROP + ", creature inside, dragon, beast, "
 def negative_for(species: str) -> str:
     if species == "tether_machine":
         return NEGATIVE_MACHINE
+    if species == "camp_bed":
+        return NEGATIVE_CAMP_BED
     if species == "veridian":
         return NEGATIVE_PLANT
     if species in HUMANS:
@@ -582,6 +606,173 @@ SPECIES_PROMPTS = {
         "from the arches and a pointed clamp head hanging on chains from the "
         "apex above the rings. Tall banner pennants on the outer pillars, "
         "glowing teal runic channels inlaid in dark stone, brass-gold trim"),
+
+    # BAND1-D1, owner board 2026-08-23 ("camp set": tent/campfire/bed), owner
+    # directive to generate against it. Not a hero object — camp furniture for
+    # the trail_camp cluster and the player-built camp (scripts/build/camp.gd)
+    # — but the reference board is real and owner-supplied, which is the
+    # actual prerequisite CLAUDE.md states. Signature first, in capitals, per
+    # this file's own rule: the two lashed CROSSED ridge-pole tips are what
+    # read as "tent" in silhouette before any canvas detail resolves.
+    # ROUND 2 (owner reviewed round 1's renders directly against the board,
+    # not against a text description of it). Round 1 measured close on the
+    # front silhouette's own width:height (generated 1.32, board 1.35 --
+    # tools/refcrop measurement of tent_front.png) but the owner read it as
+    # proportionally off anyway, and the one dimension that measurement did
+    # NOT check is floor footprint: round 1's AABB was 1.60m wide x 1.90m
+    # deep, near-square, where an A-frame ridge tent is a long, narrow prism
+    # -- the ridge runs the LENGTH of the tent, not its width. A near-square
+    # footprint reads as squat and stumpy regardless of how correct the
+    # front cross-section is. Explicit numbers added because round 1's
+    # words ("narrow ground footprint") were true and still lost to the
+    # images, the same lesson board 15's occupant and board 16's head both
+    # already taught this pipeline: image-to-3D follows pictures over prose,
+    # so when prose alone is not landing, make the prose impossible to
+    # satisfy with the wrong shape.
+    # ROUND 3. A dispatched Fable review compared round 2's render straight
+    # against the reference and called it "a poor reproduction... the
+    # defining A-frame silhouette has collapsed into a low tarp shape" --
+    # specific and correct: both round 1 and round 2 came back a shallow
+    # lean-to, roughly half the reference's height-to-width ratio, with a
+    # flared ground skirt lost entirely. Two rounds of stronger TEXT did not
+    # move it (round 1 -> round 2's footprint numbers barely changed the
+    # AABB), which is this file's own recurring lesson: image-to-3D follows
+    # its pictures far harder than its words. So this round changes the
+    # PICTURES instead. The three-view set had a `back` crop -- the tent's
+    # rear canvas panel, shot flat-on so it fills its own frame edge-to-edge
+    # with no pole, no ground, no depth cue -- which a multi-view
+    # reconstruction may well have read as evidence for a flatter, more
+    # tarp-like structure than the hero and front views alone suggest.
+    # Dropped it; TWO views only (front, three_quarter), both of which show
+    # the true steep A-frame profile and nothing that looks flat.
+    # ROUND 4. Round 3 (image-to-3D, two views, silhouette-only text) still
+    # came back a low lean-to -- SIX generations across three rounds have
+    # now converged on the same shape regardless of prompt wording or which
+    # reference views were fed. That consistency itself is the diagnosis:
+    # this is very likely not a prompt problem at all, but the reference
+    # crops' own camera angle -- a fairly shallow hero-render angle that
+    # foreshortens a tall A-frame's true height, and multi-image
+    # reconstruction is reproducing what the pictures actually show rather
+    # than what the object actually is. `tools/art_pipeline/README.md`'s own
+    # documented fallback for exactly this situation -- a species with no
+    # usable multi-view sheet -- is text-to-3D for FORM, then `texture`
+    # against the concept art for STYLE, already the established path for
+    # all twelve wild Meadows species with no drawn turnaround. Switched to
+    # it here for the same reason: text-to-3D has no image to foreshorten,
+    # only the numbers below, so a "height equal to width" instruction with
+    # no competing picture is now testable on its own.
+    # ROUND 5. Text-to-3D got the height right (candidates' own AABB: height
+    # became the tallest axis for the first time in eight attempts) and lost
+    # the construction entirely -- both candidates came back a round CONE
+    # with one central pole, a teepee, not an A-frame. "A-frame" and "two
+    # crossed pole tips at BOTH ends" did not stop the generator reaching for
+    # the far more common association "tent = teepee" once there was no
+    # picture forcing the ridge shape. Rewritten to rule the cone out by
+    # name and to describe the ridge as a straight line joining two separate
+    # peaks rather than trusting "A-frame" alone to carry it.
+    "camp_tent": (
+        "small survival tent, canvas over wood poles. NOT A CONE, NOT A "
+        "TEEPEE. A straight horizontal ridge joining two separate "
+        "triangular peaks, one at each end -- a canvas tunnel with a "
+        "triangular wall at each end. TALL AND STEEP: ridge height equal "
+        "to base width. Crossed pole tips above EACH peak, rope-lashed. "
+        "Steep canvas sides reaching flat to the ground. Open front flap "
+        "at one end, dark interior. Square patches stitched on canvas. "
+        "Guy-ropes to stakes. Worn tan-brown fabric, dirt-stained. One "
+        "person scale, 2m tall"),
+
+    # ROUND 2. Round 1 tried five times (3 preview, 2 refine) to keep ring,
+    # logs and flame together in one generation and never got all three:
+    # every attempt dropped one or flattened the stones to 2D discs. The
+    # eventual round-1 fix split it -- a retextured ring alone, flame left
+    # to the game's existing procedural campfire_glow.gd -- which solved the
+    # geometry problem by not asking the generator to hold three unrelated
+    # forms (a ring, a stack, a fire) in one topology budget at once. Owner
+    # directive: try again as ONE PIECE, not split. The prompt below tries a
+    # different failure fix from round 1's -- not more capitals on "flame"
+    # (round 1 already led with capitals and still lost it), but a smaller,
+    # more specific ask: fewer, LARGER stones (round 1 asked for a full ring
+    # continuous under a woodpile at 1m across; this asks for six-to-eight
+    # instead of twelve-to-fourteen, larger relative to the log stack, and
+    # states the height ordering explicitly -- flame taller than logs taller
+    # than stones -- so the topology budget has less small-detail competition
+    # for the same triangle count).
+    "camp_fire_pit": (
+        "small stylized campfire, a low ring of SIX TO EIGHT LARGE ROUGH "
+        "FIRE-CRACKED BOULDERS, each roughly bowling-ball sized, set apart "
+        "from each other with visible gaps between them, not touching. "
+        "A stack of three to four crossed split logs leaning together at "
+        "the ring's centre, taller than the boulders. ACTIVE BRIGHT "
+        "ORANGE-YELLOW FLAME rising from the centre of the log stack, "
+        "TALLER THAN THE LOGS THEMSELVES, the single tallest element in the "
+        "whole object. Visible embers glowing at the base of the flame, "
+        "soot-blackening on the boulders nearest the fire, scorched dark "
+        "earth visible in the gaps between boulders, roughly 1.2 metres "
+        "across the stone ring, HEIGHT ORDER FROM TALLEST TO SHORTEST: "
+        "flame, then logs, then boulders"),
+
+    # ROUND 3. Owner, looking at the assembled camp: "the wood and the fire
+    # looks like a toy". Split from the combined `camp_fire_pit` prompt
+    # above rather than tuned further -- seven attempts across two rounds
+    # already established that ring+logs+flame together in one generation
+    # never converges (a stone ring OR a log stack OR a flame survives, "
+    # never more than two at once), so the working answer stays compositional:
+    # a textured stone ring (already generated, kept), a log stack (this
+    # entry), and a flame (the next entry), placed together in-scene rather
+    # than fused. Generated ALONE, this asks the generator to spend its
+    # whole topology/texture budget on wood, which the combined prompt's
+    # earlier passes never got the chance to do -- round 2's fire-pit
+    # attempts (refine4/refine5) show a genuinely well-formed crossed log
+    # stack with real bark texture whenever a ring wasn't competing for the
+    # same triangles, which is the evidence this split is likely to work.
+    "camp_firewood": (
+        "a stack of three to four crossed SPLIT FIREWOOD LOGS leaning "
+        "together at a central point like a small teepee, ready to burn. "
+        "Rough split wood with visible grain and bark on the outer curved "
+        "faces, cut flat ends showing growth rings, natural size variation "
+        "between logs, weathered and slightly charred at the lower ends "
+        "where they would sit in ash, roughly 0.5 metres tall"),
+
+    # A static flame shape, not an effect -- Meshy generates a rigid mesh,
+    # so this asks for the kind of STYLISED SOLID flame shape stylised games
+    # use for exactly this (faceted, layered tongues, not a photoreal
+    # gas-flame silhouette), which is also what the reference board's own
+    # campfire panel actually draws. Intended to replace or sit alongside
+    # `campfire_glow.gd`'s procedural billboard flame, which the owner
+    # separately called out as reading as a toy.
+    "camp_flame": (
+        "a single stylised campfire FLAME, solid faceted shape, multiple "
+        "layered upward-curling tongues of fire like low-poly stylised "
+        "game fire, NOT a realistic photoreal gas flame and not a "
+        "particle effect -- a sculpted solid object. Bright orange-yellow "
+        "at the outer tongues shading to pale yellow-white at the core "
+        "and base, sharp angular facets rather than smooth curves, "
+        "roughly 0.6 metres tall, narrow flared base widening slightly "
+        "toward jagged tips"),
+
+    # ROUND 2. Owner: "it's missing a bottom portion basically." Round 1's
+    # AABB was 1.23 x 0.41 x 1.90m and the render showed corner posts as
+    # short stubs the frame sat almost directly on -- correct height by the
+    # numbers (a real camp bed's mattress-top-to-ground is close to 0.4m)
+    # but wrong by the READ, because nearly all of that 0.41m was mattress
+    # thickness with the actual LEG below the rail barely present. Fixed the
+    # same way as the tent above: state the leg as its own explicit
+    # fraction of the total height rather than trust "knee height off the
+    # ground" to imply visible legs on its own -- it did not.
+    "camp_bed": (
+        "small fantasy camp bed, a RECTANGULAR FRAME OF LASHED ROUND WOOD "
+        "POLES raised on FOUR TALL VISIBLE ROUND WOOD LEG POSTS at the "
+        "corners. THE LEG POSTS ARE THE TALLEST VISIBLE PART OF THE "
+        "STRUCTURE BELOW THE MATTRESS -- clearly separate cylindrical posts "
+        "reaching from the ground up to the side rails, at least as tall as "
+        "the mattress is thick, so the whole bed reads as raised well off "
+        "the ground on visible legs, not as a low pad sitting on the "
+        "ground. Thick rope-wrapped joints where each post meets the rail. "
+        "Plain unbranded dark fabric mattress filling the frame on top of "
+        "the rails, one plump stuffed pillow at the head end, blanket "
+        "corner folded back, coarse woven rope lashing visible at every "
+        "joint, weathered worn wood, roughly 2 metres long, PLAIN "
+        "UNDECORATED FABRIC WITH NO PRINT OR SYMBOL"),
 }
 
 

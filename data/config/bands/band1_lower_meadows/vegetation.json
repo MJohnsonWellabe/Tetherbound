@@ -60,6 +60,27 @@
       "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them",
       "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250).",
       "_comment_ow5c_seam": "OW5C follow-up: shifted +8 in x with south_bridge crossings[0] (WALL1 seam workaround)."
+    },
+    {
+      "order": 1000,
+      "x": 344.0,
+      "z": 935.0,
+      "radius": 9.0,
+      "_why": "BAND1-D1: the trail_camp prop cluster (props.json order 1000) and the ground its fire ring, seats and gear pile stand on. Moved from (348,919.5) r=12 with the cluster itself: the old site dropped 1.2m across the camp's own footprint (tools/_probe_camp_ground.gd) and (344,935) is the flattest shelf within 14m of the loop trail (tools/_probe_camp_flat.gd, 0.29m of relief over 8m). Radius tightened 12 -> 9 at the same time: the camp's outermost prop is 5.7m from centre, so 9 keeps a ~3m margin while letting scattered grass close back in near enough that the camp reads as a cleared spot rather than a bald patch in a field. NOTE for the coordinator: scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4), so this move does NOT invalidate the baked scatter on this branch and needs the single integration re-bake."
+    },
+    {
+      "order": 1900,
+      "x": -490.0,
+      "z": 555.0,
+      "radius": 12.0,
+      "_why": "BAND1-D1 / PW2: the elder mosshell's hollow (spawns.json order 1900) and the arena a fight with it forms in. Same reasoning as clearings 3 and 4 above -- a trainer or wild battle arena is ~11m across and forms between the player and the creature, so without this the encounter is watched through a tree. NOTE for the coordinator: like the trail_camp move, this does NOT invalidate the baked scatter on this branch, because scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4). It needs the single integration re-bake."
+    },
+    {
+      "order": 1901,
+      "x": 195.0,
+      "z": 905.0,
+      "radius": 13.0,
+      "_why": "BAND1-D1 / prompt 30: Old Bram's ground (trainers.json order 1010) and the arena his fight forms in. Same reasoning as clearings 3, 4 and 1900 -- a trainer battle arena is ~11m across and forms between the player and the creature their opponent just sent out, so without this the region's hardest optional fight is watched through a tree. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
     }
   ],
   "footprints": [

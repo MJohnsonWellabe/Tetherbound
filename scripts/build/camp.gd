@@ -14,8 +14,22 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
-const BEDROLL := "res://assets/props/quaternius_furniture/BedTwin.obj"
+## BAND1-D1: was `quaternius_furniture/BedTwin.obj` scaled to 0.45 -- an
+## indoor bed frame standing in for a bedroll, which is what was available
+## when this shipped. A real bedroll is now vendored (Kenney Survival Kit,
+## CC0, docs/ASSET_LEDGER.md) because the authored trail camp needed one, and
+## the player-built camp wanted exactly the same prop. Authored small, so its
+## scale below is 2.6 where the bed frame's was 0.45.
+## The .obj rather than the .glb sibling beside it, deliberately: `_mesh()`
+## below loads a bare Mesh, which is what Godot's OBJ import produces, while
+## a .glb arrives as a PackedScene and would not load here at all. The .glb
+## stays for `props.gd`, which instantiates scenes and keeps multi-part props
+## intact. Both are the same model from the same fetch and share the one
+## vendored `Textures/colormap.png` their MTL/glTF both point at.
+const BEDROLL := "res://assets/props/kenney_survival/bedroll.obj"
+const BEDROLL_SCALE := 2.6
 
 const FADE_SECONDS := 1.2
 
@@ -66,7 +80,17 @@ func build_real() -> void:
 func _spawn_meshes(solid: bool) -> void:
 	_ghost_meshes.clear()
 	var fire := _mesh(BONFIRE, Vector3.ZERO, 0.55)
-	var roll := _mesh(BEDROLL, Vector3(1.8, 0.0, 0.6), 0.45)
+	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
+	# believed to be one combined mesh whose flame could not be addressed --
+	# true of the OBJ file, false of what Godot imports, since the OBJ loader
+	# splits by material (BAND1-D1, tools/_probe_bonfire_fire.gd). Until this,
+	# the player-built camp's fire was a pile of unlit logs with a light
+	# floating above it, which is the same defect the authored trail camp
+	# failed a blind judgement on. Only on the real thing: the drag-around
+	# ghost is meant to read as a preview, not as a fire already burning.
+	if fire != null and solid:
+		CAMPFIRE_GLOW.ignite(fire)
+	var roll := _mesh(BEDROLL, Vector3(1.8, 0.0, 0.6), BEDROLL_SCALE)
 	if roll != null:
 		roll.rotation.y = deg_to_rad(30.0)
 	if not solid:
