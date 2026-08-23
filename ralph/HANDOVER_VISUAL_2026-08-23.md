@@ -72,11 +72,22 @@ all along. That part of the owner's directive is real and still open.
    height back to baseline −1.09. Leaves a **1.0 m standable sliver** inside the
    leaf's span, with 2.5–2.8 m of margin against both failure modes.
 
-**This is the current committed state and its WALKABILITY IS UNVERIFIED.** A 1.0
-m gap against a ~0.8 m player capsule is very tight. If `smoke_traversal`'s
-`_check_sigil_gate` shows the unlocked gate uncrossable, **revert
-`half_length` to 40.0 and `end_fade` to 14.0** — a leaky gate is far better than
-an unreachable finale, and that ordering is the whole lesson here.
+**Attempt 3 was NOT shipped.** Its walkability was never proven — the container
+restarted mid-verification — and a 1.0 m gap against a ~0.8 m player capsule is
+exactly how an unreachable finale ships. The branch was deliberately restored to
+`half_length` **40.0** (config and terrain together, from `7ab358ee`, so they
+cannot disagree): a 33.4 m gap, measured at 38.1 m along the leaf's own axis.
+Wide open, unambiguously walkable, **and still leaky**.
+
+So the owner's directive is **OPEN for this one gate**. A leaky gate is better
+than an unreachable finale; that ordering is the whole lesson here. Attempt 3's
+values (`half_length` 58.5, `end_fade` 2.0) are recorded above and are the right
+place to resume — they need one clean `smoke_traversal` run to accept or reject,
+and that run is the only thing standing between them and shipping.
+
+Note `end_fade` on the branch is **2.0**, not the 14.0 the chapter originally
+shipped with — that came from attempt 3 and was kept because it is what the
+restored bake was made from. Restoring the original taper needs a re-bake.
 
 ### The deeper problem nobody has solved
 
