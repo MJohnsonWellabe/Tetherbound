@@ -1101,7 +1101,20 @@ func _build_recovery_point() -> void:
 	_bed.position = Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z)
 	_bed.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
 	add_child(_bed)
-	_bed.call("build_real")
+	# GATE-E, two arguments that are both about this bed NOT being a player's.
+	#
+	# `player_built = false`: `build_real()` sets the chapter's
+	# `creature_bed_built` objective flag, and this bed is built with the world
+	# at boot -- so on a fresh save the tournament ladder's "Build a creature
+	# bed" line was already complete before the player owned a hammer. Measured.
+	#
+	# `set_build_index`: without one this bed sat at UNASSIGNED and
+	# `assign_creature()` refused every creature, so SG38's one recovery
+	# opportunity before the Warden opened a panel that could not rest anything.
+	# The reserved negative index is documented in creature_bed.gd -- it is in no
+	# build store, so the dismantle renumbering can never move it.
+	_bed.call("build_real", false)
+	_bed.call("set_build_index", CREATURE_BED.AUTHORED_STRONGHOLD_REST)
 	_markers["recovery"] = _bed.global_position
 
 

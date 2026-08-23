@@ -181,6 +181,8 @@ const WORLD_FLAGS := {
 	"relay_disabled": "scripts/world/tether_relay.gd (console flag)",
 	"hall_approach_open": "scripts/world/playground_world.gd (SIGIL_GATE_FLAG)",
 	"legendary_freed": "scripts/world/stronghold_climax.gd",
+	"legendary_settled": "scripts/world/stronghold_climax.gd::_settle() (either answer to the roster decision)",
+	"meadows_acknowledged": "data/dialogue/meadows_freed.json (flag:meadows_acknowledged, on every post-victory conversation's first line)",
 	# opening ladder / tournament build-up. None of these are trainer defeat
 	# flags, so `_trainer_defeat_flags()` can never see them -- real writers,
 	# just not that kind.
@@ -290,3 +292,99 @@ func test_completing_the_whole_chain_leaves_nothing_tracked() -> void:
 				% str((raw as Dictionary).get("label", "")))
 	assert_eq(log_reader.tracked_text(progression), "",
 		"the chapter's objectives are all complete and something is still tracked")
+
+
+## --- GATE-E: the finale's own tail (prompt 68's last two lines) --------------
+##
+## The chain used to stop at `legendary_freed`, which is the moment the machine
+## dies -- one flag short of the two beats prompt 68 names after it (resolve the
+## roster decision, then see what the region makes of it). A chapter whose HUD
+## goes blank at the machine tells the player the game is over while its last
+## decision is still open and its whole payoff is still unwalked. These check
+## the tail exists, is ordered, and terminates.
+
+const FINALE_TAIL := ["legendary_freed", "legendary_settled", "meadows_acknowledged"]
+const FREED_DIALOGUE := "res://data/dialogue/meadows_freed.json"
+const ACKNOWLEDGED_FLAG := "meadows_acknowledged"
+
+
+func _complete_main_up_to(flag_id: String) -> void:
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		if str(entry.get("flag_id", "")) == flag_id:
+			return
+		progression.set_flag(str(entry.get("flag_id", "")))
+
+
+func test_the_chain_does_not_end_at_the_machine() -> void:
+	var flags: Array[String] = []
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		flags.append(str((raw as Dictionary).get("flag_id", "")))
+	for flag: String in FINALE_TAIL:
+		assert_true(flags.has(flag),
+			"the finale chain has no objective waiting on '%s'" % flag)
+	assert_eq(flags.slice(flags.size() - FINALE_TAIL.size()), FINALE_TAIL,
+		"the chapter's last three objectives are not the machine, the roster decision and the walk home, in that order")
+
+
+func test_freeing_the_legendary_tracks_the_roster_decision_next() -> void:
+	_complete_main_up_to("legendary_freed")
+	progression.set_flag("legendary_freed")
+	var line: String = log_reader.tracked_text(progression)
+	assert_false(line.is_empty(),
+		"the HUD goes blank the moment the machine dies; the roster decision is still open")
+	assert_true(line.to_lower().contains("walks with you"),
+		"the beat after the machine is not the roster decision; got '%s'" % line)
+
+
+## The point of `legendary_settled` rather than `legendary_joined`: a player who
+## keeps their five and lets the legendary go has ANSWERED the decision, and the
+## chain has to move on for them exactly as it does for the player who kept it.
+func test_the_roster_beat_closes_on_the_decision_not_on_the_join() -> void:
+	_complete_main_up_to("legendary_settled")
+	progression.set_flag("legendary_settled")
+	var line: String = log_reader.tracked_text(progression)
+	assert_false(line.to_lower().contains("walks with you"),
+		"the roster objective is still tracked after the decision was made; got '%s'" % line)
+	assert_true(line.to_lower().contains("changed"),
+		"the walk home is not the beat after the roster decision; got '%s'" % line)
+	# And it must NOT be waiting on the join, which only one of the two legal
+	# answers ever sets.
+	assert_false(progression.has("legendary_joined"),
+		"this test set the join flag by accident; it is meant to prove the chain does not need it")
+
+
+func test_hearing_the_meadows_ends_the_chain() -> void:
+	for flag: String in FINALE_TAIL:
+		_complete_main_up_to(flag)
+		progression.set_flag(flag)
+	assert_eq(log_reader.tracked_text(progression), "",
+		"the chapter is over and the HUD is still tracking something")
+
+
+## The acknowledgment beat is only completable if the words actually carry the
+## flag. Five speakers, and the flag is on each one's FIRST line so a player who
+## walks off part-way has still had the beat.
+func test_every_post_victory_conversation_sets_the_acknowledgment_flag() -> void:
+	var file := FileAccess.open(FREED_DIALOGUE, FileAccess.READ)
+	assert_true(file != null, "%s is missing" % FREED_DIALOGUE)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "%s is not a JSON object" % FREED_DIALOGUE)
+	var conversations: Dictionary = (parsed as Dictionary).get("conversations", {})
+	assert_true(conversations.size() >= 4,
+		"only %d post-victory conversations; the acknowledgment has almost nowhere to happen"
+			% conversations.size())
+	for id: String in conversations:
+		var lines: Array = (conversations[id] as Dictionary).get("lines", [])
+		assert_false(lines.is_empty(), "post-victory conversation '%s' has no lines" % id)
+		var first: Variant = lines[0]
+		var effects: Array = []
+		if first is Dictionary:
+			effects = ((first as Dictionary).get("effects", []) as Array).duplicate()
+			if str((first as Dictionary).get("effect", "")) != "":
+				effects.append(str((first as Dictionary)["effect"]))
+		assert_true(effects.has("flag:%s" % ACKNOWLEDGED_FLAG),
+			("post-victory conversation '%s' does not set '%s' on its first line; a player who hears "
+			+ "only that speaker can never close the chapter's last objective") % [id, ACKNOWLEDGED_FLAG])

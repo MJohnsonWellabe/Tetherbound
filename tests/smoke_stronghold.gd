@@ -243,6 +243,29 @@ func _the_recovery_point_revives_and_heals(hold: Node3D) -> void:
 	if bed.get_node_or_null(^"Interactable") == null:
 		_fail("the recovery point offers no interaction; it cannot be used")
 
+	# GATE-E, two things this file used to take on trust about the authored bed
+	# and both of which were wrong on `main`.
+	#
+	# It is a `creature_bed.gd`, and that class does two things a bed the PLAYER
+	# places should do and this one must not: it announces itself as the
+	# chapter's "Build a creature bed" objective, and it refuses every creature
+	# until something hands it a build index. The stronghold's bed is built with
+	# the world at boot, so the first cost `creature_bed_built` on frame one of
+	# a brand-new save, and the second left SG38's one recovery opportunity
+	# opening a panel that could not rest anything.
+	#
+	# `smoke_gateb_flags.gd` asserts the opposite of the first — that
+	# `build_real` DOES set the flag — and stayed green throughout, because it
+	# builds its bed on a bare FlatWorld with no stronghold in it. The real
+	# world is the only place either defect is visible.
+	var progression := _progression_store()
+	if progression != null and bool(progression.call("has", "creature_bed_built")):
+		_fail("the stronghold's own bed set 'creature_bed_built' at boot; a fresh save starts with "
+			+ "the tournament ladder's bed objective already complete")
+	if int(bed.call("build_index")) == -1:
+		_fail("the recovery point has no bed index, so assign_creature() refuses every creature; "
+			+ "the one rest before the Warden does nothing")
+
 	var cfg := _progression_config()
 	var creature: RefCounted = TRAINERS.creature_for({"species": "mudsnout", "level": 12})
 	if creature == null:
@@ -391,6 +414,11 @@ func _push(player: CharacterBody3D, direction: Vector3) -> void:
 		player.move_and_slide()
 		await physics_frame
 	player.set_physics_process(true)
+
+
+func _progression_store() -> RefCounted:
+	var game := root.get_node_or_null(^"/root/Game")
+	return game.get("progression") as RefCounted if game != null else null
 
 
 func _progression_config() -> Dictionary:

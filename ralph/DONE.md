@@ -4,6 +4,79 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 
+## GATE-E-LOGIC — the finale walked end to end, and the three defects that found
+
+`tests: full suite 1362 tests, 830328 assertions, 0 failed · tests/smoke_gate_e_finale.gd (new, 2 consecutive green runs, ~5m20s each) · smoke_stronghold.gd green · smoke_boss.gd green` · `area: tests/, scripts/build/creature_bed.gd, scripts/ui/combat_hud.gd, scripts/world/stronghold*.gd, data/progression/objectives.json, data/dialogue/meadows_freed.json`
+
+Prompts 69 (+34/46/67/68). **Most of the finale was already built and this
+entry should not be read as if it were not.** The Warden, the reveal readout,
+the lever, the freeing, the voluntary join, the `pending_catch` hand-off to
+R4.10's ceremony, SG44's rift, SG46's healing and the post-victory villager
+dialogue are all on `main` and all correct. What was missing was the JOIN
+between them and the two beats after it.
+
+### What was actually missing
+
+1. **Nothing walked the finale continuously.** `smoke_stronghold.gd` proves the
+   route and fights nobody, by design. `smoke_boss.gd` teleports in front of
+   the Warden with a level-1 starter. The gauntlet, the recovery point, the
+   shutter after a real fight, the walk between rooms, and everything after the
+   ceremony were covered by neither. `tests/smoke_gate_e_finale.gd` is that run:
+   arrive with a full five -> walk in from the entrance -> three gauntlet fights
+   in their own rooms -> rest a fainted creature at the recovery point -> elite
+   -> shutter lifts -> read the reveal -> Warden -> lever -> freed -> full belt
+   forces the release ceremony -> decision recorded -> region answers ->
+   post-victory villager -> objective chain terminates. Added to
+   `verify-gate-evidence-shard`.
+
+2. **The objective chain stopped one beat before the chapter did** (prompt 68's
+   last two finale lines). It ended at `legendary_freed`, so the HUD went blank
+   while the roster decision was still open and the whole payoff still unwalked.
+   Two entries added: `legendary_settled` and `meadows_acknowledged`.
+   `legendary_settled` is a NEW flag and deliberately not `legendary_joined` —
+   keeping five and letting the legendary go is a legal ending under the hard
+   cap, and keying the chain on the join would strand that player forever.
+   `meadows_acknowledged` is carried by every conversation in
+   `meadows_freed.json`, on its FIRST line, so no villager is a required stop.
+
+### Three real defects the run found, all on `main`, none of them new
+
+- **Every level-up in the chapter aborted its own announcement.**
+  `combat_hud.gd::_set_xp_line` read `creature.get("bond_nodes")`; that is a
+  METHOD, so `get()` returned a Callable and `int(Callable)` killed the function
+  with "Nonexistent 'int' constructor" — the player never saw the line.
+  `test_level_up_announcement.gd` asserted on the SOURCE TEXT of that function
+  and stayed green through all of it (prompt 33's exact shape). Fixed, and the
+  test now also executes the builder.
+- **The stronghold's recovery point could not rest anything.** The authored bed
+  never got a build index, so `assign_creature()` refused every creature and
+  SG38's one pre-Warden recovery opened a panel that did nothing.
+  `creature_bed.gd` now documents its index namespace and reserves negatives for
+  authored beds.
+- **`creature_bed_built` was set on frame one of every new save**, by that same
+  bed, because `build_real()` sets the chapter's bed objective — so the
+  tournament ladder's "Build a Creature Bed" line was complete before the player
+  had a hammer. `build_real(player_built := true)` now takes the answer;
+  the stronghold passes false. `smoke_gateb_flags.gd` asserts the opposite and
+  stayed green because it builds its bed on a bare FlatWorld with no stronghold
+  in it — the real world was the only place either bed defect was visible, which
+  is the argument for this whole file.
+
+### Prompt 34 (boss verification flake)
+
+Not reproduced. Its root cause — the approach gate assuming two bodies can close
+to a guessed 2.0m — was found and fixed on `main` before this lane, and the new
+finale test reuses the same body-radius floor for all four of its fights. Two
+consecutive green finale runs and a green `smoke_boss.gd` on a contended box.
+The `|| retry` on `smoke_boss.gd` in `verify-combat-shard` is left alone: it is
+the shard's uniform contention policy, not a mask for this bug.
+
+### Not touched
+
+Stronghold materials/sky planes (prompts 21/22, owned elsewhere). No new mesh,
+no generation, no sixth slot, no storage.
+
+
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
