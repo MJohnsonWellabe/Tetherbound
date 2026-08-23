@@ -368,3 +368,60 @@ file this lane owns. It is a content/systems gap: against `palworld-01`,
 `-02` and `-03`, which all carry creatures in the midground, and against the
 project's own key art, which puts a creature beside the trainer. Recorded here
 for the coordinator rather than acted on.
+
+## A measurement trap that would have declared convergence falsely
+
+`frame_stats.py`'s `nearL` is `luma[int(h * 0.85):, :].mean()` — the bottom
+**15%** of the frame, and nothing else.
+
+In this survey the camera stands ON the path, 2.0m up, aimed at a point 4.5m
+ahead at ground level. So the bottom 15% of every ground frame is the worn dirt
+directly under the player — ground the `path_factor` gate deliberately keeps
+clear. **`nearL` is measuring the path.** It cannot move when groundcover
+beside the path changes, and it did not: it is identical to three decimal
+places across all three rounds on almost every frame (band1-day 0.280,
+band3-day 0.262, band4-day 0.115) while the frames visibly changed and the
+placement count went from 143,630 to 405,101.
+
+This matters beyond bookkeeping. `ralph/conventions.md`'s stopping rule is two
+consecutive rounds that name no new defect **and move no measured axis**, and
+it names near-field luminance as one of those axes. On this survey's own
+framing that axis is structurally incapable of moving, so a round that changed
+the near field a great deal would still read as flat and the pass would stop
+early on a false signal. Recorded so it does not.
+
+`tools/_cover_stats.py` is the supplementary measure this lane used instead:
+the share of pixels in rows 50-90% — the mid-to-near ground either side of the
+path, where the cover actually sits — that fall in the green-yellow band above
+a saturation floor. It is a proxy, not a segmentation, and only round-over-round
+deltas on identical viewpoints mean anything.
+
+| day frame | baseline | round 1 | round 2 |
+|---|---|---|---|
+| band1 opening | 7.022% | 7.022% | 7.003% |
+| band2 stone-root | 3.113% | 3.112% | 3.280% |
+| band3 crossing | 4.927% | 5.028% | 4.927% |
+| band4 ironwood | 3.274% | 3.201% | 3.500% |
+| band5 approach | 0.658% | 0.668% | **2.391%** |
+| **mean** | 3.799% | 3.806% | **4.220%** |
+
+Round 1: +0.2%, i.e. nothing. Round 2: +10.9% mean, with band 5 more than
+tripling off the lowest base in the set. Band 1 is unchanged by construction
+(inside the origin square). Band 3 did not move at all.
+
+**+11% of visible cover for +86% of placements is a poor return, and it points
+at the next lever rather than at more density.** Grass renders at `scale_min`
+0.14 to `scale_max` 0.42 on meshes measuring 1.33-1.87m tall, so a tuft is
+0.26-0.79m — ankle to knee against the 1.80m trainer. That is realistic, and it
+is also why adding instances at distance buys so few pixels: past ~15m a 0.5m
+tuft is a few pixels tall, and past `lod_range` 55m it is not drawn at all.
+
+The build already demonstrates the alternative. `water.json`'s `river.reeds`
+uses **the same two Grass_Wispy meshes** as the drygrass layer at `scale_min`
+0.6 / `scale_max` 1.4 — 1.00-2.34m, knee to overhead — in tight 3.4m clumps.
+That is the single biggest reason the river bank reads as a surface with
+vegetation on it while the walk bands read as a texture. Same art, 4-5x the
+scale.
+
+So the round-3 lever is grass SIZE, not more grass. It costs no instances and
+is checkable against the rubric's own scale criterion.
