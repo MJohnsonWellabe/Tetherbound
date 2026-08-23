@@ -22,6 +22,38 @@ extends RefCounted
 const MODULES_DIR := "res://assets/buildings/quaternius_medieval"
 const CONFIG_PATH := "res://data/config/building_prefabs.json"
 
+## VISUAL-CORRIDOR fix (2026-08-23): applied to EVERY prefab's own retint
+## dict at template-build time (see `_build_template`'s call to
+## `_apply_retint` below), not opt-in per recipe. `MI_RockTrim` ships with no
+## `metallicFactor` in the kit's glTF export -- glTF's own spec default
+## (1.0, full metal) fills the gap, the exact same missing-factor shape
+## `MI_Plaster` had (this file's own top comment, and
+## `build_material_finish.gd`'s BUILD-KIT-2 header, both independently found
+## the same kit-export gap on a different material). A full-metal surface
+## with no reflection probes (Compatibility renderer, realtime lighting
+## only) just mirrors the sky, which is why the low RockTrim border skirt
+## "every building sits on" (this file's own vocabulary comment above) reads
+## as ice-blue chrome rather than stone -- confirmed by direct load
+## (`Prop_ExteriorBorder_Straight1.gltf`: metallic=1.0, albedo (1,1,1,1)
+## white) on the exact module the quarry_foundation ramp uses, the worst
+## instance a blind critic named ("ramp slabs read literally as slabs of
+## ice"). EV6-remainder-well-rocktrim-shadow already diagnosed and fixed
+## this bug once, but only for the `well` recipe, which happens to carry its
+## own `retint` block; every OTHER MI_RockTrim user (the workshop and every
+## cottage's border skirt, quarry_foundation, ranger_station, mill, the
+## farmhouse shell, the inn...) never got it, because `_apply_retint` only
+## ever touched a recipe's own authored dict. `structure.stone_grey`
+## (`data/config/palette.json`) is this project's already-authored warm-grey
+## stone value -- reused here rather than inventing a new one, per that
+## file's own job ("one source for materials... so they cannot drift
+## apart"); the well keeps its own paler `#f0e2c4` (a deliberate, well-
+## specific warm tone from its own three-round history), since a recipe's
+## own retint entry for a material still wins over this baseline (see
+## `_merge_baseline`).
+const BASELINE_RETINT := {
+	"MI_RockTrim": {"color": "#b4b1a6", "metallic": 0.0},
+}
+
 var _recipes: Dictionary = {}
 var _templates: Dictionary = {}
 ## (material name, colour) -> tinted duplicate, shared across every surface
@@ -227,11 +259,25 @@ func _build_template(prefab_name: String) -> Node3D:
 		var s := float(spec.get("scale", 1.0))
 		node.scale = Vector3.ONE * s
 		root.add_child(node)
-	_apply_retint(root, recipe.get("retint", {}))
+	_apply_retint(root, _merge_baseline(recipe.get("retint", {})))
 	if _holder != null:
 		root.visible = false
 		_holder.add_child(root)
 	return root
+
+
+## `BASELINE_RETINT` underneath, the recipe's own `retint` block on top --
+## a recipe that names the same material (only `well` does today, for
+## `MI_RockTrim`) is authoring a deliberate choice and wins; every other
+## recipe gets the baseline correction it was never asked to opt into.
+## Applied once per prefab at template-build time (`_build_template` is the
+## only caller), not per-instance -- `instantiate()`'s own `duplicate()`
+## carries the corrected surface override forward for free.
+func _merge_baseline(recipe_retint: Dictionary) -> Dictionary:
+	var merged: Dictionary = BASELINE_RETINT.duplicate(true)
+	for key in recipe_retint:
+		merged[key] = recipe_retint[key]
+	return merged
 
 
 ## Per-placement retint (village.json's own `retint` key) — applied to a

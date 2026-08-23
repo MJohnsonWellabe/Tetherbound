@@ -301,6 +301,21 @@ func _arrive_ground(entry: Array) -> Dictionary:
 	var eye_xz: Vector2 = entry[1]
 	var aim_xz: Vector2 = entry[2]
 	var forward := (aim_xz - eye_xz).normalized()
+	# VISUAL-CORRIDOR fix: two of these authored eye coordinates land dead-
+	# centre on a captain NPC's own capsule collider -- `captain_field` at
+	# (170, 5590) is this file's own "ground-04-band4-ironwood" eye, and
+	# `captain_ridge` at (-280, 6460) (`data/config/bands/
+	# band4_upper_meadows_ironwood/trainers.json`) is close enough to
+	# band4's own AHEAD-projected target/camera path to graze the same body.
+	# `tools/_probe_corridor_survey.gd`'s own header already diagnosed the
+	# exact failure this produces: a player capsule spawned centred on
+	# another capsule has no lateral escape vector, so Godot's depenetration
+	# shoves it straight UP the shared axis instead of sideways -- "the
+	# trainer standing on the NPC's head" a blind critic saw in all three
+	# band-4 ground frames. Stepping the seat aside before framing (same
+	# `_clear_of_bodies` that tool already proved) fixes the HARNESS choosing
+	# an occupied seat; it is not a game bug to route around any other way.
+	eye_xz = _clear_of_bodies(eye_xz, forward, _surface(eye_xz))
 	var cam_xz := eye_xz - forward * GROUND_BACK
 	var target_xz := eye_xz + forward * GROUND_AHEAD
 
@@ -552,6 +567,61 @@ func _surface(at: Vector2) -> float:
 			at.x, at.y, analytic])
 		return analytic
 	return float((hit["position"] as Vector3).y)
+
+
+## Ported from `tools/_probe_corridor_survey.gd::_clear_of_bodies` (see that
+## file's own header comment for the full diagnosis) rather than duplicated
+## by rewriting: this harness places the player at an authored `eye_xz` the
+## same way corridor's `_shoot` places it at an authored `eye`, so the same
+## occupied-seat failure and the same fix apply unchanged. Steps the seat
+## sideways, perpendicular to the walking direction, until the player's own
+## capsule footprint is clear of any body that is not Terrain3D's own
+## collision (a slope graze is not an occupied seat).
+func _clear_of_bodies(eye: Vector2, toward: Vector2, ground: float) -> Vector2:
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	if space == null:
+		return eye
+	var aside := Vector2(-toward.y, toward.x).normalized()
+	for attempt in 4:
+		var candidate := eye if attempt == 0 else eye + aside * 2.0 * float(attempt)
+		var query := PhysicsShapeQueryParameters3D.new()
+		var capsule := CapsuleShape3D.new()
+		capsule.radius = 0.6
+		capsule.height = 2.6
+		query.shape = capsule
+		query.transform = Transform3D(Basis(), Vector3(candidate.x, ground + 1.3, candidate.y))
+		query.collide_with_bodies = true
+		query.collide_with_areas = false
+		if _player != null:
+			query.exclude = [_player.get_rid()]
+		var blocker := ""
+		for hit: Dictionary in space.intersect_shape(query, 4):
+			var body: Node = hit.get("collider") as Node
+			if body == null or _under_terrain(body):
+				continue
+			blocker = body.name
+			break
+		if blocker == "":
+			if attempt > 0:
+				print("  NOTE (%.0f,%.0f) was occupied by an NPC body; landing moved %.1fm aside" % [
+					eye.x, eye.y, (candidate - eye).length()])
+			return candidate
+	return eye
+
+
+## Terrain3D's own collision is a StaticBody3D too, and the occupancy
+## capsule's lower edge can graze a slope. Only a body OUTSIDE the Terrain
+## node counts as something worth stepping around.
+func _under_terrain(body: Node) -> bool:
+	var terrain: Node = _world.get_node_or_null(^"Terrain")
+	if terrain == null:
+		return false
+	var node: Node = body
+	while node != null:
+		if node == terrain:
+			return true
+		node = node.get_parent()
+	return false
 
 
 func _hide_huds() -> void:
