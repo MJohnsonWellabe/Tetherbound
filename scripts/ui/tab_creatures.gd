@@ -169,7 +169,12 @@ var _detail_type_icon: TextureRect = null
 var _detail_type_label: Label = null
 var _detail_hp: Label = null
 var _detail_stats: Label = null
-var _detail_appraisal: Label = null
+var _detail_appraisal_label: Label = null
+## Drawn pips, not a typed string -- see `APPRAISAL_TOTAL`'s own header.
+## `queue_redraw()`'d from `_describe()`; the star count it should paint lives
+## in `_appraisal_stars` since a `Control.draw` callback takes no arguments.
+var _appraisal_pips: Control = null
+var _appraisal_stars: int = 0
 var _detail_traits: Label = null
 var _detail_xp: Label = null
 var _detail_xp_bar: ProgressBar = null
@@ -530,10 +535,37 @@ func _build_detail() -> Control:
 	_detail_stats.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	panel.add_child(_detail_stats)
 
-	_detail_appraisal = Label.new()
-	_detail_appraisal.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_detail_appraisal.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	panel.add_child(_detail_appraisal)
+	var appraisal_row := HBoxContainer.new()
+	appraisal_row.add_theme_constant_override("separation", 8)
+	panel.add_child(appraisal_row)
+
+	_detail_appraisal_label = Label.new()
+	_detail_appraisal_label.text = "Appraisal"
+	_detail_appraisal_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_appraisal_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	appraisal_row.add_child(_detail_appraisal_label)
+
+	_appraisal_pips = Control.new()
+	_appraisal_pips.custom_minimum_size = Vector2(
+		APPRAISAL_PIP_GAP * float(APPRAISAL_TOTAL - 1) + APPRAISAL_PIP_RADIUS * 2.0,
+		APPRAISAL_PIP_RADIUS * 2.0
+	)
+	_appraisal_pips.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_appraisal_pips.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# `build()` (menu reopen) frees the old detail column and makes a fresh
+	# one, but the OLD Control's own `queue_free()` is deferred -- it can
+	# still fire its own `draw` signal later this same frame, after
+	# `_appraisal_pips` above has already been reassigned to the NEW one.
+	# A callback that read the shared `_appraisal_pips` var would then call
+	# `draw_circle` on the NEW control while the OLD one is the one actually
+	# mid-draw ("Drawing is only allowed inside this node's `_draw()`"),
+	# because CanvasItem's draw-allowed flag is per-instance and the two
+	# stopped being the same instance. The lambda captures THIS specific
+	# control by value instead, so a stale signal from a not-yet-freed old
+	# row always draws on itself, never on its replacement.
+	var pips := _appraisal_pips
+	pips.draw.connect(func() -> void: _draw_appraisal_pips(pips))
+	appraisal_row.add_child(_appraisal_pips)
 
 	_detail_traits = Label.new()
 	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -768,13 +800,24 @@ func _build_move_row() -> Array:
 	return [icon, name_label, tag_label, sub_label, box]
 
 
-## A `total`-character fill bar for the appraisal line — `stars` of `*`,
-## the rest `-`. Plain ASCII rather than a unicode star glyph: kenney_future
-## is a display font with no confirmed coverage for U+2605, and a tofu box
-## in place of the rating would be worse than an honest asterisk.
-func _fill_bar(stars: int, total: int = 5) -> String:
-	var filled := clampi(stars, 0, total)
-	return "*".repeat(filled) + "-".repeat(total - filled)
+## Blind-judge pass: "[***--]" read as ASCII debug styling rather than a
+## rating. Draws `_appraisal_stars` filled circles out of `APPRAISAL_TOTAL`,
+## the rest hollow -- `bond_meter.gd`'s own node-line idiom for the same "N of
+## five" shape this screen already uses one row up, not a second typed
+## convention beside it. No unicode star glyph either: kenney_future has no
+## confirmed coverage for U+2605, and a drawn circle sidesteps that gap
+## instead of risking a tofu box.
+## `control`: the specific pips Control to draw on, passed by the caller's
+## closure rather than read off `_appraisal_pips` here -- see that var's own
+## build-site comment for why a rebuild makes those two able to disagree.
+func _draw_appraisal_pips(control: Control) -> void:
+	var y := APPRAISAL_PIP_RADIUS
+	for i in APPRAISAL_TOTAL:
+		var center := Vector2(APPRAISAL_PIP_RADIUS + APPRAISAL_PIP_GAP * float(i), y)
+		if i < _appraisal_stars:
+			control.draw_circle(center, APPRAISAL_PIP_RADIUS, UITokens.TEAL)
+		else:
+			control.draw_arc(center, APPRAISAL_PIP_RADIUS, 0.0, TAU, 16, UITokens.BORDER, 2.0, true)
 
 
 func _hairline() -> Control:
@@ -973,7 +1016,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_type_label.text = "Nothing here yet."
 		_detail_hp.text = ""
 		_detail_stats.text = ""
-		_detail_appraisal.text = ""
+		_appraisal_stars = 0
+		_appraisal_pips.queue_redraw()
 		_detail_traits.text = ""
 		_detail_xp.text = ""
 		_detail_xp_bar.value = 0.0
@@ -1026,9 +1070,9 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	]
 
 	# GAME_DESIGN.md 11: "show appraisal through stars/bars, not exact IV
-	# numbers" — a five-character fill bar, never the raw 0.0-1.0 roll.
-	var overall: int = int(creature.call("overall_appraisal_stars", cfg))
-	_detail_appraisal.text = "Appraisal  [%s]" % _fill_bar(overall)
+	# numbers" — drawn pips (`_draw_appraisal_pips`), never the raw 0.0-1.0 roll.
+	_appraisal_stars = int(creature.call("overall_appraisal_stars", cfg))
+	_appraisal_pips.queue_redraw()
 
 	var primary := str(creature.get("trait_primary"))
 	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))
