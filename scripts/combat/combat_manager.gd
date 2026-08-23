@@ -670,7 +670,22 @@ func _resolve_player_strike() -> void:
 	var vfx: Dictionary = _pending_move.get("vfx", {}) as Dictionary
 	var tint: Variant = Color(str(vfx["colour"])) if vfx.has("colour") else null
 	var host: Node = _arena if _arena != null else _player.get_parent()
-	var shot := PROJECTILE.launch(host, origin, target, vfx)
+	# The bolt LEAVES the creature rather than starting inside it.
+	#
+	# `origin` is the body's centre, which is correct for `move_connects` above
+	# and wrong for the thing the player watches: spawned there, the first third
+	# of every flight is buried in the caster's own shell, and at the distance
+	# the AI actually holds station that is most of the visible travel. A blind
+	# round watching a bolt that had finally been made to render at all still
+	# read it as a streak lying on the creature's back.
+	#
+	# Deliberately a SEPARATE value from `origin`. Moving `origin` itself would
+	# move the point `move_connects` measures reach from, which is a change to
+	# whether attacks land -- presentation must not reach into the hit math.
+	var muzzle := origin
+	if _ally_body.has_method("body_radius"):
+		muzzle = origin + facing * float(_ally_body.call("body_radius"))
+	var shot := PROJECTILE.launch(host, muzzle, target, vfx)
 	if shot != null:
 		var landing: Vector3 = target
 		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint))

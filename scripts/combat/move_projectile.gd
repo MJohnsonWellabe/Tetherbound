@@ -104,10 +104,13 @@ func _ready() -> void:
 	#   * MIX, not ADD -- `telegraph_glow.gd` states the reason plainly:
 	#     "additive renders at a fraction of its strength under the
 	#     Compatibility renderer".
-	#   * `no_depth_test` TRUE, the same reversal `impact_flash.gd` made after a
-	#     blind critic. It matters more here than there: the AI holds station
-	#     about 2m away, so the bolt spends its whole flight inside the space
-	#     between two bodies that are already interpenetrating.
+	#   * `no_depth_test` stays FALSE, unlike `impact_flash.gd`. Tried true and
+	#     backed it out against the frame: MIX alone is what made the bolt
+	#     render, and with depth testing off the bolt painted straight over the
+	#     caster's shell -- a pale streak lying on the creature's back rather
+	#     than an object in the world. A point burst can afford to draw through
+	#     geometry; a travelling object cannot, because it is the one thing that
+	#     has to look like it is IN the scene.
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -115,7 +118,7 @@ func _ready() -> void:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.vertex_color_use_as_albedo = true
 	material.disable_receive_shadows = true
-	material.no_depth_test = true
+	material.no_depth_test = false
 	_body.material_override = material
 	add_child(_body)
 	_redraw(0.0)

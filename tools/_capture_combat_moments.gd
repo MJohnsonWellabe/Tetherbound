@@ -681,7 +681,14 @@ func _run_elite_encounter() -> void:
 		scale = float(wild.call("body_scale"))
 	elif wild.get("body_scale") != null:
 		scale = float(wild.get("body_scale"))
-	var offset := wild.global_position.distance_to(ELDER_CENTRE)
+	# HORIZONTAL distance. `ELDER_CENTRE`'s y is the config's placeholder 0, not
+	# ground height, and the elder actually stands at y = -13.1 -- so a
+	# straight-line distance_to() reported "13.1m off the elder's centre" for a
+	# creature standing essentially ON its own spawn point. That number is what
+	# the old proximity-only test rejected the elder for on every previous run.
+	var flat := wild.global_position
+	flat.y = 0.0
+	var offset := flat.distance_to(Vector3(ELDER_CENTRE.x, 0.0, ELDER_CENTRE.z))
 
 	var display_name := "?"
 	var instance: Variant = wild.get("instance")
