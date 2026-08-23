@@ -592,6 +592,7 @@ func _build_mound() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(mound.get("seed", 63220))
 	var sink := float(mound.get("sink_m", 1.0))
+	var tint := Color(str(mound.get("tint", "#ffffff")))
 	var skip_front := float(mound.get("skip_front_m", 9.0))
 	var mouth_z := _mouth_outer_z()
 
@@ -638,7 +639,9 @@ func _build_mound() -> void:
 						lerpf(min_z, max_z, t))
 				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
 					continue
-				_place_rock(holder, loaded, rng, at, perimeter_scale, sink)
+				_place_rock(holder, loaded, rng, at, perimeter_scale, sink, tint)
+
+	_build_site_skirt(holder, mound, rng)
 
 	# And the roofs: one grid per chamber, at that chamber's own ceiling.
 	var roof_spacing := maxf(float(mound.get("roof_spacing_m", 7.0)), 1.0)
@@ -658,13 +661,87 @@ func _build_mound() -> void:
 					centre.z + size.y * (float(iz) / float(steps_z) - 0.5))
 				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
 					continue
-				_place_rock(holder, loaded, rng, at, roof_scale, sink)
+				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint)
+
+
+## Ground cover for the ground this site cleared.
+##
+## `_clear_the_ground_the_cave_stands_on()` takes every scattered tree, rock
+## and grass tuft inside the site radius, because otherwise they stand in the
+## cave. What it leaves is a bare ring, and the first blind pass named ground
+## density as the single loudest gap between these frames and the references.
+## So the site plants its own: broken rock and low cover banked against the
+## outcrop, thinning with distance, densest where debris and shade would put
+## it. Deterministic from the mound's own seed, and never collidable -- a
+## pebble that stops a player is a bug, and the cave's walls already do the
+## stopping that matters.
+func _build_site_skirt(holder: Node3D, mound: Dictionary, rng: RandomNumberGenerator) -> void:
+	var models: Array = mound.get("skirt_models", [])
+	var count := int(mound.get("skirt_count", 0))
+	if models.is_empty() or count <= 0:
+		return
+	var loaded: Array[PackedScene] = []
+	for path: Variant in models:
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	if loaded.is_empty():
+		return
+	var reach := float(mound.get("skirt_reach_m", 30.0))
+	var scale_range: Array = mound.get("skirt_scale", [0.7, 2.0])
+	var low := float(scale_range[0])
+	var high := float(scale_range[1])
+	var planted := 0
+	for i in count:
+		# Weighted toward the outcrop: sqrt would spread evenly over the disc,
+		# so this deliberately does NOT use it -- what reads as a rock skirt is
+		# thick at the foot of the rock and thin at the edge of the clearing.
+		var distance: float = reach * pow(rng.randf(), 1.7)
+		var angle := rng.randf() * TAU
+		var local := Vector3(sin(angle) * distance, 0.0, cos(angle) * distance)
+		# Nothing inside the cave's own footprint, and nothing in the doorway.
+		if _inside_footprint(local) or (local.z < _mouth_outer_z() + 5.0 and absf(local.x) < 4.0):
+			continue
+		var ground := _site_ground(local)
+		if is_nan(ground):
+			continue
+		var art: Node3D = loaded[rng.randi() % loaded.size()].instantiate() as Node3D
+		if art == null:
+			continue
+		art.position = Vector3(local.x, ground - 0.08, local.z)
+		art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
+		art.scale = Vector3.ONE * rng.randf_range(low, high)
+		holder.add_child(art)
+		planted += 1
+	if planted > 0:
+		print("[warrens] planted %d pieces of ground cover around the site" % planted)
+
+
+## Is this local point over one of the cave's own rooms?
+func _inside_footprint(local: Vector3) -> bool:
+	for rect: Array in _footprint:
+		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
+				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+			return true
+	return false
+
+
+## Terrain height under a LOCAL point, in this node's own local Y -- the
+## meadow outside the cave, not the cave floor.
+func _site_ground(local: Vector3) -> float:
+	if _world == null or not _world.has_method("ground_height_at"):
+		return NAN
+	var at := to_global(Vector3(local.x, 0.0, local.z))
+	var ground := float(_world.call("ground_height_at", at.x, at.z))
+	if is_nan(ground):
+		return NAN
+	return ground - global_position.y
 
 
 ## One boulder. `at.y` is the height its BASE should sit around; `sink` pulls
 ## it down into whatever it is standing on so there is no seam under it.
 func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGenerator,
-		at: Vector3, scale_range: Array, sink: float) -> void:
+		at: Vector3, scale_range: Array, sink: float, tint: Color) -> void:
 	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
 	if art == null:
 		return
@@ -681,6 +758,34 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 		rng.randf_range(-PI, PI),
 		rng.randf_range(-0.18, 0.18))
 	holder.add_child(art)
+	_tint_rock(art, tint)
+
+
+## The nature pack's rocks ship a cool mint-grey. Beside this cave's own warm
+## dark stone that read, to a blind critic, as "a heap of enormous cabbages" --
+## the outcrop and the cave it dresses have to be made of the same thing. The
+## albedo is MULTIPLIED rather than replaced so the model keeps its own shading
+## and texture variation, and each source material is duplicated once and
+## cached, so a hundred boulders sharing one material still cost one.
+func _tint_rock(node: Node, tint: Color) -> void:
+	if node is MeshInstance3D:
+		var mesh_instance := node as MeshInstance3D
+		var mesh := mesh_instance.mesh
+		if mesh != null:
+			for surface in mesh.get_surface_count():
+				var source: Material = mesh_instance.get_active_material(surface)
+				if source == null:
+					continue
+				var key := "%s#%d" % [str(source.resource_path), source.get_instance_id()]
+				if not _materials.has(key):
+					var copy: StandardMaterial3D = source.duplicate() as StandardMaterial3D
+					if copy == null:
+						continue
+					copy.albedo_color = copy.albedo_color * tint
+					_materials[key] = copy
+				mesh_instance.set_surface_override_material(surface, _materials[key])
+	for child in node.get_children():
+		_tint_rock(child, tint)
 
 
 ## The cave's authored props: crates, a barrel, a pickaxe, a bag, a tipped

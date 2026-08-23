@@ -17,8 +17,17 @@ prompt 63 asks for inside the cave, named and enlarged the guardian, put the
 Tuskroot lead on the heartstone's pickup line, and closed the test gap that let
 it ship. `vegetation.gd::clear_area()` is new and lets the site clear its own
 doorway at build time; it is NOT the bake-fingerprint fix and goes quiet once
-the coordinator re-bakes. Blind visual pass: seven frames in `shots/warrens_63/`,
-deliberately unjudged — the coordinator dispatches the critic.
+the coordinator re-bakes. Blind visual pass: two independent rounds, both recorded. Round 1 was largely
+a verdict on the capture harness (a player parked under the world was tinting
+every frame with its own damage vignette; interiors shot with no torch in a
+cave that is dark on purpose) and found one real defect this lane had shipped
+blind: an ironwood harvest node standing in the cave doorway. Round 2, on
+fixed frames, still answers NO to both bar questions, and what it names is a
+corridor-wide material set, the guardian's creature art (which CLAUDE.md
+forbids this lane from touching) and scatter density (coordinator's). NOT
+converged, deliberately, with the remainder escalated rather than papered over.
+Density request for band 2: 0.05 -> 0.09, reversing the previous round's "no
+request" on evidence it did not have.
 
 ## BAND2-63 — finished Quarry / Burrow Warrens (Gate D2)
 

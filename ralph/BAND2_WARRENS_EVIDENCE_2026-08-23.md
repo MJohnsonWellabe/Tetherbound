@@ -146,33 +146,94 @@ case is trusted here. **This is not the fingerprint fix and does not replace
 it.** It touches only collidable layers, it runs every boot, and when the
 re-bake lands it has nothing left to remove.
 
-## Visual state — frames produced, NOT judged
+## Visual state — two blind rounds, judged by an independent critic
 
-`tools/capture_warrens_63.gd` (new) renders seven frames to `shots/warrens_63/`:
-two exterior stands found by measurement rather than guessed (the ring is cast
-at the mound and only stands that can actually see it are kept — hand-picked
-cameras ended up inside hillsides twice), the mouth, the hall dressing from two
-angles, the den with the guardian, and the den dressing.
+`tools/capture_warrens_63.gd` renders seven frames to `shots/warrens_63/`: two
+exterior stands found by measurement (the ring is cast at the mound and only
+stands that can see it are kept), the mouth, the hall dressing from two angles,
+the den with the guardian, and the den dressing. Both rounds were judged by an
+independent critic that never saw this branch, this report, or a word about
+what had changed — only the frames, the contact sheet and the two references
+`ralph/conventions.md` names.
 
-Two things were changed off the first capture round, both structural rather
-than aesthetic, and both recorded so the critic knows what they are looking at:
-the ceilings came down 0.6–1.2 m, because at this site every metre of ceiling
-is a metre of grey slab on the skyline; and the cave wears an outcrop of
-deterministic boulders in three courses from the nature family the corridor is
-already scattered with, because an undressed six-metre rectangular mass in a
-meadow is what the first frames showed.
+**Round 1 was mostly a verdict on my own harness, which is worth writing down
+as the lesson it is.** Three of its findings were capture bugs, not the world:
 
-**No verdict here.** `ralph/conventions.md` forbids grading your own frames and
-this lane produced them. The coordinator should dispatch the independent critic
-at `shots/warrens_63/`. What that critic should be asked about specifically:
-whether the knoll reads as stone in the ground or as a box with rocks on it,
-whether the boulders' pale colour sits with the cave's own darker rock, and
-whether the mouth is findable in the exterior frames.
+- Five of seven frames came back flooded red, and the critic reasonably read
+  that as a colour grade spent on ambience. It was the **player's damage
+  vignette**: the harness parked the player 500 m under the world to keep them
+  out of shot (the trick `capture_band2_63.gd` uses), so they fell into the
+  kill volume, took damage, and every frame after the first two rendered
+  through a hurt overlay. The player is now parked far away on the ground,
+  hidden, with physics off.
+- The interiors were shot with no torch, in a cave whose own
+  `_comment_lights` says it is dark on purpose and readable by the torch the
+  player carries. A stand-in torch now rides the camera on interior shots.
+- Two frames on the sheet were the camera's nose against a cliff. The stand
+  finder now rejects any position whose ray dies within 12 m.
+
+A harness that lies costs a critic's whole round. Round 1 spent three of its
+findings on my capture code and its two bar answers were decided partly by it.
+
+**What round 1 found that was real, and what was done about it:**
+
+| Finding | Action |
+|---|---|
+| A full-canopy tree standing in the cave doorway | It was one of this band's own **ironwood harvest nodes**: OW5D-style uniform translation had carried five of them onto the new site, one *inside* the knoll and three in the doorway corridor, the nearest 8.5 m dead in front of the mouth. Re-arranged into a stand ringing the site at 34–46 m, ≥26 m off the doorway axis. |
+| The entrance is invisible from outside; the mouth is a flat textured plane with straight cut edges | `skip_front_m` 9 → 6, so the outcrop runs across the front of the cave and the opening reads as a hole in a rock face instead of a panel with a hole in it. |
+| The boulders read as "a heap of enormous cabbages" — one repeated module, mint-green against the cave's warm stone | Albedo now multiplied toward the cave's own rock colour, and the rock runs in three courses from below the plinth to the roof. |
+| The cave floor is "a single untextured flat tone … no floor material in the readable sense" | The floor slab is textured with the same stone the walls use, a shade darker. |
+| The den is bare — "a den should show occupation" | Three more pieces, deliberately scattered across the guardian's half of the room rather than added to the tidy pile. |
+| Ground density: "a lawn, not a meadow" | Partly mine and partly not — see below. The site clears 30 m of scatter so nothing stands in the cave, which left a bare ring; it now plants its own ground cover (141 pieces, banked against the outcrop, thinning outward). The **corridor-wide** density is a `density_scale` request, recorded below. |
+
+**Round 2, on the fixed frames.** The red flood, the blocked doorway, the
+invisible entrance, the flat billboard face and the buried-camera frames are
+gone from its list. It found new, more specific things, and two of them were
+cheap and mine:
+
+- **A placeholder box appeared in two frames.** Every rootstone deposit in the
+  cave had no `model`, and `harvest_node.gd` falls back to an untextured box
+  when a spec has none. The critic found it twice without being told what it
+  was. The deposits are now rocks from the same family as the outcrop.
+- **The guardian was half cropped by the frame edge** in the one shot that
+  exists to show it. The camera now aims at the guardian's own body.
+
+**Round 2 still answers NO to both bar questions, and this lane cannot honestly
+close that.** Its own split of what is left says why:
+
+- *Material language.* The cave's walls use `terrain_playground.json`'s
+  photo-speckle rock — chosen in an earlier pass precisely so the cave would
+  match the cliff the player walks past — and the outcrop and meadow around it
+  are smooth low-poly nature-pack stone. The critic reads the seam between
+  those two languages as the loudest single defect. Reconciling them is an
+  art-set decision across the whole corridor, not a Band 2 config change, and
+  it cannot be done without new material work.
+- *The creature.* The critic says plainly that the guardian's model does not
+  belong to this game's style and no staging will fix it. **CLAUDE.md forbids
+  this lane from acting on that**: no new creature meshes, no Meshy
+  generations, and never one without owner-supplied reference art. Presentation
+  is all this lane may change and it has been changed — name, silhouette scale,
+  framing. The rest is an owner decision and is flagged, not acted on.
+- *Ground density.* Corridor-wide, and coordinator-owned by
+  `GATE_D_LANE_CONTRACT.md` §3.
+
+So: **not converged.** The convergence rule in `ralph/conventions.md` is two
+consecutive rounds naming no new defect, and round 2 named plenty. What is left
+on the list is a material set, a creature, and a shared config — none of them
+this lane's to change, all three recorded here.
 
 ## Not requested, not changed
 
-- **No `density_scale` request.** Unchanged at 0.05. Nothing in the driven run
-  pointed at the vegetation layer as bare; the problem here was the opposite.
+- **`density_scale` request for band 2: 0.05 → 0.09.** This reverses the
+  previous round's "no request", on evidence it did not have. Two independent
+  blind rounds named ground density as the single loudest gap between these
+  frames and both references — "a lawn, not a meadow", "flat texture-only grass
+  with five flower decals … zero grass blades, zero clumping" against
+  Palworld's field shots. The driven run cannot see this and the analytical
+  cadence probe cannot either; only frames can. 0.09 is band 1's 0.07 plus a
+  step, not a guess at the right number — this band is the first place the
+  player leaves the opening meadow, and it should not read thinner than the
+  meadow behind it. Coordinator's call and coordinator's single bake.
 - **No new creature, mesh, humanoid or mechanic.** The guardian is the same
   Burrowback, differentiated by name and silhouette per CLAUDE.md's own list.
 - **No chamber re-authoring.** Layout, sizes, spawns, deposits, dressing and

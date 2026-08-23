@@ -164,6 +164,14 @@ var _data: Object = null
 ## for any model that did not survive into the kept set at all (rare — every
 ## instance of that model was drained).
 var _mesh_ids: Dictionary = {}
+## BAND2-63-WARRENS: mesh id -> every position that mesh was instanced at, as a
+## `PackedVector3Array` (~12 bytes each; ~1.5 MB across the whole corridor's
+## 129k instances, against tens of MB if the placement Dictionaries themselves
+## were retained). `clear_area()` is the only reader. The collision batches
+## already hold their own placements, but they only cover layers that COLLIDE,
+## and the tree that stood in the Burrow Warrens' doorway did not -- it was
+## walked straight through and still blocked the entrance in every frame.
+var _instance_positions: Dictionary = {}
 var _next_mesh_id: int = 0
 
 ## COLL1 / §8.3: how close a collidable placement must be to the last point
@@ -200,6 +208,7 @@ func build(world_size: float, terrain: Node) -> void:
 	_t_collision_ms = 0
 	_tints.clear()
 	_mesh_ids.clear()
+	_instance_positions.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -846,6 +855,11 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	# every model in `build()`'s loop rather than once per model here.
 	_instancer.call("add_transforms", mesh_id, transforms, colours, false)
 
+	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
+	for i in placements.size():
+		known.append((placements[i] as Dictionary)["position"])
+	_instance_positions[mesh_id] = known
+
 	_placed += placements.size()
 	_draw_calls += 1
 	var t_c0 := Time.get_ticks_msec()
@@ -1321,7 +1335,10 @@ func clear_felled(key: String) -> void:
 
 ## See `HARVEST_REMOVE_RADIUS`'s own comment for why this is safe: called only
 ## at the placement's own exact stored position, never a player-aimed point.
-func _remove_render_instance(mesh_id: int, position: Vector3) -> void:
+## `update` false skips the `update_mmis()` refresh, for a caller removing many
+## instances at once (`clear_area()`), which refreshes once at the end instead
+## of once per instance.
+func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = true) -> void:
 	if mesh_id < 0 or _instancer == null:
 		return
 	_instancer.call("remove_instances", position, {
@@ -1334,7 +1351,8 @@ func _remove_render_instance(mesh_id: int, position: Vector3) -> void:
 		"on_collision": false,
 		"raycast_height": 10.0,
 	})
-	_instancer.call("update_mmis", true)
+	if update:
+		_instancer.call("update_mmis", true)
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
@@ -1466,16 +1484,36 @@ func harvested_count() -> int:
 func clear_area(centre: Vector3, radius: float) -> int:
 	var removed := 0
 	var radius_sq := radius * radius
+
+	# Every RENDERED instance first, collidable or not. A layer with no
+	# collider is not harmless here: the first version of this removed only
+	# collidable scatter and left a full-canopy tree standing in the cave's
+	# doorway -- physically absent, visually the whole entrance.
+	for mesh_id_value: Variant in _instance_positions:
+		var mesh_id := int(mesh_id_value)
+		var positions: PackedVector3Array = _instance_positions[mesh_id_value]
+		var kept := PackedVector3Array()
+		for spot: Vector3 in positions:
+			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
+				kept.append(spot)
+				continue
+			_remove_render_instance(mesh_id, spot, false)
+			removed += 1
+		_instance_positions[mesh_id_value] = kept
+	if removed > 0 and _instancer != null:
+		_instancer.call("update_mmis", true)
+
+	# Then the collidable layers' own bookkeeping: the collider itself, the
+	# gather point standing on it, and the counters. Their render instances
+	# are already gone above, so nothing here touches the instancer again.
 	for batch: Dictionary in _collision_batches:
 		var placements: Array = batch["placements"]
 		var resident: Array = batch["resident"]
-		var mesh_id := _mesh_id_for(str(batch.get("model", "")))
 		for i in range(placements.size() - 1, -1, -1):
 			var placement: Dictionary = placements[i]
 			var spot: Vector3 = placement["position"]
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 				continue
-			_remove_render_instance(mesh_id, spot)
 			if resident[i] != null:
 				(resident[i] as Node).queue_free()
 			resident.remove_at(i)
@@ -1489,8 +1527,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 				_harvest_nodes.erase(key)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
-			_placed = maxi(0, _placed - 1)
-			removed += 1
+	_placed = maxi(0, _placed - removed)
 	return removed
 
 

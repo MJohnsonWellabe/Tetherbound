@@ -56,7 +56,10 @@ const VIEWPOINTS := [
 		"target": Vector2(4.0, 24.0), "target_h": 1.0,
 	},
 	{
-		"name": "06-den-and-guardian", "local": true,
+		# Aimed at the guardian's own body, not at a hand-guessed point near it:
+		# round 2 of the blind pass caught the creature half cropped off the
+		# right edge, which is the one thing this frame exists to show.
+		"name": "06-den-and-guardian", "local": true, "aim_guardian": true,
 		"eye": Vector2(0.0, 33.0), "eye_h": 1.7,
 		"target": Vector2(1.0, 43.0), "target_h": 1.2,
 	},
@@ -119,18 +122,49 @@ func _run() -> void:
 	if look != null:
 		look.set_process(false)
 		look.set_physics_process(false)
+		# Clear the weather BEFORE the time: `apply_time()` re-layers whatever
+		# `_weather` holds every time it runs (world_look.gd::_layer_weather),
+		# so freezing world_weather's process leaves whatever preset was rolled
+		# at boot baked into every frame -- which is what put five of the first
+		# seven frames under a red flood a blind critic then read, fairly, as a
+		# deliberate colour grade.
+		if look.has_method("set_weather"):
+			look.call("set_weather", {})
 		look.call("apply_time", "day")
 
 	# The player is parked far below so a stray trainer model never stands in
 	# a frame -- capture_band2_63.gd's own trick.
+	# Parked far away ON THE GROUND, hidden, with its physics off -- NOT dropped
+	# below the world, which is what capture_band2_63.gd does and what wrecked
+	# this pass's first blind round. A player under the map falls into the kill
+	# volume, takes damage, and the hurt vignette tints EVERY frame after it
+	# red. The critic read five red frames as a deliberate colour grade and
+	# spent three of its findings on it. The world was never red.
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	if player != null:
-		player.global_position = Vector3(-373.0, -500.0, 2476.0)
+		var park := Vector2(-373.0, 2476.0) + Vector2(600.0, 600.0)
+		var park_y := float(world.call("ground_height_at", park.x, park.y))
+		player.global_position = Vector3(park.x, park_y + 0.2, park.y)
+		player.visible = false
+		player.set_physics_process(false)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var views: Array = _clear_exterior_views(world, warrens)
 	views.append_array(VIEWPOINTS)
+
+	# A stand-in for the torch. The warrens is authored DARK on purpose -- its
+	# lights are low-energy pools and OF24's carried torch is the thing that
+	# makes it readable (burrow_warrens.json's `_comment_lights`). Capturing the
+	# interior with no torch photographs a cave no player ever sees, and the
+	# first blind round judged four interior frames it could barely read. This
+	# rides with the camera on interior shots only.
+	var torch := OmniLight3D.new()
+	torch.light_energy = 2.6
+	torch.omni_range = 12.0
+	torch.light_color = Color("#ffd8a0")
+	torch.visible = false
+	world.add_child(torch)
 
 	var written: Array[String] = []
 	var failures: Array[String] = []
@@ -139,18 +173,36 @@ func _run() -> void:
 		var name_value := str(view["name"])
 		var eye := _point(world, warrens, view, "eye")
 		var target := _point(world, warrens, view, "target")
+		if bool(view.get("aim_guardian", false)):
+			var guardian: Node3D = warrens.call("guardian") as Node3D
+			if guardian != null and is_instance_valid(guardian):
+				target = guardian.global_position + Vector3.UP * 0.6
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
+		var interior := bool(view.get("local", false)) and not bool(view.get("ground", false))
+		torch.visible = interior
+		torch.global_position = eye + Vector3(0.0, 0.35, 0.0)
 		for i in 20:
 			await physics_frame
 		# AFTER the settle frames, not before them: something in the scene's
 		# own day-cycle group re-applies the hour while those frames run, and
 		# the first rounds of this pass came back with half the set at sunset.
 		if look != null:
+			if look.has_method("set_weather"):
+				look.call("set_weather", {})
 			look.call("apply_time", "day")
 		for i in POSE_FRAMES:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		if look != null:
+			var env: Environment = null
+			for child in world.get_children():
+				if child is WorldEnvironment:
+					env = (child as WorldEnvironment).environment
+			print("      [diag] time=%s processing=%s fog=%s bg=%s" % [
+				str(look.get("_time")), str(look.is_processing()),
+				str(env.fog_light_color) if env != null else "?",
+				str(env.background_mode) if env != null else "?"])
 
 		var image := root.get_texture().get_image()
 		if image == null:
@@ -204,8 +256,14 @@ func _clear_exterior_views(world: Node, warrens: Node3D) -> Array:
 			var collider: Node = hit["collider"] as Node
 			if collider == null or not warrens.is_ancestor_of(collider):
 				continue
-			found.append({"eye": eye, "angle": angle,
-				"reach": eye.distance_to(hit["position"] as Vector3)})
+			var reach: float = eye.distance_to(hit["position"] as Vector3)
+			# A stand whose ray dies in the first few metres is a camera with
+			# its nose against the rock -- round 2 of the blind pass found two
+			# such frames on the sheet and called them what they are: frames
+			# that judge nothing.
+			if reach < 12.0:
+				continue
+			found.append({"eye": eye, "angle": angle, "reach": reach})
 	found.sort_custom(func(a, b): return float(a["reach"]) > float(b["reach"]))
 	var picked: Array = []
 	for candidate: Dictionary in found:

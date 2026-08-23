@@ -16,7 +16,7 @@
     "floor_colour": "#4a423a",
     "vault_door_colour": "#6d5f4a"
   },
-  "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the entrance clear -- an outcrop that swallows its own mouth is worse than a box, because a player cannot find the way in. ALL TUNABLE.",
+  "_comment_mound": "BAND2-63-WARRENS. The cave stands in ground that does not cover it (see `_comment_resiting`), so what a player sees from the road is the cave's own rock mass standing proud of the meadow -- and the first capture round showed exactly what that is without help: a grey rectangular slab, six metres tall, in a field. This is the outcrop that makes it a knoll instead. Deterministic boulders from the nature family the corridor is already scattered with (`Rock_Medium_1..3`, the same models `vegetation.json` uses), set around the perimeter and over the roof so the silhouette breaks up and the mass reads as stone in the ground rather than a building. Seeded, never random: the same rock stands in the same place every boot, which is the determinism promise the rest of the world keeps. `skip_front_m` keeps the DOORWAY clear and nothing else -- it was 9m, which left the whole front of the cave as a bare flat rectangle standing in a field, and the blind critic called it exactly that: a textured plane with straight cut edges reading as unfinished blocking geometry. At 6m the rock runs across the front too and the opening reads as a hole in a rock face. `tint` multiplies the boulders' own albedo toward the cave's rock colour, because the nature pack's rocks ship a cool mint-grey that the same critic read as 'a heap of enormous cabbages' beside this cave's warm dark stone. ALL TUNABLE.",
   "mound": {
     "models": [
       "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
@@ -31,7 +31,22 @@
     "roof_spacing_m": 4.5,
     "roof_scale": [1.6, 2.8],
     "sink_m": 1.2,
-    "skip_front_m": 9.0
+    "_comment_skirt": "The site clears 30m of scatter so nothing stands in the cave or its doorway, and the first blind round showed the cost of that honestly: a bare lawn ring around the outcrop, in a survey whose loudest criticism was already ground density. These are the site's OWN ground cover, authored rather than scattered -- broken rock and low planting banked against the outcrop where debris and shade would actually put them, thinning outward. Same nature family the corridor already uses (D24, one nature family), deterministic from the same seed, no colliders: this is dressing, and a pebble that stops a player is a bug.",
+    "skirt_models": [
+      "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_3.gltf",
+      "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "res://assets/environment/stylized_nature/Plant_1.gltf",
+      "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
+    ],
+    "skirt_count": 260,
+    "skirt_reach_m": 30.0,
+    "skirt_scale": [0.7, 2.1],
+    "tint": "#c3bbab",
+    "skip_front_m": 6.0
   },
   "_comment_chambers_heights": "BAND2-63-WARRENS lowered every ceiling by 0.6-1.2m (mouth 4.2->3.6, hall 5.0->4.2, warren 4.0->3.4, den 6.0->4.8, vault 4.0->3.4). At this site most of the cave's mass stands ABOVE the meadow (see `_comment_resiting`), so every metre of ceiling is a metre of grey slab on the skyline; the first capture round showed a six-metre wall. They are still taller than the player and taller than the guardian, and the den is still the tallest room in the cave -- the shape of the place is unchanged, it is just not a tower any more. `lights[].y` moved with the two ceilings it would otherwise have poked through. TUNABLE.",
   "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
@@ -89,12 +104,18 @@
     }
   },
   "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
+  "_comment_deposit_models": "BAND2-63-WARRENS round 2. These carried no `model`, and `harvest_node.gd` falls back to `_box_visual()` when a spec has none -- so every rootstone deposit in the cave rendered as an untextured pale placeholder cube. The blind critic found it twice without being told what it was looking at ('a bare placeholder box ... a placeholder block in a frame offered for judgement is a defect, twice'). Rocks from the same nature family the outcrop outside uses, at deposit scale: the seam the player breaks is now made of the stone the hill is made of.",
   "deposits": [
-    {"at": [-5.0, 20.0],  "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
-    {"at": [5.5, 25.0],   "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
-    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
-    {"at": [-6.0, 43.0],  "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
-    {"at": [-13.0, 24.5], "item": "stone",     "amount": 4, "label": "Break out stone"}
+    {"at": [-5.0, 20.0],  "item": "rootstone", "amount": 3, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.85},
+    {"at": [5.5, 25.0],   "item": "rootstone", "amount": 3, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.75},
+    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "model_scale": 0.95},
+    {"at": [-6.0, 43.0],  "item": "rootstone", "amount": 4, "label": "Break out rootstone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.05},
+    {"at": [-13.0, 24.5], "item": "stone",     "amount": 4, "label": "Break out stone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 0.9}
   ],
   "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
   "dressing": [
@@ -115,7 +136,13 @@
     {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [-4.3, 0.2], "yaw_deg": -15.0, "roll_deg": 90.0, "sink_m": 0.03,
       "_why": "tipped on its side beside that crate: the one prop in the cave that is not standing, so the den's pile reads as left in a hurry against the hall's, which reads as stacked"},
     {"model": "Barrel", "chamber": "den", "offset": [-6.6, 2.4], "yaw_deg": 0.0, "sink_m": 0.05,
-      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"}
+      "_why": "the edge of the deep pile, so the group has an edge instead of a boundary"},
+    {"model": "Crate_Wooden", "chamber": "den", "offset": [5.4, -4.2], "yaw_deg": 25.0, "pitch_deg": 12.0, "sink_m": 0.05,
+      "_why": "BAND2-63-WARRENS round 2. The blind pass called the den bare -- 'one chest and one small scrap on an otherwise bare flat floor ... a den should show occupation'. This one is tipped and on the far side of the room from the rest, so the den reads as a place something large moves through rather than a store room"},
+    {"model": "Bucket_Wooden_1", "chamber": "den", "offset": [2.6, -5.4], "yaw_deg": 70.0, "roll_deg": 74.0, "sink_m": 0.03,
+      "_why": "round 2: knocked well clear of the pile it belongs to, in the guardian's own half of the room"},
+    {"model": "Bag", "chamber": "den", "offset": [-2.2, 5.6], "yaw_deg": -110.0, "sink_m": 0.06,
+      "_why": "round 2: dropped deepest of all, past the guardian -- whoever carried it did not come back for it"}
   ],
   "_comment_prize_lead": "BAND2-63-WARRENS. The pickup line carries the LEAD, not just the object. Prompt 63 asks this region to make the Mudsnout -> Tuskroot connection meaningful, and the lead was legible only to a player who happened to open the satchel and read the item description, or who owned a Mudsnout and pressed G on the creatures tab to be told `Mudsnout needs a Heartstone to evolve` (scripts/ui/tab_creatures.gd::_read_evolve, whose refusal string is where the requirement actually surfaces today). Both of those work and neither is guaranteed to happen in this region, which is where the stone is found. The line now says what the stone is FOR in the same words items.json already uses, at the one moment every player who takes it is looking at it. No rule changed: `progression.json`'s gate is still level 15 + bond 55 + heartstone, and this file does not touch it.",
   "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
