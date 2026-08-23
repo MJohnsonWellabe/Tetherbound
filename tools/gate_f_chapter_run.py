@@ -38,7 +38,17 @@ Honesty about the seam matters more than the word.  Three things are true:
 
 `ralph/lanes/COORDINATORS.md`: iterate on focused segment probes, never on full
 runs.  `--only` exists for that -- fix one segment, re-run that segment, and
-only then spend the full chapter.
+only then spend the full chapter.  The whole chapter is ~11 minutes of harness
+wall time, so a full run is cheap enough to end on rather than something to
+ration.
+
+## Where the evidence lives
+
+`REPORT.md` is the durable artifact and is written to carry the measurements and
+each segment's own verdict lines inline, because the per-segment `*.log` files
+beside it are covered by `.gitignore`'s repo-wide `*.log` and do not survive a
+commit.  Anything a later reader needs has to be IN the report; the raw logs are
+for the session that produced them, and are reproducible by re-running.
 """
 
 from __future__ import annotations
@@ -89,12 +99,31 @@ SEGMENTS = [
 
 METRIC_RE = re.compile(r"^GATEF-METRIC\s+(.*)$")
 #: Lines a segment prints that are worth lifting into the record verbatim.
-#: Deliberately narrow -- a full segment log is hundreds of lines and lives in
-#: its own file beside the report.
+#:
+#: Deliberately narrow -- a full segment log is hundreds of lines of scatter
+#: counts and lives in its own file beside the report -- but it has to be wide
+#: enough to carry the two things a reader of the record actually needs: WHY a
+#: segment failed, and the beats a passing one walked. The first cut matched
+#: `gate B continuous:` with the colon attached and so captured neither the
+#: head's `gate B continuous FAIL: ...` diagnosis nor the finale's beat lines,
+#: leaving a record that said FAIL and PASS and nothing else.
 HIGHLIGHT_RE = re.compile(
-    r"^(gate B continuous:|GATE-E|gate E|corridor walked:|longest stretch|"
-    r"things met|by kind:|grounding:|dead-walk intervals|FAIL|FAILURES?:)",
+    r"^("
+    # verdicts and diagnoses, whichever segment prints them
+    r"gate [ABE] continuous|gate [ABE] |GATE-E|FAIL|FAILURES?:|ERROR:"
+    # the corridor's own summary
+    r"|corridor walked:|longest stretch|things met|by kind:|grounding:"
+    r"|dead-walk intervals"
+    # the head's instrumented beats
+    r"|GATE [AB] \+|GATE A NPC"
+    # the finale's beats, which are conditions 10-12's live evidence
+    r"|arrived at|walked in from|read the reveal|the shutter|the legendary"
+    r"|the decision resolved|the roster decision|the region answered"
+    r"|the Meadows acknowledged|\[meadow\]|\[climax\]"
+    r")",
 )
+#: Indented per-beat lines (the finale prints its fights this way).
+BEAT_RE = re.compile(r"^\s{2}(beat |rested )")
 
 
 def _godot_default() -> str:
@@ -131,8 +160,8 @@ def run_segment(segment: dict, godot: str, logdir: Path) -> dict:
         found = METRIC_RE.match(line.strip())
         if found:
             metrics.append(found.group(1))
-        elif HIGHLIGHT_RE.match(line.strip()):
-            highlights.append(line.strip())
+        elif HIGHLIGHT_RE.match(line.strip()) or BEAT_RE.match(line):
+            highlights.append(line.rstrip())
 
     # A probe is evidence, not a verdict: it only fails by failing to run.
     # A smoke test's exit code IS the verdict.
@@ -145,7 +174,7 @@ def run_segment(segment: dict, godot: str, logdir: Path) -> dict:
         "passed": passed,
         "log": log_path,
         "metrics": metrics,
-        "highlights": highlights[:40],
+        "highlights": highlights[:60],
     }
 
 

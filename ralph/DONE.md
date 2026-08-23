@@ -3,6 +3,78 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-F — the chapter chained into one record, and the probe that mis-timed it by an hour
+
+`tests: full suite 1362 tests, 836549 assertions, 0 failed` · `smokes: gate_e_finale, warrens, relay, riding, stronghold, tournament_bracket` · `area: tools/gate_f_chapter_run.py, tools/_probe_gate_f_corridor.gd, tools/_probe_pacing.py`
+
+Prompt 70's instrument did not exist. Gate B's continuous smoke proved the
+opening, five per-band probes proved five regions, the Gate E finale smoke
+proved the ending — and each of those passing says nothing about the joins,
+which is where a 3–4 hour chapter fails. `tools/gate_f_chapter_run.py` runs the
+three segments in player order and writes one timestamped record under
+`ralph/reports/gate-f-run-<stamp>/`; `--only` runs a subset, because the method
+law is focused segment probes. The whole chapter is **10.8 min** of harness wall
+time, so it is cheap enough to iterate on — that was the main worry going in and
+it turned out unfounded.
+
+`tools/_probe_gate_f_corridor.gd` walks the corridor as ONE boot. The five band
+spines chain end to end in `terrain_playground.json`, so the route is read from
+that file rather than transcribed, and `seen` plus the running dead-walk counter
+are carried ACROSS the band handoffs — the interval no per-band probe can see,
+because every band lane tuned its own interior and nobody owned the seams.
+
+**Corridor result: there is no dead travel in this chapter.** 11,519 m, 571
+points of interest (503 wild, 14 trainers, 51 harvest, 2 TMs, 1 key), median gap
+8 m, **worst stretch meeting nothing new 165 m** (~41 s), **zero intervals over
+250 m**, and **0 of 909 wild bodies underground** — GATE-D's regrounding holds
+chapter-wide.
+
+**The SHIP fix: `_probe_pacing.py` was charging a 13,934 m phantom detour.** Its
+meadowhart loop assigned on every match with no `break` and no distance
+comparison, so it kept whichever cluster was LAST in the merged spawn table —
+`(-165, 7345)`, the far end of the corridor — when the species has 17 clusters
+and several sit a few hundred metres from the Old Quarry where the saddle is
+actually crafted. Nobody walks past sixteen meadowharts to catch the
+seventeenth. Resolved nearest-to-the-player at the saddle beat: band 2 travel
+39 → 10 min, chapter travel 54 → 25 min, floor 2.53 → **2.04 h**, projected
+first completion 5.06 → **4.08 h**. Gate F's judgement of the 3–4 hour condition
+rested entirely on that number and it was wrong by an hour. No test asserts the
+probe's output, so nothing was masking it.
+
+**Two apparent findings were checked and are NOT defects** — recording them so
+the next lane does not re-file them. Wild levels reading above a band's declared
+`wild_band` are alphas: `_make_alpha()` adds `level_bonus` on top of the roll by
+design, and there are four alpha clusters (z=2900, 3890, 5150, 7255). Band 1's
+two over-ceiling creatures are the corridor probe's own seam bleed — both are
+5–9 m from the band 2 boundary inside its 30 m notice radius, rolling band 2's
+band. Band 1's field is 2–6 exactly as declared, and band 1 has no alpha.
+Likewise the corridor's "zero rest structures" is correct and not a finding: the
+chapter has exactly one rest structure and the player builds it, the authored
+camps are dressing, and the band files say so themselves. The real property is
+pinned by `test_camp_supply_reaches_every_band.gd`, green in all five bands.
+
+**`ralph/ASSESSMENT_2026-08-23.md` is stale in the project's favour on four
+points**, all re-measured: its 4 red tests are green; SHIP BLOCKER 2 (band 4
+harvest) is closed; SHIP BLOCKER 3 ("Gate E does not exist") is closed and the
+finale passes end to end — Warden, legendary, `'Kettle'` released for the belt of
+five, 115 plants back / 17 tether lights out / 4 patrols withdrawn, post-win
+acknowledgment, objective chain terminated; alphas are 4 not 2. Its SHIP BLOCKER
+1 stands.
+
+**What the next firing needs to know.** Gate F is NOT closed and the chapter has
+still never been run end to end by anyone, because the head is red: on `main` it
+stalls at Mira's door (reproduced here, `player 3.6m away ... arbiter
+winner=EncounterDirector`), and `ralph/GATEB-PATH`'s own commit `a6c64bf8` says
+it still fails past that at the live scatter fill. When that branch lands,
+`python3 tools/gate_f_chapter_run.py` closes the loop in one command, and the
+save hand-off between segments (designed, not built — it edits
+`smoke_gate_b_continuous.gd`, which GATEB-PATH owns) can land with it. 11 of §6's
+fifteen conditions are met on measured evidence; 1 blocked on Gate B, 1 marginal
+(pacing, 2% over), 1 unprovable without an Ally, and the full-corridor visual
+pass belongs to the VISUAL lane. Evidence:
+`ralph/GATE_F_EVIDENCE_2026-08-23.md`. Filed: `BAND2-THIN` (QUALITY),
+`CURVE-DOC-STALE` (POLISH).
+
 ## RUNTESTS-FILTER — `--only=` selector for run_tests.gd, and why CI run 2180 was red
 
 `tests: full suite 1362 tests, 830325 assertions, 0 failed` · `area: tests/run_tests.gd`

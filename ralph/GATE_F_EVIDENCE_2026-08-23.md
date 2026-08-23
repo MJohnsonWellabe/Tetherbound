@@ -133,6 +133,15 @@ inside any band.
 trainers, 51 harvest nodes, 2 TMs, 1 key.** 909 wild bodies stand in the world
 overall.
 
+Those 14 trainers are not the critical path's 15 and the two lists should not be
+confused. The corridor probe counts BODIES near the spine, so it picks up field
+and picket trainers the critical path skips (`south_bridge_grunt`,
+`quarry_picket_dorn`, `warrens_watch_pell`, `stronghold_outer_watch`,
+`stronghold_checkpoint`) and misses the ones standing off it — the three village
+trainers indoors, and the courtyard/elite/Warden fights inside the Hall, which
+the finale segment walks instead. Both numbers are right about different things:
+the ladder is 15 fights, and 14 fightable bodies are visible from the road.
+
 **0 of 909 are underground.** GATE-D's regrounding fix holds chapter-wide —
 worth re-measuring because a body under the terrain is authored content the
 player never meets, and it is invisible to every count above since the body IS
@@ -240,6 +249,26 @@ enforced by `test_chapter_rewards.gd`, green in the suite below. The pacing
 probe's material check: 28 rootstone supplied against 12 spent on the saddle and
 a greater orb; 30 ironwood against 4 for `orb_prime`.
 
+### Regional loops and milestones — PASS, run live
+
+`tests/run_tests.gd` auto-discovers `test_*.gd` only, so the regional GAMEPLAY
+smokes are not in the 1362 and had to be run separately. Gate F is the lane that
+has to care whether the milestones actually work, not just whether their data
+loads. All five pass on this branch:
+
+| smoke | milestone it proves | verdict |
+|---|---|---|
+| `smoke_tournament_bracket` | the village tournament ladder | PASS |
+| `smoke_warrens` | Burrow Warrens, guardian, vault gating, first-clear reward | PASS |
+| `smoke_relay` | Tether Relay, Captain Vance, captive, crossing restored | PASS |
+| `smoke_riding` | the saddle/mount traversal payoff | PASS |
+| `smoke_stronghold` | the five-space Hall route and its gauntlet placement | PASS |
+
+Together with the finale smoke that is every named milestone in Prompt 70's
+difficulty list — tournament, Warrens guardian, Relay gauntlet and Vance,
+regional captains, Warden — exercised in the running game rather than argued
+from the trainer table.
+
 ### Reliability — PASS at suite level
 
 **Full suite: 1362 tests, 836,549 assertions, 0 failed** (19m35s). No freeze,
@@ -326,11 +355,11 @@ one hard blocker.
 | 1 | strong opening-to-tournament first session | Gate B head | **BLOCKED** — Gate B red |
 | 2 | coherent team progression/reward economy | curve conforms; reward invariants green | met |
 | 3 | desirable wild creatures across every region | 503 on-route, 12 species, 0 underground | met |
-| 4 | authored trainer escalation ladder | 14 on-route + Warden; ladder tests green | met |
+| 4 | authored trainer escalation ladder | 15 critical-path fights L2→Warden's L20 ace, ladder tests green; 14 bodies stand within 30 m of the route | met |
 | 5 | useful resource progression | 51 nodes; rootstone/ironwood supply covers spend | met |
 | 6 | natural expedition/rest decisions | every band pays for camp + bed from its own ground | met |
 | 7 | real five-creature roster pressure | 12 species vs 5 slots; release ceremony ran live | met |
-| 8 | distinct finished regional loops | five bands, each with own content signature | met |
+| 8 | distinct finished regional loops | warrens/relay/riding/stronghold/tournament smokes all PASS | met |
 | 9 | clear objectives without a quest engine | 22-entry chain, unbroken, terminates | met |
 | 10 | strong final approach and Warden climax | finale smoke, live | met |
 | 11 | meaningful legendary/release decision | 'Kettle' released for the legendary, live | met |
