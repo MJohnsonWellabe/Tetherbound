@@ -85,6 +85,7 @@ CLIPS = {
     "sprint": 11,
     "jump": 28,
     "throw": 24,
+    "chop": 15,
 }
 
 ## Meshy's humanoid bone names. Kept in one table so a rig that names things
@@ -438,6 +439,128 @@ def author_throw(rig, frames: int) -> None:
     key(rig, "arm.l", recover, euler=(0, 0, 6))
 
 
+def author_chop(rig, frames: int) -> None:
+    """A two-handed overhead axe chop, driven down through the target.
+
+    OP21-24. The owner played the shipped build and reported that he "still
+    does not see a convincing chopping swing during normal gathering". He was
+    looking at the throw: `trainer_model.gd` had no chop role and reused
+    `throw` for the tool swing, so pressing Use Tool played an aimed overarm
+    LOB — chest turning away, hand opening at the top of the arc, nothing
+    travelling down through the tree. There was no chop clip anywhere in the
+    project to play instead; `CLIPS` had five entries and this is the sixth.
+
+    What makes a chop read as a chop, and what each key here is for:
+
+    * **It is two-handed.** The prop hangs off the right hand (`tool_hold.gd`
+      bone-attaches to `RightHand`), so the left arm cannot literally grip the
+      haft without IK this pipeline does not have — but a left arm swinging
+      the same arc within a few degrees of the right reads as hands together
+      at normal play distance, and a left arm hanging idle at the hip reads
+      immediately as a one-armed flail. The left is keyed to shadow the right
+      throughout, slightly wider (`Z`) so the arms do not interpenetrate.
+    * **The body supplies the force, not the shoulder.** Spine EXTENDS back at
+      the raise and FLEXES hard through impact (`+X` is forward flexion — see
+      AXES). A chop with a still torso reads as swatting.
+    * **The carry is LOW so the lift is visible.** Measured, not judged: the
+      first version held the ready pose with the elbow folded to -52 and the
+      shoulder at -38, which stands the axe straight up out of the fist and
+      puts its head at 2.23 m -- HIGHER than the 2.07 m it reached at the top
+      of the wind-up. The swing therefore had no visible upstroke at all; it
+      started at its own peak and fell. The carry now sits at the hip
+      (shoulder -14, elbow -34) so the raise is a real lift, and `recover`
+      returns to that same low carry rather than to the old high one.
+    * **It decelerates into the target rather than through the floor.** The
+      follow-through is small and the recovery brings the axe back to a ready
+      carry, because the swing is repeatable: the player holds the tree down
+      and swings again, and a clip that ends splayed cannot loop back into its
+      own start.
+    * **Knees brace at impact.** A few degrees only; it stops the character
+      reading as bolted to the ground at the one frame carrying all the force.
+
+    RE-KEYED AFTER THE FIRST RENDER, and the corrections are worth keeping
+    because both were invisible in the numbers. (1) The raise reached only
+    HEAD height, not overhead: the elbows were folded so hard (-74) that the
+    flexion ate most of the shoulder's travel, so the fold came down to -40
+    and the shoulder went up to -146. (2) The chop finished pointing at the
+    trainer's own boots — a log-splitter's stroke, aimed where a splitting
+    block would be — while the thing being chopped is a STANDING trunk at
+    chest height. The impact now stops the arc out in front at trunk height
+    (shoulder -62, elbow nearly straight) with half the torso fold, because
+    a body bent double at the waist reads as looking at the ground rather
+    than driving through wood.
+
+    The hit lands at `impact` and `art.json`'s `chop_impact_fraction` tells
+    the game which frame that is, so `tool_hold.gd` resolves the gather when
+    the axe is IN the wood rather than at an arbitrary midpoint.
+    """
+    ready, raise_, impact, follow, recover = 0, int(frames * 0.33), int(frames * 0.60), int(frames * 0.75), frames
+
+    # Ready: axe carried at chest, elbows softly bent. Not the rest pose — a
+    # tool that snaps from arms-down to overhead in two frames reads as a pop.
+    key(rig, "spine", ready, euler=(2, 0, 0))
+    key(rig, "chest", ready, euler=(2, 0, 0))
+    key(rig, "head", ready, euler=(4, 0, 0))
+    key(rig, "arm.r", ready, euler=(-14, 0, -10))
+    key(rig, "forearm.r", ready, euler=(-34, 0, 0))
+    key(rig, "arm.l", ready, euler=(-11, 0, 12))
+    key(rig, "forearm.l", ready, euler=(-38, 0, 0))
+
+    # Raise: both arms overhead and behind, torso extended back, head still on
+    # the target. Elbows stay folded — a straight-armed windmill is a golf
+    # swing, not a chop.
+    key(rig, "hips", raise_, euler=(0, 0, 2))
+    key(rig, "spine", raise_, euler=(-16, 0, 0))
+    key(rig, "chest", raise_, euler=(-13, 0, 0))
+    key(rig, "head", raise_, euler=(8, 0, 0))
+    key(rig, "arm.r", raise_, euler=(-146, 6, -8))
+    key(rig, "forearm.r", raise_, euler=(-40, 0, 0))
+    key(rig, "hand.r", raise_, euler=(-8, 0, 0))
+    key(rig, "arm.l", raise_, euler=(-140, -6, 12))
+    key(rig, "forearm.l", raise_, euler=(-44, 0, 0))
+
+    # Impact: the frame the wood takes the edge. Arms nearly straight and
+    # forward-down, torso folded through, knees braced.
+    key(rig, "hips", impact, euler=(0, 0, -2))
+    key(rig, "spine", impact, euler=(9, 0, 0))
+    key(rig, "chest", impact, euler=(7, 0, 0))
+    key(rig, "head", impact, euler=(4, 0, 0))
+    key(rig, "arm.r", impact, euler=(-62, 0, -6))
+    key(rig, "forearm.r", impact, euler=(-10, 0, 0))
+    key(rig, "hand.r", impact, euler=(6, 0, 0))
+    key(rig, "arm.l", impact, euler=(-58, 0, 9))
+    key(rig, "forearm.l", impact, euler=(-14, 0, 0))
+    for side in ("l", "r"):
+        key(rig, f"upleg.{side}", impact, euler=(-7, 0, 0))
+        key(rig, f"leg.{side}", impact, euler=(13, 0, 0))
+        key(rig, f"foot.{side}", impact, euler=(-6, 0, 0))
+
+    # Follow-through: short. The axe settles just past the cut, not past the
+    # knees.
+    key(rig, "spine", follow, euler=(13, 0, 0))
+    key(rig, "chest", follow, euler=(10, 0, 0))
+    key(rig, "head", follow, euler=(4, 0, 0))
+    key(rig, "arm.r", follow, euler=(-34, 0, -8))
+    key(rig, "forearm.r", follow, euler=(-34, 0, 0))
+    key(rig, "arm.l", follow, euler=(-30, 0, 10))
+    key(rig, "forearm.l", follow, euler=(-38, 0, 0))
+
+    # Recover: back to the ready carry, so a held chop chains into itself.
+    key(rig, "hips", recover, euler=(0, 0, 0))
+    key(rig, "spine", recover, euler=(3, 0, 0))
+    key(rig, "chest", recover, euler=(3, 0, 0))
+    key(rig, "head", recover, euler=(4, 0, 0))
+    key(rig, "arm.r", recover, euler=(-14, 0, -10))
+    key(rig, "forearm.r", recover, euler=(-34, 0, 0))
+    key(rig, "hand.r", recover, euler=(0, 0, 0))
+    key(rig, "arm.l", recover, euler=(-11, 0, 12))
+    key(rig, "forearm.l", recover, euler=(-38, 0, 0))
+    for side in ("l", "r"):
+        key(rig, f"upleg.{side}", recover, euler=(0, 0, 0))
+        key(rig, f"leg.{side}", recover, euler=(0, 0, 0))
+        key(rig, f"foot.{side}", recover, euler=(0, 0, 0))
+
+
 def author(rig, name: str, frames: int) -> None:
     clear_pose(rig)
     action = bpy.data.actions.new(name)
@@ -455,6 +578,8 @@ def author(rig, name: str, frames: int) -> None:
         author_jump(rig, frames)
     elif name == "throw":
         author_throw(rig, frames)
+    elif name == "chop":
+        author_chop(rig, frames)
 
     action.use_fake_user = True
     # Stashed as an NLA strip so the glTF exporter writes every action as its

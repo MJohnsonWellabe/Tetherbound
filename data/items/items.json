@@ -219,10 +219,10 @@
       "description": "A proper woodcutter's edge. It takes a full swing off an oak in the time bare hands would still be scraping bark, and it wears down a little with every tree.",
       "held_model": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
       "held_offset": [
-        0.02,
-        0.0,
-        0.0
-      ],
+   0.02,
+   0.15,
+   0.0
+  ],
       "held_rotation_deg": [
         0,
         0,

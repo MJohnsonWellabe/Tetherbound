@@ -13,8 +13,14 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "chop": "chop"
     },
+     "_comment_tool_swing": "OP21-24. The chop clip's own length and the frame the axe is IN the wood, in clip fractions. tool_hold.gd reads these so the gather resolves on the impact pose rather than at an arbitrary half-way point, and so the swing state holds for exactly as long as the clip plays instead of cutting to idle mid-arc. Re-derive both from animate_humanoid.py's author_chop() (15 frames at 24 fps; impact keyed at frame 9) if that clip is re-timed. TUNABLE.",
+     "tool_swing": {
+      "seconds": 0.625,
+      "impact_fraction": 0.6
+     },
     "_comment_gait_speeds": "OF5, TUNABLE. Metres per second each gait clip was AUTHORED for \u2014 animate_humanoid.py derives the cycle length and stride from these so a planted foot sweeps back under the body at the same speed the controller drives it. trainer_model.gd scales playback by actual ground speed / this value (clamped 0.5-1.4x in character_model.gd), so cadence stays honest through acceleration, slopes and any movement.json retune. If locomotion speeds are retuned by more than the clamp covers, re-bake the clips against the new numbers rather than widening the clamp: past ~1.4x a gait reads as frantic, not fast.",
     "gait_reference_speeds": {
       "walk": 5.0,

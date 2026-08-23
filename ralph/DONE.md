@@ -195,6 +195,69 @@ RANGE does not touch, so `smoke_boss`'s before/after signature is unaffected.
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: data/config/bands, data/config/map_landmarks.json`
 
+## STRANDED-P3 — landed the chop clip, fixed dark Team Tether NPCs, fixed the survey_band2 capture bug
+
+`tests: tests/smoke_art.gd OK, tests/smoke_playground.gd OK` · `area: player/tool_hold, characters/character_model, tools/survey_band2, data/config`
+
+Three items on branch `ralph/STRANDED-P3`.
+
+**1. Landed OP21-24 (the chop clip).** Cherry-picked `19d7d4a5` from
+`origin/claude/gate-a-core-verbs-8aaw7g` (one conflict in `tool_hold.gd` --
+both sides added a new field, merged trivially) and `a36fc5a6` (CI coverage
+backlog note, reworked below rather than applied as-is). The trainer now
+authors and swings a real two-handed overhead chop instead of borrowing the
+throw clip; verified by re-running `tests/smoke_playground.gd`
+(`_a_swing_plays_the_chop_and_lands_on_its_impact_frame`), which is OK and
+reports `chop swing: role=chop clip=chop impact at 0.73 of 0.625s (want
+~0.60)` mid-swing (the trailing print reads `clip=idle` because it fires
+after the poll loop, once the one-shot has already reverted -- a display
+quirk, not a bug; role/clip were asserted correctly earlier in the same
+check). `a9215a1b` (the branch's own CI-wiring commit for this and other
+Gate A checkpoints) conflicted heavily against `main`'s own later, more
+complete `verify-owner-regressions-shard` / `verify-gate-evidence-shard` /
+`verify-continuous-core-known-red` jobs and was not cherry-picked whole --
+see BACKLOG.md's `CI-COVERAGE-1` for what it and a broader sweep still found
+unwired.
+
+**2. Dark Team Tether NPCs, confirmed with real renders, not asserted.**
+grunt's rank palette (`#4a5049`, luminance ~0.30) crushed Hess to a
+near-black silhouette on the band3 picket road via
+`character_model.gd::_shared_variant_material`, which multiplies the rank
+colour into both `albedo_color` and the shared self-lit emission channel at
+once. A first-round fix that only raised the palette hex (to luminance
+~0.55) and scaled `emission_energy_multiplier` up for dark tints still
+rendered almost solid black once actually captured -- a straight multiply
+can only ever darken a source pixel, and wherever the rig's painted emission
+texture is already near-black, no tint brightness or energy scalar rescues
+a value that was already zero. Fixed with an ADDITIVE emission floor
+(`lerp()` the tinted emission toward the tint colour, gated to skip every
+`#ffffff` identity tint so villagers are untouched), the same shape as
+`severed_spokes.gd::_tether_material()`'s tether_oxblood fix. Re-rendered:
+Hess now reads with visible brown leather and blue-grey uniform detail, not
+a flat cutout. `npc_ranks.json`'s grunt/officer hexes stay at their
+round-1-brightened values (still the darkest pair below captain/warden) even
+though the real fix turned out to be in `character_model.gd`, not the data.
+
+**3. SURVEY_BAND2 capture bug.** Ported `capture_band3_region.gd`'s two
+established fixes into `tools/survey_band2.gd`: pin weather to clear and
+stop both `WorldLook`/`WorldWeather` processing before the per-viewpoint
+loop (the day/night clock was racing the settle/pose waits across 8
+viewpoints and rolling day frames toward dusk before capture), and park the
+actor-less viewpoints' `Player` above ground instead of 500m under it
+(`water.gd` reads that as fully submerged and ramps a red drowning vignette
+over the whole frame -- the actual source of the reported crimson, already
+diagnosed once in `capture_band3_region.gd`'s own header comment 3).
+Verified with a fresh `survey_band2.gd` run: all 8 frames wrote clean,
+`04-warrens-mouth-day.png` is genuine daylight, and the night frames read as
+blue dusk with a lit pylon, not submerged-red.
+
+Not done: the 31-file `CI-COVERAGE-1` backlog item (non-blocking, filed for a
+dedicated pass) and the pre-existing, unrelated `CONTINUOUS-CORE` axe-swing
+defect (the swing never STARTS in that one flaky smoke-test scenario --
+`equipped=""`, `prop=<null>` -- a different bug from the chop clip this item
+fixed, already tracked in BACKLOG.md and untouched here).
+
+
 `ralph/ASSESSMENT_2026-08-23.md` (P2) named 3 real content gaps as the suite's
 only failures. All 3 fixed as data, no code changes:
 

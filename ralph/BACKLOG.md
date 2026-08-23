@@ -70,6 +70,41 @@ Check the tree.
 
 ---
 
+## CI-COVERAGE-1 — 31 smoke_*.gd files exist with no CI job (non-blocking)
+
+Filed by `STRANDED-P3` while reconciling `origin/claude/gate-a-core-verbs-8aaw7g`'s
+CI-wiring commit (`a9215a1b`) against current `main`: `main` had already wired
+its own (later, differently-shaped) `verify-owner-regressions-shard` /
+`verify-gate-evidence-shard` / `verify-continuous-core-known-red` jobs closing
+most of that same gap, so `a9215a1b` itself conflicted heavily and was not
+cherry-picked whole — reopening its own already-superseded job structure would
+have thrown away `main`'s more complete version for no gain. What `a9215a1b`
+still names that `main`'s version does not: `smoke_title_new_game`,
+`smoke_save_persistence`, `smoke_gate_a_build_segment_meadows`,
+`smoke_gate_a_map_cycle`, `smoke_no_double_prompt`, `smoke_collision_streaming`
+— six Gate A checkpoint/lifecycle regressions that exist on disk and run in no
+CI job. A broader sweep of `tests/smoke_*.gd` against the current `ci.yml`
+found 25 more beyond those six: `smoke_backpack_pad_target`,
+`smoke_build_menu_footprint`, `smoke_build_menu_pad_pick`,
+`smoke_camera_probe`, `smoke_controller_catching`,
+`smoke_craft_panel_controller`, `smoke_creature_control`, `smoke_evolution`,
+`smoke_exploration_legend`, `smoke_gateb_flags`,
+`smoke_hud_handheld_legibility`, `smoke_interactable_sightline`,
+`smoke_menu_focus`, `smoke_menu_owns_dpad`, `smoke_mouse_look`,
+`smoke_name_prompt_controller`, `smoke_name_prompt_keyboard`,
+`smoke_pond_water`, `smoke_prompt_hotbar_dock`, `smoke_release`,
+`smoke_rename_pad_trigger`, `smoke_step_up`, `smoke_village_smith`,
+`smoke_village_trade`, `smoke_village_trainer`, `smoke_wake_softlock`.
+
+Not wired in this pass: none confirmed green against current `main` first
+(a red job added blind is worse than an unwired test — it wedges every branch
+behind a check nobody has seen pass), and 31 files is real re-audit scope, not
+a side effect of a CI-wiring cherry-pick. Worth a dedicated pass: run each
+against current `main`, confirm or fix it, then wire it into an existing
+shard (or the unit suite if it's cheap enough to run every commit).
+
+---
+
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
 Filed by `GATES-ABC-VERIFY` (see `ralph/DONE.md`). Each of these was found by

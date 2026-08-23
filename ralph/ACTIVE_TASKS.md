@@ -60,7 +60,7 @@ Fresh owner blockers include:
 - building rotate not working;
 - door/build/roof modular sizing and usable doors still wrong;
 - free-build/free-crafting rule inconsistency;
-- equipped axe hold/grip and visible chopping swing still not reading correctly in normal play;
+- equipped axe hold/grip and visible chopping swing still not reading correctly in normal play — **OP21-24 landed on `STRANDED-P3`** (`ralph/DONE.md`): the trainer now swings an authored two-handed chop clip instead of the borrowed throw animation, verified by `tests/smoke_playground.gd`'s mid-swing role/clip/impact-timing check. Left here rather than struck: this closes the "no chop clip at all" defect the owner's report matches, but only a real owner ROG pass re-confirms the grip/swing now READS right in normal play, and `CONTINUOUS-CORE` (`ralph/BACKLOG.md`) is a separate, still-open defect where the swing never starts at all in one flaky smoke-test scenario;
 - confusing party-cycle presentation and remaining `Pal` terminology;
 - team count showing `2/5` after three creatures are caught;
 - roadside signs placed in travel lanes;

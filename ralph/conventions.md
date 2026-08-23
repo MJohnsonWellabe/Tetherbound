@@ -156,6 +156,13 @@ reason not to push throwaways at all.
 
 ## Art pipeline traps already paid for
 
+- **Re-baking an asset mid-session does not reach a capture until you
+  re-import.** A `--script` capture run loads the IMPORTED form out of
+  `.godot/`; overwriting the `.glb` on disk leaves that cache alone, so the
+  frames come back pixel-identical to the asset you just replaced and read as
+  "the re-key changed nothing". Paid for once on OP21-24's chop clip, where a
+  whole re-key round was judged against the previous bake. Run `godot
+  --headless --path . --import` between the bake and the capture, every time.
 - **A fresh container has no `.godot/` import cache and no Blender/Godot.**
   `tools/art_pipeline/setup.sh all` fetches both; `godot --headless --path .
   --import` builds the import cache once (needed before `tools/survey.sh` or
