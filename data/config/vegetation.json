@@ -7,38 +7,41 @@
   "_comment_ev2": "EV2 (bible sec10): an APPROVED SUBSET, not all 116 models in the fuller pack. `trees` (standard canopy) and `grove` (hero trees) are each cut to the bible's counts and given controlled spring/deep/yellow-green variants per model instead of one flat colour; `saplings` is new. Two of the bible's asks are NOT done here and are recorded rather than faked: 'wetland forms near river' was blocked on there being no water at all; EV5 has since shipped the pond/stream and reed stands at the banks, but a dedicated wetland MESH still does not exist; and the rock family's '2-3 large' tier has no distinct large-format mesh in the imported subset (the fuller Stylized Nature MegaKit is itch.io-blocked, see EV1-remainder in BLOCKED.md) \u2014 reusing the existing Rock_Medium meshes in a second layer would silently break their tint/collision via vegetation.gd's known models-shared-across-layers failure mode, so the existing single `rocks` layer's 0.28-2.1 scale span (already producing large-boulder reads from the same 3 medium meshes) stands as the honest ceiling until more geometry is unblocked.",
   "seed": 20260803,
   "_comment_corridor_bands": "VEG-CORRIDOR. The scatter's clumps/strays only ever sampled inside the old +-256m square (world_size below) -- everything past it, out to the corridor's real x+-1024/z-512..7680 (docs/decisions/D50/D51), was correctly-shaped baked ground with nothing growing on it. `density_scale` here (0..1, per band, TUNABLE) is the knob a content lane tunes to bring one band up as it gets authored -- NOT a single global figure, because a uniform full-density fill was measured to multiply the whole scatter's instance count and its ~45s share of boot by roughly the corridor:square area ratio (~64x), which is not affordable (see scatter_rules.gd::_place_corridor_fill's own header for the arithmetic). z ranges mirror terrain_playground.json's trail.bands (read, not imported -- this file owns scatter rules, not the spine) so a band's own reach matches the trail through it; z_max is exclusive, and the final band's max is the corridor's own z bound so nothing past band 5 is unaccounted for. A layer only fills the corridor at all if it opts in with its own `corridor_fill` key (see e.g. the `trees` layer below) -- absent is a no-op, same contract as verge/anchors.",
+  "_comment_visual_groundcover": "VISUAL-GROUNDCOVER. ASSESSMENT_2026-08-23's blind critique ranked emptiness the #1 gap in every round -- '60-90% of most frames is one flat green terrain material with confetti scatter', named as the single biggest lever in the chapter. Every band was still floored at 0.03-0.07 against the origin square's own tuned 1.0, so a player spends nearly the whole 7.5km chapter on a fraction of the ground cover the opening square carries. Raised roughly 1.4-1.7x per band (not to parity -- see the header above for why a uniform full-density fill is not affordable) using headroom test_scatter_perf_budget.gd still had free (committed bake 143,630 vs its 260,000 sane ceiling): a config-fingerprint re-bake after this edit landed at 223,271, still under the ceiling (14% headroom left) but close enough that a further band-density bump belongs on a freshly-measured bake, not a guess from this one. Band 3 (the river lock, already the sparsest and shortest band) and band 5 (drain stations already thin the ground at run time) get the smallest bumps; band 4 (chapter's longest region, the one this lane's own band4 hero-tree work sits in) gets the largest, matching band4's own standing density request in DONE.md. TUNABLE.",
   "corridor_bands": [
     {
       "id": "band1_lower_meadows",
       "z_min": -512.0,
       "z_max": 1360.0,
-      "density_scale": 0.07
+      "density_scale": 0.11
     },
     {
       "id": "band2_stone_and_root",
       "z_min": 1360.0,
       "z_max": 3180.0,
-      "density_scale": 0.05
+      "density_scale": 0.08
     },
     {
       "id": "band3_the_river_lock",
       "z_min": 3180.0,
       "z_max": 4760.0,
-      "density_scale": 0.03
+      "density_scale": 0.05
     },
     {
       "id": "band4_upper_meadows_ironwood",
       "z_min": 4760.0,
       "z_max": 7000.0,
-      "density_scale": 0.05,
-      "_why_gate_d4": "GATE-D4 REQUEST. 0.03 -> 0.05, matching bands 2 and 5. Asked for by the Band 4 lane and then arrived at independently by its blind pass, which named understorey, litter, saplings and overlapping canopy as what the ironwood stand still lacks -- all of them this scatter layer's job, none of them reachable from a band's own files. Band 4 is also the chapter's longest region at 2240m, so the floor density buys the least here per metre walked."
+      "density_scale": 0.085,
+      "_why_gate_d4": "GATE-D4 REQUEST. 0.03 -> 0.05, matching bands 2 and 5. Asked for by the Band 4 lane and then arrived at independently by its blind pass, which named understorey, litter, saplings and overlapping canopy as what the ironwood stand still lacks -- all of them this scatter layer's job, none of them reachable from a band's own files. Band 4 is also the chapter's longest region at 2240m, so the floor density buys the least here per metre walked.",
+      "_why_visual_groundcover": "VISUAL-GROUNDCOVER: 0.05 -> 0.085, the largest per-band bump in this pass -- band4 is both the chapter's longest region and the one whose own hero-tree/understorey gaps were already logged above, so a floor bump here buys the most walked metres of relief per point of density."
     },
     {
       "id": "band5_stronghold_approach",
       "z_min": 7000.0,
       "z_max": 7680.0,
-      "density_scale": 0.05,
-      "_why_gate_d5": "GATE-D5 REQUEST 3. 0.03 -> 0.05. Not a taste call: the eight drain stations granted with it make scatter_rules REMOVE vegetation along this route at run time, so a floor-density band gets thinner here, not thicker -- and drained ground only reads as damage if healthy ground survives beside it to compare against."
+      "density_scale": 0.07,
+      "_why_gate_d5": "GATE-D5 REQUEST 3. 0.03 -> 0.05. Not a taste call: the eight drain stations granted with it make scatter_rules REMOVE vegetation along this route at run time, so a floor-density band gets thinner here, not thicker -- and drained ground only reads as damage if healthy ground survives beside it to compare against.",
+      "_why_visual_groundcover": "VISUAL-GROUNDCOVER: 0.05 -> 0.07, smaller than the other bumps on purpose -- the drain stations already thin this band at run time, and a drained radius only reads as damage if the healthy ground beside it is not itself pushed to the same ceiling as the rest of the chapter."
     }
   ],
   "layers": {
@@ -362,8 +365,9 @@
       "max_slope_deg": 27.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Bushes reach nearer the waterline than trees but stay dry. TUNABLE.",
       "min_height": -21.9,
-      "scale_min": 0.6,
-      "scale_max": 1.5,
+      "_comment_scale_visual_groundcover": "VISUAL-GROUNDCOVER. Measured with tools/measure_models.gd, not guessed: this layer's own real-world model heights (not this file's stale 'ferns and broad plants' prose) are Bush_Common/Bush_Common_Flowers 1.58m and Fern_1 0.84m. At the old 0.6-1.5 * base_scale 0.9 span, Bush_Common's tall roll reached 2.13m -- taller than the 1.8m trainer beside it, a shrub standing over a human's head -- and Fern_1's tall roll reached 1.13m of frond height on a 2.83m x 2.65m canopy footprint, the '~1.5m ferns' the assessment measured in-scene once the canopy's own visual bulk is added to the stem. Pulled to 0.45-1.0 -- Bush_Common's ceiling drops to 1.42m (a tall shrub, still under head height) and Fern_1's to 0.76m (knee-to-hip, plausible fern height beside a person), while the floor stays a real small plant (0.64m/0.34m) rather than collapsing the layer's whole size range. TUNABLE -- check any change against a person in frame, the same rule the flowers layer's own R9.4 fix used.",
+      "scale_min": 0.45,
+      "scale_max": 1.0,
       "clear_radius": 9.0,
       "base_scale": 0.9,
       "lod_range": 110.0,
@@ -596,8 +600,8 @@
       "max_slope_deg": 22.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Flowers reach the waterline and stop. TUNABLE.",
       "min_height": -22,
-      "scale_min": 0.07,
-      "scale_max": 0.26,
+      "scale_min": 0.025,
+      "scale_max": 0.09,
       "clear_radius": 2.5,
       "base_scale": 1.0,
       "lod_range": 45.0,
@@ -605,7 +609,8 @@
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
-      "_comment_scale_r9_4": "R9.4. THE LOUDEST SCALE ERROR IN THE BUILD. Was scale 0.35-0.8 on base_scale 1.0. A blind critic measured the flower heads against the 1.8m NPC standing beside the barn and found them reaching his shoulder, with foreground heads spanning four 0.4m stepping stones -- about 1.8m across on a 2m stem, roughly 4x life size for a meadow wildflower. It is also the second-loudest colour in frame, so the error is maximally visible: the flower layer competes with the buildings instead of reading as ground detail. The key art's flowers are an ankle-height carpet. Cut to a quarter, which puts heads at ankle-to-shin. TUNABLE -- but check any change against a person in frame, not by eye."
+      "_comment_scale_r9_4": "R9.4. THE LOUDEST SCALE ERROR IN THE BUILD. Was scale 0.35-0.8 on base_scale 1.0. A blind critic measured the flower heads against the 1.8m NPC standing beside the barn and found them reaching his shoulder, with foreground heads spanning four 0.4m stepping stones -- about 1.8m across on a 2m stem, roughly 4x life size for a meadow wildflower. It is also the second-loudest colour in frame, so the error is maximally visible: the flower layer competes with the buildings instead of reading as ground detail. The key art's flowers are an ankle-height carpet. Cut to a quarter, which puts heads at ankle-to-shin. TUNABLE -- but check any change against a person in frame, not by eye.",
+      "_comment_scale_visual_groundcover": "VISUAL-GROUNDCOVER. R9.4's own 0.07-0.26 range was tuned against Clover's shorter models, but this layer also carries Flower_3/4 (measured with tools/measure_models.gd: 2.05-2.49m raw), and the SAME scale_max on a taller model still put a Flower_4 head at 0.26*2.49=0.65m -- shin-to-knee on a 1.8m person, still roughly the '0.5-0.8m violet blossom' oversize the follow-up assessment measured, not the ankle-height carpet the comment above believed it had already reached. A further ~3x cut (0.07-0.26 -> 0.025-0.09) puts every model in this layer's 1.14-2.49m raw-height range at 0.03-0.22m of blossom -- ankle height across the board rather than only for the shortest model in the list. TUNABLE -- check against a person in frame."
     },
     "rocks": {
       "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle. The critic found the previous rocks read as 'dollops of moss' because their lit top face was the same hue as grass \u2014 these carry a real rock texture instead of a tinted flat colour.",
@@ -894,6 +899,13 @@
       "per_clump": 12,
       "clump_radius": 3.5,
       "strays": 90,
+      "_comment_corridor_fill_visual_groundcover": "VISUAL-GROUNDCOVER. This was the one ground-cover layer with no `corridor_fill` key at all, so 'small stones' and a trodden-path texture existed only inside the origin square -- the whole rest of the 7.5km corridor had dirt paths with nothing on them. `path_bias` above only fires inside `_place_clumps` (the square's own mechanism); `_place_corridor_fill` needs its own `trail_bias` to reach the same siting, hence the high value here rather than the more moderate figure the tree/bush layers use -- a stone note belongs ON the trodden path itself, not spread across the corridor's open ground the way canopy/undergrowth do. `trail_offset_min/max` is much tighter than any other layer's for the same reason: 0-5m keeps stones on the path and its immediate shoulder rather than the 15-80m band the tree/bush layers site their copses in. TUNABLE.",
+      "corridor_fill": {
+        "density_scale": 2.5,
+        "trail_bias": 0.9,
+        "trail_offset_min": 0.0,
+        "trail_offset_max": 5.0
+      },
       "max_slope_deg": 14.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. The path network ends above the waterline; stray stones stay with it. TUNABLE.",
       "min_height": -21.9,

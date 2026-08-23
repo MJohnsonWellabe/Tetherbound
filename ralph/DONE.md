@@ -3,6 +3,84 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## VISUAL-GROUNDCOVER — chapter-wide ground-cover density, oversized-flora rescale, two band4 Ironwood landmark trees
+
+`tests: the four named scatter/veg tests green individually (test_scatter_rules.gd 27/27, test_scatter_perf_budget.gd 3/3, test_scatter_fingerprint_covers_bands.gd 3/3, test_veg_corridor.gd 6/6); test_harvest.gd 22/22 (band4 harvest.json touched); full suite NOT run this session -- see "what's unverified" below` · `area: data/config/vegetation.json, data/config/bands/band4_upper_meadows_ironwood/harvest.json, data/scatter/playground/* (re-bake), tests/test_scatter_rules.gd`
+
+ASSESSMENT_2026-08-23.md ranked emptiness the #1 blind-critique gap in every
+round ("60-90% of most frames is one flat green terrain material with
+confetti scatter... ground cover density and flower drifts are the single
+biggest lever"), alongside two named scale errors (violet flowers ~3x oversize
+at 0.5-0.8m blossoms, ~1.5m ferns) and orchard-scale (6-9m) Ironwood hero trees
+against the keyart's 15-20m landmarks. `BAND2-FLOOR` (unmerged, `cf4d25e4`) was
+in flight on the same file doing hand-sited forest-floor anchors; this lane's
+diff never touches an `anchors` array, so the two should merge cleanly.
+
+**What shipped:**
+
+1. **Corridor-wide ground-cover density.** `vegetation.json`'s
+   `corridor_bands.density_scale` (the knob every ground-cover layer's
+   `corridor_fill` multiplies against, per `scatter_rules.gd::_band_scale_at`)
+   was floored at 0.03-0.07 against the origin square's own tuned 1.0 --
+   raised roughly 1.4-1.7x per band (band1 0.07->0.11, band2 0.05->0.08, band3
+   0.03->0.05, band4 0.05->0.085, band5 0.05->0.07; band3/5 get the smallest
+   bumps -- band3 is the shortest region, band5's drain stations already thin
+   it at run time). `path_stones` gained its own `corridor_fill` (it had none
+   before -- "small stones" and a trodden-path read existed only inside the
+   origin square) with a tight 0-5m trail offset so stones sit on the path
+   itself, not spread across open ground.
+2. **Flora rescale.** `flowers` layer `scale_min/max` 0.07-0.26 -> 0.025-0.09
+   (measured with `tools/measure_models.gd`: the layer's Flower_4 models are
+   2.05-2.49m raw, so the old scale_max still put blossoms at 0.5-0.65m on the
+   taller models even though the layer's own R9.4 comment believed it had
+   already fixed this to ankle height). `bushes` layer `scale_min/max`
+   0.6-1.5 -> 0.45-1.0 (Bush_Common's old ceiling reached 2.13m -- taller than
+   the 1.8m trainer -- and Fern_1's reached ~1.13m of frond height on top of a
+   2.83m canopy footprint, the game's actual read of "~1.5m ferns").
+3. **Two band4 Ironwood landmark trees.** `harvest.json` order 4000 and 4003
+   (of the stand's five TwistedTree_4 nodes) raised from `model_scale`
+   0.42/0.36 to 0.85/0.78 -- real height ~15.9m/14.6m against TwistedTree_4's
+   measured 18.74m raw height, up from the previous 4.9-7.9m orchard-scale
+   stand. The other three nodes are untouched (modest scale variation, not a
+   uniform regrade -- `_comment_stand_d4b`'s own prior finding was that
+   uniform scale reads as scatter, not a placement, and turning all five into
+   landmarks would repeat that).
+4. **Re-baked.** `data/scatter/playground` config-fingerprint re-bake:
+   143,630 -> 223,271 placements (10 layers, 256 regions), comfortably inside
+   `test_scatter_perf_budget.gd`'s 260,000 sane ceiling (14% headroom left --
+   a further density bump belongs on a freshly-measured bake, not a guess
+   from this one).
+5. **One test fix.** `test_scatter_rules.gd::test_path_bias_of_one_lands_clumps_on_the_road`
+   duplicates the real `path_stones` layer and toggles `path_bias`; adding
+   `corridor_fill` to that layer meant both the biased and unbiased runs now
+   also draw corridor-fill instances (which don't read `path_bias` at all --
+   tested separately in `test_veg_corridor.gd`), diluting both averages and
+   breaking the test's 10x ratio assertion. Fixed by erasing `corridor_fill`
+   from the test's duplicated layer to isolate the square-only mechanism the
+   test is actually about.
+
+**What's unverified.** The blind visual-judge pass (survey render + contact
+sheet + blind sub-agent critique, `ralph/conventions.md`'s own requirement for
+visual-affecting work) did not complete this session. Three render attempts
+via `tools/survey.sh`/`survey.gd` under `xvfb-run`+`opengl3` were OOM-killed
+(exit 137, confirmed via `dmesg` against this session's own `claude-code-bash`
+memory cgroup, 14.3GB limit) or hit a one-frame renderer flake (`05-spawn-low-sun`
+came back a flat black frame, spread 0.0000, on an otherwise-clean 4/5-frame
+run) under heavy concurrent load from five-plus sibling lanes sharing this
+box (1-min load 15-35 for most of the session; ~22 concurrent Godot processes
+at peak). No `frame_stats.py` before/after deltas and no blind critique were
+obtained. `tools/_capture_band4_sites.gd`'s `ironwood-grove` shot (the direct
+verification frame for item 3 above) was never captured either. The config
+math, the model measurements (`tools/measure_models.gd`), and the four named
+scatter/veg tests are the only verification this entry can honestly claim --
+**the actual rendered result has not been looked at, by a human or a blind
+critic, and should be before this is treated as done.** Next step for
+whoever picks this up: `tools/survey.sh` (or the raw `xvfb-run ... survey.gd`
+invocation, `--headless` must NOT be combined with `--rendering-driver`)
+once the box has real headroom, then `godot --headless --path . --script
+tools/contact_sheet.gd`, then the `visual-judge` skill's blind sub-agent pass,
+iterating per `ralph/conventions.md`'s convergence rule.
+
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 
 `tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd (new), scripts/world/rift_collapse.gd, data/config/building_prefabs.json, data/config/stronghold_occupation.json (new), data/config/rift_collapse.json`
