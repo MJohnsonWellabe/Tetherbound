@@ -115,8 +115,19 @@ streaming activation verified live.
 ## Blind visual critique — the weakest part of the game
 
 Both bar questions: **NO** (keyart-belonging: no; Palworld-kind: no).
-Round 1 covered opening, band2, band3, stronghold frames; band4/village
-round pending capture completion.
+Round 1 covered opening, band2, band3, stronghold frames; round 2
+covered band4 + a village-pond frame and returned NO/NO again with new
+specifics: untextured grey ghost boxes on 4 of 7 band4 horizons
+(investigate vs storm slabs / sky planes / distant LOD), band4 ground
+at dark dead-olive with a dusk-sky/afternoon-shadow mismatch,
+violet flowers ~3× oversize (0.5–0.8m blossoms), trees at orchard
+scale (6–9m) where the keyart draws 15–20m landmarks, camps reading as
+props-on-lawn (no fire ring/tent/wear/arriving path), resort-turquoise
+pond water against a dusk sky, hard grass-water edges, and
+speckle-noise creature textures with unreadable faces. Positives both
+rounds: wandering forked paths, correct object grounding, receding
+hills/fog, keyart-shaped layout — "the vocabulary exists, the
+sentences don't."
 
 The three separating gaps, ranked:
 1. **Emptiness** — 60–90% of most frames is one flat green terrain
