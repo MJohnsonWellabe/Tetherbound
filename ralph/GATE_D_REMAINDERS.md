@@ -203,6 +203,28 @@ change and was reverted to its pre-investigation form. Confirmed: three
 consecutive local runs all reached the historical +23.5-23.6m margin after
 the spawn-table fix, with no other change to the walk.
 
+**Same bug class, second location — CI run 2170.** Fixing the galecrest
+cluster made the Old Mill Crossing itself pass on CI, but the same shard then
+failed `smoke_traversal.gd`'s OTHER wild-body check: the basic four-direction
+walk near spawn, "player got wedged ... at move_left at (-8, 40)" (move_back
+had ended at `(60.0, -7.4, 39.9)`, so move_left's constant-z leg runs near
+z≈40). Same method, same result:
+`data/config/bands/band1_lower_meadows/spawns.json`'s order 1006 — a
+BAND1-D1-DENSITY bramblebun cluster from the same 2026-08-22 owner directive,
+centred `(-2.4, 35.2)` radius 14.2 — reached to z=49.4 before wander, well
+past the walk's z≈40 line. `tools/_probe_spawn_wedge.gd` (the same
+frame-by-frame replay as `_probe_mill_stall.gd`) caught it directly:
+`get_slide_collision()` named `Wild_bramblebun_1006_3` as the collider,
+glancing on one local run and (per CI) square-on enough elsewhere to trip the
+sustained-wedge check. Fixed the same way: moved further along z and shrunk
+the radius (`35.2/14.2 → 62.0/8.0`) so a full wander excursion still clears
+z≈40 by 7m, keeping the density pass's own "left of the spine" siting intent.
+Two for two — every wild cluster this investigation has actually walked into
+was sited without checking it against a route or test walk that happens to
+cross nearby; a third may exist unfound. `smoke_traversal.gd`'s own
+four-direction walk and both crossing walks are the only routes verified
+clear so far.
+
 ---
 
 ## What is NOT open, so nobody re-investigates it
