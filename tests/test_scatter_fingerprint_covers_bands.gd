@@ -108,21 +108,48 @@ func test_the_fingerprint_survives_a_json_round_trip() -> void:
 		"the fingerprint changed passing through JSON, which is exactly what "
 		+ "manifest.json does to it on every bake")
 
-## A band with no vegetation.json is the normal case, not an error — most bands
-## have never needed a clearing. The missing-file branch must skip, not return
-## 0: returning 0 would make `is_fresh` false forever for every such band and
-## turn the freshness check into a permanent "re-bake now" that nobody could
-## satisfy.
+## A band with no vegetation.json is the normal case, not an error -- most bands
+## had none until Gate D. The missing-file branch must skip, not return 0:
+## returning 0 would make `is_fresh` false forever for any band without one and
+## turn the freshness check into a permanent "re-bake now" nobody could satisfy.
+##
+## GATE-D, second pass: this used to assert against whichever real band files
+## happened to be absent, and it stopped covering anything the moment D3, D4 and
+## D5 each authored a clearing -- all five bands have a vegetation.json now. Its
+## own failure message said so ("this test no longer covers the missing-file
+## branch and needs rewriting against a temp path"), which is the failure that
+## sent me here. So it now MAKES the condition instead of hoping for it: move a
+## real band file aside, take the fingerprint, put it back. A test that quietly
+## stops testing anything is the thing this repo's conventions warn about by
+## name.
 func test_a_band_with_no_vegetation_file_does_not_void_the_fingerprint() -> void:
-	var missing := 0
-	for band: String in BAND_CONTENT.BANDS:
-		if not FileAccess.file_exists(_band_veg_path(band)):
-			missing += 1
+	var band: String = BAND_CONTENT.BANDS[0]
+	var path := _band_veg_path(band)
+	var original := FileAccess.get_file_as_string(path)
+	assert_ne(original, "", "%s is empty or unreadable; this test needs a real band file" % path)
 
-	# If every band grows a vegetation.json this assertion stops testing
-	# anything, so say so rather than passing vacuously.
-	assert_true(missing > 0,
-		"every band now has a vegetation.json; this test no longer covers the "
-		+ "missing-file branch and needs rewriting against a temp path")
-	assert_ne(BAKE.config_fingerprint(), 0,
-		"fingerprint returned 0 with %d band vegetation files absent; absent is normal" % missing)
+	var with_file := BAKE.config_fingerprint()
+	assert_ne(with_file, 0, "fingerprint was 0 with every band file present")
+
+	# Remove it for real. DirAccess.remove_absolute rather than a rename, so the
+	# absent branch is reached by the same FileAccess.file_exists check the
+	# production path uses.
+	var absolute := ProjectSettings.globalize_path(path)
+	var removed := DirAccess.remove_absolute(absolute) == OK
+	assert_true(removed, "could not remove %s to create the missing-file condition" % path)
+
+	var without_file := BAKE.config_fingerprint()
+
+	var writer := FileAccess.open(path, FileAccess.WRITE)
+	if writer != null:
+		writer.store_string(original)
+		writer.close()
+	assert_eq(FileAccess.get_file_as_string(path), original,
+		"failed to restore %s; the working tree is now dirty" % path)
+
+	assert_ne(without_file, 0,
+		"config_fingerprint() returned 0 with one band's vegetation.json absent. "
+		+ "Absent is normal, and 0 means no bake is ever fresh for that band.")
+	assert_ne(without_file, with_file,
+		"removing a band's vegetation.json did not move the fingerprint, so the "
+		+ "file is not actually in the hash")
