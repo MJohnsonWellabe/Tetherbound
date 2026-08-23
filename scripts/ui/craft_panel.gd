@@ -126,6 +126,12 @@ func open() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
 	get_tree().paused = true
+	# A station panel is a modal surface, and the exploration HUD was drawn
+	# straight over the top of it -- the creature block, roster, vitals,
+	# hotbar and minimap all still painting across this panel's own rows. It
+	# went unnoticed because the UI survey used to shoot these panels with no
+	# world loaded at all, so there was no HUD in the frame to collide with.
+	INPUT_OWNER.set_world_hud_visible(get_tree(), false)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_poll()
 	if not _rows.is_empty():
@@ -143,6 +149,9 @@ func close() -> void:
 	# true value can come from a previous modal in the same handoff and
 	# restoring it after every visible panel is gone freezes the world.
 	if INPUT_OWNER.current(get_tree()) == null:
+		# Only once nothing else owns the screen -- restoring on any close
+		# would put the HUD back over a panel that is still open underneath.
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_tree().paused = false
 

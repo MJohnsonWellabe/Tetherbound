@@ -79,6 +79,41 @@ static func suppress_pause_reopen(tree: SceneTree) -> void:
 		menu.call("suppress_reopen")
 
 
+## Hide or restore every world HUD layer while a modal surface owns the screen.
+##
+## Two layers, not one. `combat_hud.gd` is mounted beside `PlaygroundHUD` in the
+## world scene and draws `encounter_director.gd`'s own prompt line ("Call out
+## Biscuit") whenever that director owns the active prompt, fight or no fight --
+## so hiding only the exploration HUD leaves that line printing through whatever
+## opened over it.
+##
+## Lives here rather than in each panel because five station panels and the
+## pause shell all need the identical answer, and `game_menu.gd` already
+## carried a private copy of it that knew about one layer. A sixth surface that
+## joins `GROUP` and forgets to call this is the failure this file's own header
+## describes for input gates: one caller wired, the next forgotten.
+##
+## Callers hide on open, and restore inside the same
+## `current(tree) == null` branch that releases pause -- restoring on any close
+## would re-show the HUD over a panel that is still up when one modal closes on
+## top of another.
+##
+## `build_menu.gd` deliberately does NOT call this. It keeps the world live
+## behind it on purpose, and the player needs the hotbar to pick a piece;
+## `playground_hud.gd::_yield_bottom_to_build_menu()` already takes away the
+## part of the HUD that would collide.
+static func set_world_hud_visible(tree: SceneTree, value: bool) -> void:
+	if tree == null:
+		return
+	var world := tree.current_scene
+	if world == null:
+		return
+	for layer_path in [^"PlaygroundHUD", ^"CombatHUD"]:
+		var hud := world.get_node_or_null(layer_path)
+		if hud != null:
+			hud.visible = value
+
+
 ## Does `node` own input at this moment?
 ##
 ## `is_open()` first because it is what the panels in this group actually mean —

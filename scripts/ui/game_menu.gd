@@ -811,10 +811,4 @@ func _find_combat(node: Node) -> Node:
 ## exactly the reason `input_owner.gd`'s header gives about per-caller gates
 ## drifting out of sync.
 func _set_world_hud_visible(value: bool) -> void:
-	var world := get_tree().get_current_scene()
-	if world == null:
-		return
-	for layer_path in [^"PlaygroundHUD", ^"CombatHUD"]:
-		var hud := world.get_node_or_null(layer_path)
-		if hud != null:
-			hud.visible = value
+	INPUT_OWNER.set_world_hud_visible(get_tree(), value)
