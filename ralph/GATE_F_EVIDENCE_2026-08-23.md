@@ -127,6 +127,18 @@ berry cluster in band 2. Eighteen intervals reach 100 m; seven of those are in
 band 2. There is no dead-travel problem in this corridor, at the seams or
 inside any band.
 
+### Reproducibility
+
+The corridor was measured three times: twice before merging `origin/main` and
+once after, with a full `--import` between (the documented stale-import trap).
+All three agree byte for byte — 11,519 m, 571 met, worst gap 165 m ending at
+4,782 m, 909 wild bodies, 0 underground. The last of those runs is the committed
+record (`ralph/reports/gate-f-run-2026-08-23-1919/`) and it includes PERF-ROG's
+changes to `interaction_arbiter.gd` and `encounter_director.gd`, which is worth
+saying explicitly: the arbiter and the director are the two systems this
+evidence leans on hardest, they were rewritten underneath it mid-session, and
+the corridor did not move.
+
 ### Encounter density and reality — PASS
 
 571 points of interest within 30 m of the route: **503 wild creatures, 14

@@ -1,4 +1,4 @@
-# Gate F — full-chapter run, 2026-08-23 19:06
+# Gate F — full-chapter run, 2026-08-23 19:19
 
 Produced by `tools/gate_f_chapter_run.py` on `/root/godot-bin/Godot_v4.7-stable_linux.x86_64`.
 
@@ -9,10 +9,10 @@ Produced by `tools/gate_f_chapter_run.py` on `/root/godot-bin/Godot_v4.7-stable_
 | # | segment | verdict | wall time | covers |
 |---|---------|---------|-----------|--------|
 | 1 | Gate B — title through the village tournament to South Bridge | **FAIL** (exit 1) | 3.7 min | title, fresh save, opening, first catch, team, tools, gathering, villagers, home, creature bed, sleep, tournament, South Bridge |
-| 2 | D corridor — South Bridge through band 1..5 to the Hall approach | recorded | 1.3 min | band1 Lower Meadows, band2 Quarry/Warrens, band3 River/Relay, band4 Upper Meadows, band5 Stronghold approach |
+| 2 | D corridor — South Bridge through band 1..5 to the Hall approach | recorded | 1.2 min | band1 Lower Meadows, band2 Quarry/Warrens, band3 River/Relay, band4 Upper Meadows, band5 Stronghold approach |
 | 3 | Gate E — Hall entry through the Warden, legendary and world healing | PASS | 5.6 min | patrol, courtyard, recovery point, elite, shutter, Warden, lever, legendary offer, release ceremony, region answer, post-win chain end |
 
-Harness wall time: **10.5 min**.
+Harness wall time: **10.6 min**.
 
 Harness wall time is not the player's 3–4 hours and must never be reported as it: the head grants the tournament's team rather than grinding six levels, the corridor steps its route instead of walking it at 4 m/s, and the tail tops fighters up. The player-time estimate is built from the corridor's own metres and the beat table below, not from this clock.
 
@@ -23,33 +23,37 @@ Harness wall time is not the player's 3–4 hours and must never be reported as 
 From the segment's own output:
 
 ```
-GATE B +143.40s — opening | title interactive
-GATE B +143.40s — opening | new game world entered
-GATE B +143.40s — opening | wake/Get Up complete
-GATE B +143.40s — opening | Grandpa briefing and pack complete
-GATE B +143.40s — opening | starter selected and named
-GATE B +143.40s — opening | usable house/front doorway exited
-GATE B +143.40s — opening | tutorial Bramblebun combat entered
-GATE B +143.40s — opening | Bramblebun naturally weakened to 33/124 HP
-GATE B +143.40s — opening | satchel drained to 1 orb(s) so the empty case is on the real path
-GATE B +143.40s — opening | running dry restocked the tutorial satchel to 5 orb(s)
-GATE B +143.40s — opening | physical landed throw caught Bramblebun on launch 2 (2 strike(s), 0 miss(es))
-GATE B +143.40s — opening | catch complete; exploration resumed with two-creature party
-GATE B +143.40s — opening played; player stands where the game left them, at (20.0, 1.0, -29.0)
-GATE B +143.49s — team of 3 at level 6 qualifies for the tournament
-GATE A NPC/GATHER +12.90s — Tam cycle 1 exited and movement resumed
-GATE A NPC/GATHER +12.90s — Tam handed over axe, pickaxe, knife and torch through dialogue
-GATE A NPC/GATHER +16.28s — Satchel assigned four tools by focused controller input
-GATE A NPC/GATHER +18.73s — axe equipped, swung, gathered +4 Wood
-GATE A NPC/GATHER +21.16s — pickaxe equipped, swung, gathered +3 Stone
-GATE A NPC/GATHER +24.60s — knife equipped, swung, gathered +4 Fiber
-GATE A NPC/GATHER +42.68s — Oskar cycle 1 exited and movement resumed
-gate B continuous FAIL: village tools: could not reach or activate door 'Door' in 1200 frames (player 3.6m away at (18.0, 1.0, -6.0), door at (15.0, 1.0, -3.0), prompt enabled=true, arbiter winner=EncounterDirector). A distance that does not shrink across runs is the player walking into geometry, not walking slowly.
-gate B continuous FAIL: village tools: could not naturally enter Mira's building
-ERROR: could not reach or activate door 'Door' in 1200 frames (player 3.6m away at (18.0, 1.0, -6.0), door at (15.0, 1.0, -3.0), prompt enabled=true, arbiter winner=EncounterDirector). A distance that does not shrink across runs is the player walking into geometry, not walking slowly.
-ERROR: could not naturally enter Mira's building
-ERROR: village tools: could not reach or activate door 'Door' in 1200 frames (player 3.6m away at (18.0, 1.0, -6.0), door at (15.0, 1.0, -3.0), prompt enabled=true, arbiter winner=EncounterDirector). A distance that does not shrink across runs is the player walking into geometry, not walking slowly.
-ERROR: village tools: could not naturally enter Mira's building
+GATE B +135.01s — opening | title interactive
+GATE B +135.01s — opening | new game world entered
+GATE B +135.01s — opening | wake/Get Up complete
+GATE B +135.01s — opening | Grandpa briefing and pack complete
+GATE B +135.01s — opening | starter selected and named
+GATE B +135.01s — opening | usable house/front doorway exited
+GATE B +135.01s — opening | tutorial Bramblebun combat entered
+GATE B +135.01s — opening | Bramblebun naturally weakened to 34/124 HP
+GATE B +135.01s — opening | satchel drained to 1 orb(s) so the empty case is on the real path
+GATE B +135.01s — opening | running dry restocked the tutorial satchel to 5 orb(s)
+GATE B +135.01s — opening | physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE B +135.01s — opening | catch complete; exploration resumed with two-creature party
+GATE B +135.01s — opening played; player stands where the game left them, at (23.0, 1.0, -35.0)
+GATE B +135.04s — team of 3 at level 6 qualifies for the tournament
+GATE A NPC/GATHER +17.50s — Tam cycle 1 exited and movement resumed
+GATE A NPC/GATHER +17.50s — Tam handed over axe, pickaxe, knife and torch through dialogue
+GATE A NPC/GATHER +20.88s — Satchel assigned four tools by focused controller input
+GATE A NPC/GATHER +23.53s — axe equipped, swung, gathered +4 Wood
+GATE A NPC/GATHER +25.81s — pickaxe equipped, swung, gathered +3 Stone
+GATE A NPC/GATHER +29.09s — knife equipped, swung, gathered +4 Fiber
+GATE A NPC/GATHER +48.71s — Oskar cycle 1 exited and movement resumed
+GATE A NPC/GATHER +58.17s — Mira cycle 1 exited and movement resumed
+GATE A NPC/GATHER +65.69s — Bram cycle 1 exited and movement resumed
+GATE A NPC/GATHER +67.11s — Bram cycle 2 exited and movement resumed
+GATE A NPC/GATHER +68.08s — Bram cycle 3 exited and movement resumed
+GATE A NPC/GATHER +70.25s — five NPC/modal exits and three equipped-tool gathers returned world control
+GATE B +205.30s — visited the village and came away with tools
+gate B continuous FAIL: gather route: use_tool has no physical joypad binding
+gate B continuous FAIL: gather route: wood action produced no visible inventory gain
+ERROR: gather route: use_tool has no physical joypad binding
+ERROR: gather route: wood action produced no visible inventory gain
 ```
 
 ## corridor — D corridor — South Bridge through band 1..5 to the Hall approach
@@ -95,7 +99,7 @@ arrived at the Hall with 5 creatures
 walked in from the entrance; 13.5m from the Outer Works' centre
   beat stronghold_patrol; tracked objective now 'Fight through the guard inside Meadows Hall. 1/3'
   beat stronghold_courtyard; tracked objective now 'Fight through the guard inside Meadows Hall. 2/3'
-  rested a fainted creature at the recovery point: 16.4/196 hp back
+  rested a fainted creature at the recovery point: 16.3/196 hp back
   beat stronghold_elite; tracked objective now 'Defeat the Meadows Warden.'
 the shutter lifted once the elite fell
 read the reveal on the threshold, before the Warden
