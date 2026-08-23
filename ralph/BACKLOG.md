@@ -1069,6 +1069,20 @@ ceiling, until checked) — but on the largest structure in the Meadows, legible
 from hundreds of metres. **Check `D63`'s exact failure first**: one model
 reaching the world down two code paths, only one of which warms its material.
 
+**ADDRESSED by `GATE-E-STRONGHOLD-ART` (2026-08-23), and the diagnosis above is
+wrong — worth reading before anyone re-opens it.** It is not `D63`'s failure and
+there is no unwarmed material path; `building_prefabs.gd` retints every castle
+module correctly and always has. The castle renders black because `art.json`
+puts the sun in the NORTH sky (pitch -44, yaw -40) while `landmark.gd` puts the
+gate, ramp and whole approach on the SOUTH side, so the hero face is backlit at
+every hour the chapter is played and lit by ambient fill alone — measured near
+luma 0.012 on `gate-close` against a 0.49–0.60 reference range. Fixed by raising
+the retint ladder and by giving the garrison its own fires
+(`stronghold_occupation.gd`), not by repainting. See `DONE.md`. **Remaining: the
+blind visual-judge pass could not be spawned during that lane (session service
+unavailable) — the frames are improved and unjudged, and the blind pass still
+owes this item.**
+
 ### SKY-PLANES — large translucent quads hang in the air over the stronghold
 `model: sonnet` · `tests: smoke_stronghold` · `area: visual`
 Visible in both `shots/storm_pass/01-road-approach.png` and
@@ -1077,6 +1091,44 @@ standing in the sky above and behind the stronghold, at a scale that reads from
 the whole approach. Not a subtle artefact and not previously reported.
 Unknown cause — candidates are an LOD/impostor plane, a shadow-catcher, or a
 wall mesh with a broken transform.
+
+**FIXED by `GATE-E-STRONGHOLD-ART` (2026-08-23). None of the three candidates.**
+They are `scripts/world/rift_collapse.gd`'s `StormWall_0/1/2` — the storm-road
+seam backdrop, correct material, correct transform, simply being looked at from
+1.4–2.0km away by viewpoints that did not exist when it was authored. That file
+still claims its meshes sit "outside the 512m terrain"; the 8192m corridor move
+silently ended that. Fixed with a viewing band
+(`rift_collapse.json`'s `visible_within_metres` / `fade_metres`) rather than a
+colour, applied to `FarCountry` too since it would inherit the same defect the
+moment `legendary_freed` is set. Identification tool:
+`tools/_probe_sky_slabs.gd`. If a translucent rectangle turns up on some other
+horizon, probe it the same way before assuming it is this one — `BILLBOARD-WHITE`
+below is a separate, still-open report.
+
+### STRONGHOLD-TETHER-HERO-PROPS — what this site would spend a Meshy generation on
+`model: sonnet` · `tests: smoke_stronghold` · `area: visual` · **blocked on owner reference art**
+Recorded by `GATE-E-STRONGHOLD-ART` rather than generated, because `CLAUDE.md`
+reserves Meshy for Team Tether hero objects **and never without owner-supplied
+reference art**, and there is none for any of these. Everything that lane
+shipped is installed-asset kit-bash; these are the places where that is visibly
+the ceiling rather than the choice:
+
+- **A real brazier / fire-basket.** Currently two primitives (post + bowl) with
+  `torch_prop.gd`'s billboard flame seated in it, because `assets/**` ships no
+  brand, lantern or brazier mesh at all — `torch_prop.gd`'s own header already
+  recorded that gap. It reads as a dark cup on a stem at 26m.
+- **A Team Tether gate pylon / relay mast for the gatehouse.** The teal work
+  lamps are an emissive sphere in a cylinder housing. The relay site and the
+  tether machine both have real apparatus; the fortress that Team Tether
+  actually holds has none of it on the outside.
+- **A barbican or outer-works gate for the ramp foot.** The approach reads as a
+  camp beside a ramp rather than a controlled entry. Note the terrain bound
+  recorded in the castle recipe before designing one: the Rise flank climbs
+  +34m twenty metres west of the wall and the heightfield ends ~30m east, so a
+  sprawl has to go SOUTH down the approach, not around the footprint.
+- **A hanging banner with real cloth silhouette.** The kit's `Banner.obj` is a
+  flat pennant; nine of them now hang on the south face and they read as small
+  red flags rather than as an occupying army's colours.
 
 ### BILLBOARD-WHITE — untextured white cards standing among the trees
 `model: sonnet` · `tests: smoke_playground` · `area: visual`

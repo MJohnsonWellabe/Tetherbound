@@ -3,6 +3,193 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
+
+`tests: full suite 1355 tests, 830269 assertions, 0 failed` · `area: scripts/world/landmark.gd, scripts/world/stronghold_occupation.gd (new), scripts/world/rift_collapse.gd, data/config/building_prefabs.json, data/config/stronghold_occupation.json (new), data/config/rift_collapse.json`
+
+Prompts `21-STRONGHOLD-MAT` and `22-SKY-PLANES`, plus the stronghold half of
+`ralph/ASSESSMENT_2026-08-23.md`'s round-2 blind critique ("an untextured
+toy-scale blockout (~30m), bannerless, unlit-looking, no Tether presence" /
+"untextured grey ghost boxes on 4 of 7 band4 horizons").
+
+### The stronghold was not untextured. It was unlit, and that is measurable.
+
+The first thing worth recording is that **`21-STRONGHOLD-MAT`'s own hypothesis
+was wrong, and so was mine for the first hour.** There is no broken material
+path, no null material, no builder bypassing the palette. `building_prefabs.gd`
+retints every castle module correctly and always has.
+
+What is actually wrong is an argument between two files that have never been
+read together:
+
+* `data/config/art.json` authors the sun at **pitch -44, yaw -40** — the north
+  sky.
+* `landmark.gd` puts the gate, the ramp and the entire approach on the castle's
+  **south** side, because that is where the road and the Legendary Chamber are.
+
+So the hero face of the endgame landmark is **backlit at every hour the chapter
+is ever played**, and everything a player looks at walking in is lit by ambient
+fill alone. Measured on `main` with `tools/frame_stats.py`:
+
+| frame | near-field luma, main | reference range (art.json's own quote) |
+|---|---|---|
+| `gate-close` | **0.012** | 0.49 – 0.60 |
+| `silhouette-approach` | **0.053** | 0.49 – 0.60 |
+
+Ten to forty times under. No albedo survives that. A stone colour chosen against
+a lit test render lands at near-black when the surface it is on never sees the
+sun, which is exactly what the earlier pass that DARKENED this castle's retint
+(recorded in `landmark.gd`'s `PLINTH_COLOUR` history) walked into — it was
+answering a washed-out-at-distance complaint from the era when this was a
+long-range wayfinding silhouette, and `OF13` moved the site out of long-range
+view entirely. `landmark.gd`'s own header already says that argument stopped
+being load-bearing; the darkening it bought could be given back.
+
+**Turning the sun around was deliberately NOT done here.** It is one global
+value every biome, frame and combat-readability decision in the game is tuned
+against, and it lives in the environment config another lane owns. Two fixes
+were used instead, and both are inside this lane's scope:
+
+1. **Albedo.** Every stone value in the `castle` retint raised about a stop and
+   a half, ladder unchanged (`LightRock` #786d5e→#a3907a, `DarkRock`
+   #463f37→#6b5f52, `Black` #18140f→#221d18, `Celing`, `LightWood`). The plinth
+   followed it (#332e28→#524a41) and is still darker than the wall's darkest
+   stone, so round 3's "foundation grounds the mass" relationship is preserved,
+   not undone. Team Tether's oxblood is untouched.
+2. **The garrison's own fires.** A fortress held by an army, facing away from
+   the sun, is lit by the people holding it. That is `stronghold_occupation.gd`
+   below, and it is the honest fix rather than a cheat.
+
+Result: `gate-close` near luma **0.012 → 0.144** (12x), `silhouette-approach`
+**0.053 → 0.128** (2.4x), value spread on `gate-close` **0.38 → 0.52**.
+
+### It was genuinely bannerless, and the two banners that existed were inside a wall
+
+`tools/_probe_castle_geometry.gd` (scratch) instantiates the prefab and reads
+the real per-module AABBs back instead of trusting the recipe's own `_why`
+prose. It found the two shipped gatehouse banners at z -9.648 hanging on
+`LargeSquareTowerBricks` at scale 3.4, whose measured south face is at
+**z -10.79** — they have been buried in the masonry since the day they were
+authored. **Neither blind critic who called this castle "bannerless" was wrong
+about what was on screen.** Fixed, plus seven more: four down the south curtain
+run, one on each south corner tower, one on the keep.
+
+Measured extents, for whoever dresses this next (local frame, castle base =
+plinth top = y 4.2): curtain top **13.97**, outer face **-9.07**; gatehouse
+flankers top **18.4**, south face **-10.79**; south corner towers top **23.6**,
+south face **-11.19**; keep top **33.6**; plinth top **4.2**, south edge
+**-10.0**, leaving a 0.93m apron. They are in
+`stronghold_occupation.json`'s `_comment_measured` too.
+
+### `stronghold_occupation.gd` — presentation only, no collider, no flag
+
+Fire baskets at the gate, on the ramp head, along the parapet, down the ramp's
+own verges and at the checkpoint; Team Tether work lamps in the reserved teal on
+the gatehouse, in the gate passage and on the keep's crown; and a garrison camp
+running ~30m along the base of the south wall — tents, bedroll, firewood, a
+stone-ring fire, oxblood-marked crates, barrels, rope — with more clutter on the
+courtyard slab inside the gate.
+
+Nothing generated, no new asset. Flames are `torch_prop.gd`'s existing billboard
+geometry **with its stick freed** and seated on a two-primitive iron basket; the
+camp is `generated_camp` / `kenney_survival` / `quaternius_fantasy` props
+`props.gd` already places elsewhere; banners are the castle kit's own
+`Banner.obj`. The camp is also the answer to "toy-scale": a 1.8m tent beside a
+10m curtain is the scale cue an untextured wall cannot give on its own. **The
+footprint was not changed** — the terrain probe recorded in the castle recipe
+bounds it (the Rise flank climbs +34m twenty metres west, the heightfield ends
+~30m east), and height already carries the scale.
+
+Nothing is inside the ramp's own 6m walked width. `smoke_stronghold` passes
+unchanged — it exercises `stronghold.gd`'s five-space route, which is a
+different building sited south of this one and is untouched.
+
+### Six rounds of my own iteration before the blind pass, all of them earned
+
+Recorded because each was a real defect a render caught and reading the config
+would not have: round 1 hung braziers in mid-air and glued crates to the outside
+of a wall (numbers inferred from prose, hence the geometry probe); round 2 left
+a row of black mushrooms on sticks (a 0.78m handheld brand scaled 2.6x is 2.8m
+of bare pole out of a bowl) and a translucent grey smoke plume up the right
+third of the hero shot — the same reading this task is elsewhere REMOVING from
+the Band 4 horizons, so that camp's smoke column is dropped; round 3 turned the
+whole fortress orange (energy 6.0 / range 20) and washed the south curtain
+sickly green with teal at range 11, which breaks the reservation as surely as
+painting something friendly teal would; rounds 4–6 dialled fire back to
+punctuation, halved the teal reach twice, and respaced the ramp baskets after
+`tools/_probe_occupation.gd` measured one landing **2.06m** from the
+`gate-close` eye, which is where the black bowl filling that frame's corner came
+from.
+
+### SKY-PLANES: named, and it is not a broken transform
+
+`shots/band4/far-panels-north.png`'s three pale translucent rectangles are
+`scripts/world/rift_collapse.gd`'s **`StormWall_0/1/2`**, proven by
+`tools/_probe_sky_slabs.gd` — 1943–2005m from that viewpoint, inside the
+capture camera's own 2000m far plane and dead ahead of it, and 1414–1557m off
+`ridge-patrol-camp` and `watchtower-spur`.
+
+Nothing is broken in the material or the transform. `rift_collapse.gd`'s own
+header still asserts every mesh sits "260–460m out ... outside the 512m
+terrain"; the first half is true and **the second half quietly stopped being
+true when the world moved to the 8192m corridor** and the seam went with it to
+z≈7513. At the seam the effect works — 365–461m out, each slab subtending ~26°
+of sky, a wall of weather with no land past it. At 2km the identical quad
+subtends 5–8° and the fog it is correctly drawn through blends roughly two
+thirds of the way to `fog_colour`, so a slate storm wall becomes a small, pale,
+hard-edged translucent box on a hillside.
+
+So the fix is a **placement contract, not a colour**: `visible_within_metres`
+1150 / `fade_metres` 250 in `rift_collapse.json`, applied to both groups.
+Proven visually as well as analytically: `shots/band4/ridge-patrol-camp.png`
+re-shot from the identical viewpoint is the same frame with the pale
+rectangles simply absent, and `tools/frame_stats.py` over the four Band 4
+frames that re-rendered moves nothing except that frame's value spread
+(0.60 → 0.63, which is what removing three pale sky quads does) — every other
+axis identical to three decimals, so nothing else in Band 4 was disturbed.
+
+The two frames the assessment named by name, `far-panels-east` and
+`far-panels-north`, were **not** re-shot: the seven-shot Band 4 capture was
+killed four frames in (those two are last in its dict), and the coordinator
+then held all renders — the box was at load ~29 with five lanes capturing into
+each other and one lane had written zero frames in 32 minutes. Re-shooting them
+is cheap when the box is free: `tools/_capture_far_panels.gd` (scratch, this
+task) is the same two viewpoints and the same 22-degree lens with the other
+five dropped. It is worth doing, but the finding does not rest on it —
+`ridge-patrol-camp` is a same-viewpoint A/B on the identical defect, and
+`tools/_probe_sky_slabs.gd` covers all seven Band 4 sightlines analytically
+(nearest 1414m, against a 1150m cull) without a renderer at all.
+Chosen off the storm road's own length rather than picked round — the road runs
+z 7000→7513, so a player stepping onto its far end stands ~919m from the nearest
+slab and must still see the wall they have walked toward all chapter; full
+opacity holds to 900m, fades to nothing by 1150m, with ~260m of margin under the
+1414m nearest Band 4 sightline. Re-probed: every Band 4 sightline culled, the
+seam view untouched. `FarCountry` gets it too — it is at zero alpha until
+`legendary_freed` and would have inherited the identical defect the moment the
+Warden fell. `horizon()`/`_cover()` read `instance.visible`, which a visibility
+RANGE does not touch, so `smoke_boss`'s before/after signature is unaffected.
+
+### Not done, and why
+
+* **The blind visual-judge pass did not run.** `conventions.md` requires it and
+  I could not spawn the critic: this lane has no in-process subagent tool, and
+  every `create_session` attempt returned "the service is temporarily
+  unavailable". The six rounds of iteration above are **my own** reads of real
+  frames, which is explicitly not the same thing. The frames and the sheet are
+  built and current; **the next firing on this branch should run the blind pass
+  before this is called done**, against `shots/wayfinding/_sheet.png` and the
+  three frames, with `docs/reference/`. Treat the frames as
+  improved-and-unjudged, not as passed. Both remaining pieces of work — that
+  blind pass and the two `far-panels-*` frames — are render-bound, so check
+  `uptime` first: the coordinator's standing rule this weekend is not to start
+  a capture unless the 1-minute load average is under 8. It was 10.2 and
+  falling when this branch was pushed.
+* `GATE-E-LOGIC` had not landed on `origin/main` at branch time (no
+  `tests/smoke_gate_e_finale.gd` present), so it was not run.
+* No Meshy generation was spent. `CLAUDE.md` reserves it for Team Tether hero
+  objects **with owner-supplied reference art**, and there is none for a
+  brazier, a pylon or a barbican. What this site would actually use is recorded
+  in `BACKLOG.md` as `STRONGHOLD-TETHER-HERO-PROPS` rather than generated.
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 
