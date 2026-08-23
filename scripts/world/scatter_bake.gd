@@ -74,7 +74,26 @@ static func config_fingerprint() -> int:
 				continue
 			return 0
 		mixed = mixed ^ (file.get_as_text().hash() + int(path.hash()) + 0x9e3779b9 + (mixed << 6) + (mixed >> 2))
-	return mixed
+	# GATE-D: masked to 53 bits, and it has to be.
+	#
+	# This number is written into `manifest.json` and read back through
+	# `JSON.parse_string`, which has no integer type -- every number comes back
+	# as a double. A 64-bit hash does not survive that: the first value this
+	# function produced after the band files joined the hash was
+	# -7753574619431497427, and the manifest read back
+	# -7753574619431496704, off by 723 because the magnitude is ~860x past the
+	# 2^53 where doubles stop representing consecutive integers exactly.
+	#
+	# `is_fresh()` then compared the two and said no, so the suite failed with
+	# "the bake is stale" on a bake that had just been written from the very
+	# config it was being compared against -- and the advice in that failure
+	# ("re-run the bake and commit the result") could never have fixed it.
+	#
+	# Masking rather than changing the manifest format keeps every existing
+	# reader working and needs no migration. 53 bits is far more than a
+	# staleness check needs; the alternative, storing it as a string, buys
+	# 11 more bits of hash for a format change nothing else wants.
+	return mixed & 0x1FFFFFFFFFFFFF
 
 
 ## Floor-divided region coordinate for a world-space spot, matching the

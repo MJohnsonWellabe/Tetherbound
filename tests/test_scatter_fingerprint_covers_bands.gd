@@ -80,6 +80,34 @@ func test_a_band_clearing_moves_the_scatter_fingerprint() -> void:
 		+ "so a stale bake would be served for it")
 
 
+
+
+## GATE-D. The fingerprint has to survive a round trip through `manifest.json`,
+## and a 64-bit one does not.
+##
+## `JSON.parse_string` has no integer type: every number comes back as a double,
+## which stops representing consecutive integers exactly past 2^53. The first
+## value `config_fingerprint()` produced after the band files joined the hash
+## was ~860x past that, and read back off by 723 -- so `is_fresh()` compared a
+## freshly written bake against the config it had just been written from and
+## said no. The suite failed with "the bake is stale", and the advice in that
+## failure, re-run the bake, could never have fixed it.
+##
+## Verified failable before shipping: removing the `& 0x1FFFFFFFFFFFFF` mask
+## fails this test with the real pre-fix numbers.
+func test_the_fingerprint_survives_a_json_round_trip() -> void:
+	var fingerprint := BAKE.config_fingerprint()
+	assert_true(fingerprint >= 0 and fingerprint <= 0x1FFFFFFFFFFFFF,
+		"config_fingerprint() returned %d, outside the 53-bit range a JSON double " % fingerprint
+		+ "can hold exactly; manifest.json will read it back as a different number")
+
+	# Not a proxy for the round trip -- actually do it.
+	var round_tripped: Variant = JSON.parse_string(JSON.stringify({"f": fingerprint}))
+	assert_true(round_tripped is Dictionary, "could not round-trip the fingerprint through JSON")
+	assert_eq(int((round_tripped as Dictionary)["f"]), fingerprint,
+		"the fingerprint changed passing through JSON, which is exactly what "
+		+ "manifest.json does to it on every bake")
+
 ## A band with no vegetation.json is the normal case, not an error — most bands
 ## have never needed a clearing. The missing-file branch must skip, not return
 ## 0: returning 0 would make `is_fresh` false forever for every such band and
