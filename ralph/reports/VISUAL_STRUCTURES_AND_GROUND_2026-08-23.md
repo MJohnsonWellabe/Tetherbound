@@ -94,3 +94,60 @@ The floating badge sphere on the Team Tether ranks has now been reported by
 (*"a debug gizmo, not insignia"*), and the ground survey, which saw *"a
 detached orange sphere floating beside the Warden's face"* without being asked
 about characters at all.
+
+---
+
+# The stronghold: RULED — a siting bug, not a material bug
+
+Three critics called the stronghold *"untextured blockout"*, *"the game's
+antagonist made of nothing"*, and *"needs art not in the build… no amount of
+scatter or lighting will hide a five-hundred-metre grey plane."* That last
+conclusion is **wrong**, and the evidence is in the configs rather than in any
+frame.
+
+VIS-SITES found a second castle and shot both, specifically to separate two
+fixes hiding behind one verdict. This ruling closes that question without
+needing the frames.
+
+**`scripts/world/playground_world.gd` builds a node named
+`StrongholdSilhouette` on every boot**, from `landmark.gd`, at
+`RISE_CENTRE (140, -90) + OFFSET (89.8, -54.4)` = **(229.8, -144.4)**. It is a
+132-module assembled castle — four corner towers, a two-module gate, nine
+oxblood banners, a retinted stone kit.
+
+`landmark.gd`'s own comment gives its job: *"271 m out and therefore beyond
+`world_perimeter.gd`'s 235 m ring — it is a silhouette, drawn to be seen and
+not reached"*, sited on the bearing from the Sigil Gate's OLD position at
+(130, -176).
+
+**Then OW5D moved the map and left it behind.** The Sigil Gate went to
+(0, 7400); `stronghold.json`'s site went to (0, 7560). `landmark.gd` line 25
+states the silhouette's coordinates are *"unchanged from OF9/OF13"*. So the
+castle now stands beside the village at z = -144, framed as a distant view
+from a gate that is 7.5 km away and no longer exists there — while the
+destination the player actually walks to is a different system that renders as
+blockout.
+
+**The game already owns a good castle. The player never sees it.**
+
+## What this changes
+
+The fix is not authoring a fortress kit. It is one or both of:
+
+1. **Re-site the silhouette** onto the new stronghold bearing so it reads as
+   the destination seen from distance — the job it was built for, on the map
+   that now exists.
+2. **Bring the castle prefab's assembly and retint to the destination itself**,
+   so the thing the player reaches is made of the kit that already works.
+
+Both are cheap against "needs art that is not in the build", which is what the
+structures round's verdict implied and what would have been budgeted for.
+
+## Method note
+
+This was ruled from `playground_world.gd`, `landmark.gd`, `stronghold.json` and
+`map_landmarks.json` — no render. A blind critic looking at frames could not
+have reached it: the frames show a blockout stronghold and are correct that it
+looks like one. Photographing the second castle told VIS-SITES it existed;
+reading the constants told us why it is in the wrong place. **The critic
+diagnoses the symptom; only the code names the cause.**
