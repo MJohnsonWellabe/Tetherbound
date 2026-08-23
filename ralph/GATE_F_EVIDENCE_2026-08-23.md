@@ -365,11 +365,12 @@ one hard blocker.
 | 11 | meaningful legendary/release decision | 'Kettle' released for the legendary, live | met |
 | 12 | visible post-Warden world healing | 115 plants, 17 lights out, 4 patrols withdrawn | met |
 | 13 | 3–4 h focused pacing | floor 2.04 h; projection 4.08 h | **marginal — 2% over** |
-| 14 | acceptable ROG Ally/Windows performance | code-verified only; no Ally in this container | **unproven here** |
+| 14 | acceptable ROG Ally/Windows performance | PERF-ROG landed mid-session: per-frame CPU −86..−90% at six corridor sites, 33–40 ms → 3.8–4.7 ms against a 16.7 ms budget. Still not a device frame rate. | **improved, unproven on hardware** |
 | 15 | no major core-verb reliability failures | 1362 tests / 0 failed; no failure seen in any run | met |
 
 **11 of 15 met on measured evidence. One blocked on Gate B, one marginal, one
-unprovable in this container, and the visual pass belongs to another lane.**
+materially improved but unprovable without the hardware, and the full-corridor
+visual pass belongs to another lane.**
 
 ---
 
@@ -380,7 +381,15 @@ unprovable in this container, and the visual pass belongs to another lane.**
   loop in one command.
 - **Save continuity across the three segments** — designed, not built; waiting
   on the same branch.
-- **Target hardware.** No ROG Ally here.
+- **Target hardware.** No ROG Ally here. `ralph/PERF-ROG` landed on `main`
+  while this session ran and closes the CPU half of OP23-01: the arbiter was
+  polling 24,461 prompt providers a frame, and per-frame GDScript cost is down
+  86–90% at six corridor sites — from 33–40 ms, twice a 60fps frame's entire
+  budget before the renderer drew anything, to 3.8–4.7 ms. That is the single
+  biggest change to condition 14 the chapter has had, and it happened after the
+  measurements above were taken, so nothing else in this document reflects it.
+  It is still not a device frame rate, and that report says so itself. The GPU
+  half is filed as `PERF-ROG-GPU` and needs an Ally.
 - **The full-corridor visual pass** — the VISUAL coordinator's item 6, and the
   second of the two conditions Prompt 70's pass requires. The
   2026-08-23 blind critique answered NO to both bar questions; whether the

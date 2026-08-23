@@ -103,10 +103,33 @@ func _run() -> void:
 	if total > 0 and resident_at_a >= total and resident_at_b >= total:
 		failures.append("resident count never dropped below the world total when the streaming centre moved -- nothing is ever being freed")
 
+	# --- check 4 (PERF-ROG): the cell-indexed sweep is placement-for-placement
+	# identical to the exhaustive one it replaced.
+	#
+	# `vegetation.gd::_stream_batch()` used to test EVERY collidable placement
+	# in the world on every call -- 22,306 of them, twice a second, measured at
+	# 8-10ms a sweep. It now visits only the cells the bubble's bounding box
+	# covers. That is only a safe trade if the answer is unchanged, and "the
+	# resident count looks plausible" is not that check: a cell-indexing bug
+	# leaves a whole cell of trees walk-through-able, which still counts as
+	# "some colliders are resident" and would pass checks 1-3 above.
+	#
+	# So this recomputes, from the placement data itself, exactly which
+	# placements SHOULD be resident at CORNER_B (the last centre streamed
+	# above) by brute force, and compares the two sets. A single placement in
+	# one set and not the other fails.
+	var expected: int = int(vegetation.call("collidable_within", CORNER_B))
+	var actual: int = int(vegetation.call("collision_resident_count"))
+	print("brute-force expectation at corner B: %d resident, sweep produced %d" % [expected, actual])
+	if expected != actual:
+		failures.append(
+			"the cell-indexed streaming sweep disagrees with a brute-force pass over every placement: %d should be resident at %s, %d actually are" % [
+				expected, CORNER_B, actual])
+
 	print("")
 	if failures.is_empty():
-		print("collision-streaming: OK — %d/%d resident at boot, and the resident set actually changes (%d at corner A, %d at corner B) as the streaming centre moves." % [
-			resident_at_boot, total, resident_at_a, resident_at_b])
+		print("collision-streaming: OK — %d/%d resident at boot, the resident set actually changes (%d at corner A, %d at corner B) as the streaming centre moves, and the cell-indexed sweep matches a brute-force pass exactly (%d)." % [
+			resident_at_boot, total, resident_at_a, resident_at_b, expected])
 		quit(0)
 	else:
 		for line in failures:
