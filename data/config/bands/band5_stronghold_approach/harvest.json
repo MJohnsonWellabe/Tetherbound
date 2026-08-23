@@ -1,4 +1,90 @@
 {
   "_comment": "BAND-SPLIT. Band-local nodes for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
-  "nodes": []
+  "_comment_bare": "BAND5-CONTENT. Prompt 66: 'the approach must still contain Meadows ecology and resource decisions. It should not become an empty faction corridor.' This file was empty -- every band3/4/5 harvest table is -- and Band 5 is the chapter's LAST chance to say the Meadows still grows something before the Hall swallows the frame entirely. Two groups: one node early, at the mouth the player enters through, so the region does not open as pure faction corridor; five around `the_waystop` (vegetation.json order 5000, props.json order 5001, map_landmarks.json), the final preparation clearing, so a player who stops there to build has the wood/stone/fiber to do it with rather than a bare lawn with a bench on it. Models/amounts follow the established band1/band2 vocabulary -- no new asset.",
+  "nodes": [
+    {
+      "order": 5000,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Pull tough grass",
+      "at": [
+        -58.0,
+        7112.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 0.9,
+      "_why": "The mouth of the band, beside the outer watch (trainers.json order 5005) and the burrowback cluster (spawns.json order 5000). Coarse grass that outlasted the drain -- the last easy forage before the ground starts telling you Team Tether has been at it."
+    },
+    {
+      "order": 5001,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -32.0,
+        7452.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "The waystop clearing (vegetation.json order 5000, centre (-25,7460) r14) -- materials for a player who stops here to build rather than a bare lawn. AMOUNT RAISED 4 -> 8 by the D5 verification pass, and the number is not arbitrary: prompt 66 asks the final preparation point to let the player \"stop, adjust the five, rest/camp\", and the cheapest rest object in the game is `creature_bed` at wood 6 + fiber 8 (data/items/buildables.json). The Waystop's own five nodes paid wood 8 / stone 6 / fiber 4 -- HALF the fiber for the one thing the place exists to enable, on a clearing that by design keeps the bushes (the only renewable fiber, vegetation.json `_comment_harvest_fiber`) off the very ground the player is standing on. At 8 the site funds EXACTLY one creature bed and nothing more: `camp` still needs 12/8/10 and stays out of reach. That is the intended shape rather than a shortfall patched to comfort -- the last stop before the assault heals ONE of the five, so which one is a real choice, and it is still built and paid for rather than an automatic free heal the prompt explicitly warns against."
+    },
+    {
+      "order": 5002,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -14.0,
+        7469.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 5003,
+      "item": "stone",
+      "amount": 3,
+      "label": "Break loose stone",
+      "at": [
+        -19.0,
+        7448.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 5004,
+      "item": "stone",
+      "amount": 3,
+      "label": "Break loose stone",
+      "at": [
+        -31.0,
+        7469.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.05
+    },
+    {
+      "order": 5005,
+      "item": "fiber",
+      "amount": 8,
+      "label": "Pull tough grass",
+      "at": [
+        -22.0,
+        7455.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 0.85
+    },
+    {
+      "order": 5006,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stone",
+      "at": [46.0, 7331.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "BAND5-DEADTRAVEL. The second beat placed into the 123m empty diagonal the driven run measured (see spawns.json order 5022). Stone rather than another fiber/wood pair because the five nodes at `the_waystop` already cover a builder's needs at the camp; this one is 130m earlier, on the exposed leg, and its job is to be a reason to break stride rather than a reason to stop and build. Model and amount follow the band1/band2 stone vocabulary -- no new asset."
+    }
+  ]
 }

@@ -1,4 +1,147 @@
 {
   "_comment": "BAND-SPLIT. Band-local clusters for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
-  "clusters": []
+  "_comment_bare": "BAND5-CONTENT. This file was empty and prompt 66 asks for visible Team Tether occupation building across the region, not just at the doorstep, plus a real final preparation point. Two clusters, both built from the same Quaternius Fantasy Props MegaKit every other band already uses (D24, one prop family) -- nothing new.",
+  "clusters": [
+    {
+      "order": 5000,
+      "name": "outer_watch_cache",
+      "_why": "The outer watch's own supply cache (trainers.json order 5005, Watchman Corr at (-68,7140)) -- a working checkpoint's kit, not an abandoned one: crates and a barrel stacked square and close together rather than scattered, the same 'a touching pile reads as one load' finding `quarry_station`'s own cluster (band2) already used, but upright and squared rather than tipped -- somebody here is still using it. A bag sits apart, ready rather than forgotten.",
+      "props": [
+        {
+          "model": "FarmCrate_Empty",
+          "at": [
+            -71.4,
+            7143.8
+          ],
+          "yaw_deg": 12.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the cache's anchor, square to the road"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -70.6,
+            7144.9
+          ],
+          "yaw_deg": 8.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "stacked hard against the first crate's side -- a load, not a scatter"
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            -72.3,
+            7145.6
+          ],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a post that expects to be manned a while"
+        },
+        {
+          "model": "Bag",
+          "at": [
+            -69.8,
+            7142.6
+          ],
+          "yaw_deg": -110.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "kit set down within arm's reach of the challenge line, not tucked away -- Corr is on duty, not camped"
+        }
+      ]
+    },
+    {
+      "order": 5001,
+      "name": "the_waystop",
+      "_why": "EXPEDITION-REST/prompt 66's final preparation point. A remembered clearing, not a hotel: `vegetation.json` (order 5000) keeps this 14m nook clear for a player to build in, `harvest.json` (orders 5001-5005) puts wood/stone/fiber within a few paces, and this cluster is the flavour that makes it read as a place travellers already stop rather than a bare lawn -- log seats and a kept pack, no bed and no fire ring (the shipped prop family has neither model; `ranger_camp`'s own note in band2 records the same substitution). Deliberately NOT collapsed or abandoned like `ranger_camp`: this is the last waystop before the Hall, still in use, the difference between a place something happened to and a place people keep choosing to stop.",
+      "props": [
+        {
+          "model": "Bench",
+          "at": [
+            -26.5,
+            7457.0
+          ],
+          "yaw_deg": 35.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- seating, facing back down the road the player just climbed"
+        },
+        {
+          "model": "Anvil_Log",
+          "at": [
+            -24.0,
+            7458.8
+          ],
+          "yaw_deg": -20.0,
+          "sink_m": 0.06,
+          "scale": 0.9,
+          "_why": "a second, lower seat opposite the bench -- two ways to sit, the same cue `ranger_camp`'s round 3 used for 'a place people actually gathered'"
+        },
+        {
+          "model": "Bag",
+          "at": [
+            -25.2,
+            7456.0
+          ],
+          "yaw_deg": 140.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "somebody's kit, set down and not forgotten -- whoever stopped here meant to come back for it, unlike the abandoned camps further back"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -27.8,
+            7459.4
+          ],
+          "yaw_deg": -60.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "within reach of the bench, not tipped -- this stop is tended"
+        }
+      ]
+    },
+    {
+      "order": 5002,
+      "name": "road_watch_drop",
+      "_why": "BAND5-DEADTRAVEL, and prompt 66's 'visible Team Tether occupation' asked for ACROSS the 680m rather than at the doorstep. The driven run measured a 123m stretch of the spine with nothing within reach; this is the first of the three beats placed into it, and the one that does the region's own job. Not a manned post -- Corr is 150m behind and Ness 130m ahead, and a third body here would spend a combat beat the prompt explicitly says not to spend before the stronghold. A supply DROP instead: a load left on the road for somebody who has not come for it yet. The occupation is present in the props even where nobody is standing, which is the whole read this leg was missing. Same Quaternius Fantasy Props MegaKit as the other two clusters (D24, one prop family).",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [9.2, 7281.4],
+          "yaw_deg": 24.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set square to the road, the way a load is put down rather than dropped"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [10.4, 7282.3],
+          "yaw_deg": 19.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "hard against the first -- `quarry_station`'s own finding, that a touching pile reads as one load and a scattered one reads as debris"
+        },
+        {
+          "model": "Barrel",
+          "at": [8.1, 7283.1],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "upright, closing the third side, so the drop has a shape from the road"
+        },
+        {
+          "model": "Bag",
+          "at": [11.8, 7280.2],
+          "yaw_deg": 41.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "one item set apart and ready to be picked up -- the cue that says somebody is coming back for this"
+        }
+      ]
+    }
+  ]
 }

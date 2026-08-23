@@ -748,8 +748,17 @@ func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
 		# A live line is kept taut; a dead one has hung slack since the
 		# severance. The extra droop is also what keeps the dead span out of
 		# the skyline when seen from under it.
+		#
+		# `sag_scale` overrides the LIVE figure per run, defaulting to the 1.0
+		# every existing caller already gets. Added for the stronghold approach,
+		# whose spans are 35m against the spokes' and the quarry's ~14m: sag is
+		# proportional to span, so the same 1.0 that reads as a hanging cable
+		# over 14m reads as a taut straight diagonal over 35m -- the blind
+		# visual pass called it "a bezier debug line, not a hanging cable;
+		# cables sag, they do not soar." Dead spans are untouched.
+		var live_sag := maxf(float(config.get("sag_scale", 1.0)), 0.0)
 		_conduit_span(holder, i, attachments[i], attachments[i + 1],
-			_conduit_material(live), 1.0 if live else 2.2)
+			_conduit_material(live), live_sag if live else 2.2)
 
 
 ## Which way pylon `i` faces: toward its neighbour along the line.

@@ -7,7 +7,11 @@
       "order": 5000,
       "species": "burrowback",
       "count": 2,
-      "centre": [-85.0, 0.0, 7125.0],
+      "centre": [
+        -85.0,
+        0.0,
+        7125.0
+      ],
       "radius": 18.0,
       "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four."
     },
@@ -15,7 +19,11 @@
       "order": 5001,
       "species": "galecrest",
       "count": 3,
-      "centre": [-25.0, 0.0, 7255.0],
+      "centre": [
+        -25.0,
+        0.0,
+        7255.0
+      ],
       "radius": 22.0,
       "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable."
     },
@@ -23,7 +31,11 @@
       "order": 5002,
       "species": "duskhush",
       "count": 2,
-      "centre": [85.0, 0.0, 7375.0],
+      "centre": [
+        85.0,
+        0.0,
+        7375.0
+      ],
       "radius": 18.0,
       "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players."
     },
@@ -31,9 +43,242 @@
       "order": 5003,
       "species": "trailpup",
       "count": 2,
-      "centre": [20.0, 0.0, 7485.0],
+      "centre": [
+        20.0,
+        0.0,
+        7485.0
+      ],
       "radius": 16.0,
       "_why": "The last 80m before the Hall ((20,7480) is the spine's final point before (0,7560)). The chapter's strongest ordinary wild creatures, standing between the player and the Warden -- the final chance to weigh a catch against the five that are about to fight the boss."
+    },
+    {
+      "order": 5004,
+      "species": "mudsnout",
+      "count": 1,
+      "centre": [
+        130.0,
+        0.0,
+        7290.0
+      ],
+      "radius": 26.0,
+      "_why": "BAND5-CONTENT. Prompt 66's 'special encounter' -- one solitary, optional catch that tempts a prepared player to spend resources before the Hall. Mudsnout is deliberately the same species `stronghold_courtyard`'s Warder Solene fields (trainers.json) at level 16-17: Team Tether's own stock, escaped or turned loose off the drained ground, wilder for it. Not new lore -- it says the faction's creatures come from this same land, which the courtyard fight already implies. Sited off-spine at the `tm_heavenfall` detour (playground_world.gd's TM_AT, (140,7300)) so the same trip that risks the apex Air TM also risks this fight: two reasons to leave the road in the same 30m, not two separate errands. A LARGE radius (26m, against the ordinary clusters' 16-22m) reads as a single wary animal ranging rather than a den -- the opposite presentation from the burrowback/galecrest/duskhush/trailpup clusters, on purpose, so a prepared player can tell at a glance this is the one worth stalking rather than just another patch of aggro."
+    },
+    {
+      "order": 5005,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [
+        -31.1,
+        0.0,
+        7021.4
+      ],
+      "radius": 16.0,
+      "_why": "40m past the band boundary, west flank -- dug in before the mouth cluster proper"
+    },
+    {
+      "order": 5006,
+      "species": "galecrest",
+      "count": 5,
+      "centre": [
+        -23.9,
+        0.0,
+        7068.2
+      ],
+      "radius": 18.0,
+      "_why": "east flank of the mouth stretch, a second hunting pack answering the first"
+    },
+    {
+      "order": 5007,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        -76.5,
+        0.0,
+        7075.2
+      ],
+      "radius": 16.0,
+      "_why": "roosting close behind the outer watch (trainers.json order 5005) -- the post did not clear the ground around it"
+    },
+    {
+      "order": 5008,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [
+        -28.8,
+        0.0,
+        7168.8
+      ],
+      "radius": 14.0,
+      "_why": "past the outer watch, west flank, thinning into the exposed stretch"
+    },
+    {
+      "order": 5009,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -50.5,
+        0.0,
+        7217.4
+      ],
+      "radius": 16.0,
+      "_why": "west flank of the exposed stretch"
+    },
+    {
+      "order": 5010,
+      "species": "burrowback",
+      "count": 3,
+      "centre": [
+        18.0,
+        0.0,
+        7250.0
+      ],
+      "radius": 14.0,
+      "_why": "east flank, clear of the aggressor cluster's own 22m ring"
+    },
+    {
+      "order": 5011,
+      "species": "galecrest",
+      "count": 3,
+      "centre": [
+        3.2,
+        0.0,
+        7312.2
+      ],
+      "radius": 14.0,
+      "_why": "a second, smaller aggressive pocket on the exposed stretch -- thin, not empty"
+    },
+    {
+      "order": 5012,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        62.5,
+        0.0,
+        7308.3
+      ],
+      "radius": 16.0,
+      "_why": "east flank ahead of the Sigil gate"
+    },
+    {
+      "order": 5013,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        35.0,
+        0.0,
+        7345.0
+      ],
+      "radius": 16.0,
+      "_why": "closing on the gate, clear of the roost at the gate itself (order 5002)"
+    },
+    {
+      "order": 5014,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        73.6,
+        0.0,
+        7419.3
+      ],
+      "radius": 16.0,
+      "_why": "past the gate, east flank, ahead of the checkpoint (trainers.json order 5006)"
+    },
+    {
+      "order": 5015,
+      "species": "burrowback",
+      "count": 5,
+      "centre": [
+        -20.0,
+        0.0,
+        7505.0
+      ],
+      "radius": 18.0,
+      "_why": "west flank of the last stretch before the Hall, the densest ordinary cluster in the band's second half"
+    },
+    {
+      "order": 5016,
+      "species": "burrowback",
+      "count": 4,
+      "centre": [
+        -145.0,
+        0.0,
+        7085.0
+      ],
+      "radius": 18.0,
+      "_why": "off-spine warren pocket, west of the mouth -- leaving the road here is rewarded, not just scenery"
+    },
+    {
+      "order": 5017,
+      "species": "mudsnout",
+      "count": 3,
+      "centre": [
+        65.0,
+        0.0,
+        7055.0
+      ],
+      "radius": 14.0,
+      "_why": "off-spine pocket, east of the mouth"
+    },
+    {
+      "order": 5018,
+      "species": "pipwing",
+      "count": 4,
+      "centre": [
+        172.0,
+        0.0,
+        7255.0
+      ],
+      "radius": 18.0,
+      "_why": "off-spine flock over the tm_heavenfall detour (playground_world.gd TM_AT) -- a third reason to leave the road at the same spot as the apex TM and the mudsnout special encounter"
+    },
+    {
+      "order": 5019,
+      "species": "meadowhart",
+      "count": 3,
+      "centre": [
+        -165.0,
+        0.0,
+        7345.0
+      ],
+      "radius": 14.0,
+      "_why": "a grazing remnant well off the west flank -- the land still trying to live on ground this drained, the one un-hostile pocket in the band"
+    },
+    {
+      "order": 5020,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        -95.0,
+        0.0,
+        7395.0
+      ],
+      "radius": 18.0,
+      "_why": "off-spine roost west of the Sigil gate"
+    },
+    {
+      "order": 5021,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        150.0,
+        0.0,
+        7495.0
+      ],
+      "radius": 18.0,
+      "_why": "off-spine hunting pocket east of the final stretch, well clear of the checkpoint and the doorstep gauntlet"
+    },
+    {
+      "order": 5022,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        30.0,
+        0.0,
+        7308.0
+      ],
+      "radius": 18.0,
+      "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu."
     }
-  ]
+  ],
+  "_comment_density_pass": "BAND5-DENSITY. Owner directive, 2026-08-22: 'you're going to need a lot more than 24 creatures in a band... look at Pokemon density and Palworld density... Valheim deer and boar density it's far more.' The original five clusters/10 creatures above (plus the mudsnout special encounter) were sited against the OLD floor and are kept unchanged, positions and reasoning both -- this is an addition, not a rewrite. Orders 5005-5021 add 17 clusters/65 creatures: a cluster roughly every 35m of the spine's own ~650m length (skipping stations that already fell on an existing cluster, the outer watch or the checkpoint trainer, or landed short of the band's own z=7000 boundary), thinner (3-4, not 5) across the exposed stretch between the mouth and the Sigil gate where the original _comment_habitat's own reasoning already called the ground more dangerous than populous, plus six off-spine pockets (orders 5016-5021) so leaving the road is rewarded rather than the route reading as a conveyor belt. Total: 22 clusters, 75 creatures over ~530m of authored spine -- inside the owner's 18-28/70-110 target, toward its lower-middle rather than its ceiling, because `encounter_director.gd` instantiates and ticks every spawn in the whole 7.5km corridor with no distance-based streaming yet (a separate lane is landing that; band5 does not own either file). Species stay the four the region already established (burrowback/galecrest/duskhush/trailpup) plus mudsnout (already introduced by the special encounter, order 5004) for the direct route; the off-spine pockets add pipwing and meadowhart, both already-validated non-evolved roster species used wild elsewhere in the chapter, for the ecological variety a detour should be rewarded with."
 }
