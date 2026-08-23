@@ -86,6 +86,10 @@ func _run() -> void:
 		_height_map(world, origin)
 	elif "--sites" in args:
 		_site_sweep(world, config, origin, floor_clearance)
+	elif "--best" in args:
+		_best(world, config, origin, floor_clearance)
+	elif "--approach" in args:
+		_approach(world, config, origin, floor_clearance)
 	elif "--mound" in args:
 		_mound(world, config, origin, floor_clearance)
 	elif "--slide" in args:
@@ -182,6 +186,148 @@ func _plan(world: Node, config: Dictionary, origin: Vector2, mouth_floor: float)
 		print("  bearing %5.1f deg: %5.2f m of descent, %4.1f deg down over the %.0f m to it" % [
 			float(row["yaw"]), depth, rad_to_deg(atan2(depth, run)), run])
 	print("  (each row is the DEEPEST chamber on that bearing; shallower is better)")
+
+
+## Both criteria at once, over a grid: a footprint the ground never rises into,
+## AND 40 m in front of the mouth a player can actually walk up. The first
+## re-siting satisfied only the first and produced a cave whose mouth sat above
+## a 50-degree bank -- `tools/_probe_warrens_run.gd` walked 30 m from the road
+## and stopped 25 m short of the entrance. Candidates are also kept near the
+## spine, because a dungeon nobody finds is no better than one nobody can enter.
+func _best(world: Node, config: Dictionary, origin: Vector2, floor_clearance: float) -> void:
+	print("")
+	print("--- sites that clear the footprint AND can be walked up to -------------")
+	# The band-2 spine points either side of the warrens
+	# (terrain_playground.json, trail.bands[band2_stone_and_root]).
+	var spine := [Vector2(-310.0, 2320.0), Vector2(-420.0, 2470.0), Vector2(-330.0, 2630.0)]
+	var found: Array = []
+	for ix in range(-6, 7):
+		for iz in range(-6, 7):
+			var candidate := origin + Vector2(float(ix) * 25.0, float(iz) * 25.0)
+			var from_spine := 1e9
+			for point: Vector2 in spine:
+				from_spine = minf(from_spine, candidate.distance_to(point))
+			if from_spine > 90.0:
+				continue
+			var ground := float(world.call("ground_height_at", candidate.x, candidate.y))
+			if is_nan(ground):
+				continue
+			var mouth_floor := ground + floor_clearance
+			for step in 24:
+				var yaw_deg := float(step) * 15.0
+				var highest := -999.0
+				for entry: Variant in config.get("chambers", []):
+					highest = maxf(highest, _highest_terrain(world, config, candidate, yaw_deg,
+						entry as Dictionary))
+				var intrusion := highest - mouth_floor
+				if intrusion > -0.2:
+					continue
+				var yaw := deg_to_rad(yaw_deg)
+				var out := Vector2(-sin(yaw), -cos(yaw))
+				var steepest := 0.0
+				var previous := ground
+				for metre in range(2, 42, 2):
+					var at := candidate + out * float(metre)
+					var here := float(world.call("ground_height_at", at.x, at.y))
+					if is_nan(here):
+						continue
+					steepest = maxf(steepest, rad_to_deg(atan2(absf(here - previous), 2.0)))
+					previous = here
+				var blockers := _solid_scatter_in_the_way(world, candidate, yaw)
+				found.append({"at": candidate, "yaw": yaw_deg, "intrusion": intrusion,
+					"slope": steepest, "spine": from_spine, "blockers": blockers})
+	# Blockers first, then slope: a doorway with a tree in it is not a doorway,
+	# and the authored clearing that would remove it does not take effect until
+	# the coordinator re-bakes (GATE_D_LANE_CONTRACT.md sec4). A site that needs
+	# no re-bake to be walkable is worth more than a slightly flatter one.
+	found.sort_custom(func(a, b): return (int(a["blockers"]) * 100.0 + float(a["slope"])) \
+		< (int(b["blockers"]) * 100.0 + float(b["slope"])))
+	for row: Dictionary in found.slice(0, 15):
+		var at: Vector2 = row["at"]
+		print("  (%6.0f, %6.0f) yaw %5.1f: clear by %5.2f m, approach %4.1f deg, %2d solid scatter in the way, %3.0f m off the spine" % [
+			at.x, at.y, float(row["yaw"]), -float(row["intrusion"]),
+			float(row["slope"]), int(row["blockers"]), float(row["spine"])])
+	if found.is_empty():
+		print("  nothing on this grid satisfies both")
+
+
+## Trees and rocks with colliders standing where the cave would be, counted
+## from the scatter's own placement lists rather than by casting rays -- the
+## colliders themselves only stream in near the player (`vegetation.gd::
+## update_collision_streaming`), so a ray from an empty probe would report a
+## clear doorway that a player then walks into.
+##
+## Two areas matter: anything inside the footprint (a tree growing out of the
+## roof) and anything in the 25 m corridor in front of the mouth (a tree in the
+## doorway, which is what the first re-siting hit).
+func _solid_scatter_in_the_way(world: Node, origin: Vector2, yaw: float) -> int:
+	var vegetation: Node = world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		return 0
+	var batches: Variant = vegetation.get("_collision_batches")
+	if not batches is Array:
+		return 0
+	var out := Vector2(-sin(yaw), -cos(yaw))
+	var count := 0
+	for batch: Variant in batches as Array:
+		for placement: Variant in ((batch as Dictionary)["placements"] as Array):
+			var spot: Vector3 = (placement as Dictionary)["position"]
+			var flat := Vector2(spot.x, spot.z) - origin
+			if flat.length() <= 26.0:
+				count += 1
+				continue
+			var along := flat.dot(out)
+			if along > 0.0 and along < 26.0 and absf(flat.dot(Vector2(out.y, -out.x))) < 5.0:
+				count += 1
+	return count
+
+
+## A mouth nobody can walk to is a cave nobody can enter, and the first
+## re-siting found that out the hard way: the ground between Pell's stand and
+## the new mouth turned out to be a 50-degree bank, which is past the player's
+## own `floor_max_angle` of 45. So the bearing has to satisfy TWO things at
+## once -- the footprint has to stand on ground that never rises above the
+## floor (`--mound`), and the 40 m in FRONT of the mouth has to be walkable.
+## This reports both per bearing.
+func _approach(world: Node, config: Dictionary, origin: Vector2, floor_clearance: float) -> void:
+	print("")
+	print("--- bearings that both clear the footprint and can be walked up to ------")
+	var ground := float(world.call("ground_height_at", origin.x, origin.y))
+	var mouth_floor := ground + floor_clearance
+	var rows: Array = []
+	for step in 72:
+		var yaw_deg := float(step) * 5.0
+		var yaw := deg_to_rad(yaw_deg)
+		var highest := -999.0
+		for entry: Variant in config.get("chambers", []):
+			highest = maxf(highest, _highest_terrain(world, config, origin, yaw_deg,
+				entry as Dictionary))
+		var intrusion := highest - mouth_floor
+		# Out from the mouth along the way in, reversed: local -z.
+		var out := Vector2(-sin(yaw), -cos(yaw))
+		var steepest := 0.0
+		var previous := ground
+		for metre in range(2, 42, 2):
+			var at := origin + out * float(metre)
+			var here := float(world.call("ground_height_at", at.x, at.y))
+			if is_nan(here):
+				continue
+			steepest = maxf(steepest, rad_to_deg(atan2(absf(here - previous), 2.0)))
+			previous = here
+		rows.append({"yaw": yaw_deg, "intrusion": intrusion, "slope": steepest})
+	rows.sort_custom(func(a, b): return float(a["slope"]) < float(b["slope"]))
+	var shown := 0
+	for row: Dictionary in rows:
+		if float(row["intrusion"]) > 0.0:
+			continue
+		print("  yaw %5.1f deg: footprint clear by %5.2f m, approach steepest %4.1f deg%s" % [
+			float(row["yaw"]), -float(row["intrusion"]), float(row["slope"]),
+			"  [walkable]" if float(row["slope"]) < 35.0 else ""])
+		shown += 1
+		if shown == 10:
+			break
+	if shown == 0:
+		print("  no bearing clears the footprint at this origin")
 
 
 ## The other way to have a cave in gentle country: stop pretending there is a

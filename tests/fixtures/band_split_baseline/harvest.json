@@ -193,13 +193,13 @@
       "model_scale": 1.0
     },
     {
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-382,2510), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+38,+40), so they still stand around the mouth in the same arrangement.",
+      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140), so they still stand around the mouth in the same arrangement.",
       "item": "ironwood",
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -392.0,
-        2514.0
+        -367.0,
+        2614.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
       "model_scale": 0.28
@@ -209,8 +209,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -386.0,
-        2498.0
+        -361.0,
+        2598.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
       "model_scale": 0.3
@@ -220,8 +220,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -376.0,
-        2504.0
+        -351.0,
+        2604.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
       "model_scale": 0.28
@@ -231,8 +231,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -372.0,
-        2498.0
+        -347.0,
+        2598.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
       "model_scale": 0.32
@@ -242,8 +242,8 @@
       "amount": 3,
       "label": "Fell an ironwood",
       "at": [
-        -360.0,
-        2492.0
+        -335.0,
+        2592.0
       ],
       "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
       "model_scale": 0.28

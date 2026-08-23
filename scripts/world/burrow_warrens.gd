@@ -148,6 +148,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_approach_apron()
 	_build_lights()
 	_build_interior_area()
+	_clear_the_ground_the_cave_stands_on()
+	_build_mound()
 	_build_deposits()
 	_build_dressing()
 	_build_prize()
@@ -520,6 +522,165 @@ func _build_deposits() -> void:
 		node.position = Vector3(at.x, _floor_y, at.z)
 		add_child(node)
 		node.call("setup", spec)
+
+
+## Nothing grows through a cave.
+##
+## `data/config/bands/band2_stone_and_root/vegetation.json` authors a clearing
+## at this site, and that clearing does not take effect until the Gate D
+## coordinator re-bakes the scatter -- a band clearing does not invalidate the
+## bake (GATE_D_LANE_CONTRACT.md sec4, inherited by every lane, not this one's
+## to fix). Until then the stale bake stands its trees exactly where the cave
+## now is, and the driven run proved what that costs: `tools/_probe_warrens_run.gd`
+## walked 70m from the road, reached the entrance, and stopped dead against a
+## `CommonTree_3` growing in the doorway.
+##
+## So the cave clears its own ground at build time, through
+## `vegetation.gd::clear_area()`. The radius is the authored clearing's own, so
+## the two say the same thing and the re-bake changes nothing about what the
+## player sees here -- it just does it properly, offline, for the grass too.
+func _clear_the_ground_the_cave_stands_on() -> void:
+	var radius := float(_config.get("site", {}).get("clear_radius_m", 0.0))
+	if radius <= 0.0 or _world == null or not is_instance_valid(_world):
+		return
+	var vegetation: Node = _world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	var removed := int(vegetation.call("clear_area", global_position, radius))
+	if removed > 0:
+		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius" % [
+			removed, radius])
+
+
+## The outcrop the cave stands in.
+##
+## The chambers, walls and ceiling slabs are boxes, and at this site most of
+## that mass is ABOVE ground (see `burrow_warrens.json`'s `_comment_resiting`:
+## there is no hillside here to put it in). The first capture round showed the
+## consequence plainly -- a grey rectangular slab standing in a meadow. This
+## dresses that mass into stone: boulders from the same nature family the
+## corridor is already scattered with, around the perimeter and over the roof,
+## sunk so they read as rock in the ground rather than props resting on a box.
+##
+## Deterministic, from the config's own `seed` -- the same rock stands in the
+## same place every boot, which is the promise `encounter_director.gd` makes
+## about creatures and `scatter_rules.gd` makes about grass. Nothing here has a
+## collider: the cave's own walls already stop the player, a second collision
+## shell around them would catch them on nothing visible, and a boulder that
+## is decoration should not be a place to get stuck.
+##
+## The `skip_front_m` metres in front of the mouth stay clear. An outcrop that
+## swallows its own entrance is worse than a bare box, because the box at
+## least has a visible hole in it.
+func _build_mound() -> void:
+	var mound: Dictionary = _config.get("mound", {})
+	var models: Array = mound.get("models", [])
+	if mound.is_empty() or models.is_empty() or _footprint.is_empty():
+		return
+	var loaded: Array[PackedScene] = []
+	for path: Variant in models:
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	if loaded.is_empty():
+		push_warning("the warrens mound names no model that loads; the cave stands bare")
+		return
+
+	var holder := Node3D.new()
+	holder.name = "Mound"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(mound.get("seed", 63220))
+	var sink := float(mound.get("sink_m", 1.0))
+	var skip_front := float(mound.get("skip_front_m", 9.0))
+	var mouth_z := _mouth_outer_z()
+
+	var min_x := INF
+	var min_z := INF
+	var max_x := -INF
+	var max_z := -INF
+	for rect: Array in _footprint:
+		min_x = minf(min_x, float(rect[0]) - _wall_t)
+		min_z = minf(min_z, float(rect[1]) - _wall_t)
+		max_x = maxf(max_x, float(rect[2]) + _wall_t)
+		max_z = maxf(max_z, float(rect[3]) + _wall_t)
+
+	# The perimeter, walked as four edges at a fixed spacing.
+	var spacing := maxf(float(mound.get("perimeter_spacing_m", 4.5)), 1.0)
+	var perimeter_scale: Array = mound.get("perimeter_scale", [2.6, 4.4])
+	# Two courses, because one is a hedge on the skyline with a bare grey wall
+	# under it -- the first capture round's own picture. The lower course
+	# stands on the ground the wall comes out of, the upper on the shoulder
+	# just under the roof, and between them the slab is broken all the way up.
+	var courses := maxi(int(mound.get("perimeter_courses", 1)), 1)
+	var tallest := 0.0
+	for id_value: String in _chambers:
+		tallest = maxf(tallest, float((_chambers[id_value] as Dictionary).get("height", 4.0)))
+	# The lowest course sits BELOW the floor, on the ground the plinth stands
+	# on, or the base of the wall stays a grey band under the rock -- again,
+	# the capture round's own picture.
+	var base_drop := float(mound.get("perimeter_base_drop_m", 1.6))
+	for course in courses:
+		var lift: float = -base_drop if courses <= 1 else \
+			lerpf(-base_drop, tallest - 1.0, float(course) / float(courses - 1))
+		for edge in 4:
+			var along_x := edge < 2
+			var length: float = (max_x - min_x) if along_x else (max_z - min_z)
+			var steps := maxi(int(length / spacing), 1)
+			for step in steps + 1:
+				var t := float(step) / float(steps)
+				var at := Vector3.ZERO
+				if along_x:
+					at = Vector3(lerpf(min_x, max_x, t), _floor_y + lift,
+						min_z if edge == 0 else max_z)
+				else:
+					at = Vector3(min_x if edge == 2 else max_x, _floor_y + lift,
+						lerpf(min_z, max_z, t))
+				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
+					continue
+				_place_rock(holder, loaded, rng, at, perimeter_scale, sink)
+
+	# And the roofs: one grid per chamber, at that chamber's own ceiling.
+	var roof_spacing := maxf(float(mound.get("roof_spacing_m", 7.0)), 1.0)
+	var roof_scale: Array = mound.get("roof_scale", [2.2, 3.8])
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var top: float = _floor_y + float(chamber.get("height", 4.0)) + 0.8
+		var steps_x := maxi(int(size.x / roof_spacing), 1)
+		var steps_z := maxi(int(size.y / roof_spacing), 1)
+		for ix in steps_x + 1:
+			for iz in steps_z + 1:
+				var at := Vector3(
+					centre.x + size.x * (float(ix) / float(steps_x) - 0.5),
+					top,
+					centre.z + size.y * (float(iz) / float(steps_z) - 0.5))
+				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
+					continue
+				_place_rock(holder, loaded, rng, at, roof_scale, sink)
+
+
+## One boulder. `at.y` is the height its BASE should sit around; `sink` pulls
+## it down into whatever it is standing on so there is no seam under it.
+func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGenerator,
+		at: Vector3, scale_range: Array, sink: float) -> void:
+	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+	if art == null:
+		return
+	var low := float(scale_range[0]) if scale_range.size() > 0 else 2.0
+	var high := float(scale_range[1]) if scale_range.size() > 1 else 3.0
+	var scale_value := rng.randf_range(low, high)
+	art.scale = Vector3.ONE * scale_value
+	art.position = Vector3(
+		at.x + rng.randf_range(-1.2, 1.2),
+		at.y - sink,
+		at.z + rng.randf_range(-1.2, 1.2))
+	art.rotation = Vector3(
+		rng.randf_range(-0.18, 0.18),
+		rng.randf_range(-PI, PI),
+		rng.randf_range(-0.18, 0.18))
+	holder.add_child(art)
 
 
 ## The cave's authored props: crates, a barrel, a pickaxe, a bag, a tipped

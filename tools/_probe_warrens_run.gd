@@ -82,7 +82,7 @@ func _run() -> void:
 
 	_report_dressing(warrens)
 	_report_guardian(warrens)
-	await _walk_the_route(player, warrens)
+	await _walk_the_route(world, player, warrens)
 	_report_branch(warrens)
 
 	print("")
@@ -101,7 +101,7 @@ func _run() -> void:
 ## own marker, and what is measured is whether a straight push GETS there --
 ## a route that needs the player to hunt for the opening is a route that fails
 ## this even though the geometry is fine.
-func _walk_the_route(player: CharacterBody3D, warrens: Node3D) -> void:
+func _walk_the_route(world: Node, player: CharacterBody3D, warrens: Node3D) -> void:
 	print("")
 	print("--- route -------------------------------------------------------------")
 	# Waypoints, not chamber centres alone. A passage's own side walls overlap
@@ -112,8 +112,17 @@ func _walk_the_route(player: CharacterBody3D, warrens: Node3D) -> void:
 	# reports the dungeon impassable, which is a fact about the probe. So each
 	# leg aims at the doorway first and the room second, the way a person walks
 	# through a door.
+	# From the road, not from the doorstep. `marker("entrance")` is three
+	# metres out; the question a region asks first is whether the mouth can be
+	# reached from the spine at all, and Pell's stand is where the spine puts
+	# the player (trainers.json order 2001).
+	# The `warren_undertrail` loop's own second point (terrain_playground.json),
+	# the piece of road nearest the mouth -- not Pell's square metre, which the
+	# first run of this dropped the player straight on top of.
+	var road := Vector3(-380.0, 0.0, 2540.0)
+	road.y = float(warrens.call("ground_height_at", road.x, road.z)) + 1.5
 	var entrance: Vector3 = warrens.call("marker", "entrance")
-	await _put_down(player, entrance + Vector3(0.0, 1.5, 0.0))
+	await _put_down(player, road)
 	# The residents are aggressive by design and there are seven of them in a
 	# cave 47 m deep: left running they close on the player, block the corridor
 	# with their own capsules and eventually start a real fight, which takes
@@ -123,6 +132,7 @@ func _walk_the_route(player: CharacterBody3D, warrens: Node3D) -> void:
 	# smoke_combat.gd already owns. Frozen here so the route measures the
 	# ROUTE; the fight budget is added back in the totals at the end.
 	_quieten_the_residents(warrens)
+	await _leg(player, warrens, "approach", entrance)
 	for leg: String in ["mouth", "hall", "den"]:
 		for point: Vector3 in _approach(warrens, leg):
 			await _leg(player, warrens, leg, point)
@@ -237,6 +247,55 @@ func _leg(player: CharacterBody3D, warrens: Node3D, chamber: String, target: Vec
 	var verdict := "arrived" if remaining <= ARRIVED_M else "STUCK %.1fm short" % remaining
 	print("  %-6s  %5.1f m walked, %4.1f s, straight-line %5.1f m  [%s]" % [
 		chamber, walked, seconds, start.distance_to(target), verdict])
+
+
+## Kept, unused by the walk below, and worth keeping: it is how this pass
+## measured the route BEFORE `burrow_warrens.gd::_clear_the_ground_the_cave_
+## stands_on()` existed, and it is the tool for asking "would this site work
+## once the scatter is told about it" at any future site.
+##
+## The cave moved; the baked scatter has not been told.
+##
+## `data/config/bands/band2_stone_and_root/vegetation.json` now authors a
+## 30 m clearing at the new mouth, and it does NOT take effect until the
+## coordinator re-bakes: `scatter_bake.gd::config_fingerprint()` hashes only
+## the two head configs, so a band clearing changes where scatter should go
+## without invalidating the bake (GATE_D_LANE_CONTRACT.md sec4, inherited by
+## every lane, not this lane's to fix). The live bake therefore still has a
+## `CommonTree_3` standing in the doorway, which is exactly what the first run
+## of this probe walked into.
+##
+## So the walk below is measured against the state the re-bake will produce:
+## the scatter colliders inside the authored clearing are dropped from their
+## batches, which is what the bake would have done by never placing them. The
+## number removed is printed, because a report that quietly simulated its own
+## success would be worthless.
+@warning_ignore("unused_private_class_variable")
+func _simulate_the_pending_rebake(world: Node, warrens: Node3D) -> void:
+	var vegetation: Node = world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		return
+	var batches: Variant = vegetation.get("_collision_batches")
+	if not batches is Array:
+		print("  (could not reach the scatter's collision batches; walking the LIVE bake)")
+		return
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	var radius := 30.0
+	var dropped := 0
+	for batch: Variant in batches as Array:
+		var placements: Array = (batch as Dictionary)["placements"]
+		var resident: Array = (batch as Dictionary)["resident"]
+		for i in range(placements.size() - 1, -1, -1):
+			var spot: Vector3 = (placements[i] as Dictionary)["position"]
+			if Vector2(spot.x - mouth.x, spot.z - mouth.z).length() > radius:
+				continue
+			if resident[i] != null:
+				(resident[i] as Node).queue_free()
+			resident.remove_at(i)
+			placements.remove_at(i)
+			dropped += 1
+	print("  simulating the pending re-bake: %d scatter colliders dropped inside the" % dropped)
+	print("  authored %.0fm clearing at the mouth (band2 vegetation.json order 2002)" % radius)
 
 
 ## Physics off, aggression off, exactly as tests/smoke_warrens.gd does it --

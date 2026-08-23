@@ -155,10 +155,10 @@
     {
       "id": "the_burrow_warrens",
       "display_name": "The Burrow Warrens",
-      "_comment_mq2b": "MQ2B, spec Sec3 Band 2. The chapter's required dungeon had a `site.at` in burrow_warrens.json and no map entry anywhere -- the Old Quarry (evidence, optional) had a named region and the required dungeon next to it did not. Centre is the site's own entrance point, the one part of the complex that is actually above ground and approachable; the chambers run in from there rather than around it, so naming the mouth names the place. Separation is comfortable and was checked: ~1065m to The Old Quarry, ~1498m to The Tether Relay, both bands away -- no overlap possible at this range. TUNABLE.",
+      "_comment_mq2b": "MQ2B, spec Sec3 Band 2. The chapter's required dungeon had a `site.at` in burrow_warrens.json and no map entry anywhere -- the Old Quarry (evidence, optional) had a named region and the required dungeon next to it did not. BAND2-63-WARRENS: centre follows the site, which moved to (-357,2610) after the driven run found the OW5D site impassable (burrow_warrens.json's `_comment_resiting`). Centre is the site's own entrance point, the one part of the complex that is actually above ground and approachable; the chambers run in from there rather than around it, so naming the mouth names the place. Separation is comfortable and was checked: ~1065m to The Old Quarry, ~1498m to The Tether Relay, both bands away -- no overlap possible at this range. TUNABLE.",
       "centre": [
-        -420.0,
-        2470.0
+        -357.0,
+        2610.0
       ],
       "radius": 45.0
     },

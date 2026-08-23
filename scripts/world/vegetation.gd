@@ -967,6 +967,10 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		"radius": radius,
 		"placements": placements,
 		"resident": resident,
+		# BAND2-63-WARRENS: the model this batch was built from, so
+		# `clear_area()` can ask `_mesh_id_for()` which instances to remove.
+		# Nothing else reads it.
+		"model": model_path,
 	}
 	_collision_batches.append(batch)
 	_solid += placements.size()
@@ -1432,6 +1436,62 @@ func harvested_count() -> int:
 			if _bit_get(bytes, i):
 				total += 1
 	return total
+
+
+## Remove every COLLIDABLE scatter instance whose position falls inside a
+## circle, render and collider both. Returns how many went.
+##
+## Why this exists. An authored site can only keep scatter off itself through
+## `vegetation.json`'s `clearings`, and a clearing authored in a BAND file does
+## not invalidate the bake -- `scatter_bake.gd::config_fingerprint()` hashes
+## only the two head configs, so the stale bake is served and the trees stay
+## (GATE_D_LANE_CONTRACT.md sec4 names this and hands the fingerprint fix to
+## the Gate D coordinator). BAND2-63-WARRENS hit the sharp end of that: the
+## Burrow Warrens moved, its authored clearing could not take effect until
+## somebody else re-bakes, and the driven run walked into a `CommonTree_3`
+## standing in the cave's doorway. A dungeon nobody can enter is not something
+## to hand over on a promise, so the site clears its own ground at build time.
+##
+## This is NOT the fingerprint fix and does not replace it: it only touches
+## collidable layers (a cave mouth needs the trees and rocks gone, not the
+## grass), it runs every boot rather than being baked, and the clearing stays
+## authored so the re-bake does the job properly. What it guarantees is that
+## the site is walkable in the meantime.
+##
+## Removal is per placement at its own stored position, never one big brush:
+## `HARVEST_REMOVE_RADIUS`'s comment above records why -- `remove_instances()`
+## is a probabilistic editor brush, and the exact-position case is the only one
+## this codebase trusts. So this is the same reliable path `harvest_permanently()`
+## already uses, just driven by geometry instead of by a player's axe.
+func clear_area(centre: Vector3, radius: float) -> int:
+	var removed := 0
+	var radius_sq := radius * radius
+	for batch: Dictionary in _collision_batches:
+		var placements: Array = batch["placements"]
+		var resident: Array = batch["resident"]
+		var mesh_id := _mesh_id_for(str(batch.get("model", "")))
+		for i in range(placements.size() - 1, -1, -1):
+			var placement: Dictionary = placements[i]
+			var spot: Vector3 = placement["position"]
+			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
+				continue
+			_remove_render_instance(mesh_id, spot)
+			if resident[i] != null:
+				(resident[i] as Node).queue_free()
+			resident.remove_at(i)
+			placements.remove_at(i)
+			# A harvestable placement that is gone must not leave a gather
+			# point standing in the air where its tree used to be.
+			var key := "%s#%d" % [str(placement.get("harvest_layer", "")),
+				int(placement.get("harvest_index", -1))]
+			if _harvest_nodes.has(key):
+				(_harvest_nodes[key] as Node).queue_free()
+				_harvest_nodes.erase(key)
+			_harvest_collision_lookup.erase(key)
+			_solid = maxi(0, _solid - 1)
+			_placed = maxi(0, _placed - 1)
+			removed += 1
+	return removed
 
 
 ## For the survey's cost readout. Not a budget and not a gate — software
