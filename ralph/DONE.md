@@ -70,7 +70,20 @@ being compared against sky). `shots/` is gitignored, so the four contact
 sheets and the two alpha frames are force-added into
 `shots/creature_presentation/` (`before/` holds the same two sheets from
 before the pass) and the 34 per-species frames stay local, the same way
-`shots/candidates/` was kept. Bramblebun's hue distance from the ground goes
+`shots/candidates/` was kept.
+
+**In-habitat evidence.** `tools/_probe_creature_habitat.gd` (new, nonshipping)
+shoots the two places the defects were reported from —
+`shots/creature_presentation/habitat/practice-meadow-cluster.png` (the Band 1
+Bramblebun cluster, the frame whose mint rabbits started this) and
+`habitat/pond-shoreline.png` (the otter, the frame whose eyes could not be
+found). Compare against `shots/band3/09-wild-cluster-on-the-road.png` and
+`shots/gate_a/village_pond_op21/pond-shoreline.png` in a full checkout. It
+exists because the tools that already frame these places settle 90 frames and
+then 40 more per shot: on a box shared with five rendering lanes that ran over
+half an hour without producing a single frame, twice. 24 + 10 frames produces
+a usable composition-and-colour frame in a fraction of that, and this pass
+needed colour, not fine lighting. Bramblebun's hue distance from the ground goes
 21.8 -> 64.5 degrees; Mosshell's 34.9 -> 61.3; Mudsnout's value distance 0.14
 -> 0.27 before the emission fix pulled it back to a deliberate 0.17 with the
 saturation restored.
