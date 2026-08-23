@@ -80,7 +80,8 @@
       "alpha": {
         "level_bonus": 3,
         "scale": 1.3
-      }
+      },
+      "_why_alpha": "The lone duskhush at (70,2900), the deepest point of the band. Moved here from the burrowback at order 3 for a reason worth keeping: order 3 is a PRE-SPLIT entry, and tests/test_band_content.gd holds a baseline fixture asserting every pre-split entry still merges byte-identical to the file it came from, with `order` the single key the split may add. Adding `alpha` to one of those breaks the guard that proves the band split changed no world content. Order 2006 is post-split, so it is this band's to author. The siting is no worse for it -- 2900 is further along the band than 2465 and still well off the quarry road, so the alpha remains a thing you go and find."
     },
     {
       "order": 2010,
