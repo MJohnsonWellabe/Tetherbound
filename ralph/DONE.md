@@ -5,7 +5,7 @@ shipped, the commit, and anything the next firing should know.
 
 ## CREATURE-IDENTITY-2 — the board's fantasy layer, painted onto the UVs the meshes already have
 
-`tests: smoke_arena_contain + smoke_art + full suite` · `area: tools/creature_anatomy_maps.py (new), tools/creature_overlays.py (new), tools/repaint_creature_textures.py, data/creatures/shiny_colourways.json, scripts/creatures/alpha_aura.gd (new), scripts/creatures/creature_body.gd, scripts/combat/encounter_director.gd, tests/smoke_art.gd`
+`tests: smoke_arena_contain OK, smoke_art OK, run_tests.gd 1331 ok / 0 failed at wind-down (suite still running its veg/world tail on a contended box — see "Test state at hand-off" below)` · `area: tools/creature_anatomy_maps.py (new), tools/creature_overlays.py (new), tools/repaint_creature_textures.py, data/creatures/shiny_colourways.json, scripts/creatures/alpha_aura.gd (new), scripts/creatures/creature_body.gd, scripts/combat/encounter_director.gd, tests/smoke_art.gd`
 
 Round 1 (`CREATURE-PRESENTATION`) re-keyed the roster's palette, despeckled the
 photoreal Meshy albedos and halved the self-lit emission. A blind critique
@@ -139,6 +139,44 @@ every overlay prints the share of its species' surface it actually painted, and
 those numbers are in the spec's own comments (bramblebun's ears 9.5%, mosshell's
 shell 14.5%, burrowback's plate moss 12.2% after a first attempt came back at
 0.0%, tuskroot's mantle 19.7%, galecrest's wing tips 21.6%).
+
+### Test state at hand-off, and what is DONE vs PENDING
+
+This lane was wound down by owner directive mid-suite. Stated exactly:
+
+* **`tests/smoke_arena_contain.gd` — GREEN**, verified twice locally after the
+  merge. Step 0 is closed; the root cause is `main`'s, not this branch's, and
+  the test was not touched.
+* **`tests/smoke_art.gd` — GREEN**, including the new alpha-presence assertion.
+* **`tests/run_tests.gd` — 1331 ok, 0 failed** at the moment of wind-down, still
+  working through its vegetation/world tail on a box running nine concurrent
+  suites. Nothing this lane changed is exercised by the remaining files. CI on
+  the branch is the authority; **whoever adopts this branch should read the CI
+  run rather than this line.**
+
+**Identity overlays — DONE and rendered** (share of each species' surface
+actually painted, printed by the tool): bramblebun leaf ears 9.5% + leaf ruff
+6.9%; mosshell shell moss 14.5%; mudsnout back moss 20.6%; tuskroot mantle
+19.7% + root creep 9.8%; burrowback plate moss 12.2%; trailpup saddle 6.6%;
+terrapup leaf collar 6.6%; meadowhart antler tint 5.2% + antler leaf 1.8%;
+galecrest storm tips 21.6% + crest 9.8%; paddlenewt belly 33.6%; veridian hide
+39.1% plus emissive crown 41.6% / body damp 60.6%.
+
+**PENDING, and named rather than implied:**
+
+* **Eye unification is partial.** The shared re-stamp language landed (measured
+  per-species thresholds, so all seventeen re-stamp the same share to the same
+  dark). Direct iris work did NOT: one mesh, one material, no per-eye ID, and no
+  reliable texture-space iris locator. Needs per-eye material IDs or a
+  hand-authored eye mask per species.
+* **Alpha colourways exist for two species only** — burrowback and galecrest,
+  the two the task named. Every other species' alpha falls back to `vivid` and
+  still gets the rim and the aura, so nothing is broken; the material half is
+  simply unauthored. Adding one is a `overlays_alpha` block in
+  `data/creatures/shiny_colourways.json` and a regeneration, no code.
+* **The blind critique did not run** (see above).
+* **`ROSTER-BLUE` is untouched** and still open: seven of seventeen still read
+  blue-to-white at thumbnail size. Out of this lane's scope by its own filing.
 
 ### Blocked, deliberately
 
