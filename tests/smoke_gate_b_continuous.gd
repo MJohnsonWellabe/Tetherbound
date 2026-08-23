@@ -55,14 +55,19 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
-const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
-const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
 ## while that beat is the current one.
+## The ten flags Gate B WRITES, in the order `data/progression/objectives.json`
+## lists them. `south_bridge_open` is deliberately not one of them: Gate B's
+## own evidence line ends on "objective to leave for South Bridge"
+## (`ralph/ACTIVE_GAME_PLAN.md`), and a run that sets that flag itself consumes
+## the objective the chapter is supposed to finish pointing at. Crossing the
+## bridge is Gate C's first beat.
 const LADDER := [
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
@@ -74,8 +79,10 @@ const LADDER := [
 	["player_slept_at_home", "Sleep until"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
-	["south_bridge_open", "South Bridge"],
 ]
+
+## Where the chapter is supposed to leave the player standing.
+const CLOSING_OBJECTIVE := "South Bridge"
 
 var _failures: Array[String] = []
 var _started_ms := 0
@@ -102,13 +109,10 @@ func _run() -> void:
 	if not await _ready_a_tournament_team():
 		_finish()
 		return
-	if not await _gather_and_build_a_home():
+	if not await _visit_the_village_and_gather():
 		_finish()
 		return
-	if not await _sleep_the_night():
-		_finish()
-		return
-	if not await _win_the_tournament():
+	if not await _play_the_tail():
 		_finish()
 		return
 	_assert_the_whole_ladder_was_walked()
@@ -218,7 +222,7 @@ func _ready_a_tournament_team() -> bool:
 	return true
 
 
-func _gather_and_build_a_home() -> bool:
+func _visit_the_village_and_gather() -> bool:
 	# The village first, for the tools.
 	#
 	# Run 4 failed with "natural route requires Tam's axe before it can
@@ -249,102 +253,60 @@ func _gather_and_build_a_home() -> bool:
 			+ "home_progress.gd watches harvests and writes it")
 		return false
 	_note("home_materials_gathered")
-
-	# Walk home before building.
+	# Walk home before the tail.
 	#
-	# `gate_a_build_segment.gd` refuses to start anywhere but the Village Square
-	# ("the caller must bring the real player to the Village Square through
-	# ordinary exploration first"), and the gather route legitimately ends
-	# wherever the last stop and the live-scatter fill left the player -- its own
-	# authored list reaches (-168, 312). Nothing had ever walked that leg,
-	# because until this branch nothing had ever finished the gather route.
+	# The tail's first beat is the house, and `gate_a_build_segment.gd` refuses
+	# to start anywhere but the Village Square ("the caller must bring the real
+	# player to the Village Square through ordinary exploration first"). The
+	# gather route legitimately ends wherever the last stop and the live-scatter
+	# fill left the player -- its own authored list reaches (-168, 312). Nothing
+	# had ever walked that leg, because until this branch nothing had ever
+	# finished the gather route.
 	if not await _walk_back_to_the_square():
 		return false
-
-	var built: Dictionary = await BUILD_SEGMENT.new().run(self, _world, _player, _rig)
-	if not _segment_passed("build segment", built):
-		return false
-	if not _flag("home_built"):
-		_fail("the house went up and 'home_built' is unset")
-		return false
-	_note("home_built")
-	_checkpoint("gathered and built the small home")
+	_checkpoint("gathered the home materials: %s" % _stock())
 	return true
 
 
-func _sleep_the_night() -> bool:
-	var bed := _find_by_script(_world, "creature_bed.gd")
-	if bed == null:
-		_fail("no creature bed in the world after the build segment")
+## Everything downstream of the village, played by
+## `tests/helpers/gate_b_tail_segment.gd`.
+##
+## This half of the run used to be four short blocks of `set_flag`: the house
+## was built for real, and then a creature bed somewhere in the world had
+## `build_real()` called on it, `camp.gd::_on_rest()` was invoked directly, and
+## all three tournament rounds were awarded by writing their trainers' defeat
+## flags. Every one of those is a beat the PLAYER does, and none of them had
+## ever run here -- the file has never got past the village, so nothing
+## downstream of it had executed inside this run at all.
+##
+## The tail is now a segment of its own, driven from a synthesized post-village
+## state by `tests/smoke_gate_b_tail.gd` in a couple of minutes as well as from
+## here at the end of the real thing. It places the bed and the camp out of the
+## materials the gather route actually supplies, sleeps the team into
+## condition one night at a time, is let into the draw by the marshal's own
+## ladder reading that condition, and fights all three rounds.
+func _play_the_tail() -> bool:
+	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig)
+	for line: Variant in (tail.get("transcript", []) as Array):
+		_checkpoint("tail | %s" % str(line))
+	if not bool(tail.get("passed", false)):
+		for line: Variant in (tail.get("failures", []) as Array):
+			_fail("tail: %s" % str(line))
 		return false
-	if bed.has_method("build_real"):
-		bed.call("build_real")
-	for _i in 120:
-		if _flag("creature_bed_built"):
-			break
-		await physics_frame
-	if not _flag("creature_bed_built"):
-		_fail("a real creature bed stands and 'creature_bed_built' is unset")
-		return false
-	_note("creature_bed_built")
-
-	var camp := _find_by_script(_world, "camp.gd")
-	if camp == null:
-		_fail("no camp to sleep at; the night beat has nowhere to happen")
-		return false
-	if camp.has_method("_on_rest"):
-		camp.call("_on_rest")
-	for _i in 240:
-		if _flag("player_slept_at_home"):
-			break
-		await physics_frame
-	if not _flag("player_slept_at_home"):
-		_fail("resting did not set 'player_slept_at_home'")
-		return false
-	_note("player_slept_at_home")
-	_checkpoint("slept at home; day is %d" % int(_game.get("day")))
-	return true
-
-
-func _win_the_tournament() -> bool:
-	var board := _find_by_script(_world, "tournament.gd")
-	if board == null:
-		_fail("no tournament board in the world")
-		return false
-	_progression.call("set_flag", "tournament_entered")
-	_note("tournament_entered")
-	# Win the three rounds through the bracket's own reward path: each round's
-	# defeat flag is trainers.json data, and the final's carries `tournament_won`
-	# plus the saddle recipe.
-	for id: String in ["tournament_quarter_mira", "tournament_semi_tam", "tournament_final_oskar"]:
-		var trainer := TRAINERS.trainer(id)
-		if trainer.is_empty():
-			_fail("trainers.json has no '%s'; the bracket cannot be fought" % id)
+	for id: String in ["home_built", "creature_bed_built", "player_slept_at_home",
+			"tournament_entered", "tournament_won"]:
+		if not _flag(id):
+			_fail("the tail segment passed and '%s' is unset" % id)
 			return false
-		var flag := str(trainer.get("defeat_flag", ""))
-		if flag.is_empty():
-			_fail("'%s' has no defeat_flag" % id)
-			return false
-		_progression.call("set_flag", flag)
-	for _i in 240:
-		if _flag("tournament_won"):
-			break
-		await physics_frame
-	if not _flag("tournament_won"):
-		_fail("all three bracket rounds are marked won and 'tournament_won' is unset")
-		return false
-	_note("tournament_won")
-
-	var oskar := TRAINERS.trainer("trainer_oskar")
-	if not oskar.is_empty():
-		_progression.call("set_flag", str(oskar.get("defeat_flag", "defeated_oskar")))
-	_progression.call("set_flag", "south_bridge_open")
-	if not _flag("south_bridge_open"):
-		_fail("south_bridge_open would not set; the chapter cannot leave the village")
-		return false
-	_note("south_bridge_open")
-	_checkpoint("tournament won; the road to South Bridge is open")
+		_note(id, false)
+	_checkpoint("tail played: home, bed, camp, the nights, the draw and the bracket")
 	return true
+
+
+func _stock() -> String:
+	var inventory: RefCounted = _game.get("inventory")
+	return "wood %d / stone %d / fiber %d" % [int(inventory.call("count", "wood")),
+		int(inventory.call("count", "stone")), int(inventory.call("count", "fiber"))]
 
 
 ## --- the assertion ------------------------------------------------------------
@@ -357,17 +319,47 @@ func _assert_the_whole_ladder_was_walked() -> void:
 		_fail("the chain did not advance in order.\n  walked: %s\n  wanted: %s"
 			% [str(_reached), str(wanted)])
 		return
+	# Where the chapter LEAVES the player.
+	#
+	# This used to demand an EMPTY tracked line, which `quest_log.gd` returns
+	# only when every Main Story entry in `data/progression/objectives.json` is
+	# done -- and that file carries eleven more entries after Gate B, from the
+	# Burrow Warrens to the Warden. So the assertion could not pass on any save
+	# that had not finished the whole chapter, and the last thing this run did
+	# before reaching it was set `south_bridge_open` itself, which ALSO
+	# consumed the one objective Gate B is supposed to end pointing at. Gate B's
+	# own evidence line is "objective to leave for South Bridge"; that is what
+	# is checked.
 	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
-	if not tracked.is_empty():
-		_fail("every Gate B flag is set and the objective still reads '%s'; the "
-			% tracked + "player would be told to do something they have done")
+	if not tracked.contains(CLOSING_OBJECTIVE):
+		_fail("the tournament is won and the tracked objective reads '%s'; Gate B ends "
+			% tracked + "with the player told to leave for the South Bridge")
 		return
-	_checkpoint("all %d Gate B objectives walked in order" % wanted.size())
+	_checkpoint("all %d Gate B objectives walked in order, ending on '%s'"
+		% [wanted.size(), tracked])
 
 
 ## Record a flag as reached, and check the objective line moved with it.
-func _note(flag_id: String) -> void:
+##
+## The LADDER's second column is the fragment the tracked line has to show
+## while that beat is the CURRENT one, so noting beat `i` is also the moment
+## beat `i+1`'s line should have taken over. Nothing checked that before: a
+## beat could fire its flag without the HUD moving, and the player would have
+## no way to see they had finished it.
+## `check_objective` is false only for the beats the tail segment already
+## checked as it played them: by the time it hands its result back every one of
+## its flags is set, so re-reading the tracked line here would compare a
+## finished chapter against a mid-chapter objective.
+func _note(flag_id: String, check_objective: bool = true) -> void:
 	_reached.append(flag_id)
+	var next := _reached.size()
+	if not check_objective or next >= LADDER.size():
+		return
+	var fragment := str((LADDER[next] as Array)[1])
+	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
+	if not tracked.contains(fragment):
+		_fail("'%s' is set and the tracked objective reads '%s'; it should have moved on to "
+			% [flag_id, tracked] + "the beat that says '%s'" % fragment)
 
 
 ## --- plumbing -----------------------------------------------------------------

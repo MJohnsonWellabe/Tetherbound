@@ -43,6 +43,39 @@ just screenshots.
 
 ---
 
+## GATEB-TAIL-REMAINDER — Gate B's tail is written and half-proven (opened 2026-08-23)
+
+`branch: ralph/GATEB-TAIL` · see `ralph/DONE.md`'s GATEB-TAIL entry for the five
+defects already found and fixed, and for the two CHAPTER findings (the gather
+budget buys exactly one creature bed; a thirty-minute run arrives at the marshal
+hungry).
+
+`tests/smoke_gate_b_tail.gd` drives Gate B's tail from a synthesized
+post-village state so a defect in it costs minutes rather than a whole
+continuous run. In iteration mode it currently reaches the creature bed and the
+camp — both PLACED for real through the build menu, with the gather route's
+exact stock spent to zero — and the bed panel's own assignment. What is left:
+
+1. **It fails walking to the camp's "Rest until morning" prompt.** Undiagnosed.
+   Suspect `_walk_to_prompt()` targeting the prompt node's own position rather
+   than a stance beside it.
+2. **The nights, the entry gate, the sign-up, the three fought rounds and the
+   South Bridge hand-off have never executed.** They are written in
+   `tests/helpers/gate_b_tail_segment.gd`. Treat them as a plan.
+3. **The full-house path has never completed.** Staging at the Village Square
+   now drops the player in from six metres rather than placing them at terrain
+   height (they were wedged inside village geometry); untested.
+4. **`tests/smoke_gate_b_continuous.gd` was not re-run** after being rewired to
+   call the tail segment, and the full unit suite was not run on this branch.
+5. **Worth a production look:** with a creature deployed, the "Put <name> away"
+   offer wins arbitration and the hammer gate forfeits Interact to it, so a
+   controller player may not be able to open Build in the open field at all.
+   The tail works around it by recalling the creature first. That is the shape
+   of the owner's original "building doesn't work" report.
+6. **Owner ruling wanted:** three creature beds and a bigger gather, or one bed
+   and three nights? `condition_ready()` needs the three strongest entrants
+   rested and a bed holds one.
+
 ## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
 
 **This file had drifted badly and this note exists so the drift is legible
