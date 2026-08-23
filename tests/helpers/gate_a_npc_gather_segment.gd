@@ -256,7 +256,24 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 		message.visible = false
 	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
-		_fail("physical interact on the node did not start the visible %s swing" % tool_id)
+		# Say WHY, not just that. This assertion has never once run in CI --
+		# `--gate-a-continuous-core` is a flag no shard passes -- so the first
+		# time it fired, on 2026-08-23, it reported a bare "did not start the
+		# swing" about a path with no working baseline to compare against.
+		#
+		# The three things that decide this: who won the interact button (a
+		# nearer prop takes a distance-ranked arbiter), whether the tool is
+		# still in hand at the moment of the press, and whether a swing was
+		# already running and refused the new one.
+		var winner: Variant = _arbiter.call("winning_provider") if _arbiter != null else null
+		_fail(("physical interact on the node did not start the visible %s swing "
+			+ "(arbiter winner=%s, equipped=%s, prop=%s, cooling=%s, node=%s)") % [
+			tool_id,
+			str(winner.name) if winner is Node else "<none>",
+			str(_game.get("equipped_tool")),
+			str(hold.call("prop_node")),
+			str(hold.call("is_swinging")),
+			str(node.name) if node != null else "<null>"])
 		return false
 	for _i in 90:
 		if int(inventory.call("count", item_id)) > before and message != null and message.visible:
