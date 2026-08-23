@@ -6,6 +6,188 @@ design decision rather than inventing one.
 
 ---
 
+## VIS-CAST — the "grunt armband" defect does not exist on this branch
+
+Recorded so a future round does not spend a finding rediscovering that there is
+nothing to find. A briefing carried into this lane described *"a flat pure-red
+untextured rectangle on the grunt that renders magenta at night"*, called an
+armband, as an open defect.
+
+**There is no armband.** Checked three ways on `ralph/VIS-CAST`:
+
+- no `armband` anywhere in `scripts/`, `data/` or `tools/`;
+- `assets/characters/grunt/grunt_lod0.glb` has exactly one material and one
+  2048x2048 texture, and that texture contains **zero** saturated-red pixels
+  (`r>140, g<95, b<95, r-max(g,b)>70` matches 0 of 4,194,304). It is a dark
+  purple-navy tactical outfit with tan leather strapping;
+- nothing in `art.json`'s `grunt` block adds an accessory.
+
+**What the description actually fits is the CAPTAIN'S RANK BADGE**, which was a
+0.13 m `box` accessory at a fully saturated `#c23b30` on a default matte
+material — a flat pure-red untextured rectangle, sitting proud of the chest
+straps, with no shading gradient across it at all because a cube presents one
+flat face and a plane takes one shade under one key. That is fixed (VIS-CAST NPC
+round 1: `disc` primitive, per-accessory `metallic`/`roughness`, size down to
+0.095, colour off full saturation). The "renders magenta at night" half was not
+reproduced — the cast capture is a fixed daylight key — and should be re-checked
+against the badge, not against a nonexistent armband, if it recurs.
+
+---
+
+## VIS-CAST — are the villagers adults or youths? An owner decision, not a defect
+
+**This is a design question and VIS-CAST did not answer it.** A blind round
+reported the villagers as *"1.78 m children — child faces and head ratios at
+adult height"*. That is a real observation, but "fix it" has two opposite
+implementations and choosing between them is a story/world decision, not a
+rendering one.
+
+**Measured off the cast capture** (`tools/_capture_character_cast.gd`, identical
+camera and framing for every character; heads counted crown-to-neck off the
+rendered silhouette):
+
+| character | rendered height | head count | apparent head size |
+|---|---|---|---|
+| villager female | 1.75 m | **4.87 heads** | ~36 cm |
+| villager male | 1.78 m | **4.98 heads** | ~36 cm |
+| grandpa | 1.72 m | 5.08 heads | ~34 cm |
+| trainer (style anchor) | 1.80 m | 5.21 heads | ~35 cm |
+| Team Tether grunt rig | 1.80 m | **6.50 heads** | ~28 cm |
+
+For reference: an adult human is roughly 7.5 heads, a child roughly 5–6, a
+toddler roughly 4. A real adult head is about 22–23 cm.
+
+Two things fall out of this, and only the first is the blocked one.
+
+**The blocked question.** The villagers sit at 4.9 heads with 36 cm heads on
+1.75–1.78 m bodies. Either they are meant to be **adults**, in which case the
+head is far too large for the body and the bodies want lengthening; or they are
+meant to be **youths**, in which case the proportions are right and the HEIGHTS
+are wrong — a 4.9-head character should not be as tall as the 1.80 m adult
+player. Both are one-number fixes and they point in opposite directions.
+Guessing means inventing a fact about who lives in this village, which
+`CLAUDE.md` forbids.
+
+*What would clear it:* the owner saying whether the two villager rigs are adult
+villagers or village youths.
+
+**The thing that is NOT blocked, recorded here because the measurement found
+it.** The villagers are close to the trainer (4.9 vs 5.2) — the real proportion
+outlier in this cast is the **Team Tether grunt rig at 6.5 heads**, which is a
+quarter longer-limbed than the game's own style anchor, and it is now the body
+of three of the four antagonist ranks after NP2-grunt-wire. That fix was correct
+and necessary — it stopped the rank ladder being the Warden's mesh four times —
+but it bought that at the price of putting the faction a player fights for a
+whole chapter in a visibly different proportion language from everyone else in
+the game. That is ordinary art-direction work, not an owner decision, and it
+belongs in the visual sweep rather than here.
+
+*(The Warden's own rig could not be measured this way: his fur collar is wider
+than his neck, so a narrowest-row head count returns nonsense for him. His
+proportions need measuring off the mesh, not the silhouette.)*
+
+---
+
+## VIS-CAST — the creature roster contradicts the owner's own board in ways paint cannot reach
+
+**Owner-supplied reference art needed, or an owner decision. Recorded, not
+attempted** — `CLAUDE.md`'s "No new creature meshes or Meshy generations for the
+Meadows" is unconditional, and the owner reaffirmed it on 2026-08-11 with 5000
+credits in the account, so a healthy balance does not lift it.
+
+Two blind rounds compared the render against
+`docs/reference/owner-board-2026-08-15-creature-colors.png`. VIS-CAST closed
+every gap a colourway, an overlay or a material could close (see
+`data/creatures/shiny_colourways.json`). What is listed here is what is left
+after that, and none of it is a tuning problem.
+
+**Read this first, because it changes what the gaps mean.** The board's own
+header says *"Same creatures. Better colors, materials, and visual identity. Use
+existing meshes/rigs/animations"*, and its implementation notes say *"Keep
+silhouettes and anatomy the same."* The board is a COLOUR AND MATERIAL REFRESH
+of the roster that exists, not a commission for new animals. So the "wrong
+animal" findings below are real as art direction and must not be read as the
+owner asking for regeneration — the owner drew idealised versions of creatures
+he expected to keep. Deciding whether any of them is worth new geometry is his
+call and nobody else's.
+
+### 1. Terrapup and burrowback share one badger mesh
+
+The starter and the Band-2 tank are the same body. The board draws them as
+completely different animals: terrapup a small leafy **puppy**, burrowback a
+rock-plated **armoured tank** with stacked stone shell plates.
+
+The consequence a blind round drew, and the reason this outranks the rest:
+*"a player cannot tell their shiny starter from a shiny Burrowback across a
+meadow"*, and *"recoloring cannot make the starter a different species from the
+tank; only geometry can."*
+
+VIS-CAST pushed them as far apart as paint reaches — terrapup to warm earth with
+the board's real quantity of leaf growth, burrowback to cold grey stone with
+heavier moss, and their two rare variants off the shared cornflower blue that
+had made them twins. That helps and it does not solve it. **The silhouette is
+still one animal.**
+
+*What would clear it:* an owner decision on whether the starter or the tank gets
+its own body, plus a reference sheet for whichever one moves. Both are already
+drawn on the 2026-08-15 board.
+
+### 2. Four species where the board paints a different animal from the mesh
+
+| species | the board paints | the mesh is | what paint reached |
+|---|---|---|---|
+| burrowback | stacked rock-plate **shell armour** | a badger with a moss strip | plates greyed, moss heavier; **no shell geometry** |
+| brooktail | a signature bright cyan **water-swirl tail** | a plain flat beaver tail | colour only; **the swirl is a shape** |
+| ripplet | a quadruped **axolotl-dragon** with fin frills | a glossy bipedal chipmunk | colour only; **frills are geometry** |
+| reedwing | an elegant blue **crane**, long legs and neck | a domestic duck | the board's navy/white/yellow crane colouring landed; **it is still duck-shaped** |
+
+Brooktail's tail and ripplet's frills are each the species' *identifying*
+feature, and both are geometry. Reedwing is the most visible of the four because
+it is also 1.80 m — eye to eye with the player, which a duck should never be.
+
+*What would clear it:* per-species owner decision plus reference art. Note the
+board's own "keep silhouettes and anatomy the same" note argues against most of
+these; the honest position is that the board's paintings and the installed
+meshes were never the same animals, and only the owner can say which he wants.
+
+### 3. There is no small creature tier — and fixing it would reverse D19
+
+Measured off the cast capture, with the 1.80 m trainer in every frame: the
+roster spans **1.35 m (pipwing) to 2.60 m (veridian)**, a 1.93x span over 17
+species. Ten of seventeen creatures stand at or above the player's height. The
+smallest creature in the game is a metre-and-a-third songbird "chick"; the
+starter pup is 2.00 m and out-masses the tank it shares a mesh with.
+
+A blind round called this out and it is plainly true. **It is recorded here
+rather than fixed, because the fix reverses an accepted owner decision.**
+`docs/decisions/D19-starters-are-boar-sized.md` set exactly these numbers, by
+the owner, *after he played the build*, with the finding that "your creature felt
+small" — it deliberately raised the whole band and gave the starters a bigger
+jump than everyone else. `CLAUDE.md`'s canon precedence puts owner-play evidence
+first, and nothing in the 2026-08-18 or 2026-08-21 playtests reopens it. A
+visual critic's aesthetic reading does not outrank a decision the owner made at
+the controller.
+
+*What would clear it:* the owner saying whether he still wants the D19 band
+after seeing the roster photographed against the ruler. If he does, "no small
+tier" is a deliberate feature and should stop being reported as a defect. If he
+does not, D19 needs amending the way D19 amended D12/D13 — and the relative
+ordering it protects is the thing to preserve.
+
+### 4. Alpha creatures have no art, only a scale multiplier
+
+Confirmed by grep and by two blind rounds independently: "alpha" is
+`creature_body.apply_size_multiplier()` and nothing else for most of the roster.
+`shiny_colourways.json` now carries `overlays_alpha` for burrowback and
+galecrest — heavier plates, darker storm tips — which is the pattern to extend,
+but thirteen species still have no alpha treatment at all and an alpha of those
+is a normal creature that is bigger.
+
+*What would clear it:* nothing blocking — this is ordinary work, extending
+`overlays_alpha` across the roster, and it is listed here only so it is not lost.
+
+---
+
 ## ✅ RESOLVED 2026-08-22 by owner correction — sourced, not generated
 
 **This entry was wrong, and the owner said so in one line: "you can't go get a
