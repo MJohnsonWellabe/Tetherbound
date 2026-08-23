@@ -231,6 +231,189 @@ run directly, but `tests/test_world_weather.gd` (which this task's own brief
 required to stay green) was read and reasoned about but not executed after
 the day/night change landed. Run the full suite before shipping past this
 branch.
+## CREATURE-IDENTITY-2 — the board's fantasy layer, painted onto the UVs the meshes already have
+
+`tests: smoke_arena_contain OK, smoke_art OK, run_tests.gd 1331 ok / 0 failed at wind-down (suite still running its veg/world tail on a contended box — see "Test state at hand-off" below)` · `area: tools/creature_anatomy_maps.py (new), tools/creature_overlays.py (new), tools/repaint_creature_textures.py, data/creatures/shiny_colourways.json, scripts/creatures/alpha_aura.gd (new), scripts/creatures/creature_body.gd, scripts/combat/encounter_director.gd, tests/smoke_art.gd`
+
+Round 1 (`CREATURE-PRESENTATION`) re-keyed the roster's palette, despeckled the
+photoreal Meshy albedos and halved the self-lit emission. A blind critique
+called the result **"correct but half-depth"**, and it was right: the owner
+board (`docs/reference/owner-board-2026-08-15-creature-colors.png`) does not
+draw recoloured animals. It draws animals the meadow has grown into — leaf ears
+on bramblebun, moss carpeting mudsnout's and tuskroot's shoulders and mosshell's
+shell, foliage on terrapup's and trailpup's backs, meadowhart's antler tips
+greened, storm-blue tips on galecrest's flight feathers. None of that layer
+existed. This is that layer.
+
+### Step 0 first: the red CI was inherited, not caused
+
+Round 1's CI failed `tests/smoke_arena_contain.gd` — *"burrow warrens / mouth:
+the fight's own centre ((-364.4, 4.15, 2618.2)) is not recognised as inside any
+chamber"*. **Merging current `main` fixes it, and the cause was never round 1's
+textures.** `main` gained `653f4cdc` (GATE-E/CI-BOSS, `scripts/world/built_floor.gd`)
+after this branch was cut: before it, every Warrens and Stronghold fight resolved
+its ground against the TERRAIN under the building rather than the building's own
+floor, because `ground_height_at` is discovered by walking up the tree and the
+director parents fight participants to the world root. Participants were placed
+outside the room, the arena opened at the player's position, and
+`burrow_warrens.combat_arena_bounds_at()` correctly answered "that x/z is in no
+chamber". With the merge the same fight opens at (-360.1, 4.24, 2616.6), inside
+the `mouth` footprint, and the test passes untouched — 0.5m arena against a 0.5m
+bound, plus its own reproduction of the unfixed case. Nothing in the test was
+loosened.
+
+### Anatomy, not UV rectangles
+
+`tools/creature_anatomy_maps.py` rasterises each species' own glb into a UV-space
+map of normalised position, surface normal and distance off the centre line, so
+an overlay is authored as *"the top fifth of the animal, away from the spine"*
+(an ear) or *"up-facing surfaces above the shoulder, clear of the head"* (where
+moss grows). `tools/creature_overlays.py` composites against that with three
+modes — `grow` (moss/leaf: new material keeping the host's value relief),
+`tint` (the animal's own material recoloured, **value untouched**), `shade`
+(the region's own paint pushed) — broken up by value noise sampled in MODEL
+space so a clump is not sliced at every UV seam.
+
+This is also the fix for round 1's named galecrest defect. Its blue came from a
+colourway RULE, so it landed wherever the source texture happened to be rusty —
+blotches crossing feather boundaries. The blue is now placed anatomically (the
+distal third of both wings) and applied as a `tint`, so every quill line, barb
+shadow and specular edge in the value channel survives and the colour flows
+along the feathers instead of over them.
+
+**Two bugs found by rendering, both worth knowing about:**
+
+1. **The rasteriser flipped V.** glTF's UV origin *is* the image's top-left, so
+   no flip is correct; the first version used that fact backwards. The symptom
+   is not a visible mirror — UV islands are scattered, so a flipped anatomy map
+   puts moss on a boar's snout, a leaf on a rabbit's chin and green on a deer's
+   hooves. Caught by rendering, confirmed by measurement against mosshell's
+   unmistakable tan-shell-over-green-body texture. Cost one full regeneration
+   round.
+2. **A second colourway swap read back its own first swap.**
+   `get_active_material()` returns the override, so an alpha burrowback — built
+   `vivid`, re-dressed `alpha` when the director marks it — asked for the alpha
+   sibling of `..._base_color_vivid.png`, found nothing, and silently stayed
+   ordinary. `_swap_node_textures` now clears the override before reading, so
+   colourways can never chain. `tests/smoke_art.gd` asserts it.
+
+### Alphas now look like alphas
+
+WILD-ECOLOGY already spawned cluster leaders with a level bonus and a 1.3–1.4x
+size multiplier, and nothing about them looked different — a size difference is
+only legible when an ordinary member of the same species happens to stand beside
+it. An alpha now carries a `*_alpha` colourway where one is authored
+(burrowback: heavier, darker stone plates and an older moss coat; galecrest:
+deeper storm blue reaching further up the wing), a rim light on the silhouette
+(the part that survives at the distance where the player chooses whether to
+approach — rim rather than emission, because these models are already self-lit),
+and a permanent idle aura of drifting motes (`scripts/creatures/alpha_aura.gd`).
+
+The aura is mesh-based, camera-facing, MIX-blended and physics-clocked, which is
+four lessons this repo already paid for in `impact_flash.gd` and
+`telegraph_glow.gd`. Its motes were flat quads in the first render and came back
+as pale hard-edged SQUARES; they are soft vertex-coloured fans now.
+
+**The scale multiplier was NOT touched.** It grows the collider, the hit cone's
+reach and the catch accuracy bonus together, on purpose, so raising it retunes
+combat and catching for every alpha in the chapter. The ask is recorded on
+`BACKLOG`'s `ALPHA-PRESENCE`, not made here.
+
+### One roster, and what could not be reached
+
+The two-families problem — glassy-plush chibi faces next to naturalists — turned
+out to be measurable, and the measurement is the fix. The shared finish pass
+re-stamps "the darkest 3%, but never brighter than 0.22", and **ripplet's darkest
+2.5% sits at 0.384 and galewisp's at 0.314**: both above the cap, so those two
+received *no* feature re-stamp at all while burrowback (0.043) received a full
+one. Every species now carries a `feature_max_val` measured from its own surface
+texels, so all seventeen re-stamp the same share of surface to the same shared
+dark. Paddlenewt's scalloped belly, which aliased into fishnet at thumbnail size,
+gets a `shade` overlay that reduces the scallops' local contrast rather than
+blurring them at the same frequency.
+
+**What this could not do, honestly:** isolating an iris to unify the eyes
+directly. These glbs are one mesh, one primitive, one material, so there is no
+per-eye material; and a texture-space locator is unreliable — the darkest 1% of
+every species is scattered over feet, crevices and shadow, not concentrated on
+the eyes. The shared-dark language above is what texture work can actually
+reach. A real eye pass needs either per-eye material IDs or a hand-authored eye
+mask per species.
+
+### Legendary and shinies
+
+Veridian keeps VERIDIAN-HIDE's ivory hide — no hue was touched. It gains value
+range (the underside deepened, so the silhouette is not one flat pale mass) and,
+in the EMISSIVE map only, a crown boosted and a body damped: emission is the one
+channel distance, shadow and overcast do not take away, so at range the player
+sees a pale stag with a burning green rack rather than a pale shape.
+
+`*_shiny` was regenerated through the same finish pass and the same identity
+overlays — **this closes `BACKLOG`'s `SHINY-FINISH`**. The 109MB objection was
+backwards: the finish pass's own downsample makes the regenerated set a fraction
+of what it replaced.
+
+### The blind pass still could not be run
+
+Same gap round 1 recorded, same cause: this lane's toolset has no task/sub-agent
+tool, and the only session-spawning tool available starts a container that cannot
+see this worktree. So the frames were judged against `.claude/skills/visual-judge`'s
+rubric and `docs/reference/` by the same session that made the change — which is
+exactly the weaker thing the convention exists to prevent. **A firing with a
+sub-agent tool should re-critique `shots/creature_presentation/_portraits.png`,
+`_field_thumbs.png` and `burrowback_alpha_x1.30.png` before trusting this entry's
+read.** What the self-judged rounds produced is checkable rather than assertable:
+every overlay prints the share of its species' surface it actually painted, and
+those numbers are in the spec's own comments (bramblebun's ears 9.5%, mosshell's
+shell 14.5%, burrowback's plate moss 12.2% after a first attempt came back at
+0.0%, tuskroot's mantle 19.7%, galecrest's wing tips 21.6%).
+
+### Test state at hand-off, and what is DONE vs PENDING
+
+This lane was wound down by owner directive mid-suite. Stated exactly:
+
+* **`tests/smoke_arena_contain.gd` — GREEN**, verified twice locally after the
+  merge. Step 0 is closed; the root cause is `main`'s, not this branch's, and
+  the test was not touched.
+* **`tests/smoke_art.gd` — GREEN**, including the new alpha-presence assertion.
+* **`tests/run_tests.gd` — 1331 ok, 0 failed** at the moment of wind-down, still
+  working through its vegetation/world tail on a box running nine concurrent
+  suites. Nothing this lane changed is exercised by the remaining files. CI on
+  the branch is the authority; **whoever adopts this branch should read the CI
+  run rather than this line.**
+
+**Identity overlays — DONE and rendered** (share of each species' surface
+actually painted, printed by the tool): bramblebun leaf ears 9.5% + leaf ruff
+6.9%; mosshell shell moss 14.5%; mudsnout back moss 20.6%; tuskroot mantle
+19.7% + root creep 9.8%; burrowback plate moss 12.2%; trailpup saddle 6.6%;
+terrapup leaf collar 6.6%; meadowhart antler tint 5.2% + antler leaf 1.8%;
+galecrest storm tips 21.6% + crest 9.8%; paddlenewt belly 33.6%; veridian hide
+39.1% plus emissive crown 41.6% / body damp 60.6%.
+
+**PENDING, and named rather than implied:**
+
+* **Eye unification is partial.** The shared re-stamp language landed (measured
+  per-species thresholds, so all seventeen re-stamp the same share to the same
+  dark). Direct iris work did NOT: one mesh, one material, no per-eye ID, and no
+  reliable texture-space iris locator. Needs per-eye material IDs or a
+  hand-authored eye mask per species.
+* **Alpha colourways exist for two species only** — burrowback and galecrest,
+  the two the task named. Every other species' alpha falls back to `vivid` and
+  still gets the rim and the aura, so nothing is broken; the material half is
+  simply unauthored. Adding one is a `overlays_alpha` block in
+  `data/creatures/shiny_colourways.json` and a regeneration, no code.
+* **The blind critique did not run** (see above).
+* **`ROSTER-BLUE` is untouched** and still open: seven of seventeen still read
+  blue-to-white at thumbnail size. Out of this lane's scope by its own filing.
+
+### Blocked, deliberately
+
+Brooktail's wave-tail, ripplet's proportions and both antler racks are
+SILHOUETTE, and a texture cannot change a silhouette. Filed in
+`ralph/BLOCKED.md` as `CREATURE-MESH-FLOURISH` — with the note that
+`MEADOWS_PROGRESSION_SPEC.md` already answers it ("do not reopen creature
+concept design because a silhouette is imperfect"), so the entry exists to stop
+the next lane relitigating it, not to ask for a decision that has been made.
 
 ## GATE-E-STRONGHOLD-ART — the stronghold reads as held, and the Band 4 ghost boxes are named
 
@@ -720,6 +903,139 @@ genuinely blind pass on the four after-frames is still owed to this work.
   ownership, not this lane's to fix.
 - Mill yard path tiles: placement unverified by render (above).
 - A real blind (subagent) critique of the four after-frames.
+
+## CREATURE-PRESENTATION — the roster repainted for the world it stands in
+
+`tests: smoke_art + full suite` · `area: data/creatures/shiny_colourways.json, tools/repaint_creature_textures.py, scripts/creatures/creature_body.gd, scripts/creatures/creature_visual.gd, data/config/creatures_visual.json, assets/creatures/tetherbound/*/models/*_vivid.png`
+
+Two blind critics ranked creature presentation a top-3 gap against the Palworld
+bar and named four defects. All four were reachable inside the no-new-meshes
+rule, because none of them were about the meshes:
+
+**1. Colour keyed to nothing.** `shots/band3/09-wild-cluster-on-the-road.png`
+measures three Bramblebun at hue 141-148 standing on grass at hue 134-155 —
+the most common creature in Band 1, painted the colour of the ground it lives
+on, invisible until you are on top of it. The vivid pass that did that was
+authored against the owner's colour boards on a NEUTRAL GREY card, where a
+mint rabbit reads perfectly well. Six species were re-keyed off the terrain
+instead (`bramblebun` `mudsnout` `trailpup` `mosshell` `veridian` `tuskroot`,
+plus `pipwing` and `duskhush` for contrast rather than hue), and the rule is
+now written down in the spec file: the meadow owns hue 80-175, green is spent
+on ACCENTS — bramble sprigs, moss on stone plates, a legendary's crown — never
+on a coat. `repaint_creature_textures.py` prints each output's share of
+chromatic pixels left in that band, so the next author gets the number.
+
+Every board's own words survived: Bramblebun's 'Forest greens + Leafy details'
+kept the leafy details and moved the coat; Veridian's 'Verdant glow + Ancient +
+Sacred' is now three words on three parts of one animal rather than three words
+on one hue (see `VERIDIAN-HIDE` in `BACKLOG.md` — that one is an owner call and
+is filed as reversible).
+
+**2. Speckle that reads as dithering.** These are photoreal-ish Meshy albedos;
+at the forty pixels a wild creature actually occupies, their fine detail is
+noise. `repaint_creature_textures.py` grew a FINISH pass — median despeckle,
+value quantised into bounded zones, saturation ceiling, and the darkest 3% of
+the SOURCE re-stamped after the smoothing so eyes, nostrils and outlines
+survive it — plus a downsample to 1024. The roster's ordinary colourways went
+from 110MB of tracked binaries to 24MB in the same commit that improved them.
+
+**3. Faces that cannot be found.** Two causes, both fixed. A rule that pushes a
+whole animal to one hue and one saturation erases the value contrast the face
+was carrying — Brooktail (the otter at the village pond, the first water
+creature a player meets, whose eyes a critic could not locate at all) and
+Duskhush had exactly that done to them, and now get their pale muzzle and
+facial disc back. The second cause is systemic and was not visible from the
+textures: **these glbs ship self-lit.** The painted albedo is wired into the
+emission slot at full energy, so every creature in daylight renders as its own
+texture plus an unshaded copy of itself. Mudsnout's repainted albedo measures
+hue 24 / saturation 0.63 / value 0.37 and rendered as a pale peach piglet.
+`creatures_visual.json::emission_scale` (0.5, tunable) halves it in the
+material override — kept rather than removed because that emission is what
+makes a creature readable at dusk and in the Warrens.
+
+**4. Pastel blobs at distance.** Pipwing — 140 field spawns, the second most
+common creature in the chapter — was a pale grey body under pale sky-blue tips,
+two pastels a stop apart. Same scheme, contrast pushed apart: near-white body,
+deep saturated tips.
+
+**Evidence.** `tools/capture_creature_presentation.gd` is new and is the rig
+this pass needed and did not have: every species on GRASS keyed to the shipped
+frames' own measured value, under meadow light, portrait plus a gameplay-
+distance field shot, with the 1.80m trainer bar in frame.
+`tools/creature_presentation_sheet.py` builds the two sheets and prints, per
+species, the measured hue and value distance between the creature and the
+ground BEHIND IT (per row, from an empty strip of the same frame — a global
+background average scored every creature well because half its silhouette was
+being compared against sky). `shots/` is gitignored, so the four contact
+sheets and the two alpha frames are force-added into
+`shots/creature_presentation/` (`before/` holds the same two sheets from
+before the pass) and the 34 per-species frames stay local, the same way
+`shots/candidates/` was kept.
+
+**In-habitat evidence.** `tools/_probe_creature_habitat.gd` (new, nonshipping)
+shoots the two places the defects were reported from —
+`shots/creature_presentation/habitat/practice-meadow-cluster.png` (the Band 1
+Bramblebun cluster, the frame whose mint rabbits started this) and
+`habitat/pond-shoreline.png` (the otter, the frame whose eyes could not be
+found). Compare against `shots/band3/09-wild-cluster-on-the-road.png` and
+`shots/gate_a/village_pond_op21/pond-shoreline.png` in a full checkout. It
+exists because the tools that already frame these places settle 90 frames and
+then 40 more per shot: on a box shared with five rendering lanes that ran over
+half an hour without producing a single frame, twice. 24 + 10 frames produces
+a usable composition-and-colour frame in a fraction of that, and this pass
+needed colour, not fine lighting. Bramblebun's hue distance from the ground goes
+21.8 -> 64.5 degrees; Mosshell's 34.9 -> 61.3; Mudsnout's value distance 0.14
+-> 0.27 before the emission fix pulled it back to a deliberate 0.17 with the
+saturation restored.
+
+**The blind pass could not be run, and that is a gap in this entry.**
+`ralph/conventions.md` requires the critique to come from a sub-agent that does
+not know what changed. This lane had no way to spawn one: its toolset has no
+task/sub-agent tool, and the only session-spawning tool available
+(`create_session`) starts a container that cannot see this worktree and whose
+output cannot be read back from here. So the frames were judged against
+`.claude/skills/visual-judge`'s own rubric and `docs/reference/` by the same
+session that made the change, which is exactly the weaker thing the convention
+exists to prevent. **The next firing that touches creature art should re-run
+the blind critique on `shots/creature_presentation/_portraits.png` and
+`_field_thumbs.png` before trusting this entry's read.**
+
+What the self-judged pass produced, so it can be checked rather than taken:
+three rounds, each re-rendered and re-measured. Round 1 moved five species'
+hue distance from the ground (Bramblebun 21.8 -> 62.3 degrees, Mosshell 34.9
+-> 61.1, Mudsnout's value distance 0.14 -> 0.27) and was the round that found
+the Bramblebun rule was recolouring the COAT and not the sprigs. Round 2 was
+the emission finding — a defect no texture measurement would have shown, since
+the textures were already right and the renderer was adding a second copy of
+them. Round 3 was one species (Mosshell's shell read khaki where its board says
+teal; the ochre rule was claiming the shell instead of the moss on it).
+`tools/frame_stats.py` on the roster sheet before and after: hue families 2 ->
+3 (a warm family appears at 7% of chromatic pixels where there was none),
+chromatic share 31.9 -> 33.2, saturation 0.38 -> 0.39 — small numbers because
+the sheet is mostly sky and ground card, which is why the per-species
+separation table is the one to read.
+
+Defects the pass names and does NOT fix, filed rather than buried:
+`ROSTER-BLUE` (seven of seventeen creatures read blue — a set-level palette
+decision, not a per-species one), `VERIDIAN-HIDE` (the legendary's hide is an
+owner call), `SHINY-FINISH`, `ALPHA-PRESENCE`.
+
+**Alphas were checked, not changed.** `_make_alpha`'s 1.3x/1.4x does read as a
+bigger animal beside the trainer bar (`burrowback_alpha_x1.30.png`). It does
+not read as a field boss, but that is staging, not scale, and raising the
+multiplier is a gameplay change — filed as `ALPHA-PRESENCE`.
+
+**Scale was checked, not changed.** Every species' `placeholder` height matches
+its collider (`smoke_art`) and sits inside the wild canon's own scale rule
+("on average visually around the player-character scale", `docs/art/wild/20`).
+Nothing was obviously wrong against the reference sheets, and what a species
+SHOULD be is a design decision, not a presentation one.
+
+**No new assets, no Meshy, no sourced textures** — every pixel here is derived
+from the installed albedos, so `docs/ASSET_LEDGER.md` needs no new provenance
+row. The `*_shiny` colourways were deliberately not regenerated; see
+`SHINY-FINISH` in `BACKLOG.md`.
+
 
 ## ASSESS-REDS — the assessment's 3 real content-gap test failures, made green
 

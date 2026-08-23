@@ -49,3 +49,8 @@ site/img/*.import
 
 # throwaway lane capture/probe scripts, by convention run-and-deleted, never shipped
 tools/_scratch_*
+
+# CREATURE-IDENTITY-2 anatomy maps: UV-space position/normal rasterisations
+# derived from the creature glbs by tools/creature_anatomy_maps.py. Pure
+# derived data, a few MB each, rebuilt in about a second per species.
+*_anatomy.npz

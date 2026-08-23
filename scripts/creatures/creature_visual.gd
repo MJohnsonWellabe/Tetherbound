@@ -36,3 +36,21 @@ static func config() -> Dictionary:
 ## The odds a single wild roll comes up shiny, 0..1.
 static func shiny_chance() -> float:
 	return float(config().get("shiny_chance", DEFAULT_SHINY_CHANCE))
+
+
+## CREATURE-PRESENTATION. Multiplier applied to a creature material's emission
+## energy when its colourway texture is swapped in.
+##
+## These models ship SELF-LIT: the same painted albedo is wired into the
+## emission slot at full energy, so every creature adds a copy of its own
+## texture to whatever the sun is already doing. Measured on mudsnout, whose
+## repainted albedo is a saturated mid-brown (hue 24, sat 0.63, value 0.37) and
+## whose rendered body in daylight is a pale peach -- the emission pass washes
+## saturation out and flattens the value range that carries a face. That is a
+## large part of why the roster reads as pastel blobs at distance while its
+## textures do not.
+##
+## Scaled rather than switched off: the emission is doing real work at dusk and
+## in the warrens, where an unlit creature would be a black shape.
+static func emission_scale() -> float:
+	return float(config().get("emission_scale", 1.0))

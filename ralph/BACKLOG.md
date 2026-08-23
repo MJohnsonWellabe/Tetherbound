@@ -43,6 +43,105 @@ just screenshots.
 
 ---
 
+## Filed by CREATURE-PRESENTATION (2026-08-23)
+
+Left open on purpose by the creature-presentation pass rather than half-done
+inside it. Full record in `ralph/DONE.md`.
+
+### VERIDIAN-HIDE — the legendary is now an ivory stag with a verdant crown · `model: fable` · owner call, not a bug
+
+The Meadows legendary was a saturated green stag standing on a green meadow —
+45 degrees of hue from the grass it fights on, the worst-camouflaged animal in
+the roster, on the encounter the whole chapter builds toward. The presentation
+pass split its board's own three words (`'Verdant glow + Ancient + Sacred'`)
+across the model instead of spending all three on one hue: the crown and mane
+foliage keep the verdant glow, the hide goes pale ivory-bone.
+
+**This is a presentation call on a story creature and the owner may want it
+back.** The alternative fix is the other one: keep the green hide and change
+the SETTING — stage the encounter somewhere that is not green (the stone of the
+Rise, a dusk sky, a clearing floored in pale rock), which is what a Palworld
+field boss gets. That is scene work, not texture work, and it was out of this
+lane's scope. Either answer is defensible; the current one is cheap and
+reversible (`data/creatures/shiny_colourways.json`, `veridian.vivid_rules`).
+
+### ✅ SHINY-FINISH — CLOSED 2026-08-23 by CREATURE-IDENTITY-2
+
+The identity pass had to regenerate the whole roster anyway (the board's
+overlay layer belongs to the animal, not to one colourway), so `*_shiny` went
+through the same finish pass and the same identity overlays as `*_vivid`. A
+shiny bramblebun now has leaf ears; it did not before. The 109MB objection
+turned out to be backwards: the finish pass's own `output_size` downsample
+means the regenerated shiny set is a fraction of what it replaced.
+
+The original entry, for its reasoning:
+
+### SHINY-FINISH — the rare colourways never got the finish pass · `model: sonnet` · `tests: smoke_art`
+
+`tools/repaint_creature_textures.py` now carries a finish pass (despeckle,
+value zones, feature re-stamp, downsample) and the whole roster's ORDINARY
+`*_vivid` textures were regenerated through it. The `*_shiny` set was left
+untouched, deliberately: it is another 109MB of tracked binaries, and a shiny
+is roughly one creature in 128, so re-writing them would have been most of the
+diff for the least of the screen time. They therefore still carry the speckle
+and the flat faces this pass removed everywhere else.
+
+Regenerating is one command — `python3 tools/repaint_creature_textures.py
+--only shiny` — plus a look at `tools/capture_shiny_pairs.gd`'s sheet to
+confirm no shiny collided with its own species' new vivid. Do it when a shiny
+is next in shot.
+
+### ROSTER-BLUE — seven of seventeen creatures are blue · `model: sonnet` · `tests: smoke_art`
+
+Found while judging the finished roster sheet as a set rather than species by
+species (`shots/creature_presentation/_field_thumbs.png`). Ripplet, Paddlenewt,
+Brooktail, Reedwing, Galewisp, Galecrest and Pipwing all read blue-to-white at
+thumbnail size. Nothing is wrong with any one of them — each matches its own
+board — but the boards were authored one creature at a time, and Water and Air
+were both handed the same half of the colour wheel. Against
+`docs/reference/palworld-0*.jpg`, where a field of Pals is a field of clearly
+different colours, seven blues is a roster that reads as three animals.
+
+The Ground half is now warm (hazel, russet, tan, charcoal, ivory) so the
+overall spread is better than it was, and this is the remaining half. It is
+also NOT a per-species fix: it needs somebody to lay all seventeen out and
+decide which two or three move — most likely the Air trio, which has no water
+to justify blue and could take a slate/bronze/white split instead. That is a
+one-sitting palette decision by someone allowed to overrule an individual
+board, not a tuning job.
+
+### ALPHA-PRESENCE — 1.3x reads, but it is the ceiling · `model: sonnet` · no action yet
+
+Verified in frame beside the 1.80m trainer bar
+(`shots/creature_presentation/burrowback_alpha_x1.30.png` and the galecrest
+1.4x): an alpha does read as a bigger animal, not as a same-sized one with a
+label. It does not yet read like a Palworld field boss, which is a different
+thing — a field boss owns the clearing. Raising the multiplier is a GAMEPLAY
+change (`_make_alpha` grows the collider with the art, on purpose), so it is
+not a presentation lane's call; if an alpha is supposed to be an event, the
+work is encounter staging and framing, not a bigger number.
+
+**Updated 2026-08-23 by CREATURE-IDENTITY-2 — the presentation half is now
+done, and the ask above still stands.** An alpha now carries three things it
+did not: an `*_alpha` colourway where one is authored (burrowback's heavier,
+darker stone plates and an older moss coat; galecrest's deeper storm blue
+reaching further up the wing), a rim light on the silhouette, and a permanent
+idle aura of drifting motes (`scripts/creatures/alpha_aura.gd`, wired from
+`encounter_director._make_alpha`, asserted by `tests/smoke_art.gd`). That
+closes the "same-sized animal with a label" half: an alpha is now recognisable
+before the first exchange, at the distance where a 1.3x size difference is not.
+
+What is NOT closed, and is still not a presentation lane's call: **whether the
+1.3x/1.4x multiplier itself should rise.** It grows the collider, the hit
+cone's reach and the catch accuracy bonus together, on purpose
+(`creature_body.apply_size_multiplier`'s own comment), so raising it retunes
+combat and catching for every alpha in the chapter. If the owner wants an alpha
+to own its clearing the way a Palworld field boss does, that is a deliberate
+gameplay change plus encounter staging — a decision, then a balance pass, not a
+number a texture lane may edit. Filed here rather than made.
+
+---
+
 ## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
 
 **This file had drifted badly and this note exists so the drift is legible

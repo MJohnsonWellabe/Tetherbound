@@ -1,6 +1,19 @@
 {
   "_comment": "OF28: per-species shiny REPAINT rules, consumed by tools/repaint_creature_textures.py. Owner directive 2026-08-15: shinies are genuinely different colourways, never a tint -- 'if our newt is blue, I want red. not blue with a red shade over it. for the white and black striped badger maybe it becomes blue stripes.' Rules are HSV region remaps (first match wins per pixel); value/texture detail is preserved so the repaint reads as the same painted surface in a new colourway. All numbers tunable. Regenerate with: python3 tools/repaint_creature_textures.py",
   "_comment_pilots": "paddlenewt and burrowback are the owner's own named examples and the pilot pair; the rest of the roster gets colourways after the pilots pass a render judge.",
+  "_finish_default": {
+    "_comment": "CREATURE-PRESENTATION 2026-08-23. Applied after every species' rules by tools/repaint_creature_textures.py, per-species overridable with a `finish` block ({} opts out entirely). These assets are photoreal-ish Meshy albedos: at the 40 pixels a wild creature actually occupies (shots/band3/09-wild-cluster-on-the-road.png) their fine detail is not fur, it is dithering, and the value gradients that carry a face on a 2048 map average to one flat tone. So: median-despeckle, quantise value into bounded zones, re-stamp the darkest 3% of the SOURCE so eyes/nostrils/outlines survive the smoothing, and downsample. All numbers tunable; the blind critique against docs/reference/palworld-0*.jpg is the gate, never these numbers.",
+    "despeckle": 5,
+    "posterize": 6,
+    "posterize_strength": 0.6,
+    "feature_percentile": 3,
+    "feature_max_val": 0.22,
+    "feature_set_val": 0.05,
+    "feature_sat_scale": 0.4,
+    "sat_ceiling": 0.8,
+    "output_size": 1024
+  },
+  "_comment_terrain_key": "CREATURE-PRESENTATION. The Meadows grass measures hue 134-155 / value 0.26-0.47 in shipped frames and the canopy hue 98. A wild species that stands in that band separates by value alone, which distance, shadow and overcast all take away -- so a body hue inside 80-175 degrees is a defect on any creature that walks on grass, and green is spent on ACCENTS (bramble sprigs, moss on plates, a legendary's crown) rather than on coats. The repaint tool prints the share of chromatic pixels each output leaves in that band.",
   "species": {
     "paddlenewt": {
       "_comment": "Base: teal body, cream/tan belly plates, salmon accents, gold spots + eyes. Vivid (board: 'Vibrant blues + Wet sheen'): vibrant BLUE, not the first pass's emerald; the salmon and gold accents sit outside the band and keep their identity. Shiny: ember red, unchanged.",
@@ -42,7 +55,26 @@
           "sat_scale": 1.55,
           "val_scale": 1.03
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "belly_calm",
+          "_why": "ONE ROSTER / surface rendering. Paddlenewt's scalloped belly plates are a high-contrast grid at texture resolution; on a 40-pixel creature they alias into fishnet. Pulling the belly's local contrast toward its own mean keeps the scallops as a surface and stops them ringing. A blur would smear at the same frequency; this reduces the amplitude instead.",
+          "where": {
+            "y_max": 0.44,
+            "up_max": 0.0
+          },
+          "mode": "shade",
+          "detail": 0.55,
+          "sat_scale": 0.92,
+          "softness": 0.12
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.221,
+        "feature_set_val": 0.065
+      }
     },
     "burrowback": {
       "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the violet is gone -- the base ALREADY matches the board, so the vivid only warms the cream, mosses the plate mid-tones, and leaves the charcoal alone. Shiny: cornflower-blue stripes, unchanged.",
@@ -101,7 +133,62 @@
           },
           "sat_scale": 1.1
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "plate_moss",
+          "_why": "Board: 'Stone plates + Moss + Ancient'. Sparse moss in the seams of the back plates -- an old animal, not a mossy one.",
+          "where": {
+            "y_min": 0.55,
+            "z_max": 0.62,
+            "up_min": 0.3
+          },
+          "mode": "grow",
+          "color": "#4f8a2f",
+          "shade": "#234519",
+          "coverage": 0.42,
+          "grain": 6.0,
+          "softness": 0.1,
+          "relief": 0.65
+        }
+      ],
+      "overlays_alpha": [
+        {
+          "id": "alpha_plates",
+          "_why": "ALPHA PRESENCE. WILD-ECOLOGY already spawns a cluster leader bigger and stronger; it looked identical to its neighbours. Heavier, darker, higher-contrast stone across the back reads as armour at the distance where the size difference alone is ambiguous.",
+          "where": {
+            "y_min": 0.52,
+            "z_max": 0.66,
+            "up_min": 0.15
+          },
+          "mode": "shade",
+          "val_scale": 0.72,
+          "sat_scale": 0.55,
+          "detail": 1.2,
+          "softness": 0.12
+        },
+        {
+          "id": "alpha_moss",
+          "_why": "More of the same moss, and older: a leader has stood in one place long enough to grow a coat.",
+          "where": {
+            "y_min": 0.52,
+            "z_max": 0.62,
+            "up_min": 0.3
+          },
+          "mode": "grow",
+          "color": "#48802b",
+          "shade": "#1f3f17",
+          "coverage": 0.52,
+          "grain": 5.0,
+          "softness": 0.1,
+          "relief": 0.65
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.048,
+        "feature_set_val": 0.03
+      }
     },
     "terrapup": {
       "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents -- Natural, grounded feel'): warm earth, modest saturation -- the first pass's x1.7 crank made it copper-loud, which is not 'grounded'. Shiny: frost pup, unchanged.",
@@ -152,7 +239,30 @@
           "sat_scale": 1.25,
           "val_scale": 1.04
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "leaf_collar",
+          "_why": "Board: the Ground starter wears a leaf collar and shoulder foliage. z_max keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
+          "where": {
+            "y_min": 0.52,
+            "z_max": 0.58,
+            "up_min": 0.05
+          },
+          "mode": "grow",
+          "color": "#63a437",
+          "shade": "#2c5822",
+          "coverage": 0.45,
+          "grain": 6.0,
+          "softness": 0.1,
+          "relief": 0.55
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.091,
+        "feature_set_val": 0.03
+      }
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
@@ -182,7 +292,12 @@
           "set_hue": 206,
           "sat_scale": 1.5
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.389,
+        "feature_set_val": 0.1
+      }
     },
     "galewisp": {
       "_comment": "Base: pale cyan + soft yellow. Vivid (board: 'Clean whites + Sky blues -- Ethereal, wind-kissed'): cools go sky, yellows bleach toward white instead of the first pass's gold push. Shiny: lavender-violet, unchanged.",
@@ -233,7 +348,12 @@
           "sat_scale": 0.45,
           "val_scale": 1.06
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.319,
+        "feature_set_val": 0.094
+      }
     },
     "meadowhart": {
       "_comment": "Base: golden-tan deer. Vivid (board: 'Natural browns + Antlers'): tawny natural brown, restrained -- the burnished-gold pass read as a trophy, not an animal. Shiny: pale silver spirit-hart, unchanged.",
@@ -273,7 +393,41 @@
           "set_hue": 32,
           "sat_scale": 1.2
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "antler_tips",
+          "_why": "Board: greened antler tips. TINT, not growth -- an antler's ridges and its bright tip all live in the value channel, so recolouring hue/saturation and leaving value alone keeps the antler an antler.",
+          "where": {
+            "y_min": 0.86,
+            "lateral_min": 0.22
+          },
+          "mode": "tint",
+          "color": "#7cba3f",
+          "sat_floor": 0.8,
+          "softness": 0.06
+        },
+        {
+          "id": "antler_leaf",
+          "_why": "A few real leaf clumps caught in the rack on top of the tint, so the greening reads as growth rather than as paint.",
+          "where": {
+            "y_min": 0.84,
+            "lateral_min": 0.18
+          },
+          "mode": "grow",
+          "color": "#4f8a2c",
+          "shade": "#20431a",
+          "coverage": 0.3,
+          "grain": 9.0,
+          "softness": 0.08,
+          "relief": 0.55
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.142,
+        "feature_set_val": 0.041
+      }
     },
     "tuskroot": {
       "_comment": "Base: dark earth-brown boar. Vivid (board: 'Deeper browns + Moss + Mature'; canon: must read as Mudsnout grown up, same colour logic): rich deep brown, darker value -- the amethyst pass broke the family line outright. Shiny: deep jade, unchanged (green against brown, clearly apart).",
@@ -290,7 +444,7 @@
           "sat_scale": 1.1
         }
       ],
-      "vivid_comment": "dark earth -> deep amethyst heartwood (first pass read neon; hue pulled to violet, saturation pinned, value dropped)",
+      "vivid_comment": "CREATURE-PRESENTATION: still the deepest brown in the roster and still darker than Mudsnout, but 0.68 was an unreadable silhouette rather than a mature one",
       "vivid_rules": [
         {
           "match": {
@@ -301,10 +455,48 @@
             "sat_min": 0.1
           },
           "set_hue": 20,
-          "sat_scale": 1.0,
-          "val_scale": 0.68
+          "set_sat": 0.45,
+          "val_scale": 0.88
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "moss_mantle",
+          "_why": "Board: 'Deeper browns + Moss + Mature'. Tuskroot is mudsnout grown up, so it wears the SAME moss in a heavier coat -- same hue, more of it, further down the shoulder.",
+          "where": {
+            "y_min": 0.56,
+            "z_max": 0.62,
+            "up_min": 0.28
+          },
+          "mode": "grow",
+          "color": "#4e8a2e",
+          "shade": "#24451b",
+          "coverage": 0.6,
+          "grain": 4.5,
+          "softness": 0.1,
+          "relief": 0.6
+        },
+        {
+          "id": "root_creep",
+          "_why": "The evolution's own name. A thin creep of the same growth up the legs, which reads as age at any distance where the mantle is still legible.",
+          "where": {
+            "y_max": 0.26,
+            "z_max": 0.7
+          },
+          "mode": "grow",
+          "color": "#3f6f2a",
+          "shade": "#1f3d17",
+          "coverage": 0.16,
+          "grain": 8.0,
+          "softness": 0.1,
+          "relief": 0.7
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.123,
+        "feature_set_val": 0.035
+      }
     },
     "mosshell": {
       "_comment": "Base: green/yellow-green turtle. Vivid (board: 'Teal shell + Moss growth'; canon: primary read is WATER): the greens go teal, the yellow-greens stay moss -- the first pass pushed everything green, which is exactly the Grass read the canon forbids. Shiny: autumn ember, unchanged.",
@@ -321,34 +513,56 @@
           "sat_scale": 1.15
         }
       ],
-      "vivid_comment": "olive -> vivid moss green",
+      "vivid_comment": "CREATURE-PRESENTATION: teal shell kept, but the moss band goes warm ochre -- a water turtle whose second colour was grass-hue green was still half a Grass creature at distance",
       "vivid_rules": [
         {
           "match": {
             "hue": [
               40,
-              78
+              58
             ],
-            "sat_min": 0.1
+            "sat_min": 0.28
           },
-          "set_hue": 100,
-          "sat_scale": 1.25
+          "set_hue": 38,
+          "set_sat": 0.42
         },
         {
           "match": {
             "hue": [
-              78,
+              40,
               175
             ],
             "sat_min": 0.1
           },
           "set_hue": 178,
-          "sat_scale": 1.5
+          "set_sat": 0.55
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "shell_moss",
+          "_why": "Board: 'Teal shell + Moss growth' -- moss ON STONE, the shell's own scutes showing through it. The shell is the up-facing top of the mesh; relief keeps the scute seams visible under the carpet.",
+          "where": {
+            "y_min": 0.56,
+            "up_min": 0.18
+          },
+          "mode": "grow",
+          "color": "#58962f",
+          "shade": "#24471b",
+          "coverage": 0.62,
+          "grain": 5.0,
+          "softness": 0.1,
+          "relief": 0.62
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.15,
+        "feature_set_val": 0.043
+      }
     },
     "brooktail": {
-      "_comment": "Base: warm brown otter. Vivid (board: 'Cool blues + White accents'): the river blue the first pass chose already matches the board and stays; the pale chest now bleaches toward white. Shiny: midnight indigo, unchanged.",
+      "_comment": "Base: warm brown otter. Vivid (board: 'Cool blues + White accents'): the river blue the first pass chose already matches the board and stays; the pale chest now bleaches toward white. CREATURE-PRESENTATION 2026-08-23: a blind critic could not locate this creature's EYES in the village pond frame (shots/gate_a/village_pond_op21/pond-shoreline.png) -- sat 1.4x on a dark base turned an otter with a pale muzzle and a dark eye into one uniform navy mass, at the pond where the player meets their first water creature. The chest/muzzle band now catches everything down to value 0.45 and bleaches properly, the body sits a full stop brighter at pinned saturation, and the finish pass re-stamps the eyes. Shiny: midnight indigo, unchanged.",
       "rules": [
         {
           "match": {
@@ -362,15 +576,15 @@
           "sat_scale": 0.85
         }
       ],
-      "vivid_comment": "brown -> river blue",
+      "vivid_comment": "CREATURE-PRESENTATION: same river blue, lifted two stops and desaturated so the otter has a face again",
       "vivid_rules": [
         {
           "match": {
-            "sat_max": 0.25,
-            "val_min": 0.6
+            "sat_max": 0.3,
+            "val_min": 0.45
           },
-          "sat_scale": 0.6,
-          "val_scale": 1.08
+          "set_sat": 0.08,
+          "val_scale": 1.3
         },
         {
           "match": {
@@ -380,11 +594,16 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 205,
-          "sat_scale": 1.4,
-          "val_scale": 1.05
+          "set_hue": 202,
+          "set_sat": 0.45,
+          "val_scale": 1.35
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.146,
+        "feature_set_val": 0.042
+      }
     },
     "galecrest": {
       "_comment": "Base: rust red-orange raptor. Vivid (board: 'White + blue + Noble'): saturated rust becomes slate-blue feathering, pale rust bleaches white -- an eagle, not the first pass's ember hawk. Shiny: SWAPPED ROLES with the old vivid -- the golden-ember look becomes the rare, because a storm-white shiny beside a white-bodied ordinary is invisible.",
@@ -426,7 +645,54 @@
           "set_sat": 0.12,
           "val_scale": 1.12
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "storm_tips",
+          "_why": "Round 1 put slate-blue on galecrest as a colourway RULE, so the blue landed wherever the source texture happened to be rusty -- blotches that cross feather boundaries, which a blind critic named. This is the same blue placed anatomically instead: the distal third of both wings (lateral extremes, above the feet), TINTED so every quill line, barb shadow and specular edge in the value channel survives and the colour flows along the feathers.",
+          "where": {
+            "lateral_min": 0.62,
+            "y_min": 0.4
+          },
+          "mode": "tint",
+          "color": "#3a6ec4",
+          "sat_floor": 0.45,
+          "softness": 0.12
+        },
+        {
+          "id": "crest_slate",
+          "_why": "The head crest picks up the same blue at half strength, which is what ties the wing tips to the bird instead of leaving them as two blue flags.",
+          "where": {
+            "y_min": 0.8,
+            "lateral_max": 0.3
+          },
+          "mode": "tint",
+          "color": "#4a78c8",
+          "sat_floor": 0.45,
+          "softness": 0.1,
+          "strength": 0.5
+        }
+      ],
+      "overlays_alpha": [
+        {
+          "id": "alpha_storm",
+          "_why": "ALPHA PRESENCE: the same storm blue, darker and reaching further up the wing.",
+          "where": {
+            "lateral_min": 0.38,
+            "y_min": 0.35
+          },
+          "mode": "tint",
+          "color": "#20438f",
+          "sat_floor": 0.9,
+          "softness": 0.12,
+          "val_scale": 0.88
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.178,
+        "feature_set_val": 0.052
+      }
     },
     "duskhush": {
       "_comment": "Base: grey-teal nocturne. Vivid (board: 'Midnight tones + Glowing accents'): the first pass's twilight indigo matches the board and stays, saturation pulled just off neon. Shiny: plum-magenta, unchanged.",
@@ -451,7 +717,7 @@
           "set_sat": 0.18
         }
       ],
-      "vivid_comment": "grey-teal -> deep twilight indigo",
+      "vivid_comment": "CREATURE-PRESENTATION: twilight indigo body kept, but the owl gets its pale facial disc back -- 0.55/0.6 on both bands left one black mass with no face and no silhouette",
       "vivid_rules": [
         {
           "match": {
@@ -462,22 +728,27 @@
             "sat_min": 0.06
           },
           "set_hue": 250,
-          "sat_scale": 1.3,
-          "val_scale": 0.55
+          "sat_scale": 1.2,
+          "val_scale": 0.8
         },
         {
           "match": {
             "sat_max": 0.15,
             "val_min": 0.3
           },
-          "set_hue": 248,
-          "set_sat": 0.3,
-          "val_scale": 0.6
+          "set_hue": 224,
+          "set_sat": 0.1,
+          "val_scale": 1.45
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.134,
+        "feature_set_val": 0.039
+      }
     },
     "pipwing": {
-      "_comment": "Base: sunny yellow songbird. Vivid (board: 'Soft grays + Blue tips'): the body goes pale gray, the saturated markings go sky blue. Shiny: the sunny yellow the vivid retires comes back saturated as a canary-gold rare -- the old sky-blue shiny would have sat next door to the new blue-tipped ordinary.",
+      "_comment": "Base: sunny yellow songbird. Vivid (board: 'Soft grays + Blue tips'): the body goes pale gray, the saturated markings go sky blue. CREATURE-PRESENTATION 2026-08-23: the second most common creature in the chapter (140 field spawns) was a pale grey body under pale sky-blue tips -- two pastels a stop apart, which is the 'tiny pastel blob at distance' the critics named (shots/band3/02-riverwatch-rest.png). The scheme is unchanged; the CONTRAST inside it is not. Near-white body, deep saturated blue tips: one light shape with dark marks on it still reads at forty pixels, where two pastels do not. Shiny: the sunny yellow the vivid retires comes back saturated as a canary-gold rare -- the old sky-blue shiny would have sat next door to the new blue-tipped ordinary.",
       "rules": [
         {
           "match": {
@@ -492,7 +763,7 @@
           "val_scale": 1.05
         }
       ],
-      "vivid_comment": "dull straw -> bright canary",
+      "vivid_comment": "CREATURE-PRESENTATION: same grey-and-blue scheme, pushed apart -- pastel on pastel is what makes this one a tiny colourless smudge at distance",
       "vivid_rules": [
         {
           "match": {
@@ -502,8 +773,9 @@
             ],
             "sat_min": 0.45
           },
-          "set_hue": 210,
-          "set_sat": 0.5
+          "set_hue": 214,
+          "set_sat": 0.75,
+          "val_scale": 0.72
         },
         {
           "match": {
@@ -513,10 +785,15 @@
             ],
             "sat_min": 0.1
           },
-          "set_sat": 0.08,
-          "val_scale": 1.05
+          "set_sat": 0.06,
+          "val_scale": 1.16
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.221,
+        "feature_set_val": 0.065
+      }
     },
     "reedwing": {
       "_comment": "Base: mixed teal/green/straw wader. Vivid (board: 'Blue + white + Reed accents'): cools go teal-blue, pales go white, straws STAY reed -- the first pass's spring green traded the wader's water read away. Shiny: flamingo, unchanged.",
@@ -576,10 +853,15 @@
           "set_hue": 205,
           "sat_scale": 1.4
         }
-      ]
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.158,
+        "feature_set_val": 0.046
+      }
     },
     "bramblebun": {
-      "_comment": "Embedded-texture species. Base: golden bunny. Vivid (board: 'Forest greens + Leafy details'): saturated golds become leaf green, the coat goes olive green-brown. Shiny: REAUTHORED to snow-white -- the first render showed the old mint shiny beside the new leafy vivid as two greens, which fails the owner's 'genuinely different colourway' rule. A snow bunny against a forest one cannot be mistaken at any distance.",
+      "_comment": "Embedded-texture species. Base: golden bunny. Vivid (board: 'Forest greens + Leafy details'): CREATURE-PRESENTATION 2026-08-23 re-keyed this off the terrain. The previous pass painted the whole coat leaf-green and the result is the frame that reached the owner -- shots/band3/09-wild-cluster-on-the-road.png, three mint rabbits at hue 141-148 standing on grass at hue 134-155, invisible until you are on top of them, on the single most common creature in Band 1. The board's own words survive intact: the LEAFY DETAILS (the bramble sprigs and flowers, the most saturated pixels in the map) stay forest green, and the coat goes warm hazel, which is 100 degrees of hue and a value step away from the meadow. Shiny: REAUTHORED to snow-white -- the first render showed the old mint shiny beside the new leafy vivid as two greens, which fails the owner's 'genuinely different colourway' rule. A snow bunny against a forest one cannot be mistaken at any distance.",
       "rules": [
         {
           "match": {
@@ -593,18 +875,19 @@
           "val_scale": 1.18
         }
       ],
-      "vivid_comment": "tan -> saffron gold",
+      "vivid_comment": "CREATURE-PRESENTATION: leaf-green COAT -> warm hazel coat, green kept as the bramble accent it was named for",
       "vivid_rules": [
         {
           "match": {
             "hue": [
-              20,
-              70
+              75,
+              170
             ],
-            "sat_min": 0.4
+            "sat_min": 0.12
           },
-          "set_hue": 110,
-          "sat_scale": 1.2
+          "set_hue": 104,
+          "set_sat": 0.6,
+          "val_scale": 0.92
         },
         {
           "match": {
@@ -612,15 +895,54 @@
               20,
               70
             ],
-            "sat_min": 0.12
+            "sat_min": 0.1
           },
-          "set_hue": 62,
-          "sat_scale": 1.15
+          "set_hue": 33,
+          "sat_scale": 1.3,
+          "val_scale": 1.14
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "leaf_ears",
+          "_why": "Board: leaf-shaped green ears are bramblebun's single signature. The ear pair is the top fifth of the mesh at the lateral extremes -- y>0.80 with |x| off the centre line -- on every rig, which a UV rectangle could not say.",
+          "where": {
+            "y_min": 0.8,
+            "lateral_min": 0.28
+          },
+          "mode": "grow",
+          "color": "#6fae3c",
+          "shade": "#2f5f22",
+          "coverage": 0.82,
+          "grain": 6.0,
+          "softness": 0.05,
+          "relief": 0.5
+        },
+        {
+          "id": "leaf_ruff",
+          "_why": "Board: 'leafy details' -- sprigs through the shoulder fur, not a solid cape. Low coverage on purpose: it should read as growth caught in the coat.",
+          "where": {
+            "y_min": 0.42,
+            "y_max": 0.72,
+            "up_min": 0.1
+          },
+          "mode": "grow",
+          "color": "#5f9c33",
+          "shade": "#2a5220",
+          "coverage": 0.3,
+          "grain": 7.0,
+          "softness": 0.1,
+          "relief": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.185,
+        "feature_set_val": 0.054
+      }
     },
     "mudsnout": {
-      "_comment": "Embedded-texture species. Base: mud-brown snuffler. Vivid (board: 'Rich browns + Mud texture'): richer and slightly deeper, never orange. Shiny: pulled to clear rose-pink with a saturation floor -- the old h348 sat next to the vivid's warm brown across the red wrap.",
+      "_comment": "Embedded-texture species. Base: mud-brown snuffler. Vivid (board: 'Rich browns + Mud texture'): CREATURE-PRESENTATION 2026-08-23 lifted this off the floor. `val_scale: 0.7` on the roster's MOST COMMON creature (164 of the ~900 field spawns across five bands) made a dark unlit lump whose measured value distance from the grass was 0.14 -- less than the shadow of a cloud -- and buried the snout and eye the model actually has. Same hue family, saturation pinned rather than scaled so the mud reads as earth instead of the previous pass's salmon, and the value now works FOR the read. Shiny: pulled to clear rose-pink with a saturation floor -- the old h348 sat next to the vivid's warm brown across the red wrap.",
       "rules": [
         {
           "match": {
@@ -635,7 +957,7 @@
           "val_scale": 1.08
         }
       ],
-      "vivid_comment": "mud -> rich terracotta",
+      "vivid_comment": "CREATURE-PRESENTATION: the same rich earth, but at a value the meadow does not swallow",
       "vivid_rules": [
         {
           "match": {
@@ -645,11 +967,34 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 15,
-          "sat_scale": 1.05,
-          "val_scale": 0.7
+          "set_hue": 24,
+          "set_sat": 0.62,
+          "val_scale": 0.8
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "moss_back",
+          "_why": "Board: mud-brown snuffler carrying moss across the shoulders and spine. Up-facing surfaces only (up_min) -- moss grows where rain sits, and a boar's flanks are vertical.",
+          "where": {
+            "y_min": 0.58,
+            "z_max": 0.62,
+            "up_min": 0.35
+          },
+          "mode": "grow",
+          "color": "#5d9433",
+          "shade": "#2b4f1f",
+          "coverage": 0.58,
+          "grain": 5.5,
+          "softness": 0.1,
+          "relief": 0.62
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.166,
+        "feature_set_val": 0.048
+      }
     },
     "trailpup": {
       "_comment": "Embedded-texture species. Base: sandy tan pup with a darker back stripe and dark-tipped tail. Vivid (board: 'Tan + moss'): modest tan, value untouched so the stripe and tip survive. Shiny: deep fox-red, moved off the old h14 that sat 19 degrees from the old vivid.",
@@ -666,7 +1011,7 @@
           "sat_scale": 1.6
         }
       ],
-      "vivid_comment": "sandy -> warm amber",
+      "vivid_comment": "CREATURE-PRESENTATION: the mid-tone band was moss green on a canine that spends its life standing in grass; it is now the darker earth-brown dorsal the base texture already implies",
       "vivid_rules": [
         {
           "match": {
@@ -678,8 +1023,9 @@
             "val_min": 0.2,
             "val_max": 0.42
           },
-          "set_hue": 90,
-          "sat_scale": 0.9
+          "set_hue": 22,
+          "set_sat": 0.42,
+          "val_scale": 0.85
         },
         {
           "match": {
@@ -692,10 +1038,34 @@
           "set_hue": 35,
           "sat_scale": 1.2
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "moss_saddle",
+          "_why": "Board: 'Tan + moss'. A saddle over the back between shoulder and haunch, clear of the head (z<0.72) so the face stays the face.",
+          "where": {
+            "y_min": 0.58,
+            "z_min": 0.2,
+            "z_max": 0.62,
+            "up_min": 0.3
+          },
+          "mode": "grow",
+          "color": "#5b9433",
+          "shade": "#2a4f1f",
+          "coverage": 0.52,
+          "grain": 6.0,
+          "softness": 0.1,
+          "relief": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.24,
+        "feature_set_val": 0.07
+      }
     },
     "veridian": {
-      "_comment": "Embedded-texture species. Base: leaf green. Vivid (board: 'Verdant glow + Ancient + Sacred'): the first pass's luminous forest green matches the board and is kept as shipped. Shiny: amber-gold, unchanged.",
+      "_comment": "Embedded-texture species. Base: leaf green. Vivid (board: 'Verdant glow + Ancient + Sacred'). CREATURE-PRESENTATION 2026-08-23 SPLIT the board's three words across the model instead of spending all three on one hue. The chapter's climax creature was a saturated green stag on a green meadow -- 45 degrees of hue from the grass and the worst-camouflaged animal in the roster on the one encounter the whole chapter builds toward. Now: the foliage of the crown and mane (the most saturated greens in the map) carry VERDANT GLOW, and the hide carries ANCIENT and SACRED as pale ivory-bone. A white stag with a living green crown is more legendary than a green one, and it is the only creature in the Meadows that reads that way. Shiny: amber-gold, unchanged -- still clear of the ivory. Flagged in ralph/BACKLOG.md as a presentation call on a story creature, in case the owner wants the hide green again with the SETTING changed instead.",
       "rules": [
         {
           "match": {
@@ -709,8 +1079,20 @@
           "sat_scale": 1.15
         }
       ],
-      "vivid_comment": "flat green -> luminous forest green",
+      "vivid_comment": "CREATURE-PRESENTATION: verdant CROWN over a pale ancient hide, instead of a wholly green stag standing in green",
       "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              60,
+              160
+            ],
+            "sat_min": 0.42
+          },
+          "set_hue": 132,
+          "set_sat": 0.72,
+          "val_scale": 1.1
+        },
         {
           "match": {
             "hue": [
@@ -719,12 +1101,56 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 142,
-          "sat_scale": 1.8,
-          "val_scale": 1.06
+          "set_hue": 46,
+          "set_sat": 0.12,
+          "val_scale": 1.32
         }
-      ]
+      ],
+      "overlays": [
+        {
+          "id": "hide_deepen",
+          "_why": "LEGENDARY AT 100m. VERIDIAN-HIDE keeps the ivory hide -- this does not touch its hue. It deepens the underside so the stag carries a real value range instead of one flat pale mass, which is what a silhouette needs to survive against lit grass at distance.",
+          "where": {
+            "y_max": 0.52,
+            "up_max": 0.35
+          },
+          "mode": "shade",
+          "val_scale": 0.78,
+          "sat_scale": 1.1,
+          "softness": 0.15
+        }
+      ],
+      "overlays_emissive": [
+        {
+          "id": "crown_glow",
+          "_why": "The crown is the only part of this animal that is allowed to be green (VERIDIAN-HIDE), so it is also the part that has to carry the read at range. Boosted in the EMISSIVE map only: emission is the one channel distance, shadow and overcast do not take away, so a hundred metres out the player sees a pale stag with a burning green rack rather than a pale shape.",
+          "where": {
+            "y_min": 0.72
+          },
+          "mode": "shade",
+          "val_scale": 1.9,
+          "sat_scale": 1.2,
+          "softness": 0.1
+        },
+        {
+          "id": "body_damp",
+          "_why": "The other half of the same separation: the hide's own glow pulled DOWN, so the crown is the brightest thing on the model rather than one bright thing among many.",
+          "where": {
+            "y_max": 0.66
+          },
+          "mode": "shade",
+          "val_scale": 0.45,
+          "softness": 0.12
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.17,
+        "feature_set_val": 0.05
+      }
     }
   },
-  "_comment_vivid": "REDO 2026-08-16, against the owner's vendored boards (docs/reference/owner-board-2026-08-15-*.png, see docs/ASSET_LEDGER.md). The first vivid pass was authored without them and went jewel-toned -- amethyst tuskroot, emerald paddlenewt, canary pipwing, ember galecrest -- where the boards call for natural palettes with elemental accents ('Warm earth tones + Moss accents', 'Vibrant blues + Wet sheen', 'Soft grays + Blue tips', 'White + blue + Noble'). Three species' first-pass hues already matched the boards and are kept: duskhush, brooktail, veridian. Every vivid hue stays clear of its own species' shiny hue; galecrest and pipwing swapped/reauthored their shinies to preserve that after their vivids moved. Boards are direction, not pixel targets (owner: 'none are the exact direction') -- the render judge against the boards is the gate, never this file's numbers."
+  "_comment_vivid": "REDO 2026-08-16, against the owner's vendored boards (docs/reference/owner-board-2026-08-15-*.png, see docs/ASSET_LEDGER.md). The first vivid pass was authored without them and went jewel-toned -- amethyst tuskroot, emerald paddlenewt, canary pipwing, ember galecrest -- where the boards call for natural palettes with elemental accents ('Warm earth tones + Moss accents', 'Vibrant blues + Wet sheen', 'Soft grays + Blue tips', 'White + blue + Noble'). Three species' first-pass hues already matched the boards and are kept: duskhush, brooktail, veridian. Every vivid hue stays clear of its own species' shiny hue; galecrest and pipwing swapped/reauthored their shinies to preserve that after their vivids moved. Boards are direction, not pixel targets (owner: 'none are the exact direction') -- the render judge against the boards is the gate, never this file's numbers.",
+  "_comment_overlays": "CREATURE-IDENTITY-2 2026-08-23. `overlays` is the board's FANTASY LAYER -- leaf ears, moss carpets, greened antler tips, storm-blue feather tips -- painted onto the existing UVs by tools/creature_overlays.py after the colourway rules and the finish pass. Round 1 delivered the palette and none of this, which a blind critic called 'correct but half-depth'. Every overlay is authored in ANATOMY (normalised height, surface normal, distance off the centre line, read out of the species' own glb by tools/creature_anatomy_maps.py), never in UV rectangles: an automatic unwrap scatters a wing across islands, so a rectangle that looks like a wing tip on the sheet is several unrelated pieces of bird -- that is exactly how round 1's galecrest patches ended up crossing feather boundaries. `overlays` applies to every colourway; `overlays_alpha` adds the cluster-leader variant, `overlays_emissive` the glow-only pass. No mesh is touched by any of this; mesh-level flourishes are in ralph/BLOCKED.md as an owner decision.",
+  "_comment_feature_key": "CREATURE-IDENTITY-2: the per-species `finish.feature_max_val` numbers below are MEASURED, not chosen -- the value of the darkest 2.5% of each species' own SURFACE texels (the anatomy map's valid mask, so UV gutter does not vote). The shared 0.22 cap this replaced is the numeric form of the two-families problem: ripplet's darkest 2.5% sits at 0.384 and galewisp's at 0.314, both above the cap, so those two received NO feature re-stamp at all while burrowback (0.043) received a full one. That is why the chibi half of the roster reads soft-focus and glassy next to the naturalists. Measuring per species makes every creature re-stamp the same SHARE of its surface to the same shared dark, which is the one-roster eye/outline language at the level texture work can actually reach."
 }
