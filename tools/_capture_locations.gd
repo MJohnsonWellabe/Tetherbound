@@ -89,6 +89,15 @@ extends SceneTree
 ## has already streamed and the director has already populated -- HOP 8 + POSE
 ## 4 each. Budgeting three full arrivals per site instead would be 10 minutes
 ## of pure re-settling for frames that would look identical.
+##
+## MEASURED on this box, 2026-08-23, one-site smoke run (`--only=04-warrens`):
+## process start to first shutter 231 s for 182 frames, then 12 frames per
+## extra shot in 25 s and 13 s. That is ~1.3 s per awaited frame, roughly HALF
+## the 2.4 s the ledger records -- and the world it renders is BIGGER (223,889
+## scattered props here against the corridor's 143,630). The ledger's figure is
+## not wrong, it was measured under different contention; both are worth having
+## because the honest planning number is "measure it on the day", not either
+## constant. At 1.3 s the budget above is ~32 minutes, not 54.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -168,9 +177,9 @@ const SITES := [
 		"night": false,
 		"_why": "data/config/burrow_warrens.json site [-357,2610] yaw 315. Every eye here is asked of the node itself (`BurrowWarrens.marker`) rather than transcribed, because a 315-degree yaw makes hand-rotating five chamber locals a guess this file should not be making.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "marker": ["BurrowWarrens", "entrance"], "offset": [24.0, 24.0],
-			 "look_marker": ["BurrowWarrens", "entrance"],
-			 "_why": "34m out from the entrance on the open side, the distance the mound has to read as a way in from. The offset puts this eye on open terrain, so it is ray-seated; only the look target keeps the marker's floor."},
+			{"label": "approach", "mode": "approach", "marker": ["BurrowWarrens", "entrance"],
+			 "look_marker": ["BurrowWarrens", "hall"], "pull_back": 30.0,
+			 "_why": "30m straight out in FRONT of the mouth, on the axis the cave itself runs. The first draft of this shot used a hand-written world offset of (+24,+24) from the entrance and its frame came back with no cave in it: the site is yawed 315 degrees, so the mouth faces (+x,-z), and moving +z walked sideways past the mound instead of standing off from it. `pull_back` takes the direction from the two markers -- entrance out through the hall -- so the shot cannot be wrong about which way the door faces."},
 			{"label": "standing", "mode": "standing", "marker": ["BurrowWarrens", "entrance"],
 			 "look_marker": ["BurrowWarrens", "hall"],
 			 "_why": "at the mouth looking in, the threshold shot"},
@@ -249,9 +258,10 @@ const SITES := [
 		"night": true,
 		"_why": "data/config/stronghold.json site [0,7560] yaw 90; chambers outer_works/courtyard/tether_approach/warden_arena/legendary_chamber; approach pylon run starts [-40,7010]. Interior eyes are asked of `Stronghold.marker()` -- the node's own `to_global()` of each chamber centre -- because site yaw 90 rotates every chamber local, and getting that rotation wrong by hand would photograph the inside of a wall.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [0.0, 7440.0], "look": [0.0, 7560.0],
+			{"label": "approach", "mode": "approach", "marker": ["Stronghold", "entrance"],
+			 "look_marker": ["Stronghold", "outer_works"], "pull_back": 110.0,
 			 "back": 12.0, "up": 6.0,
-			 "_why": "120m out on the road's own axis, well back and high, because the ONE thing the stronghold has to do at this distance is announce itself. VISUAL_STRUCTURES round 1 calls it 'the game's antagonist made of nothing'; this is the eye that claim has to be answered at."},
+			 "_why": "110m straight out from the gate, well back and high, because the ONE thing the stronghold has to do at this distance is announce itself. VISUAL_STRUCTURES round 1 calls it 'the game's antagonist made of nothing'; this is the eye that claim has to be answered at. `pull_back` rather than a world coordinate because site yaw 90 turns the route's front to face WEST -- a hand-written eye due south of [0,7560] would have photographed a side wall and called it the approach."},
 			{"label": "gate", "mode": "standing", "marker": ["Stronghold", "entrance"],
 			 "look_marker": ["Stronghold", "outer_works"],
 			 "_why": "at the entrance mark looking into the outer works -- the gate slot at the height a 1.80m person meets it"},
@@ -532,6 +542,18 @@ func _resolve(shot: Dictionary) -> Dictionary:
 		var l: Array = shot["look"] as Array
 		look = Vector2(float(l[0]), float(l[1]))
 
+	# `pull_back` stands the eye off along the line the look target already
+	# defines, rather than at a world coordinate someone had to reason about a
+	# site yaw to write down. The stronghold is the case that forced it: its
+	# route is yawed 90 degrees, so the gate faces west, and an "approach" eye
+	# placed due south of the site centre photographs a side wall.
+	if shot.has("pull_back"):
+		var away := (eye - look).normalized()
+		if away.is_zero_approx():
+			print("  WARN pull_back has no direction; eye and look coincide")
+			return {}
+		eye += away * float(shot["pull_back"])
+		floor_y = NAN
 	return {"eye": eye, "look": look, "floor": floor_y, "look_floor": look_floor}
 
 
@@ -629,6 +651,11 @@ func _clear_of_bodies(eye: Vector2, toward: Vector2, ground: float) -> Vector2:
 		return eye
 	# Perpendicular to the view line, so a step aside barely changes the shot.
 	var aside := Vector2(-toward.y, toward.x).normalized()
+	# Remembered across attempts, because `blocker` is empty on the attempt
+	# that SUCCEEDS -- reporting it there named nothing and made the NOTE read
+	# "was occupied by ", which is exactly the kind of silent diagnostic this
+	# survey exists to avoid.
+	var occupant := ""
 	for attempt in 4:
 		var candidate := eye if attempt == 0 else eye + aside * 2.0 * float(attempt)
 		var query := PhysicsShapeQueryParameters3D.new()
@@ -647,13 +674,16 @@ func _clear_of_bodies(eye: Vector2, toward: Vector2, ground: float) -> Vector2:
 			if body == null or _under_terrain(body):
 				continue
 			blocker = body.name
+			if occupant == "":
+				occupant = body.name
 			break
 		if blocker == "":
 			if attempt > 0:
 				print("  NOTE (%.0f,%.0f) was occupied by %s; landing moved %.1fm aside" % [
-					eye.x, eye.y, blocker, (candidate - eye).length()])
+					eye.x, eye.y, occupant, (candidate - eye).length()])
 			return candidate
-	print("  WARN (%.0f,%.0f) is occupied and four steps aside did not clear it" % [eye.x, eye.y])
+	print("  WARN (%.0f,%.0f) is occupied by %s and four steps aside did not clear it" % [
+		eye.x, eye.y, occupant])
 	return eye
 
 
