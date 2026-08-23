@@ -56,6 +56,7 @@ const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
@@ -249,6 +250,17 @@ func _gather_and_build_a_home() -> bool:
 		return false
 	_note("home_materials_gathered")
 
+	# Walk home before building.
+	#
+	# `gate_a_build_segment.gd` refuses to start anywhere but the Village Square
+	# ("the caller must bring the real player to the Village Square through
+	# ordinary exploration first"), and the gather route legitimately ends
+	# wherever the last stop and the live-scatter fill left the player -- its own
+	# authored list reaches (-168, 312). Nothing had ever walked that leg,
+	# because until this branch nothing had ever finished the gather route.
+	if not await _walk_back_to_the_square():
+		return false
+
 	var built: Dictionary = await BUILD_SEGMENT.new().run(self, _world, _player, _rig)
 	if not _segment_passed("build segment", built):
 		return false
@@ -423,6 +435,43 @@ func _tap(action: StringName) -> void:
 	Input.parse_input_event(released)
 	for _i in 5:
 		await physics_frame
+
+
+## The walk back from the gather route to the Village Square, on the left stick
+## and around whatever the Meadow has put in the way (`stick_navigator.gd`).
+##
+## `gate_a_build_segment.gd::BUILD_ROUTE_XZ.front()` is the square at (10, -10)
+## and it wants the player within `BUILD_ROUTE_ENTRY_EPSILON` (0.75m) of it, so
+## the walk finishes tighter than that before handing over.
+func _walk_back_to_the_square() -> bool:
+	var square := Vector3(10.0, _player.global_position.y, -10.0)
+	var nav = NAVIGATOR.new(self, _player, _rig, _send_stick)
+	var arrived: bool = await nav.walk_to(square, 12000, 0.5)
+	_send_stick(0.0, 0.0)
+	for _i in 10:
+		await physics_frame
+	if not arrived:
+		_fail("could not walk back to the Village Square from the gather route "
+			+ "(stopped %.1fm away at %s)" % [
+				Vector2(_player.global_position.x - 10.0,
+					_player.global_position.z + 10.0).length(),
+				str(_player.global_position.round())])
+		return false
+	_checkpoint("walked back to the Village Square for the build")
+	return true
+
+
+func _send_stick(x: float, y: float) -> void:
+	_send_axis(JOY_AXIS_LEFT_X, x)
+	_send_axis(JOY_AXIS_LEFT_Y, y)
+
+
+func _send_axis(axis: JoyAxis, value: float) -> void:
+	var event := InputEventJoypadMotion.new()
+	event.device = 0
+	event.axis = axis
+	event.axis_value = clampf(value, -1.0, 1.0)
+	Input.parse_input_event(event)
 
 
 func _event_for(action: StringName, pressed: bool) -> InputEvent:

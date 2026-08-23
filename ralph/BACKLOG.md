@@ -479,6 +479,67 @@ corrected on this branch.
 
 ### CONTINUOUS-CORE — the village/gather/build continuation has never run
 
+**UPDATE 2026-08-23, `ralph/GATEB-PATH` — the village-pathing half is DONE. The
+entry stays open, one stall further on.**
+
+The prediction this entry ends on was right: "what is actually left is pathing,
+not positioning". It is fixed, in `tests/helpers/stick_navigator.gd`, and the
+answer was neither of the two options the entry offered. There is **no navmesh
+in this game at all** (nothing in `scripts/`, `scenes/` or `autoload/` mentions
+`NavigationServer3D`), and authored per-villager waypoints were rejected because
+the same straight line breaks at Bram's inn, on the material route's 161m legs
+and at every unreached beat after them. What shipped is a shared left-stick
+navigator that **detects a leg that has stopped closing and slides sideways**,
+picking the side with a physics free-space probe — plus doors approached along
+their own outward normal, which is where a player walks up to a door from.
+
+Two corrections to the record above, both measured:
+
+* **Mira's door was cottage_a's front wall, and the geometry is exact.** Oskar
+  at [22,-6], the doorway in cottage_a (`village.json` `at: [18,-2]`,
+  `yaw_deg: -135`), and that wall's solid left-hand collider
+  (`building_prefabs.json`, local x -2.2..0.2 at local z 3) sits square across
+  the straight line between them. The stubborn 3.6m was the wall.
+* **"The arbiter is a red herring" was right for a second reason.**
+  `interactable.gd::_has_line_of_sight` refuses an offer through a wall, so with
+  the player pressed against plaster the EncounterDirector was not taking the
+  interact line — it was the only provider still bidding.
+
+**Village evidence now passing**, six consecutive runs of
+`tools/_probe_village_route.gd` (real opening drive + real village segment, one
+session, nothing granted, ~3 minutes a run): Tam, the Satchel's four quick
+slots, the axe/pickaxe/knife gathers, Oskar, **Mira in and out through her real
+door**, and **Bram three times in and out through the inn's**.
+
+**Where it now stalls: the live scatter fill.** `smoke_gate_b_continuous.gd`
+reaches opening -> road gate -> team -> village tools -> every authored gather
+stop including the 161m leg to (-5, 141), and fails inside
+`gate_a_material_route.gd::_fill_with_live_scatter("wood")`:
+
+```
+controller could not reach live natural wood at (-55.7, 7.06, -51.2)
+(stopped 46.9m short)
+```
+
+That is a TRAVEL failure on open ground, not a harvest one, and it has its own
+one-minute harness: `tools/_probe_scatter_fill.gd`. The first hypothesis to test
+is that the navigator's free-space probe — a flat ray at hip height — reads a
+rising slope as a wall, so a leg that should be climbing sidesteps instead. The
+target in that failure is 4m uphill of the start.
+
+Four other real blockers were found and fixed on the way to it (the tutorial
+aim's unconvergeable 1-degree window and its two walk-away cases; the material
+route pressing the unbound `use_tool`; the route walking to authored nodes the
+village segment had just spent, because `resource_amount()` keeps reporting a
+spent node's authored amount; and a fixed 1800-frame walk budget that is 150m at
+the trainer's own 5 m/s). See `ralph/DONE.md`'s GATEB-PATH entry for each one's
+evidence.
+
+Do NOT re-derive any of this by iterating the full run. Three probes exist for
+exactly that reason and are on the branch.
+
+---
+
 Gate B cannot be proven end-to-end until this passes. Everything below is
 observed, not inferred.
 

@@ -16,8 +16,10 @@ extends RefCounted
 ## constants, and selecting the live public resource nodes proves the actual
 ## loaded Meadow has the claimed economy.
 
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const HARVEST_NODE_PATH := "res://scripts/world/harvest_node.gd"
 const VEGETATION_POINT_PATH := "res://scripts/world/vegetation_harvest_point.gd"
+const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
 const TARGET_STOCK := {"wood": 57, "stone": 42, "fiber": 18}
 const TOOL_ACTION := {"wood": &"hotbar_1", "stone": &"hotbar_2", "fiber": &"hotbar_3"}
 const TOOL_ID := {"wood": "axe", "stone": "pickaxe", "fiber": "knife"}
@@ -49,6 +51,9 @@ var _move_x_axis: JoyAxis = JOY_AXIS_LEFT_X
 var _move_y_axis: JoyAxis = JOY_AXIS_LEFT_Y
 var _move_x_sign := 1.0
 var _move_y_sign := 1.0
+## Travel. See `stick_navigator.gd`: this route crosses the whole Meadow and a
+## straight stick vector walks into the first tree, rock or wall on the bearing.
+var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
@@ -67,6 +72,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		return _result()
 	if not _resolve_move_bindings():
 		return _result()
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
 	if not _verify_tool_hotbar():
 		return _result()
 	transcript.append("starting natural paid-build route with %s" % _stock_snapshot())
@@ -109,8 +115,9 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 		# invariant, not a synthetic replacement, decides sufficiency.
 		transcript.append("authored %s at %s was already spent; continuing from real satchel stock" % [item_id, expected])
 		return true
-	if not await _walk_to(node.global_position, 1.65, 1800):
-		_fail("controller could not reach authored %s at %s" % [item_id, expected])
+	if not await _walk_to(node.global_position, 1.65, _travel_budget(node.global_position)):
+		_fail("controller could not reach authored %s at %s (stopped %.1fm short)" % [
+			item_id, expected, _player.global_position.distance_to(node.global_position)])
 		return false
 	if not await _harvest_node(node, item_id, true):
 		return false
@@ -128,8 +135,10 @@ func _fill_with_live_scatter(item_id: String) -> bool:
 				item_id, _count(item_id), required])
 			return false
 		var before := _count(item_id)
-		if not await _walk_to(node.global_position, 1.65, 2400):
-			_fail("controller could not reach live natural %s at %s" % [item_id, node.global_position])
+		if not await _walk_to(node.global_position, 1.65, _travel_budget(node.global_position)):
+			_fail("controller could not reach live natural %s at %s (stopped %.1fm short)" % [
+				item_id, node.global_position,
+				_player.global_position.distance_to(node.global_position)])
 			return false
 		if not await _harvest_node(node, item_id, false):
 			return false
@@ -154,9 +163,34 @@ func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
 	if not await _equip(item_id):
 		return false
 	var before := _count(item_id)
-	await _tap_action(&"use_tool")
+	# `interact` (X), not `use_tool`.
+	#
+	# CONTROLLER-MAP gave X "talk, gather, chop, mine" and left `use_tool` with
+	# only its mouse button (project.godot's own comment on the action says so:
+	# "L3, not X"). This line therefore had NO physical joypad binding at all,
+	# and `_tap_action` refuses one -- the Gate B continuous run failed here with
+	# "use_tool has no physical joypad binding" followed by "wood action produced
+	# no visible inventory gain", which is one fault reported twice.
+	#
+	# `gate_a_npc_gather_segment.gd` fixed exactly this in its own three gathers
+	# and wrote the reasoning into its header; this is the same swing on the same
+	# pad, so it is the same button.
+	# Wait for the node's own prompt to be the one the button is offering.
+	#
+	# The village stands in open meadow, the arbiter ranks by distance, and X is
+	# ALSO "engage the wild creature" -- so a press sent from 1.65m without
+	# checking who holds the line can go somewhere else entirely and report back
+	# as a swing that credited nothing. `gate_a_npc_gather_segment.gd` learned
+	# the same thing at Tam and now says the winner in its own failures.
+	var node_prompt := node.get_node_or_null(^"Interactable") as Node3D
+	if node_prompt != null:
+		await _stand_where_it_wins(node_prompt, node.global_position)
+	await _tap_action(&"interact")
 	if authored:
-		return await _wait_for_inventory_gain(item_id, before, 120)
+		if await _wait_for_inventory_gain(item_id, before, 120):
+			return true
+		_fail(_why_the_swing_paid_nothing(node, node_prompt, item_id))
+		return false
 	# Scatter stands are a two-stage production verb: physical tool swing chops,
 	# then the same player picks up the visible felled pile. Never call either
 	# stage directly, and never assume a swing is itself an inventory grant.
@@ -168,16 +202,55 @@ func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
 		_fail("controller could not reach its felled %s pickup" % item_id)
 		return false
 	var prompt := pile.get_node_or_null(^"Interactable") as Node3D
-	if prompt == null or not await _wait_for_prompt(prompt, 90):
+	if prompt == null or not await _stand_where_it_wins(prompt, pile.global_position, 1.0):
 		_fail("felled %s pickup never offered the production Pick up prompt" % item_id)
 		return false
 	await _tap_action(&"interact")
-	return await _wait_for_inventory_gain(item_id, before, 120)
+	if await _wait_for_inventory_gain(item_id, before, 240):
+		return true
+	_fail(_why_the_swing_paid_nothing(pile, prompt, item_id))
+	return false
 
 
+## Why a pressed swing credited nothing. Four different bugs used to arrive as
+## one line reading "wood action produced no visible inventory gain".
+func _why_the_swing_paid_nothing(node: Node3D, node_prompt: Node3D, item_id: String) -> String:
+	var winner: Variant = _arbiter.call("winning_provider")
+	var hold: Node = _player.get("tool_hold")
+	return ("%s swing credited nothing (arbiter winner=%s offering %s, wanted=%s, %.2fm away, "
+		+ "equipped=%s, prop=%s, swinging=%s, node stock=%s)") % [
+		item_id,
+		str((winner as Node).name) if winner is Node else "<none>",
+		str(_arbiter.call("winner")),
+		str(node_prompt.name) if node_prompt != null else "<no Interactable child>",
+		_player.global_position.distance_to(node.global_position),
+		str(_game.get("equipped_tool")),
+		str(hold.call("prop_node")) if hold != null else "<no ToolHold>",
+		str(hold.call("is_swinging")) if hold != null else "<no ToolHold>",
+		str(node.call("resource_amount"))]
+
+
+## Put the right tool in hand -- and press NOTHING if it is already there.
+##
+## A quick slot TOGGLES (`playground_hud.gd`: "press slot, tool in hand", and
+## pressing it again stows). This pressed unconditionally, so the second wood
+## stop in a row would have STOWED the axe and then failed waiting for it, with
+## the outcome depending entirely on what the previous beat left in hand.
+## `gate_a_npc_gather_segment.gd` fixed the identical thing after two runs of
+## the same file failed at two different points with no code change between
+## them; the same reasoning applies to the same toggle here.
 func _equip(item_id: String) -> bool:
-	await _tap_action(TOOL_ACTION[item_id])
 	var expected_tool := str(TOOL_ID[item_id])
+	# A visible swing owns the held prop for its whole animation and the player
+	# cannot switch tools mid-swing, so neither does this.
+	var holder: Node = _player.get("tool_hold")
+	if holder != null:
+		for _i in 120:
+			if not bool(holder.call("is_swinging")):
+				break
+			await _tree.physics_frame
+	if str(_game.get("equipped_tool")) != expected_tool:
+		await _tap_action(TOOL_ACTION[item_id])
 	for _i in 45:
 		var hold: Node = _player.get("tool_hold")
 		if str(_game.get("equipped_tool")) == expected_tool and hold != null and hold.call("prop_node") != null:
@@ -198,12 +271,40 @@ func _authored_node_at(at: Vector2, item_id: String) -> Node3D:
 			continue
 		if str(candidate.call("resource_item")) != item_id:
 			continue
+		if not _is_unspent(candidate as Node3D):
+			continue
 		var gap := Vector2((candidate as Node3D).global_position.x - at.x,
 			(candidate as Node3D).global_position.z - at.y).length()
 		if gap < distance:
 			distance = gap
 			nearest = candidate as Node3D
 	return nearest if distance <= 2.0 else null
+
+
+## Has this authored node actually still got anything on it?
+##
+## `harvest_node.gd::resource_amount()` reports the AUTHORED amount and keeps
+## reporting it after the node has been harvested -- what changes on a spent
+## node is that its visual hides and its prompt is switched off for
+## `RESPAWN_SECONDS`. So "stock is 4" was never the question; "is the prompt
+## still enabled" is.
+##
+## This mattered because `gate_a_npc_gather_segment.gd` runs immediately before
+## this route in the Gate B continuous session and spends the NEAREST authored
+## wood, stone and fiber node -- which is routinely one of the stops listed in
+## `AUTHORED_ROUTE`. The route then walked to a hidden stump, found the only
+## remaining bidder for X was the encounter director's own "Put Bud away"
+## statement, pressed anyway, and reported "wood action produced no visible
+## inventory gain" about a node a previous beat had legitimately harvested.
+##
+## `_harvest_authored_stop()` already had the right answer for a spent stop --
+## note it in the transcript and let the live-scatter fill cover the shortfall
+## -- and simply never reached it.
+func _is_unspent(node: Node3D) -> bool:
+	if float(node.get("_respawn_left")) > 0.0:
+		return false
+	var prompt := node.get_node_or_null(^"Interactable")
+	return prompt == null or bool(prompt.get("enabled"))
 
 
 func _nearest_live_scatter(item_id: String) -> Node3D:
@@ -213,6 +314,10 @@ func _nearest_live_scatter(item_id: String) -> Node3D:
 			continue
 		var script := candidate.get_script() as Script
 		if script == null or script.resource_path != VEGETATION_POINT_PATH:
+			continue
+		# A spent scatter stand frees itself (`vegetation_harvest_point.gd`), and
+		# a node freed this frame is still in the group for the rest of it.
+		if not candidate.is_inside_tree() or candidate.is_queued_for_deletion():
 			continue
 		if str(candidate.call("resource_item")) == item_id:
 			candidates.append(candidate as Node3D)
@@ -228,18 +333,97 @@ func _nearest_live_scatter(item_id: String) -> Node3D:
 	return candidates[0] if not candidates.is_empty() else null
 
 
+## The visible pile a chop leaves behind. Matched by SCRIPT, not by "anything
+## nearby that answers `resource_item`".
+##
+## The stand that was just chopped answers that too, and it is by definition
+## within the 3m radius of itself: `vegetation_harvest_point.gd` frees itself
+## when spent, but not until the end of the frame, so a loop that started
+## looking immediately could hand back the stump. Walking to it then finds a
+## prompt that is on its way out of the tree, presses X at it, and reports "wood
+## action produced no visible inventory gain" about a chop that worked and a
+## pickup that was never visited.
+## Searched through the `harvestable` GROUP rather than by walking the world.
+## `felled_resource.gd::_ready()` joins it, and `_descendants(_world)` is a
+## recursion over the ~143,000 props `vegetation.gd` scatters -- run once per
+## frame for 180 frames, which is most of what made this route slow.
 func _wait_for_felled_pickup(at: Vector3, item_id: String, frames: int) -> Node3D:
 	for _i in frames:
-		for candidate: Node in _descendants(_world):
-			if not candidate is Node3D or not candidate.has_method("resource_item"):
-				continue
-			if str(candidate.call("resource_item")) != item_id:
-				continue
-			var prompt := candidate.get_node_or_null(^"Interactable")
-			if prompt != null and (candidate as Node3D).global_position.distance_to(at) <= 3.0:
-				return candidate as Node3D
+		# Every fourth frame: the pile is spawned by the swing's own resolution
+		# and is not going to appear between two consecutive physics ticks.
+		if _i % 4 == 0:
+			for candidate: Node in _tree.get_nodes_in_group("harvestable"):
+				if not candidate is Node3D:
+					continue
+				var script := candidate.get_script() as Script
+				if script == null or script.resource_path != FELLED_RESOURCE_PATH:
+					continue
+				if not candidate.is_inside_tree() or candidate.is_queued_for_deletion():
+					continue
+				if str(candidate.call("resource_item")) != item_id:
+					continue
+				var prompt := candidate.get_node_or_null(^"Interactable")
+				if prompt != null and (candidate as Node3D).global_position.distance_to(at) <= 3.0:
+					return candidate as Node3D
 		await _tree.physics_frame
 	return null
+
+
+## Stand somewhere the button belongs to `prompt` before pressing it.
+##
+## X is one button and the arbiter gives it to whatever is NEAREST
+## (`prompt_arbiter.gd`), so a chop press sent from beside a tree while a wild
+## creature is wandering past goes to the creature instead. Measured, not
+## theorised: this route failed at its very first authored stop with
+##
+##   wood swing credited nothing (arbiter winner=EncounterDirector,
+##   wanted=Interactable, 1.13m away, equipped=axe, prop=Axe_Bronze2, ...)
+##
+## -- axe in hand, a metre from the trunk, and X meant "engage the Bramblebun".
+##
+## A player walks round the tree and asks again, so this circles the node and
+## re-checks. Also gives the wanderer time to wander: the pause between spots is
+## as much of the answer as the movement is.
+func _stand_where_it_wins(prompt: Node3D, around: Vector3, radius := 1.2) -> bool:
+	for attempt in 10:
+		if await _wait_for_prompt(prompt, 30):
+			return true
+		if await _clear_a_statement_off_the_button():
+			continue
+		var angle := TAU * float(attempt) / 10.0
+		await _walk_to(around + Vector3(cos(angle), 0.0, sin(angle)) * radius, 0.6, 300)
+		for _i in 12:
+			await _tree.physics_frame
+	return await _wait_for_prompt(prompt, 60)
+
+
+## A STATEMENT can hold the interact line, and walking round it does not help.
+##
+## `encounter_director.gd::interaction_offer()` answers a knocked-out ally with
+## `PROMPTS.offer("%s is out of the fight.", 0.0, 100, false)` -- priority 100,
+## distance 0, `actionable: false`. That outranks every harvest node in the
+## world by design (the line exists to explain why the button is doing nothing),
+## and it is not cleared by moving: it stands until the creature is dealt with.
+## A press against it is refused outright by
+## `interaction_arbiter.gd::activate()`, which is a swing that never happened
+## and a satchel that never changed -- exactly the shape of this route's own
+## "wood swing credited nothing (arbiter winner=EncounterDirector ...
+## swinging=false)".
+##
+## The player's verb for it is the recall button, so that is the button. Returns
+## whether it pressed anything, so the caller can re-check rather than walk.
+func _clear_a_statement_off_the_button() -> bool:
+	var winner: Variant = _arbiter.call("winning_provider")
+	if winner == null or (winner is Node and str((winner as Node).name) != "EncounterDirector"):
+		return false
+	var offer := _arbiter.call("winner") as Dictionary
+	if bool(offer.get("actionable", true)):
+		return false
+	transcript.append("a statement held the interact line ('%s'); recalling" % str(offer.get("label", "")))
+	await _tap_action(&"creature_recall")
+	for _i in 30:
+		await _tree.physics_frame
+	return true
 
 
 func _wait_for_prompt(prompt: Node3D, frames: int) -> bool:
@@ -259,20 +443,35 @@ func _wait_for_inventory_gain(item_id: String, before: int, frames: int) -> bool
 	return false
 
 
+## Physics frames to allow for a leg, from how long the leg actually is.
+##
+## The fixed 1800-frame budget these call sites used to share is 30 seconds, and
+## `data/config/movement.json` walks the trainer at 5 m/s -- so it covered about
+## 150m in a straight line with nothing in the way. `AUTHORED_ROUTE`'s own last
+## two fiber stops are at (-5, 141) and (-168, 312), "deliberately on ordinary
+## open-spine travel", and the first of those is a 161m leg. It failed by a few
+## metres: "controller could not reach authored fiber at (-5.0, 141.0)", on a
+## walk that was working and simply ran out of clock.
+##
+## 60 frames per metre is one metre per second -- five times the margin the
+## trainer needs at a walk, which is what pays for the detours around trees and
+## the climbs the open spine has in it.
+func _travel_budget(target: Vector3) -> int:
+	return 240 + int(_player.global_position.distance_to(target) * 60.0)
+
+
 func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
-	for _i in budget:
-		var delta := target - _player.global_position
-		delta.y = 0.0
-		if delta.length() <= close_enough:
-			_release_move()
-			return true
-		var basis: Basis = _rig.call("planar_basis")
-		var local := basis.inverse() * delta.normalized()
-		_parse_axis(_move_x_axis, clampf(local.x, -1.0, 1.0) * _move_x_sign)
-		_parse_axis(_move_y_axis, clampf(local.z, -1.0, 1.0) * _move_y_sign)
-		await _tree.physics_frame
+	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
 	_release_move()
-	return false
+	return arrived
+
+
+## The left stick as `stick_navigator.gd` asks for it, through THIS file's own
+## resolved bindings: the navigator hands over stick-space numbers and never
+## touches `Input` itself, so each harness keeps speaking the pad it parsed.
+func _send_stick(x: float, y: float) -> void:
+	_parse_axis(_move_x_axis, x * _move_x_sign)
+	_parse_axis(_move_y_axis, y * _move_y_sign)
 
 
 func _tap_action(action: StringName) -> void:

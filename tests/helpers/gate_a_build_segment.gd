@@ -12,6 +12,7 @@ extends RefCounted
 const BUILD_MENU_GROUP := &"build_menu"
 const PLACED_GROUP := &"placed_building"
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const PLACE_AHEAD := 3.0
 const POSITION_EPSILON := 0.08
 const MOVE_EPSILON := 0.16
@@ -47,6 +48,9 @@ var _move_x_axis: JoyAxis = JOY_AXIS_LEFT_X
 var _move_y_axis: JoyAxis = JOY_AXIS_LEFT_Y
 var _move_x_sign := 1.0
 var _move_y_sign := 1.0
+## Travel, built lazily because the bindings above are resolved after `run()`
+## starts. See `stick_navigator.gd`.
+var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
 var _look_x_axis: JoyAxis = JOY_AXIS_RIGHT_X
 var _look_x_sign := 1.0
 var _house_record_start := 0
@@ -505,19 +509,25 @@ func _cancel_and_resume() -> bool:
 	return true
 
 
+## Travel one leg, around whatever is in the way -- see `stick_navigator.gd`.
+##
+## The straight-line version this replaces is still visible in the navigator's
+## own easing constants: `EASE_METRES` 0.9 and `EASE_FLOOR` 0.32 came from here,
+## because a leg that ends within `MOVE_EPSILON` (0.16m) needs the stick to ease
+## off near the target and full deflection everywhere else.
+##
+## What is added is the detour. The documented Village Square-to-Practice-Meadow
+## road runs past two fence runs (`data/config/village.json`, at [14,-20] and
+## [19.5,-25.5], both "along the practice-meadow path"), and a straight stick
+## vector between waypoints has no way past a fence post it happens to meet.
 func _walk_to(target: Vector3, purpose: String) -> bool:
-	for frame in MOVE_FRAME_LIMIT:
-		var delta := Vector3(target.x - _player.global_position.x, 0, target.z - _player.global_position.z)
-		if delta.length() <= MOVE_EPSILON:
-			_release_move_stick()
-			return true
-		var strength := clampf(delta.length() / 0.9, 0.32, 1.0)
-		var local := (_camera_rig.call("planar_basis") as Basis).inverse() * delta.normalized() * strength
-		_parse_move_stick(clampf(local.x, -1.0, 1.0), clampf(local.z, -1.0, 1.0))
-		await _tree.physics_frame
+	if _nav == null:
+		_nav = NAVIGATOR.new(_tree, _player, _camera_rig, _parse_move_stick)
+	var arrived: bool = await _nav.walk_to(target, MOVE_FRAME_LIMIT, MOVE_EPSILON)
 	_release_move_stick()
-	_fail("controller could not walk to the %s" % purpose)
-	return false
+	if not arrived:
+		_fail("controller could not walk to the %s" % purpose)
+	return arrived
 
 
 func _tap_action(action: StringName) -> void:
