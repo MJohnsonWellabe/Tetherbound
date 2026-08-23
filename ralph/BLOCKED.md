@@ -111,26 +111,44 @@ owner asking for regeneration — the owner drew idealised versions of creatures
 he expected to keep. Deciding whether any of them is worth new geometry is his
 call and nobody else's.
 
-### 1. Terrapup and burrowback share one badger mesh
+### 1. Terrapup and burrowback read as the same animal — but they do NOT share a mesh
 
-The starter and the Band-2 tank are the same body. The board draws them as
-completely different animals: terrapup a small leafy **puppy**, burrowback a
-rock-plated **armoured tank** with stacked stone shell plates.
+**A correction first, because this lane was briefed with the opposite as fact.**
+Round 2 reported that terrapup and burrowback *"share one badger mesh"*, and drew
+from it the conclusion *"recoloring cannot make the starter a different species
+from the tank; only geometry can."* That was checked directly against the
+installed assets and **it is not true**:
 
-The consequence a blind round drew, and the reason this outranks the rest:
-*"a player cannot tell their shiny starter from a shiny Burrowback across a
-meadow"*, and *"recoloring cannot make the starter a different species from the
-tank; only geometry can."*
+| | terrapup | burrowback |
+|---|---|---|
+| file | `creature_terrapup_lod0.glb` | `creature_burrowback_lod0.glb` |
+| size / md5 | 9,960,880 · `2cbf58767fdc` | 11,353,780 · `4d9ad68a0a56` |
+| vertices | **15,616** | **17,204** |
+| POSITION bounds | 1.256 x 1.505 x 1.996 | 1.121 x 1.209 x 2.000 |
+| POSITION accessor md5 | `d656225f6501` | `578891375692` |
 
-VIS-CAST pushed them as far apart as paint reaches — terrapup to warm earth with
-the board's real quantity of leaf growth, burrowback to cold grey stone with
-heavier moss, and their two rare variants off the shared cornflower blue that
-had made them twins. That helps and it does not solve it. **The silhouette is
-still one animal.**
+No two species in the roster share a mesh file, byte-identical or otherwise
+(checked across all seventeen). The two do share a **skeleton template** — 17
+nodes, 15 joints, 6 clips each — which is the humanoid/quadruped rig pipeline
+working as intended and is not a defect.
 
-*What would clear it:* an owner decision on whether the starter or the tank gets
-its own body, plus a reference sheet for whichever one moves. Both are already
-drawn on the 2026-08-15 board.
+**The real finding, restated accurately:** these are two DIFFERENT meshes of the
+same archetype — a badger-shaped quadruped at similar mass — so they read as the
+same kind of animal at thumbnail size, which is what the critic actually saw.
+That is a casting problem, not a mesh-sharing one, and it matters because the
+prescription changes with it: paint is *not* powerless here, and VIS-CAST's
+divergence pass (terrapup to warm earth with heavy leaf growth, burrowback to
+cold grey stone with heavy moss and its rare variant off the shared blue) visibly
+separates them in the re-render in a way the "only geometry can" framing said was
+impossible.
+
+What paint still cannot do is make the starter's SILHOUETTE a leafy puppy or
+burrowback's a plated tank, which is what the board draws. That half stands.
+
+*What would clear it:* an owner decision on whether either species is worth new
+geometry, with reference art — both are already drawn on the 2026-08-15 board.
+This is a lower priority than the entry's original framing implied, because the
+sharpest version of the problem turned out not to exist.
 
 ### 2. Four species where the board paints a different animal from the mesh
 

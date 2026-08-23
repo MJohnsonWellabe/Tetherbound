@@ -77,7 +77,7 @@
       }
     },
     "burrowback": {
-      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the plates go COOLER and greyer and the moss goes heavier, because this species shares one badger mesh with terrapup and paint is the only axis left to separate them -- terrapup takes warm earth and heavy leaf, burrowback takes cold stone and moss. Shiny: REBUILT off cornflower blue. Both species' shinies were blue badgers with white face stripes and a blind round could not tell them apart; this one moves to pale marble plates over a charcoal-violet body, which is a VALUE and pattern read rather than another hue in the same family.",
+      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the plates go COOLER and greyer and the moss goes heavier, because this species and terrapup are two different meshes of the SAME ARCHETYPE -- a badger-shaped quadruped at similar mass, which is why a blind round read them as one animal and mistakenly reported them as one mesh (they differ in vertex count, bounds and POSITION data; no two species here share a mesh file). Paint is therefore not powerless the way 'only geometry can' implied -- terrapup takes warm earth and heavy leaf, burrowback takes cold stone and moss. Shiny: REBUILT off cornflower blue. Both species' shinies were blue badgers with white face stripes and a blind round could not tell them apart; this one moves to pale marble plates over a charcoal-violet body, which is a VALUE and pattern read rather than another hue in the same family.",
       "rules": [
         {
           "match": {
@@ -106,7 +106,7 @@
           "val_scale": 0.7
         }
       ],
-      "vivid_comment": "Was: warm cream + mossed mid-tones, which read as the same warm animal terrapup already is on the same mesh. Now cold grey stone across all three bands -- the board's plates are grey rock, not warm hide, and cold-vs-warm is the strongest separation two creatures sharing one silhouette can be given.",
+      "vivid_comment": "Was: warm cream + mossed mid-tones, which read as the same warm animal terrapup already is on the same mesh. Now cold grey stone across all three bands -- the board's plates are grey rock, not warm hide, and cold-vs-warm is the strongest separation two creatures of one archetype can be given without touching geometry.",
       "vivid_rules": [
         {
           "match": {
@@ -197,7 +197,7 @@
       }
     },
     "terrapup": {
-      "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents'): warm earth, modest saturation, now carrying the board's real amount of leaf growth. Shiny: frost pup -- KEPT blue, and burrowback's shiny is the one that moved, because the starter is the creature a player sees for the whole game and its rare variant is the one worth keeping memorable.",
+      "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents'): warm earth, modest saturation, now carrying the board's real amount of leaf growth. Shiny: frost pup -- KEPT blue, and burrowback's shiny is the one that moved off the same cornflower, because the starter is the creature a player sees for the whole game and its rare variant is the one worth keeping memorable.",
       "rules": [
         {
           "match": {
@@ -249,7 +249,7 @@
       "overlays": [
         {
           "id": "leaf_collar",
-          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from the burrowback it shares a mesh with. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
+          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from burrowback -- which it does NOT share a mesh with, contrary to what round 2 reported and this lane was briefed: the two glbs differ in vertex count (15,616 vs 17,204), bounds and POSITION data, and no two species in the roster share a mesh file. They share an ARCHETYPE, a badger-shaped quadruped at similar mass, which is why they read alike at thumbnail size -- and that is a problem paint can genuinely work on, unlike the mesh-sharing version of the story. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
           "where": {
             "y_min": 0.4,
             "z_max": 0.58,
