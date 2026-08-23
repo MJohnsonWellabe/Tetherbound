@@ -17,11 +17,19 @@ var _player: CharacterBody3D = null
 ## Set while the trainer is aiming a throw, so the body reads as throwing rather
 ## than as standing still watching its creature be hit.
 var _throwing_for: float = 0.0
-## Gate A gathering: a held axe/pick/knife must visibly move when used. The
-## current trainer asset has no dedicated chop clip; its authored throw one-shot
-## is the closest real arm/torso motion and, with the tool bone-attached, reads
-## as a swing instead of an invisible arithmetic event. A future authored swing
-## clip can replace the fallback without changing this contract.
+## Gate A gathering: a held axe/pick/knife must visibly move when used. Held
+## for the length of the swing so the body commits to the clip rather than
+## flickering back to idle a frame later.
+##
+## OP21-24: this used to borrow the THROW clip, because the trainer asset had
+## no chop of its own — and the owner, playing the shipped build, reported he
+## "still does not see a convincing chopping swing". He was right, and the
+## reason is that a throw is the wrong motion, not a slightly-off one: it
+## turns the chest AWAY from the target, opens the hand at the top of the arc,
+## and carries nothing downward through the wood. `animate_humanoid.py::
+## author_chop()` now authors a real overhead two-handed chop on the same rig
+## (`CLIPS["chop"]`, baked into `trainer_lod0.glb`), and the swing role is its
+## own role rather than a second name for throwing.
 var _tool_swing_for: float = 0.0
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
@@ -71,11 +79,16 @@ func _physics_process(delta: float) -> void:
 	# the player asking to move, not where physics has settled them yet.
 	if is_lying() and float(_player.call("ground_speed")) > 0.4:
 		set_lying(false)
-	# Only the throw is a committed one-shot (timed by _throwing_for); idle,
+	# Only the throw and the chop are committed one-shots (timed by
+	# _throwing_for / _tool_swing_for); idle,
 	# walk, sprint and jump are all states the trainer can hold indefinitely
 	# and must loop — see character_model.gd's play() for why that matters.
 	var role := _role_for_state()
-	play(_clip_for_role(role), _throwing_for <= 0.0)
+	# The looping flag is per-ROLE, not per-clip: a one-shot played on loop
+	# rewinds and swings again for as long as the state holds. Before OP21-24
+	# this read `_throwing_for <= 0.0`, which was complete while the throw was
+	# the only one-shot and would have quietly looped the chop.
+	play(_clip_for_role(role), _throwing_for <= 0.0 and _tool_swing_for <= 0.0)
 	# OF5: gait cadence tracks how fast the body is actually covering ground,
 	# not the one speed the clip was baked at. No-op (resets to 1x) for every
 	# non-gait role — see character_model.gd's match_gait_rate().
@@ -133,7 +146,12 @@ func _apply_terrain_adaptation(delta: float) -> void:
 
 ## What the trainer's body should be doing, from what the trainer is doing.
 func _role_for_state() -> String:
-	if _throwing_for > 0.0 or _tool_swing_for > 0.0:
+	# Chop is checked first: a swing started while a throw is still settling
+	# should show the tool the player just used, not the orb they threw before
+	# it. The two are never both wanted, and the newer one is the honest one.
+	if _tool_swing_for > 0.0:
+		return "chop"
+	if _throwing_for > 0.0:
 		return "throw"
 	if not _player.is_on_floor():
 		return "jump"
@@ -150,6 +168,12 @@ func _clip_for_role(role: String) -> String:
 	match role:
 		"throw":
 			return clip_for("throw", "pick-up")
+		"chop":
+			# Falls back to the throw, which is what this role played before
+			# OP21-24 authored a chop -- so a rig baked before that clip
+			# existed (or a stand-in with a partial clip set) still shows arm
+			# motion rather than a frozen body swinging an invisible axe.
+			return clip_for("chop", clip_for("throw", "pick-up"))
 		"jump":
 			return clip_for("jump")
 		_:
@@ -162,5 +186,7 @@ func play_throw(seconds: float = 0.6) -> void:
 	_throwing_for = seconds
 
 
-func play_tool_swing(seconds: float = 0.45) -> void:
+## Called when a swing starts, so the body commits to the chop for the clip's
+## own length. `tool_hold.gd` passes `art.json`'s `tool_swing.seconds`.
+func play_tool_swing(seconds: float = 0.625) -> void:
 	_tool_swing_for = maxf(_tool_swing_for, seconds)

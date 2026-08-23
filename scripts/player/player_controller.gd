@@ -337,9 +337,18 @@ func _try_jump(input_owned: bool) -> void:
 	_airborne_for = _coyote_time + 1.0   # consume coyote so one press is one jump
 
 
+## OP21-24. The body commits to the chop for the clip's OWN length, asked of
+## `tool_hold.gd` rather than restated here -- the hard-coded 0.45 this used to
+## pass was a second copy of a swing duration that lives in `art.json`, and it
+## expired before the clip finished, so the trainer snapped back to idle
+## mid-arc every chop.
 func _on_tool_swing_started() -> void:
-	if _model != null and _model.has_method("play_tool_swing"):
-		_model.call("play_tool_swing", 0.45)
+	if _model == null or not _model.has_method("play_tool_swing"):
+		return
+	var seconds := 0.45
+	if tool_hold != null and tool_hold.has_method("swing_seconds"):
+		seconds = float(tool_hold.call("swing_seconds"))
+	_model.call("play_tool_swing", seconds)
 
 
 func _resolve_landing(falling_speed: float) -> void:

@@ -72,6 +72,51 @@
           "sink_m": 0.06,
           "scale": 1.0,
           "_why": "somebody's pack, still here -- the detail that makes the site abandoned rather than merely disused"
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [404.6, 1801.8],
+          "yaw_deg": 55.0,
+          "sink_m": 0.03,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: cut-face spoil, largest of the set, between the working pile and the conduit head (404,1804) -- what a quarry actually leaves is broken rock, not four identical boulders on a lawn. Same textured Rock_Medium family band1's fire ring already proved through props.gd (environment/nature's own untextured rock pack is the one that fails, per that band's own record)."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [405.8, 1799.6],
+          "yaw_deg": 210.0,
+          "sink_m": 0.02,
+          "scale": 0.3,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: second spoil piece, deliberately a different model AND a different scale/rotation band from its neighbour -- the two-identical-rocks-at-near-identical-rotation defect this pass exists to fix."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [399.6, 1803.3],
+          "yaw_deg": 340.0,
+          "sink_m": 0.02,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: spoil at the foot of the north-west foundation (397,1805) -- rubble a crew clearing that ruin's own footing would have piled here, not carried off."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [402.9, 1796.4],
+          "yaw_deg": 95.0,
+          "sink_m": 0.02,
+          "scale": 0.22,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: smaller chip toward the second foundation (404,1794), the one piece in this set scaled as debris rather than a boulder -- extraction leaves a size gradient, not one repeated stone."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [401.9, 1802.6],
+          "yaw_deg": 165.0,
+          "sink_m": 0.03,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "SITE-DRESSING: closes the working face's own cut-face read -- set behind the crate pile from the approach so the crew reads as having worked INTO the rock, not merely stacked crates on grass beside it."
         }
       ]
     },

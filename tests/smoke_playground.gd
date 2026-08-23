@@ -134,6 +134,7 @@ func _run() -> void:
 	failures.append_array(await _swinging_the_tool_connects_after_walking_up_to_a_tree(world))
 	failures.append_array(await _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world))
 	failures.append_array(await _an_authored_tool_gather_reports_the_exact_pickup(world))
+	failures.append_array(await _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
 	failures.append_array(await _the_berry_farm_can_be_worked(world))
@@ -642,13 +643,180 @@ func _swinging_the_tool_connects_after_walking_up_to_a_tree(world: Node) -> Arra
 	return found
 
 
+## OP21-24. The owner played the shipped build and reported that he "still does
+## not see a convincing chopping swing", with the axe held wrong. The mechanism
+## behind that was not a tuning value: `trainer_model.gd` had no chop role, so a
+## tool swing played the THROW clip, and the gather resolved at an arbitrary
+## halfway point of a duration that had nothing to do with the visible motion.
+##
+## Every check here would have passed vacuously on a `clip_for()` fallback, so
+## each asserts the specific thing rather than truthiness:
+##
+##   1. the trainer rig actually carries an authored `chop` -- a re-bake that
+##      drops it would otherwise silently fall back to the throw and this whole
+##      defect would come back looking fixed;
+##   2. a real swing puts the BODY in the chop role, not the throw role;
+##   3. the AnimationPlayer is really playing that clip;
+##   4. it is not looping -- a one-shot on loop swings forever;
+##   5. the gather resolves on the clip's impact frame, not before it. Timed,
+##      not asserted structurally: the swing is started and the inventory is
+##      read while the axe is still on the way DOWN, which is exactly when the
+##      old midpoint resolve would already have paid out.
+func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var game := root.get_node_or_null(^"/root/Game")
+	if player == null or game == null:
+		return ["no Player/Game; cannot verify the chop swing"] as Array[String]
+	var model := player.get_node_or_null(^"Model") as Node3D
+	var hold: Node = player.get("tool_hold")
+	if model == null or hold == null:
+		return ["the player has no Model/ToolHold; the chop cannot be verified"] as Array[String]
+	var items: RefCounted = game.get("items")
+	var inventory: RefCounted = game.get("inventory")
+	if items == null or inventory == null:
+		return ["Game exposes no items/inventory; cannot equip a tool for the chop"] as Array[String]
+
+	var anim := model.call("animation_player") as AnimationPlayer
+	if anim == null:
+		return ["the trainer has no AnimationPlayer"] as Array[String]
+	if not anim.has_animation("chop"):
+		# Reported and returned rather than folded in with the rest: every check
+		# below would pass on the throw fallback, and a green result there is
+		# the exact false positive this item is about.
+		return ["the trainer rig carries no 'chop' clip -- animate_humanoid.py's " +
+			"CLIPS entry never made it into trainer_lod0.glb, so every tool swing " +
+			"is playing the throw again"] as Array[String]
+
+	# Same approach the authored-node check above uses: stand at a real harvest
+	# point and face it with Model only, because that is what `_face()` turns
+	# during a real walk-up and what the swing cone is measured against.
+	var best: Node3D = null
+	var best_distance := INF
+	for node: Node in world.get_tree().get_nodes_in_group("harvestable"):
+		if not is_instance_valid(node) or not (node is Node3D):
+			continue
+		if (node.get_script() as Script) != HARVEST_NODE_SCRIPT:
+			continue
+		if str(items.call("gathered_with", str(node.get("_item_id")))).is_empty():
+			continue
+		var distance := player.global_position.distance_to((node as Node3D).global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = node as Node3D
+	if best == null:
+		return ["no tool-gated harvest point in the world; cannot time the chop's impact"] as Array[String]
+
+	var to_target := best.global_position - player.global_position
+	to_target.y = 0.0
+	var approach := to_target.normalized() if to_target.length() > 0.01 else Vector3.FORWARD
+	var stand_at: Vector3 = best.global_position - approach * 1.5
+	var terrain: Node = world.get_node_or_null(^"Terrain")
+	if terrain != null:
+		var data: Object = terrain.get("data")
+		if data != null:
+			var ground: float = data.call("get_height", Vector3(stand_at.x, 0.0, stand_at.z))
+			if not is_nan(ground):
+				stand_at.y = ground + 1.0
+	player.global_position = stand_at
+	player.velocity = Vector3.ZERO
+	model.rotation.y = atan2(approach.x, approach.z)
+	for i in 6:
+		await physics_frame
+
+	var required_tool := str(items.call("gathered_with", str(best.get("_item_id"))))
+	inventory.call("add", required_tool, 1)
+	game.set("equipped_tool", required_tool)
+	for i in 4:
+		await process_frame
+	if hold.call("prop_node") == null:
+		return ["the equipped %s has no visible held prop; there is nothing to swing" % required_tool] as Array[String]
+
+	var required_slot := int(inventory.call("find_slot", required_tool))
+	var durability_before := int(inventory.call("durability_at", required_slot))
+	var seconds := float(hold.call("swing_seconds")) if hold.has_method("swing_seconds") else 0.625
+
+	if not bool(hold.call("swing")):
+		return ["tool_hold.swing() refused a swing with the %s visibly equipped" % required_tool] as Array[String]
+	var started := float(Time.get_ticks_msec())
+	# One physics frame, then one process frame: trainer_model.gd picks the
+	# role in _physics_process, and _process there re-plays the clip on it.
+	# Checked HERE, mid-swing, not after the poll loop below runs to
+	# completion -- a first version of this check read role/anim only after
+	# waiting for is_swinging() to go false, by which point the swing was
+	# already OVER and had reverted to idle, so "does a swing show the chop"
+	# was silently answered by the state after the swing rather than during it.
+	await physics_frame
+	await process_frame
+
+	var role := String(model.call("_role_for_state"))
+	if role != "chop":
+		found.append("a tool swing put the trainer in the '%s' role, not 'chop' -- " % role +
+			"the body is playing some other motion while the axe swings")
+	if anim.current_animation != "chop":
+		found.append("the trainer is playing '%s' during a tool swing, not the chop clip" %
+			anim.current_animation)
+	else:
+		var clip := anim.get_animation("chop")
+		if clip != null and clip.loop_mode != Animation.LOOP_NONE:
+			found.append("the chop clip is playing on loop; a one-shot swing that loops " +
+				"never returns the body to idle")
+
+	# When the gather actually resolves, as a fraction of the swing. Measured
+	# off the required tool's DURABILITY dropping by one -- the same signal the
+	# equipped-tool-gate check above already trusts for "did this swing
+	# connect" -- polled every frame rather than off `swing_connected`. A
+	# GDScript lambda closure captures an outer local BY VALUE at definition
+	# time; an assignment made inside the callable does not write back to this
+	# function's own variable, so a first version of this check that tried to
+	# time the signal that way silently never saw its own connection.
+	var connected_at := -1.0
+	while bool(hold.call("is_swinging")):
+		if connected_at < 0.0 and int(inventory.call("durability_at", required_slot)) != durability_before:
+			connected_at = (float(Time.get_ticks_msec()) - started) / 1000.0
+		await process_frame
+	if connected_at < 0.0 and int(inventory.call("durability_at", required_slot)) != durability_before:
+		connected_at = (float(Time.get_ticks_msec()) - started) / 1000.0
+
+	# The hit lands when the axe is IN the wood. `art.json`'s
+	# `trainer.tool_swing.impact_fraction` is where that is, and the tolerance
+	# below is deliberately tighter than the gap to the old behaviour (0.5, the
+	# bare midpoint of the swing) so this check can actually tell the two apart
+	# rather than passing on either.
+	var impact := 0.6
+	if hold.get("_swing_impact_fraction") != null:
+		impact = float(hold.get("_swing_impact_fraction"))
+	if connected_at < 0.0:
+		found.append("the swing never connected to the %s standing 1.5m in front of it" % str(best.name))
+	else:
+		var fraction := connected_at / maxf(seconds, 0.001)
+		print("chop swing: role=%s clip=%s impact at %.2f of %.3fs (want ~%.2f)" % [
+			role, anim.current_animation, fraction, seconds, impact])
+		if fraction < impact - 0.08:
+			found.append("the gather resolved %.2f through the swing but the axe does not " % fraction +
+				"reach the wood until %.2f -- the reward lands before the visible hit" % impact)
+		elif fraction > impact + 0.20:
+			found.append("the gather resolved %.2f through the swing, well past the %.2f " % [fraction, impact] +
+				"impact pose -- the hit reads as disconnected from the action")
+	return found
+
+
 ## `tool_hold.gd` resolves its impact and ends its cooldown from `_process()`
 ## using elapsed seconds. Smoke runs headless and uncapped in CI, so frame
 ## counts are not a valid stand-in for that duration. The extra process frame
 ## lets ToolHold consume the timer's final elapsed slice before the caller
 ## asks whether the next action is legal.
+##
+## The wait is ASKED of the swing rather than hard-coded. It was a flat 0.60s,
+## which was 0.15s of margin over the old 0.45s swing and would have gone
+## NEGATIVE the moment OP21-24 retimed the swing to the chop clip's own 0.625s
+## -- reporting "the swing never completed" for a swing that was simply still
+## running. A duration this test does not own is a duration it should read.
 func _wait_for_tool_swing(hold: Node) -> bool:
-	await create_timer(0.60).timeout
+	var seconds := 0.45
+	if hold.has_method("swing_seconds"):
+		seconds = float(hold.call("swing_seconds"))
+	await create_timer(seconds + 0.15).timeout
 	await process_frame
 	return not bool(hold.call("is_swinging"))
 

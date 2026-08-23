@@ -156,6 +156,53 @@ reason not to push throwaways at all.
 
 ## Art pipeline traps already paid for
 
+- **Re-baking an asset mid-session does not reach a capture until you
+  re-import.** A `--script` capture run loads the IMPORTED form out of
+  `.godot/`; overwriting the `.glb` on disk leaves that cache alone, so the
+  frames come back pixel-identical to the asset you just replaced and read as
+  "the re-key changed nothing". Paid for once on OP21-24's chop clip, where a
+  whole re-key round was judged against the previous bake. Run `godot
+  --headless --path . --import` between the bake and the capture, every time.
+
+- **`--headless` HANGS FOREVER with `--rendering-driver opengl3`. This is the
+  single most expensive trap in this repo.** Verified 2026-08-22 both ways on a
+  bare `ColorRect` with no project scenes and no autoloads: with `--headless`
+  the process prints its first line and then sits in silence until killed — no
+  error, no crash, no partial output, exit 124/143 from `timeout`. Drop
+  `--headless`, keep `xvfb-run` for the virtual display, and the identical
+  script writes its PNG and exits 0 in under a second.
+
+  **Correct invocation for any capture:**
+
+      xvfb-run -a -s "-screen 0 1280x800x24" "$GODOT" --path . \
+        --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd
+
+  Note `--headless` is still correct and fast for **tests**, which render
+  nothing. It is specifically the combination of `--headless` with a real
+  rendering driver that hangs.
+
+  What this cost on 2026-08-22 alone: four LOD capture attempts (one running 43
+  minutes), several map captures, and two HUD captures — all abandoned as
+  "contention" or "the world is too slow to build." None of that was true. The
+  world builds fine; one lane got through the full Meadows stand-up, 129,723
+  scattered props and a 240-frame settle in about 50 seconds on an idle box.
+  The hang is always in the render step and is unrelated to scene weight.
+
+  It also leaves **zombie processes**: a hung capture keeps running after its
+  lane gives up, so a session that removes the worktree leaves a Godot process
+  pinned to a deleted directory burning CPU. Three such orphans were found
+  running 33-57 minutes, which then produced real contention and made the
+  original misdiagnosis look correct. Before pruning a worktree, check:
+
+      for pid in $(pgrep -f "godot --headless"); do echo "$pid $(readlink /proc/$pid/cwd)"; done
+
+  and `kill -9` anything whose cwd reads "(deleted)".
+
+  `tools/capture_diag_minimal.gd` is a 120-second smoke test for exactly this:
+  if it cannot write a PNG, stop and fix the invocation before blaming the
+  capture script, the scene, or the box.
+
+
 - **A fresh container has no `.godot/` import cache and no Blender/Godot.**
   `tools/art_pipeline/setup.sh all` fetches both; `godot --headless --path .
   --import` builds the import cache once (needed before `tools/survey.sh` or

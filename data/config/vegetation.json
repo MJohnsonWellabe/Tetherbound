@@ -96,15 +96,19 @@
       "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. Round 1 of EV2's own blind pass tried R9.4's shipped #9dcaff (`spring`) plus a straight darken (`deep`) -- both BLUE-hued multiplies (hue ~213) that land in the intended green family on Leaves.png's dark/average texels but multiply through nearly unchanged on bright highlight texels, reading as cyan/teal flecks a blind critic named directly. Round 2 fixed the hue (green-hued multiplies, hue 77-112, confirmed fleck-free by an independent second blind pass) but that pass's own close pixel inspection found the three still clustered in a 63-84 degree rendered hue band -- too narrow to read as distinguishable varieties once scene lighting compresses it further, even though the un-lit albedo maths looked separated. These values push both hue (77/96/103 after the same texture-multiply check) AND value (0.20/0.19/0.09) further apart -- `deep` in particular is now a genuinely darker tint, not just a different hue at the same brightness -- while the highlight-case check (a synthetic near-white texel) still stays inside 75-130 degrees, short of the ~150 degree line where the round-1 cyan artifact started.",
       "variant_retint": {
         "res://assets/environment/stylized_nature/CommonTree_1.gltf": {
-          "Leaves_NormalTree": "#78c86e"
+          "Leaves_NormalTree": "#78c86e",
+          "Bark_NormalTree": "#9c8268"
         },
         "res://assets/environment/stylized_nature/CommonTree_2.gltf": {
-          "Leaves_NormalTree": "#325f3c"
+          "Leaves_NormalTree": "#325f3c",
+          "Bark_NormalTree": "#5f4a3a"
         },
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": {
-          "Leaves_NormalTree": "#c4d696"
+          "Leaves_NormalTree": "#c4d696",
+          "Bark_NormalTree": "#d4bc9e"
         }
       },
+      "_comment_bark_band2_floor": "BAND2-FLOOR: the top-level `retint` above maps `Bark_NormalTree` to one colour (#b09985) for every model, so every CommonTree in the corridor shares one trunk tone regardless of which of the three canopy variants it is -- a blind critique of Band 2's forest floor named this directly, 'uniform salmon trunks'. `_tint_for` only falls back to the top-level map when a model's own `variant_retint` entry has no key for that material (vegetation.gd), so adding `Bark_NormalTree` here -- the canopy hue split already has three steps, the trunk had none -- is enough to give each of the three standard-canopy variants its own bark tone without a fourth model or a new texture: deep canopy gets darker bark, pale canopy gets lighter bark, the same direction the leaf split already goes. This is corridor-wide (variant_retint is keyed by model, not by band) because the uniform-trunk read is the same everywhere CommonTree grows and there is no per-band retint mechanism to narrow it to. Bark TEXTURE/material redesign -- the flat, undetailed bark surface itself -- is needs-art and not attempted here; recorded, not fixed.",
       "_comment_anchors_of4_mound": "OF4-remainder-mound. A BROKEN tree line along the rise's village-facing foot, and a few trees standing on the lower flank. A 7-9m tree is the cheapest ruler a landform can carry -- with nothing of known size anywhere on it the rise read as 'an enlarged pebble' to a blind critic, which is a scale failure, not a texture one. Slope is relaxed to 25 degrees for these draws only (this layer's own 21-degree ceiling stays as tuned everywhere else) so the line climbs a little way onto the flank instead of stopping dead at the break. Round 2: the three groups were the same size at the same radius and read as 'a ring following the hill's foot contour at near-even spacing' -- now one dense copse, one loose stand and one pair, at three different radii, which is the difference between a wood and a hedge. ALL TUNABLE.",
       "anchors": [
         {
@@ -136,6 +140,30 @@
           "radius": 9.0,
           "count": 2,
           "max_slope_deg": 25.0
+        },
+        {
+          "_why": "BAND2-FLOOR round 2: a blind critique of this exact anchor's own frame (01-early-forest-day) still read the treeline as 'near-identical canopy size/height/tint... a scatter-brush pass'. Scale pushed further (1.4-1.75 -> 1.55-2.0, RNG-safe: a wider scale_min/scale_max range draws the same one randf_range() call per placed instance regardless of its bounds) so the two old trees are unmistakably a different age class. `count` deliberately left at 2, NOT raised -- `_place_anchor`'s attempt budget is `count * ANCHOR_ATTEMPTS_PER_INSTANCE`, drawn from this layer's single shared RNG stream (scatter_rules.gd::all_placements), and `_place_corridor_fill` runs after every anchor in that same stream for the WHOLE CORRIDOR, not just Band 2 -- raising `count` here was tried, rendered, and found to reshuffle corridor-wide tree corridor_fill enough that this exact frame's own midground/background treeline (the coverage that answers the region's core 'is there a forest here' complaint) thinned out, trading a solved complaint for a resurfaced one. Centred on the harvest.json order 2005/2006 cluster (135-145,1538-1543), the exact ground tools/survey_band2.gd's 01-early-forest-day frame looks at. This layer's own scale_min/max (0.55-1.35) already varies size but tops out short of an OLD tree beside young growth, which is the age-range read a closed canopy needs and the girth half of the same blind critique's complaint ('no leaf litter, undergrowth, fallen branches, saplings... uniform salmon trunks'). docs/reviews/band2/round-05 already measured that the corridor-wide trail-biased fill lands near none of Band 2's eight survey viewpoints by chance -- a density multiplier has nothing to multiply at a site it never reaches, so this is a hand-placed anchor, not a tuning number.",
+          "at": [
+            142.0,
+            1550.0
+          ],
+          "radius": 9.0,
+          "count": 2,
+          "max_slope_deg": 21.0,
+          "scale_min": 1.55,
+          "scale_max": 2.0
+        },
+        {
+          "_why": "BAND2-FLOOR: same old-growth girth treatment as the early-forest anchor above, at the late-ridge site -- centred on harvest.json order 2004/2007 (68-76,2965-2972), the ground tools/survey_band2.gd's 05-late-ridge-day frame looks at.",
+          "at": [
+            72.0,
+            2969.0
+          ],
+          "radius": 9.0,
+          "count": 2,
+          "max_slope_deg": 21.0,
+          "scale_min": 1.4,
+          "scale_max": 1.75
         }
       ]
     },
@@ -264,7 +292,28 @@
         "res://assets/environment/stylized_nature/CommonTree_5.gltf": {
           "Leaves_NormalTree": "#c4d696"
         }
-      }
+      },
+      "_comment_anchors_band2_floor": "BAND2-FLOOR: a blind critique of Band 2's forest floor named saplings by name as missing ('no leaf litter, undergrowth, fallen branches, saplings'). This layer's own corridor_fill already runs a rich trail-biased fill, but docs/reviews/band2/round-05 measured that random siting lands near none of Band 2's own survey viewpoints by chance -- these anchors guarantee young growth at the exact sites the critique's frames looked at, using this layer's own default models (no override needed).",
+      "anchors": [
+        {
+          "at": [142.0, 1550.0],
+          "radius": 10.0,
+          "count": 5,
+          "_why": "early-forest: centred on harvest.json order 2005/2006 (135-145,1538-1543), tools/survey_band2.gd's 01-early-forest-day frame."
+        },
+        {
+          "at": [-408.0, 2443.0],
+          "radius": 10.0,
+          "count": 5,
+          "_why": "Burrow Warrens' forest approach: centred on harvest.json order 2010 (-420,2440), tools/survey_band2.gd's 04-warrens-mouth-day frame."
+        },
+        {
+          "at": [72.0, 2969.0],
+          "radius": 10.0,
+          "count": 5,
+          "_why": "late-ridge: centred on harvest.json order 2004/2007 (68-76,2965-2972), tools/survey_band2.gd's 05-late-ridge-day frame."
+        }
+      ]
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
@@ -307,6 +356,57 @@
           "cleared_by_clearings": false,
           "_comment_cleared": "The quarry's own clearing (below) covers this anchor's whole radius, and a clearing culls every layer that can block sight -- deadfall included -- so without this the stand would be authored and then silently thrown away. An anchor overriding a layer key for its own draws is exactly what anchors are for: the clearing exists to stop the SCATTER growing a copse through a working face, not to veto a hand-placed one.",
           "_why": "SD16/D41: the standing dead around the quarry's conduit head. Half the drained-ground read is what is MISSING (the scatter thins itself out); this is the other half, the grey verticals that say something used to grow here."
+        },
+        {
+          "at": [142.0, 1550.0],
+          "radius": 12.0,
+          "count": 8,
+          "models": [
+            "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+          ],
+          "_comment_why_band2_floor": "BAND2-FLOOR: leaf-litter/decay dressing for Band 2's closed-canopy forest floor, named missing by a blind critique ('the same mown lawn as open fields -- no leaf litter, undergrowth, fallen branches'). Narrowed to the two mushroom models ONLY, never DeadTree -- this layer's own `_comment_drain_sd16` above already reserves standing dead wood for the drained-ground grammar (D41/D45): a dead TREE says a Tether station killed this ground, and using that same vocabulary for ordinary forest floor would blur the one place it is meant to mean something. Mushrooms carry no such meaning and are the layer's other half, 'the mushrooms belong under a living canopy, not on drained ground' (this layer's own comment, written for exactly this site).",
+          "_why": "early-forest litter: centred on harvest.json order 2005/2006 (135-145,1538-1543), the ground tools/survey_band2.gd's 01-early-forest-day frame looks at."
+        },
+        {
+          "at": [168.0, 2038.0],
+          "radius": 10.0,
+          "count": 6,
+          "models": [
+            "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+          ],
+          "_why": "BAND2-FLOOR: ridge-trail litter between the Old Quarry and the ranger camp spur, centred on harvest.json order 2001 (168,2038)."
+        },
+        {
+          "at": [28.0, 2118.0],
+          "radius": 10.0,
+          "count": 6,
+          "models": [
+            "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+          ],
+          "_why": "BAND2-FLOOR: same ridge-trail stretch, second beat -- centred on harvest.json order 2002 (28,2118)."
+        },
+        {
+          "at": [-408.0, 2443.0],
+          "radius": 12.0,
+          "count": 8,
+          "models": [
+            "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+          ],
+          "_why": "BAND2-FLOOR: the Burrow Warrens' forest approach, centred on harvest.json order 2010 (-420,2440), the ground tools/survey_band2.gd's 04-warrens-mouth-day frame looks at."
+        },
+        {
+          "at": [72.0, 2969.0],
+          "radius": 10.0,
+          "count": 6,
+          "models": [
+            "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+          ],
+          "_why": "BAND2-FLOOR: late-ridge litter toward the Band 3 seam -- centred on harvest.json order 2004/2007 (68-76,2965-2972), the ground tools/survey_band2.gd's 05-late-ridge-day frame looks at."
         }
       ],
       "max_slope_deg": 20.0,
@@ -449,6 +549,58 @@
           "scale_min": 0.55,
           "scale_max": 0.95,
           "_why": "starter stream's lower bend, before the village approach"
+        },
+        {
+          "at": [142.0, 1550.0],
+          "radius": 12.0,
+          "count": 10,
+          "models": [
+            "res://assets/environment/stylized_nature/Fern_1.gltf",
+            "res://assets/environment/stylized_nature/Plant_7.gltf"
+          ],
+          "_comment_why_band2_floor": "BAND2-FLOOR. A blind critique of Band 2's forest floor named it directly: 'the same mown lawn as open fields -- no leaf litter, undergrowth, fallen branches, saplings'. This layer already runs a heavy corridor_fill (clumps 44/per_clump 15/strays 180) that should be dressing the whole corridor, but docs/reviews/band2/round-05 measured that trail-biased random siting lands near none of Band 2's eight survey viewpoints by chance -- a density lever has nothing to multiply at a site it never reaches. Narrowed to Fern_1/Plant_7 rather than this layer's full model list (which also carries Bush_Common/_Flowers, already the default open-field read) so this specific patch reads as understorey banked under canopy, not more of the same shrub the fields already have.",
+          "_why": "early-forest floor: centred on harvest.json order 2005/2006 (135-145,1538-1543), the ground tools/survey_band2.gd's 01-early-forest-day frame looks at."
+        },
+        {
+          "at": [168.0, 2038.0],
+          "radius": 10.0,
+          "count": 8,
+          "models": [
+            "res://assets/environment/stylized_nature/Fern_1.gltf",
+            "res://assets/environment/stylized_nature/Plant_7.gltf"
+          ],
+          "_why": "BAND2-FLOOR: ridge-trail forest floor between the Old Quarry and the ranger camp spur, centred on harvest.json order 2001 (168,2038)."
+        },
+        {
+          "at": [28.0, 2118.0],
+          "radius": 10.0,
+          "count": 8,
+          "models": [
+            "res://assets/environment/stylized_nature/Fern_1.gltf",
+            "res://assets/environment/stylized_nature/Plant_7.gltf"
+          ],
+          "_why": "BAND2-FLOOR: same ridge-trail stretch, second beat -- centred on harvest.json order 2002 (28,2118)."
+        },
+        {
+          "at": [-408.0, 2443.0],
+          "radius": 12.0,
+          "count": 10,
+          "models": [
+            "res://assets/environment/stylized_nature/Fern_1.gltf",
+            "res://assets/environment/stylized_nature/Plant_7.gltf",
+            "res://assets/environment/stylized_nature/Plant_7_Big.gltf"
+          ],
+          "_why": "BAND2-FLOOR: the Burrow Warrens' approach, in the same forest ralph/BAND2_WARRENS_EVIDENCE_2026-08-23.md already records the cave mouth moved into -- centred on harvest.json order 2010 (-420,2440), the ground tools/survey_band2.gd's 04-warrens-mouth-day frame looks at. Plant_7_Big included here (not at the smaller sites) for a taller understorey beat right at the dungeon's own doorway."
+        },
+        {
+          "at": [72.0, 2969.0],
+          "radius": 10.0,
+          "count": 8,
+          "models": [
+            "res://assets/environment/stylized_nature/Fern_1.gltf",
+            "res://assets/environment/stylized_nature/Plant_7.gltf"
+          ],
+          "_why": "BAND2-FLOOR: late-ridge floor toward the Band 3 seam -- centred on harvest.json order 2004/2007 (68-76,2965-2972), the ground tools/survey_band2.gd's 05-late-ridge-day frame looks at."
         }
       ]
     },

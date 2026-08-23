@@ -150,12 +150,30 @@ func _run() -> void:
 	camera.make_current()
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 
 	var terrain: Node = world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", camera)
+
+	# STRANDED-P3, same bug capture_band3_region.gd:266-277 already fixed once:
+	# `world_look.gd`/`world_weather.gd` both advance in `_process`, and this
+	# harness's own settle/pose/move waits are seconds of real ticks across
+	# eight viewpoints -- enough for the clock to drift off whatever
+	# `apply_time()` last set and roll a "day" viewpoint into a red dusk wash
+	# before it is ever captured. Pin weather to clear and stop BOTH nodes'
+	# processing here, once, so the per-viewpoint `apply_time()` call below
+	# still sets each frame's time/night state directly but nothing can drift
+	# it afterward while this harness waits out its settle frames.
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	if look != null:
+		look.set_process(false)
+		look.set_physics_process(false)
 
 	var written: Array[String] = []
 	var failures: Array[String] = []
@@ -236,9 +254,17 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 		# so a body straight under the eye can still throw a shadow onto
 		# visible terrain even from 500m down. Parking far away in XZ as well
 		# (not just deep) puts it outside the shadow frustum by any measure.
+		#
+		# STRANDED-P3: -500m is also a SECOND bug, named and already fixed once
+		# in `capture_band3_region.gd`'s own comment 3 -- `water.gd` reads a
+		# body that far under the surface as fully submerged and ramps a red
+		# drowning vignette over its grace period across the WHOLE screen,
+		# which is exactly the crimson day frames this harness was producing.
+		# Parked above ground instead, same far-off-to-the-side XZ as before so
+		# it still throws no shadow into any framed viewpoint.
 		var eye_xz: Vector2 = view["eye"]
 		var far_xz := eye_xz + Vector2(5000.0, 5000.0)
-		player.global_position = Vector3(far_xz.x, -500.0, far_xz.y)
+		player.global_position = Vector3(far_xz.x, field.height_at(far_xz.x, far_xz.y) + 1.0, far_xz.y)
 		return
 
 	var xz: Vector2 = view["actor"]
