@@ -1,6 +1,7 @@
 {
   "_comment": "OF28: per-species shiny REPAINT rules, consumed by tools/repaint_creature_textures.py. Owner directive 2026-08-15: shinies are genuinely different colourways, never a tint -- 'if our newt is blue, I want red. not blue with a red shade over it. for the white and black striped badger maybe it becomes blue stripes.' Rules are HSV region remaps (first match wins per pixel); value/texture detail is preserved so the repaint reads as the same painted surface in a new colourway. All numbers tunable. Regenerate with: python3 tools/repaint_creature_textures.py",
   "_comment_pilots": "paddlenewt and burrowback are the owner's own named examples and the pilot pair; the rest of the roster gets colourways after the pilots pass a render judge.",
+  "_comment_selector": "SELECTOR LESSON, learned three times in one round and written here so it is not learned a fourth. A colourway rule's `match` block selects on HUE, SATURATION and VALUE -- it cannot select on ANATOMY. Whenever the thing you want to recolour is a PART of the creature (ear tips, a face marking, veins, a crest), check first that some HSV band actually isolates that part in the SOURCE texture, by measuring it. Three times this round it did not, and each time the rule silently recoloured most of the animal instead: galewisp's `sat_min 0.16` gold gilded the whole bird because its source is uniformly hue 44; pipwing's `sat_min 0.30` face marking took 69% of the chick for the same reason; veridian's `sat_min 0.42` vein rule caught 87.9% of the stag. None of the three raised an error and all three looked plausible in the spec. If no HSV band isolates the part, the tool already has the right mechanism -- put it in `overlays`, which selects on real anatomy read out of the species' own glb (see `_comment_overlays`). Veridian is the one case where a band DID exist, just not the one first reached for: value, not saturation.",
   "_finish_default": {
     "_comment": "CREATURE-PRESENTATION 2026-08-23. Applied after every species' rules by tools/repaint_creature_textures.py, per-species overridable with a `finish` block ({} opts out entirely). These assets are photoreal-ish Meshy albedos: at the 40 pixels a wild creature actually occupies (shots/band3/09-wild-cluster-on-the-road.png) their fine detail is not fur, it is dithering, and the value gradients that carry a face on a 2048 map average to one flat tone. So: median-despeckle, quantise value into bounded zones, re-stamp the darkest 3% of the SOURCE so eyes/nostrils/outlines survive the smoothing, and downsample. All numbers tunable; the blind critique against docs/reference/palworld-0*.jpg is the gate, never these numbers.",
     "despeckle": 5,
@@ -1323,7 +1324,7 @@
           "sat_scale": 1.15
         }
       ],
-      "vivid_comment": "CHARCOAL HIDE, EMERALD VEINS. The board paints the legendary as a near-black animal lit from inside; the shipped vivid took the hide to val_scale 1.32 and a blind round measured the result as a uniformly bright jade deer and said it reads 'green deer', not 'legendary'. The emissive crown overlays were already authored and the same round reported nothing in the survey looked emissive at all -- which is what a glow does when there is no dark value anywhere for it to glow against. The veins keep their saturation and their brightness; the HIDE goes dark, which is the half that was wrong. This also gives the roster a second genuinely dark creature alongside duskhush.",
+      "vivid_comment": "CHARCOAL HIDE, EMERALD VEINS -- and the vein rule keys on VALUE, not saturation, which is the correction that finally made it land. The board paints the legendary as a near-black animal lit from inside. Two attempts failed before this one: the shipped vivid took the hide to val_scale 1.32 and a blind round measured a 'uniformly bright jade deer' that reads 'green deer, not legendary', and the first fix here darkened the wrong half, because it split veins from hide on `sat_min 0.42` and this source texture is 87.9% above that threshold. Rule one caught the whole animal and made all of it bright emerald.\n\nMeasured on the source: saturation cannot separate anything here (96.2% sits above sat 0.30), but VALUE can -- only 13.3% is above val 0.75 and 20.5% above 0.65, and that bright minority is the vein and glow work. So the veins are selected by `val_min` and everything else goes near-black.\n\nTHIRD TIME THIS ROUND a saturation-keyed rule failed to isolate a feature -- galewisp's gold tips and pipwing's face marking failed identically, each recolouring most of the animal instead of the part named. See `_comment_selector` at the top of this file.",
       "vivid_rules": [
         {
           "match": {
@@ -1331,23 +1332,22 @@
               60,
               160
             ],
-            "sat_min": 0.42
+            "val_min": 0.7
           },
           "set_hue": 140,
-          "set_sat": 0.82,
-          "val_scale": 1.05
+          "set_sat": 0.85,
+          "val_scale": 1.12
         },
         {
           "match": {
             "hue": [
               60,
               160
-            ],
-            "sat_min": 0.1
+            ]
           },
           "set_hue": 150,
-          "set_sat": 0.1,
-          "val_scale": 0.34
+          "set_sat": 0.14,
+          "val_scale": 0.3
         }
       ],
       "overlays": [
