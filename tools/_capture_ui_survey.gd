@@ -173,9 +173,18 @@ func _run() -> void:
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 
+	# Autoloads are NOT in the tree yet when a `--script` SceneTree reaches its
+	# first line. Godot mounts them as children of `root` once the tree starts
+	# iterating, so a lookup before the first awaited frame finds nothing and
+	# this tool reported "no Game autoload in the tree" and wrote zero frames on
+	# its first real run. Every capture tool in this repo that reads `/root/Game`
+	# successfully happens to await frames first (loading a world scene), which
+	# hid the ordering requirement rather than removing it.
+	for i in 4:
+		await process_frame
 	_game = root.get_node_or_null(^"Game")
 	if _game == null:
-		_failures.append("no Game autoload in the tree -- nothing here can be staged")
+		_failures.append("no Game autoload in the tree after 4 frames -- nothing here can be staged")
 		_finish()
 		return
 
