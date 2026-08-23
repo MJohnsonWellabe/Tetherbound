@@ -357,22 +357,41 @@ func _nearest_authored_node(item_id: String) -> Node3D:
 	return best
 
 
+## Four ways to fail and, until now, one bare `false` for all of them.
+##
+## This has never run in CI (`--gate-a-continuous-core` is a flag no shard
+## passes), so the first time it fired it reported "could not naturally enter
+## Mira's building" about a door nobody has watched. Each branch says which one
+## it was, for the same reason the swing assertion now does: on this path a
+## symptom without a cause costs a twenty-minute run to re-derive.
 func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	var prompt := door.get_node_or_null(^"Prompt") as Node3D
 	if prompt == null:
+		_fail("door '%s' has no Prompt child; nothing can open it" % door.name)
 		return false
 	if not bool(door.call("is_open")):
 		if not await _walk_to_and_activate(prompt, 1200):
+			_fail(("could not reach or activate door '%s' in 1200 frames "
+				+ "(player %.1fm away, prompt enabled=%s)") % [
+				door.name, _player.global_position.distance_to(door.global_position),
+				str(prompt.get("enabled")) if prompt.has_method("get") else "?"])
 			return false
 		for _i in 45:
 			if bool(door.call("is_open")):
 				break
 			await _tree.process_frame
 	if not bool(door.call("is_open")):
+		_fail("door '%s' was activated and did not open within 45 frames" % door.name)
 		return false
 	var inward := inside_target - door.global_position
 	inward.y = 0.0
-	return await _walk_toward(door.global_position + inward.normalized() * 2.2, 600, 0.7)
+	var step := door.global_position + inward.normalized() * 2.2
+	if not await _walk_toward(step, 600, 0.7):
+		_fail(("opened door '%s' but could not walk the 2.2m inward to %s "
+			+ "(stopped %.1fm short)") % [
+			door.name, str(step.round()), _player.global_position.distance_to(step)])
+		return false
+	return true
 
 
 func _exit_through(door: Node3D, inside_target: Vector3) -> bool:
