@@ -889,31 +889,50 @@
           "val_scale": 1.05
         }
       ],
-      "vivid_comment": "CREAM AND A HINT OF PALE BLUE, per the board. The shipped vivid set hue 214 at 0.75 saturation -- a deep blue that made this chick and reedwing read as 'small blue bird' and 'slightly bigger blue bird' at thumbnail size, which a blind round named. The board's pipwing is the CREAM one and its reedwing is the blue one. The remaining blue is a FACE AND CREST marking at low saturation, not a coat, and it was pulled down again (0.34 -> 0.20) under the owner's 2026-08-23 direction that too much of the roster sits in one shade of blue -- this bird should read as a cream chick with cool markings, never as another blue one.",
+      "vivid_comment": "CREAM BODY, PALE BLUE FACE -- and the blue is an anatomical OVERLAY, not a colourway rule, which is the actual correction here. The shipped vivid set hue 214 at 0.75 saturation and made this chick read as 'small blue bird' beside reedwing's 'slightly bigger blue bird', which a blind round named. The owner then directed (2026-08-23) that too much of the roster sits in one shade of blue.\n\nThe first correction pulled the blue rule's saturation down and assumed that left a cream bird with a blue marking. Measured, it did not: this species' source texture is uniformly hue 44 at every saturation level -- 87.8% of it sits above sat 0.20 and the mean hue is 43 at every threshold -- so there is no marking-versus-body split for a saturation rule to find, and `sat_min 0.30` simply recoloured 69% of the bird. It was still a blue bird, just a paler one.\n\nSo the body goes cream through the rules, and the blue is placed where a face marking actually is: high on the model, near the centre line. Exactly the lesson `_comment_overlays` already records -- placement is anatomy, never a colour band -- and the same fix galewisp's gold needed this round for the same reason.",
       "vivid_rules": [
-        {
-          "match": {
-            "sat_min": 0.3
-          },
-          "set_hue": 205,
-          "set_sat": 0.2,
-          "val_scale": 1.06
-        },
         {
           "match": {
             "sat_min": 0.06
           },
           "set_hue": 44,
-          "set_sat": 0.13,
-          "val_scale": 1.12
+          "set_sat": 0.16,
+          "val_scale": 1.14
         },
         {
           "match": {
             "sat_max": 0.06
           },
           "set_hue": 44,
-          "set_sat": 0.06,
-          "val_scale": 1.14
+          "set_sat": 0.05,
+          "val_scale": 1.16
+        }
+      ],
+      "overlays": [
+        {
+          "id": "face_blue",
+          "_why": "The board's pale blue on this chick is a FACE and crest marking, and anatomy is the only thing that can say so -- the source texture has no saturation band that isolates it. High on the model and near the centre line; `tint` so the down and feather detail in the value channel survives underneath.",
+          "where": {
+            "y_min": 0.78,
+            "lateral_max": 0.36
+          },
+          "mode": "tint",
+          "color": "#93bcdc",
+          "sat_floor": 0.34,
+          "softness": 0.11
+        },
+        {
+          "id": "wing_blue",
+          "_why": "A half-strength touch on the distal wings, which is what stops the face marking reading as a hat.",
+          "where": {
+            "lateral_min": 0.62,
+            "y_min": 0.45
+          },
+          "mode": "tint",
+          "color": "#a8cbe6",
+          "sat_floor": 0.3,
+          "softness": 0.12,
+          "strength": 0.5
         }
       ],
       "finish": {
