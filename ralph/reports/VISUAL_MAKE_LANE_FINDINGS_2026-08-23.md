@@ -138,3 +138,59 @@ asset, no generation and no D24 exception is needed to close the gap.
 re-pointing a path — the rest is an asset that is not in the build, which is the
 split the visual-judge rubric asks for and a `BLOCKED.md` candidate rather than
 something tuning reaches.
+
+## 6. The teal/green ground band — measured, and NOT this lane's
+
+Round 2's blind critic called it *"a hard-edged teal light band across the
+hillside... matches no sun direction and no time of day; it reads as a
+misconfigured spotlight or lightmap seam, and it is the single most artificial
+thing in the combat set"* (`01-engagement-clean`, `04-catching-clean`). It is
+still there in round 3 and is very prominent.
+
+Measured rather than eyeballed, because the description and the numbers disagree
+in a way worth recording. Sampled inside the band against adjacent grass in
+`01-engagement-clean`:
+
+    band          avg #26330a   (38, 51, 10)
+    grass beside  avg #232e03   (35, 46,  3)
+
+So it is **not** a bright light: about +8% luminance, and a blue channel lifted
+from 3 to 10. What makes it read as an artefact is not its brightness but its
+SHAPE — a large, coherent region with a hard curved boundary that follows no
+terrain feature and no sun direction. It looks like a lighting bug and measures
+like a ground-material or splat boundary.
+
+This is terrain/ground, which is D7 / VIS-WORLD's, not builds-items-combat. Not
+touched. Recorded here with the numbers so whoever owns it does not have to
+re-derive them, and so nobody goes looking for a stray SpotLight3D that is not
+there.
+
+## 7. Measured baseline for the convergence rule
+
+`tools/frame_stats.py` on round 3's combat clean frames, so the next round has
+numbers to move rather than adjectives to argue with:
+
+| frame | luminance | hue families | dominant |
+|---|---|---|---|
+| 01-engagement | 11.708 | 2 | chartreuse 79%, yellow 10% |
+| 02-move-firing | 11.353 | 2 | chartreuse 80%, yellow 9% |
+| 03-hit-landing | 11.754 | 2 | chartreuse 79%, yellow 10% |
+| 04-catching | 8.600 | 2 | chartreuse 90%, orange 6% |
+| 05-trainer-battle | 50.941 | 4 | orange 27%, chartreuse 26%, red 20%, yellow 19% |
+
+Two things worth reading off it:
+
+- **01/02/03 now agree to within 0.4 luminance.** Before the clock was pinned
+  and frozen they drifted across the pass. 04 is still an outlier, but its hue
+  mix (chartreuse 90%) says that is FRAMING — the aim camera fills the frame
+  with grass — rather than the light having moved. 05 is in the village, so its
+  numbers are not comparable to the meadow shots at all.
+- **Two hue families in every meadow frame.** That is the numeric form of the
+  ledger's standing "the chapter has one colour", now confirmed for combat
+  specifically, and it is the baseline any palette work has to move.
+
+**Item icons, the one axis this lane did move:** measured across the icon
+sheet's non-background pixels, visibly-coloured pixels went from **0% to 55.8%**,
+and hue families present from **0 to 10**. That is a measured movement on the
+axis round 1 and round 2 both complained about, which is what
+`ralph/conventions.md` counts as a round that improved.
