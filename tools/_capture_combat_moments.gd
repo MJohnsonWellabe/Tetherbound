@@ -258,6 +258,8 @@ func _run() -> void:
 		quit(1)
 		return
 
+	_pin_and_freeze_clock()
+
 	_manager.connect("hit_landed", _on_hit)
 	_manager.connect("attack_missed", _on_missed)
 
@@ -291,6 +293,40 @@ func _collect_nodes() -> bool:
 
 ## Same reasoning as `_probe_combat_hit_rate.gd::_leave_the_farmhouse` — a
 ## known-clear spot before anything else is asked of the player.
+## Pin the world to day/clear and FREEZE it, ported in intent from
+## `_capture_ground_and_sky.gd`, which settled on this after its own pin wore
+## off mid-pass.
+##
+## `ralph/VISUAL_LEDGER.md` names this trap by name -- "Pin the clock AND freeze
+## it. A pin that is not frozen wears off across a multi-viewpoint pass and the
+## late frames come back in a dusk wash" -- and this tool did NEITHER. Round 2's
+## blind critic found it without being told to look: "Exposure disagrees across
+## the same encounter. Frames 01-03 are mid-day olive; 04-catching-clean is
+## several stops darker, near-dusk ground values, same sky." 04 is simply the
+## shot taken last, minutes of wall clock after 01.
+##
+## That is not a small thing to leave in. Frames whose exposure drifts between
+## shots cannot be compared with each other OR with the references, and a critic
+## reasonably reads the drift as a lighting defect in the game rather than as a
+## property of the camera that took them.
+func _pin_and_freeze_clock() -> void:
+	var look: Node = _world.get_node_or_null(^"WorldLook")
+	var weather: Node = _world.get_node_or_null(^"WorldWeather")
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	else:
+		print("FAIL no WorldWeather node; weather cannot be pinned and the frames may not agree")
+	if look != null:
+		look.call("apply_time", "day")
+		look.set_process(false)
+		look.set_physics_process(false)
+		print("[clock] pinned to day/clear and FROZEN; every shot below is in the same light")
+	else:
+		print("FAIL no WorldLook node; time-of-day cannot be pinned and late shots will drift toward dusk")
+
+
 func _leave_the_farmhouse() -> void:
 	var start := Vector3(48.0, 0.0, -58.0)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0

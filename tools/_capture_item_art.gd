@@ -363,6 +363,20 @@ func _scatter_models() -> Dictionary:
 ## --- phase 1: the icon sheet -------------------------------------------------
 
 func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> void:
+	# The tool sets its OWN window rather than trusting the caller's
+	# `--resolution`. The icon sheet is a tall document, not a 16:9 frame, and a
+	# caller reusing this repo's standard 1280x800 capture invocation silently
+	# cropped it -- twice, across two blind rounds. Nothing about "audit every
+	# icon" should depend on remembering an unusual flag.
+	# Restored at the end of this function: the held-tool and world-node phases
+	# are ordinary 3D frames and must keep the caller's aspect.
+	var caller_window := DisplayServer.window_get_size()
+	DisplayServer.window_set_size(RESOLUTION)
+	await process_frame
+	await process_frame
+	print("[icons] window %dx%d -> %dx%d for the sheet; restored afterwards" % [
+		caller_window.x, caller_window.y, RESOLUTION.x, RESOLUTION.y])
+
 	var canvas := CanvasLayer.new()
 	canvas.layer = 5
 	root.add_child(canvas)
@@ -437,12 +451,27 @@ func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> vo
 	# than trusting the arithmetic in the header comment.
 	await process_frame
 	await process_frame
+	# Measured against the REAL viewport, not against `RESOLUTION`.
+	#
+	# This guard used to compare the content against the RESOLUTION constant --
+	# a number describing the window this tool WANTS, not the one it got. The
+	# window size comes from the caller's `--resolution`, so a run at any other
+	# size cropped the sheet while this line printed "fits". That is exactly what
+	# happened: two consecutive blind rounds judged an icon sheet cut off at
+	# roughly 26 of 55 tiles, the second one rendered 1280x800 into a guard
+	# checking 2800, and the game's most-opened screen has still never been
+	# audited whole. A guard that cannot fail is not a guard -- `conventions.md`
+	# says so about assertions and it is just as true here.
+	#
+	# The window is now forced to RESOLUTION above, so this should always fit;
+	# it stays as a check because the content grows with the item count.
+	var viewport_h: float = float(root.size.y)
 	var content_h: float = vbox.size.y + 60.0
-	if content_h > float(RESOLUTION.y):
-		print("WARN icon sheet content measures %.0fpx tall inside a %dpx viewport -- bottom rows are clipped; raise RESOLUTION.y or ICON_COLUMNS" % [
-			content_h, RESOLUTION.y])
+	if content_h > viewport_h:
+		print("WARN icon sheet content measures %.0fpx tall inside a %.0fpx viewport -- bottom rows ARE clipped and every icon finding from this sheet covers only part of the set; raise RESOLUTION.y or ICON_COLUMNS" % [
+			content_h, viewport_h])
 	else:
-		print("[icons] sheet content measures %.0fpx tall inside a %dpx viewport -- fits" % [content_h, RESOLUTION.y])
+		print("[icons] sheet content measures %.0fpx tall inside a %.0fpx viewport -- fits, whole set is auditable" % [content_h, viewport_h])
 
 	for i in ICON_SETTLE_FRAMES:
 		await process_frame
@@ -459,6 +488,8 @@ func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> vo
 			path, ids.size(), shared_count, ids.size()])
 
 	canvas.queue_free()
+	DisplayServer.window_set_size(caller_window)
+	await process_frame
 	await process_frame
 
 
