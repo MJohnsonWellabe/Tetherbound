@@ -60,6 +60,15 @@ var _trail_fade: float = 1.0
 var _bounces: int = 0
 var _seal_time: float = -1.0
 
+## Flight forensics. A miss reported as one word ("miss") cannot distinguish an
+## orb that fell short from one that flew past, and CATCH-FEEL burned three
+## wrong diagnoses on that ambiguity. These record how near the orb actually
+## got and what ended the flight, so the next question is answered by a number.
+var _closest: float = INF
+var _closest_at: Vector3 = Vector3.INF
+var _end_reason: String = "unknown"
+var _ground_collider: String = ""
+
 ## How many times the orb's own radius the readable halo is drawn at, and how
 ## wide the trail gets at its head. Presentation only — the collision radius the
 ## catch maths reads is untouched by both.
@@ -305,9 +314,14 @@ func _tick_flight(delta: float) -> void:
 		_path.remove_at(0)
 	_draw_trail()
 
+	_note_closest_approach()
 	if _check_target():
 		return
-	if _life >= _max_life or _hit_ground():
+	if _life >= _max_life:
+		_end_reason = "flight_time"
+		_finish_with_miss()
+	elif _hit_ground():
+		_end_reason = "ground"
 		_finish_with_miss()
 
 
@@ -431,6 +445,18 @@ func is_resting() -> bool:
 	return _phase == Phase.RESTING or _phase == Phase.SEALED
 
 
+## The nearest the orb came to the target's centre, sampled every flight frame.
+func _note_closest_approach() -> void:
+	if _target == null or not is_instance_valid(_target):
+		return
+	var centre: Vector3 = _target.call("centre") if _target.has_method("centre") \
+		else _target.global_position
+	var offset := global_position.distance_to(centre)
+	if offset < _closest:
+		_closest = offset
+		_closest_at = global_position
+
+
 func _check_target() -> bool:
 	if _target == null or not is_instance_valid(_target) or not _target.visible:
 		return false
@@ -470,6 +496,8 @@ func _hit_ground() -> bool:
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return false
+	var collider := hit.get("collider") as Node
+	_ground_collider = collider.name if collider != null else "unnamed"
 	global_position = hit["position"]
 	return true
 
@@ -490,6 +518,14 @@ func _ground_below(from: Vector3, to: Vector3) -> float:
 
 func _finish_with_miss() -> void:
 	_phase = Phase.DONE
+	var need := 0.92
+	if _target != null and is_instance_valid(_target) and _target.has_method("body_radius"):
+		need = float(_target.call("body_radius")) + _radius
+	print("catch launch: miss forensics reason=%s closest=%.2f needed=%.2f at=(%.2f, %.2f, %.2f) ground=%s life=%.2f" % [
+		_end_reason, _closest, need,
+		_closest_at.x, _closest_at.y, _closest_at.z,
+		_ground_collider if _ground_collider != "" else "none", _life,
+	])
 	missed.emit()
 
 

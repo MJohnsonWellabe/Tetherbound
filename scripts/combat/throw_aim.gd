@@ -392,8 +392,12 @@ func _release() -> void:
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 	_released_assist_point = _committed_assist_point
-	print("catch launch: release assist=%s predicted=%s" % [
+	var throw_range := -1.0
+	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
+		throw_range = origin.distance_to(_target.call("centre"))
+	print("catch launch: release assist=%s predicted=%s range=%.2f dir=(%.2f, %.2f, %.2f)" % [
 		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+		throw_range, forward.x, forward.y, forward.z,
 	])
 
 	_despawn_orb()

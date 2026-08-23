@@ -226,6 +226,51 @@ rather than authored portraits -- the fix is camera control on the picker, not
 new art. The judge rated the creature designs themselves as the strongest thing
 in the whole frame set, which makes the framing the only thing in the way.
 
+### CATCH-FEEL: the ~3% strike rate was the stale-aim harness, not the mechanic
+
+**Supersedes BOTH entries below, including the "straight reticle" one, which was
+wrong on two code facts I asserted without reading the functions involved.**
+
+What the code actually does, read this time rather than inferred:
+
+- **`launch_assist_max_distance` bounds the LEAD, not the range.** In
+  `predict_launch_point()` the clamp is `lead = predicted - centre`, then
+  `if lead.length() > max_distance`. It limits how far AHEAD of the creature's
+  centre the aim point may be pulled -- a guard against a pathological velocity
+  snapping the aim across the arena. A throw at 6m is assisted exactly as much
+  as a throw at 2m. The comparison against `flow.engage_range: 6.0` was
+  meaningless: the two numbers measure different things.
+- **The launch is already ballistic.** `_launch_direction()` returns
+  `_ballistic_direction(origin, point, ...)`, which solves the low arc that
+  LANDS on the aim point. `_aim_direction()` carries a comment recording that
+  exact fix and why. "A straight reticle aiming a ballistic orb" describes a bug
+  that was fixed before I filed it.
+
+What the measurement was. The 40-throw and 33-throw runs that produced ~3% were
+taken on the build with the stale-aim regression -- the step-aside moved the
+player AFTER the aim, so every throw was aimed from a position the player had
+already left. Fixed at `ab4ae014`. Re-run on the fixed build, the Gate A opening
+catches Bramblebun **on launch 1**, range 3.61m, assist applied, offset 0.60.
+One throw, one strike.
+
+So the eliminations below stand -- it was never the catch roll, and it was never
+the reticle geometry -- but the headline number was an artefact of my own
+harness, and the mechanism I proposed to explain it does not exist. What is
+carried forward is the instrumentation: `orb.gd` now reports each miss's closest
+approach, what it needed, and what ended the flight, and `throw_aim.gd` logs the
+throw range and launch direction at release. A future "the throw feels bad"
+report gets answered with those numbers instead of a fourth theory.
+
+Open, honestly: this is now measured on a harness aimer, not on a human with a
+thumbstick. The owner's *"I never know if I was close"* is a FEEDBACK complaint
+and survives independently of the strike rate -- a miss currently tells the
+player nothing about how near it came. That is a real, separable piece of work
+and it is not fixed by this entry.
+
+---
+
+**Superseded, and wrong -- kept only so the mistake is not repeated.**
+
 ### CATCH-FEEL root cause: a straight reticle aiming a ballistic orb
 
 **Supersedes the entry below, which was measured through a broken harness and
