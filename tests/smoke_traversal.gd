@@ -978,11 +978,10 @@ func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array
 ## -- a seal that also blocks the finale once the player has earned it would
 ## be a worse bug than the leak it replaced, and nothing else in the chapter
 ## re-tests this gate once it is open.
-## The causeway `tools/_probe_crossings.gd` measured still open after the two
-## gorge diagonals were extended to the world edges: uncarved ground whose only
-## barrier is the gate leaf. Any collider narrower than this gates nothing.
-const SIGIL_CAUSEWAY_MIN_X := 57.0
-const SIGIL_CAUSEWAY_MAX_X := 70.0
+## No player strides this far in one physics frame. Anything larger is the
+## kill volume returning a fallen body to spawn, which this walk must not score
+## as forward progress -- see `_walk_at_the_sigil_gate`.
+const STEP_SANITY_M := 5.0
 
 const SIGIL_GATE_START_BACK := 12.0
 const SIGIL_GATE_WALK_FRAMES := 420
@@ -1043,25 +1042,6 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 		failures.append("the Sigil Gate's collider is disabled before anyone opens it")
 		return
 
-	# THE ASSERTION THAT ACTUALLY MATTERS, and the one nobody had made.
-	# `tools/_probe_crossings.gd` proved the two gorge diagonals seal everything
-	# except a causeway at world-x 57..70 -- thirteen metres of uncarved ground
-	# whose only barrier is this leaf. The leaf covers 3.6m of it. A player
-	# walks around the side, which is exactly the failure `south_bridge.gd`'s
-	# own history already records: "any deck the rails do not cover can be
-	# stepped onto from the side, and a gate inboard of that gap gates nothing."
-	# The leaf is yawed, so its WORLD-X extent decides this, not its own width.
-	var yaw := shape.global_rotation.y
-	var scaled: Vector3 = box.size * shape.global_transform.basis.get_scale()
-	var half_x: float = absf(scaled.x * cos(yaw)) * 0.5 + absf(scaled.z * sin(yaw)) * 0.5
-	var leaf_min := shape.global_position.x - half_x
-	var leaf_max := shape.global_position.x + half_x
-	if leaf_min > SIGIL_CAUSEWAY_MIN_X + 0.5 or leaf_max < SIGIL_CAUSEWAY_MAX_X - 0.5:
-		failures.append(
-			("the Sigil Gate leaf spans world-x %.1f..%.1f but the causeway it must close is %.1f..%.1f"
-				+ " -- %.1fm of open ground beside it, which a player simply walks around") % [
-				leaf_min, leaf_max, SIGIL_CAUSEWAY_MIN_X, SIGIL_CAUSEWAY_MAX_X,
-				maxf(0.0, leaf_min - SIGIL_CAUSEWAY_MIN_X) + maxf(0.0, SIGIL_CAUSEWAY_MAX_X - leaf_max)])
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		failures.append("no Game autoload; the Sigil Gate has no inventory or flag store to read")
@@ -1089,9 +1069,22 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 		return
 	print("  Sigil Gate: leaf collider half-width %.2fm; open causeway runs %.2fm..%.2fm either side of centre (%.1fm total)" % [
 		leaf_half, gap.x, gap.y, gap.y - gap.x])
+	# A FAILURE, not a note. This was printed as an observation while the gap
+	# was 13m and the leaf 3.6m -- which is precisely the defect, so observing
+	# it was not enough. `south_bridge.gd`'s own history states the rule: "a
+	# gate inboard of that gap gates nothing."
+	#
+	# Derived from the two flanking carves every run rather than compared
+	# against a written-down width. An earlier version of this check carried
+	# the measured causeway as constants (57.0..70.0) and went stale the moment
+	# the carves were narrowed to close it -- the test then failed against a
+	# causeway that no longer existed, which is a worse failure than the one it
+	# was written to catch, because it looks like the fix did not work.
 	if gap.x < -leaf_half - 0.1 or gap.y > leaf_half + 0.1:
-		print("  NOTE: the leaf covers %.1fm of a %.1fm gap -- the shoulders either side are open, uncarved ground" % [
-			leaf_half * 2.0, gap.y - gap.x])
+		failures.append(
+			"the Sigil Gate leaf covers %.1fm of a %.1fm causeway -- %.1fm of open ground beside it, which a player walks around" % [
+				leaf_half * 2.0, gap.y - gap.x,
+				maxf(0.0, -leaf_half - gap.x) + maxf(0.0, gap.y - leaf_half)])
 
 	var offsets: Array[float] = [
 		0.0,
@@ -1228,6 +1221,15 @@ func _walk_at_the_sigil_gate(world: Node, player: CharacterBody3D, camera_rig: N
 	var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.y))
 	if is_nan(ground):
 		return -INF
+	# Starting inside a gorge measures the gorge, not the gate. With the
+	# causeway narrowed to the leaf's own width, a start 12m along the gate's
+	# axis can land in a trench -- and a walk that begins 11m down a hole
+	# reports whatever the recovery does next.
+	var gate_ground: float = float(world.call("ground_height_at", gate_xz.x, gate_xz.y))
+	if not is_nan(gate_ground) and ground < gate_ground - 4.0:
+		print("      (start %+.1fm off centre sits %.1fm below the gate -- inside a gorge, not on the causeway; skipped)" % [
+			offset, gate_ground - ground])
+		return -INF
 	player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.y)
 	player.velocity = Vector3.ZERO
 	var outward := Vector3(travel.x, 0.0, travel.y)
@@ -1235,11 +1237,35 @@ func _walk_at_the_sigil_gate(world: Node, player: CharacterBody3D, camera_rig: N
 	for i in 10:
 		await physics_frame
 
+	# A FALL IS NOT A CROSSING, and this walk could not tell the difference.
+	#
+	# Both gorges are 11m deep and the causeway between them is now barely
+	# wider than the leaf, so a walk that drifts off it falls in -- and
+	# `water_hazard`/the kill volume RETURNS A FALLEN PLAYER TO SPAWN. Spawn is
+	# ~7.4km from this gate, so `travel.dot(here - gate_xz)` then reports
+	# thousands of metres of "progress" and the check reads a fall as a player
+	# strolling past a locked gate.
+	#
+	# The tell was that locked and unlocked runs reported the SAME +6466.6m.
+	# A number that does not change with the thing under test is not measuring
+	# the thing under test -- the same reasoning `south_bridge.gd`'s
+	# `_comment_ow5c_seam` used when its walk stopped at 1.4m "regardless of
+	# gate state" and the cause turned out to be a collision-tile seam.
+	#
+	# So progress is only counted while the player is still walking: a step
+	# larger than STEP_SANITY_M in one physics frame is a teleport, not a
+	# stride, and the walk stops there and keeps what it had.
 	var best := -INF
+	var previous := player.global_position
 	Input.action_press("move_forward")
 	for i in SIGIL_GATE_WALK_FRAMES:
 		await physics_frame
 		var here := player.global_position
+		if here.distance_to(previous) > STEP_SANITY_M:
+			print("      (walk abandoned at frame %d: the player moved %.0fm in one frame -- a fall and respawn, not a crossing)" % [
+				i, here.distance_to(previous)])
+			break
+		previous = here
 		var depth: float = travel.dot(Vector2(here.x, here.z) - gate_xz)
 		best = maxf(best, depth)
 	Input.action_release("move_forward")
