@@ -174,3 +174,95 @@ trainer's bright albedo far more than a terrain whose grass albedo R9.4
 deliberately darkened to value 0.199. That is a direct arithmetic account of
 "the character is pasted onto black paper", and it is checkable rather than a
 guess. Not acted on this round.
+
+## The black grass is not a backface bug, and the mechanism is confirmed
+
+Reported to this lane as *"grass tufts render BLACK on back faces — a
+two-sided material bug"*. It is a real defect and it is clearly visible in
+`ground-03-band3-crossing-day` (the near-field tuft at bottom right: the lower
+third of every blade is solid black, following the blade geometry rather than
+any light direction). **But the diagnosis is wrong, and acting on it would have
+fixed nothing.**
+
+Culling is correct. Every grass, flower and bush source declares
+`doubleSided: true` in its own glTF, and `vegetation.gd` copies
+`standard.cull_mode` faithfully, so the back faces are drawn. It is not a
+two-sided material bug and there is no culling flag to set.
+
+What is actually happening, traced end to end and measured:
+
+1. The pack's meshes carry a `COLOR_0` vertex attribute. Decoding
+   `Grass_Common_Tall.gltf`'s accessor: mean vertex colour **0.001 at the
+   lowest 15% of vertices and 0.962 at the highest**. It is a baked
+   ambient-occlusion gradient, black at the blade base, white at the tip.
+2. The pack's own glTF material declares only `baseColorTexture` and
+   `metallicFactor`. It does **not** ask for that vertex colour as albedo.
+3. `vegetation.gd::_tint_for` sets
+   `vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo or needs_instance_colour`.
+4. `needs_instance_colour` is simply `colour_jitter > 0.0`, and grass carries
+   `colour_jitter` 0.22, drygrass 0.20, rocks 0.16.
+
+So asking for per-instance colour jitter force-enables the vertex-colour
+channel, and `albedo_color` MULTIPLIES — which turns a 0.001 vertex colour at
+the blade base into black. Every jittered layer pays this; grass is where it is
+visible, because a blade is thin enough that the black half is most of it.
+
+The two channels cannot simply be separated: Godot's MultiMesh per-instance
+colour reaches albedo through the same `vertex_color_use_as_albedo` switch, so
+turning it off to fix the black would silently disable the jitter — the exact
+"set a value, nothing happens, nobody notices" failure class this repo has
+already paid for twice.
+
+The correct fix is therefore to neutralise the mesh's own `COLOR_0` (rebuild
+the surface with a white ARRAY_COLOR) at the point `_retint` already rebuilds
+surfaces, keeping per-instance jitter working and losing only the pack's baked
+AO. Not applied yet; queued behind the current blind round so it lands as one
+coherent change with the other near-field work.
+
+## What round 1 actually moved, measured
+
+`tools/frame_stats.py`, baseline against round 1:
+
+| frame | chroma | near luminance | hue families |
+|---|---|---|---|
+| band2 cloudy | 41.7 -> **46.7** | 0.137 -> **0.151** | 3 -> **4** |
+| band2 fog | 40.9 -> **44.9** | 0.199 -> **0.220** | 4 -> **5** |
+| band2 rain | 42.9 -> **47.2** | 0.112 -> **0.125** | 3 -> **5** |
+| band2 day | 49.48 -> 49.47 | 0.220 -> 0.220 | 3 -> 3 |
+| band3 day | 62.18 -> 62.25 | 0.262 -> 0.262 | 3 -> 3 |
+| band4 day | 48.97 -> 49.15 | 0.115 -> 0.115 | 3 -> 3 |
+| band5 day | 54.08 -> 54.11 | 0.263 -> 0.263 | 2 -> 2 |
+
+Read honestly: **the weather work moved, and the ground-cover siting did not** —
+not on the numbers. The three weather frames are the shadow_opacity fix, and
+they break the standing "eleven of twelve day frames carry exactly three hue
+families" finding for the first time.
+
+The day frames moved by hundredths. Cover did visibly relocate onto the route
+(compare the band-3 day frame's near field between `shots/ground_baseline` and
+`shots/ground_r1`: a tuft now reads clearly at bottom right where there was
+bare path), but a handful of tufts per frame cannot shift a whole-frame
+statistic. Siting was necessary and is not sufficient.
+
+Band 1 is unchanged by construction and should not be read as a null result:
+its viewpoint at (8, 90) sits inside the +-256m origin square, which
+`_place_corridor_fill` skips outright.
+
+## The path is 6m wide. The bald strip around it is 20m
+
+Measured from the configs rather than judged by eye:
+
+- `paths.width` 3.0 plus `paths.shoulder` 1.5 each side = **6.0m of painted
+  dirt**, which is inside Palworld's own 3-4m footpath range at the low end and
+  reasonable at the high.
+- `grass.path_standoff.max` **7.0m**, drygrass 8.0, flowers 5.0. So vegetation
+  is culled to a half-width of up to 10-11m, and the ground that reads as
+  "path" is up to **20-22m across**.
+
+So the critique that the path is *"10-20 m wide, ten trainer-heights... not a
+footpath"* is exactly right, and the cause is not the path. **Up to 14m of it
+is grass-free ground beside a correctly-sized path.** OF12 introduced the
+0.3-7.0m noise range to stop a ruler-straight verge, and the noise is the right
+idea; the ceiling is what makes the meadow stand back a full trainer-height and
+a half from a footpath. This is the largest remaining near-field lever and it
+costs no instances.
