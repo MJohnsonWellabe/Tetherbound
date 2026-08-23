@@ -80,7 +80,18 @@ pass belongs to the VISUAL lane. Evidence:
 1362 tests / 0 failed` · `branch: ralph/GATEB-PATH` · adopts and closes
 `ralph/GATEB-PATH` and `ralph/GATEB-TAIL`
 
-**GATE B PASSES.** A fresh save walks all ten Gate B objectives, in order, from
+**GATE B PASSES.** Verified on the merged tree (this branch with `origin/main`
+at `d271c92b`, which brought PERF-ROG's 177-line `interaction_arbiter.gd`
+rewrite in under the directive-3 work):
+
+```
+M1: gate B continuous: OK — a fresh save walked all 10 objectives to South Bridge
+M2: gate B continuous: OK — a fresh save walked all 10 objectives to South Bridge
+full suite: 1362 tests, 837289 assertions, 0 failed
+smoke_build_wins_while_hammer_is_out.gd: OK (all four cases, post-merge)
+```
+
+A fresh save walks all ten Gate B objectives, in order, from
 the title screen to the South Bridge: wake, Grandpa, starter, the tutorial
 catch, the village, the gather route, the house, the camp, three creature beds,
 the nights, the marshal's entry gate, three fought rounds, and the objective
