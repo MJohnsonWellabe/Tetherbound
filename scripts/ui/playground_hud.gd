@@ -2139,7 +2139,16 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
 			# resolution, the smallest text on the whole HUD and, per the
 			# blind critic, illegible without magnification.
-			text = "%s\n%s [font_size=%d][color=#%s]%s[/color][/font_size]" % [
+			# Icon on its own line, count beneath it. Both used to share one
+			# line, and a tool's durability ("40/40" -- the starting axe) needs
+			# ~119px beside a 28px icon against ~104px of inner slot width, so
+			# with `scroll_active = false` the count was cut mid-glyph in every
+			# frame the quickbar appeared in. The slot grew taller rather than
+			# wider (see the note on Slot1 in `playground_hud.tscn`): the dock
+			# is right-aligned and cannot move left without covering the central
+			# focus lane `smoke_prompt_hotbar_dock.gd` guards, so width was the
+			# one axis with nothing to give.
+			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				glyph, icon_bbcode, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
 		if text != _hotbar_last_text[i]:
