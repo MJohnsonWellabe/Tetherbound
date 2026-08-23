@@ -84,6 +84,29 @@ rewrites itself cannot be trusted about what it got wrong.
   vertex data; the "diagonal lift" is an intentional Tudor V-brace. No change
   made, and none wanted.
 
+- **The grunt armband defect does not exist.** The corridor round-2 critic
+  reported "a flat pure-red untextured rectangle that renders magenta at night"
+  and this coordinator briefed VIS-CAST on it without checking. VIS-CAST found
+  **no armband in code or data and zero saturated-red pixels in the grunt
+  texture** — the description fits the captain's box badge, which was already
+  fixed. A critic's misattribution, propagated into a lane brief. Verify a
+  named part exists before handing it to a lane.
+- **The villagers are not child-proportioned.** Head counts measured off the
+  capture rather than asserted: villagers **4.9**, trainer **5.2**, grunt rig
+  **6.5**. The "1.78 m children" reading is far smaller than stated, and the
+  real outlier is the grunt rig — **a quarter longer-limbed than the game's own
+  style anchor, and now the body of three antagonist ranks** because of this
+  coordinator's own rank-ladder fix.
+- **The missing small-creature tier must not be "fixed".** Its fix would
+  reverse **D19**, an owner decision made at the controller after play, having
+  found his creature felt small. Canon precedence puts owner-play evidence above
+  a critic's reading. Recorded as blocked, not actioned.
+- **Combat DOES have attack VFX — the capture was shooting between frames.**
+  VIS-MAKE established the missing engagement/move/hit moments as **harness
+  defect #7**, not a game defect, and proved the impact flash "was always
+  there". The capture now photographs a moment that lasts less than a frame.
+  This is why it was recorded as an open question rather than a finding.
+
 ## Findings from the parallel lanes that are NOT visual
 
 - **Three of the chapter's four gates are decorative.** VIS-SITES measured every
