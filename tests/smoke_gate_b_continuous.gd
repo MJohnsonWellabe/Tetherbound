@@ -254,8 +254,7 @@ func _ready_a_tournament_team() -> bool:
 func _gather_and_build_a_home() -> bool:
 	var route := MATERIAL_ROUTE.new()
 	var gathered: Dictionary = await route.run(self, _world, _game, _player, _rig)
-	if not bool(gathered.get("ok", false)):
-		_fail("the gather route failed: %s" % str(gathered.get("why", "no reason given")))
+	if not _segment_passed("gather route", gathered):
 		return false
 	if not _flag("home_materials_gathered"):
 		_fail("the gather route finished and 'home_materials_gathered' is unset; "
@@ -264,8 +263,7 @@ func _gather_and_build_a_home() -> bool:
 	_note("home_materials_gathered")
 
 	var built: Dictionary = await BUILD_SEGMENT.new().run(self, _world, _player, _rig)
-	if not bool(built.get("ok", false)):
-		_fail("the build segment failed: %s" % str(built.get("why", "no reason given")))
+	if not _segment_passed("build segment", built):
 		return false
 	if not _flag("home_built"):
 		_fail("the house went up and 'home_built' is unset")
@@ -476,3 +474,24 @@ func _finish() -> void:
 	for line: String in _failures:
 		print("gate B continuous FAIL: %s" % line)
 	quit(1)
+
+
+## Read a helper segment's result, and report what it actually said.
+##
+## `gate_a_material_route.gd` and `gate_a_build_segment.gd` share one contract:
+## `{passed, failures, transcript}`. The first version of this file invented
+## `{ok, why}`, so a real failure surfaced as "the gather route failed: no
+## reason given" -- the segment had recorded exactly why and this file threw it
+## away. The transcript is printed on failure for the same reason: these
+## segments narrate their route, and that narration is the diagnosis.
+func _segment_passed(label: String, result: Dictionary) -> bool:
+	if bool(result.get("passed", false)):
+		return true
+	var failures: Array = result.get("failures", [])
+	if failures.is_empty():
+		_fail("%s failed and recorded no failure text" % label)
+	for line: Variant in failures:
+		_fail("%s: %s" % [label, str(line)])
+	for line: Variant in (result.get("transcript", []) as Array):
+		print("  %s | %s" % [label, str(line)])
+	return false
