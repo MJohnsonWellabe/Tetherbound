@@ -43,6 +43,33 @@ just screenshots.
 
 ---
 
+## SCATTER-BUDGET-REVIEW — corridor scatter density needs an owner look before the budget test can go green (2026-08-24)
+
+`test_scatter_perf_budget.gd :: test_playground_bake_loads_within_budget` is
+red: the merged tree's bake loads **789,511 placements against a 260,000
+ceiling**. This is not a bug in any one branch's merge — `VIS-WORLD`'s own
+`GROUND-REBUILD` commit already carries 777,138 placements alone (up from
+532,886) and its own commit message names this explicitly as unreviewed:
+"has never been measured on the Ally... this is the number to watch." Boot
+cost is roughly double (placements 10.4s, batch build 8.4s) versus the
+pre-rebuild bake.
+
+**Not fixed here on purpose** — the test's own failure message says why:
+"re-bake is not the fix here, the density change needs a deliberate look
+first." Raising the budget ceiling to make the assertion pass would hide
+the real signal (device performance headroom on the ROG Ally) rather than
+answer it, and it's a game-feel/performance tradeoff, not a mechanical
+merge conflict.
+
+**If it needs to come down**, `VIS-WORLD`'s own commit already named the
+right order: `corridor_bands` density scales first, then the per-layer
+`density_scale` in `vegetation.json` — explicitly NOT the `trail_bias`
+siting or clustering, which cost nothing at runtime and are what make the
+scatter actually read as intentional rather than random. `model: sonnet`
+once the ceiling (or the density) is the owner's call.
+
+---
+
 ## Filed by CREATURE-PRESENTATION (2026-08-23)
 
 Left open on purpose by the creature-presentation pass rather than half-done
