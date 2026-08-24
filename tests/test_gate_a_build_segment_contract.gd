@@ -44,7 +44,7 @@ func test_reusable_segment_enters_and_preflights_the_documented_patch_before_spe
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
 	assert_true(source.contains("BUILD_PATCH_XZ := Vector2(30.0, -40.0)"),
 		"the authored Practice Meadow clearing must be the documented patch")
-	assert_true(source.contains("Vector2(10.0, -10.0), # Village Square"),
+	assert_true(source.contains("Vector2(10.0, -13.0), # Village Square"),
 		"the reusable route must begin at the real-exploration Village Square entry")
 	assert_true(source.contains("Vector2(18.0, -24.0), # Practice Meadow road bend"),
 		"the route must follow the authored road bend instead of a settlement diagonal")
@@ -72,7 +72,7 @@ func test_mechanical_fixture_is_not_misrepresented_as_canonical_evidence() -> vo
 		"the injected mechanical wrapper must stay honestly labelled")
 	assert_true(wrapper.contains("Wrapper-only fixture placement"),
 		"fixture positioning must remain visibly scoped outside the reusable controller segment")
-	assert_true(wrapper.contains("ROUTE_ENTRY_XZ := Vector2(10.0, -10.0)"),
+	assert_true(wrapper.contains("ROUTE_ENTRY_XZ := Vector2(10.0, -13.0)"),
 		"the mechanical wrapper must stage only at the named route entry")
 	assert_true(wrapper.contains("This is not canonical positioning"),
 		"the wrapper must disclose that its route-entry staging is noncanonical")
@@ -98,8 +98,20 @@ func test_roof_stances_use_the_preflighted_open_exterior_ring() -> void:
 		"the live ghost must resolve to the exact supported anchor")
 	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"rear-exterior\""),
 		"rear roofs must use the preflighted exterior ring")
-	assert_true(source.contains("HOUSE_AIM_DIRECTION, \"front-exterior\""),
-		"front roofs must use the same exterior ring")
+	# The front pair faces the OTHER way, and that is the fix rather than a
+	# drift from it. GATEB-COORD drove this segment to a finished house for the
+	# first time and found that `HOUSE_AIM_DIRECTION` puts the front stance
+	# three metres the wrong way -- on top of the floor the completed shell
+	# encloses, which the preflight cannot detect because it runs before
+	# anything is built. The trainer circled the finished house for three full
+	# attempts trying to reach a spot inside it. The front row's exterior IS
+	# the south side, so the segment stands there and faces back; the roof
+	# ANCHOR is unchanged, because
+	# `build_snap_contract.gd::_add_supported_roofs()` corrects by the
+	# SUPPORT's yaw rather than the player's.
+	assert_true(source.contains("-HOUSE_AIM_DIRECTION,\n\t\t\t\t\"front-exterior\"")
+			or source.contains("-HOUSE_AIM_DIRECTION, \"front-exterior\""),
+		"front roofs must be aimed from their own exterior, facing back at the house")
 	assert_true(source.contains("look_right"),
 		"the exterior roof orientation must be supplied through the right stick")
 	assert_false(source.contains("_move_round_open_right_side"),
@@ -127,5 +139,10 @@ func test_preflight_errors_do_not_claim_a_dismantle_attempt() -> void:
 	var preflight := source.substr(source.find("func _preflight()"), source.find("func _preflight_all_planned_anchors"))
 	assert_false(preflight.contains("aimed dismantle stance"),
 		"a pre-spend route failure must not be reported as dismantle movement")
-	assert_true(source.contains("func _walk_to(target: Vector3, purpose: String)"),
+	# Matched as a PREFIX. GATEB-COORD gave `_walk_to` a third parameter (the
+	# arrival tolerance, so a walk that only needs to BE somewhere does not
+	# fail asking for 16cm), and what this assertion is for is unchanged: every
+	# caller still has to name its own purpose, because that is what turns a
+	# walk failure into a sentence that says which walk failed.
+	assert_true(source.contains("func _walk_to(target: Vector3, purpose: String"),
 		"shared controller walking must name each caller's actual purpose")

@@ -9,9 +9,19 @@ const ROUTE_PATH := "res://tests/helpers/gate_a_material_route.gd"
 
 func test_route_declares_the_full_prebuild_material_invariant() -> void:
 	var source := FileAccess.get_file_as_string(ROUTE_PATH)
-	assert_true(source.contains('"wood": 57'))
+	# 69 / 42 / 34, not the 57 / 42 / 18 this pinned before.
+	#
+	# OWNER DIRECTIVE 2026-08-23 §1, "three creature beds before the
+	# tournament": the old budget bought exactly ONE bed against an entry gate
+	# that wants three rested entrants, so the house (39 wood / 34 stone),
+	# THREE beds (6 wood + 8 fiber each) and the camp (12 / 8 / 10) come to
+	# these numbers. Mirrored here by hand, deliberately, the same way
+	# `test_band_content.gd` records TOURNAMENT-1's fixture edit: a pinned
+	# number moved by an owner directive is updated in place, never relaxed
+	# into a range.
+	assert_true(source.contains('"wood": 69'))
 	assert_true(source.contains('"stone": 42'))
-	assert_true(source.contains('"fiber": 18'))
+	assert_true(source.contains('"fiber": 34'))
 	assert_true(source.contains('Vector2(-5.0, 141.0)'),
 		"the fourth authored fiber stop must remain in the public Band-1 route")
 	assert_true(source.contains('Vector2(-168.0, 312.0)'),

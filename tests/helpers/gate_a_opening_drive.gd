@@ -48,6 +48,18 @@ const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 ## harness may only press what a pad can press, so it presses that.
 const THROW_ACTION := &"interact"
 const CHOSEN_NAME := "Bud"
+## Degrees of angular error inside which the aim stick eases off, and the
+## smallest deflection it eases to. See `_aim_strength()`.
+const AIM_FINE_DEGREES := 6.0
+const AIM_FINE_FLOOR := 0.18
+## How far, and how many times, the aim steps back from a creature it cannot
+## look down at. See `_aim_at_wild()`.
+const AIM_BACKOFF_METRES := 2.0
+const AIM_BACKOFF_TRIES := 3
+## Inside this the aim camera's own pitch clamp stops it finding the creature;
+## past this the orb cannot reach it. Both are answered by walking.
+const AIM_TOO_CLOSE_METRES := 5.0
+const AIM_THROWABLE_METRES := 12.0
 const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
 var _failures: Array[String] = []
@@ -346,6 +358,7 @@ func _catch_with_real_throws() -> bool:
 		return false
 	_checkpoint("satchel drained to %d orb(s) so the empty case is on the real path" % drained)
 	var launches := 0
+	var blocked_lines := 0
 	var restocked := false
 	var refusals := 0
 	var re_engages := 0
@@ -443,7 +456,7 @@ func _catch_with_real_throws() -> bool:
 				launches, _why_the_aim_would_not_open(),
 			])
 			return false
-		if not await _aim_camera_at(_wild, 360):
+		if not await _aim_at_wild(360):
 			_fail("right-stick aim could not line up the real throw reticle")
 			return false
 		# Do not throw into a rock.
@@ -458,10 +471,28 @@ func _catch_with_real_throws() -> bool:
 		# orb is committed, so the player-true move is available: see that the
 		# shot is blocked, step somewhere it is not, look again. Throwing anyway
 		# spends an orb into a rock, which no player does twice.
+		# A blocked line is not a failed run.
+		#
+		# GATEB-COORD: this was the dominant flake in Gate B's continuous
+		# evidence -- two thirty-minute runs died here, on the opening's first
+		# and second launch, because a search for a clear shot ran out while
+		# the Bramblebun wandered. A player who cannot see the thing does not
+		# put the controller down; they walk somewhere else and look again.
+		# So does this. The loop's own launch bound is what ends the beat, and
+		# `_fight_until_catchable()` at the top keeps the creature catchable
+		# while it goes on.
 		if not await _step_until_the_shot_is_clear():
-			_fail("could not find a spot with a clear line to the Bramblebun "
-				+ "after launch %d" % launches)
-			return false
+			blocked_lines += 1
+			print("no clear line after launch %d (%d so far); moving and looking again"
+				% [launches, blocked_lines])
+			if blocked_lines > BLOCKED_LINES_ALLOWED:
+				_fail(("could not find a spot with a clear line to the Bramblebun %d times "
+					+ "running after launch %d; the shot is not being blocked by one rock")
+					% [blocked_lines, launches])
+				return false
+			await _wander_for_a_new_angle()
+			continue
+		blocked_lines = 0
 		# Re-aim AFTER moving, and this is not optional.
 		#
 		# `_step_until_the_shot_is_clear()` strafes to get a rock out of the
@@ -471,7 +502,7 @@ func _catch_with_real_throws() -> bool:
 		# this did: strike rates fell from a measured 22% to 1-2 strikes per
 		# 30-40 launches once the step-aside landed, which is the signature of
 		# aiming and then walking away from the aim.
-		if not await _aim_camera_at(_wild, 360):
+		if not await _aim_at_wild(360):
 			_fail("right-stick aim could not line up after stepping clear on "
 				+ "launch %d" % launches)
 			return false
@@ -516,12 +547,18 @@ func _catch_with_real_throws() -> bool:
 				launches -= 1
 				refusals += 1
 				if refusals > 8:
-					_fail("the throw was refused %d times; the trainer never got "
-						+ "within the orb's range of the Bramblebun" % refusals)
+					# Parenthesised. `%` binds tighter than `+`, so this used to
+					# format the SECOND fragment -- which has no placeholder --
+					# and the run's own failure line came out containing a
+					# literal "%d" beside a "not all arguments converted" engine
+					# error. The message a failing run prints is the evidence;
+					# it does not get to be broken too.
+					_fail(("the throw was refused %d times; the trainer never got "
+						+ "within the orb's range of the Bramblebun") % refusals)
 					return false
-				var toward := _wild.global_position
-				await _drive_body_toward(_player, toward, 220)
-				_stop_left_stick()
+				# Chase the LIVE body, not where it was when the throw was
+				# refused. See `_close_to_wild()`.
+				await _close_to_wild(AIM_THROWABLE_METRES, 900)
 				for _i in 6:
 					await _tree.physics_frame
 				continue
@@ -648,17 +685,123 @@ func _aim_camera_at(target: Node3D, budget: int) -> bool:
 		if absf(yaw_error) < deg_to_rad(1.0) and absf(pitch_error) < deg_to_rad(1.0):
 			_stop_right_stick()
 			return true
-		# The target keeps circling while aim owns the trainer. Full deflection is
-		# intentional here: proportional easing fell behind the live target even
-		# though the stick was correctly mapped, creating a harness-only miss.
-		var yaw_strength := 1.0 if absf(yaw_error) >= deg_to_rad(1.0) else 0.0
-		var pitch_strength := 1.0 if absf(pitch_error) >= deg_to_rad(1.0) else 0.0
-		_send_axis(JOY_AXIS_RIGHT_X, signf(yaw_error) * yaw_strength)
-		_send_axis(JOY_AXIS_RIGHT_Y, -signf(pitch_error) * pitch_strength)
+		# The target keeps circling while aim owns the trainer, so the stick goes
+		# to FULL deflection while there is real angle to cover -- proportional
+		# easing across the whole range fell behind a live target and was
+		# correctly removed. It comes back only inside the last few degrees:
+		# `catching.json`'s aim profile runs the rig at `sensitivity_scale` 0.55
+		# with a `response_exponent` of 2.0, which still turns the camera further
+		# in one physics frame than the 1-degree window this loop is trying to
+		# stop inside. Bang-bang cannot settle in a window narrower than its own
+		# step; it limit-cycles across it, which is a run that walks its error
+		# down to about two degrees and then never returns true.
+		_send_axis(JOY_AXIS_RIGHT_X, signf(yaw_error) * _aim_strength(yaw_error))
+		_send_axis(JOY_AXIS_RIGHT_Y, -signf(pitch_error) * _aim_strength(pitch_error))
 		await _tree.physics_frame
 	_stop_right_stick()
-	print("aim convergence stopped %.2f° off the body" % last_error)
+	var camera_pitch := rad_to_deg(camera.global_rotation.x)
+	print(("aim convergence stopped %.2f° off the body "
+		+ "(camera pitch %.1f°, target %.2fm away and %.2fm below the lens)") % [
+		last_error, camera_pitch,
+		_player.global_position.distance_to(target.global_position),
+		camera.global_position.y - (target.call("centre") as Vector3).y])
 	return false
+
+
+## Stick deflection for an angular error: all of it until the last few degrees,
+## then proportional so the loop can actually stop. Floored so a small error
+## still moves the camera at all against the rig's own response curve.
+func _aim_strength(error: float) -> float:
+	var degrees := absf(rad_to_deg(error))
+	if degrees < 1.0:
+		return 0.0
+	if degrees >= AIM_FINE_DEGREES:
+		return 1.0
+	return maxf(AIM_FINE_FLOOR, degrees / AIM_FINE_DEGREES)
+
+
+## Aim at the wild creature, and MOVE if standing still cannot line the shot up.
+##
+## `_aim_camera_at()` alone was the whole of this, and it fails in two ways that
+## are not the harness driving the stick wrongly, both measured on this branch:
+##
+## - **Too close to look down at.** `catching.json`'s aim profile clamps the aim
+##   camera to `pitch_min_deg: -35` and puts the lens `height: 1.78` above the
+##   trainer, so a Bramblebun that has circled inside about two metres is more
+##   than 35 degrees below the camera and cannot be centred however long the
+##   stick is held. One run reported "aim convergence stopped 37.06° off the
+##   body", which is that clamp and nothing else.
+## - **Too far to throw at.** `throw_aim.gd` refuses a locked-on throw past the
+##   orb's own reach (~20.6m). A creature that has drifted to 25-30m during the
+##   fight leaves the loop centring a target it could never have thrown at, and
+##   a run then spends its whole refusal budget standing there.
+##
+## A player answers both by walking -- back for the first, forward for the
+## second -- so that is what this does, tracking the LIVE body rather than a
+## captured coordinate. It also defers to the game's own pre-launch verdict:
+## `launch_assist_diagnostics().eligible` is what actually decides whether the
+## throw gets its assist, and when the game says the reticle is on the creature
+## this loop's tighter one-degree window has no standing to disagree.
+func _aim_at_wild(budget: int) -> bool:
+	if await _aim_camera_at(_wild, budget):
+		return true
+	if _shot_is_eligible():
+		return true
+	for _attempt in AIM_BACKOFF_TRIES:
+		if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
+			return false
+		var gap := _player.global_position.distance_to(_wild.global_position)
+		if gap > AIM_THROWABLE_METRES:
+			print("aim: %.1fm is past the orb's reach; closing in" % gap)
+			await _close_to_wild(AIM_THROWABLE_METRES, 900)
+		elif gap < AIM_TOO_CLOSE_METRES:
+			var away := _player.global_position - _wild.global_position
+			away.y = 0.0
+			if away.length() < 0.05:
+				away = Vector3.FORWARD
+			print("aim: %.1fm is too steep to centre; backing off %.1fm" % [
+				gap, AIM_BACKOFF_METRES])
+			await _drive_body_toward(_player,
+				_player.global_position + away.normalized() * AIM_BACKOFF_METRES, 30)
+			_stop_left_stick()
+			for _i in 6:
+				await _tree.physics_frame
+		if await _aim_camera_at(_wild, budget):
+			return true
+		if _shot_is_eligible():
+			return true
+	return false
+
+
+## Walk at the live creature until it is inside `within` metres.
+##
+## Re-aimed EVERY frame (`_drive_body_toward` with a one-frame hold), which the
+## static 220-frame chase it replaces was not: that one pushed the stick at
+## where the Bramblebun had been and arrived at empty grass, which is how a run
+## sat at 21-30m through eight refusals while "closing the distance" every time.
+func _close_to_wild(within: float, budget: int) -> bool:
+	for _i in budget:
+		if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
+			_stop_left_stick()
+			return false
+		if _player.global_position.distance_to(_wild.global_position) <= within:
+			_stop_left_stick()
+			for _j in 5:
+				await _tree.physics_frame
+			return true
+		await _drive_body_toward(_player, _wild.global_position, 1)
+	_stop_left_stick()
+	return false
+
+
+## The game's own answer to "would this throw get its launch assist right now".
+func _shot_is_eligible() -> bool:
+	if _combat == null or not bool(_combat.call("is_fighting")):
+		return false
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null or not throw.has_method("launch_assist_diagnostics"):
+		return false
+	return bool((throw.call("launch_assist_diagnostics") as Dictionary).get("eligible", false))
 
 
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
@@ -916,28 +1059,95 @@ func _hold_the_fight_where_it_was() -> void:
 ## Reads the game's own pre-launch verdict rather than guessing at geometry:
 ## `eligible` is exactly the condition that decides whether the throw gets its
 ## launch assist, and `first_hit` names whatever is in the way when it does not.
+## Consecutive launches that may find no clear line before the beat is called
+## broken. Generous on purpose: one blocked line is ordinary meadow, and the
+## creature moves between every attempt.
+const BLOCKED_LINES_ALLOWED := 8
+
+
+## Walk somewhere genuinely different and look again. Not a strafe -- the
+## strafing inside `_step_until_the_shot_is_clear()` has already been tried and
+## exhausted by the time this runs.
+func _wander_for_a_new_angle() -> void:
+	if not is_instance_valid(_wild):
+		return
+	var to := _wild.global_position - _player.global_position
+	to.y = 0.0
+	if to.length() < 0.05:
+		to = Vector3.FORWARD
+	# A quarter turn around the creature, at a comfortable throwing radius.
+	var around := to.normalized().rotated(Vector3.UP, PI * 0.5) * THROW_RANGE_WANTED
+	await _drive_body_toward(_player, _wild.global_position + around, 90)
+	_stop_left_stick()
+	for _i in 10:
+		await _tree.physics_frame
+	await _aim_camera_at(_wild, 240)
+
+
+## How close the trainer wants to be before hunting sideways for a clear line.
+##
+## Derived from the two bounds this file already has rather than picked: inside
+## `AIM_TOO_CLOSE_METRES` the camera cannot centre the reticle at all ("too
+## steep to centre"), and past `AIM_THROWABLE_METRES` the orb will not reach.
+## Halfway between is the band where both are comfortably true. GATEB-COORD
+## first set this to 6.0 and traded one flake for another -- the creature
+## wanders, six metres becomes four, and the run failed with "right-stick aim
+## could not line up the real throw reticle" instead.
+const THROW_RANGE_WANTED := (AIM_TOO_CLOSE_METRES + AIM_THROWABLE_METRES) * 0.5
+
+
 func _step_until_the_shot_is_clear() -> bool:
 	var throw: Node = _combat.call("throw_aim")
 	if throw == null or not throw.has_method("launch_assist_diagnostics"):
 		return true
-	for attempt in 12:
+	# GATEB-COORD: twenty-four, not twelve, and the sidestep widens as it goes.
+	#
+	# The wild creature is WANDERING while this looks for a line, so the spot
+	# that clears the shot moves too; a fixed twelve identical 3m strafes ran
+	# out mid-search often enough to fail whole thirty-minute runs on the
+	# opening's second launch. A player keeps circling until they can see the
+	# thing, and each step out is a little wider than the last.
+	for attempt in 24:
 		var report: Dictionary = throw.call("launch_assist_diagnostics")
 		if bool(report.get("eligible", false)):
 			return true
 		var blocked_by := str(report.get("first_hit", "unavailable"))
 		var reason := str(report.get("reason", "unavailable"))
-		# Strafe rather than close in: the reticle problems here are things
-		# STANDING BETWEEN the trainer and the creature, and sideways is what
-		# clears a line that forward does not.
+		# Nothing is in the way when the thing the ray hits IS the creature: the
+		# reticle is simply not on it yet, and the answer to that is to aim
+		# again, not to walk. Strafing here made it worse -- a run logged eight
+		# consecutive "shot blocked by Wild_bramblebun_0_2 (reticle_outside_body);
+		# stepping aside" while the Bramblebun drifted from 21m to 36m, because
+		# each sidestep is 3m of travel spent not closing.
+		if is_instance_valid(_wild) and blocked_by.begins_with(str(_wild.name)):
+			if await _aim_at_wild(240):
+				continue
+			print("re-aim on the creature itself failed (%s); stepping aside" % reason)
+		# CLOSE FIRST, strafe second.
+		#
+		# GATEB-COORD: sideways is what clears a line past something standing
+		# in it, and that reasoning is right -- but it was being applied from
+		# twenty and thirty metres out, where the meadow puts a boulder or a
+		# tree in almost every line and one strafe simply swaps which one. The
+		# shortest line has the least in it, so distance is closed until the
+		# creature is within `THROW_RANGE_WANTED` and only then is the search
+		# sideways. This flake cost two whole thirty-minute continuous runs on
+		# the opening's second launch.
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		var sideways := to.cross(Vector3.UP).normalized()
-		if attempt % 2 == 1:
-			sideways = -sideways
-		var step := _player.global_position + sideways * 3.0
-		if to.length() > 7.0:
-			step += to.normalized() * 2.5
-		print("shot blocked by %s (%s); stepping aside" % [blocked_by, reason])
+		var step := Vector3.ZERO
+		if to.length() > THROW_RANGE_WANTED:
+			step = _player.global_position \
+				+ to.normalized() * minf(to.length() - THROW_RANGE_WANTED + 1.0, 8.0)
+			print("shot blocked by %s (%s) from %.1fm; closing in" % [
+				blocked_by, reason, to.length()])
+		else:
+			var sideways := to.cross(Vector3.UP).normalized()
+			if attempt % 2 == 1:
+				sideways = -sideways
+			step = _player.global_position + sideways * (2.0 + 0.5 * float(attempt / 2))
+			print("shot blocked by %s (%s) from %.1fm; stepping aside" % [
+				blocked_by, reason, to.length()])
 		await _drive_body_toward(_player, step, 26)
 		_stop_left_stick()
 		for _i in 6:
