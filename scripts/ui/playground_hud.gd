@@ -489,6 +489,10 @@ var _legend_last_party_revision := -999
 ## was last drawn. Part of the redraw key: without it a stale Call Out entry
 ## would survive until the party or the input device changed.
 var _legend_last_prompt_owned_recall := false
+## Whether the active creature was standing in the world when the legend was
+## last drawn. Part of the redraw key for the same reason: the recall entry
+## reads "Put Away" or "Call Out" off exactly this.
+var _legend_last_creature_was_out := false
 var _legend_was_drawn := false
 
 ## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
@@ -2056,17 +2060,26 @@ func _update_exploration_legend() -> void:
 	# below claims RB is "the one world verb with no other on-screen home",
 	# and that is exactly false in the moment the contextual prompt is
 	# naming it. The specific line wins; the legend is the fallback.
+	# BOTH phrasings of the contextual line, not just "Call out". The offer is
+	# "Put <name> away" whenever the creature is actually standing in the
+	# world, and matching only the stowed wording left the legend drawing its
+	# own "Call Out" entry underneath a prompt that said the opposite -- the
+	# same button, two labels ten pixels apart, saying contradictory things.
 	var prompt_owns_recall := _prompt_label != null \
-			and _prompt_label.text.contains("Call out")
+			and (_prompt_label.text.contains("Call out")
+				or _prompt_label.text.contains(" away"))
+	var creature_is_out := _active_creature_is_out(_party != null and int(_party.call("size")) > 0)
 	if _legend_was_drawn and gamepad == _legend_last_gamepad \
 			and revision == _legend_last_party_revision \
-			and prompt_owns_recall == _legend_last_prompt_owned_recall:
+			and prompt_owns_recall == _legend_last_prompt_owned_recall \
+			and creature_is_out == _legend_last_creature_was_out:
 		return
 	_legend_was_drawn = true
 	_legend_last_gamepad = gamepad
 	_legend_last_party_revision = revision
 	_legend_last_prompt_owned_recall = prompt_owns_recall
-	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall)
+	_legend_last_creature_was_out = creature_is_out
+	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall, creature_is_out)
 
 
 func _exploration_legend_should_show() -> bool:
@@ -2080,7 +2093,8 @@ func _exploration_legend_should_show() -> bool:
 	return INPUT_OWNER.current(get_tree()) == null
 
 
-func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
+func _exploration_legend_text(prompt_owns_recall: bool = false,
+		creature_is_out: bool = false) -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
 	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
@@ -2097,8 +2111,15 @@ func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
 	# Stand down while the contextual prompt directly above is already naming
 	# this button, with the creature's actual name on it. Two labels for one
 	# button, ten pixels apart, is worse than one.
+	# OWNER DIRECTIVE 2026-08-23 §3 lands here. With the build hammer out the
+	# director stops publishing its creature line so Build can own Interact,
+	# and this legend -- sitting beside Change Creature, which is the
+	# party-cycle button -- is where the verb goes for the duration. It has to
+	# carry the right word to be worth having: "Call Out" over a creature that
+	# is already standing there names the wrong half of a toggle.
 	if not prompt_owns_recall:
-		entries.append(_legend_entry("creature_recall", "Call Out", normal))
+		entries.append(_legend_entry("creature_recall",
+			"Put Away" if creature_is_out else "Call Out", normal))
 	entries.append(_legend_entry("party_cycle", "Change Creature", change_tint))
 	return "     ".join(entries)
 
