@@ -947,6 +947,12 @@ func _build_sigil_gate() -> void:
 	gate.set("locked_conversation", "hall_approach_sealed")
 	gate.set("unlocked_conversation", "hall_approach_opened")
 	gate.set("prompt_text", "Try the Hall gate")
+	# SIGIL-SEAL. The leaf alone is 4.06m against a 14.1m causeway, so a locked
+	# gate could be walked round at +/-3m off centre -- `smoke_traversal.gd`
+	# walks exactly that. 8.5m is the causeway's own measured half-width (7.04m)
+	# plus enough to bury the wing ends in the gorge rims instead of stopping
+	# flush with walkable ground.
+	gate.set("seal_half_width", 8.5)
 	add_child(gate)
 	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
 

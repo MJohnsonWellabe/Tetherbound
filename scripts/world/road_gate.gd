@@ -39,6 +39,21 @@ var flag_id := FLAG_ID
 var locked_conversation := LOCKED_CONVERSATION
 var unlocked_conversation := UNLOCKED_CONVERSATION
 var prompt_text := "Try the gate"
+## SIGIL-SEAL. How far either side of centre this gate must actually seal, in
+## metres. 0.0 (the default, and the village road gate's value) means "the leaf
+## is the whole barrier" -- correct there, because that gate stands in a fence
+## line that already runs off both its ends.
+##
+## The Meadows Hall approach has no such fence line. It stands alone on the
+## causeway between `terrain_playground.json`'s two `sigil_gate_gorge_*` carves,
+## and the leaf prefab is 4.06m wide against a causeway measured at 14.1m -- so
+## the locked gate had 10m of open grass beside it and a player simply walked
+## round. `smoke_traversal.gd` walks exactly that: at +3.0m and +6.0m off centre
+## it got 22.9m past a LOCKED gate.
+##
+## Set above the causeway half-width so the wings bury their ends in the gorge
+## rims rather than stopping flush with a walkable edge.
+var seal_half_width := 0.0
 
 var _mesh: Node3D = null
 var _shape: CollisionShape3D = null
@@ -153,6 +168,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	body.position = Vector3(0.0, aabb.size.y * 0.5, 0.0)
 	add_child(body)
 
+	_build_wings(world, prefabs, at, aabb)
+
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3(0.0, 1.2, 0.0)
@@ -173,6 +190,54 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression != null and _gate.is_open(progression):
 		_unlock()
+
+
+## SIGIL-SEAL. Fence the causeway either side of the leaf, out to
+## `seal_half_width`, using the SAME prefab the leaf is made from -- so the
+## barrier reads as one built thing rather than as a gate with invisible walls
+## bolted to it. Nothing here is a child of `_mesh`: these are the wall, not
+## the gate, and they must NOT swing away when the leaf does. That is how a
+## real gate works, and `smoke_traversal.gd`'s unlocked walk goes through the
+## centre, which the opened leaf clears.
+##
+## Each panel takes its own ground height rather than the gate's: the causeway
+## is not flat, and a wing pinned to the gate's y left a gap under its
+## downhill end big enough to walk through -- which is the same defect one
+## step smaller.
+func _build_wings(world: Node3D, prefabs: RefCounted, at: Vector2, aabb: AABB) -> void:
+	var panel_width: float = aabb.size.x
+	if seal_half_width <= 0.0 or panel_width <= 0.0:
+		return
+	var yaw := rotation.y
+	var half_leaf := panel_width * 0.5
+	var per_side: int = int(ceil((seal_half_width - half_leaf) / panel_width))
+	for side: int in [-1, 1]:
+		for i in range(per_side):
+			var offset: float = float(side) * (half_leaf + panel_width * (float(i) + 0.5))
+			var world_x: float = at.x + cos(yaw) * offset
+			var world_z: float = at.y - sin(yaw) * offset
+			var ground: float = float(world.call("ground_height_at", world_x, world_z))
+			if is_nan(ground):
+				# Off the causeway and over the gorge -- the fall does the
+				# sealing there, and a panel with no ground under it would
+				# hang in the air looking like a mistake.
+				continue
+			var wing: Node3D = prefabs.call("instantiate", LEAF_PREFAB)
+			if wing == null:
+				continue
+			wing.name = "GateWing%d_%d" % [side, i]
+			wing.position = Vector3(offset, ground - (position.y), 0.0)
+			add_child(wing)
+			var wing_body := StaticBody3D.new()
+			wing_body.name = "GateWingCollision%d_%d" % [side, i]
+			var wing_shape := CollisionShape3D.new()
+			var wing_box := BoxShape3D.new()
+			wing_box.size = aabb.size
+			wing_shape.shape = wing_box
+			wing_body.add_child(wing_shape)
+			wing_body.position = Vector3(
+				offset, ground - (position.y) + aabb.size.y * 0.5, 0.0)
+			add_child(wing_body)
 
 
 func is_open() -> bool:

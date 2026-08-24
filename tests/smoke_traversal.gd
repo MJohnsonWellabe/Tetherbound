@@ -1063,12 +1063,56 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 		along = -along  # standardise "along" toward +z (the Hall side) so the prints below read consistently
 
 	var leaf_half: float = box.size.x * 0.5
+	# SIGIL-SEAL. The BARRIER is not only the leaf. `road_gate.gd` now fences
+	# the causeway either side of the leaf out to its `seal_half_width`, and
+	# those wings are separate StaticBody3D children (deliberately not children
+	# of the swinging panel -- they are the wall, not the gate). Measuring the
+	# leaf alone and calling the rest "open ground" was the proxy that made this
+	# check fail against a causeway that is, in fact, sealed: the walk-past
+	# probes below -- the real property -- all stop at the gate.
+	#
+	# So measure every collider the gate owns, projected onto the causeway's own
+	# across-axis, and treat the widest CONTIGUOUS span through centre as the
+	# barrier. Contiguous matters: three panels with a two-metre hole between
+	# them are not a wall, and summing their widths would say they were.
+	var spans: Array = []
+	for child in gate.get_children():
+		if not (child is StaticBody3D):
+			continue
+		for sub in (child as StaticBody3D).get_children():
+			var cs := sub as CollisionShape3D
+			if cs == null or cs.disabled:
+				continue
+			var cb := cs.shape as BoxShape3D
+			if cb == null:
+				continue
+			var centre_x: float = (child as StaticBody3D).position.x + cs.position.x
+			spans.append(Vector2(centre_x - cb.size.x * 0.5, centre_x + cb.size.x * 0.5))
+	# Grow outward from centre through overlapping spans. Anything not reachable
+	# without crossing a hole is not part of this barrier.
+	var sealed_min := 0.0
+	var sealed_max := 0.0
+	for span: Vector2 in spans:
+		if span.x <= 0.0 and span.y >= 0.0:
+			sealed_min = span.x
+			sealed_max = span.y
+			break
+	var grew := true
+	while grew:
+		grew = false
+		for span: Vector2 in spans:
+			if span.x <= sealed_max + 0.1 and span.y > sealed_max:
+				sealed_max = span.y
+				grew = true
+			if span.y >= sealed_min - 0.1 and span.x < sealed_min:
+				sealed_min = span.x
+				grew = true
 	var gap := _sigil_causeway_gap(gate_xz, across)
 	if gap == Vector2.ZERO:
 		failures.append("could not read the Sigil Gate's flanking gorges from terrain_playground.json; the causeway width is unknown")
 		return
-	print("  Sigil Gate: leaf collider half-width %.2fm; open causeway runs %.2fm..%.2fm either side of centre (%.1fm total)" % [
-		leaf_half, gap.x, gap.y, gap.y - gap.x])
+	print("  Sigil Gate: leaf collider half-width %.2fm; whole barrier seals %.2fm..%.2fm; open causeway runs %.2fm..%.2fm either side of centre (%.1fm total)" % [
+		leaf_half, sealed_min, sealed_max, gap.x, gap.y, gap.y - gap.x])
 	# A FAILURE, not a note. This was printed as an observation while the gap
 	# was 13m and the leaf 3.6m -- which is precisely the defect, so observing
 	# it was not enough. `south_bridge.gd`'s own history states the rule: "a
@@ -1080,11 +1124,11 @@ func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[Str
 	# the carves were narrowed to close it -- the test then failed against a
 	# causeway that no longer existed, which is a worse failure than the one it
 	# was written to catch, because it looks like the fix did not work.
-	if gap.x < -leaf_half - 0.1 or gap.y > leaf_half + 0.1:
+	if gap.x < sealed_min - 0.1 or gap.y > sealed_max + 0.1:
 		failures.append(
-			"the Sigil Gate leaf covers %.1fm of a %.1fm causeway -- %.1fm of open ground beside it, which a player walks around" % [
-				leaf_half * 2.0, gap.y - gap.x,
-				maxf(0.0, -leaf_half - gap.x) + maxf(0.0, gap.y - leaf_half)])
+			"the Sigil Gate barrier covers %.1fm of a %.1fm causeway -- %.1fm of open ground beside it, which a player walks around" % [
+				sealed_max - sealed_min, gap.y - gap.x,
+				maxf(0.0, sealed_min - gap.x) + maxf(0.0, gap.y - sealed_max)])
 
 	var offsets: Array[float] = [
 		0.0,

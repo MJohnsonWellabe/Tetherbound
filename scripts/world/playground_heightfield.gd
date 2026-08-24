@@ -23,14 +23,6 @@ var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
 var _path_dominant := FastNoiseLite.new()
-## GROUND-REBUILD round 2 / C2. Metres of edge wobble for `path_factor`'s
-## fade band, read once here from `macro.path_wobble_metres` rather than
-## looked up per pixel: this function runs once per terrain texel AND per
-## scatter candidate, so a Dictionary/config lookup inside it would be a real
-## per-call cost repeated over the whole bake. Defaults to `shoulder * 0.5`
-## (the old hard-coded scale) when the config key is absent, so an
-## unconfigured route is unchanged.
-var _path_wobble_metres := -1.0
 var _outcrop := FastNoiseLite.new()
 var _outcrop_detail := FastNoiseLite.new()
 var _ridge := FastNoiseLite.new()
@@ -102,9 +94,6 @@ var _crossing_carves: Array = []
 ## to answer the same question.
 var _road_polylines_ready := false
 var _road_polylines: Array = []
-## STRONGHOLD-R2: the same roads with their own widths — see `road_bands()`.
-var _road_bands_ready := false
-var _road_bands: Array = []
 
 var _outlet_ready := false
 var _outlet_sill: Dictionary = {}
@@ -149,25 +138,8 @@ func _init(config: Dictionary = {}) -> void:
 	_path_edge.seed = seed_value + 2
 	_path_edge.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	_path_edge.fractal_type = FastNoiseLite.FRACTAL_FBM
-	# GROUND-REBUILD round 2 / C2: 0.05 -> 0.07. Threshold-space jitter
-	# (macro.path_edge_jitter) mathematically cannot move a control-map
-	# boundary a full 2m texel -- it would need +-0.7 on a 0-1 field, well
-	# past its own severs-the-trail ceiling -- so decorrelating the 2m
-	# staircase needs the edge to wander in METRES instead (see
-	# `_path_wobble_metres` below). 0.07 gives a ~14m wavelength, which is 7
-	# samples per wavelength at the 2m control pitch the bake paints at --
-	# safely above the aliasing floor that produced the staircase in the
-	# first place.
-	_path_edge.frequency = 0.07
+	_path_edge.frequency = 0.05
 	_path_edge.fractal_octaves = 1
-
-	# GROUND-REBUILD round 2 / C2. `path_factor` is called once per terrain
-	# texel AND per scatter candidate, so this reads `macro.path_wobble_metres`
-	# once here rather than doing a Dictionary lookup per call. -1.0 is a
-	# sentinel meaning "not configured" -- `shoulder` varies per road band, so
-	# the fallback (`shoulder * 0.5`, the old hard-coded scale) can only be
-	# resolved per-call inside `path_factor` itself, not here.
-	_path_wobble_metres = float(_config.get("macro", {}).get("path_wobble_metres", -1.0))
 
 	# EV4-textures: `_path_control` (build_playground_terrain.gd) has to
 	# collapse the slope-driven grass/soil/rock blend to a single "dominant"
@@ -1089,45 +1061,21 @@ func stream_factor(x: float, z: float) -> float:
 ## `half`/`half+shoulder` together, so the band KEEPS its width and only its
 ## position wobbles; a route waypoint (`nearest == 0`) stays fully on the path
 ## regardless (bible sec8: "feathered irregular edges").
-## STRONGHOLD-R2: the width is now PER ROAD, not one number for every road on
-## the map. `paths.width`/`paths.shoulder` remain the default and every
-## existing route still gets exactly them (a route that declares nothing is
-## bit-identical to what this returned before), but an entry may carry its own
-## `width`/`shoulder` and the strongest weight across all bands wins.
-##
-## The reason is the stronghold approach. A 3.0m track is right for the four
-## dirt paths out of a village square and wrong for the road an occupying
-## army moves along: at 3.0m the approach road read, in the wayfinding frames
-## this exists to fix, as a faint discolouration in the grass rather than as a
-## road — which is the same "no path leads there" reading with an extra step.
-## Widening `paths.width` itself would have widened Grandpa's garden path too.
 func path_factor(x: float, z: float) -> float:
-	var bands: Array = road_bands()
-	if bands.is_empty():
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = road_polylines()
+	if routes.is_empty():
 		return 0.0
+	var half := float(paths.get("width", 3.0)) * 0.5
+	var shoulder := float(paths.get("shoulder", 1.5))
 	var spot := Vector2(x, z)
-	var best := 0.0
-	for entry: Variant in bands:
-		var band: Dictionary = entry
-		var line: PackedVector2Array = band["line"]
-		var nearest := INF
+	var nearest := INF
+	for line: PackedVector2Array in routes:
 		for i in line.size() - 1:
 			nearest = minf(nearest, _segment_distance(spot, line[i], line[i + 1]))
-		var shoulder: float = band["shoulder"]
-		# C2: wobble amplitude in METRES, not threshold units -- a threshold-
-		# space jitter (macro.path_edge_jitter, applied at the control-map
-		# paint step) cannot move this boundary a full 2m texel, since that
-		# would need +-0.7 on a 0-1 field. Only a metre-space wobble like this
-		# one can actually decorrelate the 2m staircase. `_path_wobble_metres`
-		# is read once in `_init`, not here, because this runs once per
-		# terrain texel and per scatter candidate.
-		var wobble_metres: float = _path_wobble_metres if _path_wobble_metres >= 0.0 else shoulder * 0.5
-		var wobble := _path_edge.get_noise_2d(x, z) * wobble_metres
-		var edge_start: float = maxf(0.0, float(band["half"]) + wobble)
-		best = maxf(best, 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest))
-		if best >= 1.0:
-			return 1.0
-	return best
+	var wobble := _path_edge.get_noise_2d(x, z) * shoulder * 0.5
+	var edge_start := maxf(0.0, half + wobble)
+	return 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest)
 
 
 ## How much a world point belongs to a building's worked-soil apron: 1.0
@@ -1329,48 +1277,19 @@ func road_polylines() -> Array:
 		return _road_polylines
 	_road_polylines_ready = true
 	var out: Array = []
-	for entry: Variant in road_bands():
-		out.append((entry as Dictionary)["line"])
-	_road_polylines = out
-	return out
-
-
-## STRONGHOLD-R2. The same list `road_polylines()` returns, plus each road's
-## own worn half-width and shoulder — `{line, half, shoulder}` per entry.
-##
-## `road_polylines()` is what every OTHER consumer wants (the scatter's verge,
-## the stone anchors, `nearest_point_on_paths`): they ask "where are the roads",
-## not "how wide is this one". `path_factor()` is the one caller that has to
-## know, because it is what paints the ground, and a single global width made
-## the stronghold's own approach road the same 3.0m track as the path to
-## Grandpa's door. Defaults come from `paths.width`/`paths.shoulder`, so any
-## entry that declares neither behaves exactly as it did before this existed.
-func road_bands() -> Array:
-	if _road_bands_ready:
-		return _road_bands
-	_road_bands_ready = true
-	var out: Array = []
 	for entry: Variant in _config.get("paths", {}).get("routes", []):
 		if entry is Dictionary:
-			_append_line(out, (entry as Dictionary).get("points", []), entry as Dictionary)
-	# STRONGHOLD-R2: `paths.approaches` — a road to a landmark, joining here for
-	# the same one-arm-per-`routes`-entry reason the spokes do, and for one more
-	# that is specific to this road: OF13 moved the stronghold out of sight of
-	# the village square so it is not known from the start, and a junction arm
-	# in the square naming it would give that away before the player leaves.
-	for entry: Variant in _config.get("paths", {}).get("approaches", []):
-		if entry is Dictionary:
-			_append_line(out, (entry as Dictionary).get("points", []), entry as Dictionary)
+			_append_line(out, (entry as Dictionary).get("points", []))
 	for entry: Variant in _config.get("spokes", {}).get("routes", []):
 		if entry is Dictionary and bool((entry as Dictionary).get("built", false)):
-			_append_line(out, (entry as Dictionary).get("road", []), entry as Dictionary)
+			_append_line(out, (entry as Dictionary).get("road", []))
 	# SC14: an interior crossing's road is a road in exactly the same sense —
 	# painted soil, no scatter on it, path stones down it. It joins here rather
 	# than in `paths.routes` for the reason the spokes do: one signpost arm per
 	# route entry, and the junction post by the well has room for four.
 	for entry: Variant in _config.get("crossings", []):
 		if entry is Dictionary:
-			_append_line(out, (entry as Dictionary).get("road", []), entry as Dictionary)
+			_append_line(out, (entry as Dictionary).get("road", []))
 	# OW5C, section 11: the 12km corridor spine and its ten regional loops
 	# join here for the identical reason the spokes and crossings do -- one
 	# signpost arm per `paths.routes` entry, four-arm post -- never as
@@ -1383,29 +1302,24 @@ func road_bands() -> Array:
 	var trail: Dictionary = _config.get("trail", {})
 	for entry: Variant in trail.get("bands", []):
 		if entry is Dictionary:
-			_append_line(out, (entry as Dictionary).get("points", []), entry as Dictionary)
+			_append_line(out, (entry as Dictionary).get("points", []))
 	for entry: Variant in trail.get("loops", []):
 		if entry is Dictionary:
-			_append_line(out, (entry as Dictionary).get("points", []), entry as Dictionary)
+			_append_line(out, (entry as Dictionary).get("points", []))
 	for entry: Variant in trail.get("shortcuts", []):
 		if entry is Dictionary and str((entry as Dictionary).get("type", "")) == "road":
-			_append_line(out, (entry as Dictionary).get("points", []), entry as Dictionary)
-	_road_bands = out
+			_append_line(out, (entry as Dictionary).get("points", []))
+	_road_polylines = out
 	return out
 
 
-func _append_line(out: Array, points: Array, spec: Dictionary = {}) -> void:
+func _append_line(out: Array, points: Array) -> void:
 	if points.size() < 2:
 		return
 	var line := PackedVector2Array()
 	for p: Variant in points:
 		line.append(Vector2(float((p as Array)[0]), float((p as Array)[1])))
-	var paths: Dictionary = _config.get("paths", {})
-	out.append({
-		"line": line,
-		"half": float(spec.get("width", paths.get("width", 3.0))) * 0.5,
-		"shoulder": float(spec.get("shoulder", paths.get("shoulder", 1.5))),
-	})
+	out.append(line)
 
 
 ## Height before the spawn pad flattening, used as the pad's own target so the
