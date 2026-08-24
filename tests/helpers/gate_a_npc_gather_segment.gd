@@ -605,7 +605,7 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			# already fixed the identical thing this way after reporting "could
 			# not engage" from 3.3m inside a 6.0m range.
 			var aside := to.cross(Vector3.UP).normalized() * 1.4
-			if _i % 2 == 1:
+			if walked % 2 == 1:
 				aside = -aside
 			# `push_once`, not the navigator's `step`: this is a deliberate 1.4m
 			# shuffle to change the arbiter's mind, not a leg of travel, and
