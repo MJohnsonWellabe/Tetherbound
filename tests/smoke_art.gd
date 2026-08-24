@@ -626,8 +626,30 @@ func _the_team_tether_ranks_read_as_distinct() -> void:
 				_fail("'%s' built with no body material to check its tint against" % rank)
 			else:
 				var albedo: Color = (material as BaseMaterial3D).albedo_color
-				if albedo.is_equal_approx(Color(1, 1, 1)):
-					_fail("'%s' rendered with an untinted default body material; its rank palette did not apply" % rank)
+				# Assert the palette was APPLIED, not merely that it is non-white.
+				#
+				# This used to read `albedo == Color(1,1,1) -> the palette did not
+				# apply`, which was a proxy: an unapplied palette leaves the
+				# default white material, so white meant failure. That proxy broke
+				# the moment a rank legitimately declared white. VIS-CAST rebuilt
+				# the rank ladder as a readable value ramp -- grunt #8a8a8a,
+				# officer #c2c2c2, captain #ffffff -- because the old bottom rung
+				# (#4a5049, ~0.30 luminance) was crushing Team Tether NPCs to
+				# black on screen. Captain's top rung IS white, so the proxy
+				# reported "palette did not apply" for a palette that applied
+				# perfectly.
+				#
+				# Comparing against the rank's own declared colour tests the thing
+				# that actually matters and cannot be fooled by any particular
+				# value: a genuinely unapplied palette still fails here, because
+				# the default white would not match a non-white declaration.
+				var declared: Dictionary = cfg.get("palette", {}) as Dictionary
+				var expected_hex := str(declared.get("*", ""))
+				if not expected_hex.is_empty():
+					var expected := Color(expected_hex)
+					if not albedo.is_equal_approx(expected):
+						_fail("'%s' body albedo is %s but its rank palette declares %s; the palette did not apply" % [
+							rank, albedo, expected])
 				for other_rank: String in seen_bodies:
 					if albedo.is_equal_approx(seen_bodies[other_rank]):
 						_fail("'%s' and '%s' bodies are the same colour" % [rank, other_rank])
