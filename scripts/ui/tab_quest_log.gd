@@ -32,7 +32,15 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const DONE_MARK := "✓"  ## a check
 const OPEN_MARK := "▸"  ## a small right-pointing triangle, matches the tab row's own ◆ accent language
 
+## Right-stick pan, px/second at full deflection. Reuses `look_up`/`look_down`
+## (project.godot), the same action `tab_map.gd::_read_navigation_input`
+## already reads for its own pan, rather than adding a new one — this agent
+## may not touch project.godot's input map. Mouse wheel scrolls a
+## ScrollContainer for free; this is only the controller half of that job.
+const SCROLL_SPEED := 900.0
+
 var _log: RefCounted = QUEST_LOG.new()
+var _scroll: ScrollContainer = null
 var _main_list: VBoxContainer = null
 var _local_list: VBoxContainer = null
 var _last_progression_revision: int = -1
@@ -43,39 +51,55 @@ func build() -> void:
 		child.queue_free()
 	_last_progression_revision = -1
 
+	# ONE scroll container for the whole tab (mirrors tab_settings.gd's own
+	# `_scroll`, OP21-04): the log's last line used to clip against the
+	# panel's bottom edge with nothing to reveal it. AUTO vertical scrolling
+	# (the default, left unset) is also the visible affordance itself — a
+	# scrollbar only draws when content actually overflows.
+	_scroll = ScrollContainer.new()
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(_scroll)
+
+	var page := VBoxContainer.new()
+	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	page.add_theme_constant_override("separation", 14)
+	_scroll.add_child(page)
+
 	var title := Label.new()
 	title.text = "QUEST LOG"
 	title.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	add_child(title)
+	page.add_child(title)
 
-	_main_list = _section("MAIN STORY")
-	_local_list = _section("LOCAL REQUESTS")
+	_main_list = _section(page, "MAIN STORY")
+	_local_list = _section(page, "LOCAL REQUESTS")
 
 	poll()
 	UITokens.make_text_legible(self)
 
 
-func _section(heading_text: String) -> VBoxContainer:
+func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
 	var heading := Label.new()
 	heading.text = heading_text
 	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	heading.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	add_child(heading)
+	parent.add_child(heading)
 
 	var list := VBoxContainer.new()
 	list.add_theme_constant_override("separation", 6)
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(_panel(list))
+	parent.add_child(_panel(list))
 	return list
 
 
 ## Rebuilds only when `progression.revision` actually moved — the same
 ## polling idiom `progression_state.gd`'s own header describes — not once a
-## frame regardless.
+## frame regardless. Scrolling itself is read every frame, revision or not.
 func poll() -> void:
 	if _main_list == null:
 		return
+	_read_scroll()
 	var game := state()
 	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression == null:
@@ -91,6 +115,15 @@ func poll() -> void:
 		int(_log.call("current_index", progression))
 	)
 	_fill(_local_list, _log.call("local_entries", progression), "Nothing outstanding right now.")
+
+
+func _read_scroll() -> void:
+	if _scroll == null:
+		return
+	var axis := Input.get_axis("look_up", "look_down")
+	if is_zero_approx(axis):
+		return
+	_scroll.scroll_vertical += int(roundi(axis * SCROLL_SPEED * get_process_delta_time()))
 
 
 ## `current` is the index within `entries` of the one open rung, or -1 when

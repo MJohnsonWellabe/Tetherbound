@@ -322,27 +322,33 @@ func _check_all_enabled_controls_are_reachable() -> void:
 	if _rows.is_empty():
 		return
 
-	# The preceding D-pad/stick check ends on row 0's gamepad cell.
+	# The preceding D-pad/stick check ends on row 0's SECOND column, whichever
+	# that is, so one press Left returns to the first. The columns are drawn
+	# Gamepad, Keyboard/mouse, Default -- gamepad first, per CLAUDE.md's
+	# "Controller first" hard rule (`tab_settings.gd::_column_header`). This
+	# walk used to name the two binding columns the other way round, from when
+	# Keyboard/mouse was drawn first; the shape of the walk is unchanged and
+	# only which column each step expects moved with the screen.
 	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
-	if _focused() != (_rows[0] as Dictionary)["keyboard"]:
-		_fail("could not return to the first keyboard binding from the natural Settings focus")
+	if _focused() != (_rows[0] as Dictionary)["gamepad"]:
+		_fail("could not return to the first gamepad binding from the natural Settings focus")
 		return
 
 	var scroll: ScrollContainer = _tab.get("_scroll")
 	var start_scroll := scroll.scroll_vertical
 	for i in range(1, _rows.size()):
 		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
-		if _focused() != (_rows[i] as Dictionary)["keyboard"]:
-			_fail("D-pad skipped keyboard binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
+		if _focused() != (_rows[i] as Dictionary)["gamepad"]:
+			_fail("D-pad skipped gamepad binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
 			return
 	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
-	if _focused() != (_rows[-1] as Dictionary)["gamepad"]:
-		_fail("D-pad could not cross to the gamepad binding column on the last row")
+	if _focused() != (_rows[-1] as Dictionary)["keyboard"]:
+		_fail("D-pad could not cross to the keyboard binding column on the last row")
 		return
 	for i in range(_rows.size() - 2, -1, -1):
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
-		if _focused() != (_rows[i] as Dictionary)["gamepad"]:
-			_fail("D-pad skipped gamepad binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
+		if _focused() != (_rows[i] as Dictionary)["keyboard"]:
+			_fail("D-pad skipped keyboard binding row %d ('%s')" % [i, str((_rows[i] as Dictionary)["action"])])
 			return
 	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
 	if _focused() != (_rows[0] as Dictionary)["reset"]:

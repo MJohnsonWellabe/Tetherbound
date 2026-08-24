@@ -525,7 +525,34 @@ func _draw_ticks_and_compass(centre: Vector2, box: Vector2) -> void:
 	# latter made N look clipped/crowded whenever north approached a corner.
 	var north_pos := centre + north_dir * (tick_radius - 16.0)
 	draw_circle(north_pos, 9.0, Color(UITokens.BG_DEEP, 0.82))
-	_draw_upright_text(north_pos, "N", UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
+	_draw_north_needle(north_pos, north_dir)
+
+
+## The north mark: a needle pointing north, not the letter N.
+##
+## It WAS the letter, drawn through `_draw_upright_text` at `FONT_TINY`, and a
+## blind pass reported that it "does not read as 'N' at any size". Cropping the
+## frame and zooming showed something worse than a lowercase n: at 19px
+## `kenney_future` loses the capital N's diagonal stroke completely, so the
+## glyph renders as a bare inverted U. The diagonal is the only thing that makes
+## an N an N.
+##
+## Enlarging it was the obvious move and was rejected: the mark sits in a 9px
+## circle on the rim of a small widget, so a font size big enough to hold that
+## hairline diagonal would crowd the rim it is pinned to -- and it would still
+## be one display font's rendering of one letter at a size nobody can check
+## without a render. A needle has no such failure mode. It is the compass
+## convention, it is legible at any size because it is a solid shape rather
+## than a stroke, and it points, which the letter never did.
+func _draw_north_needle(pos: Vector2, direction: Vector2) -> void:
+	var along := direction.normalized()
+	var across := Vector2(-along.y, along.x)
+	var points := PackedVector2Array([
+		pos + along * 6.5,
+		pos - along * 3.5 + across * 4.5,
+		pos - along * 3.5 - across * 4.5,
+	])
+	draw_colored_polygon(points, UITokens.TEXT_PRIMARY)
 
 
 ## The player's arrow is independent from the movement-up world layer. With
@@ -609,7 +636,21 @@ func _draw_dot(centre: Vector2, r: float, colour: Color) -> void:
 func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: Color) -> void:
 	if _font == null:
 		return
-	const MARGIN := 3.0
+	# DEFECT 3 (blind visual review, `shots/ui/07-minimap.png`): "the
+	# waypoint distance '256 m' is clipped by the minimap's own right
+	# border, cutting the 'm' in half." Not `clip_contents` -- the old
+	# MARGIN (3.0) already kept the clamp inside the Control's own `size`,
+	# so `clip_contents` never touched it. The real cause is draw order:
+	# `_draw()` calls `_draw_objective()` (this text) BEFORE `_draw_frame()`
+	# paints the ring, and `_draw_frame()`'s ring border is `RING_WIDTH` (8px)
+	# thick, painted inward from the widget's edge -- so a label clamped to
+	# within 3px of that edge sits UNDER where the ring gets painted on TOP
+	# of it one call later, and the ring's own opaque colour bites into
+	# whatever glyph was sitting in that outer band. Clamping to at least
+	# `RING_WIDTH` clear of the edge keeps every label's clamped box entirely
+	# outside the ring's painted footprint, so nothing drawn afterward can
+	# cut into it.
+	const MARGIN := RING_WIDTH + 3.0
 	var text_size := _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	var top_left := centre - text_size * 0.5
 	top_left.x = clampf(top_left.x, MARGIN, maxf(MARGIN, size.x - text_size.x - MARGIN))

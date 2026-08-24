@@ -189,6 +189,7 @@ func _run() -> void:
 		return
 
 	_seed_game_state()
+	_pin_owner_device()
 
 	await _phase_standalone()
 	await _phase_world()
@@ -197,6 +198,31 @@ func _run() -> void:
 
 
 # --- shared plumbing ---------------------------------------------------------
+
+## Pin the survey to the device the owner actually holds.
+##
+## `game_state.gd` initialises `_last_input_was_gamepad` to
+## `not Input.get_connected_joypads().is_empty()`, so on the ROG Ally -- whose
+## pad is an always-connected XInput device -- the game draws gamepad glyphs
+## from its first frame, before the player has touched anything. Under
+## `xvfb-run` no joypad is connected at all, so that same line initialises the
+## flag to FALSE and every glyph in the survey renders its keyboard half.
+##
+## That is a harness artefact with real cost: the round-1 blind critic read the
+## resulting keycaps as CLAUDE.md's "Controller first" hard rule being violated
+## across the whole interface, and the single largest finding in that report was
+## spent on a device the owner's hardware never presents. The survey has to
+## photograph the Ally, not the empty virtual display.
+##
+## Pinned once here rather than per-frame so it covers BOTH phases -- the
+## standalone panels and the world-anchored HUD -- and cannot wear off partway
+## the way an unfrozen clock pin does (`ralph/VISUAL_LEDGER.md`, "Pin the clock
+## AND freeze it"). `06-hud-input-glyphs` still flips to the keyboard form for
+## one frame, so the sheet keeps showing both halves of every dual binding.
+func _pin_owner_device() -> void:
+	_game.set("_last_input_was_gamepad", true)
+
+
 
 
 ## One seeding pass, reused by every standalone panel and (because `Game` is
@@ -254,7 +280,20 @@ func _seed_game_state() -> void:
 		save_system.call("save", _game, 2)
 
 
-func _shoot(name: String) -> void:
+## `crop`, when it has a positive area, saves only that rectangle of the frame.
+## Used by the two standalone widget closeups: a 250x540 strip or a 48x160 arc
+## alone on a 1920x1080 backdrop is not a closeup of anything and cannot be
+## judged for legibility at the 40% downscale this survey is reviewed at.
+##
+## Cropping rather than SCALING the widget, which was the previous attempt and
+## was worse than the problem: `Control.scale` multiplies about the pivot and
+## leaves `position` unscaled, so the strip rendered from the frame's corner
+## and its fifth row was cut off by the bottom screen edge -- a blind critic
+## duly reported "the fifth party row is cut mid-glyph by the bottom screen
+## edge", which was the harness's doing and not the widget's. A crop cannot
+## misplace anything: the widget draws at its authored 1:1 size, exactly as the
+## game draws it, and only the saved PNG is smaller.
+func _shoot(name: String, crop: Rect2i = Rect2i()) -> void:
 	for i in 6:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -263,6 +302,17 @@ func _shoot(name: String) -> void:
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
 		return
+	if crop.size.x > 0 and crop.size.y > 0:
+		var bounds := Rect2i(0, 0, image.get_width(), image.get_height())
+		var clipped := crop.intersection(bounds)
+		if clipped.size.x <= 0 or clipped.size.y <= 0:
+			_failures.append("%s: crop %s falls outside the %s frame" % [name, crop, bounds.size])
+			return
+		if clipped != crop:
+			# Silently saving a smaller rectangle than asked for is how a
+			# clipped widget gets mistaken for a clipped WIDGET.
+			_failures.append("%s: crop %s was clamped to %s by the frame edge" % [name, crop, clipped])
+		image = image.get_region(clipped)
 	var path := "%s/%s.png" % [OUT_DIR, name]
 	var error := image.save_png(path)
 	if error != OK:
@@ -294,19 +344,42 @@ func _finish() -> void:
 # --- phase 1: everything Game.menu() mounts with no world in the tree -------
 
 
+## Screens with genuinely nothing behind them, plus the two widget closeups
+## which are deliberately shot on a plain backdrop so the widget itself can be
+## inspected.
+##
+## WHAT MOVED OUT OF HERE, and why it had to. The pause tabs, the five fixture
+## panels and the dialogue panel used to be shot here, with no world scene
+## loaded, purely because that is faster. A blind critic caught what that
+## actually produced: "this is the only pause tab that shows the dimmed world
+## behind the panel; frames 12, 13, 15-18 sit on opaque flat navy. One of those
+## two behaviours is wrong" -- and separately, of the fixture panels, "frames
+## 19-23 also sit on a flat colour void despite being opened while standing in
+## the world at a bench/shop/chest/bed", and of the dialogue frame, "the entire
+## screen behind the dialogue panel is one flat untextured blue... If this is a
+## real story beat, the world is missing."
+##
+## All three readings are correct about the picture and wrong about the game,
+## which is this survey's fault and not the interface's. A player never opens
+## the satchel, a chest or a conversation with a flat colour behind it; there
+## is always a world back there, dimmed. Photographing eleven screens against a
+## background the game never shows made the one screen that WAS honest -- the
+## map tab, which has to load the world for its terrain bake -- look like the
+## odd one out. They are all shot over the real world now, which is the seventh
+## time in this sweep a survey was photographing something other than its
+## subject.
+##
+## The cost is real and was checked before spending it: eleven more screens
+## with `meadows_playground.tscn` in the tree, at roughly 14 awaited frames
+## each, is about 154 frames -- some six minutes at the measured software rate.
+## That buys eleven frames that show what the player sees instead of eleven
+## that do not.
 func _phase_standalone() -> void:
 	await _shoot_title_screen()
 	await _shoot_starter_picker()
 	await _shoot_name_prompt()
-	await _shoot_dialogue_panel()
 	await _shoot_party_strip_closeup()
 	await _shoot_stamina_arc_closeup()
-	await _shoot_menu_tabs()
-	await _shoot_craft_panel()
-	await _shoot_shop_panel()
-	await _shoot_storage_panel()
-	await _shoot_swap_panel()
-	await _shoot_creature_bed_panel()
 
 
 func _shoot_title_screen() -> void:
@@ -320,6 +393,46 @@ func _shoot_title_screen() -> void:
 	await _shoot("01-title")
 	screen.queue_free()
 	await _settle(2)
+
+
+## Stop the creature turntables before any shutter.
+##
+## `starter_picker.gd` and `creature_viewport.gd` both spin their model in
+## `_process` at 0.5 rad/s, which is a slow, pleasant turn at 60fps and is
+## nothing of the kind here: under software rendering a frame's `delta` is
+## about 2.4 SECONDS, so each awaited frame turns the model roughly 69 degrees
+## and a twelve-frame settle spins it more than twice round. Every pose this
+## survey has ever captured of a creature was therefore whatever angle the
+## shutter happened to land on.
+##
+## That is what a blind critic saw twice: the starter picker "presents three
+## dim, tiny renders posed facing away or side-on", and the Creatures menu is
+## "a rear three-quarter view of Terrapup... face invisible". Neither is how
+## either screen is authored. Both scripts set their model to
+## `rotation.y = 200 degrees` on build -- a front three-quarter -- and then
+## spin away from it. Freezing `_process` leaves each model exactly on the
+## authored angle, which is the pose the screens were designed around and the
+## only one a still frame can fairly judge. `ralph/VISUAL_LEDGER.md` already
+## carries the same lesson about the clock: pin it AND freeze it.
+##
+## This does not hide a defect. A player still sees the far side as it turns;
+## a still frame simply cannot say anything useful about a turntable, which is
+## the "static frames" limit `.claude/skills/visual-judge/SKILL.md` names in its
+## own honest-limits section.
+const SPINNING_PREVIEW_SCRIPTS := [
+	"res://scripts/ui/starter_picker.gd",
+	"res://scripts/ui/creature_viewport.gd",
+]
+
+
+func _freeze_preview_spinners(node: Node) -> void:
+	if node == null:
+		return
+	var script_res: Variant = node.get_script()
+	if script_res != null and str(script_res.resource_path) in SPINNING_PREVIEW_SCRIPTS:
+		node.set_process(false)
+	for child in node.get_children():
+		_freeze_preview_spinners(child)
 
 
 func _shoot_starter_picker() -> void:
@@ -341,6 +454,10 @@ func _shoot_starter_picker() -> void:
 
 	var picker: CanvasLayer = packed.instantiate() as CanvasLayer
 	root.add_child(picker)
+	# Before any settle: `_ready()` has already posed each model at its
+	# authored front three-quarter, and every awaited frame after this would
+	# spin it ~69 degrees off that (see `_freeze_preview_spinners`).
+	_freeze_preview_spinners(picker)
 	picker.call("open", STARTER_SPECIES)
 	await _settle(20) # a couple seconds of turntable spin, not frame zero
 	await _shoot("02-starter-picker")
@@ -380,13 +497,24 @@ func _shoot_dialogue_panel() -> void:
 	await _settle(2)
 
 
-## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
-## directly with five entries in the shapes `update_from_party()` documents,
-## covering the states a real belt actually shows: an out/selected member,
-## an ordinary healthy one, one worn down, one fainted (KO badge), one
-## resting. A close standalone frame reads its hierarchy far more legibly
-## than a corner of a 1920x1080 exploration shot would.
-func _shoot_party_strip_closeup() -> void:
+## The staging both standalone widget closeups mount into: a backdrop layer and,
+## ABOVE IT, a layer for the widget itself.
+##
+## The two layers are what this helper exists for. Both closeups used to put the
+## backdrop in a `CanvasLayer` at layer 0 and parent the widget straight to
+## `root`, and a `CanvasLayer` at layer 0 draws OVER root's own default canvas --
+## so the full-screen backdrop painted across the very widget it was meant to sit
+## behind. `08-party-strip` and `09-stamina-arc` came back as solid near-black
+## frames, and the round-1 blind critic spent a finding on them ("both are
+## failures someone must own before this set can be called a survey of every HUD
+## element"). Nothing was wrong with either widget: parented into a layer above
+## the backdrop, `party_strip.gd` draws its header, five rows, portraits, HP bars
+## and KO/REST tags exactly as written, and `stamina_arc.gd` draws its arc.
+##
+## Ordering is explicit here rather than left to default-canvas semantics,
+## because "which draws first, a CanvasLayer(0) or a Control parented to root"
+## is precisely the question that got this wrong once already.
+func _widget_stage() -> Array:
 	var backdrop_layer := CanvasLayer.new()
 	backdrop_layer.layer = 0
 	root.add_child(backdrop_layer)
@@ -395,9 +523,44 @@ func _shoot_party_strip_closeup() -> void:
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	backdrop_layer.add_child(backdrop)
 
+	var widget_layer := CanvasLayer.new()
+	widget_layer.layer = 1
+	root.add_child(widget_layer)
+	return [backdrop_layer, widget_layer]
+
+
+func _free_widget_stage(stage: Array) -> void:
+	for layer in stage:
+		(layer as CanvasLayer).queue_free()
+
+
+## Place a standalone widget at its authored size and hand back the rectangle
+## `_shoot` should crop to: the widget plus an even margin of backdrop.
+##
+## `authored_size` is passed in rather than read off the node because a Control
+## that has not had a layout pass yet reports its `size` as zero here, and both
+## of these widgets set their own size in `_build()`/`_ready()`.
+func _place_widget(widget: Control, authored_size: Vector2, margin: float) -> Rect2i:
+	var origin := ((Vector2(root.size) - authored_size) * 0.5).floor()
+	widget.position = origin
+	return Rect2i(
+		Vector2i(origin - Vector2(margin, margin)),
+		Vector2i(authored_size + Vector2(margin, margin) * 2.0)
+	)
+
+
+## `party_strip.gd` never reaches `/root/Game` (its own header) -- fed here
+## directly with five entries in the shapes `update_from_party()` documents,
+## covering the states a real belt actually shows: an out/selected member,
+## an ordinary healthy one, one worn down, one fainted (KO badge), one
+## resting. A close standalone frame reads its hierarchy far more legibly
+## than a corner of a 1920x1080 exploration shot would.
+func _shoot_party_strip_closeup() -> void:
+	var stage := _widget_stage()
+
 	var strip: Control = PARTY_STRIP.new()
-	strip.position = Vector2(80.0, 80.0)
-	root.add_child(strip)
+	stage[1].add_child(strip)
+	var strip_crop := _place_widget(strip, Vector2(250.0, 540.0), 60.0)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
@@ -414,9 +577,9 @@ func _shoot_party_strip_closeup() -> void:
 	strip.call("update_from_party", entries, 0, true)
 	strip.call("set_pinned", true) # stays revealed; no fade timer to race against the shutter
 	await _settle(8)
-	await _shoot("08-party-strip")
+	await _shoot("08-party-strip", strip_crop)
 	strip.queue_free()
-	backdrop_layer.queue_free()
+	_free_widget_stage(stage)
 	await _settle(2)
 
 
@@ -425,22 +588,16 @@ func _shoot_party_strip_closeup() -> void:
 ## mid-sprint. Mid-value and draining puts it in the warning colour tier
 ## (`WARNING_BELOW`), which is more informative than a full or empty arc.
 func _shoot_stamina_arc_closeup() -> void:
-	var backdrop_layer := CanvasLayer.new()
-	backdrop_layer.layer = 0
-	root.add_child(backdrop_layer)
-	var backdrop := ColorRect.new()
-	backdrop.color = Color(0.08, 0.09, 0.10)
-	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop_layer.add_child(backdrop)
+	var stage := _widget_stage()
 
 	var arc: Control = STAMINA_ARC.new()
-	arc.position = Vector2(400.0, 300.0)
-	root.add_child(arc)
+	stage[1].add_child(arc)
+	var arc_crop := _place_widget(arc, Vector2(48.0, 160.0), 90.0)
 	arc.call("update_stamina", 0.34, true, 0.1)
 	await _settle(6)
-	await _shoot("09-stamina-arc")
+	await _shoot("09-stamina-arc", arc_crop)
 	arc.queue_free()
-	backdrop_layer.queue_free()
+	_free_widget_stage(stage)
 	await _settle(2)
 
 
@@ -470,6 +627,9 @@ func _shoot_menu_tabs() -> void:
 		if str(menu.call("current_tab_id")) != tab_id:
 			_failures.append("%s: menu did not land on tab '%s'" % [shot_name, tab_id])
 			continue
+		# The Creatures tab mounts a `creature_viewport.gd` turntable; freeze it
+		# on the authored pose before settling, same reason as the picker.
+		_freeze_preview_spinners(menu)
 		await _settle(8)
 		await _shoot(shot_name)
 	menu.call("close")
@@ -558,6 +718,18 @@ func _phase_world() -> void:
 		return
 	var world: Node = packed.instantiate()
 	root.add_child(world)
+	# `current_scene` is what `playground_hud.gd::_ensure_minimap_baked()` reads
+	# to find the world -- `get_tree().get_current_scene()`, guarded by
+	# `has_method("ground_height_at")`. Adding the world as a plain child of
+	# `root` leaves `current_scene` null, so that guard returned early every
+	# frame, `map_baker.gd::bake_cached()` never ran, the minimap's terrain
+	# texture stayed null and the widget drew its frame, fog and markers over
+	# the live 3D view with no map under them. The round-1 blind critic read
+	# that as "the minimap is a frame around sky with no terrain or road"
+	# (`05-hud-exploration`, `07-minimap`) and as an empty instrument rather
+	# than an unbaked one. One assignment, because a scene that is in the tree
+	# but not the current scene is a state no real play session is ever in.
+	current_scene = world
 	for i in BOOT_FRAMES:
 		await physics_frame
 	print("[world] boot settled")
@@ -597,14 +769,17 @@ func _phase_world() -> void:
 	await _settle(12)
 	await _shoot("05-hud-exploration")
 
-	# Input glyphs: the bottom-dock legend redraws in gamepad-button form the
-	# moment `Game._last_input_was_gamepad` is true -- same flip
-	# `capture_ui_suite.gd` uses -- so this is the real legend in its other
-	# real state, not a mocked-up glyph sheet.
-	_game.set("_last_input_was_gamepad", true)
+	# Input glyphs: every other frame in this survey is pinned to the pad
+	# (`_pin_owner_device`, the Ally's own default), so the state this frame
+	# exists to show is the OTHER one -- the same legend redrawn in keycap form
+	# for a desktop player, which `Game._last_input_was_gamepad` flips to live.
+	# The flip is restored immediately: the pin is the survey's baseline, and a
+	# frame that left it off would silently hand every later screen back to the
+	# keyboard half this capture was corrected to stop showing.
+	_game.set("_last_input_was_gamepad", false)
 	await _settle(6)
 	await _shoot("06-hud-input-glyphs")
-	_game.set("_last_input_was_gamepad", false)
+	_game.set("_last_input_was_gamepad", true)
 
 	# Minimap: a broad reveal plus a nearby wild creature, same seeding
 	# `capture_minimap.gd` uses, so the rim clamp, fog edge and creature
@@ -612,8 +787,28 @@ func _phase_world() -> void:
 	var map_state: RefCounted = _game.get("map")
 	var director: Node = world.get_node_or_null(^"EncounterDirector")
 	if map_state != null:
-		map_state.call("reveal_circle", Vector3(-6.0, 0.0, -13.0), 55.0)
-		for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0)]:
+		# A REPRESENTATIVE amount of exploration, not a token one. The reveal
+		# here used to be a single 55m circle in a world that runs -1024..1024
+		# on X and -512..7680 on Z (`data/config/terrain_playground.json`'s
+		# `world_bounds`) -- about a thousandth of one percent of it -- so both
+		# map instruments were photographed in a state no player who had walked
+		# anywhere would ever see. `ralph/VISUAL_LEDGER.md`'s own POPULATION
+		# rule is the same point about inventories and quest logs: an empty
+		# instrument tells a blind critic nothing about hierarchy or legibility,
+		# and round 1 duly spent findings calling the full map "a black column"
+		# and the minimap "a frame around sky". Fog IS opaque by design on
+		# unexplored ground (`tab_map.gd`'s own note on spec 16 -- the map "does
+		# not reveal everything automatically"), so the only way to photograph
+		# the fog EDGE, the baked terrain under it and the discovered-region
+		# callouts at all is to have explored something first.
+		#
+		# Walked up the road corridor from the spawn, which is where the
+		# chapter's first hour actually goes.
+		for step in 9:
+			var along := -13.0 + float(step) * 95.0
+			map_state.call("reveal_circle", Vector3(-6.0 + float(step % 3) * 18.0, 0.0, along), 110.0)
+		for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0),
+				Vector3(4.0, 0.0, 180.0), Vector3(-30.0, 0.0, 420.0), Vector3(22.0, 0.0, 640.0)]:
 			map_state.call("mark_visited", point)
 		_game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	var minimap_wild: Node3D = null
@@ -643,6 +838,17 @@ func _phase_world() -> void:
 	else:
 		_failures.append("14-menu-map: Game.menu() not reachable")
 
+	# The rest of the menu, and every panel the player opens standing at a
+	# fixture, over the same real world -- see `_phase_standalone`'s header for
+	# what these looked like when they were shot with nothing behind them.
+	await _shoot_dialogue_panel()
+	await _shoot_menu_tabs()
+	await _shoot_craft_panel()
+	await _shoot_shop_panel()
+	await _shoot_storage_panel()
+	await _shoot_swap_panel()
+	await _shoot_creature_bed_panel()
+
 	# Combat HUD + capture reticle: one real fight serves both. Teleport
 	# straight into the "practice" spawn cluster and enter combat through
 	# `encounter_director.gd`'s own entry point (`_start_fight` ->
@@ -664,6 +870,21 @@ func _phase_world() -> void:
 			await _settle(12)
 
 			var wild: Node3D = director.call("wild_creature") as Node3D
+			# The survey's own camera is the current one (`make_current()`
+			# above) and was framed for the EXPLORATION shot, tens of metres
+			# from this cluster -- it is not carried along by teleporting the
+			# player, and the rig's camera that `_aim_at` steers is neither
+			# current nor processing. So both combat frames were shot from the
+			# old vantage, and `combat_hud.gd::_update_capture_reticle()` --
+			# which unprojects the wild creature through
+			# `get_viewport().get_camera_3d()` and gives up when the target is
+			# outside that frustum -- had nothing to place a ring on. The
+			# round-1 critic recorded `11-capture-reticle` as having no
+			# reticle; the reticle was working and the camera was pointed
+			# somewhere else.
+			if wild != null:
+				_frame_combat(camera, player, wild)
+				await _settle(6)
 			if wild == null:
 				_failures.append("10-combat-hud: no practice-role wild creature near the cluster")
 			else:
@@ -682,6 +903,7 @@ func _phase_world() -> void:
 					await _settle(12)
 					if bool(manager.call("is_aiming")):
 						_aim_at(rig, wild)
+						_frame_combat(camera, player, wild)
 						await _settle(6)
 						await _shoot("11-capture-reticle")
 					else:
@@ -713,6 +935,27 @@ func _cluster_centre(director: Node, role: String, fallback: Vector3) -> Vector3
 ## same shape `capture_ui_final.gd::_aim_at` uses -- close enough for a
 ## legible reticle frame; this is a screenshot, not a real thrown orb, so no
 ## launch-assist precision is needed.
+## Put the survey's current camera behind the player and looking at the
+## creature being fought, so both combat frames photograph the fight rather
+## than the vantage the exploration shot was framed from -- and so the HUD's
+## own reticle, which unprojects the target through whichever camera is
+## current, has the target on screen to place a ring on.
+##
+## Over-the-shoulder from behind the player, offset along the player->wild
+## axis, matching the three-quarter framing the exploration shot uses.
+func _frame_combat(camera: Camera3D, player: Node3D, wild: Node3D) -> void:
+	if camera == null or player == null or wild == null:
+		return
+	var target: Vector3 = wild.call("centre") if wild.has_method("centre") else wild.global_position
+	var along := target - player.global_position
+	along.y = 0.0
+	if along.length() < 0.01:
+		along = Vector3(0.0, 0.0, -1.0)
+	along = along.normalized()
+	camera.global_position = player.global_position - along * 5.5 + Vector3.UP * 2.6
+	camera.look_at((player.global_position + target) * 0.5 + Vector3.UP, Vector3.UP)
+
+
 func _aim_at(rig: Node, wild: Node3D) -> void:
 	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null:

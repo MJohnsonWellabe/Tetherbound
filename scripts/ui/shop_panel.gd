@@ -25,6 +25,18 @@ const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
 const ROW_ICON_PX := 24
+const PRICE_COLUMN_PX := 70
+
+## Panel D39 (OF31 defect sweep, frame 20): with Coin: 0 and a full 17-item
+## catalogue, the unbounded panel grew past 1080px tall and clipped both its
+## own rounded corners and the "Leave" hint off the bottom of the screen --
+## the CenterContainer this sits in only centers a child, it never bounds one.
+## A fixed panel height plus a ScrollContainer around the rows (same fix
+## tab_settings.gd/tab_quest_log.gd already use for their own unbounded lists)
+## keeps the panel on screen regardless of how many items trade.json lists,
+## with the coin/title header and the Leave hint permanently visible outside
+## the scrolling region.
+const PANEL_HEIGHT := 860
 
 var game: Node = null
 
@@ -34,6 +46,7 @@ var _title: Label = null
 var _purse: Label = null
 var _buy_column: VBoxContainer = null
 var _sell_column: VBoxContainer = null
+var _columns_scroll: ScrollContainer = null
 var _message: Label = null
 var _rows: Array[Button] = []
 var _open: bool = false
@@ -82,6 +95,12 @@ func open(vendor: String) -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
 	get_tree().paused = true
+	# A station panel is a modal surface, and the exploration HUD was drawn
+	# straight over the top of it -- the creature block, roster, vitals,
+	# hotbar and minimap all still painting across this panel's own rows. It
+	# went unnoticed because the UI survey used to shoot these panels with no
+	# world loaded at all, so there was no HUD in the frame to collide with.
+	INPUT_OWNER.set_world_hud_visible(get_tree(), false)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if _message != null:
 		_message.text = ""
@@ -100,6 +119,9 @@ func close() -> void:
 	# true value can come from a previous modal in the same handoff and
 	# restoring it after every visible panel is gone freezes the world.
 	if INPUT_OWNER.current(get_tree()) == null:
+		# Only once nothing else owns the screen -- restoring on any close
+		# would put the HUD back over a panel that is still open underneath.
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_tree().paused = false
 
@@ -143,7 +165,13 @@ func _build_shell() -> void:
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", box)
-	panel.custom_minimum_size = Vector2(720, 0)
+	# Height is a floor AND the effective ceiling here: PanelContainer only
+	# ever grows past custom_minimum_size for a child that actually demands
+	# more, and the one child that could (the row scroll below) is a
+	# ScrollContainer, which never reports its content's full height as its
+	# own minimum -- that is the whole mechanism scrolling relies on. So this
+	# number is really "how tall the panel gets", not a mere hint.
+	panel.custom_minimum_size = Vector2(720, PANEL_HEIGHT)
 	center.add_child(panel)
 
 	var outer := VBoxContainer.new()
@@ -165,9 +193,20 @@ func _build_shell() -> void:
 	_purse.add_theme_color_override("font_color", UITokens.WARNING)
 	header.add_child(_purse)
 
+	# Seventeen items in trade.json's stocked list (and growing) do not fit
+	# unpaginated in one column at this font size -- the shop used to just
+	# keep drawing rows past the panel's own bottom edge. One shared scroll
+	# for both columns, same "one container for the whole tab" shape
+	# tab_settings.gd/tab_quest_log.gd already use, rather than a second
+	# hand-rolled scroll mechanism per column.
+	_columns_scroll = ScrollContainer.new()
+	_columns_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_columns_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	outer.add_child(_columns_scroll)
+
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 24)
-	outer.add_child(columns)
+	_columns_scroll.add_child(columns)
 
 	var buy_side := VBoxContainer.new()
 	buy_side.add_theme_constant_override("separation", 8)
@@ -266,7 +305,7 @@ func _rebuild_buy_side(db: RefCounted, inventory: RefCounted) -> void:
 		var affordable := purse >= price
 		var row := _row(
 			db, item_id,
-			"%s   %d" % [str(db.call("item_name", item_id)), price],
+			str(db.call("item_name", item_id)), str(price),
 			affordable
 		)
 		row.pressed.connect(func() -> void: _on_buy(item_id))
@@ -294,7 +333,7 @@ func _rebuild_sell_side(db: RefCounted, inventory: RefCounted) -> void:
 		var price := int(_trade.call("sell_price", _vendor_id, item_id))
 		var row := _row(
 			db, item_id,
-			"%s x%d   +%d" % [str(db.call("item_name", item_id)), have, price],
+			"%s x%d" % [str(db.call("item_name", item_id)), have], "+%d" % price,
 			true
 		)
 		row.pressed.connect(func() -> void: _on_sell(item_id))
@@ -305,7 +344,20 @@ func _rebuild_sell_side(db: RefCounted, inventory: RefCounted) -> void:
 		_sell_column.add_child(_empty_label("(nothing she wants)"))
 
 
-func _row(db: RefCounted, item_id: String, text: String, enabled: bool) -> Button:
+## `name_text` and `price_text` are two separate labels, not one concatenated
+## string -- a single label with hand-placed spaces between name and price
+## (the old shape) only lines up for names of one particular length, which is
+## why the buy column's prices used to sit ragged, immediately after each
+## name rather than in a shared column. `price_text` gets a fixed-width,
+## right-aligned label instead, so every price in the column shares one edge
+## regardless of name length.
+##
+## `enabled == false` (nothing in the purse for this item's price) dims BOTH
+## the icon and a dedicated "disabled" stylebox, not just the text color --
+## text alone read as "every row looks the same" at handheld scale (OF31
+## sweep, frame 20: "a column of identical white circles"), because the icon
+## itself carried no affordability signal at all.
+func _row(db: RefCounted, item_id: String, name_text: String, price_text: String, enabled: bool) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(310, 52)
 	button.focus_mode = Control.FOCUS_ALL
@@ -315,6 +367,7 @@ func _row(db: RefCounted, item_id: String, text: String, enabled: bool) -> Butto
 	button.add_theme_stylebox_override("hover", UITokens.slot_box(false))
 	button.add_theme_stylebox_override("pressed", UITokens.slot_box(true))
 	button.add_theme_stylebox_override("focus", UITokens.slot_box(true))
+	button.add_theme_stylebox_override("disabled", _disabled_row_box())
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 	var pad := MarginContainer.new()
@@ -334,17 +387,47 @@ func _row(db: RefCounted, item_id: String, text: String, enabled: bool) -> Butto
 	icon.custom_minimum_size = Vector2(ROW_ICON_PX, ROW_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(db, item_id)
+	icon.modulate = Color(1, 1, 1, 1) if enabled else Color(1, 1, 1, 0.35)
 	row.add_child(icon)
 
-	var label := Label.new()
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.text = text
-	label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
-	label.add_theme_color_override(
+	var name_label := Label.new()
+	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	name_label.text = name_text
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.clip_text = true
+	name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	name_label.add_theme_color_override(
 		"font_color", UITokens.TEXT_PRIMARY if enabled else UITokens.TEXT_MUTED
 	)
-	row.add_child(label)
+	row.add_child(name_label)
+
+	var price_label := Label.new()
+	price_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	price_label.text = price_text
+	price_label.custom_minimum_size = Vector2(PRICE_COLUMN_PX, 0)
+	price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	price_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	price_label.add_theme_color_override(
+		"font_color", UITokens.TEXT_PRIMARY if enabled else UITokens.TEXT_MUTED
+	)
+	row.add_child(price_label)
+
+	button.focus_entered.connect(func() -> void:
+		if _columns_scroll != null:
+			_columns_scroll.ensure_control_visible(button)
+	)
 	return button
+
+
+## A visibly flatter, more transparent version of the ordinary row box --
+## `disabled = true` alone (default engine disabled style, since nothing here
+## overrode it before) did not read as "you can't afford this" next to the
+## row's own focus/normal styleboxes, which is what let a Coin: 0 catalogue
+## draw seventeen rows that all looked alike.
+func _disabled_row_box() -> StyleBoxFlat:
+	var box := UITokens.slot_box(false).duplicate() as StyleBoxFlat
+	box.bg_color = Color(box.bg_color, box.bg_color.a * 0.4)
+	return box
 
 
 func _empty_label(text: String) -> Label:

@@ -23,6 +23,11 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PARTY := preload("res://autoload/party.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
+## Blind-judge pass: this panel's own leave hint was a hand-typed "B / Esc",
+## a third spelling/format alongside dialogue_panel.gd's and tab_creatures.gd's
+## `INPUT_GLYPH.icon()` glyph (which also reads the player's real rebinding;
+## typed text does not). Matched to those rather than invented fresh.
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 var game: Node = null
 
@@ -64,6 +69,12 @@ func open(bed: Node) -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
 	get_tree().paused = true
+	# A station panel is a modal surface, and the exploration HUD was drawn
+	# straight over the top of it -- the creature block, roster, vitals,
+	# hotbar and minimap all still painting across this panel's own rows. It
+	# went unnoticed because the UI survey used to shoot these panels with no
+	# world loaded at all, so there was no HUD in the frame to collide with.
+	INPUT_OWNER.set_world_hud_visible(get_tree(), false)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if _message != null:
 		_message.text = ""
@@ -80,6 +91,9 @@ func close() -> void:
 	# true value can come from a previous modal in the same handoff and
 	# restoring it after every visible panel is gone freezes the world.
 	if INPUT_OWNER.current(get_tree()) == null:
+		# Only once nothing else owns the screen -- restoring on any close
+		# would put the HUD back over a panel that is still open underneath.
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_tree().paused = false
 	_bed = null
@@ -156,10 +170,19 @@ func _build_shell() -> void:
 	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	outer.add_child(_message)
 
-	var hint := Label.new()
-	hint.text = "Leave: B / Esc"
-	hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	# RichTextLabel, not Label: a real cancel-button glyph, the same
+	# dialogue_panel.gd/tab_creatures.gd convention, in place of a hand-typed
+	# "B / Esc" that named neither the player's real binding nor the same
+	# spelling the rest of the game uses for this key.
+	var hint := RichTextLabel.new()
+	hint.bbcode_enabled = true
+	hint.fit_content = true
+	hint.scroll_active = false
+	hint.shortcut_keys_enabled = false
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint.text = "%s  Leave" % INPUT_GLYPH.icon("cancel", 24)
+	hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	outer.add_child(hint)
 
 
@@ -205,8 +228,13 @@ func _refresh() -> void:
 			var fainted := bool(creature.get("fainted"))
 			var resting := bool(creature.get("resting"))
 			var this_bed := resting and _bed != null and int(creature.get("rest_bed_index")) == int(_bed.call("build_index"))
+			# "KO", not "fainted" -- blind-judge pass: the party strip's red KO
+			# chip and this screen's own lowercase word were the same state
+			# spelled two ways, one of three the critique found across the game.
+			# Matched to the strip's spelling since that badge is the more-seen,
+			# more-established one (`party_strip.gd`'s own header/comments).
 			var status := "Resting — HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))] \
-				if this_bed else ("Resting elsewhere" if resting else ("fainted" if fainted else "HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))]))
+				if this_bed else ("Resting elsewhere" if resting else ("KO" if fainted else "HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))]))
 			button.text = "  %d.  %-16s %s" % [i + 1, str(creature.call("label")), status]
 			var occupied := _bed != null and int(_bed.call("occupant_index")) >= 0
 			button.disabled = (occupied and not this_bed) or (resting and not this_bed)

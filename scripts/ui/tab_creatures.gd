@@ -97,6 +97,15 @@ const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
 
+## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
+## not a rating a player was meant to see). Drawn the same filled/open-circle
+## way `bond_meter.gd` already draws this screen's bond nodes, rather than a
+## typed asterisk row -- one drawing idiom for "N of five" on this screen,
+## not a bar widget for bond and a typed string for appraisal.
+const APPRAISAL_TOTAL := 5
+const APPRAISAL_PIP_RADIUS := 5.0
+const APPRAISAL_PIP_GAP := 16.0
+
 const ROW_HEIGHT := 110.0
 const ROW_WIDTH := 420.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
@@ -112,12 +121,29 @@ const TYPE_ICONS := {
 }
 const BOND_ICON := preload("res://assets/ui/icons/ui/bond.png")
 
+## Where a species' portrait art lives, if it has any -- the same path shape
+## `playground_hud.gd::_species_portrait_path` builds for the HUD's own
+## tracked-creature chip. Duplicated rather than called cross-file (this tab
+## and that HUD are unrelated nodes with no shared parent to reach through),
+## but kept to the one format string so the two screens can never point at
+## different art for the same species.
+const PORTRAIT_DIR := "res://assets/ui/portraits/creatures/"
+
 var _header: Label = null
 ## Button nodes only — see the header note on why `smoke_menu.gd` needs these
 ## to be castable straight to `Button`, not a wrapper.
 var _rows: Array = []
 var _row_wraps: Array = []
 var _row_chips: Array = []
+## Real species art over the chip's colour swatch, when the species has a
+## portrait -- blind-judge pass: "the roster identifies creatures by flat
+## colour swatches while the HUD uses real sprites -- same data, two
+## screens, two identity systems." The swatch stays underneath and still
+## shows through a portrait's transparent surround (the same layering
+## `playground_hud.gd`'s own chip+portrait pair already uses), so a species
+## that somehow has no art yet degrades to exactly today's swatch rather than
+## to a blank chip.
+var _row_portraits: Array = []
 var _row_names: Array = []
 var _row_levels: Array = []
 ## RG19-spec/D68's one-line "Rested · Fed · Happy" per row.
@@ -143,7 +169,12 @@ var _detail_type_icon: TextureRect = null
 var _detail_type_label: Label = null
 var _detail_hp: Label = null
 var _detail_stats: Label = null
-var _detail_appraisal: Label = null
+var _detail_appraisal_label: Label = null
+## Drawn pips, not a typed string -- see `APPRAISAL_TOTAL`'s own header.
+## `queue_redraw()`'d from `_describe()`; the star count it should paint lives
+## in `_appraisal_stars` since a `Control.draw` callback takes no arguments.
+var _appraisal_pips: Control = null
+var _appraisal_stars: int = 0
 var _detail_traits: Label = null
 var _detail_trait_desc: Label = null
 var _detail_xp: Label = null
@@ -247,6 +278,7 @@ func build() -> void:
 	_rows.clear()
 	_row_wraps.clear()
 	_row_chips.clear()
+	_row_portraits.clear()
 	_row_names.clear()
 	_row_levels.clear()
 	_row_conditions.clear()
@@ -306,9 +338,9 @@ func build() -> void:
 	_pending_rule.visible = false
 	list.add_child(_pending_rule)
 	_pending_caption = Label.new()
-	# Plain ASCII, same reason `_fill_bar` gives: kenney_future is a display
-	# font with no confirmed coverage past ASCII, and a tofu box in the middle
-	# of the ceremony's one caption would be worse than a hyphen.
+	# Plain ASCII: kenney_future is a display font with no confirmed coverage
+	# past ASCII, and a tofu box in the middle of the ceremony's one caption
+	# would be worse than a hyphen.
 	_pending_caption.text = "JUST CAUGHT - NOT ON THE BELT"
 	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	# WARNING rather than TEXT_MUTED, same defect #4 tonal cue as the hairline
@@ -383,6 +415,20 @@ func _build_slot_row(index: int) -> Control:
 	content.add_child(chip)
 	_row_chips.append(chip)
 
+	# Real species art, layered over the colour swatch `chip`'s own stylebox
+	# still draws -- a portrait's transparent surround lets that swatch show
+	# through exactly the way `playground_hud.gd`'s tracked-creature chip
+	# already does. PanelContainer auto-fits its one child, so no manual
+	# position/size math is needed the way `party_strip.gd`'s plain `Panel`
+	# chip requires.
+	var portrait := TextureRect.new()
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.visible = false
+	chip.add_child(portrait)
+	_row_portraits.append(portrait)
+
 	var text_col := VBoxContainer.new()
 	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -406,14 +452,6 @@ func _build_slot_row(index: int) -> Control:
 	stat_row.add_child(level_label)
 	_row_levels.append(level_label)
 
-	# RG19-spec/D68's condition line, beside the level it is not the same as.
-	var condition_label := Label.new()
-	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	condition_label.custom_minimum_size = Vector2(190, 0)
-	stat_row.add_child(condition_label)
-	_row_conditions.append(condition_label)
-
 	var hp_bar := ProgressBar.new()
 	hp_bar.custom_minimum_size = Vector2(150, 8)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -428,6 +466,22 @@ func _build_slot_row(index: int) -> Control:
 	stat_row.add_child(hp_bar)
 	_row_hp_bars.append(hp_bar)
 	_row_hp_fills.append(hp_fill)
+
+	# RG19-spec/D68's condition line, on its OWN row below level+HP rather
+	# than crammed beside them in `stat_row` (blind-judge pass: level(48) +
+	# this label's own 190 + the HP bar's 150 add up to 404px of fixed-width
+	# children inside a text_col that, once the chip and bond column and the
+	# row's own insets are subtracted from ROW_WIDTH, has roughly 260px to
+	# give them -- the overflow rendered underneath the 3D viewport column to
+	# its right, which draws after (so on top of) this list, and read as "HP
+	# bars poke out from behind the portrait viewport". A second line has
+	# room for the label at its full width with nothing to overlap.
+	var condition_label := Label.new()
+	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	condition_label.clip_text = true
+	text_col.add_child(condition_label)
+	_row_conditions.append(condition_label)
 
 	var bond_col := VBoxContainer.new()
 	bond_col.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -482,10 +536,37 @@ func _build_detail() -> Control:
 	_detail_stats.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	panel.add_child(_detail_stats)
 
-	_detail_appraisal = Label.new()
-	_detail_appraisal.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_detail_appraisal.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	panel.add_child(_detail_appraisal)
+	var appraisal_row := HBoxContainer.new()
+	appraisal_row.add_theme_constant_override("separation", 8)
+	panel.add_child(appraisal_row)
+
+	_detail_appraisal_label = Label.new()
+	_detail_appraisal_label.text = "Appraisal"
+	_detail_appraisal_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_appraisal_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	appraisal_row.add_child(_detail_appraisal_label)
+
+	_appraisal_pips = Control.new()
+	_appraisal_pips.custom_minimum_size = Vector2(
+		APPRAISAL_PIP_GAP * float(APPRAISAL_TOTAL - 1) + APPRAISAL_PIP_RADIUS * 2.0,
+		APPRAISAL_PIP_RADIUS * 2.0
+	)
+	_appraisal_pips.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_appraisal_pips.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# `build()` (menu reopen) frees the old detail column and makes a fresh
+	# one, but the OLD Control's own `queue_free()` is deferred -- it can
+	# still fire its own `draw` signal later this same frame, after
+	# `_appraisal_pips` above has already been reassigned to the NEW one.
+	# A callback that read the shared `_appraisal_pips` var would then call
+	# `draw_circle` on the NEW control while the OLD one is the one actually
+	# mid-draw ("Drawing is only allowed inside this node's `_draw()`"),
+	# because CanvasItem's draw-allowed flag is per-instance and the two
+	# stopped being the same instance. The lambda captures THIS specific
+	# control by value instead, so a stale signal from a not-yet-freed old
+	# row always draws on itself, never on its replacement.
+	var pips := _appraisal_pips
+	pips.draw.connect(func() -> void: _draw_appraisal_pips(pips))
+	appraisal_row.add_child(_appraisal_pips)
 
 	_detail_traits = Label.new()
 	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -727,13 +808,24 @@ func _build_move_row() -> Array:
 	return [icon, name_label, tag_label, sub_label, box]
 
 
-## A `total`-character fill bar for the appraisal line — `stars` of `*`,
-## the rest `-`. Plain ASCII rather than a unicode star glyph: kenney_future
-## is a display font with no confirmed coverage for U+2605, and a tofu box
-## in place of the rating would be worse than an honest asterisk.
-func _fill_bar(stars: int, total: int = 5) -> String:
-	var filled := clampi(stars, 0, total)
-	return "*".repeat(filled) + "-".repeat(total - filled)
+## Blind-judge pass: "[***--]" read as ASCII debug styling rather than a
+## rating. Draws `_appraisal_stars` filled circles out of `APPRAISAL_TOTAL`,
+## the rest hollow -- `bond_meter.gd`'s own node-line idiom for the same "N of
+## five" shape this screen already uses one row up, not a second typed
+## convention beside it. No unicode star glyph either: kenney_future has no
+## confirmed coverage for U+2605, and a drawn circle sidesteps that gap
+## instead of risking a tofu box.
+## `control`: the specific pips Control to draw on, passed by the caller's
+## closure rather than read off `_appraisal_pips` here -- see that var's own
+## build-site comment for why a rebuild makes those two able to disagree.
+func _draw_appraisal_pips(control: Control) -> void:
+	var y := APPRAISAL_PIP_RADIUS
+	for i in APPRAISAL_TOTAL:
+		var center := Vector2(APPRAISAL_PIP_RADIUS + APPRAISAL_PIP_GAP * float(i), y)
+		if i < _appraisal_stars:
+			control.draw_circle(center, APPRAISAL_PIP_RADIUS, UITokens.TEAL)
+		else:
+			control.draw_arc(center, APPRAISAL_PIP_RADIUS, 0.0, TAU, 16, UITokens.BORDER, 2.0, true)
 
 
 func _hairline() -> Control:
@@ -846,7 +938,28 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	chip_box.corner_radius_bottom_right = UITokens.RADIUS_SLOT
 	chip.add_theme_stylebox_override("panel", chip_box)
 
-	var marker := " *" if i == active and size > 0 else ""
+	# Real portrait over the swatch when the species has one -- see
+	# `_row_portraits`'s own header for why the swatch is left drawing
+	# underneath rather than replaced.
+	var portrait_texture: Texture2D = null
+	var portrait_path := "%s%s.png" % [PORTRAIT_DIR, str(creature.get("species_id"))]
+	if ResourceLoader.exists(portrait_path):
+		portrait_texture = load(portrait_path) as Texture2D
+	(_row_portraits[i] as TextureRect).texture = portrait_texture
+	(_row_portraits[i] as TextureRect).visible = portrait_texture != null
+	(_row_portraits[i] as TextureRect).modulate = (
+		Color(1, 1, 1, 0.5) if bool(creature.get("fainted")) else Color.WHITE
+	)
+
+	# Blind-judge pass: a bare " *" named nothing a player could look up, and
+	# was one of two unrelated markers sharing this line with the equally
+	# silent " ★" (Best Creature, which at least matches the icon
+	# `bond_icon`/other screens use for the same idea). Spelled out instead --
+	# this is exactly the state `_detail_status` already writes in words
+	# ("Goes out first.") once the row is focused, so the row-list marker
+	# says the same thing rather than a shorthand only that other label
+	# happens to explain.
+	var marker := " · Active" if i == active and size > 0 else ""
 	if i == int(party.call("best_index")):
 		marker += " ★"
 	(_row_names[i] as Label).text = "%s%s" % [str(creature.call("label")), marker]
@@ -861,17 +974,42 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 
 	var nodes: int = int(creature.call("bond_nodes", cfg))
 	var total: int = int(cfg.get("bond", {}).get("thresholds", []).size())
-	(_row_bond_counts[i] as Label).text = "%d/%d" % [nodes, maxi(total, 1)]
+	# "Bond N/M", not a bare fraction sitting under the bond icon -- blind-judge
+	# pass named "0/5" a token nobody could explain, and the icon alone (no
+	# text label anywhere near it) does not carry that meaning on its own.
+	(_row_bond_counts[i] as Label).text = "Bond %d/%d" % [nodes, maxi(total, 1)]
 
 	# RG19-spec/D68. The tournament's entry gate is rested/fed/happy, and
 	# 26-RG19 is explicit that it may not live only in the organizer's
 	# dialogue: a gate the player cannot see on their own team is a gate they
-	# cannot act on. One line per row, red while it would refuse entry.
+	# cannot act on. One line per row, coloured while it would refuse entry.
 	var condition: Dictionary = CONDITION.summary(creature, CONDITION.config())
 	var line := _row_conditions[i] as Label
-	line.text = CONDITION.label(creature, CONDITION.config())
-	line.add_theme_color_override("font_color",
-		UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else HEALTH_LOW)
+	if bool(creature.get("fainted")):
+		# Blind-judge pass: a fainted row here showed only a red NAME, with no
+		# word anywhere on it -- the same state the party strip spells "KO"
+		# and this screen's own detail column already calls "Out of the
+		# fight." (`_detail_status`, below). Matched to the strip's "KO"
+		# rather than inventing a third label for a state that already has
+		# two spellings in this game (`creature_bed_panel.gd` was the third,
+		# fixed the same way). The rested/fed/happy read is also meaningless
+		# for a creature that is not conscious to be tired or hungry, so it
+		# is replaced outright here rather than appended to.
+		line.text = "KO"
+		line.add_theme_color_override("font_color", UITokens.DANGER)
+	else:
+		line.text = CONDITION.label(creature, CONDITION.config())
+		# Blind-judge pass: "Tired"/"Restless" (chronic, low-stakes states any
+		# creature sits in for most of the game) painted in the same near-red
+		# `HEALTH_LOW` this file reserves for actually dangerous readings (a
+		# draining HP bar, a fainted name) -- the one colour meant to mean
+		# "urgent" was spent on "hasn't slept yet." `WARNING` is this game's
+		# existing "pay attention, not an emergency" tone (`_header`'s own
+		# full-belt notice and the R4.10 ceremony both already reach for it
+		# for exactly this weight), so a gate-blocking condition reads as
+		# worth fixing rather than as a crisis.
+		line.add_theme_color_override("font_color",
+			UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else UITokens.WARNING)
 
 
 func _describe(index: int, cfg: Dictionary) -> void:
@@ -886,7 +1024,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_type_label.text = "Nothing here yet."
 		_detail_hp.text = ""
 		_detail_stats.text = ""
-		_detail_appraisal.text = ""
+		_appraisal_stars = 0
+		_appraisal_pips.queue_redraw()
 		_detail_traits.text = ""
 		_detail_trait_desc.text = ""
 		_detail_xp.text = ""
@@ -940,9 +1079,9 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	]
 
 	# GAME_DESIGN.md 11: "show appraisal through stars/bars, not exact IV
-	# numbers" — a five-character fill bar, never the raw 0.0-1.0 roll.
-	var overall: int = int(creature.call("overall_appraisal_stars", cfg))
-	_detail_appraisal.text = "Appraisal  [%s]" % _fill_bar(overall)
+	# numbers" — drawn pips (`_draw_appraisal_pips`), never the raw 0.0-1.0 roll.
+	_appraisal_stars = int(creature.call("overall_appraisal_stars", cfg))
+	_appraisal_pips.queue_redraw()
 
 	var primary := str(creature.get("trait_primary"))
 	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))

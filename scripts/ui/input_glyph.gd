@@ -256,6 +256,16 @@ static func key_name_for_action(action: String) -> String:
 			# trimmed rather than the current one only, because this string is
 			# an engine display detail and has already moved once.
 			var text := key.as_text().trim_suffix(" (Physical)").trim_suffix(" - Physical")
+			# Blind-judge pass: Godot's own key name for this key ("Escape")
+			# and every hand-typed cancel hint already in this game
+			# (craft_panel.gd, shop_panel.gd, storage_panel.gd, swap_panel.gd,
+			# creature_bed_panel.gd) spelled the same key two ways -- one of
+			# the three prompt-grammar drifts the critique named. Normalized
+			# here, the one place every keyboard-name caller (including
+			# game_menu.gd's shared footer) already reads through, rather
+			# than in each caller separately.
+			if text == "Escape":
+				text = "Esc"
 			if not text.is_empty():
 				return text
 	return action

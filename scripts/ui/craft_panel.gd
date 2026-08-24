@@ -32,10 +32,30 @@ const STATUS_SECONDS := 2.4
 const ROW_ICON_PX := 40
 const CENTER_ICON_PX := 96
 const INGREDIENT_ICON_PX := 24
+## Was 64: too tight even for a single-line cost summary at FONT_BODY (name)
+## + FONT_TINY (cost) with the row's own 6px top/bottom padding, which is why
+## rows overflowed on ordinary recipes, not just ones with unusually long
+## ingredient lists. 80 is the smallest height that fits both labels at their
+## real line heights with room to spare; `_make_row`'s `clip_contents = true`
+## is the hard backstop for whatever this estimate still gets wrong.
+const ROW_HEIGHT := 80
+
+## Six rows' worth of the left column visible at once, the rest reached by
+## scrolling. `known_recipe_ids()` (autoload/game_state.gd) returns every
+## recipe with no `unlocked_by` flag from the first minute -- 13 of
+## data/recipes/recipes.json's 14 entries today -- so the list zone's real
+## content height (14 * ROW_HEIGHT + separations, over 1200px) routinely
+## exceeds what fits in the panel alongside the hero/detail columns. A fixed
+## cap here is what makes `_build_list_zone`'s ScrollContainer actually bound
+## the panel's height instead of just being a scrollbar around content that
+## still forces the panel taller than the screen (same mechanism as
+## shop_panel.gd's PANEL_HEIGHT/scroll pairing).
+const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
 
 var game: Node = null
 
 var _root: Control = null
+var _list_scroll: ScrollContainer = null
 var _rows: Array[Button] = []
 var _cost_labels: Array[Label] = []
 var _recipe_ids: Array[String] = []
@@ -106,6 +126,12 @@ func open() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_paused_before = get_tree().paused
 	get_tree().paused = true
+	# A station panel is a modal surface, and the exploration HUD was drawn
+	# straight over the top of it -- the creature block, roster, vitals,
+	# hotbar and minimap all still painting across this panel's own rows. It
+	# went unnoticed because the UI survey used to shoot these panels with no
+	# world loaded at all, so there was no HUD in the frame to collide with.
+	INPUT_OWNER.set_world_hud_visible(get_tree(), false)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_poll()
 	if not _rows.is_empty():
@@ -123,6 +149,9 @@ func close() -> void:
 	# true value can come from a previous modal in the same handoff and
 	# restoring it after every visible panel is gone freezes the world.
 	if INPUT_OWNER.current(get_tree()) == null:
+		# Only once nothing else owns the screen -- restoring on any close
+		# would put the HUD back over a panel that is still open underneath.
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		get_tree().paused = false
 
@@ -196,22 +225,56 @@ func _build() -> void:
 ## an orb recipe the player has never been told exists has nothing to say yet.
 func _build_list_zone() -> Control:
 	var side := VBoxContainer.new()
-	side.add_theme_constant_override("separation", 8)
 	side.custom_minimum_size = Vector2(300, 0)
+
+	# Bounded scroll, not an unbounded VBoxContainer directly in `side`: with
+	# every unlocked-by-default recipe known from the start, this list is
+	# routinely taller than LIST_VISIBLE_HEIGHT, and an unbounded column here
+	# was pushing the whole panel past the screen the same way shop_panel.gd's
+	# rows did (OF31 sweep) -- it just read as "empty" instead of "clipped"
+	# because the row-building crash below (`text_overrun_behavior`, fixed
+	# alongside this) had been leaving `_rows` empty, so nothing was tall
+	# enough to notice.
+	_list_scroll = ScrollContainer.new()
+	_list_scroll.custom_minimum_size = Vector2(300, LIST_VISIBLE_HEIGHT)
+	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	side.add_child(_list_scroll)
+
+	var rows_col := VBoxContainer.new()
+	rows_col.add_theme_constant_override("separation", 8)
+	rows_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_list_scroll.add_child(rows_col)
 
 	var db := _items()
 	for id: Variant in _known_ids():
 		var recipe_id := str(id)
 		_recipe_ids.append(recipe_id)
 		var recipe: Dictionary = db.call("recipe", recipe_id) if db != null else {}
-		side.add_child(_make_row(recipe_id, recipe))
+		rows_col.add_child(_make_row(recipe_id, recipe))
+
+	# Godot's default D-pad focus search is geometric, and it does not treat a
+	# ScrollContainer's clip boundary any differently from the edge of the
+	# screen: a row past LIST_VISIBLE_HEIGHT is excluded from the search
+	# entirely until it is actually scrolled into view -- which
+	# `ensure_control_visible` (in `_make_row`) can only do once focus has
+	# already reached that row. That deadlock silently capped D-pad Down at
+	# the sixth recipe (measured: `smoke_craft_panel_controller.gd` on Small
+	# Potion, recipe index 10). Same fix `tab_settings.gd::_link_vertical`
+	# already uses for its own scrolled debug-teleport list: chain each row to
+	# its immediate neighbours explicitly so Up/Down never has to cross the
+	# clip boundary via the spatial search at all.
+	for i in _rows.size():
+		if i > 0:
+			_rows[i].focus_neighbor_top = _rows[i].get_path_to(_rows[i - 1])
+		if i + 1 < _rows.size():
+			_rows[i].focus_neighbor_bottom = _rows[i].get_path_to(_rows[i + 1])
 
 	return side
 
 
 func _make_row(id: String, recipe: Dictionary) -> Button:
 	var button := Button.new()
-	button.custom_minimum_size = Vector2(300, 64)
+	button.custom_minimum_size = Vector2(300, ROW_HEIGHT)
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = ""
 	button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
@@ -219,6 +282,17 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	button.add_theme_stylebox_override("pressed", UITokens.slot_box(true))
 	button.add_theme_stylebox_override("focus", UITokens.slot_box(true))
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# `Button` is not a `Container` and never asks its children how tall they
+	# want to be, so a cost line long enough to wrap past ROW_HEIGHT does not
+	# grow the row -- it just draws past its own bottom edge. Godot then
+	# paints the NEXT row's Button (added after this one, so drawn on top of
+	# it) directly over that overflow, which is what a blind visual-judge
+	# pass read as "ingredients spill into the next row's title" with
+	# "orphaned ghost strings" behind the rows, and the last row printing
+	# over the footer. `clip_contents` makes the overflow impossible instead
+	# of merely unlikely: whatever the row's real content turns out to need,
+	# nothing it draws can ever leave this Button's own rect.
+	button.clip_contents = true
 
 	var pad := MarginContainer.new()
 	pad.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -258,14 +332,29 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	var cost_label := Label.new()
 	cost_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cost_label.text = _cost_line(recipe)
-	cost_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Single line, ellipsis on overflow -- NOT word-wrap. Word-wrap made the
+	# line grow with ingredient count, which is what blew past ROW_HEIGHT in
+	# the first place (see `_make_row`'s `clip_contents` comment); wrapping
+	# also used to just get chopped wherever the row's real height ran out,
+	# which is the "lists truncate on a hanging comma" a blind visual-judge
+	# pass caught -- a raw cut mid-list reads as broken text, not as "there's
+	# more". Ellipsis is bounded and honest about being a summary; the full,
+	# untruncated ingredient list is still shown in the right-hand detail
+	# column (`_describe`) for whichever row is focused.
+	cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	cost_label.clip_text = true
 	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
 
 	button.pressed.connect(func() -> void: _craft(id))
 	var index := _rows.size()
-	button.focus_entered.connect(func() -> void: _select(index))
+	button.focus_entered.connect(func() -> void:
+		_select(index)
+		if _list_scroll != null:
+			_list_scroll.ensure_control_visible(button)
+	)
 	_rows.append(button)
 	return button
 

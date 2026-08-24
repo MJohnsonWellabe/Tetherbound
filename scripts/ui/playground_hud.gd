@@ -43,7 +43,25 @@ const FADE_SPEED := 2.2
 ## calm-but-present bar); this one dims the whole `Root` at once, the same
 ## way `combat_hud.gd` dims its own enemy plate and move grid for the same
 ## reason.
-const AIM_FADE_ALPHA := 0.35
+##
+## Fully to zero, not a partial dim -- was 0.35 (DEFECT 2, blind visual
+## review of `shots/ui/11-capture-reticle.png`: "the minimap and MAIN STORY
+## panel are ghosted to near-zero opacity but still occupy their space --
+## outlines and unreadable remnants over the mountain... this state reads as
+## a rendering bug"). `combat_hud.gd::_draw_grid()` already drew the same
+## conclusion for its own enemy plate, in words: "a 35%-alpha plate over open
+## sky read as 'a broken grey ghost', not 'temporarily de-emphasised'" --
+## true there because the enemy plate has translucent backing over open sky,
+## and true here for the same reason: the minimap and objective block are
+## also translucent panels over open sky/terrain, so a 0.35 multiply left
+## their borders and text legible enough to read as broken, not quiet. This
+## HUD's own bars/hotbar have no equivalent readable-but-shouldn't-be state
+## at 0.35 (a blind critic never flagged them), but there is no reason to
+## keep one corner of the fade at a value another part of this same codebase
+## already proved reads as a rendering bug -- one target for the whole `Root`,
+## same as before, just the target combat_hud.gd already picked for the
+## identical shape of widget.
+const AIM_FADE_ALPHA := 0.0
 const AIM_FADE_SPEED := 4.0
 
 const READOUT_INTERVAL := 0.1
@@ -1681,7 +1699,16 @@ func _build_objective_block() -> void:
 	# height) -- see this function's own header.
 	_objective_text_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	# LEFT, not RIGHT (DEFECT 4b, blind visual review of
+	# `shots/ui/10-combat-hud.png` and `shots/ui/07-minimap.png`): quest text
+	# genuinely long enough to wrap ("Restore the Old Mill Crossing.") right-
+	# aligns each wrapped line independently, so a short trailing word like
+	# "Crossing." lands flush against the right edge with a wide gap of empty
+	# space to its left -- reading as a stray fragment floating apart from the
+	# line above it, not the end of a wrapped sentence. Left alignment gives
+	# every wrapped line the same starting edge, which is what actually makes
+	# it read as one continuing sentence instead of a widow.
+	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	block.add_child(_objective_text_label)
 
@@ -1847,6 +1874,13 @@ func _run_frame(delta: float) -> void:
 	# bar visibility is actually in place, or it is always one frame stale.
 	_reflow_left_stack()
 	_update_party_strip()
+	# AFTER `_update_party_strip()`, not alongside `_yield_bottom_to_build_menu()`
+	# above: `_update_party_strip()` can call `party_strip.gd::show_strip()` on
+	# any frame the roster actually changes (a catch, a level, a faint), which
+	# sets the widget's own `.visible = true` again — running the combat yield
+	# first would have that overwrite this frame's hide the instant anything
+	# in the party moved. Running last gives this the final word every frame.
+	_yield_left_stack_to_combat_hud()
 	_update_objective()
 	_update_region_banner()
 	_update_exploration_legend()
@@ -2209,7 +2243,16 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
 			# resolution, the smallest text on the whole HUD and, per the
 			# blind critic, illegible without magnification.
-			text = "%s\n%s [font_size=%d][color=#%s]%s[/color][/font_size]" % [
+			# Icon on its own line, count beneath it. Both used to share one
+			# line, and a tool's durability ("40/40" -- the starting axe) needs
+			# ~119px beside a 28px icon against ~104px of inner slot width, so
+			# with `scroll_active = false` the count was cut mid-glyph in every
+			# frame the quickbar appeared in. The slot grew taller rather than
+			# wider (see the note on Slot1 in `playground_hud.tscn`): the dock
+			# is right-aligned and cannot move left without covering the central
+			# focus lane `smoke_prompt_hotbar_dock.gd` guards, so width was the
+			# one axis with nothing to give.
+			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				glyph, icon_bbcode, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
 		if text != _hotbar_last_text[i]:
@@ -2263,6 +2306,64 @@ func _combat_is_aiming() -> bool:
 		return false
 	var combat := world.get_node_or_null(^"CombatManager")
 	return combat != null and combat.has_method("is_aiming") and bool(combat.call("is_aiming"))
+
+
+## Stands down the whole left stack -- `_creature_block`, `_party_strip`, and
+## `_vitals_cluster` -- for the length of a fight.
+##
+## `_creature_block` ("ACTIVE COMPANION" -- name, level, HP, energy) and
+## `_party_strip` ("TEAM n / 5") are here because `combat_hud.gd` draws its
+## own copy of both: a second, independent `party_strip.gd` mount for
+## mid-fight switching, and the active creature's name/level/HP/energy again
+## in `AllyPanel` (`_draw_ally()`). Leaving this HUD's versions up named the
+## same creature in three places on screen at once and let combat's higher
+## `UITokens.LAYER_COMBAT` CanvasLayer win the pixels, exactly the frame a
+## blind critic captured (`shots/ui/10-combat-hud.png`: "TEAM 5/5" printing
+## straight through a companion panel's own "120 / 120").
+##
+## `_vitals_cluster` (the player's own HP/FOOD, bottom-left) joins them here
+## now too -- DEFECT 1, the worst-ranked finding in the same critique. It
+## does not have a `combat_hud.gd` twin the way the other two do; the reason
+## it stood down anyway is the geometry, not duplication: `vitals_position()`
+## places it in the exact bottom-left corner `combat_hud.gd` needs for its
+## own `AllyPanel`/`PartyStrip`, so leaving it up let a ghosted "100 / 100"
+## and "FOOD 100%" print straight through combat's roster
+## (`shots/ui/10-combat-hud.png`, `shots/ui/11-capture-reticle.png`). CLAUDE.md
+## is explicit that the human never fights -- creature combat is real-time
+## and directly piloted, and nothing in a fight can move the trainer's own
+## HP -- so nothing this cluster shows is actually ABOUT the fight on screen;
+## satiety keeps draining in the background regardless, same as it does
+## through a menu, a conversation, or a build session, none of which keep
+## this cluster up either. Relocating it instead of hiding it was considered
+## and rejected: the only screen corner combat leaves clear (bottom-right) is
+## already `combat_hud.gd`'s own move grid, so a rework big enough to find it
+## a genuinely free corner is a lot more risk than folding it into a stand-down
+## mechanism its two neighbours already use correctly.
+##
+## The minimap and objective block have no equivalent anywhere in
+## `combat_hud.gd` AND sit in a screen corner combat's own UI never reaches
+## (top-right) -- neither problem `_vitals_cluster` has -- so they stay
+## deliberately out of this function; hiding them would take away information
+## combat never replaces, for a collision that does not exist.
+##
+## Plain `.visible` writes, not a fade: `_creature_block` is a bare `Control`
+## with no animation of its own, `_vitals_cluster` only ever animates its own
+## `modulate.a` (`_update_vitals_cluster`'s idle fade), never `.visible`, and
+## `party_strip.gd::_process` already early-returns its fade-timer bookkeeping
+## whenever `not visible` (`if _pinned or not visible: return`), so forcing it
+## off here cannot fight the widget's own reveal/hide tween -- it simply
+## pauses mid-state and picks up again once this sets `.visible = true` back
+## on the frame the fight ends, which is also the frame
+## `_update_creature_block()`/`_update_party_strip()`/`_update_vitals_cluster()`
+## next redraw real content into all three, so nothing stale is left showing.
+func _yield_left_stack_to_combat_hud() -> void:
+	var combat := _combat_is_running()
+	if _creature_block != null:
+		_creature_block.visible = not combat
+	if _party_strip != null:
+		_party_strip.visible = not combat
+	if _vitals_cluster != null:
+		_vitals_cluster.visible = not combat
 
 
 func _use_hotbar_slot(slot_index: int) -> void:
@@ -2535,12 +2636,49 @@ func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = 
 ## `_exploration_legend_should_show()` above already stands the legend down on
 ## exactly this predicate. The hotbar is inert whenever something owns input,
 ## so again only the drawing of it is taken away.
+##
+## Also the one place both `_prompt_label.text` writers (`_ready()`'s seed and
+## `_on_prompt_changed()`) get read back every frame, which is what makes this
+## the right spot for the emptiness check below rather than a second one at
+## each write site -- a write site added later would silently miss a
+## duplicated check the way `input_owner.gd`'s header describes for the
+## hotbar leak. A blind critic caught the failure of having no check at all:
+## `_prompt_label` carries its own backing plate (`prompt_box` above) so that
+## the contextual line reads over grass instead of floating bare -- but
+## `fit_content` only collapses the TEXT to zero height when `text` is empty,
+## not the plate's own `content_margin_top`/`bottom`, so an empty prompt still
+## drew an unlabelled 800x12 pill bottom-centre of every frame with nothing to
+## say. Gating on `not text.is_empty()` here removes the plate exactly when
+## there is no line for it to hold, without touching `text` itself --
+## `_exploration_legend_should_show()`'s recall check and the legend text
+## builder both still read `_prompt_label.text` to know whether the prompt
+## currently owns "Call out", and clearing the string instead of hiding the
+## node would have broken both of those reads.
+##
+## The hotbar half of the swap also covers `_combat_is_running()` now, folded
+## into the same `_hotbar_panel.visible` write rather than a second function
+## racing this one for the same node -- whichever ran second would win and
+## silently undo the other's answer. `combat_hud.gd` draws its own move grid
+## and `Orbs N` readout (`_grid_panel`/`_orbs`) directly over this HUD's
+## bottom-right corner on its own higher `UITokens.LAYER_COMBAT` CanvasLayer,
+## a real overlap a blind critic caught (`shots/ui/10-combat-hud.png`:
+## hotbar slot chips and "Orbs 10" compositing through the move grid).
+## CONTROLLER-MAP still routes hotbar presses through the d-pad in a fight
+## ("stays live... reachable mid-fight") -- that is `_read_hotbar_input()`'s
+## own gate (`_world_input_allowed(false, true)`), unrelated to this node's
+## `visible` flag, and PlaygroundHUD's `_process` keeps running through a
+## fight (combat does not pause the tree) so the poll is unaffected by the
+## panel going undrawn. Only the SAME thing OW11 already took away for the
+## build menu -- the drawing -- goes with it here; the prompt is left out of
+## this combat branch because it already carries its own combat dedup
+## (`_prompt_belongs_to_combat()` blanks its text once the fight owns it),
+## and the emptiness check just above already hides the plate for that case.
 func _yield_bottom_to_build_menu() -> void:
 	var yielding := _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
 	if _hotbar_panel != null:
-		_hotbar_panel.visible = not yielding
+		_hotbar_panel.visible = not yielding and not _combat_is_running()
 	if _prompt_label != null:
-		_prompt_label.visible = not yielding
+		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
 
 
 func _build_menu_is_open() -> bool:

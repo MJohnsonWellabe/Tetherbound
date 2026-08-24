@@ -183,7 +183,13 @@ text = ""
 
 ; --- Move grid: lower-right ---------------------------------------------------
 
-[node name="OrbsLabel" type="Label" parent="Root"]
+; Backing plate for the orb count -- a blind visual review flagged "Orbs 10"
+; as the one combat readout with no plate behind it, floating bare over
+; whatever ground happens to be under it (DEFECT 4a). Every sibling readout
+; on this HUD (EnemyPanel, AllyPanel, GridPanel) already wears one; styled in
+; code (`_ready()`) same as those, per this file's own header on why no
+; PanelContainer here carries a stylebox directly.
+[node name="OrbsPanel" type="PanelContainer" parent="Root"]
 mouse_filter = 2
 anchor_left = 1.0
 anchor_right = 1.0
@@ -195,7 +201,11 @@ offset_right = -56.0
 offset_bottom = -258.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="OrbsLabel" type="Label" parent="Root/OrbsPanel"]
+mouse_filter = 2
 horizontal_alignment = 1
+vertical_alignment = 1
 theme_override_font_sizes/font_size = 23
 text = ""
 
