@@ -310,6 +310,31 @@ static func pad_button_name_for_action(id: String) -> String:
 	return ""
 
 
+## The action's button as PLAIN TEXT for the live device: "X" on a pad, "E" on
+## a keyboard. No BBCode, no image, no brackets -- for a caller drawing into an
+## ordinary `Label`, which cannot render `icon()`'s `[img]` tag at all.
+##
+## Added for TUTORIAL-CHAIN (OP23-04): the guided objective chain's `how` lines
+## name a controller verb per step ("{interact} at the gate"), and both places
+## they are drawn -- the HUD's objective block and the quest-log tab -- are
+## plain Labels. Reading the InputMap here rather than typing a letter into
+## data/progression/objectives.json is the whole point: tab_settings.gd lets
+## the player move these bindings, and a hint that names the wrong button is
+## worse than one that names none.
+##
+## Controller-first (CLAUDE.md): the pad button wins whenever the pad is the
+## live device and the action has one, and the bound key is the fallback --
+## the same order `icon()`'s own gamepad path already resolves in.
+static func action_name(id: String) -> String:
+	if not InputMap.has_action(id):
+		return id
+	if using_gamepad():
+		var pad := pad_button_name_for_action(id)
+		if not pad.is_empty():
+			return pad
+	return key_name_for_action(id)
+
+
 static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_override: String = "") -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id

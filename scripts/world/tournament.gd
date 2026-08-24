@@ -332,7 +332,40 @@ func _build_board() -> void:
 
 ## --- polling ------------------------------------------------------------------
 
-func _process(_delta: float) -> void:
+## Seconds between re-checks of the VOLATILE condition flags. TUNABLE.
+##
+## The revision short-circuit in `_refresh()` below is right for the bracket --
+## nothing repaints unless a flag or the roster actually moved -- and WRONG for
+## condition, which is the one thing here that changes with no revision behind
+## it at all. Nourishment drains on a real-time clock inside
+## `creature_condition.gd::tick()`; feeding one from the satchel writes a float
+## on a creature instance. Neither touches `party.revision` or
+## `progression.revision`, so on a pure revision poll `tournament_condition_ready`
+## could only ever be recomputed when something ELSE happened to change --
+## a team could go hungry and the gate would not notice, and a player could feed
+## them and the gate would not notice that either.
+##
+## That was survivable while condition was only read by the marshal at the
+## moment you talked to her. TUTORIAL-CHAIN (OP23-04) put `tournament_team_fed`
+## on the guided chain, where a stale answer is a HUD line that tells the player
+## to go and feed a team they just fed, so the clock is no longer optional.
+##
+## One second, because that is the resolution a player can perceive on a meter
+## that moves 1.1 points a minute, and the work is `entrants()` -- a sort of at
+## most five creatures and three condition summaries.
+const CONDITION_POLL_SECONDS := 1.0
+
+var _condition_elapsed := 0.0
+
+
+func _process(delta: float) -> void:
+	_condition_elapsed += delta
+	if _condition_elapsed >= CONDITION_POLL_SECONDS:
+		_condition_elapsed = 0.0
+		# Idempotent: `progression_state.gd::set_flag` bumps its revision only
+		# when the value actually changes, so a settled team costs one poll and
+		# no repaint.
+		_write_entry_flags(_party(), _progression())
 	_refresh(false)
 
 
@@ -476,6 +509,19 @@ func _write_entry_flags(party: RefCounted, progression: RefCounted) -> void:
 	# marshal's ladder reads it like any other flag, which is what keeps the
 	# entry rule in data rather than in a second copy inside her dialogue.
 	progression.call("set_flag", "tournament_condition_ready", condition_ready(party))
+	# OP23-04 / owner directive 2026-08-23 section 2: "Keep the satiety drain
+	# rate; teach it... an explicit 'feed your team' step before tournament
+	# sign-up so arriving hungry reads as a deliberate care ritual, not a
+	# trap." The drain is untouched; this is the flag that rung waits on.
+	#
+	# VOLATILE, exactly like `tournament_condition_ready` above and for the
+	# same reason -- a team that goes hungry again has genuinely stopped being
+	# fed, and the guided chain putting the line back on the HUD is the
+	# teaching working, not a regression. Split out from `condition_ready`
+	# rather than reusing it because the objective says "feed your team": a
+	# line naming food while the real failure is an unrested creature is the
+	# class of defect OP23-04 reports.
+	progression.call("set_flag", "tournament_team_fed", team_fed(party))
 
 
 func _progression() -> RefCounted:
@@ -539,6 +585,22 @@ static func condition_ready(party: RefCounted) -> bool:
 		if not bool((entry.get("condition", {}) as Dictionary).get("ready", false)):
 			return false
 	return not entrants(party).is_empty()
+
+
+## Is every entrant FED -- `creature_condition.gd`'s own `fed` answer, over the
+## same entrants `condition_ready()` reads, so the two can never disagree about
+## who is being asked about. One of the three halves of that gate, surfaced on
+## its own because `data/progression/objectives.json`'s feed rung names it on
+## its own. Every threshold still lives in creature_condition.json; this asks
+## the question and does not interpret a number.
+static func team_fed(party: RefCounted) -> bool:
+	var who := entrants(party)
+	if who.is_empty():
+		return false
+	for entry: Dictionary in who:
+		if not bool((entry.get("condition", {}) as Dictionary).get("fed", false)):
+			return false
+	return true
 
 
 ## Who would actually be entered, strongest first, each with their condition:

@@ -10,30 +10,22 @@ extends "res://scripts/ui/menu_tab.gd"
 ##
 ## No branching, no timers, no prerequisite chains (spec §19, CLAUDE.md): an
 ## entry is either DONE (its flag is set) or not yet, in the fixed order
-## `data/progression/objectives.json` lists it. `_fill_main` below only
-## decides what of that fixed order gets DRAWN; it is still `quest_log.gd`'s
-## own DONE/not-yet answer for every entry, read once and not cached anywhere
-## new.
+## `data/progression/objectives.json` lists it.
 ##
-## PRESENTATION FIX (blind-judge pass): a Day-1 save used to print all
-## twenty-plus Main Story steps at once — through "Defeat the Meadows
-## Warden" — as a flat, equally-weighted list, so the one line the player
-## could actually act on sat second in a wall of identical rows and the
-## chapter's ending was legible from the first minute. `_fill_main` now draws
-## only what the player has reached: every entry already DONE, the one entry
-## currently open (`quest_log.gd::tracked_text()`'s own "first not-yet entry
-## in file order" rule, reused here rather than re-invented), and exactly one
-## step of look-ahead past it -- with the current entry given real visual
-## weight instead of sharing a font size with twenty others. The look-ahead
-## row is not a softening of the rule: drawing the current step ALONE hid the
-## village gate on a fresh save, where the open entry is still "Catch your
-## first wild creature", and `tests/smoke_menu.gd` caught it. One line ahead
-## is what the player is walking into; twenty were the chapter's ending. Nothing here hides a step the player is IN — a revealed
-## objective still reads until it is done — it only stops printing steps
-## nobody has reached yet. `objectives.json` and `quest_log.gd` are both
-## untouched: the data still holds every entry in the same order, and this is
-## the one file (see `_comment_no_spoilers` there) allowed to decide how much
-## of it a Day-1 screen actually shows.
+## TUTORIAL-CHAIN (OP23-04) changed WHAT THIS DRAWS and nothing else. It used
+## to render every Main Story entry in the file, done and not-done alike --
+## twenty-two rows on a fresh save, of which one was actionable. The owner's
+## report is the whole reason this lane exists: the opening should tell you
+## the next thing to do, one step at a time, "never fronting the full list".
+##
+## So the Main Story section now draws `quest_log.gd::guided_entries()` -- what
+## is done, plus the one rung the player is on -- with that open rung given the
+## panel's emphasis and its `how` line printed underneath it: the concrete
+## action and the button to do it with, read live off the InputMap so a rebind
+## cannot make it lie. Local Requests are untouched; `revealed_by` already
+## gives them their own one-at-a-time rule.
+##
+## Still no state of its own, still one reader, still no condition in the data.
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 
@@ -116,7 +108,12 @@ func poll() -> void:
 	if revision == _last_progression_revision:
 		return
 	_last_progression_revision = revision
-	_fill_main(_main_list, _log.call("main_entries", progression))
+	_fill(
+		_main_list,
+		_log.call("guided_entries", progression),
+		"The road ahead is unclear.",
+		int(_log.call("current_index", progression))
+	)
 	_fill(_local_list, _log.call("local_entries", progression), "Nothing outstanding right now.")
 
 
@@ -129,97 +126,12 @@ func _read_scroll() -> void:
 	_scroll.scroll_vertical += int(roundi(axis * SCROLL_SPEED * get_process_delta_time()))
 
 
-## The Main Story list. See the file header for why this draws a prefix of
-## `entries` rather than all of it: everything DONE, in file order, then the
-## one entry currently open — given its own row, first and loudest — and
-## nothing past it. `entries[i]["done"]` is `quest_log.gd`'s own answer; this
-## function only chooses which of them to draw and how loud.
-func _fill_main(list: VBoxContainer, entries: Array) -> void:
-	for child in list.get_children():
-		child.queue_free()
-
-	if entries.is_empty():
-		var empty := Label.new()
-		empty.text = "The road ahead is unclear."
-		empty.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-		list.add_child(empty)
-		return
-
-	var current_index := -1
-	for i in entries.size():
-		if not bool((entries[i] as Dictionary).get("done", false)):
-			current_index = i
-			break
-
-	# -1 means every authored Main Story entry is DONE (quest_log.gd's own
-	# "" tracked-text state, spec-honest for a finished chapter) — draw the
-	# whole completed history and skip the current-objective row, since there
-	# is no longer a current objective.
-	var revealed := current_index if current_index >= 0 else entries.size()
-
-	if current_index >= 0:
-		list.add_child(_current_row(entries[current_index] as Dictionary))
-		# One step of look-ahead, and exactly one. Drawing ONLY the current
-		# step reads as a chapter with no shape -- and it hid a step the
-		# player is about to be sent to: in a fresh save the open entry is
-		# "Catch your first wild creature" and the village gate is the very
-		# next one, which `tests/smoke_menu.gd` caught disappearing. One line
-		# ahead is what the player is walking into; twenty were the chapter's
-		# ending, which is the wall this filter exists to stop printing.
-		# Muted and small, so the current step above it is still the loudest
-		# thing on the page.
-		if current_index + 1 < entries.size():
-			list.add_child(_next_row(entries[current_index + 1] as Dictionary))
-
-	if revealed <= 0:
-		return
-
-	var done_list := VBoxContainer.new()
-	done_list.add_theme_constant_override("separation", 4)
-	list.add_child(done_list)
-	for i in revealed:
-		done_list.add_child(_done_row(entries[i] as Dictionary))
-
-
-## The one line a Day-1 player can act on: bigger and TEAL, the same accent
-## colour the focus ring already means "this is the live one" everywhere else
-## in this menu, rather than sharing FONT_BODY with a wall of finished steps.
-func _current_row(entry: Dictionary) -> Control:
-	var row := Label.new()
-	row.text = "%s  %s" % [OPEN_MARK, str(entry.get("label", ""))]
-	row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	row.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
-	row.add_theme_color_override("font_color", UITokens.TEAL)
-	return row
-
-
-## The single step after the current one. Marked OPEN like the current row --
-## it is not done -- but at the muted weight the finished history uses, so the
-## page still has exactly one loud line on it.
-func _next_row(entry: Dictionary) -> Control:
-	var row := Label.new()
-	row.text = "%s  %s" % [OPEN_MARK, str(entry.get("label", ""))]
-	row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	row.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
-	row.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	return row
-
-
-func _done_row(entry: Dictionary) -> Control:
-	var row := Label.new()
-	row.text = "%s  %s" % [DONE_MARK, str(entry.get("label", ""))]
-	row.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	row.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	return row
-
-
-## The Local Requests list. Unlike Main Story, an entry here only exists at
-## all once `revealed_by` has fired (`quest_log.gd::_entries`), so the wall-
-## of-spoilers problem `_fill_main` fixes does not apply — every entry this
-## list ever hands back is one the player has already met in the world, done
-## or not, and showing an OPEN one is the point.
-func _fill(list: VBoxContainer, entries: Array, empty_text: String) -> void:
+## `current` is the index within `entries` of the one open rung, or -1 when
+## there is none (Local Requests never pass one; a finished chapter passes -1).
+## That row gets the `how` line under it -- only that row, because a hint for a
+## step the player already finished is noise and a hint for one they cannot see
+## does not exist.
+func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int = -1) -> void:
 	for child in list.get_children():
 		child.queue_free()
 	if entries.is_empty():
@@ -229,8 +141,8 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String) -> void:
 		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		list.add_child(empty)
 		return
-	for raw: Variant in entries:
-		var entry := raw as Dictionary
+	for i in entries.size():
+		var entry := entries[i] as Dictionary
 		var done := bool(entry.get("done", false))
 		var row := Label.new()
 		row.text = "%s  %s" % [DONE_MARK if done else OPEN_MARK, str(entry.get("label", ""))]
@@ -239,3 +151,23 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String) -> void:
 			"font_color", UITokens.TEXT_MUTED if done else UITokens.TEXT_PRIMARY
 		)
 		list.add_child(row)
+		if i != current:
+			continue
+		var how := str(entry.get("how", ""))
+		if how.is_empty():
+			continue
+		var hint := Label.new()
+		# Indented under the row it belongs to, one step quieter than the open
+		# objective and one step louder than a finished one: it is the answer
+		# to "how", not a second objective competing with the "what" above it.
+		#
+		# FONT_LABEL, not FONT_TINY, for the reason `tab_backpack.gd`'s own bar
+		# hint gives at the same size: this sentence is the instruction, and an
+		# instruction nobody can read at handheld scale is the OP23-04 defect
+		# happening one layer further in.
+		hint.text = "     %s" % how
+		hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		list.add_child(hint)
