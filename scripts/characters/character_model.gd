@@ -377,13 +377,31 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## was closes that gap without touching the "painted, self-lit" look itself:
 ## a fully white emission untouched by a "*" wildcard tint of `#ffffff`
 ## renders identically to before, and any other tint now visibly lands.
-func _shared_variant_material(source: Material, name: String, colour: Color) -> Material:
-	var key := "%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html()]
+func _shared_variant_material(source: Material, name: String, colour: Color,
+		finish: Dictionary = {}) -> Material:
+	# `finish` joins the cache key because it changes the rendered material as
+	# much as `colour` does; two accessories sharing a name and a colour but
+	# asking for different metal would otherwise silently share one instance.
+	var key := "%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")])]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
 		if source is BaseMaterial3D else StandardMaterial3D.new()
 	material.albedo_color = material.albedo_color * colour
+	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
+	# matte. On a flat-faced primitive under one directional key that renders as
+	# a single uniform colour with no gradient anywhere across it, which is
+	# precisely why the captain's chest badge photographed as "a flat pure-red
+	# untextured rectangle" and read as a debug gizmo rather than insignia. The
+	# shape ladder was not the problem; the absence of any shading model was.
+	# Metal gives the face a specular falloff, so a primitive reads as a struck
+	# metal object rather than as a colour swatch pasted over the costume.
+	if finish.has("metallic"):
+		material.metallic = float(finish["metallic"])
+		material.metallic_specular = float(finish.get("metallic_specular", 0.5))
+	if finish.has("roughness"):
+		material.roughness = float(finish["roughness"])
 	if material.emission_enabled:
 		# STRANDED-P3: a dark tint (a Team Tether rank palette, e.g. the grunt's
 		# original #4a5049) darkens the SAME colour into both albedo and this
@@ -416,13 +434,58 @@ func _shared_variant_material(source: Material, name: String, colour: Color) -> 
 		# floor-then-identity is safe algebraically, but the energy-multiplier
 		# bump below is not, and skipping the whole block is clearer than
 		# relying on that algebra. TUNABLE.
-		const EMISSION_FLOOR_BLEND := 0.5
-		const EMISSION_FLOOR_MULTIPLIER := 1.4
+		# THE FLOOR IS NOW GENUINELY ADDITIVE, which is what this block has claimed
+		# to be since STRANDED-P3 and was not.
+		#
+		# The old implementation lerped `material.emission` -- the emission COLOUR,
+		# which Godot uses as a MULTIPLIER over `emission_texture` whenever
+		# `emission_operator` is `EMISSION_OP_MULTIPLY`. Probed directly on the
+		# built rank materials: the operator is 1 (MULTIPLY) on every one of them,
+		# inherited from the glTF import. So the "floor" raised a multiplier and
+		# the product stayed dark, for exactly the reason the comment above gives
+		# for albedo -- "a straight multiply can only ever DARKEN a source pixel,
+		# never brighten one". The floor was subject to the same law it was
+		# written to escape, and raising its blend from 0.5 to 0.72 moved the
+		# rendered uniform by about one value point, which is how it was caught.
+		#
+		# What it cost: a blind round measured every Team Tether body at 0.11-0.18
+		# lightness and reported the whole faction collapsing into
+		# "interchangeable near-black smears" at thumbnail size -- meaning the
+		# reserved oxblood the rank palettes carry was, in practice, absent from
+		# the faction it exists to identify. The grunt rig's own texture is the
+		# reason it needs a floor at all: sampled off `grunt_lod0_texture_0.png`,
+		# its dominant values sit at 14-30 out of 255.
+		#
+		# Switching the operator to ADD makes the tint reach the surface no matter
+		# how dark the texel under it is, which is the whole point. The added
+		# amount is deliberately small: enough to carry hue and lift the uniform
+		# into a value where hue survives distance, not enough to flatten the
+		# painted panels, straps and folds into one self-lit slab. Texture
+		# variation survives because the add is constant while the texture is not.
+		#
+		# Only tinted characters are affected. The gate skips any tint at
+		# luminance >= 0.95, and every non-rank tint in the game is `#ffffff`
+		# (art.json's identity multiply), so the trainer -- five independent
+		# critics' named style anchor -- Grandpa and every villager render
+		# bit-identical across this change. It reaches Team Tether and nothing
+		# else, which is exactly the scope the defect has. TUNABLE.
+		# 0.30, raised alongside the move to genuinely dark oxblood palettes: the
+		# add is `colour * EMISSION_FLOOR_ADD`, so a darker tint contributes a
+		# smaller floor and needs a larger coefficient to stay legible.
+		# 0.06, down from 0.30. The floor's job shrank dramatically once the
+		# faction colour moved into the rig's own texture: it no longer has to
+		# manufacture a colour on a near-black surface, only to keep the very
+		# darkest folds from crushing. At 0.30 it was adding the same absolute
+		# amount to the blacks and the mids alike, which halved the texture's
+		# 7.5x contrast ratio and produced the "washed, blacks lifted to grey"
+		# reading a blind round gave the whole ranked cast. An additive floor is
+		# the right tool for a crushing shadow and the wrong tool for a palette.
+		const EMISSION_FLOOR_ADD := 0.06
 		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
 		if tint_luminance < 0.95:
-			material.emission = (material.emission * colour).lerp(colour, EMISSION_FLOOR_BLEND)
-			material.emission_energy_multiplier = maxf(
-				material.emission_energy_multiplier, EMISSION_FLOOR_MULTIPLIER)
+			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+			material.emission = colour * EMISSION_FLOOR_ADD
+			material.emission_energy_multiplier = 1.0
 		else:
 			material.emission = material.emission * colour
 	_variant_materials[key] = material
@@ -503,9 +566,17 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var part := _attach_part(mesh, str(acc.get("bone", "Hips")), offset, name)
 		if part == null:
 			continue
+		if str(acc.get("shape", "box")) in ["disc", "ring"]:
+			# CylinderMesh is built around Y; a chest badge lies in the coronal
+			# plane, so tip it a quarter turn to face forward off the bone.
+			part.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
 		var hex := str(acc.get("color", acc.get("colour", "#5a3d21")))
+		var finish := {}
+		for property: String in ["metallic", "metallic_specular", "roughness"]:
+			if acc.has(property):
+				finish[property] = acc[property]
 		part.set_surface_override_material(
-			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex)))
+			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex), finish))
 
 
 func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
@@ -514,6 +585,35 @@ func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
 			var box := BoxMesh.new()
 			box.size = Vector3.ONE * size
 			return box
+		"ring":
+			# The rim of a struck medal. A blind round named the chest badge "a
+			# flat, unshaded, borderless dark-red ellipse... it reads as a paint
+			# splat or a debug decal", and pointed at the fix in the same
+			# sentence: these characters' CAP badge is a proper gold ring-and-dot
+			# device, and the bare blob below it looks unfinished by comparison.
+			# A torus laid in the coronal plane behind a `disc` gives the chest
+			# badge that same ring-and-dot reading, with a curved rim that
+			# catches the key from a different angle than the flat face does.
+			var ring := TorusMesh.new()
+			ring.inner_radius = size * 0.40
+			ring.outer_radius = size * 0.50
+			ring.rings = 24
+			return ring
+		"disc":
+			# A struck medal: a shallow cylinder whose rim curves away from the
+			# key light, giving the shape a lit edge and a shaded one. A `box`
+			# badge presents ONE flat face square to the camera and, being a
+			# plane, takes exactly one shade across the whole of it -- which is
+			# what made the captain's insignia photograph as a flat red
+			# rectangle with no shading model at all. CylinderMesh is built
+			# around the Y axis, so `_apply_accessories` lays it onto the chest;
+			# a mesh resource cannot carry that rotation itself.
+			var disc := CylinderMesh.new()
+			disc.top_radius = size * 0.5
+			disc.bottom_radius = size * 0.5
+			disc.height = size * 0.22
+			disc.radial_segments = 24
+			return disc
 		"capsule":
 			var capsule := CapsuleMesh.new()
 			capsule.radius = size * 0.5

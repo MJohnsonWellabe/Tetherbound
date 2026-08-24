@@ -1,10 +1,10 @@
 {
-  "_comment": "R8.1. Every trainer battle in the chapter, as data. Spec \u00a712 sizes what this table has to carry -- roughly 12-17 battles (3 Lower Meadows trainers, 2-3 in the relay station, 3 regional captains, 2-4 in the stronghold, 2-4 optional patrols) -- so a new trainer is an entry here, never a new script. `scripts/world/trainer_npc.gd` places them and `scripts/combat/encounter_director.gd` fights them.",
+  "_comment": "R8.1. Every trainer battle in the chapter, as data. Spec §12 sizes what this table has to carry -- roughly 12-17 battles (3 Lower Meadows trainers, 2-3 in the relay station, 3 regional captains, 2-4 in the stronghold, 2-4 optional patrols) -- so a new trainer is an entry here, never a new script. `scripts/world/trainer_npc.gd` places them and `scripts/combat/encounter_director.gd` fights them.",
   "_comment_defeat_flag": "SB9 (autoload/progression_state.gd), the same flat flag store the road gate, the TM pickups and Tam's handover already write to. Set by the encounter director the moment the trainer's last creature faints. It is what makes the battle unrepeatable (`rechallenge: false`), what SC14's bridge will read, and what SC15's reward is recorded against so beating a trainer twice pays once.",
-  "_comment_rechallenge": "false everywhere for now, and spec \u00a711/\u00a717 is why: a re-fightable trainer is an XP faucet, and grinding is supposed to mean 'play more of the game', not 'replay one fight'. The field exists because a later sparring partner may legitimately want it -- it is not a promise that one does.",
+  "_comment_rechallenge": "false everywhere for now, and spec §11/§17 is why: a re-fightable trainer is an XP faucet, and grinding is supposed to mean 'play more of the game', not 'replay one fight'. The field exists because a later sparring partner may legitimately want it -- it is not a promise that one does.",
   "_comment_team": "Fought SEQUENTIALLY: the trainer sends out the next creature when one faints, in this order. `level` is the creature's real level (D30 arithmetic, data/config/progression.json), NOT a difficulty band. `moves` is optional and overrides the species' own quick/charged pair (data/creatures/species.json) -- for a trainer whose lesson is a specific move, SC13's Tam being the obvious case.",
   "_comment_reward": "SC15's shape (spec Sec17 P1 step 9; D39: 'SC15's trainer payouts later pay coins too'). ALL TUNABLE. `coins` (int, default 0) is granted through the ordinary satchel -- `coin` is just another items.json entry (D39), so this is `inventory.add('coin', coins)`, nothing more. `items` are real item ids granted once, each `{id, count}`. `flags` are extra progression flags to set alongside the defeat flag (SC14's South Bridge Key is a flag AND an item). `xp_bonus` (int, default 0, optional) is a FLAT bonus on top of the fight's own per-kill XP -- ordinary victory XP already happens naturally, per creature felled, through combat_manager's award; this is the authored extra, applied flatly (no party-share split, unlike the per-kill award) to every non-fainted party member. Every field pays out only when the defeat flag was NOT already set, so a rechallenge can never pay twice.",
-  "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec \u00a721). No new human generations here.",
+  "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec §21). No new human generations here.",
   "_comment_levels_sh47": "SH47/D42, the gauntlet. WAS patrol 17/18, courtyard 18/19/19, elite 21/22/22; NOW 15/16, 16/17/17, 18/19/19. TUNABLE, and no fight is removed or added. Two reasons, both measured with tools/_probe_pacing.py. First, the ladder ran the wrong way at the top: the elite's aces were 21 and 22 while the Warden's own ace -- the chapter's boss, the fight everything else prepares for -- is 20. A gauntlet harder than the boss it guards inverts spec Sec8's whole shape. Second, the three regional captains cap at 16, so a player arriving off the Sigil gate faced a five-level step and the probe showed the cost: seven forced wild fights against level-2-to-6 field creatures purely to inflate a number, which is Sec11's `bad grind` by name. The gauntlet now climbs 15 -> 19 across three fights and hands the player to a Warden whose last creature is still the highest level in the chapter. Nothing about the ROOM sequence, the rewards or the rank ladder moved -- only the numbers on the teams.",
   "_comment_positions": "World metres [x, z]; Y is always asked of the world (D09). `facing_deg` is the yaw the trainer is placed with; npc_body.gd turns them to face the player on approach regardless.",
   "_comment_placed_by": "SC12/SC13. An entry naming `placed_by` is a trainer whose body already exists somewhere else -- `scripts/world/trainer_npc.gd::build()` skips it rather than standing up a second, duplicate body. Mira, Oskar and Tam all name `\"village_npcs\"`: they are the three existing village NPCs (data/config/village_npcs.json, placed by scripts/world/village_npcs.gd) and spec sec3 Band 1 says outright to reuse them rather than add a fourth. `position`/`facing_deg` below still mirror their real village_npcs.json entry for anyone reading this table, even though nothing spawns from them. Their challenge is offered through village_npcs.gd's own `greeting_when` list (not this file's prompt system) and their fight is started by sequence_director.gd's `battle:<trainer_id>` dialogue effect (not `_on_challenged`/`_on_conversation_finished` below) -- but this table, and `encounter_director.begin_trainer_battle()`, are exactly what both routes read and run.",
@@ -28,7 +28,7 @@
       "hair": {
         "visible": true,
         "color": "#c9a86a",
-        "_comment": "Spec \u00a721 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
+        "_comment": "Spec §21 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
       },
       "position": [
         13.0,
@@ -470,12 +470,12 @@
     {
       "id": "captain_field",
       "name": "Captain Halder",
-      "_comment": "SF34, spec \u00a73 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside \u00a73's own 'roughly 10-16 entering this band' -- NEVER player-scaled (\u00a73 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
+      "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
       "rank": "captain",
       "palette": {
-        "*": "#a89a6b"
+        "*": "#d9a878"
       },
-      "_comment_palette": "NP2's CAPTAIN rank palette (#b0a271, data/config/npc_ranks.json) with ONE regional accent -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec \u00a721 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting.",
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the golden dry straw of the high pasture, and the warmest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: this captain was 'unplaced/near village' (the (52,-122) below was a Band-4-shaped stand-in on the OLD map, not a real Band 4 site -- the old map had no Band 4). Moved to (170,5590), the position section 3.1's Band 4 waypoint list names explicitly for the Field Captain. `facing_deg` (-20.6) is UNCHANGED and is almost certainly wrong for the new site -- it was derived by atan2 back to the OLD village at roughly the origin, and the new corridor's Band 4 geometry is a different shape entirely. Left as a flag rather than invented: re-deriving a correct facing needs the reviewer to pick which way 'back down the road' points on the new spine, which is authoring judgement past a coordinate relocation.",
       "position": [
         170.0,
@@ -515,7 +515,8 @@
         "xp_bonus": 60
       },
       "defeat_flag": "defeated_captain_field",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     },
     {
       "id": "captain_ridge",
@@ -523,9 +524,9 @@
       "_comment": "SF34. The second captain: Air-focused team, rewards the Ridge Sigil. A level step above the Field Captain -- the three are meant to be fought in road order, not in one sitting, and nothing enforces that order because nothing needs to: the Sigils are a set and the gate counts them, not their sequence.",
       "rank": "captain",
       "palette": {
-        "*": "#a3a79c"
+        "*": "#c8969f"
       },
-      "_comment_palette": "Captain base, accented toward the pale grey-green of the wind ridge -- see captain_field's own note for why this is a per-material accent rather than a tint or a new body.",
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the cold rose light of the wind ridge, the coolest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow5d": "OW5D relocation to (-280,6460), section 3.1's named 'Ridge Captain' position (watchtower spur). `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note; the same reasoning applies here.",
       "position": [
         -280.0,
@@ -565,17 +566,18 @@
         "xp_bonus": 70
       },
       "defeat_flag": "defeated_captain_ridge",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     },
     {
       "id": "captain_riverwatch",
       "name": "Captain Oreth",
-      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec \u00a73 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
+      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec §3 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
       "rank": "captain",
       "palette": {
-        "*": "#8f9a86"
+        "*": "#cc9b88"
       },
-      "_comment_palette": "Captain base, accented toward the wet slate of the draw. Same per-material rule as the other two.",
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the terracotta of the river lock's warm stone, sitting between the other two. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow5d": "OW5D relocation to (-100,4350), section 3.1's own text: 'Riverwatch Captain sits off-spine on the Band 3/4 seam.' `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note. This captain's whole `_why_here` below describes a posting that watches for a river that, per this same macro-layout document (section 5), now actually exists nearby (the river crosses the corridor at z~4200, per section 10.2's Old Mill Crossing row) -- the 'no actual watercourse here yet' caveat is arguably resolved by the new geography, but confirming that is OW5C's river work, not this pass's.",
       "position": [
         -100.0,
@@ -615,7 +617,8 @@
         "xp_bonus": 80
       },
       "defeat_flag": "defeated_captain_riverwatch",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     },
     {
       "id": "warden_aldis",

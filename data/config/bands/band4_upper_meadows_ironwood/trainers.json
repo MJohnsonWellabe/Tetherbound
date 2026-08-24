@@ -9,9 +9,9 @@
       "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
       "rank": "captain",
       "palette": {
-        "*": "#a89a6b"
+        "*": "#d9a878"
       },
-      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec §21 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting. NP2-grunt-wire moved the rank's OWN base palette to an oxblood-family hex (data/config/npc_ranks.json's `#d4a3a3`, up from the old olive `#b0a271`) and did not touch this override -- this captain's body still renders in this file's own straw tone, not the rank base, since `trainer_npc.gd::model_config()` replaces the whole palette rather than layering on it. Known gap, not silently fixed: recolouring three live encounter sites' flavour palettes wasn't part of that item's scope.",
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the golden dry straw of the high pasture, and the warmest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow6": "OW6 (owner: 'the captain to challenge is way too close to where you start'). THIS is the trainer the complaint describes -- OW5D's own note below records the pre-corridor stand-in position (52,-122), effectively at the village. It already moved before this item ran. Verified with OW5-walk's real spine (11,316.6m walked, 37.7min, walked/config 0.983): current site is 8767m of polyline / 76.1% in, ~28.7 walked minutes -- third of the four field/relay captains and well past the corridor's midpoint. No further move made; a fourth relocation of the same trainer without a fresh measured problem would be exactly the kind of un-asked-for redesign this project's own conventions warn against.",
       "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: this captain was 'unplaced/near village' (the (52,-122) below was a Band-4-shaped stand-in on the OLD map, not a real Band 4 site -- the old map had no Band 4). Moved to (170,5590), the position section 3.1's Band 4 waypoint list names explicitly for the Field Captain. `facing_deg` (-20.6) is UNCHANGED and is almost certainly wrong for the new site -- it was derived by atan2 back to the OLD village at roughly the origin, and the new corridor's Band 4 geometry is a different shape entirely. Left as a flag rather than invented: re-deriving a correct facing needs the reviewer to pick which way 'back down the road' points on the new spine, which is authoring judgement past a coordinate relocation.",
       "position": [
@@ -52,7 +52,8 @@
         "xp_bonus": 60
       },
       "defeat_flag": "defeated_captain_field",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     },
     {
       "order": 12,
@@ -62,9 +63,9 @@
       "_comment": "SF34. The second captain: Air-focused team, rewards the Ridge Sigil. A level step above the Field Captain -- the three are meant to be fought in road order, not in one sitting, and nothing enforces that order because nothing needs to: the Sigils are a set and the gate counts them, not their sequence.",
       "rank": "captain",
       "palette": {
-        "*": "#a3a79c"
+        "*": "#c8969f"
       },
-      "_comment_palette": "Captain base, accented toward the pale grey-green of the wind ridge -- see captain_field's own note for why this is a per-material accent rather than a tint or a new body.",
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the cold rose light of the wind ridge, the coolest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow6": "OW6. Measured against OW5-walk's real spine: nearest spine point is 10143m of polyline / 88.1% in, ~33.2 walked minutes -- the furthest of the four, and already sited at the last patch of walkable ground on the ridge (see `_why_here` below, which measured 43-76 degrees of rock past it). Left in place; there is no further walkable ground to move him onto without a fresh terrain probe this item did not run.",
       "_comment_ow5d": "OW5D relocation to (-280,6460), section 3.1's named 'Ridge Captain' position (watchtower spur). `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note; the same reasoning applies here.",
       "position": [
@@ -105,7 +106,8 @@
         "xp_bonus": 70
       },
       "defeat_flag": "defeated_captain_ridge",
-      "rechallenge": false
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
     },
     {
       "order": 4000,

@@ -325,6 +325,7 @@ Band 4 render. Round 2's box ran at load 12–30 on four cores with ~1GB free an
 five other lanes capturing and testing into each other; its own full-scene
 capture was starved out at 11 minutes without printing a line. Needs an idle box
 and one render, then either a fix or a note that the capture invented it.
+
 ## Phase -1.9 — what PERF-ROG left open (2026-08-23)
 
 `OP23-01` itself is closed (`ralph/DONE.md`, `ralph/PERF_ROG_REPORT.md`): the

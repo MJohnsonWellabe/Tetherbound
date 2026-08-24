@@ -353,7 +353,25 @@ static func model_config(spec: Dictionary) -> Dictionary:
 	if cfg.is_empty():
 		return cfg
 	cfg = cfg.duplicate(true)
-	for key: String in ["hair", "palette", "accessories", "tint", "height"]:
+	for key: String in ["hair", "accessories", "tint", "height"]:
 		if spec.has(key):
 			cfg[key] = spec[key]
+	# `palette` LAYERS; everything above still replaces. A site entry that names
+	# one surface must not silently discard the rank's own colours for every
+	# other surface -- which is exactly what a whole-dictionary assignment did,
+	# and it is how `captain_field`/`captain_ridge`/`captain_riverwatch` each
+	# spent a whole chapter rendering in their old olive/tan/slate: NP2-grunt-wire
+	# moved the captain RANK to the faction's oxblood, and these three overrode
+	# `palette` wholesale, so the faction colour reached the generic
+	# `relay_captain` and never reached a single captain the player actually
+	# fights. Merging per key means a site accent adds to the rank rather than
+	# erasing it, and a site that deliberately wants the whole body (a `"*"` key,
+	# which is what today's single-fused-material rigs can address) still wins
+	# that key outright -- the mechanism is the same one `npc_ranks.gd` uses to
+	# lay a rank over its base.
+	if spec.has("palette"):
+		var merged: Dictionary = (cfg.get("palette", {}) as Dictionary).duplicate(true)
+		for surface: Variant in (spec["palette"] as Dictionary):
+			merged[surface] = (spec["palette"] as Dictionary)[surface]
+		cfg["palette"] = merged
 	return cfg

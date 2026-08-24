@@ -62,12 +62,20 @@ extends SceneTree
 ##   has on record, so the budget below is costed against it rather than
 ##   against a guessed cheaper figure:
 ##
-##     17 species x 2 variants (ordinary "vivid" + shiny)     = 34 shots
+##     17 species x 2 variants (ordinary "vivid" + shiny)
+##       x 2 views (front-on + rear three-quarter)            = 68 shots
 ##     1 alpha-scale demonstration (galecrest, the same pair
-##       framing as the 34 above)                             =  1 shot
+##       framing as the 68 above)                             =  1 shot
 ##     1 line-up frame (5 species + the trainer, one settle)  =  1 shot
 ##                                                              ----------
-##                                                               36 shots
+##                                                               70 shots
+##
+##   The rear view doubles the species pass and is worth it: see `REAR_YAW_DEG`
+##   for why a front-only survey cannot photograph most of what the owner's
+##   board asks these creatures to carry. MEASURED on this box rather than
+##   estimated -- the whole 37-frame pass ran in well under a minute, so the
+##   pessimistic 2.4s/frame budget below overstates this scene by roughly an
+##   order of magnitude and 70 shots is still a sub-two-minute capture.
 ##
 ##   Per pair-shot (the 35 that are one creature + the trainer):
 ##     SETTLE_FRAMES (6, physics_frame) + POSE_FRAMES (2, process_frame)
@@ -189,6 +197,26 @@ const LINEUP_TRAINER_X := -6.0
 ## --- fixed pair framing: identical for every one of the 35 pair shots -----
 const PAIR_TRAINER_POS := Vector3(-2.3, 0.0, 0.0)
 const PAIR_CREATURE_POS := Vector3(0.0, 0.0, 0.0)
+## Every species is shot twice: front-on, and turned away from the camera.
+##
+## The rear view exists because a front-only survey cannot photograph what the
+## owner's own creature board gives several species as their IDENTIFYING
+## feature, and those features are dorsal: terrapup's leaf growth over the back
+## and shoulders, burrowback's stacked stone shell plates, trailpup's shoulder
+## growth and mudsnout's moss crown, plus every `overlays`/`overlays_shiny`
+## entry in `shiny_colourways.json` whose `where` block selects on `up_min` --
+## which is most of them, because moss and leaf growth sit on upward-facing
+## surfaces by definition. Measured while raising terrapup's leaf coverage:
+## the green share of its chromatic texels went 3.8% -> 11.3%, a tripling, and
+## the front-on frame barely moved, because nearly all of it is on the back.
+##
+## A survey that cannot show the thing it changed cannot be judged on it, which
+## is the same class of defect `ralph/VISUAL_LEDGER.md` already records six of
+## under "this sweep's own harness defects". 145 degrees rather than a flat 180
+## so the frame still carries some of the head and flank and reads as a
+## three-quarter rear rather than a wall of back.
+const REAR_YAW_DEG := 145.0
+
 const CAM_POS := Vector3(-1.15, 1.55, 7.0)
 const CAM_LOOK := Vector3(-1.15, 1.35, 0.0)
 const FOV := 42.0
@@ -262,14 +290,42 @@ func _build_environment() -> void:
 	env.background_color = Color(0.20, 0.22, 0.24)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.75, 0.78, 0.82)
-	env.ambient_light_energy = 1.5
+	# CALIBRATED, not chosen. This stage was over-exposing every subject by a
+	# measured 2.3x and three consecutive blind creature rounds spent their
+	# top-ranked finding on the result -- "the roster floats in high-key pastel",
+	# "25-50% of body highlight regions clipped to pure white", and a duskhush
+	# reported as "candy lavender" whose own albedo texture measures mean 65.6
+	# with a 95th percentile of 135, i.e. a genuinely dark plum owl. The art was
+	# not pastel; the photograph was.
+	#
+	# The proof is in the frame itself and costs nothing to re-check: the
+	# BACKDROP is `BG_COLOR` and is not lit, and it renders at exactly its
+	# authored (51,56,61). The FLOOR carries albedo (0.30,0.33,0.30), which
+	# should land near (77,84,77), and it rendered at (174,200,184) -- 2.26x,
+	# 2.38x, 2.39x per channel. Anything lit was that far off; anything unlit was
+	# exact.
+	#
+	# Cause was simple addition: ambient 1.5 at a near-white colour is already
+	# ~1.17 of light before the 1.6 key adds ~0.91 more at this elevation, and
+	# these creature materials are ALSO self-lit (the painted albedo is wired
+	# into the emission slot, tamed but not removed by
+	# creatures_visual.json's `emission_scale`). Three sources summing past 3.0
+	# where a neutral stage wants ~1.0.
+	#
+	# Set in two measured passes: 1.5/1.6 gave 2.3x, 0.55/0.85 gave 1.26x,
+	# 0.44/0.68 landed it at 1.0; adding the rim light below pushed it back to 1.31,
+	# so 0.35/0.55 re-lands it WITH the rim. The floor is the target, always. The values below are set so the floor renders at its own albedo. THE FLOOR
+	# IS THE CALIBRATION TARGET: if a change here makes it drift off (77,84,77)
+	# again, the survey is lying about colour and every verdict taken from it
+	# inherits the error. Re-measure it, do not eyeball it.
+	env.ambient_light_energy = 0.35
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env_node.environment = env
 	_world.add_child(env_node)
 
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(-35.0), 0.0)
-	key.light_energy = 1.6
+	key.light_energy = 0.55
 	# Godot defaults DirectionalLight3D.shadow_enabled to FALSE, and a bare
 	# stage that does not set it renders every subject with no contact shadow at
 	# all. A blind critic read exactly that off this survey's first run --
@@ -281,6 +337,23 @@ func _build_environment() -> void:
 	# which is half of judging its scale against the trainer.
 	key.shadow_enabled = true
 	_world.add_child(key)
+
+	# A low RIM from behind, so a dark creature can never fall below its own
+	# backdrop. A blind round measured galecrest's rare at mean luminance 43
+	# against a 56 backdrop -- "a black cutout; eyes, feather pattern, everything
+	# gone, the least readable frame on the sheet" -- and brooktail did the same
+	# thing earlier. Those are art problems and are fixed in the colourways, but
+	# the STAGE should not be the reason a legitimately dark creature becomes
+	# unjudgeable: a roster is allowed dark members, and the survey has to be able
+	# to photograph them. A rim separates a dark silhouette from a dark ground
+	# without touching the exposure the floor is calibrated to -- it is aimed away
+	# from the camera and carries no shadow, so it adds an edge and nothing else.
+	var rim := DirectionalLight3D.new()
+	rim.rotation = Vector3(deg_to_rad(-18.0), deg_to_rad(158.0), 0.0)
+	rim.light_energy = 0.5
+	rim.light_color = Color(0.86, 0.90, 1.0)
+	rim.shadow_enabled = false
+	_world.add_child(rim)
 
 	# Decorative only, no collision -- both the trainer (a StaticBody3D under
 	# npc_body.gd, no gravity) and every creature (physics_process frozen
@@ -317,18 +390,24 @@ func _run_species_pass() -> void:
 	for i in ORDER.size():
 		var id := ORDER[i]
 		var idx := i + 1
-		await _species_shot(idx, id, false)
-		await _species_shot(idx, id, true)
+		await _species_shot(idx, id, false, 0.0)
+		await _species_shot(idx, id, true, 0.0)
+		await _species_shot(idx, id, false, REAR_YAW_DEG)
+		await _species_shot(idx, id, true, REAR_YAW_DEG)
 
 
-func _species_shot(idx: int, id: String, is_shiny: bool) -> void:
+## `yaw_deg` turns the CREATURE, never the camera -- the same choice
+## `_capture_character_cast.gd` makes, and for the same reason: two frames that
+## differ only in what is being photographed, never in how.
+func _species_shot(idx: int, id: String, is_shiny: bool, yaw_deg: float) -> void:
 	var suffix := "-shiny" if is_shiny else ""
-	var name := "%02d-%s%s" % [idx, id, suffix]
+	var view := "-rear" if not is_zero_approx(yaw_deg) else ""
+	var name := "%02d-%s%s%s" % [idx, id, suffix, view]
 	if not SPECIES.has(id):
 		print("FAIL %s: no entry in data/creatures/species.json" % name)
 		return
 
-	var body := _spawn_creature(id, is_shiny, PAIR_CREATURE_POS)
+	var body := _spawn_creature(id, is_shiny, PAIR_CREATURE_POS, yaw_deg)
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -397,13 +476,16 @@ func _lineup_shot() -> void:
 ## and only then does the script attach and `setup()` run. Same order
 ## `preview_creatures.gd` and `starter_picker.gd::_build_preview()` both use,
 ## for the same is_inside_tree() reason the header above explains.
-func _spawn_creature(id: String, is_shiny: bool, at: Vector3) -> Node3D:
+func _spawn_creature(id: String, is_shiny: bool, at: Vector3, yaw_deg: float = 0.0) -> Node3D:
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.name = "Shot_%s_%s" % [id, ("shiny" if is_shiny else "ordinary")]
 	body.set_script(BODY)
 	_world.add_child(body)
 	body.call("setup", id, is_shiny)
 	body.global_position = at
+	# Turned BEFORE seating, because `_seat_on_ground` measures a render-space
+	# AABB and a yawed body presents a different one.
+	body.rotation.y = deg_to_rad(yaw_deg)
 	# No floor collider under it (see `_build_environment`'s comment); a
 	# CharacterBody3D with nothing to stand on falls under gravity every
 	# physics frame, which `preview_creatures.gd` already found the hard way.
