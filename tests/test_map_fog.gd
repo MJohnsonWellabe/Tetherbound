@@ -117,7 +117,16 @@ func test_the_starting_reveal_does_not_hand_over_the_rest_of_the_chapter() -> vo
 		assert_false(bool(state.call("is_discovered", at)),
 			"a fresh save already reveals (%.0f, %.0f); the starting reveal is the village and its roads, not the chapter" % [at.x, at.z])
 	var fraction := float(state.call("discovered_fraction"))
-	assert_true(fraction > 0.0,
-		"a fresh save reveals nothing at all -- this is the black-rectangle state the owner reported as OP21-15")
+	# OP23-03 (owner playtest 2026-08-23): "the map is still a black
+	# rectangle" -- a ~0.12% seed passed the old `fraction > 0.0` floor
+	# while reading as experientially invisible on the full map view. 0.2%
+	# is a floor stated in player terms: comfortably below the tripled
+	# seed's own measured ~0.42%, but an order of magnitude past "not
+	# exactly zero," so a future regression back toward specks has to move
+	# the fraction, not just keep it positive, before this test notices.
+	assert_true(fraction > 0.002, (
+		"a fresh save only reveals %.2f%% of the world -- OP23-03's ruling is VISIBLY "
+		+ "revealed village + roads, not a floor a handful of pixels can satisfy"
+	) % (fraction * 100.0))
 	assert_true(fraction < 0.05,
 		"a fresh save reveals %.1f%% of the world; the seed is meant to be the home town, not a head start" % (fraction * 100.0))

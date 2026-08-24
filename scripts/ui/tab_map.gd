@@ -176,7 +176,13 @@ const SETTLE_FRAMES := 6
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
-	_zoom = MIN_ZOOM
+	# OP23-03 (owner playtest 2026-08-23): "zoom level should persist" --
+	# `build()` runs every time the map tab (re)opens (`game_menu.gd` forces
+	# this on open/select), so hardcoding MIN_ZOOM here reset the player's
+	# zoom on every single visit. Clamped against the current ZOOM_LEVELS in
+	# case the saved value came from a build with a different level set.
+	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else MIN_ZOOM
+	_zoom = clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM)
 	_pan_world = Vector2.ZERO
 	_manual_pan = false
 	_terrain_attempted = false
@@ -283,12 +289,18 @@ func poll() -> void:
 
 func _read_navigation_input() -> void:
 	var changed := false
+	var zoomed := false
 	if Input.is_action_just_pressed("map_zoom_in"):
 		_zoom = _next_zoom_level(1)
 		changed = true
+		zoomed = true
 	if Input.is_action_just_pressed("map_zoom_out"):
 		_zoom = _next_zoom_level(-1)
 		changed = true
+		zoomed = true
+	# OP23-03: remembered for the NEXT time this tab opens (`build()`, above).
+	if zoomed and state() != null:
+		state().set("map_last_zoom", _zoom)
 
 	var pan_input := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	if _zoom > MIN_ZOOM and pan_input.length_squared() > 0.01:

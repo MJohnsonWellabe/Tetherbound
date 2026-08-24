@@ -163,6 +163,44 @@ func test_rest_bond_matches_the_shipped_config() -> void:
 	assert_true(expected > 0, "resting together is supposed to be a real bond source, not a no-op")
 
 
+## OP23-14 (owner playtest 2026-08-23): "one percent per action is worthless."
+## Before the retune, catching (10) plus battle wins alone (4 each) needed
+## ~23 wins to reach the 100-point max; nothing here asserted that the gain
+## amounts scaled with the max, only that they existed. This pins the shipped
+## config to a concrete "meaningful" floor: a catch plus a couple dozen
+## ordinary actions (wins/nights), not fifty-plus, should be able to reach max.
+func test_bond_gain_is_meaningful_against_the_shipped_max() -> void:
+	var cfg := PROGRESSION.config()
+	var bond: Dictionary = cfg.get("bond", {})
+	var max_bond := int(bond.get("max", 0))
+	var battle_won := int(bond.get("battle_won", 0))
+	var catch_start := int(bond.get("successful_catch_start", 0))
+	var per_day := int(bond.get("per_day_in_party", 0))
+
+	assert_true(max_bond > 0, "bond.max is missing from the shipped config")
+
+	# A single battle win must move at least 5% of the max bar, not ~1%.
+	var win_msg := (
+		"a battle win only grants %d/%d (%.1f%%) of max bond; OP23-14 asked for a "
+		+ "win to feel meaningful, not a rounding error"
+	) % [battle_won, max_bond, 100.0 * float(battle_won) / float(max_bond)]
+	assert_true(float(battle_won) / float(max_bond) >= 0.05, win_msg)
+
+	# Catching a creature should hand it a real head start, not a token amount.
+	var catch_msg := "successful_catch_start only grants %d/%d of max bond" % [catch_start, max_bond]
+	assert_true(float(catch_start) / float(max_bond) >= 0.10, catch_msg)
+
+	# A dozen wins plus a dozen nights together should be enough to max a
+	# bond in ordinary play, without resting alone or fighting alone doing it.
+	var reached := catch_start + 12 * battle_won + 12 * per_day
+	var reached_msg := (
+		"a catch plus a dozen wins and a dozen nights together only reaches %d/%d "
+		+ "bond; ordinary play should be able to max a bond well inside the "
+		+ "chapter's length"
+	) % [reached, max_bond]
+	assert_true(reached >= max_bond, reached_msg)
+
+
 # --- autoload/party.gd: the Best Creature designation ------------------------
 
 var party: RefCounted = null

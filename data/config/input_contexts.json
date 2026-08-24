@@ -19,7 +19,7 @@
       "actions": [
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
-        "jump", "sprint", "camera_recenter",
+        "jump", "sprint", "auto_run", "camera_recenter",
         "interact", "inventory", "map", "game_menu",
         "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
         "party_cycle", "creature_recall",
@@ -32,7 +32,7 @@
       "actions": [
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
-        "jump", "sprint", "camera_recenter",
+        "jump", "sprint", "auto_run", "camera_recenter",
         "interact", "combat_throw", "combat_quick", "combat_charged", "combat_run",
         "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
         "party_cycle", "creature_recall"
@@ -54,7 +54,7 @@
       "actions": [
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
-        "jump", "sprint", "camera_recenter",
+        "jump", "sprint", "auto_run", "camera_recenter",
         "build_place", "build_cancel", "build_dismantle",
         "build_rotate", "build_rotate_left", "build_rotate_right", "build_snap_cycle",
         "build_open"

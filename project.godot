@@ -134,6 +134,12 @@ sprint={
 , Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
 ]
 }
+auto_run={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194329,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":15,"pressed":false,"script":null)
+]
+}
 interact={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":69,"pressed":false,"script":null)

@@ -181,6 +181,7 @@ func _physics_process(delta: float) -> void:
 	var input_owned := INPUT_OWNER.current(get_tree()) != null
 	_track_airborne(delta, input_owned)
 	_apply_gravity(delta)
+	_toggle_auto_run(input_owned)
 	_apply_movement(delta, input_owned)
 	_try_jump(input_owned)
 
@@ -284,6 +285,19 @@ func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * scale * delta
 
 
+## OP23-13 (owner playtest 2026-08-23): "Auto-run is needed." A toggle, not a
+## hold — `is_action_just_pressed` flips `Game.auto_run` and writes it down,
+## the same "gate on input_owned" discipline `jump`/movement already use so a
+## menu open underneath can't also flip the toggle (see `_physics_process`'s
+## own RG5 comment on that leak class).
+func _toggle_auto_run(input_owned: bool) -> void:
+	if input_owned or not Input.is_action_just_pressed("auto_run"):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("set_auto_run"):
+		game.call("set_auto_run", not bool(game.get("auto_run")))
+
+
 func _apply_movement(delta: float, input_owned: bool) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	if not _locomotion_enabled or input_owned:
@@ -295,7 +309,10 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 		var basis_value: Basis = _camera_rig.call("planar_basis")
 		direction = (basis_value * Vector3(input.x, 0.0, input.y)).normalized()
 
-	_sprinting = Input.is_action_pressed("sprint") and vitals.can_sprint() and input != Vector2.ZERO
+	var game := get_node_or_null(^"/root/Game")
+	var auto_running := game != null and bool(game.get("auto_run"))
+	var wants_run := Input.is_action_pressed("sprint") or auto_running
+	_sprinting = wants_run and vitals.can_sprint() and input != Vector2.ZERO
 	# D29: critical hunger softens ground speed a little; never below that,
 	# and never enough on its own to strand the player.
 	var target_speed: float = (_sprint_speed if _sprinting else _walk_speed) * vitals.move_speed_scale()

@@ -499,14 +499,23 @@ func _build_interior_area() -> void:
 	add_child(area)
 
 
+## OP23-02: same race `stronghold.gd::_combat_owns_the_camera()` guards
+## against, for the same shared Area3D pattern -- a wild fight can open
+## while the player is crossing this room's own threshold, and this handler
+## used to reassign the rig to the player mid-fight when that happened.
+func _combat_owns_the_camera() -> bool:
+	var manager: Node = _world.get_node_or_null(^"CombatManager") if _world != null else null
+	return manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting"))
+
+
 func _on_body_entered(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
 
 
 func _on_body_exited(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or _camera_rig == null or _combat_owns_the_camera():
 		return
 	_camera_rig.call("set_target", _player, {})
 

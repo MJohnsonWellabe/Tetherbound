@@ -282,6 +282,24 @@ var debug_teleport: bool = false
 ## The key `debug_teleport` is stored under in user://settings.json.
 const PREF_DEBUG_TELEPORT := "debug_teleport"
 
+## OP23-13 (owner playtest 2026-08-23): "Auto-run is needed." A real player
+## preference, not D16 scaffolding — persisted the same way `free_build`/
+## `debug_teleport` are, but with no removal note, since this is meant to
+## ship. Toggled by the `auto_run` input action (`player_controller.gd`);
+## `true` makes the player run without holding `sprint`.
+var auto_run: bool = false
+
+## The key `auto_run` is stored under in user://settings.json.
+const PREF_AUTO_RUN := "auto_run"
+
+## OP23-03 (owner playtest 2026-08-23): "zoom level should persist" across map
+## opens. Session-only on purpose -- unlike `auto_run`/`free_build` this is
+## not written to user://settings.json; it just has to survive `tab_map.gd`
+## rebuilding its whole canvas every time the tab opens (`game_menu.gd` forces
+## a rebuild on open/select), the same "one thing across scene loads" job this
+## autoload already does for `map` itself.
+var map_last_zoom: float = 1.0
+
 var _menu: CanvasLayer = null
 
 ## Throttle for fog-of-war discovery — see `_process()`. 0.5s is often enough
@@ -1122,6 +1140,19 @@ func set_debug_teleport(on: bool) -> bool:
 	return bool(prefs.call("save"))
 
 
+## OP23-13. Turn auto-run on or off and write it down. Same contract as
+## `set_free_build` above, including the "false means this session only"
+## return.
+func set_auto_run(on: bool) -> bool:
+	auto_run = on
+	var prefs := _preferences()
+	if prefs == null:
+		return false
+	var table: Dictionary = prefs.get("gameplay")
+	table[PREF_AUTO_RUN] = on
+	return bool(prefs.call("save"))
+
+
 func _adopt_preferences() -> void:
 	var prefs := _preferences()
 	if prefs == null:
@@ -1129,6 +1160,7 @@ func _adopt_preferences() -> void:
 	var table: Dictionary = prefs.get("gameplay")
 	free_build = bool(table.get(PREF_FREE_BUILD, false))
 	debug_teleport = bool(table.get(PREF_DEBUG_TELEPORT, false))
+	auto_run = bool(table.get(PREF_AUTO_RUN, false))
 
 
 ## The settings file, which the menu shell owns (docs/decisions/D15). There is

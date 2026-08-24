@@ -84,7 +84,7 @@
       "groups": [
         {
           "name": "Moving",
-          "actions": ["move_forward", "move_back", "move_left", "move_right", "jump", "sprint"]
+          "actions": ["move_forward", "move_back", "move_left", "move_right", "jump", "sprint", "auto_run"]
         },
         {
           "name": "Looking around",
@@ -129,6 +129,7 @@
         "move_right": "Step right",
         "jump": "Jump",
         "sprint": "Sprint",
+        "auto_run": "Auto-run",
         "look_up": "Look up",
         "look_down": "Look down",
         "look_left": "Look left",
@@ -192,6 +193,7 @@
         "pad_12": "D-pad down",
         "pad_13": "D-pad left",
         "pad_14": "D-pad right",
+        "pad_15": "Share",
         "axis_0_-": "Left stick left",
         "axis_0_+": "Left stick right",
         "axis_1_-": "Left stick up",
