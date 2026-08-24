@@ -101,6 +101,25 @@ decision or a task of their own.
    `docs/MEADOWS_PROGRESSION_CURVE.md` before it is called acceptable pacing.
    `model: sonnet`
 
+5. **Oskar's village-visit segment is a real, reproducible flake, not a
+   red herring this time.** `tests/helpers/gate_a_npc_gather_segment.gd`'s
+   `_visit_villager("Oskar", ...)` intermittently fails "could not activate
+   Oskar cycle 1 (29.3m away, arbiter winner=EncounterDirector)" — the exact
+   diagnostic shape this file's own DONE.md history already spent two rounds
+   diagnosing (distance stranding the player outside Oskar's prompt radius, so
+   the EncounterDirector fallback wins by being the only offer). Confirmed
+   NOT branch-specific: reproduced identically (same 29.3m, same message) on
+   an unmodified `_visit_the_village_and_gather()` call order (integration
+   verification of `ralph/OP23-FIXPACK`) and on `ralph/TUTORIAL-CHAIN`'s
+   reordered `_visit_the_village_for_tools()` (which visits Oskar earlier,
+   at a different point in the run, and still hit it — once at Oskar, once
+   at the Quarry Foreman, in two back-to-back runs). `_one_approach()`'s own
+   sidestep-retry exists for exactly this case but the retry budget (10
+   pushes, 3 attempts) is not reliably enough at Oskar's stand-off distance.
+   Not this lane's file to own a real fix in; flagging for Gate B / whoever
+   owns `gate_a_npc_gather_segment.gd` next. `model: sonnet`
+   `tests: smoke_gate_b_continuous.gd (run 3x headless, watch for "arbiter winner=EncounterDirector")`
+
 ## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
 
 **This file had drifted badly and this note exists so the drift is legible
