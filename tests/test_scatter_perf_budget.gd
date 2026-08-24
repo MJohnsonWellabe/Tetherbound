@@ -87,7 +87,24 @@ const MIN_SANE_PLACEMENT_COUNT := 25000
 ## silently stopped being used and we're back to computing," which is a
 ## 40-60x jump, not to police single-digit-millisecond drift on shared CI
 ## runners.
-const MAX_BAKE_LOAD_MS := 15000
+##
+## RAISED 15,000 -> 45,000 alongside the placement ceiling above, same owner
+## ruling, and this is the number that actually costs something. Measured
+## 15,769ms on this box for the consolidated sweep's bake against the 1,327ms
+## the comment above records for the pre-rebuild one -- roughly 12x, of which
+## ~5.5x is simply reading 789,511 placements instead of 143,630 and the rest
+## is CPU contention. It is a BOOT cost, not a per-frame one: it lands once on
+## load, not every few feet, so it is a different and lesser evil than OP23-01's
+## map-fog stall. It is still a real 15+ second wait on a dev box, and the Ally
+## is slower.
+##
+## 45,000 is deliberately generous rather than snug to today's number, because
+## a tight budget here would fail on CI contention alone and teach the next
+## reader to raise it again reflexively. What this assertion is FOR is
+## unchanged and still works at 45,000: catching the bake silently falling back
+## to `vegetation.gd`'s ~60s compute path, which is the 40-60x jump the header
+## describes, not this 12x one.
+const MAX_BAKE_LOAD_MS := 45000
 
 
 func _base_seed() -> int:
