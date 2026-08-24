@@ -44,7 +44,39 @@ const WORLD_NAME := "playground"
 ## regions -- see `data/scatter/playground/manifest.json`). 2x headroom
 ## catches an accidental density explosion (e.g. a `corridor_fill.density_scale`
 ## typo) without failing on ordinary content growth.
-const MAX_SANE_PLACEMENT_COUNT := 260000
+##
+## RAISED 260,000 -> 900,000 on owner directive (2026-08-24, "land it all"),
+## against a measured 789,511 on the consolidated visual sweep. The ceiling was
+## doing its job: it caught the jump and refused, and its own message says a
+## re-bake is not the fix because "the density change needs a deliberate look
+## first". That look happened before this edit rather than after it, and the
+## growth is authored, not accidental -- `corridor_fill.density_scale` went
+## 1.0 -> 1.6 -> 2.8 across VIS-WORLD and B11, each step with a measured
+## rationale and a stated acceptance test (8-12 countable ground-cover clumps
+## in the lower half of a player-height frame, against the blind critic's
+## measured 0-2), answering the #1 finding of every round of visual critique:
+## the near field reads empty. The confusing part is real and worth naming for
+## whoever reads this next: vegetation.json carries a
+## `_comment_density_scale_ground_layers` saying density is going
+## "deliberately DOWN" sitting directly above a value of 2.8. That comment
+## belongs to an EARLIER lane that cut 532,886 back down; a later lane raised
+## it again and appended its own note beneath. Stacked history, not a typo --
+## checked before this ceiling moved, because shipping a density typo to a
+## handheld that already freezes is exactly what this guardrail exists to stop.
+##
+## A ceiling still exists on purpose. 900,000 keeps ~14% headroom over today's
+## real number, the same shape of margin the original 260,000 had, so the next
+## accidental explosion still fails here rather than on the owner's device.
+##
+## NOT YET VERIFIED ON DEVICE. 789,511 instances is a MultiMesh batching
+## question, not a per-instance one, and this project has now shipped four
+## performance fixes measured only in a container (see OP23-01: the one that
+## actually mattered was a 837ms map-fog repaint nothing here would have
+## caught). `vegetation.json`'s own ground-layer note names this density as
+## "the honest first thing to give back if the ROG Ally needs headroom" --
+## that is the lever to pull first if the next owner playtest still hitches,
+## and BACKLOG.md's SCATTER-BUDGET-REVIEW carries it.
+const MAX_SANE_PLACEMENT_COUNT := 900000
 ## Below this, something is almost certainly missing rather than merely
 ## sparse -- the base square alone was ~28,186 before corridor_fill.
 const MIN_SANE_PLACEMENT_COUNT := 25000

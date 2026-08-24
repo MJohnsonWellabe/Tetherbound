@@ -54,12 +54,34 @@ ceiling**. This is not a bug in any one branch's merge — `VIS-WORLD`'s own
 cost is roughly double (placements 10.4s, batch build 8.4s) versus the
 pre-rebuild bake.
 
-**Not fixed here on purpose** — the test's own failure message says why:
-"re-bake is not the fix here, the density change needs a deliberate look
-first." Raising the budget ceiling to make the assertion pass would hide
-the real signal (device performance headroom on the ROG Ally) rather than
-answer it, and it's a game-feel/performance tradeoff, not a mechanical
-merge conflict.
+**OWNER RULING 2026-08-24: land it.** The owner was shown the number, the
+tradeoff and the three options (keep and raise the ceiling / cut the density
+and re-bake / park the branch) and answered "land it all". The ceiling in
+`test_scatter_perf_budget.gd` is raised 260,000 -> 900,000 accordingly, with
+the full reasoning in that constant's own comment.
+
+The deliberate look the test demanded DID happen first, and found the growth
+authored rather than accidental: `corridor_fill.density_scale` went
+1.0 -> 1.6 -> 2.8 across VIS-WORLD and B11, each step with a measured
+rationale and an acceptance test (8-12 countable ground-cover clumps in a
+player-height frame, against a blind-measured 0-2), answering the #1 finding
+of every visual critique round. One genuine trap was checked and cleared:
+`vegetation.json` has a `_comment_density_scale_ground_layers` reading
+"deliberately DOWN" immediately above a value of 2.8 — that comment is an
+earlier lane's, which a later lane superseded without removing. Stacked
+history, not a typo.
+
+**What is still owed, and it is the important half.** Nothing here has been
+measured on an Ally. Two numbers make that uncomfortable rather than routine:
+boot cost roughly doubled (placements 10.4s, batch build 8.4s) versus the
+pre-rebuild bake, and the owner is reporting constant in-game freezing on
+that device. OP23-01 turned out to be a 837ms map-fog repaint that no
+container profile had caught, which is the fourth performance fix on this
+project measured only in a container. So: if the next owner playtest still
+hitches after OP23-01's fog fix lands, **this density is the first lever to
+pull**, and `vegetation.json`'s own ground-layer note already says so in as
+many words ("the honest first thing to give back if the ROG Ally needs
+headroom"). Pull it before hunting anything subtler.
 
 **If it needs to come down**, `VIS-WORLD`'s own commit already named the
 right order: `corridor_bands` density scales first, then the per-layer
