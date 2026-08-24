@@ -13,6 +13,7 @@ extends Node
 ## dropped into the real Meadows scene unchanged.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## D30: wild creatures spawn inside a level band rather than at one fixed level.
@@ -28,6 +29,7 @@ const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd
 ## existing config-loading pattern rather than a new one.
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
+const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -923,6 +925,15 @@ func _read_creature_control_input() -> void:
 ## nothing nearby is offering anything else — see that function's own comment
 ## on why `PROMPTS`'s single line can carry a second button's prompt at all.
 func _creature_control_offer() -> Dictionary:
+	# OWNER DIRECTIVE 2026-08-23 §3: with the build hammer out, this line moves
+	# to the party-cycle button context for the duration, and Build has the
+	# interact prompt to itself. Nothing is lost -- `_handle_creature_control()`
+	# reads `creature_recall` straight off the pad and never consulted this
+	# offer, and `playground_hud.gd::_exploration_legend_text()` puts the verb
+	# up beside Change Creature with the right word on it, which is the one
+	# place it had no on-screen home before.
+	if BUILD_HOLD.hammer_is_out(get_tree()):
+		return {}
 	if _ally_body != null and is_instance_valid(_ally_body):
 		if _ally == null:
 			return {}
@@ -1200,6 +1211,15 @@ func _activation_radius_margin() -> float:
 func _tick_streaming() -> void:
 	if _player == null:
 		return
+	if PERF_TRACE.enabled:
+		var t0 := Time.get_ticks_usec()
+		_stream_clusters()
+		PERF_TRACE.record("wild cluster streaming", Time.get_ticks_usec() - t0)
+		return
+	_stream_clusters()
+
+
+func _stream_clusters() -> void:
 	var player_pos := _player.global_position
 	var margin := _activation_radius_margin()
 	for cluster: Dictionary in _clusters:

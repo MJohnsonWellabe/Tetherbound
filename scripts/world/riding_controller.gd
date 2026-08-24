@@ -32,6 +32,7 @@ extends Node
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
+const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 const ARBITER_NODE := preload("res://scripts/world/interaction_arbiter.gd")
 const CONFIG_PATH := "res://data/config/movement.json"
 
@@ -431,9 +432,18 @@ func ride_climb_limit_deg() -> float:
 func interaction_offer(from: Vector3) -> Dictionary:
 	if is_mounted():
 		# Beats proximity: with a creature under you, nothing you could walk
-		# past matters more than being able to get off it.
+		# past matters more than being able to get off it. Deliberately still
+		# offered with the hammer out -- see BUILD_HOLD's own header.
 		return PROMPTS.offer("Dismount", 0.0, 50)
 	if not _riding_allowed():
+		return {}
+	# OWNER DIRECTIVE 2026-08-23 §3: Build owns Interact while the hammer is
+	# out. This offer is actionable and the creature making it FOLLOWS the
+	# player, so without this there is no spot in the open field from which
+	# `playground_hud.gd::_hammer_opens_the_catalogue()` can win the button --
+	# measured in `tools/_probe_hammer_gate.gd`. Riding is not lost, only
+	# deferred: put the hammer away and the offer is back the same frame.
+	if BUILD_HOLD.hammer_is_out(get_tree()):
 		return {}
 	var body := _mountable_body()
 	if body == null:

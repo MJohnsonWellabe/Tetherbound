@@ -576,10 +576,31 @@ def run():
     # The saddle can only be crafted once Rootstone is in hand -- find the beat
     # index of the rootstone cluster, and treat every leg AFTER the warrens as
     # ridden if a Meadowhart is realistically catchable by then.
-    meadowhart_at = None
-    for s in SPAWNS["spawns"]:
-        if s["species"] == "meadowhart":
-            meadowhart_at = (s["centre"][0], s["centre"][2])
+    #
+    # GATE-F: every meadowhart cluster, not one of them. This loop used to
+    # assign `meadowhart_at` on each match with no break and no distance
+    # comparison, so it kept whichever cluster happened to be LAST in the
+    # merged spawn table -- (-165, 7345), up in the stronghold approach at the
+    # far end of the corridor. The species has 17 clusters spread from z=1230
+    # to z=7345, several of them within a few hundred metres of the Old Quarry
+    # where the saddle is actually crafted, so the probe was charging the
+    # chapter a 13,934 m round trip for a mount standing 250 m away. That one
+    # number is ~32 minutes of phantom travel; it is most of why Band 2 read
+    # as 39 minutes of walking and a material part of why the probe's
+    # projected first completion sat at 5.06 h against a 3-4 h target. No
+    # player walks past sixteen meadowharts to catch the seventeenth.
+    #
+    # Nearest-to-the-player is resolved at the saddle beat below rather than
+    # here, because "nearest" only means anything once there is a position to
+    # measure from. Level is not a filter: wild level is resolved from world
+    # position (MEADOWS_PROGRESSION_CURVE.md §3, no player scaling), and the
+    # band the quarry sits in rolls 6-8 against a team the same probe has at
+    # L8 by then, so the near clusters are catchable as well as close.
+    meadowhart_ats = [
+        (s["centre"][0], s["centre"][2])
+        for s in SPAWNS["spawns"]
+        if s["species"] == "meadowhart"
+    ]
     for i, b in enumerate(BEATS):
         if b["name"].startswith("Old Quarry"):
             saddle_ready_index = i
@@ -627,7 +648,8 @@ def run():
 
         # The Meadowhart detour + saddle craft, taken the moment Rootstone is
         # in hand. Cost: the round trip out to the nearest Meadowhart cluster.
-        if i == saddle_ready_index and meadowhart_at is not None:
+        if i == saddle_ready_index and meadowhart_ats:
+            meadowhart_at = min(meadowhart_ats, key=lambda c: math.dist(pos, c))
             d = math.dist(pos, meadowhart_at) * ROUTE_FACTOR * 2.0
             st["travel_s"] += d / WALK
             st["scripted_s"] += 180.0  # catch attempts + crafting

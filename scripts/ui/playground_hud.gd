@@ -63,6 +63,8 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 ## OW10: the one "who owns input right now" question both world-verb polls ask.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
+const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
@@ -469,6 +471,10 @@ var _legend_last_party_revision := -999
 ## was last drawn. Part of the redraw key: without it a stale Call Out entry
 ## would survive until the party or the input device changed.
 var _legend_last_prompt_owned_recall := false
+## Whether the active creature was standing in the world when the legend was
+## last drawn. Part of the redraw key for the same reason: the recall entry
+## reads "Put Away" or "Call Out" off exactly this.
+var _legend_last_creature_was_out := false
 var _legend_was_drawn := false
 
 ## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
@@ -535,6 +541,18 @@ func _ready() -> void:
 		"/".join(OS.get_video_adapter_driver_info()),
 	]
 
+	# PERF-ROG / OP23-01. The overlay has to be reachable on the device the
+	# owner actually plays on, and F3 is not: the ROG Ally is a handheld with a
+	# controller, and the owner's authored controller map (2026-08-22) spends
+	# every pad button on a gameplay verb with held chords banned, so there is
+	# no spare press to give this. A config flag is the honest answer -- flip
+	# `debug_overlay_on_boot` in data/config/performance.json, build, and the
+	# readout is on from the first frame of the session the owner plays.
+	# F3 still cycles it for anyone on a keyboard.
+	var perf_cfg: Dictionary = PERF_CONFIG.config()
+	if bool(perf_cfg.get("debug_overlay_on_boot", false)):
+		_debug_level = clampi(int(perf_cfg.get("debug_overlay_level", DEBUG_PERF)), DEBUG_PERF, DEBUG_FULL)
+	PERF_TRACE.set_enabled(_debug_level != DEBUG_OFF)
 	_debug_readout.visible = _debug_level != DEBUG_OFF
 
 	# Seeded from the arbiter rather than blanked, because `prompt_changed`
@@ -1786,6 +1804,7 @@ func _on_landed(impact_speed: float, damage: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F3:
 		_debug_level = (_debug_level + 1) % 3
+		PERF_TRACE.set_enabled(_debug_level != DEBUG_OFF)
 		_debug_readout.visible = _debug_level != DEBUG_OFF
 
 
@@ -1797,6 +1816,17 @@ func _input(event: InputEvent) -> void:
 ## a capture tool or a headless smoke boot with no player still gets every
 ## `Game`-sourced block drawn correctly.
 func _process(delta: float) -> void:
+	if _debug_level == DEBUG_OFF:
+		_run_frame(delta)
+		return
+	var t0 := Time.get_ticks_usec()
+	_run_frame(delta)
+	PERF_TRACE.record("HUD", Time.get_ticks_usec() - t0)
+
+
+## The HUD's actual per-frame work, split out of `_process` so the readout can
+## time it without timing itself.
+func _run_frame(delta: float) -> void:
 	if _debug_level != DEBUG_OFF:
 		_sample_frame(delta)
 		_since_readout += delta
@@ -1860,7 +1890,7 @@ func _perf_lines() -> Array[String]:
 	if DisplayServer.get_name() != "headless":
 		vsync = int(DisplayServer.window_get_vsync_mode())
 
-	return [
+	var lines: Array[String] = [
 		"perf (F3 again for movement/input, once more to hide)",
 		"",
 		"fps        %d      frame %.1f ms   min %.1f   max %.1f" % [
@@ -1889,6 +1919,29 @@ func _perf_lines() -> Array[String]:
 		"vsync      %d      max_fps %d" % [vsync, Engine.max_fps],
 		_hardware_line,
 	]
+	lines.append_array(_top_cost_lines())
+	return lines
+
+
+## PERF-ROG / OP23-01: the three subsystems asking for the most CPU right now.
+##
+## "The frame costs 40ms" is what the owner already knew. Which THING costs it
+## is what a playtest could not report, and is the difference between a bug
+## report and a fix -- OP23-01's own root cause (`interaction_arbiter`, 20ms a
+## frame polling 24,461 prompt providers to find two) was invisible from inside
+## the game until this existed. Ranked by work-per-second rather than
+## work-per-call, because the scatter's collision sweep runs twice a second and
+## the arbiter runs sixty times, and a per-call ranking puts them in the wrong
+## order. Instrumentation is live only while this readout is (`perf_trace.gd`).
+func _top_cost_lines() -> Array[String]:
+	var rows: Array = PERF_TRACE.top(3)
+	if rows.is_empty():
+		return ["", "top costs   (measuring...)"]
+	var out: Array[String] = ["", "top costs  ms/s   per call   rate"]
+	for row: Dictionary in rows:
+		out.append("  %-22s %6.1f  %6.2f ms  %5.1f Hz" % [
+			row["label"], row["ms_per_second"], row["ms"], row["hz"]])
+	return out
 
 
 func _on_prompt_changed(text: String) -> void:
@@ -1973,17 +2026,26 @@ func _update_exploration_legend() -> void:
 	# below claims RB is "the one world verb with no other on-screen home",
 	# and that is exactly false in the moment the contextual prompt is
 	# naming it. The specific line wins; the legend is the fallback.
+	# BOTH phrasings of the contextual line, not just "Call out". The offer is
+	# "Put <name> away" whenever the creature is actually standing in the
+	# world, and matching only the stowed wording left the legend drawing its
+	# own "Call Out" entry underneath a prompt that said the opposite -- the
+	# same button, two labels ten pixels apart, saying contradictory things.
 	var prompt_owns_recall := _prompt_label != null \
-			and _prompt_label.text.contains("Call out")
+			and (_prompt_label.text.contains("Call out")
+				or _prompt_label.text.contains(" away"))
+	var creature_is_out := _active_creature_is_out(_party != null and int(_party.call("size")) > 0)
 	if _legend_was_drawn and gamepad == _legend_last_gamepad \
 			and revision == _legend_last_party_revision \
-			and prompt_owns_recall == _legend_last_prompt_owned_recall:
+			and prompt_owns_recall == _legend_last_prompt_owned_recall \
+			and creature_is_out == _legend_last_creature_was_out:
 		return
 	_legend_was_drawn = true
 	_legend_last_gamepad = gamepad
 	_legend_last_party_revision = revision
 	_legend_last_prompt_owned_recall = prompt_owns_recall
-	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall)
+	_legend_last_creature_was_out = creature_is_out
+	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall, creature_is_out)
 
 
 func _exploration_legend_should_show() -> bool:
@@ -1997,7 +2059,8 @@ func _exploration_legend_should_show() -> bool:
 	return INPUT_OWNER.current(get_tree()) == null
 
 
-func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
+func _exploration_legend_text(prompt_owns_recall: bool = false,
+		creature_is_out: bool = false) -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
 	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
@@ -2014,8 +2077,15 @@ func _exploration_legend_text(prompt_owns_recall: bool = false) -> String:
 	# Stand down while the contextual prompt directly above is already naming
 	# this button, with the creature's actual name on it. Two labels for one
 	# button, ten pixels apart, is worse than one.
+	# OWNER DIRECTIVE 2026-08-23 §3 lands here. With the build hammer out the
+	# director stops publishing its creature line so Build can own Interact,
+	# and this legend -- sitting beside Change Creature, which is the
+	# party-cycle button -- is where the verb goes for the duration. It has to
+	# carry the right word to be worth having: "Call Out" over a creature that
+	# is already standing there names the wrong half of a toggle.
 	if not prompt_owns_recall:
-		entries.append(_legend_entry("creature_recall", "Call Out", normal))
+		entries.append(_legend_entry("creature_recall",
+			"Put Away" if creature_is_out else "Call Out", normal))
 	entries.append(_legend_entry("party_cycle", "Change Creature", change_tint))
 	return "     ".join(entries)
 

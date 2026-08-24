@@ -29,6 +29,12 @@ const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const DOOR_SCRIPT := "res://scripts/world/village_door.gd"
 const HARVEST_NODE_SCRIPT := "res://scripts/world/harvest_node.gd"
 const BACKPACK_COLUMNS := 6
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+
+## Metres out along a door's own outward normal that the approach stands off
+## before asking for the prompt, and metres in past the leaf once it is open.
+const DOOR_STANDOFF := 2.6
+const DOOR_STEP_IN := 2.2
 
 var _tree: SceneTree = null
 var _world: Node = null
@@ -41,6 +47,9 @@ var _menu: CanvasLayer = null
 var _hud: CanvasLayer = null
 var _failures: Array[String] = []
 var _started_ms := 0
+## Travel. See `stick_navigator.gd` for why walking is no longer a straight
+## line: the village has buildings in it and the game has no navmesh.
+var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
 
 
 func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
@@ -65,16 +74,52 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	if not _required_pad_actions_exist():
 		return _failures
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
 
 	# Tam first: all four tools must enter through the one-time production
 	# conversation before the Satchel route has anything to assign.
-	if not await _visit_villager("Tam", "", 1):
+	# TWICE. GATEB-COORD: `village_npcs.json` gives Tam two one-time gift
+	# branches in order -- `village_tam_tools` (which sets `tam_tools_given`)
+	# and then `village_tam_orbs` (which sets `recipe_orb_basic`) -- and one
+	# conversation only fires the first. `recipe_orb_basic` is what unlocks the
+	# Foreman's hammer below, so a single visit left the chapter with no way
+	# into build mode at all. Exactly two: with both flags set his next branch
+	# is `village_tam_challenge`, which is a fight and not this segment's beat.
+	if not await _visit_villager("Tam", "", 2):
 		return _failures
+	for flag_id in ["tam_tools_given", "recipe_orb_basic"]:
+		if not _progression_has(flag_id):
+			_fail("two conversations with Tam and '%s' is unset; his gift branches are "
+				% flag_id + "what the Foreman's hammer and the orb recipe wait on")
+			return _failures
 	for tool_id in ["axe", "pickaxe", "knife", "torch"]:
 		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
 			_fail("Tam's completed dialogue did not leave exactly one %s in the Satchel" % tool_id)
 			return _failures
 	_checkpoint("Tam handed over axe, pickaxe, knife and torch through dialogue")
+
+	# The Foreman, and the hammer.
+	#
+	# GATEB-COORD: the chapter cannot be built without one -- CONTROLLER-MAP
+	# retired `build_open`'s pad button, so hammer-in-hand plus Interact is the
+	# ONLY route a controller has into build mode -- and this segment, which is
+	# the village beat, never collected it. Nothing noticed because
+	# `gate_a_build_segment.gd` used to GRANT itself a hammer when the caller
+	# had none; with that bypass removed (it breaks that file's own contract
+	# against inventory shortcuts) the continuous run stopped dead at the house:
+	#
+	#   there is no hammer in the satchel; the village's gift
+	#   (camp_hammer_given) comes before any of this segment's work
+	#
+	# `village_npcs.json` gates the Foreman's gift on `recipe_orb_basic`, which
+	# is TAM's second flag, so this has to come after Tam and does.
+	if not await _visit_villager("Quarry Foreman", "", 1):
+		return _failures
+	if int((_game.get("inventory") as RefCounted).call("count", "hammer")) < 1:
+		_fail("the Foreman's completed dialogue left no hammer in the Satchel; "
+			+ "camp_hammer_given=%s" % str(_progression_has("camp_hammer_given")))
+		return _failures
+	_checkpoint("the Foreman handed over the build hammer through dialogue")
 
 	if not await _assign_tools_in_satchel():
 		return _failures
@@ -100,6 +145,11 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 	return _failures
 
 
+func _progression_has(flag_id: String) -> bool:
+	var progression: RefCounted = _game.get("progression")
+	return progression != null and bool(progression.call("has", flag_id))
+
+
 func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) -> bool:
 	var npc := _world.find_child(who, true, false) as Node3D
 	if npc == null:
@@ -120,7 +170,13 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		_fail("%s has no enabled production greeting prompt" % who)
 		return false
 	for cycle in cycles:
-		if not await _walk_to_and_activate(prompt, 1400):
+		# 1400 frames is 23 seconds of walking, which is fine for a villager a
+		# few metres away and short for one on the other side of the village --
+		# the Foreman stands at (0, -6) and Oskar at (22, -6), with the well,
+		# two cottages and a wagon between them. Derived from the leg.
+		if not await _walk_to_and_activate(prompt,
+				maxi(1400, 600 + int(_player.global_position.distance_to(
+					prompt.global_position) * 120.0))):
 			var holder: Variant = _arbiter.call("winning_provider")
 			_fail(("natural controller travel could not activate %s cycle %d "
 				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
@@ -183,7 +239,16 @@ func _assign_tools_in_satchel() -> bool:
 	# Assign in reverse quick-slot order.  The one-button assignment verb walks
 	# an item through slot 1, 2, ...; reverse order prevents a later walk from
 	# overwriting an earlier tool on its way to its destination.
-	for spec: Array in [["torch", 3], ["knife", 2], ["pickaxe", 1], ["axe", 0]]:
+	# GATEB-COORD: the HAMMER takes quick slot 4, not the torch.
+	#
+	# It is the one tool the chapter cannot proceed without -- CONTROLLER-MAP
+	# retired `build_open`'s pad button, so hammer-in-hand plus Interact is the
+	# only route a controller has into build mode, and
+	# `gate_a_build_segment.gd::HOTBAR_ACTIONS` reaches slots 1-4 only. The
+	# torch stays in the Satchel, where OW12 already put it: it is equipped the
+	# same way any other tool is and Gate B never asks for it, whereas a house
+	# with no hammer on the bar is a chapter that stops.
+	for spec: Array in [["hammer", 3], ["knife", 2], ["pickaxe", 1], ["axe", 0]]:
 		var item_id := str(spec[0])
 		var destination := int(spec[1])
 		var inventory_slot := int(inventory.call("find_slot", item_id))
@@ -378,7 +443,13 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	if prompt == null:
 		_fail("door '%s' has no Prompt child; nothing can open it" % door.name)
 		return false
+	var outward := _door_outward(door, inside_target)
 	if not bool(door.call("is_open")):
+		# Stand in front of the door before asking for it. Best effort on
+		# purpose: if the standoff is unreachable the walk below still gets its
+		# full budget and its own diagnosis, which is better evidence than a
+		# second failure message about a point the player never needed to reach.
+		await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0)
 		if not await _walk_to_and_activate(prompt, 1200):
 			var winner: Variant = _arbiter.call("winning_provider")
 			_fail(("could not reach or activate door '%s' in 1200 frames "
@@ -397,9 +468,10 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	if not bool(door.call("is_open")):
 		_fail("door '%s' was activated and did not open within 45 frames" % door.name)
 		return false
-	var inward := inside_target - door.global_position
-	inward.y = 0.0
-	var step := door.global_position + inward.normalized() * 2.2
+	# Straight in through the frame, along the door's own axis rather than at the
+	# villager standing somewhere off to one side of the room: a 1.6m clear
+	# opening does not forgive an oblique entry.
+	var step := door.global_position - outward * DOOR_STEP_IN
 	if not await _walk_toward(step, 600, 0.7):
 		_fail(("opened door '%s' but could not walk the 2.2m inward to %s "
 			+ "(stopped %.1fm short)") % [
@@ -409,11 +481,32 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 
 
 func _exit_through(door: Node3D, inside_target: Vector3) -> bool:
-	var outward := door.global_position - inside_target
-	outward.y = 0.0
+	var outward := _door_outward(door, inside_target)
 	if not await _walk_toward(door.global_position, 700, 0.65):
 		return false
-	return await _walk_toward(door.global_position + outward.normalized() * 2.4, 500, 0.7)
+	return await _walk_toward(door.global_position + outward * 2.4, 500, 0.7)
+
+
+## Which way a door faces, as a planar unit vector pointing OUT of the building.
+##
+## `village_door.gd` is added as a child of the building at the recipe's doorway
+## centre with no rotation of its own, so its global basis is the building's:
+## local +z is the front the recipe authored the doorway into, for every prefab
+## that declares a `door`. The dot product against a point known to be indoors
+## is the guard for a recipe that ever authors one the other way round -- the
+## harness should not be the thing that silently walks through a wall because a
+## building was mirrored.
+func _door_outward(door: Node3D, inside_target: Vector3) -> Vector3:
+	var outward: Vector3 = door.global_transform.basis.z
+	outward.y = 0.0
+	if outward.length() < 0.01:
+		outward = door.global_position - inside_target
+		outward.y = 0.0
+	var inward := inside_target - door.global_position
+	inward.y = 0.0
+	if outward.dot(inward) > 0.0:
+		outward = -outward
+	return outward.normalized()
 
 
 func _nearest_door(npc: Node3D) -> Node3D:
@@ -450,8 +543,49 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 ##
 ## So the offer is the success condition and the distance is only the fallback
 ## for something that is not currently winning.
+## GATEB-COORD: pauses while the player cannot move, and starts over rather
+## than spending one budget in one attempt.
+##
+## A wild creature picking a fight freezes locomotion
+## (`encounter_director.gd::_set_exploration_active()`), and a walker that
+## keeps pushing at a frozen body reads every frame as a stall and then sets
+## off in a stale detour direction when the fight ends. The Quarry Foreman
+## stands beside the inn, so getting to him means going round it -- and one
+## 1400-frame attempt from a navigator boxed into a corner stays boxed in:
+##
+##   natural controller travel could not activate Quarry Foreman cycle 1
+##   (7.0m away, arbiter winner=EncounterDirector under MeadowsPlayground)
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
-	for _i in budget:
+	for attempt in 3:
+		if await _one_approach(target, budget):
+			return true
+		_stop_left_stick()
+		for _i in 30:
+			await _tree.physics_frame
+	return false
+
+
+## Frames spent held do NOT count against the budget, for the same reason
+## `stick_navigator.gd::walk_to()` says: the budget measures walking, and a
+## fight that freezes the body for twenty seconds is not twenty seconds of
+## failing to get somewhere. Counting them spent the whole allowance waiting
+## and then reported the villager as unreachable from twenty-nine metres away.
+func _one_approach(target: Node3D, budget: int) -> bool:
+	_nav.reset()
+	var walked := 0
+	var held := 0
+	while walked < budget:
+		if not _nav.can_walk():
+			# Hands off while a fight owns the body; nothing learned during it
+			# says anything about what is in the way.
+			held += 1
+			if held > 36000:
+				return false
+			_stop_left_stick()
+			_nav.reset()
+			await _tree.physics_frame
+			continue
+		walked += 1
 		if _arbiter.call("winning_provider") == target:
 			await _tap_action(&"interact")
 			return true
@@ -473,14 +607,19 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 			var aside := to.cross(Vector3.UP).normalized() * 1.4
 			if _i % 2 == 1:
 				aside = -aside
-			var spot := _player.global_position + aside
+			# `push_once`, not the navigator's `step`: this is a deliberate 1.4m
+			# shuffle to change the arbiter's mind, not a leg of travel, and
+			# letting the detour machinery read it as one would have it fighting
+			# the very stall the shuffle exists to create.
 			for _j in 10:
-				await _step_toward(spot)
+				_nav.push_once(aside.normalized())
+				await _tree.physics_frame
 			_stop_left_stick()
 			for _j in 6:
 				await _tree.physics_frame
+			_nav.reset()
 			continue
-		await _step_toward(target.global_position)
+		await _nav.step(target.global_position)
 	_stop_left_stick()
 	# Standing close and still not winning: give the arbiter a few frames to
 	# settle before giving up, which is what the previous version did and is
@@ -493,36 +632,15 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 	return false
 
 
-## One frame of stick toward a point. Split out of `_walk_toward` so the loop
-## above can interleave walking with checking what the world is offering.
-func _step_toward(point: Vector3) -> void:
-	var to := point - _player.global_position
-	to.y = 0.0
-	var basis: Basis = _rig.call("planar_basis")
-	var local := basis.inverse() * to.normalized()
-	Input.action_press(&"move_forward", clampf(-local.z, 0.0, 1.0))
-	Input.action_press(&"move_back", clampf(local.z, 0.0, 1.0))
-	Input.action_press(&"move_right", clampf(local.x, 0.0, 1.0))
-	Input.action_press(&"move_left", clampf(-local.x, 0.0, 1.0))
-	await _tree.physics_frame
-
-
+## Travel one leg. The detour logic lives in `stick_navigator.gd`; this only
+## adds the settle frames the callers here rely on after arriving.
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
-	for _i in budget:
-		var to := point - _player.global_position
-		to.y = 0.0
-		if to.length() <= close_enough:
-			_stop_left_stick()
-			for _j in 5:
-				await _tree.physics_frame
-			return true
-		var basis: Basis = _rig.call("planar_basis")
-		var local := basis.inverse() * to.normalized()
-		_send_axis(JOY_AXIS_LEFT_X, local.x)
-		_send_axis(JOY_AXIS_LEFT_Y, local.z)
-		await _tree.physics_frame
+	var arrived: bool = await _nav.walk_to(point, budget, close_enough)
 	_stop_left_stick()
-	return false
+	if arrived:
+		for _i in 5:
+			await _tree.physics_frame
+	return arrived
 
 
 func _prove_movement_resumed() -> bool:
@@ -530,6 +648,20 @@ func _prove_movement_resumed() -> bool:
 	# paused tree, a stale input owner, a cleared locomotion flag and a player
 	# who simply could not walk anywhere, and those are four different bugs
 	# with four different fixes -- the caller used to report them identically.
+	#
+	# Given TIME, though. `_wait_world_owned()` clears the moment the panel is
+	# gone, and `sequence_director.gd::_refresh_lockout` hands locomotion back a
+	# little after that -- the fade is still running. Sampling the flag on the
+	# first frame after the modal closed therefore fails intermittently on a beat
+	# that is working: one run of this file reported "movement dead:
+	# locomotion_enabled is false" at Tam where four earlier runs of the same
+	# unchanged code walked away from him fine. A player waits for the fade; so
+	# does this, and only then is a still-dead flag real evidence.
+	for _i in 120:
+		if not _tree.paused and INPUT_OWNER.current(_tree) == null \
+				and bool(_player.call("locomotion_enabled")):
+			break
+		await _tree.physics_frame
 	if _tree.paused:
 		print("movement dead: the scene tree is still paused")
 		return false
@@ -538,7 +670,7 @@ func _prove_movement_resumed() -> bool:
 		print("movement dead: input still owned by %s" % str(owner_node))
 		return false
 	if not bool(_player.call("locomotion_enabled")):
-		print("movement dead: locomotion_enabled is false")
+		print("movement dead: locomotion_enabled is false after two seconds of waiting")
 		return false
 	# Try four physical directions because a villager counter or wall can block
 	# one without implying dead world input.  This is ordinary walking, not a
@@ -649,6 +781,16 @@ func _send_axis(axis: JoyAxis, value: float) -> void:
 	event.axis = axis
 	event.axis_value = clampf(value, -1.0, 1.0)
 	Input.parse_input_event(event)
+
+
+## The left stick, as `stick_navigator.gd` asks for it. Still a real
+## `InputEventJoypadMotion` on device 0 -- which is also why `Input.action_press`
+## is gone from this file: a detour driven by poking action strengths directly
+## would not have been travel by the player's own left stick, and this segment's
+## header makes that a load-bearing constraint.
+func _send_stick(x: float, y: float) -> void:
+	_send_axis(JOY_AXIS_LEFT_X, x)
+	_send_axis(JOY_AXIS_LEFT_Y, y)
 
 
 func _stop_left_stick() -> void:

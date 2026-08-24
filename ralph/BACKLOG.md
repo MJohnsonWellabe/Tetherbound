@@ -111,6 +111,63 @@ not a presentation lane's call; if an alpha is supposed to be an event, the
 work is encounter staging and framing, not a bigger number.
 
 ---
+## GATEB-TAIL-REMAINDER — CLOSED 2026-08-23 by GATEB-COORD
+
+`branch: ralph/GATEB-PATH` · see `ralph/DONE.md`'s GATEB-COORD entry.
+
+All six threads are answered. Threads 1-4 are fixed and proven: the tail runs
+end to end with the REAL twelve-piece controller house, and the continuous run
+and the full unit suite were both re-run. Thread 5 was diagnosed and the
+handoff note had the wrong culprit — the line the hammer gate loses to is
+`riding_controller.gd`'s ACTIONABLE "Ride <name>", not the non-actionable "Put
+<name> away" the gate already ignores; fixed under the owner's §3 ruling and
+pinned by `tests/smoke_build_wins_while_hammer_is_out.gd`. Thread 6 was ruled
+on by the owner: three beds and a bigger gather.
+
+## GATEB-FINDINGS — what driving Gate B for real turned up (opened 2026-08-23)
+
+`branch: ralph/GATEB-PATH` · none of these blocks Gate B; all are worth a
+decision or a task of their own.
+
+1. **A floor's height depends on exactly where the player stood.**
+   `build_grid.gd::snap_to_grid(raw, ground_y)` takes a ground-clamped piece's
+   height from the RAW point being aimed at rather than from the resolved cell
+   centre, so the same grid cell previews and places a few centimetres
+   differently from two different stances. Harmless for one piece, visible as
+   a stepped floor across four, and it forced two rebases in
+   `gate_a_build_segment.gd`'s preflight. Sampling the ground at the resolved
+   cell centre would remove it — a change to the live ghost's own maths, so it
+   wants its own task and its own regression pass. `model: sonnet`
+   `tests: test_build_grid.gd, test_build_placer_preview.gd, smoke_free_build.gd`
+
+2. **Build still loses Interact to a harvest node.** OWNER DIRECTIVE
+   2026-08-23 §3 was implemented as written — the player's own deployed
+   creature stands down while the hammer is out, and Build owns the button. It
+   deliberately did NOT go further: an NPC or a harvest stand still wins, so
+   `playground_hud.gd::_hammer_opens_the_catalogue()` forfeits, and a player
+   who wants to build next to a tree has to step away from it first. The Gate B
+   tail hit this beside the authored deadwood at the Practice Meadow patch and
+   works around it by stepping clear. Going further would mean Grandpa no
+   longer answers a player with a hammer in hand, which is a bigger call than
+   the directive makes and is banned from being invented — **owner ruling
+   wanted.** `model: sonnet`
+
+3. **One fainted creature costs a night.** "Rested, fed and happy" is three
+   things and a bed buys only the first. Happiness starts at 55 against a gate
+   of 60 (`data/config/creature_condition.json`), a completed rest is +12 and a
+   FAINT is -12, and `CONDITION.feed()` refuses a creature that is already fed
+   — so a creature knocked out during an ordinary build session arrives full,
+   rested and unhappy with nothing left that helps it, and the marshal turns
+   the whole team away. The tail sleeps a second night, which works and reads
+   fine. Whether a player should have any other way to cheer a creature up
+   (petting, a favourite food, a won fight) is a design question. `model: fable`
+
+4. **The gather route is the chapter's longest dead-travel stretch.** The wood
+   fill alone closes its shortfall in ~18 scatter stops, and the authored route
+   still ends at (-168, 312) — a 300m round trip north for two fiber stops.
+   Gate F should measure this against
+   `docs/MEADOWS_PROGRESSION_CURVE.md` before it is called acceptable pacing.
+   `model: sonnet`
 
 ## RECONCILED 2026-08-17 (OPS1) — 35 items closed in one pass
 
@@ -173,6 +230,100 @@ against current `main`, confirm or fix it, then wire it into an existing
 shard (or the unit suite if it's cheap enough to run every commit).
 
 ---
+
+## Phase -1.9 — what PERF-ROG left open (2026-08-23)
+
+`OP23-01` itself is closed (`ralph/DONE.md`, `ralph/PERF_ROG_REPORT.md`): the
+CPU cause was `interaction_arbiter.gd` polling 24,461 prompt providers a frame,
+and per-frame CPU is down 88% across six corridor sites. What follows is what
+that measurement pass could NOT settle, stated as numbers rather than as
+worries.
+
+### PERF-ROG-GPU — the half of OP23-01 no container can answer · `model: sonnet` · `tests: none (device evidence)`
+
+The CPU half is fixed and measured. The GPU half is not, and cannot be from
+here: under the Compatibility renderer `RENDER_TOTAL_DRAW_CALLS_IN_FRAME` and
+`RENDER_TOTAL_PRIMITIVES_IN_FRAME` count MultiMesh BATCHES in the frustum, not
+the instances inside them, and this box rasterises in software, so its frame
+times mean nothing for fill rate. What we can say: 22,109 MultiMeshInstance3D,
+1,605 MB static, 5,789 draw calls at the worst measured view.
+
+**The next owner playtest should produce numbers, not adjectives.** Set
+`debug_overlay_on_boot: true` in `data/config/performance.json`, build, play,
+photograph the readout at the village, in Band 4 and at the stronghold. The
+top-three-costs block names what to fix next; `fps` / `frame ms` / `draw calls`
+say whether anything is left to fix at all.
+
+### PERF-ROG-MEMORY — 1.6 GB of static memory for one chapter · `model: sonnet` · `tests: new`
+
+`tools/perf_profile.gd` reports 1,605 MB static and 89,137 nodes on `main`'s
+bake; `ralph/VISUAL-GROUNDCOVER`'s takes that to 1,755 MB and 126,037 nodes. The
+Ally shares 16 GB with its GPU. Not measured as a problem, and NOT to be
+"optimised" on suspicion — but it is the number that decides whether the density
+raise, the wild population and the chapter's prop budget can all grow again, and
+nothing currently watches it. A budget assertion in the test suite (the shape
+`test_scatter_perf_budget.gd` already uses for placement count) would.
+
+### PERF-ROG-WILD-BOOT — 909 creature bodies built at boot, never despawned · `model: sonnet` · `tests: smoke_playground`
+
+Not a per-frame cost: STREAM-D's cluster activation works, 8-15 tick at any
+site, and only 41 of 939 AnimationPlayers advance. It is a boot-time and memory
+cost, and it is the number that grows if wild density rises again.
+`encounter_director.gd::_spawn_creatures()`'s own header already names this as
+deliberately untouched. Recorded so the next density directive is priced before
+it lands, not after.
+
+### PERF-ROG-LOD-REMAINDER — the visibility-range lever, measured and parked · `model: sonnet` · `tests: none`
+
+`scatter_lod_ranges` is wired and gated in `data/config/performance.json`,
+**default false**. Measured: at the authored 110-260m ranges it changes draw
+calls by less than noise; forcing every range to 20m removes only 5-16%. It is
+real and it is small. It would become worth something with a genuine low-poly
+LOD1 mesh per scatter model to fall back to and a `shadow_impostor` pointed at
+it — which needs meshes this chapter is not allowed to generate (CLAUDE.md).
+Re-measure with `tools/perf_render_stats.gd` before spending anything here.
+## Phase -1.9b — what the Gate F full-chapter pass found (2026-08-23)
+
+Filed by the `GATE-F` coordinator. Evidence:
+`ralph/GATE_F_EVIDENCE_2026-08-23.md`; instruments
+`tools/gate_f_chapter_run.py` and `tools/_probe_gate_f_corridor.gd`. Each item
+below was measured on the running game or in the shipped data, not inferred.
+
+Nothing here blocks the chapter. Gate F's one hard blocker is Gate B's
+continuous head, which belongs to `ralph/GATEB-PATH` and is already tracked.
+
+### BAND2-THIN — Stone & Root is the chapter's quiet band · `model: sonnet` · `tests: _probe_gate_f_corridor` · QUALITY
+
+Four independent measurements agree, and none of them individually fails a
+threshold — which is why this is one entry and not four:
+
+- sparsest cadence in the chapter: **36.6 points of interest per km**, against a
+  49.6 chapter average and band 5's 81.4;
+- fewest distinct wild species: **4** (Burrowback, Meadowhart, Mudsnout,
+  Trailpup), against 8/9/6/5 in the other bands and 12 chapter-wide;
+- **seven of the chapter's eighteen** 100 m-plus intervals;
+- the single worst gap anywhere in the corridor: **165 m**, at 4,782 m along,
+  broken by a berry cluster.
+
+165 m is ~41 seconds at walk pace, so this is not dead travel and must not be
+fixed as if it were. It is the stretch a player is most likely to call the quiet
+one. Band 2's own lane should rule whether that is deliberate breathing room
+before the Warrens or a hole — the corridor probe reprints all four numbers in
+one run.
+
+### CURVE-DOC-STALE — the curve doc plans against a corridor that no longer exists · `model: sonnet` · `tests: none (doc)` · POLISH
+
+`docs/MEADOWS_PROGRESSION_CURVE.md` §6 ("Deliberately left to the regional
+packages") still says **"Band 3 and Band 5 have zero wild spawns; Band 4 has one
+Meadowhart cluster ... Half the corridor has no creatures in it"** and **"Band 2
+has no trainers at all"**.
+
+Measured on `main` 2026-08-23 by walking the corridor: band 3 has **91** wilds
+and **5** trainers, band 4 **184** wilds and **2** trainers, band 5 **48** wilds
+and **3** trainers, band 2 **2** trainers. D3/D4/D5 landed the ecology after
+that section was written. The section is stale in the project's favour, which is
+the dangerous direction: a future lane reading it would plan to build content
+that already exists. Rewrite §6 against the corridor probe's output.
 
 ## Phase -1.8 — what verifying the integration-ABC merge left open (2026-08-22)
 
@@ -547,6 +698,67 @@ make at the end of a verification pass -- but it should not sit unnamed either.
 corrected on this branch.
 
 ### CONTINUOUS-CORE — the village/gather/build continuation has never run
+
+**UPDATE 2026-08-23, `ralph/GATEB-PATH` — the village-pathing half is DONE. The
+entry stays open, one stall further on.**
+
+The prediction this entry ends on was right: "what is actually left is pathing,
+not positioning". It is fixed, in `tests/helpers/stick_navigator.gd`, and the
+answer was neither of the two options the entry offered. There is **no navmesh
+in this game at all** (nothing in `scripts/`, `scenes/` or `autoload/` mentions
+`NavigationServer3D`), and authored per-villager waypoints were rejected because
+the same straight line breaks at Bram's inn, on the material route's 161m legs
+and at every unreached beat after them. What shipped is a shared left-stick
+navigator that **detects a leg that has stopped closing and slides sideways**,
+picking the side with a physics free-space probe — plus doors approached along
+their own outward normal, which is where a player walks up to a door from.
+
+Two corrections to the record above, both measured:
+
+* **Mira's door was cottage_a's front wall, and the geometry is exact.** Oskar
+  at [22,-6], the doorway in cottage_a (`village.json` `at: [18,-2]`,
+  `yaw_deg: -135`), and that wall's solid left-hand collider
+  (`building_prefabs.json`, local x -2.2..0.2 at local z 3) sits square across
+  the straight line between them. The stubborn 3.6m was the wall.
+* **"The arbiter is a red herring" was right for a second reason.**
+  `interactable.gd::_has_line_of_sight` refuses an offer through a wall, so with
+  the player pressed against plaster the EncounterDirector was not taking the
+  interact line — it was the only provider still bidding.
+
+**Village evidence now passing**, six consecutive runs of
+`tools/_probe_village_route.gd` (real opening drive + real village segment, one
+session, nothing granted, ~3 minutes a run): Tam, the Satchel's four quick
+slots, the axe/pickaxe/knife gathers, Oskar, **Mira in and out through her real
+door**, and **Bram three times in and out through the inn's**.
+
+**Where it now stalls: the live scatter fill.** `smoke_gate_b_continuous.gd`
+reaches opening -> road gate -> team -> village tools -> every authored gather
+stop including the 161m leg to (-5, 141), and fails inside
+`gate_a_material_route.gd::_fill_with_live_scatter("wood")`:
+
+```
+controller could not reach live natural wood at (-55.7, 7.06, -51.2)
+(stopped 46.9m short)
+```
+
+That is a TRAVEL failure on open ground, not a harvest one, and it has its own
+one-minute harness: `tools/_probe_scatter_fill.gd`. The first hypothesis to test
+is that the navigator's free-space probe — a flat ray at hip height — reads a
+rising slope as a wall, so a leg that should be climbing sidesteps instead. The
+target in that failure is 4m uphill of the start.
+
+Four other real blockers were found and fixed on the way to it (the tutorial
+aim's unconvergeable 1-degree window and its two walk-away cases; the material
+route pressing the unbound `use_tool`; the route walking to authored nodes the
+village segment had just spent, because `resource_amount()` keeps reporting a
+spent node's authored amount; and a fixed 1800-frame walk budget that is 150m at
+the trainer's own 5 m/s). See `ralph/DONE.md`'s GATEB-PATH entry for each one's
+evidence.
+
+Do NOT re-derive any of this by iterating the full run. Three probes exist for
+exactly that reason and are on the branch.
+
+---
 
 Gate B cannot be proven end-to-end until this passes. Everything below is
 observed, not inferred.
