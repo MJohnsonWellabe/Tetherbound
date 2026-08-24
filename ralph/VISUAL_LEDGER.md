@@ -63,6 +63,118 @@ Round 2 is not convergence in either case — both named NEW defects, which is
 `ralph/conventions.md`'s definition of a round that improved. Neither domain is
 near its stopping rule.
 
+## The pattern that explains four separate defects: metallic in this renderer
+
+Named here because it has now been diagnosed from scratch four times, each time
+as a colour problem, and each time it was the same thing.
+
+**The Compatibility renderer has no reflection probe and, on a bare capture
+stage, no sky. A metallic surface therefore has nothing to reflect. High
+metallic suppresses the diffuse term and returns almost nothing.** It is never
+a sheen here; it is either a mirror of whatever IS in the sky, or a hole.
+
+- **Ice-blue foundations** under seven buildings: `MI_RockTrim` ships with no
+  `metallicFactor`, so glTF's spec default of 1.0 applies — full metal,
+  mirroring the sky, reading as chrome. Diagnosed as a colour choice twice
+  before the third pass found the missing factor.
+- **`MI_Plaster`** — the same missing-factor shape, found independently by two
+  different headers in this codebase.
+- **The Warden's badge became a literal black hole**: metallic 0.88 on the
+  near-black reserved hex returns RGB 0,0,0. A blind critic called it "the
+  loudest single defect in the survey" and correctly read it as a missing
+  material. Metallic now 0.10-0.18; roughness alone gives the sheen that was
+  actually wanted.
+
+**Check for a metallic value before treating any "wrong colour" as a colour.**
+
+## The oxblood story, third correction
+
+`tether_oxblood` `#332228` has now failed legibility twice — once as a matte
+near-black disc invisible on a dark green coat, once as a metallic black hole —
+and preserving the hex exactly was the wrong instinct both times.
+
+> *"A colour reserved for a faction has to be VISIBLE on that faction to mean
+> anything; a black disc on a black coat reserves nothing."*
+
+It lifts to `#5a3742`: the reserved colour's own hue and family, raised until it
+reads. This supersedes both earlier entries here — the original "the discipline
+holds" reading, and the VIS-SITES correction that the discipline holds while the
+READ fails. The rule is not "reserve the hex", it is "reserve the identity, and
+make it legible where it is worn."
+
+## Corrections to this ledger from later rounds
+
+Kept as corrections rather than edited away, because a ledger that quietly
+rewrites itself cannot be trusted about what it got wrong.
+
+- **The oxblood "pass" was half wrong.** Every report above records the oxblood
+  discipline as holding. VIS-SITES' critic, not told the colour means anything,
+  flagged the castle's nine banners as a friendly landmark wearing the danger
+  colour. **The banners are correct — it IS the enemy stronghold — so the
+  discipline holds and the READ fails**, because nothing else in frame says
+  whose castle it is. Reserving a colour is not the same as making the reading
+  land.
+- **D3 round 1's scale numbers were measured against a broken ruler** and are
+  superseded by round 2's (1.93x span over 17 species, not 1.6x). Two
+  individual readings reversed outright: veridian is the largest species rather
+  than common-deer-sized, and terrapup genuinely does out-mass the tank it
+  shares a mesh with.
+- **The buildable wall is not warped.** A critic's finding, disproven by raw
+  vertex data; the "diagonal lift" is an intentional Tudor V-brace. No change
+  made, and none wanted.
+
+- **The grunt armband defect does not exist.** The corridor round-2 critic
+  reported "a flat pure-red untextured rectangle that renders magenta at night"
+  and this coordinator briefed VIS-CAST on it without checking. VIS-CAST found
+  **no armband in code or data and zero saturated-red pixels in the grunt
+  texture** — the description fits the captain's box badge, which was already
+  fixed. A critic's misattribution, propagated into a lane brief. Verify a
+  named part exists before handing it to a lane.
+- **The villagers are not child-proportioned.** Head counts measured off the
+  capture rather than asserted: villagers **4.9**, trainer **5.2**, grunt rig
+  **6.5**. The "1.78 m children" reading is far smaller than stated, and the
+  real outlier is the grunt rig — **a quarter longer-limbed than the game's own
+  style anchor, and now the body of three antagonist ranks** because of this
+  coordinator's own rank-ladder fix.
+- **The missing small-creature tier must not be "fixed".** Its fix would
+  reverse **D19**, an owner decision made at the controller after play, having
+  found his creature felt small. Canon precedence puts owner-play evidence above
+  a critic's reading. Recorded as blocked, not actioned.
+- **Combat DOES have attack VFX — the capture was shooting between frames.**
+  VIS-MAKE established the missing engagement/move/hit moments as **harness
+  defect #7**, not a game defect, and proved the impact flash "was always
+  there". The capture now photographs a moment that lasts less than a frame.
+  This is why it was recorded as an open question rather than a finding.
+
+## Findings from the parallel lanes that are NOT visual
+
+- **Three of the chapter's four gates are decorative.** VIS-SITES measured every
+  choke point across the corridor's full 2,048 m width at the player's 45 degree
+  slope limit and at the 60 degrees a ridden legendary gets. The river holds —
+  no 64 m window reaches the far bank anywhere, the cut is 11.4-21.1 m deep at
+  65-80 degrees across 188 stations, and every baked depth is within a metre of
+  the recipe, so the Old Mill Crossing is genuinely the only way over. But the
+  **South Bridge gully and both Sigil Gate gorges are 90 m and 108 m bars in a
+  2,048 m corridor** — authored correctly and walked around the end of in about
+  a minute. Routed to gameplay, not art: it affects progression pacing.
+
+## Mechanisms found that nobody had
+
+- **The fires emit no light.** Both camp fire-detail night frames are lit by
+  nothing. For a brief whose own words are "cozy and inviting", the cheapest
+  instrument in the game is switched off.
+- **There are two castles.** `landmark.gd` builds a 132-module castle with four
+  corner towers, a two-module gate and nine oxblood banners at (229.8, -144.4)
+  — **7,708 m from the stronghold the player reaches**, which is the untextured
+  blockout three critics have called "the antagonist made of nothing". Shooting
+  both in-world separates two fixes that one verdict was hiding: dressing at the
+  wrong coordinates (a const the OW5D relocation left behind) versus materials
+  not loading. A prefab survey on a bare stage cannot tell those apart.
+- **Sites need wear, not density.** "Nothing organises the ground plane...
+  until a path enters a site and the grass dies where feet go, no site will read
+  as a place." A different lever from the scatter density the corridor lane is
+  tuning.
+
 ## What recurs across independent critics
 
 The strongest signal in the sweep is agreement between critics who could not

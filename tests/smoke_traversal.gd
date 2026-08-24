@@ -424,6 +424,7 @@ func _run() -> void:
 	await _check_the_quarry(world, player, failures)
 	await _check_the_river(world, player, failures)
 	await _check_mill_crossing(world, player, failures)
+	await _check_sigil_gate(world, player, failures)
 	await _check_village_doors(world, failures)
 	_check_no_severed_spoke_blocks_a_route(failures)
 
@@ -437,7 +438,7 @@ func _run() -> void:
 			STUCK_MIN_PROGRESS, STUCK_CHECK_INTERVAL * STUCK_SUSTAIN_WINDOWS / 60.0, stuck_positions.size(), ", ".join(coords)
 		])
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, every village house door starts shut, blocks the doorway, and opens on interact into a real room, and no severed spoke's blocker lies across a route the player is asked to walk.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, the Old Mill Crossing is shut without its gear and open with it, the Sigil Gate's causeway cannot be walked past locked and genuinely opens with all three Sigils, every village house door starts shut, blocks the doorway, and opens on interact into a real room, and no severed spoke's blocker lies across a route the player is asked to walk.")
 		quit(0)
 	else:
 		for line in failures:
@@ -941,6 +942,357 @@ func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array
 		failures.append("could not cross the open %s (only %.1fm past the gap)" % [label, reached_open])
 	if player.global_position.y < THROUGH_THE_FLOOR:
 		failures.append("fell into the gap while crossing the open %s" % label)
+
+
+## GATE-D5 REQUEST 2 / CHOKE-POINTS: the Sigil Gate, spec Band 4's last gate.
+##
+## Every other choke point in the chapter (South Bridge, Old Mill Crossing) is
+## a deck over a fully carved channel, so a TERRAIN probe (`tools/
+## _probe_crossings.gd`, run against the baked surface) can tell whether it is
+## sealed on its own -- and did: SEALED at 45 and 60 degrees, everywhere. The
+## Sigil Gate is different. `sigil_gate_gorge_west`/`_east` (terrain_
+## playground.json) carve the flanking gorges, but deliberately leave a real,
+## uncarved, walkable causeway between them (see those entries' own `_why`) --
+## the gate at (63.6, 7400) is a `road_gate.gd` PROP standing on that open
+## ground, not a deck over carved terrain. A terrain probe measures the gorges
+## either side and correctly calls the causeway itself open; whether the
+## PLAYER can actually get through it is entirely down to the gate's own
+## `GateCollision` box, which no terrain probe has ever looked at.
+##
+## THE SUSPECT, found by measuring rather than assuming. `road_gate_leaf`
+## (`building_prefabs.json`) is ~4.07m wide -- sized for the ~4.1m ROAD this
+## same prefab shuts at the village gate (SA7), where flanking fence_run props
+## do the actual work of blocking the shoulders. The Sigil Gate has no such
+## flanking dressing: the gorges are its only flanking geometry, and they sit
+## ~61m out along the causeway's own width, each reaching 54m back toward the
+## gate -- a ~14m gap between them (`sigil_gate_gorge_west`'s own `_why`).
+## A 4m leaf standing in the middle of a 14m gap, with nothing else in the
+## world to stop a player, is "a gate inboard of that gap" in exactly the
+## words `south_bridge.gd`'s own history warns about. `_sigil_causeway_gap`
+## and the leaf's own live `box.size.x` below measure this instead of
+## asserting it, and the walk at several points across that width is what
+## actually decides it.
+##
+## Both directions matter for a different reason each: LOCKED has to hold
+## (the reason this check exists at all), and UNLOCKED has to genuinely open
+## -- a seal that also blocks the finale once the player has earned it would
+## be a worse bug than the leak it replaced, and nothing else in the chapter
+## re-tests this gate once it is open.
+## No player strides this far in one physics frame. Anything larger is the
+## kill volume returning a fallen body to spawn, which this walk must not score
+## as forward progress -- see `_walk_at_the_sigil_gate`.
+const STEP_SANITY_M := 5.0
+
+const SIGIL_GATE_START_BACK := 12.0
+const SIGIL_GATE_WALK_FRAMES := 420
+## Same reasoning as BRIDGE_BLOCKED_M: a locked approach should stop at
+## essentially zero penetration. A little slack for the capsule settling
+## against the box before physics resolves the contact, not for a real gap.
+const SIGIL_GATE_BLOCKED_M := 1.0
+## Symmetric to BRIDGE_CROSSED_M / RIVER_CROSSED_M: comfortably past the
+## leaf's own resting position so "reached the gate" cannot pass for "got
+## through it".
+const SIGIL_GATE_CROSSED_M := 8.0
+## How far past the leaf's own measured half-width to test the "walked around
+## it" approach. 1.0m clears the player's own 0.4m capsule radius with margin,
+## so a pass here is a real gap next to the leaf, not the capsule grazing its
+## edge.
+const SIGIL_GATE_OFFSET_OUTSIDE_LEAF := 1.0
+## How far inside the causeway's own true edge (see `_sigil_causeway_gap`) to
+## test the widest plausible "walk around it" line, without putting the start
+## point up on the gorge's own carved wall.
+const SIGIL_GATE_OFFSET_NEAR_GORGE := 1.0
+
+
+func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var gate: Node3D = world.get_node_or_null(^"SigilGate") as Node3D
+	if gate == null:
+		failures.append("no SigilGate in the scene; spec Band 4's last gate is not built")
+		return
+	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
+	if camera_rig == null:
+		failures.append("no CameraRig in the scene; cannot aim a walk at the Sigil Gate")
+		return
+	var prompt: Node3D = gate.get_node_or_null(^"Interactable") as Node3D
+	if prompt == null:
+		failures.append("the Sigil Gate has no Interactable; it cannot be tried at all")
+		return
+	# Found BY TYPE, not by node path. `road_gate.gd` creates its shape with
+	# `CollisionShape3D.new()` and never names it, so the auto-assigned name is
+	# not reliably the literal "CollisionShape3D" a path assumes -- and the
+	# earlier path-based lookup here reported "the Sigil Gate has no box
+	# collider; nothing would ever stop a player at it" about a collider that is
+	# present, enabled and correctly sited at (63.6, 7400).
+	# `tools/_probe_sigil_gate_body.gd` measured it: GateCollision, BoxShape3D,
+	# disabled=false, world-x 61.8..65.4. A test that says a real barrier is
+	# absent is worse than no test, because the fix it invites is to build a
+	# second one.
+	var body: Node = gate.get_node_or_null(^"GateCollision")
+	var shape: CollisionShape3D = null
+	if body != null:
+		for child in body.get_children():
+			if child is CollisionShape3D:
+				shape = child as CollisionShape3D
+				break
+	var box: BoxShape3D = shape.shape as BoxShape3D if shape != null else null
+	if box == null:
+		failures.append("the Sigil Gate has no box collider; nothing would ever stop a player at it")
+		return
+	if shape.disabled:
+		failures.append("the Sigil Gate's collider is disabled before anyone opens it")
+		return
+
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		failures.append("no Game autoload; the Sigil Gate has no inventory or flag store to read")
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var progression: RefCounted = game.get("progression")
+
+	if bool(gate.call("is_open")):
+		failures.append("the Sigil Gate started open on a fresh world; it is not a gate")
+		return
+
+	# Measured, not assumed: the leaf's real collider width against the real
+	# gap the two gorges leave open, both read from the live node/config
+	# rather than the numbers either script's own comments quote.
+	var gate_xz := Vector2(gate.global_position.x, gate.global_position.z)
+	var across := Vector2(gate.global_transform.basis.x.x, gate.global_transform.basis.x.z).normalized()
+	var along := Vector2(-across.y, across.x)
+	if along.y < 0.0:
+		along = -along  # standardise "along" toward +z (the Hall side) so the prints below read consistently
+
+	var leaf_half: float = box.size.x * 0.5
+	var gap := _sigil_causeway_gap(gate_xz, across)
+	if gap == Vector2.ZERO:
+		failures.append("could not read the Sigil Gate's flanking gorges from terrain_playground.json; the causeway width is unknown")
+		return
+	print("  Sigil Gate: leaf collider half-width %.2fm; open causeway runs %.2fm..%.2fm either side of centre (%.1fm total)" % [
+		leaf_half, gap.x, gap.y, gap.y - gap.x])
+	# A FAILURE, not a note. This was printed as an observation while the gap
+	# was 13m and the leaf 3.6m -- which is precisely the defect, so observing
+	# it was not enough. `south_bridge.gd`'s own history states the rule: "a
+	# gate inboard of that gap gates nothing."
+	#
+	# Derived from the two flanking carves every run rather than compared
+	# against a written-down width. An earlier version of this check carried
+	# the measured causeway as constants (57.0..70.0) and went stale the moment
+	# the carves were narrowed to close it -- the test then failed against a
+	# causeway that no longer existed, which is a worse failure than the one it
+	# was written to catch, because it looks like the fix did not work.
+	if gap.x < -leaf_half - 0.1 or gap.y > leaf_half + 0.1:
+		failures.append(
+			"the Sigil Gate leaf covers %.1fm of a %.1fm causeway -- %.1fm of open ground beside it, which a player walks around" % [
+				leaf_half * 2.0, gap.y - gap.x,
+				maxf(0.0, -leaf_half - gap.x) + maxf(0.0, gap.y - leaf_half)])
+
+	var offsets: Array[float] = [
+		0.0,
+		leaf_half + SIGIL_GATE_OFFSET_OUTSIDE_LEAF, -(leaf_half + SIGIL_GATE_OFFSET_OUTSIDE_LEAF),
+		gap.y - SIGIL_GATE_OFFSET_NEAR_GORGE, gap.x + SIGIL_GATE_OFFSET_NEAR_GORGE,
+	]
+
+	# --- locked: no Sigils in the satchel, and every approach across the
+	# causeway's full width, from both sides, must be stopped. Both sides and
+	# several offsets rather than one straight line for the same reason the
+	# South Bridge's own OW5C seam bug demands it: a single fixed-x walk can
+	# land exactly on a collision-shape-tile seam and report a false result
+	# either way.
+	for id: String in playground_world_gd().SIGIL_ITEM_IDS:
+		var carried := int(inventory.call("count", id))
+		if carried > 0:
+			inventory.call("remove", id, carried)
+	prompt.call("interaction_activate")
+	await physics_frame
+	if bool(gate.call("is_open")):
+		failures.append("the Sigil Gate opened without any Sigils")
+	await _dismiss_dialogue()
+	if bool(progression.call("has", "hall_approach_open")):
+		failures.append("trying the locked Sigil Gate set its open flag anyway")
+
+	var worst_locked := -INF
+	var worst_locked_label := ""
+	for offset: float in offsets:
+		for forward in [true, false]:
+			var reached: float = await _walk_at_the_sigil_gate(world, player, camera_rig, gate_xz, across, along, offset, forward)
+			var label := "%+.1fm off centre, %s" % [offset, "south->north" if forward else "north->south"]
+			print("  Sigil Gate, locked, %s: reached %+.1fm past the gate" % [label, reached])
+			if reached > worst_locked:
+				worst_locked = reached
+				worst_locked_label = label
+	if worst_locked > SIGIL_GATE_BLOCKED_M:
+		failures.append("the locked Sigil Gate can be walked past (%s, %.1fm past the gate) -- the causeway is not sealed" % [
+			worst_locked_label, worst_locked])
+
+	# --- unlocked: all three Sigils, and the gate must actually let the
+	# player through its own centre. A seal that also blocks the finale is
+	# worse than the leak it fixed.
+	for id: String in playground_world_gd().SIGIL_ITEM_IDS:
+		inventory.call("add", id, 1)
+	prompt.call("interaction_activate")
+	await physics_frame
+	if not bool(gate.call("is_open")):
+		failures.append("the Sigil Gate stayed shut with all three Sigils in the satchel")
+		return
+	await _dismiss_dialogue()
+	for id: String in playground_world_gd().SIGIL_ITEM_IDS:
+		if int(inventory.call("count", id)) != 0:
+			failures.append("'%s' was not consumed opening the Sigil Gate" % id)
+	if not bool(progression.call("has", "hall_approach_open")):
+		failures.append("the open Sigil Gate did not set hall_approach_open; a reload would relock it")
+
+	var best_open := -INF
+	for forward in [true, false]:
+		var reached: float = await _walk_at_the_sigil_gate(world, player, camera_rig, gate_xz, across, along, 0.0, forward)
+		print("  Sigil Gate, unlocked, centre, %s: reached %+.1fm past the gate" % [
+			"south->north" if forward else "north->south", reached])
+		best_open = maxf(best_open, reached)
+	if best_open < SIGIL_GATE_CROSSED_M:
+		failures.append("could not cross the open Sigil Gate through its own centre (only %.1fm past the gate)" % best_open)
+	if player.global_position.y < THROUGH_THE_FLOOR:
+		failures.append("fell into a gorge while crossing the open Sigil Gate")
+
+
+## Lazily loaded rather than a top-of-file `preload`: `playground_world.gd` is
+## a large scene script and this test only needs the three Sigil item ids off
+## it, read from the SAME constant `_build_sigil_gate()` configures the real
+## gate with, so this cannot name a Sigil the gate does not actually require.
+var _playground_world_script: GDScript = null
+
+
+func playground_world_gd() -> GDScript:
+	if _playground_world_script == null:
+		_playground_world_script = load("res://scripts/world/playground_world.gd")
+	return _playground_world_script
+
+
+## The open, uncarved span either side of the gate's own centre, measured
+## along `across` (the leaf's own width direction) from the two flanking
+## gorge carves in terrain_playground.json -- `sigil_gate_gorge_west`'s and
+## `_east`'s own reach (`half_length + end_fade`), not the `_wing` extensions,
+## which pick up at the diagonals' own OUTWARD corners and cannot narrow this
+## near-gate gap any further than the diagonals already do. Returns
+## `(negative edge, positive edge)` of the open interval, or `Vector2.ZERO` if
+## the config could not be read.
+func _sigil_causeway_gap(gate_xz: Vector2, across: Vector2) -> Vector2:
+	var cfg := _terrain_config()
+	if cfg.is_empty():
+		return Vector2.ZERO
+	var by_id := {}
+	for entry: Variant in cfg.get("crossings", []):
+		by_id[str((entry as Dictionary).get("id", ""))] = entry
+	var west: Dictionary = by_id.get("sigil_gate_gorge_west", {})
+	var east: Dictionary = by_id.get("sigil_gate_gorge_east", {})
+	if west.is_empty() or east.is_empty():
+		return Vector2.ZERO
+	var a := _carve_near_edge(west.get("carve", {}), gate_xz, across)
+	var b := _carve_near_edge(east.get("carve", {}), gate_xz, across)
+	if is_nan(a) or is_nan(b):
+		return Vector2.ZERO
+	return Vector2(minf(a, b), maxf(a, b))
+
+
+## Where this one carve's own full-depth reach ends closest to the gate,
+## projected onto `across`. Does not assume the carve's own axis matches
+## `across` (it is expected to, per `sigil_gate_gorge_west`'s own `_why`, but
+## this measures the actual overlap rather than trusting that) -- an
+## authored carve on the wrong axis or the wrong side reports honestly rather
+## than being silently folded into "whichever number is smaller".
+func _carve_near_edge(carve: Dictionary, gate_xz: Vector2, across: Vector2) -> float:
+	if carve.is_empty():
+		return NAN
+	var centre := Vector2(float(carve["centre"][0]), float(carve["centre"][1]))
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var reach: float = float(carve.get("half_length", 0.0)) + float(carve.get("end_fade", 0.0))
+	var u := (centre - gate_xz).dot(across)
+	var span := reach * absf(axis.dot(across))
+	return u - signf(u) * span
+
+
+## One walk at the Sigil Gate from a given lateral offset (along `across`,
+## the leaf's own width direction) and a given side (`forward` = starting
+## south of the gate and walking toward +z, the Hall side; false = the
+## reverse). Returns how far past the gate's own centre, in the direction of
+## travel, the player got -- the same "how far past the gap" convention
+## `_walk_at_the_bridge` uses, so a positive number always means "got
+## through" regardless of which side or offset produced it.
+## Trying either gate SPEAKS -- `road_gate.gd::_try` calls `_say()`, which opens
+## the dialogue panel -- and a modal panel captures input, so every
+## `Input.action_press("move_forward")` after it does nothing.
+##
+## That is what made every Sigil walk report exactly its own start position
+## while the South Bridge and Old Mill Crossing walks in the same run reached
+## +22.8m and +23.6m. The gate was never blocking the player; the conversation
+## was. Read as "the finale cannot be crossed", which is the most alarming thing
+## a traversal test can say, and it was this file's own doing.
+func _dismiss_dialogue() -> void:
+	var panel := root.get_tree().get_first_node_in_group("dialogue_panel")
+	if panel == null:
+		return
+	if bool(panel.call("is_open")):
+		panel.call("close")
+		await physics_frame
+
+
+func _walk_at_the_sigil_gate(world: Node, player: CharacterBody3D, camera_rig: Node3D,
+		gate_xz: Vector2, across: Vector2, along: Vector2, offset: float, forward: bool) -> float:
+	var travel: Vector2 = along if forward else -along
+	var start_xz: Vector2 = gate_xz + across * offset - travel * SIGIL_GATE_START_BACK
+	var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.y))
+	if is_nan(ground):
+		return -INF
+	# Starting inside a gorge measures the gorge, not the gate. With the
+	# causeway narrowed to the leaf's own width, a start 12m along the gate's
+	# axis can land in a trench -- and a walk that begins 11m down a hole
+	# reports whatever the recovery does next.
+	var gate_ground: float = float(world.call("ground_height_at", gate_xz.x, gate_xz.y))
+	if not is_nan(gate_ground) and ground < gate_ground - 4.0:
+		print("      (start %+.1fm off centre sits %.1fm below the gate -- inside a gorge, not on the causeway; skipped)" % [
+			offset, gate_ground - ground])
+		return -INF
+	await _dismiss_dialogue()
+	player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.y)
+	player.velocity = Vector3.ZERO
+	var outward := Vector3(travel.x, 0.0, travel.y)
+	camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+	for i in 10:
+		await physics_frame
+
+	# A FALL IS NOT A CROSSING, and this walk could not tell the difference.
+	#
+	# Both gorges are 11m deep and the causeway between them is now barely
+	# wider than the leaf, so a walk that drifts off it falls in -- and
+	# `water_hazard`/the kill volume RETURNS A FALLEN PLAYER TO SPAWN. Spawn is
+	# ~7.4km from this gate, so `travel.dot(here - gate_xz)` then reports
+	# thousands of metres of "progress" and the check reads a fall as a player
+	# strolling past a locked gate.
+	#
+	# The tell was that locked and unlocked runs reported the SAME +6466.6m.
+	# A number that does not change with the thing under test is not measuring
+	# the thing under test -- the same reasoning `south_bridge.gd`'s
+	# `_comment_ow5c_seam` used when its walk stopped at 1.4m "regardless of
+	# gate state" and the cause turned out to be a collision-tile seam.
+	#
+	# So progress is only counted while the player is still walking: a step
+	# larger than STEP_SANITY_M in one physics frame is a teleport, not a
+	# stride, and the walk stops there and keeps what it had.
+	var best := -INF
+	var previous := player.global_position
+	Input.action_press("move_forward")
+	for i in SIGIL_GATE_WALK_FRAMES:
+		await physics_frame
+		var here := player.global_position
+		if here.distance_to(previous) > STEP_SANITY_M:
+			print("      (walk abandoned at frame %d: the player moved %.0fm in one frame -- a fall and respawn, not a crossing)" % [
+				i, here.distance_to(previous)])
+			break
+		previous = here
+		var depth: float = travel.dot(Vector2(here.x, here.z) - gate_xz)
+		best = maxf(best, depth)
+	Input.action_release("move_forward")
+	for i in 20:
+		await physics_frame
+	return best
 
 
 ## SE21: the river itself, asserted the only way that is worth anything — by

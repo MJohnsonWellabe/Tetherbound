@@ -78,11 +78,18 @@ const GATE_KEY_AT := Vector2(24.0, -10.0)
 ## `road_gate.gd` configured, not a second gate script; see that file's own
 ## note on why.
 ##
-## Sited where the walkable upper Meadows ENDS on the stronghold's bearing:
-## `map_landmarks.json` puts Meadows Hall at [229.8,-144.4], which is 271m out
-## and therefore beyond `world_perimeter.gd`'s 235m ring — it is a silhouette,
-## drawn to be seen and not reached, and the approach to it is the last ground
-## the player can stand on facing it. [130,-176] is 219m out, measured by
+## ORIGINAL siting record (pre-OW5D; see that note below for what actually
+## drives `SIGIL_GATE_AT` today). Sited where the walkable upper Meadows
+## ENDED on the stronghold's bearing at the time: `map_landmarks.json` put
+## Meadows Hall at [229.8,-144.4], which was 271m out and therefore beyond
+## `world_perimeter.gd`'s 235m ring — it was a silhouette, drawn to be seen
+## and not reached, and the approach to it was the last ground the player
+## could stand on facing it. GATE-E2 (2026-08-23, "move the castle to the
+## end") later moved BOTH the castle (`landmark.gd`'s `SITE`, now (150,7595))
+## and this landmark's map pin (`map_landmarks.json`'s `stronghold` entry,
+## now also (150,7595)) again, decoupled from this gate's own siting below —
+## see `landmark.gd`'s own header for that move's reasoning. [130,-176] was
+## 219m out, measured by
 ## `tools/_probe_upper_meadows.gd` at 1.19m of height spread and a worst local
 ## slope of 9.8 degrees over a 5m pad, with the Riverwatch Captain 18m back
 ## down the draw — close enough that the sealed gate is visible over his
