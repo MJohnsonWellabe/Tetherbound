@@ -263,24 +263,59 @@ static func terrain_source_region(world_centre: Vector2, span_m: float, texture_
 	return Rect2((world_centre - half - world_min) * pixels_per_metre, Vector2.ONE * span_m * pixels_per_metre)
 
 
+## OP23-01. This used to repaint every cell in the grid on every `revision`
+## bump. At the corridor world's 512x2048 grid that is 1,048,576 cells and two
+## scripted calls each — measured at 837ms, of which 735ms was `cell_at()`
+## alone — fired on essentially every 0.5s discovery tick while walking. That
+## was the freeze-every-few-feet, in the village, indoors, everywhere.
+##
+## Now: `MapState` tracks the cell rect its reveals actually touched, and this
+## patches only that (a reveal disc is ~40 cells across, so ~1600 pixels, not
+## a million). The full path still exists for the wholesale cases — first
+## build, a loaded save, a resized grid — and reads the fog bitfield in bulk
+## instead of calling across into `MapState` a million times.
 func _rebuild_fog() -> void:
 	if _map_state == null:
 		return
 	var grid_x: int = int(_map_state.cell_grid_x())
 	var grid_z: int = int(_map_state.cell_grid_z())
-	if _fog_image == null or _fog_image.get_width() != grid_x or _fog_image.get_height() != grid_z:
+
+	var size_changed := _fog_image == null \
+		or _fog_image.get_width() != grid_x or _fog_image.get_height() != grid_z
+	if size_changed:
 		_fog_image = Image.create(grid_x, grid_z, false, Image.FORMAT_RGBA8)
 
-	for iz in grid_z:
-		for ix in grid_x:
-			var discovered: bool = bool(_map_state.cell_at(ix, iz))
-			_fog_image.set_pixel(ix, iz, FOG_DISCOVERED if discovered else FOG_UNDISCOVERED)
+	var dirty: Dictionary = _map_state.take_fog_dirty()
+	# A consumer that never built at this size, or that has fallen behind a
+	# wholesale grid replacement, needs everything regardless of the rect.
+	var full := size_changed or bool(dirty.get("all", false)) or _last_fog_revision < 0
+	var rect: Variant = dirty.get("rect")
+
+	if full:
+		_paint_fog_rect(Rect2i(0, 0, grid_x, grid_z), grid_x)
+	elif rect != null:
+		_paint_fog_rect((rect as Rect2i).intersection(Rect2i(0, 0, grid_x, grid_z)), grid_x)
 
 	if _fog_texture == null:
 		_fog_texture = ImageTexture.create_from_image(_fog_image)
 	else:
 		_fog_texture.update(_fog_image)
 	_last_fog_revision = int(_map_state.revision)
+
+
+## Paints one cell rect of the fog image from `MapState`'s bitfield. Reads the
+## bytes once (`visited_bytes()`) rather than per cell: in a bulk loop the
+## cross-object call is the cost, not the pixel write.
+func _paint_fog_rect(rect: Rect2i, grid_x: int) -> void:
+	if rect.size.x <= 0 or rect.size.y <= 0:
+		return
+	var visited: PackedByteArray = _map_state.visited_bytes()
+	var end_x := rect.position.x + rect.size.x
+	var end_z := rect.position.y + rect.size.y
+	for iz in range(rect.position.y, end_z):
+		var row := iz * grid_x
+		for ix in range(rect.position.x, end_x):
+			_fog_image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else FOG_UNDISCOVERED)
 
 
 ## World XZ -> local widget pixels, through the SAME rotation the map layer

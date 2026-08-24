@@ -90,6 +90,26 @@ var minimap_span_m: float = 90.0
 var _visited: PackedByteArray = PackedByteArray()
 var _visited_count: int = 0
 
+## Fog dirty tracking, for the minimap/full-map texture builders.
+##
+## OP23-01 root cause: those builders rebuilt the WHOLE grid on every
+## `revision` bump. That was fine at the 128x128 this file's header still
+## describes, but the corridor world derives 512x2048 = 1,048,576 cells, and
+## `mark_visited()` bumps `revision` on essentially every 0.5s discovery tick
+## while walking (an 80m reveal radius over a 4m cell always sweeps new cells).
+## Measured: 837ms per full rebuild, 735ms of which was the per-cell
+## `cell_at()` cross-object call. That is the freeze-every-few-feet the owner
+## reported everywhere including indoors, and why a per-frame arbiter fix did
+## nothing for it — this is a burst on a spatial grid, not steady frame cost.
+##
+## So: accumulate the cell rect actually touched since the last texture build,
+## and let the builders patch only that. `_fog_dirty_all` covers the wholesale
+## replacements (configure/load/reveal_all) where a rect is meaningless.
+var _fog_dirty_all: bool = true
+var _fog_dirty_min := Vector2i.ZERO
+var _fog_dirty_max := Vector2i.ZERO
+var _fog_has_dirty_rect: bool = false
+
 ## id -> {display_name, icon, position: Vector2, discover_radius, category, silhouette}
 var _landmark_defs: Dictionary = {}
 ## id -> true, for every discovered landmark id.
@@ -139,6 +159,7 @@ func configure(config: Dictionary) -> void:
 	_visited.resize(grid_x() * grid_z())
 	_visited.fill(0)
 	_visited_count = 0
+	_mark_fog_dirty_all()
 
 	_landmark_defs.clear()
 	_discovered.clear()
@@ -302,6 +323,42 @@ func cell_size() -> float:
 	return CELL
 
 
+## Bulk read of the fog bitfield (1 byte per cell, 1 = discovered), for
+## texture builders. `cell_at()` stays the right call for single lookups, but
+## in a million-cell loop the cross-object call IS the cost — see the
+## `_fog_dirty_all` comment above.
+func visited_bytes() -> PackedByteArray:
+	return _visited
+
+
+## Consumes the pending fog dirty region. Returns:
+##   {"all": true}                     -> rebuild everything (grid replaced)
+##   {"all": false, "rect": Rect2i}    -> patch only this cell rect
+##   {"all": false, "rect": null}      -> nothing changed since last call
+## Clearing on read is deliberate: two consumers (minimap + full map) each
+## need their own view, so each keeps its own last-built revision and asks for
+## a full rebuild when it has fallen behind rather than sharing this flag.
+func take_fog_dirty() -> Dictionary:
+	if _fog_dirty_all:
+		_fog_dirty_all = false
+		_fog_has_dirty_rect = false
+		return {"all": true, "rect": null}
+	if not _fog_has_dirty_rect:
+		return {"all": false, "rect": null}
+	var rect := Rect2i(
+		_fog_dirty_min,
+		Vector2i(_fog_dirty_max.x - _fog_dirty_min.x + 1, _fog_dirty_max.y - _fog_dirty_min.y + 1))
+	_fog_has_dirty_rect = false
+	return {"all": false, "rect": rect}
+
+
+## Marks the whole fog grid as needing a rebuild. Called wherever `_visited`
+## is replaced or filled wholesale rather than revealed cell by cell.
+func _mark_fog_dirty_all() -> void:
+	_fog_dirty_all = true
+	_fog_has_dirty_rect = false
+
+
 func cell_at(ix: int, iz: int) -> bool:
 	if ix < 0 or iz < 0 or ix >= grid_x() or iz >= grid_z():
 		return false
@@ -450,6 +507,7 @@ func save_data() -> Dictionary:
 func load_data(data: Dictionary) -> void:
 	_visited.fill(0)
 	_visited_count = 0
+	_mark_fog_dirty_all()
 	_discovered.clear()
 	_dynamic.clear()
 	_discovered_regions.clear()
@@ -516,6 +574,7 @@ func reveal_all() -> void:
 		return
 	_visited.fill(1)
 	_visited_count = total
+	_mark_fog_dirty_all()
 	revision += 1
 
 
@@ -597,8 +656,22 @@ func _reveal_cells(world_pos: Vector3, radius: float) -> bool:
 			if _visited[idx] == 0:
 				_visited[idx] = 1
 				_visited_count += 1
+				_mark_fog_dirty(ix, iz)
 				changed = true
 	return changed
+
+
+## Grows the pending fog dirty rect to include one newly-revealed cell.
+func _mark_fog_dirty(ix: int, iz: int) -> void:
+	if not _fog_has_dirty_rect:
+		_fog_dirty_min = Vector2i(ix, iz)
+		_fog_dirty_max = Vector2i(ix, iz)
+		_fog_has_dirty_rect = true
+		return
+	_fog_dirty_min.x = mini(_fog_dirty_min.x, ix)
+	_fog_dirty_min.y = mini(_fog_dirty_min.y, iz)
+	_fog_dirty_max.x = maxi(_fog_dirty_max.x, ix)
+	_fog_dirty_max.y = maxi(_fog_dirty_max.y, iz)
 
 
 ## Discovers any not-yet-discovered landmark within its own discover_radius

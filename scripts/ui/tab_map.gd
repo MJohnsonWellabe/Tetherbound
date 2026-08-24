@@ -994,10 +994,17 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	if grid_x <= 0 or grid_z <= 0:
 		return null
 	var image := Image.create(grid_x, grid_z, false, Image.FORMAT_RGBA8)
+	# Bulk-read the fog bitfield instead of calling `cell_at` per cell. Same
+	# OP23-01 measurement as `minimap.gd`: over the corridor world's 1,048,576
+	# cells the cross-object call was 735ms of an 837ms rebuild. The minimap
+	# patches a dirty rect because it rebuilds while walking; this one only
+	# rebuilds when the map tab is opened, so a full repaint is still the right
+	# shape — it just must not cost most of a second to open the map.
+	var visited: PackedByteArray = map_state.call("visited_bytes")
 	for iz in grid_z:
+		var row := iz * grid_x
 		for ix in grid_x:
-			var discovered: bool = bool(map_state.call("cell_at", ix, iz))
-			image.set_pixel(ix, iz, FOG_DISCOVERED if discovered else FOG_UNDISCOVERED)
+			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else FOG_UNDISCOVERED)
 	_fog_tex = ImageTexture.create_from_image(image)
 	_fog_tex_revision = revision
 	return _fog_tex
