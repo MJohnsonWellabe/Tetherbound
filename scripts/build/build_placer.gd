@@ -800,6 +800,24 @@ func _reindex_placed_nodes(removed_index: int, game: Node) -> void:
 			creature.set("rest_bed_index", int(creature.get("rest_bed_index")) - 1)
 
 
+## RIDs the dismantle ray must pass through: the player, and any creature body
+## deployed alongside them. Anything else solid in the line is genuinely in the
+## way and should stop the ray -- a wall you cannot see past is a wall you
+## should not be able to dismantle through.
+func _bodies_that_are_not_buildings() -> Array[RID]:
+	var out: Array[RID] = []
+	if _player is CollisionObject3D and is_instance_valid(_player):
+		out.append((_player as CollisionObject3D).get_rid())
+	# Found by name in the current scene, the same defensive way
+	# `playground_hud.gd::_active_creature_is_out()` finds it -- no coupling to
+	# the encounter director from here.
+	var world := get_tree().get_current_scene()
+	var ally: Node = world.get_node_or_null(^"AllyCreature") if world != null else null
+	if ally is CollisionObject3D and is_instance_valid(ally):
+		out.append((ally as CollisionObject3D).get_rid())
+	return out
+
+
 func _update_dismantle_target() -> void:
 	var next: Node3D = null
 	var camera := get_viewport().get_camera_3d()
@@ -809,6 +827,22 @@ func _update_dismantle_target() -> void:
 		var to := from + camera.project_ray_normal(centre) * DISMANTLE_RANGE
 		var query := PhysicsRayQueryParameters3D.create(from, to)
 		query.collide_with_areas = false
+		# The trainer's own body, and whatever creature is walking at their
+		# heels, are NOT things you are trying to take apart.
+		#
+		# This is a third-person camera: it sits behind and above the player and
+		# the centre of the screen goes straight through them. Without these
+		# exclusions the ray stopped on the trainer every time and the highlight
+		# never appeared, so a player aiming at a wall of their own house and
+		# pressing Y got nothing -- measured in the Gate B build segment, where
+		# four stand-off distances all reported
+		#
+		#   the screen-centre ray from (30, 4, -35) hits Player < MeadowsPlayground
+		#
+		# with the whole house standing in front of them. Dismantle could not
+		# reach anything the trainer was between the camera and, which is
+		# everything worth aiming at.
+		query.exclude = _bodies_that_are_not_buildings()
 		var world_root := get_parent() as Node3D
 		var hit: Dictionary = world_root.get_world_3d().direct_space_state.intersect_ray(query) \
 			if world_root != null else {}
