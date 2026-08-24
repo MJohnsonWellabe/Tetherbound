@@ -359,3 +359,87 @@ func test_reveal_all_reveals_the_whole_grid_once() -> void:
 	var after: int = map.revision
 	map.reveal_all()
 	assert_eq(map.revision, after, "revealing an already-full grid must not bump again")
+
+
+# --- fog dirty tracking (OP23-01) -------------------------------------------
+#
+# The owner's report was "freezes every few feet of walking", everywhere,
+# including indoors. Root cause: the minimap and full map repainted EVERY fog
+# cell whenever `revision` moved, and the corridor world's grid is 512x2048 =
+# 1,048,576 cells -- 837ms per repaint, fired on essentially every 0.5s
+# discovery tick, because an 80m reveal radius over a 4m cell always sweeps
+# new cells while walking.
+#
+# These tests hold the property that actually protects the frame rate: the
+# work a reveal creates is bounded by the REVEAL RADIUS, never by the size of
+# the world. A future CELL/bounds/reveal_radius change that reintroduces a
+# whole-grid repaint fails here rather than on the owner's device.
+
+func test_walking_marks_only_a_small_rect_dirty_not_the_whole_grid() -> void:
+	map.mark_visited(Vector3(0.0, 0.0, 0.0))
+	map.take_fog_dirty() # consume the priming reveal
+
+	map.mark_visited(Vector3(0.0, 0.0, 8.0)) # one walking tick forward
+	var dirty: Dictionary = map.take_fog_dirty()
+
+	assert_false(bool(dirty.get("all", false)),
+		"an ordinary walking reveal must not demand a full-grid rebuild")
+	var rect: Variant = dirty.get("rect")
+	assert_true(rect != null, "a reveal that changed cells must report a dirty rect")
+
+	var r: Rect2i = rect
+	# The reveal disc is 2*radius across; the rect bounding one tick's NEW
+	# cells can never exceed that, whatever the world's dimensions are.
+	var max_span: int = int(ceil((map.reveal_radius * 2.0) / MAP_STATE.CELL)) + 2
+	assert_true(r.size.x <= max_span and r.size.y <= max_span,
+		"dirty rect %s exceeds the reveal disc (%d cells) -- the fog repaint is scaling with the world, not the reveal" % [r, max_span])
+
+	var grid_cells: int = map.cell_grid_x() * map.cell_grid_z()
+	assert_true(r.size.x * r.size.y < grid_cells / 10,
+		"dirty rect covers %d of %d cells; a walking tick must touch a small fraction" % [r.size.x * r.size.y, grid_cells])
+
+
+func test_standing_still_reports_no_dirty_region() -> void:
+	map.mark_visited(Vector3(0.0, 0.0, 0.0))
+	map.take_fog_dirty()
+
+	map.mark_visited(Vector3(0.0, 0.0, 0.0)) # same spot, nothing new
+	var dirty: Dictionary = map.take_fog_dirty()
+
+	assert_false(bool(dirty.get("all", false)))
+	assert_true(dirty.get("rect") == null,
+		"a stationary player must not cause any fog repaint at all")
+
+
+func test_load_and_reveal_all_demand_a_full_rebuild() -> void:
+	map.mark_visited(Vector3(0.0, 0.0, 0.0))
+	map.take_fog_dirty()
+
+	# A loaded save replaces the whole grid, so a rect cannot describe it.
+	var saved: Dictionary = map.save_data()
+	var loaded: RefCounted = MAP_STATE.new()
+	loaded.configure(_config())
+	loaded.take_fog_dirty() # consume configure()'s own full flag
+	loaded.load_data(saved)
+	assert_true(bool(loaded.take_fog_dirty().get("all", false)),
+		"loading a save must force a full fog rebuild, not a rect patch")
+
+	map.reveal_all()
+	assert_true(bool(map.take_fog_dirty().get("all", false)),
+		"reveal_all must force a full fog rebuild")
+
+
+func test_dirty_rect_accumulates_across_ticks_until_consumed() -> void:
+	map.take_fog_dirty()
+	map.mark_visited(Vector3(0.0, 0.0, 0.0))
+	map.mark_visited(Vector3(0.0, 0.0, 40.0))
+	map.mark_visited(Vector3(0.0, 0.0, 80.0))
+
+	# The minimap may not draw on every tick (hidden, dimmed, offscreen). When
+	# it does, one patch must cover everything revealed since its last one.
+	var dirty: Dictionary = map.take_fog_dirty()
+	var r: Rect2i = dirty.get("rect")
+	var near: Vector2i = map.world_to_cell(Vector3(0.0, 0.0, 0.0))
+	var far: Vector2i = map.world_to_cell(Vector3(0.0, 0.0, 80.0))
+	assert_true(r.has_point(near) and r.has_point(far),
+		"the accumulated rect %s must cover every cell revealed since the last consume" % r)
