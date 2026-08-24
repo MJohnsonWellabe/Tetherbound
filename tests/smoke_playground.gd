@@ -479,7 +479,13 @@ func _an_authored_tool_gather_reports_the_exact_pickup(world: Node) -> Array[Str
 	var before := int(inventory.call("count", "wood"))
 	if not bool(hold.call("swing")):
 		return ["the equipped axe refused to swing at an authored wood node"] as Array[String]
-	for i in 45:
+	# A frame count assumed the pre-PERF-ROG per-frame cost; the interaction
+	# arbiter rewrite (main) cut that from ~20ms to ~0.024ms, so headless
+	# frames now advance far more real seconds per await than before, and a
+	# fixed count no longer reliably covers the swing's own real-time
+	# duration. Wait on real elapsed time instead.
+	var swing_deadline_ms := Time.get_ticks_msec() + 3000
+	while Time.get_ticks_msec() < swing_deadline_ms:
 		await process_frame
 		if not bool(hold.call("is_swinging")) and message.visible:
 			break
