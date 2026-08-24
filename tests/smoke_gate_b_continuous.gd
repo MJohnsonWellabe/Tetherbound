@@ -46,7 +46,7 @@ extends SceneTree
 ## ## What it asserts
 ##
 ## That the objective chain -- the game's own record of where the player is --
-## advances through all eleven Gate B flags IN ORDER, each one moving the
+## advances through all twelve Gate B flags IN ORDER, each one moving the
 ## tracked line, ending on the South Bridge objective. A beat that fires its
 ## flag without the line moving is a beat the player cannot see they finished.
 
@@ -55,26 +55,31 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
-const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+## Read from the build segment rather than repeated here, so the walk back
+## and the place it has to arrive at cannot drift apart.
+const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd").BUILD_ROUTE_XZ[0]
+const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
-const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
-## TUTORIAL-CHAIN (OP23-04): the feed rung reads the same thresholds
-## `tournament.gd` does, from the one file that owns them.
-const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
 ## while that beat is the current one.
-## TUTORIAL-CHAIN (OP23-04) re-authored the ladder, so this list moved with it:
-## Tam's tools became a rung of their own (this file's own comment in
-## `_gather_and_build_a_home()` already said gathering presupposes them -- the
-## chain now says so too), the bed rung completes on the THIRD bed per the
-## owner's 2026-08-23 directive, and a "feed your team" rung stands between the
-## sleep and the sign-up per the same directive's section 2. Rows either side
-## are untouched.
 ##
-## The two intermediate bed flags are not rows here: they fill the rung's 1/3
-## counter without moving the tracked line, which is what a count is for.
+## TUTORIAL-CHAIN (OP23-04) re-authored the ladder: Tam's tools became a rung
+## of their own (`tam_tools_given`, third -- gathering presupposes them, and a
+## player cannot chop anything before meeting Tam either), the bed rung
+## completes on the THIRD bed per the owner's 2026-08-23 directive
+## (`creature_bed_built_3`, written by `home_progress.gd::maybe_set_creature_beds()`
+## counting real placed beds), and a "feed your team" rung stands between the
+## sleep and the sign-up per the same directive's section 2
+## (`tournament_team_fed`, written by `tournament.gd::_write_entry_flags()` from
+## the party's own condition). Rows either side are untouched.
+##
+## `south_bridge_open` is deliberately not a row here: Gate B's own evidence
+## line ends on "objective to leave for South Bridge" (`ralph/ACTIVE_GAME_PLAN.md`),
+## and a run that sets that flag itself consumes the objective the chapter is
+## supposed to finish pointing at. Crossing the bridge is Gate C's first beat.
 const LADDER := [
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
@@ -88,8 +93,10 @@ const LADDER := [
 	["tournament_team_fed", "Feed your team"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
-	["south_bridge_open", "South Bridge"],
 ]
+
+## Where the chapter is supposed to leave the player standing.
+const CLOSING_OBJECTIVE := "South Bridge"
 
 var _failures: Array[String] = []
 var _started_ms := 0
@@ -119,13 +126,10 @@ func _run() -> void:
 	if not await _ready_a_tournament_team():
 		_finish()
 		return
-	if not await _gather_and_build_a_home():
+	if not await _gather_and_walk_home():
 		_finish()
 		return
-	if not await _sleep_the_night():
-		_finish()
-		return
-	if not await _win_the_tournament():
+	if not await _play_the_tail():
 		_finish()
 		return
 	_assert_the_whole_ladder_was_walked()
@@ -190,6 +194,45 @@ func _through_the_road_gate() -> bool:
 	return true
 
 
+## The village, for the tools.
+##
+## Run 4 failed with "natural route requires Tam's axe before it can harvest",
+## which was not a harness bug -- it was a real beat of Gate B this file had
+## skipped. Gathering presupposes the tools the village hands over, and a
+## player cannot chop anything before meeting Tam either.
+##
+## TUTORIAL-CHAIN (OP23-04) made that a RUNG of the guided chain rather than an
+## unwritten prerequisite (`tam_tools_given`, third in
+## data/progression/objectives.json), which is why this segment is its own step
+## here now, played before the tournament team is fielded: the ladder assertion
+## walks the chain in authored order, and the authored order puts the tools
+## before the team -- correctly, since the orb recipe that lets a player catch
+## a team at all is Tam's, and the fiber orbs are made with his knife.
+##
+## `gate_a_npc_gather_segment.gd` walks it for real and says so in its own
+## header: "no teleport, direct inventory grant, progression mutation, or
+## private gameplay method stages the route". Its contract differs from the
+## other two helpers -- it returns a bare Array of failure strings, empty on
+## success -- so it is read on its own terms rather than through
+## `_segment_passed()`.
+func _visit_the_village_for_tools() -> bool:
+	var village: Array = await NPC_GATHER.new().run(self, _world, _game, _player, _rig)
+	if not village.is_empty():
+		for line: Variant in village:
+			_fail("village tools: %s" % str(line))
+		return false
+	# The segment plays Tam's real production dialogue, which is the only thing
+	# that carries `flag:tam_tools_given` -- so this asserts the ladder's own
+	# record of the beat, not a second copy of the handover.
+	if not _flag("tam_tools_given"):
+		_fail("Tam handed over his tools and 'tam_tools_given' is unset; the guided "
+			+ "chain would still be pointing the player at the forge")
+		return false
+	_note("tam_tools_given")
+	_checkpoint("visited the village and came away with tools")
+	return true
+
+
 ## The entry gate, satisfied the way the game measures it.
 ##
 ## `tournament.gd::_write_entry_flags()` polls the party and writes both flags
@@ -235,47 +278,7 @@ func _ready_a_tournament_team() -> bool:
 	return true
 
 
-## The village, for the tools.
-##
-## Run 4 failed with "natural route requires Tam's axe before it can harvest",
-## which was not a harness bug -- it was a real beat of Gate B this file had
-## skipped. Gathering presupposes the tools the village hands over, and a
-## player cannot chop anything before meeting Tam either.
-##
-## TUTORIAL-CHAIN (OP23-04) made that a RUNG of the guided chain rather than an
-## unwritten prerequisite (`tam_tools_given`, third in
-## data/progression/objectives.json), which is why this segment is its own step
-## here now instead of the first half of `_gather_and_build_a_home()`: the
-## ladder assertion walks the chain in authored order, and the authored order
-## puts the tools before the team -- correctly, since the orb recipe that lets
-## a player catch a team at all is Tam's, and the fiber orbs are made of needs
-## his knife. Nothing INSIDE the segment changed; the call moved.
-##
-## `gate_a_npc_gather_segment.gd` walks it for real and says so in its own
-## header: "no teleport, direct inventory grant, progression mutation, or
-## private gameplay method stages the route". Its contract differs from the
-## other two helpers -- it returns a bare Array of failure strings, empty on
-## success -- so it is read on its own terms rather than through
-## `_segment_passed()`.
-func _visit_the_village_for_tools() -> bool:
-	var village: Array = await NPC_GATHER.new().run(self, _world, _game, _player, _rig)
-	if not village.is_empty():
-		for line: Variant in village:
-			_fail("village tools: %s" % str(line))
-		return false
-	# The segment plays Tam's real production dialogue, which is the only thing
-	# that carries `flag:tam_tools_given` -- so this asserts the ladder's own
-	# record of the beat, not a second copy of the handover.
-	if not _flag("tam_tools_given"):
-		_fail("Tam handed over his tools and 'tam_tools_given' is unset; the guided "
-			+ "chain would still be pointing the player at the forge")
-		return false
-	_note("tam_tools_given")
-	_checkpoint("visited the village and came away with tools")
-	return true
-
-
-func _gather_and_build_a_home() -> bool:
+func _gather_and_walk_home() -> bool:
 	var route := MATERIAL_ROUTE.new()
 	var gathered: Dictionary = await route.run(self, _world, _game, _player, _rig)
 	if not _segment_passed("gather route", gathered):
@@ -285,172 +288,67 @@ func _gather_and_build_a_home() -> bool:
 			+ "home_progress.gd watches harvests and writes it")
 		return false
 	_note("home_materials_gathered")
-
-	var built: Dictionary = await BUILD_SEGMENT.new().run(self, _world, _player, _rig)
-	if not _segment_passed("build segment", built):
-		return false
-	if not _flag("home_built"):
-		_fail("the house went up and 'home_built' is unset")
-		return false
-	_note("home_built")
-	_checkpoint("gathered and built the small home")
-	return true
-
-
-func _sleep_the_night() -> bool:
-	var bed := _find_by_script(_world, "creature_bed.gd")
-	if bed == null:
-		_fail("no creature bed in the world after the build segment")
-		return false
-	if bed.has_method("build_real"):
-		bed.call("build_real")
-	for _i in 120:
-		if _flag("creature_bed_built"):
-			break
-		await physics_frame
-	if not _flag("creature_bed_built"):
-		_fail("a real creature bed stands and 'creature_bed_built' is unset")
-		return false
-
-	# TUTORIAL-CHAIN (OP23-04) / owner directive 2026-08-23 section 1: three
-	# beds, one per tournament entrant, and the ladder's bed rung completes on
-	# the third. Registered and restored the same way the home pieces are, which
-	# is the bookkeeping `build_placer._place` performs after a real placement --
-	# `home_progress.gd::maybe_set_creature_beds()` counts that registry, so this
-	# is the real trigger and not a flag written by hand.
+	# Walk home before the tail.
 	#
-	# NOTE FOR THE GATE B LANE: whether three beds are AFFORDABLE from the
-	# authored gather budget near the village is the other half of that
-	# directive and is yours. Measured (data/items/buildables.json +
-	# data/config/progression.json's home.required_pieces): home + 3 beds costs
-	# 45 wood / 17 stone / 34 fiber against an authored near-village budget of
-	# 57 / 42 / 18 -- so wood and stone already cover it and FIBER is the only
-	# shortfall, 18 against 34. +16 fiber, and that is a floor rather than a
-	# comfortable number because Basic Orbs spend the same fiber. Full workings
-	# in ralph/BACKLOG.md's GATEB-BED-BUDGET entry. This harness REGISTERS the
-	# beds rather than paying for them, so it stays green either way; the budget
-	# shows up in the natural-route segment, not here.
-	var placer := _find_by_script(_world, "build_placer.gd")
-	if placer == null:
-		_fail("no BuildPlacer in the world; the bed count has nothing to read")
+	# The tail's first beat is the house, and `gate_a_build_segment.gd` refuses
+	# to start anywhere but the Village Square ("the caller must bring the real
+	# player to the Village Square through ordinary exploration first"). The
+	# gather route legitimately ends wherever the last stop and the live-scatter
+	# fill left the player -- its own authored list reaches (-168, 312). Nothing
+	# had ever walked that leg, because until this branch nothing had ever
+	# finished the gather route.
+	if not await _walk_back_to_the_square():
 		return false
-	# Two more, for three standing including the one built above. One
-	# `restore_from_game` for all of them: it clears and rebuilds every placed
-	# piece, so calling it per bed would tear the finished home down and put it
-	# back up twice for nothing. That two beds is exactly TWO flags rather than
-	# three is pinned in isolation by smoke_gateb_flags.gd.
-	for i in 2:
-		_game.call("register_building", "creature_bed",
-			_player.global_position + Vector3(float(i + 1) * 3.0, 0.0, 4.0))
-	placer.call("restore_from_game", _game)
-	for _i in 120:
-		if _flag("creature_bed_built_3"):
-			break
-		await physics_frame
-	if not _flag("creature_bed_built_3"):
-		_fail("three creature beds stand and 'creature_bed_built_3' is unset; the "
-			+ "ladder's bed rung can never complete")
-		return false
-	_note("creature_bed_built_3")
-
-	var camp := _find_by_script(_world, "camp.gd")
-	if camp == null:
-		_fail("no camp to sleep at; the night beat has nowhere to happen")
-		return false
-	if camp.has_method("_on_rest"):
-		camp.call("_on_rest")
-	for _i in 240:
-		if _flag("player_slept_at_home"):
-			break
-		await physics_frame
-	if not _flag("player_slept_at_home"):
-		_fail("resting did not set 'player_slept_at_home'")
-		return false
-	_note("player_slept_at_home")
-	_checkpoint("slept at home; day is %d" % int(_game.get("day")))
+	_checkpoint("gathered the home materials: %s" % _stock())
 	return true
 
 
-func _win_the_tournament() -> bool:
-	var board := _find_by_script(_world, "tournament.gd")
-	if board == null:
-		_fail("no tournament board in the world")
-		return false
-	# TUTORIAL-CHAIN (OP23-04) / owner directive 2026-08-23 section 2: an
-	# explicit "feed your team" rung before sign-up. FED for real, through the
-	# same nourishment meter the satchel's Use writes and the same threshold
-	# `creature_condition.gd` reads -- and then the flag is left to
-	# `tournament.gd`'s own watch to write, exactly as this file already leaves
-	# `tournament_team_ready` to it. A broken watch stalls here for the same
-	# reason it would stall a player.
-	if not await _feed_the_team():
-		return false
-
-	_progression.call("set_flag", "tournament_entered")
-	_note("tournament_entered")
-	# Win the three rounds through the bracket's own reward path: each round's
-	# defeat flag is trainers.json data, and the final's carries `tournament_won`
-	# plus the saddle recipe.
-	for id: String in ["tournament_quarter_mira", "tournament_semi_tam", "tournament_final_oskar"]:
-		var trainer := TRAINERS.trainer(id)
-		if trainer.is_empty():
-			_fail("trainers.json has no '%s'; the bracket cannot be fought" % id)
-			return false
-		var flag := str(trainer.get("defeat_flag", ""))
-		if flag.is_empty():
-			_fail("'%s' has no defeat_flag" % id)
-			return false
-		_progression.call("set_flag", flag)
-	for _i in 240:
-		if _flag("tournament_won"):
-			break
-		await physics_frame
-	if not _flag("tournament_won"):
-		_fail("all three bracket rounds are marked won and 'tournament_won' is unset")
-		return false
-	_note("tournament_won")
-
-	var oskar := TRAINERS.trainer("trainer_oskar")
-	if not oskar.is_empty():
-		_progression.call("set_flag", str(oskar.get("defeat_flag", "defeated_oskar")))
-	_progression.call("set_flag", "south_bridge_open")
-	if not _flag("south_bridge_open"):
-		_fail("south_bridge_open would not set; the chapter cannot leave the village")
-		return false
-	_note("south_bridge_open")
-	_checkpoint("tournament won; the road to South Bridge is open")
-	return true
-
-
-## Fill every entrant's nourishment meter and wait for the board to notice.
+## Everything downstream of the village, played by
+## `tests/helpers/gate_b_tail_segment.gd`.
 ##
-## `tournament.gd` re-checks the volatile condition flags on its own one-second
-## clock (`CONDITION_POLL_SECONDS`) rather than on a revision, because feeding
-## a creature moves a float on a creature instance and bumps no revision at
-## all -- so this waits real frames rather than asserting immediately.
-func _feed_the_team() -> bool:
-	var party: RefCounted = _game.get("party")
-	if party == null:
-		_fail("no party to feed")
+## This half of the run used to be four short blocks of `set_flag`: the house
+## was built for real, and then a creature bed somewhere in the world had
+## `build_real()` called on it, `camp.gd::_on_rest()` was invoked directly, and
+## all three tournament rounds were awarded by writing their trainers' defeat
+## flags. Every one of those is a beat the PLAYER does, and none of them had
+## ever run here -- the file has never got past the village, so nothing
+## downstream of it had executed inside this run at all.
+##
+## The tail is now a segment of its own, driven from a synthesized post-village
+## state by `tests/smoke_gate_b_tail.gd` in a couple of minutes as well as from
+## here at the end of the real thing. It places all three creature beds and the
+## camp out of the materials the gather route actually supplies (OWNER DIRECTIVE
+## 2026-08-23 §1), feeds the team every night it sleeps (§2), is let into the
+## draw by the marshal's own ladder reading that condition, and fights all
+## three rounds.
+func _play_the_tail() -> bool:
+	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig)
+	for line: Variant in (tail.get("transcript", []) as Array):
+		_checkpoint("tail | %s" % str(line))
+	if not bool(tail.get("passed", false)):
+		for line: Variant in (tail.get("failures", []) as Array):
+			_fail("tail: %s" % str(line))
 		return false
-	var cfg: Dictionary = CREATURE_CONDITION.config()
-	var full := float((cfg.get("nourishment", {}) as Dictionary).get("max", 100.0))
-	for i in int(party.call("size")):
-		var member: RefCounted = party.call("at", i)
-		if member != null:
-			member.set("nourishment", full)
-	for _i in 240:
-		if _flag("tournament_team_fed"):
-			break
-		await physics_frame
-	if not _flag("tournament_team_fed"):
-		_fail("every entrant is fed and 'tournament_team_fed' is unset; tournament.gd "
-			+ "watches the team's condition and writes it, so the feed rung is not "
-			+ "reading the team and the chain stalls one step before sign-up")
-		return false
-	_note("tournament_team_fed")
-	_checkpoint("team fed; the marshal will take them")
+	# `creature_bed_built_3` and `tournament_team_fed` are written the same way
+	# `home_built` always was -- by the real systems the tail segment drives
+	# (`home_progress.gd::maybe_set_creature_beds()` counting the three placed
+	# beds, `tournament.gd::_write_entry_flags()` reading the fed party) -- not
+	# by this file, so a broken watch stalls here exactly as it would for a
+	# player.
+	for id: String in ["home_built", "creature_bed_built_3", "player_slept_at_home",
+			"tournament_team_fed", "tournament_entered", "tournament_won"]:
+		if not _flag(id):
+			_fail("the tail segment passed and '%s' is unset" % id)
+			return false
+		_note(id, false)
+	_checkpoint("tail played: home, three beds, the nights, feeding, the draw and the bracket")
 	return true
+
+
+func _stock() -> String:
+	var inventory: RefCounted = _game.get("inventory")
+	return "wood %d / stone %d / fiber %d" % [int(inventory.call("count", "wood")),
+		int(inventory.call("count", "stone")), int(inventory.call("count", "fiber"))]
 
 
 ## --- the assertion ------------------------------------------------------------
@@ -463,17 +361,66 @@ func _assert_the_whole_ladder_was_walked() -> void:
 		_fail("the chain did not advance in order.\n  walked: %s\n  wanted: %s"
 			% [str(_reached), str(wanted)])
 		return
+	# Where the chapter LEAVES the player.
+	#
+	# This used to demand an EMPTY tracked line, which `quest_log.gd` returns
+	# only when every Main Story entry in `data/progression/objectives.json` is
+	# done -- and that file carries eleven more entries after Gate B, from the
+	# Burrow Warrens to the Warden. So the assertion could not pass on any save
+	# that had not finished the whole chapter, and the last thing this run did
+	# before reaching it was set `south_bridge_open` itself, which ALSO
+	# consumed the one objective Gate B is supposed to end pointing at. Gate B's
+	# own evidence line is "objective to leave for South Bridge"; that is what
+	# is checked.
 	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
-	if not tracked.is_empty():
-		_fail("every Gate B flag is set and the objective still reads '%s'; the "
-			% tracked + "player would be told to do something they have done")
+	if not tracked.contains(CLOSING_OBJECTIVE):
+		_fail("the tournament is won and the tracked objective reads '%s'; Gate B ends "
+			% tracked + "with the player told to leave for the South Bridge")
 		return
-	_checkpoint("all %d Gate B objectives walked in order" % wanted.size())
+	_checkpoint("all %d Gate B objectives walked in order, ending on '%s'"
+		% [wanted.size(), tracked])
 
 
 ## Record a flag as reached, and check the objective line moved with it.
-func _note(flag_id: String) -> void:
+##
+## The LADDER's second column is the fragment the tracked line has to show
+## while that beat is the CURRENT one, so noting beat `i` is also the moment
+## beat `i+1`'s line should have taken over. Nothing checked that before: a
+## beat could fire its flag without the HUD moving, and the player would have
+## no way to see they had finished it.
+## `check_objective` is false only for the beats the tail segment already
+## checked as it played them: by the time it hands its result back every one of
+## its flags is set, so re-reading the tracked line here would compare a
+## finished chapter against a mid-chapter objective.
+func _note(flag_id: String, check_objective: bool = true) -> void:
 	_reached.append(flag_id)
+	var next := _reached.size()
+	if not check_objective or next >= LADDER.size():
+		return
+	# The next beat the player still has to DO, not simply the next row.
+	#
+	# GATEB-COORD: some beats are satisfied by the same act that satisfies the
+	# one before them. `tournament_team_ready` and `tournament_training_ready`
+	# are both written by `tournament.gd` watching the party, and a team of
+	# three at level 6 answers both in the same frame -- so the tracked line
+	# correctly skips straight past the training beat, and asserting on the
+	# very next row failed a chain that was working:
+	#
+	#   'tournament_team_ready' is set and the tracked objective reads 'Gather
+	#   wood and stone for a home.'; it should have moved on to 'Train with'
+	#
+	# `quest_log.gd` shows the first UNFINISHED Main Story entry, so that is
+	# what this compares against.
+	var row := next
+	while row < LADDER.size() and _flag(str((LADDER[row] as Array)[0])):
+		row += 1
+	if row >= LADDER.size():
+		return
+	var fragment := str((LADDER[row] as Array)[1])
+	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
+	if not tracked.contains(fragment):
+		_fail("'%s' is set and the tracked objective reads '%s'; it should have moved on to "
+			% [flag_id, tracked] + "the beat that says '%s'" % fragment)
 
 
 ## --- plumbing -----------------------------------------------------------------
@@ -541,6 +488,81 @@ func _tap(action: StringName) -> void:
 	Input.parse_input_event(released)
 	for _i in 5:
 		await physics_frame
+
+
+## The walk back from the gather route to the Village Square, on the left stick
+## and around whatever the Meadow has put in the way (`stick_navigator.gd`).
+##
+## `gate_a_build_segment.gd::BUILD_ROUTE_XZ.front()` is the square
+## and it wants the player within `BUILD_ROUTE_ENTRY_EPSILON` (0.75m) of it, so
+## the walk finishes tighter than that before handing over.
+## GATEB-COORD: approached along the open ground south-east of the settlement,
+## and retried, rather than aimed straight at from wherever the gather route
+## ended.
+##
+## The village stands fourteen structures deep and the square is in the middle
+## of it. A single straight leg from the north walked into the cottages and
+## stopped there:
+##
+##   could not walk back to the Village Square from the gather route
+##   (stopped 7.9m away at (17.0, 1.0, -6.0))
+##
+## -- wedged between buildings, seven metres from a target it could see. The
+## waypoints come in off the Practice Meadow road instead, which is the way a
+## player who has just walked that road arrives, and each leg gets three tries
+## from a clean navigator state because `stick_navigator.gd` commits to a side
+## once it picks one and an attempt that has boxed itself in will stay boxed in.
+func _walk_back_to_the_square() -> bool:
+	var y := _player.global_position.y
+	var legs: Array = [
+		[Vector3(30.0, y, -40.0), 2.5, "the Practice Meadow clearing"],
+		[Vector3(18.0, y, -24.0), 2.0, "the Practice Meadow road bend"],
+		[Vector3(BUILD_ROUTE_ENTRY.x, y, BUILD_ROUTE_ENTRY.y), 0.5, "the Village Square"],
+	]
+	var nav = NAVIGATOR.new(self, _player, _rig, _send_stick)
+	for leg: Variant in legs:
+		var target: Vector3 = (leg as Array)[0]
+		var close_enough: float = (leg as Array)[1]
+		var what: String = str((leg as Array)[2])
+		var arrived := false
+		for attempt in 3:
+			nav.reset()
+			var here := _player.global_position
+			target.y = here.y
+			arrived = await nav.walk_to(target, 900 + int(here.distance_to(target) * 60.0),
+				close_enough)
+			_send_stick(0.0, 0.0)
+			for _i in 10:
+				await physics_frame
+			if arrived:
+				break
+			_checkpoint("attempt %d back to %s stopped %.1fm short at %s; starting over" % [
+				attempt + 1, what,
+				Vector2(target.x - _player.global_position.x,
+					target.z - _player.global_position.z).length(),
+				str(_player.global_position.round())])
+		if not arrived:
+			_fail("could not walk back to %s from the gather route (stopped %.1fm away at %s)"
+				% [what,
+					Vector2(target.x - _player.global_position.x,
+						target.z - _player.global_position.z).length(),
+					str(_player.global_position.round())])
+			return false
+	_checkpoint("walked back to the Village Square for the build")
+	return true
+
+
+func _send_stick(x: float, y: float) -> void:
+	_send_axis(JOY_AXIS_LEFT_X, x)
+	_send_axis(JOY_AXIS_LEFT_Y, y)
+
+
+func _send_axis(axis: JoyAxis, value: float) -> void:
+	var event := InputEventJoypadMotion.new()
+	event.device = 0
+	event.axis = axis
+	event.axis_value = clampf(value, -1.0, 1.0)
+	Input.parse_input_event(event)
 
 
 func _event_for(action: StringName, pressed: bool) -> InputEvent:
