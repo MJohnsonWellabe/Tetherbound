@@ -101,9 +101,23 @@ const REVEAL_FLAG := "learned_legendary_is_the_source"
 ## file covers the FINALE segment, and re-playing the preceding three hours to
 ## reach it would be a different (and much slower) test.
 const ARRIVED_AT_THE_HALL := [
-	"opening:beat:road", "road_gate_open", "tournament_team_ready",
+	"opening:beat:road", "road_gate_open",
+	# TUTORIAL-CHAIN (OP23-04) added two rungs to the opening ladder and made
+	# the bed rung a count of three (owner directives 2026-08-23 sections 1
+	# and 2). A player standing in front of Meadows Hall has walked all of
+	# them -- they took Tam's tools, they slept their team in three beds and
+	# they fed them before signing up -- so this list carries them.
+	#
+	# Not optional bookkeeping: `quest_log.gd::tracked_text()` reports the
+	# FIRST unset rung, so one missing flag here puts the village back on the
+	# HUD at the climax. That is exactly how this was caught -- CI run
+	# 32653572764 failed with "the tracked objective on arrival at Meadows
+	# Hall is 'Meet Tam in the village and take his tools.'"
+	"tam_tools_given",
+	"tournament_team_ready",
 	"tournament_training_ready", "home_materials_gathered", "home_built",
-	"creature_bed_built", "player_slept_at_home", "tournament_entered",
+	"creature_bed_built", "creature_bed_built_2", "creature_bed_built_3",
+	"player_slept_at_home", "tournament_team_fed", "tournament_entered",
 	"tournament_won", "south_bridge_open", "warrens_cleared",
 	"relay_captain_defeated", "captive_rescued", "relay_disabled",
 	"mill_crossing_restored", "defeated_captain_field", "defeated_captain_ridge",

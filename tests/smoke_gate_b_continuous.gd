@@ -46,7 +46,7 @@ extends SceneTree
 ## ## What it asserts
 ##
 ## That the objective chain -- the game's own record of where the player is --
-## advances through all eleven Gate B flags IN ORDER, each one moving the
+## advances through all twelve Gate B flags IN ORDER, each one moving the
 ## tracked line, ending on the South Bridge objective. A beat that fires its
 ## flag without the line moving is a beat the player cannot see they finished.
 
@@ -65,21 +65,32 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
 ## while that beat is the current one.
-## The ten flags Gate B WRITES, in the order `data/progression/objectives.json`
-## lists them. `south_bridge_open` is deliberately not one of them: Gate B's
-## own evidence line ends on "objective to leave for South Bridge"
-## (`ralph/ACTIVE_GAME_PLAN.md`), and a run that sets that flag itself consumes
-## the objective the chapter is supposed to finish pointing at. Crossing the
-## bridge is Gate C's first beat.
+##
+## TUTORIAL-CHAIN (OP23-04) re-authored the ladder: Tam's tools became a rung
+## of their own (`tam_tools_given`, third -- gathering presupposes them, and a
+## player cannot chop anything before meeting Tam either), the bed rung
+## completes on the THIRD bed per the owner's 2026-08-23 directive
+## (`creature_bed_built_3`, written by `home_progress.gd::maybe_set_creature_beds()`
+## counting real placed beds), and a "feed your team" rung stands between the
+## sleep and the sign-up per the same directive's section 2
+## (`tournament_team_fed`, written by `tournament.gd::_write_entry_flags()` from
+## the party's own condition). Rows either side are untouched.
+##
+## `south_bridge_open` is deliberately not a row here: Gate B's own evidence
+## line ends on "objective to leave for South Bridge" (`ralph/ACTIVE_GAME_PLAN.md`),
+## and a run that sets that flag itself consumes the objective the chapter is
+## supposed to finish pointing at. Crossing the bridge is Gate C's first beat.
 const LADDER := [
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
+	["tam_tools_given", "Tam"],
 	["tournament_team_ready", "tournament"],
 	["tournament_training_ready", "Train with"],
 	["home_materials_gathered", "Gather wood"],
 	["home_built", "small home"],
-	["creature_bed_built", "Creature Bed"],
+	["creature_bed_built_3", "Creature Bed"],
 	["player_slept_at_home", "Sleep until"],
+	["tournament_team_fed", "Feed your team"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
 ]
@@ -109,10 +120,13 @@ func _run() -> void:
 	if not await _through_the_road_gate():
 		_finish()
 		return
+	if not await _visit_the_village_for_tools():
+		_finish()
+		return
 	if not await _ready_a_tournament_team():
 		_finish()
 		return
-	if not await _visit_the_village_and_gather():
+	if not await _gather_and_walk_home():
 		_finish()
 		return
 	if not await _play_the_tail():
@@ -180,6 +194,45 @@ func _through_the_road_gate() -> bool:
 	return true
 
 
+## The village, for the tools.
+##
+## Run 4 failed with "natural route requires Tam's axe before it can harvest",
+## which was not a harness bug -- it was a real beat of Gate B this file had
+## skipped. Gathering presupposes the tools the village hands over, and a
+## player cannot chop anything before meeting Tam either.
+##
+## TUTORIAL-CHAIN (OP23-04) made that a RUNG of the guided chain rather than an
+## unwritten prerequisite (`tam_tools_given`, third in
+## data/progression/objectives.json), which is why this segment is its own step
+## here now, played before the tournament team is fielded: the ladder assertion
+## walks the chain in authored order, and the authored order puts the tools
+## before the team -- correctly, since the orb recipe that lets a player catch
+## a team at all is Tam's, and the fiber orbs are made with his knife.
+##
+## `gate_a_npc_gather_segment.gd` walks it for real and says so in its own
+## header: "no teleport, direct inventory grant, progression mutation, or
+## private gameplay method stages the route". Its contract differs from the
+## other two helpers -- it returns a bare Array of failure strings, empty on
+## success -- so it is read on its own terms rather than through
+## `_segment_passed()`.
+func _visit_the_village_for_tools() -> bool:
+	var village: Array = await NPC_GATHER.new().run(self, _world, _game, _player, _rig)
+	if not village.is_empty():
+		for line: Variant in village:
+			_fail("village tools: %s" % str(line))
+		return false
+	# The segment plays Tam's real production dialogue, which is the only thing
+	# that carries `flag:tam_tools_given` -- so this asserts the ladder's own
+	# record of the beat, not a second copy of the handover.
+	if not _flag("tam_tools_given"):
+		_fail("Tam handed over his tools and 'tam_tools_given' is unset; the guided "
+			+ "chain would still be pointing the player at the forge")
+		return false
+	_note("tam_tools_given")
+	_checkpoint("visited the village and came away with tools")
+	return true
+
+
 ## The entry gate, satisfied the way the game measures it.
 ##
 ## `tournament.gd::_write_entry_flags()` polls the party and writes both flags
@@ -225,28 +278,7 @@ func _ready_a_tournament_team() -> bool:
 	return true
 
 
-func _visit_the_village_and_gather() -> bool:
-	# The village first, for the tools.
-	#
-	# Run 4 failed with "natural route requires Tam's axe before it can
-	# harvest", which was not a harness bug -- it was a real beat of Gate B this
-	# file had skipped. The plan's own wording is "build a team -> train ->
-	# gather", and gathering presupposes the tools the village hands over. A
-	# player cannot chop anything before meeting Tam either.
-	#
-	# `gate_a_npc_gather_segment.gd` walks that for real and says so in its own
-	# header: "no teleport, direct inventory grant, progression mutation, or
-	# private gameplay method stages the route". Its contract differs from the
-	# other two helpers -- it returns a bare Array of failure strings, empty on
-	# success -- so it is read on its own terms rather than through
-	# `_segment_passed()`.
-	var village: Array = await NPC_GATHER.new().run(self, _world, _game, _player, _rig)
-	if not village.is_empty():
-		for line: Variant in village:
-			_fail("village tools: %s" % str(line))
-		return false
-	_checkpoint("visited the village and came away with tools")
-
+func _gather_and_walk_home() -> bool:
 	var route := MATERIAL_ROUTE.new()
 	var gathered: Dictionary = await route.run(self, _world, _game, _player, _rig)
 	if not _segment_passed("gather route", gathered):
@@ -284,10 +316,11 @@ func _visit_the_village_and_gather() -> bool:
 ##
 ## The tail is now a segment of its own, driven from a synthesized post-village
 ## state by `tests/smoke_gate_b_tail.gd` in a couple of minutes as well as from
-## here at the end of the real thing. It places the bed and the camp out of the
-## materials the gather route actually supplies, sleeps the team into
-## condition one night at a time, is let into the draw by the marshal's own
-## ladder reading that condition, and fights all three rounds.
+## here at the end of the real thing. It places all three creature beds and the
+## camp out of the materials the gather route actually supplies (OWNER DIRECTIVE
+## 2026-08-23 §1), feeds the team every night it sleeps (§2), is let into the
+## draw by the marshal's own ladder reading that condition, and fights all
+## three rounds.
 func _play_the_tail() -> bool:
 	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig)
 	for line: Variant in (tail.get("transcript", []) as Array):
@@ -296,13 +329,19 @@ func _play_the_tail() -> bool:
 		for line: Variant in (tail.get("failures", []) as Array):
 			_fail("tail: %s" % str(line))
 		return false
-	for id: String in ["home_built", "creature_bed_built", "player_slept_at_home",
-			"tournament_entered", "tournament_won"]:
+	# `creature_bed_built_3` and `tournament_team_fed` are written the same way
+	# `home_built` always was -- by the real systems the tail segment drives
+	# (`home_progress.gd::maybe_set_creature_beds()` counting the three placed
+	# beds, `tournament.gd::_write_entry_flags()` reading the fed party) -- not
+	# by this file, so a broken watch stalls here exactly as it would for a
+	# player.
+	for id: String in ["home_built", "creature_bed_built_3", "player_slept_at_home",
+			"tournament_team_fed", "tournament_entered", "tournament_won"]:
 		if not _flag(id):
 			_fail("the tail segment passed and '%s' is unset" % id)
 			return false
 		_note(id, false)
-	_checkpoint("tail played: home, bed, camp, the nights, the draw and the bracket")
+	_checkpoint("tail played: home, three beds, the nights, feeding, the draw and the bracket")
 	return true
 
 

@@ -1998,6 +1998,156 @@ called `quit()`, so the first run idled the SceneTree indefinitely instead
 of exiting -- caught after ~2 hours of unnoticed wall-clock, fixed by
 adding `quit(0)` like every other `_probe_*.gd` in `tools/`.
 
+## TUTORIAL-CHAIN — OP23-04: the opening is a guided one-step-at-a-time chain
+
+`area: data/progression/objectives.json, scripts/world/quest_log.gd, scripts/ui/tab_quest_log.gd, scripts/ui/input_glyph.gd, scripts/build/home_progress.gd, scripts/build/build_placer.gd, scripts/world/tournament.gd`
+
+Owner report (`ralph/OWNER_PLAYTEST_2026-08-23.md`, OP23-04): "The opening
+objective chain teaches nothing. 'Find a way through the village gate' is the
+first task and makes no sense." Directive: Palworld-style, tell the player the
+NEXT thing to do, one step at a time, through every tournament prerequisite,
+never fronting the full list. Plus the two 2026-08-23 rulings
+(`ralph/OWNER_DIRECTIVES_2026-08-23.md`): teach building THREE creature beds,
+and add an explicit "feed your team" step before sign-up with the satiety drain
+left exactly as it is.
+
+### The ladder, re-authored
+
+Eleven rungs became thirteen, in a teaching order rather than a systems order:
+
+1. catch your first wild creature — 2. **open the village gate and follow the
+road in** (was the riddle) — 3. **meet Tam and take his tools** (NEW) — 4. build
+a team — 5. train it — 6. gather — 7. build a home — 8. **a Creature Bed per
+entrant, counted 0/3** (was one bed, one flag) — 9. sleep — 10. **feed your
+team** (NEW) — 11. sign up — 12. win — 13. cross the bridge.
+
+Three of those are load-bearing rather than cosmetic:
+
+- **Tam's tools** is the rung the ladder was missing. `item_db.harvest_yield()`
+  pays NOTHING for the wrong tool, and fiber is knife-gated — so a player
+  without Tam's set cannot afford an orb, a camp or a bed, and every rung below
+  gathering silently presupposed a handover the chain never mentioned. Gate B's
+  own harness had already discovered this and written it down in a comment
+  ("not a harness bug — it was a real beat of Gate B this file had skipped");
+  the chain now says it out loud. Real flag, already wired: `tam_tools_given`.
+- **Rest and food are the last two rungs before sign-up** because both EXPIRE.
+  Teaching them any earlier sends a prepared team to the marshal an hour stale,
+  which is the trap the owner's section-2 ruling is about.
+- **`how` lines.** Every opening rung now carries one short line naming the
+  concrete action and the controller verb: `"{interact} to take it, then
+  {interact} at the gate."` `{action}` is a project.godot input-action id
+  resolved at display time through `input_glyph.gd::action_name()` (new,
+  controller-first: pad button when the pad is live, bound key otherwise), so
+  the hint names the button the player actually has BOUND. A test refuses any
+  `{...}` that is not a real action, and no button letter is typed into data —
+  a rebind in Settings cannot turn a hint into a lie.
+
+### The guided view
+
+`quest_log.gd::guided_entries()` returns what is done plus the ONE current rung
+and nothing after it; `current_index()` says which row that is; the quest-log
+tab renders that instead of the whole file, with the open row's `how` line
+under it. A fresh save shows one row where it used to show twenty-two.
+
+`main_entries()` is untouched and still returns the whole authored chain — the
+two questions ("what is authored", "what may the player see") are different,
+and every existing caller of the first one keeps its answer. This is one
+uniform presentation rule, not per-entry visibility conditions: no branching,
+no prerequisites, no quest engine (spec §19/CLAUDE.md intact).
+
+### The flags behind the two new rungs
+
+- `creature_bed_built_2` / `_3`: `home_progress.gd::maybe_set_creature_beds()`
+  counts real `creature_bed` entries in `Game.placed_buildings` — the same
+  registry `home_built` is counted from — called from `build_placer`'s two
+  existing `maybe_set_home_built` sites, so a save/load answers exactly as a
+  live placement does and an older save with three beds standing loads into
+  3/3. `creature_bed_built` keeps its meaning and is simply the first of three.
+  The COUNT is not authored twice: `test_quest_log.gd` pins the length of the
+  rung's `count_flags` against `tournament.json`'s `min_party_size`, so raising
+  the entry size and forgetting the beds fails a test.
+- `tournament_team_fed`: `tournament.gd::team_fed()`, the FED third of the
+  existing condition gate asked on its own, over the same entrants
+  `condition_ready()` reads. Volatile — written true AND false — because being
+  fed is a fact about today, so a team that goes hungry again puts the line
+  back on the HUD. Every threshold still lives in `creature_condition.json`;
+  nothing about the ~1.1/min drain changed, per the ruling.
+
+### One real bug found and fixed on the way
+
+`tournament.gd` recomputed the volatile condition flags only when
+`party.revision` or `progression.revision` moved — and nourishment draining on
+a real-time clock, or a player feeding a creature from the satchel, bumps
+NEITHER. So `tournament_condition_ready` could go stale in both directions: a
+team could get hungry and the gate not notice, and the player could feed them
+and the gate not notice that either. Survivable while only the marshal read it
+at the moment you talked to her; not survivable with a HUD rung waiting on it.
+`_process` now re-checks the condition flags on a one-second clock
+(`CONDITION_POLL_SECONDS`, tunable) and leaves the bracket repaint on its
+revision short-circuit. `set_flag` is idempotent, so a settled team costs one
+poll and no repaint.
+
+### Deliberately NOT done: the hint is not on the HUD
+
+`quest_log.gd::tracked_hint()` exists and is tested, and nothing draws it yet.
+Measured rather than skipped: the HUD's objective block is 420px wide at a
+`HUD_READABLE_FONT_SIZE` (38) floor its own header fought a blind critic to
+win — about twenty characters to a line — so a hint long enough to name an
+action AND a button is four or five lines and grows that block from 170px to
+nearly 300, on a HUD the same playtest reports (OP23-09) as taking far too much
+screen already. Shortening the hints until they fit costs the teaching that is
+the point of them. So the guidance lives in the quest log, where there is room,
+and `tracked_hint()` waits for whoever re-proportions that corner. Anyone
+giving it a home: measure the wrapped height first.
+
+### Coordination — read this, Gate B lane
+
+**The three-bed gather budget is yours and the number is 16 more fiber.**
+Measured from `data/items/buildables.json` and
+`data/config/progression.json`'s `home.required_pieces`:
+
+| | wood | stone | fiber |
+|---|---|---|---|
+| home (camp+floor+wall+roof+door) | 27 | 17 | 10 |
+| home + 1 bed | 33 | 17 | **18** |
+| home + 3 beds | **45** | **17** | **34** |
+| authored near-village budget today | 57 | 42 | 18 |
+
+Wood and stone already cover three beds. **Fiber is the only binding
+constraint** — 18 authored against 34 needed — which is exactly why today's
+budget "buys exactly one" as the directive says. Orbs compete for the same
+fiber (2 per Basic Orb), so 16 is the floor, not the comfortable number.
+Bushes yield fiber chapter-wide at `harvest_fraction` 0.2
+(`vegetation.json`), so the authored nodes are not the only source; the
+authored budget is still the number the directive names.
+
+**One structural change to `smoke_gate_b_continuous.gd`, flagged so it merges
+cleanly:** the village segment moved out of the first half of
+`_gather_and_build_a_home()` into its own `_visit_the_village_for_tools()`
+step, called before `_ready_a_tournament_team()`. Nothing INSIDE
+`gate_a_npc_gather_segment.gd` was touched — the Mira stall is exactly where it
+was — the call moved, because the ladder assertion walks the chain in authored
+order and the tools now come before the team. The bed and feed steps were added
+to `_sleep_the_night()` and `_win_the_tournament()` in the same file.
+
+### Tests
+
+`test_quest_log.gd` +17 (guided view grows one row per step; the open row is
+always last and `current_index` agrees; the HUD line and the log's open row are
+the same step; every opening rung names an action and most name a verb; every
+`{action}` is a real InputMap action; the bed rung asks for one bed per
+entrant and is NOT done at 1/3; the feed rung stands between sleep and sign-up;
+the gate rung is no longer a riddle; tools come before gathering).
+`test_tournament.gd` +4 for `team_fed()`. `smoke_gateb_flags.gd` +1 check
+(two beds is two flags, three is three). `test_gateb_objective_chain.gd`,
+`smoke_gate_b_continuous.gd`, `smoke_menu.gd` presentation contracts updated to
+the new ladder — `smoke_menu`'s quest-log check now proves strictly more than
+it did (exactly one open row, it matches `tracked_text`, nothing is listed past
+it, and the hint is drawn under it) where it used to look for the road-gate row
+somewhere in a full list. `tools/_probe_band3_driven.gd`'s arrival flags
+updated for the same reason.
+
+Branched from `origin/main` at `a8ed4f0`.
 ## PERF-ROG — OP23-01, the ROG Ally frame rate: found, measured, fixed
 
 `tests: full suite 1362 tests, 836552 assertions, 0 failed` · `area: scripts/world/interaction_arbiter.gd,
