@@ -87,10 +87,34 @@ func _ready() -> void:
 	_body.mesh = _mesh
 	_body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
+	# EVERY LINE HERE NOW MATCHES `impact_flash.gd::_additive()`, which is the
+	# sibling that works. This material was drawn with the exact combination that
+	# file's own header rules out by name -- additive blending AND vertex-colour
+	# alpha -- and records the result of: "the burst rendered as a barely-visible
+	# smudge under additive blending and as NOTHING under alpha blending, which
+	# is the signature of the alpha arriving at the shader near zero."
+	#
+	# That is three blind rounds of "there is no projectile" explained. The node
+	# was spawned, was on the right clock, and was VERIFIED ALIVE in the arena at
+	# the shutter by the capture's own check -- it simply did not render. And
+	# this is not a survey-only problem: `.claude/skills/visual-judge/SKILL.md`
+	# records that Compatibility is what the game SHIPS since RB4/D01, so a
+	# player firing a ranged move has been seeing the same nothing.
+	#
+	#   * MIX, not ADD -- `telegraph_glow.gd` states the reason plainly:
+	#     "additive renders at a fraction of its strength under the
+	#     Compatibility renderer".
+	#   * `no_depth_test` stays FALSE, unlike `impact_flash.gd`. Tried true and
+	#     backed it out against the frame: MIX alone is what made the bolt
+	#     render, and with depth testing off the bolt painted straight over the
+	#     caster's shell -- a pale streak lying on the creature's back rather
+	#     than an object in the world. A point burst can afford to draw through
+	#     geometry; a travelling object cannot, because it is the one thing that
+	#     has to look like it is IN the scene.
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.vertex_color_use_as_albedo = true
 	material.disable_receive_shadows = true
@@ -100,7 +124,21 @@ func _ready() -> void:
 	_redraw(0.0)
 
 
-func _process(delta: float) -> void:
+## The PHYSICS clock, not `_process`, and for the reason `impact_flash.gd:136`
+## and `telegraph_glow.gd` both already record in their own headers: a
+## sub-second effect driven by real frame time is gone inside a SINGLE frame
+## under the software renderer every visual verdict on this project is made
+## with. The arithmetic for this one: a flight is clamped to `MAX_TRAVEL`
+## 0.42s, and one llvmpipe frame at 1280x800 is ~2.4s of `_process` delta, so
+## the first tick after launch put `t` at 5.7, clamped to 1.0, and freed the
+## node before it was ever presented. Both siblings were moved for this; this
+## one was left behind, and `tools/_capture_combat_moments.gd`'s own header
+## predicted the consequence before a blind critic reported it as "there is no
+## firing in the firing frame".
+##
+## Nothing changes on real hardware: physics runs at 60Hz there too, so a 0.42s
+## bolt is ~25 frames of travel either way.
+func _physics_process(delta: float) -> void:
 	if _done:
 		return
 	_elapsed += delta
@@ -125,8 +163,17 @@ func _redraw(t: float) -> void:
 	var fade := 1.0 - clampf((t - 0.66) / 0.34, 0.0, 1.0)
 	if fade <= 0.0:
 		return
-	var colour := Color(_colour.r, _colour.g, _colour.b, _colour.a * fade)
-	var core := colour.lerp(Color(1, 1, 1, colour.a), 0.55)
+	# Opacity is ONE value on the material, set once per frame, for the reason
+	# `impact_flash.gd` gives: with the fade carried in per-vertex alpha there
+	# are as many places for it to arrive wrong as there are vertices. The tail
+	# gradient is unaffected -- `core` and `colour` only ever differed in RGB,
+	# and every vertex already shared one alpha, so there is nothing to lose by
+	# moving it.
+	var material := _body.material_override as StandardMaterial3D
+	if material != null:
+		material.albedo_color = Color(1.0, 1.0, 1.0, _colour.a * fade)
+	var colour := Color(_colour.r, _colour.g, _colour.b, 1.0)
+	var core := colour.lerp(Color(1.0, 1.0, 1.0, 1.0), 0.55)
 
 	match _kind:
 		"cone":

@@ -64,6 +64,32 @@ const FINISH := {
 	"MI_RoundTiles": {"roughness": 0.80, "specular": 0.18},
 	"MI_UnevenBrick": {"roughness": 0.85, "specular": 0.20},
 	"MI_RockTrim": {"roughness": 0.85, "specular": 0.20},
+	# THE PROPS KIT, added after scanning all 126 vendored .gltf files for the
+	# same gap MI_RockTrim had. 68 materials across that set ship with NO
+	# `metallicFactor`, so glTF's spec default of 1.0 applies and they render
+	# FULL METAL -- the root cause already blamed for the ice-blue foundations,
+	# and it was never confined to the buildings kit.
+	#
+	# The four below are the props-kit trims that are not metal and were falling
+	# straight through `apply()`'s `if finish == null: continue`. That silent
+	# skip is the same shape as the one behind the red ironwood canopy
+	# (`harvest_node.gd::_material_fixups_for_model()` matching by model path):
+	# a fix that lives in a lookup table does not protect the material that is
+	# not in the table.
+	#
+	# The most visible of these is `MI_Trim_Cloth`, which is the bedding on
+	# `Bed_Twin1.gltf` -- the player's buildable creature bed. Its blanket and
+	# pillow have been rendering as chromed metal, mirroring the sky, in a piece
+	# a blind critic already called the worst-looking thing in the game.
+	#
+	# DELIBERATELY ABSENT: `MI_Trim_Metal` and `MI_MetalOrnaments`. They have the
+	# same missing factor, and for them 1.0 is CORRECT -- they are the kit's
+	# actual metal. Do not "complete" this table by adding them; that would flatten
+	# the anvil and the door furniture into plastic.
+	"MI_Trim_Cloth": {"roughness": 0.95, "specular": 0.15},
+	"MI_Trim_Furniture": {"roughness": 0.75, "specular": 0.25},
+	"MI_Trim_Props": {"roughness": 0.80, "specular": 0.22},
+	"MI_Trim_Props_Vertex": {"roughness": 0.78, "specular": 0.25},
 }
 
 ## VISUAL-CORRIDOR fix: BUILD-KIT-3 used to override the roof mesh's ridge

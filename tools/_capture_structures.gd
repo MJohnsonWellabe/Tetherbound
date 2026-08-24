@@ -144,9 +144,18 @@ const FOV := 55.0
 ## through the same distance/height formula to every structure (see header).
 const AZIMUTH_DEG := -35.0
 const MARGIN := 1.15
+## The close shot's standoff, measured from the structure's FRONT FACE rather
+## than from its centre -- see `_shoot_structure`. Measuring from the centre is
+## what put the camera inside the eaves of every tall building on the round-1
+## sheet: a 9m building's own half-depth ate most of a 5.4m centre distance.
 const CLOSE_FACTOR := 0.32
-const CLOSE_MIN := 2.4
-const CLOSE_MAX := 16.0
+const CLOSE_MIN := 3.0
+const CLOSE_MAX := 9.0
+## A person's eye, and the top of a door they can walk through. The close frame
+## is composed around these two numbers instead of around the structure's
+## height, so it always shows something a player would actually be looking at.
+const EYE_HEIGHT := 1.7
+const DOOR_HEAD_HEIGHT := 2.1
 
 var _prefabs: RefCounted = null
 var _holder: Node3D = null
@@ -344,11 +353,29 @@ func _shoot_structure(world: Node3D, name: String, aabb: AABB, trainer_x_overrid
 
 	# Close frame -- same angle, pulled in, so a defect that only reads up
 	# close (R9.4's own finding) has somewhere to show up.
-	var close_distance := clampf(distance * CLOSE_FACTOR, CLOSE_MIN, CLOSE_MAX)
-	var close_eye_h := clampf(eye_h, 1.6, 6.0)
-	var close_eye_xz := Vector2(center.x, center.z) + dir * close_distance
-	camera.global_position = Vector3(close_eye_xz.x, close_eye_h, close_eye_xz.y)
-	camera.look_at(Vector3(center.x, aabb.position.y + aabb.size.y * 0.55, center.z), Vector3.UP)
+	#
+	# It is composed around a PERSON AT THE DOOR, not around the structure's
+	# own height. The previous version pulled the establishing shot in along
+	# its own axis, and a third of the round-1 sheet came back framed inside
+	# the eaves showing nothing judgeable. That was not bad luck: for a 9m
+	# building the eye sat at `size.y * 0.35` = 3.1m and aimed at
+	# `size.y * 0.55` = 5.0m, from 5.4m measured from the CENTRE -- of which
+	# the building's own half-depth took ~4m, leaving the camera about a metre
+	# off the wall, looking up into the roof overhang. It also pushed the
+	# 1.80m trainer out of frame, which makes the rubric's scale criterion
+	# unanswerable on the very shot most likely to show a scale error.
+	#
+	# So: standoff measured from the front face, eye at standing height, aim at
+	# door-head height, and the frame centred between the door and the trainer
+	# so both are in it. Every close frame is now what a player walking up to
+	# the door sees.
+	var half_depth := aabb.size.z * 0.5
+	var close_distance := half_depth + clampf(distance * CLOSE_FACTOR, CLOSE_MIN, CLOSE_MAX)
+	var close_x := (center.x + 0.85) if is_nan(trainer_x_override) else (trainer_x_override - 0.7)
+	var close_target_y := clampf(aabb.position.y + aabb.size.y * 0.55, 0.6, DOOR_HEAD_HEIGHT)
+	var close_eye_xz := Vector2(close_x, center.z) + dir * close_distance
+	camera.global_position = Vector3(close_eye_xz.x, EYE_HEIGHT, close_eye_xz.y)
+	camera.look_at(Vector3(close_x, close_target_y, center.z), Vector3.UP)
 	await _shoot_frame("%s/%02d-%s-close.png" % [OUT_DIR, _shot_index, name])
 
 

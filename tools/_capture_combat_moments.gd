@@ -61,21 +61,42 @@ extends SceneTree
 ## single worst thing a capture tool can do here is the 45-minute wait on a
 ## moment that never came that an earlier harness already paid for once.
 ##
-## A RESIDUAL RISK THIS SCRIPT CANNOT FIX FROM HERE. `impact_flash.gd`'s own
-## header already documents one instance of a pattern worth watching for
-## again: an effect timed on `_process(delta)` — real wall-clock render-frame
-## time, not the physics tick — can complete its entire lifetime inside a
-## SINGLE frame under this harness's ~2.4s-per-frame software rendering, and
-## be gone before any shutter this script fires. `impact_flash.gd` was moved
-## to `_physics_process` for exactly that reason (see its own comment).
-## `move_projectile.gd` (the quick attack's travel/bolt) was NOT — it is still
-## `_process`-driven — and `scripts/player/camera_rig.gd`'s own follow/look
-## (`_follow()`, `_apply_look()`) are `_process`-driven too. If a future
-## capture sheet still shows a dead projectile or a camera that is not where
-## the aim math (verified correct, headlessly, against the real fight) says
-## it should be, that class of bug — not this script's aim/timing — is where
-## to look next; it is a source fix, not something this photographer can wait
-## or re-aim its way around.
+## THE CLOCKS, AND WHY THIS TOOL PAUSES TO SHOOT. Resolved 2026-08-23, after a
+## blind round reported "02-move-firing is titled as the firing moment, and
+## there is no firing in it... put 01, 02 and 03 side by side and they are the
+## same still life three times" against a game that has had projectile, impact
+## and telegraph VFX all along.
+##
+## The cause was this tool, not the fight. One llvmpipe frame at 1280x800 is
+## ~2.4s of `_process` delta and at most 8 physics ticks, so `_shoot_pair`'s two
+## RENDER_SETTLE_FRAMES waits cost more animation time than the entire life of
+## every effect in a fight: the impact flash is 0.34s, a bolt at most 0.42s, an
+## attack or hit clip about a second. The moment was always over before the
+## shutter opened, and no wait value could have fixed it -- the settle waits
+## alone outlived every one of them.
+##
+## Two fixes, and they are different in kind:
+##   * `_shoot_pair` now PAUSES the tree for the shutter. Rendering is
+##     independent of the pause, so the frames still draw while the effect stays
+##     exactly where it is, at zero simulated cost. This is the general fix and
+##     it is what makes a sub-second event photographable at all here.
+##   * `move_projectile.gd` was moved from `_process` to `_physics_process`, so
+##     it is finally on the same clock as the two siblings that were moved for
+##     this reason years of comments ago (`impact_flash.gd:136`,
+##     `telegraph_glow.gd`). Nothing changes on real hardware.
+##
+## Still `_process`-driven and worth knowing about: `scripts/player/camera_rig.gd`'s
+## own follow/look (`_follow()`, `_apply_look()`). This tool sets the camera
+## transform directly through `_aim_camera_clear()` rather than waiting for the
+## rig to settle, and the pause freezes the rig too, so the shot lands where it
+## was aimed. If a future sheet shows a camera somewhere the aim math does not
+## predict, that is where to look.
+##
+## 02 and 03 now also VERIFY their own subject: `_live_effect()` checks that a
+## projectile / an impact flash is actually alive in the arena at the shutter,
+## and prints a FAIL naming the problem when it is not. Six times in this sweep
+## a survey photographed something other than its subject; a tool that is about
+## to write a PNG called "the projectile in flight" can afford to check.
 ##
 ## SHOT LIST (12 PNGs — six moments, each shot twice):
 ##   01-engagement          — player creature and wild creature squared up,
@@ -160,12 +181,26 @@ const STRIKE_RESOLVE_BOUND := 60
 ## After the strike resolves, before the "move firing" shot: enough physics
 ## time for the projectile to be visibly clear of the creature that just
 ## threw it (pebble_toss travels at 26 m/s; 6 frames is ~2.6m of travel).
-const PROJECTILE_INFLIGHT_FRAMES := 6
+## Two physics ticks after the strike, not six. `MIN_TRAVEL` is 0.06s -- 3.6
+## ticks -- so a fight at close quarters lands its bolt before a six-tick wait
+## ends, and the first run with the shutter fixed reported exactly that:
+## "NO projectile alive in the arena", with the impact flash appearing one tick
+## later. Two ticks puts the bolt between a tenth and half way across at every
+## distance the arena allows.
+const PROJECTILE_INFLIGHT_FRAMES := 2
 ## From the "move firing" shot to the "hit landing" shot: the remaining
 ## flight time to a ~5m separation (`combat.json` arena.separation) at 26
 ## m/s is ~12 frames; this adds margin for the impact flash to actually be
 ## on screen rather than photographed one frame early.
 const IMPACT_SETTLE_FRAMES := 20
+## The bolt's whole flight plus margin, in physics ticks: the impact flash is
+## spawned off `arrived`, so this bounds "wait for the burst to exist" rather
+## than guessing when it will. Bounded and FAILs loudly, per requirement 5/6 --
+## an earlier harness in this sweep burned 45 minutes on a moment that never came.
+const FLASH_WAIT_BOUND := 40
+## How far into the 0.34s burst to shoot. The ring expands from zero radius, so
+## its first tick is not a picture of anything.
+const FLASH_BITE_FRAMES := 4
 ## Let `player_quick.recovery` (0.22-0.24s, ~13-15 frames) finish so
 ## `_action == Action.READY` before the aim button is pressed — pressing
 ## Throw during recovery is silently ignored by `_read_player_input()`.
@@ -223,11 +258,14 @@ func _run() -> void:
 		quit(1)
 		return
 
+	_pin_and_freeze_clock()
+
 	_manager.connect("hit_landed", _on_hit)
 	_manager.connect("attack_missed", _on_missed)
 
 	_leave_the_farmhouse()
 	await _ensure_ally()
+	_ensure_orbs()
 	if _director.call("ally_instance") == null:
 		print("FAIL: the player has no creature to fight with; nothing below this point can run")
 		_report()
@@ -255,6 +293,40 @@ func _collect_nodes() -> bool:
 
 ## Same reasoning as `_probe_combat_hit_rate.gd::_leave_the_farmhouse` — a
 ## known-clear spot before anything else is asked of the player.
+## Pin the world to day/clear and FREEZE it, ported in intent from
+## `_capture_ground_and_sky.gd`, which settled on this after its own pin wore
+## off mid-pass.
+##
+## `ralph/VISUAL_LEDGER.md` names this trap by name -- "Pin the clock AND freeze
+## it. A pin that is not frozen wears off across a multi-viewpoint pass and the
+## late frames come back in a dusk wash" -- and this tool did NEITHER. Round 2's
+## blind critic found it without being told to look: "Exposure disagrees across
+## the same encounter. Frames 01-03 are mid-day olive; 04-catching-clean is
+## several stops darker, near-dusk ground values, same sky." 04 is simply the
+## shot taken last, minutes of wall clock after 01.
+##
+## That is not a small thing to leave in. Frames whose exposure drifts between
+## shots cannot be compared with each other OR with the references, and a critic
+## reasonably reads the drift as a lighting defect in the game rather than as a
+## property of the camera that took them.
+func _pin_and_freeze_clock() -> void:
+	var look: Node = _world.get_node_or_null(^"WorldLook")
+	var weather: Node = _world.get_node_or_null(^"WorldWeather")
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	else:
+		print("FAIL no WorldWeather node; weather cannot be pinned and the frames may not agree")
+	if look != null:
+		look.call("apply_time", "day")
+		look.set_process(false)
+		look.set_physics_process(false)
+		print("[clock] pinned to day/clear and FROZEN; every shot below is in the same light")
+	else:
+		print("FAIL no WorldLook node; time-of-day cannot be pinned and late shots will drift toward dusk")
+
+
 func _leave_the_farmhouse() -> void:
 	var start := Vector3(48.0, 0.0, -58.0)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
@@ -268,9 +340,43 @@ func _leave_the_farmhouse() -> void:
 ## already makes for the same reason (`_probe_combat_hit_rate.gd`,
 ## `smoke_trainer_battle.gd`, both `_ensure_ally()`).
 func _ensure_ally() -> void:
-	if _director.call("ally_instance") != null:
+	if _director.call("ally_instance") == null:
+		await _director.call("adopt_starter", "terrapup")
+
+	# AND put it in the party, which `adopt_starter` does not do.
+	#
+	# `_spawn_ally_body()` builds `_ally` and `_ally_body` and stops there; the
+	# real opening registers the starter separately
+	# (`sequence_director.gd:1209`, `party.call("add", instance)`). So every
+	# capture that granted its creature this way photographed a HUD with five
+	# OPEN SLOT rows down the middle of a fight the player was winning -- and
+	# round 1's blind critic reported exactly that, reasonably, as a defect.
+	# The HUD was telling the truth about a state no player can ever be in.
+	var game := root.get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var instance: RefCounted = _director.call("ally_instance")
+	if party != null and instance != null and (party.call("members") as Array).is_empty():
+		party.call("add", instance)
+
+
+## Orbs, for the same reason: the satchel starts empty here.
+##
+## `throw_aim.gd` refuses to open the reticle with no orb in the satchel, so
+## `04-catching` came back uncaptured with "the capture reticle never opened" --
+## not a defect in the aim, just a player who had been given nothing to throw.
+## The real opening hands over fifteen (`give:orb_basic:15`,
+## data/dialogue/opening.json); this grants the same item the same way every
+## catching smoke test in the repo already does.
+func _ensure_orbs() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		print("FAIL: no Game autoload; cannot seed orbs and 04-catching will not open")
 		return
-	await _director.call("adopt_starter", "terrapup")
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		print("FAIL: no inventory; cannot seed orbs and 04-catching will not open")
+		return
+	inventory.call("add", "orb_basic", 5)
 
 
 ## --- encounter A: the wild fight (engagement, move firing, hit landing, catching) ---
@@ -315,6 +421,12 @@ func _run_wild_encounter() -> void:
 			continue
 		landed = true
 
+		# `hit_landed` is emitted on the SAME physics tick that launches the
+		# bolt (`combat_manager.gd::_resolve_player_strike`), so the wait below
+		# starts at t=0 of the flight. pebble_toss travels 9m at 26 m/s = 0.35s
+		# = ~21 physics ticks, so six ticks puts the bolt around a third of the
+		# way across -- genuinely mid-flight, at any engagement distance the
+		# arena allows.
 		await _await_physics(PROJECTILE_INFLIGHT_FRAMES, "projectile in flight")
 		if not bool(_manager.call("is_fighting")):
 			print("FAIL: the fight ended before the projectile could be photographed")
@@ -322,9 +434,35 @@ func _run_wild_encounter() -> void:
 		ally = _director.call("ally_body") as Node3D
 		if ally != null and is_instance_valid(wild):
 			_aim_camera_clear(ally.global_position, wild.global_position, ally)
+		var bolt := _live_effect("move_projectile.gd")
+		if bolt == null:
+			print("FAIL: 02-move-firing is being shot with NO projectile alive in the arena; the frame will not show what its name says")
+		else:
+			print("02-move-firing: projectile present at %s" % str((bolt as Node3D).global_position))
 		await _shoot_pair("02-move-firing")
 
-		await _await_physics(IMPACT_SETTLE_FRAMES, "impact settle")
+		# The burst does not exist yet: `_resolve_player_strike` defers it to
+		# the bolt's own `arrived` signal so the flash goes off where and when
+		# the blow lands. So wait for the flash to EXIST rather than counting a
+		# fixed number of frames at it -- the old fixed 20-tick wait expired at
+		# the same instant a 0.34s burst did, which is why round 1's
+		# 03-hit-landing was the same still life as 01 and 02.
+		var flash: Node = null
+		var waited_for_flash := 0
+		while flash == null and waited_for_flash < FLASH_WAIT_BOUND:
+			waited_for_flash += 1
+			_frame_count += 1
+			await physics_frame
+			if not bool(_manager.call("is_fighting")):
+				break
+			flash = _live_effect("impact_flash.gd")
+		if flash == null:
+			print("FAIL: no impact flash appeared within %d ticks; 03-hit-landing cannot show a blow landing" % FLASH_WAIT_BOUND)
+		else:
+			print("03-hit-landing: impact flash present after %d ticks" % waited_for_flash)
+			# A few ticks into the burst rather than on its first frame: the
+			# ring starts at zero radius and reads as nothing at t=0.
+			await _await_physics(FLASH_BITE_FRAMES, "letting the burst open")
 		if bool(_manager.call("is_fighting")) and is_instance_valid(wild):
 			ally = _director.call("ally_body") as Node3D
 			if ally != null:
@@ -503,26 +641,66 @@ func _run_trainer_encounter() -> void:
 ## this is the one wild creature standing exactly at its authored centre —
 ## no scatter to search.
 const ELDER_CENTRE := Vector3(-490.0, 0.0, 555.0)
+## How far off its own centre the elder may be found, and the scale that proves
+## it is the elder anyway. `wander_radius` is 1.5m, so a few metres of settle
+## drift is normal and 13m is somebody else; `elder.body_scale` is 1.35, and no
+## ordinary band-1 mosshell is scaled up at all.
+const ELDER_TOLERANCE_M := 6.0
+const ELDER_MIN_SCALE := 1.2
 
 
 func _run_elite_encounter() -> void:
 	print("")
 	print("=== encounter C: elite encounter (elder mosshell, band 1) ===")
+	# STAND THE PLAYER THERE FIRST, THEN LOOK.
+	#
+	# This searched before teleporting, and skipped every run with "nearest wild
+	# creature to the elder's spawn is 13m away; likely the wrong creature". The
+	# elder's own spawn entry gives it `wander_radius: 1.5`, so it cannot BE 13m
+	# from its centre -- which means it had not spawned yet and the search found
+	# somebody else entirely. `ralph/VISUAL_LEDGER.md` carries the reason as a
+	# standing fact: "a capture with the player parked away from the shot
+	# photographs an empty world, because creature spawning is driven off the
+	# player." The tool was asking who was standing in a clearing it had not
+	# arrived at.
+	await _teleport_player_near(ELDER_CENTRE, FAR_TELEPORT_SETTLE_FRAMES)
+
 	var wild := _find_nearest_wild(ELDER_CENTRE)
 	if wild == null:
-		print("FAIL: no wild creature found at the elder mosshell's spawn point; encounter C skipped")
+		print("FAIL: no wild creature at the elder mosshell's spawn point even after standing there; encounter C skipped")
 		return
-	if wild.global_position.distance_to(ELDER_CENTRE) > 5.0:
-		print("FAIL: nearest wild creature to the elder's spawn is %.0fm away; likely the wrong creature; encounter C skipped" % wild.global_position.distance_to(ELDER_CENTRE))
-		return
+
+	# Identity, not proximity. The elder is the one mosshell in Band 1 carrying
+	# `elder.body_scale` 1.35, and checking for that is what the rest of this
+	# tool already does for the projectile and the impact flash: confirm the
+	# subject is present rather than infer it from where the camera is pointed.
+	# Six times in this sweep a survey photographed the wrong thing; a distance
+	# threshold is exactly the kind of inference that produced those.
+	var scale := 1.0
+	if wild.has_method("body_scale"):
+		scale = float(wild.call("body_scale"))
+	elif wild.get("body_scale") != null:
+		scale = float(wild.get("body_scale"))
+	# HORIZONTAL distance. `ELDER_CENTRE`'s y is the config's placeholder 0, not
+	# ground height, and the elder actually stands at y = -13.1 -- so a
+	# straight-line distance_to() reported "13.1m off the elder's centre" for a
+	# creature standing essentially ON its own spawn point. That number is what
+	# the old proximity-only test rejected the elder for on every previous run.
+	var flat := wild.global_position
+	flat.y = 0.0
+	var offset := flat.distance_to(Vector3(ELDER_CENTRE.x, 0.0, ELDER_CENTRE.z))
 
 	var display_name := "?"
 	var instance: Variant = wild.get("instance")
 	if instance != null:
 		display_name = str(instance.get("display_name"))
-	print("found '%s' at %s" % [display_name, wild.global_position])
+	print("found '%s' at %s (%.1fm off the elder's centre, body_scale %.2f)" % [
+		display_name, wild.global_position, offset, scale])
 
-	await _teleport_player_near(wild.global_position, FAR_TELEPORT_SETTLE_FRAMES)
+	if offset > ELDER_TOLERANCE_M and scale < ELDER_MIN_SCALE:
+		print("FAIL: nearest creature is %.0fm off the elder's centre AND is not scaled like an elder (%.2f < %.2f); this is not the elder, so 06-elite-encounter is NOT shot rather than shot at the wrong creature" % [
+			offset, scale, ELDER_MIN_SCALE])
+		return
 	if not await _engage(wild):
 		print("FAIL: could not engage the elder mosshell; 06-elite-encounter was not captured")
 		return
@@ -674,6 +852,53 @@ func _press(action: String) -> void:
 ## toggling HUD visibility between the two shots does not let the moment
 ## drift out from under them.
 func _shoot_pair(name: String) -> void:
+	# THE TREE IS PAUSED FOR THE WHOLE PAIR. Without this the shutter cannot
+	# photograph any sub-second event, and every visual event in a Tetherbound
+	# fight is sub-second by design -- which is exactly how round 1 came back
+	# with "02-move-firing is titled as the firing moment and there is no
+	# firing in it" for a game that has had projectile, impact and telegraph
+	# VFX all along.
+	#
+	# The arithmetic, because it is not close: one llvmpipe frame at 1280x800
+	# is ~2.4s of `_process` delta and at most 8 physics ticks (Godot's
+	# `max_physics_steps_per_frame` default; project.godot overrides neither).
+	# The two RENDER_SETTLE_FRAMES waits below therefore used to cost ~4.8s of
+	# animation time and ~0.27s of simulated time BEFORE the first shot -- more
+	# than the entire life of the impact flash (0.34s), the projectile (<=0.42s)
+	# and any attack or hit clip. The moment was always over before the shutter
+	# opened.
+	#
+	# Paused, those waits cost zero simulated time: rendering is independent of
+	# the tree pause, so the frames still draw, the effect stays exactly where
+	# it was, and the HUD and clean shots become genuinely the SAME moment --
+	# which is what this function's own header has always claimed and, before
+	# this, was not true either (they were ~0.27s of simulated time apart).
+	# The separation, printed with every shot.
+	#
+	# Four rounds of critiques turned on whether the two creatures were inside
+	# each other, and four rounds answered it by looking at pixels -- including
+	# this lane, twice. The fight knows the number; it costs one line to say it,
+	# and it converts "they look like they are overlapping" into something that
+	# can be checked against `combat.json`'s own arithmetic.
+	if _manager != null and bool(_manager.call("is_fighting")):
+		var a: Node3D = _director.call("ally_body") as Node3D
+		var e: Node3D = _manager.call("enemy_body") as Node3D
+		if a != null and e != null and is_instance_valid(a) and is_instance_valid(e):
+			var flat_a := a.global_position
+			var flat_e := e.global_position
+			flat_a.y = 0.0
+			flat_e.y = 0.0
+			var gap := flat_a.distance_to(flat_e)
+			var bodies := 0.0
+			if a.has_method("body_radius"):
+				bodies += float(a.call("body_radius"))
+			if e.has_method("body_radius"):
+				bodies += float(e.call("body_radius"))
+			print("[spacing] %s: centres %.2fm apart (combined body radii %.2fm)" % [name, gap, bodies])
+
+	var was_paused := paused
+	paused = true
+
 	await _await_process(RENDER_SETTLE_FRAMES, "render settle (hud) for %s" % name)
 	await _screenshot("%s/%s-hud.png" % [OUT_DIR, name])
 
@@ -688,6 +913,31 @@ func _shoot_pair(name: String) -> void:
 	for child: Variant in saved.keys():
 		if is_instance_valid(child):
 			(child as CanvasLayer).visible = bool(saved[child])
+
+	paused = was_paused
+
+
+## Is one of the fight's own effect nodes alive right now?
+##
+## `combat_manager.gd` adds every effect as a DIRECT child of the arena
+## (`_resolve_player_strike` -> `PROJECTILE.launch(host, ...)`, `_flash_at` ->
+## `FLASH.burst`), so this is a one-level scan of a handful of nodes, not a walk
+## of a 143k-prop world.
+##
+## This exists so the capture can ANSWER ITS OWN QUESTION. Six times in this
+## sweep a survey photographed something other than its subject and a blind
+## critic spent findings on it. A tool that is about to write a PNG called
+## "the projectile in flight" can cheaply check whether a projectile is in
+## flight, and say so in its own log either way.
+func _live_effect(script_file: String) -> Node:
+	var arena: Node3D = _manager.call("arena") as Node3D
+	if arena == null:
+		return null
+	for child in arena.get_children():
+		var script: Variant = child.get_script()
+		if script != null and str(script.resource_path).ends_with(script_file):
+			return child
+	return null
 
 
 func _screenshot(path: String) -> void:

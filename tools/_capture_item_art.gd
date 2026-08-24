@@ -96,6 +96,10 @@ const OUT_DIR := "res://shots/items"
 ## to know it, which is the same class of error as photographing an empty world
 ## and calling the region empty. 2800 clears the measured 2479 with room for
 ## the layout to grow by a row or two before anyone has to think about it again.
+## Applied by this tool to its own window (see `_shoot_icon_sheet`) rather than
+## left to the caller's `--resolution`, which is what cropped the sheet for two
+## consecutive blind rounds. 2800 clears the content's measured 2479px with room
+## for the set to grow, and the guard prints the real number every run.
 const RESOLUTION := Vector2i(1440, 2800)
 
 const ICON_COLUMNS := 10
@@ -172,8 +176,15 @@ const WORLD_NODES: Array[Dictionary] = [
 ## exploration rig, per the brief: the same eye and target for all 7 tools is
 ## what makes a comically large or small one a defect visible in a still
 ## rather than an artefact of a different framing per shot.
-const CAM_EYE := Vector3(1.9, 1.55, -2.3)
-const CAM_TARGET := Vector3(0.0, 0.95, 0.0)
+## The held-tool vantage, in the TRAINER'S OWN frame rather than world space --
+## see `_shoot_held_tools`. Forward-and-right of them, at chest height, looking
+## at the hand rather than the face: the question this set exists to answer is
+## "what is in the hand and how big is it", and only one side of a person can
+## answer it.
+const CAM_FORWARD := 2.1
+const CAM_RIGHT := 1.3
+const CAM_EYE_HEIGHT := 1.35
+const CAM_LOOK_HEIGHT := 0.95
 const CAM_FOV := 42.0
 
 ## Fixed vantage for every world-node shot: the player stands `NODE_AHEAD`
@@ -290,10 +301,86 @@ func _print_static_findings(db: RefCounted, ids: Array, icon_users: Dictionary) 
 			continue
 		print("  NO WORLD NODE  %-14s kind=resource but no entry in any data/config/bands/*/harvest.json -- never seen growing" % id)
 
+	print("")
+	print("[static audit] harvest-node material fixups -- the red-leak check:")
+	var scattered := _scatter_models()
+	if scattered.is_empty():
+		print("  UNKNOWN  data/config/vegetation.json unreadable; fixup coverage NOT checked")
+	else:
+		var leaked := 0
+		for spec in WORLD_NODES:
+			var model := str(spec.get("model", ""))
+			if scattered.has(model):
+				continue
+			leaked += 1
+			print("  NO MATERIAL FIXUP  %-12s %s is listed in NO vegetation.json layer, so this node renders the vendored pack's RAW texture -- no `retexture`, no `retint`" % [
+				str(spec.get("item")), model.get_file()])
+		if leaked == 0:
+			print("  all %d world nodes are built from models a scatter layer covers" % WORLD_NODES.size())
+
+
+## Every model path any `data/config/vegetation.json` scatter layer lists.
+##
+## Read here because `harvest_node.gd::_material_fixups_for_model()` matches BY
+## MODEL PATH: a harvest node built from a model no layer mentions silently gets
+## neither the layer's `retexture` nor its `retint`, and renders whatever the
+## vendored pack shipped. That is not a hypothetical failure mode -- it is the
+## mechanism behind the red ironwood canopy that independent blind reviews have
+## now reported THREE times (band4_upper_meadows_ironwood/harvest.json's
+## `_comment_red_leak_d4b` records the first two, and the whole-game item pass
+## found it again on `world-ironwood`). `Leaves_TwistedTree_C.png` is
+## RGB(167,23,23), and TwistedTree_1 and _3 are in no layer, so a node authored
+## from either one wears a saturated crimson canopy -- on a FRIENDLY gatherable,
+## in the hue `data/config/palette.json` reserves for Team Tether and nothing
+## else.
+##
+## The check is here rather than in the fix because this tool photographs the
+## game as it is: the model below is copied verbatim from the game's own config
+## and MUST stay that way, or the capture stops being evidence. So the tool
+## reports the defect instead of hiding it, and the fourth blind review does not
+## have to spend a finding rediscovering it.
+func _scatter_models() -> Dictionary:
+	var out: Dictionary = {}
+	var file := FileAccess.open("res://data/config/vegetation.json", FileAccess.READ)
+	if file == null:
+		return out
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return out
+	var layers: Variant = (parsed as Dictionary).get("layers", {})
+	if not layers is Dictionary:
+		return out
+	for key in (layers as Dictionary).keys():
+		var layer: Variant = (layers as Dictionary)[key]
+		if not layer is Dictionary:
+			continue
+		var models: Variant = (layer as Dictionary).get("models", [])
+		if models is Array:
+			for m: Variant in (models as Array):
+				out[str(m)] = true
+		var single := str((layer as Dictionary).get("model", ""))
+		if single != "":
+			out[single] = true
+	return out
+
 
 ## --- phase 1: the icon sheet -------------------------------------------------
 
 func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> void:
+	# The tool sets its OWN window rather than trusting the caller's
+	# `--resolution`. The icon sheet is a tall document, not a 16:9 frame, and a
+	# caller reusing this repo's standard 1280x800 capture invocation silently
+	# cropped it -- twice, across two blind rounds. Nothing about "audit every
+	# icon" should depend on remembering an unusual flag.
+	# Restored at the end of this function: the held-tool and world-node phases
+	# are ordinary 3D frames and must keep the caller's aspect.
+	var caller_window := DisplayServer.window_get_size()
+	DisplayServer.window_set_size(RESOLUTION)
+	await process_frame
+	await process_frame
+	print("[icons] window %dx%d -> %dx%d for the sheet; restored afterwards" % [
+		caller_window.x, caller_window.y, RESOLUTION.x, RESOLUTION.y])
+
 	var canvas := CanvasLayer.new()
 	canvas.layer = 5
 	root.add_child(canvas)
@@ -368,12 +455,42 @@ func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> vo
 	# than trusting the arithmetic in the header comment.
 	await process_frame
 	await process_frame
-	var content_h: float = vbox.size.y + 60.0
-	if content_h > float(RESOLUTION.y):
-		print("WARN icon sheet content measures %.0fpx tall inside a %dpx viewport -- bottom rows are clipped; raise RESOLUTION.y or ICON_COLUMNS" % [
-			content_h, RESOLUTION.y])
+	# Measured against the REAL viewport, not against `RESOLUTION`.
+	#
+	# This guard used to compare the content against the RESOLUTION constant --
+	# a number describing the window this tool WANTS, not the one it got. The
+	# window size comes from the caller's `--resolution`, so a run at any other
+	# size cropped the sheet while this line printed "fits". That is exactly what
+	# happened: two consecutive blind rounds judged an icon sheet cut off at
+	# roughly 26 of 55 tiles, the second one rendered 1280x800 into a guard
+	# checking 2800, and the game's most-opened screen has still never been
+	# audited whole. A guard that cannot fail is not a guard -- `conventions.md`
+	# says so about assertions and it is just as true here.
+	#
+	# The window is now forced to RESOLUTION above, so this should always fit;
+	# it stays as a check because the content grows with the item count.
+	# `get_combined_minimum_size()`, NOT `size`. The VBox lives inside a
+	# PRESET_FULL_RECT MarginContainer, so its `size` is stretched to whatever
+	# the viewport happens to be and measuring it told us about the window
+	# rather than about the content -- which is why raising the height once made
+	# the "content" appear to grow with it. The combined minimum size is the
+	# intrinsic height of the tiles and headers, and it does not move when the
+	# window does.
+	#
+	# Measured, the content is 2479px -- which means the 2800 this file already
+	# carried was ALWAYS tall enough, and the cropped sheets both blind rounds
+	# judged were never a height problem at all. They were a caller problem: the
+	# window came from `--resolution`, and a run reusing this repo's standard
+	# 1280x800 capture invocation cropped the sheet while the old guard,
+	# comparing against the constant, printed "fits". The window is now forced
+	# above, so the flag cannot get this wrong again.
+	var content_h: float = vbox.get_combined_minimum_size().y + 60.0
+	var viewport_h: float = float(root.size.y)
+	if content_h > viewport_h:
+		print("WARN icon sheet content measures %.0fpx tall inside a %.0fpx viewport -- bottom rows ARE clipped and every icon finding from this sheet covers only part of the set; raise RESOLUTION.y or ICON_COLUMNS" % [
+			content_h, viewport_h])
 	else:
-		print("[icons] sheet content measures %.0fpx tall inside a %dpx viewport -- fits" % [content_h, RESOLUTION.y])
+		print("[icons] sheet content measures %.0fpx tall inside a %.0fpx viewport -- fits, whole set is auditable" % [content_h, viewport_h])
 
 	for i in ICON_SETTLE_FRAMES:
 		await process_frame
@@ -390,6 +507,8 @@ func _shoot_icon_sheet(db: RefCounted, ids: Array, icon_users: Dictionary) -> vo
 			path, ids.size(), shared_count, ids.size()])
 
 	canvas.queue_free()
+	DisplayServer.window_set_size(caller_window)
+	await process_frame
 	await process_frame
 
 
@@ -573,12 +692,40 @@ func _shoot_held_tools(db: RefCounted, stage: Dictionary) -> void:
 	var player: Node3D = stage["player"]
 	var game: Node = stage["game"]
 
+	# FRONT-RIGHT THREE-QUARTER, DERIVED FROM THE RIG'S OWN FACING.
+	#
+	# The fixed world-space eye this used to carry sat BEHIND the trainer, and
+	# round 1's critic reported every held tool as "STOWED on the back or hip,
+	# not in hand" and threw the whole set out. Re-shot and checked: the tool is
+	# bone-attached to `RightHand` correctly and always was -- `tool_hold.gd`'s
+	# lookup finds it, because `trainer_lod0.glb` really does carry a `RightHand`
+	# bone. What the frame showed was a backpack, and an arm hanging at the side
+	# with the axe head half-occluded by the leg behind it. From behind, a tool
+	# held in a relaxed hand is indistinguishable from a tool holstered on a hip,
+	# and the critic was right that the set could not answer its own question.
+	#
+	# Computed from the player's own basis rather than hardcoded, so it cannot go
+	# stale if the stage's spawn yaw ever changes: `-basis.z` is Godot's forward,
+	# `basis.x` is the trainer's right, and the tool is in the RIGHT hand -- so
+	# standing forward-and-right of them puts the hand nearest the camera and
+	# unoccluded, with the body behind it rather than in front.
+	# `+basis.z`, NOT Godot's usual `-basis.z` forward. Measured, not assumed:
+	# the first reframe used `-basis.z` and the re-shot sheet still came back
+	# showing the backpack, so this rig's model faces the opposite way from the
+	# node convention. `right` flips with it, since a 180-degree yaw takes both
+	# axes.
+	var facing := player.global_basis.z
+	var right := -player.global_basis.x
 	camera.fov = CAM_FOV
-	camera.global_position = CAM_EYE
-	camera.look_at(CAM_TARGET, Vector3.UP)
+	camera.global_position = player.global_position \
+		+ facing * CAM_FORWARD \
+		+ right * CAM_RIGHT \
+		+ Vector3.UP * CAM_EYE_HEIGHT
+	camera.look_at(player.global_position + Vector3.UP * CAM_LOOK_HEIGHT, Vector3.UP)
 
 	print("")
 	print("[held] trainer is %.2fm tall; a believable tool reads well under 100%% of that on its longest axis" % TRAINER_HEIGHT_M)
+	print("[held] camera stands forward-right of the trainer so the RIGHT hand is nearest and unoccluded")
 
 	for tool_id in TOOL_SHOTS:
 		# The tool reaches the hand exactly the way it does in play: the Game

@@ -114,7 +114,7 @@
       "name": "Creature Bed",
       "category": "furniture",
       "blurb": "Somewhere for a creature to rest at home.",
-      "mesh": "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf",
+      "_comment_mesh": "The camp set's bed, not the furniture pack's twin bed -- see scripts/build/creature_bed.gd::MESH_PATH for why, and for what it still does not fix. Kept in step with that constant deliberately: this key builds the placement GHOST and the menu thumbnail, so a mismatch would show the player one bed while placing another.", "mesh": "res://assets/props/generated_camp/camp_bed.glb",
       "thumbnail": "res://assets/ui/icons/buildables/creature_bed.png",
       "cost": [
         { "id": "wood", "n": 6 },

@@ -42,6 +42,7 @@ extends Node3D
 ## is data on the item itself (`data/items/items.json`'s `held_model`,
 ## `held_offset`, `held_rotation_deg`), not a table in here.
 
+const MATERIAL_FINISH := preload("res://scripts/build/build_material_finish.gd")
 const HAND_BONE := "Hand.R"
 ## Bones to try, in order, for the hand the prop hangs off. Rigs in this project
 ## have come from more than one source and do not agree on a name. Falls
@@ -240,6 +241,28 @@ func _rebuild_prop() -> void:
 	_prop_root.add_child(_prop)
 	_prop.position = _vector3_from(definition.get("held_offset", [0.0, 0.0, 0.0]))
 	_prop.rotation_degrees = _vector3_from(definition.get("held_rotation_deg", [0.0, 0.0, 0.0]))
+	# The vendored kits' missing `metallicFactor` reaches the trainer's hand too.
+	# `Axe_Bronze.gltf` and `Pickaxe_Bronze.gltf` both carry one material,
+	# `MI_Trim_Props_Vertex`, with no `metallicFactor` at all, so glTF's spec
+	# default of 1.0 applies and every tool the player holds is FULL METAL.
+	# Measured with a throwaway probe rather than assumed: metallic reads 1.00
+	# before this call and 0.00 after.
+	#
+	# Honest about what this does NOT fix, so nobody re-opens it expecting a
+	# colour change: the tool HEADS still render pale near-white, and that is
+	# the albedo texture, not the metallic factor -- the atlas region these
+	# heads are mapped to is light grey, so "Bronze" is the filename's claim
+	# rather than the texture's. That is an art observation for a blind round,
+	# not something this correction reaches.
+	#
+	# Same correction the build pieces already get; `build_material_finish.gd`
+	# is named for where it was first needed, not for the only place the kits'
+	# gap shows up. Three defects have now been traced to this one missing
+	# field (the ice-blue foundations, the metal bedding, this), so the table is
+	# the single place to fix it rather than a per-caller patch -- the lesson
+	# VISUAL_LEDGER.md records as "a fix that lives in one tool does not protect
+	# the next tool that does the same thing".
+	MATERIAL_FINISH.apply(_prop)
 
 
 ## The node props hang off: a `BoneAttachment3D` on the trainer's hand when the
