@@ -1,73 +1,105 @@
 {
   "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
   "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
-  "_comment_gateb": "GATE B (68-CHAPTER/17-RG18). Everything between `open_road_gate` and `defeat_the_captains` is the opening's preparation ladder -- wake, starter, first catch, build a team, train, gather, build a home, build a Creature Bed, sleep, then the village tournament and the road to South Bridge. Nine entries, in the exact order RG18's owner-locked sequence gives: 1 get creatures for the tournament, 2 train them, 3 gather materials, 4 build a home, 5 build a creature bed, 6 build/use your own bed and sleep, 7 enter the tournament, 8 win it, 9 head to the bridge.",
-  "_comment_gateb_flags": "The starter/first-catch beats already write real flags (`opening:beat:*`, `opening:starter_granted`, `sequence_director.gd`) and `south_bridge_open` already fires for real (Oskar's defeat hands over `south_bridge_key`, which `gated_crossing.gd`/`south_bridge.gd` reads) -- those three entries below are wired to real state today. The nine tournament-ladder flags in between (`tournament_team_ready` through `tournament_won`) are CONTRACT flags: nothing sets them yet. quest_log.gd only ever reads `progression`'s flag store (SB9) -- it has no live view of party size, XP, placed buildings or sleep, and giving it one would mean touching build/**, combat/** and autoload/game_state.gd, which this task does not own. Until the owning systems (RG13 building unlocks, RG19 tournament/condition model, the creature-bed/sleep rest loop) call `progression.set_flag(...)` on these exact ids, the HUD will track the first ladder entry and hold there -- that is the honest state of an unbuilt system, not a bug in this file. See ralph/DONE.md's GATEB-OBJECTIVES entry for the full contract list.",
+  "_comment_gateb": "GATE B (68-CHAPTER/17-RG18), re-authored by TUTORIAL-CHAIN (OP23-04). Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's GUIDED LADDER, and it is now a teaching order rather than a list of systems: catch -> open the gate -> take Tam's tools -> build a team -> train it -> gather -> build a home -> build a bed per entrant -> sleep -> feed -> sign up -> win -> cross. Thirteen rungs. Two of them are new (Tam's tools, feeding) and one became a count (three beds); see each entry's own `_comment` for the evidence behind it. The ORDER is the load-bearing part: rest and food are the two rungs immediately before sign-up because both expire, so a chain that taught them earlier would send a rested, fed team to the marshal an hour later as a tired, hungry one.",
+  "_comment_guided": "OP23-04 (owner, 2026-08-23): \"the opening should tell you the NEXT thing to do (gather, catch a pal, ...) one step at a time like Palworld's early game, walking you through every tournament prerequisite until all are cleared -- never fronting the full list.\" Two things implement that, and neither is a quest engine (sec19/CLAUDE.md still ban one):\n\n1. `how` (new, optional). One short line per entry naming the CONCRETE action and the controller verb for it. `{action}` is a project.godot input-action id -- `{interact}`, `{inventory}`, `{combat_throw}` -- resolved at display time by scripts/world/quest_log.gd through scripts/ui/input_glyph.gd, so it names the button the player has actually BOUND rather than a letter typed into this file. Never hardcode a button here; a rebind in Settings would turn it into a lie.\n2. The guided view. `quest_log.gd::guided_entries()` returns what is DONE plus the ONE current rung and nothing after it, and scripts/ui/tab_quest_log.gd renders that instead of the whole file. The log becomes a record of where the player is, and the chapter reveals itself a rung at a time.\n\nThe DATA is still flat: no prerequisites, no branching, no visibility conditions per entry. The guided rule is one uniform sentence about presentation applied to the whole list, which is why it is here and not a new key on every row.",
+  "_comment_gateb_flags": "What is real and what is contract, kept current. REAL, wired today: `opening:beat:road` (sequence_director.gd, on a successful catch), `road_gate_open` (key_pickup.gd/road_gate.gd), `tam_tools_given` (data/dialogue/village.json's `village_tam_tools`), `home_materials_gathered`/`home_built`/`creature_bed_built*` (scripts/build/home_progress.gd), `player_slept_at_home` (camp.gd::_on_rest), `tournament_team_ready`/`tournament_training_ready`/`tournament_team_fed` (tournament.gd::_write_entry_flags, from data/config/tournament.json + creature_condition.json thresholds), `tournament_entered` (Halda's sign-up dialogue), `tournament_won` (the final round's trainer reward), `south_bridge_open` (gated_crossing.gd/south_bridge.gd). quest_log.gd still only ever reads `progression`'s flag store (SB9) and still has no live view of party size, XP, placed buildings or sleep -- the owning systems call `set_flag` on these exact ids and this file only names them. `tournament_team_fed` is the one flag here that is CLEARED as well as set; see its entry.",
   "main": [
     {
       "id": "opening_first_catch",
       "flag_id": "opening:beat:road",
       "label": "Catch your first wild creature.",
+      "how": "Wear it down in the fight first, then pick an orb on the hotbar and press {combat_throw}.",
       "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`. Covers wake/Grandpa/starter/naming/walk-out for free: any save that has not yet reached this beat is still inside the scripted opening, where the sequence director's own prompts are already the guidance."
     },
     {
       "id": "open_road_gate",
       "flag_id": "road_gate_open",
-      "label": "Find a way through the village gate."
+      "label": "Open the village gate and follow the road in.",
+      "how": "The old key lies in the grass a few steps off the road. {interact} to take it, then {interact} at the gate.",
+      "_comment": "OP23-04. Was \"Find a way through the village gate.\" -- a riddle, and the owner's own words for why this lane exists: it \"makes no sense\" as the thing the game asks of you first. There is no puzzle here; `playground_world.gd::_spawn_gate_key()` drops `castle_gate_key` a few metres to the side of the gate on purpose (SA7: \"near-field and low-stakes, so the player understands early that gated things have keys\"). The label now says what to do and the `how` line says where the key is, which is what the beat was always FOR."
+    },
+    {
+      "id": "village_tools",
+      "flag_id": "tam_tools_given",
+      "label": "Meet Tam in the village and take his tools.",
+      "how": "Tam is the village smith, south-east of the well. {interact} to talk: axe for trees, pickaxe for stone, knife for fiber.",
+      "_comment": "OP23-04, a NEW rung and the one the ladder was missing. Real flag, already wired: data/dialogue/village.json's `village_tam_tools` carries `flag:tam_tools_given` on the same line as its three `give:` effects. Everything below this rung presupposes those tools -- item_db.harvest_yield()'s rule is right-tool = full, no tool = half, WRONG tool = nothing, so a player without the knife gathers ZERO fiber and cannot afford an orb, a camp or a bed. Gate B's own harness discovered this the hard way and wrote it down: \"'natural route requires Tam's axe before it can harvest', which was not a harness bug -- it was a real beat of Gate B this file had skipped\" (tests/smoke_gate_b_continuous.gd). A ladder that skips the rung the player is actually standing on is the whole of what OP23-04 reports."
     },
     {
       "id": "tournament_build_team",
       "flag_id": "tournament_team_ready",
       "label": "Catch and raise a team for the village tournament.",
-      "_comment": "CONTRACT flag -- RG19 owns the real roster-size/eligibility rule (spec: tied to the five-creature cap). Set this once a party is tournament-ready by that rule, not a second copy of the number here."
+      "how": "Talk to Tam again for the Basic Orb recipe, craft orbs at the workbench, then weaken and catch.",
+      "_comment": "CONTRACT flag -- RG19 owns the real roster-size/eligibility rule (spec: tied to the five-creature cap). Set this once a party is tournament-ready by that rule, not a second copy of the number here. The `how` line deliberately names no NUMBER for the same reason the label does not: `data/config/tournament.json`'s `min_party_size` is the one place that lives, tournament.gd reads it, and Halda's own readiness summary says it in words the player can act on."
     },
     {
       "id": "tournament_train_team",
       "flag_id": "tournament_training_ready",
       "label": "Train with your team before the tournament.",
+      "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels.",
       "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number."
     },
     {
       "id": "tournament_gather_materials",
       "flag_id": "home_materials_gathered",
       "label": "Gather wood and stone for a home.",
+      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush.",
       "_comment": "CONTRACT flag. Tam/the Quarry Foreman already narrate the WHY (OF30/OW9, data/dialogue/village.json) -- this is the WHAT, set once the player holds enough of the baseline materials the next build step (a home) actually costs."
     },
     {
       "id": "tournament_build_home",
       "flag_id": "home_built",
       "label": "Build a small home of your own.",
-      "_comment": "CONTRACT flag. The smallest coherent completion rule (RG18) is the owning building lane's call -- a placed `camp` plus enough structure to read as 'a home', not a second housing-validation system authored here."
+      "how": "Select the hammer on the hotbar and {interact} to open Build. A camp, a floor, a wall, a roof and a door.",
+      "_comment": "CONTRACT flag. The smallest coherent completion rule (RG18) is the owning building lane's call -- a placed `camp` plus enough structure to read as 'a home', not a second housing-validation system authored here. The `how` line's piece list is `data/config/progression.json`'s `home.required_pieces` said in words; home_progress.gd reads the config and this line describes it, so a change there is a change to one sentence here rather than to a second rule. \"Select the hammer and Interact\" is the pad's ONLY route into build mode (CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1) and half of what used to break it is already fixed on main -- the hammer no longer forfeits the button to a non-actionable status line (tests/test_hammer_keeps_the_interact_button.gd). The other half is owner directive 2026-08-23 section 3, \"Build wins while the hammer is out\", which moves a DEPLOYED creature's \"Put away\" offer off Interact for the duration; that is the Gate B / OP23-FIXPACK lane's to land. This sentence is true today with nothing deployed and true always once that lands. If that ruling were ever reversed, this is the line to re-word."
     },
     {
-      "id": "tournament_build_creature_bed",
-      "flag_id": "creature_bed_built",
-      "label": "Build a Creature Bed so your team can rest.",
-      "_comment": "CONTRACT flag. `creature_bed.gd` already places the object (R2.8/Gate A); this fires once it is placed, giving creature care a visible, tracked reason to exist before the tournament asks for a rested team."
+      "id": "tournament_build_creature_beds",
+      "flag_id": "creature_bed_built_3",
+      "label": "Build a Creature Bed for each of your entrants.",
+      "count_flags": [
+        "creature_bed_built",
+        "creature_bed_built_2",
+        "creature_bed_built_3"
+      ],
+      "how": "One creature to a bed -- a team of three needs three. Place them by your camp with the hammer.",
+      "_comment": "OWNER DIRECTIVE 2026-08-23 (ralph/OWNER_DIRECTIVES_2026-08-23.md section 1): \"Three creature beds before the tournament... Each of the three entrants gets its own bed. Adjust the guided tutorial chain (OP23-04) to teach building all three.\" This was ONE bed and one flag, which taught the object and then went quiet -- a player who built one and slept arrived at sign-up with two tired creatures and no line anywhere telling them why. `count_flags` is SF34's existing feature doing exactly the job its own comment describes (\"a three-part objective that reads the same at 0/3 and at 2/3\"), so the row reads \"... 1/3\" while the player is mid-build. The three flags are written by scripts/build/home_progress.gd::maybe_set_creature_beds() counting real placed beds in `Game.placed_buildings`, so a save/load answers the same way a live placement does. THE COUNT IS NOT AUTHORED TWICE: tests/test_quest_log.gd pins this list's length against `data/config/tournament.json`'s `min_party_size`, which is what decides how many creatures are entered, so raising the entry size and forgetting the beds fails a test instead of shipping a chain that asks for the wrong number. The GATHER BUDGET that makes three affordable is the Gate B lane's (ralph/GATEB-PATH lineage), per the same directive -- this file only teaches it."
     },
     {
       "id": "tournament_sleep",
       "flag_id": "player_slept_at_home",
       "label": "Sleep until morning in your new home.",
+      "how": "Put a creature in each bed with {interact}, then {interact} at the camp. Only creatures left in a bed wake rested.",
       "_comment": "CONTRACT flag. `camp.gd::_on_rest()` already does the fade/advance-day/heal-the-party rest interaction; this fires on that same rest so completion requires the actual sleep, not just placing the bed."
+    },
+    {
+      "id": "tournament_feed_team",
+      "flag_id": "tournament_team_fed",
+      "label": "Feed your team before you sign up.",
+      "how": "Open the satchel with {inventory}, Use a food item, and pick the creature. Do it for every entrant.",
+      "_comment": "OWNER DIRECTIVE 2026-08-23 (section 2): \"Keep the satiety drain rate; teach it. The ~1.1/min drain stays. The guided tutorial chain adds an explicit 'feed your team' step before tournament sign-up so arriving hungry reads as a deliberate care ritual, not a trap.\" The drain is untouched (data/config/creature_condition.json) -- this rung is the teaching half of that ruling and nothing else.\n\nThe flag is VOLATILE, and deliberately the only one in this chain that is: `tournament.gd::_write_entry_flags()` writes it true or false from `creature_condition.gd`'s own `fed` answer over the same entrants `condition_ready()` reads, so a team that goes hungry again puts the line BACK on the HUD. That is the correct behaviour for a state rather than an event -- the two contract flags above it record that something happened and are never cleared; being fed is a fact about today. Ordered after the sleep because that is the ritual the directive describes: rest them, feed them, then walk to Halda.\n\nIt is `fed` alone rather than `condition_ready` on purpose. Rested and happy have their own rungs and their own fixes; a line that says \"feed your team\" while the real failure is an unrested creature is the class of defect OP23-03 and OP23-04 are both reports of."
     },
     {
       "id": "tournament_enter",
       "flag_id": "tournament_entered",
       "label": "Enter the village tournament.",
+      "how": "Halda runs the bracket in the north field past the square. {interact} to sign up; her board names anything missing.",
       "_comment": "CONTRACT flag -- RG19's own tournament-entry system. This objective must not duplicate RG19's eligibility checklist; it only reflects RG19's own verdict."
     },
     {
       "id": "tournament_win",
       "flag_id": "tournament_won",
       "label": "Win the village tournament.",
+      "how": "Three rounds. Lose one and you can heal your team and ask Halda for the same round again.",
       "_comment": "CONTRACT flag -- RG19's own tournament victory state."
     },
     {
       "id": "head_to_south_bridge",
       "flag_id": "south_bridge_open",
       "label": "Cross the South Bridge into the Lower Meadows.",
-      "_comment": "Real flag, already wired: Oskar (Bridgehand) hands over `south_bridge_key` on defeat (data/config/bands/band1_lower_meadows/trainers.json), which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here."
+      "how": "Oskar the Bridgehand holds the key. Beat him, then take the road south out of the village.",
+      "_comment": "Real flag, already wired: Oskar (Bridgehand) hands over `south_bridge_key` on defeat (data/config/bands/band1_lower_meadows/trainers.json), which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here, and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent."
     },
     {
       "id": "clear_the_burrow_warrens",
@@ -153,6 +185,6 @@
     }
   ],
   "_comment_chain": "CHAPTER-OBJECTIVES (prompt 68). This list was TWO entries -- the village gate and the Upper Meadows captains -- for a 3-4 hour chapter, so everything between the opening and Band 4 (the South Bridge, the quarry, the warrens, the captive, the relay, the crossing) and everything after the captains (the Hall, the Warden, the machine) was untracked. A player who put the game down mid-chapter had no line telling them what they were in the middle of. The eleven entries below are all built from flags the game ALREADY sets -- no new boolean was invented for any of them, per the prompt's 'avoid redundant booleans where real game state can answer completion' -- and the architecture is untouched: still DONE-or-not-yet, still first-unset-in-file-order for the tracked line, still no prerequisites and no branching (spec sec19 and CLAUDE.md both ban a quest engine).",
-  "_comment_no_spoilers": "WHY THE LATE LABELS ARE VAGUE. scripts/ui/tab_quest_log.gd renders EVERY main entry, done and not-done alike, so every label here is readable from the first minute of the game. That makes this file subject to spec sec32's reveal ladder exactly like dialogue is: the last entries are written in the terms the player already has -- Team Tether, the Hall, the Warden, a machine -- and none of them names what is inside the stronghold. The right fix for a spoiler here is a vaguer label, never a visibility condition; a condition would be the branching the architecture comment above rules out.",
+  "_comment_no_spoilers": "WHY THE LATE LABELS ARE VAGUE. This used to read \"tab_quest_log.gd renders EVERY main entry, done and not-done alike, so every label here is readable from the first minute of the game\" -- OP23-04's guided view ended that: the tab now shows what is done plus the current rung only, so a late label is not read until the player is standing in front of it. The labels stay vague anyway, because the rule was never really about the MENU. spec sec32's reveal ladder applies to the line at the moment it becomes current, and the HUD puts the tracked line on screen the instant its rung opens -- so \"Shut down what Team Tether built under the Hall\" still has to be sayable to a player who has just beaten the Warden and does not yet know what is under it. The right fix for a spoiler here is still a vaguer label, never a per-entry visibility condition; a condition would be the branching the architecture comment above rules out, and the guided view is a uniform presentation rule rather than one. That makes this file subject to spec sec32's reveal ladder exactly like dialogue is: the last entries are written in the terms the player already has -- Team Tether, the Hall, the Warden, a machine -- and none of them names what is inside the stronghold. The right fix for a spoiler here is a vaguer label, never a visibility condition; a condition would be the branching the architecture comment above rules out.",
   "_comment_directions": "NO COMPASS DIRECTIONS IN THESE LABELS, on purpose. Prompt 68 asks for an audit of wording that drifted after the OW5D relocation. The audit was done and the shipped dialogue came back CONSISTENT -- but only because this world's north is -Z (scripts/ui/minimap.gd's header: 'screen-up ... is world -Z (north) and screen-right is world +X'), so the corridor running toward +Z runs SOUTH, and Mira's 'south crossing', Oskar's 'bridge south of here' and the Foreman's 'seams south of here' are all correct for a South Bridge at z=+1330 below a village at z=-10. Reading +Z as north makes every one of those lines look like a bug and is the easy mistake to make here. These labels name places instead of bearings so they cannot rot the next time the corridor moves."
 }

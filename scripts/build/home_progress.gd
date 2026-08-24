@@ -137,6 +137,61 @@ static func maybe_set_home_built(game: Node) -> void:
 		progression.call("set_flag", "home_built")
 
 
+## --- OP23-04 / owner directive 2026-08-23: a bed per entrant --------------
+
+## The buildable id a Creature Bed is registered under
+## (`data/items/buildables.json`). One place, because two functions below
+## count it.
+const CREATURE_BED_ID := "creature_bed"
+
+## The ladder's three bed flags, in the order they fill. The FIRST is
+## `creature_bed_built`, which predates this and is what
+## `creature_bed.gd::CREATURE_BED_FLAG`, every existing save and
+## `tests/smoke_gateb_flags.gd` already name -- it keeps its meaning exactly
+## ("a bed the player built is standing") and simply became the first of three
+## rather than the only one.
+##
+## `data/progression/objectives.json` counts these to render "Build a Creature
+## Bed for each of your entrants. 1/3", and `tests/test_quest_log.gd` pins the
+## LENGTH of that list against `data/config/tournament.json`'s `min_party_size`
+## -- the number of creatures actually entered -- so the count is authored once
+## and a change to the entry size fails a test instead of shipping a chain that
+## asks for the wrong number of beds.
+const CREATURE_BED_FLAGS: Array[String] = [
+	"creature_bed_built", "creature_bed_built_2", "creature_bed_built_3",
+]
+
+
+## How many player-built Creature Beds are standing, counted from the same
+## `GameState.placed_buildings` registry `pieces_built()` reads -- so this
+## answers identically right after a placement and right after a load, and a
+## bed that belongs to the world rather than to the player (the stronghold's
+## authored recovery point, `creature_bed.gd::AUTHORED_STRONGHOLD_REST`) is
+## never counted, because it is in no build store to be counted from.
+static func creature_beds_built(placed_buildings: Array) -> int:
+	return int(pieces_built(placed_buildings).get(CREATURE_BED_ID, 0))
+
+
+## Set as many of `CREATURE_BED_FLAGS` as there are beds standing, and no more.
+##
+## Monotonic like every other progression flag: dismantling a bed does not
+## un-set one. That is deliberate rather than lazy -- the objective records
+## that the player LEARNED to build a bed each, and a chain that reopened a
+## finished rung because a bed was moved would be a chain that can go
+## backwards. The tournament's rested gate is what actually cares whether a
+## creature has somewhere to sleep TONIGHT, it is per-occupant, and it reads
+## the beds themselves rather than these flags.
+static func maybe_set_creature_beds(game: Node) -> void:
+	if game == null:
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression == null:
+		return
+	var standing := creature_beds_built(game.get("placed_buildings") as Array)
+	for i in mini(standing, CREATURE_BED_FLAGS.size()):
+		progression.call("set_flag", CREATURE_BED_FLAGS[i])
+
+
 ## One-line call site for a gathering-completion path.
 static func maybe_set_materials_gathered(game: Node) -> void:
 	if game == null:

@@ -187,6 +187,13 @@ const WORLD_FLAGS := {
 	# flags, so `_trainer_defeat_flags()` can never see them -- real writers,
 	# just not that kind.
 	"opening:beat:road": "scripts/story/sequence_director.gd (_set_beat(BEATS.ROAD), OPENING_BEAT_PREFIX + \"road\")",
+	# TUTORIAL-CHAIN (OP23-04). Two new rungs and one new count; every one of
+	# them is written by something that ships, which is exactly what this
+	# registry is for.
+	"tam_tools_given": "data/dialogue/village.json's `village_tam_tools` (flag:tam_tools_given, same line as its three give: effects)",
+	"creature_bed_built_2": "scripts/build/home_progress.gd::maybe_set_creature_beds() (second placed bed)",
+	"creature_bed_built_3": "scripts/build/home_progress.gd::maybe_set_creature_beds() (third placed bed)",
+	"tournament_team_fed": "scripts/world/tournament.gd::_write_entry_flags() via team_fed() -- VOLATILE, written true AND false",
 	"tournament_team_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
 	"tournament_training_ready": "scripts/world/tournament.gd::_write_entry_flags() (RG19)",
 	"home_materials_gathered": "scripts/build/home_progress.gd",
@@ -388,3 +395,319 @@ func test_every_post_victory_conversation_sets_the_acknowledgment_flag() -> void
 		assert_true(effects.has("flag:%s" % ACKNOWLEDGED_FLAG),
 			("post-victory conversation '%s' does not set '%s' on its first line; a player who hears "
 			+ "only that speaker can never close the chapter's last objective") % [id, ACKNOWLEDGED_FLAG])
+
+
+## --- TUTORIAL-CHAIN (OP23-04): the guided one-step-at-a-time chain ----------
+##
+## The owner's report is that the opening "teaches nothing" and that the first
+## thing it asks for ("Find a way through the village gate") makes no sense.
+## The directive is a chain that names the NEXT thing to do, one step at a
+## time, "walking you through every tournament prerequisite until all are
+## cleared -- never fronting the full list."
+##
+## Three properties carry that, and each is checkable:
+##   1. the log shows what is done plus the ONE current rung, never more;
+##   2. every rung of the opening ladder names a concrete action AND a
+##      controller verb;
+##   3. the ladder actually covers the real tournament prerequisites, in an
+##      order where the two that EXPIRE (rest, food) are the last two before
+##      sign-up.
+##
+## Verified to fail against pre-TUTORIAL-CHAIN `main`: `guided_entries` did not
+## exist (a parse error on every test below), and with the old data every hint
+## check found no `how` key on any entry.
+
+const TOURNAMENT_CONFIG := "res://data/config/tournament.json"
+## Where the guided ladder starts and stops -- the opening's own rungs, the
+## ones OP23-04's "until tournament entry" names. Read as flag ids rather than
+## labels so a rewording cannot silently drop a rung out of these checks.
+const LADDER_FIRST := "opening:beat:road"
+const LADDER_LAST := "south_bridge_open"
+
+
+func _main_data() -> Array:
+	return _objectives().get("main", []) as Array
+
+
+## The ladder as authored, one dictionary per rung, first through last.
+func _ladder() -> Array:
+	var out: Array = []
+	var inside := false
+	for raw: Variant in _main_data():
+		var entry: Dictionary = raw as Dictionary
+		if str(entry.get("flag_id", "")) == LADDER_FIRST:
+			inside = true
+		if inside:
+			out.append(entry)
+		if str(entry.get("flag_id", "")) == LADDER_LAST:
+			break
+	return out
+
+
+func _flag_order() -> Array[String]:
+	var out: Array[String] = []
+	for raw: Variant in _main_data():
+		out.append(str((raw as Dictionary).get("flag_id", "")))
+	return out
+
+
+func _entry_config() -> Dictionary:
+	var file := FileAccess.open(TOURNAMENT_CONFIG, FileAccess.READ)
+	assert_true(file != null, "%s is missing" % TOURNAMENT_CONFIG)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return ((parsed as Dictionary).get("entry", {}) as Dictionary) if parsed is Dictionary else {}
+
+
+func test_a_fresh_save_is_shown_exactly_one_objective() -> void:
+	var guided: Array = log_reader.guided_entries(progression)
+	assert_eq(guided.size(), 1,
+		"a fresh save should be shown one step, not %d; the whole point of "
+			% guided.size() + "OP23-04 is that the full list is never fronted")
+	assert_false(bool((guided[0] as Dictionary).get("done", true)),
+		"the one step a fresh save is shown already reads done")
+	# And the full chain is still there underneath -- this is a presentation
+	# rule, not a deletion.
+	assert_true(log_reader.main_entries(progression).size() > guided.size(),
+		"main_entries() shrank to the guided view; the authored chain must stay whole")
+
+
+func test_the_guided_view_grows_by_exactly_one_row_per_completed_step() -> void:
+	var expected := 1
+	for flag: String in _flag_order():
+		var guided: Array = log_reader.guided_entries(progression)
+		assert_eq(guided.size(), expected,
+			"after %d completed steps the log should show %d rows, showed %d"
+				% [expected - 1, expected, guided.size()])
+		progression.set_flag(flag)
+		expected += 1
+	# The last flag of the chain is set: everything is done and nothing is open.
+	var finished: Array = log_reader.guided_entries(progression)
+	assert_eq(finished.size(), _flag_order().size(),
+		"a finished chapter should show its whole walked history")
+	for raw: Variant in finished:
+		assert_true(bool((raw as Dictionary).get("done", false)),
+			"'%s' reads open in a finished chapter" % str((raw as Dictionary).get("label", "")))
+
+
+func test_the_open_row_is_always_the_last_one_and_current_index_says_so() -> void:
+	for flag: String in _flag_order():
+		var guided: Array = log_reader.guided_entries(progression)
+		var current: int = log_reader.current_index(progression)
+		assert_eq(current, guided.size() - 1,
+			"the open rung must be the last row shown; got index %d of %d"
+				% [current, guided.size()])
+		# Every row before it is done, or the "one step at a time" promise is
+		# broken in the other direction: a skipped step left behind.
+		for i in guided.size() - 1:
+			assert_true(bool((guided[i] as Dictionary).get("done", false)),
+				"row %d is shown open behind the current rung" % i)
+		progression.set_flag(flag)
+	assert_eq(log_reader.current_index(progression), -1,
+		"a finished chapter still reports an open rung")
+
+
+## The tracked HUD line and the guided log's open row are the same step. Two
+## readers of one file that disagree about where the player is would be the
+## OP23-04 defect in a new place.
+func test_the_hud_line_and_the_guided_logs_open_row_are_the_same_step() -> void:
+	for flag: String in _flag_order():
+		var current: int = log_reader.current_index(progression)
+		var row: Dictionary = log_reader.guided_entries(progression)[current] as Dictionary
+		assert_eq(log_reader.tracked_text(progression), str(row.get("label", "")))
+		assert_eq(log_reader.tracked_hint(progression), str(row.get("how", "")))
+		progression.set_flag(flag)
+
+
+## --- the hints ---------------------------------------------------------------
+
+func test_every_opening_rung_names_a_concrete_action_and_a_controller_verb() -> void:
+	var ladder := _ladder()
+	assert_true(ladder.size() >= 10,
+		"only %d rungs between the first catch and the bridge; the opening ladder shrank"
+			% ladder.size())
+	var with_a_button := 0
+	for entry: Dictionary in ladder:
+		var how := str(entry.get("how", ""))
+		assert_false(how.is_empty(),
+			("rung '%s' has no `how` line. OP23-04's directive is that each step names "
+			+ "the concrete action -- a label alone is the thing the owner reported as "
+			+ "teaching nothing") % str(entry.get("id", "")))
+		if how.find("{") != -1:
+			with_a_button += 1
+	# Not every rung CAN name a button (winning a tournament is not a
+	# keypress), but most of them are a thing you press something to do.
+	assert_true(with_a_button >= 6,
+		"only %d of %d opening rungs name a controller verb at all"
+			% [with_a_button, ladder.size()])
+
+
+## The one rule that keeps the hints honest: a button is named by its ACTION
+## id, resolved live off the InputMap, never typed in as a letter. A rebind in
+## Settings must not be able to turn a hint into a lie.
+func test_hints_name_input_actions_not_hardcoded_buttons() -> void:
+	for entry: Dictionary in _ladder():
+		var how := str(entry.get("how", ""))
+		var at := how.find("{")
+		while at != -1:
+			var close := how.find("}", at)
+			assert_true(close != -1, "rung '%s' has an unclosed `{` in its `how`"
+				% str(entry.get("id", "")))
+			if close == -1:
+				return
+			var action := how.substr(at + 1, close - at - 1)
+			assert_true(InputMap.has_action(action),
+				("rung '%s' names `{%s}`, which is not an action in project.godot. "
+				+ "The hint would print the raw id at the player.")
+					% [str(entry.get("id", "")), action])
+			at = how.find("{", close)
+
+
+func test_a_resolved_hint_replaces_every_placeholder_with_a_real_button() -> void:
+	var resolved := str(log_reader.hint_text({"how": "Press {interact} then {inventory}."}))
+	assert_true(resolved.find("{") == -1 and resolved.find("}") == -1,
+		"a placeholder survived resolution: '%s'" % resolved)
+	assert_ne(resolved, "Press then .", "the placeholders resolved to nothing at all")
+	# The bound name, whatever the live device is -- not the action id.
+	assert_true(resolved.find("interact") == -1,
+		"the raw action id leaked into a resolved hint: '%s'" % resolved)
+
+
+func test_an_entry_with_no_how_line_resolves_to_an_empty_hint_not_a_blank_line() -> void:
+	assert_eq(log_reader.hint_text({"label": "Something."}), "")
+	# The late chapter authors no hints today; that must read as "draw
+	# nothing", never as an empty row under the objective.
+	for raw: Variant in _main_data():
+		var entry: Dictionary = raw as Dictionary
+		var how := str(entry.get("how", ""))
+		if how.is_empty():
+			continue
+		assert_ne(how.strip_edges(), "",
+			"rung '%s' authors a whitespace-only `how`" % str(entry.get("id", "")))
+
+
+## --- the owner's two 2026-08-23 directives ----------------------------------
+
+## "Three creature beds before the tournament... Each of the three entrants
+## gets its own bed." The count is not authored twice: it is pinned here
+## against the number of creatures the tournament actually enters.
+func test_the_bed_rung_asks_for_one_bed_per_tournament_entrant() -> void:
+	var wanted := int(_entry_config().get("min_party_size", 0))
+	assert_true(wanted >= 1, "tournament.json's entry.min_party_size is missing or zero")
+	var beds: Array = []
+	for raw: Variant in _main_data():
+		var entry: Dictionary = raw as Dictionary
+		if str(entry.get("id", "")) == "tournament_build_creature_beds":
+			beds = entry.get("count_flags", []) as Array
+	assert_false(beds.is_empty(), "objectives.json has no counted creature-bed rung")
+	assert_eq(beds.size(), wanted,
+		("the chain teaches %d creature beds and the tournament enters %d creatures. "
+		+ "The owner's 2026-08-23 directive is one bed per entrant; whichever number "
+		+ "moved, the other has to move with it.") % [beds.size(), wanted])
+
+
+func test_the_bed_rung_reads_a_count_and_is_done_only_on_the_last_bed() -> void:
+	var line := ""
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).find("Creature Bed") != -1:
+			line = str(entry.get("label", ""))
+	assert_true(line.ends_with("0/3"), "the bed rung should start at 0/3; got '%s'" % line)
+
+	progression.set_flag("creature_bed_built")
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).find("Creature Bed") != -1:
+			assert_true(str(entry.get("label", "")).ends_with("1/3"),
+				"one bed should read 1/3; got '%s'" % str(entry.get("label", "")))
+			assert_false(bool(entry.get("done", true)),
+				"the bed rung read DONE after one bed. This is the exact defect the "
+					+ "owner's three-bed directive is about: a player who builds one, "
+					+ "sleeps, and arrives with two tired creatures is told nothing.")
+
+
+## "Keep the satiety drain rate; teach it... an explicit 'feed your team' step
+## before tournament sign-up." Both halves: the rung exists, and it is
+## ordered where the directive puts it.
+func test_a_feed_your_team_rung_stands_between_the_sleep_and_the_sign_up() -> void:
+	var order := _flag_order()
+	var sleep := order.find("player_slept_at_home")
+	var fed := order.find("tournament_team_fed")
+	var enter := order.find("tournament_entered")
+	assert_true(fed != -1,
+		"there is no 'feed your team' rung. Owner directive 2026-08-23 section 2 "
+			+ "adds one before sign-up so a hungry team is a taught ritual, not a trap.")
+	assert_true(sleep < fed and fed < enter,
+		("the feed rung is at %d, between sleep (%d) and sign-up (%d) it is not. "
+		+ "Rest and food both EXPIRE -- teaching them anywhere but immediately "
+		+ "before the marshal sends a prepared team to her an hour stale.")
+			% [fed, sleep, enter])
+	var label := ""
+	for raw: Variant in _main_data():
+		if str((raw as Dictionary).get("flag_id", "")) == "tournament_team_fed":
+			label = str((raw as Dictionary).get("label", ""))
+	assert_true(label.to_lower().find("feed") != -1,
+		"the feed rung does not say 'feed' in words the player reads: '%s'" % label)
+
+
+## The rung the owner reported by name: "find a way through the village gate"
+## as the first thing the game asks of you, which "makes no sense". It must
+## still be about the gate -- and it must now say what to do.
+func test_the_gate_rung_gives_an_instruction_rather_than_a_riddle() -> void:
+	var entry: Dictionary = {}
+	for raw: Variant in _main_data():
+		if str((raw as Dictionary).get("flag_id", "")) == "road_gate_open":
+			entry = raw as Dictionary
+	assert_false(entry.is_empty(), "the road-gate rung is gone entirely")
+	var label := str(entry.get("label", ""))
+	assert_true(label.find("Find a way") == -1,
+		"the gate rung still reads as a riddle: '%s'" % label)
+	assert_true(str(entry.get("how", "")).to_lower().find("key") != -1,
+		"the gate rung's hint does not mention the key lying beside it, which is the "
+			+ "one fact that turns this beat from a puzzle into an instruction")
+
+
+## The rung the ladder was missing: the tools everything below it needs.
+func test_the_ladder_hands_over_tools_before_it_asks_for_gathering() -> void:
+	var order := _flag_order()
+	var tools := order.find("tam_tools_given")
+	var gather := order.find("home_materials_gathered")
+	assert_true(tools != -1,
+		"nothing in the chain sends the player to Tam for an axe, a pickaxe and a knife, "
+			+ "and every rung below gathering needs them (item_db.harvest_yield(): "
+			+ "WRONG tool yields nothing at all)")
+	assert_true(tools < gather,
+		"the chain asks for wood and stone (%d) before it hands over the tools (%d)"
+			% [gather, tools])
+
+
+## Out-of-order completion. `objectives.json`'s own comment already promised
+## this is safe -- "an entry whose flag is already set is simply done, and the
+## tracked line moves to the first one that is not" -- and the guided view has
+## to keep that promise while ALSO not showing a beat the player has not
+## reached. Both, together: the tracked line still steps over the early
+## completion when it gets there, and the log does not spoil it in the
+## meantime.
+func test_finishing_a_later_beat_early_neither_strands_nor_spoils_the_chain() -> void:
+	# Two rungs ahead of where a fresh save stands.
+	progression.set_flag("tam_tools_given")
+	var guided: Array = log_reader.guided_entries(progression)
+	assert_eq(guided.size(), 1,
+		"completing a later beat early put %d rows in the log; the player has still "
+			% guided.size() + "only reached the first")
+	for raw: Variant in guided:
+		assert_eq(str((raw as Dictionary).get("label", "")).find("Tam"), -1,
+			"a beat the player has not reached is being shown because its flag happens to be set")
+
+	# And when they do get there, it is already done and the line steps over it.
+	progression.set_flag("opening:beat:road")
+	progression.set_flag("road_gate_open")
+	assert_true(log_reader.tracked_text(progression).find("Tam") == -1,
+		"the tracked line went back to a beat that was already finished")
+	var after: Array = log_reader.guided_entries(progression)
+	var saw_tam_done := false
+	for raw: Variant in after:
+		var entry := raw as Dictionary
+		if str(entry.get("label", "")).find("Tam") != -1:
+			saw_tam_done = bool(entry.get("done", false))
+	assert_true(saw_tam_done,
+		"the early-completed beat is not shown as done once the player reaches it")

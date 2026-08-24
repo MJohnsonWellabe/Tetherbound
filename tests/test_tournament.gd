@@ -686,6 +686,63 @@ func test_a_freshly_caught_creature_does_not_disqualify_a_ready_team() -> void:
 		"a level-1 stray in the sixth-strongest slot cost the team its entry")
 
 
+## --- TUTORIAL-CHAIN (OP23-04): "feed your team" on its own ------------------
+##
+## Owner directive 2026-08-23 section 2 keeps the ~1.1/min satiety drain and
+## adds a taught rung before sign-up. That rung waits on `team_fed()`, which is
+## the FED third of the condition gate asked on its own -- so the objective can
+## say "feed your team" and be telling the truth about why it is open.
+##
+## Verified to fail against pre-TUTORIAL-CHAIN `main`: `team_fed` did not
+## exist.
+
+## A caught creature starts at `nourishment.start` (70), which is deliberately
+## ABOVE `fed_at` (0.55) so the meter is not empty the moment you own something
+## -- so "never eaten" is not the same as "hungry", and the rung is honest
+## about that: it opens when the team has DRAINED, which at 1.1/minute is about
+## fourteen minutes into owning them, well inside the opening ladder.
+func test_a_team_that_has_drained_below_the_threshold_is_not_fed() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(TOURNAMENT.team_fed(party),
+		"a freshly caught team should start fed; creature_condition.json's "
+			+ "nourishment.start is above fed_at on purpose")
+	var cfg: Dictionary = CONDITION.config()
+	var below := float(cfg.get("nourishment", {}).get("max", 100.0)) \
+		* float(cfg.get("nourishment", {}).get("fed_at", 0.55)) - 1.0
+	for i in int(party.size()):
+		party.at(i).set("nourishment", below)
+	assert_false(TOURNAMENT.team_fed(party),
+		"a team below the fed threshold still read as fed")
+
+
+func test_a_fed_team_reads_fed_even_while_it_is_tired() -> void:
+	# The whole reason this is separate from `condition_ready()`: a team that
+	# has eaten but not slept must CLOSE the feed rung and leave the rest one
+	# open, not sit under a line telling them to find food they already ate.
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	var cfg: Dictionary = CONDITION.config()
+	for i in int(party.size()):
+		party.at(i).set("nourishment", float(cfg.get("nourishment", {}).get("max", 100.0)))
+	assert_true(TOURNAMENT.team_fed(party), "a fully fed team read as unfed")
+	assert_false(TOURNAMENT.condition_ready(party),
+		"this test needs the team to still be OUT of overall condition to mean anything")
+
+
+func test_one_hungry_entrant_holds_the_feed_step_open() -> void:
+	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	_bring_the_party_into_condition()
+	assert_true(TOURNAMENT.team_fed(party))
+	party.at(0).set("nourishment", 0.0)
+	assert_false(TOURNAMENT.team_fed(party),
+		"one starving entrant did not reopen the feed step; the team is what is entered")
+
+
+func test_no_party_at_all_is_not_fed() -> void:
+	assert_false(TOURNAMENT.team_fed(party),
+		"an empty party read as a fed team, which would tick the rung before the "
+			+ "player owns anything to feed")
+
+
 ## Every entrant, in condition. Rested through the same call the creature bed
 ## makes, fed and cheered to the configured maxima.
 func _bring_the_party_into_condition() -> void:

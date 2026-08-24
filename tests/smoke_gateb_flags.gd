@@ -65,6 +65,7 @@ func _run() -> void:
 	await physics_frame
 
 	_check_creature_bed_flag()
+	_check_three_creature_beds()
 	_check_home_built_flag()
 	await _check_player_slept_flag()
 	_check_materials_gathered_flag()
@@ -82,6 +83,43 @@ func _check_creature_bed_flag() -> void:
 	bed.call("build_real")
 	if not bool(progression.call("has", "creature_bed_built")):
 		_fail("creature_bed.gd::build_real did not set creature_bed_built")
+
+
+## TUTORIAL-CHAIN (OP23-04) / owner directive 2026-08-23 section 1: the ladder
+## asks for a Creature Bed per tournament entrant, and the counted rung fills
+## from these three flags. Driven the same way `_check_home_built_flag()` below
+## drives `home_built` -- `register_building` is the exact bookkeeping
+## `build_placer._place` performs after a real placement, and
+## `restore_from_game` is the call site that reads it -- so this is a faithful
+## replay of "three beds are standing", not a shortcut around the trigger.
+##
+## Verified to fail against pre-TUTORIAL-CHAIN `main`: nothing set
+## `creature_bed_built_2` or `_3`, so the second assertion below came back
+## false where it now asserts true.
+func _check_three_creature_beds() -> void:
+	var progression: RefCounted = _game.get("progression")
+	for id: String in ["creature_bed_built", "creature_bed_built_2", "creature_bed_built_3"]:
+		progression.call("set_flag", id, false)
+	_game.set("placed_buildings", [])
+
+	# Two beds standing is TWO flags. A count that latches all three off one
+	# placement would tick the rung the moment the player builds their first
+	# bed, which is the defect the directive is about.
+	for i in 2:
+		_game.call("register_building", "creature_bed", Vector3(float(i) * 3.0, 0.0, 20.0))
+	_placer.call("restore_from_game", _game)
+	if not bool(progression.call("has", "creature_bed_built_2")):
+		_fail("two placed Creature Beds did not set creature_bed_built_2")
+	if bool(progression.call("has", "creature_bed_built_3")):
+		_fail("creature_bed_built_3 fired with only two beds standing; the rung would "
+			+ "read 3/3 and close a step the player has not finished")
+
+	_game.call("register_building", "creature_bed", Vector3(6.0, 0.0, 20.0))
+	_placer.call("restore_from_game", _game)
+	if not bool(progression.call("has", "creature_bed_built_3")):
+		_fail("a third placed Creature Bed did not set creature_bed_built_3; the "
+			+ "ladder's bed rung can never complete")
+	_game.set("placed_buildings", [])
 
 
 ## Drives `build_placer.gd::restore_from_game` -- the same `maybe_set_home_
