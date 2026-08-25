@@ -320,14 +320,23 @@
       "expected": "beat 5: 'It is yours; it has a name you typed'"
     },
     {
+      "id": "S02-27b",
+      "title": "let the naming prompt close and `grandpa_named` open",
+      "action": "wait",
+      "args": {
+        "seconds": 5
+      },
+      "expected": "`grandpa_named` is 3 lines (data/dialogue/opening.json) and opens the moment the name is confirmed, not when the player next talks to him. Measured on attempt 2: the 12 taps of S02-28 landed inside the naming prompt's own close and the conversation then sat open for its full 120 s held budget, stalling the walk to the bramblebun. This wait is a transition allowance, deliberately NOT `answer_prompts` on the walk -- that flag is off by default precisely so a harness cannot hide something blocking travel."
+    },
+    {
       "id": "S02-28",
       "title": "hear `grandpa_named` out",
       "action": "press",
       "args": {
         "control": "interact",
         "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "times": 20,
+        "settle_frames": 30
       },
       "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun"
     },
