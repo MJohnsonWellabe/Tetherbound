@@ -104,6 +104,8 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		return _result()
 	transcript.append("starting natural paid-build route with %s" % _stock_snapshot())
 
+	if not await _unlock_road_gate():
+		return _result()
 	for stop in AUTHORED_ROUTE:
 		if not await _harvest_authored_stop(stop):
 			return _result()
@@ -118,6 +120,70 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			_stock_snapshot(), int(TARGET_STOCK["wood"]), int(TARGET_STOCK["stone"]),
 			int(TARGET_STOCK["fiber"])])
 	return _result()
+
+
+## SIGIL-SEAL fallout, owner ruling 2026-08-25 ("make the route unlock the
+## gate"). The authored stop at (36, -16) sits BEYOND the village road gate,
+## which stands at (27.5, -16). That was reachable only for as long as the gate
+## did not really seal its road -- a player, or this route, simply walked round
+## the 4m leaf across open meadow. Once `road_gate.gd` grew wings wide enough to
+## actually stop someone, the route could not reach its own wood: "controller
+## could not reach authored wood at (36.0, -16.0) (stopped 9.0m short)".
+##
+## The gate was always meant to be opened, not bypassed -- `road_gate.gd`'s own
+## header calls this "a simple physical gate on the road out of the village,
+## with an easy key nearby", the whole point being that the player learns early
+## that gated things have keys. So the route now does what the gate was built to
+## teach: take the key at (24, -10), open the gate, walk through.
+##
+## Tolerant by design. A preceding evidence section may already have taken the
+## key or opened the gate, and neither is a failure -- the same rule
+## `_harvest_authored_stop` uses for an already-spent stop.
+func _unlock_road_gate() -> bool:
+	var gate: Node3D = _world.get_node_or_null(^"RoadGate") as Node3D
+	if gate == null:
+		transcript.append("no road gate in this world; nothing to unlock")
+		return true
+	if bool(gate.call("is_open")):
+		transcript.append("road gate already open; continuing")
+		return true
+
+	var key: Node3D = _world.get_node_or_null(^"GateKey") as Node3D
+	if key != null and is_instance_valid(key):
+		if not await _walk_to(key.global_position, 1.65, _travel_budget(key.global_position)) \
+				and _player.global_position.distance_to(key.global_position) > WITHIN_REACH:
+			_fail("controller could not reach the gate key at %s (stopped %.1fm short)" % [
+				key.global_position, _player.global_position.distance_to(key.global_position)])
+			return false
+		var key_prompt: Node3D = key.get_node_or_null(^"Interactable") as Node3D
+		if key_prompt == null:
+			key_prompt = key
+		if not await _press_and_confirm(key_prompt):
+			_fail("the gate key would not come up on the interact line")
+			return false
+		transcript.append("took the old key at (%.1f, %.1f)" % [
+			key.global_position.x, key.global_position.z])
+	else:
+		transcript.append("gate key already taken; continuing to the gate")
+
+	var prompt: Node3D = gate.get_node_or_null(^"Interactable") as Node3D
+	if prompt == null:
+		_fail("the road gate has no interact prompt; it cannot be opened")
+		return false
+	var at := gate.global_position
+	if not await _walk_to(at, 2.5, _travel_budget(at)) \
+			and _player.global_position.distance_to(at) > WITHIN_REACH:
+		_fail("controller could not reach the road gate at %s (stopped %.1fm short)" % [
+			at, _player.global_position.distance_to(at)])
+		return false
+	if not await _press_and_confirm(prompt):
+		_fail("the road gate would not open with the key in the satchel")
+		return false
+	if not bool(gate.call("is_open")):
+		_fail("the road gate was tried with the key in the satchel and stayed shut")
+		return false
+	transcript.append("unlocked the road gate with the old key")
+	return true
 
 
 func _verify_tool_hotbar() -> bool:
