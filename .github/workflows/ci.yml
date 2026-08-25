@@ -174,10 +174,20 @@ jobs:
     # above says raising it only moves the cliff, and that note was written
     # after the ceiling had already been raised once and clipped again the same
     # evening.
+    #
+    # FIVE shards, 2026-08-25: shard 3 and shard 4 both hit the 12-minute
+    # ceiling and were killed (reported as CANCELLED, not failed -- see this
+    # job's own comment above on why that reads as a human abort and costs a
+    # whole rerun) on two consecutive runs of the same unrelated commit
+    # (ci-consolidation-main-sync-lmztz6, runs 2415 attempts 1 and 2). Nothing
+    # in that push touched a test file; the suite had simply grown past four
+    # shards' remaining margin. Same fix as GATE-D's shard split before it:
+    # more shards, not a higher ceiling -- `run_tests.gd --shard=I/N` already
+    # takes any N.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -269,7 +279,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/4
+            -- --shard=${{ matrix.shard }}/5
 
   verify-playground:
     runs-on: ubuntu-latest
