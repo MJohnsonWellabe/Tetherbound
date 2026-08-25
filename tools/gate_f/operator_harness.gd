@@ -1771,6 +1771,16 @@ func _run_overhead_probe() -> void:
 	var verdict := "within budget"
 	if delta > 1.0:
 		verdict = "OVER the ~1 ms/frame the protocol asks about; the trace was NOT thinned to hide it"
+	elif delta < 0.0:
+		# A negative delta does not mean telemetry makes the game faster. The ON
+		# phase runs first and the OFF phase second, so anything that drifts
+		# between them -- other load on the box, the world still settling --
+		# lands entirely in the difference. All a negative reading supports is
+		# that the cost is smaller than this measurement can separate from
+		# noise, and saying more than that would be inventing a result.
+		verdict = ("BELOW this measurement's noise floor: the ON phase read faster than the OFF phase, "
+			+ "which is drift between the two 60 s windows, not a speed-up. Read it as "
+			+ "'under about %.1f ms/frame', not as zero") % maxf(0.5, absf(delta))
 	_overhead_note = ("%.1f s idle at %s: telemetry+capture ON mean %.3f ms/frame, OFF mean %.3f ms/frame, "
 		+ "delta %+.3f ms/frame (%s). Measured on this container's CPU only; no device fps, no VRAM.") % [
 			seconds, str(_pos_array()), with_on, with_off, delta, verdict]
