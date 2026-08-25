@@ -177,7 +177,7 @@
       "title": "capture GF-19-UI-08",
       "action": "capture",
       "args": {
-        "id": "GF-19-UI-08",
+        "id": "GF-19-UI-08a",
         "class": "19",
         "hud": "on",
         "camera_kind": "gameplay",

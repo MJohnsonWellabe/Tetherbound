@@ -386,7 +386,7 @@
       "title": "GF-19-UI-08: the HUD in ordinary exploration",
       "action": "capture",
       "args": {
-        "id": "GF-19-UI-08",
+        "id": "GF-19-UI-08b",
         "class": "19",
         "hud": "on",
         "camera_kind": "gameplay",

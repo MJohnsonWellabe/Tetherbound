@@ -456,7 +456,7 @@
       "title": "GF-14-COMBAT-09: switching under pressure",
       "action": "capture",
       "args": {
-        "id": "GF-14-COMBAT-09",
+        "id": "GF-14-COMBAT-09b",
         "class": "14",
         "hud": "on",
         "camera_kind": "gameplay",
@@ -772,7 +772,7 @@
       "title": "GF-14-COMBAT-12: the size and range spread",
       "action": "capture",
       "args": {
-        "id": "GF-14-COMBAT-12",
+        "id": "GF-14-COMBAT-12b",
         "class": "14",
         "hud": "on",
         "camera_kind": "gameplay",
