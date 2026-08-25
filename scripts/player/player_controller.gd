@@ -190,78 +190,12 @@ func _physics_process(delta: float) -> void:
 	# into-wall component of velocity, which is precisely the motion the
 	# step-up probe needs to test.
 	var planned_motion := Vector3(velocity.x, 0.0, velocity.z) * delta
-	var before := global_position
 	move_and_slide()
 	_try_step_up(planned_motion)
-	_unwedge(planned_motion, before, delta)
 	_resolve_landing(falling_speed)
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
-
-
-## OF15: slide along what you walk into instead of pinning against it.
-##
-## The owner's report was "movement getting WEDGED against geometry rather than
-## sliding". `_try_step_up` below answers half of it -- things low enough to
-## step onto -- and `move_and_slide` answers most of the rest, because a glancing
-## contact already slides. What neither answers is a POCKET: two contacts whose
-## normals oppose each other, where every component of the desired motion is
-## cancelled and the body sits still with the stick held. `smoke_traversal.gd`
-## reproduces one at (-43,-53), where the bake sites two medium rocks 1.3m and
-## 1.9m apart on a 6-degree slope (`tools/_probe_wedge.gd` measures it).
-##
-## Deliberately HORIZONTAL ONLY. Nothing here lifts the body, so this cannot
-## make a barrier climbable -- `STEP_HEIGHT`'s own note ("every barrier in the
-## game was sized against players who cannot climb") stays true, and a fence,
-## kerb, bank or arena ring blocks exactly what it blocked before. All this does
-## is pick which way ALONG the obstacle a held direction resolves to, which is
-## what a player does with the stick anyway.
-##
-## It waits `UNWEDGE_AFTER` before acting, so ordinary head-on contact still
-## stops you dead for a beat and a rock still reads as solid. Only a sustained
-## no-progress-while-pushing state deflects, which is the state the traversal
-## audit calls a defect.
-const UNWEDGE_AFTER := 0.2
-## Below this fraction of the motion actually planned for the frame, the body
-## is not making progress. Not zero: a pocket usually leaks a millimetre or two
-## per frame rather than exactly nothing.
-const UNWEDGE_PROGRESS := 0.25
-
-var _wedged_for := 0.0
-
-
-func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
-	var wanted := Vector2(planned.x, planned.z)
-	if not is_on_floor() or not is_on_wall() or wanted.length() < 0.0001:
-		_wedged_for = 0.0
-		return
-	var moved := Vector2(global_position.x - before.x, global_position.z - before.z)
-	if moved.length() >= wanted.length() * UNWEDGE_PROGRESS:
-		_wedged_for = 0.0
-		return
-
-	_wedged_for += delta
-	if _wedged_for < UNWEDGE_AFTER:
-		return
-
-	# Along the wall, not into it. Both tangents are valid; take the one that
-	# keeps more of what the player asked for, so pushing left round a rock
-	# leaves you travelling left rather than doubling back.
-	var normal := get_wall_normal()
-	var tangent := Vector2(-normal.z, normal.x)
-	if tangent.length() < 0.0001:
-		_wedged_for = 0.0
-		return
-	tangent = tangent.normalized()
-	if tangent.dot(wanted.normalized()) < 0.0:
-		tangent = -tangent
-
-	var speed := wanted.length() / maxf(delta, 0.0001)
-	velocity.x = tangent.x * speed
-	velocity.z = tangent.y * speed
-	move_and_slide()
-	_wedged_for = 0.0
 
 
 ## Step up small ledges instead of stopping dead against them.
