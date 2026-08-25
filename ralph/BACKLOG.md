@@ -626,6 +626,41 @@ five other lanes capturing and testing into each other; its own full-scene
 capture was starved out at 11 minutes without printing a line. Needs an idle box
 and one render, then either a fix or a note that the capture invented it.
 
+## Phase -2.0 — owner art direction: the ground plane (2026-08-25)
+
+Owner brought a reference (a Godot soulslike demo, `docs/reference/moong-*.jpg`)
+and said "make our world look like that", naming **grass** as what matters most.
+Full contract: `docs/ralph-prompts/72-WORLD-ground-cover-and-mid-layer.md`.
+
+### WORLD-GRASS — the ground is a picture of grass, not grass · `model: sonnet` · `tests: test_veg_corridor, test_scatter_rules, test_scatter_perf_budget, test_band_vegetation, test_scatter_fingerprint_covers_bands` · QUALITY BLOCKER (owner-directed)
+
+Measured on `main` at `ded2e697`. `vegetation.json`'s `grass` layer is placed in
+quantity — 110 clumps × 130, 900 strays, a 2400 verge — and then scaled to
+**0.14–0.42**, a few centimetres. The same file scales `bushes` 0.6–1.5 and
+`trees` 0.55–1.35. Its `corridor_fill.density_scale` is **1.0** where `bushes`
+and `trees` both sit at **6.0**, so the fill that covers the 7.5 km outside
+authored clumps barely places any. `lod_range` **55 m** leaves a bald ring
+around the player. Net effect at eye height: the player sees the terrain splat
+texture, which is precisely the blind critique's "60–90% of most frames is one
+flat green terrain material with confetti scatter."
+
+**No new assets. None may be added.** `Grass_Common_Tall` and `Grass_Wide_Tall`
+are already in the layer's `models` and already vendored, with `Fern_1` and
+`Clover_1/2` available for the mid-layer.
+
+**Sequencing matters.** `ralph/VISUAL-GROUNDCOVER` (`ea589dd9`, unlanded)
+rescaled `flowers` 0.07–0.26 → 0.025–0.09 and `bushes` 0.6–1.5 → 0.45–1.0 to fix
+the separate "flora ~3× oversize" defect. That is correct and must survive — but
+it **never touched `grass`**, so landed alone it makes the ground plane sparser,
+not fuller. Merge it first, keep its numbers, put the grass work on top.
+
+**The binding constraint is GPU, and this container cannot measure it**
+(`PERF-ROG-GPU`). `test_scatter_perf_budget.gd` caps placements at 260,000
+against a current bake of ~144,456 — that is the headroom, and the cap is not to
+be raised to fit a chosen number. OP23-01 just took per-frame CPU from 33–40 ms
+to 3.8–4.7 ms; do not spend that win here. State GPU risk as risk; do not claim
+a frame rate.
+
 ## Phase -1.9 — what PERF-ROG left open (2026-08-23)
 
 `OP23-01` itself is closed (`ralph/DONE.md`, `ralph/PERF_ROG_REPORT.md`): the
