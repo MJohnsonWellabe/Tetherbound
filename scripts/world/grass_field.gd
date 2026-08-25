@@ -159,50 +159,73 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 
-	# Metres, baked. An earlier version carried the mesh in [-0.5, 0.5] and let
-	# the shader's `blade_width` scale x -- which also scaled the OFFSET below,
-	# so the four blades of a tuft collapsed to two centimetres apart and every
-	# tuft rendered as one wide leaf. Real dimensions here, and `blade_width`
-	# is a multiplier around 1.0.
-	# 16mm half-width and a tip that keeps 40% of it. An earlier version tapered
-	# to 15% of an 11mm blade, which is a 1.6mm tip -- sub-pixel at any distance
-	# past a couple of metres, and it aliased into white speckle across the whole
-	# field rather than reading as grass.
-	# 11mm blades, and the number has now been wrong in both directions. At 19mm
-	# a blind critic measured them against the 1.80m trainer and called them
-	# 4-6cm where real meadow grass at this height is 3-6mm -- "a field of
-	# leeks". At a literal 6mm they are correct and read WORSE: a 6mm blade is
-	# under a pixel wide beyond a few metres on a 1280-wide frame, so the field
-	# dissolves into wisp and the software rasteriser has no coverage AA to
-	# recover it. 11mm is the compromise the render resolution actually
-	# supports, not the botanically right answer. Revisit if the game ever
-	# renders at a resolution where a thinner blade survives minification.
+	# Metres, baked, and the per-blade VARIATION is baked here too rather than
+	# computed in the shader. That is a deliberate move after a blind critic
+	# measured this field and reported "zero height variance -- the field has a
+	# mown ceiling... every blade a straight vertical constant-width rectangle",
+	# despite the shader carrying both a height jitter and a per-blade bend. Two
+	# reasons to bake it instead of arguing with that:
+	#
+	#   1. It cannot silently fail. The shader path depended on UV2 reaching the
+	#      vertex stage to tell one blade of a tuft from another; geometry that
+	#      is already different needs nothing delivered.
+	#   2. The critic's own prescription is a geometry one, not a parameter one:
+	#      "a moong-01 or palworld-03 grass card carries five to eight tapered,
+	#      curving blades of differing length, so one quad reads as a tuft and
+	#      the field reads as turf" -- and, on scaling the existing quad, "a 25:1
+	#      rectangle stays a reed at any size".
+	#
+	# So each blade in the tuft gets its own length, its own outward splay and
+	# its own forward curve, from a deterministic hash of its index. The shader
+	# then scales the whole thing by one height, and the differences survive.
 	var half_width := 0.0055
 	var spread := 0.075
 	for b in blades:
-		var yaw := TAU * float(b) / float(blades) + 0.37 * float(b)
+		# Deterministic per-blade variation. `fract(sin(i) * k)` rather than an
+		# RNG so the mesh is identical on every run and every machine -- this
+		# geometry is shared by every tuft in the world, so a mesh that varied
+		# per boot would be a different world per boot.
+		var r1 := fmod(abs(sin(float(b) * 12.9898) * 43758.5453), 1.0)
+		var r2 := fmod(abs(sin(float(b) * 78.233) * 24634.6345), 1.0)
+		var r3 := fmod(abs(sin(float(b) * 39.425) * 15731.7431), 1.0)
+		# Length: 0.55 to 1.0 of the tuft's height. The short ones are what stop
+		# the field having a flat top, and they are the majority on purpose --
+		# meadow is mostly base turf with a few stems standing above it.
+		var length := 0.55 + 0.45 * r1
+		# Splay: each blade leans out from the tuft centre, further the taller
+		# it is, so a tuft opens like a fan instead of standing as a bundle.
+		var splay := (0.10 + 0.22 * r2) * length
+		# Curve: the tip falls away from vertical. A blade of grass is an arc;
+		# a straight one reads as a reed however wide it is.
+		var curve := (0.25 + 0.55 * r3) * length
+		var yaw := TAU * (float(b) + 0.37 * r2) / float(blades)
 		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
 		var side := Vector3(dir.z, 0.0, -dir.x)
-		var normal := dir
-		# Blades of one tuft start at slightly different points so the tuft has
-		# a footprint rather than a single stem.
-		var offset := (dir * 0.6 + side * (float(b) - float(blades - 1) * 0.5)) * spread
+		var offset := dir * spread * (0.35 + 0.65 * r2)
 		var first := verts.size()
-		for s in segments + 1:
-			var t := float(s) / float(segments)
-			# Taper: full width at the base, a point at the tip.
-			var half := half_width * (1.0 - t * t * 0.55)
-			verts.append(offset + side * -half + Vector3.UP * t)
-			verts.append(offset + side * half + Vector3.UP * t)
-			normals.append(normal)
-			normals.append(normal)
+		for s2 in segments + 1:
+			var t := float(s2) / float(segments)
+			# Taper to a point rather than to a flat top. The critic measured
+			# "constant width top to bottom, squared-off top" and that squared
+			# tip is most of why a blade reads as a plank.
+			var half := half_width * (1.0 - t) * (1.0 - t * 0.35) + half_width * 0.06
+			# The arc: lean grows with t^1.7, so the base stays planted and the
+			# top half does the bending.
+			var lean := dir * (splay * t + curve * pow(t, 1.7))
+			var up := Vector3.UP * (t * length)
+			verts.append(offset + lean + side * -half + up)
+			verts.append(offset + lean + side * half + up)
+			# Normal tilted toward the blade's own face, so a fan of blades
+			# catches the light at a spread of angles instead of one.
+			normals.append((dir * 0.55 + Vector3.UP * 0.8).normalized())
+			normals.append((dir * 0.55 + Vector3.UP * 0.8).normalized())
 			uvs.append(Vector2(0.0, t))
 			uvs.append(Vector2(1.0, t))
 			var blade_id := float(b) / float(blades)
 			uv2s.append(Vector2(blade_id, 0.0))
 			uv2s.append(Vector2(blade_id, 0.0))
-		for s in segments:
-			var a := first + s * 2
+		for s2 in segments:
+			var a := first + s2 * 2
 			indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
 
 	var arrays := []
