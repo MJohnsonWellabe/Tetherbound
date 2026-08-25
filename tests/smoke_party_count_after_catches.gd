@@ -444,10 +444,31 @@ func _close_in_until_offered(target: Node3D) -> void:
 			await physics_frame
 
 
-## Is the arbiter's current winner this creature (or something under it)?
+## Is the arbiter's current winner an offer that would engage THIS creature?
+##
+## Not the same question as "is the winner this creature's node". The wild
+## engage line is published by `encounter_director.gd::interaction_offer()` --
+## "Engage Bramblebun" -- so the director is the winning PROVIDER for exactly
+## the press this harness wants, and it is neither the target nor an ancestor
+## of it. Judging by node identity alone therefore rejected the offer it was
+## waiting for, span the sidestep search out to its limit, and reported
+## "the winning prompt is EncounterDirector, not the target" -- which is the
+## engage prompt, being offered, for the creature in question.
+##
+## So ask the director which body the press would actually take:
+## `interaction_activate()` engages `_engageable()`, so that IS the answer, and
+## comparing against it keeps the check honest -- a director offering a
+## DIFFERENT creature still correctly reads as "not our target".
 func _arbiter_offers(arbiter: Object, target: Node3D) -> bool:
 	var winner: Variant = arbiter.call("winning_provider")
 	if winner == null or not (winner is Node):
 		return false
 	var node := winner as Node
-	return node == target or target.is_ancestor_of(node) or node.is_ancestor_of(target)
+	if node == target or target.is_ancestor_of(node) or node.is_ancestor_of(target):
+		return true
+	if node.has_method("_engageable"):
+		var candidate: Variant = node.call("_engageable")
+		if candidate is Node3D and is_instance_valid(candidate as Node3D):
+			var body := candidate as Node3D
+			return body == target or target.is_ancestor_of(body) or body.is_ancestor_of(target)
+	return false
