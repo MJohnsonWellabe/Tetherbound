@@ -690,6 +690,7 @@ close view if useful, at first occurrence, as-found.
 | GF-19-UI-01…07 | 19 | each pause tab, first-open state | menu | n/a | each tab is game UI, not debug tooling | on |
 | GF-19-UI-08 | 19 | HUD in ordinary exploration | world | natural | HUD footprint/legibility at 1080p | on |
 | GF-19-UI-09 | 19 | party strip at 5/5 | world | natural | exactly five slots, no sixth implied | on |
+| GF-19-UI-10 | 19 | first level-up moment, announcement on screen | wherever the journey levels first (S03) | natural | the level-up actually announces itself to the player | on |
 | GF-20-NIGHT-01 | 20 | first natural nightfall, no torch | wherever the journey is | natural | night legibility floor | on |
 | GF-20-NIGHT-02 | 20 | same position, torch drawn | same | natural | torch value and hold pose as-shipped | on |
 | GF-21-WEATHER-01…n | 21 | each weather preset first naturally encountered (clear/cloudy/fog/rain) | as-played | natural | weather identity; palette holds | on |
@@ -698,6 +699,19 @@ close view if useful, at first occurrence, as-found.
 
 Fable does not produce, stage, select or edit any of these images. A
 planned frame that cannot be captured is a manifest entry with a reason.
+
+**Coordinator amendment, 2026-08-25 (pre-freeze, recorded not silent).**
+`GF-19-UI-10` was added to this table by the Gate F coordinator before the
+candidate freeze. It is not new coverage: §L.4 already requires "first level-up
+moment captured; announcement verified visible ... shot + event" in S03, but
+§G defined no row for it, and §C.4 forbids the operator inventing a planned
+shot id. Without the row the requirement was unsatisfiable by anyone — the
+operator may not create it and the transcriber may not either. The row states
+§L.4's own words and adds nothing beyond them.
+
+This is the only amendment made to Fable's Phase A protocol by the coordinator.
+It resolves an internal inconsistency; it does not change what is tested, and
+it was made before any evidence was gathered.
 
 ---
 
