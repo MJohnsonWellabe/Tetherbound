@@ -1,0 +1,1044 @@
+{
+  "id": "S06",
+  "title": "Stone & Root / Band 2: bridge -> Old Quarry -> rootstone -> Burrow Warrens -> guardian -> exit toward river",
+  "lane": "journey",
+  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-06, RT-07), section E.1 (CB-04's band 2 fights and CB-05, the enclosed-geometry Warrens fight), section E.5 (objective `clear_the_burrow_warrens`), section G (GF-08-QUARRY-01, GF-09-WARRENS-01/02/03, GF-16-GATHER-02, GF-14-COMBAT-04b, GF-14-COMBAT-05) and section H (0.1 Hz plus the band handoff window).",
+  "_comment_warrens_anchor": "AMBIGUITY: section D's RT-06 and section G both put the Warrens mouth at (-420,2470), which is data/config/map_landmarks.json's REGION centre. data/config/burrow_warrens.json's own `site.at` is (-357,2610), about 150 m away. Transcribed by walking the protocol's anchor first (where the GF-09-WARRENS-01 frame is taken, because that is the anchor section G names) and then on to the site the complex is actually built at.",
+  "_comment_interior": "Section D describes RT-07 only as 'Warrens interior (entry -> guardian -> exit) | interior' -- it supplies no coordinates. The interior anchors below are derived from burrow_warrens.json's chamber offsets against `site.at` and are the transcriber's, not the protocol's.",
+  "steps": [
+    {
+      "id": "S06-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "\u00a7B: this segment's entry save is `S05-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. \u00a7B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S06-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S05-exit.json"
+      },
+      "expected": "\u00a7B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S06-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S06-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S06-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S06-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "\u00a7B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S06-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; \u00a7I.4 records the load duration"
+    },
+    {
+      "id": "S06-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S06-10",
+      "title": "the team travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 3
+      },
+      "expected": "three entrants across the bridge"
+    },
+    {
+      "id": "S06-11",
+      "title": "the Warrens objective is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "clear_the_burrow_warrens"
+      },
+      "expected": "\u00a7E.5 objective 14/24 `clear_the_burrow_warrens`, 'Clear the Burrow Warrens beneath the Old Quarry.'"
+    },
+    {
+      "id": "S06-12",
+      "title": "\u00a7H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "\u00a7H: 0.1 Hz segment plus event-forced frames, with the band 1 -> band 2 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-13",
+      "title": "open the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "\u00a7E.5 at a major objective: open the Map tab, zoom, verify pan/centering and zoom persistence"
+    },
+    {
+      "id": "S06-14",
+      "title": "zoom out to see band 2",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_out",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "\u00a7E.5's map-usefulness record"
+    },
+    {
+      "id": "S06-15",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell"
+    },
+    {
+      "id": "S06-16",
+      "title": "\u00a7E.5 nav note -- clear_the_burrow_warrens",
+      "action": "note",
+      "args": {
+        "text": "\u00a7E.5 navigation record, objective 14/24 `clear_the_burrow_warrens`. Wording: 'Clear the Burrow Warrens beneath the Old Quarry.' It names WHAT and a WHERE relative to a second named place -- the strongest form in the chapter, because it tells the player to find the quarry first. Player-visible information: `the_old_quarry` and `the_burrow_warrens` are named regions on the map; the quarry is a visible landform north-east of the bridge. Route decision: follow the road north-east to the quarry, then look for the Warrens beneath it, because the objective's own wording orders the two. Reasoned from GF-07-BRIDGE-02 (S05) and the map frame taken above. Operator: record whether the map named either place before it was discovered, and the time to the decision."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-17",
+      "title": "walk to the quarry picket",
+      "action": "move_to",
+      "args": {
+        "at": [
+          315.0,
+          1668.0
+        ],
+        "budget_frames": 18900,
+        "close_enough": 3.5,
+        "held_budget_frames": 10800
+      },
+      "expected": "\u00a7E.1 CB-04: 'S06: quarry_picket_dorn' -- Dorn stands at (315,1668) on the way in"
+    },
+    {
+      "id": "S06-18",
+      "title": "challenge Dorn",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "a band 2 trainer on the approach"
+    },
+    {
+      "id": "S06-19",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "trainer flow stages send-out"
+    },
+    {
+      "id": "S06-20",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S06-21",
+      "title": "capture GF-14-COMBAT-04b",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-04b",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-04: representative fight per band -- S06, quarry_picket_dorn",
+        "intended_proof": "per-case: band 2's representative fight"
+      },
+      "expected": "\u00a7G: CB-04: representative fight per band -- S06, quarry_picket_dorn -- per-case: band 2's representative fight"
+    },
+    {
+      "id": "S06-22",
+      "title": "fight Dorn",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 34,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 per-fight record: duration, hit events, switches, camera corrections, target_on_screen dropouts, pathing stalls, difficulty read, XP/reward"
+    },
+    {
+      "id": "S06-23",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S06-24",
+      "title": "walk into the Old Quarry",
+      "action": "move_to",
+      "args": {
+        "at": [
+          403.0,
+          1794.0
+        ],
+        "budget_frames": 6300,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "\u00a7D RT-06: bridge (0,1330) -> Old Quarry (403,1794) -> Warrens mouth (-420,2470)"
+    },
+    {
+      "id": "S06-25",
+      "title": "the quarry region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_old_quarry"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_old_quarry`"
+    },
+    {
+      "id": "S06-26",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the quarry's own content joins the POI set"
+    },
+    {
+      "id": "S06-27",
+      "title": "capture GF-08-QUARRY-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-08-QUARRY-01",
+        "class": "8",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "quarry arrival, (403,1794) entry",
+        "intended_proof": "quarry identity; rootstone visibly present"
+      },
+      "expected": "\u00a7G: quarry arrival, (403,1794) entry -- quarry identity; rootstone visibly present"
+    },
+    {
+      "id": "S06-28",
+      "title": "break out rootstone",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 90
+      },
+      "expected": "\u00a7L.3: 'Gathering with visible tool use ... rootstone (pickaxe)'. The deposit's own prompt is 'Break out rootstone'"
+    },
+    {
+      "id": "S06-29",
+      "title": "capture GF-16-GATHER-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-16-GATHER-02",
+        "class": "16",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "pickaxe on rootstone deposit, quarry",
+        "intended_proof": "tier material gathering"
+      },
+      "expected": "\u00a7G: pickaxe on rootstone deposit, quarry -- tier material gathering"
+    },
+    {
+      "id": "S06-30",
+      "title": "\u00a7L.3 band 2 crafting has no authored site",
+      "action": "note",
+      "args": {
+        "text": "\u00a7L.3 requires 'S06 orb_greater + reinforced tools -- each paid at real cost'. \u00a7B's S06 span does not mention crafting and the protocol names no crafting site in band 2, so the workbench below is placed by the player at the quarry, where the tier material is. RECORDED as the transcriber's siting of a requirement \u00a7L.3 states and \u00a7B's span omits."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-31",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the pause shell, opened by its bound button"
+    },
+    {
+      "id": "S06-32",
+      "title": "cycle to the Build tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 12
+      },
+      "expected": "four RB presses reach Build"
+    },
+    {
+      "id": "S06-33",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "'Open Build Menu' is the tab's only focusable control"
+    },
+    {
+      "id": "S06-34",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "it reopens on the last category and piece used this session"
+    },
+    {
+      "id": "S06-35",
+      "title": "move to Crafting",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_left",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "`build_menu.gd::CATEGORY_ORDER` is survival, crafting, structures, furniture; Crafting holds the Workbench (10 wood / 4 stone)"
+    },
+    {
+      "id": "S06-36",
+      "title": "arm the workbench",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "paid at the real cost -- free_build is OFF for the whole run"
+    },
+    {
+      "id": "S06-37",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the placement camera takes over"
+    },
+    {
+      "id": "S06-38",
+      "title": "place the workbench",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "\u00a7L.3's crafting site for band 2"
+    },
+    {
+      "id": "S06-39",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "`GameState.placed_buildings` gains the workbench"
+    },
+    {
+      "id": "S06-40",
+      "title": "use the workbench",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the craft panel opens over the world"
+    },
+    {
+      "id": "S06-41",
+      "title": "let the craft panel open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "\u00a7E.4 lists the craft panel as one of the surfaces the matrix crosses"
+    },
+    {
+      "id": "S06-42",
+      "title": "the craft panel focuses a recipe",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "without focus the panel cannot be driven on a pad at all"
+    },
+    {
+      "id": "S06-43",
+      "title": "craft the greater orb",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "\u00a7L.3: 'S06 orb_greater + reinforced tools -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence the cost was paid"
+    },
+    {
+      "id": "S06-44",
+      "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
+      "id": "S06-45",
+      "title": "focus the next recipe",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol names the recipes but not their order in the panel; a focus_move that does not land FAILs rather than crafting the wrong thing"
+    },
+    {
+      "id": "S06-46",
+      "title": "craft the reinforced tool",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "\u00a7L.3's second band 2 recipe, paid at the real cost"
+    },
+    {
+      "id": "S06-47",
+      "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
+      "id": "S06-48",
+      "title": "leave the craft panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "\u00a7L.6 T01's shape: the surface hands the world back"
+    },
+    {
+      "id": "S06-49",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is back to 'world'; \u00a7E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
+      "id": "S06-50",
+      "title": "walk to the Warrens mouth anchor",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -420.0,
+          2470.0
+        ],
+        "budget_frames": 44100,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "\u00a7D RT-06's third anchor and \u00a7G's location for GF-09-WARRENS-01"
+    },
+    {
+      "id": "S06-51",
+      "title": "the Warrens region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_burrow_warrens"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_burrow_warrens`"
+    },
+    {
+      "id": "S06-52",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the complex's own content joins the POI set"
+    },
+    {
+      "id": "S06-53",
+      "title": "capture GF-09-WARRENS-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-09-WARRENS-01",
+        "class": "9",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Warrens mouth, (-420,2470)",
+        "intended_proof": "dungeon entrance announces itself"
+      },
+      "expected": "\u00a7G: Warrens mouth, (-420,2470) -- dungeon entrance announces itself"
+    },
+    {
+      "id": "S06-54",
+      "title": "the protocol's Warrens anchor and the built site are 150 m apart",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: this frame is taken at the protocol's own anchor (-420,2470), which is map_landmarks.json's REGION centre. data/config/burrow_warrens.json's `site.at` -- where the mound and the mouth are actually built -- is (-357,2610), about 150 m north-east. If GF-09-WARRENS-01 does not have the mound in it, that distance is the reason and it is itself a finding about the map's own pin. The walk continues to the built site."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-55",
+      "title": "walk to the mouth chamber",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -357.0,
+          2616.0
+        ],
+        "budget_frames": 7200,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "burrow_warrens.json's `site.at` (-357,2610) plus the `mouth` chamber's own (0,6) offset. \u00a7D RT-07: 'Warrens interior (entry -> guardian -> exit) | interior' -- the protocol supplies no interior coordinates"
+    },
+    {
+      "id": "S06-56",
+      "title": "enter the Warrens",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "\u00a7L.5's gate/crossing row: the Warrens vault is one of the chapter's gates and this is the entrance to it"
+    },
+    {
+      "id": "S06-57",
+      "title": "let the interior stage",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "the complex's own lighting takes over from the sky"
+    },
+    {
+      "id": "S06-58",
+      "title": "walk into the hall chamber",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -357.0,
+          2632.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "burrow_warrens.json's `hall` chamber at (0,22) from `site.at`"
+    },
+    {
+      "id": "S06-59",
+      "title": "capture GF-09-WARRENS-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-09-WARRENS-02",
+        "class": "9",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "interior chamber mid-clear, interior",
+        "intended_proof": "interior readability, lighting"
+      },
+      "expected": "\u00a7G: interior chamber mid-clear, interior -- interior readability, lighting"
+    },
+    {
+      "id": "S06-60",
+      "title": "engage what is in the hall",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "\u00a7E.1 CB-05: 'Warrens fight (enclosed geometry) | inside Burrow Warrens chambers'"
+    },
+    {
+      "id": "S06-61",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera has to acquire both combatants inside a chamber"
+    },
+    {
+      "id": "S06-62",
+      "title": "combat owns input underground",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S06-63",
+      "title": "capture GF-14-COMBAT-05",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-05",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-05: Warrens fight, enclosed geometry, inside Burrow Warrens chambers",
+        "intended_proof": "per-case: camera fields under enclosure"
+      },
+      "expected": "\u00a7G: CB-05: Warrens fight, enclosed geometry, inside Burrow Warrens chambers -- per-case: camera fields under enclosure"
+    },
+    {
+      "id": "S06-64",
+      "title": "fight in the chamber",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 28,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 CB-05 records the camera fields specifically: a fight pressed against a wall is where `target_on_screen` drops out and the camera-correction count means something"
+    },
+    {
+      "id": "S06-65",
+      "title": "recentre the camera mid-fight",
+      "action": "press",
+      "args": {
+        "control": "camera_recenter",
+        "hold": "tap"
+      },
+      "expected": "\u00a7F: 'Camera correction: any scripted camera input needed solely to restore the target/route to view'. Every one of these is counted"
+    },
+    {
+      "id": "S06-66",
+      "title": "finish the chamber fight",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 18,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 per-fight record"
+    },
+    {
+      "id": "S06-67",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S06-68",
+      "title": "walk into the warren side chamber",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -373.0,
+          2632.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "burrow_warrens.json's `warren` chamber at (-16,22) from `site.at`"
+    },
+    {
+      "id": "S06-69",
+      "title": "break out rootstone underground",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 90
+      },
+      "expected": "the complex's own deposits; \u00a7L.3's tier-material row"
+    },
+    {
+      "id": "S06-70",
+      "title": "walk into the den",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -357.0,
+          2650.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "burrow_warrens.json's `den` chamber at (0,40) from `site.at`; the guardian's offset is measured from it"
+    },
+    {
+      "id": "S06-71",
+      "title": "capture GF-09-WARRENS-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-09-WARRENS-03",
+        "class": "9",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "guardian encounter, guardian chamber",
+        "intended_proof": "memorable-encounter staging"
+      },
+      "expected": "\u00a7G: guardian encounter, guardian chamber -- memorable-encounter staging"
+    },
+    {
+      "id": "S06-72",
+      "title": "face the Warren Guardian",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "\u00a7E.1 CB-04: 'S06: ... warrens guardian'. \u00a7D RT-07's midpoint"
+    },
+    {
+      "id": "S06-73",
+      "title": "let the guardian fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S06-74",
+      "title": "fight the guardian",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 36,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 per-fight record; the guardian is the band's memorable encounter and its difficulty read is \u00a7D's material"
+    },
+    {
+      "id": "S06-75",
+      "title": "switch pilot under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "\u00a7E.1 CB-09's shape, crossed naturally: pilot handoff and camera handoff inside a chamber"
+    },
+    {
+      "id": "S06-76",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 per-fight record"
+    },
+    {
+      "id": "S06-77",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge in an enclosed fight"
+    },
+    {
+      "id": "S06-78",
+      "title": "finish the guardian",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 per-fight record"
+    },
+    {
+      "id": "S06-79",
+      "title": "let the guardian fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "the vault door is what 'you have beaten the thing standing in the doorway' opens"
+    },
+    {
+      "id": "S06-80",
+      "title": "the Warrens are cleared",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "warrens_cleared"
+      },
+      "expected": "`warrens_cleared` closes \u00a7E.5 objective 14/24"
+    },
+    {
+      "id": "S06-81",
+      "title": "walk into the vault",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -342.0,
+          2650.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "burrow_warrens.json's `vault` chamber at (15,40) from `site.at`; the prize is 'Take the heartstone'"
+    },
+    {
+      "id": "S06-82",
+      "title": "take the prize",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the clear reward; the inventory snapshot is the evidence"
+    },
+    {
+      "id": "S06-83",
+      "title": "walk back out of the Warrens",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -357.0,
+          2616.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "\u00a7D RT-07: 'entry -> guardian -> exit'. The exit leg is part of the route the protocol names"
+    },
+    {
+      "id": "S06-84",
+      "title": "walk out toward the ranger camp on the way north",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -259.0,
+          2256.5
+        ],
+        "budget_frames": 18900,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "data/config/map_landmarks.json's `band2_ranger_camp` (-259,2256.5): 'the only way the map tells a player looking for a rest stop where it is'. \u00a7B: S06 exits 'toward river'"
+    },
+    {
+      "id": "S06-85",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the camp's own content joins the POI set"
+    },
+    {
+      "id": "S06-86",
+      "title": "band 2 was actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 2000.0
+      },
+      "expected": "\u00a7D RT-06 is roughly 1.5 km of corridor before the interior; no pacing claim may come from a shortcut (\u00a70.6)"
+    },
+    {
+      "id": "S06-87",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 3000
+      },
+      "expected": "\u00a7C.2"
+    },
+    {
+      "id": "S06-88",
+      "title": "band 2's longest empty stretch is on the record",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 150.0
+      },
+      "expected": "\u00a7D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the only half that proves the meter accumulates; a PASS records a watch item and its size, it is not a passing grade"
+    },
+    {
+      "id": "S06-89",
+      "title": "\u00a7B save handoff",
+      "action": "note",
+      "args": {
+        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. \u00a7B also branches X04 (combat lab) from this file."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S06-90",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+    },
+    {
+      "id": "S06-91",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "S06-92",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S06-93",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S06-94",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S06-95",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+    },
+    {
+      "id": "S06-96",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S06-exit.json"
+      },
+      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S06-exit.json`"
+    },
+    {
+      "id": "S06-97",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S06-98",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S06 exit save written and copied."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

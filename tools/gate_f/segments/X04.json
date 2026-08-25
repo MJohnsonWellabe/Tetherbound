@@ -1,0 +1,1278 @@
+{
+  "id": "X04",
+  "title": "Combat lab (protocol E.1 / section 5)",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.1, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S04-exit, S06-exit, S09-exit.",
+  "_scope": "E.1's own framing: 'Every journey fight already emits combat_* telemetry. The lab adds the cases natural play avoids.' CB-01 to CB-06 are sited in the journey lane and are recorded there; X04 owns CB-07 to CB-12, and CB-13's fallback belongs to X07.",
+  "_env_partial": "E.1's own caveat travels with this evidence: '[ENV-PARTIAL]: synthetic piloting cannot feel responsiveness/latency; twitch-feel is [OWNER-ONLY].'",
+  "_no_teleport": "X04 is not a DIAG segment and contains no teleport step. Every fight below is reached by walking from a real journey save.",
+  "_shot_ids": "Protocol G defines the combat family as 'GF-14-COMBAT-01...n | one per CB-01...CB-13 case'. The numbering here keys the shot to the CB case: GF-14-COMBAT-07 is CB-07's frame. The journey lane takes the numbers for the cases it owns, and X07 takes 13 if CB-13's fallback runs.",
+  "steps": [
+    {
+      "id": "X04-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "Protocol E.1's combat lab. Human never fights: every fight below is a creature the player is directly piloting in real time."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-002",
+      "title": "CB-01 to CB-06 are the journey lane's",
+      "action": "note",
+      "args": {
+        "text": "CB-01 first ambush (S02); CB-02 practice_trainer (13,9) then Mira; CB-03 tournament rounds (S04); CB-04 a representative fight per band (S05-S09); CB-05 the Warrens fight in enclosed geometry (S06); CB-06 the stronghold fights including warden_aldis (90.2,7569.4), whose combat camera must be verified at battle start for every stronghold fight. None of them is re-run here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-003",
+      "title": "AMBIGUITY: CB-12's segment is not named",
+      "action": "note",
+      "args": {
+        "text": "E.1's 'Where / how' column for CB-12 says only 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets' and names no segment, unlike CB-07 to CB-11 which all say 'X04'. Transcribed into X04 because E.1's header gives the lab 'the cases natural play avoids' and a deliberate smallest/largest pairing is one. If the journey happens to cover it, Phase B has both records rather than neither."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-004",
+      "title": "AMBIGUITY: L.5's 'X04 optional: lose a round' cannot be staged from S04-exit",
+      "action": "note",
+      "args": {
+        "text": "Protocol L.5's tournament row says 'S04 full; E.6.12 unready states; X04 optional: lose a round and record the offered path'. X04's entry saves are S04-exit, S06-exit and S09-exit -- all of them AFTER the tournament is won, and the bracket does not re-offer a round already taken. Transcribed as this note rather than as steps that would need a save the protocol does not give X04."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-005",
+      "title": "Part 1: from S04-exit",
+      "action": "note",
+      "args": {
+        "text": "Post-tournament, pre-South-Bridge. CB-07 needs south_bridge_grunt still standing."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-006",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X04-007",
+      "title": "seed slot 4 from S04-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S04-exit.json"
+      },
+      "expected": "the journey's S04-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X04-008",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X04-009",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X04-010",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X04-011",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X04-012",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X04-013",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X04-014",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X04-015",
+      "title": "CB-07",
+      "action": "note",
+      "args": {
+        "text": "'Intentional loss | X04: take an under-leveled team into south_bridge_grunt; record the full defeat -> consequence -> recovery loop (satchel, respawn, party state) | telemetry + shots.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-016",
+      "title": "what CB-07 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-017",
+      "title": "party state before the intentional loss",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `party` field is the before half of the party-state record: levels, hp, fed, rested, bond"
+    },
+    {
+      "id": "X04-018",
+      "title": "cycle the weakest party member into the pilot seat",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "LB puts the under-levelled creature in front; the team is taken in as it stands, not weakened by any granted state"
+    },
+    {
+      "id": "X04-019",
+      "title": "walk to the South Bridge grunt",
+      "action": "move_to",
+      "args": {
+        "at": [
+          14.0,
+          1314.0
+        ]
+      },
+      "expected": "the player walks to south_bridge_grunt (14,1314), band 1's gate fight"
+    },
+    {
+      "id": "X04-020",
+      "title": "take the fight",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "the trainer's conversation ends in a fight and the trainer stages a send-out"
+    },
+    {
+      "id": "X04-021",
+      "title": "the fight is running",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "X04-022",
+      "title": "GF-14-COMBAT-07: the intentional loss",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-07",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-07: intentional loss"
+      },
+      "expected": "a frame of the under-levelled team losing the South Bridge fight"
+    },
+    {
+      "id": "X04-023",
+      "title": "do not disengage; take the loss",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the fight runs to a defeat; the defeat -> consequence -> recovery loop is the record"
+    },
+    {
+      "id": "X04-024",
+      "title": "where the defeat put the player",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `pos`, `party` and `inventory` are the consequence record: respawn point, party state and what the satchel kept"
+    },
+    {
+      "id": "X04-025",
+      "title": "multiple death satchels persist",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the death satchel dropped by the defeat is a point of interest in the world; the count is read from live queries"
+    },
+    {
+      "id": "X04-026",
+      "title": "recover from the death satchel",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the satchel's prompt opens storage_panel.gd and the recovery loop closes"
+    },
+    {
+      "id": "X04-027",
+      "title": "close the satchel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "B closes the panel"
+    },
+    {
+      "id": "X04-028",
+      "title": "CB-08",
+      "action": "note",
+      "args": {
+        "text": "'Creature faint mid-fight | X04: let active faint; record faint feedback, forced switch, post-fight condition/bed pressure | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-029",
+      "title": "what CB-08 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-030",
+      "title": "walk into the band 1 field",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks to the band 1 field"
+    },
+    {
+      "id": "X04-031",
+      "title": "engage a wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts"
+    },
+    {
+      "id": "X04-032",
+      "title": "let the active creature take hits",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the active creature is allowed to faint rather than being switched out"
+    },
+    {
+      "id": "X04-033",
+      "title": "GF-14-COMBAT-08: the faint and the forced switch",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-08",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-08: creature faint mid-fight"
+      },
+      "expected": "a frame of the faint feedback and the forced switch"
+    },
+    {
+      "id": "X04-034",
+      "title": "the forced switch happened",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "the fight is still running with a new pilot: faint feedback, forced switch"
+    },
+    {
+      "id": "X04-035",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves; the fainted creature's post-fight condition is the bed-pressure record"
+    },
+    {
+      "id": "X04-036",
+      "title": "post-fight condition",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `party` field carries hp/fed/rested/bond for the fainted creature: the bed pressure the next rest has to answer"
+    },
+    {
+      "id": "X04-037",
+      "title": "CB-09",
+      "action": "note",
+      "args": {
+        "text": "'Switching under pressure | X04 + at least one journey fight: party_cycle (LB) mid-combat while taking hits; verify pilot handoff, camera handoff, no input loss | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-038",
+      "title": "what CB-09 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-039",
+      "title": "engage another wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts"
+    },
+    {
+      "id": "X04-040",
+      "title": "take hits without switching",
+      "action": "wait",
+      "args": {
+        "seconds": 15
+      },
+      "expected": "the fight is under pressure before the first switch"
+    },
+    {
+      "id": "X04-041",
+      "title": "switch mid-combat under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "party_cycle swaps pilot; HP/cooldown states coherent (L.6 T06)"
+    },
+    {
+      "id": "X04-042",
+      "title": "the pilot handoff kept the fight",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is still 'combat': no input loss across the handoff"
+    },
+    {
+      "id": "X04-043",
+      "title": "attack immediately after the switch",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap"
+      },
+      "expected": "the new pilot answers its first input: no input loss"
+    },
+    {
+      "id": "X04-044",
+      "title": "switch again while still taking hits",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 40
+      },
+      "expected": "three more switches under pressure; the camera hands off to each new active without losing the opponent"
+    },
+    {
+      "id": "X04-045",
+      "title": "GF-14-COMBAT-09: switching under pressure",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-09",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-09: switching under pressure"
+      },
+      "expected": "a frame taken across a mid-combat switch, with the opponent still framed"
+    },
+    {
+      "id": "X04-046",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-047",
+      "title": "CB-11",
+      "action": "note",
+      "args": {
+        "text": "'Arena-edge stress | X04: drive fight to arena boundary; verify containment (no phasing out), boundary readability | telemetry + shots.' E.6 case 7 adds: 'Push a fight to the arena boundary and hold there 10 s.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-048",
+      "title": "what CB-11 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-049",
+      "title": "engage a wild for the boundary test",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts"
+    },
+    {
+      "id": "X04-050",
+      "title": "drive the fight to the arena boundary",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 300
+      },
+      "expected": "the player pilots straight at the arena boundary"
+    },
+    {
+      "id": "X04-051",
+      "title": "hold at the boundary for ten seconds",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 600
+      },
+      "expected": "E.6 case 7: held against the boundary for 10 s. Containment holds: no phasing out."
+    },
+    {
+      "id": "X04-052",
+      "title": "GF-14-COMBAT-11: the arena boundary",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-11",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-11: arena-edge stress"
+      },
+      "expected": "a frame at the arena boundary: containment and boundary readability"
+    },
+    {
+      "id": "X04-053",
+      "title": "still inside the arena",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "the fight is still running and the player is still inside the arena; this event's `pos` and `combat` fields are the containment record"
+    },
+    {
+      "id": "X04-054",
+      "title": "drive at the boundary from the other side",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 1.0,
+        "y": 1.0,
+        "frames": 300
+      },
+      "expected": "a second heading into the boundary, so containment is not proved on one side only"
+    },
+    {
+      "id": "X04-055",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-056",
+      "title": "CB-12",
+      "action": "note",
+      "args": {
+        "text": "'Size/range spread | fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-057",
+      "title": "what CB-12 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-058",
+      "title": "find a smallest wild (pipwing/bramblebun class)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks the band 1 field looking for a smallest wild"
+    },
+    {
+      "id": "X04-059",
+      "title": "rescan for a smallest wild",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X04-060",
+      "title": "engage the smallest wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the smallest body class"
+    },
+    {
+      "id": "X04-061",
+      "title": "exercise the melee moveset (smallest)",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 40
+      },
+      "expected": "the quick attack, at melee range"
+    },
+    {
+      "id": "X04-062",
+      "title": "exercise the charged moveset (smallest)",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long",
+        "times": 3,
+        "settle_frames": 60
+      },
+      "expected": "the charged attack, held to charge; melee vs ranged movesets are both recorded"
+    },
+    {
+      "id": "X04-063",
+      "title": "back off to ranged distance (smallest)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 120
+      },
+      "expected": "the player pilots out to ranged distance against the same opponent"
+    },
+    {
+      "id": "X04-064",
+      "title": "exercise the moveset at range (smallest)",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 40
+      },
+      "expected": "the same moveset at range; reach and whiff behaviour are recorded"
+    },
+    {
+      "id": "X04-065",
+      "title": "finish the smallest fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-066",
+      "title": "find a largest wild (meadowhart/tuskroot class)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks the band 1 field looking for a largest wild"
+    },
+    {
+      "id": "X04-067",
+      "title": "rescan for a largest wild",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X04-068",
+      "title": "engage the largest wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the largest body class"
+    },
+    {
+      "id": "X04-069",
+      "title": "exercise the melee moveset (largest)",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 40
+      },
+      "expected": "the quick attack, at melee range"
+    },
+    {
+      "id": "X04-070",
+      "title": "exercise the charged moveset (largest)",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long",
+        "times": 3,
+        "settle_frames": 60
+      },
+      "expected": "the charged attack, held to charge; melee vs ranged movesets are both recorded"
+    },
+    {
+      "id": "X04-071",
+      "title": "back off to ranged distance (largest)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 120
+      },
+      "expected": "the player pilots out to ranged distance against the same opponent"
+    },
+    {
+      "id": "X04-072",
+      "title": "exercise the moveset at range (largest)",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 40
+      },
+      "expected": "the same moveset at range; reach and whiff behaviour are recorded"
+    },
+    {
+      "id": "X04-073",
+      "title": "finish the largest fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-074",
+      "title": "GF-14-COMBAT-12: the size and range spread",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-12",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-12: size/range spread"
+      },
+      "expected": "a frame of the size and range spread"
+    },
+    {
+      "id": "X04-075",
+      "title": "CB-10",
+      "action": "note",
+      "args": {
+        "text": "'Camera stress near geometry | X04: fight pressed against Warrens wall, stronghold interior wall, and a large tree/rock in band 1; record target_on_screen ratio and camera correction count | telemetry + shots.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-076",
+      "title": "what CB-10 records",
+      "action": "note",
+      "args": {
+        "text": "E.1's per-fight record: duration, attacks/damage exchanges (hit events), switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward, and the operator's observation on whether the fight read as fair/readable/purposeful (observation, not verdict)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-077",
+      "title": "CB-10 site 1 of 3: a large tree/rock in band 1",
+      "action": "note",
+      "args": {
+        "text": "The band 1 site is reachable from this entry save; the Warrens wall needs S06-exit and the stronghold interior wall needs S09-exit, which is why X04 has three entry saves."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-078",
+      "title": "find a large tree or rock in band 1",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks to a large tree/rock in the band 1 field"
+    },
+    {
+      "id": "X04-079",
+      "title": "engage a wild beside it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts with the geometry between the camera and the opponent"
+    },
+    {
+      "id": "X04-080",
+      "title": "press the fight against the geometry",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 300
+      },
+      "expected": "the fight is driven up against the tree/rock"
+    },
+    {
+      "id": "X04-081",
+      "title": "camera corrections at the band 1 geometry",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 120
+      },
+      "expected": "any camera input needed solely to restore the target to view is a camera correction (protocol F) and is counted"
+    },
+    {
+      "id": "X04-082",
+      "title": "GF-14-COMBAT-10: camera stress, band 1 geometry",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-10",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-10: camera stress near geometry"
+      },
+      "expected": "a frame of the fight pressed against band 1 geometry, with the target_on_screen state visible"
+    },
+    {
+      "id": "X04-083",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-084",
+      "title": "Part 2: from S06-exit",
+      "action": "note",
+      "args": {
+        "text": "CB-10 site 2 of 3: the Warrens wall, in enclosed geometry."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-085",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X04-086",
+      "title": "seed slot 4 from S06-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S06-exit.json"
+      },
+      "expected": "the journey's S06-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X04-087",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X04-088",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X04-089",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X04-090",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X04-091",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X04-092",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X04-093",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X04-094",
+      "title": "walk to the Warrens mouth",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -420.0,
+          2470.0
+        ]
+      },
+      "expected": "the player walks to the Burrow Warrens mouth (-420,2470), RT-06's last anchor"
+    },
+    {
+      "id": "X04-095",
+      "title": "go into the chambers",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 600
+      },
+      "expected": "the player walks in to an interior chamber"
+    },
+    {
+      "id": "X04-096",
+      "title": "engage a wild inside the chambers",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts in enclosed geometry"
+    },
+    {
+      "id": "X04-097",
+      "title": "press the fight against the Warrens wall",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 1.0,
+        "y": -1.0,
+        "frames": 300
+      },
+      "expected": "the fight is driven up against a chamber wall"
+    },
+    {
+      "id": "X04-098",
+      "title": "camera corrections at the Warrens wall",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 120
+      },
+      "expected": "camera corrections and target_on_screen dropouts are counted against the wall"
+    },
+    {
+      "id": "X04-099",
+      "title": "GF-14-COMBAT-10-warrens: camera stress, Warrens wall",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-10-warrens",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-10: camera stress near geometry, Warrens wall"
+      },
+      "expected": "a frame of the fight pressed against a Warrens chamber wall"
+    },
+    {
+      "id": "X04-100",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-101",
+      "title": "Part 3: from S09-exit",
+      "action": "note",
+      "args": {
+        "text": "CB-10 site 3 of 3: a stronghold interior wall. E.1 CB-06 also requires that the combat camera be verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch -- and that verification is the journey lane's; what X04 adds here is the wall-pressed camera stress."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-102",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X04-103",
+      "title": "seed slot 4 from S09-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S09-exit.json"
+      },
+      "expected": "the journey's S09-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X04-104",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X04-105",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X04-106",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X04-107",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X04-108",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X04-109",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X04-110",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X04-111",
+      "title": "walk to the Hall threshold",
+      "action": "move_to",
+      "args": {
+        "at": [
+          150.0,
+          7595.0
+        ]
+      },
+      "expected": "the player walks to Meadows Hall (150,7595), RT-11's end anchor"
+    },
+    {
+      "id": "X04-112",
+      "title": "go inside to an interior wall",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 600
+      },
+      "expected": "the player walks in to an interior space with a wall to press against"
+    },
+    {
+      "id": "X04-113",
+      "title": "engage the nearest stronghold fight",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a stronghold fight starts"
+    },
+    {
+      "id": "X04-114",
+      "title": "target_on_screen at battle start",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "the combat camera acquires both combatants at fight start including stronghold/teleport-staged fights (L.6 T05); this event's `combat.target_on_screen` is the t=0 record"
+    },
+    {
+      "id": "X04-115",
+      "title": "press the fight against the interior wall",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 1.0,
+        "y": -1.0,
+        "frames": 300
+      },
+      "expected": "the fight is driven up against a stronghold interior wall"
+    },
+    {
+      "id": "X04-116",
+      "title": "switch pilot against the wall",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "target_on_screen is recorded at every switch as well as at t=0"
+    },
+    {
+      "id": "X04-117",
+      "title": "camera corrections at the stronghold wall",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 120
+      },
+      "expected": "camera corrections and target_on_screen dropouts are counted against the wall"
+    },
+    {
+      "id": "X04-118",
+      "title": "GF-14-COMBAT-10-stronghold: camera stress, stronghold interior wall",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-10-stronghold",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-10: camera stress near geometry, stronghold interior wall"
+      },
+      "expected": "a frame of the fight pressed against a stronghold interior wall"
+    },
+    {
+      "id": "X04-119",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 120
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X04-120",
+      "title": "CB-13 is not this segment's",
+      "action": "note",
+      "args": {
+        "text": "E.1 CB-13 asks for 'at least one night fight (torch conditions) and one rain/fog fight, as natural play allows; else X07 pins and labels DIAG'. Natural play is the journey lane's, and the fallback is X07's by the protocol's own wording. X04 stages neither."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X04-121",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "Per-fight records for Phase B are the combat_start / combat_hit / combat_switch / combat_end / faint events in this segment's events.jsonl, with the GF-14-COMBAT frames correlated by artefact id."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

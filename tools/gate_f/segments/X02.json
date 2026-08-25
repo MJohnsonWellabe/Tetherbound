@@ -1,0 +1,1743 @@
+{
+  "id": "X02",
+  "title": "Build, craft and gather lab (protocol E.3 / section 7)",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.3, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry save per protocol B: S03-exit.",
+  "_economy": "E.3's authoritative economy rule, verbatim: 'building and crafting are resource-bound. free_build is D16 temporary dev scaffolding, default OFF, and the Build tab banners when it is on; OP21-10 separately established free build never implies free craft. The authoritative run keeps free_build OFF everywhere; X02 step 12 toggles it on/off once purely to verify the banner and the setting, then restores OFF and says so in telemetry.' Every build and craft below is paid at real cost.",
+  "_no_teleport": "X02 is not a DIAG segment and contains no teleport step. It branches from the S03-exit journey save so the lab starts from a real player state and a real satchel.",
+  "steps": [
+    {
+      "id": "X02-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "Protocol E.3's deep lab. S03 already builds the tutorial home and three creature beds under the real economy; this is the lab at a flat site near the village. Recorded throughout: construction time, failed placements + why, correction attempts, snap failures, collision defects, final dimensions, camera obstruction during placement, input leakage events, full resource ledger (gathered/spent/refunded)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-002",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X02-003",
+      "title": "seed slot 4 from S03-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03-exit.json"
+      },
+      "expected": "the journey's S03-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X02-004",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X02-005",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X02-006",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X02-007",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X02-008",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X02-009",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X02-010",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X02-011",
+      "title": "AMBIGUITY: 'a flat site near the village' has no coordinate",
+      "action": "note",
+      "args": {
+        "text": "E.3 sites the lab 'at a flat site near the village' and the protocol's route table (section D) gives no anchor for it. Instrumentation request section 6 says a move_to anchor should come from the route table. (44,-16) is the transcriber's choice: due east of the Road Gate landmark at (27.5,-16) in data/config/map_landmarks.json, on the road's own flat ground and clear of the village buildings RT-02 walks between. Recorded as an ambiguity rather than presented as the protocol's number."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-012",
+      "title": "walk to the lab site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          44.0,
+          -16.0
+        ]
+      },
+      "expected": "the player walks east past the Road Gate to the flat build site"
+    },
+    {
+      "id": "X02-013",
+      "title": "the satchel state the lab starts from",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the world owns input; this event's `inventory` snapshot opens the resource ledger"
+    },
+    {
+      "id": "X02-014",
+      "title": "E.3 step 1",
+      "action": "note",
+      "args": {
+        "text": "'Gather under the current economy with visible tool use: craft axe (4 wood/3 stone/2 fiber) and pickaxe (3/4/2) if not carried over; record swing animation firing, pickup feedback, felled-resource behavior.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-015",
+      "title": "open the crafting station",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the camp/workbench prompt opens the craft panel; crafting is 'at the campfire or workbench' and it is resource-bound"
+    },
+    {
+      "id": "X02-016",
+      "title": "the craft panel owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "panel"
+      },
+      "expected": "input_context names a panel owner: the craft panel holds the input-owner group"
+    },
+    {
+      "id": "X02-017",
+      "title": "focus the axe recipe",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "ui_down, delivered as a physical event, moves focus onto a recipe row"
+    },
+    {
+      "id": "X02-018",
+      "title": "craft the axe",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the axe costs 4 wood / 3 stone / 2 fiber and the satchel pays it"
+    },
+    {
+      "id": "X02-019",
+      "title": "focus the pickaxe recipe",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus moves to the next recipe row"
+    },
+    {
+      "id": "X02-020",
+      "title": "craft the pickaxe",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the pickaxe costs 3 wood / 4 stone / 2 fiber and the satchel pays it"
+    },
+    {
+      "id": "X02-021",
+      "title": "close the craft panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "B closes the craft panel and returns the world"
+    },
+    {
+      "id": "X02-022",
+      "title": "assign the axe to the hotbar",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the Satchel shortcut opens the pause shell onto the Satchel tab"
+    },
+    {
+      "id": "X02-023",
+      "title": "focus the axe",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "expected": "focus moves onto the axe's slot"
+    },
+    {
+      "id": "X02-024",
+      "title": "assign it",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap"
+      },
+      "expected": "assign uses backpack_assign (L3), not the hotbar buttons (L.6 T04)"
+    },
+    {
+      "id": "X02-025",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes and the world is live again"
+    },
+    {
+      "id": "X02-026",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap"
+      },
+      "expected": "the hotbar slot equips the axe in the world"
+    },
+    {
+      "id": "X02-027",
+      "title": "swing the axe at a tree",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 30
+      },
+      "expected": "chopping is interact under CONTROLLER-MAP: the swing animation fires, the pickup feeds the satchel, and the felled resource behaves"
+    },
+    {
+      "id": "X02-028",
+      "title": "GF-16-GATHER-01: axe mid-swing on a tree",
+      "action": "capture",
+      "args": {
+        "id": "GF-16-GATHER-01",
+        "class": "16",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "visible tool use"
+      },
+      "expected": "a frame of the axe mid-swing on a tree"
+    },
+    {
+      "id": "X02-029",
+      "title": "equip the pickaxe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "the second hotbar slot equips the pickaxe"
+    },
+    {
+      "id": "X02-030",
+      "title": "swing the pickaxe at a stone deposit",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 30
+      },
+      "expected": "mining is interact too: swing animation firing, pickup feedback, felled-resource behaviour"
+    },
+    {
+      "id": "X02-031",
+      "title": "GF-16-GATHER-02 is not this segment's",
+      "action": "note",
+      "args": {
+        "text": "Protocol G sites GF-16-GATHER-02 at 'pickaxe on rootstone deposit | quarry', which is the journey's S06. X02 takes GF-16-GATHER-01 only."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-032",
+      "title": "gather the wood, stone and fibre the build costs",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 45
+      },
+      "expected": "the structure below costs 16 stone of floors, 6 wood/2 stone per wall, 5 wood for the doorway and 4 wood/3 stone per roof piece, and every one of them is paid"
+    },
+    {
+      "id": "X02-033",
+      "title": "E.3 step 2",
+      "action": "note",
+      "args": {
+        "text": "'Build the required 2x2 enclosed structure: 4 floors (4 stone each), perimeter walls (6 wood/2 stone each), one doorway with a usable door (5 wood), roof pieces (4 wood/3 stone each) to full cover. Exercise repeat-place (place multiple floors without re-opening the catalogue), rotation (build_rotate, both directions), snapping (build_snap_cycle; record snap failures), cancel (build_cancel with a ghost armed).'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-034",
+      "title": "open the build catalogue",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens and build_menu.gd takes the input-owner group"
+    },
+    {
+      "id": "X02-035",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_catalogue"
+      },
+      "expected": "input_context is 'build_catalogue'"
+    },
+    {
+      "id": "X02-036",
+      "title": "focus the floor piece",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "expected": "focus moves onto a build cell; focus_move FAILs if focus did not move"
+    },
+    {
+      "id": "X02-037",
+      "title": "arm the floor ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused build cell arms a ghost and the game enters placement"
+    },
+    {
+      "id": "X02-038",
+      "title": "a ghost is armed",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context is 'build_placement'"
+    },
+    {
+      "id": "X02-039",
+      "title": "GF-17-BUILD-03: armed ghost + placement UI",
+      "action": "capture",
+      "args": {
+        "id": "GF-17-BUILD-03",
+        "class": "17",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "placement affordances"
+      },
+      "expected": "a frame of the armed ghost and the placement UI"
+    },
+    {
+      "id": "X02-040",
+      "title": "place the first floor",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the floor is placed and 4 stone leaves the satchel"
+    },
+    {
+      "id": "X02-041",
+      "title": "repeat-place the other three floors",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 30
+      },
+      "expected": "repeat-place: multiple floors placed without re-opening the catalogue, 4 stone each"
+    },
+    {
+      "id": "X02-042",
+      "title": "still in placement after repeat-place",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "the ghost is still armed; repeat-place did not drop the player back to the catalogue"
+    },
+    {
+      "id": "X02-043",
+      "title": "cycle the snap mode",
+      "action": "press",
+      "args": {
+        "control": "build_snap_cycle",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 20
+      },
+      "expected": "build_snap_cycle walks the snap modes; snap failures are recorded"
+    },
+    {
+      "id": "X02-044",
+      "title": "rotate the ghost one way",
+      "action": "press",
+      "args": {
+        "control": "build_rotate_left",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 15
+      },
+      "expected": "rotation, first direction"
+    },
+    {
+      "id": "X02-045",
+      "title": "rotate the ghost the other way",
+      "action": "press",
+      "args": {
+        "control": "build_rotate_right",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 15
+      },
+      "expected": "rotation, both directions"
+    },
+    {
+      "id": "X02-046",
+      "title": "cancel with a ghost armed",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel with a ghost armed disarms it and returns cleanly"
+    },
+    {
+      "id": "X02-047",
+      "title": "the world owns input after the cancel",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is back to 'world' with no ghost armed"
+    },
+    {
+      "id": "X02-048",
+      "title": "open the catalogue for perimeter wall 1",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue re-opens"
+    },
+    {
+      "id": "X02-049",
+      "title": "focus the wall piece (1)",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 2
+      },
+      "expected": "focus reaches the wall cell"
+    },
+    {
+      "id": "X02-050",
+      "title": "arm the wall ghost (1)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the wall ghost is armed"
+    },
+    {
+      "id": "X02-051",
+      "title": "place perimeter wall 1",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the wall is placed and 6 wood / 2 stone leaves the satchel"
+    },
+    {
+      "id": "X02-052",
+      "title": "cancel the armed ghost (1)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-053",
+      "title": "open the catalogue for perimeter wall 2",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue re-opens"
+    },
+    {
+      "id": "X02-054",
+      "title": "focus the wall piece (2)",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 2
+      },
+      "expected": "focus reaches the wall cell"
+    },
+    {
+      "id": "X02-055",
+      "title": "arm the wall ghost (2)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the wall ghost is armed"
+    },
+    {
+      "id": "X02-056",
+      "title": "place perimeter wall 2",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the wall is placed and 6 wood / 2 stone leaves the satchel"
+    },
+    {
+      "id": "X02-057",
+      "title": "cancel the armed ghost (2)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-058",
+      "title": "open the catalogue for perimeter wall 3",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue re-opens"
+    },
+    {
+      "id": "X02-059",
+      "title": "focus the wall piece (3)",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 2
+      },
+      "expected": "focus reaches the wall cell"
+    },
+    {
+      "id": "X02-060",
+      "title": "arm the wall ghost (3)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the wall ghost is armed"
+    },
+    {
+      "id": "X02-061",
+      "title": "place perimeter wall 3",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the wall is placed and 6 wood / 2 stone leaves the satchel"
+    },
+    {
+      "id": "X02-062",
+      "title": "cancel the armed ghost (3)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-063",
+      "title": "open the catalogue for the doorway",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue re-opens"
+    },
+    {
+      "id": "X02-064",
+      "title": "focus the doorway piece",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "focus reaches the doorway cell"
+    },
+    {
+      "id": "X02-065",
+      "title": "arm the doorway ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the doorway ghost is armed"
+    },
+    {
+      "id": "X02-066",
+      "title": "place the doorway with a usable door",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "one doorway with a usable door is placed and 5 wood leaves the satchel"
+    },
+    {
+      "id": "X02-067",
+      "title": "cancel the armed ghost",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-068",
+      "title": "open the catalogue for the roof",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue re-opens"
+    },
+    {
+      "id": "X02-069",
+      "title": "focus the roof piece",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 4
+      },
+      "expected": "focus reaches the roof cell"
+    },
+    {
+      "id": "X02-070",
+      "title": "arm the roof ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the roof ghost is armed"
+    },
+    {
+      "id": "X02-071",
+      "title": "place roof pieces to full cover",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 30
+      },
+      "expected": "roof pieces to full cover, 4 wood / 3 stone each"
+    },
+    {
+      "id": "X02-072",
+      "title": "cancel the armed ghost",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed and the structure is closed"
+    },
+    {
+      "id": "X02-073",
+      "title": "GF-17-BUILD-01: the 2x2 exterior complete",
+      "action": "capture",
+      "args": {
+        "id": "GF-17-BUILD-01",
+        "class": "17",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "structure coheres (planes/junctions visible)"
+      },
+      "expected": "a frame of the finished 2x2 exterior"
+    },
+    {
+      "id": "X02-074",
+      "title": "E.3 step 3",
+      "action": "note",
+      "args": {
+        "text": "'Enter and exit the structure through its door; close the door; verify interior camera behavior; shot GF-17 interior + exterior.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-075",
+      "title": "open the door",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the door's prompt opens it"
+    },
+    {
+      "id": "X02-076",
+      "title": "walk inside",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 90
+      },
+      "expected": "the player walks in through the doorway"
+    },
+    {
+      "id": "X02-077",
+      "title": "close the door behind the player",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the door closes"
+    },
+    {
+      "id": "X02-078",
+      "title": "look around the interior",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 120
+      },
+      "expected": "interior camera behaviour is recorded: obstruction, clipping, how close the rig sits"
+    },
+    {
+      "id": "X02-079",
+      "title": "GF-17-BUILD-02: interior with door, camp and creature bed",
+      "action": "capture",
+      "args": {
+        "id": "GF-17-BUILD-02",
+        "class": "17",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "interior usable; bed occupied"
+      },
+      "expected": "a frame of the interior with the door, the camp and the occupied creature bed. This shot is taken after E.3 step 4 places them; it is listed here because protocol G names it against step 3's interior."
+    },
+    {
+      "id": "X02-080",
+      "title": "E.3 step 4",
+      "action": "note",
+      "args": {
+        "text": "'Place camp (12/8/10) and a creature_bed inside; rest a creature in it; record the bed's unavailability window.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-081",
+      "title": "open the catalogue for the camp",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-082",
+      "title": "focus the camp",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 5
+      },
+      "expected": "focus reaches the camp cell"
+    },
+    {
+      "id": "X02-083",
+      "title": "arm the camp ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the camp ghost is armed"
+    },
+    {
+      "id": "X02-084",
+      "title": "place the camp",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the camp costs 12 wood / 8 stone / 10 fibre and the satchel pays it"
+    },
+    {
+      "id": "X02-085",
+      "title": "cancel the armed ghost",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-086",
+      "title": "open the catalogue for the creature bed",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-087",
+      "title": "focus the creature bed",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 6
+      },
+      "expected": "focus reaches the creature_bed cell"
+    },
+    {
+      "id": "X02-088",
+      "title": "arm the bed ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the bed ghost is armed"
+    },
+    {
+      "id": "X02-089",
+      "title": "place the creature bed inside",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the bed is placed inside the structure and the satchel pays its cost"
+    },
+    {
+      "id": "X02-090",
+      "title": "cancel the armed ghost",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-091",
+      "title": "open the bed panel",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the bed's prompt opens creature_bed_panel.gd"
+    },
+    {
+      "id": "X02-092",
+      "title": "the bed panel owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "panel"
+      },
+      "expected": "input_context names a panel owner"
+    },
+    {
+      "id": "X02-093",
+      "title": "rest a creature in it",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused party member is bedded"
+    },
+    {
+      "id": "X02-094",
+      "title": "close the bed panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "B closes the panel"
+    },
+    {
+      "id": "X02-095",
+      "title": "watch the bed's unavailability window",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the bed's unavailability window is recorded: how long it is and what the panel says while it runs"
+    },
+    {
+      "id": "X02-096",
+      "title": "re-open the bed panel during the window",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the panel re-opens and states the bed's unavailability"
+    },
+    {
+      "id": "X02-097",
+      "title": "close it again",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "B closes the panel"
+    },
+    {
+      "id": "X02-098",
+      "title": "E.3 step 5",
+      "action": "note",
+      "args": {
+        "text": "'Dismantle one wall and the camp (build_dismantle); verify the refund arithmetic against data/items/buildables.json costs in the inventory snapshot.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-099",
+      "title": "inventory before the dismantles",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the world owns input; this event's `inventory` snapshot is the before half of the refund arithmetic"
+    },
+    {
+      "id": "X02-100",
+      "title": "dismantle one wall",
+      "action": "press",
+      "args": {
+        "control": "build_dismantle",
+        "hold": "tap"
+      },
+      "expected": "the wall comes down and its refund lands in the satchel"
+    },
+    {
+      "id": "X02-101",
+      "title": "dismantle the camp",
+      "action": "press",
+      "args": {
+        "control": "build_dismantle",
+        "hold": "tap"
+      },
+      "expected": "the camp comes down and its refund lands in the satchel"
+    },
+    {
+      "id": "X02-102",
+      "title": "inventory after the dismantles",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `inventory` snapshot is the after half; the refund arithmetic is verified against data/items/buildables.json's costs"
+    },
+    {
+      "id": "X02-103",
+      "title": "E.3 step 6",
+      "action": "note",
+      "args": {
+        "text": "'Exit Build and immediately resume normal play: move, jump, open Satchel, cycle party -- recording input_context on every step (input leakage is the target).'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-104",
+      "title": "exit Build",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "nothing is armed and the Build surface is left"
+    },
+    {
+      "id": "X02-105",
+      "title": "input_context immediately after leaving Build",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world'"
+    },
+    {
+      "id": "X02-106",
+      "title": "move",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 30
+      },
+      "expected": "movement is live immediately"
+    },
+    {
+      "id": "X02-107",
+      "title": "input_context while moving",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world'"
+    },
+    {
+      "id": "X02-108",
+      "title": "jump",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap"
+      },
+      "expected": "the jump fires"
+    },
+    {
+      "id": "X02-109",
+      "title": "input_context after the jump",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world'"
+    },
+    {
+      "id": "X02-110",
+      "title": "open Satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the Satchel shortcut opens the shell onto the Satchel tab"
+    },
+    {
+      "id": "X02-111",
+      "title": "input_context with Satchel open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context is 'menu_backpack'"
+    },
+    {
+      "id": "X02-112",
+      "title": "close Satchel",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X02-113",
+      "title": "cycle party",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "LB cycles the party in the world"
+    },
+    {
+      "id": "X02-114",
+      "title": "input_context after the party cycle",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world'; input leakage is the target of this whole step"
+    },
+    {
+      "id": "X02-115",
+      "title": "E.3 step 7",
+      "action": "note",
+      "args": {
+        "text": "'Abuse (see E.6 for the full list): rapid rotate/place/cancel; invalid placements (in water, intersecting a tree, on steep slope, overlapping the existing structure); placement while a creature stands in the footprint.' E.6's own numbered cases 4 and 5 are transcribed in X06; the items E.3 step 7 names itself are here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-116",
+      "title": "arm a ghost for the abuse loop",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-117",
+      "title": "focus a piece",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "expected": "focus reaches a build cell"
+    },
+    {
+      "id": "X02-118",
+      "title": "arm it",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the ghost is armed"
+    },
+    {
+      "id": "X02-119",
+      "title": "rapid rotate",
+      "action": "press",
+      "args": {
+        "control": "build_rotate_right",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "ten rotations in ten frames; no drift, no double-fire"
+    },
+    {
+      "id": "X02-120",
+      "title": "rapid place",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "ten places in ten frames; each one is paid for exactly once or refused"
+    },
+    {
+      "id": "X02-121",
+      "title": "rapid cancel",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "ten cancels in ten frames; the state does not drift"
+    },
+    {
+      "id": "X02-122",
+      "title": "place-cancel-place the same piece",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens again"
+    },
+    {
+      "id": "X02-123",
+      "title": "arm the same piece",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the same piece is armed"
+    },
+    {
+      "id": "X02-124",
+      "title": "place it",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "it is placed"
+    },
+    {
+      "id": "X02-125",
+      "title": "cancel it",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-126",
+      "title": "place it again",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens for the same piece a third time"
+    },
+    {
+      "id": "X02-127",
+      "title": "arm and place",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the same piece is armed and placed again; the resource ledger stays coherent"
+    },
+    {
+      "id": "X02-128",
+      "title": "invalid placements",
+      "action": "note",
+      "args": {
+        "text": "'Invalid placements: water, cliff, tree, NPC, inside own structure, mid-air edge of terrain.' Each attempt below arms a ghost, walks to the invalid site, and presses build_place; the expectation is a refusal with a stated reason, not a placement."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-129",
+      "title": "walk to the in water (the pond shore) site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -342.0,
+          507.0
+        ]
+      },
+      "expected": "the player walks to the invalid placement site"
+    },
+    {
+      "id": "X02-130",
+      "title": "arm a ghost for the in water (the pond shore) attempt",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-131",
+      "title": "arm it (in water (the pond shore))",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X02-132",
+      "title": "attempt the placement in water (the pond shore)",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X02-133",
+      "title": "cancel after the in water (the pond shore) attempt",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-134",
+      "title": "find the intersecting a tree site",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 150
+      },
+      "expected": "the player walks to the nearest intersecting a tree"
+    },
+    {
+      "id": "X02-135",
+      "title": "arm a ghost for the intersecting a tree attempt",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-136",
+      "title": "arm it (intersecting a tree)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X02-137",
+      "title": "attempt the placement intersecting a tree",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X02-138",
+      "title": "cancel after the intersecting a tree attempt",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-139",
+      "title": "find the on a steep slope site",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 150
+      },
+      "expected": "the player walks to the nearest on a steep slope"
+    },
+    {
+      "id": "X02-140",
+      "title": "arm a ghost for the on a steep slope attempt",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-141",
+      "title": "arm it (on a steep slope)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X02-142",
+      "title": "attempt the placement on a steep slope",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X02-143",
+      "title": "cancel after the on a steep slope attempt",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-144",
+      "title": "walk to the overlapping the existing structure site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          44.0,
+          -16.0
+        ]
+      },
+      "expected": "the player walks to the invalid placement site"
+    },
+    {
+      "id": "X02-145",
+      "title": "arm a ghost for the overlapping the existing structure attempt",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-146",
+      "title": "arm it (overlapping the existing structure)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X02-147",
+      "title": "attempt the placement overlapping the existing structure",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X02-148",
+      "title": "cancel after the overlapping the existing structure attempt",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-149",
+      "title": "walk back to the lab site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          44.0,
+          -16.0
+        ]
+      },
+      "expected": "the player returns to the structure"
+    },
+    {
+      "id": "X02-150",
+      "title": "deploy a creature into the footprint",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RB calls out a creature so it stands in the footprint"
+    },
+    {
+      "id": "X02-151",
+      "title": "arm a ghost over the creature",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X02-152",
+      "title": "arm it",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X02-153",
+      "title": "place while a creature stands in the footprint",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "placement while a creature stands in the footprint: recorded exactly as it behaves"
+    },
+    {
+      "id": "X02-154",
+      "title": "cancel",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X02-155",
+      "title": "AMBIGUITY: E.3 'step 12' does not exist in E.3's numbered list",
+      "action": "note",
+      "args": {
+        "text": "The E.3 preamble says 'X02 step 12 toggles it on/off once purely to verify the banner and the setting, then restores OFF and says so in telemetry', but E.3's own numbered list runs 1 to 7. The toggle check is transcribed here, after step 7, as the last thing X02 does -- so that every build and craft above was paid at real cost, and so the restoration is the segment's final state. Recorded as an ambiguity rather than silently renumbered."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-156",
+      "title": "open the Settings tab",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X02-157",
+      "title": "cycle right to Settings",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 12
+      },
+      "expected": "six RB presses reach Settings, the seventh tab in data/config/menu.json"
+    },
+    {
+      "id": "X02-158",
+      "title": "Settings owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_settings"
+      },
+      "expected": "input_context is 'menu_settings'"
+    },
+    {
+      "id": "X02-159",
+      "title": "focus the Free build toggle",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus reaches the Gameplay section's Free build control"
+    },
+    {
+      "id": "X02-160",
+      "title": "turn free_build ON",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "free_build goes on. This is the one labelled toggle check the protocol allows; nothing is built while it is on"
+    },
+    {
+      "id": "X02-161",
+      "title": "cycle to the Build tab to read the banner",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "RB reaches the Build tab, which banners while free_build is on"
+    },
+    {
+      "id": "X02-162",
+      "title": "the Build tab owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context is 'menu_build' and the banner is on screen"
+    },
+    {
+      "id": "X02-163",
+      "title": "cycle back to Settings",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "RB returns to Settings"
+    },
+    {
+      "id": "X02-164",
+      "title": "focus the Free build toggle again",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus returns to the Free build control"
+    },
+    {
+      "id": "X02-165",
+      "title": "RESTORE: turn free_build back OFF",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "free_build is OFF again. The authoritative run keeps free_build OFF everywhere; this is the explicit restoration the protocol requires."
+    },
+    {
+      "id": "X02-166",
+      "title": "free_build restored to OFF",
+      "action": "note",
+      "args": {
+        "text": "E.3 preamble: 'X02 step 12 toggles it on/off once purely to verify the banner and the setting, then restores OFF and says so in telemetry.' This note is that telemetry record. free_build is OFF; nothing in X02 was built or crafted while it was on; building and crafting are resource-bound."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X02-167",
+      "title": "the Build tab no longer banners",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "RB returns to the Build tab and the free-build banner is gone"
+    },
+    {
+      "id": "X02-168",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes and the world is live again"
+    },
+    {
+      "id": "X02-169",
+      "title": "the world owns input at the end of the lab",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' and free_build is OFF"
+    },
+    {
+      "id": "X02-170",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "The resource ledger for Phase B is the `inventory` snapshots on every gather, craft, build_place, build_dismantle and save event in this segment's events.jsonl."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

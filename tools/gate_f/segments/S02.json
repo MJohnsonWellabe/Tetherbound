@@ -1,0 +1,755 @@
+{
+  "id": "S02",
+  "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
+  "lane": "journey",
+  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
+  "_comment_answer_prompts": "Every move_to in this file leaves `answer_prompts` OFF. The schema is explicit that it 'must stay off in any segment whose subject is whether something blocks travel', and this segment's subject IS the opening's conversations -- a harness quietly answering Grandpa would hide the finding. Every dialogue below is advanced by its own explicit press step.",
+  "_comment_no_teleport": "Section 0.6 / section J: production paths only, teleport is DIAG-only. Every position in this file is reached by walking.",
+  "steps": [
+    {
+      "id": "S02-01",
+      "title": "how this segment is entered (\u00a7B ambiguity)",
+      "action": "note",
+      "args": {
+        "text": "\u00a7B gives this segment the entry save 'continues S01 process'. run_segment.sh runs one segment per Godot process, so that is not literally possible; the steps below reproduce S01's ending state through the same production front door (fresh save directory, title, Start New Game) rather than booting the world scene directly, so nothing about the state this segment starts from comes from a shortcut. AMBIGUITY RECORDED: \u00a7B's handoff column for S01/S02 assumes one process across two segments."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-02",
+      "title": "\u00a7H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "\u00a7H: 'Mandatory for the highest-risk segments: S01+S02 (opening)...' at 0.5 Hz. The vocabulary has no background-recorder action; `capture_seq` blocks. Recorded as a gap; the event-forced frames and the 2 Hz route trace are the continuous record this segment actually produces."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-03",
+      "title": "start from a fresh user:// save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "\u00a7A.2: 'fresh user:// dir'"
+    },
+    {
+      "id": "S02-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "S02-05",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "S02-06",
+      "title": "choose Start New Game",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "with no existing save, Start New Game enters the world directly"
+    },
+    {
+      "id": "S02-07",
+      "title": "let the world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the Meadows stands up and the opening's fade begins"
+    },
+    {
+      "id": "S02-08",
+      "title": "capture GF-02-START-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-01",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "wake beat, before leaving bed area",
+        "intended_proof": "opening stages correctly (incl. player body presence as-shipped)"
+      },
+      "expected": "\u00a7G: wake beat, before leaving bed area -- opening stages correctly (incl. player body presence as-shipped)"
+    },
+    {
+      "id": "S02-09",
+      "title": "capture GF-21-WEATHER-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-21-WEATHER-01",
+        "class": "21",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
+        "intended_proof": "weather identity; palette holds"
+      },
+      "expected": "\u00a7G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+    },
+    {
+      "id": "S02-10",
+      "title": "\u00a7G GF-21 placement",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: \u00a7G's GF-21 row triggers on 'each weather preset first naturally encountered ... as-played', which a step-script written before the run cannot locate. \u00a7C.4 forbids the operator from adding planned entries, so the four GF-21 frames are pinned at four widely separated points of the journey (S02 here, S05, S07, S09) and the manifest's own `weather` field records which preset each one actually caught. A preset the journey never produced shows up as absent evidence rather than as a frame nobody planned."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-11",
+      "title": "the opening's first rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "opening_first_catch"
+      },
+      "expected": "\u00a7E.5's first of 24 main-chain objectives: `opening_first_catch`, 'Catch your first wild creature.'"
+    },
+    {
+      "id": "S02-12",
+      "title": "\u00a7E.5 nav note -- opening_first_catch",
+      "action": "note",
+      "args": {
+        "text": "\u00a7E.5 navigation record, objective 1/24 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-13",
+      "title": "get up",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 1: 'The bed's \"Get up\" prompt is the only interactable in the world'"
+    },
+    {
+      "id": "S02-14",
+      "title": "let the wake beat settle",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the player has control and the fade has finished"
+    },
+    {
+      "id": "S02-15",
+      "title": "walk down to Grandpa",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of \u00a7D's RT-01 (Grandpa's house -> village center)"
+    },
+    {
+      "id": "S02-16",
+      "title": "talk to Grandpa",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 3: one conversation, `grandpa_house`, carries the briefing, the gifts and the five-creature rule said in fiction"
+    },
+    {
+      "id": "S02-17",
+      "title": "capture GF-02-START-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-02",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Grandpa conversation mid-dialogue",
+        "intended_proof": "mandatory opening reads; dialogue UI"
+      },
+      "expected": "\u00a7G: Grandpa conversation mid-dialogue -- mandatory opening reads; dialogue UI"
+    },
+    {
+      "id": "S02-18",
+      "title": "the dialogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "narrative_modal"
+      },
+      "expected": "`dialogue_panel.gd` holds the input-owner group: input_context is 'narrative_modal'"
+    },
+    {
+      "id": "S02-19",
+      "title": "advance the briefing to its end",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "\u00a7E.4: `interact` is dialogue advance. The briefing's gifts land line by line -- `give:orb_basic:15`, `give:potion_small:3`, `give:berries:5` -- so the satchel fills as he speaks"
+    },
+    {
+      "id": "S02-20",
+      "title": "let the briefing hand off",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "his last line emits `beat:starter_choice` and `starter_picker.gd` opens over the same room"
+    },
+    {
+      "id": "S02-21",
+      "title": "capture GF-02-START-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-03",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "starter picker open, an orb focused",
+        "intended_proof": "starter choice presentation"
+      },
+      "expected": "\u00a7G: starter picker open, an orb focused -- starter choice presentation"
+    },
+    {
+      "id": "S02-22",
+      "title": "the starter picker owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "narrative_modal"
+      },
+      "expected": "`starter_picker.gd` is one of the three panels in the `narrative_modal` context"
+    },
+    {
+      "id": "S02-23",
+      "title": "look at the next orb",
+      "action": "press",
+      "args": {
+        "control": "ui_right",
+        "hold": "tap"
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 4: 'Look left and right between them'. `starter_picker.gd::_read_input` moves on ui_left/ui_right"
+    },
+    {
+      "id": "S02-24",
+      "title": "choose the focused starter",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "beat 4: 'choosing one closes the picker and opens the naming prompt straight away'. The other two stay with him -- the five-creature rule's first bite"
+    },
+    {
+      "id": "S02-25",
+      "title": "let the naming prompt open",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "`name_prompt.gd` opens in pad mode with its letter grid drawn"
+    },
+    {
+      "id": "S02-26",
+      "title": "name the starter",
+      "action": "type_name",
+      "args": {
+        "name": "Moss"
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 5: 'Naming is mandatory'. The name is typed on the pad's on-screen letter grid with real presses and confirmed with Done"
+    },
+    {
+      "id": "S02-27",
+      "title": "the starter joined the belt",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 1
+      },
+      "expected": "beat 5: 'It is yours; it has a name you typed'"
+    },
+    {
+      "id": "S02-28",
+      "title": "hear `grandpa_named` out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun"
+    },
+    {
+      "id": "S02-29",
+      "title": "\u00a7E.5 nav note -- to the first encounter",
+      "action": "note",
+      "args": {
+        "text": "\u00a7E.5 navigation record, objective 1/24 continued. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-30",
+      "title": "walk out to the grazing bramblebun",
+      "action": "move_to",
+      "args": {
+        "at": [
+          30.0,
+          -40.0
+        ],
+        "budget_frames": 4050,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered"
+    },
+    {
+      "id": "S02-31",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "\u00a7F's POI set is what the dead-travel meter resets on; rescanned here because the opening adds the encounter's wild creature to the world"
+    },
+    {
+      "id": "S02-32",
+      "title": "engage the bramblebun",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "beat 6: 'Targeting; wild creatures are individuals, not spawns'"
+    },
+    {
+      "id": "S02-33",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CombatManager takes over and the combat camera acquires both combatants"
+    },
+    {
+      "id": "S02-34",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S02-35",
+      "title": "capture GF-14-COMBAT-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-01",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-01: early wild combat, first ambush, S02",
+        "intended_proof": "per-case: the chapter's first piloted fight reads as a fight"
+      },
+      "expected": "\u00a7G: CB-01: early wild combat, first ambush, S02 -- per-case: the chapter's first piloted fight reads as a fight"
+    },
+    {
+      "id": "S02-36",
+      "title": "trade quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 30
+      },
+      "expected": "\u00a7E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)"
+    },
+    {
+      "id": "S02-37",
+      "title": "one charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "\u00a7E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack"
+    },
+    {
+      "id": "S02-38",
+      "title": "let the exchange resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the bramblebun is weakened; `data/config/opening.json` gives it the highest catch rate in species.json so the tutorial catch cannot fail twice"
+    },
+    {
+      "id": "S02-39",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 8: 'The catch is a physical act you aim'. CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so X reaches `_try_throw` through `interact`"
+    },
+    {
+      "id": "S02-40",
+      "title": "the aim owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "\u00a7E.4's `combat_aim` context; `throw_aim.gd` owns input while aiming"
+    },
+    {
+      "id": "S02-41",
+      "title": "capture GF-15-CATCH-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-01",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CT-01 aim reticle frame (tutorial/required catch, S02, production path)",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "\u00a7G: CT-01 aim reticle frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+    },
+    {
+      "id": "S02-42",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "\u00a7E.2 CT-01, the tutorial/required catch on the production path. Recorded per throw: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behaviour during aim/throw/resolve"
+    },
+    {
+      "id": "S02-43",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves; `catch_throw` and `catch_result` events carry the distance and the shown percent"
+    },
+    {
+      "id": "S02-44",
+      "title": "capture GF-15-CATCH-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-02",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CT-01 resolve frame (tutorial/required catch, S02, production path)",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "\u00a7G: CT-01 resolve frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+    },
+    {
+      "id": "S02-45",
+      "title": "the catch counted",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 2
+      },
+      "expected": "\u00a7E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch"
+    },
+    {
+      "id": "S02-46",
+      "title": "the chain advanced to the road",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "open_road_gate"
+      },
+      "expected": "\u00a7L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'"
+    },
+    {
+      "id": "S02-47",
+      "title": "hear `grandpa_road` out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "docs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`"
+    },
+    {
+      "id": "S02-48",
+      "title": "\u00a7E.5 nav note -- open_road_gate",
+      "action": "note",
+      "args": {
+        "text": "\u00a7E.5 navigation record, objective 2/24 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-49",
+      "title": "walk to the old key",
+      "action": "move_to",
+      "args": {
+        "at": [
+          31.2,
+          -8.4
+        ],
+        "budget_frames": 4050,
+        "close_enough": 2.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square"
+    },
+    {
+      "id": "S02-50",
+      "title": "take the old key",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "`key_pickup.gd` offers 'Take the old key'; taking it is what removes it from play"
+    },
+    {
+      "id": "S02-51",
+      "title": "walk to the road gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          27.5,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0
+      },
+      "expected": "the gate stands square across the road (`playground_world.gd::GATE_AT`)"
+    },
+    {
+      "id": "S02-52",
+      "title": "try the gate",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "`road_gate.gd`'s prompt is 'Try the gate'; with the key carried, `item_gate.gd` opens it and the leaf re-poses parallel to the road"
+    },
+    {
+      "id": "S02-53",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the `road_gate_unlocked` line plays and the panel swings clear"
+    },
+    {
+      "id": "S02-54",
+      "title": "the road gate is open",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "road_gate_open"
+      },
+      "expected": "\u00a7B: S02's span ends at 'road gate open'. `road_gate.gd::FLAG_ID` is `road_gate_open`"
+    },
+    {
+      "id": "S02-55",
+      "title": "\u00a7B/\u00a7D seam at the village",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: \u00a7B ends S02's span at 'road gate open' and starts S03's at 'Tam's tools', but \u00a7D assigns RT-01 (Grandpa's house (-22,-16) -> village center (10,-10)) to S02, and \u00a7G triggers GF-03-VILLAGE-01 on 'first arrival at village center (10,-10)'. The two readings put the walk into the village on opposite sides of the cut. Transcribed following \u00a7D and \u00a7G -- the walk and the arrival frame close S02 -- so RT-01 is measured end to end inside one segment's route.csv, which is what \u00a7D's per-route figures need."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-56",
+      "title": "follow the road in to the village center",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ],
+        "budget_frames": 4050,
+        "close_enough": 2.5,
+        "held_budget_frames": 7200
+      },
+      "expected": "\u00a7D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval"
+    },
+    {
+      "id": "S02-57",
+      "title": "capture GF-03-VILLAGE-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-03-VILLAGE-01",
+        "class": "3",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "first arrival at village center (10,-10)",
+        "intended_proof": "village reads as a settled place from the entry route"
+      },
+      "expected": "\u00a7G: first arrival at village center (10,-10) -- village reads as a settled place from the entry route"
+    },
+    {
+      "id": "S02-58",
+      "title": "the village region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "map_state.gd's own containment puts the player in `grandpas_village`"
+    },
+    {
+      "id": "S02-59",
+      "title": "the segment actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 150.0
+      },
+      "expected": "\u00a7D's route figures come from route.csv, never from harness wall time. RT-01 alone is about 35 m and the walk out to the encounter and back adds far more; a segment that 'passed' without anyone moving would carry no pacing evidence at all"
+    },
+    {
+      "id": "S02-60",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 900
+      },
+      "expected": "\u00a7C.2: the pacing study's raw material and the \u00a712 correlation spine"
+    },
+    {
+      "id": "S02-61",
+      "title": "the opening is not dead ground",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_below",
+        "metres": 150.0
+      },
+      "expected": "\u00a7D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. The opening runs between the house, the practice meadow and the village, all inside \u00a7F's 30 m POI radius of something, so the current run should be small; the check's `actual` also reports this segment's peak, which is the number \u00a7D actually wants"
+    },
+    {
+      "id": "S02-62",
+      "title": "\u00a7B save handoff",
+      "action": "note",
+      "args": {
+        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-63",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+    },
+    {
+      "id": "S02-64",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "S02-65",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S02-66",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S02-67",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S02-68",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+    },
+    {
+      "id": "S02-69",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S02-exit.json"
+      },
+      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S02-exit.json`"
+    },
+    {
+      "id": "S02-70",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S02-71",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S02 exit save written and copied. The next segment (S03) seeds this file back into slot 4 and loads it through the production title-screen Load path."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}
