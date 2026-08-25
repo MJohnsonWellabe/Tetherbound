@@ -359,3 +359,76 @@ a boundary.
 
 So: no further pushes until the harness agent lands its five additions. Then one
 push, one full run, allowed to finish — and that run is the freeze evidence.
+
+---
+
+## Check-in 6 — operator lane takes over; environment up; budget estimate before S01
+
+**Lane:** operator (execution). The instrumentation lane is closed. `tools/gate_f/**`
+and `scripts/debug/gate_f_probe.gd` are frozen from this point; I touch a
+step-script only if it hard-blocks a segment, and I say so here when I do.
+
+**Environment stood up on this container:**
+
+- `libegl1 libegl-mesa0 mesa-vulkan-drivers xvfb` installed.
+- Godot `4.7.stable.official.5b4e0cb0f` via `tools/art_pipeline/setup.sh godot`.
+- `--headless --path . --import` running at the time of writing.
+
+**Branch state:** `ralph/GATE-F-INSTRUMENTATION` @ `a3f61b60`, fast-forwarded to
+`origin`. `git diff --name-status origin/main HEAD` is **35 files, every one `A`,
+zero `M`, zero `D`**. (The register said 34; the 35th is the same lane's own
+addition, not a modification.) The honest enumeration of non-instrumentation
+changes in this candidate remains **none** — nothing under `scripts/`, `scenes/`,
+`data/` or `project.godot` differs from `main`. That is what makes this SHA a
+legitimate candidate to playtest: the build under test *is* `main`.
+
+### Budget estimate for step 4, written before starting it
+
+Gate F has spent $186 and produced no evidence. Remaining envelope as given: ~$130.
+
+*Wall clock*, from the step-scripts themselves (sum of `wait` seconds + `stick`
+frames/60 + `move_to` steps at a 20 s average against their 2400-frame ceiling),
+excluding scene boot:
+
+| | scripted time | + boots | notes |
+|---|---|---|---|
+| S01–S10 | ~71 min | ~10 boots | S03 is the long one (16 min, 274 steps, 28 walks) |
+| X01–X08 | ~190 min | ~12 boots | X05 alone is ~79 min of deliberate wait; X04 ~29, X06 ~28 |
+
+World boot measured by the instrumentation lane at ~90 s on this container, so
+add ~15 min per lane. **Journey ≈ 1.5–2 h wall clock, studies ≈ 3.5–4 h.** That
+is if capture mode is affordable on the world scene, which is the open question
+below.
+
+*Spend*, which is what is actually capped: my cost is per-turn context, not wall
+clock — a segment running in the background costs nothing while it runs. Held to
+the discipline of launch / poll / bounded-summary / commit / one log line, a
+segment cycle is ~4–6 tool calls. I estimate **$3–6 per segment cycle**, so
+**S01–S10 ≈ $40–60** and **X01–X08 ≈ $35–50**, plus setup already spent.
+
+**Assessment: the full journey plus studies plausibly fits ~$130, but with no
+slack for a segment that fails and needs diagnosis** — and on a first execution
+of an instrument this size, some will. So I am ordering the run by value rather
+than by the protocol's convenience, and committing each segment the moment it
+finishes:
+
+1. **S01–S04** first, unconditionally — opening through tournament, the subset
+   that decides whether a new player keeps playing at all.
+2. **S05–S10**, continuing the same chained save.
+3. Studies in value order: **X07** (world audit; 3 min of script, 80 shots, by
+   far the best evidence-per-dollar), **X01**, **X04**, **X03**, **X02**, **X06**,
+   **X05**, **X08**. X05's 79 minutes of waiting and X08's 6 minutes of held
+   stick are the two I would drop first if the cap bites.
+
+**Scope reduction is the owner's call, not mine.** I am not pre-emptively cutting
+anything; I am recording the ordering now so that if the budget ends the run
+mid-way, what survives is the part that matters most, and the fact that it ended
+early is visible here rather than inferred from a gap.
+
+**Open risk, flagged before the run rather than after:** the harness config's own
+note records that under llvmpipe *"six twenty-second windows did not complete in
+fifty minutes"* on the Meadows. If capture mode on the world scene is that
+expensive, the journey segments may have to run in logic mode, taking their
+manifest rows as `file: null` per §C.4 — honest evidence, but no frames. I will
+establish which it is empirically on S01 and record the answer here before S02,
+rather than discovering it at S08.
