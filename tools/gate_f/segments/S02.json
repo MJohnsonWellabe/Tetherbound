@@ -1,5 +1,7 @@
 {
   "id": "S02",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
   "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
   "lane": "journey",
   "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
