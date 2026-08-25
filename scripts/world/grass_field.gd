@@ -31,6 +31,7 @@ extends MultiMeshInstance3D
 const CONFIG_PATH := "res://data/config/grass_field.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
 const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
+const COVER_SHADER_PATH := "res://shaders/cover_tier.gdshader"
 
 ## Read once and cached, the same way `scatter_rules.gd::config()` does it, so a
 ## test can ask what the config says without standing a world up.
@@ -51,6 +52,11 @@ var _material: ShaderMaterial = null
 ## disagree about where the field is centred.
 var _stones: MultiMeshInstance3D = null
 var _stone_material: ShaderMaterial = null
+## Every generic cover tier's material -- bushes, flowers, litter. They all
+## run `shaders/cover_tier.gdshader` and differ only by mesh and config, so
+## binding, centring and winding them is one loop rather than one branch per
+## tier.
+var _cover_materials: Array[ShaderMaterial] = []
 var _bound := false
 var _wind := 0.0
 ## The last snapped centre. The ring only rebuilds its uniform when this moves,
@@ -146,6 +152,193 @@ func _build() -> void:
 	# AFTER `custom_aabb` is set, not before: the stone ring copies it, and
 	# built first it copied the default zero AABB instead.
 	_build_stones(cfg, radius)
+	_build_cover_tiers(cfg, radius)
+
+
+## The generic cover tiers, from `cover_tiers` in the config: small bushes,
+## flower drifts, forest litter. Each is one more MultiMesh child on the same
+## ring, running `shaders/cover_tier.gdshader`, differing only by mesh and
+## numbers -- see that shader's header for the rule about what may and may not
+## be generated this way, and why harvestable bushes are not on the list.
+func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
+	var names := _terrain_texture_names()
+	for entry: Variant in cfg.get("cover_tiers", []):
+		var tier: Dictionary = entry
+		if not bool(tier.get("enabled", true)):
+			continue
+		var count := int(tier.get("count", 0))
+		if count <= 0:
+			continue
+
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
+		mm.instance_count = count
+		# Its own RNG stream, seeded from its own name, so adding or removing a
+		# tier cannot reshuffle where any other tier's items land.
+		var rng := RandomNumberGenerator.new()
+		rng.seed = int(tier.get("seed", hash(str(tier.get("name", "tier")))))
+		var bias := float(tier.get("centre_bias", 0.6))
+		for i in count:
+			var angle := rng.randf_range(0.0, TAU)
+			var r := radius * pow(rng.randf(), bias)
+			mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, rng.randf_range(0.0, TAU)),
+					Vector3(sin(angle) * r, 0.0, cos(angle) * r)))
+
+		var node := MultiMeshInstance3D.new()
+		node.name = "Cover_" + str(tier.get("name", "tier"))
+		node.multimesh = mm
+		var mat := ShaderMaterial.new()
+		mat.shader = load(COVER_SHADER_PATH)
+		node.material_override = mat
+		# Same reasoning as the grass and stone tiers: thousands of small
+		# shadows overlap into a black carpet rather than reading as shade, and
+		# the shader darkens each item at its own contact instead.
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.custom_aabb = custom_aabb
+		add_child(node)
+
+		for key: String in [
+			"item_size", "size_jitter", "sink", "slope_lie", "density_gain",
+			"drift_scale", "drift_contrast", "tint_jitter", "ground_blend",
+			"contact_darken", "sway", "wind_scale", "gust", "gust_speed",
+			"gust_length", "field_radius", "fade_start",
+		]:
+			if tier.has(key):
+				mat.set_shader_parameter(key, float(tier[key]))
+			elif cfg.has(key):
+				mat.set_shader_parameter(key, float(cfg[key]))
+		for key2: String in ["tint_base", "tint_tip"]:
+			if tier.has(key2):
+				mat.set_shader_parameter(key2, Color(str(tier[key2])))
+		if tier.has("wind_dir"):
+			var d: Array = tier["wind_dir"]
+			mat.set_shader_parameter("wind_dir", Vector2(float(d[0]), float(d[1])).normalized())
+		elif cfg.has("wind_dir"):
+			var d2: Array = cfg["wind_dir"]
+			mat.set_shader_parameter("wind_dir", Vector2(float(d2[0]), float(d2[1])).normalized())
+		# Where it grows, by terrain texture NAME. Same list the grass tier
+		# builds its forbidden mask from, so a lane that reorders
+		# terrain_playground.json's textures cannot silently move a tier onto
+		# the wrong surface.
+		var allowed: Array = tier.get("ground", ["grass", "soil"])
+		var mask := 0
+		for i in names.size():
+			if str(names[i]) in allowed:
+				mask |= 1 << i
+		mat.set_shader_parameter("allowed_base_mask", mask)
+		_cover_materials.append(mat)
+	if not _cover_materials.is_empty():
+		print("[grass_field] %d cover tier(s) up" % _cover_materials.size())
+
+
+## The meshes the cover tiers use, generated rather than imported so no asset
+## enters the repository -- `CLAUDE.md`'s no-new-assets rule for the Meadows is
+## untouched by any of this. UV.y runs 0 at the base to 1 at the top in every
+## one of them, because that is the channel the shader's tint gradient and its
+## contact darken both read.
+func _cover_mesh(kind: String) -> ArrayMesh:
+	match kind:
+		"flower":
+			return _flower_mesh()
+		"litter":
+			return _litter_mesh()
+		_:
+			return _bush_mesh()
+
+
+## A small bush: crossed leaf panels on a short stem, domed so the silhouette is
+## round rather than a card. DECORATIVE ONLY -- the harvestable bushes stay
+## scattered, because harvesting needs an identity that survives and a generated
+## thing has none.
+func _bush_mesh() -> ArrayMesh:
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var indices := PackedInt32Array()
+	var panels := 5
+	for i in panels:
+		var yaw := PI * float(i) / float(panels)
+		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
+		# Panels shrink and rise as they go, which is what domes the silhouette.
+		var lift := 0.10 * float(i % 3)
+		var half := 0.5 * (1.0 - 0.12 * float(i % 3))
+		var first := verts.size()
+		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+			# Taper the top so the panel is a leaf mass, not a rectangle.
+			# GDScript has no C-style ternary; it is `a if cond else b`.
+			var w := half * (0.55 if corner.y > 0.5 else 1.0)
+			verts.append(dir * corner.x * w + Vector3.UP * (corner.y * 0.9 + lift))
+			normals.append((dir * 0.4 + Vector3.UP * 0.9).normalized())
+			uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y))
+		indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+	return _mesh_from(verts, normals, uvs, indices)
+
+
+## A flower: a thin stem with a small flat head. The head is what carries the
+## colour, so the shader's tint_tip is the bloom and tint_base the stalk.
+func _flower_mesh() -> ArrayMesh:
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var indices := PackedInt32Array()
+	# Stem: one narrow strip.
+	var first := verts.size()
+	for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+		verts.append(Vector3(corner.x * 0.018, corner.y * 0.78, 0.0))
+		normals.append(Vector3(0.0, 0.4, 1.0).normalized())
+		uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y * 0.72))
+	indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+	# Head: two crossed petals, so the bloom reads from any angle.
+	for i in 2:
+		var yaw := PI * 0.5 * float(i)
+		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
+		var side := Vector3(dir.z, 0.0, -dir.x)
+		var start := verts.size()
+		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+			verts.append(side * corner.x * 0.13 + Vector3.UP * (0.72 + corner.y * 0.26))
+			normals.append(Vector3.UP)
+			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.82 + corner.y * 0.18))
+		indices.append_array([start, start + 1, start + 2, start + 1, start + 3, start + 2])
+	return _mesh_from(verts, normals, uvs, indices)
+
+
+## Forest litter: flat irregular scraps lying on the ground. Near-zero height,
+## so `slope_lie` puts them ON the terrain rather than standing them up on it.
+func _litter_mesh() -> ArrayMesh:
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var indices := PackedInt32Array()
+	for i in 4:
+		var yaw := TAU * float(i) / 4.0 + 0.4 * float(i)
+		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
+		var side := Vector3(dir.z, 0.0, -dir.x)
+		var at := dir * (0.18 + 0.22 * float(i % 2))
+		var w := 0.16 + 0.08 * float(i % 3)
+		var first := verts.size()
+		for corner in [Vector2(-1.0, -1.0), Vector2(1.0, -1.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+			verts.append(at + side * corner.x * w + dir * corner.y * w
+					+ Vector3.UP * (0.012 + 0.01 * float(i % 2)))
+			normals.append(Vector3.UP)
+			# UV.y near 1 everywhere: litter has no base-to-tip gradient, it is
+			# all "tip", so the shader's contact darken does not black it out.
+			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.85))
+		indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+	return _mesh_from(verts, normals, uvs, indices)
+
+
+func _mesh_from(verts: PackedVector3Array, normals: PackedVector3Array,
+		uvs: PackedVector2Array, indices: PackedInt32Array) -> ArrayMesh:
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
 
 
 ## The stone tier: loose grit, gravel and field stone, on the same ring.
@@ -422,6 +615,8 @@ func _bind_terrain() -> void:
 	var rids: Array[RID] = [_material.get_rid()]
 	if _stone_material != null:
 		rids.append(_stone_material.get_rid())
+	for cover: ShaderMaterial in _cover_materials:
+		rids.append(cover.get_rid())
 	for rid: RID in rids:
 		_bind_maps(rid, data)
 	_bind_region_uniforms(data)
@@ -466,7 +661,9 @@ func _bind_region_uniforms(data: Object) -> void:
 	for i in region_map.size():
 		map[i] = int(region_map[i])
 
-	for mat: ShaderMaterial in [_material, _stone_material]:
+	var all: Array[ShaderMaterial] = [_material, _stone_material]
+	all.append_array(_cover_materials)
+	for mat: ShaderMaterial in all:
 		if mat == null:
 			continue
 		mat.set_shader_parameter("_region_size", region_size)
@@ -485,6 +682,8 @@ func _process(delta: float) -> void:
 		return
 	_wind += delta
 	_material.set_shader_parameter("wind_time", _wind)
+	for cover: ShaderMaterial in _cover_materials:
+		cover.set_shader_parameter("wind_time", _wind)
 	if _camera == null or not is_instance_valid(_camera):
 		return
 
@@ -503,3 +702,5 @@ func _process(delta: float) -> void:
 	_material.set_shader_parameter("field_centre", centre)
 	if _stone_material != null:
 		_stone_material.set_shader_parameter("field_centre", centre)
+	for cover: ShaderMaterial in _cover_materials:
+		cover.set_shader_parameter("field_centre", centre)

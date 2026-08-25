@@ -65,6 +65,32 @@
     "ground": ["rock", "path"]
   },
 
+  "_comment_cover_tiers": "The generic plant tiers on the same ring: small bushes, flower drifts, forest litter. Each is one MultiMesh child running shaders/cover_tier.gdshader, differing only by mesh and numbers -- see that shader's header for the rule about WHAT may be generated this way. Short version: a tier qualifies only if it does not collide, carries no persistent state, is small enough that appearing at the ring's edge is invisible, and exists in numbers too large to store. Trees and boulders fail three of those -- they are landmarks, they stop the camera's SpringArm, and they must be where you left them. HARVESTABLE bushes fail the state test: vegetation.json's `bushes` layer carries harvest_item fiber, and harvesting needs an identity that survives, which a thing that does not exist until the camera nears it cannot have. So these bushes are DECORATIVE understorey and the harvestable ones stay scattered. tests/test_grass_field.gd enforces that half of the rule against vegetation.json directly. Each tier draws from its own RNG stream so adding or removing one cannot reshuffle where any other tier's items land.",
+  "cover_tiers": [
+    {
+      "_why": "Small bushes. A blind pass found the world jumps from 50cm grass straight to 6m canopy with nothing between -- 'a forest you can see straight through at knee height' -- and counted two mid-height plants across twelve frames. This is that missing band. Sparse and heavily drifted on purpose: understorey gathers, it does not carpet, and the meadow's negative space is what GROUND-LAYERS measured as worth keeping.",
+      "name": "bushes",
+      "mesh": "bush",
+      "enabled": true,
+      "count": 9000,
+      "seed": 5512207,
+      "centre_bias": 0.6,
+      "item_size": 0.62,
+      "size_jitter": 0.55,
+      "sink": 0.06,
+      "density_gain": 0.3,
+      "drift_scale": 0.05,
+      "drift_contrast": 0.88,
+      "tint_base": "#2d3a16",
+      "tint_tip": "#5b7030",
+      "tint_jitter": 0.2,
+      "ground_blend": 0.35,
+      "contact_darken": 0.4,
+      "sway": 0.04,
+      "ground": ["grass", "soil", "forest_floor"]
+    }
+  ],
+
   "_comment_forbidden": "Ground the field refuses, by terrain texture NAME rather than by id. terrain_playground.json's `textures` array order is what assigns the ids (0 grass, 1 soil, 2 rock, 3 path, 4 damp, 5 forest_floor), so naming them means a lane that reorders that list does not silently move the mask onto the wrong surface. `path` is what keeps the routes readable -- the same control map the terrain paints its dirt from, so the verge lines up with the road for free instead of being a second exclusion rule that has to be kept in sync.",
   "forbidden_ground": ["rock", "path"]
 }
