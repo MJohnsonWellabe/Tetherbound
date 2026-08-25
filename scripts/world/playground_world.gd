@@ -16,6 +16,7 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
@@ -697,6 +698,30 @@ func _build_texture_list() -> Object:
 ## unreadable, unmergeable, and impossible to retune. The seed makes it
 ## identical every run, so a survey frame taken today is comparable with one
 ## taken after a change.
+## GRASS-FIELD. The camera-relative ground cover, if `data/config/
+## grass_field.json` says it is on. Built AFTER the scatter, because
+## `vegetation.gd::build()` is what drops the layers this replaces and the log
+## line it prints should come first, in the order a reader would want them.
+##
+## Off by default and absent when off -- `grass_field.gd::_ready` builds
+## nothing and processes nothing unless enabled -- so this costs a node and a
+## config read on a boot that is not using it.
+func _stand_up_the_grass_field() -> void:
+	if not GRASS_FIELD.is_enabled():
+		return
+	if _terrain == null:
+		push_warning("[playground] grass field is on but there is no terrain to sample")
+		return
+	var field := MultiMeshInstance3D.new()
+	field.set_script(GRASS_FIELD)
+	field.name = "GrassField"
+	add_child(field)
+	# The field follows a CAMERA, and it has to be the one actually rendering:
+	# handed the wrong one it centres its ring somewhere the player is not and
+	# the ground goes bare exactly where they are standing.
+	field.call("bind", _terrain, _camera)
+
+
 func _dress_the_meadow() -> void:
 	var config := _load_terrain_config()
 	_vegetation = VEGETATION.new()
@@ -719,6 +744,7 @@ func _dress_the_meadow() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and _vegetation.has_method("restore_from_game"):
 		_vegetation.call("restore_from_game", game)
+	_stand_up_the_grass_field()
 	var stats: Dictionary = _vegetation.call("stats")
 	print("[playground] scattered %d props in %d batches (%d harvestable, %d already chopped, %d/%d collision resident)" % [
 		stats["instances"], stats["batches"], stats.get("harvest_points", 0),

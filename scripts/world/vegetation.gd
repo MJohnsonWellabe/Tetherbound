@@ -45,6 +45,7 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 ## RG9: the felled/downed pickup a chop stands where a tree or rock stood.
 const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
 ## SCAT1: which bake this world's placements load from, in `data/scatter/<name>/`.
 ## The playground is the only world with a bake; anything else falls back to
@@ -307,6 +308,30 @@ func build(world_size: float, terrain: Node) -> void:
 	else:
 		by_layer = RULES.all_placements(field, world_size, base_seed, _drained)
 	var t_load1 := Time.get_ticks_msec()
+
+	# GRASS-FIELD. When the shader carpet owns the ground plane, the layers it
+	# replaces are dropped HERE -- after the bake is read, before anything is
+	# grouped, marked harvestable or given a mesh asset -- so a suppressed layer
+	# costs nothing beyond the bytes already on disk. The two systems must never
+	# both dress the same ground: doubled ground cover is not twice as good, it
+	# is z-fighting at every blade.
+	#
+	# Deliberately NOT a re-bake. The bake stays exactly as committed and the
+	# scatter path stays intact behind the flag, which is what lets the owner
+	# A/B the two ground systems on an ROG Ally -- the one piece of hardware no
+	# container in this project can measure (`PERF-ROG-GPU`) and the only one
+	# whose answer counts.
+	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
+	if not suppressed.is_empty():
+		var dropped := 0
+		for layer_name: String in suppressed.keys():
+			if by_layer.has(layer_name):
+				dropped += (by_layer[layer_name] as Array).size()
+				by_layer.erase(layer_name)
+				_drained.erase(layer_name)
+		print("[vegetation] grass field is on; %d placements across %d layers left unbuilt (%s)" % [
+			dropped, suppressed.size(), ", ".join(suppressed.keys())])
+
 	_mark_harvestable(by_layer)
 	var t_mark1 := Time.get_ticks_msec()
 
