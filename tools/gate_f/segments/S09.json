@@ -122,6 +122,15 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S09-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
       "id": "S09-13",
       "title": "open the Map tab",
       "action": "open_menu",
@@ -157,6 +166,18 @@
         "text": "Section E.5 navigation record, objective 20/24 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
       },
       "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-16a",
+      "title": "record_start: band 4 -> band 5, the walk to the three-Sigil gate and through it",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 4 -> band 5, the walk to the three-Sigil gate and through it",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "this is the band 4/5 crossing proper, and it happens entirely inside S09: the window opens before the walk up the causeway so the approach under Team Tether's pylon line is recorded"
     },
     {
       "id": "S09-17",
@@ -225,6 +246,15 @@
         "intended_proof": "weather identity; palette holds"
       },
       "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+    },
+    {
+      "id": "S09-22a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 4 -> band 5, the walk to the three-Sigil gate and through it",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after GF-12-APPR-01 and GF-21-WEATHER-04, so the gate opening and its settle are inside the raised window"
     },
     {
       "id": "S09-23",
@@ -578,6 +608,18 @@
       "expected": "the fade runs and the team is rested for the Hall"
     },
     {
+      "id": "S09-55a",
+      "title": "record_start: band 5 -> the Hall",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 5 -> the Hall",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "the last handoff of the chapter: the window opens before the walk from the final camp to the Hall threshold"
+    },
+    {
       "id": "S09-56",
       "title": "walk to the Hall threshold",
       "action": "move_to",
@@ -605,6 +647,15 @@
         "within": 12.0
       },
       "expected": "Section D RT-11's endpoint"
+    },
+    {
+      "id": "S09-57a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 5 -> the Hall",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes on the threshold assert. Section H's other half of this +/-60 s needs no pair -- S10 carries `record_hz: 0.5` for its whole length"
     },
     {
       "id": "S09-58",

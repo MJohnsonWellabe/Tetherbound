@@ -122,6 +122,15 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S05-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
       "id": "S05-13",
       "title": "open the Map tab",
       "action": "open_menu",
@@ -187,6 +196,18 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S05-18a",
+      "title": "record_start: village -> band 1",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "village -> band 1",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "Section H window opens on the approach OUT of the village, before the walk south, because the coordinator's own rule is that the window straddles a transition rather than beginning at it -- the approach into a region transition is where the interesting failure lives"
+    },
+    {
       "id": "S05-19",
       "title": "leave the village southbound onto the band 1 spine",
       "action": "move_to",
@@ -228,6 +249,15 @@
         "intended_proof": "weather identity; palette holds"
       },
       "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+    },
+    {
+      "id": "S05-21a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after village -> band 1",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes on the far side of the transition, after GF-05-MEADOW-01 and GF-21-WEATHER-02 have recorded what the first open-meadow stretch actually looks like"
     },
     {
       "id": "S05-22",
@@ -559,6 +589,18 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S05-50a",
+      "title": "record_start: band 1 -> band 2, the South Bridge crossing",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 1 -> band 2, the South Bridge crossing",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "the South Bridge is a GATED crossing, so its approach is the gate fight rather than a walk: the window opens inside the fight that opens the gate and carries through the crossing itself"
+    },
+    {
       "id": "S05-51",
       "title": "fight the grunt",
       "action": "press",
@@ -653,6 +695,15 @@
         "within": 8.0
       },
       "expected": "Section B: S05 ends on the far side of the South Bridge"
+    },
+    {
+      "id": "S05-58a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 1 -> band 2, the South Bridge crossing",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the arrival assert on the far bank, so the crossing, GF-07-BRIDGE-02 and the settle are all inside it. Section B puts the cut here, so section H's other half of this +/-60 s is S06's own opening window"
     },
     {
       "id": "S05-59",
