@@ -11,7 +11,7 @@
       "title": "how this segment is entered",
       "action": "note",
       "args": {
-        "text": "\u00a7B: this segment's entry save is `S08-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. \u00a7B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+        "text": "Section B: this segment's entry save is `S08-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -32,7 +32,7 @@
         "slot": 4,
         "from": "run://S08-exit.json"
       },
-      "expected": "\u00a7B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
     },
     {
       "id": "S09-04",
@@ -71,7 +71,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
     },
     {
       "id": "S09-08",
@@ -81,7 +81,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "the slot loads and the title transitions into the Meadows; \u00a7I.4 records the load duration"
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
     },
     {
       "id": "S09-09",
@@ -110,14 +110,14 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "\u00a7E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended"
+      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended"
     },
     {
       "id": "S09-12",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H: 0.1 Hz segment plus event-forced frames, with the band 4 -> band 5 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+        "text": "Section H: 0.1 Hz segment plus event-forced frames, with the band 4 -> band 5 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -128,7 +128,7 @@
       "args": {
         "tab": "map"
       },
-      "expected": "\u00a7E.5 at a major objective"
+      "expected": "Section E.5 at a major objective"
     },
     {
       "id": "S09-14",
@@ -140,7 +140,7 @@
         "times": 3,
         "settle_frames": 10
       },
-      "expected": "\u00a7E.5's map-usefulness record"
+      "expected": "Section E.5's map-usefulness record"
     },
     {
       "id": "S09-15",
@@ -151,10 +151,10 @@
     },
     {
       "id": "S09-16",
-      "title": "\u00a7E.5 nav note -- fight_through_the_hall",
+      "title": "Section E.5 nav note -- fight_through_the_hall",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 20/24 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
+        "text": "Section E.5 navigation record, objective 20/24 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -171,7 +171,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-11: 'Stronghold approach (sigil gate -> Hall threshold)'. playground_world.gd's SIGIL_GATE_AT is (63.6,7400), on the causeway between the gorge carves"
+      "expected": "Section D RT-11: 'Stronghold approach (sigil gate -> Hall threshold)'. playground_world.gd's SIGIL_GATE_AT is (63.6,7400), on the causeway between the gorge carves"
     },
     {
       "id": "S09-18",
@@ -187,7 +187,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.5's gate/crossing row: 'sigil gate ... each locked-probe then legitimately opened'. The 0-2 Sigil probe is X06's; this is the legitimate opening. `road_gate.gd` is the gate BODY and the three Sigils are its key"
+      "expected": "Section L.5's gate/crossing row: 'sigil gate ... each locked-probe then legitimately opened'. The 0-2 Sigil probe is X06's; this is the legitimate opening. `road_gate.gd` is the gate BODY and the three Sigils are its key"
     },
     {
       "id": "S09-20",
@@ -210,7 +210,7 @@
         "trigger": "sigil gate opening, gate site",
         "intended_proof": "3-Sigil payoff"
       },
-      "expected": "\u00a7G: sigil gate opening, gate site -- 3-Sigil payoff"
+      "expected": "Section G: sigil gate opening, gate site -- 3-Sigil payoff"
     },
     {
       "id": "S09-22",
@@ -224,7 +224,7 @@
         "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
         "intended_proof": "weather identity; palette holds"
       },
-      "expected": "\u00a7G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
     },
     {
       "id": "S09-23",
@@ -239,7 +239,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7B's span order: 'Sigil gate -> outer watch -> checkpoint'. \u00a7E.1 CB-04: 'S09: stronghold_outer_watch, checkpoint'. Watchman Corr stands at (-68,7140)"
+      "expected": "Section B's span order: 'Sigil gate -> outer watch -> checkpoint'. Section E.1 CB-04: 'S09: stronghold_outer_watch, checkpoint'. Watchman Corr stands at (-68,7140)"
     },
     {
       "id": "S09-24",
@@ -270,7 +270,7 @@
       "args": {
         "seconds": 3
       },
-      "expected": "\u00a7L.6 T05: the combat camera acquires both combatants at fight start"
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
     },
     {
       "id": "S09-27",
@@ -294,7 +294,7 @@
         "trigger": "CB-04: representative fight per band -- S09, stronghold_outer_watch",
         "intended_proof": "per-case: band 5's representative fight"
       },
-      "expected": "\u00a7G: CB-04: representative fight per band -- S09, stronghold_outer_watch -- per-case: band 5's representative fight"
+      "expected": "Section G: CB-04: representative fight per band -- S09, stronghold_outer_watch -- per-case: band 5's representative fight"
     },
     {
       "id": "S09-29",
@@ -306,7 +306,7 @@
         "times": 42,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record; band 5's difficulty read against a full belt"
+      "expected": "Section E.1 per-fight record; band 5's difficulty read against a full belt"
     },
     {
       "id": "S09-30",
@@ -328,7 +328,7 @@
         "times": 28,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S09-32",
@@ -352,7 +352,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7E.1 CB-04's second band 5 fight: stronghold_checkpoint, Warder Ness at (45,7440), north of the sigil gate"
+      "expected": "Section E.1 CB-04's second band 5 fight: stronghold_checkpoint, Warder Ness at (45,7440), north of the sigil gate"
     },
     {
       "id": "S09-34",
@@ -395,7 +395,7 @@
         "times": 42,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S09-38",
@@ -417,7 +417,7 @@
         "times": 26,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S09-40",
@@ -440,14 +440,14 @@
         "trigger": "Hall dominant on horizon, drained land in frame, RT-11 mid",
         "intended_proof": "escalating dread; occupied/drained grammar"
       },
-      "expected": "\u00a7G: Hall dominant on horizon, drained land in frame, RT-11 mid -- escalating dread; occupied/drained grammar"
+      "expected": "Section G: Hall dominant on horizon, drained land in frame, RT-11 mid -- escalating dread; occupied/drained grammar"
     },
     {
       "id": "S09-42",
-      "title": "\u00a7B's final camp decision is not specified",
+      "title": "Section B's final camp decision is not specified",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'final camp decision'. Nothing in the protocol says what it consists of, so it is transcribed as the decision the chapter's own systems offer: make camp on the approach and rest the team before going in, or go in as they are. Taken here, because a full belt walking into the Hall unrested is the state \u00a7L.4's care rules exist to make matter. RECORDED as the transcriber's reading of an under-specified beat."
+        "text": "Section B: 'final camp decision'. Nothing in the protocol says what it consists of, so it is transcribed as the decision the chapter's own systems offer: make camp on the approach and rest the team before going in, or go in as they are. Taken here, because a full belt walking into the Hall unrested is the state section L.4's care rules exist to make matter. RECORDED as the transcriber's reading of an under-specified beat."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -528,7 +528,7 @@
         "control": "build_place",
         "hold": "tap"
       },
-      "expected": "\u00a7B's final camp decision, taken"
+      "expected": "Section B's final camp decision, taken"
     },
     {
       "id": "S09-51",
@@ -547,7 +547,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.6 T08: 'rest -> next day ... day advances, party heals per rules, flags set, weather re-rolls legally'"
+      "expected": "Section L.6 T08: 'rest -> next day ... day advances, party heals per rules, flags set, weather re-rolls legally'"
     },
     {
       "id": "S09-53",
@@ -566,7 +566,7 @@
         "control": "menu_confirm",
         "hold": "tap"
       },
-      "expected": "\u00a7L.4: 'Player rest / sleep -> next day'"
+      "expected": "Section L.4: 'Player rest / sleep -> next day'"
     },
     {
       "id": "S09-55",
@@ -590,7 +590,7 @@
         "close_enough": 6.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-11 ends at (150,7595), the `stronghold` landmark -- the castle silhouette east of the stronghold's own built footprint. \u00a7B: S09's span ends at 'Hall threshold'"
+      "expected": "Section D RT-11 ends at (150,7595), the `stronghold` landmark -- the castle silhouette east of the stronghold's own built footprint. Section B: S09's span ends at 'Hall threshold'"
     },
     {
       "id": "S09-57",
@@ -604,7 +604,7 @@
         ],
         "within": 12.0
       },
-      "expected": "\u00a7D RT-11's endpoint"
+      "expected": "Section D RT-11's endpoint"
     },
     {
       "id": "S09-58",
@@ -614,7 +614,7 @@
         "check": "distance_above",
         "metres": 1800.0
       },
-      "expected": "\u00a7D RT-11 plus \u00a7B's back-and-forth order is well over 2 km; no pacing claim may come from a shortcut (\u00a70.6)"
+      "expected": "Section D RT-11 plus section B's back-and-forth order is well over 2 km; no pacing claim may come from a shortcut (section 0.6)"
     },
     {
       "id": "S09-59",
@@ -624,7 +624,7 @@
         "check": "route_rows_at_least",
         "rows": 3000
       },
-      "expected": "\u00a7C.2"
+      "expected": "Section C.2"
     },
     {
       "id": "S09-60",
@@ -634,14 +634,14 @@
         "check": "dead_travel_peak_above",
         "metres": 150.0
       },
-      "expected": "\u00a7D: '>= 250 m is a finding; 150-250 m is a watch item'. The drained approach is meant to read as emptied ground, so what the meter says here is a design question as much as a pacing one"
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. The drained approach is meant to read as emptied ground, so what the meter says here is a design question as much as a pacing one"
     },
     {
       "id": "S09-61",
-      "title": "\u00a7B save handoff",
+      "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. \u00a7B also branches X04 (combat lab) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X04 (combat lab) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -701,7 +701,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
     },
     {
       "id": "S09-68",
@@ -711,7 +711,7 @@
         "slot": 4,
         "name": "S09-exit.json"
       },
-      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S09-exit.json`"
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S09-exit.json`"
     },
     {
       "id": "S09-69",
