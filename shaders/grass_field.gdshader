@@ -104,6 +104,15 @@ uniform float translucency : hint_range(0.0, 1.0) = 0.35;
 // Wind. Free here, and the reference frames are of moving grass.
 uniform float wind_time = 0.0;
 uniform float wind_strength = 0.10;
+// GUST-WAVE. A travelling front on top of the ambient breeze. Without it the
+// whole field leans together, which reads as a wobble; a front crossing the
+// meadow reads as weather, and the owner's reference frames are of moving
+// grass. `gust_speed` is metres per second of front travel, `gust_length` its
+// wavelength in metres. Free -- one sine over a dot product the shader is
+// already computing.
+uniform float gust : hint_range(0.0, 1.0) = 0.0;
+uniform float gust_speed = 7.0;
+uniform float gust_length = 26.0;
 uniform float wind_scale = 0.09;
 uniform vec2 wind_dir = vec2(0.86, 0.51);
 
@@ -233,6 +242,15 @@ void vertex() {
 		// travelling.
 		float wind = value_noise(world_xz * wind_scale + wind_dir * wind_time);
 		float lean = (wind - 0.5) * 2.0 * wind_strength;
+		// The front, projected onto the wind direction so it sweeps ACROSS the
+		// field rather than everything leaning at once. Half-wave rectified:
+		// grass is pushed over by a gust and springs back, it is not blown
+		// backwards between them.
+		if (gust > 0.001) {
+			float along = dot(world_xz, normalize(wind_dir));
+			float front = sin((along - wind_time * gust_speed) * 6.2831853 / gust_length);
+			lean += max(front, 0.0) * gust * wind_strength * 2.0;
+		}
 		float own_bend = (hash12(blade_seed * 11.13) - 0.5) * 2.0 * bend;
 		float own_dir = hash12(blade_seed * 5.91) * 6.2831853;
 		vec2 bend_dir = vec2(sin(own_dir), cos(own_dir));

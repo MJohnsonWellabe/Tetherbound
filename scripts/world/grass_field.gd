@@ -546,6 +546,7 @@ func _apply_config(cfg: Dictionary) -> void:
 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
+		"gust", "gust_speed", "gust_length",
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))
