@@ -58,6 +58,12 @@ const UP := 2.4
 const NEAR_UP := 1.2
 const NEAR_BACK := 2.6
 const NEAR_AHEAD := 9.0
+## Off-route eye: how far to the side of the authored route the player is stood
+## for the `-off` frame, and how high that camera sits. 10m clears the path's
+## own 3.5m half-width and the grass layer's 0.3-3.0m standoff several times
+## over, so what is under the player is meadow rather than verge.
+const OFF_ROUTE := 10.0
+const OFF_UP := 1.6
 
 ## name, eye XZ, look-at XZ. Four regions the prompt names, each on ordinary
 ## travelled ground rather than on a set piece -- a critic shown only the good
@@ -226,6 +232,31 @@ func _shoot(shot: Array) -> void:
 	var near_eye := eye - toward * NEAR_BACK
 	var near_at := eye + toward * NEAR_AHEAD
 	await _expose("%s-near" % name, near_eye, NEAR_UP, near_at, 0.0)
+
+	# And the same near question asked OFF the route, which the two frames above
+	# cannot answer however they are tuned. Both of them stand on the trail and
+	# aim down it, so the bottom of the image is the worn band -- and at a 1.2m
+	# eye the bottom of the image is only two or three metres ahead, where a
+	# path 7m wide (terrain_playground.json `paths`: width 2.0, shoulder 2.5 a
+	# side, so path_factor reaches zero 3.5m off the centreline) subtends the
+	# whole frame width. Two blind passes in a row read that as the defect,
+	# measured the lower frame's colour, and reported the meadow as rendering in
+	# the trail's palette -- which is what the lower frame IS, and says nothing
+	# about the meadow. Sampled off-route in the same world the ground measures
+	# hue 72.6 at value 0.435 against the reference's own 68.4/0.529, so the
+	# grass palette was never the thing those measurements found. This frame
+	# stands the player ten metres off the route in open ground so ground cover
+	# is judged on ground the player actually crosses rather than on road.
+	var off_dir := Vector2(-toward.y, toward.x)
+	var off := _clear_of_bodies(eye + off_dir * OFF_ROUTE, toward, _surface(eye))
+	_place(off, _surface(off))
+	for i in 20:
+		await physics_frame
+	await _expose("%s-off" % name, off - toward * NEAR_BACK, OFF_UP,
+		off + toward * NEAR_AHEAD, 0.0)
+	# Put the player back where the site is, so the next viewpoint's own
+	# streaming starts from the seat this one reported.
+	_place(eye, ground)
 
 	print("  %-24s eye(%.0f, %.1f, %.0f)  %d creatures within 160m" % [
 		name, eye.x, ground, eye.y, _creatures_near(Vector3(eye.x, ground, eye.y))])
