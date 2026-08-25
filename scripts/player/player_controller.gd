@@ -231,6 +231,13 @@ const UNWEDGE_PROGRESS := 0.25
 ## How long a deflection steers once triggered. Long enough to clear a boulder,
 ## and it lapses the moment the player stops asking to go anywhere.
 const DEFLECT_FOR := 0.3
+## How far along the tangent to check for floor before deflecting -- about one
+## step: far enough to catch a ledge the deflection would carry the body over,
+## near enough that ordinary ground never reads as a drop.
+const DEFLECT_PROBE_M := 0.8
+## How far below that step still counts as ground. Deeper than a kerb, much
+## shallower than anything that would hurt.
+const DEFLECT_DROP_M := 1.2
 
 var _wedged_for := 0.0
 var _deflect := Vector3.ZERO
@@ -241,6 +248,19 @@ var _deflect_left := 0.0
 ## was still live when the next input came and steered it instead -- "holding
 ## move_right moved the player 0.00m".
 var _deflect_wanted := Vector3.ZERO
+
+
+## Is there floor within `DEFLECT_DROP_M` of where `offset` would put the body?
+##
+## Swept through the physics server rather than raycast from the centre, so a
+## body half over an edge is judged by the same shape that has to stand there.
+func _ground_under(offset: Vector3) -> bool:
+	if test_move(global_transform, offset):
+		return false  # solid in the way: not a drop, and the step would not happen
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = global_transform.translated(offset)
+	params.motion = Vector3.DOWN * DEFLECT_DROP_M
+	return PhysicsServer3D.body_test_motion(get_rid(), params, PhysicsTestMotionResult3D.new())
 
 
 func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
@@ -268,7 +288,16 @@ func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
 	tangent = tangent.normalized()
 	if tangent.dot(wanted.normalized()) < 0.0:
 		tangent = -tangent
-	_deflect = Vector3(tangent.x, 0.0, tangent.y)
+	# A deflection must not walk you off anything. In the open this never
+	# mattered; underground the body is in near-constant wall contact so this
+	# fires continuously, and CI's smoke_warrens reported the player "2669.9m"
+	# from the vault -- which is not short of it, that is a fall and a respawn
+	# back at world spawn. Probe that the step lands on ground before steering.
+	var side := Vector3(tangent.x, 0.0, tangent.y)
+	if not _ground_under(side * DEFLECT_PROBE_M):
+		_wedged_for = 0.0
+		return
+	_deflect = side
 	_deflect_wanted = Vector3(wanted.x, 0.0, wanted.y).normalized()
 	_deflect_left = DEFLECT_FOR
 	_wedged_for = 0.0
