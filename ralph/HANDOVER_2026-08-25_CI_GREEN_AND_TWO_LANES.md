@@ -52,17 +52,36 @@ lane below. This session's own last observed state: run `#2422`
 
 ## 2. Branch state
 
-`origin/main` is at `e56da1d7` + the WORLD-GRASS docs cherry-pick. Branches
-confirmed fully contained in that history and safe to delete:
+`origin/main` is at `4958a745` (`e56da1d7` plus the WORLD-GRASS docs
+cherry-pick and this handover). Remote branches as of this session's end:
+`main`, `claude/ci-consolidation-main-sync-lmztz6` (now redundant — its
+content is `main`'s history, safe to delete once nothing else needs it),
+`ralph/WORLD-GRASS`, and `ralph-status` (permanent bookkeeping — never
+delete this one).
+
 `ralph/VIS-MAKE`, `ralph/VIS-UI`, `ralph/VISUAL-CORRIDOR`,
-`ralph/integration-W2`, `ralph/integration-W3`, `ralph/CONSOLIDATION`. Do
-**not** delete `ralph-status` (permanent bookkeeping branch). `ralph/WORLD-GRASS`
-itself still carries a large amount of divergent history beyond that one
-docs commit (unrelated probe tooling from an old ancestor) — its useful
-content (the diagnosis doc, reference images, backlog entry) is now on
-`main` via the cherry-pick; the branch itself does not need merging and
-should be evaluated for deletion once its owner confirms nothing else on it
-is wanted.
+`ralph/integration-W2`, `ralph/integration-W3`, `ralph/CONSOLIDATION` were
+**already deleted from the remote before this session touched them** — this
+session's local git cache still had stale refs for them, which briefly made
+it look like `ralph/integration-W2`/`W3` carried real unlanded work
+(creature-presentation art, `SITE-DRESSING`, `BAND2-FLOOR` vegetation,
+`OP23-FIXPACK`'s stronghold camera/map/auto-run/bond-curve/trait work).
+**Verified none of that is lost**: a prior `SUPERSESSION`/
+`INTEGRATION-BOOKKEEPING` pass (`ralph/DONE.md`, commits around `7d452a97`)
+already reconciled and landed the equivalent content on `main` through a
+different merge path before those branches were retired — spot-checked
+several files each integration branch uniquely carried
+(`tools/capture_creature_presentation.gd`, `tests/test_trait_ui.gd`,
+`tests/test_map_zoom_persistence.gd`, and OP23-FIXPACK's own commit hash)
+and all are present on `main`. Nothing further to do here.
+
+`ralph/WORLD-GRASS` is now fully redundant too, by the same check — every
+file it uniquely carried (a large amount of probe/capture tooling from an
+older divergent ancestor, plus the diagnosis doc this session cherry-picked)
+is already on `main`, byte-identical, either via that same supersession pass
+or via the cherry-pick above. It's safe to delete but this session's
+permission scope didn't allow deleting it — the next session or the owner
+should remove it.
 
 ## 3. Lane 1 — Gate F (`ralph/GATE_F_PROTOCOL.md`)
 
