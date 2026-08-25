@@ -1,0 +1,84 @@
+{
+  "id": "selfcheck_menu",
+  "title": "Harness self-check: world -> menu -> world through synthetic physical input",
+  "lane": "diag",
+  "_comment": "NOT a protocol segment. This is the acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 1: the harness boots the real scene, opens the pause shell with a real physical event, moves focus with parse_input_event, and closes it, with events.jsonl showing input_context transitioning world -> menu -> world and the focus fields populated. The real S01-S10 / X01-X08 files are transcribed separately from protocol section E.",
+
+  "steps": [
+    {
+      "id": "SC-M-01",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": { "scene": "world" },
+      "expected": "the real world scene stands up with the real autoloads and the player has control"
+    },
+    {
+      "id": "SC-M-02",
+      "title": "the world owns input at rest",
+      "action": "assert",
+      "args": { "check": "input_context", "equals": "world" },
+      "expected": "nothing owns input, no fight is running, no ghost is armed: input_context is 'world'"
+    },
+    {
+      "id": "SC-M-03",
+      "title": "settle before pressing anything",
+      "action": "wait",
+      "args": { "frames": 30 },
+      "expected": "a few frames of quiet so the opening's own sequencing is not mid-fade"
+    },
+    {
+      "id": "SC-M-04",
+      "title": "open the pause shell with the bound button",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu action, sent as a real physical event, opens the pause shell"
+    },
+    {
+      "id": "SC-M-05",
+      "title": "the shell owns input",
+      "action": "assert",
+      "args": { "check": "context_prefix", "prefix": "menu" },
+      "expected": "input_context is a menu context; the tree is paused and the shell holds the input-owner group"
+    },
+    {
+      "id": "SC-M-06",
+      "title": "something holds GUI focus",
+      "action": "assert",
+      "args": { "check": "focus_owned" },
+      "expected": "a Control holds focus. Without one the stick moves nothing and the menu is decoration on a handheld."
+    },
+    {
+      "id": "SC-M-07",
+      "title": "the stick moves focus",
+      "action": "focus_move",
+      "args": { "direction": "down", "times": 1 },
+      "expected": "ui_down, delivered as a physical event, moves focus to a different control"
+    },
+    {
+      "id": "SC-M-08",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "menu_cancel closes the shell and hands the world back"
+    },
+    {
+      "id": "SC-M-09",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": { "check": "input_context", "equals": "world" },
+      "expected": "input_context is back to 'world': the tree is unpaused and nothing holds the input-owner group"
+    },
+    {
+      "id": "SC-M-10",
+      "title": "capture the closed state",
+      "action": "capture",
+      "args": {
+        "id": "SC-M-world-after-close",
+        "class": "context",
+        "hud": "on",
+        "intended_proof": "the HUD is back after the shell closed; file:null under a headless run is the expected logic-mode result"
+      },
+      "expected": "a PNG in capture mode, a manifest row with file:null and a reason in logic mode"
+    }
+  ]
+}
