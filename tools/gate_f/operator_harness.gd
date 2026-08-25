@@ -89,6 +89,9 @@ var _cfg := {
 	"perf_window_frames": 60,
 	"capture_settle_frames": 4,
 	"overhead_seconds": 60.0,
+	"record_default_hz": 0.1,
+	"record_window_hz": 0.5,
+	"record_forced_frames": true,
 }
 
 # --- run identity and output -------------------------------------------------
@@ -104,6 +107,37 @@ var _mode := "segment"
 var _events: FileAccess = null
 var _route: FileAccess = null
 var _manifest: Array = []
+
+# --- continuous evidence recorder (§H) ---------------------------------------
+#
+# §H's substitute for full-run video: a PNG every N seconds plus a forced frame
+# on every JSONL event, filed `frames/<segment>/<t>.png` and correlated back
+# through `events.jsonl` and `route.csv` by timestamp.
+#
+# Kept in `frames/`, deliberately NOT in `shots/`. The §G plan is
+# evidence-of-record -- every non-defect entry defined before play, none to be
+# deleted or re-staged -- and mixing a thousand cadence frames into that
+# manifest would bury the twenty frames somebody chose. Two directories, two
+# manifests, one timestamp axis joining them.
+#
+# `_record_hz` is the LIVE rate; `_record_baseline_hz` is the segment's own,
+# which `record_stop` returns to. §H sets the baseline at 0.1 Hz for journey
+# segments and 0.5 Hz for the high-risk list, so a segment declares its
+# baseline once at the top of its file and `record_start` raises it for a
+# window rather than every step carrying a rate.
+var _frames: Array = []
+var _record_hz := 0.0
+var _record_baseline_hz := 0.0
+var _record_args: Dictionary = {}
+var _record_next_t := 0.0
+var _record_written := 0
+var _record_absent := 0
+## Event types that fired since the last recorder tick, and are owed a frame.
+var _record_forced_by: Array[String] = []
+## True while a `capture`/`capture_seq` STEP is executing. The recorder stands
+## down for the length of it -- see `_recorder_tick`'s own note on why the
+## prescribed shot wins a tie.
+var _capture_step_active := false
 var _notes: Array = []
 var _harness_errors: Array[String] = []
 
@@ -212,10 +246,19 @@ func _parse_args() -> void:
 			_mode = arg.substr("--gatef-mode=".length())
 		elif arg == "--gatef-capture":
 			_want_capture = true
+		elif arg.begins_with("--gatef-cfg="):
+			# One-off override of a `harness_config.json` key, for a diagnostic
+			# rerun that must not leave an edited config behind. Applied after
+			# the file is read; the value is parsed as JSON so numbers stay
+			# numbers ("--gatef-cfg=trace_hz=4.0").
+			_cfg_overrides.append(arg.substr("--gatef-cfg=".length()))
 	if _run_id.is_empty():
 		_run_id = _out_dir.get_base_dir().get_file()
 	if _run_id.is_empty():
 		_run_id = "gate-f-run-unnamed"
+
+
+var _cfg_overrides: Array[String] = []
 
 
 func _load_config() -> void:
@@ -223,6 +266,14 @@ func _load_config() -> void:
 	for key: String in _cfg.keys():
 		if raw.has(key):
 			_cfg[key] = raw[key]
+	for override in _cfg_overrides:
+		var parts := override.split("=", true, 1)
+		if parts.size() != 2 or not _cfg.has(parts[0]):
+			_harness_error("--gatef-cfg=%s names no harness_config key" % override)
+			continue
+		var parsed: Variant = JSON.parse_string(parts[1])
+		_cfg[parts[0]] = parsed if parsed != null else parts[1]
+		print("gate-f harness: config override %s = %s" % [parts[0], str(_cfg[parts[0]])])
 
 
 # --- output files ------------------------------------------------------------
@@ -247,6 +298,10 @@ func _open_outputs() -> bool:
 		return false
 	for sub in ["telemetry", "shots", "notes", "saves"]:
 		DirAccess.make_dir_recursive_absolute(abs_dir.path_join(sub))
+	# §H files continuous frames under `frames/<segment>/`, so a run directory
+	# holding several segments keeps them apart without the filename carrying
+	# the segment twice.
+	DirAccess.make_dir_recursive_absolute(abs_dir.path_join("frames").path_join(_segment_id))
 	_events = FileAccess.open(abs_dir.path_join("telemetry/events.jsonl"), FileAccess.WRITE)
 	_route = FileAccess.open(abs_dir.path_join("telemetry/route.csv"), FileAccess.WRITE)
 	if _events == null or _route == null:
@@ -272,6 +327,13 @@ func _close_outputs() -> void:
 	if _route != null:
 		_route.close()
 	_write_json(_out_dir.path_join("shots/manifest.json"), {"shots": _manifest})
+	_write_json(_out_dir.path_join("frames/manifest.json"), {
+		"segment": _segment_id,
+		"baseline_hz": _record_baseline_hz,
+		"written": _record_written,
+		"absent": _record_absent,
+		"frames": _frames,
+	})
 	_write_text(_out_dir.path_join("notes/%s.md" % _segment_id), "\n".join(_notes))
 	_write_json(_out_dir.path_join("RUN_METADATA.json"), _run_metadata())
 
@@ -295,6 +357,9 @@ func _run_metadata() -> Dictionary:
 		"viewport_size": [_viewport_size().x, _viewport_size().y],
 		"trace_hz": _cfg["trace_hz"],
 		"trace_rows": _trace_rows,
+		"record_baseline_hz": _record_baseline_hz,
+		"frames_written": _record_written,
+		"frames_absent": _record_absent,
 		"instrumentation_overhead_note": _overhead_note,
 		"harness_errors": _harness_errors,
 	}
@@ -330,6 +395,17 @@ func _play(segment: Dictionary) -> void:
 	if steps.is_empty():
 		_die("segment %s has no steps" % _segment_id)
 		return
+	# §H's baseline, declared once at the top of the segment file. 0.1 Hz for a
+	# journey segment, 0.5 Hz for the mandatory high-risk list; `record_hz: 0`
+	# turns the continuous record off for a segment that must not have it
+	# (X08's perf audit, per §H's own last clause).
+	_record_baseline_hz = float(segment.get("record_hz", _cfg["record_default_hz"]))
+	_record_hz = _record_baseline_hz
+	_record_args = {
+		"hud": str(segment.get("record_hud", "on")),
+		"camera_kind": str(segment.get("record_camera_kind", "gameplay")),
+	}
+	_record_next_t = 0.0
 	_note_line("# %s — %s" % [_segment_id, str(segment.get("title", ""))])
 	_note_line("")
 	for raw: Variant in steps:
@@ -403,6 +479,17 @@ func _do_step(step: Dictionary) -> void:
 			actual = _step_seed_save(args)
 		"wipe_saves":
 			actual = _step_wipe_saves(args)
+		"pin_clock":
+			if not diag:
+				verdict = "FAIL"
+				actual = ("pin_clock refused: step is not marked \"diag\": true. Freezing the world "
+					+ "clock is a diagnostic instrument, not something a player can do.")
+			else:
+				actual = await _step_pin_clock(args)
+		"record_start":
+			actual = _step_record_start(args)
+		"record_stop":
+			actual = _step_record_stop(args)
 		"teleport":
 			if not diag:
 				verdict = "FAIL"
@@ -452,6 +539,8 @@ func _event_type_for(action: String) -> String:
 			return "screenshot"
 		"probe_cell":
 			return "input_probe"
+		"record_start", "record_stop", "pin_clock":
+			return "note"
 		"open_menu":
 			return "menu_open"
 		"close_menu":
@@ -533,16 +622,23 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 	# back-to-back presses with only the injection's own frames between them can
 	# arrive while the previous one is still being digested.
 	var gap := maxi(0, int(args.get("settle_frames", 8)))
+	# `device` names which BINDING to inject: "joypad", "key" or "mouse".
+	# Omitted keeps the old preference order, so every script written before
+	# this argument existed behaves identically.
+	var device := str(args.get("device", ""))
 	var raw := ""
 	for i in times:
-		var sent := await _inject(control, frames)
+		var sent := await _inject(control, frames, device)
 		if not bool(sent.get("ok", false)):
+			if bool(sent.get("device_miss", false)):
+				return str(sent.get("why", ""))
 			return "HARNESS-ERROR %s" % str(sent.get("why", "injection failed"))
 		raw = str(sent.get("raw", ""))
 		for f in gap:
 			await process_frame
-	return "pressed %s x%d (%s, %d frames each), resolved to %s" % [control, times,
-		str(args.get("hold", "tap")), frames, raw]
+	return "pressed %s x%d (%s, %d frames each) on %s, resolved to %s" % [control, times,
+		str(args.get("hold", "tap")), frames,
+		device if not device.is_empty() else "the default device", raw]
 
 
 ## Same-frame multi-press, for the collision probes §8 needs: two controls
@@ -903,6 +999,152 @@ func _walk_to_name_cell(entry: Variant, grid: GDScript, cell: String) -> bool:
 	return str(entry.call("selected")) == cell
 
 
+# --- continuous evidence recorder (§H) ---------------------------------------
+
+## Raise the background frame rate for a window. §H.
+##
+## The recorder is already running at the segment's baseline before this; what
+## `record_start` does is raise the rate for the stretch that matters -- the
+## opening, the tournament final, a band handoff plus or minus sixty seconds --
+## and `record_stop` puts it back. That is why it is a rate change rather than
+## an on switch: §H wants the record CONTINUOUS, with the mandatory list simply
+## denser, and a recorder that only ran between explicit start/stop pairs would
+## leave the rest of the segment with no frames at all.
+##
+## Unlike `capture_seq` this does not block. The frames are taken from inside
+## the per-frame tick every other step already drives, so walking, fighting and
+## menu navigation all keep happening while it records.
+func _step_record_start(args: Dictionary) -> String:
+	var hz := float(args.get("hz", _cfg["record_window_hz"]))
+	if hz <= 0.0:
+		return "FAIL record_start needs a positive hz (use record_stop to end a window)"
+	_record_hz = hz
+	_record_args = args.duplicate()
+	# Due immediately, so a window that exists to catch a transition gets a
+	# frame at its start rather than one interval later.
+	_record_next_t = _t()
+	var label := str(args.get("label", ""))
+	_emit("note", {"observation": "record_start: background frames raised to %.2f Hz%s"
+		% [hz, "" if label.is_empty() else " (%s)" % label]})
+	return "recording at %.2f Hz%s (baseline %.2f Hz)" % [
+		hz, "" if label.is_empty() else " for %s" % label, _record_baseline_hz]
+
+
+## End a raised window.
+##
+## Returns to the segment's BASELINE rate by default, not to off: §H's record is
+## continuous and a window ending is not the segment ending. `{"baseline": false}`
+## stops the recorder outright, for the one case the protocol names -- X08's
+## perf audit, which §H's own last clause says runs without capture.
+func _step_record_stop(args: Dictionary) -> String:
+	var to_baseline := bool(args.get("baseline", true))
+	_record_hz = _record_baseline_hz if to_baseline else 0.0
+	_record_args = {}
+	_record_next_t = _t() + (1.0 / maxf(0.01, _record_hz)) if _record_hz > 0.0 else 0.0
+	_emit("note", {"observation": "record_stop: background frames now %.2f Hz" % _record_hz})
+	if _record_hz > 0.0:
+		return "window ended; back to the segment baseline of %.2f Hz" % _record_hz
+	return "recording stopped entirely (baseline:false)"
+
+
+## One recorder tick. Called from `_tick`, so it runs at whatever rate the
+## current step is advancing frames -- which is every frame of walking, waiting,
+## fighting and menu navigation.
+##
+## **Deterministic against `capture`/`capture_seq`: the prescribed shot wins.**
+## The recorder stands down for the whole of a capture step and its next frame
+## is pushed forward past it. Two reasons, and the first is the one that
+## matters: §G frames are evidence-of-record chosen before play, and a §H
+## cadence frame landing on the same frame would put two files of the identical
+## image into two manifests, which is how a reader ends up citing the wrong one.
+## The second is mechanical -- both want the same framebuffer on the same frame,
+## and letting them race would make which file exists depend on step ordering.
+func _recorder_tick() -> void:
+	if not _telemetry_on() or _capture_step_active:
+		return
+	var forced := not _record_forced_by.is_empty()
+	var due := _record_hz > 0.0 and _t() >= _record_next_t
+	if not (forced or due):
+		return
+	var trigger := "cadence"
+	if forced:
+		# Every event that fired since the last tick, named. Coalesced into ONE
+		# frame on purpose: two events on the same frame describe the same
+		# image, and writing it twice would inflate the record without adding
+		# a pixel of evidence.
+		trigger = "event:" + ",".join(_record_forced_by)
+		_record_forced_by.clear()
+	if due:
+		_record_next_t = _t() + (1.0 / maxf(0.01, _record_hz))
+	_write_frame(trigger)
+
+
+## Ask for a frame on the next recorder tick, per §H's "forced frame on every
+## JSONL event".
+##
+## Latency is at most one frame: an event emitted from inside `_tick` is
+## recorded on the same tick, and one emitted from a step handler on the next
+## frame that step advances. Under 17 ms at 60 Hz, and stated rather than
+## claimed exact -- the correlation §H asks for is by TIMESTAMP through
+## `events.jsonl`, and both records carry the same `t` axis.
+func _force_frame(type: String) -> void:
+	if not _telemetry_on() or not bool(_cfg["record_forced_frames"]):
+		return
+	if _record_hz <= 0.0 and _record_baseline_hz <= 0.0:
+		return
+	if not _record_forced_by.has(type):
+		_record_forced_by.append(type)
+
+
+## Write one continuous-evidence frame and its manifest row.
+##
+## Files as `frames/<segment>/<t>.png` per §H, with `t` zero-padded so the
+## directory sorts in time order rather than lexically scrambling 9 s and 100 s.
+func _write_frame(trigger: String) -> void:
+	var t := _t()
+	var clock: Dictionary = _probe.call("clock_weather")
+	var row := {
+		"t": snappedf(t, 0.01),
+		"wall": Time.get_datetime_string_from_system(true, true),
+		"segment": _segment_id,
+		"trigger": trigger,
+		"hz": _record_hz,
+		"pos": _pos_array(),
+		"camera_kind": str(_record_args.get("camera_kind", "gameplay")),
+		"hud": str(_record_args.get("hud", "on")),
+		"clock_hour": snappedf(float(clock.get("hour", 0.0)), 0.01),
+		"weather": str(clock.get("weather", "")),
+		"input_context": str(_probe.call("input_context")),
+		"file": null,
+	}
+	if not _capture_available():
+		# Same rule as `capture`: an absent frame is evidence (§C.4). The row is
+		# still written so the cadence itself is auditable -- a headless run
+		# proves the recorder fired at the right times even though it could not
+		# draw anything.
+		row["reason"] = "headless: this process has no display server and cannot render a frame"
+		_frames.append(row)
+		_record_absent += 1
+		return
+	var image := root.get_viewport().get_texture().get_image()
+	if image == null or image.is_empty():
+		row["reason"] = "viewport returned an empty image"
+		_frames.append(row)
+		_record_absent += 1
+		return
+	var rel := "frames/%s/%09.2f.png" % [_segment_id, t]
+	var err := image.save_png(_out_dir.path_join(rel))
+	if err != OK:
+		row["reason"] = "save_png failed with error %d" % err
+		_frames.append(row)
+		_record_absent += 1
+		return
+	row["file"] = rel
+	row["size"] = [image.get_width(), image.get_height()]
+	_frames.append(row)
+	_record_written += 1
+
+
 func _step_capture(args: Dictionary, step_id: String) -> String:
 	var shot_id := str(args.get("id", step_id))
 	var row := {
@@ -930,6 +1172,9 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		row["reason"] = "telemetry off: no --gatef-out, nowhere to write a PNG"
 		_manifest.append(row)
 		return "capture %s skipped (telemetry off)" % shot_id
+	# The §H recorder stands down for the length of this step. See
+	# `_recorder_tick`'s note: the prescribed shot wins the tie, deterministically.
+	_capture_step_active = true
 	for i in int(_cfg["capture_settle_frames"]):
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -937,6 +1182,7 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if image == null or image.is_empty():
 		row["reason"] = "viewport returned an empty image"
 		_manifest.append(row)
+		_capture_step_active = false
 		_emit("screenshot", {"artifacts": [shot_id], "observation": str(row["reason"])})
 		return "FAIL capture %s produced no image" % shot_id
 	var rel := "shots/%s.png" % shot_id
@@ -944,10 +1190,16 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if err != OK:
 		row["reason"] = "save_png failed with error %d" % err
 		_manifest.append(row)
+		_capture_step_active = false
 		return "FAIL capture %s could not be written (%d)" % [shot_id, err]
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
 	_manifest.append(row)
+	_capture_step_active = false
+	# Push the recorder's next cadence frame past this shot rather than letting
+	# it fire on the very next tick with an identical image.
+	if _record_hz > 0.0:
+		_record_next_t = maxf(_record_next_t, _t() + (1.0 / maxf(0.01, _record_hz)))
 	_emit("screenshot", {"artifacts": [shot_id]})
 	return "captured %s at %dx%d" % [shot_id, image.get_width(), image.get_height()]
 
@@ -987,9 +1239,20 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", ""))
 	if control.is_empty():
 		return "HARNESS-ERROR probe_cell step %s has no control" % step_id
+	var device := str(args.get("device", ""))
 	var before := _cell_snapshot()
-	var sent := await _inject(control, HOLD_TAP)
+	var sent := await _inject(control, HOLD_TAP, device)
 	if not bool(sent.get("ok", false)):
+		if bool(sent.get("device_miss", false)):
+			# The cell is still reported -- "unreachable on this device" is a
+			# real matrix answer, and an empty cell is not.
+			_emit("input_probe", {"input": {"device": "synthetic", "device_kind": device,
+					"action": control, "edge": "none"},
+				"expected": str(args.get("expected", "")),
+				"actual": str(sent.get("why", "")),
+				"observation": "cell control=%s device=%s context=%s: no binding for that device"
+					% [control, device, str(before.get("context"))]})
+			return str(sent.get("why", ""))
 		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
 	# The release edge is where leakage most often shows: a surface that
 	# consumes the press and a second one that acts on the release.
@@ -1077,12 +1340,86 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			var walked := float(args.get("metres", 0.0))
 			return {"ok": _distance_m >= walked,
 				"actual": "walked %.1f m this segment (wanted >= %.1f)" % [_distance_m, walked]}
+		"mouse_captured":
+			# §E.4's restoration checklist and §L.6-T01: the pause shell releases
+			# the mouse on open and must RESTORE it on close. A menu that does
+			# not give it back leaves the camera dead afterwards, which reads as
+			# a camera bug rather than a menu one -- `smoke_menu.gd` exists
+			# partly for this and had no verdict on the operator side.
+			var want_captured := bool(args.get("equals", true))
+			var mode := int((_probe.call("input_state") as Dictionary).get("mouse_mode", 0))
+			var captured := mode == Input.MOUSE_MODE_CAPTURED
+			return {"ok": captured == want_captured,
+				"actual": "mouse_mode=%s (wanted %s)" % [
+					_mouse_mode_name(mode), "captured" if want_captured else "not captured"]}
+		"satiety":
+			var vitals: Dictionary = _probe.call("player_vitals")
+			if vitals.is_empty():
+				return {"ok": false, "actual": "no live vitals to read satiety from"}
+			return _compare("satiety", float(vitals.get("satiety", 0.0)), args)
+		"clock_hour":
+			# Tolerance, not equality: the day cycle is continuous and a load
+			# restores an elapsed-seconds value, so the hour comes back close
+			# rather than identical. Wraps across midnight -- 23.9 and 0.1 are
+			# 0.2 apart, not 23.8.
+			var have := float((_probe.call("clock_weather") as Dictionary).get("hour", 0.0))
+			var want := float(args.get("equals", 0.0))
+			var tolerance := float(args.get("tolerance", 0.5))
+			var gap := absf(fmod(absf(have - want) + 12.0, 24.0) - 12.0)
+			return {"ok": gap <= tolerance,
+				"actual": "clock_hour=%.2f (wanted %.2f +/- %.2f, off by %.2f)"
+					% [have, want, tolerance, gap]}
+		"placed_buildings":
+			# A load that silently dropped the player's structures would
+			# otherwise read as PASS: X05 records the number and verdicts
+			# nothing without this.
+			var g := _probe.call("game") as Node
+			if g == null:
+				return {"ok": false, "actual": "no live Game to read placed_buildings from"}
+			var raw: Variant = g.get("placed_buildings")
+			var count := (raw as Array).size() if typeof(raw) == TYPE_ARRAY else -1
+			return _compare("placed_buildings", float(count), args)
 		"route_rows_at_least":
 			var want := int(args.get("rows", 0))
 			return {"ok": _trace_rows >= want,
 				"actual": "route.csv has %d rows (wanted >= %d)" % [_trace_rows, want]}
 		_:
 			return {"ok": false, "actual": "unknown assert check '%s'" % check}
+
+
+## A numeric check with a comparator, for the assert checks that need one.
+##
+## `equals` (with optional `tolerance`), `at_least`, `at_most`. Named rather
+## than positional so a step reads as a sentence and a missing comparator is a
+## visible mistake rather than a silent equality test against zero.
+func _compare(label: String, have: float, args: Dictionary) -> Dictionary:
+	if args.has("at_least"):
+		var floor_v := float(args["at_least"])
+		return {"ok": have >= floor_v, "actual": "%s=%.2f (wanted >= %.2f)" % [label, have, floor_v]}
+	if args.has("at_most"):
+		var ceil_v := float(args["at_most"])
+		return {"ok": have <= ceil_v, "actual": "%s=%.2f (wanted <= %.2f)" % [label, have, ceil_v]}
+	if args.has("equals"):
+		var want := float(args["equals"])
+		var tolerance := float(args.get("tolerance", 0.001))
+		return {"ok": absf(have - want) <= tolerance,
+			"actual": "%s=%.2f (wanted %.2f +/- %.2f)" % [label, have, want, tolerance]}
+	return {"ok": false, "actual": "%s=%.2f but the check named no comparator (equals / at_least / at_most)"
+		% [label, have]}
+
+
+func _mouse_mode_name(mode: int) -> String:
+	match mode:
+		Input.MOUSE_MODE_VISIBLE:
+			return "visible"
+		Input.MOUSE_MODE_HIDDEN:
+			return "hidden"
+		Input.MOUSE_MODE_CAPTURED:
+			return "captured"
+		Input.MOUSE_MODE_CONFINED:
+			return "confined"
+		_:
+			return "mode:%d" % mode
 
 
 # --- save handoff (§7) -------------------------------------------------------
@@ -1188,6 +1525,80 @@ func _slot_path(slot: int) -> String:
 	return ProjectSettings.globalize_path(str(system.call("slot_path", slot)))
 
 
+## Pin the world clock and weather, then FREEZE both. DIAG only (§E.7).
+##
+## §E.7's regional audit compares sites against each other, and it can only do
+## that if the light is the same in every frame. The unpinned variant is not a
+## hypothetical: the 2026-08-23 pass let `apply_time("day")` be undone by the
+## day cycle's own `_process` during the settle between shots, and the run came
+## back with a crimson artefact nobody could reproduce because the clock had
+## moved underneath it.
+##
+## **The order is the whole instrument, and it is `capture_band3_region.gd`'s:
+## pin AFTER the settle, then stop both clocks.** Pinning before the settle is
+## the bug -- `world_look.gd::_process` re-blends every `BLEND_INTERVAL`, so a
+## pin that precedes a 240-frame settle has been overwritten four seconds later.
+## The caller settles first (a `boot` or `wait` step), this pins and freezes.
+##
+## `preset` takes a named keyframe from `art.json` (`day`, `golden`, `night`)
+## through the game's own `apply_time()`. `hour` takes an arbitrary float and
+## goes through `_apply_blended()`, which is the continuous path
+## `world_look.gd::_process` itself uses -- not a second interpolation written
+## here. Pass either or both; `hour` is applied last so it wins.
+func _step_pin_clock(args: Dictionary) -> String:
+	var look := _probe.call("world_look") as Node
+	if look == null:
+		return "HARNESS-ERROR pin_clock with no live WorldLook"
+	var applied: Array[String] = []
+
+	var weather_node := _probe.call("world_weather") as Node
+	if args.has("weather"):
+		if weather_node == null:
+			return "HARNESS-ERROR pin_clock asked for weather with no live WorldWeather"
+		weather_node.call("set_weather", str(args["weather"]))
+		applied.append("weather=%s" % str(args["weather"]))
+
+	if args.has("preset"):
+		look.call("apply_time", str(args["preset"]))
+		applied.append("preset=%s" % str(args["preset"]))
+
+	if args.has("hour"):
+		var cycle: Variant = look.get("_cycle")
+		if cycle == null:
+			return "HARNESS-ERROR WorldLook has no day cycle to pin an hour against"
+		var hour := clampf(float(args["hour"]), 0.0, 24.0)
+		look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", hour)))
+		look.call("_apply_blended", hour)
+		applied.append("hour=%.2f" % hour)
+
+	# Let the applied look reach the sun, sky and environment before the clocks
+	# stop -- `_apply_sun`/`_apply_environment` write immediately, but a frame
+	# here also lets anything watching them settle.
+	for i in int(args.get("settle_frames", 4)):
+		await physics_frame
+
+	# Freeze. Both nodes, both process kinds: `world_look.gd` re-blends in
+	# `_process` and `world_weather.gd` rolls its own preset on a timer, so
+	# stopping one leaves the other free to move the light.
+	var frozen: Array[String] = []
+	if bool(args.get("freeze", true)):
+		look.set_process(false)
+		look.set_physics_process(false)
+		frozen.append("WorldLook")
+		if weather_node != null:
+			weather_node.set_process(false)
+			weather_node.set_physics_process(false)
+			frozen.append("WorldWeather")
+
+	var now: Dictionary = _probe.call("clock_weather")
+	_emit("note", {"observation": "DIAG pin_clock: %s; froze %s" % [
+		", ".join(applied) if not applied.is_empty() else "nothing", ", ".join(frozen)]})
+	return "DIAG pinned %s and froze %s; clock now reads hour=%.2f preset=%s weather=%s" % [
+		", ".join(applied) if not applied.is_empty() else "nothing",
+		", ".join(frozen) if not frozen.is_empty() else "nothing",
+		float(now.get("hour", 0.0)), str(now.get("preset", "")), str(now.get("weather", ""))]
+
+
 ## DIAG only, and refused above unless the step says so. Recorded as its own
 ## observation so Phase B can never read a teleported arrival as a walk.
 func _step_teleport(args: Dictionary) -> String:
@@ -1223,8 +1634,8 @@ func _step_teleport(args: Dictionary) -> String:
 ##
 ## Returns `{ok, raw, why}`. `raw` is the physical event in the shorthand §C.1's
 ## `input.raw` field wants ("JoyBtn:2", "JoyAxis:1:-1.0", "Key:70").
-func _inject(control: String, frames: int) -> Dictionary:
-	var down := _edge(control, true)
+func _inject(control: String, frames: int, device: String = "") -> Dictionary:
+	var down := _edge(control, true, device)
 	if not bool(down.get("ok", false)):
 		return down
 	# One IDLE frame with the control held, before any physics frame. Every menu
@@ -1235,14 +1646,30 @@ func _inject(control: String, frames: int) -> Dictionary:
 	for i in maxi(1, frames):
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
-	var up := _edge(control, false)
+	var up := _edge(control, false, device)
 	# And an idle frame on the release edge, for the readers that act on it.
 	await process_frame
 	await physics_frame
 	_tick(1.0 / float(Engine.physics_ticks_per_second))
-	_last_input = {"device": "synthetic", "raw": str(down.get("raw", "")),
-		"action": control, "edge": "press"}
+	# §C.1's `device` field is honest: no physical controller exists here, so it
+	# says "synthetic". `device_kind` says which BINDING was injected, which is
+	# the thing §L.1's parity row is actually about.
+	_last_input = {"device": "synthetic", "device_kind": _kind_of(str(down.get("raw", ""))),
+		"raw": str(down.get("raw", "")), "action": control, "edge": "press"}
 	return {"ok": bool(up.get("ok", false)), "raw": str(down.get("raw", ""))}
+
+
+## Which physical device a `raw` shorthand describes. Derived from the shorthand
+## rather than passed down, so it always names what was actually injected --
+## including on a default-device press where the segment named nothing.
+func _kind_of(raw: String) -> String:
+	if raw.begins_with("Joy"):
+		return "joypad"
+	if raw.begins_with("Key"):
+		return "key"
+	if raw.begins_with("Mouse"):
+		return "mouse"
+	return "unknown"
 
 
 ## One edge of one control: the physical event AND the paired action state.
@@ -1251,13 +1678,22 @@ func _inject(control: String, frames: int) -> Dictionary:
 ## sending only one half causes. The physical event goes first because the
 ## viewport's focus walk happens on the event, and a poll set beforehand can
 ## make a same-frame reader see a press that has not physically arrived yet.
-func _edge(control: String, pressed: bool) -> Dictionary:
+func _edge(control: String, pressed: bool, device: String = "") -> Dictionary:
 	var action := StringName(control)
 	if not InputMap.has_action(action):
 		return {"ok": false, "why": "no input action '%s' in the live InputMap" % control}
-	var binding := _physical_binding(action)
+	if not device.is_empty() and not device in ["joypad", "key", "mouse"]:
+		return {"ok": false, "why": "unknown device '%s' (joypad, key or mouse)" % device}
+	var binding := _physical_binding(action, device)
 	if binding == null:
-		return {"ok": false, "why": "action '%s' has no physical binding to inject" % control}
+		if device.is_empty():
+			return {"ok": false, "why": "action '%s' has no physical binding to inject" % control}
+		# Named-device miss is a FINDING, not a harness error: it is precisely
+		# the answer §L.1 wants for a verb the player cannot reach on that
+		# device. Reported as FAIL so the run records it and continues.
+		return {"ok": false, "device_miss": true,
+			"why": "FAIL action '%s' has no %s binding -- that verb is unreachable on that device"
+				% [control, device]}
 	var raw := ""
 	if binding is InputEventJoypadButton:
 		var b := InputEventJoypadButton.new()
@@ -1296,24 +1732,37 @@ func _edge(control: String, pressed: bool) -> Dictionary:
 	return {"ok": true, "raw": raw}
 
 
-## The physical event to synthesize for an action.
+## The physical event to synthesize for an action, optionally on a named device.
 ##
-## Joypad first: this ships controller-first on a handheld, so a pad binding is
-## the one a segment is really testing. Keyboard and mouse are the fallbacks,
-## in that order, for the actions `input_contexts.json` records as
-## keyboard-only (torch, the hammer, the tool swing) -- a harness that refused
-## those would have no way to reach half the world verbs.
-func _physical_binding(action: StringName) -> InputEvent:
-	var by_kind := {"joy": null, "key": null, "mouse": null}
+## With `device` empty the preference is joypad, then keyboard, then mouse. This
+## ships controller-first on a handheld, so a pad binding is the one a segment
+## is usually testing, and the keyboard fallback is what reaches the actions
+## `input_contexts.json` records as keyboard-only (torch, the hammer, the tool
+## swing) -- a harness that refused those could not reach half the world verbs.
+##
+## **`device` exists because that preference silently halved §L.1's KBM parity
+## row.** Every dual-bound action -- W/A/S/D, E, I, M, Esc, Tab -- resolved to
+## its pad binding, so the keyboard half was unreachable while the matrix cell
+## read as covered. Only the five keyboard-or-mouse-exclusive actions ever
+## reached the KBM path at all. Naming a device makes the other half reachable.
+##
+## An action with no binding for the REQUESTED device returns null and the
+## caller records a FAIL. Deliberately not a fallback to another device: a
+## silent fallback is exactly how this stayed invisible, and a KBM cell that
+## quietly injected a pad event is worse evidence than an honest gap.
+func _physical_binding(action: StringName, device: String = "") -> InputEvent:
+	var by_kind := {"joypad": null, "key": null, "mouse": null}
 	for event in InputMap.action_get_events(action):
 		if (event is InputEventJoypadButton or event is InputEventJoypadMotion) \
-				and by_kind["joy"] == null:
-			by_kind["joy"] = event
+				and by_kind["joypad"] == null:
+			by_kind["joypad"] = event
 		elif event is InputEventKey and by_kind["key"] == null:
 			by_kind["key"] = event
 		elif event is InputEventMouseButton and by_kind["mouse"] == null:
 			by_kind["mouse"] = event
-	for kind in ["joy", "key", "mouse"]:
+	if not device.is_empty():
+		return by_kind.get(device) as InputEvent
+	for kind in ["joypad", "key", "mouse"]:
 		if by_kind[kind] != null:
 			return by_kind[kind] as InputEvent
 	return null
@@ -1497,6 +1946,11 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 		record[key] = value
 	_events.store_line(JSON.stringify(record))
 	_events.flush()
+	# §H: a forced frame on every JSONL event. Requested here rather than taken
+	# here, because `_emit` is called from inside `_write_frame`'s own caller
+	# chain in one case (`record_start`'s note) and a capture inside an emit
+	# would reenter.
+	_force_frame(type)
 	if _is_meaningful(type):
 		_since_interaction_s = 0.0
 		_dead_travel_m = 0.0
@@ -1541,6 +1995,9 @@ func _tick(delta: float) -> void:
 	if _t() >= _next_trace_t:
 		_write_trace_row()
 		_next_trace_t = _t() + (1.0 / maxf(0.1, float(_cfg["trace_hz"])))
+	# Last, so an event raised by `_watch_for_events` above gets its forced
+	# frame on THIS tick rather than the next one.
+	_recorder_tick()
 
 
 func _sample_frame() -> void:
@@ -1762,38 +2219,87 @@ func _run_overhead_probe() -> void:
 		await physics_frame
 	_probe.call("refresh_pois")
 	_seed_change_detection()
+	_frame_ms.clear()
 
-	var seconds := float(_cfg["overhead_seconds"])
-	var frames := int(seconds * float(Engine.physics_ticks_per_second))
-	var with_on := await _idle_frame_ms(frames, true)
-	var with_off := await _idle_frame_ms(frames, false)
-	var delta := with_on - with_off
-	var verdict := "within budget"
-	if delta > 1.0:
-		verdict = "OVER the ~1 ms/frame the protocol asks about; the trace was NOT thinned to hide it"
-	elif delta < 0.0:
-		# A negative delta does not mean telemetry makes the game faster. The ON
-		# phase runs first and the OFF phase second, so anything that drifts
-		# between them -- other load on the box, the world still settling --
-		# lands entirely in the difference. All a negative reading supports is
-		# that the cost is smaller than this measurement can separate from
-		# noise, and saying more than that would be inventing a result.
-		verdict = ("BELOW this measurement's noise floor: the ON phase read faster than the OFF phase, "
-			+ "which is drift between the two 60 s windows, not a speed-up. Read it as "
-			+ "'under about %.1f ms/frame', not as zero") % maxf(0.5, absf(delta))
-	_overhead_note = ("%.1f s idle at %s: telemetry+capture ON mean %.3f ms/frame, OFF mean %.3f ms/frame, "
-		+ "delta %+.3f ms/frame (%s). Measured on this container's CPU only; no device fps, no VRAM.") % [
-			seconds, str(_pos_array()), with_on, with_off, delta, verdict]
+	# Half-length windows, run forwards then backwards: off, telemetry,
+	# recording, recording, telemetry, off.
+	#
+	# The reversal is not decoration. The first version of this ran one window
+	# per condition, ON then OFF, and came back at -0.607 ms/frame -- telemetry
+	# apparently making the game FASTER, which is drift between two windows
+	# landing wholly in the difference. Running each condition twice, on either
+	# side of the turn, cancels any linear drift; the spread BETWEEN a
+	# condition's two windows then measures the noise floor directly, so the
+	# note can say whether a difference is real instead of asserting it.
+	var half := maxf(5.0, float(_cfg["overhead_seconds"]) * 0.5)
+	var frames := int(half * float(Engine.physics_ticks_per_second))
+	var order := ["off", "telemetry", "recording", "recording", "telemetry", "off"]
+	var runs := {"off": [], "telemetry": [], "recording": []}
+	for condition: String in order:
+		var mean := await _idle_frame_ms(frames, condition)
+		(runs[condition] as Array).append(mean)
+
+	var means := {}
+	var spreads := {}
+	for condition: String in runs.keys():
+		var pair: Array = runs[condition]
+		means[condition] = (float(pair[0]) + float(pair[1])) * 0.5
+		spreads[condition] = absf(float(pair[0]) - float(pair[1]))
+	# The noise floor is the widest disagreement any single condition had with
+	# itself. A delta smaller than that is not a measurement.
+	var noise := 0.0
+	for condition: String in spreads.keys():
+		noise = maxf(noise, float(spreads[condition]))
+
+	var d_telemetry := float(means["telemetry"]) - float(means["off"])
+	var d_recording := float(means["recording"]) - float(means["off"])
+	_overhead_note = ("%.0f s x 2 windows per condition at %s, order off/telemetry/recording/recording/"
+		+ "telemetry/off (reversed to cancel drift). Means: off %.3f, telemetry %.3f, "
+		+ "telemetry+recording@%.2fHz %.3f ms/frame. Deltas vs off: telemetry %+.3f (%s), "
+		+ "recording %+.3f (%s). Noise floor %.3f ms/frame, taken as the widest a single condition "
+		+ "disagreed with itself. Display server %s, viewport %dx%d, frames written %d. "
+		+ "CPU frame time on this container only -- no device fps, no VRAM.") % [
+			half, str(_pos_array()),
+			float(means["off"]), float(means["telemetry"]),
+			float(_cfg["record_window_hz"]), float(means["recording"]),
+			d_telemetry, _overhead_verdict(d_telemetry, noise),
+			d_recording, _overhead_verdict(d_recording, noise),
+			noise, DisplayServer.get_name(), _viewport_size().x, _viewport_size().y,
+			_record_written]
 	print("gate-f overhead: %s" % _overhead_note)
 
 
-func _idle_frame_ms(frames: int, telemetry: bool) -> float:
+## How to read one delta, honestly.
+##
+## Three outcomes and they are genuinely different claims: over the protocol's
+## ~1 ms/frame line (say so, and do NOT thin the trace to hide it -- §3's last
+## clause); measurable and under it; or smaller than this measurement can
+## separate from noise, which is not the same as zero and must not be written
+## as zero.
+func _overhead_verdict(delta: float, noise: float) -> String:
+	if delta > 1.0:
+		return "OVER the ~1 ms/frame the protocol asks about; the trace was NOT thinned to hide it"
+	if absf(delta) <= noise:
+		return "below the noise floor -- read as 'under ~%.2f ms/frame', not as zero" % maxf(noise, 0.01)
+	if delta < 0.0:
+		return "negative beyond the noise floor, which cannot be a real speed-up -- treat as unresolved"
+	return "measurable and within budget"
+
+
+## Mean CPU frame time over `frames`, under one of three conditions:
+## `off` (no telemetry tick at all), `telemetry` (the 2 Hz trace and the event
+## watch), `recording` (both, plus the §H frame recorder).
+func _idle_frame_ms(frames: int, condition: String) -> float:
+	var restore_hz := _record_hz
+	_record_hz = float(_cfg["record_window_hz"]) if condition == "recording" else 0.0
+	_record_next_t = _t()
 	var samples: Array[float] = []
 	for i in frames:
 		await physics_frame
 		samples.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
-		if telemetry:
+		if condition != "off":
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
+	_record_hz = restore_hz
 	if samples.is_empty():
 		return 0.0
 	var sum := 0.0
