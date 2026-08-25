@@ -3,6 +3,7 @@
   "title": "Combat lab (protocol E.1 / section 5)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.1, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S04-exit, S06-exit, S09-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
   "_scope": "E.1's own framing: 'Every journey fight already emits combat_* telemetry. The lab adds the cases natural play avoids.' CB-01 to CB-06 are sited in the journey lane and are recorded there; X04 owns CB-07 to CB-12, and CB-13's fallback belongs to X07.",
   "_env_partial": "E.1's own caveat travels with this evidence: '[ENV-PARTIAL]: synthetic piloting cannot feel responsiveness/latency; twitch-feel is [OWNER-ONLY].'",
   "_no_teleport": "X04 is not a DIAG segment and contains no teleport step. Every fight below is reached by walking from a real journey save.",

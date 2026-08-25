@@ -3,6 +3,7 @@
   "title": "Catching lab (protocol E.2 / section 6)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.2, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S05-exit (band 1 field) and S08-exit (party of 5).",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
   "_config": "E.2's own catch config reference: data/config/catching.json -- throw speed 17, gravity 14, max flight 4 s, cooldown 0.9 s; orbs basic/greater/prime; D31 explicit percent.",
   "_per_throw": "E.2's per-throw record, which every throw below feeds: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behavior during aim/throw/resolve.",
   "_hard_rules": "A trainer-owned creature CANNOT be caught and the party maximum is five with no storage and no sixth slot (CLAUDE.md). CT-06 and CT-09 are transcribed as expected REFUSALS and as a five-slot presentation check, never as expected successes.",
@@ -1122,6 +1123,15 @@
     },
     {
       "id": "X03-108",
+      "title": "AMBIGUITY: what the party count is at S05-exit",
+      "action": "note",
+      "args": {
+        "text": "CT-08 needs a party that is not full, and the protocol never says how many creatures S05-exit holds -- protocol B's span for S03 is 'team of 3' and nothing fixes the count at S05. The two asserts below are written as 4 then 5, so that 'party count increments' is a real verdict rather than an unfalsifiable one. A FAIL on the first of them is a bookkeeping mismatch about the entry save, not a game defect, and the event's own `party` field carries the true count either way."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-109",
       "title": "party size before the catch",
       "action": "assert",
       "args": {
@@ -1131,7 +1141,7 @@
       "expected": "the party is not full; the exact count before the catch is on this event"
     },
     {
-      "id": "X03-109",
+      "id": "X03-110",
       "title": "engage a catchable wild",
       "action": "press",
       "args": {
@@ -1143,7 +1153,7 @@
       "expected": "a fight starts against a wild the party has room for"
     },
     {
-      "id": "X03-110",
+      "id": "X03-111",
       "title": "weaken it",
       "action": "press",
       "args": {
@@ -1155,7 +1165,7 @@
       "expected": "the wild is brought low so the shown percent is workable"
     },
     {
-      "id": "X03-111",
+      "id": "X03-112",
       "title": "enter aim (CT-08 party-not-full catch)",
       "action": "press",
       "args": {
@@ -1165,7 +1175,7 @@
       "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
     },
     {
-      "id": "X03-112",
+      "id": "X03-113",
       "title": "aim owns input (CT-08 party-not-full catch)",
       "action": "assert",
       "args": {
@@ -1175,7 +1185,7 @@
       "expected": "input_context is 'combat_aim'"
     },
     {
-      "id": "X03-113",
+      "id": "X03-114",
       "title": "throw",
       "action": "press",
       "args": {
@@ -1185,7 +1195,7 @@
       "expected": "the throw resolves; a success is what CT-08 needs"
     },
     {
-      "id": "X03-114",
+      "id": "X03-115",
       "title": "the party count incremented",
       "action": "assert",
       "args": {
@@ -1195,7 +1205,7 @@
       "expected": "party count increments by exactly one. The HUD must show exactly five slots maximum -- nothing may imply a sixth."
     },
     {
-      "id": "X03-115",
+      "id": "X03-116",
       "title": "CT-10",
       "action": "note",
       "args": {
@@ -1204,14 +1214,14 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X03-116",
+      "id": "X03-117",
       "title": "open the Creatures tab",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button opens the pause shell"
     },
     {
-      "id": "X03-117",
+      "id": "X03-118",
       "title": "cycle right to Creatures",
       "action": "press",
       "args": {
@@ -1223,7 +1233,7 @@
       "expected": "one RB press reaches the Creatures tab"
     },
     {
-      "id": "X03-118",
+      "id": "X03-119",
       "title": "Creatures owns input",
       "action": "assert",
       "args": {
@@ -1233,7 +1243,7 @@
       "expected": "input_context is 'menu_creatures' and the new catch is in the list with its nickname"
     },
     {
-      "id": "X03-119",
+      "id": "X03-120",
       "title": "walk the party list",
       "action": "focus_move",
       "args": {
@@ -1243,14 +1253,14 @@
       "expected": "focus walks the party, including the newest member"
     },
     {
-      "id": "X03-120",
+      "id": "X03-121",
       "title": "close the shell",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes"
     },
     {
-      "id": "X03-121",
+      "id": "X03-122",
       "title": "cycle in the world",
       "action": "press",
       "args": {
@@ -1262,7 +1272,7 @@
       "expected": "LB cycles the party in the world, including the newest catch (L.6 T11)"
     },
     {
-      "id": "X03-122",
+      "id": "X03-123",
       "title": "deploy the new catch",
       "action": "press",
       "args": {
@@ -1272,7 +1282,7 @@
       "expected": "RB calls out the newly caught creature"
     },
     {
-      "id": "X03-123",
+      "id": "X03-124",
       "title": "CT-11",
       "action": "note",
       "args": {
@@ -1281,14 +1291,14 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X03-124",
+      "id": "X03-125",
       "title": "open the Save tab",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button opens the pause shell"
     },
     {
-      "id": "X03-125",
+      "id": "X03-126",
       "title": "cycle right to Save",
       "action": "press",
       "args": {
@@ -1300,7 +1310,7 @@
       "expected": "five RB presses reach the Save tab"
     },
     {
-      "id": "X03-126",
+      "id": "X03-127",
       "title": "the Save tab is up",
       "action": "assert",
       "args": {
@@ -1310,7 +1320,7 @@
       "expected": "input_context is 'menu_save'"
     },
     {
-      "id": "X03-127",
+      "id": "X03-128",
       "title": "focus slot 1's Save button",
       "action": "focus_move",
       "args": {
@@ -1320,7 +1330,7 @@
       "expected": "focus starts on slot 0's Save button and one d-pad down reaches slot 1's -- slots 1-3 are the ones kept free for natural play coverage"
     },
     {
-      "id": "X03-128",
+      "id": "X03-129",
       "title": "save to slot 1",
       "action": "press",
       "args": {
@@ -1330,7 +1340,7 @@
       "expected": "the focused Save button writes slot 1; the save duration is measured"
     },
     {
-      "id": "X03-129",
+      "id": "X03-130",
       "title": "give the write a moment",
       "action": "wait",
       "args": {
@@ -1339,7 +1349,7 @@
       "expected": "the slot file is on disk"
     },
     {
-      "id": "X03-130",
+      "id": "X03-131",
       "title": "copy slot 1 out",
       "action": "save_out",
       "args": {
@@ -1349,14 +1359,14 @@
       "expected": "the artefact is preserved in the run directory"
     },
     {
-      "id": "X03-131",
+      "id": "X03-132",
       "title": "close the shell",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes"
     },
     {
-      "id": "X03-132",
+      "id": "X03-133",
       "title": "quit to the title",
       "action": "boot",
       "args": {
@@ -1366,7 +1376,7 @@
       "expected": "the title comes back up"
     },
     {
-      "id": "X03-133",
+      "id": "X03-134",
       "title": "move focus to Load Game",
       "action": "focus_move",
       "args": {
@@ -1376,7 +1386,7 @@
       "expected": "d-pad down reaches Load Game"
     },
     {
-      "id": "X03-134",
+      "id": "X03-135",
       "title": "open the slot list",
       "action": "press",
       "args": {
@@ -1386,7 +1396,7 @@
       "expected": "the slot list opens and auto-focuses the first non-empty slot"
     },
     {
-      "id": "X03-135",
+      "id": "X03-136",
       "title": "load slot 1",
       "action": "press",
       "args": {
@@ -1396,7 +1406,7 @@
       "expected": "slot 1 loads; the load duration is measured"
     },
     {
-      "id": "X03-136",
+      "id": "X03-137",
       "title": "let the loaded world stand up",
       "action": "wait",
       "args": {
@@ -1405,7 +1415,7 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
     },
     {
-      "id": "X03-137",
+      "id": "X03-138",
       "title": "the party came back intact",
       "action": "assert",
       "args": {
@@ -1415,14 +1425,14 @@
       "expected": "party intact with nickname: the count is right and the Creatures tab below shows the nickname"
     },
     {
-      "id": "X03-138",
+      "id": "X03-139",
       "title": "check the nickname survived",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button opens the pause shell"
     },
     {
-      "id": "X03-139",
+      "id": "X03-140",
       "title": "cycle right to Creatures",
       "action": "press",
       "args": {
@@ -1434,7 +1444,7 @@
       "expected": "the Creatures tab shows the caught creature under its nickname"
     },
     {
-      "id": "X03-140",
+      "id": "X03-141",
       "title": "Creatures owns input",
       "action": "assert",
       "args": {
@@ -1444,14 +1454,14 @@
       "expected": "input_context is 'menu_creatures'"
     },
     {
-      "id": "X03-141",
+      "id": "X03-142",
       "title": "close the shell",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes"
     },
     {
-      "id": "X03-142",
+      "id": "X03-143",
       "title": "CT-09",
       "action": "note",
       "args": {
@@ -1460,7 +1470,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X03-143",
+      "id": "X03-144",
       "title": "the five-creature rule constrains what CT-09 can even expect",
       "action": "note",
       "args": {
@@ -1469,7 +1479,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X03-144",
+      "id": "X03-145",
       "title": "empty the live save directory",
       "action": "wipe_saves",
       "args": {
@@ -1478,7 +1488,7 @@
       "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
     },
     {
-      "id": "X03-145",
+      "id": "X03-146",
       "title": "seed slot 4 from S08-exit",
       "action": "seed_save",
       "args": {
@@ -1488,7 +1498,7 @@
       "expected": "the journey's S08-exit slot file is back in user://, so the title's Load Game finds it"
     },
     {
-      "id": "X03-146",
+      "id": "X03-147",
       "title": "boot the real title screen",
       "action": "boot",
       "args": {
@@ -1498,7 +1508,7 @@
       "expected": "the real title comes up with Start New Game focused"
     },
     {
-      "id": "X03-147",
+      "id": "X03-148",
       "title": "the title owns input",
       "action": "assert",
       "args": {
@@ -1508,7 +1518,7 @@
       "expected": "input_context is 'title'"
     },
     {
-      "id": "X03-148",
+      "id": "X03-149",
       "title": "move focus to Load Game",
       "action": "focus_move",
       "args": {
@@ -1518,7 +1528,7 @@
       "expected": "d-pad down moves focus from Start New Game to Load Game"
     },
     {
-      "id": "X03-149",
+      "id": "X03-150",
       "title": "open the load slot list",
       "action": "press",
       "args": {
@@ -1528,7 +1538,7 @@
       "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
     },
     {
-      "id": "X03-150",
+      "id": "X03-151",
       "title": "load the seeded slot",
       "action": "press",
       "args": {
@@ -1538,7 +1548,7 @@
       "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
     },
     {
-      "id": "X03-151",
+      "id": "X03-152",
       "title": "let the loaded world stand up",
       "action": "wait",
       "args": {
@@ -1547,7 +1557,7 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
     },
     {
-      "id": "X03-152",
+      "id": "X03-153",
       "title": "the world owns input",
       "action": "assert",
       "args": {
@@ -1557,7 +1567,7 @@
       "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
     },
     {
-      "id": "X03-153",
+      "id": "X03-154",
       "title": "the party is full",
       "action": "assert",
       "args": {
@@ -1567,7 +1577,7 @@
       "expected": "5/5: the party maximum, with no storage and no sixth slot"
     },
     {
-      "id": "X03-154",
+      "id": "X03-155",
       "title": "engage a wild at 5/5",
       "action": "press",
       "args": {
@@ -1579,7 +1589,7 @@
       "expected": "a fight starts against a catchable wild while the party is full"
     },
     {
-      "id": "X03-155",
+      "id": "X03-156",
       "title": "weaken it",
       "action": "press",
       "args": {
@@ -1591,7 +1601,7 @@
       "expected": "the wild is brought low"
     },
     {
-      "id": "X03-156",
+      "id": "X03-157",
       "title": "enter aim (CT-09 party-full)",
       "action": "press",
       "args": {
@@ -1601,7 +1611,7 @@
       "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
     },
     {
-      "id": "X03-157",
+      "id": "X03-158",
       "title": "aim owns input (CT-09 party-full)",
       "action": "assert",
       "args": {
@@ -1611,7 +1621,7 @@
       "expected": "input_context is 'combat_aim'"
     },
     {
-      "id": "X03-158",
+      "id": "X03-159",
       "title": "GF-15-CATCH-09a: aim reticle at 5/5",
       "action": "capture",
       "args": {
@@ -1625,7 +1635,7 @@
       "expected": "the aim reticle frame with the party at 5/5"
     },
     {
-      "id": "X03-159",
+      "id": "X03-160",
       "title": "throw while full",
       "action": "press",
       "args": {
@@ -1635,7 +1645,7 @@
       "expected": "record exactly what the game offers. The flow must neither silently discard nor imply storage."
     },
     {
-      "id": "X03-160",
+      "id": "X03-161",
       "title": "GF-15-CATCH-09b: what the game offers at 5/5",
       "action": "capture",
       "args": {
@@ -1649,7 +1659,7 @@
       "expected": "the resolve frame showing exactly what the game offers when a catch lands at 5/5"
     },
     {
-      "id": "X03-161",
+      "id": "X03-162",
       "title": "the party is still five",
       "action": "assert",
       "args": {
@@ -1659,7 +1669,7 @@
       "expected": "however the decision point resolves, the party is five: no sixth slot exists"
     },
     {
-      "id": "X03-162",
+      "id": "X03-163",
       "title": "let the fight end",
       "action": "wait",
       "args": {
@@ -1668,7 +1678,7 @@
       "expected": "the fight resolves and control returns"
     },
     {
-      "id": "X03-163",
+      "id": "X03-164",
       "title": "segment close",
       "action": "note",
       "args": {

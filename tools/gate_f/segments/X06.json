@@ -3,6 +3,7 @@
   "title": "Abuse and failure sweep (protocol E.6 / section 2)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.6, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S03-exit and S05-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
   "_rule": "E.6's own preamble: 'All on production paths, each with expected/actual telemetry.' Nothing here is granted and free_build stays OFF.",
   "_no_teleport": "X06 is not a DIAG segment and contains no teleport step. Every locked route below is approached by walking, because whether the world explains the lock diegetically on arrival is the whole point of case 11.",
   "_defect_shots": "Protocol G: 'Defect shots (GF-22/DEF-...) are the only operator-added captures: context frame first, then a diagnostic close view if useful, at first occurrence, as-found.' They are therefore NOT pre-planned in this file. Case 6's 'record any clip/soft-lock with position (GF-22 defect shots)' is an instruction to the operator at the moment of a find, not a planned frame.",
