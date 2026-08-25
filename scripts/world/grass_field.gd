@@ -151,6 +151,12 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
+	# UV2.x carries WHICH BLADE of the tuft this vertex belongs to. Without it
+	# every blade in a tuft hashes on the same instance origin and therefore
+	# gets the same height, the same lean and the same lean direction -- five
+	# parallel strips, which a blind critic read exactly as "a comb, or a field
+	# of leeks, not a meadow".
+	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 
 	# Metres, baked. An earlier version carried the mesh in [-0.5, 0.5] and let
@@ -162,7 +168,11 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	# to 15% of an 11mm blade, which is a 1.6mm tip -- sub-pixel at any distance
 	# past a couple of metres, and it aliased into white speckle across the whole
 	# field rather than reading as grass.
-	var half_width := 0.0095
+	# 6mm blades. A blind critic measured the previous 19mm ones against the
+	# 1.80m trainer and called them 4-6cm where real meadow grass at this height
+	# is 3-6mm, and named that as why the fill never read as grass however much
+	# of it there was.
+	var half_width := 0.003
 	var spread := 0.075
 	for b in blades:
 		var yaw := TAU * float(b) / float(blades) + 0.37 * float(b)
@@ -183,6 +193,9 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 			normals.append(normal)
 			uvs.append(Vector2(0.0, t))
 			uvs.append(Vector2(1.0, t))
+			var blade_id := float(b) / float(blades)
+			uv2s.append(Vector2(blade_id, 0.0))
+			uv2s.append(Vector2(blade_id, 0.0))
 		for s in segments:
 			var a := first + s * 2
 			indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
@@ -192,6 +205,7 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	arrays[Mesh.ARRAY_VERTEX] = verts
 	arrays[Mesh.ARRAY_NORMAL] = normals
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_TEX_UV2] = uv2s
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)

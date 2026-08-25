@@ -148,7 +148,16 @@ float hash12(vec2 p) {
 	return fract((p3.x + p3.y) * p3.z);
 }
 
-float value_noise(vec2 p) {
+// The domain is rotated before sampling. An axis-aligned value-noise lattice
+// puts its features on horizontal and vertical lines, and over a whole ground
+// plane that reads as ranks -- a blind critic named "distinct horizontal
+// stripes, bands of blades separated by strips of bare ground" as the loudest
+// procedural signature in the set. A 31-degree rotation costs two multiplies
+// and takes the lattice off the world axes.
+const mat2 NOISE_ROT = mat2(vec2(0.857, 0.515), vec2(-0.515, 0.857));
+
+float value_noise(vec2 q) {
+	vec2 p = NOISE_ROT * q;
 	vec2 i = floor(p);
 	vec2 f = fract(p);
 	f = f * f * (3.0 - 2.0 * f);
@@ -162,6 +171,13 @@ void vertex() {
 	// `grass_field.gd`, so this is the blade's ground position in XZ and 0 in Y.
 	vec3 base = MODEL_MATRIX[3].xyz;
 	vec2 world_xz = base.xz;
+	// Per-BLADE seed. UV2.x is which blade of the tuft this vertex belongs to
+	// (see grass_field.gd::_tuft_mesh). Hashing on the instance origin alone
+	// gives every blade in a tuft the same height and the same lean, which is
+	// the "comb" read; offsetting the hash domain by the blade id breaks them
+	// apart at no cost. Coverage and shade stay per-TUFT on purpose -- a tuft
+	// should live or die as a unit, or the drifts dissolve into static.
+	vec2 blade_seed = world_xz + vec2(UV2.x * 37.13, UV2.x * 91.71);
 
 	float dist = length(world_xz - field_centre.xz);
 	v_fade = 1.0 - smoothstep(fade_start, field_radius, dist);
@@ -208,7 +224,7 @@ void vertex() {
 		v_blade_t = t;
 
 		float h = mix(height_near, height_far, smoothstep(0.0, field_radius, dist));
-		h *= 1.0 + (hash12(world_xz * 3.77) - 0.5) * 2.0 * height_jitter;
+		h *= 1.0 + (hash12(blade_seed * 3.77) - 0.5) * 2.0 * height_jitter;
 
 		// Bend. A blade of grass is not a spike: it leans, and each one leans a
 		// different way. Without the per-blade term the whole field renders as
@@ -217,8 +233,8 @@ void vertex() {
 		// travelling.
 		float wind = value_noise(world_xz * wind_scale + wind_dir * wind_time);
 		float lean = (wind - 0.5) * 2.0 * wind_strength;
-		float own_bend = (hash12(world_xz * 11.13) - 0.5) * 2.0 * bend;
-		float own_dir = hash12(world_xz * 5.91) * 6.2831853;
+		float own_bend = (hash12(blade_seed * 11.13) - 0.5) * 2.0 * bend;
+		float own_dir = hash12(blade_seed * 5.91) * 6.2831853;
 		vec2 bend_dir = vec2(sin(own_dir), cos(own_dir));
 		// The mesh carries x in [-0.5, 0.5] scaled by its own taper and y in
 		// [0, 1]; width and height are applied here so one mesh serves every

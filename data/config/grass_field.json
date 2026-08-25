@@ -8,9 +8,9 @@
   "suppress_scatter_layers": ["grass", "drygrass", "flowers"],
 
   "_comment_ring": "The ring's size and how it is populated. `tuft_count` is the ONLY number that decides how much geometry exists -- it does not grow with the world, which is the entire point of the approach. `centre_bias` below 1.0 crowds tufts toward the middle: r = radius * pow(randf(), bias), so 0.5 is a uniform disc and lower values spend more of the budget where the camera actually is. A uniform disc wastes most of its tufts in the outer ring where they are sub-pixel.",
-  "tuft_count": 170000,
+  "tuft_count": 210000,
   "field_radius": 56.0,
-  "fade_start": 36.0,
+  "fade_start": 42.0,
   "centre_bias": 0.62,
   "seed": 20260825,
 
@@ -18,7 +18,7 @@
   "snap": 2.0,
 
   "_comment_blade": "One tuft is `blades_per_tuft` tapered strips at different yaws, generated in code by grass_field.gd::_tuft_mesh -- no asset enters the repository, which keeps CLAUDE.md's no-new-assets rule for the Meadows untouched. `blade_segments` is how many quads make a blade; more bends more smoothly and costs triangles linearly. Heights are in metres against the 1.80m trainer: WORLD-GRASS landed the scattered tufts at a 0.71m mean and a blind critic still called them short, so this starts a little above that and grows with distance so a far blade stays a few pixels tall instead of shimmering.",
-  "blades_per_tuft": 5,
+  "blades_per_tuft": 7,
   "blade_segments": 4,
   "blade_width": 1.0,
   "height_near": 0.40,
@@ -26,7 +26,7 @@
   "height_jitter": 0.38,
 
   "_comment_coverage": "What stops this being a lawn. `density_gain` is the flat keep-chance; `clump_scale` is the frequency of the drift noise that modulates it (smaller is broader drifts) and `clump_contrast` how hard that noise bites -- 0 is uniform coverage, 1 is drifts with genuinely bare ground between them. This is where GROUND-LAYERS' measured composition target lives now: roughly 70% open grass, 15% path/worn, 10% low accents, 5% special. That target was expressed as placement counts before and cannot be any more, so it is expressed as noise here. TUNABLE, and the first thing to re-judge against a blind pass.",
-  "density_gain": 0.74,
+  "density_gain": 0.82,
   "clump_scale": 0.11,
   "clump_contrast": 0.78,
 
@@ -37,7 +37,7 @@
   "translucency": 0.18,
 
   "_comment_wind": "Free here, and the owner's reference frames are of moving grass. Strength is in metres of tip travel.",
-  "bend": 0.18,
+  "bend": 0.26,
   "shade_jitter": 0.18,
   "wind_strength": 0.1,
   "wind_scale": 0.09,
