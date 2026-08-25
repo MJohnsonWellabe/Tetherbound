@@ -168,11 +168,16 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	# to 15% of an 11mm blade, which is a 1.6mm tip -- sub-pixel at any distance
 	# past a couple of metres, and it aliased into white speckle across the whole
 	# field rather than reading as grass.
-	# 6mm blades. A blind critic measured the previous 19mm ones against the
-	# 1.80m trainer and called them 4-6cm where real meadow grass at this height
-	# is 3-6mm, and named that as why the fill never read as grass however much
-	# of it there was.
-	var half_width := 0.003
+	# 11mm blades, and the number has now been wrong in both directions. At 19mm
+	# a blind critic measured them against the 1.80m trainer and called them
+	# 4-6cm where real meadow grass at this height is 3-6mm -- "a field of
+	# leeks". At a literal 6mm they are correct and read WORSE: a 6mm blade is
+	# under a pixel wide beyond a few metres on a 1280-wide frame, so the field
+	# dissolves into wisp and the software rasteriser has no coverage AA to
+	# recover it. 11mm is the compromise the render resolution actually
+	# supports, not the botanically right answer. Revisit if the game ever
+	# renders at a resolution where a thinner blade survives minification.
+	var half_width := 0.0055
 	var spread := 0.075
 	for b in blades:
 		var yaw := TAU * float(b) / float(blades) + 0.37 * float(b)
