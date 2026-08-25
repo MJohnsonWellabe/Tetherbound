@@ -2181,7 +2181,7 @@
       "title": "GF-14-COMBAT-13: the night fight",
       "action": "capture",
       "args": {
-        "id": "GF-14-COMBAT-13",
+        "id": "GF-14-COMBAT-13b",
         "class": "14",
         "hud": "on",
         "camera_kind": "gameplay",

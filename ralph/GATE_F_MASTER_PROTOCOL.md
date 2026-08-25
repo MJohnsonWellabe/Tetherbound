@@ -713,6 +713,35 @@ This is the only amendment made to Fable's Phase A protocol by the coordinator.
 It resolves an internal inconsistency; it does not change what is tested, and
 it was made before any evidence was gathered.
 
+**Coordinator amendment 2, 2026-08-25 (pre-freeze, recorded not silent).**
+Four ids were each claimed by a capture step in **both** the journey and the
+study lane, because §E's own wording assigns them to both:
+
+| id | why both lanes took it |
+|---|---|
+| `GF-14-COMBAT-09` | CB-09 is "X04 **plus** at least one journey fight" |
+| `GF-14-COMBAT-12` | CB-12 is "smallest **and** largest" |
+| `GF-14-COMBAT-13` | CB-13 is "as natural play allows; **else** X07 pins and labels DIAG" |
+| `GF-19-UI-08` | class 19's world HUD frame, reachable from either lane |
+
+In the first three the two frames are genuinely different evidence and both are
+wanted; the collision is only in the naming. Manifests are per-segment so no
+file collides, but two rows carrying one id in a single run directory is how a
+reader cites the wrong frame — the same hazard §G's own cadence rule guards
+against.
+
+Resolved by the `GF-14-COMBAT-04a…04e` precedent already in this table:
+**journey takes `a`, study takes `b`, and the bare id stays what §G planned so
+neither lane claims it.** No frame was added or dropped; only the labels changed.
+Renaming one side alone would have been worse than the collision, which is why
+the transcribers correctly refused to do it unilaterally and referred it up.
+
+Together with amendment 1 these are the only coordinator edits to Fable's
+Phase A artefacts, alongside the `record_hz` keys set in eight segment files per
+§H's mandatory list. All are recorded in-file with their reasoning. None adds or
+removes coverage. Whether they were the coordinator's to make is for the
+reconciliation to judge, not for this document to assert.
+
 ---
 
 ## H. Continuous evidence plan (§12)

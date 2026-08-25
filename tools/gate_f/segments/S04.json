@@ -504,7 +504,7 @@
       "title": "capture GF-14-COMBAT-09",
       "action": "capture",
       "args": {
-        "id": "GF-14-COMBAT-09",
+        "id": "GF-14-COMBAT-09a",
         "class": "14",
         "hud": "on",
         "camera_kind": "gameplay",
