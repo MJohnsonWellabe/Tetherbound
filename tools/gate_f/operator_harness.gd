@@ -115,6 +115,11 @@ var _boot_usec := 0
 var _distance_m := 0.0
 var _since_interaction_s := 0.0
 var _dead_travel_m := 0.0
+## The largest dead-travel run this segment has seen. Kept because the CURRENT
+## value is almost always small -- a segment ends near something -- so it can
+## only ever prove the meter resets, never that it accumulates. Both halves have
+## to be checkable or "the meter works" is half a claim.
+var _dead_travel_peak := 0.0
 var _last_pos := Vector3.ZERO
 var _have_last_pos := false
 var _next_trace_t := 0.0
@@ -378,6 +383,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_close_menu(args, id)
 		"focus_move":
 			actual = await _step_focus_move(args, id)
+		"type_name":
+			actual = await _step_type_name(args, id)
 		"capture":
 			actual = await _step_capture(args, id)
 		"capture_seq":
@@ -516,11 +523,26 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 	if control.is_empty():
 		return "HARNESS-ERROR press step %s has no control" % step_id
 	var frames := _hold_frames(args.get("hold", "tap"))
-	var sent := await _inject(control, frames)
-	if not bool(sent.get("ok", false)):
-		return "HARNESS-ERROR %s" % str(sent.get("why", "injection failed"))
-	return "pressed %s (%s, %d frames), resolved to %s" % [control,
-		str(args.get("hold", "tap")), frames, str(sent.get("raw", ""))]
+	# `times` rather than N identical steps. Five copies is how the save-handoff
+	# self-check was first written and it hid the answer: one result line per
+	# press, and no way to see which press did not land.
+	var times := maxi(1, int(args.get("times", 1)))
+	# Idle frames between repeats. Every menu-side reader in this game polls
+	# `Input.is_action_just_pressed` from `_process` (`game_menu.gd::_process`),
+	# and a tab switch rebuilds a whole tab body -- the map tab bakes a map -- so
+	# back-to-back presses with only the injection's own frames between them can
+	# arrive while the previous one is still being digested.
+	var gap := maxi(0, int(args.get("settle_frames", 8)))
+	var raw := ""
+	for i in times:
+		var sent := await _inject(control, frames)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", "injection failed"))
+		raw = str(sent.get("raw", ""))
+		for f in gap:
+			await process_frame
+	return "pressed %s x%d (%s, %d frames each), resolved to %s" % [control, times,
+		str(args.get("hold", "tap")), frames, raw]
 
 
 ## Same-frame multi-press, for the collision probes §8 needs: two controls
@@ -700,7 +722,13 @@ func _step_face(args: Dictionary) -> String:
 		var delta := rad_to_deg(angle_difference(deg_to_rad(have), deg_to_rad(want)))
 		if absf(delta) <= tolerance:
 			break
-		_stick_right = Vector2(clampf(-delta / 45.0, -1.0, 1.0), 0.0)
+		# Floored well above `camera_rig.gd`'s own 0.18 stick deadzone. A pure
+		# proportional push eases below the deadzone about 8 degrees out and
+		# then pushes nothing at all: measured on the band 1 spine, a `face`
+		# step asking for 138 degrees stalled at 124 and reported the camera as
+		# unable to turn, when the harness had simply stopped asking it to.
+		var push := clampf(absf(delta) / 45.0, 0.4, 1.0) * signf(-delta)
+		_stick_right = Vector2(push, 0.0)
 		_drive_sticks()
 		turned += 1
 		await physics_frame
@@ -793,6 +821,86 @@ func _focus_name(state: Dictionary) -> String:
 	if owner.is_empty():
 		return "nothing"
 	return "'%s' (%s)" % [text, owner] if not text.is_empty() else owner
+
+
+## Type a name into the live naming prompt on the pad's on-screen grid.
+##
+## Naming is mandatory (`docs/OPENING_SEQUENCE.md`) and it is the one beat the
+## rest of this vocabulary cannot reach: `name_prompt.gd` in gamepad mode is a
+## letter grid driven by `ui_*` and `menu_confirm`, so "press confirm until it
+## goes away" types the same letter forever and never finds Done. Without this
+## action the protocol's S01 could not be transcribed at all -- which is the
+## test of a vocabulary, not a convenience.
+##
+## Still production input: every press below is a real physical event through
+## the live InputMap, the same as every other step. What it reads from the panel
+## is only WHERE THE CURSOR IS (`name_prompt.gd::entry()`'s row/column), because
+## a blind walk of a grid whose layout it cannot see would be guessing. Nothing
+## is written into the panel and `_confirm()` is never called directly.
+##
+## The grid walk is `tests/helpers/gate_a_opening_drive.gd::_select_name_cell`'s,
+## reimplemented here rather than imported: that helper is a test fixture that
+## reports through a test's own `_fail`, and the harness has to report through a
+## step verdict instead. The cell-finding rule is the same one, and
+## `name_entry.gd::ROWS` is the single source both read.
+func _step_type_name(args: Dictionary, step_id: String) -> String:
+	var wanted := str(args.get("name", ""))
+	if wanted.is_empty():
+		return "HARNESS-ERROR type_name step %s has no name" % step_id
+	var owner := _probe.call("input_owner_node") as Node
+	if owner == null or not owner.has_method("entry"):
+		return "FAIL no naming prompt is open (input owner is '%s')" % (
+			"nothing" if owner == null else str(owner.name))
+	# The panel switches between keyboard and pad presentation on the last
+	# device it saw. Every press this harness sends is a joypad event where one
+	# exists, so it should already be in pad mode; if it is not, the grid is not
+	# drawn and the walk below has nothing to walk.
+	if not bool(owner.get("_using_gamepad")):
+		return "FAIL the naming prompt is in keyboard mode; the pad grid is not drawn"
+	var entry: Variant = owner.call("entry")
+	var grid := load("res://scripts/ui/name_entry.gd") as GDScript
+	if entry == null or grid == null:
+		return "HARNESS-ERROR the naming prompt exposes no entry grid"
+	for character in wanted:
+		if not await _walk_to_name_cell(entry, grid, character):
+			return "FAIL could not reach the '%s' cell in the naming grid" % character
+		await _inject("menu_confirm", HOLD_TAP)
+	var typed := str(owner.call("current_text"))
+	if typed != wanted:
+		return "FAIL typed '%s' on the pad grid, wanted '%s'" % [typed, wanted]
+	if not await _walk_to_name_cell(entry, grid, grid.DONE):
+		return "FAIL typed '%s' and could not reach the Done cell" % typed
+	await _inject("menu_confirm", HOLD_TAP)
+	var closed := await _settle_until(func() -> bool:
+		return not bool(owner.call("is_open")), 180)
+	if not closed:
+		return "FAIL Done did not close the naming prompt after typing '%s'" % typed
+	return "typed '%s' on the pad grid and confirmed Done" % typed
+
+
+## Move the naming cursor onto `cell`, one d-pad tap at a time.
+func _walk_to_name_cell(entry: Variant, grid: GDScript, cell: String) -> bool:
+	var target := Vector2i(-1, -1)
+	var rows: Array = grid.ROWS
+	for row_index in rows.size():
+		var row: Array = rows[row_index]
+		for column_index in row.size():
+			if str(row[column_index]) == cell:
+				target = Vector2i(row_index, column_index)
+	if target.x < 0:
+		return false
+	# Bounded rather than "until it arrives": a grid walk that could not reach
+	# its cell would otherwise spin for the rest of the segment. The bounds are
+	# a row/column count with slack, so overshooting wraps rather than hanging.
+	for i in 16:
+		if int(entry.get("row")) == target.x:
+			break
+		await _inject("ui_down", HOLD_TAP)
+	for i in 20:
+		if int(entry.get("column")) == target.y:
+			break
+		await _inject("ui_right", HOLD_TAP)
+	return str(entry.call("selected")) == cell
 
 
 func _step_capture(args: Dictionary, step_id: String) -> String:
@@ -958,7 +1066,17 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"dead_travel_below":
 			var ceiling := float(args.get("metres", 0.0))
 			return {"ok": _dead_travel_m <= ceiling,
-				"actual": "dead_travel=%.1f m (ceiling %.1f)" % [_dead_travel_m, ceiling]}
+				"actual": "dead_travel=%.1f m now, peak %.1f m this segment (ceiling %.1f)"
+					% [_dead_travel_m, _dead_travel_peak, ceiling]}
+		"dead_travel_peak_above":
+			var floor_m := float(args.get("metres", 0.0))
+			return {"ok": _dead_travel_peak >= floor_m,
+				"actual": "dead_travel peaked at %.1f m this segment (wanted >= %.1f); %.1f m walked in total"
+					% [_dead_travel_peak, floor_m, _distance_m]}
+		"distance_above":
+			var walked := float(args.get("metres", 0.0))
+			return {"ok": _distance_m >= walked,
+				"actual": "walked %.1f m this segment (wanted >= %.1f)" % [_distance_m, walked]}
 		"route_rows_at_least":
 			var want := int(args.get("rows", 0))
 			return {"ok": _trace_rows >= want,
@@ -1109,10 +1227,17 @@ func _inject(control: String, frames: int) -> Dictionary:
 	var down := _edge(control, true)
 	if not bool(down.get("ok", false)):
 		return down
+	# One IDLE frame with the control held, before any physics frame. Every menu
+	# in this game polls `Input.is_action_just_pressed` from `_process`, which is
+	# idle; a press that only ever spanned physics frames can be pressed and
+	# released without a single `_process` seeing it down.
+	await process_frame
 	for i in maxi(1, frames):
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	var up := _edge(control, false)
+	# And an idle frame on the release edge, for the readers that act on it.
+	await process_frame
 	await physics_frame
 	_tick(1.0 / float(Engine.physics_ticks_per_second))
 	_last_input = {"device": "synthetic", "raw": str(down.get("raw", "")),
@@ -1403,6 +1528,7 @@ func _tick(delta: float) -> void:
 			if moved < 5.0:
 				_distance_m += moved
 				_dead_travel_m += moved
+				_dead_travel_peak = maxf(_dead_travel_peak, _dead_travel_m)
 		_last_pos = here
 		_have_last_pos = true
 		# §F: the dead-travel run resets on a POI within 30 m as well as on an
