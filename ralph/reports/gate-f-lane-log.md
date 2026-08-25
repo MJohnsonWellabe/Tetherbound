@@ -432,3 +432,70 @@ expensive, the journey segments may have to run in logic mode, taking their
 manifest rows as `file: null` per §C.4 — honest evidence, but no frames. I will
 establish which it is empirically on S01 and record the answer here before S02,
 rather than discovering it at S08.
+
+---
+
+## Check-in 7 — harness smoke passed; one real finding out of the self-check
+
+Both smokes ran on `a3f61b60` with Godot 4.7.stable, imported cache 1728 assets.
+
+**`selfcheck_capture` — 6/6 PASS, and the frames are real.** Capture mode reached
+the framebuffer at the **requested 1920×1080 with no fallback**
+(`CAPTURE_RESOLUTION.json`: `"substituted": false`). I opened `SC-C-title.png`
+rather than trusting the byte count: it is the shipped title screen, correctly
+composed — "THE MEADOWS / TETHERBOUND", the tagline, three focusable buttons with
+Start New Game holding a visible focus ring, the A/D-pad hint line, and the
+parallax landscape with the tether pylon. Not a black frame, not a stub.
+
+The three `SC-C-seq-*.png` frames are byte-identical to each other and *different*
+from `SC-C-title.png`. That is the correct result, not a stuck recorder: the focus
+move happened between the two (so the pair differs), and nothing animates during
+the 0.75 s window (so the triple matches).
+
+**`selfcheck_walk` — 11 PASS, 1 FAIL, exit 0.** The trace instrument itself is
+sound: 140 route rows over the 10 s idle + 60 s walk (2 Hz, as specified), the
+teleport recorded as a teleport with the accumulators reset, 162.3 m walked on a
+held stick, and the dead-travel meter resetting correctly through populated band 1
+(peak 24.9 m against a 30 m ceiling).
+
+`SC-W-11` FAILED: dead travel peaked at **24.9 m against a `>= 25.0 m` threshold**.
+I am **not** adjusting that threshold. Tuning an assertion by 0.1 m to make a
+self-check go green is the exact move this lane exists to not make, and the
+number is not the interesting part anyway.
+
+**The interesting part is why, and it is a candidate defect.** The second walk —
+`SC-W-10`, 7200 frames of full-forward left stick, two solid minutes — moved the
+player **zero metres**. Total distance walked is 162.3 m after step 6 and still
+162.3 m after step 10. The route trace shows position pinned at
+`(-161.03, 2.13, 286.01)` and heading pinned at `-49.4°` for 120 consecutive
+seconds, identical to two decimal places on every row from t=160.45 to t=280.94.
+
+What it is *not*: `input_context` stays `world` for the entire stall, and
+`events.jsonl` records **no** combat, dialogue, menu or region event in that
+window. So this is not locomotion being legitimately held by a conversation or a
+fight — the world verbs are live, the stick is being read, and the player does
+not move. `nearest_poi_dist_m` sits at 0.62 m throughout, which is also why the
+dead-travel meter reads 0.00 and never climbed to 25: the player is wedged
+*inside* a point of interest's radius, so the meter correctly keeps resetting.
+The failing assertion is a true report of a stuck player, not a bad threshold.
+
+Recorded as a candidate reliability defect: **player can become permanently
+immobile in the open world with input context still `world` and no holder**.
+
+Two constraints on that, both binding:
+
+- It came out of a **DIAG** segment that teleported to its start point, so per §0.6
+  and §J **no pacing, navigation or economy claim may be sourced from it** — and I
+  am making none. "Player got stuck" is a reliability observation, which is the one
+  class a DIAG segment can legitimately carry.
+- I am the operator, not a developer (§13): I am **not** diagnosing the cause and
+  **not** fixing it. It is recorded, with its evidence preserved under
+  `ralph/reports/gate-f-selfcheck/selfcheck_walk/`, and the journey segments will
+  say whether a player on a production route ever meets it.
+
+Worth noting against the instrumentation lane's own recorded baseline: that lane
+measured 326 m over this same segment on this same SHA. I got 162.3 m and a hard
+stall. Same script, same commit, different outcome — so whatever this is, it is
+**not deterministic**, which is itself part of the finding.
+
+Tooling is now **frozen**. Both smokes run; nothing further gets "improved."
