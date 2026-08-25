@@ -162,12 +162,31 @@ func test_more_than_one_model_is_used() -> void:
 	assert_true(models.size() > 1, "the whole tree layer used a single model")
 
 
+## PERF, 2026-08-25: this test's own two layers, computed with the SAME
+## per-layer seed `all_placements()` itself derives (base_seed +
+## offset*7919 + layer's own seed_offset, `offset` being the layer's position
+## in `config()["layers"]`'s own key order) -- not a full `all_placements()`
+## sweep of all ten layers (~200s, measured with
+## `tools/_probe_placements_timing.gd`), which this test only ever read two
+## of. Using the real offset formula rather than two arbitrary seeds matters:
+## the property under test is that DIFFERENT layers sharing one base_seed
+## still diverge, which a hand-picked distinct seed per layer would prove
+## trivially even if the production offset logic were broken.
+func _offset_seed(base_seed: int, name: String) -> int:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	var offset := 0
+	for key: String in layers.keys():
+		if key == name:
+			return base_seed + offset * 7919 + int((layers[key] as Dictionary).get("seed_offset", 0))
+		offset += 1
+	return base_seed
+
+
 func test_the_layers_do_not_all_share_one_pattern() -> void:
 	# The seed is offset per layer. Without that, grass grows in exactly the
 	# same clumps as the trees and the meadow reads as a single stamped tile.
-	var built: Dictionary = RULES.all_placements(field, world_size, 4242)
-	var trees: Array = built.get("trees", [])
-	var bushes: Array = built.get("bushes", [])
+	var trees := RULES.placements_for(_layer("trees"), field, world_size, _offset_seed(4242, "trees"))
+	var bushes := RULES.placements_for(_layer("bushes"), field, world_size, _offset_seed(4242, "bushes"))
 	if trees.is_empty() or bushes.is_empty():
 		assert_true(false, "cannot compare layers; one of them is empty")
 		return
@@ -330,15 +349,30 @@ func _route_probes(side: float) -> Array[Vector2]:
 	return probes
 
 
+## PERF, 2026-08-25: a small synthetic layer, the same shape
+## `test_path_standoff_never_places_inside_its_minimum` already uses below --
+## the property these absent-vs-empty tests verify is the mechanism's own
+## handling of a missing/blank key, not grass's specific tuning, and the real
+## grass layer's `corridor_fill` (measured ~110s per `placements_for` call
+## with `tools/_probe_placements_timing.gd`) buys neither test anything. This
+## file's own `test_nothing_is_placed_outside_the_world` above still exercises
+## the real grass layer -- that one genuinely needs it.
+func _small_layer() -> Dictionary:
+	return {
+		"models": _layer("grass").get("models", []),
+		"clumps": 30, "per_clump": 10, "strays": 300, "clump_radius": 10.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+
+
 func test_path_standoff_absent_or_empty_changes_nothing() -> void:
 	# Same backward-compatibility guarantee ridge_bias 0.0 and path_bias 0.0
 	# carry: a layer that does not opt in must place identically whether the
 	# key is an empty dictionary or absent entirely.
-	var grass := _layer("grass").duplicate(true)
+	var grass := _small_layer()
 	grass["path_standoff"] = {}
 	var with_empty := RULES.placements_for(grass, field, world_size, 55)
-	var without_the_key := _layer("grass").duplicate(true)
-	without_the_key.erase("path_standoff")
+	var without_the_key := _small_layer()
 	var without := RULES.placements_for(without_the_key, field, world_size, 55)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():
@@ -415,12 +449,12 @@ func test_path_standoff_sides_are_independent() -> void:
 
 
 func test_verge_absent_or_empty_changes_nothing() -> void:
-	# The fringe is opt-in, like every other path mechanism here.
-	var grass := _layer("grass").duplicate(true)
+	# The fringe is opt-in, like every other path mechanism here. Small
+	# synthetic layer -- see `_small_layer()`'s own comment above.
+	var grass := _small_layer()
 	grass["verge"] = {}
 	var with_empty := RULES.placements_for(grass, field, world_size, 55)
-	var without_the_key := _layer("grass").duplicate(true)
-	without_the_key.erase("verge")
+	var without_the_key := _small_layer()
 	var without := RULES.placements_for(without_the_key, field, world_size, 55)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():

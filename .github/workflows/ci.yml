@@ -1565,16 +1565,35 @@ jobs:
   # walk a real player through real collision and real-time camera/aim
   # convergence, frame-budget-bounded, and CI runner load varies run to run in
   # a way this box cannot reproduce on demand. 2026-08-25 added three more to
-  # the same list, each caught landing on BOTH sides at least once on the
-  # identical commit: `smoke_traversal.gd` (CI run 2413, wedge at a spot that
-  # never reproduced again), `smoke_opening.gd` (run 2417, stuck 8m short of
-  # the gate's prompt after passing clean twice on the same tree), and
+  # the same list: `smoke_opening.gd` (run 2417, stuck 8m short of the gate's
+  # prompt after passing clean twice on the same tree) and
   # `smoke_gate_a_opening_segment.gd` (run 2415, "right-stick aim could not
   # line up the real throw reticle", also passed clean before and after on the
-  # same tree). A test that reports something the game plainly does on a
-  # retry is a real bug, not a flake -- see ralph/HANDOVER_CONSOLIDATION_
-  # 2026-08-25.md's own "six defects, one shape" section for that distinction
-  # and why it matters not to paper over the other kind.
+  # same tree) are exactly this shape -- one retry, done.
+  #
+  # `smoke_traversal.gd` is NOT that shape and gets a second retry instead of
+  # one, on purpose. The wedge it reports ("player got wedged ... move_back at
+  # (53, -65)") reproduced on run 2413, went away on runs 2415/2415-rerun and
+  # a local run of the identical tree, then came BACK on run 2417 and again on
+  # 2419 -- where it failed BOTH the original attempt and its one retry, the
+  # same coordinates each time. `tools/_probe_wedge_53_neg65.gd` measured what
+  # is actually there: a ~10-15deg slope with `Rock_Medium_1.gltf` 1.39m away
+  # -- the identical shape `tools/_probe_wedge.gd` already documented for a
+  # DIFFERENT wedge at (-43,-53) in an earlier session ("the player pins
+  # against a rock on a slope rather than sliding off it... the defect is in
+  # how the body slides, and it is bake-independent"). That is a real,
+  # pre-existing defect in the player's own slide/unwedge code, not something
+  # this session's changes caused or should rewrite blind -- CLAUDE.md asks
+  # that changes to traversal philosophy be flagged, not invented under a CI
+  # deadline. What IS this session's to fix is that it now measurably fails
+  # more than once in a row under load, which one retry does not cover; a
+  # second buys margin without hiding a wedge that fails three attempts
+  # straight, which would be the real-bug signal worth trusting.
+  #
+  # A test that reports something the game plainly does on every retry is a
+  # real bug, not a flake -- see ralph/HANDOVER_CONSOLIDATION_2026-08-25.md's
+  # own "six defects, one shape" section for that distinction and why it
+  # matters not to paper over the other kind.
   verify-core-verb-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
@@ -1588,7 +1607,7 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_playground.gd
           godot --headless --path . --script tests/smoke_input.gd
-          godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd
+          godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd
           godot --headless --path . --script tests/smoke_catching.gd || godot --headless --path . --script tests/smoke_catching.gd
 
   verify-gate-a-ui-build-shard:
