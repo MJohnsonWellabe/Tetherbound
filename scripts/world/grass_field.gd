@@ -318,22 +318,42 @@ func _flower_mesh() -> ArrayMesh:
 		normals.append(Vector3(0.0, 0.5, 1.0).normalized())
 		uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y * 0.74))
 	indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
-	# Head: three VERTICAL crossed petals. The first version used horizontal
-	# quads facing up, and at this size a flat upward-facing quad is not a
-	# bloom, it is a white paper square lying in the grass -- which is exactly
-	# how the field rendered. Vertical petals catch the light on an edge and
-	# read as a flower head from any angle the player can stand at.
-	for i in 3:
-		var yaw := PI * float(i) / 3.0
-		var side := Vector3(sin(yaw), 0.0, cos(yaw))
+	# Head: five petals SPLAYED outward from a centre, wider than the head is
+	# tall. Two earlier versions were wrong in opposite directions. Horizontal
+	# quads facing up read as white paper squares lying in the grass. Tall
+	# vertical crossed petals, narrow at the base and wide at the top, read as
+	# paper CONES -- a field of lilac arrowheads, which is what the owner saw.
+	#
+	# A bloom is a disc with a rim, not a spike: so each petal leaves the centre
+	# at about 40 degrees above horizontal, is widest across its middle and
+	# rounds off at its tip, and five of them close into a shape whose
+	# silhouette is round from the side and from above alike.
+	var head_y := 0.72
+	for i in 5:
+		var yaw := TAU * float(i) / 5.0 + 0.31
+		var out := Vector3(sin(yaw), 0.0, cos(yaw))
+		var side := Vector3(out.z, 0.0, -out.x)
+		var axis := (out * 0.78 + Vector3.UP * 0.62).normalized()
 		var start_i := verts.size()
-		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-			# Narrow at the base, wider at the top: a bloom, not a card.
-			var w := 0.090 * (1.0 if corner.y > 0.5 else 0.40)
-			verts.append(side * corner.x * w + Vector3.UP * (0.70 + corner.y * 0.25))
-			normals.append((side * 0.3 + Vector3.UP * 0.9).normalized())
-			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.82 + corner.y * 0.18))
-		indices.append_array([start_i, start_i + 1, start_i + 2, start_i + 1, start_i + 3, start_i + 2])
+		# Four spans along the petal rather than one quad, so it can be narrow
+		# at the throat, broad across the middle and rounded at the tip.
+		var spans := [
+			{"at": 0.00, "w": 0.022},
+			{"at": 0.38, "w": 0.062},
+			{"at": 0.72, "w": 0.058},
+			{"at": 1.00, "w": 0.020},
+		]
+		for span_index in spans.size():
+			var span: Dictionary = spans[span_index]
+			var along: float = float(span["at"]) * 0.135
+			var half: float = float(span["w"])
+			for sign_x in [-1.0, 1.0]:
+				verts.append(Vector3.UP * head_y + axis * along + side * (sign_x * half))
+				normals.append((Vector3.UP * 0.85 + out * 0.4).normalized())
+				uvs.append(Vector2(sign_x * 0.5 + 0.5, 0.84 + float(span["at"]) * 0.16))
+			if span_index > 0:
+				var a := start_i + (span_index - 1) * 2
+				indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
 	return _mesh_from(verts, normals, uvs, indices)
 
 
