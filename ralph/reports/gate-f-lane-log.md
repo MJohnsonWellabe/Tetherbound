@@ -269,3 +269,93 @@ But the freeze record must state the baseline honestly rather than inheriting
 and the first real verification of this lineage is run 2432 attempt 2, with
 `verify-core-verb-shard`'s timeout recorded as a pre-existing CI-budget defect
 rather than a candidate defect.
+
+---
+
+## Check-in 5 — 2026-08-25 18:10Z — transcription complete; five pre-freeze gaps found and closing
+
+Both transcriptions are committed. Measured scale of the authoritative run:
+
+| lane | steps | planned `GF-` frames |
+|---|---|---|
+| journey S01–S10 | 1,011 | 57 |
+| studies X01–X08 | 2,536 | 115 |
+| **total** | **3,547** | **172** |
+
+X01's matrix is **418 cells** (19 physical controls × 22 contexts), 487
+`probe_cell` steps once the boundary and combat-edge probes are counted.
+
+Both lanes' load-bearing confirmations came back clean: zero `teleport` in the
+journey; `teleport` only in X07/X08 and only on `"diag": true` steps; save
+handoff genuinely through the production Save tab and title-screen Load path
+with `save_out` copying the artefact afterwards rather than standing in for a
+save; `free_build` OFF everywhere but §E.3's single toggle, restored in an
+explicit step; CT-06 and CT-09 written as expected **refusals**.
+
+### Five gaps that had to close before the freeze — which is what §1.5 is for
+
+Found by transcription, not by the run. Each would have been a blocker and a
+re-freeze if it had surfaced mid-run instead.
+
+1. **§H's continuous evidence had no action at all.** The requirement is a
+   background recorder (0.5 Hz on high-risk segments, 0.1 Hz elsewhere, plus a
+   frame on every event). The vocabulary had only `capture_seq`, which is
+   bounded and blocking — so "every band handoff ±60 s at 0.5 Hz" was
+   inexpressible. Adding `record_start`/`record_stop` plus a per-segment
+   background rate.
+2. **Nothing pinned the WorldLook clock** for X07, though §E.7 requires
+   pin-and-freeze and names the artefact the unpinned variant produced on
+   2026-08-23. The transcriber wrote all 15 pin notes the protocol asks for; the
+   pin itself could not happen. Adding `pin_clock`, DIAG-only.
+3. **The keyboard half of every dual-bound action was unreachable.** The
+   harness resolves joypad → key → mouse, so W/A/S/D, E, I, M, Esc and Tab all
+   injected pad events. §L.1's Mouse/KBM parity row was **half-covered while
+   appearing covered** — the worst of the three states. Adding a `device` arg,
+   with a missing binding recorded as a FAIL rather than falling back silently,
+   because the silent fallback is how this stayed invisible.
+4. **Four assert checks were missing** — mouse-capture, satiety, clock hour,
+   placed buildings. All four values were already on the event fields, so X05
+   was recording them and verdicting none: a load that silently dropped the
+   player's placed buildings would have read PASS.
+5. **§G had no row for the level-up shot §L.4 requires.** §L.4 asks for "first
+   level-up moment captured; announcement verified visible ... shot + event" in
+   S03; §G defined no row, and §C.4 forbids the operator inventing a planned id.
+   The requirement was unsatisfiable by anyone. Added as `GF-19-UI-10`, recorded
+   in the protocol as the single coordinator amendment rather than edited in
+   silently — Fable authored Phase A and an edit to it has to be visible as one.
+
+Note for §16.4, kept here rather than in the protocol: the register's
+`HIST-053` records that a real defect once aborted **every** level-up
+announcement in the chapter while its test stayed green by asserting on the
+function's own source text. That is not why the row was added — §L.4's
+requirement is — and the operator is told nothing about it, per §16.1
+blind-first. It is recorded here only so the reconciliation can see that this
+frame had independent reason to exist.
+
+### Declared limitations, not solved
+
+- **Same-frame probe at a combat edge.** `press_multi` must name a frame; a
+  fight starts and ends on a frame the harness does not choose. World↔combat
+  gets next-frame probes only.
+- **The §L.5 website desk check** and **§E.9's `perf_profile` runs** — the
+  harness cannot read a file off disk or launch a second process, and §10
+  forbids modifying that tool. Both handled by the coordinator outside the
+  harness, which is what §E.9 actually describes.
+- **§L.5's optional "lose a tournament round"** needs a mid-S04 save that X04's
+  three entry saves cannot supply. Recorded as a declared gap.
+- **S03 is expected to FAIL `flag_set home_materials_gathered`**: the 20 village
+  harvest nodes yield 28 wood / 9 stone against a 45 wood / 17 stone
+  requirement. That is the owner's three-bed budget directive being genuinely
+  paid rather than asserted. If it fails it is an economy finding, not a broken
+  script.
+
+### Why nothing is pushed right now
+
+Runs 2432 (attempt 3), 2433, 2434 and 2435 all concluded **cancelled**. `ci.yml`
+sets `cancel-in-progress: true` on non-`main` refs, so every push killed the
+run before it. Four code CI runs have been started on this branch and **not one
+has completed**, which is a real cost of pushing on every commit rather than at
+a boundary.
+
+So: no further pushes until the harness agent lands its five additions. Then one
+push, one full run, allowed to finish — and that run is the freeze evidence.
