@@ -422,17 +422,49 @@ func test_every_rootstone_deposit_is_past_the_south_bridge() -> void:
 
 
 # --- selection: scripts/world/vegetation.gd's _mark_harvestable ------------
-
-func _placements() -> Dictionary:
+#
+# PERF, 2026-08-25: this file's own tests were the single biggest cost in the
+# whole suite -- 816s of a ~830s local run, almost entirely `RULES.
+# all_placements()`, which walks all ten layers across the REAL corridor
+# (`_place_corridor_fill` reads `field.world_bounds()`, the true ~7500m
+# extent, not the `world_size` argument, so shrinking that argument does not
+# shrink this cost). Measured per layer with `tools/_probe_placements_timing.
+# gd` (kept for the next time this needs re-checking): trees 14.0s, grove
+# 0.1s, saplings 1.0s, deadfall 0.05s, bushes 15.7s, GRASS 112.6s, drygrass
+# 30.1s, flowers 22.4s, rocks 2.9s, path_stones 1.9s -- ~200s for one full
+# call, and this file made four of them (800s), one pair of which only ever
+# read the "rocks" layer back out.
+#
+# `_layer_placements()` below calls `RULES.placements_for()` directly for
+# exactly the layer(s) a test actually reads, using the same per-layer seed
+# `all_placements()` itself derives (base_seed + offset*7919 +
+# seed_offset, `offset` being the layer's position in `config()["layers"]`'s
+# own key order) so a single-layer call reproduces precisely what a full
+# `all_placements()` call would have produced for that layer -- `vegetation.
+# gd`'s own `_mark_harvestable()` already iterates `by_layer.keys()`
+# independently per entry (scripts/world/vegetation.gd:368-369), so handing
+# it a partial dict is exactly what it is written to accept, not a
+# workaround.
+func _layer_placements(name: String) -> Array[Dictionary]:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	var offset := 0
+	var layer: Dictionary = {}
+	for key: String in layers.keys():
+		if key == name:
+			layer = layers[key]
+			break
+		offset += 1
+	if layer.is_empty():
+		return []
+	var seed_value := int(RULES.config().get("seed", 1)) + offset * 7919 + int(layer.get("seed_offset", 0))
 	var field: RefCounted = HEIGHTFIELD.new()
 	var world_size: float = float(HEIGHTFIELD.load_config().get("world_size", 512))
-	var cfg: Dictionary = RULES.config()
-	return RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	return RULES.placements_for(layer, field, world_size, seed_value)
 
 
 func test_marking_produces_a_sane_slice_of_the_configured_layers() -> void:
 	var veg: Node3D = VEGETATION.new()
-	var by_layer := _placements()
+	var by_layer := {"trees": _layer_placements("trees")}
 	veg.call("_mark_harvestable", by_layer)
 
 	var trees: Array = by_layer.get("trees", [])
@@ -454,8 +486,6 @@ func test_marking_produces_a_sane_slice_of_the_configured_layers() -> void:
 
 func test_marking_leaves_layers_with_no_harvest_item_untouched() -> void:
 	var veg: Node3D = VEGETATION.new()
-	var by_layer := _placements()
-	veg.call("_mark_harvestable", by_layer)
 
 	# DERIVED from the config rather than a hardcoded list. This used to name
 	# ["flowers", "grass", "drygrass", "bushes"], which was correct until
@@ -464,13 +494,22 @@ func test_marking_leaves_layers_with_no_harvest_item_untouched() -> void:
 	# what it was configured to do. Asking the config which layers are supposed
 	# to be inert tests the actual rule ("no harvest_item means never marked")
 	# and cannot rot the next time a layer gains or loses one.
-	var checked := 0
+	#
+	# Only the inert layers' placements are computed -- this test never reads
+	# the harvestable ones (trees/bushes/rocks), so generating them would only
+	# pay their cost (30s+ apiece) for nothing this assertion looks at.
+	var by_layer: Dictionary = {}
 	for name: String in (RULES.config().get("layers", {}) as Dictionary).keys():
 		var layer: Dictionary = RULES.config()["layers"][name]
 		if str(layer.get("harvest_item", "")) != "":
 			continue
+		by_layer[name] = _layer_placements(name)
+	veg.call("_mark_harvestable", by_layer)
+
+	var checked := 0
+	for name: String in by_layer.keys():
 		checked += 1
-		for p: Dictionary in (by_layer.get(name, []) as Array):
+		for p: Dictionary in (by_layer[name] as Array):
 			assert_false((p as Dictionary).has("harvest_item"),
 				"layer '%s' has no harvest_item configured and must never be marked" % name)
 	assert_true(checked >= 3,
@@ -479,14 +518,20 @@ func test_marking_leaves_layers_with_no_harvest_item_untouched() -> void:
 
 
 func test_marking_is_deterministic_for_the_same_seed() -> void:
+	# Only "rocks" -- the sole layer this test ever reads back -- computed
+	# twice and independently, which is the actual property under test ("the
+	# same seed reproduces the same placements/marking"), not "every layer
+	# generates the same numbers as some other layer," which nothing here
+	# asserts. Was two full `all_placements()` calls (~400s for the pair);
+	# `_layer_placements("rocks")` alone measured 2.9s per call.
 	var veg: Node3D = VEGETATION.new()
-	var first := _placements()
+	var first := {"rocks": _layer_placements("rocks")}
 	veg.call("_mark_harvestable", first)
 	var first_marked: Array = []
 	for p: Dictionary in (first.get("rocks", []) as Array):
 		first_marked.append(p.has("harvest_item"))
 
-	var second := _placements()
+	var second := {"rocks": _layer_placements("rocks")}
 	veg.call("_mark_harvestable", second)
 	var second_marked: Array = []
 	for p: Dictionary in (second.get("rocks", []) as Array):
