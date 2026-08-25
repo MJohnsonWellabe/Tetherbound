@@ -335,10 +335,11 @@
       "args": {
         "control": "interact",
         "hold": "tap",
-        "times": 20,
+        "times": 4,
         "settle_frames": 30
       },
-      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun"
+      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun",
+      "observation": "times reduced 12 -> 20 -> 4. `grandpa_named` is THREE lines (data/dialogue/opening.json), and Grandpa stays re-talkable, so every tap past the third can re-open the conversation the previous tap just closed. 4 taps is three lines plus one. Recorded rather than silently retuned: attempts 2 and 3 both ended with a DialoguePanel owning input for exactly 7201 frames."
     },
     {
       "id": "S02-29",
