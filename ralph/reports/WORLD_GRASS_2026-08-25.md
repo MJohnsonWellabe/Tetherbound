@@ -106,10 +106,26 @@ frames agree with it. Written out:
 
 **A continuous grass carpet is roughly 40x outside the placement budget however
 it is spent.** That is not a tuning failure and no density number reaches it.
-Reaching the reference's ground would need a different instrument — Terrain3D's
-own per-`Terrain3DMeshAsset` `density` field, which `vegetation.gd` registers
-assets through but has never set, or a grass shader on the terrain material
-itself. Both are `vegetation.gd`/terrain work and outside this lane's files.
+
+**Terrain3D's own `density` is NOT the way out, and this was checked rather than
+assumed.** `Terrain3DMeshAsset.density` exists — `tools/_probe_terrain3d_api.gd`
+reads it straight off ClassDB, since the addon ships here as a GDExtension binary
+with no C++ sources to consult. But it is a BRUSH parameter, not a runtime
+population: every entry point on `Terrain3DInstancer` (`add_instances`,
+`add_transforms`, `add_multimesh`, `append_location`, `append_region`) either
+takes explicit transforms or, in `add_instances`' case, generates them once and
+stores them. The upstream docs are explicit that `add_instances` is "designed for
+hand editing via Terrain3DEditor" and that "data is currently stored in
+`Terrain3DRegion.instances`". So that path costs exactly what ours costs and
+removes nothing.
+
+The instrument that *would* reach it is a camera-relative grass shader — geometry
+generated per frame around the camera and placed by sampling Terrain3D's own
+height and control maps in the vertex shader, which
+`Terrain3DData.get_height_maps_rid()`/`get_control_maps_rid()` and
+`Terrain3DMaterial.shader_override` all expose. That is `vegetation.gd` and
+shader work, outside this lane's files, and it is written up as its own item in
+`ralph/BACKLOG.md`.
 
 What *is* reachable, and what this lane delivered, is ground that reads as
 grassland with real growth on it at legible scale, in three tiers, out to the
