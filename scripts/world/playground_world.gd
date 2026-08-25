@@ -71,7 +71,27 @@ const GATE_YAW_DEG := 71.0
 ## interactables' radii (4.0m gate, 2.4m key) do not overlap; the first
 ## placement (3.6m away) put both prompts in contest right where a player
 ## would naturally stand to try the gate, and the closer one always won.
-const GATE_KEY_AT := Vector2(24.0, -10.0)
+##
+## SIGIL-SEAL fallout, 2026-08-25: the old (24,-10) sat only 6.8m along the
+## gate's own fence line -- inside `_build_wings()`'s `seal_half_width` 12.0m
+## reach on that side, ~2m from the wing panel it now builds there. The wing
+## is solid, so it ate the approach: nothing got the player inside the key's
+## 2.4m prompt radius and `smoke_opening` failed with "the arbiter picked
+## something else" (it hadn't; there was nothing to pick).
+##
+## Moved off the fence line entirely rather than shortened along it -- a
+## shorter seal on this one side is a gap in an otherwise-physical barrier,
+## exactly the hole SIGIL-SEAL was written to close. Computed, not eyeballed,
+## by `tools/_probe_key_site.gd` (kept for the next time a gate or a fence
+## near here moves): a grid search over ground-valid points requiring real
+## clearance from every neighbour that matters -- the seal wings themselves
+## (>6.0m to the nearest wing centre), the gate's own prompt (>6.4m, same
+## non-overlap rule this comment already used), the berries harvest node and
+## both village.json `fence_run`s (>4.8m / >4.0m), cottage_b's walls (>3.0m)
+## and the square oak (>2.5m) -- then, among every point that cleared all of
+## those, the one closest to the gate, so the detour stays "short." Verified
+## clear at every margin; see the probe's own output for the full table.
+const GATE_KEY_AT := Vector2(31.2, -8.4)
 
 ## SF34: the Meadows Hall approach, the chapter's last gate (spec §3 Band 4).
 ## Three Sigils, one lock — sealed at two of three, open at three. The body is
