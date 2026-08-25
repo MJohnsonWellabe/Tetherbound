@@ -548,3 +548,75 @@ needs reading as this same question rather than as 24 separate bugs.
 The other 13 steps passed: fresh `user://` wiped clean, title booted in 375 ms with
 `Start New Game` holding focus, one `ui_accept` tap resolved to `JoyBtn:0`, the
 world stood up, region `grandpas_village`, party size 0, and 354 route rows.
+
+---
+
+## Check-in 9 — **BLOCKER at S02. The journey chain stops at the opening.**
+
+**S02 — 52 PASS / 19 FAIL, no exit save.** Full report at `ralph/reports/gate-f-run-20260825T201354Z/S02/BLOCKER.md`;
+telemetry and notes committed alongside it.
+
+The nineteen failures are not nineteen problems. They are one problem with
+eighteen consequences. `route.csv`'s `input_context` column changes five times in
+the entire segment and then never again:
+
+```
+0.38  title
+2.68  world
+53.94 locked            (the wake beat)
+56.00 world
+253.38 narrative_modal  <- and it stays here for the remaining ~1,750 s
+```
+
+The opening's modal opens at **t=253.4**, about three seconds after the script's
+last input burst and sixteen seconds after the first `interact` on Grandpa. Every
+step that would have answered it — advance the briefing, pick the orb, confirm,
+name the starter — had already run, into a `world` context, against no modal.
+Everything after that fails downstream of one held modal: three walks report
+`locomotion never came back: held ... by input_context 'narrative_modal'`, the
+segment walked 10.1 m against a 150 m expectation, the party never reaches 1, the
+road gate flag never sets, and slot 4 has no file, so **there is no S02-exit save**.
+
+**Consequence for the run:** S03–S10 each entry-depend on the previous exit save
+(§B), and X01–X06 seed from journey saves. All of them are blocked. **X07 and X08
+are DIAG segments that need no journey save and remain runnable** — I am going to
+them next, which is continuation of the parts that stayed valid, not improvising
+around the blocker.
+
+### The candidate defect worth the coordinator's attention
+
+Three late steps identify what is holding input:
+
+- `game_menu` did not open the pause shell: `narrative_modal -> narrative_modal
+  (owner=StarterPicker)`
+- `4 × ui_down did not move focus off **nothing**`
+- slot 4 has no file — nothing could be saved
+
+**The StarterPicker owns input while nothing owns focus.** Directional input has
+nothing to move between, confirm has nothing to activate; the modal cannot be
+answered or dismissed, locomotion stays held, the pause shell will not open, and
+the game cannot be saved. In that state the chapter is unexitable.
+
+**And the caveat, which travels with the finding:** the script pressed `ui_right`
+and `menu_confirm` *before* the picker existed and only probed it afterwards. It
+is **not** established that a human pressing at the right moment gets locked out.
+What is established is that the picker sat open and input-owning for ~1,750 s and
+every input sent to it in that window did nothing. Two readings fit — the picker
+opens with no focused control (chapter-ending), or it fails to take focus when
+input arrives late (recoverable). Separating them is diagnosis, which is not the
+operator's job (§13), and I have not done it.
+
+### What I did not do
+
+I did not touch `tools/gate_f/**`. The temptation here is obvious — insert a wait,
+re-order two asserts, and S02 probably goes green. That would convert the single
+most interesting result this run has produced into a passing line, and it would be
+me deciding, alone and unwatched, that the opening is fine. §A is explicit that a
+blocker's fix happens outside the run against a newly frozen SHA. So: recorded,
+committed, reported, and the build is untouched.
+
+**This is also the answer to the question Gate F exists to ask.** A first-time
+player's very first interaction in Tetherbound is talking to Grandpa and choosing a
+starter. On this SHA, a scripted run of exactly that path ends with the player
+frozen in an unanswerable modal 253 seconds in, with 10 metres walked. Whatever the
+root cause turns out to be, the opening is where the evidence says to look first.
