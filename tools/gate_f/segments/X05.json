@@ -3,6 +3,7 @@
   "title": "Save and session lifecycle (protocol E.8)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.8, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: every S0n-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
   "_slots": "scripts/save/save_game.gd has 5 slots. Slot 0 is autosave; slot 4 is the segment handoff slot; slots 1-3 are the player slots, and E.8 requires all three exercised across the run. This segment rotates 1, 2, 3 across the nine journey exit saves.",
   "_no_teleport": "X05 is not a DIAG segment and contains no teleport step.",
   "_gap": "SEGMENT_SCHEMA.md's assert checks cover position (near), party (party_size), flags (flag_set), tracked objective (objective_is) and region (region_is). Satiety, time of day and placed buildings have no assert check, so those three legs of E.6.13's checklist are recorded as event fields (player.satiety, clock_hour, inventory) and read by Phase B rather than verdicted by the harness. Named here rather than quietly dropped.",
