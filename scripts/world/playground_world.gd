@@ -912,6 +912,15 @@ func _build_trailhead_signposts() -> void:
 func _build_road_gate() -> void:
 	var gate: Node3D = ROAD_GATE.new()
 	gate.name = "RoadGate"
+	# SIGIL-SEAL / owner ruling 2026-08-25: "gates have to be physically sealed
+	# -- there needs to actually be something keeping a player from walking
+	# around it". This gate's own header claimed it stood in a fence line that
+	# ran off both its ends; it does not. The nearest `fence_run` in
+	# village.json sits 12m away and cottage_b 6.7m off one side, so the leaf
+	# was a 4m panel with open meadow beside it, and a player who slid along it
+	# simply walked round -- exactly the hole this session found and closed at
+	# the Sigil Gate.
+	gate.set("seal_half_width", 12.0)
 	add_child(gate)
 	gate.call("build", self, GATE_AT, GATE_YAW_DEG)
 
@@ -952,7 +961,16 @@ func _build_sigil_gate() -> void:
 	# walks exactly that. 8.5m is the causeway's own measured half-width (7.04m)
 	# plus enough to bury the wing ends in the gorge rims instead of stopping
 	# flush with walkable ground.
-	gate.set("seal_half_width", 8.5)
+	# Raised 8.5 -> 16.0 under the 2026-08-25 owner ruling. 8.5 covered the
+	# causeway's own 7.04m half-width and was sized for a player who walks
+	# STRAIGHT at a gate. Once the body slides (OF15), it runs along the wings
+	# and round their ends: smoke_traversal walked a locked gate at -6.0m off
+	# centre and got 15m past. The wings now reach out to where the gorge itself
+	# stops the player -- the same run records a fall-and-respawn at +/-18m -- so
+	# the barrier ends where the ground does rather than in open grass. Wings
+	# skip any offset with no ground under it, so this cannot hang panels over
+	# the carve.
+	gate.set("seal_half_width", 16.0)
 	add_child(gate)
 	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
 

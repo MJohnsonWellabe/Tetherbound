@@ -190,12 +190,81 @@ func _physics_process(delta: float) -> void:
 	# into-wall component of velocity, which is precisely the motion the
 	# step-up probe needs to test.
 	var planned_motion := Vector3(velocity.x, 0.0, velocity.z) * delta
+	var before := global_position
 	move_and_slide()
 	_try_step_up(planned_motion)
+	_unwedge(planned_motion, before, delta)
 	_resolve_landing(falling_speed)
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
+
+
+## OF15: slide around what you walk into instead of pinning against it.
+##
+## Owner ruling (2026-08-25): "when you hit a rock you should slide around it",
+## paired with "gates have to be physically sealed -- there needs to actually be
+## something keeping a player from walking around it". The two halves belong
+## together and neither is safe alone. Sliding without sealed gates lets a
+## player walk round a gate; sealed gates without sliding leaves them stuck on
+## boulders. `road_gate.gd`'s `seal_half_width` is the other half.
+##
+## `move_and_slide` already handles a glancing contact, and `_try_step_up`
+## below handles anything low enough to step onto. What neither handles is a
+## POCKET: contacts whose normals oppose, where every component of the desired
+## motion cancels and the body sits still with the stick held. Reproduced by
+## `smoke_traversal.gd`, measured by `tools/_probe_wedge.gd` -- boulders 3.0-3.5m
+## across, sited close enough to touch.
+##
+## ONE `move_and_slide()` PER FRAME. An earlier attempt called it a second time
+## here, which applies another whole frame of motion and pushed the body clean
+## past the village road gate. This only changes the DIRECTION the next frame's
+## single move pass is asked for; collision still gets the final say, so nothing
+## here can move the body through anything.
+##
+## Horizontal only -- nothing lifts the body, so `STEP_HEIGHT`'s note ("every
+## barrier in the game was sized against players who cannot climb") still holds.
+const UNWEDGE_AFTER := 0.2
+## Below this fraction of the motion planned for the frame, the body is not
+## making progress. Not zero: a pocket usually leaks a millimetre or two.
+const UNWEDGE_PROGRESS := 0.25
+## How long a deflection steers once triggered. Long enough to clear a boulder,
+## and it lapses the moment the player stops asking to go anywhere.
+const DEFLECT_FOR := 0.3
+
+var _wedged_for := 0.0
+var _deflect := Vector3.ZERO
+var _deflect_left := 0.0
+
+
+func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
+	var wanted := Vector2(planned.x, planned.z)
+	if not is_on_floor() or not is_on_wall() or wanted.length() < 0.0001:
+		_wedged_for = 0.0
+		return
+	var moved := Vector2(global_position.x - before.x, global_position.z - before.z)
+	if moved.length() >= wanted.length() * UNWEDGE_PROGRESS:
+		_wedged_for = 0.0
+		return
+
+	_wedged_for += delta
+	if _wedged_for < UNWEDGE_AFTER:
+		return
+
+	# Along the wall, not into it. Both tangents are valid; take the one that
+	# keeps more of what the player asked for, so pushing left round a boulder
+	# leaves you travelling left rather than doubling back.
+	var normal := get_wall_normal()
+	var tangent := Vector2(-normal.z, normal.x)
+	if tangent.length() < 0.0001:
+		_wedged_for = 0.0
+		return
+	tangent = tangent.normalized()
+	if tangent.dot(wanted.normalized()) < 0.0:
+		tangent = -tangent
+	_deflect = Vector3(tangent.x, 0.0, tangent.y)
+	_deflect_left = DEFLECT_FOR
+	_wedged_for = 0.0
 
 
 ## Step up small ledges instead of stopping dead against them.
@@ -308,6 +377,16 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	if input != Vector2.ZERO and _camera_rig != null and _camera_rig.has_method("planar_basis"):
 		var basis_value: Basis = _camera_rig.call("planar_basis")
 		direction = (basis_value * Vector3(input.x, 0.0, input.y)).normalized()
+
+	# OF15: while a deflection is live, a held direction resolves ALONG the
+	# obstacle instead of into it. Lapses as soon as the player stops pushing,
+	# so it can never carry anyone somewhere they stopped asking to go.
+	if _deflect_left > 0.0:
+		if direction == Vector3.ZERO:
+			_deflect_left = 0.0
+		else:
+			_deflect_left -= delta
+			direction = _deflect
 
 	var game := get_node_or_null(^"/root/Game")
 	var auto_running := game != null and bool(game.get("auto_run"))
