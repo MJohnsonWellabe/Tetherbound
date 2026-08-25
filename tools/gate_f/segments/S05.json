@@ -11,7 +11,7 @@
       "title": "how this segment is entered",
       "action": "note",
       "args": {
-        "text": "\u00a7B: this segment's entry save is `S04-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. \u00a7B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+        "text": "Section B: this segment's entry save is `S04-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -32,7 +32,7 @@
         "slot": 4,
         "from": "run://S04-exit.json"
       },
-      "expected": "\u00a7B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
     },
     {
       "id": "S05-04",
@@ -71,7 +71,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
     },
     {
       "id": "S05-08",
@@ -81,7 +81,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "the slot loads and the title transitions into the Meadows; \u00a7I.4 records the load duration"
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
     },
     {
       "id": "S05-09",
@@ -110,14 +110,14 @@
         "check": "objective_is",
         "id": "head_to_south_bridge"
       },
-      "expected": "\u00a7E.5 objective 13/24 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'"
+      "expected": "Section E.5 objective 13/24 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'"
     },
     {
       "id": "S05-12",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H: this segment is outside the mandatory 0.5 Hz list and runs at 0.1 Hz plus event-forced frames -- except that \u00a7H also mandates 0.5 Hz for 'every band handoff +/-60 s (region transitions)', and the village -> band 1 handoff falls inside this segment. The vocabulary has no background-recorder action and no way to raise the trace rate for a window; recorded as a gap."
+        "text": "Section H: this segment is outside the mandatory 0.5 Hz list and runs at 0.1 Hz plus event-forced frames -- except that section H also mandates 0.5 Hz for 'every band handoff +/-60 s (region transitions)', and the village -> band 1 handoff falls inside this segment. The vocabulary has no background-recorder action and no way to raise the trace rate for a window; recorded as a gap."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -128,7 +128,7 @@
       "args": {
         "tab": "map"
       },
-      "expected": "\u00a7E.5 at a major objective: open Map tab, zoom in/out, verify pan/centering and zoom persistence"
+      "expected": "Section E.5 at a major objective: open Map tab, zoom in/out, verify pan/centering and zoom persistence"
     },
     {
       "id": "S05-14",
@@ -140,7 +140,7 @@
         "times": 4,
         "settle_frames": 10
       },
-      "expected": "\u00a7E.5: the map's usefulness at the moment it matters"
+      "expected": "Section E.5: the map's usefulness at the moment it matters"
     },
     {
       "id": "S05-15",
@@ -161,7 +161,7 @@
         "trigger": "minimap in world at a route decision point",
         "intended_proof": "minimap usefulness at the moment it matters"
       },
-      "expected": "\u00a7G: minimap in world at a route decision point -- minimap usefulness at the moment it matters"
+      "expected": "Section G: minimap in world at a route decision point -- minimap usefulness at the moment it matters"
     },
     {
       "id": "S05-17",
@@ -175,14 +175,14 @@
         "trigger": "HUD in ordinary exploration",
         "intended_proof": "HUD footprint/legibility at 1080p"
       },
-      "expected": "\u00a7G: HUD in ordinary exploration -- HUD footprint/legibility at 1080p"
+      "expected": "Section G: HUD in ordinary exploration -- HUD footprint/legibility at 1080p"
     },
     {
       "id": "S05-18",
-      "title": "\u00a7E.5 nav note -- head_to_south_bridge",
+      "title": "Section E.5 nav note -- head_to_south_bridge",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 13/24 `head_to_south_bridge`. Wording: 'Cross the South Bridge into the Lower Meadows.' It names WHAT and a WHERE that is a named landmark -- the strongest objective line in the chapter so far. Player-visible information: `south_bridge` is a `major` map landmark at (0,1330); the fresh reveal covers the village and its roads only, so whether the bridge is a visible pin before it is discovered is the thing to record. The road runs south out of the village. Route decision: follow the road south, because the objective names a crossing and roads lead to crossings. Reasoned from GF-18-MAP-03 and GF-19-UI-08. Operator: record what the map ACTUALLY showed -- fog-of-war reveal as rendered, not as the config claims (\u00a7E.5's own instruction)."
+        "text": "Section E.5 navigation record, objective 13/24 `head_to_south_bridge`. Wording: 'Cross the South Bridge into the Lower Meadows.' It names WHAT and a WHERE that is a named landmark -- the strongest objective line in the chapter so far. Player-visible information: `south_bridge` is a `major` map landmark at (0,1330); the fresh reveal covers the village and its roads only, so whether the bridge is a visible pin before it is discovered is the thing to record. The road runs south out of the village. Route decision: follow the road south, because the objective names a crossing and roads lead to crossings. Reasoned from GF-18-MAP-03 and GF-19-UI-08. Operator: record what the map ACTUALLY showed -- fog-of-war reveal as rendered, not as the config claims (section E.5's own instruction)."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -199,7 +199,7 @@
         "close_enough": 3.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-04: 'Tournament win -> next objective start (South Bridge road) | (20,12) -> leaving village southbound'. This is where the chapter stops being a village"
+      "expected": "Section D RT-04: 'Tournament win -> next objective start (South Bridge road) | (20,12) -> leaving village southbound'. This is where the chapter stops being a village"
     },
     {
       "id": "S05-20",
@@ -213,7 +213,7 @@
         "trigger": "first open-meadow stretch south of village, broad sightline frame on RT-04/05",
         "intended_proof": "open land is authored, not empty; distant pulls visible"
       },
-      "expected": "\u00a7G: first open-meadow stretch south of village, broad sightline frame on RT-04/05 -- open land is authored, not empty; distant pulls visible"
+      "expected": "Section G: first open-meadow stretch south of village, broad sightline frame on RT-04/05 -- open land is authored, not empty; distant pulls visible"
     },
     {
       "id": "S05-21",
@@ -227,7 +227,7 @@
         "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
         "intended_proof": "weather identity; palette holds"
       },
-      "expected": "\u00a7G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
     },
     {
       "id": "S05-22",
@@ -237,7 +237,7 @@
         "control": "auto_run",
         "hold": "tap"
       },
-      "expected": "\u00a7L.1: 'Movement, sprint, jump, auto-run | journey traversal; auto-run engaged on a long RT leg, disengaged by stick | S05'"
+      "expected": "Section L.1: 'Movement, sprint, jump, auto-run | journey traversal; auto-run engaged on a long RT leg, disengaged by stick | S05'"
     },
     {
       "id": "S05-23",
@@ -252,7 +252,7 @@
         "close_enough": 3.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-03: village (10,-10) -> pond (-342,507). The route table's anchors define where each measurement starts and stops; the operator navigates by in-game means"
+      "expected": "Section D RT-03: village (10,-10) -> pond (-342,507). The route table's anchors define where each measurement starts and stops; the operator navigates by in-game means"
     },
     {
       "id": "S05-24",
@@ -264,7 +264,7 @@
         "y": -0.4,
         "frames": 60
       },
-      "expected": "\u00a7L.1: auto-run 'disengaged by stick'. A second of deflection off the held heading is what a player does to break it"
+      "expected": "Section L.1: auto-run 'disengaged by stick'. A second of deflection off the held heading is what a player does to break it"
     },
     {
       "id": "S05-25",
@@ -274,7 +274,7 @@
         "control": "camera_recenter",
         "hold": "tap"
       },
-      "expected": "\u00a7L.1: 'Camera control + recenter (R3) | journey; recenter during walk, combat, riding'"
+      "expected": "Section L.1: 'Camera control + recenter (R3) | journey; recenter during walk, combat, riding'"
     },
     {
       "id": "S05-26",
@@ -289,7 +289,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-03 ends at the pond (-342,507)"
+      "expected": "Section D RT-03 ends at the pond (-342,507)"
     },
     {
       "id": "S05-27",
@@ -303,7 +303,7 @@
         "trigger": "pond first visible on approach, RT-03 approach vector",
         "intended_proof": "approach reads; lush pocket vs open contrast"
       },
-      "expected": "\u00a7G: pond first visible on approach, RT-03 approach vector -- approach reads; lush pocket vs open contrast"
+      "expected": "Section G: pond first visible on approach, RT-03 approach vector -- approach reads; lush pocket vs open contrast"
     },
     {
       "id": "S05-28",
@@ -313,7 +313,7 @@
         "check": "region_is",
         "equals": "the_pond"
       },
-      "expected": "map_state.gd's own containment puts the player in `the_pond` -- \u00a7L.5's 'Every meaningful named location/region' row, recorded on arrival"
+      "expected": "map_state.gd's own containment puts the player in `the_pond` -- section L.5's 'Every meaningful named location/region' row, recorded on arrival"
     },
     {
       "id": "S05-29",
@@ -333,23 +333,23 @@
         "trigger": "pond shore, water edge in frame, (-342,507) shore",
         "intended_proof": "water/edge/vegetation quality"
       },
-      "expected": "\u00a7G: pond shore, water edge in frame, (-342,507) shore -- water/edge/vegetation quality"
+      "expected": "Section G: pond shore, water edge in frame, (-342,507) shore -- water/edge/vegetation quality"
     },
     {
       "id": "S05-31",
-      "title": "\u00a7D RT-03 record",
+      "title": "Section D RT-03 record",
       "action": "note",
       "args": {
-        "text": "\u00a7D RT-03 complete: village -> pond. Per route, from telemetry: actual distance, elapsed time, meaningful interactions (count + type), wild/trainer encounters, resource stops, landmark/visual pulls noted on screen, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval with its start/end coordinates, and moments of uncertainty. All of it is in this segment's route.csv and events.jsonl; the operator adds the uncertainty notes, which telemetry cannot carry."
+        "text": "Section D RT-03 complete: village -> pond. Per route, from telemetry: actual distance, elapsed time, meaningful interactions (count + type), wild/trainer encounters, resource stops, landmark/visual pulls noted on screen, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval with its start/end coordinates, and moments of uncertainty. All of it is in this segment's route.csv and events.jsonl; the operator adds the uncertainty notes, which telemetry cannot carry."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S05-32",
-      "title": "\u00a7B's optional detour is not named",
+      "title": "Section B's optional detour is not named",
       "action": "note",
       "args": {
-        "text": "\u00a7B names an 'optional detour' here and does not say which. \u00a7L.4 names old_champion_bram (195,905) as the journey's representative optional trainer and data/config/map_landmarks.json puts the Trail Camp (348,919.5) on the same corridor bend -- 'a waypoint to be found by walking to it and remembered'. Both are walked below. RECORDED as the transcriber's reading of an under-specified span."
+        "text": "Section B names an 'optional detour' here and does not say which. Section L.4 names old_champion_bram (195,905) as the journey's representative optional trainer and data/config/map_landmarks.json puts the Trail Camp (348,919.5) on the same corridor bend -- 'a waypoint to be found by walking to it and remembered'. Both are walked below. RECORDED as the transcriber's reading of an under-specified span."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -366,7 +366,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905)'"
+      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905)'"
     },
     {
       "id": "S05-34",
@@ -409,7 +409,7 @@
         "times": 30,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record; an optional fight's difficulty read against a required one is \u00a7D's material"
+      "expected": "Section E.1 per-fight record; an optional fight's difficulty read against a required one is section D's material"
     },
     {
       "id": "S05-38",
@@ -446,7 +446,7 @@
       "title": "corridor rest stop",
       "action": "note",
       "args": {
-        "text": "\u00a7D RT-05 in progress. The Trail Camp is a `minor` pin -- 'a waypoint to be found by walking to it and remembered, not a landmark seen from across the meadow'. Record whether it announced itself on arrival and whether it functioned as a rest stop (\u00a7E.7's 'destination readability on arrival')."
+        "text": "Section D RT-05 in progress. The Trail Camp is a `minor` pin -- 'a waypoint to be found by walking to it and remembered, not a landmark seen from across the meadow'. Record whether it announced itself on arrival and whether it functioned as a rest stop (section E.7's 'destination readability on arrival')."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -463,7 +463,7 @@
         "close_enough": 6.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-05: pond (-342,507) -> South Bridge (0,1330)"
+      "expected": "Section D RT-05: pond (-342,507) -> South Bridge (0,1330)"
     },
     {
       "id": "S05-43",
@@ -477,7 +477,7 @@
         "trigger": "South Bridge first visible, RT-05 northbound view",
         "intended_proof": "gate landmark visible before reached"
       },
-      "expected": "\u00a7G: South Bridge first visible, RT-05 northbound view -- gate landmark visible before reached"
+      "expected": "Section G: South Bridge first visible, RT-05 northbound view -- gate landmark visible before reached"
     },
     {
       "id": "S05-44",
@@ -492,7 +492,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7E.1 CB-04: 'S05: south_bridge_grunt (14,1314)'"
+      "expected": "Section E.1 CB-04: 'S05: south_bridge_grunt (14,1314)'"
     },
     {
       "id": "S05-45",
@@ -502,7 +502,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.5: 'Every gate/crossing | road gate, South Bridge, Warrens vault, Mill Crossing, sigil gate, Hall shutter -- each locked-probe then legitimately opened'. The locked probe is X06's; this is the legitimate opening"
+      "expected": "Section L.5: 'Every gate/crossing | road gate, South Bridge, Warrens vault, Mill Crossing, sigil gate, Hall shutter -- each locked-probe then legitimately opened'. The locked probe is X06's; this is the legitimate opening"
     },
     {
       "id": "S05-46",
@@ -523,7 +523,7 @@
       "args": {
         "seconds": 3
       },
-      "expected": "\u00a7L.6 T05: the combat camera acquires both combatants at fight start"
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
     },
     {
       "id": "S05-48",
@@ -547,14 +547,14 @@
         "trigger": "CB-04: representative fight per band -- S05, south_bridge_grunt (14,1314)",
         "intended_proof": "per-case: band 1's representative fight"
       },
-      "expected": "\u00a7G: CB-04: representative fight per band -- S05, south_bridge_grunt (14,1314) -- per-case: band 1's representative fight"
+      "expected": "Section G: CB-04: representative fight per band -- S05, south_bridge_grunt (14,1314) -- per-case: band 1's representative fight"
     },
     {
       "id": "S05-50",
-      "title": "\u00a7G GF-14 numbering for CB-04",
+      "title": "Section G GF-14 numbering for CB-04",
       "action": "note",
       "args": {
-        "text": "AMBIGUITY RECORDED: \u00a7G gives GF-14 the id form 'GF-14-COMBAT-01...n, one per CB-01...CB-13 case', but CB-04 is a single case spanning five bands and five separate fights. Transcribed as GF-14-COMBAT-04a through 04e, one per band (S05, S06, S07, S08, S09), so the CB case number stays readable in the id rather than being renumbered into a flat sequence."
+        "text": "AMBIGUITY RECORDED: section G gives GF-14 the id form 'GF-14-COMBAT-01...n, one per CB-01...CB-13 case', but CB-04 is a single case spanning five bands and five separate fights. Transcribed as GF-14-COMBAT-04a through 04e, one per band (S05, S06, S07, S08, S09), so the CB case number stays readable in the id rather than being renumbered into a flat sequence."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -568,7 +568,7 @@
         "times": 32,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record. \u00a7D's difficulty read for band 1 comes from the HP margin at the end of this fight"
+      "expected": "Section E.1 per-fight record. Section D's difficulty read for band 1 comes from the HP margin at the end of this fight"
     },
     {
       "id": "S05-52",
@@ -590,7 +590,7 @@
         "times": 18,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S05-54",
@@ -609,7 +609,7 @@
         "check": "flag_set",
         "flag": "south_bridge_open"
       },
-      "expected": "`south_bridge_open` closes \u00a7E.5 objective 13/24"
+      "expected": "`south_bridge_open` closes section E.5 objective 13/24"
     },
     {
       "id": "S05-56",
@@ -624,7 +624,7 @@
         "close_enough": 3.0,
         "held_budget_frames": 7200
       },
-      "expected": "\u00a7D RT-05 ends at the bridge (0,1330); \u00a7B: S05's span ends at 'cross'"
+      "expected": "Section D RT-05 ends at the bridge (0,1330); section B: S05's span ends at 'cross'"
     },
     {
       "id": "S05-57",
@@ -638,7 +638,7 @@
         "trigger": "on the bridge after it opens, (0,1330)",
         "intended_proof": "crossing payoff"
       },
-      "expected": "\u00a7G: on the bridge after it opens, (0,1330) -- crossing payoff"
+      "expected": "Section G: on the bridge after it opens, (0,1330) -- crossing payoff"
     },
     {
       "id": "S05-58",
@@ -652,7 +652,7 @@
         ],
         "within": 8.0
       },
-      "expected": "\u00a7B: S05 ends on the far side of the South Bridge"
+      "expected": "Section B: S05 ends on the far side of the South Bridge"
     },
     {
       "id": "S05-59",
@@ -662,7 +662,7 @@
         "check": "distance_above",
         "metres": 1800.0
       },
-      "expected": "\u00a7D: RT-03 alone is about 600 m and RT-05 about 900 m; no pacing claim may come from a shortcut (\u00a70.6)"
+      "expected": "Section D: RT-03 alone is about 600 m and RT-05 about 900 m; no pacing claim may come from a shortcut (section 0.6)"
     },
     {
       "id": "S05-60",
@@ -672,7 +672,7 @@
         "check": "route_rows_at_least",
         "rows": 3000
       },
-      "expected": "\u00a7C.2"
+      "expected": "Section C.2"
     },
     {
       "id": "S05-61",
@@ -682,14 +682,14 @@
         "check": "dead_travel_peak_above",
         "metres": 150.0
       },
-      "expected": "\u00a7D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. This check reads the LARGEST run this segment saw, which is the only half that can prove the meter accumulates. A PASS here means a watch item exists and its size is in `actual`; it is not a passing grade, and classifying the interval as breathing room, exploration opportunity or dead time is Fable's Phase B call"
+      "expected": "Section D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. This check reads the LARGEST run this segment saw, which is the only half that can prove the meter accumulates. A PASS here means a watch item exists and its size is in `actual`; it is not a passing grade, and classifying the interval as breathing room, exploration opportunity or dead time is Fable's Phase B call"
     },
     {
       "id": "S05-62",
-      "title": "\u00a7B save handoff",
+      "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. \u00a7B also branches X03 (catching lab, band 1 field) and X06 (abuse sweep) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X03 (catching lab, band 1 field) and X06 (abuse sweep) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -749,7 +749,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
     },
     {
       "id": "S05-69",
@@ -759,7 +759,7 @@
         "slot": 4,
         "name": "S05-exit.json"
       },
-      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S05-exit.json`"
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S05-exit.json`"
     },
     {
       "id": "S05-70",
