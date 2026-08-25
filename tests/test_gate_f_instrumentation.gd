@@ -309,6 +309,140 @@ func test_the_harness_config_and_its_defaults_agree() -> void:
 			"harness_config.json sets '%s' and the harness reads no such key -- editing it would change nothing" % str(key))
 
 
+## §G's GF-01 rows carry `hud: "as shipped"`, which is neither `on` nor `off`.
+## The manifest must record it verbatim: a harness that coerced it to a boolean
+## would file the title screen as an ordinary HUD-on gameplay frame, and the
+## whole point of that row is that the title has no HUD to speak of.
+func test_the_hud_field_is_recorded_verbatim_and_never_coerced() -> void:
+	var source := _harness_source()
+	assert_true(source.contains('"hud": str(args.get("hud", "on"))'),
+		"the capture manifest row no longer stores `hud` as a plain string; §G's \"as shipped\" would be lost")
+	# The coercion this guards against, in the shapes it would actually take.
+	for shape in ['hud == "on"', 'hud == "off"', 'hud_on', 'bool(args.get("hud"']:
+		assert_false(source.contains(shape),
+			"operator_harness.gd looks like it interprets `hud` (%s); §G authors three values, not two" % shape)
+	# And at least one segment really does use it, or this test guards nothing.
+	var seen := false
+	for path in _segment_files():
+		if FileAccess.get_file_as_string(path).contains('"hud": "as shipped"'):
+			seen = true
+	assert_true(seen, "no segment uses `hud: \"as shipped\"`, so nothing here is actually being protected")
+
+
+## §L.1's KBM parity row. `_physical_binding` prefers joypad, so every
+## dual-bound action resolved to its pad binding and the keyboard half was
+## unreachable while the cell read as covered. `device` makes it reachable; a
+## miss must be a recorded FAIL rather than a fallback, because a silent
+## fallback is exactly how that stayed invisible.
+func test_a_named_device_never_silently_falls_back_to_another() -> void:
+	var source := _harness_source()
+	assert_true(source.contains("func _physical_binding(action: StringName, device: String = \"\") -> InputEvent:"),
+		"_physical_binding no longer takes a device; §L.1's KBM half becomes unreachable again")
+	var start := source.find("func _physical_binding")
+	var body := source.substr(start, source.find("\n\n\n", start) - start)
+	assert_true(body.contains("if not device.is_empty():\n\t\treturn by_kind.get(device) as InputEvent"),
+		"a named device must return that device's binding or null -- never walk the preference order")
+	assert_true(source.contains("device_miss"),
+		"a named-device miss must be reported as a FAIL the run records, not a harness error and not a fallback")
+
+
+## The four checks §E.6.13's restoration checklist and §E.4/§L.6-T01 need. All
+## four values were already on the event fields; without the checks, X05 records
+## the numbers and verdicts nothing -- a save/load that dropped every building
+## would read as PASS.
+func test_the_restoration_checks_exist_and_take_comparators() -> void:
+	var source := _harness_source()
+	var start := source.find("func _step_assert")
+	var body := source.substr(start, source.find("\n\n\n", start) - start)
+	for check in ["mouse_captured", "satiety", "clock_hour", "placed_buildings"]:
+		assert_true(body.contains("\"%s\":" % check),
+			"_step_assert has no '%s' case; the value is on the event and nothing can verdict it" % check)
+	assert_true(source.contains("func _compare("),
+		"the numeric checks need a named comparator helper (equals/at_least/at_most)")
+	var cmp_start := source.find("func _compare(")
+	var cmp := source.substr(cmp_start, source.find("\n\n\n", cmp_start) - cmp_start)
+	assert_true(cmp.contains("at_least") and cmp.contains("at_most") and cmp.contains("equals"),
+		"_compare must offer all three comparators")
+	assert_true(cmp.contains("named no comparator"),
+		"a check with no comparator must FAIL saying so, not silently compare against zero")
+	# The midnight wrap. 23.9 and 0.1 are 0.2 apart; a plain subtraction says
+	# 23.8 and a save/load restoration check would fail across midnight.
+	assert_true(body.contains("fmod(absf(have - want) + 12.0, 24.0) - 12.0"),
+		"clock_hour must wrap across midnight, or a restoration check fails at 23:xx for arithmetic reasons")
+
+
+## §E.7's pin-and-freeze. The 2026-08-23 crimson artefact came from a pin the
+## day cycle undid during the settle; the freeze is what makes the pin hold.
+func test_pin_clock_freezes_both_clocks_and_is_diag_only() -> void:
+	var source := _harness_source()
+	var start := source.find("func _step_pin_clock")
+	assert_true(start >= 0, "no pin_clock action; §E.7's regional audit has no way to pin the light")
+	var body := source.substr(start, source.find("\n\n\n", start) - start)
+	# BOTH nodes and BOTH process kinds. The look re-blends on idle; the weather
+	# rolls its own preset on a timer. Stopping one leaves the other free to
+	# move the light, which is the failure being prevented.
+	assert_true(body.contains("look.set_process(false)") and body.contains("look.set_physics_process(false)"),
+		"pin_clock must stop WorldLook's idle AND physics processing")
+	assert_true(body.contains("weather_node.set_process(false)")
+			and body.contains("weather_node.set_physics_process(false)"),
+		"pin_clock must stop WorldWeather too -- it rolls its own preset on a timer")
+	# Through the game's own appliers, not a second interpolation.
+	assert_true(body.contains('look.call("apply_time"'), "the preset path must go through apply_time()")
+	assert_true(body.contains('look.call("_apply_blended"'),
+		"the hour path must go through _apply_blended(), the same continuous path world_look.gd::_process uses")
+	assert_true(source.contains("pin_clock refused: step is not marked"),
+		"pin_clock must be DIAG-only, refused with a recorded FAIL like teleport")
+
+
+## §H. The continuous record has to be continuous: a recorder that only ran
+## between explicit start/stop pairs would leave the rest of a segment blank.
+func test_the_continuous_recorder_has_a_segment_baseline_and_forced_frames() -> void:
+	var source := _harness_source()
+	assert_true(source.contains('_record_baseline_hz = float(segment.get("record_hz", _cfg["record_default_hz"]))'),
+		"the §H baseline must come from the segment's own top-level record_hz, defaulting from config")
+	assert_true(source.contains("func _force_frame("),
+		"§H requires a forced frame on every JSONL event")
+	var emit_start := source.find("func _emit(")
+	var emit_body := source.substr(emit_start, source.find("\n\n\n", emit_start) - emit_start)
+	assert_true(emit_body.contains("_force_frame(type)"),
+		"_emit must ask for a frame; otherwise 'a frame on every JSONL event' is not implemented")
+	# frames/, not shots/. The §G plan is evidence-of-record and must not be
+	# diluted by the cadence stream.
+	assert_true(source.contains('"frames/%s/%09.2f.png"'),
+		"§H files continuous frames as frames/<segment>/<t>.png, zero-padded so the directory sorts by time")
+	var frame_start := source.find("func _write_frame(")
+	var frame_body := source.substr(frame_start, source.find("\n\n\n", frame_start) - frame_start)
+	assert_false(frame_body.contains("_manifest.append"),
+		"the recorder must not write into shots/manifest.json -- §G's plan is evidence-of-record")
+	# Deterministic collision rule.
+	assert_true(source.contains("_capture_step_active"),
+		"capture and the recorder must not race for the same framebuffer; the prescribed shot wins")
+	var rec_start := source.find("func _recorder_tick(")
+	var rec_body := source.substr(rec_start, source.find("\n\n\n", rec_start) - rec_start)
+	assert_true(rec_body.contains("_capture_step_active"),
+		"_recorder_tick must stand down while a capture step is running")
+
+
+## §3's last clause and §H's: if the instrumentation costs frame time, say so.
+## The check is that the code cannot report a difference it did not measure.
+func test_the_overhead_note_cannot_report_a_delta_it_did_not_measure() -> void:
+	var source := _harness_source()
+	assert_true(source.contains("func _overhead_verdict("),
+		"the overhead note must classify a delta rather than asserting it is fine")
+	var start := source.find("func _overhead_verdict(")
+	var body := source.substr(start, source.find("\n\n\n", start) - start)
+	assert_true(body.contains("OVER the ~1 ms/frame"),
+		"a delta over ~1 ms/frame must say so plainly (§3's last clause)")
+	assert_true(body.contains("below the noise floor"),
+		"a delta smaller than the measurement's own noise must be reported as such, never as zero")
+	assert_true(body.contains("NOT thinned"),
+		"the note must state that the trace was not thinned to make the number look better")
+	# Three conditions, each run twice, reversed. One window per condition
+	# produced -0.607 ms/frame -- telemetry apparently making the game faster.
+	assert_true(source.contains('var order := ["off", "telemetry", "recording", "recording", "telemetry", "off"]'),
+		"the overhead probe must run each condition twice in reversed order; a single ordered pair measures drift")
+
+
 # --- why the live-state checks are not here ---------------------------------
 #
 # `run_tests.gd` runs every test file from its own `_init`, before Godot has
