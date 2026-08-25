@@ -726,13 +726,37 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 	if to_gate.length() < 1.0:
 		_fail("the player is standing on the gate's own position; no approach direction to test")
 		return
+	# CROSSING THE GATE'S PLANE, not proximity to a point.
+	#
+	# This measured "did the player get within 8m of `beyond`", where `beyond`
+	# is 15m further along the player-to-gate ray. That is only "past the gate"
+	# when the approach is head-on down the road. Approach obliquely -- which a
+	# controller walk does -- and the ray runs mostly PARALLEL to the gate's
+	# fence line, so `beyond` lands beside the gate rather than behind it, and
+	# walking along the near side of the fence gets close enough to fail the
+	# check without ever passing anything.
+	#
+	# Measured on the failing CI run: the player ended 0.7m past the gate's own
+	# plane and 14.9m sideways along it -- they never crossed, and the test said
+	# the road was not blocked.
+	#
+	# So ask the actual question: which side of the barrier are they on? The
+	# gate's local X is the fence line, so its perpendicular is the direction of
+	# travel through it, and the sign of that projection is the side.
+	var across := Vector2(gate.global_transform.basis.x.x, gate.global_transform.basis.x.z).normalized()
+	var through := Vector2(-across.y, across.x)
+	var gate_xz := Vector2(gate.global_position.x, gate.global_position.z)
+	var side_before: float = through.dot(
+		Vector2(_player.global_position.x, _player.global_position.z) - gate_xz)
 	var beyond: Vector3 = gate.global_position + to_gate.normalized() * 15.0
 	await _walk_toward_point(beyond, 1800)
-	var short_by := _player.global_position.distance_to(beyond)
-	if short_by < 8.0:
-		_fail("walked to within %.1fm of a point 15m past the gate; the road is not physically blocked" % short_by)
+	var side_after: float = through.dot(
+		Vector2(_player.global_position.x, _player.global_position.z) - gate_xz)
+	# A metre of tolerance: standing ON the line is not crossing it.
+	if signf(side_after) != signf(side_before) and absf(side_after) > 1.0:
+		_fail("crossed to the far side of the locked gate (%.1fm past its plane); the road is not physically blocked" % absf(side_after))
 		return
-	print("gate: physically blocked, stopped %.1fm short of a point beyond it" % short_by)
+	print("gate: physically blocked, still %.1fm on the approach side of its plane" % absf(side_after))
 
 	var gate_prompt := _find_interactable_matching(["gate"])
 	if gate_prompt == null:

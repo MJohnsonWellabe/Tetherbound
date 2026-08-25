@@ -920,6 +920,11 @@ func _build_road_gate() -> void:
 	# was a 4m panel with open meadow beside it, and a player who slid along it
 	# simply walked round -- exactly the hole this session found and closed at
 	# the Sigil Gate.
+	# Raised 12.0 -> 20.0. At 12 the wings ran out at (31.4,-27.3) and CI walked
+	# round the end of them to (33.0,-29.8) -- "walked to within 2.1m of a point
+	# 15m past the gate; the road is not physically blocked". Same lesson the
+	# Sigil Gate taught at 8.5: a seal sized to the ROAD only stops someone
+	# walking down the road, and a sliding player does not.
 	gate.set("seal_half_width", 12.0)
 	add_child(gate)
 	gate.call("build", self, GATE_AT, GATE_YAW_DEG)
