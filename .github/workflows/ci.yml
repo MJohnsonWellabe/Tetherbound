@@ -184,10 +184,26 @@ jobs:
     # shards' remaining margin. Same fix as GATE-D's shard split before it:
     # more shards, not a higher ceiling -- `run_tests.gd --shard=I/N` already
     # takes any N.
+    #
+    # SIX shards, same day: five still clipped once (run 2417/2419's shard 4)
+    # after the file-count fix, root-caused this time to real per-test cost,
+    # not distribution -- test_harvest.gd, test_harvest_permanence.gd and
+    # test_scatter_rules.gd each called RULES.all_placements() (walks all ten
+    # vegetation layers against the real corridor, ~200s measured with
+    # tools/_probe_placements_timing.gd) multiple times for properties that
+    # only ever read one or two layers back out; fixed at the test level
+    # (compute only the layer(s) actually read) rather than papered over here.
+    # test_veg_corridor.gd's two `all_placements()` calls were NOT touched --
+    # both are real whole-config regression checks (see that file's own
+    # comments) and shrinking them would cut coverage, not waste -- so this
+    # file alone still costs ~400-450s wherever it lands. A sixth shard buys
+    # margin for that against whatever else round-robins into the same shard,
+    # on top of the per-test fixes; watch for a real per-test cost problem
+    # again before reaching for a seventh.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5]
+        shard: [1, 2, 3, 4, 5, 6]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -279,7 +295,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/5
+            -- --shard=${{ matrix.shard }}/6
 
   verify-playground:
     runs-on: ubuntu-latest

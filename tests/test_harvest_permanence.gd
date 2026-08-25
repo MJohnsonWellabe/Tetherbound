@@ -64,18 +64,35 @@ func test_bit_get_out_of_range_is_false_not_a_crash() -> void:
 # --- _mark_harvestable: every placement is now harvestable, and identifiable ---
 
 
-func _placements() -> Dictionary:
+## PERF, 2026-08-25: same fix as tests/test_harvest.gd's own header explains
+## in full -- RULES.all_placements() walks all ten vegetation layers against
+## the real corridor (~200s, measured with tools/_probe_placements_timing.gd)
+## and the two tests below only ever read "trees" and "rocks" back out.
+## _layer_placements() calls RULES.placements_for() directly for one named
+## layer, using the same per-layer seed all_placements() itself derives, so
+## it reproduces exactly what a full call would have produced for that layer.
+func _layer_placements(name: String) -> Array[Dictionary]:
 	const RULES := preload("res://scripts/world/scatter_rules.gd")
 	const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+	var layers: Dictionary = RULES.config().get("layers", {})
+	var offset := 0
+	var layer: Dictionary = {}
+	for key: String in layers.keys():
+		if key == name:
+			layer = layers[key]
+			break
+		offset += 1
+	if layer.is_empty():
+		return []
+	var seed_value := int(RULES.config().get("seed", 1)) + offset * 7919 + int(layer.get("seed_offset", 0))
 	var field: RefCounted = HEIGHTFIELD.new()
 	var world_size: float = float(HEIGHTFIELD.load_config().get("world_size", 512))
-	var cfg: Dictionary = RULES.config()
-	return RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	return RULES.placements_for(layer, field, world_size, seed_value)
 
 
 func test_marking_stamps_a_stable_layer_and_index_on_every_harvestable_placement() -> void:
 	var veg := _veg()
-	var by_layer := _placements()
+	var by_layer := {"trees": _layer_placements("trees")}
 	veg.call("_mark_harvestable", by_layer)
 
 	var trees: Array = by_layer.get("trees", [])
@@ -97,7 +114,7 @@ func test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density() ->
 	# config would have shown ~1-in-12/1-in-14; against today's config every
 	# single placement in each layer must be marked.
 	var veg := _veg()
-	var by_layer := _placements()
+	var by_layer := {"trees": _layer_placements("trees"), "rocks": _layer_placements("rocks")}
 	veg.call("_mark_harvestable", by_layer)
 	for layer_name in ["trees", "rocks"]:
 		var placements: Array = by_layer.get(layer_name, [])
