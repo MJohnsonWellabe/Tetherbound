@@ -1,0 +1,202 @@
+{
+  "id": "selfcheck_save_handoff",
+  "title": "Harness self-check: save via the Save tab, copy out, wipe, seed, load through the title",
+  "lane": "diag",
+  "_comment": "NOT a protocol segment. Acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 4 and section 7: the whole handoff, driven end to end through production paths and synthetic physical input, with no game code change. Slot 4 is the handoff slot (autosave is 0; 1-3 stay free for natural play coverage).",
+  "_comment_why_a_walk_first": "The player walks somewhere before saving on purpose. A save taken at the spawn point round-trips to a position a FRESH boot would also produce, so the load would prove nothing. Walking first makes the restored position a fact only the save could carry.",
+
+  "steps": [
+    {
+      "id": "SC-S-01",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": { "scene": "world" },
+      "expected": "the real world scene stands up with the real autoloads"
+    },
+    {
+      "id": "SC-S-02",
+      "title": "let the opening fade finish",
+      "action": "wait",
+      "args": { "seconds": 4 },
+      "expected": "the boot fade completes and the interaction arbiter comes back; until it does, input_context reads 'locked'"
+    },
+    {
+      "id": "SC-S-03",
+      "title": "walk somewhere a fresh boot would not put the player",
+      "action": "move_to",
+      "args": { "at": [-14.0, 14.0], "budget_frames": 1800, "answer_prompts": true },
+      "expected": "the player walks to the Pond road's first leg on the stick"
+    },
+    {
+      "id": "SC-S-04",
+      "title": "record where the save is being taken from",
+      "action": "note",
+      "args": { "text": "the position in this event's `pos` is what the load has to bring back" },
+      "expected": "a note event carrying the pre-save position"
+    },
+    {
+      "id": "SC-S-05",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the shell onto the Satchel tab"
+    },
+    {
+      "id": "SC-S-06",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": { "control": "menu_tab_right", "hold": "tap" },
+      "expected": "RB moves one tab right"
+    },
+    {
+      "id": "SC-S-07",
+      "action": "press",
+      "args": { "control": "menu_tab_right", "hold": "tap" },
+      "expected": "RB moves one tab right"
+    },
+    {
+      "id": "SC-S-08",
+      "action": "press",
+      "args": { "control": "menu_tab_right", "hold": "tap" },
+      "expected": "RB moves one tab right"
+    },
+    {
+      "id": "SC-S-09",
+      "action": "press",
+      "args": { "control": "menu_tab_right", "hold": "tap" },
+      "expected": "RB moves one tab right"
+    },
+    {
+      "id": "SC-S-10",
+      "action": "press",
+      "args": { "control": "menu_tab_right", "hold": "tap" },
+      "expected": "RB moves one tab right, arriving on Save (the sixth tab in data/config/menu.json)"
+    },
+    {
+      "id": "SC-S-11",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": { "check": "input_context", "equals": "menu_save" },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "SC-S-12",
+      "title": "move focus down to slot 4's Save button",
+      "action": "focus_move",
+      "args": { "direction": "down", "times": 4 },
+      "expected": "focus starts on slot 0's Save and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "SC-S-13",
+      "title": "press Save",
+      "action": "press",
+      "args": { "control": "ui_accept", "hold": "tap" },
+      "expected": "the focused Save button activates and writes slot 4"
+    },
+    {
+      "id": "SC-S-14",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": { "seconds": 1 },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "SC-S-15",
+      "title": "copy the slot out of user://",
+      "action": "save_out",
+      "args": { "slot": 4, "name": "handoff_slot_4.json" },
+      "expected": "the file the Save tab just wrote is preserved in the run directory"
+    },
+    {
+      "id": "SC-S-16",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell"
+    },
+    {
+      "id": "SC-S-17",
+      "title": "wipe the live save directory",
+      "action": "wipe_saves",
+      "args": {},
+      "expected": "every slot file is gone; a load that found the state still in memory would prove nothing"
+    },
+    {
+      "id": "SC-S-18",
+      "title": "seed the wiped directory from the copy",
+      "action": "seed_save",
+      "args": { "slot": 4, "from": "run://handoff_slot_4.json" },
+      "expected": "slot 4 exists again, from the run directory rather than from anything still in memory"
+    },
+    {
+      "id": "SC-S-19",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": { "scene": "title", "settle_frames": 30 },
+      "expected": "the world is torn down and the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "SC-S-20",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": { "check": "focus_owned" },
+      "expected": "the title focuses its first button; without focus a controller cannot start the game at all"
+    },
+    {
+      "id": "SC-S-21",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": { "direction": "down", "times": 1 },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "SC-S-22",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": { "control": "ui_accept", "hold": "tap" },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- which is the seeded slot 4"
+    },
+    {
+      "id": "SC-S-23",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": { "control": "ui_accept", "hold": "tap" },
+      "expected": "the slot loads and the title transitions into the Meadows"
+    },
+    {
+      "id": "SC-S-24",
+      "title": "let the loaded pose land",
+      "action": "wait",
+      "args": { "seconds": 6 },
+      "expected": "the world stands up and Game.apply_loaded_player_pose() runs"
+    },
+    {
+      "id": "SC-S-25",
+      "title": "the player came back where the save was taken",
+      "action": "assert",
+      "args": { "check": "near", "at": [-14.0, 14.0], "within": 4.0 },
+      "expected": "the loaded position is the saved one, not the fresh-boot spawn"
+    },
+    {
+      "id": "SC-S-26",
+      "title": "the party came back",
+      "action": "assert",
+      "args": { "check": "party_size", "equals": 0 },
+      "expected": "the party matches the save. On this fresh-game round trip that is zero -- the segment proves the party TRAVELS, not that a populated one does; a populated round trip is smoke_save_persistence.gd's job."
+    },
+    {
+      "id": "SC-S-27",
+      "title": "the region containment agrees",
+      "action": "assert",
+      "args": { "check": "region_is", "equals": "the_pond" },
+      "expected": "map_state.gd's own containment puts the loaded position in The Pond, the region the walk ended in"
+    },
+    {
+      "id": "SC-S-28",
+      "title": "close the segment",
+      "action": "note",
+      "args": { "text": "save handoff round trip complete: Save tab -> copy out -> wipe -> seed -> title Load. No game code was called directly at any point." },
+      "expected": "a note event closes the segment"
+    }
+  ]
+}
