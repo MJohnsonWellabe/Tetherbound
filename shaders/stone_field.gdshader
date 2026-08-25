@@ -81,6 +81,10 @@ uniform int allowed_base_mask = 12;
 // A small chance of a stone out on ordinary ground, so a meadow has field
 // stones in it rather than a hard line where the path grit stops.
 uniform float stray_chance : hint_range(0.0, 1.0) = 0.06;
+// How thickly grit gathers at a ground-type boundary -- in practice, the worn
+// edge of a route. Cubed in use, so it is tight to the edge rather than a broad
+// halo.
+uniform float verge_gain : hint_range(0.0, 1.0) = 0.55;
 
 varying vec3 v_colour;
 varying float v_contact;
@@ -150,7 +154,19 @@ void vertex() {
 	// are what stop the gravel ending on the same hard line the grass mask was
 	// criticised for.
 	float drift = mix(1.0, value_noise(world_xz * clump_scale), clump_contrast);
-	float keep = on_stone_ground ? drift * density_gain : stray_chance;
+	// The verge. Terrain3D's control word carries the blend between a cell's
+	// base and overlay texture in bits 14-21, so a value in the MIDDLE of that
+	// range means this cell is on a boundary between two ground types -- which,
+	// beside a route, is the edge of the path. Grit concentrated there is what
+	// turns "the grass simply stops" into a worn edge: a blind pass called the
+	// boundary "a density edge rather than a material edge, and it looks cut",
+	// and this is the material edge it was missing. Costs nothing -- the
+	// control word is already fetched.
+	float blend = float(control >> 14u & 0xFFu) * 0.003921568627450;
+	float verge = 1.0 - abs(blend - 0.5) * 2.0;
+	float keep = on_stone_ground
+			? drift * density_gain
+			: max(stray_chance, verge * verge * verge_gain);
 	bool culled = off_map || hole || v_fade <= 0.001
 			|| hash12(world_xz * 3.19) > keep;
 

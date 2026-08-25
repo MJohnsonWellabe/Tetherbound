@@ -202,7 +202,7 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	for key: String in [
 		"stone_size", "size_jitter", "sink", "density_gain", "clump_scale",
 		"clump_contrast", "tint_jitter", "ground_blend", "contact_darken", "slope_lie",
-		"stray_chance", "field_radius", "fade_start",
+		"stray_chance", "verge_gain", "field_radius", "fade_start",
 	]:
 		if stone_cfg.has(key):
 			_stone_material.set_shader_parameter(key, float(stone_cfg[key]))
