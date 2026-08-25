@@ -3,6 +3,9 @@
 **Snapshot date:** 2026-08-25
 **Branch:** `ralph/GATE-F-INSTRUMENTATION`
 **Commit:** `c5a84dd95f02ae51b469d9033b5167ce85640b09`
+**Revised:** 2026-08-25, second pass — the three sweep gaps the first pass
+named are now closed. See "Known gaps in this sweep" for what remains.
+
 **Mandate:** `ralph/GATE_F_PROTOCOL.md` §16.1 — *"freeze a snapshot/reference of
 every unresolved historical item for later reconciliation"*.
 
@@ -53,14 +56,21 @@ reading at that point.
 | `ralph/DONE.md` (16,910 lines) | targeted: section index + every entry needed to close or contradict a candidate | never cold-read, per `START_HERE.md` §6 |
 | `ralph/VISUAL_LEDGER.md` | full read of the domain table and standing findings | added beyond the brief's list; it is the only place the eight visual domains' verdicts live |
 | `ralph/HANDOVER_2026-08-25_CI_GREEN_AND_TWO_LANES.md`, `ralph/HANDOVER_CONSOLIDATION_2026-08-25.md` | full read | newest state; supersedes the 08-23 assessment in places |
-| `ralph/reports/*` | grepped for open/unresolved markers; `CHOKE_POINTS`, `CROSSINGS_IMPASSABILITY`, `PERF_ROG_REPORT`, `BAND2_WARRENS_EVIDENCE`, `GATE_C_EVIDENCE`, `GATE_D5_EVIDENCE` | one open item found (`tether_relay` flag), already carried from BACKLOG |
-| working tree spot-checks | `scripts/world/tm_pickup.gd`, `data/config/tether_relay.json`, `data/config/stronghold_climax.json`, `data/config/vegetation.json`, `data/config/bands/*/trainers.json`, `.github/workflows/ci.yml` | used to confirm or refute six entries rather than trust prose |
+| `ralph/reports/VISUAL_*_2026-08-23.md` (13 files, 3,314 lines) | **read in full, second pass** | the per-frame defect lists; source of `HIST-146`–`HIST-199` |
+| `ralph/lanes/` (11 files) | **read, second pass** | `VISUAL_SWEEP_LANES.md`'s settled-findings and harness-pattern lists used to refute three candidates |
+| `ralph/planning/` (3 files) | **read, second pass** | source of `HIST-200`–`HIST-206`; the superseded draft read only for its own supersession note |
+| `ralph/ledger/` | **opened, second pass** | a generated dashboard frozen at `395b514e` / 2026-08-12 — `HIST-207` |
+| `docs/ralph-prompts/` (80 files) | **swept, second pass** | filenames + the `OP1`–`OP16` set resolved against real records; see the OP table |
+| `ralph/reports/*` (non-VISUAL) | grepped for open/unresolved markers; `CHOKE_POINTS`, `CROSSINGS_IMPASSABILITY`, `PERF_ROG_REPORT`, `BAND2_WARRENS_EVIDENCE`, `GATE_C_EVIDENCE`, `GATE_D5_EVIDENCE` | one open item found (`tether_relay` flag), already carried from BACKLOG |
+| working tree spot-checks | first pass: `scripts/world/tm_pickup.gd`, `data/config/tether_relay.json`, `data/config/stronghold_climax.json`, `data/config/vegetation.json`, `data/config/bands/*/trainers.json`, `.github/workflows/ci.yml`. Second pass: `scripts/world/landmark.gd`, `scripts/ui/audio_cues.gd`, `assets/ui/audio/`, `scripts/build/build_placer.gd`, `scripts/build/creature_bed.gd`, `scripts/combat/encounter_director.gd`, `data/terrain/playground/` | used to confirm or refute **twelve** entries rather than trust prose |
 
 ## ID allocation order (stable)
 
-`HIST-###` is allocated in one pass over the sources in the order of the table
-above, and within each source by ascending line number of the entry's own
-heading. IDs therefore do **not** run in section order — an ID's section is a
+`HIST-###` is allocated in source order: the first pass allocated `HIST-001`–
+`HIST-145` over the sources in the order of the table above, and the second pass
+allocated `HIST-146`–`HIST-210` over the three sweeps it was sent to close, in
+the order the coordinator listed them. Within each source, ascending line number
+of the entry's own heading. IDs therefore do **not** run in section order — an ID's section is a
 property of the item, not of its number. This keeps the numbering stable if an
 item is later re-sectioned at reconciliation.
 
@@ -1630,6 +1640,852 @@ decision or a verified code/data fact*, not by being awkward.
 
 ---
 
+---
+
+# Section 1 (continued) — player-facing items added by the second sweep
+
+`HIST-146` onward. Allocated 2026-08-25 after the coordinator directed that the
+three gaps the first pass named be closed. Order within this block: the
+`ralph/reports/VISUAL_*_2026-08-23.md` set first (read in full, not grepped),
+then `ralph/lanes/` + `ralph/ledger/` + `ralph/planning/`, then
+`docs/ralph-prompts/`.
+
+**A note on this block's status evidence.** The visual reports are lane records
+written mid-sweep, and several of them fix, refute or supersede findings inside
+their own text. Every row below was checked against the later rounds in the same
+file before being carried, and where a later round closed it, it is not here.
+
+## HIST-146 — the camera watches the fight from behind your own creature's rear
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`; root-caused in `ralph/reports/VISUAL_MAKE_LANE_FINDINGS_2026-08-23.md` §1
+- **original_id:** (unnamed; D8 round 1 combat camera)
+- **title:** `enemy.preferred_range` 2.1 m against `camera.distance` 4.6 m
+- **player_visible_problem:** *"The fight happens between a large rump and a distant dot."* The piloted creature fills the bottom-centre of the screen with its back to the camera, face never visible, while the opponent is a ~40 px speck at mid-distance.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Not a camera-placement taste call — it falls out of three config numbers that were each reasonable alone. The ally sits ~69% of the way along the camera's sight line (4.6 of 6.7 m), dead centre, and at 4.6 m a creature-sized body subtends more angle than a 1.5 m shoulder offset moves it. Measured, not inferred: `_aim_camera_clear()` fires a real physics ray and tries five lateral yaw nudges before giving up, printing *"every camera nudge tried toward this target was still blocked by the ally's own body"* in **both** encounters of the latest run. `_aim_camera()` never moves the camera, so these are the real `CameraRig` a player looks through. Also named separately: `arena.separation` is 5.0 m while the AI holds 2.1 m — *"the arena is authored for a fight at roughly twice the distance the fight is actually had at."* Recorded as *"the first fix queued behind the round-2 verdict"* and, four rounds later, still not made. **Distinct from `HIST-002`**, which is the body-spacing half.
+- **owner_reported:** no
+- **system_class:** combat/camera
+- **likely_still_valid:** yes
+
+## HIST-147 — the danger telegraph is drawn where the player cannot see it
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; D8 round 1)
+- **title:** The "incoming — move" ring is stamped on the player creature's own back shell
+- **player_visible_problem:** The red ring that warns the player to move is drawn on their own creature's back and occluded by its body — and given `HIST-146`, the camera is looking at exactly that back. *"A danger telegraph the player physically cannot see is worse than none."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** `telegraph_glow.gd` is built, wired at `combat_manager.gd:29`, and was itself built against an earlier critic's *"the wind-up frame is indistinguishable from standing"* — so the feature exists and its placement is the defect. No later round records it moved. Compounds with `HIST-146` and `HIST-002`: the ring is on the back, the camera faces the back, and the two bodies are touching.
+- **owner_reported:** no
+- **system_class:** combat/camera
+- **likely_still_valid:** yes
+
+## HIST-148 — a ranged move produces nothing visible in the world
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND4_2026-08-23.md`; mechanism in `ralph/reports/VISUAL_COMBAT_CAPTURE_MECHANISM_2026-08-23.md`
+- **original_id:** (unnamed; the projectile finding, rounds 1–4)
+- **title:** *"The move exists in the UI and nowhere in the world"*
+- **player_visible_problem:** Using a ranged move shows no projectile, no muzzle or cast flash, no trail and no dust — the move happens in the interface and not on screen.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** **Three separate things wore this one symptom and only two are resolved.** (1) The harness could never photograph it — `move_projectile.gd` clamps its flight to `MAX_TRAVEL` 0.42 s while one rendered frame costs ~2.4 s under llvmpipe, so the node is freed roughly two rendered frames before the shutter opens; that is a capture defect and is `HIST-195`. (2) A real material bug — the bolt was drawn with additive blend *and* vertex-colour alpha, both of which `impact_flash.gd` rules out by name, and rendered as literally nothing; fixed, and the bolt now produces a measurable cream cluster at the muzzle. (3) **The bolt has nowhere to fly**, because the target is inside the caster (`HIST-002`) — *"a ranged move has never had a visible distance to travel in any survey this sweep has run."* Round 4's verdict is explicit that the fix for (2) *"does not rescue it"* and the frame still fails.
+- **owner_reported:** no
+- **system_class:** combat/camera
+- **likely_still_valid:** yes — gated behind `HIST-002`.
+
+## HIST-149 — the impact burst reads as a flat decal
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed; D8 round 2)
+- **title:** *"a flat beige starburst decal"*
+- **player_visible_problem:** A landed hit produces a flat pale starburst pasted over the scene rather than an impact.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Recorded as the correct outcome of round 1's open question: the effect was always there and the shutter was late, so it is *"now judged, and judged harshly, which is the correct outcome."* `impact_flash.gd`'s own header records the measurement that caused it to be built — 10 warm pixels at contact against `palworld-01`'s 24,623. No later round records it re-authored. This is criticism of the effect, not a report that it is missing, which is why it is a distinct row from `HIST-148`.
+- **owner_reported:** no
+- **system_class:** combat/camera
+- **likely_still_valid:** yes
+
+## HIST-150 — a fight carries the previous fight's toast and target plate
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed; `05-trainer-battle`)
+- **title:** *"You backed off."* over a target plate naming the last encounter's creature
+- **player_visible_problem:** A trainer battle opens showing a message from the previous encounter and a target plate reading the wild creature the player just left.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** `is_fighting()` is true and `enemy_body()` is non-null, so a fight is genuinely open — the frame carries a stale toast and a stale target from the previous encounter, and the trainer's own creature is not in shot. **Explicitly left unresolved by its own lane:** *"Whether the stale plate is a capture-sequencing problem or a real HUD defect is not yet established and is NOT recorded as either."* No later round settles it.
+- **owner_reported:** no
+- **system_class:** UI architecture / combat
+- **likely_still_valid:** unsure — genuinely undetermined, by the lane's own statement.
+
+## HIST-151 — a hard-edged band across the hillside that follows nothing
+
+- **source:** `ralph/reports/VISUAL_MAKE_LANE_FINDINGS_2026-08-23.md` §6
+- **original_id:** (unnamed; the teal ground band)
+- **title:** Measured — it is a shape, not a light
+- **player_visible_problem:** A large region of hillside carries a hard curved boundary that follows no terrain feature and no sun direction. The blind critic: *"the single most artificial thing in the combat set."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Measured rather than eyeballed, because the description and the numbers disagree: inside the band `(38, 51, 10)` against adjacent grass `(35, 46, 3)` — about +8% luminance with the blue channel lifted 3 → 10. So it is **not** a bright light and nobody should go looking for a stray `SpotLight3D`; it *"measures like a ground-material or splat boundary."* Still present in round 3 and *"very prominent"*. Routed to D7/VIS-WORLD and not touched by the lane that measured it. Plausibly the same family as `HIST-193` (the 2 m control-map cell), which VIS-WORLD later measured from the other side.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes
+
+## HIST-152 — the HUD says no creature is out while the player is piloting one
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; D8 round 1 HUD)
+- **title:** *"ACTIVE COMPANION — No creature out"* during a fight
+- **player_visible_problem:** The interface contradicts the game state the player is looking at.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Reported alongside two findings from the same frame that were later shown to be capture artefacts (the keyboard glyphs; the empty TEAM panel, which *"points the same way: the capture probably never seeded a party"*). This one is not named in D2's list of eight resolved artefacts, and no round records it fixed. `translated: no` — the string is what the player reads.
+- **owner_reported:** no
+- **system_class:** UI architecture
+- **likely_still_valid:** unsure — sits in a frame whose neighbours were artefacts, and was never separately cleared.
+
+## HIST-153 — the exploration HUD draws over every station panel
+
+- **source:** `ralph/reports/VISUAL_UI_2026-08-23-round2.md` (round 3 section)
+- **original_id:** (unnamed)
+- **title:** A real shipping bug the dishonest capture hid for the whole sweep
+- **player_visible_problem:** Opening a bench, chest, shop, bed or any of the five station panels leaves the world HUD drawing straight over it.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Found the moment the capture started shooting panels over a real world: *"There was never a frame of it because those panels had only ever been photographed with no world, and therefore no HUD, behind them."* The round-3 text records it as **found**, not as fixed, and it does not appear in that round's own "what round 3 fixed" list. Related but distinct from `HIST-016` (`VIS-UI-r6`, the player's body printing through the panels) and from the round-2 fix that made the *pause menu* hide both HUD layers.
+- **owner_reported:** no
+- **system_class:** UI architecture
+- **likely_still_valid:** yes
+
+## HIST-154 — the hotbar is not drawn during a fight
+
+- **source:** `ralph/reports/VISUAL_UI_2026-08-23-round2.md` ("Deliberate trade-off, recorded rather than buried")
+- **original_id:** (unnamed)
+- **title:** A deliberate trade-off with a stated revisit condition
+- **player_visible_problem:** When combat starts the exploration legend, the prompt and the hotbar panel all vanish, so a player who wants food or an orb mid-fight has no visible bar to find it on — *"a bar the player cannot see is harder to use than one they can."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Recorded honestly by the lane that did it, with the reason: combat's own move grid and orb readout are anchored bottom-right and neither can move without taking the central focus lane `smoke_prompt_hotbar_dock.gd` guards. **The bindings are untouched** — owner directive 2026-08-22 §1 keeps the d-pad on hotbar 2–5 in every context *"so food and orbs stay reachable mid-fight"*, and `_read_hotbar_input()` still polls through a fight. The lane names its own revisit condition: *"If a later blind round says the fight gives no way to find a potion, the fix is to move combat's grid, not to restore this panel where it is."* A Gate F playtest is exactly that round.
+- **owner_reported:** no (but it sits directly against an owner directive's stated intent)
+- **system_class:** UI architecture
+- **likely_still_valid:** yes — as a live trade-off awaiting the evidence it names.
+
+## HIST-155 — the title, the portraits and the picker are three more art languages
+
+- **source:** `ralph/reports/VISUAL_UI_2026-08-23.md` ("Five visual languages"); carried as "not acted on" in `ralph/reports/VISUAL_UI_2026-08-23-round2.md`
+- **original_id:** (unnamed; D2 round 1)
+- **title:** Flat vector poster art, an anime portrait on an uncropped light-grey square, and the starter-picker staging
+- **player_visible_problem:** The panel system is judged *"a real, coherent system"*; against it sit a title screen in flat vector poster art, a character portrait pasted on an uncropped light-grey square, and a starter picker staged differently from both.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Round 2 lists these among *"Not acted on, with reasons… the starter-picker staging, the portrait art style and the title illustration (other domains, and partly art that is not in the build)."* The critic's verdict on the panel system itself is worth preserving: *"Nothing in the panel language says 'meadow', 'cozy', or 'hand-made'; it says 'dark-mode tool'"* — with the bones judged compatible with a reskin. Overlaps `HIST-019` (the display font), which is the fourth language.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-156 — unrelated items share one glyph
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; D6 round 1)
+- **title:** axe = hoe = pickaxe; four of six consumables are one flask; heartstone = rootstone = stone
+- **player_visible_problem:** On the screen the player opens most, three different tools draw the same T-mattock, most consumables draw the same flask, and three different stones draw the same fractured hex. The torch is *"a two-pixel vertical line with a dot — invisible at any zoom."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** **Distinct from `HIST-004`**, which is about colour encoding category; this is the glyph shapes themselves colliding. The icon sheet's own SHARED-ICON flagging is called *"honest and well-organized bookkeeping — the flags just haven't been acted on."* Complicated by `HIST-196`: every icon finding in rounds 1 and 2 covers less than half the set, because the sheet was cropped both times.
+- **owner_reported:** no
+- **system_class:** UI architecture / art
+- **likely_still_valid:** yes
+
+## HIST-157 — the berry bush has no berries
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; `world-berries`)
+- **title:** A green bush with purple trumpet flowers
+- **player_visible_problem:** The node the game calls berries, and which the corridor relies on to break its longest gaps, has no berries on it.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Judged blind from the item-art survey. Worth cross-reading with `GATE_F_EVIDENCE_2026-08-23.md`, which records the chapter's single worst gap (165 m in band 2) as *"broken by a berry cluster"* — i.e. the pacing argument leans on a prop a player may not recognise.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-158 — the two most-gathered plant nodes share one identity
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; `world-fiber`)
+- **title:** Neon-violet flowers at ~3× scale, a colour-twin of the berry bush
+- **player_visible_problem:** Fiber and berries — the two things the player gathers most — look like the same plant.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-25
+- **status_evidence:** The **~3× scale** half is plausibly addressed: `VISUAL-GROUNDCOVER` rescaled `flowers` 0.07–0.26 → 0.025–0.09, and the 2026-08-23 blind critique's "violet flowers ~3× oversize (0.5–0.8 m blossoms)" was that lane's target. The **colour-twin** half is not addressed anywhere found. The consolidation branch then cut the flowers layer's density again (1.5 → 0.8), which changes how often the pair appear together but not whether they are distinguishable.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** unsure — one half plausibly closed, the other untouched.
+
+## HIST-159 — the friendliest gathering verb points at a burnt tree
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; `world-wood`)
+- **title:** *"a dead, leafless, charcoal-black tree"*
+- **player_visible_problem:** The wood node — the first thing the tutorial sends the player to chop — is a dead black tree. *"In a biome sold as cozy-and-inviting, the friendliest gathering verb in the game points at a burnt, haunted prop."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** No closing evidence found. Note the neighbouring `HIST-009`: band 2's ironwood nodes have the opposite defect (raw crimson) from the same root cause class — harvest nodes taking their material from a path no scatter layer covers.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-160 — the common stone wears the exotic look
+
+- **source:** `ralph/reports/VISUAL_COMBAT_AND_ITEMS_2026-08-23.md`
+- **original_id:** (unnamed; stone vs rootstone)
+- **title:** Stone and rootstone read reversed
+- **player_visible_problem:** Ordinary stone is exotic coal-black while rootstone — the special material the saddle recipe is gated behind — is ordinary granite. The player learns the wrong signal for what is rare.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** From the same blind pass that called `world-rootstone` *"the best prop in either set"*, so the prop is not bad — the pairing is inverted. Same shape as the galecrest rarity inversion D3 found and fixed, which is precedent that this class is fixable without new art.
+- **owner_reported:** no
+- **system_class:** art/asset / progression legibility
+- **likely_still_valid:** yes
+
+## HIST-161 — no tool is gripped
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed; held-tool set, round 2)
+- **title:** *"the right hand is open, fingers splayed, and the shaft passes behind/through the hand"*
+- **player_visible_problem:** Every tool the player holds floats through an open hand. There is no grip pose anywhere in the set.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Round 1 could not have seen this — its camera faced the trainer's back and every tool rendered stowed. Round 2's reframe made the held-tool set valid for the first time, and this is what it showed. Adjacent to the owner's OP21-24 (*"the trainer does not hold the axe in a believable expected grip/pose"*), which `ASSESSMENT_2026-08-23.md` records as fixed for the **swing clip** by `STRANDED-P3`; the grip pose is a different half and is not recorded as addressed.
+- **owner_reported:** yes — OP21-24 names the grip explicitly, and OP23-10 re-reports the torch pose.
+- **system_class:** art/asset (animation)
+- **likely_still_valid:** yes
+
+## HIST-162 — held tools are two to three times too large, and cannot be scaled from data
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`; `ralph/reports/VISUAL_MAKE_LANE_FINDINGS_2026-08-23.md` §3
+- **original_id:** (unnamed)
+- **title:** `tool_hold.gd` has `held_offset` and `held_rotation_deg` but no `held_scale`
+- **player_visible_problem:** The knife reads ~1.4 m, the pickaxe head ~1.4 m and the hammer ~2.1 m against a 1.80 m person. The hammer is also the *survival* pack's axe while every other tool is the *fantasy* pack's — a different art family in the same hand.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Corroborated by the capture's own measurement (`held/hoe … 78% of a 1.80 m trainer`). The missing `held_scale` is the load-bearing part: *"the size cannot currently be corrected from data at all."* Also settled in the same pass and worth not re-deriving: a repo-wide search for `*hammer*`, `*mallet*`, `*sledge*`, `*rod*`, `*fish*` returns **icons only**, so the hammer is not a lazy pick from a set that had a hammer in it, and `fishing_rod` has `held_model: ""` deliberately — *"For water that doesn't exist yet"* — so `held-fishing_rod` containing no rod is the capture being correct, not a defect.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-163 — the mill has no mill in it
+
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md`; independently in `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md` and `VISUAL_MAKE_ROUND4`
+- **original_id:** (unnamed)
+- **title:** 78 modules, not one of them a wheel
+- **player_visible_problem:** A named landmark the player is sent to, and which a Band 3 progression gate is named after, has no wheel, sails, hopper, race or axle — it is a three-storey townhouse with a landmark's name.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** **Found twice independently and agreeing** — from the recipe (78 modules enumerated, every one a wall, roof, window, corner, border or fence) and blind from the frames (*"The shot named 'wheel' contains no wheel"*). `village.json`'s own placement comment states the wheel hangs at local x −4.0 with its paddles meeting the stream, and the same file already records why there is none: the Medieval Village MegaKit has no mill machinery, which is why the old `TowerWindmill` was removed **and not replaced**. So a named landmark is being grounded `"highest"` so that a wheel which does not exist clears a streambed.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-164 — three named landmarks are two kits used twice
+
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md`; `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** The inn is `farmhouse_shell` plus one retint; the ranger station is a bigger `cottage_b`
+- **player_visible_problem:** *"The world cannot be navigated by looking at it."* The inn and the farmhouse stand side by side as visible twins in the same frame.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Measured from the recipes, and the locations pass **narrows the structures critic's claim** in a way that changes the fix: the inn is 75 modules against `farmhouse_shell`'s 74 with identical module histograms and exactly one extra `retint` (`MI_RoundTiles: #8a5a3a`) — everything else it adds is colliders, a door leaf and an interior, real work, none of it visible from outside. The ranger station is **not** the same mesh: 34 modules against `cottage_b`'s 29, a `Roof_RoundTiles_4x6` instead of a `4x4`, seven straight walls instead of five. *"'It is the same model' and 'it is the same kit used the same way twice' have different fixes."* Round 4 records both as unmoved.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-165 — the well has no well
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** *"a hollow, open-sided frame you can see straight through"*
+- **player_visible_problem:** The village well has no hole, no water, no winch and no rope.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** From the same round that found `HIST-166`. Note the tension with the locations pass, which names the well plaza as part of *"the one frame with genuine site grammar"* — so the plaza composes and the prop itself does not resolve. `VIS-MAKE-remainder` lists "a well shaft" among its blocked-on-art items (`HIST-008`); this row is the player-facing statement of the same gap.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-166 — bridges and gates are overlapped fence panels
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed; `18-south_bridge_gate`)
+- **title:** *"visibly two fence pieces overlapped"* with a stacked double post
+- **player_visible_problem:** The South Bridge gate — the chapter's first hard progression gate, the one Oskar's key opens — is two fence pieces laid over each other.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-25
+- **status_evidence:** No closing evidence found in the visual reports. Adjacent and complicating: the 2026-08-25 owner ruling that gates must be *physically* sealed produced `road_gate.gd`'s `seal_half_width`, which builds wing panels **from the same prefab as the leaf** — i.e. the fix for the gating problem propagates this prop further along the fence line. See `HIST-145`.
+- **owner_reported:** no (the gating behaviour is owner-ruled; the prop's read is not)
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-167 — there are no clouds anywhere, and no cloud layer exists
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md`; reported blind in `VISUAL_STRUCTURES_AND_GROUND` and `VISUAL_CORRIDOR_PASS`
+- **original_id:** (unnamed)
+- **title:** Established by reading, not by looking at frames
+- **player_visible_problem:** Every sky in the game is a flat vertical gradient. The key art has cumulus in all seven panels, and no day frame in 24 surveyed shows a single cloud form. Named by critics as the main reason the wide shots read as empty.
+- **date_opened:** 2026-08-22 · **last_touched:** 2026-08-23
+- **status_evidence:** The sky is a `ProceduralSkyMaterial` — a vertical gradient and a soft sun blob — and `art.json`'s own comment states the limit: *"No amount of tuning puts a cloud in it."* A `PanoramaSkyMaterial` path exists and once used `day.hdr`/`golden.hdr`, which **did** carry cloud form; **EV8 pulled it deliberately** because a static equirect has a baked-in sun position that cannot track `sun.pitch_deg`/`yaw_deg`, so one viewpoint read as dusk over midday ground, and golden hour blew out two-thirds of the frame at every energy tried. The `cloudy` preset is explicitly *"a stylised flat-overcast look, not literal cloud shapes."* Recorded as **needs-implementation, not needs-tuning, and not something to fake**, with two honest routes named. **Distinct from `HIST-060`/`HIST-126`**, which are about how weather lights the ground.
+- **owner_reported:** no
+- **system_class:** art/asset (renderer capability)
+- **likely_still_valid:** yes
+
+## HIST-168 — three water bodies read as three unrelated colours
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md`; reported blind in `VISUAL_STRUCTURES_AND_GROUND`
+- **original_id:** (unnamed)
+- **title:** The palette is already unified; the divergence is depth and alpha
+- **player_visible_problem:** The pond, the river and the stream read as pool cyan, dark navy and pale grey-blue — three unrelated liquids in one chapter.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Root-caused rather than repainted, and the finding **corrects the prescription**: all three already share `surface.deep_colour` #17494a and `surface.shallow_colour` #6fa384, and the only per-body override is `alpha_shallow` (pond 0.48, river 0.70, stream 0.78). Depth decides how much resolves toward `deep_colour`, alpha decides how much bed shows through, and a grazing angle adds a fresnel of pale sky. *"So the fix is not 'give them one colour' — they have one."* Recorded as **not yet acted on**. Related: the 2026-08-23 blind critique's separate "resort-turquoise pond water against a dusk sky", which `VISUAL-LIGHT` inspected and deliberately did not touch.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-169 — half of every grass blade renders black
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md`
+- **original_id:** (unnamed; "the black grass")
+- **title:** Not a backface bug — a baked-AO vertex colour forced into albedo by colour jitter
+- **player_visible_problem:** The lower third of every grass blade is solid black, following the blade geometry rather than any light direction. On a ground plane that is already the game's weakest surface, half of every tuft is a black spike.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** **The briefed diagnosis was wrong and acting on it would have fixed nothing.** Culling is correct: every grass, flower and bush source declares `doubleSided: true` and `vegetation.gd` copies `cull_mode` faithfully. Traced end to end instead: the pack's meshes carry a `COLOR_0` baked-AO gradient (`Grass_Common_Tall.gltf` measures **0.001 at the lowest 15% of vertices, 0.962 at the highest**); the pack's material does not ask for it as albedo; but `vegetation.gd::_tint_for` sets `vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo or needs_instance_colour`, and `needs_instance_colour` is just `colour_jitter > 0.0` — grass 0.22, drygrass 0.20, rocks 0.16. So asking for jitter force-enables the channel and `albedo_color` multiplies 0.001 to black. The two cannot simply be separated — Godot's per-instance MultiMesh colour reaches albedo through the same switch, so disabling it would silently kill the jitter, *"the exact 'set a value, nothing happens, nobody notices' failure class this repo has already paid for twice."* Recorded as **not applied yet**, queued behind the then-current blind round. Directly relevant to `HIST-041` (WORLD-GRASS), which raises grass scale on top of this.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-170 — golden hour reads as mud
+
+- **source:** `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md`
+- **original_id:** (unnamed; D7 round 1)
+- **title:** The one preset the key art most depends on
+- **player_visible_problem:** The warmest, most flattering hour of the day grade reads brown rather than gold.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-25
+- **status_evidence:** Reported blind. Complicated since: `VISUAL-LIGHT` flipped the sun's hemisphere and made the clock continuous, and `TWO-SUNS` (`HIST-061`) records the `golden` preset's own frame being re-shot clean — but neither pass re-judged the grade, and `VISUAL-LIGHT`'s own entry says no blind pass ran. Also relevant: `HIST-167`'s note that golden hour *"blew out two-thirds of the frame at every energy tried"* under the panorama path.
+- **owner_reported:** no
+- **system_class:** terrain/composition (lighting)
+- **likely_still_valid:** unsure — the preset moved under the finding, unjudged.
+
+## HIST-171 — night has no moon, no horizon, and a character lit by a different rig
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`; `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md`; `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md`
+- **original_id:** (unnamed; three independent reports)
+- **title:** *"Night is an absence, not a mood"* — and the character is exempt from it
+- **player_visible_problem:** There is no moon disc in any night frame; the sky is indistinguishable from the ground so there is no horizon at all; and the trainer renders at near-daylight brightness against pitch black, *"pasted onto black paper"*, casting two divergent shadows with no visible source.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Measured across all night frames before any change: **sky 0.0% and horizon 0.00 in every one**; near-field luminance 0.012–0.140 against 0.115–0.301 in daylight. Arithmetic account recorded rather than guessed: the night preset runs `exposure` 2.0 against day's 0.6 with `ambient_energy` 2.3, and a uniform ambient lift multiplies albedo — so it raises the trainer's bright albedo far more than a terrain whose grass albedo R9.4 deliberately darkened to value 0.199. The world-surface lane later root-caused the character half further as **an emissive material, not a lighting bug**. Recorded as **not acted on**. Distinct from `HIST-135` (whether the *transition into* night reads) and from `HIST-083` (whether the torch helps once there).
+- **owner_reported:** yes in origin — `RG21`/OP23-06 are the owner's "night is too dark"; this row is the mechanism three critics named independently.
+- **system_class:** terrain/composition (lighting)
+- **likely_still_valid:** yes
+
+## HIST-172 — the fires emit no light
+
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md`
+- **original_id:** (unnamed; locations round 1, ranked gap 3)
+- **title:** *"the single cheapest coziness instrument in the toolbox is switched off"*
+- **player_visible_problem:** `08-ridge-camp-fire-night` is *"pure black with an unlit campfire"*; `05-relay-camp-fire-night`'s fire is *"a faint smudge behind crates; the scene is lit by nothing."* A camp at night gives no light.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Judged blind, against a brief whose own words are "cozy and inviting". Partly complicated by a known capture defect in a *different* pass: `GATE_D_REMAINDERS.md` §2.2 records *"a campfire with no flame, glow or smoke — embers survived the headless renderer, flame billboards and the omni light did not"*, i.e. the same symptom has a documented capture explanation. The locations critic saw it at **night**, where an omni light is exactly what would show, which is evidence the other way. **Not resolved by either pass.** `GATE-E-STRONGHOLD-ART` separately gave the stronghold garrison its own fires, which is precedent that lit fires are achievable.
+- **owner_reported:** no
+- **system_class:** terrain/composition (lighting)
+- **likely_still_valid:** unsure — a real finding with a competing capture explanation on record.
+
+## HIST-173 — the ground does not respond to anything standing on it
+
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md` (round 1, ranked gap 1)
+- **original_id:** (unnamed)
+- **title:** *"Until a path enters a site and the grass dies where feet go, no site will read as a place"*
+- **player_visible_problem:** Buildings and props sit on untouched uniform lawn with no path in, no wear, no enclosure and no ground-material response — in the village and at the stronghold alike.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** The locations-lane form of the standing density finding, and **sharper than it**: *"the problem is not how much grass there is, it is that the ground does not respond to the site standing on it."* That distinction matters because `HIST-041`/`HIST-024` are about quantity and this is about the terrain's own surface. Broader than `HIST-117` (the trail camp's ground-wear decal), which is one site's instance of it and is blocked on a `terrain_playground.json` capability no lane may edit.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes
+
+## HIST-174 — whole sites are still blockout, in frame
+
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md` (round 1, ranked gap 2)
+- **original_id:** (unnamed)
+- **title:** The stronghold gate, the waystop's raw grey cliff, the relay plaza's tiling brick slabs
+- **player_visible_problem:** *"No Palworld reference contains a single unfinished surface. The bar images are finished pictures; a third of this survey is not."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** The **stronghold gate** half is materially changed since: `STRONGHOLD-MAT`, `GATE-E-STRONGHOLD-ART` and `STRONGHOLD-R2` landed real textured masonry, a retint ladder, garrison fires and an approach road — all unjudged (`HIST-037`, `HIST-069`). The **waystop cliff** and the **relay plaza slabs** are not addressed anywhere found. `ACTIVE_TASKS.md`'s P4 named "dress the relay-yard greybox" as scheduled work.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes — for the two sites the stronghold work did not touch.
+
+## HIST-175 — the player renders standing on an NPC's head
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; "the finding that outranks the verdict")
+- **title:** *"a ~3.5 m totem pole"*, in three of sixteen frames, across a day and a night capture in the same band
+- **player_visible_problem:** The player character stands on top of a cloaked NPC, both feet planted on its crown.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Reached blind, with no knowledge that anything was being tested, in `08-band4-ironwood-day`, `08-band4-ironwood-night` and `09-band4-ridge-day` — *"a state that survives along the route, not a one-frame fluke."* **Explicitly left undetermined:** whether a walking player can do this, or whether the capture's teleport-to-authored-coordinate drops the body onto an NPC a walking player would never land on. `VISUAL_SWEEP_LANES.md` lists "the player seated inside two captains' colliders" first among this sweep's six harness defects, which is evidence for the capture explanation — but the corridor lane that owns both did not close it. Adjacent and unresolved from a different direction: `HIST-128`, wild clusters sited without checking the routes they block.
+- **owner_reported:** no
+- **system_class:** terrain/composition (collision) / tooling
+- **likely_still_valid:** unsure — one of two opposite answers, neither established.
+
+## HIST-176 — the trail is ten trainer-heights wide
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`; re-measured in `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** *"ten trainer-heights… not a footpath"*
+- **player_visible_problem:** The path the player walks for 11.5 km reads as a road-width strip rather than a trail, against Palworld's 3–4 m.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Round 1 judged 10–20 m from frames. The world-surface lane then measured it directly and **partly corrects the number**: *"The path is 6 m wide. The bald strip around it is 20 m."* So the painted path is closer to right than the critique implied, and what reads as width is the unvegetated verge — which routes it into `HIST-041`/`HIST-169` rather than into re-authoring the spine. That lane later *"narrowed paths so the verge shoulder is a real texel-wide strip for the first time"*, and **has not been rendered since** (`HIST-190`).
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** unsure — the diagnosis moved and the fix is unjudged.
+
+## HIST-177 — signposts are 4.5 m telephone poles
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** With the plank at the very top
+- **player_visible_problem:** The objects the player is meant to read for directions are twice human height with the readable part at the top, out of eyeline.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Part of the round's scale group — *"Scale is right where props are conventional — it breaks on the authored elements."* Listed by the critic itself in the **scene-fixable** half of the split. Relevant history: OP21-18 moved signs off the travel lane (18 signposts offset), which is a siting fix and did not touch their height.
+- **owner_reported:** no
+- **system_class:** navigation/objectives / art
+- **likely_still_valid:** yes
+
+## HIST-178 — a text label floats in mid-air with nothing behind it
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; `09-day`)
+- **title:** No signboard behind the text
+- **player_visible_problem:** Words hang in the air over the meadow with no object holding them.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Named by the critic in the scene-fixable half. No closing evidence. Possibly the same object family as `HIST-177` (a signpost whose plank did not render) but the report does not say so and neither does anything else.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** unsure — never diagnosed.
+
+## HIST-179 — photo-real gravel on faceted low-poly rock, beside toon trees
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; `04`)
+- **title:** Two texture languages on one object
+- **player_visible_problem:** A rock outcrop carries a photographic gravel texture stretched over visibly faceted low-poly triangles, standing next to painted toon trees.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Partly addressed by a later lane from the other end: the world-surface rebuild removed every photographic scan from the terrain texture list (*"no photographic scan remains"*), but that is the **ground**, not the rock props. No pass records the rock material re-judged.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** unsure
+
+## HIST-180 — distant trees render near-black in daylight
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** The same trees are bright kelly green close up
+- **player_visible_problem:** The middle distance of every wide shot is a band of near-black shapes while the foreground is bright green — so the world reads as receding into shadow on a clear day.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Seen in frames `02`, `04` and `05`. Named by the critic in the **scene-fixable** half. Same family as, and the opposite symptom to, `GATE_D_REMAINDERS.md` §5's *"distant-LOD instances rendering white"* (`HIST-126`) — two LOD colour defects in opposite directions that no pass has reconciled, alongside `HIST-039`, `HIST-071` and `HIST-093`. Note `HIST-052`'s landmark-black finding may be a third instance of the same mechanism.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** unsure — one of five unreconciled distant-rendering reports.
+
+## HIST-181 — stark white unshaded terrain around the gate pylon
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; `12-day`)
+- **title:** *"an unshaded patch"*, glowing again at night
+- **player_visible_problem:** The ground around the Sigil gate pylon is stark white with no edge treatment, and it glows at night.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Reported in the same frame group as the grey blockout slabs, most of which were the stronghold and have since been addressed. This one is terrain, not the stronghold, and no pass records it. Adjacent: the ground rebuild's engine limit that *"the colour map can only darken"*, which means anything reading lighter than the meadow must be a real splat surface — so a white patch is likely a surface assignment rather than a light.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** unsure
+
+## HIST-182 — eleven of twelve day frames carry the same three hue families
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; the measured palette baseline)
+- **title:** Blue, chartreuse, yellow — every time
+- **player_visible_problem:** The chapter's colour range does not change as the player travels, so five regions do not read as five places.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** *"That is the numeric form of the standing 'palette incoherence' finding and the baseline any groundcover or lighting change has to move."* Full table in `shots/corridor_pre/`. Corroborated from a different lane: `VISUAL_MAKE_LANE_FINDINGS` measures round-3 combat frames at **two** hue families (chartreuse 79–90%). Carried as its own row rather than folded into `HIST-107` because it is the one item in the visual programme with a stated number Gate F could re-measure rather than re-argue. The per-band ground identity that would move it is specified and unimplemented (`HIST-191`).
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes
+
+## HIST-183 — the relay camp is props at even spacing
+
+- **source:** `ralph/reports/VISUAL_CORRIDOR_PASS_2026-08-23.md`
+- **original_id:** (unnamed; `05`)
+- **title:** *"a campfire with no camp around it, a banner and a grunt with nothing to guard"*
+- **player_visible_problem:** A Team Tether site on the route reads as objects placed at regular intervals on open grass rather than as somewhere an enemy is stationed.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Set against `03-day`, which the same critic calls *"the one composed frame in the set… it proves the team can do it."* `SITE-DRESSING` landed since (bands 2/3/4 `props.json`), and `ACTIVE_TASKS.md`'s P4 named "cluster/de-symmetrise picket, quarry and mill props" as scheduled work — neither is recorded as re-judged against this frame.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** unsure — plausibly addressed by SITE-DRESSING, unjudged.
+
+## HIST-184 — faces do not survive meeting distance
+
+- **source:** `ralph/reports/VISUAL_VIS_CAST_2026-08-23.md` (D4 round 2, ranked 2)
+- **original_id:** (unnamed)
+- **title:** The Warden's eyes read as two dark hollows; everyone else wears the same vinyl-doll face
+- **player_visible_problem:** At the distance a player actually stands to talk to someone, the antagonist reads as eyeless and the villagers and Team Tether bodies share one blank face.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Reported in round 1 (*"at gameplay distance he reads as eyeless"*) and again in round 2 after a full material pass. The round-2 critic calls the facial language **a mesh gap, not a paint gap**, which places it against `CLAUDE.md`'s humanoid rules — `docs/art/HUMANOID_ASSET_INVENTORY.md` is authoritative, a new humanoid mesh is exceptional, and any generation needs owner-supplied reference art. `CLAUDE.md` also states the Warden was already rebuilt from the owner's board-16 sheet and that historical claims his face is unmodelled must not be reopened — so this row is deliberately about the **rendered read at distance**, not about whether the face is modelled.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-185 — the villager male has orange streaks on one sock
+
+- **source:** `ralph/reports/VISUAL_VIS_CAST_2026-08-23.md` (D4 round 2, item 5)
+- **original_id:** (unnamed)
+- **title:** A mesh interpenetration, not a texture bug — diagnosed, not fixed
+- **player_visible_problem:** Bright flame-like orange streaks across one of a villager's socks.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** **Diagnosed precisely because two rounds had called it "an orange emissive scribble" and a repaint would not have touched it.** `villager_male_lod0.glb` carries two meshes — `char1` (body, 14,257 verts, `Material_1`/`texture_0`) and a separate `trousers` (3,741 verts, `Trousers`/`trousers_tex`). The sock belongs to the body. `texture_0` contains **zero** orange pixels (0 of 4,194,304 by a stated filter), so nothing painted on the sock is orange — but the streaks measure (191,127,64) against the trousers leather's own (204,132,67). It is the trouser hem showing through the sock; both materials are self-lit (`emissiveFactor [1,1,1]` with an emissive texture each), which is why it reads as bright streaks rather than a dull clip; and it appears on one leg only, which points at the idle pose. *"Fix is a mesh or skinning correction on the trousers hem, or a depth/priority change on that material — not a repaint."* Recorded as diagnosed; no entry records it fixed.
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-186 — the Warden's cape lining renders as a translucent membrane
+
+- **source:** `ralph/reports/VISUAL_VIS_CAST_2026-08-23.md` (D4 round 2, item 4)
+- **original_id:** (unnamed)
+- **title:** An alpha/material artefact on the chapter's antagonist
+- **player_visible_problem:** The Warden's cape lining is see-through.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Listed as still open in the round's own ranked verdict, below the three-art-languages and faces findings. No later entry records it. Adjacent precedent worth having: `VISUAL_LEDGER.md`'s standing "metallic in this renderer" entry, which records four separate defects diagnosed as colour problems that were all a missing or wrong material factor — *"check for a metallic value before treating any 'wrong colour' as a colour."*
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** yes
+
+## HIST-187 — the three named captains are one person three times
+
+- **source:** `ralph/reports/VISUAL_VIS_CAST_2026-08-23.md` (D4 round 2, item 3)
+- **original_id:** (unnamed)
+- **title:** Deliberate, recorded, and needing a dial that is not the faction colour
+- **player_visible_problem:** Riverwatch, Field and Ridge — three separate captain fights the player travels between — are visually the same person.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Recorded as **deliberate and documented in the band files**: the rigs carry one fused material, so the body palette is the only dial, and it is spent on faction identity. Measured: three accents held inside one reserved colour at one luminance moved the rendered torso by **1–5 points per channel** — *"not a difference a player can see."* So the lane did the work and the work cannot land. *"Real per-site separation needs a dial that is not the faction colour."* Pairs with `HIST-104`, which records the same three captains not escalating in difficulty — so they are neither visually nor mechanically distinguished.
+- **owner_reported:** no
+- **system_class:** art/asset / creature attachment
+- **likely_still_valid:** yes
+
+## HIST-188 — the roster is two art packs wearing one logo
+
+- **source:** `ralph/reports/VISUAL_CAST_AND_ROSTER_2026-08-23.md` (D3 round 1); still the top-three item in round 3 per `ralph/reports/VISUAL_VIS_CAST_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** Photoreal wildlife recolours beside glossy chibi toys
+- **player_visible_problem:** About twelve species are a cohesive mascot family; five — bramblebun, trailpup, duskhush, galecrest, brooktail — are realistic wildlife with a green tint and read as **sourced**: *"Bramblebun is 'a rabbit, but the ears are green'."* Paddlenewt reads as *"a baby Toothless — a player will name the reference before they name the species."*
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Named in round 1 and still the round-3 verdict's own top-three item, *"called not fixable by paint."* Round 4's structures/combat critic reported the same thing independently: *"The Bramblebun is a different game's art… a near-photoreal brown rabbit with leaf ears added"* beside the painterly Terrapup. VIS-CAST's summary says *"See `ralph/BLOCKED.md`"* — **but `BLOCKED.md`'s VIS-CAST section carries four numbered roster items and this is not one of them**, so the pointer leads nowhere and this item has had no home until now. The critic also insisted the good news be stated plainly: the twelve-species core *"holds up beside Palworld, and I want that said clearly, because it is the best news in the survey."*
+- **owner_reported:** no
+- **system_class:** creature attachment / art
+- **likely_still_valid:** yes — and it is the clearest instance this sweep found of a finding that fell through a cross-reference.
+
+## HIST-189 — the same species renders at two sizes in one scene
+
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md`
+- **original_id:** (unnamed)
+- **title:** The engaged Bramblebun and the roaming one differ by ~2×
+- **player_visible_problem:** A creature the player is fighting is twice the size of the same creature standing behind it.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** One line in round 2's new-defects list, never followed up. Candidate mechanisms exist in the repo and neither is confirmed: `creature_body.apply_size_multiplier()` (the alpha path, 1.3×/1.4×) and the round-1 finding that species models disagree about where their origin sits. Not the same as `HIST-115`'s roster-span question, which is about the authored heights.
+- **owner_reported:** no
+- **system_class:** creature attachment
+- **likely_still_valid:** unsure — one observation, never reproduced.
+
+## HIST-190 — the ground rebuild's last round has never been rendered
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md` ("State at handover", and the partial-bake warning)
+- **original_id:** (unnamed; VIS-WORLD handover)
+- **title:** *"First action next session: capture band 1 and look, before anything else is changed"*
+- **player_visible_problem:** The ground the player walks on for the whole chapter was rebuilt from scratch on six generated surfaces and the last set of changes has never been looked at — including a `verge_cut` correction whose predecessor is visible in the last committed frames as a sandy overshoot.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-25
+- **status_evidence:** The lane hands over explicitly mid-pass. It also warns that **the committed terrain was a PARTIAL bake** — 4 (later 10) of 64 regions on the new material, the rest on the old, with *"a hard material seam at every boundary between them"* — and gives the exact commands and the 43-minute cost of the full bake before the branch is merged or judged. **Partly refuted at this SHA:** `data/terrain/playground/` holds 64 region files and the branch landed through the consolidation with the scatter/veg tests green, which is consistent with a full bake having been run; a file count does not prove every region carries the new material, and nothing found states it either way. The *unrendered* half is not refuted at all.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes — for the unrendered half; unsure for the partial bake.
+
+## HIST-191 — per-band ground identity is specified and not implemented
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md` ("State at handover", item 2)
+- **original_id:** (unnamed; work-order item C3)
+- **title:** Five z-ranged colour grades with 150 m feathering
+- **player_visible_problem:** Every band's ground is the same ground, so travelling from the Lower Meadows to the Ironwood does not change what the player is walking on. This is the mechanism behind `HIST-182`'s three-hue measurement.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** *"specified in full… and not implemented."* Deliberately designed as a colour-map grade rather than five more splat surfaces, *"because every surface added multiplies the 2 m boundary problem"* (`HIST-193`). Bounded by a measured engine limit recorded in the same file: **the colour map can only darken**, because Terrain3D multiplies by it — so anything that must read lighter than the meadow has to be a real splat surface.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes
+
+## HIST-192 — `forest_floor` is generated, wired and unplaced
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md` ("State at handover", item 3)
+- **original_id:** (unnamed)
+- **title:** A surface that exists and appears nowhere
+- **player_visible_problem:** Under the canopy the ground is the same open-meadow grass as the fields, so woodland does not read as woodland.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** *"It needs canopy-driven placement, which needs the terrain bake to know where the oaks are — the scatter runs in a separate pass, so this is real integration work, not a number."* Third instance in this register of the repo's recurring "written, tested, and inert" pattern, after `HIST-066` (PERF-LOD) and the `GATEC-CURVE` wild-band note. `BAND2-FLOOR` landed hand-sited forest-floor dressing for band 2, which is the content half of the same gap by a different route.
+- **owner_reported:** no
+- **system_class:** terrain/composition
+- **likely_still_valid:** yes
+
+## HIST-193 — the 2 m control-map cell is visible on long diagonals
+
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md` ("State at handover", item 4 and the engine limits)
+- **original_id:** (unnamed)
+- **title:** A partial control blend does not draw — verified three ways
+- **player_visible_problem:** Where two ground surfaces meet, the boundary is a stair of 2 m squares rather than a blend, and steep rock/verge faces still read as blocky.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Verified three ways with a magenta test texture. *"This is why the ground is built from hard 2 m assignments with dithered thresholds instead of blended transitions, and it is what defeated four rounds of EV4-hillside-seam-remainder before this sweep."* Reduced by a hash dither, not eliminated: *"A viewer looking for the 2 m cell will still find it on long diagonals."* Removing it needs a higher-resolution control map or shader-level boundary blending. Recorded here as a **bound with a visible consequence**, not as a defect with a fix. Plausibly the same thing `HIST-151` measured from the combat lane's side.
+- **owner_reported:** no
+- **system_class:** terrain/composition (engine bound)
+- **likely_still_valid:** yes
+
+## HIST-194 — the oaks are the wrong colour in three ways
+
+- **source:** `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md`
+- **original_id:** (unnamed; D5 round 1)
+- **title:** Near-black canopies, blue and maroon leaf cards, salmon-pink trunks
+- **player_visible_problem:** The hero trees have near-black canopies with individual blue and maroon leaf cards in them, on salmon-pink trunks, at 6–7 m.
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Three distinct claims, differently supported. **Trunk colour** is partly explained and deliberately parked — `GATE_D_REMAINDERS.md` §7 records the bone-grey `Bark_TwistedTree` retint (`#918178`) as solved from a measured per-channel gain and explicitly not to be changed on one band's evidence (`HIST-127`); "salmon-pink" is a different reading of the same value. **Height** is `HIST-121`'s asset ceiling, and `VISUAL-GROUNDCOVER` landmark-scaled two band-4 hero trees. **Blue and maroon leaf cards** is not addressed anywhere and is the one that reads as a straightforward material or variant bug — `vegetation.json`'s `grove` layer carries a three-step green variant family and a documented history of the crimson `Leaves_TwistedTree_C` leaking through unswapped keys (see `HIST-009`).
+- **owner_reported:** no
+- **system_class:** art/asset
+- **likely_still_valid:** unsure — one of three claims is live and unexamined; the other two are parked with reasons.
+
+## HIST-200 — partnered traversal abilities: an owner decision nothing tracks
+
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §10
+- **original_id:** `PW1`
+- **title:** **OWNER DECISION REQUIRED BEFORE BUILDING** — and no queue entry anywhere
+- **player_visible_problem:** Whether a creature in the party can open shortcuts, secrets, alternate routes, optional resource areas, optional alpha encounters or alternate dungeon entrances — i.e. whether the five-creature roster choice affects exploration at all, or only combat.
+- **date_opened:** before 2026-08-17 · **last_touched:** unchanged since the owner revised the plan
+- **status_evidence:** **`PW1` returns zero hits across `ralph/BACKLOG.md`, `ralph/DONE.md`, `ralph/ACTIVE_TASKS.md` and `ralph/ACTIVE_GAME_PLAN.md`** — grepped at this SHA. It exists only in the planning document, which is exactly the failure the backlog's own Phase 6.5 header records happening to `MQ2B`/`MQ3`/`PW2` (*"the largest block of remaining work on the project sat in a planning document with no entry anywhere in the queue"*). The plan carries a worked recommended direction if approved (shortcuts, secrets, alternate routes; glide from a ridge, cross a small optional water route, dig a shortcut, reach a ledge, bypass a long return) and one hard constraint: *"Do not make the critical Meadows storyline permanently depend on owning a specific pal unless the design also guarantees the player cannot softlock themselves through the five-pal permanent-roster rule."*
+- **owner_reported:** no — it is a decision **awaiting** the owner, which is a different thing and is why it must not be quietly dropped.
+- **system_class:** progression/economy (traversal design)
+- **likely_still_valid:** yes — undecided, untracked, and named in the plan's §18 as still required.
+
+## HIST-201 — the sixth-creature release has a direction and no lasting meaning
+
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §11
+- **original_id:** `PW3`
+- **title:** **DO NOT IMPLEMENT A STAT-TRIBUTE SYSTEM** — and no queue entry anywhere
+- **player_visible_problem:** Releasing a creature to make room for a sixth is described as *"one of Tetherbound's distinctive emotional mechanics"*, and once the array slot is cleared nothing in the world remembers it happened.
+- **date_opened:** before 2026-08-17 · **last_touched:** unchanged since the owner revised the plan
+- **status_evidence:** **`PW3` returns zero hits** across the four queue files, same as `HIST-200`. The plan sets a firm negative direction — do not convert released creatures into permanent combat statistics or upgrade fuel, because *"that would incentivize catching creatures specifically to sacrifice them and undermine the intended emotional release choice"* — and names the preferred non-power alternatives: journal/memory entry, camp keepsake, record of name and release location, a later sighting, relationship history, cosmetic remembrance. The superseded draft plan is explicit that the owner **overrode** an earlier AI proposal for a tribute mechanic, so the negative half is a recorded owner decision. What is untracked is the positive half. Partly related: `R4.10`'s ceremony exists and ran live in the Gate F finale (`HIST-108`), and `DONE.md` records *"No per-creature history, so the release ceremony had nothing to surface"* — which is this gap seen from the ceremony's side.
+- **owner_reported:** yes in part — the negative direction is an owner override on record.
+- **system_class:** creature attachment
+- **likely_still_valid:** yes
+
+## HIST-202 — no rule stops a captain fight being the same fight in a different room
+
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §9
+- **original_id:** `PW4`
+- **title:** Signature dungeon and captain encounters — and no queue entry anywhere
+- **player_visible_problem:** *"No major dungeon or captain fight should reduce to: same standard fight in a different room with more HP."* Each major encounter is supposed to have one strong identity.
+- **date_opened:** before 2026-08-17 · **last_touched:** unchanged
+- **status_evidence:** **`PW4` returns zero hits** across the four queue files. The plan gives a scope discipline that makes it cheap — prefer recombining mechanics the player already understands (terrain forcing repositioning, attack windows tied to cover, environmental hazards, vertical arena structure, changing safe zones, adds/priority targets, destructible elements, movement timing, type interaction expressed spatially) and *"avoid building an entire bespoke system used once"* — and an acceptance test in player terms: *"A blind player can describe what made each captain/dungeon mechanically memorable without answering only 'it was harder', 'it had more health', 'it looked different'."* Directly compounds two rows already in this register: `HIST-104` (the three Sigil captains do not escalate) and `HIST-187` (they are visually one person three times).
+- **owner_reported:** no
+- **system_class:** combat/camera (encounter design)
+- **likely_still_valid:** yes
+
+## HIST-203 — four owner decisions the plan says are still required
+
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §18
+- **original_id:** (unnamed; the plan's own owner-decision block)
+- **title:** *"Do not invent answers to these"*
+- **player_visible_problem:** Four questions that shape what the chapter is: whether partnered traversal exists at all and whether it may gate critical progress; whether catching gets a probability floor; and whether the release mechanic gets any mechanical reinterpretation.
+- **date_opened:** before 2026-08-17 · **last_touched:** unchanged
+- **status_evidence:** Verbatim: (1) approve/reject `PW1`; (2) if approved, define whether Meadows traversal abilities are optional/shortcut-only or can gate critical progress; (3) any future catch-floor mechanic after fresh play evidence; (4) any mechanical reinterpretation of the sixth-pal release beyond the non-power remembrance direction. **None appears in `ralph/BLOCKED.md`**, which is the repo's designated home for owner-blocking questions and which `CLAUDE.md` says a firing has done its job by adding to. (1) and (2) are `HIST-200`; (4) is `HIST-201`. **(3) is the one this row exists for**, and the plan is precise about it in a way that matters to Gate F: do not implement a catch floor because an older complaint asked for one — first determine whether the frustration is aim, trajectory readability, odds, odds communication, early orb supply, practice-creature tuning, HP tuning or feedback, and *"a global catch floor becomes an owner decision only if fresh evidence shows the existing design still creates a bad early-game experience."* That is `HIST-048`'s open question with a decision procedure attached.
+- **owner_reported:** no — awaiting the owner.
+- **system_class:** other (decisions)
+- **likely_still_valid:** yes
+
+## HIST-204 — the game has essentially no world audio
+
+- **source:** `ralph/planning/TETHERBOUND_OWNER_ONLY_FULL_BLIND_PLAYTEST.md` §30; verified in the working tree
+- **original_id:** (none — this item has no ID anywhere in the repo)
+- **title:** Nine UI cues exist; footsteps, gathering, combat, hits, catches, crafting, building, dialogue, ambience and music do not
+- **player_visible_problem:** Actions occur on screen and make no sound. The owner's own manual playtest protocol lists fourteen audio surfaces to evaluate and instructs *"Look for actions that visually occur but feel dead because they lack sound or feedback."*
+- **date_opened:** never opened · **last_touched:** n/a
+- **status_evidence:** **Verified at this SHA rather than inferred.** `scripts/ui/audio_cues.gd` is the only file in the project that touches `AudioStreamPlayer`; it implements spec 20's *"small UI audio set. One shared player, nine short cues"* and is called from `game_menu.gd`, `build_menu.gd`, `build_placer.gd` and `playground_hud.gd`. The nine `.wav` files under `assets/ui/audio/` (`ui_focus`, `ui_accept`, `ui_cancel`, `ui_tab`, `ui_error`, `build_place`, `build_snap`, `capture_success`, `aim_enter`) are the **only** audio files anywhere under `assets/`. Separately: **`grep -in "audio|sound effect|music"` over `ralph/BACKLOG.md` and `ralph/ACTIVE_GAME_PLAN.md` returns nothing at all** — the active ledger and the gate plan do not mention audio in any form, so this is not a deprioritised item, it is an unenumerated one. `ralph/VISUAL_LEDGER.md`'s eight domains are all visual by construction, so the standing whole-game sweep does not cover it either.
+- **owner_reported:** no directly — but the owner authored the protocol that lists it, and `GATE_F_PROTOCOL.md`'s §18 exit question (*"what would make them confused, bored, frustrated, distrust the game, or stop playing"*) is the kind a silent game answers badly.
+- **system_class:** other (audio)
+- **likely_still_valid:** yes — and it is the single largest wholly-unenumerated gap this sweep found.
+
+## HIST-205 — the macro-world redesign has no queue entry of its own
+
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §5
+- **original_id:** `MQ2A`
+- **title:** Referenced as a pointer, never transcribed as an item
+- **player_visible_problem:** The plan's world-shape brief — core structure, scale philosophy, interesting-decision density, regional identity, navigation, camps, day span — is what decides whether the corridor reads as a journey rather than a long walk.
+- **date_opened:** before 2026-08-17 · **last_touched:** 2026-08-17
+- **status_evidence:** Unlike `PW1`/`PW3`/`PW4` this one is not invisible — but it has never been an item. `BACKLOG.md:2518` cites it only as a *"read §5 before starting"* pointer under `OW5`, and `DONE.md:4845` records a lane authoring *"the corridor plan `MQ2A` §5 asks for"*. So the layout was executed through `OW5A`–`OW5E` and the plan section itself was never converted into an entry with acceptance criteria. Its per-section content (regional identity, interesting-decision density, camps, day span) is the direct ancestor of several rows already here — `HIST-046`, `HIST-105`, `HIST-182`, `HIST-191` — which is evidence the section is still describing live gaps rather than finished work.
+- **owner_reported:** no
+- **system_class:** terrain/composition (content)
+- **likely_still_valid:** unsure — substantially executed by a different route; never checked against its own criteria.
+
+## HIST-208 — picking something up says nothing
+
+- **source:** `ralph/OWNER_PLAYTEST_2026-08-18.md` OP3; prompt `docs/ralph-prompts/44-GATHER-equipped-tool-swing-and-pickup-feedback.md`
+- **original_id:** `OP3` (second half)
+- **title:** *"Picking up harvested resources must show concise gain feedback such as `+3 Wood`"*
+- **player_visible_problem:** The player chops, gathers, and the only way to know what they got is to open the satchel.
+- **date_opened:** 2026-08-18 · **last_touched:** 2026-08-18
+- **status_evidence:** **The first half of OP3 has a closing record and this half does not.** The swing half is closed: `RG2` landed the hit cone fix (`c9870df7`), `RG9`/`RG10` split chop-then-gather (`210c1ae5`), and `STRANDED-P3` landed the OP21-24 chop clip. For the gain feedback, a working-tree search at this SHA for `+%d`-style gain strings, `picked up`, `gained`, and for any notice/toast/announce entry point on `playground_hud.gd` returns **nothing**. `PROMPT_COMPATIBILITY_MAP.md` routes the legacy `41-OP-HARVEST-*` brief into prompt 44 *"+ Gate A/B evidence"*, and Gate A/B evidence asserts that gathering *succeeds*, not that the player is told.
+- **owner_reported:** yes (OP3)
+- **system_class:** UI architecture
+- **likely_still_valid:** yes — verified absent in code, not inferred from prose.
+
+---
+
+# Section 2 (continued) — not player-facing, added by the second sweep
+
+## HIST-195 — the combat capture cannot photograph any sub-second event
+- **source:** `ralph/reports/VISUAL_COMBAT_CAPTURE_MECHANISM_2026-08-23.md` · **original_id:** (unnamed; "the seventh harness failure")
+- **player_visible_problem:** none — but it cost three blind rounds their headline finding, and its verdict is that *"nothing in the round-1 combat critique's headline should be actioned as art or gameplay work. The frames were honest; the labels on them were not."* `translated: yes`
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Arithmetic, not timing luck. Physics runs at 60 Hz with `max_physics_steps_per_frame` 8, and one rendered frame costs ~2.4 s under llvmpipe — so one rendered frame is 2.4 s of `_process` time but at most 0.133 s of simulated time. `_shoot_pair()` waits two **process** frames, a ~4.8 s floor on every shot. Against that, `move_projectile.gd` runs on `_process` and clamps its whole flight to `MAX_TRAVEL` 0.42 s, so its first tick lands `t = 2.4/0.42 = 5.7`, clamps to 1.0, emits `arrived` and frees itself — *"the node has been freed for roughly two rendered frames before the shutter opens. No wait value could have saved it."* The attack pose and flinch fail on the same clock. Every element the critic missed (`move_projectile.gd`, `impact_flash.gd`, `telegraph_glow.gd`, `play_attack()`, `play_hit()`) is built, wired and fires in a real fight. Not recorded as fixed.
+- **owner_reported:** no · **system_class:** tooling/CI · **likely_still_valid:** yes
+
+## HIST-196 — the icon sheet has been cropped in every round that judged it
+- **source:** `ralph/reports/VISUAL_MAKE_ROUND2_2026-08-23.md` · **original_id:** (unnamed)
+- **player_visible_problem:** none — but *"every icon finding in rounds 1 and 2 covers less than half the set"*, on the screen the player opens most. `translated: yes`
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** *"Header claims 55 items; roughly 26 tiles are visible and the sheet is cut off mid-way through the GEAR row."* Round 1 hit it, a viewport-height fix went in the same day (2200 → 2800 px), `VISUAL_LEDGER.md` records the crop as fixed, **and round 2 hit it again** — *"It was not enough."* Directly bounds `HIST-004` and `HIST-156`: both are conclusions about an item set half of which has never been photographed.
+- **owner_reported:** no · **system_class:** tooling/CI · **likely_still_valid:** unsure — one fix landed and was insufficient; no round since has confirmed the full sheet.
+
+## HIST-197 — the locations `detail` rig composes shots about the dirt
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md` · **original_id:** (unnamed)
+- **player_visible_problem:** none. Five of forty-five frames do not show their subject: a mill-crossing yard shot at a grazing angle to bare terrain, a "fire" detail shot with the fire cut off the bottom edge, two frames ~70% empty sky, and one where an NPC interpenetrates the trainer. `translated: yes`
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** Root-caused: *"The `detail` rig aims 1.6 m above the target's ground from 5 m back, which composes a shot about the dirt when the subject is a fire on the ground or an apparatus on a 10 m deck."* The lane's own instruction: *"Round 2 must fix the rig before it re-judges the sites, or it will re-photograph its own framing."* Round 2 of that lane is not in evidence. Also recorded from the same pass: `_clear_of_bodies()` protects the player's seat but does not stop an NPC standing where the player was put afterwards.
+- **owner_reported:** no · **system_class:** tooling/CI · **likely_still_valid:** yes
+
+## HIST-198 — the standing count of capture artefacts, and the discipline it implies
+- **source:** `ralph/reports/VISUAL_UI_2026-08-23-round2.md`; `ralph/VISUAL_LEDGER.md`; `ralph/lanes/VISUAL_SWEEP_LANES.md`; `ralph/GATE_D_REMAINDERS.md` §2
+- **original_id:** (unnamed)
+- **player_visible_problem:** none directly. This row exists because the ratio is the most decision-relevant number the visual programme produced and it lives in four files with four different counts. `translated: yes`
+- **date_opened:** 2026-08-22 · **last_touched:** 2026-08-23
+- **status_evidence:** D2 alone reached **eight** diagnosed artefacts (the layer-0 backdrop painting over the widget; the keyboard-pinned device; a null `current_scene` taking out the minimap, the world map, the combat-state check and the pause menu's own HUD hiding at once; the combat camera never following the player into the fight; eleven screens shot with no world behind them; the creature turntables spinning ~69° per awaited frame). `VISUAL_LEDGER.md` counts six across all domains; `GATE_D_REMAINDERS.md` §2 counts five more in the Gate D lanes; `VIS-CAST` adds a seventh *shape* — photographing the right subject **wrongly**, a stage over-exposing every creature by a measured 2.3× that three consecutive blind rounds spent their top finding on. **The durable output is the rule, and it is already written down twice:** a defect seen only in a survey frame must be reproduced through a second path before acting on it, and *"a fix that lives in one tool does not protect the next tool that does the same thing."* Carried because §16.4's coverage-defect loop will need it: several rows in Section 1 are one reproduction away from being retired.
+- **owner_reported:** no · **system_class:** tooling/CI · **likely_still_valid:** yes
+
+## HIST-199 — `--check-only` proves syntax, not behaviour
+- **source:** `ralph/reports/VISUAL_UI_2026-08-23-round2.md` · **original_id:** (unnamed)
+- **player_visible_problem:** none directly — but it shipped an empty crafting list to a blind critic, who reported it as a design defect two rounds later. `translated: yes`
+- **date_opened:** 2026-08-23 · **last_touched:** 2026-08-23
+- **status_evidence:** A fix set `cost_label.text_overflow_behavior`; Godot 4 spells it `text_overrun_behavior`. The file parse-checked clean, shipped, and the unknown property threw mid-`_make_row()`, which aborted the function, returned null, and **silently emptied the entire craft recipe list**. The lane's conclusion: *"the only things that would have caught this were a test asserting the property took effect, or a render. Treat `--check-only` as necessary and never sufficient for anything that sets a property by name."* Same family as `HIST-088` (`TEST2`) and as the lane's other recorded error — a confidently-published wrong diagnosis (`Control.scale` pivot maths) that `HIST-011` corrects. Nothing enforces either lesson.
+- **owner_reported:** no · **system_class:** tooling/CI (test integrity) · **likely_still_valid:** yes
+
+## HIST-206 — the plan's per-region quality gates have never been applied as a gate
+- **source:** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §13 · **original_id:** (unnamed)
+- **player_visible_problem:** none directly; it is the readiness bar the five D regions were meant to clear. `translated: yes`
+- **date_opened:** before 2026-08-17 · **last_touched:** 2026-08-17
+- **status_evidence:** §13 lists six categories every region should pass before being considered production-ready — geography, navigation, content density, visual quality, gameplay, blind test. The D1–D5 packages each ran their own evidence criteria from `ACTIVE_GAME_PLAN.md` instead, and `GATE_D_REMAINDERS.md` §4 records the resulting shape: *"That is plausible and it is also the lane assessing its own ceiling."* No document records any region checked against §13's list. Distinct from `HIST-094` (`MQ2B`, the blind-critic stopping rule), which is one of §13's six categories rather than the whole gate.
+- **owner_reported:** yes in origin — it is the owner's own revised plan.
+- **system_class:** other (process) · **likely_still_valid:** unsure — plausibly satisfied piecemeal; never checked as a gate.
+
+## HIST-207 — `ralph/ledger/` is a dashboard frozen at a two-week-old commit
+- **source:** `ralph/ledger/data/meta.json`, `ralph/ledger/dashboard.html` · **original_id:** (unnamed)
+- **player_visible_problem:** none. `translated: yes`
+- **date_opened:** 2026-08-12 (the snapshot) · **last_touched:** 2026-08-12
+- **status_evidence:** `meta.json` reads `{"sha": "395b514e", "snapshot": "2026-08-12 10:57 UTC"}`. The generated `dashboard.html` (52 KB) and its `data/*.json` therefore describe a project state thirteen days stale at this SHA, including a `blocked.json` whose entries are largely `✅`-resolved in `BLOCKED.md` and a `gates.json` listing play gates the owner **retired on 2026-08-16**. `REGENERATE.md` and `generate_ledger.py` exist, so it is regenerable and nobody has. Carried because a stale dashboard that looks authoritative is the same hazard as stale backlog prose, which is what `HIST-100` and `HIST-133` are about — and because this sweep opened the directory only after the coordinator insisted, which is itself the evidence that it is not being read.
+- **owner_reported:** no · **system_class:** other (bookkeeping) · **likely_still_valid:** yes
+
+---
+
+# Section 3 (continued) — superseded/obsolete candidates from the second sweep
+
+## HIST-209 — the stronghold's art is standing 7,708 metres from the stronghold
+- **source:** `ralph/reports/VISUAL_LOCATIONS_2026-08-23.md`; `ralph/reports/VISUAL_STRUCTURES_AND_GROUND_2026-08-23.md` ("RULED — a siting bug, not a material bug")
+- **player_visible_problem (for the record):** two buildings answered to "the stronghold" and the good one was not the one the player walks to. `landmark.gd` built a 132-module assembled castle — crenellated curtain walls, four corner towers, a two-module gate with a door leaf, nine oxblood banners, warm cream masonry — at `RISE_CENTRE + OFFSET` = **(229.8, −144.4)**, while the stronghold the player reaches was five `BoxMesh` chambers under three flat colours at **(0, 7560)**. `stronghold_occupation.json`'s 14 braziers, 4 tether lamps, 5 sky-fill lights and 21-prop camp were attached to the legacy castle too. Frames from the same afternoon, same renderer, showed both.
+- **superseding evidence:** **Refuted in the working tree at this SHA.** `scripts/world/landmark.gd` now carries `const SITE := Vector2(150.0, 7595.0)` — beside the real stronghold — with its own header recording the history block *"for why the old `RISE_CENTRE + OFFSET` site stopped"* and stating that `RISE_CENTRE`/`OFFSET` *"no longer drive anything"*. `scripts/world/stronghold_occupation.gd` is now referenced by `stronghold.gd` as well as `landmark.gd`, so the dressing is no longer attached only to the legacy site. Landed through the `GATE-E2` / `STRONGHOLD-R2` / `GATE-E-STRONGHOLD-ART` lineage.
+- **caveat:** the re-sited silhouette has **never been blind-judged** — that is `HIST-037`, which stays open. This row retires the siting bug, not the question of whether the result looks right.
+- **candidate category:** OBSOLETE (already fixed)
+
+## HIST-210 — "nothing populates the open corridor"
+- **source:** `ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md` ("Outside this lane, unfixed, and worth routing")
+- **claim (for the record):** *"`spawn_wild()`'s only caller in `scripts/` is the Burrow Warrens dungeon, so a survey that stands the player on the trail has nothing to photograph. Two blind critics have ranked the resulting emptiness second overall."*
+- **superseding evidence:** **The premise is true and the conclusion is wrong.** `spawn_wild()` genuinely has one caller (`burrow_warrens.gd`, which uses it because a dungeon should not stream) — but that is not the path that populates the corridor. `encounter_director.gd::_spawn_creatures()` builds the world's wild population from the band `spawns.json` files, and `GATE_F_EVIDENCE_2026-08-23.md` measured the result three times byte-identically: **909 wild bodies in the world, 503 within 30 m of the route, 12 distinct species, 0 underground.** So the corridor is populated and a survey standing on the trail has plenty to photograph.
+- **caveat:** the **perceived** emptiness two critics ranked second is real and is not retired by this — it is `HIST-024`, `HIST-041` and `HIST-173`, none of which is about creature count. What is retired is the proposed mechanism.
+- **candidate category:** OBSOLETE (refuted by measurement; the symptom is carried elsewhere)
+
+---
+
+# Amendments to rows written in the first pass
+
+Two rows are contradicted by evidence found in this sweep. Both are amended in
+place below rather than edited silently, per the coordinator's instruction.
+
+## Amendment to HIST-053 — AMENDED 2026-08-25: it was worse than recorded, and it is fixed
+
+The first pass wrote `likely_still_valid: unsure`, with the reason *"it may well
+work and simply never have been read off screen."* **Both halves of that are
+wrong.** A targeted grep of `DONE.md` for this item's own subject — not a cold
+read — found `GATE-E-LOGIC`'s entry:
+
+> **Every level-up in the chapter aborted its own announcement.**
+> `combat_hud.gd::_set_xp_line` read `creature.get("bond_nodes")`; that is a
+> METHOD, so `get()` returned a Callable and `int(Callable)` killed the function
+> with "Nonexistent 'int' constructor" — the player never saw the line.
+> `test_level_up_announcement.gd` asserted on the SOURCE TEXT of that function
+> and stayed green through all of it (prompt 33's exact shape). Fixed, and the
+> test now also executes the builder.
+
+So the defect was real and total across the whole chapter, and it is closed with
+a named root cause and a strengthened test. **Revised `likely_still_valid`: no.**
+
+Two things survive the amendment and are why the row is not deleted. First, OP11
+asks for three things — identity, new level, **and any meaningful unlock** — and
+the fix is described as restoring the XP line; whether the unlock half is
+announced is not stated. Second, this is a textbook instance of `HIST-088`
+(`TEST2`): a test that asserted on source text and stayed green through a total
+failure of the thing it names. That pattern is not retired by fixing one
+instance of it.
+
+## Amendment to HIST-091 — AMENDED 2026-08-25: reproduced, root-caused and fixed
+
+The first pass wrote `likely_still_valid: unsure`, reasoning that CI had been
+rebuilt and `verify-boss` no longer appears by that name. The real answer is in
+`DONE.md`'s `GATE-E-LOGIC` entry, under the heading **"Prompt 34 (boss
+verification flake) — REPRODUCED, root-caused, fixed"**: a push was green
+locally and red on GitHub's runner (CI 2169) with *"the elite's fight never
+resolved inside 9000 frames (5 quick attacks landed, 0 missed)"*. **Zero misses
+is the tell** — the swing was never attempted, so it was never a whiff and never
+a budget — and it was root-caused on a probe of the elite fight alone to bodies
+being held above the terrain (`elite body y=8.56, floor y=8.56, terrain y=1.37`),
+the same defect that produced the owner's OP21-25 report about fights phasing
+outside reachable arena bounds.
+
+**Revised `likely_still_valid`: no.** What survives: the entry's standing
+instruction — *"Do not just raise the frame budget"* — is corroborated six more
+times by the 2026-08-25 handover's pattern (*"a budget or a bounded search that
+could never succeed, filed as an intermittent flake"*), and nothing enforces it.
+That lesson is carried by `HIST-088` and `HIST-198`, not by this row.
+
+---
+
+# `OP1`–`OP16`: the inference resolved
+
+The first pass carried eleven of the sixteen 2026-08-18 owner items as closed
+**by inference from `PROMPT_COMPATIBILITY_MAP.md`**, and named that as its most
+expensive possible error because owner-reported items weigh most in §16.5's
+denominator. Resolved against real records and the working tree:
+
+| item | resolution | evidence |
+|---|---|---|
+| `OP1` modal freeze | **closed, record found** | `RG-INPUT` built a real repro rather than eyeballing it; `tests/smoke_post_modal_control.gd` exists at this SHA (28 declarations). The backlog's own note: *"Do not re-chase these two freezes."* |
+| `OP2` build snap/grid | **closed, with a carried residual** | `GATEB-COORD` built the real twelve-piece controller house end to end; the stance-dependent floor height is carried as `HIST-029`. |
+| `OP3` tool swing + pickup feedback | **half closed, half open** | swing: `c9870df7`, `210c1ae5`, `STRANDED-P3`. Gain feedback: **not present in the working tree** → `HIST-208`. |
+| `OP4` torch hand + re-equip | **carried** | `HIST-083`. |
+| `OP5` title screen | **carried** | `HIST-085` (title half closed; boot cost and quit open). |
+| `OP6` repeat placement | **closed, verified in code** | `build_placer.gd::_place()` carries a `BUILD-FLOW (owner 2026-08-18)` comment: *"selection persists after a successful placement… Only explicit Cancel or choosing another catalogue entry clears/replaces it."* |
+| `OP7` dismantle + full refund | **closed, verified in code** | `build_placer.gd` carries `DISMANTLE_ACTION`, a dismantle target and a refund path; `GATEB-COORD` separately fixed the screen-centre ray that made it unable to target anything. |
+| `OP8` gradual overnight bed rest | **closed, verified in code** | `creature_bed.gd`'s header names *"the assignment UI, and the visible sleeping body"*; `occupant_index()` gates assignment; `game_state.gd::_tick_creature_bed_recovery()` heals gradually and `complete_creature_bed_rests()` pays the overnight bonus (recorded in `HIST-057`). |
+| `OP9` catch aim/throw | **carried** | `HIST-048`, with `HIST-203`'s decision procedure attached. |
+| `OP10` release ceremony | **closed, record found** | `R4.10` in `DONE.md`; the Gate F finale ran it live with a full belt and a named release. Experiential half carried as `HIST-108`. |
+| `OP11` level-up feedback | **closed — and it amends `HIST-053`** | see the amendment above. |
+| `OP12` cycle creatures in exploration | **closed, record found** | `CONTROLLER-MAP`'s authored map: LB cycles party member, RB calls out / puts away. |
+| `OP13` pond real water | **closed, record found** | OP21-19/20 both FIXED per `ASSESSMENT_2026-08-23.md` (waterline re-anchor, `water.gd` + 8 tests); `smoke_pond_water.gd` exists. |
+| `OP14` usable building doors | **closed, record found** | `R7.8` (`eed123a6`): `village_door.gd`, real doorway colliders on `cottage_b` and `ranger_station`, three new door checks in `smoke_traversal`. |
+| `OP15` map trails | **carried** | `HIST-079` / `HIST-140`. |
+| `OP16` core-loop density | **closed, with carried residuals** | Gate F measured 571 POI, 49.6/km, 12 species, zero 250 m+ intervals. Residuals: `HIST-046` (band 2), `HIST-032` (the gather route). |
+
+**Net: one new open item (`HIST-208`), one amendment (`HIST-053`), and no
+inference found to have hidden a second missed owner item.** Ten of the eleven
+inferences were correct; the eleventh (`OP11`) was wrong in the safe direction —
+it was carried as possibly-open when it was closed.
+
 # IDs merged rather than allocated separately
 
 Two owner-reported items from `OWNER_PLAYTEST_2026-08-23.md` describe the same
@@ -1650,73 +2506,136 @@ double report recorded in the row.
 
 # Counts
 
+Revised after the second pass. Every number below is derived from the file
+itself, not carried forward by hand.
+
 | | count |
 |---|---|
-| **Total unresolved historical items enumerated** | **145** |
-| — Section 1, player-facing | 106 |
-| — Section 2, not player-facing | 29 |
-| — Section 3, superseded/obsolete candidates | 8 |
+| **Total unresolved historical items enumerated** | **210** |
+| — Section 1, player-facing | 162 |
+| — Section 2, not player-facing | 36 |
+| — Section 3, superseded/obsolete candidates | 10 |
 | — merged into another row (no separate ID) | 2 |
-| **Owner-reported** (sections 1+2) | 40 |
-| — of which player-facing (Section 1) | 39 |
+| **Owner-reported** (sections 1+2) | 45 |
+| — of which player-facing (Section 1) | 43 |
 
-`likely_still_valid`, across the 135 rows in sections 1 and 2:
+`likely_still_valid`, across the 198 rows in sections 1 and 2. Two rows carry a
+dated amendment that revises the field; both figures are given so neither is
+hidden:
 
 | | Section 1 | Section 2 | total |
 |---|---|---|---|
-| `yes` | 67 | 23 | 90 |
-| `unsure` | 34 | 5 | 39 |
-| `no` | 5 | 1 | 6 |
-| **total** | **106** | **29** | **135** |
+| `yes` | 108 | 28 | 136 |
+| `unsure` (as filed) | 49 | 7 | 56 |
+| `no` (as filed) | 5 | 1 | 6 |
+| `unsure` (after the two amendments) | 48 | 6 | 54 |
+| `no` (after the two amendments) | 6 | 2 | 8 |
+| **total** | **162** | **36** | **198** |
 
-Section 3's 8 rows carry no `likely_still_valid` field: each is retired by a
-named superseding decision or a verified code/data refutation instead, and the
-ruling is Fable's. One of them (`HIST-115`) is owner-reported in origin and is
-not counted in the 40.
+The two amendments are `HIST-053` (level-up feedback) and `HIST-091`
+(`CI-BOSS`), both revised from `unsure` to `no` on closing records found in this
+pass. Both rows are kept, with the contradicting evidence quoted, because each
+carries a live sub-finding the fix did not retire.
 
-**The §16.5 denominator is not 145 and is not 106.** It is whatever subset of
+Section 3's 10 rows carry no `likely_still_valid` field: each is retired by a
+named superseding decision or a verified code/data refutation, and the ruling is
+Fable's. One of them (`HIST-115`) is owner-reported in origin and is not counted
+in the 45.
+
+**The §16.5 denominator is not 210 and is not 162.** It is whatever subset of
 Section 1 Fable rules genuinely valid and current at reconciliation. This
-snapshot's own bracket is **67 to 101** — the lower bound is Section 1's `yes`
-rows alone, the upper is Section 1 minus its 5 `no` rows, with the 34 `unsure`
+snapshot's own bracket is **108 to 156** — the lower bound is Section 1's `yes`
+rows alone, the upper is Section 1 minus its 6 `no` rows, with the 48 `unsure`
 rows falling somewhere between. Stating the bracket rather than a number is
 deliberate: picking the low end would inflate the capture rate, which is exactly
 what §16.5 forbids.
 
+## What the second pass changed, in one line each
+
+| sweep | new items | of which player-facing | contradicted an existing row? |
+|---|---|---|---|
+| `ralph/reports/VISUAL_*` (13 files, read in full) | 55 (`HIST-146`–`HIST-199`, `HIST-209`) | 49 | yes — `HIST-209` refutes the stronghold-siting finding those same reports rank highest |
+| `ralph/lanes/` + `ralph/ledger/` + `ralph/planning/` | 9 (`HIST-200`–`HIST-207`, `HIST-210`) | 6 | yes — `HIST-210` refutes a routing claim `VISUAL_WORLD_SURFACE` handed onward |
+| `docs/ralph-prompts/` (`OP1`–`OP16` resolved) | 1 (`HIST-208`) | 1 | yes — `OP11` amends `HIST-053` |
+
+The first pass's judgement that the visual reports were the most likely hiding
+place was correct by a wide margin: they account for 55 of the 65 new items, and
+49 of the 56 new player-facing ones. The prompts sweep was the least productive
+in raw count and still worth doing — it converted eleven inferences into ten
+cited closing records and one genuinely open owner item.
+
 # Known gaps in this sweep
 
-Recorded so nobody mistakes this register for exhaustive in the places it is not.
+Revised after the second pass. Gaps 1–3 of the first pass are **closed**; what
+follows is what genuinely remains.
 
-1. **`ralph/DONE.md` was not read end to end.** 16,910 lines; `START_HERE.md` §6
-   says search it, never cold-read it. Every candidate here was checked against
-   it by ID and by section index, but an item closed in `DONE.md` under a name
-   this register does not know would not have been caught.
-2. **`ralph/BLOCKED.md`'s `✅`-marked resolved entries were read at heading level
-   only.** Their bodies routinely contain *"the still-open half"* notes — that is
-   how `HIST-117` was found — so more may be buried in the ones read at heading
-   level.
-3. **`docs/ralph-prompts/` was not swept.** 70+ prompt files, several of which
-   carry acceptance detail that no backlog entry restates.
-   `PROMPT_COMPATIBILITY_MAP.md` was read and used to route `OP1`–`OP16`.
-4. **The 2026-08-18 `OP1`–`OP16` list was resolved by inference**, via
-   `PROMPT_COMPATIBILITY_MAP.md` and the OP21/assessment tables, rather than by
-   finding a closing record for each. Only `OP9` (`HIST-048`), `OP11`
-   (`HIST-053`), `OP15` (`HIST-140`) and `OP4`/`OP5` (folded into `HIST-083`,
-   `HIST-085`) are carried; the other eleven are treated as closed on that
-   inference and could be wrong.
-5. **Per-gate evidence files were grepped, not read**: `GATE_C_EVIDENCE.md`,
+## Closed by the second pass
+
+1. **`ralph/reports/VISUAL_*_2026-08-23.md`** — all 13 files, 3,314 lines, read
+   in full rather than grepped. The individual per-frame defects are now
+   enumerated (`HIST-146`–`HIST-199`) instead of standing behind the
+   `VIS-MAKE-remainder` / `VIS-UI-remainder` summaries. Where a later round in
+   the same file fixed, refuted or superseded a finding, it is not carried; the
+   refutations that matter are recorded as `HIST-209`, `HIST-210` and inside
+   `HIST-148`, `HIST-169`, `HIST-176` and `HIST-194`.
+2. **`ralph/lanes/`, `ralph/ledger/`, `ralph/planning/`** — opened. The failure
+   mode the first pass predicted was live: `PW1`, `PW3` and `PW4` return **zero
+   hits** across `BACKLOG.md`, `DONE.md`, `ACTIVE_TASKS.md` and
+   `ACTIVE_GAME_PLAN.md`, and the plan's §18 owner-decision block appears in no
+   queue file and in no `BLOCKED.md` entry. `ralph/ledger/` turned out to be a
+   generated dashboard frozen at a 2026-08-12 commit (`HIST-207`).
+3. **`docs/ralph-prompts/`** — swept, and the `OP1`–`OP16` inference resolved
+   item by item against real records and the working tree. Ten of eleven
+   inferences were correct; one (`OP11`) was wrong, in the safe direction. See
+   the OP table.
+
+## What still remains, and why
+
+1. **`ralph/DONE.md` is still not read end to end**, by design —
+   `START_HERE.md` §6 forbids it and the coordinator confirmed it stays
+   cold-read-forbidden. Targeted greps by item ID and by subject were used
+   throughout, and that is how `HIST-053` and `HIST-091` were found to be
+   closed. **The residual risk is unchanged in kind and smaller in size:** an
+   item closed in `DONE.md` under a name this register does not know would still
+   not be caught. Two of the 208 rows turned out that way, which is the only
+   measurement available of how often it happens.
+2. **`docs/ralph-prompts/` was swept, not read in full.** All 80 filenames were
+   listed and the `OP1`–`OP16` set was resolved individually. The 55–72
+   gameplay-package prompts (`55-MEADOWS-gameplay-assembly-master` through
+   `72-WORLD-ground-cover-and-mid-layer`) were **not** read line by line, and
+   several carry acceptance detail no backlog entry restates. `HIST-099` and
+   `HIST-108` are the umbrella rows for that surface; a genuinely missed
+   requirement inside one of those prompts would sit under them unnamed.
+3. **The `ralph/reports/VISUAL_*` rows are lane records, not verified state.**
+   Each was checked against the later rounds in its own file, and twelve were
+   checked against the working tree — but most were **not**, because doing so
+   for all 54 would mean rendering the game, which is the Gate F operator's job
+   and not this register's. `HIST-198` is the standing reason this matters: the
+   sweep that produced these reports diagnosed **eight capture artefacts in one
+   domain alone**, so some share of these rows will retire on a single
+   reproduction. That is expected and is what §16.3 category 5 (NOT REPRODUCED)
+   exists for; it is not a reason to have omitted them.
+4. **`docs/decisions/` was not swept.** `CLAUDE.md` puts settled decisions at
+   precedence level 2, and this register reads them only where another document
+   cited one (`D19`, `D23`, `D42`, `D46`, `D63`). A decision that records an
+   open consequence would not have been caught.
+5. **`ralph/GATE_F_MASTER_PROTOCOL.md` (935 lines) was not read.** It is Fable's
+   Phase A output for this run — the coverage matrix the operator will execute —
+   and reading it would risk exactly the contamination §16.1 and §16.2 forbid,
+   since this register must not be shaped by what Gate F plans to look for. Left
+   unread deliberately.
+6. **Per-gate evidence files remain grepped, not read**: `GATE_C_EVIDENCE.md`,
    `GATE_D3_EVIDENCE_2026-08-22.md`, `GATE_D5_EVIDENCE.md`,
    `GATE_D5_VISUAL_PASS_2026-08-22.md`, `GATEB_TOURNAMENT_EVIDENCE_2026-08-22.md`,
-   `BAND2_WARRENS_EVIDENCE_2026-08-23.md`, `PERF_ROG_REPORT.md`, and the
-   `ralph/reports/VISUAL_*` set. One open item surfaced that way
-   (`tether_relay`'s flag, already refuted). The `VISUAL_*` reports in particular
-   contain per-frame defect lists longer than the `VIS-*-remainder` summaries
-   that represent them here.
-6. **`ralph/lanes/`, `ralph/ledger/` and `ralph/planning/` were not swept.**
-   `MEADOWS_QUALITY_REBUILD_PLAN.md` §5–§8 is the source `MQ2B`/`MQ3`/`PW2` were
-   transcribed from, and the backlog's own history records that those three sat
-   in that plan with no queue entry for weeks — the same failure could be live
-   again in a directory this sweep did not open.
+   `BAND2_WARRENS_EVIDENCE_2026-08-23.md`, `PERF_ROG_REPORT.md`. One open item
+   surfaced that way in the first pass and was already refuted. These are the
+   most likely remaining hiding place, and they are smaller and less
+   defect-dense than the `VISUAL_*` set that gap 1 replaced.
 
-**Honest summary: this register is complete for the six files the brief names as
-primary, and partial beyond them.** The most likely place a missed player-facing
-item is hiding is (5) — the per-frame visual reports — followed by (3).
+**Honest summary: the register is now complete for the primary ledger, the owner
+evidence, the visual programme, the lane/planning directories and the owner-item
+prompt set; and partial for the gameplay-package prompts, `docs/decisions/` and
+the per-gate evidence files.** The largest single class of residual error is no
+longer omission — it is over-inclusion of visual-report rows that a single
+reproduction will retire, which reconciliation handles and which was the
+deliberate trade.
