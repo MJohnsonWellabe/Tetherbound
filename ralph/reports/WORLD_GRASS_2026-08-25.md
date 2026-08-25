@@ -31,6 +31,18 @@ Three levers did the work, and two of them cost nothing in the placement budget.
 Committed bake **466,922 -> 725,949** against `test_scatter_perf_budget.gd`'s
 **900,000** ceiling: 19% headroom left, and the cap was not touched.
 
+**Two numbers this lane was briefed with were stale and are corrected here.**
+The ceiling is 900,000, not 260,000 — raised on owner directive 2026-08-24
+against a measured 789,511, and the test's own header records it. And the
+committed bake at `636673ce` was 466,922, not ~144,456. Both matter: the real
+headroom was ~433,000 placements rather than ~116,000, which is what made a
+ground-cover tier affordable at all.
+
+**And the outcome, stated up front: the blind pass converged without passing.**
+Three rounds, three sub-agents, both bar questions answered `no` every time.
+WORLD-GRASS is **not** marked done; the remainder is in `ralph/BACKLOG.md` and
+the round-by-round record is at the end of this file.
+
 ## What prompt 72 gets wrong, and why it matters
 
 Prompt 72's table says `scale_min`/`scale_max` of 0.14/0.42 means "blades a few
@@ -289,38 +301,131 @@ question, not a scatter one, and it is handed over rather than guessed at here.
 
 ## Performance
 
-**CPU.** The OP23-01 win is not spent, and the reason is structural rather than
-lucky: every layer this lane touched is `collides: false` and carries no
+### CPU: the OP23-01 win is not spent, and the reason is structural
+
+Every layer this lane touched is `collides: false` and carries no
 `harvest_item`, so none of them registers an interaction provider or a collision
-shape.
+shape. The two populations OP23-01's fixes are `O(n)` in are therefore
+**exactly unchanged**:
 
 | world total | before | after |
 |---|---|---|
 | scatter instances | 465,752 | 724,769 |
 | **solid placements** (collision streaming's `n`) | **51,511** | **51,511** |
 | **harvest points** (the arbiter's provider population) | **56,430** | **56,430** |
+| static bodies | 1,200 | 1,200 |
 | scatter batches (one `add_transforms` per model) | 41 | 43 |
-| boot to settled | 60.7 s | 64.2 s (+5.8%) |
+| MultiMesh instances registered | 41,807 | 43,608 |
+| boot to settled | 60.7 s / 61.4 s | 64.2 s / 70.7 s |
 
-**GPU: not measurable here, and stated as risk.** `PERF-ROG-GPU` records why —
-the Compatibility renderer counts MultiMesh batches, not instances, and this box
-rasterises in software. The ROG Ally is the target and this lane cannot see it.
-The honest statement of the risk:
+### Per-site frame CPU: the change is below this box's noise floor, and saying so is the honest result
+
+`tools/perf_profile.gd` was run twice per config rather than once, which is what
+makes the following statement possible. Process ms/frame, mean, both runs:
+
+| site | before (run 1 / run 2) | after (run 1 / run 2) |
+|---|---|---|
+| village | 6.46 / 6.98 | 4.63 / 5.28 |
+| band1 | 6.18 / 6.13 | 6.07 / 6.71 |
+| band2 | 4.68 / 5.22 | 5.16 / 4.95 |
+| band3 | 5.06 / 5.88 | 4.95 / 5.66 |
+| band4 | **4.72 / 9.36** | 4.86 / 5.18 |
+| stronghold | 5.89 / 6.81 | 8.37 / 6.96 |
+
+Band 4 measured 4.72 ms and 9.36 ms on the *same config*; village physics
+measured 6.43 ms and 30.84 ms on the same config. **Run-to-run variance on this
+container is larger than the effect being measured**, in both directions, so no
+per-site number here supports a claim either way and none is made. A single-run
+before/after table would have looked like a clean result and would have been an
+artefact — the first pair taken looked like "+2.47 ms process and +18.28 ms
+physics at the stronghold", and the repeat put the same site at 6.96 / 8.65.
+
+What *is* trustworthy is the structural table above, which is exact and
+identical across both runs of each config. OP23-01's own report ranked the four
+CPU suspects; three of the four are functions of populations this lane did not
+move, and the fourth (`wild_cluster_sweep`) is a creature count, not a scatter
+one.
+
+### GPU: not measurable here, and stated as risk
+
+`PERF-ROG-GPU` records why — the Compatibility renderer counts MultiMesh
+batches, not instances, and this box rasterises in software. The ROG Ally is the
+target and this lane cannot see it. **No frame rate is claimed.** The risk,
+stated plainly:
 
 - Instances drawn per frame rise on two axes at once: **+56% total placements**,
-  and grass's own visibility range going 55 -> 120 m, which is roughly
+  and grass's own visibility range going 55 m -> 120 m, which is roughly
   **(120/55)^2 ~ 4.8x** the grass instances inside the draw radius. Grass is 48%
   of the bake.
-- Batch count barely moved (41 -> 43), so this is an instance-count question and
-  not a draw-call one.
+- Batch count barely moved (41 -> 43), so this is an instance-count question,
+  not a draw-call one. Widening the fade band to 55 m puts more of what is drawn
+  inside the fade, which helps slightly; it does not change the order of the
+  risk.
+- Boot cost rose 5.8-15% across the two run pairs, entirely in reading a larger
+  bake. It lands once, on load.
 
-**The two cheapest things to give back, in order, if the owner's next handheld
-pass hitches**, both named in `vegetation.json` at the keys themselves:
+**The two cheapest things to give back, in order**, both named in
+`vegetation.json` at the keys themselves:
 
 1. `grass.lod_range` back toward 80-90. Costs **no re-bake** — it is a
    render-side number — and reclaims most of the GPU rise on its own.
 2. The whole `groundmat` layer. It is the smallest geometry in the world and the
    least missed at distance, and dropping it returns 145,577 placements.
+
+## The blind pass: three rounds, converged within this lane's files, did not pass
+
+Recorded per `ralph/conventions.md`, which requires the round count and what the
+last rounds failed to move.
+
+Three rounds, three separate sub-agents, each told nothing about what changed,
+each running `.claude/skills/visual-judge` against `docs/reference/`.
+
+**Both bar questions were answered `no` in all three rounds.** This lane does
+**not** mark WORLD-GRASS done.
+
+What each round moved, and what it did not:
+
+- **Round 1 -> 2** improved. Round 2 named defects round 1 had not: the meadow
+  ground measured against `palette.json`, canopy saturation at 1.00 with a
+  near-black interior, crushed blacks with no highlight end, and — in this
+  lane's own subject — *"the grass is too short to be a meadow"*, which round 1
+  did not say.
+- **Round 2 -> 3** named new defects too, but **every new one is outside this
+  lane's files or outside its means**: a house floating on its plinth seen only
+  from the new off-route angle, untextured white blobs in a distant treeline,
+  a UV seam on the mount's shoulder, a trainer costume with no accent that
+  survives thumbnailing, and — the one that is this lane's subject and this
+  lane's wall — *"the current clump is flat two-tone polygon and will not
+  survive being multiplied; density alone will make it worse"*, filed by the
+  critic under **needs art that is not in the build**. This lane is forbidden
+  from adding art.
+- The **ranked-first defect is the same in all three rounds**: the player stands
+  on a painted surface with isolated props on it, where the references carry
+  grass geometry across the whole ground plane. That is the defect this lane's
+  own arithmetic (above) shows is ~40x outside the placement ceiling.
+- `tools/frame_stats.py` moved by **hundredths** across all three rounds on
+  every axis — chroma 68.33 -> 67.26 -> 67.04 on the band-1 eye frame, near-field
+  luminance and hue-family counts unchanged. That is the same null result
+  `VIS-WORLD` measured, and it is a property of the instrument: a whole-frame
+  statistic cannot see a change confined to the lower third of the image.
+- The measured axis that *did* move is `tools/_probe_grass_census.gd`: mean
+  instance scale 0.280 -> 0.475, near-field grass at the band-1 opening eye
+  0.019 -> 0.035 per m2, at band 4 0.107 -> 0.257, and a ground-cover tier that
+  did not exist at all before.
+
+**So: converged within this lane's files after three rounds, without passing.**
+The remaining ground-plane work needs either a different instrument (Terrain3D's
+per-mesh `density`, or a terrain grass shader — `vegetation.gd`/terrain files)
+or a grass asset with a base-to-tip gradient and a ground blend, which is an
+asset purchase or authoring job and a `BLOCKED.md`/owner decision, not a tuning
+number. Both are recorded as `WORLD-GRASS-remainder` in `ralph/BACKLOG.md`.
+
+Prompt 72's item 5 — a mid-distance landmark — is also unstarted: it is terrain
+authoring (`terrain_playground.json`) and outside this lane's file ownership.
+All three blind rounds independently asked for it, and round 3 named the one
+frame that already has one (`03-band3-crossing-eye`, the house on the ridge) as
+the best composition in the survey, which is useful evidence for whoever takes
+it.
 
 ## Tests
 
