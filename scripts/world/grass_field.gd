@@ -256,16 +256,20 @@ func _bush_mesh() -> ArrayMesh:
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var indices := PackedInt32Array()
-	# A DOME OF SMALL ANGLED LEAF QUADS, not a few big crossed panels. The panel
-	# version rendered as angular green slabs: at any size where the bush was
-	# tall enough to read as understorey, each panel was a half-metre flat card
-	# catching the light as one facet, and five of them is a folded box. Twenty
-	# small quads tilted outward on two rings have a silhouette instead, and
-	# each one is small enough that its flatness does not read.
+	# A DOME OF MANY SMALL LEAVES, and the "many" is the whole point. Two earlier
+	# versions failed the same way at different scales: five big crossed panels
+	# read as a folded green box, and twenty quads at a third of the bush's own
+	# size read as a handful of chunky slabs stuck in the grass. A leaf that is
+	# an appreciable fraction of the silhouette IS the silhouette, and a flat
+	# one then reads as flat however it is lit. Forty-four leaves at an eighth
+	# of the bush size each are individually too small to read as polygons, so
+	# what the eye gets is the mass they make.
 	var rings := [
-		{"count": 8, "y": 0.16, "r": 0.42, "tilt": 0.75, "size": 0.30},
-		{"count": 7, "y": 0.44, "r": 0.33, "tilt": 0.50, "size": 0.26},
-		{"count": 5, "y": 0.68, "r": 0.19, "tilt": 0.25, "size": 0.22},
+		{"count": 12, "y": 0.10, "r": 0.30, "tilt": 0.80, "size": 0.17},
+		{"count": 11, "y": 0.28, "r": 0.29, "tilt": 0.66, "size": 0.16},
+		{"count": 9, "y": 0.46, "r": 0.24, "tilt": 0.50, "size": 0.15},
+		{"count": 7, "y": 0.63, "r": 0.17, "tilt": 0.34, "size": 0.14},
+		{"count": 5, "y": 0.78, "r": 0.10, "tilt": 0.18, "size": 0.13},
 	]
 	for ring_index in rings.size():
 		var ring: Dictionary = rings[ring_index]
@@ -282,9 +286,13 @@ func _bush_mesh() -> ArrayMesh:
 			var first := verts.size()
 			for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
 				# Taper the far edge so a leaf is a blade, not a rectangle.
-				var w := half * (0.45 if corner.y > 0.5 else 1.0)
+				var w := half * (0.30 if corner.y > 0.5 else 0.62)
 				verts.append(at + side * corner.x * w + up_axis * corner.y * float(ring["size"]))
-				normals.append((up_axis * 0.6 + Vector3.UP * 0.6).normalized())
+				# Weighted toward the leaf's OWN axis rather than toward world up.
+				# An even split put the inner rings' normals nearly straight up, so
+				# every one of them took full sun at once and the bush read as a
+				# handful of bright flat flakes sitting in the grass.
+				normals.append((up_axis * 0.85 + Vector3.UP * 0.25).normalized())
 				# UV.y across the whole bush height, not the leaf's own, so the
 				# shader's base-to-tip gradient runs up the BUSH.
 				# Typed, not inferred: `corner` comes from an untyped Array literal so
