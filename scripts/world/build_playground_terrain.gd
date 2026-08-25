@@ -601,7 +601,16 @@ func _paint_control_map(
 			data.call("set_control_auto", pos, false)
 
 	var total_px := float(maxi(1, size_x * size_z))
-	print("  control map: verge dry %.1f%%, path %.1f%%, path shoulder %.1f%%, damp %.1f%% (target 14 / 4 / -- / 1)" %
+	# The path target moved 4% -> 0.6% when GRASS-FIELD narrowed the routes
+	# (paths.width 2.0 -> 1.4, shoulder 2.5 -> 1.1, so the painted band is 3.6m
+	# rather than 7.0m). That is a ~6x area reduction and 4 / 6 is 0.67, so the
+	# new figure is the old target scaled by the same change rather than a
+	# freshly measured one. Blind passes had measured the old band at "8-12m
+	# across against a 1.80m figure -- that is a road, not the worn footpath the
+	# framing describes". Nothing asserts this line; it is a reference for a
+	# reader, which is exactly why leaving it at 4 would have been worse than
+	# useless once the bake started reporting 0.6.
+	print("  control map: verge dry %.1f%%, path %.1f%%, path shoulder %.1f%%, damp %.1f%% (target 14 / 0.6 / -- / 1)" %
 		[painted_dry_pixels / total_px * 100.0, painted_path_pixels / total_px * 100.0,
 		painted_verge_pixels / total_px * 100.0, painted_damp_pixels / total_px * 100.0])
 	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), drained ground in soil (%d pixels), auto-shader off" %
