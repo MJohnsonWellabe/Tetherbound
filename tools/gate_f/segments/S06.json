@@ -122,6 +122,27 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S06-12a",
+      "title": "record_start: band 1 -> band 2, the arrival side of the South Bridge cut",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 1 -> band 2, the arrival side of the South Bridge cut",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "S05 saved ON the bridge, so this segment loads standing on the band 1/2 boundary: the window opens the moment the load's assertions have run, which is the earliest frame of the arrival side of that handoff"
+    },
+    {
+      "id": "S06-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
       "id": "S06-13",
       "title": "open the Map tab",
       "action": "open_menu",
@@ -172,6 +193,15 @@
         "held_budget_frames": 10800
       },
       "expected": "Section E.1 CB-04: 'S06: quarry_picket_dorn' -- Dorn stands at (315,1668) on the way in"
+    },
+    {
+      "id": "S06-17a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 1 -> band 2, the arrival side of the South Bridge cut",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes on the first ground inside band 2, at the quarry picket. This leg is longer than 60 s and cannot be split -- see this segment's section H note"
     },
     {
       "id": "S06-18",
@@ -897,6 +927,18 @@
       "expected": "Section D RT-07: 'entry -> guardian -> exit'. The exit leg is part of the route the protocol names"
     },
     {
+      "id": "S06-83a",
+      "title": "record_start: band 2 -> band 3, exit toward the river",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 2 -> band 3, exit toward the river",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "section B's own words for S06's exit are 'exit toward river': the window opens on the leg that leaves the Warrens for the ranger camp and the river beyond it"
+    },
+    {
       "id": "S06-84",
       "title": "walk out toward the ranger camp on the way north",
       "action": "move_to",
@@ -916,6 +958,15 @@
       "title": "rescan for points of interest",
       "action": "refresh_pois",
       "expected": "the camp's own content joins the POI set"
+    },
+    {
+      "id": "S06-85a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 2 -> band 3, exit toward the river",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the point-of-interest rescan at the ranger camp. Section H's other half of this +/-60 s is S07's river-arrival window"
     },
     {
       "id": "S06-86",

@@ -121,6 +121,15 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S07-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
       "id": "S07-13",
       "title": "open the Map tab",
       "action": "open_menu",
@@ -225,6 +234,18 @@
       "expected": "rewards and control return"
     },
     {
+      "id": "S07-22a",
+      "title": "record_start: band 2 -> band 3, the river arrival",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 2 -> band 3, the river arrival",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "the window opens before the walk on to the bank, so the approach to the river is inside it -- GF-10-RELAY-01's whole point is whether the river reads as a regional barrier before it is reached"
+    },
+    {
       "id": "S07-23",
       "title": "walk on to the river bank",
       "action": "move_to",
@@ -276,6 +297,15 @@
         "equals": "the_long_water"
       },
       "expected": "map_state.gd's containment puts the player in `the_long_water`"
+    },
+    {
+      "id": "S07-26a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 2 -> band 3, the river arrival",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the region assert puts the player in `the_long_water`, so the region_enter event and its forced frame are both inside the raised window"
     },
     {
       "id": "S07-27",
@@ -819,6 +849,18 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S07-75a",
+      "title": "record_start: band 3 -> band 4, the Old Mill Crossing",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 3 -> band 4, the Old Mill Crossing",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "the crossing is the band 3/4 boundary and restoring it is what opens it: the window opens before the walk upstream so the approach along the bank is recorded"
+    },
+    {
       "id": "S07-76",
       "title": "walk upstream to the Old Mill Crossing",
       "action": "move_to",
@@ -870,6 +912,15 @@
         "flag": "mill_crossing_restored"
       },
       "expected": "`mill_crossing_restored` closes section E.5 objective 18/24 and section B's S07 span"
+    },
+    {
+      "id": "S07-80a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 3 -> band 4, the Old Mill Crossing",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes once `mill_crossing_restored` is set. Section B puts the cut here, so section H's other half of this +/-60 s is S08's own opening window"
     },
     {
       "id": "S07-81",
