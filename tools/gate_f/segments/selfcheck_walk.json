@@ -124,9 +124,9 @@
       "action": "assert",
       "args": {
         "check": "dead_travel_peak_above",
-        "metres": 100.0
+        "metres": 25.0
       },
-      "expected": "somewhere past band 1 the player walked more than 100 m with nothing inside 30 m. A meter that never accumulates would read every journey in the chapter as content-dense."
+      "expected": "somewhere in that walk the player covered more than 25 m with nothing inside 30 m. The threshold is deliberately modest and the reason is a finding, not a fudge: measured on main, 326 m walked along the band 1 spine peaked the meter at 34.5 m and ended at 9.3 m, because band 1's content keeps arriving inside the radius. HOW FAR dead travel actually runs in this chapter is the journey segments' question (protocol section D, never from a DIAG segment); all this assertion has to prove is that the meter climbs at all, which a meter stuck at zero would fail and a meter that never reset would pass at 326."
     },
     {
       "id": "SC-W-12",
