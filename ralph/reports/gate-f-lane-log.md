@@ -620,3 +620,95 @@ player's very first interaction in Tetherbound is talking to Grandpa and choosin
 starter. On this SHA, a scripted run of exactly that path ends with the player
 frozen in an unanswerable modal 253 seconds in, with 10 metres walked. Whatever the
 root cause turns out to be, the opening is where the evidence says to look first.
+
+---
+
+## Check-in 10 — X07 and X08 in; **and a correction to my own S02 blocker report**
+
+### X08 — 62 PASS / 0 FAIL
+
+The perf audit ran clean, headless, start to finish. Committed at `ralph/reports/gate-f-run-20260825T201354Z/X08/`.
+
+### X07 — 79 of 80 audit frames, no harness verdicts
+
+Killed by my own 4,200 s cap one capture short of the end; exit 143 is that
+SIGTERM. **It was still working when it died** (last event: `captured
+GF-14-COMBAT-13b at 1920x1080`), so this is a run that ran out of my clock, not
+one that hung. 79 real 1920×1080 PNGs, no resolution fallback. `notes/X07.md` is
+empty because the harness writes verdicts only at a segment end this segment never
+reached; I derived the outcomes by hand from `expected`/`actual` in
+`events.jsonl` and **labelled them as derived** in `X07/INCOMPLETE.md`.
+
+19 of 22 assertions clean. Three not, and two of those are E.7's own subject:
+
+| t (s) | derived FAIL |
+|---|---|
+| 1964.2 | teleport to `the_long_water`'s centre landed **11.3 m off** a 5.0 m tolerance |
+| 2580.1 | at the stronghold approach's own centre: **`region=corridor`**, expected `stronghold_approach` |
+| 2709.3 | at the Hall's own centre: **`region=corridor`**, expected `hall` |
+
+Standing at the published centre point of two named late-chapter regions, the
+game's containment reports neither — it reports `corridor`, the id meaning
+"between places."
+
+### Correction: the S02 blocker is NOT a focus bug, and the picker is not broken
+
+Check-in 9 offered two readings and said only a fix-side investigation could
+separate them. It has been separated, and **both readings were wrong.** I am
+correcting this here because a developer lane acting on my earlier wording would
+go and fix a non-bug.
+
+`scripts/ui/starter_picker.gd` reads input by **polling**:
+
+```
+377   if Input.is_action_just_pressed("menu_confirm"):
+379   elif Input.is_action_just_pressed("ui_right"):
+381   elif Input.is_action_just_pressed("ui_left"):
+```
+
+It needs no focused control, by design, and `ui_down` is not one of its inputs at
+all. So `4 × ui_down did not move focus off nothing` is the harness probing a
+poll-driven panel with a verb it does not read. **The picker sat open waiting
+correctly for input the script never sent it.** Nothing is wrong with the picker.
+
+**The real failure is upstream of it: Grandpa's briefing never opened.**
+
+`route.csv` samples `input_context` about every 1.6 s across the whole window
+(1,256 rows, largest gap in the segment 51 s and that during boot). From t=56.0
+to t=253.4 it reads `world` on **every one of 47 consecutive samples**. The probe
+maps `dialogue_panel.gd`, `name_prompt.gd` and `starter_picker.gd` all to
+`narrative_modal`, so a briefing that opened at any point in there would have
+been caught. It never opened.
+
+And it is not a reach problem. Position, from the trace:
+
+| t (s) | player |
+|---|---|
+| 228.9 – 237 | (-25.40, -15.60) — the wake spot |
+| 238.3 – 249.6 | **(-24.50, -15.68)** — where all 31 `interact` presses landed |
+| 251.3 | (-22.62, -17.36) |
+| 252.9 | (-17.74, -18.26) |
+| 254.4 | (-17.74, -17.34), `narrative_modal` |
+
+`grandpa_house.gd:137` puts Grandpa's marker at `to_global(Vector3(-2.4, 0, 1.2))`
+on a house whose origin is `HOUSE_AT = (-22, -16)` — so he stands at about
+**(-24.4, -14.8)**. The player was **~0.9 m from him**, with `arbiter_enabled:
+true` in `input_state` and a prompt radius of 3.8 m
+(`sequence_director.gd:861`), and pressed `interact` 31 times over 13 seconds
+with nothing happening. The walk itself passed honestly: the step sets
+`close_enough: 3.0` and stopped 2.5 m from its target, inside its own tolerance.
+
+Then, with no stick input in flight, the player slid ~5 m between t=251.3 and
+t=252.9 and the picker opened at t=253.4 — unprompted by anything the script did.
+
+**So the question for the fix lane is: why does `interact`, pressed 0.9 m from
+Grandpa during the `house` beat with the arbiter enabled, not open
+`grandpa_house`?** One candidate I can see but have not tested is the binding
+itself — the harness resolves `interact` to `JoyBtn:2`, and if that is not what
+the arbiter reads, no interact in the run ever landed, including the "get up"
+press. That is a hypothesis, not a finding, and testing it is developer work.
+
+**Nothing on the candidate has been touched.** Per §1.6 the fix goes on a separate
+branch and a new SHA is frozen before S02 is re-run; the S01/S02/X07/X08 evidence
+on this branch stays attached to `a3f61b60`, and the seam will be stated plainly
+rather than spliced.
