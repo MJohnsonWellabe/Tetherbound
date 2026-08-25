@@ -1,5 +1,7 @@
 {
   "id": "X08",
+  "_comment_record_hz": "Section H's own last clause: 'If frame capture measurably distorts frame timing, the overhead note records it and the perf audit (X08) runs without capture.' It does, and it is measured: at 1920x1080 under this container's software rasteriser one readback+PNG encode costs 126.5 ms mean / 218.9 ms max, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line the protocol asks about. A perf audit that recorded frames would be corrupting the one number it exists to produce, so the continuous record is OFF for this segment alone. Set by the instrumentation lane from its own measurement, not a transcription choice. Every other segment keeps its record; at the 0.1 Hz journey baseline the same grab amortises to 0.21 ms/frame, comfortably under the line.",
+  "record_hz": 0,
   "title": "DIAG performance audit (protocol E.9)",
   "lane": "diag",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.9, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry save per protocol B: 'any; teleport permitted'.",

@@ -92,6 +92,7 @@ var _cfg := {
 	"record_default_hz": 0.1,
 	"record_window_hz": 0.5,
 	"record_forced_frames": true,
+	"overhead_scene": "world",
 }
 
 # --- run identity and output -------------------------------------------------
@@ -132,6 +133,23 @@ var _record_args: Dictionary = {}
 var _record_next_t := 0.0
 var _record_written := 0
 var _record_absent := 0
+## Milliseconds spent inside the readback + PNG encode, per frame written.
+##
+## Measured DIRECTLY because the frame-time difference cannot resolve it here:
+## llvmpipe at 1920x1080 renders the title at ~70 ms/frame with a spread of
+## ~8 ms between two identical 30 s windows, so a 1 ms/frame effect -- the line
+## the protocol asks about -- sits eight times below the noise floor of a
+## before/after comparison. Timing the grab itself is immune to that: it is the
+## cost of the thing, not the difference between two noisy totals.
+var _record_grab_ms: Array[float] = []
+## The rate in effect when each of those frames was taken, kept alongside.
+##
+## Not read back from `_record_hz` at reporting time: the overhead probe restores
+## the rate to zero between conditions, so a summary that asked afterwards
+## divided by nothing and reported the amortised cost as 0.000 ms/frame -- a
+## clean pass produced by a bookkeeping mistake, which is the exact shape of
+## dishonest number this file is written to avoid.
+var _record_grab_hz: Array[float] = []
 ## Event types that fired since the last recorder tick, and are owed a frame.
 var _record_forced_by: Array[String] = []
 ## True while a `capture`/`capture_seq` STEP is executing. The recorder stands
@@ -360,6 +378,7 @@ func _run_metadata() -> Dictionary:
 		"record_baseline_hz": _record_baseline_hz,
 		"frames_written": _record_written,
 		"frames_absent": _record_absent,
+		"frame_grab_ms": _grab_summary(),
 		"instrumentation_overhead_note": _overhead_note,
 		"harness_errors": _harness_errors,
 	}
@@ -1126,6 +1145,7 @@ func _write_frame(trigger: String) -> void:
 		_frames.append(row)
 		_record_absent += 1
 		return
+	var grab_started := Time.get_ticks_usec()
 	var image := root.get_viewport().get_texture().get_image()
 	if image == null or image.is_empty():
 		row["reason"] = "viewport returned an empty image"
@@ -1134,6 +1154,10 @@ func _write_frame(trigger: String) -> void:
 		return
 	var rel := "frames/%s/%09.2f.png" % [_segment_id, t]
 	var err := image.save_png(_out_dir.path_join(rel))
+	var grab_ms := float(Time.get_ticks_usec() - grab_started) / 1000.0
+	_record_grab_ms.append(grab_ms)
+	_record_grab_hz.append(_record_hz)
+	row["grab_ms"] = snappedf(grab_ms, 0.01)
 	if err != OK:
 		row["reason"] = "save_png failed with error %d" % err
 		_frames.append(row)
@@ -2208,9 +2232,29 @@ func _describe_delta(before: Dictionary, after: Dictionary, keys: Array) -> Stri
 ## make the number look better, because the thinned trace is then what every
 ## later run produces and nobody knows why.
 func _run_overhead_probe() -> void:
-	var packed := load(WORLD_SCENE) as PackedScene
+	# `overhead_scene` exists because the two costs this probe adds up do not
+	# live in the same place, and on this container only one of them can be
+	# measured on the Meadows.
+	#
+	# The TELEMETRY tick costs what the scene costs -- it walks the party, the
+	# quest log and the point-of-interest cache -- so it has to be measured on
+	# the real world, and can be, headless.
+	#
+	# The RECORDER's cost is a framebuffer readback and a PNG encode. It scales
+	# with pixels, not with scene complexity, so the title scene at the capture
+	# resolution measures it honestly. Measuring it on the Meadows would be
+	# better and is not available here: under llvmpipe the world renders slowly
+	# enough that six twenty-second windows did not complete in fifty minutes,
+	# and a measurement taken while the box is that saturated says more about
+	# the container than about the instrument.
+	#
+	# So the note names the scene it ran on, and a reader composes the two
+	# rather than being handed one number pretending to be both.
+	var which := str(_cfg["overhead_scene"])
+	var path := TITLE_SCENE if which == "title" else WORLD_SCENE
+	var packed := load(path) as PackedScene
 	if packed == null:
-		_die("overhead probe could not load the world scene")
+		_die("overhead probe could not load %s" % path)
 		return
 	var scene := packed.instantiate()
 	root.add_child(scene)
@@ -2220,6 +2264,9 @@ func _run_overhead_probe() -> void:
 	_probe.call("refresh_pois")
 	_seed_change_detection()
 	_frame_ms.clear()
+	# The recorder is what is under test in the third condition, so its output
+	# has somewhere to go regardless of which scene this ran on.
+	_record_args = {"hud": "on", "camera_kind": "probe"}
 
 	# Half-length windows, run forwards then backwards: off, telemetry,
 	# recording, recording, telemetry, off.
@@ -2253,20 +2300,51 @@ func _run_overhead_probe() -> void:
 
 	var d_telemetry := float(means["telemetry"]) - float(means["off"])
 	var d_recording := float(means["recording"]) - float(means["off"])
-	_overhead_note = ("%.0f s x 2 windows per condition at %s, order off/telemetry/recording/recording/"
+	_overhead_note = ("scene=%s. %.0f s x 2 windows per condition at %s, order off/telemetry/recording/recording/"
 		+ "telemetry/off (reversed to cancel drift). Means: off %.3f, telemetry %.3f, "
 		+ "telemetry+recording@%.2fHz %.3f ms/frame. Deltas vs off: telemetry %+.3f (%s), "
 		+ "recording %+.3f (%s). Noise floor %.3f ms/frame, taken as the widest a single condition "
 		+ "disagreed with itself. Display server %s, viewport %dx%d, frames written %d. "
+		+ "Recorder cost measured DIRECTLY as well, because the frame-time difference cannot resolve "
+		+ "a 1 ms/frame effect against this noise floor: %s. "
 		+ "CPU frame time on this container only -- no device fps, no VRAM.") % [
-			half, str(_pos_array()),
+			which, half, str(_pos_array()),
 			float(means["off"]), float(means["telemetry"]),
 			float(_cfg["record_window_hz"]), float(means["recording"]),
 			d_telemetry, _overhead_verdict(d_telemetry, noise),
 			d_recording, _overhead_verdict(d_recording, noise),
 			noise, DisplayServer.get_name(), _viewport_size().x, _viewport_size().y,
-			_record_written]
+			_record_written, _grab_line()]
 	print("gate-f overhead: %s" % _overhead_note)
+
+
+## `{mean, max, n}` milliseconds per recorded frame, or `{}` if none were taken.
+##
+## This is the number §H's last clause actually needs. The amortised per-frame
+## cost of the recorder is `mean * hz / ticks_per_second` -- a 0.5 Hz recorder
+## at 60 Hz spreads each grab over 120 frames -- and stating both lets a reader
+## recompute it for whatever rate a segment used instead of trusting one figure.
+func _grab_summary() -> Dictionary:
+	if _record_grab_ms.is_empty():
+		return {}
+	var sum := 0.0
+	var peak := 0.0
+	for v: float in _record_grab_ms:
+		sum += v
+		peak = maxf(peak, v)
+	var mean := sum / float(_record_grab_ms.size())
+	var hz_sum := 0.0
+	for v: float in _record_grab_hz:
+		hz_sum += v
+	var hz := hz_sum / float(maxi(1, _record_grab_hz.size()))
+	return {
+		"mean_ms": snappedf(mean, 0.01),
+		"max_ms": snappedf(peak, 0.01),
+		"n": _record_grab_ms.size(),
+		"amortised_ms_per_frame_at_hz": snappedf(
+			mean * hz / float(Engine.physics_ticks_per_second), 0.001),
+		"hz": hz,
+	}
 
 
 ## How to read one delta, honestly.
@@ -2276,6 +2354,22 @@ func _run_overhead_probe() -> void:
 ## clause); measurable and under it; or smaller than this measurement can
 ## separate from noise, which is not the same as zero and must not be written
 ## as zero.
+## The direct measurement, as a sentence, with its own verdict against the
+## protocol's ~1 ms/frame line.
+func _grab_line() -> String:
+	var g := _grab_summary()
+	if g.is_empty():
+		return "no frames were recorded, so the grab cost was not measured"
+	var amortised := float(g["amortised_ms_per_frame_at_hz"])
+	var verdict := "under the ~1 ms/frame line"
+	if amortised > 1.0:
+		verdict = ("OVER the ~1 ms/frame line -- §H's own clause applies and X08's perf audit should "
+			+ "run with record_hz 0; the trace was NOT thinned to hide this")
+	return ("%d frames, %.1f ms mean and %.1f ms max per readback+encode, which at %.2f Hz amortises to "
+		+ "%.3f ms/frame (%s)") % [int(g["n"]), float(g["mean_ms"]), float(g["max_ms"]),
+			float(g["hz"]), amortised, verdict]
+
+
 func _overhead_verdict(delta: float, noise: float) -> String:
 	if delta > 1.0:
 		return "OVER the ~1 ms/frame the protocol asks about; the trace was NOT thinned to hide it"
