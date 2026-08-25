@@ -112,6 +112,7 @@ var _exit_connected := false
 ## `combat.json`'s `player_quick.lunge`: how close the harness closes before
 ## it starts throwing punches. See `_load_attack_ranges()`.
 var _engage_distance := 3.6
+var _combat_cfg_cache: Dictionary = {}
 
 
 func _init() -> void:
@@ -218,6 +219,51 @@ func _load_attack_ranges() -> void:
 	_engage_distance = maxf(
 		float(quick.get("lunge", 3.6)),
 		float(quick.get("range", 2.6)))
+
+
+## How far this pairing can actually hit, measured the way the GAME measures it.
+##
+## `_engage_distance` is read from combat.json's `player_quick` alone (lunge 3.6 /
+## range 2.6) and so is a constant. The game's reach is not: `combat_manager.gd::
+## _with_reach_for_the_bodies` grows the player's range with the bodies in the
+## fight -- `(mine + theirs) * enemy.body_clearance + 0.5` -- and
+## `wild_creature.gd::_spaced_config` grows the enemy's the same way, for the
+## reason its own comment gives: a creature spaced further out than it can reach
+## "whiffs forever".
+##
+## VIS-MAKE raised `body_clearance` 1.8 -> 2.75 to stop the combatants
+## interpenetrating (four blind rounds: "a Bramblebun is embedded in the
+## Terrapup's face"). That is correct and the game handles it -- both sides' reach
+## grew with it. This harness did not, so it stood at 4.2m with a ready attack
+## refusing to use it, walked forward into a spacing floor that pushed back, and
+## reported a stall the game would never show a player:
+##
+##   Quarter-final stalled: 901 frames without the opponent losing HP --
+##   4.2m away, quick_ready=true charged_ready=false committed=false
+##
+## Intermittent because it depends on which species are drawn: only pairings
+## whose spaced distance exceeds 3.6m could trip it.
+func _reach_for(ally: Node3D, opponent: Node3D) -> float:
+	var mine := 0.5
+	var theirs := 0.5
+	if ally.has_method("body_radius"):
+		mine = float(ally.call("body_radius"))
+	if opponent.has_method("body_radius"):
+		theirs = float(opponent.call("body_radius"))
+	var clearance: float = float(_combat_config().get("enemy", {}).get("body_clearance", 1.35))
+	return maxf(_engage_distance, (mine + theirs) * clearance + 0.5)
+
+
+func _combat_config() -> Dictionary:
+	if not _combat_cfg_cache.is_empty():
+		return _combat_cfg_cache
+	var file := FileAccess.open("res://data/config/combat.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) == TYPE_DICTIONARY:
+		_combat_cfg_cache = parsed as Dictionary
+	return _combat_cfg_cache
 
 
 func _clear_the_slate() -> void:
@@ -535,7 +581,7 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		# what the stall report above was built to catch, and it caught it on
 		# the tournament final.
 		var distance := to.length()
-		if distance > _engage_distance:
+		if distance > _reach_for(ally, opponent):
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")

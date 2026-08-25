@@ -1026,8 +1026,27 @@ func _why_the_aim_would_not_open() -> String:
 ## Returns the live body, or null if none came back inside the budget. Asked of
 ## the director rather than by node name: the respawn is a NEW body, so a cached
 ## `_wild` from before the knockout is a freed handle.
+## The budget is the RESPAWN, not a round number. 900 physics frames is 15
+## simulated seconds at Godot's 60Hz fixed step, and
+## `encounter_director.gd::_respawn_delay()` reads `respawn_seconds` from
+## spawns.json, which is 45.0. So this could never once have seen the creature
+## come back: it gave up three times too early, every time, and reported it as
+## "no Bramblebun came back" -- a starved wait dressed up as a missing respawn.
+##
+## It looked intermittent only because it is reached intermittently. A run whose
+## catch lands before the fight ends never waits here at all; a run that needs a
+## re-engage always failed. Read from the same config the director reads so a
+## respawn_seconds edit moves both together, with a margin for the beat between
+## the timer firing and the body being up and visible.
 func _wait_for_the_bramblebun_back_on_its_feet() -> Node3D:
-	for _i in 900:
+	var respawn := 45.0
+	var file := FileAccess.open("res://data/config/spawns.json", FileAccess.READ)
+	if file != null:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if typeof(parsed) == TYPE_DICTIONARY:
+			respawn = float((parsed as Dictionary).get("respawn_seconds", 45.0))
+	var budget := int((respawn + 15.0) * 60.0)
+	for _i in budget:
 		var body := _encounter.call("wild_creature") as Node3D
 		if body != null and is_instance_valid(body) and body.visible \
 				and body.has_method("is_alive") and bool(body.call("is_alive")):
