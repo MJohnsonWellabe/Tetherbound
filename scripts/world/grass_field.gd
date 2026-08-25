@@ -153,6 +153,7 @@ func _build() -> void:
 	# built first it copied the default zero AABB instead.
 	_build_stones(cfg, radius)
 	_build_cover_tiers(cfg, radius)
+	_apply_clearing(cfg)
 
 
 ## The generic cover tiers, from `cover_tiers` in the config: small bushes,
@@ -328,10 +329,10 @@ func _flower_mesh() -> ArrayMesh:
 		var start_i := verts.size()
 		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
 			# Narrow at the base, wider at the top: a bloom, not a card.
-			var w := 0.055 * (1.0 if corner.y > 0.5 else 0.45)
-			verts.append(side * corner.x * w + Vector3.UP * (0.74 + corner.y * 0.17))
+			var w := 0.090 * (1.0 if corner.y > 0.5 else 0.40)
+			verts.append(side * corner.x * w + Vector3.UP * (0.70 + corner.y * 0.25))
 			normals.append((side * 0.3 + Vector3.UP * 0.9).normalized())
-			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.86 + corner.y * 0.14))
+			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.82 + corner.y * 0.18))
 		indices.append_array([start_i, start_i + 1, start_i + 2, start_i + 1, start_i + 3, start_i + 2])
 	return _mesh_from(verts, normals, uvs, indices)
 
@@ -602,6 +603,36 @@ func _apply_config(cfg: Dictionary) -> void:
 		if str(terrain_cfg[i]) in names:
 			mask |= 1 << i
 	_material.set_shader_parameter("forbidden_base_mask", mask)
+
+
+## Tell the grass where the bushes gather, so it gives way to them.
+##
+## The grass and the cover tiers are separate MultiMeshes that know nothing
+## about each other, so without this they simply occupy the same ground: blades
+## stand through leaves and the near field reads as two systems drawn over each
+## other rather than as one meadow. A bush shades out what grows beneath it, and
+## this is that, done the only way two independent procedural fields can agree
+## on anything -- by evaluating the SAME function.
+##
+## So the numbers are read off the claiming tier's own config entry rather than
+## written twice. A tier claims clearings with `clears_grass`, and the shader's
+## `clearing_*` uniforms are its `drift_scale` and `drift_contrast` verbatim; if
+## the bushes move, the thinning moves with them. With no tier claiming,
+## `clearing_strength` stays 0 and the grass shader skips the work entirely.
+func _apply_clearing(cfg: Dictionary) -> void:
+	if _material == null:
+		return
+	for entry: Variant in cfg.get("cover_tiers", []):
+		var tier: Dictionary = entry
+		if not (bool(tier.get("enabled", true)) and bool(tier.get("clears_grass", false))):
+			continue
+		_material.set_shader_parameter("clearing_scale", float(tier.get("drift_scale", 0.05)))
+		_material.set_shader_parameter("clearing_contrast", float(tier.get("drift_contrast", 0.88)))
+		_material.set_shader_parameter("clearing_strength",
+				float(cfg.get("clearing_strength", 0.85)))
+		_material.set_shader_parameter("clearing_floor", float(cfg.get("clearing_floor", 0.78)))
+		_material.set_shader_parameter("clearing_shorten", float(cfg.get("clearing_shorten", 0.45)))
+		return
 
 
 func _terrain_texture_names() -> Array:

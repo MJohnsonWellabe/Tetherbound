@@ -116,6 +116,27 @@ uniform float gust_length = 26.0;
 uniform float wind_scale = 0.09;
 uniform vec2 wind_dir = vec2(0.86, 0.51);
 
+// CLEARINGS. Where the bush tier gathers, the grass gives way: fewer blades and
+// shorter ones, because a bush shades out what grows beneath it. Without this
+// the two tiers simply occupy the same ground and blades pass straight through
+// leaves, which reads as two systems drawn over each other rather than as one
+// meadow.
+//
+// The three shape numbers are THE BUSH TIER'S OWN drift field, pushed in by
+// `grass_field.gd` from the same `cover_tiers` entry the bushes are built from.
+// Copying them by hand would be one edit away from thinning the grass somewhere
+// the bushes are not. `clearing_strength` 0 disables the whole thing, which is
+// what the config ships as if no tier claims clearings.
+uniform float clearing_scale = 0.05;
+uniform float clearing_contrast : hint_range(0.0, 1.0) = 0.88;
+uniform float clearing_strength : hint_range(0.0, 1.0) = 0.0;
+// Only the STRONGEST part of the bush drift clears. The drift runs roughly
+// 0.12-1.0 and bushes themselves only take a fraction of it, so clearing
+// everywhere the field is merely above average would thin a third of the meadow
+// for the sake of a tenth of it.
+uniform float clearing_floor : hint_range(0.0, 1.0) = 0.78;
+uniform float clearing_shorten : hint_range(0.0, 1.0) = 0.45;
+
 // Which terrain textures grass refuses to grow on, as a bitmask over base
 // texture id. `terrain_playground.json`'s texture list is
 // 0 grass, 1 soil/verge, 2 rock, 3 path, 4 damp, 5 forest floor -- so the
@@ -215,7 +236,15 @@ void vertex() {
 	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
 	float drift = value_noise(world_xz * clump_scale);
 	drift = mix(1.0, drift, clump_contrast);
-	float keep = drift * density_gain;
+	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
+	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
+	// uses, so this is the identical field and not an approximation of it.
+	float clearing = 0.0;
+	if (clearing_strength > 0.001) {
+		float bush_drift = mix(1.0, value_noise(world_xz * clearing_scale), clearing_contrast);
+		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
+	}
+	float keep = drift * density_gain * (1.0 - clearing);
 	bool culled = off_map || hole || forbidden || v_fade <= 0.001
 			|| hash12(world_xz * 7.31) > keep;
 
@@ -234,6 +263,9 @@ void vertex() {
 
 		float h = mix(height_near, height_far, smoothstep(0.0, field_radius, dist));
 		h *= 1.0 + (hash12(blade_seed * 3.77) - 0.5) * 2.0 * height_jitter;
+		// Shorter under a bush as well as sparser. Thinning alone leaves the
+		// survivors at full height, still standing through the leaves.
+		h *= 1.0 - clearing * clearing_shorten;
 
 		// Bend. A blade of grass is not a spike: it leans, and each one leans a
 		// different way. Without the per-blade term the whole field renders as

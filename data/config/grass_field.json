@@ -70,12 +70,17 @@
   },
 
   "_comment_cover_tiers": "The generic plant tiers on the same ring: small bushes, flower drifts, forest litter. Each is one MultiMesh child running shaders/cover_tier.gdshader, differing only by mesh and numbers -- see that shader's header for the rule about WHAT may be generated this way. Short version: a tier qualifies only if it does not collide, carries no persistent state, is small enough that appearing at the ring's edge is invisible, and exists in numbers too large to store. Trees and boulders fail three of those -- they are landmarks, they stop the camera's SpringArm, and they must be where you left them. HARVESTABLE bushes fail the state test: vegetation.json's `bushes` layer carries harvest_item fiber, and harvesting needs an identity that survives, which a thing that does not exist until the camera nears it cannot have. So these bushes are DECORATIVE understorey and the harvestable ones stay scattered. tests/test_grass_field.gd enforces that half of the rule against vegetation.json directly. Each tier draws from its own RNG stream so adding or removing one cannot reshuffle where any other tier's items land.",
+  "_clearing": "Where the bush tier gathers, the grass thins and shortens. The grass and the cover tiers are separate MultiMeshes that know nothing about each other, so without this they occupy the same ground and blades stand straight through leaves -- the owner's words were that the grass overlaps the bushes. grass_field.gd reads the shape of the field off whichever tier sets `clears_grass`, so the thinning cannot drift away from the bushes it is thinning for. `clearing_floor` is high on purpose: the drift runs about 0.12-1.0 and the bushes take only a fraction of even its strongest part, so clearing everywhere above average would thin a third of the meadow for the sake of a tenth of it.",
+  "clearing_strength": 0.9,
+  "clearing_floor": 0.76,
+  "clearing_shorten": 0.5,
   "cover_tiers": [
     {
       "_why": "Small bushes. A blind pass found the world jumps from 50cm grass straight to 6m canopy with nothing between -- 'a forest you can see straight through at knee height' -- and counted two mid-height plants across twelve frames. This is that missing band. Sparse and heavily drifted on purpose: understorey gathers, it does not carpet, and the meadow's negative space is what GROUND-LAYERS measured as worth keeping.",
       "name": "bushes",
       "mesh": "bush",
       "enabled": true,
+      "clears_grass": true,
       "count": 9000,
       "seed": 5512207,
       "centre_bias": 0.6,
@@ -101,8 +106,8 @@
       "count": 20000,
       "seed": 8830145,
       "centre_bias": 0.6,
-      "item_size": 0.26,
-      "size_jitter": 0.35,
+      "item_size": 0.62,
+      "size_jitter": 0.3,
       "sink": 0.04,
       "density_gain": 0.5,
       "drift_scale": 0.03,
