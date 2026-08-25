@@ -31,6 +31,9 @@
   "_comment_capture_settle_frames": "Process frames waited before a capture, on top of the frame_post_draw await. A capture taken on the frame a panel opens catches it mid-fade.",
   "capture_settle_frames": 4,
 
+  "_comment_overhead_scene": "Which scene the section 8 overhead self-measurement runs on: 'world' or 'title'. The two costs it adds up do not live in the same place. The telemetry tick costs what the SCENE costs -- it walks the party, the quest log and the point-of-interest cache -- so it belongs on the real world, and runs there headless. The recorder's cost is a framebuffer readback and a PNG encode, which scales with PIXELS rather than scene complexity, so the title scene at the capture resolution measures it honestly. Measuring the recorder on the Meadows would be better and is not available in this container: under llvmpipe six twenty-second windows did not complete in fifty minutes, and a measurement taken while the box is that saturated describes the container rather than the instrument. The note names the scene it ran on so a reader composes the two instead of being handed one number pretending to be both.",
+  "overhead_scene": "world",
+
   "_comment_overhead_seconds": "Length of each half of the section 8 overhead self-measurement (once with telemetry on, once off). 60 s each, per the request's own wording.",
   "overhead_seconds": 60.0
 }

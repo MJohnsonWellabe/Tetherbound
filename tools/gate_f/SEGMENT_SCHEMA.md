@@ -328,6 +328,41 @@ Multiple events on one tick coalesce into **one** frame whose `trigger` names al
 of them (`event:combat_start,flag_set`). Two events on the same frame describe
 the same image; writing it twice would inflate the record without adding a pixel.
 
+### What the recorder costs, measured
+
+§H's last clause asks whether frame capture distorts frame timing. It does, and
+the amount decides the rate a segment can afford.
+
+The **frame-time difference cannot answer this** in this container: llvmpipe at
+1920×1080 renders with a spread of 6–21 ms/frame between two identical 30 s
+windows, so a 1 ms/frame effect sits an order of magnitude below the noise
+floor. Both the before/after deltas came back negative on the first attempt —
+telemetry apparently making the game faster — which is drift, not a result.
+
+So the readback and encode are **timed directly**, which is immune to that:
+
+| | measured |
+|---|---|
+| one readback + PNG encode at 1920×1080 | **126.5 ms mean, 218.9 ms max** (n=32) |
+| amortised at 0.1 Hz (journey baseline) | **0.21 ms/frame** — under the line |
+| amortised at 0.5 Hz (§H mandatory list) | **1.05 ms/frame** — **over the ~1 ms line** |
+
+Consequences, applied rather than noted:
+
+- **X08 declares `record_hz: 0`.** §H names it: the perf audit runs without
+  capture. A perf audit that recorded frames would corrupt the one number it
+  exists to produce.
+- The 0.1 Hz journey baseline is comfortably affordable and stays on everywhere
+  else.
+- A 0.5 Hz mandatory window is affordable *as a window* — it is a 1 ms/frame
+  cost for the length of the window, not for the segment — but a segment that
+  sets its whole baseline to 0.5 Hz is paying it throughout, and should say why.
+
+Every run's `RUN_METADATA.json` carries `frame_grab_ms` with `mean_ms`, `max_ms`,
+`n` and `amortised_ms_per_frame_at_hz`, so this is re-derivable per run rather
+than a figure to trust. **The trace was not thinned to make any of it look
+better.**
+
 ---
 
 ## What the harness writes
