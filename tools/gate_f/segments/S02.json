@@ -361,9 +361,11 @@
         ],
         "budget_frames": 4050,
         "close_enough": 4.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered"
+      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
     },
     {
       "id": "S02-31",
@@ -641,9 +643,11 @@
         ],
         "budget_frames": 4050,
         "close_enough": 2.5,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval"
+      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
     },
     {
       "id": "S02-57",
