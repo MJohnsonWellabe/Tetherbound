@@ -953,6 +953,37 @@ static func _consider(
 	var low := float(layer.get("scale_min", 0.85)) * base
 	var high := float(layer.get("scale_max", 1.25)) * base
 	var instance_scale := rng.randf_range(low, high)
+	var model := str(models[rng.randi_range(0, models.size() - 1)])
+	var yaw := rng.randf_range(0.0, TAU)
+
+	# WORLD-GRASS. `model_scale` (vegetation.json, optional, model path -> float,
+	# default 1.0 for anything unlisted) multiplies ONE model's draws inside a
+	# layer that otherwise shares `scale_min`/`scale_max`.
+	#
+	# Why it has to exist: this layer's `scale_min`/`scale_max` is the only size
+	# lever, and it applies to every model equally, so a layer holding a 1.20m
+	# mesh and a 1.84m mesh can only ever render them 53% apart however the
+	# range is tuned. A blind critic looking at the grass layer's four species
+	# read them as "a single blade-fan type, always roughly knee height" and
+	# called the even result generator output -- which it was, because there was
+	# no way to say "the tall species is genuinely tall and the wide one is
+	# genuinely low". `vegetation.json`'s own `_comment_species_of12_b` names
+	# the same gap from the other side ("scatter_rules.gd has no per-model
+	# weight/scale field") while adding a second species it could not
+	# differentiate. This is that field.
+	#
+	# RNG-SAFE BY CONSTRUCTION, and that is why the model and yaw draws moved
+	# above rather than the multiplier being folded into `low`/`high`. Both
+	# draws still happen, in the same order, drawing the same values from the
+	# same stream; the multiplier is applied to the RESULT. So a layer with no
+	# `model_scale` key places byte-identically to before this change -- which
+	# matters more here than usual, because a stream perturbation reshuffles
+	# every clump in the corridor and invalidates every tuned anchor position in
+	# this file.
+	var model_scale: Dictionary = layer.get("model_scale", {})
+	if model_scale.has(model):
+		instance_scale *= float(model_scale[model])
+
 	# `sink`: metres of the prop buried at scale 1.0, times its own scale, so a
 	# big block sits deeper than a cobble. A blind critic on the first round of
 	# OF4-remainder-mound's outcrops: "boulders of that mass do not rest tangent
@@ -964,9 +995,9 @@ static func _consider(
 	# grows: a half-buried tree is a bug.
 	var sink := float(layer.get("sink", 0.0)) * instance_scale
 	var placement := {
-		"model": str(models[rng.randi_range(0, models.size() - 1)]),
+		"model": model,
 		"position": Vector3(spot.x, height - sink, spot.y),
-		"yaw": rng.randf_range(0.0, TAU),
+		"yaw": yaw,
 		"scale": instance_scale,
 	}
 	# Rigid props (currently just rocks, the one layer with a MINIMUM slope)
