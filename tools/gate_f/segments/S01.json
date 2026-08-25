@@ -7,10 +7,10 @@
   "steps": [
     {
       "id": "S01-01",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H makes S01 one of the segments that must be recorded continuously: 'PNG every 2 s (0.5 Hz) plus a forced frame on every JSONL event'. The step vocabulary in tools/gate_f/SEGMENT_SCHEMA.md has no background-recorder action -- `capture_seq` is a bounded, blocking run of frames, not a recorder that runs while other steps play. This note records the \u00a7H requirement against this segment and the gap; the harness's event-forced frames and the 2 Hz route trace are what actually run continuously here."
+        "text": "Section H makes S01 one of the segments that must be recorded continuously: 'PNG every 2 s (0.5 Hz) plus a forced frame on every JSONL event'. The step vocabulary in tools/gate_f/SEGMENT_SCHEMA.md has no background-recorder action -- `capture_seq` is a bounded, blocking run of frames, not a recorder that runs while other steps play. This note records the section H requirement against this segment and the gap; the harness's event-forced frames and the 2 Hz route trace are what actually run continuously here."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -21,7 +21,7 @@
       "args": {
         "keep_slots": []
       },
-      "expected": "\u00a7A.2 records `save_state` as 'fresh user:// dir'. With no save present the title's Start New Game goes straight into the world instead of raising `title_screen.gd`'s overwrite confirmation, so this is also what makes the front-door path deterministic"
+      "expected": "Section A.2 records `save_state` as 'fresh user:// dir'. With no save present the title's Start New Game goes straight into the world instead of raising `title_screen.gd`'s overwrite confirmation, so this is also what makes the front-door path deterministic"
     },
     {
       "id": "S01-03",
@@ -31,7 +31,7 @@
         "scene": "title",
         "settle_frames": 30
       },
-      "expected": "\u00a7I.4: 'process start -> title interactive' is measured. The real title scene comes up with the real autoloads and Start New Game focused"
+      "expected": "Section I.4: 'process start -> title interactive' is measured. The real title scene comes up with the real autoloads and Start New Game focused"
     },
     {
       "id": "S01-04",
@@ -41,7 +41,7 @@
         "check": "input_context",
         "equals": "title"
       },
-      "expected": "input_context is 'title'. \u00a70.6 production paths only: this is the front door a player meets, not a world scene booted past it"
+      "expected": "input_context is 'title'. Section 0.6 production paths only: this is the front door a player meets, not a world scene booted past it"
     },
     {
       "id": "S01-05",
@@ -50,7 +50,7 @@
       "args": {
         "check": "focus_owned"
       },
-      "expected": "a Control holds focus. \u00a7E.4's own standard: without one the stick moves nothing and the front door is decoration on a handheld"
+      "expected": "a Control holds focus. Section E.4's own standard: without one the stick moves nothing and the front door is decoration on a handheld"
     },
     {
       "id": "S01-06",
@@ -64,14 +64,14 @@
         "trigger": "title screen fully loaded, S01",
         "intended_proof": "front door is a real game's front door; save slots legible"
       },
-      "expected": "\u00a7G: title screen fully loaded, S01 -- front door is a real game's front door; save slots legible"
+      "expected": "Section G: title screen fully loaded, S01 -- front door is a real game's front door; save slots legible"
     },
     {
       "id": "S01-07",
-      "title": "front-door observation (\u00a7G GF-01-TITLE-01)",
+      "title": "front-door observation (section G GF-01-TITLE-01)",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 has no objective here -- there is no tracked objective before the world exists -- so this is the front-door record \u00a7G-01 asks for instead: what the title actually offers a first-time player, whether the save slots are legible, and whether Load Game reads as available or disabled on a fresh install. Reasoned from GF-01-TITLE-01."
+        "text": "Section E.5 has no objective here -- there is no tracked objective before the world exists -- so this is the front-door record section G-01 asks for instead: what the title actually offers a first-time player, whether the save slots are legible, and whether Load Game reads as available or disabled on a fresh install. Reasoned from GF-01-TITLE-01."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -83,7 +83,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7B: S01's span ends at 'title verified, New Game chosen'. Start New Game is focused, and with no existing save `title_screen.gd::_on_new_pressed` starts the game directly rather than asking to confirm an overwrite"
+      "expected": "Section B: S01's span ends at 'title verified, New Game chosen'. Start New Game is focused, and with no existing save `title_screen.gd::_on_new_pressed` starts the game directly rather than asking to confirm an overwrite"
     },
     {
       "id": "S01-09",
@@ -92,7 +92,7 @@
       "args": {
         "seconds": 180
       },
-      "expected": "\u00a7I.4: 'title -> world playable' is measured. A cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build"
+      "expected": "Section I.4: 'title -> world playable' is measured. A cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build"
     },
     {
       "id": "S01-10",
@@ -122,7 +122,7 @@
         "check": "objective_is",
         "id": "opening_first_catch"
       },
-      "expected": "\u00a7E.5 tracks 24 main-chain objectives from `opening_first_catch`; the quest log tracks the first main entry whose flag is not set, so a fresh game tracks that one"
+      "expected": "Section E.5 tracks 24 main-chain objectives from `opening_first_catch`; the quest log tracks the first main entry whose flag is not set, so a fresh game tracks that one"
     },
     {
       "id": "S01-13",
@@ -132,14 +132,14 @@
         "check": "route_rows_at_least",
         "rows": 300
       },
-      "expected": "\u00a7C.2: route.csv is the pacing study's raw material and the \u00a712 correlation spine. Even a segment that never walks must produce a trace"
+      "expected": "Section C.2: route.csv is the pacing study's raw material and the section 12 correlation spine. Even a segment that never walks must produce a trace"
     },
     {
       "id": "S01-14",
       "title": "close the segment",
       "action": "note",
       "args": {
-        "text": "\u00a7B: S01's handoff is 'in-memory (no save yet exists pre-starter)'. This segment therefore ends with no Save-tab save and no save_out. AMBIGUITY, recorded rather than papered over: \u00a7B also gives S02 the entry save 'continues S01 process', but tools/gate_f/run_segment.sh runs one segment per Godot process, so S02 cannot continue this process. S02 reproduces this exact state through the same production front door instead, and says so in its own first step."
+        "text": "Section B: S01's handoff is 'in-memory (no save yet exists pre-starter)'. This segment therefore ends with no Save-tab save and no save_out. AMBIGUITY, recorded rather than papered over: section B also gives S02 the entry save 'continues S01 process', but tools/gate_f/run_segment.sh runs one segment per Godot process, so S02 cannot continue this process. S02 reproduces this exact state through the same production front door instead, and says so in its own first step."
       },
       "expected": "a note event carries this observation into events.jsonl"
     }

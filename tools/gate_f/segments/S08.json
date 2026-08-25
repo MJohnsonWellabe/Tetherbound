@@ -10,7 +10,7 @@
       "title": "how this segment is entered",
       "action": "note",
       "args": {
-        "text": "\u00a7B: this segment's entry save is `S07-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. \u00a7B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+        "text": "Section B: this segment's entry save is `S07-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -31,7 +31,7 @@
         "slot": 4,
         "from": "run://S07-exit.json"
       },
-      "expected": "\u00a7B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
     },
     {
       "id": "S08-04",
@@ -70,7 +70,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
     },
     {
       "id": "S08-08",
@@ -80,7 +80,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "the slot loads and the title transitions into the Meadows; \u00a7I.4 records the load duration"
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
     },
     {
       "id": "S08-09",
@@ -109,14 +109,14 @@
         "check": "objective_is",
         "id": "defeat_the_captains"
       },
-      "expected": "\u00a7E.5 objective 19/24 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain"
+      "expected": "Section E.5 objective 19/24 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain"
     },
     {
       "id": "S08-12",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H: 0.1 Hz segment plus event-forced frames, with the band 3 -> band 4 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+        "text": "Section H: 0.1 Hz segment plus event-forced frames, with the band 3 -> band 4 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -132,7 +132,7 @@
         "trigger": "Upper Meadows entry across the crossing, RT-09 end",
         "intended_proof": "region shift is felt"
       },
-      "expected": "\u00a7G: Upper Meadows entry across the crossing, RT-09 end -- region shift is felt"
+      "expected": "Section G: Upper Meadows entry across the crossing, RT-09 end -- region shift is felt"
     },
     {
       "id": "S08-14",
@@ -141,7 +141,7 @@
       "args": {
         "tab": "map"
       },
-      "expected": "\u00a7G GF-18-MAP-02 wants both zoom extremes at S08, and \u00a7E.5 wants the map opened at every major objective"
+      "expected": "Section G GF-18-MAP-02 wants both zoom extremes at S08, and section E.5 wants the map opened at every major objective"
     },
     {
       "id": "S08-15",
@@ -153,7 +153,7 @@
         "times": 6,
         "settle_frames": 10
       },
-      "expected": "\u00a7G: 'both zoom extremes'"
+      "expected": "Section G: 'both zoom extremes'"
     },
     {
       "id": "S08-16",
@@ -165,7 +165,7 @@
         "times": 8,
         "settle_frames": 10
       },
-      "expected": "\u00a7G: 'both zoom extremes'"
+      "expected": "Section G: 'both zoom extremes'"
     },
     {
       "id": "S08-17",
@@ -179,7 +179,7 @@
         "trigger": "Map tab at S08 (late chapter), both zoom extremes",
         "intended_proof": "reveal growth, zoom behavior"
       },
-      "expected": "\u00a7G: Map tab at S08 (late chapter), both zoom extremes -- reveal growth, zoom behavior"
+      "expected": "Section G: Map tab at S08 (late chapter), both zoom extremes -- reveal growth, zoom behavior"
     },
     {
       "id": "S08-18",
@@ -195,7 +195,7 @@
       "args": {
         "tab": "map"
       },
-      "expected": "\u00a7E.5: 'zoom persistence across close/reopen' -- checked again late, where the revealed map is large"
+      "expected": "Section E.5: 'zoom persistence across close/reopen' -- checked again late, where the revealed map is large"
     },
     {
       "id": "S08-20",
@@ -206,10 +206,10 @@
     },
     {
       "id": "S08-21",
-      "title": "\u00a7E.5 nav note -- defeat_the_captains",
+      "title": "Section E.5 nav note -- defeat_the_captains",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 19/24 `defeat_the_captains`. Wording: 'Defeat the Upper Meadows captains. n/3' -- it names WHAT, a count, and a WHERE only as wide as a whole region. Player-visible information: `the_ironwood_grove` and `the_ridgeline_watch` are named regions on the late map (GF-18-MAP-02), the ground climbs north from the crossing into high pasture, and the count tells the player there are three of something to find. Route decision: work north through the grove and then the high pasture, letting the named regions be the waypoints, because three captains spread over a region cannot be routed to any more precisely than that. Reasoned from GF-11-UPPER-01 and GF-18-MAP-02. Operator: record whether 'n/3' actually helped, and how long the player spent not knowing where a captain was."
+        "text": "Section E.5 navigation record, objective 19/24 `defeat_the_captains`. Wording: 'Defeat the Upper Meadows captains. n/3' -- it names WHAT, a count, and a WHERE only as wide as a whole region. Player-visible information: `the_ironwood_grove` and `the_ridgeline_watch` are named regions on the late map (GF-18-MAP-02), the ground climbs north from the crossing into high pasture, and the count tells the player there are three of something to find. Route decision: work north through the grove and then the high pasture, letting the named regions be the waypoints, because three captains spread over a region cannot be routed to any more precisely than that. Reasoned from GF-11-UPPER-01 and GF-18-MAP-02. Operator: record whether 'n/3' actually helped, and how long the player spent not knowing where a captain was."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -226,7 +226,7 @@
         "close_enough": 5.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-10's first anchor (-345,5060): 'the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place'"
+      "expected": "Section D RT-10's first anchor (-345,5060): 'the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place'"
     },
     {
       "id": "S08-23",
@@ -254,7 +254,7 @@
         "times": 2,
         "settle_frames": 90
       },
-      "expected": "\u00a7L.3: 'Gathering with visible tool use ... rootstone (pickaxe), ironwood'"
+      "expected": "Section L.3: 'Gathering with visible tool use ... rootstone (pickaxe), ironwood'"
     },
     {
       "id": "S08-26",
@@ -269,7 +269,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 7200
       },
-      "expected": "\u00a7E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below"
+      "expected": "Section E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below"
     },
     {
       "id": "S08-27",
@@ -300,7 +300,7 @@
         "times": 16,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 CB-12 records the size/range spread: a small fast body against the large slow one below"
+      "expected": "Section E.1 CB-12 records the size/range spread: a small fast body against the large slow one below"
     },
     {
       "id": "S08-30",
@@ -310,7 +310,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.2: the throw is aimed"
+      "expected": "Section E.2: the throw is aimed"
     },
     {
       "id": "S08-31",
@@ -330,7 +330,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.2 CT-08: 'Party-not-full -> catch -> count'"
+      "expected": "Section E.2 CT-08: 'Party-not-full -> catch -> count'"
     },
     {
       "id": "S08-33",
@@ -349,7 +349,7 @@
         "check": "party_size",
         "equals": 4
       },
-      "expected": "\u00a7E.2 CT-08: 'verify party count increments'. Four of five"
+      "expected": "Section E.2 CT-08: 'verify party count increments'. Four of five"
     },
     {
       "id": "S08-35",
@@ -364,7 +364,7 @@
         "close_enough": 5.0,
         "held_budget_frames": 10800
       },
-      "expected": "the high pasture herd; \u00a7L.4's riding row needs a Meadowhart in the belt"
+      "expected": "the high pasture herd; section L.4's riding row needs a Meadowhart in the belt"
     },
     {
       "id": "S08-36",
@@ -378,7 +378,7 @@
         "trigger": "same class, band 4 high pasture, RT-10",
         "intended_proof": "upper meadow identity differs from lower"
       },
-      "expected": "\u00a7G: same class, band 4 high pasture, RT-10 -- upper meadow identity differs from lower"
+      "expected": "Section G: same class, band 4 high pasture, RT-10 -- upper meadow identity differs from lower"
     },
     {
       "id": "S08-37",
@@ -394,7 +394,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.1 CB-12's large-body case"
+      "expected": "Section E.1 CB-12's large-body case"
     },
     {
       "id": "S08-39",
@@ -417,7 +417,7 @@
         "trigger": "CB-12: size/range spread -- the large half (meadowhart/tuskroot class)",
         "intended_proof": "per-case: the camera and the melee/ranged read at the other end of the size range"
       },
-      "expected": "\u00a7G: CB-12: size/range spread -- the large half (meadowhart/tuskroot class) -- per-case: the camera and the melee/ranged read at the other end of the size range"
+      "expected": "Section G: CB-12: size/range spread -- the large half (meadowhart/tuskroot class) -- per-case: the camera and the melee/ranged read at the other end of the size range"
     },
     {
       "id": "S08-41",
@@ -429,7 +429,7 @@
         "times": 24,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 CB-12 records melee vs ranged movesets and the camera's behaviour against a large body"
+      "expected": "Section E.1 CB-12 records melee vs ranged movesets and the camera's behaviour against a large body"
     },
     {
       "id": "S08-42",
@@ -439,7 +439,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.2: the throw is aimed"
+      "expected": "Section E.2: the throw is aimed"
     },
     {
       "id": "S08-43",
@@ -449,7 +449,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.2 CT-08 again, this time filling the belt"
+      "expected": "Section E.2 CT-08 again, this time filling the belt"
     },
     {
       "id": "S08-44",
@@ -482,23 +482,23 @@
         "trigger": "party strip at 5/5, world",
         "intended_proof": "exactly five slots, no sixth implied"
       },
-      "expected": "\u00a7G: party strip at 5/5, world -- exactly five slots, no sixth implied"
+      "expected": "Section G: party strip at 5/5, world -- exactly five slots, no sixth implied"
     },
     {
       "id": "S08-47",
       "title": "the five-creature rule, on screen",
       "action": "note",
       "args": {
-        "text": "\u00a7E.2 CT-08's own words: the HUD 'shows exactly five slots maximum -- nothing may imply a sixth'. GF-19-UI-09 is that frame. \u00a7B branches X03's party-full study (CT-09) from this segment's exit save, so the 5/5 state has to travel through the handoff intact."
+        "text": "Section E.2 CT-08's own words: the HUD 'shows exactly five slots maximum -- nothing may imply a sixth'. GF-19-UI-09 is that frame. Section B branches X03's party-full study (CT-09) from this segment's exit save, so the 5/5 state has to travel through the handoff intact."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S08-48",
-      "title": "\u00a7L.3 band 4 crafting has no authored site",
+      "title": "Section L.3 band 4 crafting has no authored site",
       "action": "note",
       "args": {
-        "text": "\u00a7L.3 requires 'S08 saddle + orb_prime -- each paid at real cost' and \u00a7L.4 requires 'Riding (saddle, mount, dismount, speed, no stamina cost)'. \u00a7B's S08 span names 'saddle & riding' and the protocol names no crafting site in band 4, so the workbench below is placed by the player on the high pasture. RECORDED as the transcriber's siting."
+        "text": "Section L.3 requires 'S08 saddle + orb_prime -- each paid at real cost' and section L.4 requires 'Riding (saddle, mount, dismount, speed, no stamina cost)'. Section B's S08 span names 'saddle & riding' and the protocol names no crafting site in band 4, so the workbench below is placed by the player on the high pasture. RECORDED as the transcriber's siting."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -579,7 +579,7 @@
         "control": "build_place",
         "hold": "tap"
       },
-      "expected": "\u00a7L.3's crafting site for band 4"
+      "expected": "Section L.3's crafting site for band 4"
     },
     {
       "id": "S08-57",
@@ -607,7 +607,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "\u00a7E.4 lists the craft panel among the surfaces the matrix crosses"
+      "expected": "Section E.4 lists the craft panel among the surfaces the matrix crosses"
     },
     {
       "id": "S08-60",
@@ -626,7 +626,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7L.3: 'S08 saddle + orb_prime -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence"
+      "expected": "Section L.3: 'S08 saddle + orb_prime -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence"
     },
     {
       "id": "S08-62",
@@ -655,7 +655,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7L.3's second band 4 recipe, paid at the real cost"
+      "expected": "Section L.3's second band 4 recipe, paid at the real cost"
     },
     {
       "id": "S08-65",
@@ -694,7 +694,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.4: 'Riding (saddle, mount, dismount, speed, no stamina cost) | S08: craft saddle, mount Meadowhart, ride RT-10 leg, dismount, remount'"
+      "expected": "Section L.4: 'Riding (saddle, mount, dismount, speed, no stamina cost) | S08: craft saddle, mount Meadowhart, ride RT-10 leg, dismount, remount'"
     },
     {
       "id": "S08-69",
@@ -717,7 +717,7 @@
         "trigger": "riding on Meadowhart, RT-10",
         "intended_proof": "riding payoff exists and stages correctly"
       },
-      "expected": "\u00a7G: riding on Meadowhart, RT-10 -- riding payoff exists and stages correctly"
+      "expected": "Section G: riding on Meadowhart, RT-10 -- riding payoff exists and stages correctly"
     },
     {
       "id": "S08-71",
@@ -732,7 +732,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-10's second anchor (170,5590) is captain_field. \u00a7L.4: 'ride RT-10 leg'. Riding must not cost stamina"
+      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Section L.4: 'ride RT-10 leg'. Riding must not cost stamina"
     },
     {
       "id": "S08-72",
@@ -742,7 +742,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.4: 'mount, dismount, speed, no stamina cost'"
+      "expected": "Section L.4: 'mount, dismount, speed, no stamina cost'"
     },
     {
       "id": "S08-73",
@@ -761,7 +761,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.4: '... dismount, remount'"
+      "expected": "Section L.4: '... dismount, remount'"
     },
     {
       "id": "S08-75",
@@ -799,7 +799,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.1 CB-04: 'S08: captain_field, captain_ridge, captain_riverwatch'"
+      "expected": "Section E.1 CB-04: 'S08: captain_field, captain_ridge, captain_riverwatch'"
     },
     {
       "id": "S08-79",
@@ -820,7 +820,7 @@
       "args": {
         "seconds": 3
       },
-      "expected": "\u00a7L.6 T05: the combat camera acquires both combatants at fight start"
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
     },
     {
       "id": "S08-81",
@@ -834,7 +834,7 @@
         "trigger": "CB-04: representative fight per band -- S08, captain_field",
         "intended_proof": "per-case: band 4's representative fight"
       },
-      "expected": "\u00a7G: CB-04: representative fight per band -- S08, captain_field -- per-case: band 4's representative fight"
+      "expected": "Section G: CB-04: representative fight per band -- S08, captain_field -- per-case: band 4's representative fight"
     },
     {
       "id": "S08-82",
@@ -846,7 +846,7 @@
         "times": 40,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record; band 4's difficulty read"
+      "expected": "Section E.1 per-fight record; band 4's difficulty read"
     },
     {
       "id": "S08-83",
@@ -868,7 +868,7 @@
         "times": 26,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-85",
@@ -891,10 +891,10 @@
     },
     {
       "id": "S08-87",
-      "title": "\u00a7D RT-10's third anchor is south of its second",
+      "title": "Section D RT-10's third anchor is south of its second",
       "action": "note",
       "args": {
-        "text": "\u00a7D RT-10's third anchor is (-100,4350), which is captain_riverwatch -- 1240 m back south, below the grove the segment already passed. Walked in the order \u00a7D lists rather than the order the ground would produce, because reordering coverage is exactly what the transcription rule forbids. The distance this costs is real and lands in \u00a7D's own figures for RT-10, which is the honest place for it."
+        "text": "Section D RT-10's third anchor is (-100,4350), which is captain_riverwatch -- 1240 m back south, below the grove the segment already passed. Walked in the order section D lists rather than the order the ground would produce, because reordering coverage is exactly what the transcription rule forbids. The distance this costs is real and lands in section D's own figures for RT-10, which is the honest place for it."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -911,7 +911,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-10's third anchor (-100,4350) is captain_riverwatch"
+      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch"
     },
     {
       "id": "S08-89",
@@ -921,7 +921,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.1 CB-04's second band 4 captain"
+      "expected": "Section E.1 CB-04's second band 4 captain"
     },
     {
       "id": "S08-90",
@@ -954,7 +954,7 @@
         "times": 40,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-93",
@@ -976,7 +976,7 @@
         "times": 24,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-95",
@@ -1010,7 +1010,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-10's fourth anchor (-280,6460) is captain_ridge, in `the_ridgeline_watch`"
+      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in `the_ridgeline_watch`"
     },
     {
       "id": "S08-98",
@@ -1041,7 +1041,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 7200
       },
-      "expected": "\u00a7L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905), patrol_ridgeline'"
+      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905), patrol_ridgeline'"
     },
     {
       "id": "S08-101",
@@ -1084,7 +1084,7 @@
         "times": 32,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-105",
@@ -1118,7 +1118,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.1 CB-04's third band 4 captain"
+      "expected": "Section E.1 CB-04's third band 4 captain"
     },
     {
       "id": "S08-108",
@@ -1151,7 +1151,7 @@
         "times": 40,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-111",
@@ -1173,7 +1173,7 @@
         "times": 28,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S08-113",
@@ -1202,7 +1202,7 @@
         "check": "flag_set",
         "flag": "hall_approach_open"
       },
-      "expected": "`hall_approach_open` is objective 19/24's own flag: three Sigils, three captains. \u00a7B: S08's span ends at 'three Sigils'"
+      "expected": "`hall_approach_open` is objective 19/24's own flag: three Sigils, three captains. Section B: S08's span ends at 'three Sigils'"
     },
     {
       "id": "S08-116",
@@ -1212,7 +1212,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "\u00a7E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.'"
+      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.'"
     },
     {
       "id": "S08-117",
@@ -1222,7 +1222,7 @@
         "check": "distance_above",
         "metres": 4000.0
       },
-      "expected": "\u00a7D RT-10 as listed is a circuit of well over 4 km; no pacing claim may come from a shortcut (\u00a70.6)"
+      "expected": "Section D RT-10 as listed is a circuit of well over 4 km; no pacing claim may come from a shortcut (section 0.6)"
     },
     {
       "id": "S08-118",
@@ -1232,7 +1232,7 @@
         "check": "route_rows_at_least",
         "rows": 4000
       },
-      "expected": "\u00a7C.2"
+      "expected": "Section C.2"
     },
     {
       "id": "S08-119",
@@ -1242,14 +1242,14 @@
         "check": "dead_travel_peak_above",
         "metres": 150.0
       },
-      "expected": "\u00a7D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the half that proves accumulation; a PASS records a watch item and its size"
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the half that proves accumulation; a PASS records a watch item and its size"
     },
     {
       "id": "S08-120",
-      "title": "\u00a7B save handoff",
+      "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. \u00a7B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -1309,7 +1309,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
     },
     {
       "id": "S08-127",
@@ -1319,7 +1319,7 @@
         "slot": 4,
         "name": "S08-exit.json"
       },
-      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S08-exit.json`"
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S08-exit.json`"
     },
     {
       "id": "S08-128",

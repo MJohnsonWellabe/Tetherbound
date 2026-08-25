@@ -10,7 +10,7 @@
       "title": "how this segment is entered",
       "action": "note",
       "args": {
-        "text": "\u00a7B: this segment's entry save is `S06-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. \u00a7B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+        "text": "Section B: this segment's entry save is `S06-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -31,7 +31,7 @@
         "slot": 4,
         "from": "run://S06-exit.json"
       },
-      "expected": "\u00a7B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
     },
     {
       "id": "S07-04",
@@ -70,7 +70,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "\u00a7B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
     },
     {
       "id": "S07-08",
@@ -80,7 +80,7 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "the slot loads and the title transitions into the Meadows; \u00a7I.4 records the load duration"
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
     },
     {
       "id": "S07-09",
@@ -109,14 +109,14 @@
         "check": "objective_is",
         "id": "defeat_the_relay_captain"
       },
-      "expected": "\u00a7E.5 objective 15/24 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'"
+      "expected": "Section E.5 objective 15/24 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'"
     },
     {
       "id": "S07-12",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H: 0.1 Hz segment plus event-forced frames, with the band 2 -> band 3 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+        "text": "Section H: 0.1 Hz segment plus event-forced frames, with the band 2 -> band 3 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -127,7 +127,7 @@
       "args": {
         "tab": "map"
       },
-      "expected": "\u00a7E.5 at a major objective"
+      "expected": "Section E.5 at a major objective"
     },
     {
       "id": "S07-14",
@@ -139,7 +139,7 @@
         "times": 3,
         "settle_frames": 10
       },
-      "expected": "\u00a7E.5's map-usefulness record"
+      "expected": "Section E.5's map-usefulness record"
     },
     {
       "id": "S07-15",
@@ -150,10 +150,10 @@
     },
     {
       "id": "S07-16",
-      "title": "\u00a7E.5 nav note -- defeat_the_relay_captain",
+      "title": "Section E.5 nav note -- defeat_the_relay_captain",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 15/24 `defeat_the_relay_captain`. Wording: 'Defeat the Relay Captain.' It names WHAT and no WHERE at all -- it names a person and a place-word ('Relay') that the player may or may not have on the map yet. Player-visible information: `the_tether_relay` is a `major` map landmark at (350,3760) with its own relay icon; the ground ahead falls toward a river. Route decision: continue north to the river and follow the near bank east to the relay pin, because the objective's only locational word is the relay's own name. Reasoned from the map frame taken above and from GF-09-WARRENS-01 (S06). Operator: record whether the relay was a pin before it was discovered."
+        "text": "Section E.5 navigation record, objective 15/24 `defeat_the_relay_captain`. Wording: 'Defeat the Relay Captain.' It names WHAT and no WHERE at all -- it names a person and a place-word ('Relay') that the player may or may not have on the map yet. Player-visible information: `the_tether_relay` is a `major` map landmark at (350,3760) with its own relay icon; the ground ahead falls toward a river. Route decision: continue north to the river and follow the near bank east to the relay pin, because the objective's only locational word is the relay's own name. Reasoned from the map frame taken above and from GF-09-WARRENS-01 (S06). Operator: record whether the relay was a pin before it was discovered."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -170,7 +170,7 @@
         "close_enough": 5.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-08: 'Warrens exit -> river -> Tether Relay | -> (350,3760)'. `band2_outrider_kest` stands at (0,2980) on this leg"
+      "expected": "Section D RT-08: 'Warrens exit -> river -> Tether Relay | -> (350,3760)'. `band2_outrider_kest` stands at (0,2980) on this leg"
     },
     {
       "id": "S07-18",
@@ -180,7 +180,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "an optional trainer standing on the route between bands; \u00a7D counts trainer encounters per route"
+      "expected": "an optional trainer standing on the route between bands; section D counts trainer encounters per route"
     },
     {
       "id": "S07-19",
@@ -213,7 +213,7 @@
         "times": 30,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-22",
@@ -237,7 +237,7 @@
         "close_enough": 6.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-08's middle: the river is the regional barrier band 3 is built around"
+      "expected": "Section D RT-08's middle: the river is the regional barrier band 3 is built around"
     },
     {
       "id": "S07-24",
@@ -251,7 +251,7 @@
         "trigger": "river first visible, RT-08",
         "intended_proof": "the river reads as a regional barrier"
       },
-      "expected": "\u00a7G: river first visible, RT-08 -- the river reads as a regional barrier"
+      "expected": "Section G: river first visible, RT-08 -- the river reads as a regional barrier"
     },
     {
       "id": "S07-25",
@@ -265,7 +265,7 @@
         "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
         "intended_proof": "weather identity; palette holds"
       },
-      "expected": "\u00a7G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
     },
     {
       "id": "S07-26",
@@ -290,7 +290,7 @@
         "close_enough": 3.5,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7E.1 CB-04: 'S07: relay ladder + relay_captain'. relay_picket_hess stands at (241.3,3680)"
+      "expected": "Section E.1 CB-04: 'S07: relay ladder + relay_captain'. relay_picket_hess stands at (241.3,3680)"
     },
     {
       "id": "S07-28",
@@ -335,7 +335,7 @@
         "trigger": "CB-04: representative fight per band -- S07, relay ladder + relay_captain",
         "intended_proof": "per-case: band 3's representative fight"
       },
-      "expected": "\u00a7G: CB-04: representative fight per band -- S07, relay ladder + relay_captain -- per-case: band 3's representative fight"
+      "expected": "Section G: CB-04: representative fight per band -- S07, relay ladder + relay_captain -- per-case: band 3's representative fight"
     },
     {
       "id": "S07-32",
@@ -347,7 +347,7 @@
         "times": 32,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-33",
@@ -414,7 +414,7 @@
         "times": 32,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-39",
@@ -437,7 +437,7 @@
         "trigger": "relay compound approach, pylons in frame, (350,3760) approach",
         "intended_proof": "Team Tether occupation escalation"
       },
-      "expected": "\u00a7G: relay compound approach, pylons in frame, (350,3760) approach -- Team Tether occupation escalation"
+      "expected": "Section G: relay compound approach, pylons in frame, (350,3760) approach -- Team Tether occupation escalation"
     },
     {
       "id": "S07-41",
@@ -452,7 +452,7 @@
         "close_enough": 3.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7B: S07's span names the officer between the pickets and the captain. relay_officer_dell stands at (347.5,3763.5)"
+      "expected": "Section B: S07's span names the officer between the pickets and the captain. relay_officer_dell stands at (347.5,3763.5)"
     },
     {
       "id": "S07-42",
@@ -511,7 +511,7 @@
         "times": 34,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-48",
@@ -535,7 +535,7 @@
         "close_enough": 3.0,
         "held_budget_frames": 7200
       },
-      "expected": "\u00a7E.1 CB-04: relay_captain at (352,3757), the band's required fight"
+      "expected": "Section E.1 CB-04: relay_captain at (352,3757), the band's required fight"
     },
     {
       "id": "S07-50",
@@ -545,7 +545,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.5 objective 15/24's own target"
+      "expected": "Section E.5 objective 15/24's own target"
     },
     {
       "id": "S07-51",
@@ -566,7 +566,7 @@
       "args": {
         "seconds": 3
       },
-      "expected": "\u00a7L.6 T05: the combat camera acquires both combatants at fight start"
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
     },
     {
       "id": "S07-53",
@@ -588,7 +588,7 @@
         "times": 38,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record; the HP margin at the end is band 3's difficulty read"
+      "expected": "Section E.1 per-fight record; the HP margin at the end is band 3's difficulty read"
     },
     {
       "id": "S07-55",
@@ -610,7 +610,7 @@
         "times": 26,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-57",
@@ -632,7 +632,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 per-fight record"
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-59",
@@ -651,7 +651,7 @@
         "check": "flag_set",
         "flag": "relay_captain_defeated"
       },
-      "expected": "`relay_captain_defeated` closes \u00a7E.5 objective 15/24"
+      "expected": "`relay_captain_defeated` closes section E.5 objective 15/24"
     },
     {
       "id": "S07-61",
@@ -661,14 +661,14 @@
         "check": "objective_is",
         "id": "rescue_the_captive"
       },
-      "expected": "\u00a7E.5 objective 16/24 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'"
+      "expected": "Section E.5 objective 16/24 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'"
     },
     {
       "id": "S07-62",
-      "title": "\u00a7E.5 nav note -- rescue_the_captive",
+      "title": "Section E.5 nav note -- rescue_the_captive",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 16/24 `rescue_the_captive`. Wording: 'Find who Team Tether is holding at the relay.' It names WHAT and a WHERE the player is already standing in. Player-visible information: the compound itself, now that its ladder is beaten. Route decision: search the compound; no travel decision exists. Reasoned from GF-10-RELAY-02."
+        "text": "Section E.5 navigation record, objective 16/24 `rescue_the_captive`. Wording: 'Find who Team Tether is holding at the relay.' It names WHAT and a WHERE the player is already standing in. Player-visible information: the compound itself, now that its ladder is beaten. Route decision: search the compound; no travel decision exists. Reasoned from GF-10-RELAY-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -695,7 +695,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7B: S07's span names the captive between the captain and the crossing"
+      "expected": "Section B: S07's span names the captive between the captain and the crossing"
     },
     {
       "id": "S07-65",
@@ -721,7 +721,7 @@
         "trigger": "captive rescue / crossing restored moment, relay & (-152,4203)",
         "intended_proof": "world visibly changes"
       },
-      "expected": "\u00a7G: captive rescue / crossing restored moment, relay & (-152,4203) -- world visibly changes"
+      "expected": "Section G: captive rescue / crossing restored moment, relay & (-152,4203) -- world visibly changes"
     },
     {
       "id": "S07-67",
@@ -731,7 +731,7 @@
         "check": "flag_set",
         "flag": "captive_rescued"
       },
-      "expected": "`captive_rescued` closes \u00a7E.5 objective 16/24"
+      "expected": "`captive_rescued` closes section E.5 objective 16/24"
     },
     {
       "id": "S07-68",
@@ -741,14 +741,14 @@
         "check": "objective_is",
         "id": "disable_the_relay"
       },
-      "expected": "\u00a7E.5 objective 17/24 `disable_the_relay`, 'Shut down the Tether Relay.'"
+      "expected": "Section E.5 objective 17/24 `disable_the_relay`, 'Shut down the Tether Relay.'"
     },
     {
       "id": "S07-69",
-      "title": "\u00a7E.5 nav note -- disable_the_relay",
+      "title": "Section E.5 nav note -- disable_the_relay",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 17/24 `disable_the_relay`. Wording: 'Shut down the Tether Relay.' It names WHAT and a WHERE the player is standing in. Player-visible information: the relay apparatus and its pylons, in frame in GF-10-RELAY-02. Route decision: no travel; find the apparatus in the compound. AMBIGUITY RECORDED: \u00a7B's S07 span does not name this rung at all, so the protocol gives no site for the interaction; it is transcribed at the compound centre, which is where the apparatus stands."
+        "text": "Section E.5 navigation record, objective 17/24 `disable_the_relay`. Wording: 'Shut down the Tether Relay.' It names WHAT and a WHERE the player is standing in. Player-visible information: the relay apparatus and its pylons, in frame in GF-10-RELAY-02. Route decision: no travel; find the apparatus in the compound. AMBIGUITY RECORDED: section B's S07 span does not name this rung at all, so the protocol gives no site for the interaction; it is transcribed at the compound centre, which is where the apparatus stands."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -797,7 +797,7 @@
         "check": "flag_set",
         "flag": "relay_disabled"
       },
-      "expected": "`relay_disabled` closes \u00a7E.5 objective 17/24"
+      "expected": "`relay_disabled` closes section E.5 objective 17/24"
     },
     {
       "id": "S07-74",
@@ -807,14 +807,14 @@
         "check": "objective_is",
         "id": "restore_the_mill_crossing"
       },
-      "expected": "\u00a7E.5 objective 18/24 `restore_the_mill_crossing`, 'Restore the Old Mill Crossing.'"
+      "expected": "Section E.5 objective 18/24 `restore_the_mill_crossing`, 'Restore the Old Mill Crossing.'"
     },
     {
       "id": "S07-75",
-      "title": "\u00a7E.5 nav note -- restore_the_mill_crossing",
+      "title": "Section E.5 nav note -- restore_the_mill_crossing",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 18/24 `restore_the_mill_crossing`. Wording: 'Restore the Old Mill Crossing.' It names WHAT and a named WHERE. Player-visible information: `old_mill_crossing` is a `major` map landmark at (-152,4203) with a bridge icon, upstream and west of the relay; the river is the barrier the whole band is built around. Route decision: follow the bank west and upstream to the crossing pin. Reasoned from GF-10-RELAY-01, GF-10-RELAY-02 and the map frame taken at the top of this segment."
+        "text": "Section E.5 navigation record, objective 18/24 `restore_the_mill_crossing`. Wording: 'Restore the Old Mill Crossing.' It names WHAT and a named WHERE. Player-visible information: `old_mill_crossing` is a `major` map landmark at (-152,4203) with a bridge icon, upstream and west of the relay; the river is the barrier the whole band is built around. Route decision: follow the bank west and upstream to the crossing pin. Reasoned from GF-10-RELAY-01, GF-10-RELAY-02 and the map frame taken at the top of this segment."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -831,7 +831,7 @@
         "close_enough": 4.0,
         "held_budget_frames": 10800
       },
-      "expected": "\u00a7D RT-09: 'Relay -> Old Mill Crossing -> Upper Meadows entry | (350,3760) -> (-152,4203)'"
+      "expected": "Section D RT-09: 'Relay -> Old Mill Crossing -> Upper Meadows entry | (350,3760) -> (-152,4203)'"
     },
     {
       "id": "S07-77",
@@ -847,7 +847,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7L.5's gate/crossing row: 'Old Mill Crossing ... each locked-probe then legitimately opened'. The locked probe is X06's; this is the legitimate opening"
+      "expected": "Section L.5's gate/crossing row: 'Old Mill Crossing ... each locked-probe then legitimately opened'. The locked probe is X06's; this is the legitimate opening"
     },
     {
       "id": "S07-79",
@@ -869,7 +869,7 @@
         "check": "flag_set",
         "flag": "mill_crossing_restored"
       },
-      "expected": "`mill_crossing_restored` closes \u00a7E.5 objective 18/24 and \u00a7B's S07 span"
+      "expected": "`mill_crossing_restored` closes section E.5 objective 18/24 and section B's S07 span"
     },
     {
       "id": "S07-81",
@@ -879,7 +879,7 @@
         "check": "distance_above",
         "metres": 2200.0
       },
-      "expected": "\u00a7D RT-08 plus RT-09 is well over 2 km; no pacing claim may come from a shortcut (\u00a70.6)"
+      "expected": "Section D RT-08 plus RT-09 is well over 2 km; no pacing claim may come from a shortcut (section 0.6)"
     },
     {
       "id": "S07-82",
@@ -889,7 +889,7 @@
         "check": "route_rows_at_least",
         "rows": 3000
       },
-      "expected": "\u00a7C.2"
+      "expected": "Section C.2"
     },
     {
       "id": "S07-83",
@@ -899,14 +899,14 @@
         "check": "dead_travel_peak_above",
         "metres": 150.0
       },
-      "expected": "\u00a7D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the half that proves accumulation; a PASS records a watch item and its size"
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the half that proves accumulation; a PASS records a watch item and its size"
     },
     {
       "id": "S07-84",
-      "title": "\u00a7B save handoff",
+      "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -966,7 +966,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
     },
     {
       "id": "S07-91",
@@ -976,7 +976,7 @@
         "slot": 4,
         "name": "S07-exit.json"
       },
-      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S07-exit.json`"
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S07-exit.json`"
     },
     {
       "id": "S07-92",

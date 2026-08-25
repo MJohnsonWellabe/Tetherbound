@@ -8,19 +8,19 @@
   "steps": [
     {
       "id": "S02-01",
-      "title": "how this segment is entered (\u00a7B ambiguity)",
+      "title": "how this segment is entered (section B ambiguity)",
       "action": "note",
       "args": {
-        "text": "\u00a7B gives this segment the entry save 'continues S01 process'. run_segment.sh runs one segment per Godot process, so that is not literally possible; the steps below reproduce S01's ending state through the same production front door (fresh save directory, title, Start New Game) rather than booting the world scene directly, so nothing about the state this segment starts from comes from a shortcut. AMBIGUITY RECORDED: \u00a7B's handoff column for S01/S02 assumes one process across two segments."
+        "text": "Section B gives this segment the entry save 'continues S01 process'. run_segment.sh runs one segment per Godot process, so that is not literally possible; the steps below reproduce S01's ending state through the same production front door (fresh save directory, title, Start New Game) rather than booting the world scene directly, so nothing about the state this segment starts from comes from a shortcut. AMBIGUITY RECORDED: section B's handoff column for S01/S02 assumes one process across two segments."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S02-02",
-      "title": "\u00a7H cadence for this segment",
+      "title": "Section H cadence for this segment",
       "action": "note",
       "args": {
-        "text": "\u00a7H: 'Mandatory for the highest-risk segments: S01+S02 (opening)...' at 0.5 Hz. The vocabulary has no background-recorder action; `capture_seq` blocks. Recorded as a gap; the event-forced frames and the 2 Hz route trace are the continuous record this segment actually produces."
+        "text": "Section H: 'Mandatory for the highest-risk segments: S01+S02 (opening)...' at 0.5 Hz. The vocabulary has no background-recorder action; `capture_seq` blocks. Recorded as a gap; the event-forced frames and the 2 Hz route trace are the continuous record this segment actually produces."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -31,7 +31,7 @@
       "args": {
         "keep_slots": []
       },
-      "expected": "\u00a7A.2: 'fresh user:// dir'"
+      "expected": "Section A.2: 'fresh user:// dir'"
     },
     {
       "id": "S02-04",
@@ -84,7 +84,7 @@
         "trigger": "wake beat, before leaving bed area",
         "intended_proof": "opening stages correctly (incl. player body presence as-shipped)"
       },
-      "expected": "\u00a7G: wake beat, before leaving bed area -- opening stages correctly (incl. player body presence as-shipped)"
+      "expected": "Section G: wake beat, before leaving bed area -- opening stages correctly (incl. player body presence as-shipped)"
     },
     {
       "id": "S02-09",
@@ -98,14 +98,14 @@
         "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
         "intended_proof": "weather identity; palette holds"
       },
-      "expected": "\u00a7G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
     },
     {
       "id": "S02-10",
-      "title": "\u00a7G GF-21 placement",
+      "title": "Section G GF-21 placement",
       "action": "note",
       "args": {
-        "text": "AMBIGUITY RECORDED: \u00a7G's GF-21 row triggers on 'each weather preset first naturally encountered ... as-played', which a step-script written before the run cannot locate. \u00a7C.4 forbids the operator from adding planned entries, so the four GF-21 frames are pinned at four widely separated points of the journey (S02 here, S05, S07, S09) and the manifest's own `weather` field records which preset each one actually caught. A preset the journey never produced shows up as absent evidence rather than as a frame nobody planned."
+        "text": "AMBIGUITY RECORDED: section G's GF-21 row triggers on 'each weather preset first naturally encountered ... as-played', which a step-script written before the run cannot locate. Section C.4 forbids the operator from adding planned entries, so the four GF-21 frames are pinned at four widely separated points of the journey (S02 here, S05, S07, S09) and the manifest's own `weather` field records which preset each one actually caught. A preset the journey never produced shows up as absent evidence rather than as a frame nobody planned."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -117,14 +117,14 @@
         "check": "objective_is",
         "id": "opening_first_catch"
       },
-      "expected": "\u00a7E.5's first of 24 main-chain objectives: `opening_first_catch`, 'Catch your first wild creature.'"
+      "expected": "Section E.5's first of 24 main-chain objectives: `opening_first_catch`, 'Catch your first wild creature.'"
     },
     {
       "id": "S02-12",
-      "title": "\u00a7E.5 nav note -- opening_first_catch",
+      "title": "Section E.5 nav note -- opening_first_catch",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 1/24 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
+        "text": "Section E.5 navigation record, objective 1/24 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -159,7 +159,7 @@
         "budget_frames": 3000,
         "close_enough": 3.0
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of \u00a7D's RT-01 (Grandpa's house -> village center)"
+      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)"
     },
     {
       "id": "S02-16",
@@ -183,7 +183,7 @@
         "trigger": "Grandpa conversation mid-dialogue",
         "intended_proof": "mandatory opening reads; dialogue UI"
       },
-      "expected": "\u00a7G: Grandpa conversation mid-dialogue -- mandatory opening reads; dialogue UI"
+      "expected": "Section G: Grandpa conversation mid-dialogue -- mandatory opening reads; dialogue UI"
     },
     {
       "id": "S02-18",
@@ -205,7 +205,7 @@
         "times": 30,
         "settle_frames": 20
       },
-      "expected": "\u00a7E.4: `interact` is dialogue advance. The briefing's gifts land line by line -- `give:orb_basic:15`, `give:potion_small:3`, `give:berries:5` -- so the satchel fills as he speaks"
+      "expected": "Section E.4: `interact` is dialogue advance. The briefing's gifts land line by line -- `give:orb_basic:15`, `give:potion_small:3`, `give:berries:5` -- so the satchel fills as he speaks"
     },
     {
       "id": "S02-20",
@@ -228,7 +228,7 @@
         "trigger": "starter picker open, an orb focused",
         "intended_proof": "starter choice presentation"
       },
-      "expected": "\u00a7G: starter picker open, an orb focused -- starter choice presentation"
+      "expected": "Section G: starter picker open, an orb focused -- starter choice presentation"
     },
     {
       "id": "S02-22",
@@ -302,10 +302,10 @@
     },
     {
       "id": "S02-29",
-      "title": "\u00a7E.5 nav note -- to the first encounter",
+      "title": "Section E.5 nav note -- to the first encounter",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 1/24 continued. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
+        "text": "Section E.5 navigation record, objective 1/24 continued. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -328,7 +328,7 @@
       "id": "S02-31",
       "title": "rescan for points of interest",
       "action": "refresh_pois",
-      "expected": "\u00a7F's POI set is what the dead-travel meter resets on; rescanned here because the opening adds the encounter's wild creature to the world"
+      "expected": "Section F's POI set is what the dead-travel meter resets on; rescanned here because the opening adds the encounter's wild creature to the world"
     },
     {
       "id": "S02-32",
@@ -371,7 +371,7 @@
         "trigger": "CB-01: early wild combat, first ambush, S02",
         "intended_proof": "per-case: the chapter's first piloted fight reads as a fight"
       },
-      "expected": "\u00a7G: CB-01: early wild combat, first ambush, S02 -- per-case: the chapter's first piloted fight reads as a fight"
+      "expected": "Section G: CB-01: early wild combat, first ambush, S02 -- per-case: the chapter's first piloted fight reads as a fight"
     },
     {
       "id": "S02-36",
@@ -383,7 +383,7 @@
         "times": 14,
         "settle_frames": 30
       },
-      "expected": "\u00a7E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)"
+      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)"
     },
     {
       "id": "S02-37",
@@ -393,7 +393,7 @@
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "\u00a7E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack"
+      "expected": "Section E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack"
     },
     {
       "id": "S02-38",
@@ -422,7 +422,7 @@
         "check": "input_context",
         "equals": "combat_aim"
       },
-      "expected": "\u00a7E.4's `combat_aim` context; `throw_aim.gd` owns input while aiming"
+      "expected": "Section E.4's `combat_aim` context; `throw_aim.gd` owns input while aiming"
     },
     {
       "id": "S02-41",
@@ -436,7 +436,7 @@
         "trigger": "CT-01 aim reticle frame (tutorial/required catch, S02, production path)",
         "intended_proof": "throw/feedback quality"
       },
-      "expected": "\u00a7G: CT-01 aim reticle frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+      "expected": "Section G: CT-01 aim reticle frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
     },
     {
       "id": "S02-42",
@@ -446,7 +446,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "\u00a7E.2 CT-01, the tutorial/required catch on the production path. Recorded per throw: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behaviour during aim/throw/resolve"
+      "expected": "Section E.2 CT-01, the tutorial/required catch on the production path. Recorded per throw: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behaviour during aim/throw/resolve"
     },
     {
       "id": "S02-43",
@@ -469,7 +469,7 @@
         "trigger": "CT-01 resolve frame (tutorial/required catch, S02, production path)",
         "intended_proof": "throw/feedback quality"
       },
-      "expected": "\u00a7G: CT-01 resolve frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+      "expected": "Section G: CT-01 resolve frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
     },
     {
       "id": "S02-45",
@@ -479,7 +479,7 @@
         "check": "party_size",
         "equals": 2
       },
-      "expected": "\u00a7E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch"
+      "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch"
     },
     {
       "id": "S02-46",
@@ -489,7 +489,7 @@
         "check": "objective_is",
         "id": "open_road_gate"
       },
-      "expected": "\u00a7L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'"
+      "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'"
     },
     {
       "id": "S02-47",
@@ -505,10 +505,10 @@
     },
     {
       "id": "S02-48",
-      "title": "\u00a7E.5 nav note -- open_road_gate",
+      "title": "Section E.5 nav note -- open_road_gate",
       "action": "note",
       "args": {
-        "text": "\u00a7E.5 navigation record, objective 2/24 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
+        "text": "Section E.5 navigation record, objective 2/24 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -578,14 +578,14 @@
         "check": "flag_set",
         "flag": "road_gate_open"
       },
-      "expected": "\u00a7B: S02's span ends at 'road gate open'. `road_gate.gd::FLAG_ID` is `road_gate_open`"
+      "expected": "Section B: S02's span ends at 'road gate open'. `road_gate.gd::FLAG_ID` is `road_gate_open`"
     },
     {
       "id": "S02-55",
-      "title": "\u00a7B/\u00a7D seam at the village",
+      "title": "Section B/section D seam at the village",
       "action": "note",
       "args": {
-        "text": "AMBIGUITY RECORDED: \u00a7B ends S02's span at 'road gate open' and starts S03's at 'Tam's tools', but \u00a7D assigns RT-01 (Grandpa's house (-22,-16) -> village center (10,-10)) to S02, and \u00a7G triggers GF-03-VILLAGE-01 on 'first arrival at village center (10,-10)'. The two readings put the walk into the village on opposite sides of the cut. Transcribed following \u00a7D and \u00a7G -- the walk and the arrival frame close S02 -- so RT-01 is measured end to end inside one segment's route.csv, which is what \u00a7D's per-route figures need."
+        "text": "AMBIGUITY RECORDED: section B ends S02's span at 'road gate open' and starts S03's at 'Tam's tools', but section D assigns RT-01 (Grandpa's house (-22,-16) -> village center (10,-10)) to S02, and section G triggers GF-03-VILLAGE-01 on 'first arrival at village center (10,-10)'. The two readings put the walk into the village on opposite sides of the cut. Transcribed following section D and section G -- the walk and the arrival frame close S02 -- so RT-01 is measured end to end inside one segment's route.csv, which is what section D's per-route figures need."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -602,7 +602,7 @@
         "close_enough": 2.5,
         "held_budget_frames": 7200
       },
-      "expected": "\u00a7D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval"
+      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval"
     },
     {
       "id": "S02-57",
@@ -616,7 +616,7 @@
         "trigger": "first arrival at village center (10,-10)",
         "intended_proof": "village reads as a settled place from the entry route"
       },
-      "expected": "\u00a7G: first arrival at village center (10,-10) -- village reads as a settled place from the entry route"
+      "expected": "Section G: first arrival at village center (10,-10) -- village reads as a settled place from the entry route"
     },
     {
       "id": "S02-58",
@@ -636,7 +636,7 @@
         "check": "distance_above",
         "metres": 150.0
       },
-      "expected": "\u00a7D's route figures come from route.csv, never from harness wall time. RT-01 alone is about 35 m and the walk out to the encounter and back adds far more; a segment that 'passed' without anyone moving would carry no pacing evidence at all"
+      "expected": "Section D's route figures come from route.csv, never from harness wall time. RT-01 alone is about 35 m and the walk out to the encounter and back adds far more; a segment that 'passed' without anyone moving would carry no pacing evidence at all"
     },
     {
       "id": "S02-60",
@@ -646,7 +646,7 @@
         "check": "route_rows_at_least",
         "rows": 900
       },
-      "expected": "\u00a7C.2: the pacing study's raw material and the \u00a712 correlation spine"
+      "expected": "Section C.2: the pacing study's raw material and the section 12 correlation spine"
     },
     {
       "id": "S02-61",
@@ -656,14 +656,14 @@
         "check": "dead_travel_below",
         "metres": 150.0
       },
-      "expected": "\u00a7D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. The opening runs between the house, the practice meadow and the village, all inside \u00a7F's 30 m POI radius of something, so the current run should be small; the check's `actual` also reports this segment's peak, which is the number \u00a7D actually wants"
+      "expected": "Section D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. The opening runs between the house, the practice meadow and the village, all inside section F's 30 m POI radius of something, so the current run should be small; the check's `actual` also reports this segment's peak, which is the number section D actually wants"
     },
     {
       "id": "S02-62",
-      "title": "\u00a7B save handoff",
+      "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "\u00a7B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -723,7 +723,7 @@
       "args": {
         "seconds": 2
       },
-      "expected": "the slot file is on disk and \u00a7I.4 has timed the save operation"
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
     },
     {
       "id": "S02-69",
@@ -733,7 +733,7 @@
         "slot": 4,
         "name": "S02-exit.json"
       },
-      "expected": "\u00a7B: the resulting `user://` slot file is copied into the run directory as `saves/S02-exit.json`"
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S02-exit.json`"
     },
     {
       "id": "S02-70",
