@@ -256,22 +256,42 @@ func _bush_mesh() -> ArrayMesh:
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var indices := PackedInt32Array()
-	var panels := 5
-	for i in panels:
-		var yaw := PI * float(i) / float(panels)
-		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
-		# Panels shrink and rise as they go, which is what domes the silhouette.
-		var lift := 0.10 * float(i % 3)
-		var half := 0.5 * (1.0 - 0.12 * float(i % 3))
-		var first := verts.size()
-		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-			# Taper the top so the panel is a leaf mass, not a rectangle.
-			# GDScript has no C-style ternary; it is `a if cond else b`.
-			var w := half * (0.55 if corner.y > 0.5 else 1.0)
-			verts.append(dir * corner.x * w + Vector3.UP * (corner.y * 0.9 + lift))
-			normals.append((dir * 0.4 + Vector3.UP * 0.9).normalized())
-			uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y))
-		indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+	# A DOME OF SMALL ANGLED LEAF QUADS, not a few big crossed panels. The panel
+	# version rendered as angular green slabs: at any size where the bush was
+	# tall enough to read as understorey, each panel was a half-metre flat card
+	# catching the light as one facet, and five of them is a folded box. Twenty
+	# small quads tilted outward on two rings have a silhouette instead, and
+	# each one is small enough that its flatness does not read.
+	var rings := [
+		{"count": 8, "y": 0.16, "r": 0.42, "tilt": 0.75, "size": 0.30},
+		{"count": 7, "y": 0.44, "r": 0.33, "tilt": 0.50, "size": 0.26},
+		{"count": 5, "y": 0.68, "r": 0.19, "tilt": 0.25, "size": 0.22},
+	]
+	for ring_index in rings.size():
+		var ring: Dictionary = rings[ring_index]
+		var count := int(ring["count"])
+		for i in count:
+			# Offset each ring so leaves interleave rather than stacking.
+			var yaw := TAU * (float(i) + 0.37 * float(ring_index)) / float(count)
+			var out := Vector3(sin(yaw), 0.0, cos(yaw))
+			var side := Vector3(out.z, 0.0, -out.x)
+			# The leaf leans outward and up: `tilt` 1 is flat, 0 is vertical.
+			var up_axis := (Vector3.UP * (1.0 - float(ring["tilt"])) + out * float(ring["tilt"])).normalized()
+			var at := out * float(ring["r"]) + Vector3.UP * float(ring["y"])
+			var half := float(ring["size"]) * 0.5
+			var first := verts.size()
+			for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+				# Taper the far edge so a leaf is a blade, not a rectangle.
+				var w := half * (0.45 if corner.y > 0.5 else 1.0)
+				verts.append(at + side * corner.x * w + up_axis * corner.y * float(ring["size"]))
+				normals.append((up_axis * 0.6 + Vector3.UP * 0.6).normalized())
+				# UV.y across the whole bush height, not the leaf's own, so the
+				# shader's base-to-tip gradient runs up the BUSH.
+				# Typed, not inferred: `corner` comes from an untyped Array literal so
+				# `corner.y` is a Variant and `:=` cannot infer a type from it.
+				var t: float = (float(ring["y"]) + corner.y * float(ring["size"])) / 0.95
+				uvs.append(Vector2(corner.x * 0.5 + 0.5, clamp(t, 0.0, 1.0)))
+			indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
 	return _mesh_from(verts, normals, uvs, indices)
 
 
@@ -282,24 +302,29 @@ func _flower_mesh() -> ArrayMesh:
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var indices := PackedInt32Array()
-	# Stem: one narrow strip.
+	# Stem.
 	var first := verts.size()
 	for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-		verts.append(Vector3(corner.x * 0.018, corner.y * 0.78, 0.0))
-		normals.append(Vector3(0.0, 0.4, 1.0).normalized())
-		uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y * 0.72))
+		verts.append(Vector3(corner.x * 0.016, corner.y * 0.80, 0.0))
+		normals.append(Vector3(0.0, 0.5, 1.0).normalized())
+		uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y * 0.74))
 	indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
-	# Head: two crossed petals, so the bloom reads from any angle.
-	for i in 2:
-		var yaw := PI * 0.5 * float(i)
-		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
-		var side := Vector3(dir.z, 0.0, -dir.x)
-		var start := verts.size()
+	# Head: three VERTICAL crossed petals. The first version used horizontal
+	# quads facing up, and at this size a flat upward-facing quad is not a
+	# bloom, it is a white paper square lying in the grass -- which is exactly
+	# how the field rendered. Vertical petals catch the light on an edge and
+	# read as a flower head from any angle the player can stand at.
+	for i in 3:
+		var yaw := PI * float(i) / 3.0
+		var side := Vector3(sin(yaw), 0.0, cos(yaw))
+		var start_i := verts.size()
 		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-			verts.append(side * corner.x * 0.13 + Vector3.UP * (0.72 + corner.y * 0.26))
-			normals.append(Vector3.UP)
-			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.82 + corner.y * 0.18))
-		indices.append_array([start, start + 1, start + 2, start + 1, start + 3, start + 2])
+			# Narrow at the base, wider at the top: a bloom, not a card.
+			var w := 0.055 * (1.0 if corner.y > 0.5 else 0.45)
+			verts.append(side * corner.x * w + Vector3.UP * (0.74 + corner.y * 0.17))
+			normals.append((side * 0.3 + Vector3.UP * 0.9).normalized())
+			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.86 + corner.y * 0.14))
+		indices.append_array([start_i, start_i + 1, start_i + 2, start_i + 1, start_i + 3, start_i + 2])
 	return _mesh_from(verts, normals, uvs, indices)
 
 
