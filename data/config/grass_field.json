@@ -43,6 +43,27 @@
   "wind_scale": 0.09,
   "wind_dir": [0.86, 0.51],
 
+  "_comment_stones": "STONE-FIELD. Loose grit, gravel and field stone, on the SAME camera-relative ring as the grass and storing nothing either. It exists because a blind pass, asked directly whether stones, path edges and tree bases read as bedded into the ground or sitting on top of it, answered: 'No -- everything sits on top. This is the single most consistent failure in the set.' It measured the band-4 cobbles as flat-topped slabs with their entire edge exposed, none partially buried, none casting a contact shadow; and it found the path shares one texture with the meadow, 'so the boundary is a density edge rather than a material edge, and it looks cut', with a surface that at 1-3m is 'a repeating mottled blob pattern with no grain, gravel, dirt clod, rut or footprint'. This is the path's own surface and the answer to both. `ground` names where stone is ALLOWED and is built from the same terrain texture list the grass field builds its FORBIDDEN mask from, so the two are inverses by construction and tile the ground between them. `stray_chance` is what stops the gravel ending on the same hard line the grass mask was criticised for -- a few field stones out on ordinary meadow. `sink` is the whole bedded argument in one number: the fraction of its own height a stone is buried, so its lower edge is under the surface instead of standing proud of it all the way round. `contact_darken` is the occlusion a stone this small will never get from the shadow map. TUNABLE, and the whole tier is one `enabled` away from gone.",
+  "stones": {
+    "enabled": true,
+    "count": 26000,
+    "centre_bias": 0.58,
+    "seed": 771131,
+    "sides": 7,
+    "stone_size": 0.15,
+    "size_jitter": 0.7,
+    "sink": 0.42,
+    "density_gain": 0.55,
+    "clump_scale": 0.16,
+    "clump_contrast": 0.6,
+    "tint_stone": "#8c8377",
+    "tint_jitter": 0.28,
+    "ground_blend": 0.35,
+    "contact_darken": 0.45,
+    "stray_chance": 0.06,
+    "ground": ["rock", "path"]
+  },
+
   "_comment_forbidden": "Ground the field refuses, by terrain texture NAME rather than by id. terrain_playground.json's `textures` array order is what assigns the ids (0 grass, 1 soil, 2 rock, 3 path, 4 damp, 5 forest_floor), so naming them means a lane that reorders that list does not silently move the mask onto the wrong surface. `path` is what keeps the routes readable -- the same control map the terrain paints its dirt from, so the verge lines up with the road for free instead of being a second exclusion rule that has to be kept in sync.",
   "forbidden_ground": ["rock", "path"]
 }

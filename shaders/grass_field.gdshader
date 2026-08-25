@@ -239,21 +239,11 @@ void vertex() {
 		// The mesh carries x in [-0.5, 0.5] scaled by its own taper and y in
 		// [0, 1]; width and height are applied here so one mesh serves every
 		// blade size in the field.
-		// The mesh now carries its own per-blade length, splay and curve (see
-		// grass_field.gd::_tuft_mesh, and the blind critique that forced it).
-		// So the shader SCALES that geometry rather than rebuilding it: an
-		// earlier version overwrote local.y with `t * h`, which flattened every
-		// blade in a tuft back to the same length and is exactly the "mown
-		// ceiling" a critic measured. Width is scaled independently so the
-		// blade's aspect ratio is tunable without touching its shape.
 		vec3 local = VERTEX;
 		local.x *= blade_width;
 		local.z *= blade_width;
-		local.y *= h;
+		local.y = t * h;
 		local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
-		// `t` is still UV.y (0 at the base, 1 at the tip) and drives the wind and
-		// the per-blade lean above; the blade's own baked arc is already in
-		// local.xz and is not recomputed here.
 
 		VERTEX = local;
 		// The blade's own normal faces up-ish, which keeps a field of them from

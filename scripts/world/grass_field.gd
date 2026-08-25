@@ -30,6 +30,7 @@ extends MultiMeshInstance3D
 
 const CONFIG_PATH := "res://data/config/grass_field.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
+const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
 
 ## Read once and cached, the same way `scatter_rules.gd::config()` does it, so a
 ## test can ask what the config says without standing a world up.
@@ -45,6 +46,11 @@ static var _config: Dictionary = {}
 var _camera: Camera3D = null
 var _terrain: Node = null
 var _material: ShaderMaterial = null
+## The stone tier rides as a CHILD of this node, so the camera-follow in
+## `_process` moves both rings with one transform write and the two can never
+## disagree about where the field is centred.
+var _stones: MultiMeshInstance3D = null
+var _stone_material: ShaderMaterial = null
 var _bound := false
 var _wind := 0.0
 ## The last snapped centre. The ring only rebuilds its uniform when this moves,
@@ -137,6 +143,131 @@ func _build() -> void:
 	custom_aabb = AABB(Vector3(-radius, -400.0, -radius),
 			Vector3(radius * 2.0, 800.0, radius * 2.0))
 
+	# AFTER `custom_aabb` is set, not before: the stone ring copies it, and
+	# built first it copied the default zero AABB instead.
+	_build_stones(cfg, radius)
+
+
+## The stone tier: loose grit, gravel and field stone, on the same ring.
+##
+## Built as a child rather than a second top-level node so it inherits the
+## camera follow for free. It is a separate MultiMesh because it is a different
+## mesh, a different mask and a different shader -- stone lies on the ground
+## where grass refuses to grow, and the two read the SAME control map with the
+## mask inverted, so they tile the ground between them without either being told
+## where the other is.
+##
+## The defect it exists for, from a blind pass asked the question directly:
+## stones, path edges and tree bases "sit on top" of the ground rather than
+## bedding into it, and the path "shares one texture with the meadow, so the
+## boundary is a density edge rather than a material edge, and it looks cut".
+func _build_stones(cfg: Dictionary, radius: float) -> void:
+	var stone_cfg: Dictionary = cfg.get("stones", {})
+	if not bool(stone_cfg.get("enabled", true)):
+		return
+	var count := int(stone_cfg.get("count", 26000))
+	if count <= 0:
+		return
+
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = _stone_mesh(int(stone_cfg.get("sides", 7)))
+	mm.instance_count = count
+
+	# Same disc law as the tufts, drawn from its own stream so adding or
+	# removing stones cannot reshuffle where the grass lands.
+	var bias := float(stone_cfg.get("centre_bias", 0.58))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(stone_cfg.get("seed", 771131))
+	for i in count:
+		var angle := rng.randf_range(0.0, TAU)
+		var r := radius * pow(rng.randf(), bias)
+		mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, rng.randf_range(0.0, TAU)),
+				Vector3(sin(angle) * r, 0.0, cos(angle) * r)))
+
+	_stones = MultiMeshInstance3D.new()
+	_stones.name = "StoneField"
+	_stones.multimesh = mm
+	_stone_material = ShaderMaterial.new()
+	_stone_material.shader = load(STONE_SHADER_PATH)
+	_stones.material_override = _stone_material
+	# A pebble's shadow is not information at this size, and thousands of them
+	# would be the same black carpet `vegetation.json`'s grass layer turned its
+	# own shadows off for. The shader darkens each stone at its own contact
+	# instead, which is the read that was actually missing.
+	_stones.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_stones.custom_aabb = custom_aabb
+	add_child(_stones)
+
+	for key: String in [
+		"stone_size", "size_jitter", "sink", "density_gain", "clump_scale",
+		"clump_contrast", "tint_jitter", "ground_blend", "contact_darken", "slope_lie",
+		"stray_chance", "field_radius", "fade_start",
+	]:
+		if stone_cfg.has(key):
+			_stone_material.set_shader_parameter(key, float(stone_cfg[key]))
+		elif cfg.has(key):
+			_stone_material.set_shader_parameter(key, float(cfg[key]))
+	if stone_cfg.has("tint_stone"):
+		_stone_material.set_shader_parameter("tint_stone", Color(str(stone_cfg["tint_stone"])))
+	# Where stone is ALLOWED is built from the same named texture list the grass
+	# field builds its forbidden mask from, so the two are inverses by
+	# construction rather than by two lists somebody has to keep in step.
+	var names := _terrain_texture_names()
+	var allowed: Array = stone_cfg.get("ground", ["rock", "path"])
+	var mask := 0
+	for i in names.size():
+		if str(names[i]) in allowed:
+			mask |= 1 << i
+	_stone_material.set_shader_parameter("allowed_base_mask", mask)
+
+
+## One stone: a squat faceted dome, generated rather than imported so no asset
+## enters the repository. Flat-bottomed on purpose -- the shader buries the
+## bottom, and a sphere would show its underside on a slope.
+func _stone_mesh(sides: int) -> ArrayMesh:
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var indices := PackedInt32Array()
+	# Two rings and a crown: enough to read as a rounded stone at the size these
+	# are drawn, and 3 * sides triangles rather than a sphere's dozens.
+	var rings := [
+		{"y": 0.0, "r": 0.5},
+		{"y": 0.22, "r": 0.44},
+		{"y": 0.38, "r": 0.26},
+	]
+	for ring_index in rings.size():
+		var ring: Dictionary = rings[ring_index]
+		for i in sides:
+			var a := TAU * float(i) / float(sides)
+			# A little per-vertex wobble so the silhouette is not a polygon.
+			var wobble := 1.0 + 0.16 * sin(float(i) * 2.7 + float(ring_index) * 1.9)
+			verts.append(Vector3(sin(a), 0.0, cos(a)) * float(ring["r"]) * wobble
+					+ Vector3.UP * float(ring["y"]))
+			normals.append(Vector3(sin(a) * 0.7, 0.6, cos(a) * 0.7).normalized())
+	var crown := verts.size()
+	verts.append(Vector3.UP * 0.44)
+	normals.append(Vector3.UP)
+	for ring_index in rings.size() - 1:
+		for i in sides:
+			var a0 := ring_index * sides + i
+			var a1 := ring_index * sides + (i + 1) % sides
+			var b0 := a0 + sides
+			var b1 := a1 + sides
+			indices.append_array([a0, b0, a1, a1, b0, b1])
+	var top := (rings.size() - 1) * sides
+	for i in sides:
+		indices.append_array([top + i, crown, top + (i + 1) % sides])
+
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
 
 ## One tuft: a handful of tapered blades at different yaws, sharing one mesh.
 ##
@@ -159,73 +290,50 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 
-	# Metres, baked, and the per-blade VARIATION is baked here too rather than
-	# computed in the shader. That is a deliberate move after a blind critic
-	# measured this field and reported "zero height variance -- the field has a
-	# mown ceiling... every blade a straight vertical constant-width rectangle",
-	# despite the shader carrying both a height jitter and a per-blade bend. Two
-	# reasons to bake it instead of arguing with that:
-	#
-	#   1. It cannot silently fail. The shader path depended on UV2 reaching the
-	#      vertex stage to tell one blade of a tuft from another; geometry that
-	#      is already different needs nothing delivered.
-	#   2. The critic's own prescription is a geometry one, not a parameter one:
-	#      "a moong-01 or palworld-03 grass card carries five to eight tapered,
-	#      curving blades of differing length, so one quad reads as a tuft and
-	#      the field reads as turf" -- and, on scaling the existing quad, "a 25:1
-	#      rectangle stays a reed at any size".
-	#
-	# So each blade in the tuft gets its own length, its own outward splay and
-	# its own forward curve, from a deterministic hash of its index. The shader
-	# then scales the whole thing by one height, and the differences survive.
+	# Metres, baked. An earlier version carried the mesh in [-0.5, 0.5] and let
+	# the shader's `blade_width` scale x -- which also scaled the OFFSET below,
+	# so the four blades of a tuft collapsed to two centimetres apart and every
+	# tuft rendered as one wide leaf. Real dimensions here, and `blade_width`
+	# is a multiplier around 1.0.
+	# 16mm half-width and a tip that keeps 40% of it. An earlier version tapered
+	# to 15% of an 11mm blade, which is a 1.6mm tip -- sub-pixel at any distance
+	# past a couple of metres, and it aliased into white speckle across the whole
+	# field rather than reading as grass.
+	# 11mm blades, and the number has now been wrong in both directions. At 19mm
+	# a blind critic measured them against the 1.80m trainer and called them
+	# 4-6cm where real meadow grass at this height is 3-6mm -- "a field of
+	# leeks". At a literal 6mm they are correct and read WORSE: a 6mm blade is
+	# under a pixel wide beyond a few metres on a 1280-wide frame, so the field
+	# dissolves into wisp and the software rasteriser has no coverage AA to
+	# recover it. 11mm is the compromise the render resolution actually
+	# supports, not the botanically right answer. Revisit if the game ever
+	# renders at a resolution where a thinner blade survives minification.
 	var half_width := 0.0055
 	var spread := 0.075
 	for b in blades:
-		# Deterministic per-blade variation. `fract(sin(i) * k)` rather than an
-		# RNG so the mesh is identical on every run and every machine -- this
-		# geometry is shared by every tuft in the world, so a mesh that varied
-		# per boot would be a different world per boot.
-		var r1 := fmod(abs(sin(float(b) * 12.9898) * 43758.5453), 1.0)
-		var r2 := fmod(abs(sin(float(b) * 78.233) * 24634.6345), 1.0)
-		var r3 := fmod(abs(sin(float(b) * 39.425) * 15731.7431), 1.0)
-		# Length: 0.55 to 1.0 of the tuft's height. The short ones are what stop
-		# the field having a flat top, and they are the majority on purpose --
-		# meadow is mostly base turf with a few stems standing above it.
-		var length := 0.55 + 0.45 * r1
-		# Splay: each blade leans out from the tuft centre, further the taller
-		# it is, so a tuft opens like a fan instead of standing as a bundle.
-		var splay := (0.10 + 0.22 * r2) * length
-		# Curve: the tip falls away from vertical. A blade of grass is an arc;
-		# a straight one reads as a reed however wide it is.
-		var curve := (0.25 + 0.55 * r3) * length
-		var yaw := TAU * (float(b) + 0.37 * r2) / float(blades)
+		var yaw := TAU * float(b) / float(blades) + 0.37 * float(b)
 		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
 		var side := Vector3(dir.z, 0.0, -dir.x)
-		var offset := dir * spread * (0.35 + 0.65 * r2)
+		var normal := dir
+		# Blades of one tuft start at slightly different points so the tuft has
+		# a footprint rather than a single stem.
+		var offset := (dir * 0.6 + side * (float(b) - float(blades - 1) * 0.5)) * spread
 		var first := verts.size()
-		for s2 in segments + 1:
-			var t := float(s2) / float(segments)
-			# Taper to a point rather than to a flat top. The critic measured
-			# "constant width top to bottom, squared-off top" and that squared
-			# tip is most of why a blade reads as a plank.
-			var half := half_width * (1.0 - t) * (1.0 - t * 0.35) + half_width * 0.06
-			# The arc: lean grows with t^1.7, so the base stays planted and the
-			# top half does the bending.
-			var lean := dir * (splay * t + curve * pow(t, 1.7))
-			var up := Vector3.UP * (t * length)
-			verts.append(offset + lean + side * -half + up)
-			verts.append(offset + lean + side * half + up)
-			# Normal tilted toward the blade's own face, so a fan of blades
-			# catches the light at a spread of angles instead of one.
-			normals.append((dir * 0.55 + Vector3.UP * 0.8).normalized())
-			normals.append((dir * 0.55 + Vector3.UP * 0.8).normalized())
+		for s in segments + 1:
+			var t := float(s) / float(segments)
+			# Taper: full width at the base, a point at the tip.
+			var half := half_width * (1.0 - t * t * 0.55)
+			verts.append(offset + side * -half + Vector3.UP * t)
+			verts.append(offset + side * half + Vector3.UP * t)
+			normals.append(normal)
+			normals.append(normal)
 			uvs.append(Vector2(0.0, t))
 			uvs.append(Vector2(1.0, t))
 			var blade_id := float(b) / float(blades)
 			uv2s.append(Vector2(blade_id, 0.0))
 			uv2s.append(Vector2(blade_id, 0.0))
-		for s2 in segments:
-			var a := first + s2 * 2
+		for s in segments:
+			var a := first + s * 2
 			indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
 
 	var arrays := []
@@ -311,7 +419,32 @@ func _bind_terrain() -> void:
 		push_warning("[grass_field] terrain has no data; the field cannot find the ground")
 		return
 
-	var rid: RID = _material.get_rid()
+	var rids: Array[RID] = [_material.get_rid()]
+	if _stone_material != null:
+		rids.append(_stone_material.get_rid())
+	for rid: RID in rids:
+		_bind_maps(rid, data)
+	_bind_region_uniforms(data)
+
+	# Say out loud whether the stone tier actually got the terrain, because the
+	# failure mode when it does not is silent and spectacular: an unbound
+	# `sampler2DArray` still texelFetches, at a layer index this shader takes up
+	# to the region count, and the undefined result goes straight into a vertex
+	# Y offset. The stones then render kilometres up as a dome of white shards.
+	# It cost two render cycles of guessing before this line existed.
+	if _stone_material != null:
+		var stone_rid: RID = _stone_material.get_rid()
+		print("[grass_field] stone tier: rid_valid=%s height_map=%s region_map=%d entries" % [
+			str(stone_rid.is_valid()),
+			str(RenderingServer.material_get_param(stone_rid, "_height_maps")),
+			(RenderingServer.material_get_param(stone_rid, "_region_map") as Array).size()
+				if RenderingServer.material_get_param(stone_rid, "_region_map") != null else -1])
+
+
+## The three map textures, onto one material. Bound through the RenderingServer
+## rather than `set_shader_parameter` because `Terrain3DData` hands them out as
+## RIDs and there is no Texture2DArray object to pass.
+func _bind_maps(rid: RID, data: Object) -> void:
 	for pair: Array in [
 		["_height_maps", "get_height_maps_rid"],
 		["_control_maps", "get_control_maps_rid"],
@@ -320,6 +453,11 @@ func _bind_terrain() -> void:
 		if data.has_method(str(pair[1])):
 			RenderingServer.material_set_param(rid, str(pair[0]), data.call(str(pair[1])))
 
+
+## The region arithmetic, onto both materials. Read off the LIVE terrain: the
+## shaders reproduce Terrain3D's own lookup and a region size or vertex spacing
+## that disagreed by one would put the whole field on the wrong ground.
+func _bind_region_uniforms(data: Object) -> void:
 	var region_size := float(_terrain.get("region_size"))
 	var vertex_spacing := float(_terrain.get("vertex_spacing"))
 	var region_map: Array = data.call("get_region_map") if data.has_method("get_region_map") else []
@@ -328,11 +466,14 @@ func _bind_terrain() -> void:
 	for i in region_map.size():
 		map[i] = int(region_map[i])
 
-	_material.set_shader_parameter("_region_size", region_size)
-	_material.set_shader_parameter("_region_texel_size", 1.0 / region_size)
-	_material.set_shader_parameter("_region_map_size", int(sqrt(float(region_map.size()))))
-	_material.set_shader_parameter("_vertex_density", 1.0 / vertex_spacing)
-	_material.set_shader_parameter("_region_map", map)
+	for mat: ShaderMaterial in [_material, _stone_material]:
+		if mat == null:
+			continue
+		mat.set_shader_parameter("_region_size", region_size)
+		mat.set_shader_parameter("_region_texel_size", 1.0 / region_size)
+		mat.set_shader_parameter("_region_map_size", int(sqrt(float(region_map.size()))))
+		mat.set_shader_parameter("_vertex_density", 1.0 / vertex_spacing)
+		mat.set_shader_parameter("_region_map", map)
 	_bound = true
 	print("[grass_field] bound: %d tufts, radius %.0fm, region_size %.0f, vertex_spacing %.1f, %d region slots" % [
 		multimesh.instance_count if multimesh != null else 0,
@@ -360,3 +501,5 @@ func _process(delta: float) -> void:
 	_centre = centre
 	global_position = centre
 	_material.set_shader_parameter("field_centre", centre)
+	if _stone_material != null:
+		_stone_material.set_shader_parameter("field_centre", centre)
