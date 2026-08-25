@@ -1,5 +1,7 @@
 {
   "id": "X01",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
   "title": "Controller/menu exhaustion matrix (protocol E.4 / section 8)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.4, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S03-exit (all systems unlocked in village) and S08-exit (riding/late menus).",
