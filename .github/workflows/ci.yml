@@ -1612,7 +1612,25 @@ jobs:
   # matters not to paper over the other kind.
   verify-core-verb-shard:
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    # 22 -> 40. The retry chain above and the old timeout were in direct
+    # conflict: this job runs four smokes, and conventions.md measures
+    # smoke_traversal.gd alone at ~6 minutes, so its three attempts are ~18 of
+    # the 22 minutes before smoke_playground, smoke_input and smoke_catching's
+    # two attempts run at all. The job therefore only survived while no retry
+    # was needed -- which is exactly the case the third retry was added for.
+    #
+    # Observed twice on 2026-08-25: run 2432 killed mid-smoke_traversal at
+    # 22m50s while still emitting progress, and run 2440 cancelled at ~21m on
+    # ralph/WORLD-GRASS, taking three unit shards down with it through matrix
+    # fail-fast and blocking a branch whose own tests had passed.
+    #
+    # This does NOT weaken a test: no retry count changes, no assertion moves.
+    # It gives the existing workload a budget it fits in. The cost is that a
+    # genuinely wedged traversal now takes 40 minutes to report instead of 22,
+    # which is the right trade against red runs that are unrelated to the code
+    # under test -- the failure mode that gets real defects dismissed as
+    # infrastructure noise.
+    timeout-minutes: 40
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
