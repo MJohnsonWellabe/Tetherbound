@@ -109,12 +109,25 @@ half alone fails on a different part of the game:
 
 | Action | Args | Does |
 |---|---|---|
-| `press` | `control`, `hold` | One control, down-edge, held, up-edge. |
+| `press` | `control`, `hold`, `times`, `settle_frames` | One control, down-edge, held, up-edge. `times` repeats it with `settle_frames` idle frames between repeats — use it instead of N identical steps, which hide which press failed to land. |
 | `press_multi` | `controls` (≥2), `hold` | Every down edge delivered **before any frame advances**, then held, then every up edge. The same-frame multi-press the §8 collision probes need. |
 | `hold` | `control` | Down edge only. For a hold that has to span other steps. |
 | `release` | `control` | Up edge only. Pair every `hold` with one. |
 | `stick` | `stick` (`"left"`\|`"right"`), `x`, `y`, `frames` | Analogue deflection held for `frames`, then centred. `x`/`y` in stick space, −1..1, y negative = forward/up. |
 | `focus_move` | `direction` (`up`/`down`/`left`/`right`), `times` | `ui_<direction>` taps. **FAILs if focus did not move**, which is the whole point: a focus step that silently did nothing is the defect this action exists to catch. |
+| `type_name` | `name` | Types `name` into the live naming prompt on the pad's on-screen letter grid, then presses Done. See below. |
+
+`type_name` exists because naming is mandatory (`docs/OPENING_SEQUENCE.md`) and
+it is the one beat nothing else in this vocabulary can reach: `name_prompt.gd`
+in pad mode is a letter grid driven by `ui_*` and `menu_confirm`, so "press
+confirm until it goes away" types the same letter forever and never finds Done.
+Without it the protocol's S01 could not be transcribed at all.
+
+It is still production input — every press is a real physical event through the
+live InputMap. The only thing it reads from the panel is **where the cursor is**
+(`name_prompt.gd::entry()`'s row/column), because a blind walk of a grid whose
+layout it cannot see would be guessing. Nothing is written into the panel and
+`_confirm()` is never called directly.
 
 ### Travel
 
@@ -192,6 +205,8 @@ directory copies from the directory it actually used.
 | `region_is` | `equals` | `map_state.gd`'s own containment puts the player in that region. |
 | `near` | `at: [x, z]`, `within` | The player is within `within` metres. |
 | `dead_travel_below` | `metres` | The current dead-travel run is at or under that. |
+| `dead_travel_peak_above` | `metres` | The LARGEST dead-travel run this segment saw reached at least that. The current value is almost always small — a segment ends near something — so `dead_travel_below` alone can only prove the meter resets, never that it accumulates. |
+| `distance_above` | `metres` | At least that much was actually walked this segment. Guards against a route that "passed" because nobody moved. |
 | `route_rows_at_least` | `rows` | `route.csv` has at least that many rows — the trace is actually running. |
 
 ---
