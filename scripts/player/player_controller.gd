@@ -235,6 +235,12 @@ const DEFLECT_FOR := 0.3
 var _wedged_for := 0.0
 var _deflect := Vector3.ZERO
 var _deflect_left := 0.0
+## The direction the player was ASKING for when the deflection triggered. A
+## deflection is only valid for that request: `smoke_input.gd` caught the
+## alternative, where a deflection earned while walking forward into something
+## was still live when the next input came and steered it instead -- "holding
+## move_right moved the player 0.00m".
+var _deflect_wanted := Vector3.ZERO
 
 
 func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
@@ -263,6 +269,7 @@ func _unwedge(planned: Vector3, before: Vector3, delta: float) -> void:
 	if tangent.dot(wanted.normalized()) < 0.0:
 		tangent = -tangent
 	_deflect = Vector3(tangent.x, 0.0, tangent.y)
+	_deflect_wanted = Vector3(wanted.x, 0.0, wanted.y).normalized()
 	_deflect_left = DEFLECT_FOR
 	_wedged_for = 0.0
 
@@ -382,7 +389,9 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# obstacle instead of into it. Lapses as soon as the player stops pushing,
 	# so it can never carry anyone somewhere they stopped asking to go.
 	if _deflect_left > 0.0:
-		if direction == Vector3.ZERO:
+		if direction == Vector3.ZERO or direction.dot(_deflect_wanted) < 0.7:
+			# Let go, or asked for somewhere meaningfully different. The
+			# deflection was for the old request; it has no claim on this one.
 			_deflect_left = 0.0
 		else:
 			_deflect_left -= delta
