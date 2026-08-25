@@ -3,6 +3,7 @@
   "title": "Controller/menu exhaustion matrix (protocol E.4 / section 8)",
   "lane": "study",
   "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.4, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S03-exit (all systems unlocked in village) and S08-exit (riding/late menus).",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
   "_goal": "E.4's own words: 'Goal: input ownership collisions.' The matrix crosses every physical control with every context, each context entered through its production path.",
   "_no_teleport": "X01 is not a DIAG segment and contains no teleport step. It branches from real journey saves so the study starts from a real player state (protocol B), and section 0.6 forbids sourcing any pacing, navigation, difficulty or economy claim from a shortcut.",
   "_matrix_shape": "19 physical controls x 22 contexts = 418 probe_cell steps. The 19 are E.4's own list of physical controls; the 22 are E.4's own list of contexts MINUS the starter picker and the naming grid, which E.4 marks '(S02 only -- record there)'.",
@@ -7625,28 +7626,15 @@
     },
     {
       "id": "X01-786",
-      "title": "world<->pause_shell open edge, same frame: Start",
-      "action": "press_multi",
+      "title": "world<->pause_shell open edge, same frame: Start is the boundary button itself",
+      "action": "note",
       "args": {
-        "controls": [
-          "game_menu",
-          "game_menu"
-        ],
-        "hold": "tap"
+        "text": "E.4 asks for a same-frame probe of each shared button at each context boundary. On this boundary Start (game_menu) is the button that CROSSES the boundary, so the same-frame pair collapses to a single press and there is nothing to deliver on the same frame as itself. The next-frame probe below is this cell's evidence."
       },
-      "expected": "every down edge is delivered before a frame advances. Start owns game_menu in the world and backpack_drop in the surface being opened; one press must not produce both owners' effects."
+      "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "X01-787",
-      "title": "Start open edge, same frame: what owns input now",
-      "action": "assert",
-      "args": {
-        "check": "focus_owned"
-      },
-      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
-    },
-    {
-      "id": "X01-788",
       "title": "Start close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -7659,7 +7647,7 @@
       "expected": "the close edge, same frame: Start must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-789",
+      "id": "X01-788",
       "title": "Start close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -7669,7 +7657,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-790",
+      "id": "X01-789",
       "title": "Start open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -7679,7 +7667,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-791",
+      "id": "X01-790",
       "title": "Start open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7688,7 +7676,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-792",
+      "id": "X01-791",
       "title": "Start open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7698,7 +7686,7 @@
       "expected": "Start one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-793",
+      "id": "X01-792",
       "title": "Start close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -7708,7 +7696,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-794",
+      "id": "X01-793",
       "title": "Start close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7717,7 +7705,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-795",
+      "id": "X01-794",
       "title": "Start close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7727,14 +7715,14 @@
       "expected": "Start one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-796",
+      "id": "X01-795",
       "title": "Start: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-797",
+      "id": "X01-796",
       "title": "world<->pause_shell open edge, same frame: A",
       "action": "press_multi",
       "args": {
@@ -7747,7 +7735,7 @@
       "expected": "every down edge is delivered before a frame advances. A owns jump in the world and menu_confirm in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-798",
+      "id": "X01-797",
       "title": "A open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -7756,7 +7744,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-799",
+      "id": "X01-798",
       "title": "A close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -7769,7 +7757,7 @@
       "expected": "the close edge, same frame: A must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-800",
+      "id": "X01-799",
       "title": "A close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -7779,7 +7767,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-801",
+      "id": "X01-800",
       "title": "A open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -7789,7 +7777,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-802",
+      "id": "X01-801",
       "title": "A open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7798,7 +7786,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-803",
+      "id": "X01-802",
       "title": "A open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7808,7 +7796,7 @@
       "expected": "A one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-804",
+      "id": "X01-803",
       "title": "A close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -7818,7 +7806,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-805",
+      "id": "X01-804",
       "title": "A close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7827,7 +7815,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-806",
+      "id": "X01-805",
       "title": "A close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7837,14 +7825,14 @@
       "expected": "A one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-807",
+      "id": "X01-806",
       "title": "A: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-808",
+      "id": "X01-807",
       "title": "world<->pause_shell open edge, same frame: B",
       "action": "press_multi",
       "args": {
@@ -7857,7 +7845,7 @@
       "expected": "every down edge is delivered before a frame advances. B owns hotbar_1 in the world and menu_cancel in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-809",
+      "id": "X01-808",
       "title": "B open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -7866,7 +7854,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-810",
+      "id": "X01-809",
       "title": "B close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -7879,7 +7867,7 @@
       "expected": "the close edge, same frame: B must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-811",
+      "id": "X01-810",
       "title": "B close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -7889,7 +7877,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-812",
+      "id": "X01-811",
       "title": "B open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -7899,7 +7887,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-813",
+      "id": "X01-812",
       "title": "B open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7908,7 +7896,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-814",
+      "id": "X01-813",
       "title": "B open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7918,7 +7906,7 @@
       "expected": "B one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-815",
+      "id": "X01-814",
       "title": "B close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -7928,7 +7916,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-816",
+      "id": "X01-815",
       "title": "B close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -7937,7 +7925,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-817",
+      "id": "X01-816",
       "title": "B close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -7947,14 +7935,14 @@
       "expected": "B one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-818",
+      "id": "X01-817",
       "title": "B: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-819",
+      "id": "X01-818",
       "title": "world<->pause_shell open edge, same frame: X",
       "action": "press_multi",
       "args": {
@@ -7967,7 +7955,7 @@
       "expected": "every down edge is delivered before a frame advances. X owns interact in the world and build_place in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-820",
+      "id": "X01-819",
       "title": "X open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -7976,7 +7964,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-821",
+      "id": "X01-820",
       "title": "X close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -7989,7 +7977,7 @@
       "expected": "the close edge, same frame: X must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-822",
+      "id": "X01-821",
       "title": "X close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -7999,7 +7987,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-823",
+      "id": "X01-822",
       "title": "X open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8009,7 +7997,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-824",
+      "id": "X01-823",
       "title": "X open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8018,7 +8006,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-825",
+      "id": "X01-824",
       "title": "X open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8028,7 +8016,7 @@
       "expected": "X one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-826",
+      "id": "X01-825",
       "title": "X close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8038,7 +8026,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-827",
+      "id": "X01-826",
       "title": "X close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8047,7 +8035,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-828",
+      "id": "X01-827",
       "title": "X close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8057,14 +8045,14 @@
       "expected": "X one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-829",
+      "id": "X01-828",
       "title": "X: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-830",
+      "id": "X01-829",
       "title": "world<->pause_shell open edge, same frame: RT",
       "action": "press_multi",
       "args": {
@@ -8077,7 +8065,7 @@
       "expected": "every down edge is delivered before a frame advances. RT owns combat_quick in the world and map_zoom_in in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-831",
+      "id": "X01-830",
       "title": "RT open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8086,7 +8074,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-832",
+      "id": "X01-831",
       "title": "RT close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8099,7 +8087,7 @@
       "expected": "the close edge, same frame: RT must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-833",
+      "id": "X01-832",
       "title": "RT close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8109,7 +8097,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-834",
+      "id": "X01-833",
       "title": "RT open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8119,7 +8107,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-835",
+      "id": "X01-834",
       "title": "RT open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8128,7 +8116,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-836",
+      "id": "X01-835",
       "title": "RT open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8138,7 +8126,7 @@
       "expected": "RT one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-837",
+      "id": "X01-836",
       "title": "RT close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8148,7 +8136,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-838",
+      "id": "X01-837",
       "title": "RT close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8157,7 +8145,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-839",
+      "id": "X01-838",
       "title": "RT close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8167,14 +8155,14 @@
       "expected": "RT one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-840",
+      "id": "X01-839",
       "title": "RT: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-841",
+      "id": "X01-840",
       "title": "boundary: world<->build_catalogue",
       "action": "note",
       "args": {
@@ -8183,7 +8171,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-842",
+      "id": "X01-841",
       "title": "world<->build_catalogue open edge, same frame: LB",
       "action": "press_multi",
       "args": {
@@ -8196,7 +8184,7 @@
       "expected": "every down edge is delivered before a frame advances. LB owns party_cycle in the world and menu_tab_left in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-843",
+      "id": "X01-842",
       "title": "LB open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8205,7 +8193,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-844",
+      "id": "X01-843",
       "title": "LB close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8218,7 +8206,7 @@
       "expected": "the close edge, same frame: LB must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-845",
+      "id": "X01-844",
       "title": "LB close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8228,7 +8216,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-846",
+      "id": "X01-845",
       "title": "LB open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8238,7 +8226,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-847",
+      "id": "X01-846",
       "title": "LB open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8247,7 +8235,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-848",
+      "id": "X01-847",
       "title": "LB open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8257,7 +8245,7 @@
       "expected": "LB one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-849",
+      "id": "X01-848",
       "title": "LB close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8267,7 +8255,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-850",
+      "id": "X01-849",
       "title": "LB close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8276,7 +8264,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-851",
+      "id": "X01-850",
       "title": "LB close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8286,14 +8274,14 @@
       "expected": "LB one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-852",
+      "id": "X01-851",
       "title": "LB: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-853",
+      "id": "X01-852",
       "title": "world<->build_catalogue open edge, same frame: RB",
       "action": "press_multi",
       "args": {
@@ -8306,7 +8294,7 @@
       "expected": "every down edge is delivered before a frame advances. RB owns creature_recall in the world and menu_tab_right in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-854",
+      "id": "X01-853",
       "title": "RB open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8315,7 +8303,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-855",
+      "id": "X01-854",
       "title": "RB close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8328,7 +8316,7 @@
       "expected": "the close edge, same frame: RB must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-856",
+      "id": "X01-855",
       "title": "RB close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8338,7 +8326,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-857",
+      "id": "X01-856",
       "title": "RB open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8348,7 +8336,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-858",
+      "id": "X01-857",
       "title": "RB open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8357,7 +8345,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-859",
+      "id": "X01-858",
       "title": "RB open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8367,7 +8355,7 @@
       "expected": "RB one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-860",
+      "id": "X01-859",
       "title": "RB close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8377,7 +8365,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-861",
+      "id": "X01-860",
       "title": "RB close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8386,7 +8374,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-862",
+      "id": "X01-861",
       "title": "RB close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8396,14 +8384,14 @@
       "expected": "RB one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-863",
+      "id": "X01-862",
       "title": "RB: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-864",
+      "id": "X01-863",
       "title": "world<->build_catalogue open edge, same frame: Start",
       "action": "press_multi",
       "args": {
@@ -8416,7 +8404,7 @@
       "expected": "every down edge is delivered before a frame advances. Start owns game_menu in the world and backpack_drop in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-865",
+      "id": "X01-864",
       "title": "Start open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8425,7 +8413,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-866",
+      "id": "X01-865",
       "title": "Start close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8438,7 +8426,7 @@
       "expected": "the close edge, same frame: Start must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-867",
+      "id": "X01-866",
       "title": "Start close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8448,7 +8436,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-868",
+      "id": "X01-867",
       "title": "Start open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8458,7 +8446,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-869",
+      "id": "X01-868",
       "title": "Start open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8467,7 +8455,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-870",
+      "id": "X01-869",
       "title": "Start open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8477,7 +8465,7 @@
       "expected": "Start one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-871",
+      "id": "X01-870",
       "title": "Start close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8487,7 +8475,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-872",
+      "id": "X01-871",
       "title": "Start close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8496,7 +8484,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-873",
+      "id": "X01-872",
       "title": "Start close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8506,14 +8494,14 @@
       "expected": "Start one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-874",
+      "id": "X01-873",
       "title": "Start: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-875",
+      "id": "X01-874",
       "title": "world<->build_catalogue open edge, same frame: A",
       "action": "press_multi",
       "args": {
@@ -8526,7 +8514,7 @@
       "expected": "every down edge is delivered before a frame advances. A owns jump in the world and menu_confirm in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-876",
+      "id": "X01-875",
       "title": "A open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8535,7 +8523,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-877",
+      "id": "X01-876",
       "title": "A close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8548,7 +8536,7 @@
       "expected": "the close edge, same frame: A must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-878",
+      "id": "X01-877",
       "title": "A close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8558,7 +8546,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-879",
+      "id": "X01-878",
       "title": "A open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8568,7 +8556,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-880",
+      "id": "X01-879",
       "title": "A open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8577,7 +8565,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-881",
+      "id": "X01-880",
       "title": "A open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8587,7 +8575,7 @@
       "expected": "A one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-882",
+      "id": "X01-881",
       "title": "A close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8597,7 +8585,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-883",
+      "id": "X01-882",
       "title": "A close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8606,7 +8594,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-884",
+      "id": "X01-883",
       "title": "A close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8616,14 +8604,14 @@
       "expected": "A one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-885",
+      "id": "X01-884",
       "title": "A: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-886",
+      "id": "X01-885",
       "title": "world<->build_catalogue open edge, same frame: B",
       "action": "press_multi",
       "args": {
@@ -8636,7 +8624,7 @@
       "expected": "every down edge is delivered before a frame advances. B owns hotbar_1 in the world and menu_cancel in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-887",
+      "id": "X01-886",
       "title": "B open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8645,7 +8633,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-888",
+      "id": "X01-887",
       "title": "B close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8658,7 +8646,7 @@
       "expected": "the close edge, same frame: B must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-889",
+      "id": "X01-888",
       "title": "B close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8668,7 +8656,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-890",
+      "id": "X01-889",
       "title": "B open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8678,7 +8666,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-891",
+      "id": "X01-890",
       "title": "B open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8687,7 +8675,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-892",
+      "id": "X01-891",
       "title": "B open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8697,7 +8685,7 @@
       "expected": "B one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-893",
+      "id": "X01-892",
       "title": "B close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8707,7 +8695,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-894",
+      "id": "X01-893",
       "title": "B close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8716,7 +8704,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-895",
+      "id": "X01-894",
       "title": "B close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8726,14 +8714,14 @@
       "expected": "B one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-896",
+      "id": "X01-895",
       "title": "B: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-897",
+      "id": "X01-896",
       "title": "world<->build_catalogue open edge, same frame: X",
       "action": "press_multi",
       "args": {
@@ -8746,7 +8734,7 @@
       "expected": "every down edge is delivered before a frame advances. X owns interact in the world and build_place in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-898",
+      "id": "X01-897",
       "title": "X open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8755,7 +8743,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-899",
+      "id": "X01-898",
       "title": "X close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8768,7 +8756,7 @@
       "expected": "the close edge, same frame: X must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-900",
+      "id": "X01-899",
       "title": "X close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8778,7 +8766,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-901",
+      "id": "X01-900",
       "title": "X open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8788,7 +8776,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-902",
+      "id": "X01-901",
       "title": "X open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8797,7 +8785,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-903",
+      "id": "X01-902",
       "title": "X open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8807,7 +8795,7 @@
       "expected": "X one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-904",
+      "id": "X01-903",
       "title": "X close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8817,7 +8805,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-905",
+      "id": "X01-904",
       "title": "X close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8826,7 +8814,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-906",
+      "id": "X01-905",
       "title": "X close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8836,14 +8824,14 @@
       "expected": "X one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-907",
+      "id": "X01-906",
       "title": "X: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-908",
+      "id": "X01-907",
       "title": "world<->build_catalogue open edge, same frame: RT",
       "action": "press_multi",
       "args": {
@@ -8856,7 +8844,7 @@
       "expected": "every down edge is delivered before a frame advances. RT owns combat_quick in the world and map_zoom_in in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-909",
+      "id": "X01-908",
       "title": "RT open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8865,7 +8853,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-910",
+      "id": "X01-909",
       "title": "RT close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -8878,7 +8866,7 @@
       "expected": "the close edge, same frame: RT must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-911",
+      "id": "X01-910",
       "title": "RT close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -8888,7 +8876,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-912",
+      "id": "X01-911",
       "title": "RT open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -8898,7 +8886,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-913",
+      "id": "X01-912",
       "title": "RT open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8907,7 +8895,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-914",
+      "id": "X01-913",
       "title": "RT open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8917,7 +8905,7 @@
       "expected": "RT one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-915",
+      "id": "X01-914",
       "title": "RT close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -8927,7 +8915,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-916",
+      "id": "X01-915",
       "title": "RT close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -8936,7 +8924,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-917",
+      "id": "X01-916",
       "title": "RT close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -8946,14 +8934,14 @@
       "expected": "RT one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-918",
+      "id": "X01-917",
       "title": "RT: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-919",
+      "id": "X01-918",
       "title": "boundary: world<->narrative_modal",
       "action": "note",
       "args": {
@@ -8962,7 +8950,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-920",
+      "id": "X01-919",
       "title": "stand in front of Tam again",
       "action": "move_to",
       "args": {
@@ -8974,7 +8962,7 @@
       "expected": "the player walks back to Tam so the conversation boundary can be crossed"
     },
     {
-      "id": "X01-921",
+      "id": "X01-920",
       "title": "world<->narrative_modal open edge, same frame: LB",
       "action": "press_multi",
       "args": {
@@ -8987,7 +8975,7 @@
       "expected": "every down edge is delivered before a frame advances. LB owns party_cycle in the world and menu_tab_left in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-922",
+      "id": "X01-921",
       "title": "LB open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -8996,7 +8984,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-923",
+      "id": "X01-922",
       "title": "LB close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9009,7 +8997,7 @@
       "expected": "the close edge, same frame: LB must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-924",
+      "id": "X01-923",
       "title": "LB close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9019,7 +9007,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-925",
+      "id": "X01-924",
       "title": "LB open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9029,7 +9017,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-926",
+      "id": "X01-925",
       "title": "LB open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9038,7 +9026,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-927",
+      "id": "X01-926",
       "title": "LB open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9048,7 +9036,7 @@
       "expected": "LB one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-928",
+      "id": "X01-927",
       "title": "LB close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9058,7 +9046,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-929",
+      "id": "X01-928",
       "title": "LB close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9067,7 +9055,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-930",
+      "id": "X01-929",
       "title": "LB close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9077,14 +9065,14 @@
       "expected": "LB one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-931",
+      "id": "X01-930",
       "title": "LB: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-932",
+      "id": "X01-931",
       "title": "world<->narrative_modal open edge, same frame: RB",
       "action": "press_multi",
       "args": {
@@ -9097,7 +9085,7 @@
       "expected": "every down edge is delivered before a frame advances. RB owns creature_recall in the world and menu_tab_right in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-933",
+      "id": "X01-932",
       "title": "RB open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -9106,7 +9094,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-934",
+      "id": "X01-933",
       "title": "RB close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9119,7 +9107,7 @@
       "expected": "the close edge, same frame: RB must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-935",
+      "id": "X01-934",
       "title": "RB close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9129,7 +9117,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-936",
+      "id": "X01-935",
       "title": "RB open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9139,7 +9127,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-937",
+      "id": "X01-936",
       "title": "RB open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9148,7 +9136,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-938",
+      "id": "X01-937",
       "title": "RB open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9158,7 +9146,7 @@
       "expected": "RB one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-939",
+      "id": "X01-938",
       "title": "RB close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9168,7 +9156,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-940",
+      "id": "X01-939",
       "title": "RB close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9177,7 +9165,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-941",
+      "id": "X01-940",
       "title": "RB close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9187,14 +9175,14 @@
       "expected": "RB one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-942",
+      "id": "X01-941",
       "title": "RB: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-943",
+      "id": "X01-942",
       "title": "world<->narrative_modal open edge, same frame: Start",
       "action": "press_multi",
       "args": {
@@ -9207,7 +9195,7 @@
       "expected": "every down edge is delivered before a frame advances. Start owns game_menu in the world and backpack_drop in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-944",
+      "id": "X01-943",
       "title": "Start open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -9216,7 +9204,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-945",
+      "id": "X01-944",
       "title": "Start close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9229,7 +9217,7 @@
       "expected": "the close edge, same frame: Start must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-946",
+      "id": "X01-945",
       "title": "Start close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9239,7 +9227,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-947",
+      "id": "X01-946",
       "title": "Start open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9249,7 +9237,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-948",
+      "id": "X01-947",
       "title": "Start open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9258,7 +9246,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-949",
+      "id": "X01-948",
       "title": "Start open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9268,7 +9256,7 @@
       "expected": "Start one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-950",
+      "id": "X01-949",
       "title": "Start close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9278,7 +9266,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-951",
+      "id": "X01-950",
       "title": "Start close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9287,7 +9275,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-952",
+      "id": "X01-951",
       "title": "Start close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9297,14 +9285,14 @@
       "expected": "Start one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-953",
+      "id": "X01-952",
       "title": "Start: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-954",
+      "id": "X01-953",
       "title": "world<->narrative_modal open edge, same frame: A",
       "action": "press_multi",
       "args": {
@@ -9317,7 +9305,7 @@
       "expected": "every down edge is delivered before a frame advances. A owns jump in the world and menu_confirm in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-955",
+      "id": "X01-954",
       "title": "A open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -9326,7 +9314,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-956",
+      "id": "X01-955",
       "title": "A close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9339,7 +9327,7 @@
       "expected": "the close edge, same frame: A must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-957",
+      "id": "X01-956",
       "title": "A close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9349,7 +9337,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-958",
+      "id": "X01-957",
       "title": "A open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9359,7 +9347,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-959",
+      "id": "X01-958",
       "title": "A open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9368,7 +9356,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-960",
+      "id": "X01-959",
       "title": "A open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9378,7 +9366,7 @@
       "expected": "A one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-961",
+      "id": "X01-960",
       "title": "A close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9388,7 +9376,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-962",
+      "id": "X01-961",
       "title": "A close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9397,7 +9385,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-963",
+      "id": "X01-962",
       "title": "A close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9407,14 +9395,14 @@
       "expected": "A one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-964",
+      "id": "X01-963",
       "title": "A: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-965",
+      "id": "X01-964",
       "title": "world<->narrative_modal open edge, same frame: B",
       "action": "press_multi",
       "args": {
@@ -9427,7 +9415,7 @@
       "expected": "every down edge is delivered before a frame advances. B owns hotbar_1 in the world and menu_cancel in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-966",
+      "id": "X01-965",
       "title": "B open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -9436,7 +9424,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-967",
+      "id": "X01-966",
       "title": "B close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9449,7 +9437,7 @@
       "expected": "the close edge, same frame: B must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-968",
+      "id": "X01-967",
       "title": "B close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9459,7 +9447,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-969",
+      "id": "X01-968",
       "title": "B open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9469,7 +9457,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-970",
+      "id": "X01-969",
       "title": "B open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9478,7 +9466,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-971",
+      "id": "X01-970",
       "title": "B open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9488,7 +9476,7 @@
       "expected": "B one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-972",
+      "id": "X01-971",
       "title": "B close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9498,7 +9486,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-973",
+      "id": "X01-972",
       "title": "B close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9507,7 +9495,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-974",
+      "id": "X01-973",
       "title": "B close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9517,59 +9505,32 @@
       "expected": "B one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-975",
+      "id": "X01-974",
       "title": "B: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-976",
-      "title": "world<->narrative_modal open edge, same frame: X",
-      "action": "press_multi",
+      "id": "X01-975",
+      "title": "world<->narrative_modal open edge, same frame: X is the boundary button itself",
+      "action": "note",
       "args": {
-        "controls": [
-          "interact",
-          "interact"
-        ],
-        "hold": "tap"
+        "text": "E.4 asks for a same-frame probe of each shared button at each context boundary. On this boundary X (interact) is the button that CROSSES the boundary, so the same-frame pair collapses to a single press and there is nothing to deliver on the same frame as itself. The next-frame probe below is this cell's evidence."
       },
-      "expected": "every down edge is delivered before a frame advances. X owns interact in the world and build_place in the surface being opened; one press must not produce both owners' effects."
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X01-976",
+      "title": "world<->narrative_modal close edge, same frame: X is the boundary button itself",
+      "action": "note",
+      "args": {
+        "text": "Same degeneracy on the close edge: X (interact) is the button that closes this surface, so a same-frame pair with itself is one press. The next-frame probe below is this cell's evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "X01-977",
-      "title": "X open edge, same frame: what owns input now",
-      "action": "assert",
-      "args": {
-        "check": "focus_owned"
-      },
-      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
-    },
-    {
-      "id": "X01-978",
-      "title": "X close edge, same frame",
-      "action": "press_multi",
-      "args": {
-        "controls": [
-          "interact",
-          "interact"
-        ],
-        "hold": "tap"
-      },
-      "expected": "the close edge, same frame: X must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
-    },
-    {
-      "id": "X01-979",
-      "title": "X close edge, same frame: the world is back",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is back to 'world'"
-    },
-    {
-      "id": "X01-980",
       "title": "X open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9579,7 +9540,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-981",
+      "id": "X01-978",
       "title": "X open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9588,7 +9549,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-982",
+      "id": "X01-979",
       "title": "X open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9598,7 +9559,7 @@
       "expected": "X one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-983",
+      "id": "X01-980",
       "title": "X close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9608,7 +9569,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-984",
+      "id": "X01-981",
       "title": "X close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9617,7 +9578,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-985",
+      "id": "X01-982",
       "title": "X close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9627,14 +9588,14 @@
       "expected": "X one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-986",
+      "id": "X01-983",
       "title": "X: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-987",
+      "id": "X01-984",
       "title": "world<->narrative_modal open edge, same frame: RT",
       "action": "press_multi",
       "args": {
@@ -9647,7 +9608,7 @@
       "expected": "every down edge is delivered before a frame advances. RT owns combat_quick in the world and map_zoom_in in the surface being opened; one press must not produce both owners' effects."
     },
     {
-      "id": "X01-988",
+      "id": "X01-985",
       "title": "RT open edge, same frame: what owns input now",
       "action": "assert",
       "args": {
@@ -9656,7 +9617,7 @@
       "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
     },
     {
-      "id": "X01-989",
+      "id": "X01-986",
       "title": "RT close edge, same frame",
       "action": "press_multi",
       "args": {
@@ -9669,7 +9630,7 @@
       "expected": "the close edge, same frame: RT must not fire its world verb into the surface that is closing, nor its menu verb into the world underneath"
     },
     {
-      "id": "X01-990",
+      "id": "X01-987",
       "title": "RT close edge, same frame: the world is back",
       "action": "assert",
       "args": {
@@ -9679,7 +9640,7 @@
       "expected": "input_context is back to 'world'"
     },
     {
-      "id": "X01-991",
+      "id": "X01-988",
       "title": "RT open edge, next frame: cross the boundary",
       "action": "press",
       "args": {
@@ -9689,7 +9650,7 @@
       "expected": "the boundary is crossed on its own frame"
     },
     {
-      "id": "X01-992",
+      "id": "X01-989",
       "title": "RT open edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9698,7 +9659,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-993",
+      "id": "X01-990",
       "title": "RT open edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9708,7 +9669,7 @@
       "expected": "RT one frame after the open edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-994",
+      "id": "X01-991",
       "title": "RT close edge, next frame: cross back",
       "action": "press",
       "args": {
@@ -9718,7 +9679,7 @@
       "expected": "the boundary is crossed back on its own frame"
     },
     {
-      "id": "X01-995",
+      "id": "X01-992",
       "title": "RT close edge, next frame: one frame later",
       "action": "wait",
       "args": {
@@ -9727,7 +9688,7 @@
       "expected": "exactly one physics frame passes"
     },
     {
-      "id": "X01-996",
+      "id": "X01-993",
       "title": "RT close edge, next frame: probe",
       "action": "probe_cell",
       "args": {
@@ -9737,14 +9698,14 @@
       "expected": "RT one frame after the close edge. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-997",
+      "id": "X01-994",
       "title": "RT: settle back to the world",
       "action": "close_menu",
       "args": {},
       "expected": "whatever the pair reached is closed before the next shared button is tried"
     },
     {
-      "id": "X01-998",
+      "id": "X01-995",
       "title": "boundary: world<->combat, next frame only",
       "action": "note",
       "args": {
@@ -9753,7 +9714,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-999",
+      "id": "X01-996",
       "title": "walk to the practice trainer again",
       "action": "move_to",
       "args": {
@@ -9765,7 +9726,7 @@
       "expected": "the player walks back to practice_trainer (13,9)"
     },
     {
-      "id": "X01-1000",
+      "id": "X01-997",
       "title": "accept the challenge",
       "action": "press",
       "args": {
@@ -9777,7 +9738,7 @@
       "expected": "the trainer's conversation ends in a fight"
     },
     {
-      "id": "X01-1001",
+      "id": "X01-998",
       "title": "world<->combat open edge, next frame: LB",
       "action": "probe_cell",
       "args": {
@@ -9787,7 +9748,7 @@
       "expected": "LB just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1002",
+      "id": "X01-999",
       "title": "world<->combat open edge, next frame: RB",
       "action": "probe_cell",
       "args": {
@@ -9797,7 +9758,7 @@
       "expected": "RB just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1003",
+      "id": "X01-1000",
       "title": "world<->combat open edge, next frame: Start",
       "action": "probe_cell",
       "args": {
@@ -9807,7 +9768,7 @@
       "expected": "Start just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1004",
+      "id": "X01-1001",
       "title": "world<->combat open edge, next frame: A",
       "action": "probe_cell",
       "args": {
@@ -9817,7 +9778,7 @@
       "expected": "A just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1005",
+      "id": "X01-1002",
       "title": "world<->combat open edge, next frame: B",
       "action": "probe_cell",
       "args": {
@@ -9827,7 +9788,7 @@
       "expected": "B just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1006",
+      "id": "X01-1003",
       "title": "world<->combat open edge, next frame: X",
       "action": "probe_cell",
       "args": {
@@ -9837,7 +9798,7 @@
       "expected": "X just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1007",
+      "id": "X01-1004",
       "title": "world<->combat open edge, next frame: RT",
       "action": "probe_cell",
       "args": {
@@ -9847,7 +9808,7 @@
       "expected": "RT just after the fight started. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1008",
+      "id": "X01-1005",
       "title": "let the fight end",
       "action": "wait",
       "args": {
@@ -9856,7 +9817,7 @@
       "expected": "the fight runs to its end; on victory, rewards + control return with no stuck modal (L.6 T05)"
     },
     {
-      "id": "X01-1009",
+      "id": "X01-1006",
       "title": "world<->combat close edge, next frame: LB",
       "action": "probe_cell",
       "args": {
@@ -9866,7 +9827,7 @@
       "expected": "LB just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1010",
+      "id": "X01-1007",
       "title": "world<->combat close edge, next frame: RB",
       "action": "probe_cell",
       "args": {
@@ -9876,7 +9837,7 @@
       "expected": "RB just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1011",
+      "id": "X01-1008",
       "title": "world<->combat close edge, next frame: Start",
       "action": "probe_cell",
       "args": {
@@ -9886,7 +9847,7 @@
       "expected": "Start just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1012",
+      "id": "X01-1009",
       "title": "world<->combat close edge, next frame: A",
       "action": "probe_cell",
       "args": {
@@ -9896,7 +9857,7 @@
       "expected": "A just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1013",
+      "id": "X01-1010",
       "title": "world<->combat close edge, next frame: B",
       "action": "probe_cell",
       "args": {
@@ -9906,7 +9867,7 @@
       "expected": "B just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1014",
+      "id": "X01-1011",
       "title": "world<->combat close edge, next frame: X",
       "action": "probe_cell",
       "args": {
@@ -9916,7 +9877,7 @@
       "expected": "X just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1015",
+      "id": "X01-1012",
       "title": "world<->combat close edge, next frame: RT",
       "action": "probe_cell",
       "args": {
@@ -9926,7 +9887,7 @@
       "expected": "RT just after the fight ended. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1016",
+      "id": "X01-1013",
       "title": "the per-menu sweep",
       "action": "note",
       "args": {
@@ -9935,14 +9896,14 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1017",
+      "id": "X01-1014",
       "title": "open the pause shell through its own button",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button opens the pause shell"
     },
     {
-      "id": "X01-1018",
+      "id": "X01-1015",
       "title": "RB full cycle forward through every tab",
       "action": "press",
       "args": {
@@ -9954,7 +9915,7 @@
       "expected": "seven RB presses visit every reachable tab and return to the first"
     },
     {
-      "id": "X01-1019",
+      "id": "X01-1016",
       "title": "back on the first tab after a full cycle",
       "action": "assert",
       "args": {
@@ -9964,7 +9925,7 @@
       "expected": "a full forward cycle of the seven tabs lands back on Satchel"
     },
     {
-      "id": "X01-1020",
+      "id": "X01-1017",
       "title": "LB full cycle in reverse",
       "action": "press",
       "args": {
@@ -9976,7 +9937,7 @@
       "expected": "seven LB presses walk the same seven tabs in reverse and return to the first"
     },
     {
-      "id": "X01-1021",
+      "id": "X01-1018",
       "title": "back on the first tab after the reverse cycle",
       "action": "assert",
       "args": {
@@ -9986,7 +9947,7 @@
       "expected": "a full reverse cycle lands back on Satchel"
     },
     {
-      "id": "X01-1022",
+      "id": "X01-1019",
       "title": "reach the first focusable element",
       "action": "focus_move",
       "args": {
@@ -9996,7 +9957,7 @@
       "expected": "ui_up, delivered as physical events, walks focus to the first focusable element. focus_move FAILs if focus did not move -- the poll trap is the defect class this hunts."
     },
     {
-      "id": "X01-1023",
+      "id": "X01-1020",
       "title": "reach the last focusable element",
       "action": "focus_move",
       "args": {
@@ -10006,7 +9967,7 @@
       "expected": "ui_down walks focus to the last focusable element"
     },
     {
-      "id": "X01-1024",
+      "id": "X01-1021",
       "title": "focus is still owned at the end of the list",
       "action": "assert",
       "args": {
@@ -10015,7 +9976,7 @@
       "expected": "a Control still holds focus after walking to the end"
     },
     {
-      "id": "X01-1025",
+      "id": "X01-1022",
       "title": "cycle to the Settings tab",
       "action": "press",
       "args": {
@@ -10027,7 +9988,7 @@
       "expected": "RB reaches Settings, the longest list in the game"
     },
     {
-      "id": "X01-1026",
+      "id": "X01-1023",
       "title": "Settings owns input",
       "action": "assert",
       "args": {
@@ -10037,7 +9998,7 @@
       "expected": "input_context is 'menu_settings'"
     },
     {
-      "id": "X01-1027",
+      "id": "X01-1024",
       "title": "scroll the Settings list to its far end",
       "action": "focus_move",
       "args": {
@@ -10047,7 +10008,7 @@
       "expected": "Settings' 126+ binding cells is the stress case; the ScrollContainer must follow focus"
     },
     {
-      "id": "X01-1028",
+      "id": "X01-1025",
       "title": "scroll the Settings list back to its start",
       "action": "focus_move",
       "args": {
@@ -10057,7 +10018,7 @@
       "expected": "the list walks back to the top and the ScrollContainer follows focus in both directions"
     },
     {
-      "id": "X01-1029",
+      "id": "X01-1026",
       "title": "change a representative setting",
       "action": "press",
       "args": {
@@ -10067,7 +10028,7 @@
       "expected": "the focused setting changes"
     },
     {
-      "id": "X01-1030",
+      "id": "X01-1027",
       "title": "change it back",
       "action": "press",
       "args": {
@@ -10077,7 +10038,7 @@
       "expected": "the setting returns to the value it had; settings changes persist (L.6 T07)"
     },
     {
-      "id": "X01-1031",
+      "id": "X01-1028",
       "title": "the Settings rebind flow",
       "action": "note",
       "args": {
@@ -10086,7 +10047,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1032",
+      "id": "X01-1029",
       "title": "start a rebind capture",
       "action": "press",
       "args": {
@@ -10096,7 +10057,7 @@
       "expected": "the focused binding cell enters capture and waits for a key or button"
     },
     {
-      "id": "X01-1033",
+      "id": "X01-1030",
       "title": "capture a rebind",
       "action": "press",
       "args": {
@@ -10106,7 +10067,7 @@
       "expected": "the captured event is written into the binding cell"
     },
     {
-      "id": "X01-1034",
+      "id": "X01-1031",
       "title": "start a second capture and cancel it",
       "action": "press",
       "args": {
@@ -10116,7 +10077,7 @@
       "expected": "a second binding cell enters capture"
     },
     {
-      "id": "X01-1035",
+      "id": "X01-1032",
       "title": "cancel the capture",
       "action": "press",
       "args": {
@@ -10126,7 +10087,7 @@
       "expected": "the capture is abandoned and the old binding stands"
     },
     {
-      "id": "X01-1036",
+      "id": "X01-1033",
       "title": "panic reset",
       "action": "focus_move",
       "args": {
@@ -10136,7 +10097,7 @@
       "expected": "focus reaches the reset control"
     },
     {
-      "id": "X01-1037",
+      "id": "X01-1034",
       "title": "press panic reset",
       "action": "press",
       "args": {
@@ -10146,7 +10107,7 @@
       "expected": "the whole map returns to its shipped defaults"
     },
     {
-      "id": "X01-1038",
+      "id": "X01-1035",
       "title": "confirm/cancel/back, one layer per press",
       "action": "press",
       "args": {
@@ -10156,14 +10117,14 @@
       "expected": "B chain closes exactly one layer per press (L.6 T07)"
     },
     {
-      "id": "X01-1039",
+      "id": "X01-1036",
       "title": "close the shell",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes"
     },
     {
-      "id": "X01-1040",
+      "id": "X01-1037",
       "title": "world control resumes: move",
       "action": "stick",
       "args": {
@@ -10175,7 +10136,7 @@
       "expected": "movement is live within 2 frames of close (L.6 T01)"
     },
     {
-      "id": "X01-1041",
+      "id": "X01-1038",
       "title": "world control resumes: camera",
       "action": "stick",
       "args": {
@@ -10187,7 +10148,7 @@
       "expected": "the camera is live within 2 frames of close"
     },
     {
-      "id": "X01-1042",
+      "id": "X01-1039",
       "title": "the world owns input",
       "action": "assert",
       "args": {
@@ -10197,21 +10158,21 @@
       "expected": "unpause, capture restored, movement live within 2 frames"
     },
     {
-      "id": "X01-1043",
+      "id": "X01-1040",
       "title": "reopen the shell",
       "action": "open_menu",
       "args": {},
       "expected": "reopen: the shell comes back with no drift in pause state, mouse capture or focus"
     },
     {
-      "id": "X01-1044",
+      "id": "X01-1041",
       "title": "close it again",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes again"
     },
     {
-      "id": "X01-1045",
+      "id": "X01-1042",
       "title": "VOCABULARY GAP: mouse-capture state is recorded but not assertable",
       "action": "note",
       "args": {
@@ -10220,7 +10181,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1046",
+      "id": "X01-1043",
       "title": "tap vs press-vs-release",
       "action": "note",
       "args": {
@@ -10229,7 +10190,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1047",
+      "id": "X01-1044",
       "title": "interact (dialogue advance): tap (1 frame)",
       "action": "press",
       "args": {
@@ -10239,7 +10200,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1048",
+      "id": "X01-1045",
       "title": "interact (dialogue advance): short (10 frames)",
       "action": "press",
       "args": {
@@ -10249,7 +10210,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1049",
+      "id": "X01-1046",
       "title": "interact (dialogue advance): long (60 frames)",
       "action": "press",
       "args": {
@@ -10259,7 +10220,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1050",
+      "id": "X01-1047",
       "title": "combat_charged (hold to charge): tap (1 frame)",
       "action": "press",
       "args": {
@@ -10269,7 +10230,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1051",
+      "id": "X01-1048",
       "title": "combat_charged (hold to charge): short (10 frames)",
       "action": "press",
       "args": {
@@ -10279,7 +10240,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1052",
+      "id": "X01-1049",
       "title": "combat_charged (hold to charge): long (60 frames)",
       "action": "press",
       "args": {
@@ -10289,7 +10250,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1053",
+      "id": "X01-1050",
       "title": "throw aim (hold/release): tap (1 frame)",
       "action": "press",
       "args": {
@@ -10299,7 +10260,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1054",
+      "id": "X01-1051",
       "title": "throw aim (hold/release): short (10 frames)",
       "action": "press",
       "args": {
@@ -10309,7 +10270,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1055",
+      "id": "X01-1052",
       "title": "throw aim (hold/release): long (60 frames)",
       "action": "press",
       "args": {
@@ -10319,7 +10280,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1056",
+      "id": "X01-1053",
       "title": "sprint (L3): tap (1 frame)",
       "action": "press",
       "args": {
@@ -10329,7 +10290,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1057",
+      "id": "X01-1054",
       "title": "sprint (L3): short (10 frames)",
       "action": "press",
       "args": {
@@ -10339,7 +10300,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1058",
+      "id": "X01-1055",
       "title": "sprint (L3): long (60 frames)",
       "action": "press",
       "args": {
@@ -10349,7 +10310,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1059",
+      "id": "X01-1056",
       "title": "A/B edges at a modal boundary",
       "action": "note",
       "args": {
@@ -10358,14 +10319,14 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1060",
+      "id": "X01-1057",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is the modal boundary under test"
     },
     {
-      "id": "X01-1061",
+      "id": "X01-1058",
       "title": "A edge at a modal boundary: tap",
       "action": "press",
       "args": {
@@ -10375,7 +10336,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1062",
+      "id": "X01-1059",
       "title": "A tap: what owns input now",
       "action": "assert",
       "args": {
@@ -10385,14 +10346,14 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1063",
+      "id": "X01-1060",
       "title": "A tap: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1064",
+      "id": "X01-1061",
       "title": "A edge at a modal boundary: short",
       "action": "press",
       "args": {
@@ -10402,7 +10363,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1065",
+      "id": "X01-1062",
       "title": "A short: what owns input now",
       "action": "assert",
       "args": {
@@ -10412,14 +10373,14 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1066",
+      "id": "X01-1063",
       "title": "A short: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1067",
+      "id": "X01-1064",
       "title": "A edge at a modal boundary: long",
       "action": "press",
       "args": {
@@ -10429,7 +10390,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1068",
+      "id": "X01-1065",
       "title": "A long: what owns input now",
       "action": "assert",
       "args": {
@@ -10439,14 +10400,14 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1069",
+      "id": "X01-1066",
       "title": "A long: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1070",
+      "id": "X01-1067",
       "title": "B edge at a modal boundary: tap",
       "action": "press",
       "args": {
@@ -10456,7 +10417,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1071",
+      "id": "X01-1068",
       "title": "B tap: what owns input now",
       "action": "assert",
       "args": {
@@ -10466,14 +10427,14 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1072",
+      "id": "X01-1069",
       "title": "B tap: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1073",
+      "id": "X01-1070",
       "title": "B edge at a modal boundary: short",
       "action": "press",
       "args": {
@@ -10483,7 +10444,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1074",
+      "id": "X01-1071",
       "title": "B short: what owns input now",
       "action": "assert",
       "args": {
@@ -10493,14 +10454,14 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1075",
+      "id": "X01-1072",
       "title": "B short: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1076",
+      "id": "X01-1073",
       "title": "B edge at a modal boundary: long",
       "action": "press",
       "args": {
@@ -10510,7 +10471,7 @@
       "expected": "record which edge the game acts on and whether a release leaks into the surface below"
     },
     {
-      "id": "X01-1077",
+      "id": "X01-1074",
       "title": "B long: what owns input now",
       "action": "assert",
       "args": {
@@ -10520,21 +10481,21 @@
       "expected": "the modal still owns input, or the record says which edge took it away"
     },
     {
-      "id": "X01-1078",
+      "id": "X01-1075",
       "title": "B long: re-establish the boundary",
       "action": "open_menu",
       "args": {},
       "expected": "the shell is re-opened through its own button if the edge closed it"
     },
     {
-      "id": "X01-1079",
+      "id": "X01-1076",
       "title": "close the shell",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes"
     },
     {
-      "id": "X01-1080",
+      "id": "X01-1077",
       "title": "the KBM sweep",
       "action": "note",
       "args": {
@@ -10543,7 +10504,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1081",
+      "id": "X01-1078",
       "title": "VOCABULARY GAP: the keyboard half of a dual-bound action cannot be selected",
       "action": "note",
       "args": {
@@ -10552,7 +10513,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1082",
+      "id": "X01-1079",
       "title": "KBM: W (move_forward)",
       "action": "probe_cell",
       "args": {
@@ -10562,14 +10523,14 @@
       "expected": "keyboard W resolves to move_forward. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1083",
+      "id": "X01-1080",
       "title": "KBM: return to the world after W",
       "action": "close_menu",
       "args": {},
       "expected": "whatever W opened is closed before the next key"
     },
     {
-      "id": "X01-1084",
+      "id": "X01-1081",
       "title": "KBM: A (move_left)",
       "action": "probe_cell",
       "args": {
@@ -10579,14 +10540,14 @@
       "expected": "keyboard A resolves to move_left. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1085",
+      "id": "X01-1082",
       "title": "KBM: return to the world after A",
       "action": "close_menu",
       "args": {},
       "expected": "whatever A opened is closed before the next key"
     },
     {
-      "id": "X01-1086",
+      "id": "X01-1083",
       "title": "KBM: S (move_back)",
       "action": "probe_cell",
       "args": {
@@ -10596,14 +10557,14 @@
       "expected": "keyboard S resolves to move_back. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1087",
+      "id": "X01-1084",
       "title": "KBM: return to the world after S",
       "action": "close_menu",
       "args": {},
       "expected": "whatever S opened is closed before the next key"
     },
     {
-      "id": "X01-1088",
+      "id": "X01-1085",
       "title": "KBM: D (move_right)",
       "action": "probe_cell",
       "args": {
@@ -10613,14 +10574,14 @@
       "expected": "keyboard D resolves to move_right. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1089",
+      "id": "X01-1086",
       "title": "KBM: return to the world after D",
       "action": "close_menu",
       "args": {},
       "expected": "whatever D opened is closed before the next key"
     },
     {
-      "id": "X01-1090",
+      "id": "X01-1087",
       "title": "KBM: E (interact)",
       "action": "probe_cell",
       "args": {
@@ -10630,14 +10591,14 @@
       "expected": "keyboard E resolves to interact. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1091",
+      "id": "X01-1088",
       "title": "KBM: return to the world after E",
       "action": "close_menu",
       "args": {},
       "expected": "whatever E opened is closed before the next key"
     },
     {
-      "id": "X01-1092",
+      "id": "X01-1089",
       "title": "KBM: I (inventory)",
       "action": "probe_cell",
       "args": {
@@ -10647,14 +10608,14 @@
       "expected": "keyboard I resolves to inventory. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1093",
+      "id": "X01-1090",
       "title": "KBM: return to the world after I",
       "action": "close_menu",
       "args": {},
       "expected": "whatever I opened is closed before the next key"
     },
     {
-      "id": "X01-1094",
+      "id": "X01-1091",
       "title": "KBM: M (map)",
       "action": "probe_cell",
       "args": {
@@ -10664,14 +10625,14 @@
       "expected": "keyboard M resolves to map. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1095",
+      "id": "X01-1092",
       "title": "KBM: return to the world after M",
       "action": "close_menu",
       "args": {},
       "expected": "whatever M opened is closed before the next key"
     },
     {
-      "id": "X01-1096",
+      "id": "X01-1093",
       "title": "KBM: B (build_open)",
       "action": "probe_cell",
       "args": {
@@ -10681,14 +10642,14 @@
       "expected": "keyboard B resolves to build_open. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1097",
+      "id": "X01-1094",
       "title": "KBM: return to the world after B",
       "action": "close_menu",
       "args": {},
       "expected": "whatever B opened is closed before the next key"
     },
     {
-      "id": "X01-1098",
+      "id": "X01-1095",
       "title": "KBM: L (torch_toggle)",
       "action": "probe_cell",
       "args": {
@@ -10698,14 +10659,14 @@
       "expected": "keyboard L resolves to torch_toggle. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1099",
+      "id": "X01-1096",
       "title": "KBM: return to the world after L",
       "action": "close_menu",
       "args": {},
       "expected": "whatever L opened is closed before the next key"
     },
     {
-      "id": "X01-1100",
+      "id": "X01-1097",
       "title": "KBM: F (combat_throw)",
       "action": "probe_cell",
       "args": {
@@ -10715,14 +10676,14 @@
       "expected": "keyboard F resolves to combat_throw. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1101",
+      "id": "X01-1098",
       "title": "KBM: return to the world after F",
       "action": "close_menu",
       "args": {},
       "expected": "whatever F opened is closed before the next key"
     },
     {
-      "id": "X01-1102",
+      "id": "X01-1099",
       "title": "KBM: Esc (game_menu)",
       "action": "probe_cell",
       "args": {
@@ -10732,14 +10693,14 @@
       "expected": "keyboard Esc resolves to game_menu. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1103",
+      "id": "X01-1100",
       "title": "KBM: return to the world after Esc",
       "action": "close_menu",
       "args": {},
       "expected": "whatever Esc opened is closed before the next key"
     },
     {
-      "id": "X01-1104",
+      "id": "X01-1101",
       "title": "KBM: Tab (menu_tab_right)",
       "action": "probe_cell",
       "args": {
@@ -10749,14 +10710,14 @@
       "expected": "keyboard Tab resolves to menu_tab_right. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1105",
+      "id": "X01-1102",
       "title": "KBM: return to the world after Tab",
       "action": "close_menu",
       "args": {},
       "expected": "whatever Tab opened is closed before the next key"
     },
     {
-      "id": "X01-1106",
+      "id": "X01-1103",
       "title": "KBM: the mouse's own verb",
       "action": "probe_cell",
       "args": {
@@ -10766,21 +10727,21 @@
       "expected": "the left mouse button resolves to use_tool. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1107",
+      "id": "X01-1104",
       "title": "mouse look capture across a menu open",
       "action": "open_menu",
       "args": {},
       "expected": "the shell opens; mouse capture is released"
     },
     {
-      "id": "X01-1108",
+      "id": "X01-1105",
       "title": "mouse look capture across a menu close",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes; mouse-capture state is restored"
     },
     {
-      "id": "X01-1109",
+      "id": "X01-1106",
       "title": "Part B: from S08-exit",
       "action": "note",
       "args": {
@@ -10789,7 +10750,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1110",
+      "id": "X01-1107",
       "title": "empty the live save directory",
       "action": "wipe_saves",
       "args": {
@@ -10798,7 +10759,7 @@
       "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
     },
     {
-      "id": "X01-1111",
+      "id": "X01-1108",
       "title": "seed slot 4 from S08-exit",
       "action": "seed_save",
       "args": {
@@ -10808,7 +10769,7 @@
       "expected": "the journey's S08-exit slot file is back in user://, so the title's Load Game finds it"
     },
     {
-      "id": "X01-1112",
+      "id": "X01-1109",
       "title": "boot the real title screen",
       "action": "boot",
       "args": {
@@ -10818,7 +10779,7 @@
       "expected": "the real title comes up with Start New Game focused"
     },
     {
-      "id": "X01-1113",
+      "id": "X01-1110",
       "title": "the title owns input",
       "action": "assert",
       "args": {
@@ -10828,7 +10789,7 @@
       "expected": "input_context is 'title'"
     },
     {
-      "id": "X01-1114",
+      "id": "X01-1111",
       "title": "move focus to Load Game",
       "action": "focus_move",
       "args": {
@@ -10838,7 +10799,7 @@
       "expected": "d-pad down moves focus from Start New Game to Load Game"
     },
     {
-      "id": "X01-1115",
+      "id": "X01-1112",
       "title": "open the load slot list",
       "action": "press",
       "args": {
@@ -10848,7 +10809,7 @@
       "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
     },
     {
-      "id": "X01-1116",
+      "id": "X01-1113",
       "title": "load the seeded slot",
       "action": "press",
       "args": {
@@ -10858,7 +10819,7 @@
       "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
     },
     {
-      "id": "X01-1117",
+      "id": "X01-1114",
       "title": "let the loaded world stand up",
       "action": "wait",
       "args": {
@@ -10867,7 +10828,7 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
     },
     {
-      "id": "X01-1118",
+      "id": "X01-1115",
       "title": "the world owns input",
       "action": "assert",
       "args": {
@@ -10877,7 +10838,7 @@
       "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
     },
     {
-      "id": "X01-1119",
+      "id": "X01-1116",
       "title": "AMBIGUITY: what input_context reports while mounted",
       "action": "note",
       "args": {
@@ -10886,7 +10847,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1120",
+      "id": "X01-1117",
       "title": "context: riding",
       "action": "note",
       "args": {
@@ -10895,7 +10856,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1121",
+      "id": "X01-1118",
       "title": "call out the mount",
       "action": "press",
       "args": {
@@ -10905,7 +10866,7 @@
       "expected": "RB deploys the party's saddled Meadowhart"
     },
     {
-      "id": "X01-1122",
+      "id": "X01-1119",
       "title": "stand beside it",
       "action": "wait",
       "args": {
@@ -10914,7 +10875,7 @@
       "expected": "riding_controller.gd offers the Mount prompt once the trainer is close enough"
     },
     {
-      "id": "X01-1123",
+      "id": "X01-1120",
       "title": "mount",
       "action": "press",
       "args": {
@@ -10924,7 +10885,7 @@
       "expected": "the Mount prompt mounts the creature"
     },
     {
-      "id": "X01-1124",
+      "id": "X01-1121",
       "title": "cell riding x A",
       "action": "probe_cell",
       "args": {
@@ -10934,7 +10895,7 @@
       "expected": "A (joypad 0), shared by design with ui_accept / menu_confirm in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1125",
+      "id": "X01-1122",
       "title": "cell riding x B",
       "action": "probe_cell",
       "args": {
@@ -10944,7 +10905,7 @@
       "expected": "B (joypad 1), shared by design with menu_cancel / build_cancel in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1126",
+      "id": "X01-1123",
       "title": "cell riding x X",
       "action": "probe_cell",
       "args": {
@@ -10954,8 +10915,35 @@
       "expected": "X (joypad 2), shared by design with build_place in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1127",
+      "id": "X01-1124",
       "title": "return to the mounted world after the X cell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "menu_cancel closes whatever the cell opened"
+    },
+    {
+      "id": "X01-1125",
+      "title": "re-mount if the cell dismounted",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the Mount prompt re-mounts"
+    },
+    {
+      "id": "X01-1126",
+      "title": "cell riding x Y",
+      "action": "probe_cell",
+      "args": {
+        "control": "inventory",
+        "expected": "Y (joypad 3), shared by design with build_dismantle in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+      },
+      "expected": "Y (joypad 3), shared by design with build_dismantle in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+    },
+    {
+      "id": "X01-1127",
+      "title": "return to the mounted world after the Y cell",
       "action": "close_menu",
       "args": {},
       "expected": "menu_cancel closes whatever the cell opened"
@@ -10972,17 +10960,17 @@
     },
     {
       "id": "X01-1129",
-      "title": "cell riding x Y",
+      "title": "cell riding x View",
       "action": "probe_cell",
       "args": {
-        "control": "inventory",
-        "expected": "Y (joypad 3), shared by design with build_dismantle in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+        "control": "map",
+        "expected": "View/Back (joypad 4) in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
       },
-      "expected": "Y (joypad 3), shared by design with build_dismantle in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+      "expected": "View/Back (joypad 4) in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
       "id": "X01-1130",
-      "title": "return to the mounted world after the Y cell",
+      "title": "return to the mounted world after the View cell",
       "action": "close_menu",
       "args": {},
       "expected": "menu_cancel closes whatever the cell opened"
@@ -10999,17 +10987,17 @@
     },
     {
       "id": "X01-1132",
-      "title": "cell riding x View",
+      "title": "cell riding x Start",
       "action": "probe_cell",
       "args": {
-        "control": "map",
-        "expected": "View/Back (joypad 4) in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+        "control": "game_menu",
+        "expected": "Menu/Start (joypad 6), shared by design with backpack_drop in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
       },
-      "expected": "View/Back (joypad 4) in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
+      "expected": "Menu/Start (joypad 6), shared by design with backpack_drop in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
       "id": "X01-1133",
-      "title": "return to the mounted world after the View cell",
+      "title": "return to the mounted world after the Start cell",
       "action": "close_menu",
       "args": {},
       "expected": "menu_cancel closes whatever the cell opened"
@@ -11026,33 +11014,6 @@
     },
     {
       "id": "X01-1135",
-      "title": "cell riding x Start",
-      "action": "probe_cell",
-      "args": {
-        "control": "game_menu",
-        "expected": "Menu/Start (joypad 6), shared by design with backpack_drop in riding: A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
-      },
-      "expected": "Menu/Start (joypad 6), shared by design with backpack_drop in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
-    },
-    {
-      "id": "X01-1136",
-      "title": "return to the mounted world after the Start cell",
-      "action": "close_menu",
-      "args": {},
-      "expected": "menu_cancel closes whatever the cell opened"
-    },
-    {
-      "id": "X01-1137",
-      "title": "re-mount if the cell dismounted",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "the Mount prompt re-mounts"
-    },
-    {
-      "id": "X01-1138",
       "title": "cell riding x L3",
       "action": "probe_cell",
       "args": {
@@ -11062,7 +11023,7 @@
       "expected": "L3 (joypad 7), shared by design with backpack_assign in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1139",
+      "id": "X01-1136",
       "title": "cell riding x R3",
       "action": "probe_cell",
       "args": {
@@ -11072,7 +11033,7 @@
       "expected": "R3 (joypad 8), shared by design with backpack_split in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1140",
+      "id": "X01-1137",
       "title": "cell riding x LB",
       "action": "probe_cell",
       "args": {
@@ -11082,7 +11043,7 @@
       "expected": "LB (joypad 9), shared by design with menu_tab_left in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1141",
+      "id": "X01-1138",
       "title": "cell riding x RB",
       "action": "probe_cell",
       "args": {
@@ -11092,7 +11053,7 @@
       "expected": "RB (joypad 10), shared by design with menu_tab_right in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1142",
+      "id": "X01-1139",
       "title": "cell riding x DpadUp",
       "action": "probe_cell",
       "args": {
@@ -11102,7 +11063,7 @@
       "expected": "D-pad Up (joypad 11), shared with build_snap_cycle and ui_up in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1143",
+      "id": "X01-1140",
       "title": "cell riding x DpadDown",
       "action": "probe_cell",
       "args": {
@@ -11112,7 +11073,7 @@
       "expected": "D-pad Down (joypad 12), shared with build_rotate and ui_down in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1144",
+      "id": "X01-1141",
       "title": "cell riding x DpadLeft",
       "action": "probe_cell",
       "args": {
@@ -11122,7 +11083,7 @@
       "expected": "D-pad Left (joypad 13), shared with ui_left in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1145",
+      "id": "X01-1142",
       "title": "cell riding x DpadRight",
       "action": "probe_cell",
       "args": {
@@ -11132,7 +11093,7 @@
       "expected": "D-pad Right (joypad 14), shared with ui_right in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1146",
+      "id": "X01-1143",
       "title": "cell riding x MISC1",
       "action": "probe_cell",
       "args": {
@@ -11142,7 +11103,7 @@
       "expected": "MISC1 (joypad 15), auto-run in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1147",
+      "id": "X01-1144",
       "title": "cell riding x LT",
       "action": "probe_cell",
       "args": {
@@ -11152,7 +11113,7 @@
       "expected": "LT (axis 4), shared by design with map_zoom_out / build_rotate_left in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1148",
+      "id": "X01-1145",
       "title": "cell riding x RT",
       "action": "probe_cell",
       "args": {
@@ -11162,7 +11123,7 @@
       "expected": "RT (axis 5), shared by design with map_zoom_in / build_rotate_right in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1149",
+      "id": "X01-1146",
       "title": "cell riding x LeftStick",
       "action": "probe_cell",
       "args": {
@@ -11172,7 +11133,7 @@
       "expected": "left stick (axes 0/1), deflected forward in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1150",
+      "id": "X01-1147",
       "title": "cell riding x RightStick",
       "action": "probe_cell",
       "args": {
@@ -11182,7 +11143,7 @@
       "expected": "right stick (axes 2/3), deflected left in riding. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1151",
+      "id": "X01-1148",
       "title": "menus while mounted",
       "action": "note",
       "args": {
@@ -11191,7 +11152,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1152",
+      "id": "X01-1149",
       "title": "open the Satchel tab on its own shortcut",
       "action": "open_menu",
       "args": {
@@ -11200,7 +11161,7 @@
       "expected": "the Satchel shortcut (Y) opens the pause shell straight onto the Satchel tab"
     },
     {
-      "id": "X01-1153",
+      "id": "X01-1150",
       "title": "the Satchel tab owns input",
       "action": "assert",
       "args": {
@@ -11210,21 +11171,21 @@
       "expected": "input_context names the live tab: menu_backpack"
     },
     {
-      "id": "X01-1154",
+      "id": "X01-1151",
       "title": "close the Satchel tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1155",
+      "id": "X01-1152",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell"
     },
     {
-      "id": "X01-1156",
+      "id": "X01-1153",
       "title": "cycle right to the Creatures tab",
       "action": "press",
       "args": {
@@ -11236,7 +11197,7 @@
       "expected": "RB moves forward 1 tab(s) from Satchel to Creatures"
     },
     {
-      "id": "X01-1157",
+      "id": "X01-1154",
       "title": "the Creatures tab owns input",
       "action": "assert",
       "args": {
@@ -11246,14 +11207,14 @@
       "expected": "input_context names the live tab: menu_creatures"
     },
     {
-      "id": "X01-1158",
+      "id": "X01-1155",
       "title": "close the Creatures tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1159",
+      "id": "X01-1156",
       "title": "open the Map tab on its own shortcut",
       "action": "open_menu",
       "args": {
@@ -11262,7 +11223,7 @@
       "expected": "the Map shortcut (View) opens the pause shell straight onto the Map tab"
     },
     {
-      "id": "X01-1160",
+      "id": "X01-1157",
       "title": "the Map tab owns input",
       "action": "assert",
       "args": {
@@ -11272,21 +11233,21 @@
       "expected": "input_context names the live tab: menu_map"
     },
     {
-      "id": "X01-1161",
+      "id": "X01-1158",
       "title": "close the Map tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1162",
+      "id": "X01-1159",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell"
     },
     {
-      "id": "X01-1163",
+      "id": "X01-1160",
       "title": "cycle right to the Quests tab",
       "action": "press",
       "args": {
@@ -11298,7 +11259,7 @@
       "expected": "RB moves forward 3 tab(s) from Satchel to Quests"
     },
     {
-      "id": "X01-1164",
+      "id": "X01-1161",
       "title": "the Quests tab owns input",
       "action": "assert",
       "args": {
@@ -11308,21 +11269,21 @@
       "expected": "input_context names the live tab: menu_quest_log"
     },
     {
-      "id": "X01-1165",
+      "id": "X01-1162",
       "title": "close the Quests tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1166",
+      "id": "X01-1163",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell"
     },
     {
-      "id": "X01-1167",
+      "id": "X01-1164",
       "title": "cycle right to the Build tab",
       "action": "press",
       "args": {
@@ -11334,7 +11295,7 @@
       "expected": "RB moves forward 4 tab(s) from Satchel to Build"
     },
     {
-      "id": "X01-1168",
+      "id": "X01-1165",
       "title": "the Build tab owns input",
       "action": "assert",
       "args": {
@@ -11344,21 +11305,21 @@
       "expected": "input_context names the live tab: menu_build"
     },
     {
-      "id": "X01-1169",
+      "id": "X01-1166",
       "title": "close the Build tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1170",
+      "id": "X01-1167",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell"
     },
     {
-      "id": "X01-1171",
+      "id": "X01-1168",
       "title": "cycle right to the Save tab",
       "action": "press",
       "args": {
@@ -11370,7 +11331,7 @@
       "expected": "RB moves forward 5 tab(s) from Satchel to Save"
     },
     {
-      "id": "X01-1172",
+      "id": "X01-1169",
       "title": "the Save tab owns input",
       "action": "assert",
       "args": {
@@ -11380,21 +11341,21 @@
       "expected": "input_context names the live tab: menu_save"
     },
     {
-      "id": "X01-1173",
+      "id": "X01-1170",
       "title": "close the Save tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1174",
+      "id": "X01-1171",
       "title": "open the pause shell",
       "action": "open_menu",
       "args": {},
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell"
     },
     {
-      "id": "X01-1175",
+      "id": "X01-1172",
       "title": "cycle right to the Settings tab",
       "action": "press",
       "args": {
@@ -11406,7 +11367,7 @@
       "expected": "RB moves forward 6 tab(s) from Satchel to Settings"
     },
     {
-      "id": "X01-1176",
+      "id": "X01-1173",
       "title": "the Settings tab owns input",
       "action": "assert",
       "args": {
@@ -11416,14 +11377,14 @@
       "expected": "input_context names the live tab: menu_settings"
     },
     {
-      "id": "X01-1177",
+      "id": "X01-1174",
       "title": "close the Settings tab while mounted",
       "action": "close_menu",
       "args": {},
       "expected": "the shell closes and the player is still mounted"
     },
     {
-      "id": "X01-1178",
+      "id": "X01-1175",
       "title": "dismount",
       "action": "press",
       "args": {
@@ -11433,7 +11394,7 @@
       "expected": "the Dismount prompt returns the player to their own feet"
     },
     {
-      "id": "X01-1179",
+      "id": "X01-1176",
       "title": "Part C: the title screen",
       "action": "note",
       "args": {
@@ -11442,7 +11403,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1180",
+      "id": "X01-1177",
       "title": "context: title",
       "action": "note",
       "args": {
@@ -11451,7 +11412,7 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
-      "id": "X01-1181",
+      "id": "X01-1178",
       "title": "boot the real title screen",
       "action": "boot",
       "args": {
@@ -11461,7 +11422,7 @@
       "expected": "the real title comes up with Start New Game focused"
     },
     {
-      "id": "X01-1182",
+      "id": "X01-1179",
       "title": "the title owns input",
       "action": "assert",
       "args": {
@@ -11471,7 +11432,7 @@
       "expected": "input_context is 'title'"
     },
     {
-      "id": "X01-1183",
+      "id": "X01-1180",
       "title": "the title focuses its first button",
       "action": "assert",
       "args": {
@@ -11480,7 +11441,7 @@
       "expected": "without focus a controller cannot start the game at all"
     },
     {
-      "id": "X01-1184",
+      "id": "X01-1181",
       "title": "cell title x A",
       "action": "probe_cell",
       "args": {
@@ -11490,7 +11451,7 @@
       "expected": "A (joypad 0), shared by design with ui_accept / menu_confirm in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1185",
+      "id": "X01-1182",
       "title": "re-boot the title after the A cell",
       "action": "boot",
       "args": {
@@ -11500,7 +11461,7 @@
       "expected": "the title comes back up, whatever the cell reached"
     },
     {
-      "id": "X01-1186",
+      "id": "X01-1183",
       "title": "cell title x B",
       "action": "probe_cell",
       "args": {
@@ -11510,7 +11471,7 @@
       "expected": "B (joypad 1), shared by design with menu_cancel / build_cancel in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1187",
+      "id": "X01-1184",
       "title": "re-boot the title after the B cell",
       "action": "boot",
       "args": {
@@ -11520,7 +11481,7 @@
       "expected": "the title comes back up, whatever the cell reached"
     },
     {
-      "id": "X01-1188",
+      "id": "X01-1185",
       "title": "cell title x X",
       "action": "probe_cell",
       "args": {
@@ -11530,7 +11491,7 @@
       "expected": "X (joypad 2), shared by design with build_place in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1189",
+      "id": "X01-1186",
       "title": "cell title x Y",
       "action": "probe_cell",
       "args": {
@@ -11540,7 +11501,7 @@
       "expected": "Y (joypad 3), shared by design with build_dismantle in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1190",
+      "id": "X01-1187",
       "title": "cell title x View",
       "action": "probe_cell",
       "args": {
@@ -11550,7 +11511,7 @@
       "expected": "View/Back (joypad 4) in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1191",
+      "id": "X01-1188",
       "title": "cell title x Start",
       "action": "probe_cell",
       "args": {
@@ -11560,7 +11521,7 @@
       "expected": "Menu/Start (joypad 6), shared by design with backpack_drop in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1192",
+      "id": "X01-1189",
       "title": "cell title x L3",
       "action": "probe_cell",
       "args": {
@@ -11570,7 +11531,7 @@
       "expected": "L3 (joypad 7), shared by design with backpack_assign in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1193",
+      "id": "X01-1190",
       "title": "cell title x R3",
       "action": "probe_cell",
       "args": {
@@ -11580,7 +11541,7 @@
       "expected": "R3 (joypad 8), shared by design with backpack_split in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1194",
+      "id": "X01-1191",
       "title": "cell title x LB",
       "action": "probe_cell",
       "args": {
@@ -11590,7 +11551,7 @@
       "expected": "LB (joypad 9), shared by design with menu_tab_left in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1195",
+      "id": "X01-1192",
       "title": "cell title x RB",
       "action": "probe_cell",
       "args": {
@@ -11600,7 +11561,7 @@
       "expected": "RB (joypad 10), shared by design with menu_tab_right in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1196",
+      "id": "X01-1193",
       "title": "cell title x DpadUp",
       "action": "probe_cell",
       "args": {
@@ -11610,7 +11571,7 @@
       "expected": "D-pad Up (joypad 11), shared with build_snap_cycle and ui_up in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1197",
+      "id": "X01-1194",
       "title": "cell title x DpadDown",
       "action": "probe_cell",
       "args": {
@@ -11620,7 +11581,7 @@
       "expected": "D-pad Down (joypad 12), shared with build_rotate and ui_down in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1198",
+      "id": "X01-1195",
       "title": "cell title x DpadLeft",
       "action": "probe_cell",
       "args": {
@@ -11630,7 +11591,7 @@
       "expected": "D-pad Left (joypad 13), shared with ui_left in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1199",
+      "id": "X01-1196",
       "title": "cell title x DpadRight",
       "action": "probe_cell",
       "args": {
@@ -11640,7 +11601,7 @@
       "expected": "D-pad Right (joypad 14), shared with ui_right in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1200",
+      "id": "X01-1197",
       "title": "cell title x MISC1",
       "action": "probe_cell",
       "args": {
@@ -11650,7 +11611,7 @@
       "expected": "MISC1 (joypad 15), auto-run in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1201",
+      "id": "X01-1198",
       "title": "cell title x LT",
       "action": "probe_cell",
       "args": {
@@ -11660,7 +11621,7 @@
       "expected": "LT (axis 4), shared by design with map_zoom_out / build_rotate_left in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1202",
+      "id": "X01-1199",
       "title": "cell title x RT",
       "action": "probe_cell",
       "args": {
@@ -11670,7 +11631,7 @@
       "expected": "RT (axis 5), shared by design with map_zoom_in / build_rotate_right in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1203",
+      "id": "X01-1200",
       "title": "cell title x LeftStick",
       "action": "probe_cell",
       "args": {
@@ -11680,7 +11641,7 @@
       "expected": "left stick (axes 0/1), deflected forward in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1204",
+      "id": "X01-1201",
       "title": "cell title x RightStick",
       "action": "probe_cell",
       "args": {
@@ -11690,7 +11651,7 @@
       "expected": "right stick (axes 2/3), deflected left in title. A cell fails when one press produces two owners' effects (e.g. a d-pad press that both moves menu focus and fires a hotbar slot), when a world verb fires under a modal, or when focus is lost/unrecoverable."
     },
     {
-      "id": "X01-1205",
+      "id": "X01-1202",
       "title": "GF-01-TITLE-01 is S01's, not this segment's",
       "action": "note",
       "args": {
@@ -11699,7 +11660,7 @@
       "expected": "a note event records why the title row takes no planned shot"
     },
     {
-      "id": "X01-1206",
+      "id": "X01-1203",
       "title": "segment close",
       "action": "note",
       "args": {
