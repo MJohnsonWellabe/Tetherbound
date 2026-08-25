@@ -186,3 +186,86 @@ the coordinator session was renamed (`tetherbound-06` -> `tetherbound-ba`), so
 the name-addressed sends this lane attempted were never going to land. This file
 is the channel. Check-ins land at every stage boundary and after each journey
 segment.
+
+---
+
+## Check-in 4 — 2026-08-25 17:40Z — the baseline "green" is vacuous, and it matters
+
+Instrumentation CI ran for real (run 2432, attempt 2, `8d25c8d2`). Result:
+
+| job | conclusion |
+|---|---|
+| `verify-unit-tests` shards 1-6 | **success** (all six) |
+| `verify-gate-a-ui-build-shard` | success |
+| `verify-combat-shard` | success |
+| `verify-regions-shard` | success |
+| `verify-owner-regressions-shard` | success |
+| `verify-gate-evidence-shard` | success |
+| `verify-continuous-core-known-red` | failure — **expected**, `continue-on-error: true`, tracks a real unfixed CONTINUOUS-CORE defect by design |
+| `verify-core-verb-shard` | **cancelled at the 22-minute job timeout** |
+
+### The finding: CI run #2424 tested nothing
+
+`ralph/COORDINATION_2026-08-25_GATE_F_AND_GRASS.md` §1 records, as the verified
+precondition for both lanes:
+
+> `origin/main` is at `636673ce`. **CI run #2424 is green on that exact SHA**
+> (`32862114528`, push event, conclusion `success`).
+
+That run's conclusion is `success`. **Every one of its 26 jobs concluded
+`skipped`.** Only `changes` executed, and it decided documentation-only, so
+`verify-core-verb-shard`, all six unit shards, every regional and combat shard,
+and `export` never ran. The commit it was green on
+(`ralph: correct the handover's branch-cleanup section`) touched only `ralph/`.
+
+So the green that the Gate F freeze was told to stand on is a **badge, not
+evidence**. It says "nothing needed building", not "the code passes". Nobody
+misread it; the run genuinely concluded success. That is exactly what makes this
+class of false green dangerous, and it is the same class `conventions.md` warns
+about from the other direction: *"Check `git log origin/main`, not the CI badge."*
+The rule needs a second half — **check that the jobs actually ran**, because a
+path-filtered skip and a real pass are indistinguishable at the run level.
+
+**Consequence for Gate F:** run 2432 attempt 2 is the first run in this lineage
+that has actually compiled and tested this code. The protocol's §A.4 requires a
+green suite at the candidate SHA and says plainly that a red suite is a blocker
+*before* the run rather than a finding of it. That precondition had never
+genuinely been checked.
+
+### The timeout is not the instrumentation's
+
+`verify-core-verb-shard` runs `smoke_playground`, `smoke_input`,
+`smoke_traversal` and `smoke_catching`, with the traversal smoke retried up to
+three times and catching up to twice. The log shows it killed mid-`smoke_traversal`
+while still emitting progress (severed-spokes recoveries, river crossings), at
+22m50s into a job with `timeout-minutes: 22`. Not an assertion failure — a
+workload that does not fit its budget once a retry fires.
+
+Established rather than assumed:
+
+- none of those four scripts is modified by this branch (`git diff --name-only
+  origin/main HEAD --` over them is empty);
+- none references any Gate F file;
+- this branch adds 16 files and modifies zero.
+
+`conventions.md` already measures `smoke_traversal.gd` at ~6 minutes and says the
+twelve checks are bounded by the slowest single check. Three retried traversal
+runs plus three other smokes cannot fit in 22 minutes. **The retry chain and the
+timeout are in direct conflict**, and the job only survives while no retry is
+needed. One confirming re-run has been triggered — the single re-run
+`conventions.md` permits — to establish whether it clears without a retry.
+
+This is a candidate finding for the Gate F backlog in its own right: a CI job
+whose retry policy cannot fit its own timeout is a test that reports red for
+reasons unrelated to the code under test, which is how a real defect gets
+dismissed as infrastructure noise.
+
+### What this does to the freeze
+
+It does not block it. The candidate is `main` plus 16 additive files, the unit
+suite is green across all six shards, and every gameplay shard that ran passed.
+But the freeze record must state the baseline honestly rather than inheriting
+§1's claim: **`636673ce` was never verified by a run that executed its tests**,
+and the first real verification of this lineage is run 2432 attempt 2, with
+`verify-core-verb-shard`'s timeout recorded as a pre-existing CI-budget defect
+rather than a candidate defect.
