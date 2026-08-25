@@ -581,7 +581,20 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		# what the stall report above was built to catch, and it caught it on
 		# the tournament final.
 		var distance := to.length()
-		if distance > _reach_for(ally, opponent):
+		# STALL BREAKER. Closing is the first choice, but it must not be the ONLY
+		# one. `player_quick.lunge` is 3.6m: the attack CARRIES the fighter
+		# forward, so at a standoff a ready swing is how you close, not something
+		# to save until after you have closed. The harness stood at 4.2m with
+		# `quick_ready=true` and walked into a spacing floor that pushed back for
+		# 901 frames, which is a deadlock no player would sit in -- they would
+		# swing. So once pushing has stopped making progress, swing.
+		#
+		# Kept behind the stall counter rather than applied always, so the normal
+		# path is still "close, then hit", and this only fires in the state that
+		# was previously unrecoverable.
+		if stalled > 120 and bool(_manager.call("quick_ready")):
+			await _press("combat_quick")
+		elif distance > _reach_for(ally, opponent):
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
