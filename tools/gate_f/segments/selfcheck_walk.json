@@ -1,0 +1,65 @@
+{
+  "id": "selfcheck_walk",
+  "title": "Harness self-check: 60 s of walking, the 2 Hz trace, and the dead-travel meter",
+  "lane": "diag",
+  "_comment": "NOT a protocol segment. Acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 2: a 60 s walk emitting route.csv at 2 Hz with sane positions and a dead-travel meter that resets near a point of interest. The route walks OUT of the starting hub and back, so the meter has to both climb (open ground) and reset (the village's own interactables inside 30 m).",
+
+  "steps": [
+    {
+      "id": "SC-W-01",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": { "scene": "world" },
+      "expected": "the real world scene stands up and the point-of-interest scan finds the village's content"
+    },
+    {
+      "id": "SC-W-02",
+      "title": "stand still for ten seconds",
+      "action": "wait",
+      "args": { "seconds": 10 },
+      "expected": "the 2 Hz trace runs while nothing moves; roughly 20 rows, position constant"
+    },
+    {
+      "id": "SC-W-03",
+      "title": "walk out to the Practice Meadow road end",
+      "action": "move_to",
+      "args": { "at": [30.0, -40.0], "budget_frames": 1800, "answer_prompts": true },
+      "expected": "the player walks there on the stick, detouring around village geometry rather than pushing into it. answer_prompts is on because walking out of the spawn triggers Grandpa's opening conversation, which takes locomotion until somebody presses the button a player would."
+    },
+    {
+      "id": "SC-W-04",
+      "title": "walk on, away from the hub",
+      "action": "move_to",
+      "args": { "at": [74.0, -41.0], "budget_frames": 1800, "answer_prompts": true },
+      "expected": "the walk continues toward the Rise road's walkable end"
+    },
+    {
+      "id": "SC-W-05",
+      "title": "the trace is actually running",
+      "action": "assert",
+      "args": { "check": "route_rows_at_least", "rows": 40 },
+      "expected": "route.csv has at least 40 rows: 2 Hz over the 10 s idle plus the walk"
+    },
+    {
+      "id": "SC-W-06",
+      "title": "walk back into the village square",
+      "action": "move_to",
+      "args": { "at": [10.0, -10.0], "budget_frames": 2400, "answer_prompts": true },
+      "expected": "the player returns to the hub"
+    },
+    {
+      "id": "SC-W-07",
+      "title": "the dead-travel meter reset near content",
+      "action": "assert",
+      "args": { "check": "dead_travel_below", "metres": 30.0 },
+      "expected": "standing in the village square, with landmarks and interactables well inside the 30 m point-of-interest radius, the dead-travel run has reset"
+    },
+    {
+      "id": "SC-W-08",
+      "title": "record where the walk finished",
+      "action": "note",
+      "args": { "text": "selfcheck_walk finished; route.csv is the pacing-study raw material for this segment" },
+      "expected": "a note event closes the segment"
+    }
+  ]
+}
