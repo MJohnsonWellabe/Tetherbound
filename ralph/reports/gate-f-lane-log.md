@@ -499,3 +499,52 @@ stall. Same script, same commit, different outcome — so whatever this is, it i
 **not deterministic**, which is itself part of the finding.
 
 Tooling is now **frozen**. Both smokes run; nothing further gets "improved."
+
+---
+
+## Check-in 8 — S01 committed. Capture mode is off the table for the journey; here is the number.
+
+**S01 — 13 PASS / 1 FAIL.** Evidence in `ralph/reports/gate-f-run-20260825T201354Z/S01/`.
+
+**Mode change, forced by measurement, recorded before it is used.** S01 was first
+run in **capture** mode as §H requires. All 14 steps executed (last event
+`t=180.8`), then the process never terminated — 35 minutes later the step list was
+exhausted, `events.jsonl` frozen at 14 records, and `frames/` held **one PNG**
+against §H's requested one-every-two-seconds. `route.csv`'s own `frame_ms` column
+says why: **~3,400 ms per frame, sustained — 0.29 FPS — with a single physics step
+at 611 ms.** That is llvmpipe drawing 466,922 props with no GPU. It is a fact
+about this container and **not** a device frame-rate claim; §K.1 stays [OWNER-ONLY].
+
+The attempt is preserved at `ralph/reports/gate-f-run-20260825T201354Z/S01-superseded-1/` with `WHY_SUPERSEDED.md` and
+its one real frame (`GF-01-TITLE-01.png`, a correct 1920×1080 title screen). It
+was killed, not deleted, and `notes/` is empty there because the harness writes
+verdicts at a segment end this segment never reached.
+
+**So the journey runs in logic mode** (`--headless`, no rendering driver — the
+shape §0.2 and `ralph/conventions.md` both call correct and fast; ~5 ms/frame
+here). S01 then completed cleanly. Every planned shot becomes a manifest row with
+`file: null`, which §C.4 states is itself evidence. Visual evidence will come from
+**X07**, the DIAG world audit: 80 teleport-sited stills with no walking between
+them, the one segment shape this box can still render. **This changes how the run
+executes, not what it executes** — steps, assertions and telemetry are untouched,
+and the missing frames are recorded rather than papered over.
+
+### The S01 failure
+
+`S01-12` FAIL. Expected the fresh-game tracked objective to be
+`opening_first_catch`; the game tracks `opening:beat:road`, text *"Catch your
+first wild creature."*
+
+I am recording this exactly as it came out and **not** editing the step-script to
+match the shipped id. Read plainly: the objective a new player sees is the right
+one — the text is precisely the intended first rung — but **the objective id named
+throughout the protocol's §E.5 chain does not exist in the build.** Whether that
+makes it a defect in the game's chain ids or a defect in the protocol's expectation
+is a Phase B call, not mine (§13: record, do not diagnose). It matters beyond one
+assertion because §E.5 tracks 24 main-chain objectives by id, so if the id scheme
+differs everywhere, later objective assertions will fail the same way and each one
+needs reading as this same question rather than as 24 separate bugs.
+
+The other 13 steps passed: fresh `user://` wiped clean, title booted in 375 ms with
+`Start New Game` holding focus, one `ui_accept` tap resolved to `JoyBtn:0`, the
+world stood up, region `grandpas_village`, party size 0, and 354 route rows.
