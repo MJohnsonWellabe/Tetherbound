@@ -4,6 +4,18 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
+## CURRENT STATE — 2026-08-25, two lanes open
+
+Read `ralph/HANDOVER_2026-08-25_CI_GREEN_AND_TWO_LANES.md` first. It records
+that the two-day-red CI-consolidation branch is now green and merged to
+`main`, and routes the very next coordinator session into two concurrent
+lanes: **Gate F** (`ralph/GATE_F_PROTOCOL.md` — the owner's authoritative
+full-game playtest and backlog-regeneration protocol) and **WORLD-GRASS**
+(`docs/ralph-prompts/72-WORLD-ground-cover-and-mid-layer.md` — the ground
+plane/grass visual work, owner-directed). Open exactly those two lanes next;
+do not fall back to package selection below until both are underway or the
+handover says otherwise.
+
 ## CURRENT STATE — post-sprint assessment, 2026-08-23
 
 The weekend sprint overlay (`ralph/WEEKEND_MEADOWS_SPRINT_2026-08-21.md`)
