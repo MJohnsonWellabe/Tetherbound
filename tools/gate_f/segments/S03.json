@@ -407,10 +407,10 @@
     },
     {
       "id": "S03-40",
-      "title": "Section L.4 level-up shot has no section G id",
+      "title": "Section G GF-19-UI-10, the level-up shot",
       "action": "note",
       "args": {
-        "text": "Section L.4 asks for 'Level-up communication | first level-up moment captured; announcement verified visible | S03 | shot + event'. GAP RECORDED: section G's plan defines no GF- id for a level-up frame, and section C.4 lets the operator add only DEF- entries, so there is no id this transcription may use for it. The `level_up` event type in section C.1 carries the moment; the frame section L.4 asks for has nowhere in the manifest to go. Either section G needs a level-up row or section L.4's 'shot' has to become 'event'."
+        "text": "Section L.4 requires 'Level-up communication | first level-up moment captured; announcement verified visible | S03 | shot + event'. This transcription originally recorded that section G defined no id for it and that section C.4 forbids the operator inventing one, which made the requirement unsatisfiable by anybody. The Gate F coordinator answered that pre-freeze by adding GF-19-UI-10 to section G's table -- recorded there as an amendment, stating section L.4's own words and adding nothing beyond them. The shot is taken below. AMBIGUITY REMAINING: section G triggers it on 'wherever the journey levels first (S03)', which a script written before the run cannot locate. It is pinned to the end of the first trainer fight, the training rung section L.4 sites level-up communication in; if the first level_up event in this run's events.jsonl carries an earlier `t` than this frame, the pinned frame missed the first occurrence and that is the finding."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -535,6 +535,20 @@
         "seconds": 6
       },
       "expected": "on victory, rewards and control return with no stuck modal (section L.6 T05)"
+    },
+    {
+      "id": "S03-51a",
+      "title": "capture GF-19-UI-10",
+      "action": "capture",
+      "args": {
+        "id": "GF-19-UI-10",
+        "class": "19",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "first level-up moment, announcement on screen",
+        "intended_proof": "the level-up actually announces itself to the player"
+      },
+      "expected": "Section G: first level-up moment, announcement on screen -- the level-up actually announces itself to the player"
     },
     {
       "id": "S03-52",

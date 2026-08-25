@@ -121,6 +121,27 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S08-12a",
+      "title": "record_start: band 3 -> band 4, the Upper Meadows arrival across the crossing",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 3 -> band 4, the Upper Meadows arrival across the crossing",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "S07 saved at the crossing, so this segment loads on the band 3/4 boundary: the window opens at the load's own first step, which is GF-11-UPPER-01, the frame section G triggers on 'Upper Meadows entry across the crossing'"
+    },
+    {
+      "id": "S08-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
       "id": "S08-13",
       "title": "capture GF-11-UPPER-01",
       "action": "capture",
@@ -237,6 +258,15 @@
         "equals": "the_ironwood_grove"
       },
       "expected": "map_state.gd's containment puts the player in `the_ironwood_grove`"
+    },
+    {
+      "id": "S08-23a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 3 -> band 4, the Upper Meadows arrival across the crossing",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the region assert puts the player in `the_ironwood_grove`, band 4's first named region"
     },
     {
       "id": "S08-24",
@@ -998,6 +1028,18 @@
       "expected": "`defeated_captain_riverwatch`, the second of the three `count_flags`"
     },
     {
+      "id": "S08-96a",
+      "title": "record_start: band 4's northern region transition, into the Ridgeline Watch",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 4's northern region transition, into the Ridgeline Watch",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "AMBIGUITY RECORDED: the band 4 -> band 5 handoff is NOT a spatial crossing inside S08. Section B ends this segment on the third captain -- the Sigils open the gate, and the walk through it happens in S09. So this pair sits on the last region transition S08 actually crosses, into `the_ridgeline_watch`, which is the ground the sigil gate stands beyond; the band boundary itself is covered by S09's first window"
+    },
+    {
       "id": "S08-97",
       "title": "walk north to Captain Vess on the ridgeline",
       "action": "move_to",
@@ -1027,6 +1069,15 @@
       "title": "rescan for points of interest",
       "action": "refresh_pois",
       "expected": "the watch's own content joins the POI set"
+    },
+    {
+      "id": "S08-99a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 4's northern region transition, into the Ridgeline Watch",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the point-of-interest rescan inside the watch"
     },
     {
       "id": "S08-100",
