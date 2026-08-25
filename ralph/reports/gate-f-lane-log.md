@@ -712,3 +712,80 @@ press. That is a hypothesis, not a finding, and testing it is developer work.
 branch and a new SHA is frozen before S02 is re-run; the S01/S02/X07/X08 evidence
 on this branch stays attached to `a3f61b60`, and the seam will be stated plainly
 rather than spliced.
+
+---
+
+## Check-in 11 — the opening is recovered; the house exit is not. Tuning stopped.
+
+**S02 best result: 62 PASS / 12 FAIL, still no exit save.** Full report at
+`ralph/reports/gate-f-run-20260825T201354Z/S02/BLOCKER.md`. Four attempts preserved as `S02-superseded-1..3` plus the
+current `S02/`.
+
+### Attempt 1's diagnosis was wrong, and the correction is the useful part
+
+The real defect was **in the step-script, not the game.** `S02-15 "walk down to
+Grandpa"` targeted `[-22,-16]` — the house *origin* — with `close_enough: 3.0`.
+`move_to` compares **x/z only**, and the bed is 0.89 m from Grandpa in x/z while
+**3.3 m above him in y**: the player wakes on the loft (`grandpa_house.gd`,
+`LOFT_W 4.6`, `FLOOR_H 3.2`). The step passed honestly and left the player one
+storey up, and the segment then pressed `interact` 31 times **through the floor**.
+Route trace y during those presses: **4.93, 4.65, 4.65**. Grandpa's marker: **1.32**.
+
+The house already publishes the fix — `stairs_top` and `stairs_bottom`, commented
+"for anything that has to NAVIGATE the house rather than …". Routing the walk
+through them recovered the opening: the player descends, Grandpa offers his prompt,
+the briefing plays, and **`party_size` reaches 1 — the starter is chosen and named
+through the production path.** Ten assertions recovered.
+
+**So the game needed no fix.** Two probes on `ralph/OPENING-STARTER-FOCUS`
+(`tools/opening_fix/`) establish it, including one that kills the scariest
+hypothesis: the harness injects presses during idle while
+`interaction_arbiter.gd` polls from `_physics_process`, which would have
+invalidated **every `interact` step in the protocol** — measured, and it is false.
+No game file changed, so **no new candidate SHA is needed and there is no §1.6
+seam**; S01, X07 and X08 stay valid against `a3f61b60`.
+
+### What is still blocked
+
+From the briefing onward a `narrative_modal` owns input continuously, the player
+never leaves the house, and `S02-63` names the holder: **`owner=DialoguePanel`**.
+
+| attempt | S02-28 presses | extra wait | PASS/FAIL | modal block | exit save |
+|---|---|---|---|---|---|
+| 2 | 12 × settle 20 | — | 61 / 12 | 121 s | none |
+| 3 | 20 × settle 30 | 5 s | 62 / 12 | 121 s | none |
+| 4 | 4 × settle 30 | 5 s | 62 / 12 | 139 s | none |
+
+Same twelve assertions, same values, three press counts. **The press count is not
+the variable**, which rules out "the script under-presses the conversation" —
+`grandpa_named` is three lines, so 4, 12 and 20 are all sufficient. Two facts
+constrain whoever picks this up: **nothing is pressing anything for the last ~110 s
+of the block**, and **the block ends at exactly 7201 held frames, twice, to the
+frame** — the instant `S02-30`'s `held_budget_frames: 7200` expires and the
+observer stops waiting.
+
+### Why I stopped
+
+I changed `S02.json` twice — the stair routing, which was decisive, and a
+transition allowance, which changed nothing — and said in advance that a third
+distinct wall would end the tuning rather than start another round. It did, so I
+stopped. Continuing would have meant reshaping a frozen step-script against a game
+behaviour I do not understand, alone and unwatched, until something went green.
+That is how a run stops being evidence. I did not turn on `answer_prompts` for the
+blocked walk either: the schema says it "must stay off in any segment whose subject
+is whether something blocks travel," and something is blocking travel.
+
+### Run status
+
+| | |
+|---|---|
+| S01 | 13 PASS / 1 FAIL — committed |
+| S02 | 62 PASS / 12 FAIL — **BLOCKED**, no exit save |
+| S03–S10 | blocked on S02's exit save |
+| X01–X06 | blocked — they seed from journey saves |
+| X07 | 79/80 audit frames, 3 derived FAILs — committed |
+| X08 | 62 PASS / 0 FAIL — committed |
+
+Journey coverage is the opening only. The DIAG lane is complete. **The [OWNER-ONLY]
+set has not moved**: no device frame rate, GPU, VRAM, thermal, audio, controller-feel
+or Windows-export claim appears anywhere in this run's evidence.
