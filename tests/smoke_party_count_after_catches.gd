@@ -421,12 +421,25 @@ func _close_in_until_offered(target: Node3D) -> void:
 				await physics_frame
 			Input.action_release("move_forward")
 		else:
-			# Already on top of it and still losing the line: sidestep, so a prop
+			# Already on top of it and still losing the line: circle it, so a prop
 			# sharing the spot stops being the nearest thing.
-			Input.action_press("move_right" if attempt % 2 == 0 else "move_left")
-			for i in 6:
+			#
+			# This alternated direction on EVERY attempt -- right, left, right,
+			# left -- which is a net displacement of about zero. Forty attempts
+			# of it left the harness oscillating on the spot beside whatever was
+			# stealing the line, and it reported "stopped 1.6m away; the winning
+			# prompt is Interactable, not the target" having never actually gone
+			# anywhere. That is the whole of why this test has been re-diagnosed
+			# as a flake instead of fixed.
+			#
+			# Commit to a direction for a run of attempts so the steps add up and
+			# the player genuinely arrives somewhere else, then try the other way
+			# in case the first was into a corner.
+			var side := "move_right" if (attempt / 6) % 2 == 0 else "move_left"
+			Input.action_press(side)
+			for i in 10:
 				await physics_frame
-			Input.action_release("move_right" if attempt % 2 == 0 else "move_left")
+			Input.action_release(side)
 		for i in 4:
 			await physics_frame
 
