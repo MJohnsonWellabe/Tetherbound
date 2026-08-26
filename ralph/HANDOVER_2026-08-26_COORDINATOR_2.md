@@ -4,42 +4,67 @@ Written for a successor with no memory of today. Read this before touching a
 branch. The immediately actionable state is in §1; everything after it exists so
 you do not re-derive what has already been measured.
 
-This is a **cost rotation, not a correction.** Nothing here is going wrong. The
-one blocking item is a GitHub Actions outage with no ETA, and waiting it out in a
-long-context session is the exact mechanic that took two earlier sessions to
-$131 and $186 — cache reads scale with context times turns.
+This is a **cost rotation, not a correction.** Nothing here is going wrong.
 
 ---
 
 ## 1. Do this first
 
-**`ralph/LAND-ALL` (`7d194883`) is one green CI run away from putting every piece
-of outstanding work on `main`.** It is 0 behind `main` and 38 ahead.
+**`ralph/LAND-ALL-2` (`aa0204e7`) is one green CI run from putting every piece of
+outstanding work on `main`.** It is 0 behind `main` and fast-forwardable.
 
-CI run **2523** (id `32984987975`) was created 15:23:59Z and has never started.
-That is not the branch's fault — see §3.
+Its previous tip `7d194883` already passed a full run (2525) — every verify shard
+green, `changes` confirmed to have actually run its filter. `aa0204e7` only adds a
+merge of `main`, so a red run now is a surprise worth reading carefully rather
+than a routine failure.
 
-1. Re-read `https://www.githubstatus.com/api/v2/summary.json` for the Actions
-   component. If it is still `major_outage` or degraded: **do nothing.** Do not
-   re-push, do not cancel-and-retry, do not dispatch. That only adds runs to a
-   queue that is not draining and costs queue position when it resumes. Arm a
-   check-in ~30 minutes out and stop.
-2. When Actions is healthy: if 2523 never started, re-run that run id via the
-   Actions API rather than pushing. Only re-push the branch if a re-run will not
-   take.
-3. When it runs, **check the `changes` job before anything else.** See §2 — a
-   run can report success having tested nothing, and it has happened twice today.
-4. Green: sweep via `ralph-sweep.yml`. **Never push `main`. No pull requests.**
-   Confirm by reading `git log origin/main`, not by the sweep's own output.
+1. Find the CI run for `aa0204e7` on `ralph/LAND-ALL-2`.
+2. **Check the `changes` job before anything else.** §2 — a run can report
+   success having tested nothing, and did so twice on 2026-08-26.
+3. Green → sweep. **See the warning below about how to sweep.**
+4. Then bring `ralph/COORDINATOR-DOCS` (this branch) to green and sweep it too.
+   It is documentation only, so the changes filter skips every job and it costs
+   about a minute.
+
+### Sweeping: dispatch lands EVERY green branch, not the one you meant
+
+`ralph-sweep.yml` takes no branch argument. A manual dispatch lands every green
+unmerged `ralph/**` branch it finds, deletes each one it merges, and **rebases
+any branch that `main` moved under** — which force-pushes it and invalidates its
+CI.
+
+That is not theoretical. On 2026-08-26 a dispatch meant for the landing branch
+also landed `ralph/CATCH3-ENGAGE` (Gate F's engage diagnostics, green from run
+2522) and deleted it. `main` moved from `1dc18642` to `07452b65`, and 38 verified
+commits stopped being fast-forwardable because two unrelated ones landed first.
+
+**And the sweep cannot fix that itself on this repo.** When `main` has moved, the
+sweep tries to REBASE, which replays the branch's commits — including
+`Re-bake the scatter against the narrowed paths` — onto the new base. That
+collides on every `data/scatter/playground/region_*.bin` it touches, because git
+cannot merge binary files:
+
+    CONFLICT (content): Merge conflict in data/scatter/playground/region_3_3.bin
+    error: could not apply 7ebf0989... Re-bake the scatter against the narrowed paths
+    ##[error] ralph/LAND-ALL-2 conflicts with main and cannot be rebased
+              automatically -- Nothing was pushed.
+
+The sweep is right to refuse and it pushes nothing, so this is safe — but it goes
+red and the branch stays unshipped. **The fix is to MERGE `main` into the branch
+by hand, never rebase.** A merge does not replay the bake commit, so it resolves
+cleanly (two files, no scatter conflict). Then the branch is fast-forwardable and
+the sweep ships it without attempting a rebase at all.
+
+Any branch carrying a scatter re-bake has this property. Merge it forward early,
+before `main` moves again.
+
+So before dispatching a sweep, know every green `ralph/**` branch that exists and
+be willing to land all of them. If you are not, wait until only the branch you
+want is green. `conventions.md` records the same lesson from the other
+direction — this is the cost of sweeping branches one at a time.
 
 ### After it lands
 
-- Push and sweep **this branch** (`ralph/COORDINATOR-DOCS`) if it has not landed
-  already. It is documentation only, so the changes filter skips every job and it
-  costs about a minute even while the queue is busy.
-- Delete `claude/gate-f-grass-coordination-m2mzcr`. It exists only to hold the
-  four coordination documents recovered onto this branch; once they are on
-  `main` it carries nothing unique.
 - Message the Gate F lane that `main` is complete (§5).
 - Verify the download site still tracks `main`. **Never dispatch `release.yml`
   against a `ralph/**` ref.**
@@ -47,19 +72,19 @@ That is not the branch's fault — see §3.
 
 ### Branches that exist, and why
 
-The owner cleaned up the subsumed branches already. Five remain and all five are
-deliberate:
+Four remain, all deliberate. Everything subsumed has been deleted already.
 
-| branch | keep because |
+| branch | |
 |---|---|
-| `main` | `1dc18642` |
+| `main` | `07452b65` — carries Gate F's `CATCH3-ENGAGE` diagnostics |
 | `ralph-status` | unrelated history (no merge base), coordinator notes |
-| `ralph/LAND-ALL` | `7d194883`, the landing |
-| `ralph/CATCH3-ENGAGE` | `07452b65`, **live** Gate F work, unmerged |
-| `claude/gate-f-grass-coordination-m2mzcr` | the four docs, until this branch lands |
+| `ralph/LAND-ALL-2` | `aa0204e7`, the landing, CI in flight |
+| `ralph/COORDINATOR-DOCS` | this branch — the handover and four recovered docs |
 
-Do not delete `ralph/CATCH3-ENGAGE`. Its CI went green but it is **not** on
-`main`, and green there means the bug did not reproduce, not that it is fixed.
+`ralph/CATCH3-ENGAGE`, `ralph/LAND-ALL`, and
+`claude/gate-f-grass-coordination-m2mzcr` are gone and should stay gone: the
+first landed on `main`, the second was a byte-identical twin carrying only a
+zombie run, and the third's unique documents are on this branch.
 
 ---
 
