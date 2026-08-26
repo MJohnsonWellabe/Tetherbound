@@ -864,3 +864,64 @@ transition wait (`S02-27b`), press-count and settle adjustments (`S02-28`,
 confirmation dismissal (`S02-63b`). Seven attempts preserved as
 `S02-superseded-1..6`. Nothing was tuned until green without the measurement that
 justified it being written into the step's own `observation`.
+
+---
+
+## Check-in 13 — triage: 71 failures across S01–S05 are about **six** root causes
+
+Correcting my own reporting. Check-ins 11 and 12 quoted raw PASS/FAIL counts as
+though they were defect counts. **They are not, and quoting them that way was
+misleading.** A harness FAIL means one thing: an assertion's expected value did not
+match the actual. That has four possible sources — a game defect, a wrong
+step-script expectation, a wrong protocol expectation, or a **cascade** from an
+upstream failure — and only the first is something to fix in the game.
+
+Triaged properly, the 71 failures across S01–S05 collapse to roughly six roots:
+
+| root | failures it explains | class |
+|---|---|---|
+| **combat never starts** | S02-40, S03-34, S04-28/36/43, S05-48 → then every `party size 1`, every stalled objective, every tournament flag | **~35** — root unknown, needs a probe |
+| **build tab never reached** | S03-111…169 → `home_built`, `creature_bed_built_3`, `player_slept_at_home` | ~15 — tab-memory, already fixed in-script |
+| **walks that cannot reach their target** | S03-75, S03-217, S05-33, S05-39 | 4 — **genuine, see below** |
+| **Start/drop collision** | S03-239, S03-267, S04-66, S05-63/65/66 | 6 — **genuine game defect** |
+| **protocol id naming** | S01-12 only | 1 |
+| **route-row thresholds** | S02-60, S03-262, S04-61, S05-60 | 4 — arithmetic on segment length, not defects |
+
+### Correction to check-in 12's objective-id claim
+
+I called the `opening_first_catch` mismatch a canon decision about id schemes. That
+is wrong for all but one instance. The tracked objective is **pinned at
+`opening:beat:road` — "Catch your first wild creature" — through S01, S02, S03, S04
+and S05.** It never advances because **the player never catches a wild creature**.
+Only S01-12 is a naming mismatch; the other thirteen are a cascade off the combat
+root. It is a symptom, not a decision, and nobody should spend a spec argument on it.
+
+### The finding that most deserves attention
+
+```
+S05-33 | did not reach (195, 905) in 29250 walking frames;
+         stopped 133.0 m short at (91.0, -6.0, 822.0) (0 held)
+S05-39 | did not reach (348, 920) in 7200 walking frames;
+         stopped 274.6 m short at (91.0, -6.0, 822.0) (0 held)
+```
+
+**`0 held`** — nothing was blocking. No modal, no fight, no fade. The navigator
+walked for **eight minutes** and could not arrive, then a second walk stopped at the
+**identical coordinate**. That is a traversal dead-end in Band 1 at
+`(91, -6, 822)`, on the production route between the pond and South Bridge, and it
+is the class of thing a first-time player hits and quits over. Two more of the same
+shape sit in S03 at `(28, 1, -20)` and `(-6, 1, -38)`.
+
+Sourced from journey segments on production paths, not from a DIAG segment, so it
+is a legitimate navigation claim.
+
+### What this means for the run
+
+The three things worth fixing are **combat-never-starts**, **the Band 1 traversal
+dead-end**, and **the Start/drop guard**. Fix those and most of the 71 should
+evaporate — which is the real argument for re-running the journey clean rather than
+patching forward: a re-run would then produce a genuinely different result instead
+of the same cascade with different numbers.
+
+S03/S04/S05 all ran before some of the step-script fixes, so their numbers already
+understate the build. S06 is in flight.
