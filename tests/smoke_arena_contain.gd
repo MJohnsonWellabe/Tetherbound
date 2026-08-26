@@ -114,7 +114,7 @@ func _warrens_case() -> void:
 		_fail("'Warrens_mudsnout_1' was never spawned; the mouth chamber has nobody to fight")
 		return
 
-	await _approach_and_engage_wild(warrens, wild)
+	await _approach_and_engage_wild(warrens, wild, "mouth")
 	if not bool(_manager.call("is_fighting")):
 		_fail("could not engage the warrens wild creature; nothing below this point was tested")
 		return
@@ -292,7 +292,38 @@ func _push_and_measure(participant: Node3D, direction: Vector3, centre: Vector3)
 ## along the BUILDING's own local axis (not a bare world-space nudge), so it
 ## stays correct regardless of the room's own site rotation
 ## (`burrow_warrens.json`'s 54.5-degree `site.yaw_deg`, in this case).
-func _approach_and_engage_wild(building: Node3D, wild: Node3D) -> void:
+func _approach_and_engage_wild(building: Node3D, wild: Node3D, chamber_id := "") -> void:
+	# Put the resident back on its own chamber's marker before measuring
+	# anything off it.
+	#
+	# This spawns `aggressive: true` (data/config/burrow_warrens.json) and has
+	# been charging since world load, so where it stands at this instant is a
+	# function of how many physics frames the host got through -- not of
+	# anything this file tests. `spot` below is computed FROM that body, so the
+	# drift lands on the player, and `_floor_height()` cannot catch it: outside
+	# the footprint `ground_height_at()` answers with the hillside above rather
+	# than NaN, so the fallback never fires and the player is placed underground.
+	#
+	# Measured, three local runs of this file plus CI run 2463: the arena centre
+	# walked to local z = 6.50, 8.41, 10.09 against a `mouth` chamber that ends
+	# at z = 11, affording 0.9m, 1.6m and 0.5m of radius. CI reached z = 11.03 --
+	# 3cm past the wall -- with the player at local x = -5.10 against a wall at
+	# -3.5, i.e. inside solid rock, 2m below the cave floor. `combat_arena_bounds_at()`
+	# then returned -1.0 and the run went red on a branch that touches no
+	# gameplay code. The margin shrinks as the host slows, so this is a cliff
+	# edge rather than a rare flake.
+	#
+	# The marker is the chamber's own centre (`burrow_warrens.gd:144`), which is
+	# the furthest point from every wall it has, so the fight opens with room to
+	# spare on every host. Nothing about the containment assertions changes --
+	# all three parts below run against the same real physics; only WHERE the
+	# fight starts stops being a race.
+	if chamber_id != "" and building.has_method("marker"):
+		wild.global_position = building.call("marker", chamber_id)
+		if wild is CharacterBody3D:
+			(wild as CharacterBody3D).velocity = Vector3.ZERO
+		await physics_frame
+
 	var back: Vector3 = -building.global_transform.basis.z
 	back.y = 0.0
 	back = back.normalized() if back.length() > 0.01 else Vector3.BACK
