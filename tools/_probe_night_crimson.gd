@@ -28,17 +28,36 @@ extends SceneTree
 ## so t = 0.5 falls at hour 21.0 -- between the last cool frame and the first
 ## red one.
 ##
-## This probe boots the world once, pins hour 22, and shoots the same frame
-## twice: once as shipped, once with `Environment.adjustment_enabled` forced
-## off and nothing else touched. If the second frame is cool, the colour-grade
-## is the cause; if both are red, it is not and this is the wrong tree.
+## FIRST HYPOTHESIS, TESTED AND REFUTED -- kept because the refutation is the
+## useful part. That reasoning predicted the colour grade caused the red. An A/B
+## at pinned hour 22, changing nothing but the flag, found the OPPOSITE: grade on
+## R/B 0.44 (a correct cool night), grade off R/B 2.82. And declaring the flag on
+## the base block so it never toggles did NOT fix the sweep -- a re-run with that
+## fix in place still reads R/B 3.43 at hour 22.00, unchanged. So the flag is not
+## the mechanism.
+##
+## WHAT IS LEFT. The A/B frame was pinned AND FROZEN (`set_process(false)`), the
+## way `pin_clock` does it. The sweep does not freeze: WorldLook's `_process`
+## keeps advancing `_elapsed_seconds` and re-blending. That is the only remaining
+## difference between a cool frame and a red one at the same hour, and on this
+## container it is a big one -- at ~0.29 FPS with `day_length_seconds` 600, each
+## frame advances the clock 0.136 in-game hours, about 200x what a real machine
+## at 60 FPS does per frame.
+##
+## So this probe shoots a matrix: three PINNED AND FROZEN hours spanning the
+## transition, then the same hour again with `_process` left LIVE. If the frozen
+## frames are all cool and only the live one is red, the crimson is a artefact of
+## a clock advancing far faster than the renderer can keep up with, not a
+## time-of-day defect -- which decides whether it can reach a player at all, and
+## whether the overnight X07 run (which pins) is exposed to it.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/night_crimson"
 const SETTLE_FRAMES := 240
 const SHOT_SETTLE := 12
-const HOUR := 22.0
+const HOURS := [20.5, 22.0, 23.5]
+const LIVE_HOUR := 22.0
 
 # The same viewpoint the sweep above used, so the numbers are comparable.
 const EYE := Vector2(-250.0, 2266.0)
@@ -88,26 +107,28 @@ func _run() -> void:
 	camera.look_at(Vector3(TARGET.x, field.height_at(TARGET.x, TARGET.y) + TARGET_H, TARGET.y), Vector3.UP)
 
 	var cycle: RefCounted = look.get("_cycle")
+
+	# PINNED AND FROZEN, the pattern pin_clock implements.
+	for hour: float in HOURS:
+		if cycle != null:
+			look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", hour)))
+		look.call("_apply_blended", hour)
+		look.set_process(false)
+		look.set_physics_process(false)
+		await _shoot(camera, "frozen-%.1f" % hour)
+
+	# LIVE: the same hour, with WorldLook's own _process left running -- which is
+	# the ONLY thing tools/_capture_day_night_transition.gd does differently, and
+	# the sweep is where the crimson appears.
 	if cycle != null:
-		look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", HOUR)))
-	look.call("_apply_blended", HOUR)
-	# The clock must not walk off the pinned hour between the two frames, or
-	# the comparison is between two different times as well as two settings.
-	look.set_process(false)
-	look.set_physics_process(false)
-
-	await _shoot(camera, "as-shipped")
-
-	var env: Environment = _environment(world, camera)
-	if env == null:
-		print("no Environment found; cannot isolate the colour grade")
-		quit(1)
-		return
-	print("as shipped at hour %.1f: adjustment_enabled=%s brightness=%.3f contrast=%.3f saturation=%.3f" % [
-		HOUR, str(env.adjustment_enabled), env.adjustment_brightness,
-		env.adjustment_contrast, env.adjustment_saturation])
-	env.adjustment_enabled = false
-	await _shoot(camera, "grade-off")
+		look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", LIVE_HOUR)))
+	look.call("_apply_blended", LIVE_HOUR)
+	look.set_process(true)
+	look.set_physics_process(true)
+	await _shoot(camera, "live-%.1f" % LIVE_HOUR)
+	if cycle != null:
+		print("live clock drifted to hour %.2f by the time the frame was taken" % [
+			float(cycle.call("hour_at", look.get("_elapsed_seconds")))])
 
 	print("done -> %s" % OUT_DIR)
 	quit(0)
@@ -131,19 +152,6 @@ func _shoot(camera: Camera3D, label: String) -> void:
 			b += c.b
 			n += 1
 	var count := maxf(float(n), 1.0)
-	print("%-12s R %.1f  G %.1f  B %.1f   R/B %.2f" % [
+	print("%-14s R %.1f  G %.1f  B %.1f   R/B %.2f" % [
 		label, r / count * 255.0, g / count * 255.0, b / count * 255.0,
 		(r / count) / maxf(b / count, 0.0001)])
-
-
-## The live Environment: the camera's own, or the WorldEnvironment's.
-func _environment(world: Node, camera: Camera3D) -> Environment:
-	if camera.environment != null:
-		return camera.environment
-	var stack: Array[Node] = [world]
-	while not stack.is_empty():
-		var node: Node = stack.pop_back()
-		if node is WorldEnvironment:
-			return (node as WorldEnvironment).environment
-		stack.append_array(node.get_children())
-	return null

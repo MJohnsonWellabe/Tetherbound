@@ -2,35 +2,40 @@ extends "res://tests/test_case.gd"
 
 ## The colour-grade pass must be ON at every hour, and must never be switched.
 ##
-## THE DEFECT. Toggling `Environment.adjustment_enabled` at runtime turns the
-## whole frame red under the Compatibility renderer this game ships on (D01).
-## Measured twice, in both toggle directions, at one fixed viewpoint, as mean
-## channel values over the whole frame:
+## WHAT THIS DOES AND DOES NOT FIX -- read this first, because the commit that
+## added this file got it wrong and the correction matters more than the claim.
 ##
-##   A twelve-hour sweep (tools/_capture_day_night_transition.gd) ramps smoothly
-##   and correctly cool down to hour 20.50 -- R 54.0 G 95.2 B 107.0, R/B 0.50 --
-##   then FLIPS at hour 22.00 to R 135.0 G 48.1 B 39.5, R/B 3.42, and stays red
-##   for every later frame, 23.90 / 00.10 / 02.00 included.
+## IT DOES NOT FIX THE CRIMSON NIGHT. A twelve-hour sweep re-run with this change
+## in place still reads R/B 3.43 at hour 22.00 against 0.53 at 20.50 -- unchanged
+## from before it. Whatever turns the world red at night is still there and is
+## still being chased. Nothing in this file may be cited as evidence that it is
+## fixed.
 ##
-##   The A/B that isolates it (tools/_probe_night_crimson.gd) shoots ONE pinned
-##   frame at hour 22 twice, changing nothing but this flag. Grade on: R/B 0.44,
-##   a correct cool night. Grade off: R/B 2.82 on identical geometry, identical
-##   shadows -- a hue rotation, not a lighting change.
+## WHAT IT DOES FIX is a real but smaller thing: `world_look.gd::_blend_dict` has
+## no meaningful blend for a boolean and snaps one at `t >= 0.5`. `night` was the
+## only preset declaring `adjustment_enabled`, `golden` sits at hour 18 and
+## `night` at hour 0, so the flag flipped at exactly hour 21.0 on that segment and
+## flipped back on `day -> golden` -- twice per 600-second day. Two consequences,
+## both removed here: the whole colour-grade pass switched on and off mid-blend,
+## and night's own grade (saturation 0.72, contrast 1.08) arrived all at once at
+## hour 21 instead of easing in. It now lerps from the base block's 1.0.
 ##
-## WHY IT FIRED. `world_look.gd::_blend_dict` has no meaningful blend for a
-## boolean, so it snaps one at t >= 0.5. `night` used to be the only preset
-## declaring `adjustment_enabled`, so the golden(18) -> night(0) segment flipped
-## it false -> true at exactly hour 21.0, and the day -> golden segment flipped
-## it back -- twice per 600-second day, in ordinary play, not just in captures.
+## THE ONE MEASUREMENT THAT STILL STANDS behind keeping the pass always on:
+## `tools/_probe_night_crimson.gd` shot one pinned, frozen frame at hour 22 twice,
+## changing nothing but this flag -- grade on, R/B 0.44, a correct cool night;
+## grade off, R/B 2.82 on identical geometry and shadows. So the grade being on is
+## PROTECTIVE at that hour even though it is not the whole story, and a preset
+## being able to switch it off mid-blend is worth preventing on those grounds
+## alone.
 ##
 ## WHAT THIS FILE PINS. Two independent halves, each of which fails on its own:
 ## the code may not derive the flag from config, and no preset may declare it.
-## Either alone closes the defect; both together mean reverting one does not
-## silently reopen it.
+## Either alone closes the toggle; both together mean reverting one does not
+## silently reopen it. The config half genuinely failed on the tree as it stood
+## before this branch, which is what makes it a test rather than a restatement.
 ##
-## Deliberately a source-and-config test, per docs/decisions/D02: this harness
-## is pure logic, not scenes and not rendering. The rendered proof lives in the
-## two tools named above, whose numbers are quoted here rather than re-measured.
+## Deliberately a source-and-config test, per docs/decisions/D02: this harness is
+## pure logic, not scenes and not rendering.
 
 const LOOK_SOURCE := "res://scripts/world/world_look.gd"
 const ART_CONFIG := "res://data/config/art.json"

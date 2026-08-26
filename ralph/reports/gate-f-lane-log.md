@@ -662,3 +662,80 @@ No `main` push, no PR. Nothing touched under `shaders/`,
 `data/config/vegetation.json` or `data/scatter/**`. No device claim anywhere: the
 numbers above are channel means over committed PNGs and values read out of
 config.
+
+---
+
+## DEFECT-FIX lane — check-in 3 — 2026-08-26 — CORRECTION: the night fix in check-in 2 does not fix the night
+
+### The correction, first
+
+Check-in 2 and commit `379f9bc2` both claim the crimson night is fixed. **They
+are wrong.** I re-ran the twelve-hour sweep against the fixed build and it is
+unchanged:
+
+| hour | R/B before the fix | R/B after the fix |
+|---|---|---|
+| 20.50 | 0.50 | **0.53** |
+| 22.00 | 3.42 | **3.43** |
+| 23.90 | 3.62 | **3.62** |
+
+The world still goes red. `adjustment_enabled` is not the mechanism, and I
+should not have pushed a headline that said it was before this render came back.
+Landing the fix and reporting it in the same breath as the diagnosis was the
+mistake; the render was already running and I had no reason not to wait for it.
+
+The comments in `world_look.gd`, `art.json` and
+`tests/test_night_grade_never_toggles.gd` now all say this in their first
+paragraph, so nobody reads the branch and concludes the defect is closed.
+
+### What the pushed change is actually worth
+
+I have kept it rather than reverted it, on narrower grounds, and it is now
+described that way everywhere:
+
+- The boolean snap is real. `_blend_dict` cannot blend a boolean, `night` was the
+  only preset declaring the flag, and it flipped at exactly hour 21.0 on
+  `golden → night` and back on `day → golden` — twice per 600-second day. That
+  switched the whole grade pass on and off mid-blend and landed night's own
+  saturation/contrast all at once instead of easing them in. Both are gone.
+- The A/B still stands and still says the grade is **protective**: one pinned,
+  frozen frame at hour 22, shot twice, changing nothing but the flag — grade on
+  R/B **0.44** (a correct cool night), grade off R/B **2.82** on identical
+  geometry and shadows.
+
+So: a real, smaller fix, honestly labelled. Not the crimson fix.
+
+### What the two results together actually point at
+
+The A/B frame was pinned **and frozen** (`set_process(false)`) — the pattern
+`pin_clock` implements. The sweep does not freeze: WorldLook's `_process` keeps
+advancing `_elapsed_seconds` and re-blending. That is now the **only** remaining
+difference between a cool frame and a red one at the same hour.
+
+On this container that difference is large. At ~0.29 FPS with
+`day_length_seconds` 600, each rendered frame advances the clock **0.136 in-game
+hours** — roughly 200× what a real machine at 60 FPS does per frame. The sweep's
+"hour 22.00" frame is really taken at ~23.4 after ten settle frames.
+
+`tools/_probe_night_crimson.gd` is rewritten to decide this and is running: three
+pinned-and-frozen hours spanning the transition (20.5, 22.0, 23.5), then the same
+hour again with `_process` left live. The outcome decides something that matters
+well beyond this item:
+
+- **If only the live frame is red**, the crimson is an artefact of a clock
+  advancing faster than the renderer can follow. It would then be a capture-rig
+  finding, not a defect a player can reach — and the overnight X07 run, which
+  now pins and freezes, would be immune. It would also finally explain the
+  "2026-08-23 crimson artefact" that `X07.json`'s own note records.
+- **If the frozen frames go red too**, it is a real time-of-day defect and the
+  hunt continues on the presets themselves.
+
+I will not guess which before the frames land.
+
+### Everything else is unchanged from check-in 2
+
+Items 1 and 3 are fixed and pushed and are not affected by any of this. **The
+`X07.json` fix — both the camera variants and the 19 real `pin_clock` steps — is
+pushed in `a2b80641` and still gates the overnight run.** Item 4's four
+grass-lane-adjacent defects remain deferred per the ordering directive; item 5 is
+not started.

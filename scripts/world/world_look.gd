@@ -493,20 +493,25 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# failure a blind critic named after the first legibility fix landed.
 	# `adjustment_saturation` is Godot's equivalent of that missing filter.
 	#
-	# ALWAYS ON, never read from config. GATE-F-DEFECT-FIX: toggling
-	# `adjustment_enabled` at runtime turns the whole frame red under the
-	# Compatibility renderer this game ships on (D01), and `_blend_dict` above
-	# has no meaningful blend for a boolean, so it SNAPS one at t >= 0.5 --
-	# which used to flip this flag at exactly hour 21.0 on the golden -> night
-	# segment, and back again on day -> golden, twice per 600-second day.
+	# ALWAYS ON, never read from config. GATE-F-DEFECT-FIX.
 	#
-	# Measured both directions, one fixed viewpoint, mean channel values over
-	# the whole frame. A twelve-hour sweep ramps correctly cool to hour 20.50
-	# (R/B 0.50) and then flips at 22.00 (R/B 3.42) and stays red for every
-	# later frame. The A/B that isolates it shoots ONE pinned frame at hour 22
-	# twice, changing nothing but this flag: grade on, R/B 0.44, a correct cool
-	# night; grade off, R/B 2.82 on the identical geometry and shadows.
-	# `tools/_probe_night_crimson.gd` is that probe and carries the numbers.
+	# THIS IS NOT THE FIX FOR THE CRIMSON NIGHT. Stated first because the commit
+	# that introduced it claimed otherwise and was wrong: a twelve-hour sweep
+	# re-run with this in place still reads R/B 3.43 at hour 22.00 against 0.53
+	# at 20.50, unchanged. Whatever turns the world red at night is still open.
+	#
+	# What this does fix: `_blend_dict` above has no meaningful blend for a
+	# boolean and SNAPS one at t >= 0.5. `night` was the only preset declaring
+	# this flag, so it flipped at exactly hour 21.0 on the golden -> night
+	# segment and flipped back on day -> golden, twice per 600-second day --
+	# switching the whole grade pass on and off mid-blend, and landing night's
+	# own saturation/contrast all at once instead of easing them in.
+	#
+	# The measurement that justifies keeping the pass ON rather than off:
+	# `tools/_probe_night_crimson.gd` shot one pinned, frozen frame at hour 22
+	# twice, changing nothing but this flag -- grade on, R/B 0.44, a correct
+	# cool night; grade off, R/B 2.82 on identical geometry and shadows. The
+	# grade is protective at that hour even though it is not the whole story.
 	#
 	# The three VALUES still come from config and still lerp, so a preset can
 	# grade as much or as little as it likes -- 1.0 is identity for all three,
