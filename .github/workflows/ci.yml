@@ -132,7 +132,27 @@ jobs:
           echo "${changed:-  (nothing)}"
 
           # Fail safe: an empty diff builds rather than silently shipping.
-          if [ -z "$changed" ] || printf '%s\n' "$changed" | grep -qvE '(\.md$|^site/|^docs/|^ralph/|^\.claude/)'; then
+          #
+          # NOT `grep -q` in a pipeline. `set -o pipefail` is on, and `grep -q`
+          # exits the instant it matches -- which closes the pipe, kills the
+          # upstream `printf` with SIGPIPE (141), and makes pipefail report the
+          # whole pipeline as FAILED even though grep succeeded. The `if` then
+          # took the else branch and skipped the entire build.
+          #
+          # It only bites when the diff is long enough that printf is still
+          # writing when grep exits, and when a non-doc path sorts early. Both
+          # were true on 2026-08-26: ralph/GRASS-CONSOLIDATE changed 767 files
+          # including ci.yml, shaders/, scripts/world/ and tests/ -- and CI
+          # reported SUCCESS in 50 seconds with 27 of 28 jobs skipped. A green
+          # tick on a run that tested nothing is the worst failure this file can
+          # produce, and it nearly landed an untested grass consolidation.
+          #
+          # Capturing the non-matching lines first lets grep read all of stdin,
+          # so there is no early exit and no SIGPIPE. `|| true` because grep
+          # exits 1 when it finds nothing, which here means "docs only".
+          noncode="$(printf '%s\n' "$changed" \
+            | grep -vE '(\.md$|^site/|^docs/|^ralph/|^\.claude/)' || true)"
+          if [ -z "$changed" ] || [ -n "$noncode" ]; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
             echo "Documentation only; skipping the build."
