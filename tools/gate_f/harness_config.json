@@ -1,0 +1,39 @@
+{
+  "_comment": "Operator-harness tunables for the Gate F run (tools/gate_f/operator_harness.gd). Deliberately NOT under data/config/: nothing the game ships reads this file, and ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 10 forbids touching the game's data configs. Delete the file and the harness runs on the same values, hard-coded as defaults, so a bare checkout still works.",
+
+  "_comment_trace_hz": "route.csv sample rate. The protocol section C.2 fixes it at 2 Hz for the run that produces Gate F evidence; the key is here so a diagnostic rerun can raise it without a code edit. Raising it costs frame time -- measure with --gatef-mode=overhead and record the result rather than assuming it is free.",
+  "trace_hz": 2.0,
+
+  "_comment_settle_frames": "Physics frames waited after a scene boot before anything is read or pressed. 240 is what every smoke test in tests/ uses; the Meadows scatters ~130k props at stand-up and a shorter settle reads half-built terrain as a defect.",
+  "settle_frames": 240,
+
+  "_comment_walk_budget_frames": "Physics frames one move_to step may spend walking before it reports FAIL. 2400 is 40 seconds at 60 Hz. Frames spent unable to move -- a fight, a fade, a conversation -- do not count against it (stick_navigator.gd's own rule), so this is a budget on WALKING, not on wall clock.",
+  "walk_budget_frames": 2400,
+
+  "_comment_walk_close_enough": "Metres from a move_to target that count as arrived. Looser than the navigator's own 0.8 default because a Gate F anchor is a place to stand, not a switch to press.",
+  "walk_close_enough": 1.2,
+
+  "_comment_walk_held_budget_frames": "Physics frames a move_to step will wait, in total, for locomotion to come back before giving up. 3600 is a minute at 60 Hz. stick_navigator.gd's own limit is ten minutes and then false; a harness cannot afford that, because a walk that hangs produces no evidence at all -- worse than one that reports where it stopped and what was holding it. Measured on main: walking out of the spawn triggers Grandpa's opening conversation, which takes locomotion and holds it until somebody answers.",
+  "walk_held_budget_frames": 3600,
+
+  "_comment_record_default_hz": "Section H baseline background frame rate for a segment that does not declare its own `record_hz`. 0.1 Hz is section H's rate for journey segments outside the mandatory high-risk list -- one frame per ten seconds plus event-forced frames, enough to keep the record continuous without drowning the run directory. A segment overrides it with a top-level `record_hz`; the mandatory list uses 0.5.",
+  "record_default_hz": 0.1,
+
+  "_comment_record_window_hz": "Rate `record_start` uses when a step names no `hz`, and the rate the overhead self-measurement tests the recorder at. 0.5 Hz is section H's mandatory-segment rate (a frame every two seconds).",
+  "record_window_hz": 0.5,
+
+  "_comment_record_forced_frames": "Section H's 'forced frame on every JSONL event'. Left settable because it is the one part of the continuous record that scales with how eventful a segment is rather than with its length, and X08's perf audit is meant to run without capture at all. Turning it off is a deliberate, recorded choice -- the run metadata carries the frame counts either way.",
+  "record_forced_frames": true,
+
+  "_comment_perf_window_frames": "Trailing window the perf field's avg/p95/max are computed over. 60 frames is one second at the physics rate, which is the shortest window a p95 means anything over.",
+  "perf_window_frames": 60,
+
+  "_comment_capture_settle_frames": "Process frames waited before a capture, on top of the frame_post_draw await. A capture taken on the frame a panel opens catches it mid-fade.",
+  "capture_settle_frames": 4,
+
+  "_comment_overhead_scene": "Which scene the section 8 overhead self-measurement runs on: 'world' or 'title'. The two costs it adds up do not live in the same place. The telemetry tick costs what the SCENE costs -- it walks the party, the quest log and the point-of-interest cache -- so it belongs on the real world, and runs there headless. The recorder's cost is a framebuffer readback and a PNG encode, which scales with PIXELS rather than scene complexity, so the title scene at the capture resolution measures it honestly. Measuring the recorder on the Meadows would be better and is not available in this container: under llvmpipe six twenty-second windows did not complete in fifty minutes, and a measurement taken while the box is that saturated describes the container rather than the instrument. The note names the scene it ran on so a reader composes the two instead of being handed one number pretending to be both.",
+  "overhead_scene": "world",
+
+  "_comment_overhead_seconds": "Length of each half of the section 8 overhead self-measurement (once with telemetry on, once off). 60 s each, per the request's own wording.",
+  "overhead_seconds": 60.0
+}

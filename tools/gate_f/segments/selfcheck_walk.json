@@ -1,0 +1,141 @@
+{
+  "id": "selfcheck_walk",
+  "title": "Harness self-check (DIAG): corridor walking, the 2 Hz trace, and both halves of the dead-travel meter",
+  "lane": "diag",
+  "_comment": "NOT a protocol segment. Acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 2: route.csv at 2 Hz with sane positions and a dead-travel meter that resets near a point of interest. The real pacing study runs inside the journey segments (protocol section D: never from a DIAG segment); this one is only asking whether the instrument works.",
+  "_comment_why_diag": "It teleports, and says so. Booting into the Meadows drops the player in Grandpa's dooryard, and walking out of it runs straight into the opening's dialogue, starter picker and naming prompt -- each of which takes locomotion until it is answered. Playing all three to reach open ground would make this a test of the opening rather than of the trace, and the opening is protocol segment S01's subject. So the walk is done where a walk can be done: on the band 1 trail spine, reached by a DIAG teleport that the harness records as a teleport and that resets the distance accumulators so the jump cannot appear in any pacing figure.",
+  "_comment_both_halves": "A dead-travel meter has two failure modes and they need separate, separately-sited assertions. One that never RESETS reads every journey as dead; one that never ACCUMULATES reads every journey as content-dense. So this walks twice: once through band 1's populated spine, where the meter has to keep resetting and must end small, and once on into the empty ground past it, where it has to climb. Measured on main during the first run of this segment: 172 m walked through band 1 peaked the meter at only 20.7 m, and the next 400 m took it to 379 m. Both numbers are the instrument working.",
+  "steps": [
+    {
+      "id": "SC-W-01",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "expected": "the real world scene stands up and the point-of-interest scan finds the chapter's content"
+    },
+    {
+      "id": "SC-W-02",
+      "title": "stand still for ten seconds",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "the 2 Hz trace runs while nothing moves: about 20 rows, position constant, region grandpas_village"
+    },
+    {
+      "id": "SC-W-03",
+      "title": "DIAG: go to the band 1 trail spine",
+      "action": "teleport",
+      "diag": true,
+      "args": {
+        "at": [
+          -40.0,
+          180.0
+        ]
+      },
+      "expected": "the player stands on the band 1 spine, clear of the opening's dialogue, starter picker and naming prompt -- each of which takes locomotion until answered, and all three of which are protocol segment S01's subject rather than this instrument check's. The distance and dead-travel accumulators reset, so nothing about this jump reaches a pacing figure."
+    },
+    {
+      "id": "SC-W-04",
+      "title": "the teleport landed where it said",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -40.0,
+          180.0
+        ],
+        "within": 3.0
+      },
+      "expected": "the player is on the spine point, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "SC-W-05",
+      "title": "face down the trail",
+      "action": "face",
+      "args": {
+        "at": [
+          -120.0,
+          270.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to look along the next leg of the spine"
+    },
+    {
+      "id": "SC-W-06",
+      "title": "walk sixty seconds through populated band 1",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 3600
+      },
+      "expected": "the left stick is held fully forward for 3600 physics frames -- one minute of real walking, driven by the same poll player_controller.gd reads"
+    },
+    {
+      "id": "SC-W-07",
+      "title": "the walk actually covered ground",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 100.0
+      },
+      "expected": "sixty seconds of held stick moved the player at least 100 m. Anything less means the walk is stuck on terrain, and every meter reading after it would be about that instead."
+    },
+    {
+      "id": "SC-W-08",
+      "title": "the trace ran at 2 Hz throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 130
+      },
+      "expected": "10 s idle plus 60 s walking at 2 Hz is about 140 rows"
+    },
+    {
+      "id": "SC-W-09",
+      "title": "the meter kept resetting inside band 1",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_below",
+        "metres": 30.0
+      },
+      "expected": "over 100+ m walked through populated band 1 the dead-travel run is still under 30 m, because it reset every time a wild creature, harvest node or landmark came within the section F radius. A meter that never reset would read here as the whole distance walked."
+    },
+    {
+      "id": "SC-W-10",
+      "title": "walk on into the empty ground past band 1",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 7200
+      },
+      "expected": "two more minutes of held stick, carrying the walk out of the populated spine"
+    },
+    {
+      "id": "SC-W-11",
+      "title": "the meter accumulated once the content stopped",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 25.0
+      },
+      "expected": "somewhere in that walk the player covered more than 25 m with nothing inside 30 m. The threshold is deliberately modest and the reason is a finding, not a fudge: measured on main, 326 m walked along the band 1 spine peaked the meter at 34.5 m and ended at 9.3 m, because band 1's content keeps arriving inside the radius. HOW FAR dead travel actually runs in this chapter is the journey segments' question (protocol section D, never from a DIAG segment); all this assertion has to prove is that the meter climbs at all, which a meter stuck at zero would fail and a meter that never reset would pass at 326."
+    },
+    {
+      "id": "SC-W-12",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "route.csv's dead_travel_m and nearest_poi_dist_m columns are the raw evidence for both assertions above; read them side by side"
+      },
+      "expected": "a note event closes the segment"
+    }
+  ]
+}

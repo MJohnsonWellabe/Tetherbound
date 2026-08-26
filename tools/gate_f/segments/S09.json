@@ -1,0 +1,784 @@
+{
+  "id": "S09",
+  "title": "Stronghold approach / Band 5: Sigil gate -> outer watch -> checkpoint -> final camp decision -> Hall threshold",
+  "lane": "journey",
+  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-11), section E.1 (CB-04's band 5 fights: stronghold_outer_watch, checkpoint), section E.5 (objective `fight_through_the_hall`'s routing decision), section G (GF-12-APPR-01/02, GF-21-WEATHER-04, GF-14-COMBAT-04e) and section H (0.1 Hz plus the band handoff window).",
+  "_comment_span_order": "AMBIGUITY: section B lists this span as 'Sigil gate -> outer watch -> checkpoint -> final camp decision -> Hall threshold', and section D's RT-11 starts the route at the sigil gate. But the authored positions run the other way: stronghold_outer_watch is at (-68,7140), 260 m SOUTH of playground_world.gd's SIGIL_GATE_AT (63.6,7400), and stronghold_checkpoint (45,7440) is north of the gate. Walking section B's order means passing the outer watch, opening the gate, coming back south to the watch and going north again. Transcribed in section B's order anyway -- reordering coverage is what the transcription rule forbids -- and the operator should record the order the ground actually produces.",
+  "_comment_camp": "AMBIGUITY: section B names a 'final camp decision' and nothing in the protocol says what it consists of. Transcribed as the player choosing to make camp and rest the team before the Hall -- the same camp/rest loop section L.4 already covers -- because that is the only camp decision the chapter's systems offer.",
+  "steps": [
+    {
+      "id": "S09-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "Section B: this segment's entry save is `S08-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S09-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S08-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S09-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S09-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S09-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S09-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S09-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S09-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S09-10",
+      "title": "the full belt travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "five of five across the handoff"
+    },
+    {
+      "id": "S09-11",
+      "title": "the Hall is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "fight_through_the_hall"
+      },
+      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended"
+    },
+    {
+      "id": "S09-12",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 0.1 Hz segment plus event-forced frames, with the band 4 -> band 5 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-13",
+      "title": "open the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Section E.5 at a major objective"
+    },
+    {
+      "id": "S09-14",
+      "title": "zoom out to see the approach",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_out",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "Section E.5's map-usefulness record"
+    },
+    {
+      "id": "S09-15",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell"
+    },
+    {
+      "id": "S09-16",
+      "title": "Section E.5 nav note -- fight_through_the_hall",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 20/24 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-16a",
+      "title": "record_start: band 4 -> band 5, the walk to the three-Sigil gate and through it",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 4 -> band 5, the walk to the three-Sigil gate and through it",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "this is the band 4/5 crossing proper, and it happens entirely inside S09: the window opens before the walk up the causeway so the approach under Team Tether's pylon line is recorded"
+    },
+    {
+      "id": "S09-17",
+      "title": "walk to the three-Sigil gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          63.6,
+          7400.0
+        ],
+        "budget_frames": 49500,
+        "close_enough": 3.5,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section D RT-11: 'Stronghold approach (sigil gate -> Hall threshold)'. playground_world.gd's SIGIL_GATE_AT is (63.6,7400), on the causeway between the gorge carves"
+    },
+    {
+      "id": "S09-18",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the approach's own content joins the POI set"
+    },
+    {
+      "id": "S09-19",
+      "title": "open the gate with the three Sigils",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5's gate/crossing row: 'sigil gate ... each locked-probe then legitimately opened'. The 0-2 Sigil probe is X06's; this is the legitimate opening. `road_gate.gd` is the gate BODY and the three Sigils are its key"
+    },
+    {
+      "id": "S09-20",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "the leaf re-poses and the causeway is walkable"
+    },
+    {
+      "id": "S09-21",
+      "title": "capture GF-12-APPR-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-12-APPR-01",
+        "class": "12",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "sigil gate opening, gate site",
+        "intended_proof": "3-Sigil payoff"
+      },
+      "expected": "Section G: sigil gate opening, gate site -- 3-Sigil payoff"
+    },
+    {
+      "id": "S09-22",
+      "title": "capture GF-21-WEATHER-04",
+      "action": "capture",
+      "args": {
+        "id": "GF-21-WEATHER-04",
+        "class": "21",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
+        "intended_proof": "weather identity; palette holds"
+      },
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+    },
+    {
+      "id": "S09-22a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 4 -> band 5, the walk to the three-Sigil gate and through it",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after GF-12-APPR-01 and GF-21-WEATHER-04, so the gate opening and its settle are inside the raised window"
+    },
+    {
+      "id": "S09-23",
+      "title": "walk to the outer watch",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -68.0,
+          7140.0
+        ],
+        "budget_frames": 14400,
+        "close_enough": 3.5,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section B's span order: 'Sigil gate -> outer watch -> checkpoint'. Section E.1 CB-04: 'S09: stronghold_outer_watch, checkpoint'. Watchman Corr stands at (-68,7140)"
+    },
+    {
+      "id": "S09-24",
+      "title": "challenge Watchman Corr",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the approach's first required fight"
+    },
+    {
+      "id": "S09-25",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "Team Tether at the top of its escalation"
+    },
+    {
+      "id": "S09-26",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
+    },
+    {
+      "id": "S09-27",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S09-28",
+      "title": "capture GF-14-COMBAT-04e",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-04e",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-04: representative fight per band -- S09, stronghold_outer_watch",
+        "intended_proof": "per-case: band 5's representative fight"
+      },
+      "expected": "Section G: CB-04: representative fight per band -- S09, stronghold_outer_watch -- per-case: band 5's representative fight"
+    },
+    {
+      "id": "S09-29",
+      "title": "fight the outer watch",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 42,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record; band 5's difficulty read against a full belt"
+    },
+    {
+      "id": "S09-30",
+      "title": "switch pilot under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "pilot handoff and camera handoff mid-fight"
+    },
+    {
+      "id": "S09-31",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 28,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S09-32",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S09-33",
+      "title": "walk north through the gate to the checkpoint",
+      "action": "move_to",
+      "args": {
+        "at": [
+          45.0,
+          7440.0
+        ],
+        "budget_frames": 15300,
+        "close_enough": 3.5,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section E.1 CB-04's second band 5 fight: stronghold_checkpoint, Warder Ness at (45,7440), north of the sigil gate"
+    },
+    {
+      "id": "S09-34",
+      "title": "challenge Warder Ness",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the approach's second required fight"
+    },
+    {
+      "id": "S09-35",
+      "title": "hear her out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "the last thing between the player and the Hall's own ground"
+    },
+    {
+      "id": "S09-36",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S09-37",
+      "title": "fight the checkpoint",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 42,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S09-38",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge"
+    },
+    {
+      "id": "S09-39",
+      "title": "finish the checkpoint",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 26,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S09-40",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S09-41",
+      "title": "capture GF-12-APPR-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-12-APPR-02",
+        "class": "12",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Hall dominant on horizon, drained land in frame, RT-11 mid",
+        "intended_proof": "escalating dread; occupied/drained grammar"
+      },
+      "expected": "Section G: Hall dominant on horizon, drained land in frame, RT-11 mid -- escalating dread; occupied/drained grammar"
+    },
+    {
+      "id": "S09-42",
+      "title": "Section B's final camp decision is not specified",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'final camp decision'. Nothing in the protocol says what it consists of, so it is transcribed as the decision the chapter's own systems offer: make camp on the approach and rest the team before going in, or go in as they are. Taken here, because a full belt walking into the Hall unrested is the state section L.4's care rules exist to make matter. RECORDED as the transcriber's reading of an under-specified beat."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-43",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the pause shell, opened by its bound button"
+    },
+    {
+      "id": "S09-44",
+      "title": "cycle to the Build tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 12
+      },
+      "expected": "four RB presses reach Build"
+    },
+    {
+      "id": "S09-45",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "'Open Build Menu' is the tab's only focusable control"
+    },
+    {
+      "id": "S09-46",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "it reopens on the last category and piece used this session"
+    },
+    {
+      "id": "S09-47",
+      "title": "move to Survival",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_left",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "`build_menu.gd::CATEGORY_ORDER` -- Survival holds the Camp (12 wood / 8 stone / 10 fiber)"
+    },
+    {
+      "id": "S09-48",
+      "title": "arm the camp",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "paid at the real cost; free_build is OFF for the whole run"
+    },
+    {
+      "id": "S09-49",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the placement camera takes over"
+    },
+    {
+      "id": "S09-50",
+      "title": "place the camp on the approach",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "Section B's final camp decision, taken"
+    },
+    {
+      "id": "S09-51",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "`GameState.placed_buildings` gains the camp"
+    },
+    {
+      "id": "S09-52",
+      "title": "rest before the Hall",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.6 T08: 'rest -> next day ... day advances, party heals per rules, flags set, weather re-rolls legally'"
+    },
+    {
+      "id": "S09-53",
+      "title": "let the rest panel open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the bed panel takes input"
+    },
+    {
+      "id": "S09-54",
+      "title": "confirm the rest",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Player rest / sleep -> next day'"
+    },
+    {
+      "id": "S09-55",
+      "title": "let the day advance",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "the fade runs and the team is rested for the Hall"
+    },
+    {
+      "id": "S09-55a",
+      "title": "record_start: band 5 -> the Hall",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 5 -> the Hall",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "the last handoff of the chapter: the window opens before the walk from the final camp to the Hall threshold"
+    },
+    {
+      "id": "S09-56",
+      "title": "walk to the Hall threshold",
+      "action": "move_to",
+      "args": {
+        "at": [
+          150.0,
+          7595.0
+        ],
+        "budget_frames": 9000,
+        "close_enough": 6.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section D RT-11 ends at (150,7595), the `stronghold` landmark -- the castle silhouette east of the stronghold's own built footprint. Section B: S09's span ends at 'Hall threshold'"
+    },
+    {
+      "id": "S09-57",
+      "title": "the player stands at the threshold",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          150.0,
+          7595.0
+        ],
+        "within": 12.0
+      },
+      "expected": "Section D RT-11's endpoint"
+    },
+    {
+      "id": "S09-57a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 5 -> the Hall",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes on the threshold assert. Section H's other half of this +/-60 s needs no pair -- S10 carries `record_hz: 0.5` for its whole length"
+    },
+    {
+      "id": "S09-58",
+      "title": "the approach was actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 1800.0
+      },
+      "expected": "Section D RT-11 plus section B's back-and-forth order is well over 2 km; no pacing claim may come from a shortcut (section 0.6)"
+    },
+    {
+      "id": "S09-59",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 3000
+      },
+      "expected": "Section C.2"
+    },
+    {
+      "id": "S09-60",
+      "title": "the approach's longest empty stretch is on the record",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 150.0
+      },
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. The drained approach is meant to read as emptied ground, so what the meter says here is a design question as much as a pacing one"
+    },
+    {
+      "id": "S09-61",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X04 (combat lab) from this file."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S09-62",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+    },
+    {
+      "id": "S09-63",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "S09-64",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S09-65",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S09-66",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S09-67",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S09-68",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S09-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S09-exit.json`"
+    },
+    {
+      "id": "S09-69",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S09-70",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S09 exit save written and copied, at the Hall threshold with a rested belt of five."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

@@ -1,0 +1,1299 @@
+{
+  "id": "S10",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
+  "title": "Finale: Hall entry -> gauntlet -> recovery -> elite -> Warden -> legendary -> release ceremony -> world healing",
+  "lane": "journey",
+  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-12 and RT-13's post-win walk-back), section E.1 (CB-06, whose combat camera must be verified at battle start for every stronghold fight), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`, `see_what_changed`), section E.6.15 (backtrack across story transitions), section G (GF-13-FINALE-01..05, GF-14-COMBAT-06) and section H (S10 is one of the mandatory 0.5 Hz continuous-evidence segments).",
+  "_comment_warden_coordinate": "AMBIGUITY: section E.1 CB-06 gives warden_aldis as (90.2,7569.4), which is exactly what data/config/bands/band5_stronghold_approach/trainers.json says. data/config/stronghold.json puts the `warden_arena` chamber at offset (0,90.2) from site.at (0,7560) -- that is (0,7650.2). The two numbers look like the same pair transposed. The protocol's own coordinate is used below, and the discrepancy is recorded rather than silently corrected.",
+  "_comment_walkback": "Section D's RT-13 is 'post-win S10 walk-back to the healed meadow | as played', and section L.5 asks for 'healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'. Grandpa is 7.6 km south of the Hall, so the walk-back below is the longest leg in the run. It is walked, not shortcut: section 0.6 forbids sourcing any claim from a teleport, and 'the world responds to that victory' is the chapter's whole payoff.",
+  "steps": [
+    {
+      "id": "S10-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "Section B: this segment's entry save is `S09-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S10-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S09-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S10-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S10-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S10-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S10-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S10-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S10-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S10-10",
+      "title": "the full belt travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "five of five into the Hall"
+    },
+    {
+      "id": "S10-11",
+      "title": "the Hall is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "fight_through_the_hall"
+      },
+      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`"
+    },
+    {
+      "id": "S10-12",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... CB-06 + CB-07 + Warden (representative combat) ... S10 (finale)' at 0.5 Hz. The vocabulary has no background-recorder action; the bounded `capture_seq` over the Warden fight below is the closest it reaches, and the gap is recorded."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-13",
+      "title": "walk in through the Outer Works",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          7560.0
+        ],
+        "budget_frames": 9000,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "data/config/stronghold.json's `outer_works` chamber at site.at (0,7560). Section D RT-12: 'Stronghold/finale interior | Hall spaces'"
+    },
+    {
+      "id": "S10-14",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the Hall's own content joins the POI set"
+    },
+    {
+      "id": "S10-15",
+      "title": "capture GF-13-FINALE-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-01",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Hall interior gauntlet space, Outer Works/Courtyard",
+        "intended_proof": "occupation/industrialization read"
+      },
+      "expected": "Section G: Hall interior gauntlet space, Outer Works/Courtyard -- occupation/industrialization read"
+    },
+    {
+      "id": "S10-16",
+      "title": "walk to the patrol in the Outer Works",
+      "action": "move_to",
+      "args": {
+        "at": [
+          6.0,
+          7560.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "stronghold_patrol, Patrolman Verrick at (6,7560) -- the first of the gauntlet's three"
+    },
+    {
+      "id": "S10-17",
+      "title": "challenge the patrol",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-06: 'Stronghold fights | patrol -> courtyard -> elite -> warden_aldis'"
+    },
+    {
+      "id": "S10-18",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "the gauntlet's first rung"
+    },
+    {
+      "id": "S10-19",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S10-20",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S10-21",
+      "title": "capture GF-14-COMBAT-06",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-06",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-06: stronghold fights, patrol -> courtyard -> elite -> warden_aldis",
+        "intended_proof": "per-case: combat camera verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch"
+      },
+      "expected": "Section G: CB-06: stronghold fights, patrol -> courtyard -> elite -> warden_aldis -- per-case: combat camera verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch"
+    },
+    {
+      "id": "S10-22",
+      "title": "CB-06's camera clause",
+      "action": "note",
+      "args": {
+        "text": "Section E.1 CB-06's own clause, quoted so the operator applies it to every fight in this segment: 'combat camera must be verified at battle start for every stronghold fight: target_on_screen at t=0 and every switch'. The `combat` object on every `combat_start` and `combat_switch` event carries `target_on_screen`; section L.6 T05's stronghold clause is named there as one of the two highest-priority collision probes in the whole protocol."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-23",
+      "title": "fight the patrol",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 38,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-24",
+      "title": "switch pilot",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch"
+    },
+    {
+      "id": "S10-25",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-26",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S10-27",
+      "title": "the patrol is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_patrol"
+      },
+      "expected": "`defeated_stronghold_patrol`, the first of objective 20/24's three `count_flags`"
+    },
+    {
+      "id": "S10-28",
+      "title": "walk into the Courtyard",
+      "action": "move_to",
+      "args": {
+        "at": [
+          36.0,
+          7564.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "stronghold.json's `courtyard` chamber; stronghold_courtyard is Warder Solene at (36,7564)"
+    },
+    {
+      "id": "S10-29",
+      "title": "challenge the courtyard warder",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the gauntlet's second rung"
+    },
+    {
+      "id": "S10-30",
+      "title": "hear her out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "the escalation inside the Hall"
+    },
+    {
+      "id": "S10-31",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CB-06: verify target_on_screen at t=0"
+    },
+    {
+      "id": "S10-32",
+      "title": "fight the courtyard warder",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-33",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge"
+    },
+    {
+      "id": "S10-34",
+      "title": "finish her",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-35",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S10-36",
+      "title": "the courtyard is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_courtyard"
+      },
+      "expected": "`defeated_stronghold_courtyard`, the second of the three `count_flags`"
+    },
+    {
+      "id": "S10-37",
+      "title": "Section B's recovery beat",
+      "action": "note",
+      "args": {
+        "text": "Section B's span names a 'recovery' beat between the gauntlet and the elite. stronghold.json carries a `recovery` block and `creature_bed.gd::AUTHORED_STRONGHOLD_REST` is a bed that belongs to the world rather than to the player. The steps below use it. Section L.4: 'Creature care/rest; bed occupancy/unavailability/overnight recovery'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-38",
+      "title": "use the Hall's recovery point",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the authored rest inside the complex -- the one place the chapter lets a player repair a team mid-gauntlet"
+    },
+    {
+      "id": "S10-39",
+      "title": "let the recovery panel open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the creature-bed panel takes input"
+    },
+    {
+      "id": "S10-40",
+      "title": "rest the team",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "Section L.4's care row; record the bed's unavailability window"
+    },
+    {
+      "id": "S10-41",
+      "title": "let the recovery resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "the team's condition is restored per the rules"
+    },
+    {
+      "id": "S10-42",
+      "title": "walk to the elite",
+      "action": "move_to",
+      "args": {
+        "at": [
+          69.0,
+          7557.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "stronghold_elite, Keeper Hald at (69,7557) -- the gauntlet's third rung, standing in front of the Tether blast shutter"
+    },
+    {
+      "id": "S10-43",
+      "title": "challenge the elite",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5's gate row: 'Hall shutter before the elite'. The shutter lifts when the elite in front of it has been beaten"
+    },
+    {
+      "id": "S10-44",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "the last thing between the player and the Warden"
+    },
+    {
+      "id": "S10-45",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CB-06: verify target_on_screen at t=0"
+    },
+    {
+      "id": "S10-46",
+      "title": "fight the elite",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 44,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-47",
+      "title": "switch pilot",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch"
+    },
+    {
+      "id": "S10-48",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-49",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 12
+      },
+      "expected": "the blast shutter lifts"
+    },
+    {
+      "id": "S10-50",
+      "title": "the elite is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_elite"
+      },
+      "expected": "`defeated_stronghold_elite` closes section E.5 objective 20/24"
+    },
+    {
+      "id": "S10-51",
+      "title": "the Warden is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "defeat_the_warden"
+      },
+      "expected": "Section E.5 objective 21/24 `defeat_the_warden`, 'Defeat the Meadows Warden.'"
+    },
+    {
+      "id": "S10-52",
+      "title": "Section E.5 nav note -- defeat_the_warden",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 21/24 `defeat_the_warden`. Wording: 'Defeat the Meadows Warden.' It names WHAT and no WHERE, inside a complex with one spine and no branches. Player-visible information: the shutter that just lifted, and the arena beyond it. Route decision: go through the door that just opened, because stronghold.json's passages are 'one spine, in route order, no branches'. Reasoned from GF-13-FINALE-01."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-53",
+      "title": "walk into the Warden's arena",
+      "action": "move_to",
+      "args": {
+        "at": [
+          90.2,
+          7569.4
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "Section E.1 CB-06 gives warden_aldis as (90.2,7569.4); see this file's header for the discrepancy with stronghold.json's `warden_arena` chamber"
+    },
+    {
+      "id": "S10-54",
+      "title": "face the Warden",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the chapter's climax"
+    },
+    {
+      "id": "S10-55",
+      "title": "capture GF-13-FINALE-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-02",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Warden pre-fight dialogue, Warden Arena",
+        "intended_proof": "climax staging"
+      },
+      "expected": "Section G: Warden pre-fight dialogue, Warden Arena -- climax staging"
+    },
+    {
+      "id": "S10-56",
+      "title": "hear the Warden out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 16,
+        "settle_frames": 20
+      },
+      "expected": "the fight the whole chapter has been walking toward"
+    },
+    {
+      "id": "S10-57",
+      "title": "let the Warden fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "Section E.1 CB-06 and section L.6 T05's stronghold clause: the combat camera has to acquire both combatants at fight start including a teleport-staged fight"
+    },
+    {
+      "id": "S10-58",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S10-59",
+      "title": "record the Warden fight continuously",
+      "action": "capture_seq",
+      "args": {
+        "id": "S10-SEQ-warden",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "hz": 0.5,
+        "seconds": 60,
+        "trigger": "Section H mandatory continuous evidence: CB-06 + Warden (representative combat)",
+        "intended_proof": "a timed frame sequence over the chapter's climax, one manifest row per frame so a single missing frame is visible rather than averaged away"
+      },
+      "expected": "Section H: 'Frame-sequence recording: PNG every 2 s (0.5 Hz) ... Mandatory for the highest-risk segments: ... CB-06 + CB-07 + Warden (representative combat)'. Thirty frames over a minute of the fight"
+    },
+    {
+      "id": "S10-60",
+      "title": "fight the Warden",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 50,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record; the HP margin at the end is the chapter's final difficulty read"
+    },
+    {
+      "id": "S10-61",
+      "title": "switch pilot",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch"
+    },
+    {
+      "id": "S10-62",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 34,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-63",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge in the chapter's hardest fight"
+    },
+    {
+      "id": "S10-64",
+      "title": "switch pilot again",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: every switch, not just the first"
+    },
+    {
+      "id": "S10-65",
+      "title": "finish the Warden",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 34,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10-66",
+      "title": "let the Warden fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 14
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S10-67",
+      "title": "the Warden is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_warden"
+      },
+      "expected": "`defeated_warden` closes section E.5 objective 21/24"
+    },
+    {
+      "id": "S10-68",
+      "title": "the machine is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "shut_down_the_machine"
+      },
+      "expected": "Section E.5 objective 22/24 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'"
+    },
+    {
+      "id": "S10-69",
+      "title": "Section E.5 nav note -- shut_down_the_machine",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 22/24 `shut_down_the_machine`. Wording: 'Shut down what Team Tether built under the Hall.' It names WHAT and a WHERE relative to the building the player is standing in. Player-visible information: the Legendary Chamber opens off the Warden Arena, and the machine is the thing in it. Route decision: take the one remaining door. Reasoned from GF-13-FINALE-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-70",
+      "title": "walk into the Legendary Chamber",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -32.0,
+          7650.2
+        ],
+        "budget_frames": 6300,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "stronghold.json's `legendary_chamber` at offset (-32,90.2) from site.at (0,7560)"
+    },
+    {
+      "id": "S10-71",
+      "title": "capture GF-13-FINALE-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-03",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "legendary chamber / tether machine, Legendary Chamber",
+        "intended_proof": "reveal lands visually"
+      },
+      "expected": "Section G: legendary chamber / tether machine, Legendary Chamber -- reveal lands visually"
+    },
+    {
+      "id": "S10-72",
+      "title": "shut the machine down",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the rung's own verb; the tether machine is one of the Meshy hero objects the chapter reserved its generations for"
+    },
+    {
+      "id": "S10-73",
+      "title": "see it through",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 20
+      },
+      "expected": "record what the reveal actually does on screen"
+    },
+    {
+      "id": "S10-74",
+      "title": "the legendary is freed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "legendary_freed"
+      },
+      "expected": "`legendary_freed` closes section E.5 objective 22/24"
+    },
+    {
+      "id": "S10-75",
+      "title": "the roster choice is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "settle_the_roster"
+      },
+      "expected": "Section E.5 objective 23/24 `settle_the_roster`, 'Settle who walks with you.'"
+    },
+    {
+      "id": "S10-76",
+      "title": "Section E.5 nav note -- settle_the_roster",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 23/24 `settle_the_roster`. Wording: 'Settle who walks with you.' It names WHAT and no WHERE, because the choice is on a screen rather than in a place. Player-visible information: the belt is at 5/5 and a sixth creature has just been freed. Route decision: none; the ceremony opens itself. This is the chapter's core choice and CLAUDE.md's hardest rule -- five creatures, ever, no storage, no hidden sixth slot -- meeting each other. Reasoned from GF-13-FINALE-03 and GF-19-UI-09 (S08)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-77",
+      "title": "the belt was full when the legendary arrived",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "Section L.4: 'Release ceremony under full belt | S10: legendary join with 5/5 -> ceremony; verify three-beat ceremony, history shown, choice is real and permanent'. This assertion is what proves the ceremony was reached the way the design intends rather than into a free slot"
+    },
+    {
+      "id": "S10-78",
+      "title": "open the roster choice",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the ceremony's first beat"
+    },
+    {
+      "id": "S10-79",
+      "title": "let the ceremony open",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the team screen takes input"
+    },
+    {
+      "id": "S10-80",
+      "title": "capture GF-13-FINALE-04",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-04",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "release ceremony decision screen, team screen",
+        "intended_proof": "the chapter's core choice presented with ceremony"
+      },
+      "expected": "Section G: release ceremony decision screen, team screen -- the chapter's core choice presented with ceremony"
+    },
+    {
+      "id": "S10-81",
+      "title": "the ceremony focuses a creature",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "a choice a controller cannot move through is not a choice"
+    },
+    {
+      "id": "S10-82",
+      "title": "look across the roster",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "expected": "Section L.4: 'history shown' -- what the ceremony says about each creature before the player chooses"
+    },
+    {
+      "id": "S10-83",
+      "title": "make the choice",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'choice is real and permanent'"
+    },
+    {
+      "id": "S10-84",
+      "title": "let the ceremony's second beat run",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "the three-beat ceremony section L.4 names"
+    },
+    {
+      "id": "S10-85",
+      "title": "confirm the release",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "the permanent half of the choice; CLAUDE.md: never a sixth slot, never storage"
+    },
+    {
+      "id": "S10-86",
+      "title": "let the ceremony finish",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "the third beat"
+    },
+    {
+      "id": "S10-87",
+      "title": "the belt is still five",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken"
+    },
+    {
+      "id": "S10-88",
+      "title": "the roster is settled",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "legendary_settled"
+      },
+      "expected": "`legendary_settled` closes section E.5 objective 23/24"
+    },
+    {
+      "id": "S10-89",
+      "title": "the walk-back is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "see_what_changed"
+      },
+      "expected": "Section E.5 objective 24/24 `see_what_changed`, 'Go back through the Meadows and see what changed.' -- the last of the 24 and the one that terminates the chain"
+    },
+    {
+      "id": "S10-90",
+      "title": "Section E.5 nav note -- see_what_changed",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 24/24 `see_what_changed`. Wording: 'Go back through the Meadows and see what changed.' It names WHAT and a WHERE that is the whole chapter. Player-visible information: everything the player has walked. Route decision: walk the chapter backwards -- approach, crossing, bridge, village, home -- because the objective's own verb is 'go back through'. Reasoned from every arrival frame in S05 through S09. Section D RT-13 records this as 'as played'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-91",
+      "title": "walk back down the drained approach",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -8.0,
+          7100.0
+        ],
+        "budget_frames": 31500,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "stronghold.json's `approach_drain` runs z 6990-7530 under the pylon line, and its own comments call the healing out. Section L.5: 'healed ground, lights out, patrols withdrawn'"
+    },
+    {
+      "id": "S10-92",
+      "title": "capture GF-13-FINALE-05",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-05",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "healed meadow post-win, S10 walk-back",
+        "intended_proof": "visible world healing"
+      },
+      "expected": "Section G: healed meadow post-win, S10 walk-back -- visible world healing"
+    },
+    {
+      "id": "S10-93",
+      "title": "walk back to the Old Mill Crossing",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -152.0,
+          4203.0
+        ],
+        "budget_frames": 132750,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section D RT-13: 'Backtrack: ... post-win S10 walk-back to the healed meadow | as played'. Section E.6.15: 'Backtrack across story transitions'"
+    },
+    {
+      "id": "S10-94",
+      "title": "walk back through the Tether Relay",
+      "action": "move_to",
+      "args": {
+        "at": [
+          350.0,
+          3760.0
+        ],
+        "budget_frames": 31500,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section E.6.14: 'Revisit completed areas: ... relay after clearing; record what re-offers, what is correctly spent, what dialogue acknowledges progress'"
+    },
+    {
+      "id": "S10-95",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "a cleared relay should hold different content from an occupied one; the POI scan is where that shows"
+    },
+    {
+      "id": "S10-96",
+      "title": "speak to whoever is still at the relay",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5's post-win row: 'patrols withdrawn, NPC acknowledgment'"
+    },
+    {
+      "id": "S10-97",
+      "title": "walk back past the Burrow Warrens",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -420.0,
+          2470.0
+        ],
+        "budget_frames": 65250,
+        "close_enough": 10.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section E.6.14: 'Revisit completed areas: ... Warrens after the guardian'"
+    },
+    {
+      "id": "S10-98",
+      "title": "walk back over the South Bridge",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          1330.0
+        ],
+        "budget_frames": 54000,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section E.6.15: 'walk back over the South Bridge after crossing'"
+    },
+    {
+      "id": "S10-99",
+      "title": "walk back into the village",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ],
+        "budget_frames": 60750,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800
+      },
+      "expected": "Section L.5's post-win row: NPC acknowledgment in the place the chapter started"
+    },
+    {
+      "id": "S10-100",
+      "title": "the village region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "map_state.gd's containment puts the player back in `grandpas_village` -- the same region the journey's first arrival frame was taken in"
+    },
+    {
+      "id": "S10-101",
+      "title": "speak to a villager",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5: 'NPC acknowledgment'"
+    },
+    {
+      "id": "S10-102",
+      "title": "hear them out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "record whether the village knows what happened"
+    },
+    {
+      "id": "S10-103",
+      "title": "walk home to Grandpa",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'"
+    },
+    {
+      "id": "S10-104",
+      "title": "talk to Grandpa",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the chapter's last conversation"
+    },
+    {
+      "id": "S10-105",
+      "title": "hear his post-win line out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 20
+      },
+      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'"
+    },
+    {
+      "id": "S10-106",
+      "title": "the chain terminates",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "meadows_acknowledged"
+      },
+      "expected": "`meadows_acknowledged` closes section E.5 objective 24/24 and, with it, the 24-objective main chain. Section B: S10's span ends at 'chain terminates'"
+    },
+    {
+      "id": "S10-107",
+      "title": "the team that finished the chapter is five",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "the permanent team of five the chapter exists to build"
+    },
+    {
+      "id": "S10-108",
+      "title": "the walk-back was actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 7000.0
+      },
+      "expected": "Section 0.6: no pacing, navigation, difficulty or economy claim may come from a shortcut. The walk-back is roughly 7.6 km and is the evidence for the chapter's whole payoff"
+    },
+    {
+      "id": "S10-109",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 6000
+      },
+      "expected": "Section C.2"
+    },
+    {
+      "id": "S10-110",
+      "title": "the walk-back's longest empty stretch is on the record",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 250.0
+      },
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. A 7.6 km backtrack over ground the player has already cleared is the single most likely place in the chapter for a long dead-travel run, and section D wants the interval with its start/end coordinates rather than a verdict"
+    },
+    {
+      "id": "S10-111",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B calls this one `S10-exit` (post-win); X05 branches its save-lifecycle study from it."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10-112",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+    },
+    {
+      "id": "S10-113",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "S10-114",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S10-115",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S10-116",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S10-117",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S10-118",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S10-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S10-exit.json`"
+    },
+    {
+      "id": "S10-119",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S10-120",
+      "title": "close the journey",
+      "action": "note",
+      "args": {
+        "text": "S10 exit save written and copied. The journey lane is complete: S01 through S10, one naturalistic fresh-save playthrough in player order, production paths only, chained by save handoff, with no teleport in any of the ten files."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}
