@@ -13,6 +13,7 @@ extends Node
 ## number can be argued about, it lives in data, and something must actually
 ## read it.
 
+const SKY_SHADER_PATH := "res://shaders/sky_clouds.gdshader"
 const CONFIG_PATH := "res://data/config/art.json"
 const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
 
@@ -405,6 +406,20 @@ func _apply_sun(cfg: Dictionary) -> void:
 ## to a black void, and because the procedural path is still the right answer for
 ## anywhere that wants a stylised flat sky later.
 func _apply_sky(sky: Sky, cfg: Dictionary) -> void:
+	# SKY-CLOUDS, and it takes precedence over both paths below. This function's
+	# own header argued for an HDRI panorama as the answer to "there is no amount
+	# of tuning that puts a cumulus in it", and a panorama is one answer -- but a
+	# generated sky is the better fit for the same slot: no asset to source,
+	# license and ship, it drifts on the wind, and every time of day drives it
+	# from the same art.json block that drives the gradient. `shaders/
+	# sky_clouds.gdshader` degrades to this function's own gradient when
+	# `cloud_coverage` is 0, so turning it off lands on the sky it replaced
+	# rather than on a different one.
+	if float(cfg.get("cloud_coverage", 0.0)) > 0.0 \
+			and ResourceLoader.exists(SKY_SHADER_PATH):
+		_apply_cloud_sky(sky, cfg)
+		return
+
 	var panorama := str(cfg.get("panorama", ""))
 	if panorama != "" and ResourceLoader.exists(panorama):
 		var image := sky.sky_material as PanoramaSkyMaterial
@@ -432,6 +447,41 @@ func _apply_sky(sky: Sky, cfg: Dictionary) -> void:
 	gradient.sun_angle_max = float(cfg.get("sun_angle_max_deg", 24.0))
 	gradient.sun_curve = float(cfg.get("sun_curve", 0.18))
 	gradient.energy_multiplier = float(cfg.get("energy", 1.0))
+
+
+## Drive `shaders/sky_clouds.gdshader` from the same time-of-day block the
+## gradient uses, so a time of day that wants a heavier sky says so with one
+## number rather than by naming a different asset.
+func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
+	var mat := sky.sky_material as ShaderMaterial
+	if mat == null or mat.shader == null or mat.shader.resource_path != SKY_SHADER_PATH:
+		mat = ShaderMaterial.new()
+		mat.shader = load(SKY_SHADER_PATH)
+		sky.sky_material = mat
+	mat.set_shader_parameter("top_colour", _as_colour(cfg.get("top_colour"), "#3b6f93"))
+	mat.set_shader_parameter("horizon_colour", _as_colour(cfg.get("horizon_colour"), "#b9c8cf"))
+	mat.set_shader_parameter("ground_horizon_colour",
+			_as_colour(cfg.get("ground_horizon_colour"), "#b9c8cf"))
+	mat.set_shader_parameter("ground_bottom_colour",
+			_as_colour(cfg.get("ground_bottom_colour"), "#4a5648"))
+	mat.set_shader_parameter("sky_energy", float(cfg.get("energy", 1.0)))
+	mat.set_shader_parameter("coverage", float(cfg.get("cloud_coverage", 0.46)))
+	for pair: Array in [
+		["cloud_sharpness", "sharpness"], ["cloud_scale", "scale"],
+		["cloud_height", "height"], ["cloud_sun_gain", "sun_gain"],
+		["sun_size", "sun_size"], ["sun_glow", "sun_glow"],
+	]:
+		if cfg.has(str(pair[0])):
+			mat.set_shader_parameter(str(pair[1]), float(cfg[str(pair[0])]))
+	for pair2: Array in [
+		["cloud_lit", "cloud_lit"], ["cloud_shade", "cloud_shade"],
+		["sun_colour", "sun_colour"],
+	]:
+		if cfg.has(str(pair2[0])):
+			mat.set_shader_parameter(str(pair2[1]), _as_colour(cfg.get(str(pair2[0])), "#ffffff"))
+	if cfg.has("cloud_wind"):
+		var w: Array = cfg["cloud_wind"]
+		mat.set_shader_parameter("wind", Vector2(float(w[0]), float(w[1])))
 
 
 func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
