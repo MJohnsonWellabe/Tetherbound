@@ -1723,48 +1723,75 @@ jobs:
   # real bug, not a flake -- see ralph/HANDOVER_CONSOLIDATION_2026-08-25.md's
   # own "six defects, one shape" section for that distinction and why it
   # matters not to paper over the other kind.
+  # SPLIT 2026-08-26. These five smokes ran SERIALLY in one job, and that job
+  # was the whole pipeline's long pole: 20m23s of test time on run 32926498498,
+  # against a full-run wall clock of ~40 minutes (the other ~16 being runners
+  # queueing). Nothing else came close -- next slowest were
+  # verify-gate-evidence-shard at 14m37s and verify-owner-regressions-shard at
+  # 14m02s. Sharding unit tests can never touch it; this is where the time is.
+  #
+  # Running them in parallel makes the pole the LONGEST SINGLE SMOKE rather than
+  # their sum. That is strictly better and needs no per-smoke measurement to
+  # justify, which matters because this session has already shipped one CI
+  # "fix" whose arithmetic could not have worked.
+  #
+  # smoke_traversal keeps its three attempts and smoke_catching its two, but
+  # those retries now cost only their own job instead of the four smokes queued
+  # behind them. On run 32964091592 traversal genuinely failed, so all three
+  # attempts ran and dragged the whole shard with them -- exactly the shape this
+  # removes.
+  #
+  # `retries` is per-smoke rather than blanket, so a genuinely broken smoke
+  # still fails on its first attempt instead of costing three.
+  #
+  # NOT a fix for why traversal needs retries at all: the player-slide wedge
+  # near world (53,-65). Fix that and this drops again. smoke_unstick guards the
+  # related failsafe (Gate F S05: 1,004 route rows at one coordinate over eight
+  # minutes, stick held throughout) and is seconds long -- with movement.json's
+  # `unstick.enabled` false it fails, so it cannot pass by accident.
+  #
+  # 30 minutes, not 40: the longest chain is now traversal's three ~6-minute
+  # attempts plus setup, not five smokes end to end.
   verify-core-verb-shard:
     runs-on: ubuntu-latest
-    # 22 -> 40. The retry chain above and the old timeout were in direct
-    # conflict: this job runs four smokes, and conventions.md measures
-    # smoke_traversal.gd alone at ~6 minutes, so its three attempts are ~18 of
-    # the 22 minutes before smoke_playground, smoke_input and smoke_catching's
-    # two attempts run at all. The job therefore only survived while no retry
-    # was needed -- which is exactly the case the third retry was added for.
-    #
-    # Observed twice on 2026-08-25: run 2432 killed mid-smoke_traversal at
-    # 22m50s while still emitting progress, and run 2440 cancelled at ~21m on
-    # ralph/WORLD-GRASS, taking three unit shards down with it through matrix
-    # fail-fast and blocking a branch whose own tests had passed.
-    #
-    # This does NOT weaken a test: no retry count changes, no assertion moves.
-    # It gives the existing workload a budget it fits in. The cost is that a
-    # genuinely wedged traversal now takes 40 minutes to report instead of 22,
-    # which is the right trade against red runs that are unrelated to the code
-    # under test -- the failure mode that gets real defects dismissed as
-    # infrastructure noise.
-    timeout-minutes: 40
+    timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: playground
+            retries: 1
+          - smoke: input
+            retries: 1
+          - smoke: unstick
+            retries: 1
+          - smoke: traversal
+            retries: 3
+          - smoke: catching
+            retries: 2
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-godot
-      - name: Verify movement, traversal, and catching
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
         run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_playground.gd
-          godot --headless --path . --script tests/smoke_input.gd
-          # Runs before the six-minute traversal walk on purpose: it builds its
-          # own geometry, finishes in seconds, and guards the failsafe that
-          # keeps a player from being permanently immobilised in the open world
-          # (Gate F S05: 1,004 route rows at one coordinate over eight minutes,
-          # stick held throughout). Cheap enough that it costs this shard
-          # nothing and specific enough that it cannot pass by accident -- with
-          # movement.json's `unstick.enabled` false it fails.
-          godot --headless --path . --script tests/smoke_unstick.gd
-          godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd
-          godot --headless --path . --script tests/smoke_catching.gd || godot --headless --path . --script tests/smoke_catching.gd
-
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
   verify-gate-a-ui-build-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
