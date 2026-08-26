@@ -117,12 +117,46 @@ uniform float leaf_cut : hint_range(0.0, 1.0) = 0.0;
 // the leaf becomes a comb.
 uniform float leaf_serrate : hint_range(0.0, 0.6) = 0.22;
 uniform float leaf_teeth = 5.0;
+// PER-LEAF SHADING, and the defect it answers is NOT the one `leaf_cut` fixes.
+// With the outline cut, a blind pass stopped calling the bushes "a heap of flat
+// quads" and started calling them "flat clipart: two or three flat fill colours,
+// hard vector edges, zero shading gradient", naming the reference's own ground
+// cover as "a shaded volume that darkens toward its base" and saying plainly
+// that "the difference is not resolution or budget -- it is that the
+// reference's cards are shaded and yours are not".
+//
+// The cause is that `v_t` runs up the whole BUSH, so every leaf in one ring
+// takes the same albedo and a ring becomes a band of one flat fill. A leaf is a
+// shaded volume in miniature: dark where it attaches to the stem, lit at the
+// tip, and no two on one plant quite the same. `leaf_root_darken` is the first
+// of those and `leaf_tint_jitter` the second, and both read the SAME UV2 the
+// mask already fetches -- this costs nothing that is not already in registers.
+//
+// Deliberately albedo rather than normals: `normal_soften` above exists because
+// an earlier round had one leaf near-black beside one bright green, and undoing
+// it to get a gradient would buy this defect back at the price of that one.
+uniform float leaf_root_darken : hint_range(0.0, 1.0) = 0.45;
+uniform float leaf_tint_jitter : hint_range(0.0, 1.0) = 0.22;
+
+// WOOD. `grass_field.gd::_bush_mesh` marks trunk and branch vertices with
+// UV2.y = 2.0; every leaf seed is in [0, 1), so the flag cannot collide with
+// one. Wood must escape two things the leaves want: the outline cut, which
+// would eat a twig from both ends, and the leaf tint gradient, because a
+// branch is not a small green leaf.
+//
+// The branches exist because the owner looked at the cut-leaf version and said
+// the bushes "can't just be random leaves in the air. there needs to be some
+// sort of stick connecting the leaves". Correct, and not a tuning note: the
+// old mesh placed leaves on concentric rings so no leaf's stem end touched
+// anything at all.
+uniform vec3 tint_wood : source_color = vec3(0.28, 0.22, 0.13);
 
 uniform int allowed_base_mask = 3;
 
 varying float v_t;
 varying vec3 v_colour;
 varying float v_fade;
+varying float v_wood;
 
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader, same as the other
 // two tiers and for the same reason -- see `grass_field.gdshader`'s note.
@@ -192,6 +226,8 @@ void vertex() {
 	// failure is silent -- the shader does not compile, a default material is
 	// substituted, and the raw mesh renders at every instance. Paid for once
 	// already on `stone_field.gdshader`.
+	v_wood = UV2.y > 1.5 ? 1.0 : 0.0;
+
 	if (culled) {
 		VERTEX = vec3(0.0);
 		v_t = 0.0;
@@ -230,6 +266,7 @@ void vertex() {
 		VERTEX.y += ground_h - size * sink;
 
 		vec3 own = mix(tint_base, tint_tip, smoothstep(0.0, 0.85, v_t));
+		own = mix(own, tint_wood, v_wood);
 		own *= 1.0 + (hash12(world_xz * 2.29) - 0.5) * 2.0 * tint_jitter;
 		// The base takes the terrain's own colour so growth comes OUT of the
 		// ground. The colour map is a near-white MULTIPLIER, not a colour --
@@ -259,11 +296,11 @@ void fragment() {
 	if (v_fade <= 0.001) {
 		discard;
 	}
-	ALBEDO = v_colour * (1.0 - (1.0 - smoothstep(0.0, 0.35, v_t)) * contact_darken);
-	ROUGHNESS = 0.95;
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
-	if (leaf_cut > 0.001) {
+	// Contact darken along the BUSH: its underside is in its own shade.
+	float shade = 1.0 - (1.0 - smoothstep(0.0, 0.35, v_t)) * contact_darken;
+	if (leaf_cut > 0.001 && v_wood < 0.5) {
 		// UV.x is the leaf's own width; UV.y is NOT its length -- that runs up
 		// the whole bush and the tint gradient reads it. UV2 carries the
 		// leaf-local length and this leaf's own seed.
@@ -272,5 +309,12 @@ void fragment() {
 		// Ramped rather than stepped so the scissor cuts on the outline itself
 		// (mask crosses zero exactly there) instead of on a quantised edge.
 		ALPHA = mix(1.0, clamp(0.5 + mask * 4.0, 0.0, 1.0), leaf_cut);
+		// And the same gradient again one scale down, along each leaf.
+		shade *= mix(1.0 - leaf_root_darken, 1.0, smoothstep(0.0, 0.55, UV2.x));
+		// Decorrelated from the seed the outline uses, so a leaf that happens
+		// to be cut narrow is not also always the dark one.
+		shade *= 1.0 + (fract(UV2.y * 7.31) - 0.5) * 2.0 * leaf_tint_jitter;
 	}
+	ALBEDO = v_colour * shade;
+	ROUGHNESS = 0.95;
 }

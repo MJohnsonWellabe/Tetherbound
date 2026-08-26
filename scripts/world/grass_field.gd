@@ -204,13 +204,13 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			"drift_scale", "drift_contrast", "tint_jitter", "ground_blend",
 			"contact_darken", "normal_soften", "sway", "wind_scale", "gust", "gust_speed",
 			"gust_length", "field_radius", "fade_start", "leaf_cut", "leaf_serrate",
-			"leaf_teeth",
+			"leaf_teeth", "leaf_root_darken", "leaf_tint_jitter",
 		]:
 			if tier.has(key):
 				mat.set_shader_parameter(key, float(tier[key]))
 			elif cfg.has(key):
 				mat.set_shader_parameter(key, float(cfg[key]))
-		for key2: String in ["tint_base", "tint_tip"]:
+		for key2: String in ["tint_base", "tint_tip", "tint_wood"]:
 			if tier.has(key2):
 				mat.set_shader_parameter(key2, Color(str(tier[key2])))
 		if tier.has("wind_dir"):
@@ -249,76 +249,139 @@ func _cover_mesh(kind: String) -> ArrayMesh:
 			return _bush_mesh()
 
 
-## A small bush: crossed leaf panels on a short stem, domed so the silhouette is
-## round rather than a card. DECORATIVE ONLY -- the harvestable bushes stay
-## scattered, because harvesting needs an identity that survives and a generated
-## thing has none.
+## A small bush: leaves carried on branches, not floating in a dome.
+##
+## The owner's words on the previous version were the whole brief: "they can't
+## just be random leaves in the air. there needs to be some sort of stick
+## connecting the leaves". That version placed its leaves on five concentric
+## RINGS at fixed radii, so every leaf's stem end touched nothing -- the shape
+## was right from a distance and fell apart the moment you stood next to it.
+##
+## So the structure is the plant now. A short trunk, `BUSH_BRANCHES` sticks
+## arcing up and outward from it, and every leaf anchored at a point ON one of
+## those sticks with its stem end (UV2.x = 0) exactly at the wood. That is what
+## "connected" means geometrically: not a stem drawn near the leaf, but the leaf
+## built from the branch point outward.
+##
+## Branch and trunk vertices carry UV2.y = WOOD_FLAG. `cover_tier.gdshader`
+## reads it to do two things it must not do to wood: skip the leaf-outline
+## alpha cut, which would eat a twig, and take the wood tint instead of the
+## leaf gradient. Leaf seeds are all in [0, 1), so a flag at 2.0 cannot collide
+## with one.
+##
+## DECORATIVE ONLY -- the harvestable bushes stay scattered, because harvesting
+## needs an identity that survives and a generated thing has none.
+# Eight branches of ten, not six of nine, and wider than the first attempt.
+# That first attempt gave the leaves a stick and lost the MASS doing it -- six
+# sparse branches at 0.80m read as a spindly sapling with bare wood at the
+# bottom, where the tier's whole job is the knee-height band between 50cm
+# grass and 6m canopy. Denser, shorter and broader gets the structure and the
+# mass at the same time. Costs about 190 triangles a bush against 104 before;
+# `count` in the config is the dial if a handheld pass says no.
+const BUSH_BRANCHES := 8
+const BUSH_LEAVES_PER_BRANCH := 10
+const BUSH_HEIGHT := 0.72
+const WOOD_FLAG := 2.0
+
+
+## Where a branch is at `t` along itself, 0 at the trunk and 1 at the tip. The
+## outward term is powered so the branch leaves the trunk steeply and only bends
+## away near its end -- a shrub's branches rise before they spread, and a linear
+## fan reads as an umbrella.
+func _branch_point(out: Vector3, t: float) -> Vector3:
+	return Vector3.UP * (0.05 + t * (BUSH_HEIGHT - 0.05)) + out * (pow(t, 1.5) * 0.36)
+
+
 func _bush_mesh() -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
-	# A DOME OF MANY SMALL LEAVES, and the "many" is the whole point. Two earlier
-	# versions failed the same way at different scales: five big crossed panels
-	# read as a folded green box, and twenty quads at a third of the bush's own
-	# size read as a handful of chunky slabs stuck in the grass. A leaf that is
-	# an appreciable fraction of the silhouette IS the silhouette, and a flat
-	# one then reads as flat however it is lit. Forty-four leaves at an eighth
-	# of the bush size each are individually too small to read as polygons, so
-	# what the eye gets is the mass they make.
-	#
-	# But four rounds of that argument still failed, because none of them
-	# changed the one thing that was wrong: every leaf was an opaque QUAD, and
-	# a rectangle does not read as a leaf however small, however lit, whatever
-	# its tint. So each quad is now only the leaf's BOUNDING BOX, and
-	# `cover_tier.gdshader`'s `leaf_cut` carves the outline out of it in the
-	# fragment stage against the UV2 written below. That is why the geometric
-	# taper that used to narrow the far edge is gone -- the mask does the
-	# tapering now, and doing it twice made the leaf a sliver.
-	var rings := [
-		{"count": 14, "y": 0.10, "r": 0.28, "tilt": 0.80, "size": 0.135},
-		{"count": 13, "y": 0.27, "r": 0.27, "tilt": 0.66, "size": 0.130},
-		{"count": 11, "y": 0.44, "r": 0.23, "tilt": 0.50, "size": 0.125},
-		{"count": 8, "y": 0.61, "r": 0.16, "tilt": 0.34, "size": 0.120},
-		{"count": 6, "y": 0.77, "r": 0.10, "tilt": 0.18, "size": 0.115},
-	]
-	for ring_index in rings.size():
-		var ring: Dictionary = rings[ring_index]
-		var count := int(ring["count"])
-		for i in count:
-			# Offset each ring so leaves interleave rather than stacking.
-			var yaw := TAU * (float(i) + 0.37 * float(ring_index)) / float(count)
-			var out := Vector3(sin(yaw), 0.0, cos(yaw))
-			var side := Vector3(out.z, 0.0, -out.x)
-			# The leaf leans outward and up: `tilt` 1 is flat, 0 is vertical.
-			var up_axis := (Vector3.UP * (1.0 - float(ring["tilt"])) + out * float(ring["tilt"])).normalized()
-			var at := out * float(ring["r"]) + Vector3.UP * float(ring["y"])
-			var half := float(ring["size"]) * 0.5
+
+	# Trunk: two crossed quads, so it does not vanish edge-on the way a single
+	# strip would. Short, because what the eye needs is the leaves having
+	# somewhere to come from, not a visible stem.
+	for cross in 2:
+		var dir := Vector3(1.0, 0.0, 0.0) if cross == 0 else Vector3(0.0, 0.0, 1.0)
+		var first := verts.size()
+		for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
+			var w: float = 0.020 * (1.0 - 0.35 * float(corner.y))
+			verts.append(dir * corner.x * w + Vector3.UP * corner.y * 0.13)
+			normals.append(Vector3(dir.z, 0.6, -dir.x).normalized())
+			uvs.append(Vector2(0.5, clamp(float(corner.y) * 0.16 / 0.95, 0.0, 1.0)))
+			uv2s.append(Vector2(float(corner.y), WOOD_FLAG))
+		indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+
+	for b in BUSH_BRANCHES:
+		# Golden-ratio yaw rather than an even fan: six branches at exactly 60
+		# degrees read as a manufactured rosette from above.
+		var yaw := TAU * (float(b) * 0.6180339 + 0.11)
+		var out := Vector3(sin(yaw), 0.0, cos(yaw))
+		var side := Vector3(out.z, 0.0, -out.x)
+
+		# The branch itself: a tapered strip in the plane containing `out` and
+		# up, so it presents its face outward and is seen from most angles.
+		var segments := 3
+		var first_b := verts.size()
+		for seg in segments + 1:
+			var t := float(seg) / float(segments)
+			var at := _branch_point(out, t)
+			var w := 0.013 * (1.0 - 0.70 * t)
+			for sign_x in [-1.0, 1.0]:
+				verts.append(at + side * sign_x * w)
+				normals.append((side * sign_x * 0.3 + Vector3.UP * 0.7).normalized())
+				uvs.append(Vector2(0.5, clamp(at.y / 0.95, 0.0, 1.0)))
+				uv2s.append(Vector2(t, WOOD_FLAG))
+			if seg > 0:
+				var a := first_b + (seg - 1) * 2
+				indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
+
+		for k in BUSH_LEAVES_PER_BRANCH:
+			# Leaves start a little up the branch: bare wood at the bottom is
+			# what makes the branch readable as a branch at all.
+			# From 0.14, not 0.22: a long bare shank at the bottom of every
+			# branch was the loudest thing wrong with the first branched version.
+			var t: float = 0.14 + 0.86 * float(k) / float(BUSH_LEAVES_PER_BRANCH - 1)
+			var at := _branch_point(out, t)
+			var ahead := _branch_point(out, min(t + 0.06, 1.0))
+			var behind := _branch_point(out, max(t - 0.06, 0.0))
+			var tangent := (ahead - behind).normalized()
+			# Alternate sides down the branch, the way a shrub actually sets
+			# them, rather than radiating every leaf outward from a centre.
+			var sign_k := 1.0 if k % 2 == 0 else -1.0
+			var axis := (tangent * 0.5 + side * sign_k * 0.62 + Vector3.UP * 0.42).normalized()
+			var leaf_side := axis.cross(Vector3.UP)
+			if leaf_side.length() < 0.05:
+				leaf_side = out
+			leaf_side = leaf_side.normalized()
+
+			var length: float = 0.150 * (1.0 - 0.30 * t)
+			var half := length * 0.5 * 0.56
+			var seed := fposmod(float(b) * 0.317 + float(k) * 0.6180339, 1.0)
 			var first := verts.size()
-			# Per-leaf random, so the mask does not stamp one identical outline
-			# forty-four times. Golden-ratio step rather than a hash so that
-			# neighbouring leaves in a ring are never close in phase.
-			var leaf_seed := fposmod(float(ring_index) * 0.317 + float(i) * 0.6180339, 1.0)
 			for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-				# Full width top and bottom: this quad is the leaf's bounding
-				# box, not the leaf.
-				var w := half * 0.78
-				verts.append(at + side * corner.x * w + up_axis * corner.y * float(ring["size"]))
-				# Weighted toward the leaf's OWN axis rather than toward world up.
-				# An even split put the inner rings' normals nearly straight up, so
-				# every one of them took full sun at once and the bush read as a
+				# `corner.y` 0 is the leaf's STEM END and it sits exactly on the
+				# branch point. That is the whole fix: the leaf is built out of
+				# the wood rather than placed beside it.
+				verts.append(at + leaf_side * corner.x * half + axis * corner.y * length)
+				# Weighted toward the leaf's own axis rather than world up. An
+				# even split put whole rings' normals nearly straight up, so
+				# every leaf took full sun at once and the bush read as a
 				# handful of bright flat flakes sitting in the grass.
-				normals.append((up_axis * 0.85 + Vector3.UP * 0.25).normalized())
-				# UV.y across the whole bush height, not the leaf's own, so the
-				# shader's base-to-tip gradient runs up the BUSH.
-				# Typed, not inferred: `corner` comes from an untyped Array literal so
-				# `corner.y` is a Variant and `:=` cannot infer a type from it.
-				var t: float = (float(ring["y"]) + corner.y * float(ring["size"])) / 0.95
-				uvs.append(Vector2(corner.x * 0.5 + 0.5, clamp(t, 0.0, 1.0)))
-				# Leaf-local height and this leaf's own seed, for the mask.
-				uv2s.append(Vector2(corner.y, leaf_seed))
+				normals.append((axis * 0.85 + Vector3.UP * 0.25).normalized())
+				# UV.y across the whole BUSH height, not the leaf's own, so the
+				# shader's base-to-tip tint gradient runs up the plant.
+				# Typed, not inferred: `corner` comes from an untyped Array
+				# literal so `corner.y` is a Variant.
+				var cy: float = float(corner.y)
+				var world_y: float = at.y + cy * length * axis.y
+				uvs.append(Vector2(corner.x * 0.5 + 0.5, clamp(world_y / 0.95, 0.0, 1.0)))
+				# Leaf-local height and this leaf's own seed, for the outline
+				# mask and the per-leaf shading in the fragment stage.
+				uv2s.append(Vector2(cy, seed))
 			indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
+
 	return _mesh_from(verts, normals, uvs, indices, uv2s)
 
 

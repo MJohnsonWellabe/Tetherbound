@@ -40,9 +40,16 @@ const OFF_ROUTE := 10.0
 
 ## name, fov, eye offset back along the view, eye height, look distance, look height
 const SHOTS := [
-	# Crouched in the understorey: a 0.85m bush at 1.8m fills a third of the
-	# frame height, which is the scale at which a leaf outline is judgeable.
-	["01-bush-crouch", 55.0, 1.8, 0.55, 6.0, 0.35],
+	# Low and close: a 0.85m bush at 2.2m still fills a third of the frame
+	# height, which is the scale at which a leaf outline is judgeable. The eye
+	# is at 1.00m and NOT lower, deliberately -- at 0.55m the lens sits INSIDE
+	# the understorey and photographs single leaves a hand's width from the near
+	# plane, unlit against sky with their outlines off-frame. A blind critic read
+	# that first capture as "unlit flat leaf cards floating in the sky" and
+	# ranked it a shipping-blocking bug. It is not one: the game's camera rides a
+	# SpringArm well above bush height and cannot reach that pose. It was this
+	# probe photographing the inside of a plant.
+	["01-bush-low", 55.0, 2.2, 1.00, 6.0, 0.35],
 	# Standing over it, the read a player actually gets while walking.
 	["02-bush-stand", 62.0, 2.4, 1.55, 8.0, 0.30],
 	# The whole ring in one frame: eye up high, looking down and out past the
