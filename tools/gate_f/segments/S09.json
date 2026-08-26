@@ -485,8 +485,11 @@
       "id": "S09-43",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the pause shell, opened by its bound button"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the pause shell, opened by its bound button",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
     },
     {
       "id": "S09-44",
@@ -495,10 +498,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 4,
+        "times": 2,
         "settle_frames": 12
       },
-      "expected": "four RB presses reach Build"
+      "expected": "four RB presses reach Build",
+      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
     },
     {
       "id": "S09-45",
@@ -700,8 +704,11 @@
       "id": "S09-62",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
     },
     {
       "id": "S09-63",
@@ -710,10 +717,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
     },
     {
       "id": "S09-64",
