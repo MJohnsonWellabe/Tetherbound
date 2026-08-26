@@ -1491,7 +1491,38 @@ func _step_seed_save(args: Dictionary) -> String:
 	if from.begins_with("run://"):
 		if not _telemetry_on():
 			return "HARNESS-ERROR seed_save from run:// needs --gatef-out to know which run"
-		from = _out_dir.path_join("saves").path_join(from.trim_prefix("run://"))
+		# BLOCKING-ERROR FIX (operator lane, 2026-08-26). `_out_dir` is the
+		# SEGMENT's directory, not the run's, so this resolved S03's
+		# `run://S02-exit.json` to `<run>/S03/saves/S02-exit.json` -- inside the
+		# segment that is asking, which by definition cannot hold the previous
+		# segment's exit save. `save_out` writes to `<run>/<segment>/saves/`, so
+		# the two halves of the handoff never met and EVERY chained segment
+		# S03-S10 failed at its first step with "seed source does not exist",
+		# then ran on against a title screen it never left.
+		#
+		# The comment below this block already stated the intent -- "resolves
+		# against this run's own saves/ directory" -- so this is the documented
+		# behaviour, restored, not a new one. Looks in the run root first, then
+		# in each segment's own saves/, which is where `save_out` actually puts
+		# them.
+		var want := from.trim_prefix("run://")
+		var run_root := _out_dir.get_base_dir()
+		from = run_root.path_join("saves").path_join(want)
+		if not FileAccess.file_exists(from):
+			var found := ""
+			var dir := DirAccess.open(run_root)
+			if dir != null:
+				dir.list_dir_begin()
+				var entry := dir.get_next()
+				while entry != "":
+					if dir.current_is_dir() and not entry.begins_with("."):
+						var candidate := run_root.path_join(entry).path_join("saves").path_join(want)
+						if FileAccess.file_exists(candidate):
+							found = candidate
+					entry = dir.get_next()
+				dir.list_dir_end()
+			if not found.is_empty():
+				from = found
 	if not FileAccess.file_exists(from):
 		return "FAIL seed source %s does not exist" % from
 	var dst := _slot_path(slot)
