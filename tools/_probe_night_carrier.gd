@@ -158,6 +158,13 @@ func _run() -> void:
 func _shoot(label: String) -> void:
 	for i in SHOT_SETTLE:
 		await process_frame
+	# SYNC BEFORE THE READ-BACK. `root.get_texture().get_image()` on its own
+	# reads whatever is in the viewport's buffer at that instant, which is not
+	# guaranteed to be a finished frame. `operator_harness.gd::_step_capture`
+	# awaits this before every grab; tools/_capture_day_night_transition.gd and
+	# the earlier revisions of this probe did not, and that is the difference
+	# under test.
+	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	image.save_png("%s/%s.png" % [OUT_DIR, label])
 	var r := 0.0
