@@ -1,0 +1,10 @@
+{
+  "_comment": "Candidate freeze for the Gate F run of 2026-08-26. Frozen from main AFTER ralph/GATE-F-DEFECT-FIX landed, which is what the owner's answer asked for: everything lands on main first, then a candidate is frozen from main, then the chain runs against that SHA.",
+  "candidate_sha": "14e88c7c65fd12ca5b737f1f6a4b79ae8ae6ff2e",
+  "candidate_ref": "main",
+  "frozen_at_utc": "2026-08-26T11:00:00Z",
+  "run_dir": "ralph/reports/gate-f-run-20260826T110000Z",
+  "_comment_what_is_in_it": "This candidate carries the GATE-F-DEFECT-FIX lane: the entombment failsafe (player_controller.gd::_recover_if_entombed plus movement.json's unstick block and tests/smoke_unstick.gd), and the X07.json fix -- six distinct camera variants per region instead of one, and 19 real pin_clock steps replacing 19 notes that only claimed a pin. The previous run's X07 captured every -night and -weather frame at mid-morning in clear weather because of that.",
+  "_comment_what_is_NOT_in_it": "ralph/WORLD-GRASS and ralph/GRASS-FIELD are still open branches and are NOT on main at this SHA. They carry grass scale, the ground-material mid-layer, flower drifts, shader cover tiers, sky and clouds, stone and path grit, and narrowed paths. That is why this run executes the JOURNEY segments S01-S10 only and holds X01-X07: X07 is the run's visual evidence and would audit a presentation that is about to be replaced, which is the wasted cycle the owner's ordering directive exists to prevent.",
+  "_comment_colour_warning": "Standing warning for whoever runs X07 against a later candidate: spot-check colour on a LATE frame against an EARLY one before trusting the batch. In four separate probes on this container every frame after the first in a single process came back hue-rotated, deterministically. Cause unidentified; five explanations eliminated (see ralph/reports/gate-f-lane-log.md check-in 6). X07's own 79 frames from 2026-08-25 looked normal, so its capture path may not hit it -- untested."
+}
