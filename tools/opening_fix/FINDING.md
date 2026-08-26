@@ -100,3 +100,44 @@ game.
   `(-17.74, -18.26)` at t=252.9 — essentially `stairs_bottom` `(-18.0, -18.1)` —
   and the modal opened 0.5 s later. They did eventually get downstairs, long after
   the steps that would have answered the conversation had run.
+
+---
+
+# Addendum, 2026-08-26 — the Start-collision fix was wrong and was reverted
+
+A later Gate F check-in reported that `game_menu` and `backpack_drop` sharing
+gamepad Start (button 6) caused the pause shell to open with a destructive
+"Drop it? / Cancel" confirmation focused, which then swallowed `menu_tab_right`
+and made the Save tab unreachable. That was observed twice, in S02 attempts 5
+and 6, and it is what stopped those attempts writing a handoff save.
+
+**The mechanism proposed for it was wrong, and the fix built on it has been
+reverted rather than shipped.**
+
+The proposal was that `tab_backpack.gd::poll()` disarms
+`_ignore_drop_until_release` *before* calling `_read_drop()` in the same poll,
+leaving a window a quick TAP could slip through where a held press could not.
+The reasoning was plausible from the source. It does not survive measurement:
+
+- `tests/smoke_pause_tap_no_drop.gd` taps Start on a stocked satchel and finds
+  `_confirming = -1`. It passes on unmodified code **and** on the patched code,
+  so it discriminates nothing.
+- `tools/opening_fix/probe_drop_confirm.gd` loads the run's **own S02 exit
+  save** — the exact state the failure was observed from — taps Start, and
+  gets `open=true tab=backpack confirming=-1 guard=false`, then reaches the
+  `save` tab in five `menu_tab_right` presses.
+
+From the real state, on unmodified code, the failure does not occur. So the
+trigger is something in the run's input sequence rather than the Start binding
+itself, and **it remains unexplained**.
+
+Shipping the patch would have changed game code on a false premise, and would
+have cost the run the one property it has held throughout: that the build under
+test is byte-identical to `main`. Not worth it for a fix that fixes nothing.
+
+What is still true and still needs an explanation: the confirmation *was* up in
+two separate S02 attempts, with focus moving `Drop it -> Cancel` and no further,
+which is a visible confirm panel holding focus. The next person should look at
+the harness's input sequence immediately before `S02-63` — in particular the
+`answer_prompts` taps of `interact` and `menu_confirm` during the walk at
+`S02-56` — rather than at the Start binding.
