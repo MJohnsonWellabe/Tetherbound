@@ -29,6 +29,10 @@ const TEST_SLOT := 2
 const RESPAWN_FRAME_BUDGET := 4500
 
 var _failures: Array[String] = []
+## Where the approach walk began and how many frames it spent, so a failing
+## engage can say whether the body was blocked or merely fell short.
+var _walk_started_at: Vector3 = Vector3.ZERO
+var _walk_frames_spent: int = 0
 var _world: Node = null
 var _player: CharacterBody3D = null
 var _rig: Node3D = null
@@ -229,6 +233,18 @@ func _catch_real_creature(target: Node3D) -> void:
 	# interactable than to the intended target and lose the real
 	# InteractionArbiter's offer to it.
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
+	# Recorded so a FAILURE can say whether the walk was blocked or simply had
+	# nowhere to go. This test fails intermittently on CI with "stopped 23.7m
+	# away" against a target that sits ~23m from the run's own start point --
+	# i.e. a walk that covered nothing -- and neither the distance alone nor the
+	# arbiter winner distinguishes "the body could not move" from "the body
+	# arrived somewhere unhelpful". Three separate local investigations failed
+	# to reproduce it (all cluster targets are reachable from the start point,
+	# and the fight's own stand-aside placement left eight of eight directions
+	# clear in three engagements), so the next CI red has to carry its own
+	# diagnosis rather than send someone else round the same loop.
+	_walk_started_at = _player.global_position
+	_walk_frames_spent = 0
 	for i in 1500:
 		if not is_instance_valid(target):
 			break
@@ -239,6 +255,7 @@ func _catch_real_creature(target: Node3D) -> void:
 		_aim_camera_along(to)
 		Input.action_press("move_forward")
 		await physics_frame
+		_walk_frames_spent = i + 1
 	Input.action_release("move_forward")
 	for i in 10:
 		await physics_frame
@@ -418,6 +435,27 @@ func _why_the_engage_failed(target: Node3D) -> String:
 					and winner != target:
 				reasons.append("the winning prompt is %s, not the target" % str((winner as Node).name))
 	reasons.append("party is %d/5" % int(_game.party.size()))
+
+	# Did the body actually travel? A walk that covered nothing was blocked; a
+	# walk that covered its distance and still ended short was chasing.
+	var travelled := _walk_started_at.distance_to(_player.global_position)
+	reasons.append("walked %.1fm in %d frames from %.1f, %.2f, %.1f" % [
+		travelled, _walk_frames_spent,
+		_walk_started_at.x, _walk_started_at.y, _walk_started_at.z])
+	if _walk_frames_spent > 120 and travelled < 1.0:
+		reasons.append("THE BODY DID NOT MOVE -- blocked at the start, not short of the target")
+
+	# And can it move now? Eight sweeps with the body's own shape from
+	# STEP_HEIGHT up, the same predicate player_controller.gd::_entombed_at
+	# uses. 0/8 is a sealed body; a low count names which way is open.
+	var raised := _player.global_transform.translated(Vector3.UP * 0.35)
+	var clear := 0
+	for i in 8:
+		var angle := TAU * float(i) / 8.0
+		if not _player.test_move(raised, Vector3(sin(angle), 0.0, cos(angle)) * 0.45):
+			clear += 1
+	reasons.append("%d/8 directions clear now, on_wall=%s on_floor=%s" % [
+		clear, str(_player.is_on_wall()), str(_player.is_on_floor())])
 	return " (" + "; ".join(reasons) + ")"
 
 
