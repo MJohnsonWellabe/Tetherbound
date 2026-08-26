@@ -845,3 +845,91 @@ captured at mid-morning with the clock never pinned. Fixing that labelling
 
 The branch now carries: the immobility failsafe and its test, the X07 fix, two
 measurement tools, and this log. No unproven game change.
+
+---
+
+## DEFECT-FIX lane — check-in 5 — 2026-08-26 — item 5: the S02 symptom is reproduced deterministically
+
+### The reproduction
+
+`tools/opening_fix/probe_second_start.gd`, headless, real world scene:
+
+```
+satchel stocked: 15 orb_basic, 0 left over
+before any press     open=false tab=backpack  confirming=-1  guard=false focus=-
+after Start #1       open=true  tab=backpack  confirming=-1  guard=false focus=
+after Start #2       open=true  tab=backpack  confirming=0    guard=false focus=Drop it
+after 5x menu_tab_right: tab=backpack   (the run needed 'save')
+```
+
+That is the S02 failure exactly: the drop confirmation focused on a slot nobody
+selected, and — because it calls `menu.hold_input(true)` — **five
+`menu_tab_right` presses leave the tab on `backpack`, so the Save tab is
+unreachable and the segment cannot write its handoff save.**
+
+### Why nobody found it
+
+Everything tried against §4 presses Start **once**.
+`tests/smoke_pause_tap_no_drop.gd` stocks the satchel, taps once, and passes.
+`tools/opening_fix/probe_drop_confirm.gd` loads the run's own S02 exit save,
+taps once, and reports `confirming = -1`. Both are correct: the guard works on
+the opening press.
+
+The guard **cannot** cover the second press, by its own construction.
+`tab_backpack.gd::poll()` clears `_ignore_drop_until_release` the moment the
+opening press is released. From then on the shell is open, the backpack tab is
+visible, `backpack_drop` and `game_menu` are the same physical button, and
+`game_menu.gd` deliberately does not let Menu CLOSE the shell — so the second
+press has nothing left to do except be read as Drop.
+
+### What this does and does not establish
+
+**Establishes:** a deterministic, player-reachable input sequence that produces
+the exact symptom S02 recorded, and the mechanism behind it. §4 ends with "the
+trigger is something in the run's input sequence rather than the Start binding
+itself, and it is still unexplained." It is now explained as a sequence, and the
+Start binding is a necessary part of it rather than the whole of it — which is
+consistent with the standing instruction not to re-litigate the binding.
+
+**Does not establish** that the 2026-08-25 run reached it by this path. `S02-63`
+is a single `open_menu {}`, and `_step_open_menu` presses once and does not
+retry (`operator_harness.gd:865-887`). So a second Start press is not in the
+step-script as written. Where attempts 5 and 6 got one — a superseded variant, a
+step since removed, or a different first-press failure I have not reproduced —
+is for whoever holds the run's own event logs to check. **I am not claiming the
+run's cause; I am handing over a reproduction it can be checked against.**
+
+### The player-facing half, which is real either way
+
+Open the pause menu on a gamepad, press the same button again expecting it to
+close, and you get a destructive prompt one A press from deleting an item you
+never selected — and tab navigation stops responding. `tab_backpack.gd`'s own
+comment calls exactly this shape "a destructive verb offered without being asked
+for", which is why the first-press guard exists at all.
+
+**I have not fixed it, deliberately.** Every available fix changes a settled
+input decision — suppressing drop-on-Start removes the gamepad drop verb that
+`data/config/menu.json` moved there on purpose, and letting Start close the shell
+reverses `game_menu.gd`'s own documented ruling. `CLAUDE.md` says to ask rather
+than invent on that class of change. The reproduction, the mechanism and the two
+candidate fixes are recorded here; the choice is the owner's.
+
+### CI note, and a correction to my own working style
+
+Runs 2490, 2494, 2495 and 2496 on this branch all concluded **CANCELLED**.
+`ci.yml` sets `cancel-in-progress: true` on non-`main` refs, so each of my pushes
+killed the run before it — the identical trap this log already records at
+check-in "Why nothing is pushed right now". My commit-and-push-per-item habit,
+which is right for surviving a container reclaim, is wrong against this workflow.
+Run 2497 on `cc074182` was allowed to finish and the probe commit was held back
+rather than pushed on top of it.
+
+### State
+
+| item | status |
+|---|---|
+| 1 — permanent immobility | fixed, pushed, `smoke_unstick.gd` discriminates |
+| 2 — night/weather | X07 mislabelling fixed and pushed; crimson night **open, bounded, three hypotheses refuted**; my attempted fix reverted |
+| 3 — X07 identical cameras | fixed, pushed — gates the overnight run |
+| 4 — visual defects | deferred per the ordering directive |
+| 5 — S02 drop confirmation | **reproduced deterministically**; mechanism explained; fix withheld as an owner decision |
