@@ -925,3 +925,64 @@ of the same cascade with different numbers.
 
 S03/S04/S05 all ran before some of the step-script fixes, so their numbers already
 understate the build. S06 is in flight.
+
+---
+
+## Check-in 14 — handover written; S06 landed; the Start-collision theory is dead
+
+**`ralph/reports/GATE_F_RUN_HANDOVER_2026-08-26.md`** is on this branch.
+
+**S06: 86 PASS / 17 FAIL, `S06-exit.json` written.** Chain head is S06; S07 seeds
+from `run://S06-exit.json`.
+
+### Correcting check-in 12 — the Start/drop collision is NOT what broke S02
+
+Check-in 12 reported, with severity candidate SHIP, that `game_menu` and
+`backpack_drop` sharing gamepad Start raised a destructive "Drop it? / Cancel"
+confirmation that swallowed tab navigation and made the Save tab unreachable.
+
+**That mechanism is wrong.** I applied a fix to `tab_backpack.gd`, wrote a test,
+and then checked the test actually fails without it — **it passed both ways**, so
+it discriminated nothing. A probe loading the run's **own S02 exit save**
+(`tools/opening_fix/probe_drop_confirm.gd`) then taps Start on unmodified code:
+
+```
+AFTER TAP:      open=true tab=backpack confirming=-1 guard=false
+AFTER 5x tab_right: tab=save
+```
+
+No confirmation; Save tab reachable. **The patch was reverted rather than
+shipped** — it would have changed game code on a false premise and cost the run
+its byte-identical-to-`main` property for a fix that fixes nothing.
+
+**So no new candidate SHA is needed and none was frozen.** `a3f61b60` still
+carries every segment's evidence and there is no §1.6 seam. Earlier instructions
+assuming a game fix and a re-freeze can be closed out.
+
+Still true and still unexplained: the confirmation *was* focused in S02 attempts
+5 and 6 (`Drop it → Cancel`, no further). Next lead is the `answer_prompts` taps
+during the `S02-56` walk, not the Start binding.
+
+### Also new since check-in 13
+
+- **Blind visual pass** on X07's 79 frames:
+  `ralph/reports/GATE_F_VISUAL_PASS_2026-08-26.md`. **Both bar questions
+  answered no.** Measured and objective: **night and weather do not render** —
+  `grandpas_village` day 96.6 vs "night" **99.2** mean luminance; the weather
+  variant differs from its day frame by 2.2% of pixels. Team Tether renders
+  **teal, not oxblood**, the same accent as the friendly HUD. Three of its
+  findings are X07 capture artefacts and are flagged as such so nobody actions
+  them.
+- **Instrument bug found by that pass:** `X07.json`'s `arrival`, `gameplay` and
+  `landmark` are the **same camera** (0.1–2.3% pixel difference). Three of six
+  variant slots are one shot.
+- **Catch over-damage fixed** (`S02-36`, 14 → 6 quick attacks). Measured:
+  124.2 → 43.1 after the quick attacks → **0.0** after the charged one. The
+  script was killing the creature it was meant to weaken. Root behind ~35
+  failures.
+
+### Note for the record
+
+This branch was **force-pushed by another actor** mid-run; my commits were
+rebased onto a `ci.yml` change and re-pushed under new SHAs. Content preserved,
+nothing lost. I rebased onto it rather than force-pushing back.
