@@ -621,7 +621,15 @@
         "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
         "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
       ],
-      "clumps": 110,
+      "_comment_model_scale_world_grass": "WORLD-GRASS. Per-model size, the lever scatter_rules.gd did not have until this lane added it (see its own note at the `model_scale` lookup). The layer's shared 0.26-0.58 range applies to all four species equally, so the 1.20m Wide_Short and the 1.84m Common_Tall could only ever differ by the 53% their raw meshes differ by -- and a blind critic looking at the result reported ONE asset: 'a single blade-fan type, always roughly knee height, always the same near-black green', and called the evenness generator output. These multipliers turn the four species into four real height classes: Wide_Short 0.25-0.56m, Common_Short 0.29-0.65m, Wide_Tall 0.46-1.02m, Common_Tall 0.57-1.28m. That is the mix the reference frames have -- mostly low mat with occasional standing clumps -- rather than four names for one silhouette. Common_Tall's own top of range is the number to watch: 1.28m is above R9.4's rejected ~1.2m MEAN, but it is a maximum on one of four models rather than the layer's centre, and the layer's mean tuft is 0.60m. If a critic calls pampas again, this multiplier is the one to cut, not the shared range. TUNABLE. ROUND 3: the two SHORT multipliers rose with scale_min (see the scale note above); the two tall ones are unchanged.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/Grass_Common_Short.gltf": 0.95,
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": 1.20,
+        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf": 0.92,
+        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf": 1.15
+      },
+      "_comment_clumps_world_grass": "WORLD-GRASS: 110 -> 150. The one density number this lane raises across the whole layer, and it is raised HERE rather than at `corridor_fill.density_scale` on purpose. `clumps` feeds both places -- the origin square directly, and the corridor through _place_corridor_fill's area-proportional candidate draw -- whereas `density_scale` is corridor-only, and _place_corridor_fill drops every candidate whose centre lands inside the square. The two eyes that measured WORST for near-field grass are both inside that square: the band-1 opening at 0.019 instances/m2 within 20m and the mounted eye at 0.023 (tools/_probe_grass_census.gd). That is the game's opening and the framing the owner's own reference is of, and no corridor-only knob can reach either of them. 1.36x, not the 2-3x an eye would ask for: the arithmetic in ralph/reports/WORLD_GRASS_2026-08-25.md is that a continuous carpet like the reference's needs on the order of 1.5 instances/m2 and is roughly 40x outside the placement ceiling however it is spent, so buying density past the point where it still reads as drifts spends budget on a target it cannot reach. GROUND-LAYERS' 70/15/10/5 open-ground composition survives at this figure. TUNABLE.",
+      "clumps": 150,
       "_comment_per_clump_vis_world": "VIS-WORLD round 3: 130 -> 190, taking back what strays gave up. Combined with round 2's clump_radius 10.0 -> 6.5 this is ~3.4x the instances per square metre inside a drift than round 1 had, which is what a patch of meadow has to look like before it reads as anything other than sprinkle. TUNABLE.",
       "per_clump": 190,
       "_comment_clump_radius_ev3": "EV3: R7.1-remainder-2's third round named the untried lever directly -- 'a genuine density lever inside the clumps themselves (more per_clump, smaller clump_radius for tighter packing) rather than further redistributing the same instance count'. 16.0 -> 10.0 packs the same 130 instances into 39% of the area (a squared effect), so each clump reads as a dense patch of continuous cover instead of a loose scatter, with no change to the total prop count or render cost. TUNABLE.",
@@ -656,7 +664,8 @@
       "verge": {
         "_comment_vis_world_r3": "VIS-WORLD round 3. The blind counts are what forced this: asked to count distinct clumps in the LOWER HALF of each day frame, a critic returned 0 for band 1, 2 for band 2, 0 on the hill around the player in band 3, 1 for band 4 and 12-15 for band 5 -- and called the near field \"empty, not sparse\". The camera stands ON the path and aims down it, so the lower half of every frame is the path and its immediate verge; corridor_fill clumps land NEAR the route but the verge is the only mechanism that reaches the metres either side of the dirt itself. Round 1 raised it 2400 -> 6000 and round 2's frames still counted 0-2. 6000 by arc length over the ~12km route is one instance per 2m spread across a 36 m2 strip, which is not a verge, it is a rumour of one. 30000 with a narrower band is ~0.21 instances per m2 -- roughly one every two metres of the strip the near field actually shows. `band` comes down with the count on purpose: the same instances concentrated into a narrower fringe read as growth crowding a worn edge, while spread over 18m they read as the same sprinkle further out. `inner` is unchanged and path_standoff (0.3-3.0m, noise-varied per side) still culls the fringe stretch by stretch, which is what stops a dense narrow band becoming the planted border OF12 removed. TUNABLE, and watch the placement count.",
         "_comment_count_ground_layers": "GROUND-LAYERS: down from round 3's 30000. That number was chasing a bare near field that no verge count could have filled, because the lower third of the survey frame is the 6.0m painted path itself. The verge's real job is the metre or two either side of the worn dirt, and 14000 by arc length over the ~12km route is about one instance per 0.85m of trail -- dense enough to read as a fringe crowding the edge, without carpeting ground the player is supposed to be able to see across. TUNABLE.",
-        "count": 14000,
+        "_comment_count_world_grass": "WORLD-GRASS: 14000 -> 30000, back to VIS-WORLD round 3's number, and this reverses GROUND-LAYERS deliberately rather than by accident. Its reason for the cut was that no verge count could fill a bare near field 'because the lower third of the survey frame is the 6.0m painted path itself' -- true of that framing, and this lane shot a second, lower camera aimed 9m ahead of the player (tools/_probe_grass_pass.gd's `-near` frames) specifically to stop judging ground cover from a frame whose lower third is road. The verge is the most instance-efficient lever this layer has: every draw lands within 13.5m of an authored route, which is the ground the player is actually standing on, against corridor_fill's draws which are spread over 16.8 km2. +16000 placements is 3.7% of the headroom between the committed bake and test_scatter_perf_budget.gd's ceiling. GROUND-LAYERS' negative-space intent is kept where it belongs -- open ground away from the route is untouched by this key. TUNABLE.",
+        "count": 30000,
         "inner": 1.5,
         "band": 12.0
       },
@@ -664,8 +673,9 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Grass wades ankle-deep (0.2m) into the shallows -- was 0.5m, and a blind round read the deeper submerged tufts through the water as 'glass cards', an artifact not a marsh. TUNABLE.",
       "min_height": -22.7,
       "_comment_scale": "The source tufts are 1.3-1.9m, which is head-high grass. Trimmed to roughly knee height, with a 2.5x spread. R7.1-remainder: raised from 0.26-0.78 (knee height) toward shin-to-hip height, the untried lever the density comment below already named -- bigger tufts at the same count cover more of the near field than more tufts at this size did, without the render-time cost a count increase already proved not worth paying.",
-      "scale_min": 0.14,
-      "scale_max": 0.42,
+      "_comment_scale_world_grass": "WORLD-GRASS. 0.14-0.42 -> 0.26-0.58, and prompt 72's stated reason for raising it is WRONG in a way worth recording so the next lane does not repeat it. That prompt calls 0.14-0.42 'blades a few centimetres tall'. They are not: the four source meshes measure 1.20-1.84m tall in their own glTF POSITION accessors, so the shipped range put tufts at 0.17-0.77m with a mean of 0.41m -- shin height on the 1.80m trainer, who is standing in every one of these frames as the ruler. What the frames actually show is not short grass, it is ISOLATED grass: tools/_probe_grass_census.gd measures 0.019 instances/m2 within 20m of the band-1 opening eye and 0.023 within 20m of the mounted eye, one tuft per 40-50 square metres. So the lever is not height for its own sake, it is SCREEN AREA PER INSTANCE, the only ground-coverage lever that costs zero placements: scale is uniform (scatter_rules.gd::_consider draws one randf_range and applies it to all three axes), so a mean of 0.42 against 0.28 covers 2.25x the ground with exactly the same instance count. Mean tuft height lands near 0.62m, mid-shin to knee. The ceiling is set by R9.4, which cut this range from 0.34-1.0 after a blind critic measured the result at ~1.2m and called it 'pampas, not meadow grass'; 0.58 tops out at 1.07m on the tallest of the four models and only at the top of the draw, so this stays under the read R9.4 rejected rather than reopening it. TUNABLE, and re-measure against the trainer rather than by eye. ROUND 3: scale_min 0.26 -> 0.32, and the two SHORT species' multipliers up with it (Common_Short 0.85 -> 0.95, Wide_Short 0.80 -> 0.92) while the two tall ones are left exactly where they were. A second blind pass, shown the round-2 frames and told nothing, still returned 'the grass is too short to be a meadow -- mid-shin to knee on the trainer' and pointed at moong-02, whose walking figure stands in grass to the knee-to-thigh. The layer's MEAN was already 0.62m; what the eye reads is not the mean, it is the commonest class, and three of the four species topped out below 0.7m. Lifting the FLOOR rather than the ceiling is deliberate: raising scale_max again would walk the tall class back toward the ~1.2m R9.4 rejected as pampas, and it is the low classes that carpet. New spread: Wide_Short 0.35-0.64m, Common_Short 0.40-0.72m, Wide_Tall 0.56-1.02m, Common_Tall 0.71-1.28m, layer mean ~0.72m -- knee-to-thigh, which is the reference read. Costs no placements.",
+      "scale_min": 0.32,
+      "scale_max": 0.58,
       "_comment_colour_jitter": "R7.1-remainder round 1's blind critic: 'a single saturated hue with no value range... nothing darker to anchor a black point'. Bigger tufts don't touch that; only colour does. Per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd).",
       "_comment_colour_jitter_vis_world": "VIS-WORLD. REMOVED, and the reason is a confirmed bug rather than a taste call. `colour_jitter > 0` is the only thing that sets `needs_instance_colour`, and vegetation.gd::_tint_for then forces `vertex_color_use_as_albedo` ON. This pack's meshes carry a COLOR_0 vertex attribute that is a baked ambient-occlusion gradient -- decoding Grass_Common_Tall.gltf's own accessor measures mean vertex colour 0.001 at the lowest 15% of vertices against 0.962 at the highest -- and albedo_color MULTIPLIES, so forcing it into albedo rendered the bottom third of every blade solid black. That is the defect reported as 'grass tufts render BLACK on back faces'; it is NOT a culling bug (every source declares doubleSided and the imported material reads cull_mode=2, CULL_DISABLED, verified by probe). The imported material's own `vertex_color_use_as_albedo` is FALSE, also verified by probe, so removing the jitter lets it fall back to off and the blade renders its texture. The channel cannot be split: Godot routes MultiMesh per-instance colour through the same switch, so keeping the jitter and disabling the vertex colour would silently kill the jitter instead. Colour variety is recovered below by `variant_retint`, which is per-MODEL and needs no vertex colour at all. Stripping COLOR_0 by rebuilding the surface was considered and rejected: _retint's own comment records that surface_get_arrays()/add_surface_from_arrays() silently drops the importer's generated LOD chain and shadow mesh, a regression this repo has already paid for once.",
       "_comment_variant_retint_vis_world": "VIS-WORLD. Four greens across the four grass models, replacing the per-instance jitter removed above. Keyed by model path because all four share the material name 'Grass', which is exactly the case variant_retint exists for (see the trees layer). Spread around palette.json's meadow green rather than invented: a short/tall and wide/narrow pair reading as slightly different species is more of the 'hue families' the ledger counts than one hue jittered 22% either side of itself. TUNABLE.",
@@ -678,8 +688,9 @@
       },
       "clear_radius": 1.5,
       "base_scale": 1.0,
-      "lod_range": 55.0,
-      "lod_fade_margin": 12.0,
+      "_comment_lod_world_grass": "WORLD-GRASS. 55 -> 120, fade 12 -> 35, and this is the lane's single largest lever after blade scale because it costs NOTHING in the placement budget: `lod_range` is a render-side cutoff (vegetation.gd::_make_mesh_asset -> Terrain3DMeshAsset.lod0_range -> a real RenderingServer visibility range), so no instance is added by it. At 55m the ground stopped carrying growth about a third of the way to the treeline in every band-2 and band-4 frame this lane shot, and the fade band was too narrow to disguise the cutoff -- prompt 72 calls it a bald ring and the frames agree. 120m reaches the treeline in the frames that have one. THE HONEST RISK, stated rather than measured: this multiplies the grass instances DRAWN per frame by roughly (120/55)^2 ~ 4.8x, and grass is 53% of the whole bake (249,898 of 466,922, tools/_probe_grass_census.gd). GPU cost is not measurable in this container at all -- PERF-ROG-GPU: the Compatibility renderer counts MultiMesh batches, not instances, and this box rasterises in software -- and the ROG Ally is the target. So this number, not the placement count, is the first thing to pull back if the owner's next handheld pass hitches, and pulling it back costs no re-bake. TUNABLE. ROUND 3: fade 35 -> 55, range unchanged at 120. The round-2 blind pass still named the cull as 'a hard line, not a fade' in the two frames whose eye sits inside the +-256m origin square. Widening the fade band rather than the range answers that without buying any more reach: the ramp now starts at 65m instead of 85m, so instances thin over 55 metres instead of 35. It is also the one adjustment in this lane that makes the GPU picture slightly BETTER rather than worse -- more of the drawn grass is inside the fade, none of it is further away.",
+      "lod_range": 120.0,
+      "lod_fade_margin": 55.0,
       "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive \u2014 measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
       "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera \u2014 the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
@@ -691,10 +702,16 @@
     },
     "drygrass": {
       "_comment": "The wispy tufts, warmer and looser, in their own patches. Two grass textures where there was one. The critic counted 2 hue families against the key art board's 6 and said the board's golds appear nowhere below the horizon; this and the flowers are where the warm end comes from.",
+      "_comment_models_world_grass": "WORLD-GRASS: Grass_Wheat joins, which is where the grass layer's own `_comment_species_of12_b` said it belonged -- 'its stalk form reads dry/warm not knee-grass'. Costs NO placements: a layer's model list is drawn from per instance, so a third model splits the same count three ways instead of two. It buys the thing a blind critic said the ground cover lacked, a second silhouette in the warm tier: Wispy is a splayed fan and Wheat is upright stalks with heads, so at the shared scale below they read as two plants rather than one sprite at two sizes. `model_scale` holds it shorter than Wispy_Tall so the accent layer does not out-top the green grass it accents.",
       "models": [
         "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf",
-        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wheat.gltf"
       ],
+      "_comment_model_scale_world_grass": "WORLD-GRASS: see the grass layer's matching note for the mechanism. Wheat's raw mesh is 1.78m against Wispy_Tall's 1.67m and Wispy_Short's 1.07m, so left alone it would arrive as the tallest thing in the ground cover; 0.72 puts it at 0.26-0.56m, between the two wispy classes.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/Grass_Wheat.gltf": 0.72
+      },
       "_comment_retint": "A warm straw modulate over the grass texture. Multiplies, so it stays light.",
       "retint": {
         "Grass": "#e8d89a"
@@ -743,8 +760,9 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Dry straw and standing water contradict each other; stays on the bank. TUNABLE.",
       "min_height": -21.9,
       "_comment_scale": "R7.1-remainder: raised alongside grass's own scale bump (same file, same reasoning) so the two layers stay in proportion to each other.",
-      "scale_min": 0.13,
-      "scale_max": 0.33,
+      "_comment_scale_world_grass": "WORLD-GRASS: 0.13-0.33 -> 0.20-0.44, tracking grass's raise below it. Measured, not guessed: Grass_Wispy_Short/Tall are 1.07m and 1.67m tall in their own glTF accessors, so the old range put the mean wispy tuft at 0.31m and the new one at 0.44m. Deliberately still shorter than the green grass -- dry stalks standing taller than the crop they accent invert the read.",
+      "scale_min": 0.20,
+      "scale_max": 0.44,
       "_comment_colour_jitter_vis_world": "VIS-WORLD: removed for the same confirmed reason as grass above -- see that comment for the measured COLOR_0 gradient and the probe results. This layer already carries a `retint` that paints both its models straw; `variant_retint` below splits that into two straws so the removal costs no variety.",
       "_comment_variant_retint_vis_world": "VIS-WORLD: two straws rather than one, so dry grass reads as more than a single repeated sprite now that far more of it lands where the player walks. TUNABLE.",
       "variant_retint": {
@@ -754,8 +772,9 @@
       },
       "clear_radius": 2.0,
       "base_scale": 1.0,
-      "lod_range": 55.0,
-      "lod_fade_margin": 12.0,
+      "_comment_lod_world_grass": "WORLD-GRASS: out with grass, held shorter. See the flowers layer's matching note for why the three ground layers move together -- three cutoffs at three radii are three rings. Shorter than grass's 120 on purpose: this is the accent carpet, so it is the cheaper one to let go first at distance, and a warm accent that persists as far as the primary green starts reading as its own straw-coloured field rather than as break-up within one. TUNABLE.",
+      "lod_range": 110.0,
+      "lod_fade_margin": 30.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
@@ -764,13 +783,12 @@
     "flowers": {
       "_comment": "Colour accents, clustered hard. Wildflowers grow in patches; spread evenly they read as confetti. Clover is in here because a flower patch with nothing between the blooms reads as pins in a board.",
       "_comment_density": "The critic measured saturated non-green pixels below the horizon at 0.000%-0.035% of frame against a design brief that says 'wildflower meadows', and found ZERO in one frame out of 921,600 pixels. A colour accent nobody can see is not an accent.",
+      "_comment_models_world_grass": "WORLD-GRASS: Clover_1/Clover_2 move OUT, to the new `groundmat` layer below. They were here because, in this layer's own words, 'a flower patch with nothing between the blooms reads as pins in a board' -- correct diagnosis, wrong layer. Clover is foliage, not bloom, and sharing the flower layer forced it to share the flower SCALE: VISUAL-GROUNDCOVER's measured 0.025-0.09 is right for a blossom head and puts a clover clump at 3-11cm, which is under the terrain's own texture frequency and therefore invisible. Split out, each layer gets the scale its own job needs, and this one becomes purely floral -- which is what lets the drifts below read as flower drifts.",
       "models": [
         "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
         "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
         "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
-        "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
-        "res://assets/environment/stylized_nature/Clover_1.gltf",
-        "res://assets/environment/stylized_nature/Clover_2.gltf"
+        "res://assets/environment/stylized_nature/Flower_4_Single.gltf"
       ],
       "_comment_retint_ground_layers": "GROUND-LAYERS. This was the only ground-cover layer with NO retint, which means vegetation.gd left albedo_color pure white and the layer rendered its source textures unmodified at full brightness. A blind critic read the result exactly: the pond-side sprites 'render full-bright and read as floating confetti or UI markers, not plants', and the stream agave is 'lit like an item pickup'. Checked before assuming: all 46 gltf files in stylized_nature carry ZERO emission, so this is albedo, not an emissive material like the one the character rigs turned out to have. Multiplying the petals toward the key art's own muted lilac and the foliage toward the meadow olive puts them in the same light as everything around them. Petals stay the lightest ground cover in the set on purpose -- they are the accent the composition budget reserves 5% for. TUNABLE.",
       "retint": {
@@ -778,9 +796,10 @@
         "Leaves": "#7d8f4e"
       },
       "clumps": 76,
-      "per_clump": 78,
-      "clump_radius": 9.0,
-      "strays": 620,
+      "_comment_drift_world_grass": "WORLD-GRASS: tighter, fewer, bigger drifts. clump_radius 9.0 -> 6.0, per_clump 78 -> 120, strays 620 -> 320 -- a net ~50 fewer placements, redistributed. Same trade R7.1-remainder and VIS-WORLD both made for the grass layer and for the same measured reason: uniform singles read as confetti and clusters read as placed. Prompt 72 asks for this by name off the reference ('the reference's pink drifts are tight and irregular'), and moong-02/03 show why -- their flower patches are dense enough to read as one pink shape at fifty metres, which no evenly-spread sprinkle at any count does. 120 in a 113 m2 disc is ~1.06/m2 inside a drift against 0.31 before. TUNABLE.",
+      "per_clump": 120,
+      "clump_radius": 6.0,
+      "strays": 320,
       "_comment_corridor_fill": "VEG-CORRIDOR: colour accents fill at the band table's own rate, same as the other ground cover.",
       "corridor_fill": {
         "density_scale": 0.8,
@@ -812,8 +831,9 @@
       "scale_max": 0.09,
       "clear_radius": 2.5,
       "base_scale": 1.0,
-      "lod_range": 45.0,
-      "lod_fade_margin": 10.0,
+      "_comment_lod_world_grass": "WORLD-GRASS. 45 -> 90, and the fade band with it. This is a COMPANION change, not a flower one: `lod_range` is a hard visibility cutoff (vegetation.gd wires it to Terrain3DMeshAsset.lod0_range, which becomes a real instance_geometry_set_visibility_range), so three ground layers ending at 45/55/55 draw three concentric bald rings around the player at three different radii. Moved out with grass so the ground thins ONCE, gradually, rather than in steps. No placements added -- this is a render-side number and the placements are byte-identical for it. Scale is deliberately untouched: 0.025-0.09 is VISUAL-GROUNDCOVER's measured correction for 0.5-0.8m blossoms and this lane does not get to undo it. TUNABLE, and among the first things to give back if the Ally needs GPU headroom.",
+      "lod_range": 90.0,
+      "lod_fade_margin": 24.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
@@ -1137,6 +1157,62 @@
       "retint": {
         "PathRocks": "#a89682"
       }
+    },
+    "groundmat": {
+      "_comment": "WORLD-GRASS. THE TIER BETWEEN THE GROUND AND THE TUFTS, and the answer to the defect a blind critic ranked second in this lane's round-1 pass: 'each grass tuft meets the ground at a razor line with no skirt, no thinning, no smaller filler geometry -- props stabbed into dirt'. The same critic assumed the fix needed art that is not in the build. It does not: Clover_1/Clover_2 were already vendored and already placed, just at flower scale (3-11cm) where nothing could see them, and Plant_1_Big was vendored and referenced by NOTHING. This layer is those three at sizes that do a job, and it adds no asset to the repository. LAST IN THE LAYER ORDER ON PURPOSE, and this is not cosmetic: scatter_rules.gd::all_placements seeds each layer as base_seed + INDEX * 7919, so a new layer inserted anywhere but the end re-seeds every layer after it. Measured when this one was first written between `flowers` and `rocks`: the rocks layer moved 5,697 -> 5,669 placements and path_stones 9,243 -> 9,420 for no edit of their own, which is the same class of silent reshuffle STRONGHOLD-R2 chased when the road cairn's anchor started placing 0 of 3 on some seeds. Append new layers here; do not insert them.",
+      "_comment_models": "Three models, three jobs, separated by `model_scale` rather than by three layers -- one layer means one Terrain3DMeshAsset registration per model and one shared RNG stream, three would mean three of each. NOTE the hard constraint that decided which models could be used at all: vegetation.gd::_layer_for resolves a model to the FIRST layer whose `models` list holds it, and _build_batch groups by model, so a mesh listed in two layers silently renders both layers' placements with one layer's retint, LOD, shadow and collision settings (vegetation.json's own `_comment_ev2` records the same trap for the rock meshes). So Clover had to LEAVE the flowers layer to arrive here, and Plant_7/Plant_7_Big -- the obvious mat candidates at 0.25m tall -- could not be used at all, because they belong to `bushes` and Band 2's authored understorey anchors depend on them there.",
+      "models": [
+        "res://assets/environment/stylized_nature/Clover_1.gltf",
+        "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+      ],
+      "_comment_model_scale": "Raw mesh heights are Clover_1 1.14m, Clover_2 1.26m, Plant_1_Big 3.76m, so the shared 0.24-0.46 range lands them at: clover 0.27-0.58m, the low leafy mat that skirts a grass tuft's base and breaks the hard line where it meets the terrain; Plant_1_Big at 0.44 -> 0.40-0.76m and ~0.31-0.59m across, a broadleaf standing above the mat and below the tufts. That is the ground->mid->canopy ladder prompt 72 asks for in its item 3, built from what is already here.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/Clover_1.gltf": 1.0,
+        "res://assets/environment/stylized_nature/Clover_2.gltf": 0.92,
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf": 0.44
+      },
+      "_comment_density": "Sized against the placement ceiling, not by feel. The committed bake before this layer is 561,891 against test_scatter_perf_budget.gd's 900,000, so this layer's budget is what fits inside that gap with headroom left for the next lane. Clumped hard (per_clump 150 in a 5.5m radius is ~1.6/m2 inside a drift) and trail-sited at the grass layer's own bias, because the arithmetic that governs every ground layer here is that a uniform fill over 16.8 km2 of corridor is unaffordable at any density that would be visible -- see ralph/reports/WORLD_GRASS_2026-08-25.md. The verge is where this tier earns most: it is the metre or two either side of the worn dirt, which is the ground a player looks at more than any other in the chapter. TUNABLE, and this whole layer is the cheapest thing to cut if the Ally needs headroom -- it is the smallest geometry in the world and the least missed at distance.",
+      "clumps": 90,
+      "per_clump": 150,
+      "clump_radius": 5.5,
+      "strays": 220,
+      "corridor_fill": {
+        "density_scale": 1.2,
+        "trail_bias": 0.7,
+        "trail_offset_min": 0.0,
+        "trail_offset_max": 30.0
+      },
+      "path_edge_jitter": 0.5,
+      "path_standoff": {
+        "min": 0.2,
+        "max": 2.6,
+        "wavelength": 21.0,
+        "salt": 6
+      },
+      "verge": {
+        "count": 16000,
+        "inner": 1.2,
+        "band": 9.0
+      },
+      "max_slope_deg": 28.0,
+      "min_height": -22.2,
+      "scale_min": 0.24,
+      "scale_max": 0.46,
+      "_comment_retint": "Deliberately DARKER and less saturated than the grass tufts above. This tier is the one that reads as shadow under the taller growth, and the same blind critic's separate finding is that this build has 'no quarter-tone anywhere' -- bimodal blown sand against crushed black. A mat sitting a little under the tuft's own value is where a quarter-tone comes from. Two greens rather than one so the two clovers are not one repeated sprite, the same treatment `grass` and `drygrass` already carry. TUNABLE, and re-derive against the tufts rather than by eye.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/Clover_1.gltf": { "Leaves": "#485a2c" },
+        "res://assets/environment/stylized_nature/Clover_2.gltf": { "Leaves": "#3d4f26" },
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf": { "Leaves": "#546434" }
+      },
+      "clear_radius": 1.5,
+      "base_scale": 1.0,
+      "_comment_lod": "Short on purpose, and shorter than every layer above it. These are the smallest meshes in the scatter; past ~70m a 0.3m clover is sub-pixel and costs a draw to render nothing. The fade band is wide relative to the range for the same reason grass's is -- a hard cutoff on the densest layer is the bald ring this lane exists to remove, and it must not be reintroduced by the layer that fixes it. TUNABLE, and the first ground layer to give back if the Ally needs GPU headroom.",
+      "lod_range": 70.0,
+      "lod_fade_margin": 22.0,
+      "casts_shadow": false,
+      "cleared_by_clearings": false,
+      "collides": false
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",

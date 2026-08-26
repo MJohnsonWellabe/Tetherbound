@@ -661,6 +661,65 @@ be raised to fit a chosen number. OP23-01 just took per-frame CPU from 33–40 m
 to 3.8–4.7 ms; do not spend that win here. State GPU risk as risk; do not claim
 a frame rate.
 
+### WORLD-GRASS-remainder — what three blind rounds could not reach from `vegetation.json` (2026-08-25)
+
+`ralph/WORLD-GRASS` shipped prompt 72's items 1-4. Recorded here per
+`conventions.md` because the blind pass **converged without passing**: three
+rounds, three sub-agents, both bar questions answered `no` every time. Full
+evidence and arithmetic in `ralph/reports/WORLD_GRASS_2026-08-25.md`; do not
+re-derive any of it.
+
+**The ranked-first defect was identical in all three rounds** — the player
+stands on a painted surface with isolated props on it, where the references
+carry grass geometry across the whole ground plane — and it is **not reachable
+by tuning this file**. Measured: a tuft covers ~0.33 m2, so the reference's
+continuous carpet needs ~1.5 instances/m2; the corridor is 16.8 km2, so a
+uniform carpet is 25 million placements and even a 60 m ribbon along the 12 km
+route network is ~1.08 million, against `test_scatter_perf_budget.gd`'s 900,000
+ceiling **for the whole chapter, all eleven layers**. Roughly **40x out**,
+however it is spent. Raising the cap does not fix this and must not be tried.
+
+Three items follow from that, none of them a scatter number:
+
+1. **A different instrument for ground cover.** `Terrain3DMeshAsset` exposes a
+   `density` field that `vegetation.gd::_make_mesh_asset` has never set — the
+   instancer's own procedural population, which does not come out of the baked
+   placement budget at all. Alternatively a grass shader on the terrain
+   material. Either is `vegetation.gd`/terrain work, outside WORLD-GRASS's file
+   ownership, and either could reach the reference where scatter cannot.
+2. **A grass asset that survives being multiplied.** Round 3's critic, told
+   nothing, filed this under *needs art that is not in the build*: "the current
+   clump is flat two-tone polygon and will not survive being multiplied; density
+   alone will make it worse" — no base-to-tip gradient, no translucency, no
+   ground blend, so it meets the terrain at a hard line however it is scaled.
+   That is an owner decision (buy or author), not a tuning number, and it is the
+   real ceiling on the ground plane. **Candidate for `BLOCKED.md` if the owner
+   wants the reference's ground specifically.**
+3. **Prompt 72 item 5, the mid-distance landmark — unstarted.** Terrain
+   authoring (`terrain_playground.json`), outside WORLD-GRASS's files. All three
+   blind rounds asked for it independently; round 3 named
+   `03-band3-crossing-eye`'s house-on-a-ridge as the best composition in the
+   survey and the proof the fix works. Bands 1, 2 and 4 have nothing at the end
+   of the sightline.
+
+**Two corrections to the historical record, so the next lane does not repeat
+them.** Prompt 72's "grass scaled to a few centimetres" is wrong: measured off
+the four meshes' own glTF accessors, `main`'s 0.14-0.42 put tufts at 0.17-0.77 m,
+mean 0.41 m, shin height on the 1.80 m trainer. And the meadow does **not**
+render in the trail's palette — two blind rounds measured that from a camera
+standing on the path, and sampled off-route the meadow's own ground is
+`#798732` (hue 68.3, value 0.529) against the reference's own foreground grass at
+`#7c8737` (hue 68.4, value 0.529). Retinting the grass would be a regression.
+
+**Out-of-lane findings the three rounds ranked at or near the top**, filed here
+because they are not WORLD-GRASS's files and all three critics named them:
+characters rendering as near-`#000000` cut-outs in direct sunlight (round 3
+measured 34.3% of `04-band4-high-pasture-off` below luminance 0.06, against
+0-5% in every reference, and no frame anywhere above 0.84); no cast shadows past
+middle distance; no atmospheric perspective; an empty sky in every frame; a
+dotted terrain quad-grid visible through the ground in most frames; and a house
+floating on its plinth in `03-band3-crossing-off`.
+
 ## Phase -1.9 — what PERF-ROG left open (2026-08-23)
 
 `OP23-01` itself is closed (`ralph/DONE.md`, `ralph/PERF_ROG_REPORT.md`): the
