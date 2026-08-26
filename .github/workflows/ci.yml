@@ -326,7 +326,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/10 --skip=test_veg_corridor.gd
+            -- --shard=${{ matrix.shard }}/10 --skip=test_veg_corridor.gd,test_scatter_rules.gd
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
@@ -374,6 +374,41 @@ jobs:
         run: |
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_veg_corridor.gd
+
+  # test_scatter_rules.gd, alone, for the same reason test_veg_corridor.gd is.
+  #
+  # MEASURED 2026-08-26 on ralph/WORLD-GRASS's tree (725,949 placements), timing
+  # every file in its shard individually: test_scatter_rules.gd is 850s of the
+  # shard's 858s. The other ten files are one second each. That is not a
+  # distribution problem and no shard count fixes it.
+  #
+  # It is why verify-unit-tests shard 2 was timeout-killed on that branch at both
+  # SIX shards (10m49s) and TEN (10m50s) -- the ten-shard change moved nothing,
+  # because this file lands in shard 2 either way and carries the whole cost.
+  # A timeout kill reports as CANCELLED, not failed, which is what made it read
+  # as infrastructure noise three separate times.
+  #
+  # The cost is real coverage, not waste: ci.yml's own note above records this
+  # file as one of the RULES.all_placements() callers, which walks every
+  # vegetation layer against the real corridor. Its runtime therefore TRACKS
+  # VEGETATION DENSITY, exactly like verify-veg-corridor's -- so re-time it
+  # before landing any further density increase.
+  #
+  # 30 minutes: ~14 minutes measured locally at today's densest bake, with
+  # roughly 2x headroom for the next one.
+  verify-scatter-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Run the scatter rules regression checks
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_scatter_rules.gd
 
   verify-playground:
     runs-on: ubuntu-latest
@@ -1912,6 +1947,7 @@ jobs:
       - changes
       - verify-unit-tests
       - verify-veg-corridor
+      - verify-scatter-rules
       - verify-core-verb-shard
       - verify-gate-a-ui-build-shard
       - verify-combat-shard
