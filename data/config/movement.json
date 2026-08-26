@@ -12,6 +12,25 @@
     "turn_speed": 11.0
   },
 
+  "unstick": {
+    "_comment": "GATE-F-DEFECT-FIX. The player can become PERMANENTLY immobile in the open world. Measured, not theorised: Gate F S05 logged 1,019 consecutive route rows -- over eight minutes -- pinned at exactly (91.39, -6.00, 821.68) in the corridor, input_context 'world', heading swinging through more than twenty distinct values (so the stick was held and _face() was running) while x/z moved less than 2cm in total. The harness's selfcheck_walk froze the same way at (-161.03, 2.13, 286.01) for 120s. Two sites, so it is a class, not a one-off, and neither is recoverable without reloading. player_controller.gd::_recover_if_entombed is the failsafe; every number here is TUNABLE.",
+    "enabled": true,
+    "_comment_detect": "Seconds of held input producing no movement before the failsafe even LOOKS. Long enough that it can never fire during ordinary play -- pushing into a boulder resolves in a fraction of a second via _unwedge, and the longest legitimate stall anyone has measured is a step-up probe at ~0.2s. Short enough that a real entombment costs seconds, not the eight minutes S05 paid.",
+    "detect_after_s": 2.0,
+    "_comment_progress": "Total displacement, in metres, that counts as 'still where it was'. Not zero: a pocket leaks a millimetre or two per frame (S05's rows drift 91.38 -> 91.39 before settling).",
+    "progress_m": 0.08,
+    "_comment_probe": "The entombment predicate. Eight compass directions are swept through the physics server from STEP_HEIGHT above the body -- the same height _try_step_up probes from, so ordinary ground never reads as a blocker. If ANY of the eight is clear the body is not entombed, it is merely pressed against something, and the failsafe does nothing. This is what keeps a player who is walking into a cliff (and could always walk back) from ever being moved. 0.45 is deliberately SHORT. With the capsule's own 0.4m radius it asks for ~0.85m of clearance in some direction, which is small enough that no ordinary interior dead-end reads as a seal, and still decisive on the real case: S05's body swung its heading through twenty-plus directions over eight minutes and drifted under 2cm total, so the pocket it was in has no meaningful clearance in ANY direction. Raising this buys nothing on the measured defect and costs false positives.",
+    "probe_m": 0.45,
+    "_comment_breadcrumbs": "Where recovery puts the player. A rolling trail of positions the body actually stood on and walked away from, dropped every breadcrumb_spacing_m. Recovery rewinds along it -- it never invents a destination, and it never grants access to anywhere the player had not already legitimately stood, which is why it is preferred over lifting.",
+    "breadcrumb_spacing_m": 2.5,
+    "breadcrumb_count": 10,
+    "_comment_min_distance": "Recovery must land this far from where the body is entombed, or it just drops back into the same pocket.",
+    "min_recovery_distance_m": 6.0,
+    "_comment_lift": "Last resort, when there is no usable breadcrumb (entombed within seconds of a load, say). Raise the body until the same eight-direction probe comes back clear, then let gravity settle it. Bounded so a failure can never launch anyone.",
+    "lift_max_m": 8.0,
+    "lift_step_m": 0.4
+  },
+
   "gait_feel": {
     "_comment": "MQ1A, TUNABLE. Momentum tilt: the trainer's model leans into acceleration and banks into turns (character_model.gd::apply_momentum_tilt, driven from trainer_model.gd). lean_deg_per_accel converts m/s^2 to degrees; at ground_acceleration 42 the launch lean approaches pitch_limit_deg. smoothing_rate is 1/seconds-to-settle-ish; higher snaps, lower wallows.",
     "lean_deg_per_accel": 0.18,

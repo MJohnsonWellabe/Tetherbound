@@ -93,6 +93,33 @@ var _carry_offset: Vector3 = Vector3.ZERO
 var _carry_saved_layer: int = 0
 var _carry_saved_mask: int = 0
 
+# --- entombment failsafe (GATE-F-DEFECT-FIX) --------------------------------
+# See `_recover_if_entombed` below and movement.json's own `unstick` comment
+# for the measurement this exists to answer.
+var _unstick_enabled: bool = true
+var _unstick_after: float = 2.0
+var _unstick_progress_m: float = 0.08
+var _unstick_probe_m: float = 0.45
+var _breadcrumb_spacing_m: float = 2.5
+var _breadcrumb_count: int = 10
+var _unstick_min_distance_m: float = 6.0
+var _unstick_lift_max_m: float = 8.0
+var _unstick_lift_step_m: float = 0.4
+
+## The direction `_apply_movement` resolved this frame, kept so the failsafe can
+## tell "the player is asking to go somewhere and is not going" from "the player
+## let go of the stick". Without this the timer would run while nobody is
+## pressing anything, which is a standing player, not a trapped one.
+var _wanted_dir: Vector3 = Vector3.ZERO
+## Where the body was when it stopped making progress, and for how long.
+var _stuck_anchor: Vector3 = Vector3.ZERO
+var _stuck_for: float = 0.0
+var _has_stuck_anchor: bool = false
+## Ground the body actually stood on and walked away from, newest last.
+var _breadcrumbs: Array[Vector3] = []
+## Counts recoveries for the smoke test and for anyone reading a run log.
+var _unstick_count: int = 0
+
 
 func _ready() -> void:
 	_load_config()
@@ -136,6 +163,17 @@ func _load_config() -> void:
 	_ground_friction = float(loco.get("ground_friction", _ground_friction))
 	_air_accel = float(loco.get("air_acceleration", _air_accel))
 	_turn_speed = float(loco.get("turn_speed", _turn_speed))
+
+	var unstick: Dictionary = config.get("unstick", {})
+	_unstick_enabled = bool(unstick.get("enabled", _unstick_enabled))
+	_unstick_after = float(unstick.get("detect_after_s", _unstick_after))
+	_unstick_progress_m = float(unstick.get("progress_m", _unstick_progress_m))
+	_unstick_probe_m = float(unstick.get("probe_m", _unstick_probe_m))
+	_breadcrumb_spacing_m = float(unstick.get("breadcrumb_spacing_m", _breadcrumb_spacing_m))
+	_breadcrumb_count = int(unstick.get("breadcrumb_count", _breadcrumb_count))
+	_unstick_min_distance_m = float(unstick.get("min_recovery_distance_m", _unstick_min_distance_m))
+	_unstick_lift_max_m = float(unstick.get("lift_max_m", _unstick_lift_max_m))
+	_unstick_lift_step_m = float(unstick.get("lift_step_m", _unstick_lift_step_m))
 
 	var jump: Dictionary = config.get("jump", {})
 	_gravity = float(jump.get("gravity", _gravity))
@@ -194,6 +232,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_try_step_up(planned_motion)
 	_unwedge(planned_motion, before, delta)
+	_recover_if_entombed(delta)
 	_resolve_landing(falling_speed)
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
@@ -365,6 +404,156 @@ func _try_step_up(motion: Vector3) -> void:
 	velocity.y = minf(velocity.y, 0.0)
 
 
+## The player can become PERMANENTLY immobile in the open world. This is the
+## failsafe for that, and it is the only thing in this file that ever moves the
+## body somewhere it did not walk.
+##
+## MEASURED, not theorised. Gate F segment S05 logged 1,019 consecutive route
+## rows -- over eight minutes -- at exactly (91.39, -6.00, 821.68), region
+## `corridor`, `input_context: world`, with the heading column swinging through
+## more than twenty distinct values across those rows. Heading only changes in
+## `_face`, which only runs when `_apply_movement` resolved a non-zero
+## direction: the stick was held the whole time and the body moved less than two
+## centimetres. Two separate walks in that segment stopped at that identical
+## coordinate, and the harness's own `selfcheck_walk` froze the same way at
+## (-161.03, 2.13, 286.01) for its full 120s. Two sites is a class, not a one-
+## off, and neither was recoverable without reloading the game.
+##
+## WHY `_unwedge` DOES NOT ALREADY COVER IT. `_unwedge` steers along ONE tangent
+## of the wall normal, and gives up (`_wedged_for = 0.0`) the moment
+## `_ground_under` says that one step is not clear. In a pocket whose contacts
+## oppose, that tangent is into the opposite face, so the deflection is
+## rejected every frame and the timer never survives to try anything else. It
+## is the right tool for a boulder and has nothing left to offer a box.
+##
+## THE PREDICATE IS WHAT MAKES THIS SAFE. Time-without-progress alone would fire
+## on a player leaning into a cliff, and teleporting them would be far worse
+## than the bug. So no-progress only opens the question; `_entombed_at` decides
+## it, by sweeping eight compass directions through the physics server from
+## `STEP_HEIGHT` up -- the same height `_try_step_up` probes from, so ordinary
+## ground never reads as a blocker. If ANY of the eight is clear the body can
+## still walk out of wherever it is, and nothing happens. Only a body with no
+## way out in any direction is recovered.
+##
+## RECOVERY REWINDS, IT DOES NOT INVENT. The first choice is always a breadcrumb
+## -- ground this body stood on and walked away from -- so a recovery can never
+## grant access to anywhere the player had not already legitimately reached.
+## Lifting is the fallback for when there is no usable breadcrumb, and it is
+## bounded by `lift_max_m`.
+func _recover_if_entombed(delta: float) -> void:
+	if not _unstick_enabled or _carried or not _locomotion_enabled:
+		_stuck_for = 0.0
+		_has_stuck_anchor = false
+		return
+
+	var here := global_position
+	if not _has_stuck_anchor or here.distance_to(_stuck_anchor) > _unstick_progress_m:
+		# Moving. This is also the only place breadcrumbs are dropped, so the
+		# trail is by construction a list of places the body left under its own
+		# power rather than places it merely occupied.
+		_drop_breadcrumb(here)
+		_stuck_anchor = here
+		_stuck_for = 0.0
+		_has_stuck_anchor = true
+		return
+
+	if _wanted_dir == Vector3.ZERO:
+		# Standing still because nobody is asking for anything. Hold the anchor
+		# (so letting go of the stick does not reset a real entombment that is
+		# already being timed) but do not accumulate against it.
+		return
+
+	_stuck_for += delta
+	if _stuck_for < _unstick_after:
+		return
+	_stuck_for = 0.0
+
+	if not _entombed_at(global_transform):
+		# Pressed against something, not sealed in it. Nothing to do -- this is
+		# the branch a player walking into a cliff face takes, every time.
+		return
+
+	_unstick_count += 1
+	var found := _recovery_position()
+	if found.is_empty():
+		push_warning("[player] entombed at %.2f, %.2f, %.2f with no recovery position" % [here.x, here.y, here.z])
+		return
+	var landing: Vector3 = found[0]
+	print("[player] entombed at %.2f, %.2f, %.2f -- recovering to %.2f, %.2f, %.2f" % [
+		here.x, here.y, here.z, landing.x, landing.y, landing.z
+	])
+	global_position = landing
+	velocity = Vector3.ZERO
+	_deflect_left = 0.0
+	_wedged_for = 0.0
+	_has_stuck_anchor = false
+	_breadcrumbs.clear()
+
+
+## Is there no way out of `from` in any direction?
+##
+## Swept through the physics server with this body's own shape, from
+## `STEP_HEIGHT` up, so the answer is about the capsule that actually has to fit
+## rather than a ray from its centre.
+func _entombed_at(from: Transform3D) -> bool:
+	var raised := from.translated(Vector3.UP * STEP_HEIGHT)
+	for i in 8:
+		var angle := TAU * float(i) / 8.0
+		var dir := Vector3(sin(angle), 0.0, cos(angle))
+		if not test_move(raised, dir * _unstick_probe_m):
+			return false
+	return true
+
+
+## Where to put a body that has no way out. One element, or empty if there is
+## nowhere -- an Array rather than a nullable Vector3 because GDScript has no
+## null Vector3 and a NaN sentinel is exactly the shape of bug this branch is
+## here to remove.
+##
+## Newest breadcrumb first, so a recovery costs the player as little ground as
+## it can while still landing clear of the pocket. `min_recovery_distance_m` is
+## what stops it handing the body straight back to whatever swallowed it.
+func _recovery_position() -> Array[Vector3]:
+	var here := global_position
+	for i in range(_breadcrumbs.size() - 1, -1, -1):
+		var candidate: Vector3 = _breadcrumbs[i]
+		if candidate.distance_to(here) < _unstick_min_distance_m:
+			continue
+		var at := global_transform
+		at.origin = candidate
+		if not _entombed_at(at):
+			return [candidate] as Array[Vector3]
+
+	# No usable breadcrumb: entombed within seconds of a load, or the trail is
+	# all inside the same pocket. Rise until the eight-direction probe comes
+	# back clear and let gravity do the rest.
+	var lifted := 0.0
+	while lifted < _unstick_lift_max_m:
+		lifted += _unstick_lift_step_m
+		var at := global_transform
+		at.origin = here + Vector3.UP * lifted
+		if not _entombed_at(at):
+			return [at.origin] as Array[Vector3]
+	return [] as Array[Vector3]
+
+
+func _drop_breadcrumb(here: Vector3) -> void:
+	if not is_on_floor():
+		return
+	if not _breadcrumbs.is_empty() and _breadcrumbs[-1].distance_to(here) < _breadcrumb_spacing_m:
+		return
+	_breadcrumbs.append(here)
+	while _breadcrumbs.size() > _breadcrumb_count:
+		_breadcrumbs.remove_at(0)
+
+
+## How many times this body has had to be recovered. Read by
+## tests/smoke_unstick.gd; a run that never touches it reads zero.
+func unstick_count() -> int:
+	return _unstick_count
+
+
+
 func _track_airborne(delta: float, input_owned: bool) -> void:
 	if is_on_floor():
 		_airborne_for = 0.0
@@ -425,6 +614,11 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 		else:
 			_deflect_left -= delta
 			direction = _deflect
+
+	# The failsafe below reads this, not `input`: a deflection can be steering
+	# while the raw stick reads the same, and what matters to it is whether the
+	# body was asked to go anywhere at all this frame.
+	_wanted_dir = direction
 
 	var game := get_node_or_null(^"/root/Game")
 	var auto_running := game != null and bool(game.get("auto_run"))

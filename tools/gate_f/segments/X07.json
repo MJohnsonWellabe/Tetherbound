@@ -19,12 +19,13 @@
     },
     {
       "id": "X07-002",
-      "title": "VOCABULARY GAP: no action pins the WorldLook clock",
+      "title": "the clock pin, and why the notes below are no longer the pin",
       "action": "note",
       "args": {
-        "text": "E.7 requires the pin-and-freeze pattern and warns explicitly against the unpinned variant that produced the 2026-08-23 crimson artefact. SEGMENT_SCHEMA.md's vocabulary has no clock-pin action: `wait` advances the clock and nothing freezes it. Every pin below is therefore recorded as a note -- which is what the protocol asks for -- but the pin itself has to be performed by the harness invocation (tools/gate_f/run_segment.sh, capture_band3_region.gd's own pattern) rather than by a step. Reported before the freeze: a `pin_clock` action is a harness change, and after the freeze the operator cannot make one."
+        "text": "SUPERSEDED, and kept rather than deleted because the run it describes is on the record. This step used to read 'VOCABULARY GAP: no action pins the WorldLook clock' and concluded that every pin had to be a note. That was true when X07 was transcribed and is not true now: operator_harness.gd implements a `pin_clock` action (SEGMENT_SCHEMA.md documents it under Setup and time -- `hour`, `preset`, `weather`, `freeze`, DIAG-only, and its own doc comment carries capture_band3_region.gd's pin-AFTER-the-settle ordering). X07 never called it, so the 2026-08-25 run's six 'night' frames and four 'weather' frames were captured with the clock free-running: X07's own route.csv reads clock_hour 8.16 to 11.14 across the whole segment and weather 'clear' on all 135 rows. That is what the visual pass measured when it found night frames at day luminance (grandpas_village day 96.6 vs night 99.2) -- mid-morning frames labelled night, not a renderer that cannot draw night. Every DIAG PIN step below is now a real `pin_clock` and carries its own record."
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "a note event carries this observation into events.jsonl",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). The pin notes below claimed a pin that never happened, which put a false label on ten frames of the run's only visual evidence. Blocking for the re-run: X07 is the segment the night and weather variants come from."
     },
     {
       "id": "X07-003",
@@ -90,12 +91,17 @@
     },
     {
       "id": "X07-009",
-      "title": "DIAG PIN: Grandpa's Village, day preset",
-      "action": "note",
+      "title": "DIAG PIN: Grandpa's Village, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-010",
@@ -108,7 +114,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-011",
@@ -139,6 +146,20 @@
       "expected": "arrival view (from the intended entry route direction) at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-010a",
+      "title": "aim the landmark frame (grandpas_village)",
+      "action": "face",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. aimed at grandpa_house, data/config/map_landmarks.json, 28.6 m from this position. Taken from the game's own map data rather than chosen: nothing here is an invented coordinate."
+    },
+    {
       "id": "X07-013",
       "title": "GF-AUD-grandpas_village-landmark",
       "action": "capture",
@@ -153,18 +174,18 @@
       "expected": "signature landmark at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-014",
-      "title": "GF-AUD-grandpas_village-terrain",
-      "action": "capture",
+      "id": "X07-010b",
+      "title": "aim the ecology frame (grandpas_village)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-grandpas_village-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          41.27,
+          26.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-015",
@@ -181,6 +202,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-010c",
+      "title": "aim the vegetation frame (grandpas_village)",
+      "action": "face",
+      "args": {
+        "at": [
+          -29.27,
+          26.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-016",
       "title": "GF-AUD-grandpas_village-vegetation",
       "action": "capture",
@@ -195,6 +230,73 @@
       "expected": "vegetation density impression with a paired frame at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-010d",
+      "title": "back to the entry bearing for the ground frame (grandpas_village)",
+      "action": "face",
+      "args": {
+        "at": [
+          6.0,
+          -82.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-010e",
+      "title": "pitch down to the ground (grandpas_village)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-014",
+      "title": "GF-AUD-grandpas_village-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-010f",
+      "title": "pitch back up to the ceiling (grandpas_village)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-010g",
+      "title": "settle the pitch back to its start (grandpas_village)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
+    },
+    {
       "id": "X07-017",
       "title": "what the Grandpa's Village grid recorded",
       "action": "note",
@@ -205,12 +307,17 @@
     },
     {
       "id": "X07-018",
-      "title": "DIAG PIN: Grandpa's Village, night preset",
-      "action": "note",
+      "title": "DIAG PIN: Grandpa's Village, night",
+      "action": "pin_clock",
       "args": {
-        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 23.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 23.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-019",
@@ -242,12 +349,17 @@
     },
     {
       "id": "X07-021",
-      "title": "DIAG PIN: Grandpa's Village, weather variant",
-      "action": "note",
+      "title": "DIAG PIN: Grandpa's Village, weather variant (rain)",
+      "action": "pin_clock",
       "args": {
-        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "rain"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'rain' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-022",
@@ -332,12 +444,17 @@
     },
     {
       "id": "X07-029",
-      "title": "DIAG PIN: The Rise, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Rise, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-030",
@@ -350,7 +467,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-031",
@@ -381,6 +499,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-030a",
+      "title": "aim the landmark frame (the_rise)",
+      "action": "face",
+      "args": {
+        "at": [
+          27.5,
+          -16.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. aimed at road_gate, data/config/map_landmarks.json, 66.4 m from this position. Taken from the game's own map data rather than chosen: nothing here is an invented coordinate."
+    },
+    {
       "id": "X07-033",
       "title": "GF-AUD-the_rise-landmark",
       "action": "capture",
@@ -395,18 +527,18 @@
       "expected": "signature landmark at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-034",
-      "title": "GF-AUD-the_rise-terrain",
-      "action": "capture",
+      "id": "X07-030b",
+      "title": "aim the ecology frame (the_rise)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_rise-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          123.27,
+          5.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-035",
@@ -423,6 +555,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-030c",
+      "title": "aim the vegetation frame (the_rise)",
+      "action": "face",
+      "args": {
+        "at": [
+          52.73,
+          5.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-036",
       "title": "GF-AUD-the_rise-vegetation",
       "action": "capture",
@@ -435,6 +581,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-030d",
+      "title": "back to the entry bearing for the ground frame (the_rise)",
+      "action": "face",
+      "args": {
+        "at": [
+          88.0,
+          -103.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-030e",
+      "title": "pitch down to the ground (the_rise)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-034",
+      "title": "GF-AUD-the_rise-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-030f",
+      "title": "pitch back up to the ceiling (the_rise)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-030g",
+      "title": "settle the pitch back to its start (the_rise)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-037",
@@ -500,12 +713,17 @@
     },
     {
       "id": "X07-043",
-      "title": "DIAG PIN: The Pond, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Pond, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-044",
@@ -518,7 +736,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-045",
@@ -549,6 +768,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-044a",
+      "title": "aim the landmark frame (the_pond)",
+      "action": "face",
+      "args": {
+        "at": [
+          -284.94,
+          488.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-047",
       "title": "GF-AUD-the_pond-landmark",
       "action": "capture",
@@ -563,18 +796,18 @@
       "expected": "signature landmark at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-048",
-      "title": "GF-AUD-the_pond-terrain",
-      "action": "capture",
+      "id": "X07-044b",
+      "title": "aim the ecology frame (the_pond)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_pond-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -306.73,
+          555.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-049",
@@ -591,6 +824,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-044c",
+      "title": "aim the vegetation frame (the_pond)",
+      "action": "face",
+      "args": {
+        "at": [
+          -377.27,
+          555.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-050",
       "title": "GF-AUD-the_pond-vegetation",
       "action": "capture",
@@ -605,6 +852,73 @@
       "expected": "vegetation density impression with a paired frame at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-044d",
+      "title": "back to the entry bearing for the ground frame (the_pond)",
+      "action": "face",
+      "args": {
+        "at": [
+          -342.0,
+          447.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-044e",
+      "title": "pitch down to the ground (the_pond)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-048",
+      "title": "GF-AUD-the_pond-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-044f",
+      "title": "pitch back up to the ceiling (the_pond)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-044g",
+      "title": "settle the pitch back to its start (the_pond)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
+    },
+    {
       "id": "X07-051",
       "title": "what the The Pond grid recorded",
       "action": "note",
@@ -615,12 +929,17 @@
     },
     {
       "id": "X07-052",
-      "title": "DIAG PIN: The Pond, night preset",
-      "action": "note",
+      "title": "DIAG PIN: The Pond, night",
+      "action": "pin_clock",
       "args": {
-        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 23.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 23.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-053",
@@ -652,12 +971,17 @@
     },
     {
       "id": "X07-055",
-      "title": "DIAG PIN: The Pond, weather variant",
-      "action": "note",
+      "title": "DIAG PIN: The Pond, weather variant (fog)",
+      "action": "pin_clock",
       "args": {
-        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "fog"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'fog' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-056",
@@ -742,12 +1066,17 @@
     },
     {
       "id": "X07-063",
-      "title": "DIAG PIN: The Old Quarry, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Old Quarry, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-064",
@@ -760,7 +1089,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-065",
@@ -791,6 +1121,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-064a",
+      "title": "aim the landmark frame (the_old_quarry)",
+      "action": "face",
+      "args": {
+        "at": [
+          460.06,
+          1775.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-067",
       "title": "GF-AUD-the_old_quarry-landmark",
       "action": "capture",
@@ -805,18 +1149,18 @@
       "expected": "signature landmark at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-068",
-      "title": "GF-AUD-the_old_quarry-terrain",
-      "action": "capture",
+      "id": "X07-064b",
+      "title": "aim the ecology frame (the_old_quarry)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_old_quarry-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          438.27,
+          1842.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-069",
@@ -833,6 +1177,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-064c",
+      "title": "aim the vegetation frame (the_old_quarry)",
+      "action": "face",
+      "args": {
+        "at": [
+          367.73,
+          1842.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-070",
       "title": "GF-AUD-the_old_quarry-vegetation",
       "action": "capture",
@@ -845,6 +1203,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-064d",
+      "title": "back to the entry bearing for the ground frame (the_old_quarry)",
+      "action": "face",
+      "args": {
+        "at": [
+          403.0,
+          1734.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-064e",
+      "title": "pitch down to the ground (the_old_quarry)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-068",
+      "title": "GF-AUD-the_old_quarry-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-064f",
+      "title": "pitch back up to the ceiling (the_old_quarry)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-064g",
+      "title": "settle the pitch back to its start (the_old_quarry)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-071",
@@ -910,12 +1335,17 @@
     },
     {
       "id": "X07-077",
-      "title": "DIAG PIN: The Burrow Warrens, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Burrow Warrens, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-078",
@@ -928,7 +1358,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-079",
@@ -959,6 +1390,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-078a",
+      "title": "aim the landmark frame (the_burrow_warrens)",
+      "action": "face",
+      "args": {
+        "at": [
+          -362.94,
+          2451.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-081",
       "title": "GF-AUD-the_burrow_warrens-landmark",
       "action": "capture",
@@ -973,18 +1418,18 @@
       "expected": "signature landmark at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-082",
-      "title": "GF-AUD-the_burrow_warrens-terrain",
-      "action": "capture",
+      "id": "X07-078b",
+      "title": "aim the ecology frame (the_burrow_warrens)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_burrow_warrens-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -384.73,
+          2518.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-083",
@@ -1001,6 +1446,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-078c",
+      "title": "aim the vegetation frame (the_burrow_warrens)",
+      "action": "face",
+      "args": {
+        "at": [
+          -455.27,
+          2518.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-084",
       "title": "GF-AUD-the_burrow_warrens-vegetation",
       "action": "capture",
@@ -1013,6 +1472,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-078d",
+      "title": "back to the entry bearing for the ground frame (the_burrow_warrens)",
+      "action": "face",
+      "args": {
+        "at": [
+          -420.0,
+          2410.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-078e",
+      "title": "pitch down to the ground (the_burrow_warrens)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-082",
+      "title": "GF-AUD-the_burrow_warrens-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-078f",
+      "title": "pitch back up to the ceiling (the_burrow_warrens)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-078g",
+      "title": "settle the pitch back to its start (the_burrow_warrens)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-085",
@@ -1078,12 +1604,17 @@
     },
     {
       "id": "X07-091",
-      "title": "DIAG PIN: The Tether Relay, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Tether Relay, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-092",
@@ -1096,7 +1627,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-093",
@@ -1127,6 +1659,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-092a",
+      "title": "aim the landmark frame (the_tether_relay)",
+      "action": "face",
+      "args": {
+        "at": [
+          405.06,
+          3737.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-095",
       "title": "GF-AUD-the_tether_relay-landmark",
       "action": "capture",
@@ -1141,18 +1687,18 @@
       "expected": "signature landmark at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-096",
-      "title": "GF-AUD-the_tether_relay-terrain",
-      "action": "capture",
+      "id": "X07-092b",
+      "title": "aim the ecology frame (the_tether_relay)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_tether_relay-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          383.27,
+          3804.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-097",
@@ -1169,6 +1715,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-092c",
+      "title": "aim the vegetation frame (the_tether_relay)",
+      "action": "face",
+      "args": {
+        "at": [
+          312.73,
+          3804.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-098",
       "title": "GF-AUD-the_tether_relay-vegetation",
       "action": "capture",
@@ -1181,6 +1741,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-092d",
+      "title": "back to the entry bearing for the ground frame (the_tether_relay)",
+      "action": "face",
+      "args": {
+        "at": [
+          348.0,
+          3696.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-092e",
+      "title": "pitch down to the ground (the_tether_relay)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-096",
+      "title": "GF-AUD-the_tether_relay-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-092f",
+      "title": "pitch back up to the ceiling (the_tether_relay)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-092g",
+      "title": "settle the pitch back to its start (the_tether_relay)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-099",
@@ -1246,12 +1873,17 @@
     },
     {
       "id": "X07-105",
-      "title": "DIAG PIN: The Long Water, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Long Water, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-106",
@@ -1264,7 +1896,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-107",
@@ -1295,6 +1928,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-106a",
+      "title": "aim the landmark frame (the_long_water)",
+      "action": "face",
+      "args": {
+        "at": [
+          -92.94,
+          4181.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-109",
       "title": "GF-AUD-the_long_water-landmark",
       "action": "capture",
@@ -1309,18 +1956,18 @@
       "expected": "signature landmark at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-110",
-      "title": "GF-AUD-the_long_water-terrain",
-      "action": "capture",
+      "id": "X07-106b",
+      "title": "aim the ecology frame (the_long_water)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_long_water-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -114.73,
+          4248.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-111",
@@ -1337,6 +1984,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-106c",
+      "title": "aim the vegetation frame (the_long_water)",
+      "action": "face",
+      "args": {
+        "at": [
+          -185.27,
+          4248.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-112",
       "title": "GF-AUD-the_long_water-vegetation",
       "action": "capture",
@@ -1349,6 +2010,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-106d",
+      "title": "back to the entry bearing for the ground frame (the_long_water)",
+      "action": "face",
+      "args": {
+        "at": [
+          -150.0,
+          4140.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-106e",
+      "title": "pitch down to the ground (the_long_water)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-110",
+      "title": "GF-AUD-the_long_water-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-106f",
+      "title": "pitch back up to the ceiling (the_long_water)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-106g",
+      "title": "settle the pitch back to its start (the_long_water)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-113",
@@ -1414,12 +2142,17 @@
     },
     {
       "id": "X07-119",
-      "title": "DIAG PIN: The Ironwood Grove, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Ironwood Grove, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-120",
@@ -1432,7 +2165,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-121",
@@ -1463,6 +2197,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-120a",
+      "title": "aim the landmark frame (the_ironwood_grove)",
+      "action": "face",
+      "args": {
+        "at": [
+          -287.94,
+          5041.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-123",
       "title": "GF-AUD-the_ironwood_grove-landmark",
       "action": "capture",
@@ -1477,18 +2225,18 @@
       "expected": "signature landmark at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-124",
-      "title": "GF-AUD-the_ironwood_grove-terrain",
-      "action": "capture",
+      "id": "X07-120b",
+      "title": "aim the ecology frame (the_ironwood_grove)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_ironwood_grove-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -309.73,
+          5108.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-125",
@@ -1505,6 +2253,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-120c",
+      "title": "aim the vegetation frame (the_ironwood_grove)",
+      "action": "face",
+      "args": {
+        "at": [
+          -380.27,
+          5108.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-126",
       "title": "GF-AUD-the_ironwood_grove-vegetation",
       "action": "capture",
@@ -1517,6 +2279,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-120d",
+      "title": "back to the entry bearing for the ground frame (the_ironwood_grove)",
+      "action": "face",
+      "args": {
+        "at": [
+          -345.0,
+          5000.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-120e",
+      "title": "pitch down to the ground (the_ironwood_grove)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-124",
+      "title": "GF-AUD-the_ironwood_grove-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-120f",
+      "title": "pitch back up to the ceiling (the_ironwood_grove)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-120g",
+      "title": "settle the pitch back to its start (the_ironwood_grove)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-127",
@@ -1582,12 +2411,17 @@
     },
     {
       "id": "X07-133",
-      "title": "DIAG PIN: The Ridgeline Watch, day preset",
-      "action": "note",
+      "title": "DIAG PIN: The Ridgeline Watch, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-134",
@@ -1600,7 +2434,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-135",
@@ -1631,6 +2466,20 @@
       "expected": "arrival view (from the intended entry route direction) at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-134a",
+      "title": "aim the landmark frame (the_ridgeline_watch)",
+      "action": "face",
+      "args": {
+        "at": [
+          -192.94,
+          6471.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-137",
       "title": "GF-AUD-the_ridgeline_watch-landmark",
       "action": "capture",
@@ -1645,18 +2494,18 @@
       "expected": "signature landmark at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-138",
-      "title": "GF-AUD-the_ridgeline_watch-terrain",
-      "action": "capture",
+      "id": "X07-134b",
+      "title": "aim the ecology frame (the_ridgeline_watch)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-the_ridgeline_watch-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -214.73,
+          6538.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-139",
@@ -1673,6 +2522,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-134c",
+      "title": "aim the vegetation frame (the_ridgeline_watch)",
+      "action": "face",
+      "args": {
+        "at": [
+          -285.27,
+          6538.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-140",
       "title": "GF-AUD-the_ridgeline_watch-vegetation",
       "action": "capture",
@@ -1685,6 +2548,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-134d",
+      "title": "back to the entry bearing for the ground frame (the_ridgeline_watch)",
+      "action": "face",
+      "args": {
+        "at": [
+          -250.0,
+          6430.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-134e",
+      "title": "pitch down to the ground (the_ridgeline_watch)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-138",
+      "title": "GF-AUD-the_ridgeline_watch-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-134f",
+      "title": "pitch back up to the ceiling (the_ridgeline_watch)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-134g",
+      "title": "settle the pitch back to its start (the_ridgeline_watch)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-141",
@@ -1750,12 +2680,17 @@
     },
     {
       "id": "X07-147",
-      "title": "DIAG PIN: the Stronghold approach, day preset",
-      "action": "note",
+      "title": "DIAG PIN: the Stronghold approach, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-148",
@@ -1768,7 +2703,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-149",
@@ -1799,6 +2735,20 @@
       "expected": "arrival view (from the intended entry route direction) at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-148a",
+      "title": "aim the landmark frame (stronghold_approach)",
+      "action": "face",
+      "args": {
+        "at": [
+          150.0,
+          7595.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. aimed at stronghold (the file's one `silhouette: true` landmark), data/config/map_landmarks.json, 607 m from this position. Taken from the game's own map data rather than chosen: nothing here is an invented coordinate."
+    },
+    {
       "id": "X07-151",
       "title": "GF-AUD-stronghold_approach-landmark",
       "action": "capture",
@@ -1813,18 +2763,18 @@
       "expected": "signature landmark at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-152",
-      "title": "GF-AUD-stronghold_approach-terrain",
-      "action": "capture",
+      "id": "X07-148b",
+      "title": "aim the ecology frame (stronghold_approach)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-stronghold_approach-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          -29.73,
+          7076.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-153",
@@ -1841,6 +2791,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-148c",
+      "title": "aim the vegetation frame (stronghold_approach)",
+      "action": "face",
+      "args": {
+        "at": [
+          -100.27,
+          7076.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-154",
       "title": "GF-AUD-stronghold_approach-vegetation",
       "action": "capture",
@@ -1855,6 +2819,73 @@
       "expected": "vegetation density impression with a paired frame at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-148d",
+      "title": "back to the entry bearing for the ground frame (stronghold_approach)",
+      "action": "face",
+      "args": {
+        "at": [
+          -65.0,
+          6968.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-148e",
+      "title": "pitch down to the ground (stronghold_approach)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-152",
+      "title": "GF-AUD-stronghold_approach-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-148f",
+      "title": "pitch back up to the ceiling (stronghold_approach)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-148g",
+      "title": "settle the pitch back to its start (stronghold_approach)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
+    },
+    {
       "id": "X07-155",
       "title": "what the the Stronghold approach grid recorded",
       "action": "note",
@@ -1865,12 +2896,17 @@
     },
     {
       "id": "X07-156",
-      "title": "DIAG PIN: the Stronghold approach, night preset",
-      "action": "note",
+      "title": "DIAG PIN: the Stronghold approach, night",
+      "action": "pin_clock",
       "args": {
-        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 23.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 23.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-157",
@@ -1902,12 +2938,17 @@
     },
     {
       "id": "X07-159",
-      "title": "DIAG PIN: the Stronghold approach, weather variant",
-      "action": "note",
+      "title": "DIAG PIN: the Stronghold approach, weather variant (rain)",
+      "action": "pin_clock",
       "args": {
-        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "rain"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'rain' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-160",
@@ -1992,12 +3033,17 @@
     },
     {
       "id": "X07-167",
-      "title": "DIAG PIN: the Hall, day preset",
-      "action": "note",
+      "title": "DIAG PIN: the Hall, day",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-168",
@@ -2010,7 +3056,8 @@
         ],
         "tolerance_deg": 8.0
       },
-      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Unchanged as a step. It is now the entry-route bearing for the `gameplay` and `arrival` frames only; the four other variants each get their own bearing below. The 2026-08-25 run took all six frames from this one camera, which is why the visual pass measured `arrival`, `gameplay` and `landmark` differing by 0.1-2.3% of pixels: three of six variant slots were one shot. The position itself is NOT moved -- E.7 fixes it before play and forbids moving it to improve a composition; only the bearing and the pitch change."
     },
     {
       "id": "X07-169",
@@ -2041,6 +3088,20 @@
       "expected": "arrival view (from the intended entry route direction) at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-168a",
+      "title": "aim the landmark frame (hall)",
+      "action": "face",
+      "args": {
+        "at": [
+          207.06,
+          7576.46
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to a bearing the arrival frame does not already cover, so the landmark slot captures its own shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. data/config/map_landmarks.json carries no landmark for this region more than 20 m from this position, so there is no authored landmark to aim at and one is not invented here. The bearing is the entry bearing turned 72 degrees, the first arm of the five-way compass sweep the other variants complete -- a different sixth of the region rather than the same sixth six times."
+    },
+    {
       "id": "X07-171",
       "title": "GF-AUD-hall-landmark",
       "action": "capture",
@@ -2055,18 +3116,18 @@
       "expected": "signature landmark at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
-      "id": "X07-172",
-      "title": "GF-AUD-hall-terrain",
-      "action": "capture",
+      "id": "X07-168b",
+      "title": "aim the ecology frame (hall)",
+      "action": "face",
       "args": {
-        "id": "GF-AUD-hall-terrain",
-        "class": "audit",
-        "hud": "off",
-        "camera_kind": "probe",
-        "trigger": "planned",
-        "intended_proof": "regional audit"
+        "at": [
+          185.27,
+          7643.54
+        ],
+        "tolerance_deg": 8.0
       },
-      "expected": "terrain/ground close view at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+      "expected": "the camera turns on the right stick to the entry bearing turned 144 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Third arm of the compass sweep. The ecology frame asks what lives here, and asking it down the same sightline as the arrival frame can only ever answer for that sightline."
     },
     {
       "id": "X07-173",
@@ -2083,6 +3144,20 @@
       "expected": "ecology/activity frame (wilds visible behaving) at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
     },
     {
+      "id": "X07-168c",
+      "title": "aim the vegetation frame (hall)",
+      "action": "face",
+      "args": {
+        "at": [
+          114.73,
+          7643.54
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the entry bearing turned 216 degrees",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Fourth arm of the compass sweep. The visual pass's finding that grass tufts occur 'in one narrow band and nowhere else on the visible floor' is a claim about one bearing until the audit looks down more than one."
+    },
+    {
       "id": "X07-174",
       "title": "GF-AUD-hall-vegetation",
       "action": "capture",
@@ -2095,6 +3170,73 @@
         "intended_proof": "regional audit"
       },
       "expected": "vegetation density impression with a paired frame at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-168d",
+      "title": "back to the entry bearing for the ground frame (hall)",
+      "action": "face",
+      "args": {
+        "at": [
+          150.0,
+          7535.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera returns to the entry-route bearing",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. The terrain frame is pitched down the route a player actually walks in on, so it is returned to the entry bearing first. It is also what leaves the camera on the entry bearing for the night and weather variants that follow in some blocks."
+    },
+    {
+      "id": "X07-168e",
+      "title": "pitch down to the ground (hall)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera down to its floor (camera.pitch_min_deg, -60) -- a ground close view instead of a sixth copy of the standing shot",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. 40 frames at full deflection is 0.67 s against movement.json's 190 deg/s, which is 127 degrees of travel into a 48-degree range: the pitch CLAMPS at its floor, so this lands on exactly -60 every time rather than on whatever the frame budget happened to buy."
+    },
+    {
+      "id": "X07-172",
+      "title": "GF-AUD-hall-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-168f",
+      "title": "pitch back up to the ceiling (hall)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 40
+      },
+      "expected": "the right stick pitches the camera up to its ceiling (camera.pitch_max_deg, 32)",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. Half of restoring the camera deterministically: drive it to the OTHER clamp first, so the next step starts from a known angle rather than from wherever this block left it."
+    },
+    {
+      "id": "X07-168g",
+      "title": "settle the pitch back to its start (hall)",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 14
+      },
+      "expected": "the camera returns to roughly camera.pitch_start_deg (-12), where the block found it",
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). New step. From the +32 ceiling, 14 frames at 190 deg/s is 44.3 degrees, landing at about -12.3 -- pitch_start_deg. The block hands the camera on as it found it, so the night and weather frames that follow in some blocks are comparable with the day frames above them."
     },
     {
       "id": "X07-175",
@@ -2148,11 +3290,16 @@
     {
       "id": "X07-180",
       "title": "DIAG PIN: night, torch conditions",
-      "action": "note",
+      "action": "pin_clock",
       "args": {
-        "text": "The WorldLook clock is pinned and frozen at night for the fight below. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 23.0,
+        "settle_frames": 8,
+        "weather": "clear"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 23.0 and the weather to 'clear' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The WorldLook clock is pinned and frozen at night for the fight below. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-181",
@@ -2202,11 +3349,16 @@
     {
       "id": "X07-185",
       "title": "DIAG PIN: rain/fog",
-      "action": "note",
+      "action": "pin_clock",
       "args": {
-        "text": "The weather preset is pinned and frozen at rain or fog for the fight below. This note is the pin's telemetry record, marked DIAG."
+        "freeze": true,
+        "hour": 11.0,
+        "settle_frames": 8,
+        "weather": "rain"
       },
-      "expected": "a note event carries this observation into events.jsonl"
+      "expected": "the WorldLook clock is pinned to hour 11.0 and the weather to 'rain' through the game's own _apply_blended/set_weather, then both nodes are frozen, and the harness reports the clock reading it actually got -- so the frames below carry the state their ids claim",
+      "diag": true,
+      "observation": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Was a `note` reading: \"The weather preset is pinned and frozen at rain or fog for the fight below. This note is the pin's telemetry record, marked DIAG.\" -- a note is not a pin. The 2026-08-25 run proves it: clock_hour ran 8.16-11.14 and weather stayed 'clear' for all 135 route rows, so this step's own frames were captured at mid-morning whatever their ids said. `hour` rather than `preset` because it drives world_look.gd::_apply_blended, the same continuous path _process uses, and because it makes the clock_hour recorded on every manifest row below honest -- a preset snap would have left the telemetry still reading morning and a future reader repeating this exact mistake. Pinned AFTER the settle, per _step_pin_clock's own ordering note."
     },
     {
       "id": "X07-186",
@@ -2252,5 +3404,6 @@
       },
       "expected": "a note event carries this observation into events.jsonl"
     }
-  ]
+  ],
+  "_camera_variants": "SANCTIONED CHANGE to a FROZEN file (tools/gate_f/** is frozen; the run handover's standing rules permit a single genuinely blocking error to be fixed when it is recorded both in ralph/reports/gate-f-lane-log.md and in the step's own `observation`, which is how every change in the handover's section 5 is recorded). Every region block below takes its six audit frames from five different bearings and two pitches rather than from one camera. The 2026-08-25 run took all six from a single `face` step: the visual pass measured `arrival`, `gameplay` and `landmark` at 0.1-2.3% pixel difference, so three of six variant slots captured nothing distinct and three regional variants of E.7's audit grid were never captured at all. Bearings are the entry bearing turned 72/144/216 degrees, computed from each block's own existing `at` -- no position is moved (E.7 fixes them before play) and no coordinate is invented. Where data/config/map_landmarks.json actually carries a landmark more than 20 m away, the `landmark` slot aims at it instead: grandpa_house for grandpas_village, road_gate for the_rise, and the stronghold silhouette for stronghold_approach -- which is the frame the visual pass found had no stronghold in it."
 }

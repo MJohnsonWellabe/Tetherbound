@@ -359,3 +359,160 @@ a boundary.
 
 So: no further pushes until the harness agent lands its five additions. Then one
 push, one full run, allowed to finish — and that run is the freeze evidence.
+
+---
+
+## DEFECT-FIX lane — check-in 1 — 2026-08-26 — items 1 and 3 fixed and pushed; item 2 is not the defect it was reported as
+
+Branch `ralph/GATE-F-DEFECT-FIX`, off `main` at `7dae36c6`. This lane is the
+**defect-fix** role of §13, not the operator: it does not run segments, and a
+separate session re-runs S01–S10 / X01–X07 after these land.
+
+### Item 1 — permanent immobility in the open world. FIXED.
+
+`scripts/player/player_controller.gd::_recover_if_entombed`, tuned from a new
+`unstick` block in `data/config/movement.json`.
+
+What the evidence actually says, re-derived from `S05/telemetry/route.csv` on
+`ralph/GATE-F-INSTRUMENTATION` rather than taken on trust:
+
+- 1,004 rows read exactly `91.39, -6.00, 821.68`, and the pinned run is 1,019
+  rows counting the two that drift 91.38 → 91.39 first. Total movement over the
+  whole eight minutes: **under 2 cm.**
+- The `heading` column across those rows takes **more than twenty distinct
+  values**. Heading is only written in `_face`, which only runs when
+  `_apply_movement` resolved a non-zero direction — so the stick was held, in
+  many different directions, for the whole eight minutes, and the body went
+  nowhere in any of them.
+- `y = -6.00` is **not** below-terrain. The 60 rows before the freeze walk that
+  same stretch at y between +1.35 and −7.08, rising and falling smoothly: the
+  corridor is genuinely below zero there. This is a pocket, not a fall, and it
+  is unrelated to the `ground_height_at()` NaN class the dispatch note
+  suggested relating it to. Worth saying plainly so the next lane does not
+  spend the search there.
+
+Why `_unwedge` never covered it: it steers along ONE tangent of the wall normal
+and resets its own timer (`_wedged_for = 0.0`) the moment `_ground_under` says
+that one step is not clear. In a pocket whose contacts oppose, that tangent is
+into the opposite face, so the deflection is rejected every frame and nothing
+else is ever tried. Right tool for a boulder; nothing to offer a box.
+
+The fix, and the part that matters most about it: **time-without-progress only
+opens the question.** `_entombed_at` decides it, by sweeping eight compass
+directions through the physics server from `STEP_HEIGHT` up. If any one of them
+is clear the body can still walk out and **nothing happens** — which is what
+keeps a player leaning on a cliff from ever being moved. Recovery then rewinds
+to a breadcrumb: ground this body stood on and walked away from, so a recovery
+can never grant access to anywhere the player had not already legitimately
+reached. Lifting is a bounded fallback for when there is no usable breadcrumb.
+
+**Proof it discriminates**, per the standing rule that a test which cannot fail
+on the unfixed code is not evidence. `tests/smoke_unstick.gd` walks the body on
+open ground, then seals it in a six-sided box (lid included, so only the
+breadcrumb path can resolve it) with the stick still held:
+
+- `unstick.enabled: true` → `recovered 9.82m clear after 1 recovery`, passes.
+- `unstick.enabled: false` (the pre-fix path exactly) → **FAIL: sealed in at
+  0.00, 0.00, -14.74 and still there 6.0s later (moved 0.15m, 0 recoveries)**.
+
+The same file's second case walks the body into a cliff and holds for six
+seconds, and asserts the controller's own recovery counter is **zero**. A
+failsafe that fired during ordinary play would be worse than the bug.
+
+Regressions run: `smoke_input` OK, `smoke_riding` OK, `smoke_traversal` (result
+in the next check-in). `smoke_step_up` fails — **and fails identically on a
+clean `main` checkout** (`git stash`, same two FAILs, `z=-16.74`, `y=0.00`): the
+trainer walks through both the step and the 2 m barrier. Pre-existing, not from
+this branch, and not in `ci.yml`. Flagged, not touched.
+
+### Item 3 — X07's three identical camera variants. FIXED.
+
+`tools/gate_f/segments/X07.json`. **Sanctioned exception to the `tools/gate_f/**`
+freeze**, recorded here and in every changed step's own `observation`, exactly
+the way the handover's §5 changes are recorded.
+
+All eleven region blocks took their six audit frames from one `face` step, which
+is why the visual pass measured `arrival`/`gameplay`/`landmark` at 0.1–2.3%
+pixel difference. Each block now sweeps five bearings and two pitches:
+
+- `gameplay` + `arrival` keep the entry bearing (they are a hud:on/hud:off pair
+  and are *supposed* to share it);
+- `landmark`, `ecology`, `vegetation` get the entry bearing turned 72 / 144 /
+  216°, computed from each block's own existing `at`;
+- `terrain` returns to the entry bearing and pitches to the camera's own floor
+  via the right stick, then restores to `pitch_start_deg` by driving to the
+  opposite clamp and back — both ends clamp, so it lands on the same angle every
+  time rather than on whatever the frame budget bought.
+
+**No position is moved** — E.7 fixes them before play and forbids moving them to
+improve a composition — and **no coordinate is invented**. Where
+`data/config/map_landmarks.json` carries a landmark more than 20 m from the
+block's position, the `landmark` slot aims at that instead of at the 72° arm:
+`grandpa_house` for `grandpas_village`, `road_gate` for `the_rise`, and the
+`silhouette: true` stronghold for `stronghold_approach` — which is precisely the
+frame the visual pass found had no stronghold in it.
+
+Frame count is unchanged at 80. `test_gate_f_instrumentation.gd`: 17 tests,
+23,424 assertions, 0 failed.
+
+### Item 2 — "night and weather do not render". NOT CONFIRMED, and the labelled defect is in X07.
+
+This is the one place I am contradicting the dispatch, so here is the
+measurement rather than an opinion.
+
+`X07/telemetry/route.csv`, all 135 rows of the 2026-08-25 run:
+
+- `clock_hour` runs **8.16 → 11.14**. It never leaves mid-morning.
+- `weather` reads **`clear` on every single row**.
+
+Every frame in that segment — the six labelled `-night` and the four labelled
+`-weather` included — was captured at mid-morning in clear weather. The
+luminance table (day 96.6 vs "night" 99.2) is therefore not a measurement of
+night rendering; it is two day frames, correctly reporting that they are both
+day frames.
+
+The cause is in `X07.json`, not in the renderer. Every "DIAG PIN" step in it is
+an `action: "note"` whose text *claims* a pin. `X07-002` states outright that
+"SEGMENT_SCHEMA.md's vocabulary has no clock-pin action" — **that is now stale.**
+`pin_clock` is implemented (`operator_harness.gd:501` dispatch, `:1572`
+`_step_pin_clock`), documented in `SEGMENT_SCHEMA.md` under Setup and time, and
+covered by its own test
+(`test_pin_clock_freezes_both_clocks_and_is_diag_only`). X07 simply never
+called it.
+
+**Fixed on this branch:** all 19 pin notes are now real `pin_clock` steps,
+`diag: true`, day at `hour 11.0` / `clear`, night at `hour 23.0`, weather
+variants at `rain` and `fog`, `freeze: true`, pinned after the settle per
+`_step_pin_clock`'s own ordering note. `hour` rather than `preset` deliberately:
+it drives `world_look.gd::_apply_blended`, the same continuous path `_process`
+uses, and it makes the `clock_hour` recorded on every manifest row honest — a
+preset snap would have left the telemetry still reading morning and a future
+reader repeating this exact mistake. `X07-002` is rewritten to say what
+superseded it, and kept rather than deleted because the run it describes is on
+the record.
+
+**What is still open:** whether night actually renders dark is now an *untested*
+question rather than a settled one — the evidence that was supposed to answer it
+never pinned anything. I am measuring it independently before making any claim
+either way, with `tools/_capture_day_night_transition.gd`, which drives the same
+`_apply_blended` path across a twelve-hour sweep from one fixed viewpoint. That
+result goes in the next check-in. **If it comes back flat, item 2 is a real game
+defect and I will fix it; if it comes back dark, the only defect was the label,
+and the re-run's night frames will be night.** Either way the X07 fix above is
+required first, and it is in.
+
+### Not started yet
+
+Item 4 (visual defects: Team Tether teal, the black-cutout trainer, the
+placeholder box, the `hall` black sphere, `the_rise`'s camera in the hillside,
+and the grass lane's duplicated/airborne trainer, floating oversized band-3
+house and leaked oxblood boulder) and item 5 (the S02 drop-confirmation
+trigger). Next check-in.
+
+### Constraints observed
+
+No `main` push, no PR. Nothing touched under `shaders/`,
+`data/config/grass_field.json`, `data/config/terrain_playground.json`,
+`data/config/vegetation.json` or `data/scatter/**` — the grass lane's files. No
+device claim: everything above is a file, a config value or a container
+measurement.
