@@ -64,24 +64,56 @@ func _run() -> void:
 	for i in 30:
 		await physics_frame
 
-	var target: Node3D = null
+	# Wait for the cluster to exist, then take EVERY member rather than just
+	# whichever one `wild_creature()` offers first. The first revision of this
+	# probe walked to `Wild_bramblebun_0_1` at 11.9 m and arrived in 102 frames,
+	# which reproduced nothing: CI fails on `Wild_bramblebun_0_3` at 23.7 m,
+	# which is catch THREE, a different member reached after two others have
+	# been removed. Testing the easy target and calling it a repro is how the
+	# first four hypotheses in this session's night investigation died.
 	for i in 600:
 		await physics_frame
 		var candidate := director.call("wild_creature") as Node3D
 		if candidate != null and candidate.visible and bool(candidate.call("is_alive")):
-			target = candidate
 			break
-	if target == null:
-		print("no wild creature appeared")
+
+	var members: Array[Node3D] = []
+	for node in _walk_tree(world):
+		if node is Node3D and str(node.name).begins_with("Wild_bramblebun_"):
+			members.append(node as Node3D)
+	if members.is_empty():
+		print("no wild bramblebun appeared")
 		quit(1)
 		return
-
-	print("start  player %.1f, %.2f, %.1f" % [start.x, start.y, start.z])
-	print("target %s at %.1f, %.2f, %.1f  (%.1fm away)" % [
-		str(target.get_path()), target.global_position.x, target.global_position.y,
-		target.global_position.z, start.distance_to(target.global_position)])
+	members.sort_custom(func(a: Node3D, b: Node3D) -> bool: return str(a.name) < str(b.name))
+	print("cluster members, and where each sits relative to the test's start:")
+	for m: Node3D in members:
+		print("   %-24s %8.1f, %6.2f, %8.1f   %6.1fm away" % [
+			str(m.name), m.global_position.x, m.global_position.y, m.global_position.z,
+			start.distance_to(m.global_position)])
 	print("")
-	print("%6s %9s %9s %8s %8s  %s" % ["frame", "dist", "moved/s", "on_wall", "on_floor", "position"])
+
+	for m: Node3D in members:
+		await _walk_to(player, rig, m, start, world)
+	quit(0)
+
+
+func _walk_tree(from: Node) -> Array[Node]:
+	var out: Array[Node] = [from]
+	for child in from.get_children():
+		out.append_array(_walk_tree(child))
+	return out
+
+
+## One approach, from the test's own start point every time, so the members are
+## compared against each other rather than against wherever the last one ended.
+func _walk_to(player: CharacterBody3D, rig: Node3D, target: Node3D, start: Vector3, world: Node) -> void:
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+	if not is_instance_valid(target):
+		return
 
 	var last := player.global_position
 	var stalled_seconds := 0
@@ -110,7 +142,7 @@ func _run() -> void:
 
 	var final := target.global_position - player.global_position if is_instance_valid(target) else Vector3.ZERO
 	final.y = 0.0
+	print("%-24s final %.2fm; %d of %d sampled seconds moved under 0.5m%s" % [
+		str(target.name), final.length(), stalled_seconds, WALK_FRAMES / SAMPLE_EVERY,
+		"   <-- STOPPED SHORT" if final.length() > 3.6 else ""])
 	print("")
-	print("final distance %.2fm; %d of %d sampled seconds moved under 0.5m" % [
-		final.length(), stalled_seconds, WALK_FRAMES / SAMPLE_EVERY])
-	quit(0)
