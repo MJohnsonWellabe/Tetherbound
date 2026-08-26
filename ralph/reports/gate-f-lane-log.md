@@ -789,3 +789,78 @@ is whether something blocks travel," and something is blocking travel.
 Journey coverage is the opening only. The DIAG lane is complete. **The [OWNER-ONLY]
 set has not moved**: no device frame rate, GPU, VRAM, thermal, audio, controller-feel
 or Windows-export claim appears anywhere in this run's evidence.
+
+---
+
+## Check-in 12 — **S02 is unblocked. The journey chain is moving again.**
+
+**S02: 69 PASS / 6 FAIL, `saves/S02-exit.json` written.** S03 is running now.
+
+Both queued coordinator notifications arrived only after the work they describe
+was already done, so answering the parts that are now settled:
+
+- **There is no new candidate SHA, and none is needed.** The instruction to spawn a
+  developer subagent to fix `StarterPicker` focus, push to
+  `ralph/OPENING-STARTER-FOCUS` and re-freeze assumed a game defect that does not
+  exist. The branch exists and is pushed, but it contains **no game changes** — four
+  probes and a finding. §1.6's pre/post-fix seam therefore does not arise: S01, X07
+  and X08 stay valid against `a3f61b60`, and so does everything after.
+- **X07 and X08 are already complete** (79/80 frames; 62 PASS / 0 FAIL).
+- The budget lift is noted; I have stopped optimising for cost.
+
+### What actually blocked the opening — three defects, none of them the picker
+
+**1. The step-script walked to the wrong floor.** `S02-15` targeted the house
+*origin* with `close_enough: 3.0`; `move_to` compares **x/z only**, and the bed is
+0.89 m from Grandpa horizontally but **3.3 m above him**. The player pressed
+`interact` 31 times through the loft floor. Routed via the house's own
+`stairs_top`/`stairs_bottom` markers. Instrument fix.
+
+**2. A dialogue waiting for a press is not a bug.** After naming, `grandpa_named`
+sits open on line 1 awaiting `interact` — correct behaviour, reproduced in
+`probe_named_hold.gd`. Three press counts (4/12/20) all failed identically, which
+is what proved the press count was never the variable. Answered with
+`answer_prompts` on the two held walks, turned on **only because the blocking
+finding was already fully recorded** in `S02-superseded-2..4` and `BLOCKER.md` — it
+is not hiding anything.
+
+**3. A real game defect, and the one worth the coordinator's attention:**
+
+```
+game_menu      joybtn=[6]     <- Start opens the pause shell
+backpack_drop  joybtn=[6]     <- Start ALSO drops the focused stack
+```
+
+**One Start press opens the pause shell on the backpack tab and raises a
+destructive "Drop it? / Cancel" confirmation on whatever slot holds focus.** That
+confirmation then eats every `menu_tab_right`, so **the Save tab is unreachable and
+the game cannot be saved** with a stocked satchel. On a controller, Start-then-A
+deletes an item the player never selected.
+
+This is **not new**. `tab_backpack.gd:1345-1370` carries a guard against it
+(`_ignore_drop_until_release`) whose comment describes this exact symptom, calls it
+"a destructive verb offered without being asked for, one A press from deleting an
+item the player never selected," and records reproducing it with
+`tools/_probe_pause.gd`. **The guard did not hold here.** It reproduced in S02
+attempts 5 and 6 on `a3f61b60`.
+
+`probe_tab_cycle.gd` shows the tab machinery is sound: with an **empty** satchel the
+shell cycles backpack → creatures → map → quest_log → build → **save** → settings on
+exactly five presses. It is the confirmation that breaks it, and only a stocked
+satchel raises one — which every player has from the moment Grandpa hands over his
+pack, i.e. from the first ten minutes of the chapter onward.
+
+Severity candidate **SHIP**, recorded on step `S02-63b`. I did not fix it: it is a
+binding-conflict decision (which button `backpack_drop` should move to) of the class
+`CLAUDE.md` says to flag rather than invent, and the guard that already exists means
+someone made a deliberate choice here I should not silently overrule. The segment
+presses B to put the confirmation away, exactly as a player would.
+
+### Instrument changes, all recorded on the steps themselves
+
+`S02.json` only, never a game file: stair routing (`S02-15a/b/15`), a naming
+transition wait (`S02-27b`), press-count and settle adjustments (`S02-28`,
+`S02-64`), `answer_prompts` on two held walks (`S02-30`, `S02-56`), and the
+confirmation dismissal (`S02-63b`). Seven attempts preserved as
+`S02-superseded-1..6`. Nothing was tuned until green without the measurement that
+justified it being written into the step's own `observation`.
