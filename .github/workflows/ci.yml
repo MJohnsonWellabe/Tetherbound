@@ -1688,6 +1688,14 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_playground.gd
           godot --headless --path . --script tests/smoke_input.gd
+          # Runs before the six-minute traversal walk on purpose: it builds its
+          # own geometry, finishes in seconds, and guards the failsafe that
+          # keeps a player from being permanently immobilised in the open world
+          # (Gate F S05: 1,004 route rows at one coordinate over eight minutes,
+          # stick held throughout). Cheap enough that it costs this shard
+          # nothing and specific enough that it cannot pass by accident -- with
+          # movement.json's `unstick.enabled` false it fails.
+          godot --headless --path . --script tests/smoke_unstick.gd
           godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd || godot --headless --path . --script tests/smoke_traversal.gd
           godot --headless --path . --script tests/smoke_catching.gd || godot --headless --path . --script tests/smoke_catching.gd
 
