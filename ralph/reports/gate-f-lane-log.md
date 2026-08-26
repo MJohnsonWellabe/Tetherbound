@@ -739,3 +739,109 @@ Items 1 and 3 are fixed and pushed and are not affected by any of this. **The
 pushed in `a2b80641` and still gates the overnight run.** Item 4's four
 grass-lane-adjacent defects remain deferred per the ordering directive; item 5 is
 not started.
+
+---
+
+## DEFECT-FIX lane — check-in 4 — 2026-08-26 — night IS red for a player; my grade change is reverted; cause still open
+
+### The matrix result
+
+`tools/_probe_night_crimson.gd`, one boot, one fixed viewpoint, three hours
+pinned **and frozen** the way `pin_clock` does it, then the same hour again with
+`_process` left live:
+
+| frame | R | G | B | R/B |
+|---|---|---|---|---|
+| frozen 20.5 | 55.5 | 90.6 | 102.5 | **0.54** — cool |
+| frozen 22.0 | 129.0 | 44.9 | 44.5 | **2.90** — red |
+| frozen 23.5 | 118.5 | 34.7 | 37.6 | **3.15** — red |
+| live 22.0 (drifted to 22.06) | 128.6 | 44.5 | 44.3 | **2.91** — red |
+
+Two things follow, and they close two of my three hypotheses:
+
+1. **Freezing the clock changes nothing** — 2.90 frozen against 2.91 live. The
+   live-clock theory from check-in 3 is dead. So is the idea that this is a
+   capture-rig artefact: `pin_clock` does not protect the overnight X07 run
+   from it.
+2. **A pinned, frozen frame at an ordinary hour renders red.** This is a real
+   time-of-day defect and **a player reaches it every night.** The transition
+   sits between hour 20.5 and 22.0.
+
+### I have reverted my own change
+
+`data/config/art.json`, `scripts/world/world_look.gd` and the test I added are
+now **byte-identical to their pre-branch state** (`git diff a78c062f` over those
+three paths is empty).
+
+Two reasons, and the second is the one that decided it:
+
+- It does not fix the defect it was pushed for. Established in check-in 3.
+- There is a measurement suggesting it made that defect **worse**. Pre-change,
+  a pinned frozen frame at hour 22 read R/B **0.44** — cool. Post-change, the
+  same pinned frozen frame at the same hour reads **2.90**. The only thing
+  between them is that `night`'s `adjustment_saturation` stopped snapping to
+  0.72 and started lerping (0.813 at that hour). The live sweep shows no such
+  difference (3.42 before, 3.43 after), so the two measurements disagree and I
+  cannot currently reconcile them.
+
+An unfixed known defect is better than an unproven change carrying a regression
+signal, on a branch that gates an overnight run and a frozen candidate. The
+boolean snap it addressed is real and still there; it is written up here so
+whoever picks this up does not have to rediscover it.
+
+### What is now established about the crimson, and what is not
+
+**Established:**
+- Night lighting itself works: mean luminance ramps 115.0 at hour 08 to 60.8 at
+  23.9, smooth and monotonic through dusk, 1.89x.
+- From somewhere between hour 20.5 and 22.0, the whole frame — sky, ground,
+  trees — renders red. R/B goes from ~0.54 to ~2.9-3.6 and stays there through
+  midnight to at least hour 02.
+- It reproduces with the clock pinned and frozen, so it is not a capture
+  artefact and `pin_clock` does not shield the X07 re-run from it.
+- It is almost certainly the "2026-08-23 crimson artefact" `X07.json`'s own note
+  records. That note blames an unpinned clock; **that attribution is wrong.**
+
+**Refuted, so nobody re-runs them:**
+- *The colour grade causes it.* No — an A/B at pinned hour 22 changing only that
+  flag gave grade-on 0.44 and grade-off 2.82, i.e. the opposite direction.
+- *The `adjustment_enabled` boolean snap at hour 21.0 causes it.* No — declaring
+  the flag so it never toggles left the sweep unchanged (3.42 to 3.43).
+- *A live clock advancing ~200x faster than a real machine causes it.* No —
+  frozen 2.90 against live 2.91.
+
+**Not established:** the cause. Nothing in the presets is red — `night` is
+`#1b2d5c` sky, `#3d5285` horizon, `#2a3b6e` ambient, `#b7c6ea` sun, and `golden`
+is warm but nowhere near this, so no lerp between them can produce R/B 3.6. The
+next place I would look is what `_apply_environment`/`_apply_sun` actually write
+into the live `Sky`/`Environment` at high `t` — the procedural sky's own sun
+glow and horizon terms at `sun_angle_max_deg` 14 / `sun_curve` 0.35, and the
+`exposure` 1.2 / `ambient_energy` 1.5 pair going through ACES — rather than at
+the config, which has now been ruled out twice.
+
+I have not chased that further tonight: each round of this costs a ~16-minute
+world boot, I have spent four of them, and three hypotheses have died. Handing
+over a precise, honestly-bounded defect with the dead ends marked is worth more
+than a fifth guess.
+
+### Severity, stated plainly
+
+This is a **shipping defect on the renderer the owner plays** (D01), not a
+harness problem. Every night in ordinary play, the world turns blood red from
+roughly hour 21 to dawn. It is not in the original work list because the
+evidence that was supposed to surface it — X07's six "night" frames — was
+captured at mid-morning with the clock never pinned. Fixing that labelling
+(pushed, `a2b80641`) is what made this findable at all.
+
+### State
+
+| item | status |
+|---|---|
+| 1 — permanent immobility | fixed, pushed (`a2b80641`) |
+| 2 — night/weather | X07 mislabelling **fixed and pushed**; the real crimson defect is **open, bounded and documented**; my attempted fix **reverted** |
+| 3 — X07 three identical cameras | fixed, pushed (`a2b80641`) — still the one gating the overnight run |
+| 4 — visual defects | four deferred pending the grass lanes (check-in 2) |
+| 5 — S02 drop-confirmation trigger | not started |
+
+The branch now carries: the immobility failsafe and its test, the X07 fix, two
+measurement tools, and this log. No unproven game change.

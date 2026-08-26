@@ -492,33 +492,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# enough moon reads as a dim DAY, not a distinct night mood, exactly the
 	# failure a blind critic named after the first legibility fix landed.
 	# `adjustment_saturation` is Godot's equivalent of that missing filter.
-	#
-	# ALWAYS ON, never read from config. GATE-F-DEFECT-FIX.
-	#
-	# THIS IS NOT THE FIX FOR THE CRIMSON NIGHT. Stated first because the commit
-	# that introduced it claimed otherwise and was wrong: a twelve-hour sweep
-	# re-run with this in place still reads R/B 3.43 at hour 22.00 against 0.53
-	# at 20.50, unchanged. Whatever turns the world red at night is still open.
-	#
-	# What this does fix: `_blend_dict` above has no meaningful blend for a
-	# boolean and SNAPS one at t >= 0.5. `night` was the only preset declaring
-	# this flag, so it flipped at exactly hour 21.0 on the golden -> night
-	# segment and flipped back on day -> golden, twice per 600-second day --
-	# switching the whole grade pass on and off mid-blend, and landing night's
-	# own saturation/contrast all at once instead of easing them in.
-	#
-	# The measurement that justifies keeping the pass ON rather than off:
-	# `tools/_probe_night_crimson.gd` shot one pinned, frozen frame at hour 22
-	# twice, changing nothing but this flag -- grade on, R/B 0.44, a correct
-	# cool night; grade off, R/B 2.82 on identical geometry and shadows. The
-	# grade is protective at that hour even though it is not the whole story.
-	#
-	# The three VALUES still come from config and still lerp, so a preset can
-	# grade as much or as little as it likes -- 1.0 is identity for all three,
-	# and art.json's base `environment` block declares them so every preset
-	# inherits a no-op rather than an absent key. What a preset may no longer
-	# do is turn the pass itself on or off mid-blend.
-	env.adjustment_enabled = true
+	env.adjustment_enabled = bool(cfg.get("adjustment_enabled", false))
 	env.adjustment_brightness = float(cfg.get("adjustment_brightness", 1.0))
 	env.adjustment_contrast = float(cfg.get("adjustment_contrast", 1.0))
 	env.adjustment_saturation = float(cfg.get("adjustment_saturation", 1.0))
