@@ -202,7 +202,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		for key: String in [
 			"item_size", "size_jitter", "sink", "slope_lie", "density_gain",
 			"drift_scale", "drift_contrast", "tint_jitter", "ground_blend",
-			"contact_darken", "sway", "wind_scale", "gust", "gust_speed",
+			"contact_darken", "normal_soften", "sway", "wind_scale", "gust", "gust_speed",
 			"gust_length", "field_radius", "fade_start",
 		]:
 			if tier.has(key):
@@ -266,11 +266,11 @@ func _bush_mesh() -> ArrayMesh:
 	# of the bush size each are individually too small to read as polygons, so
 	# what the eye gets is the mass they make.
 	var rings := [
-		{"count": 12, "y": 0.10, "r": 0.30, "tilt": 0.80, "size": 0.17},
-		{"count": 11, "y": 0.28, "r": 0.29, "tilt": 0.66, "size": 0.16},
-		{"count": 9, "y": 0.46, "r": 0.24, "tilt": 0.50, "size": 0.15},
-		{"count": 7, "y": 0.63, "r": 0.17, "tilt": 0.34, "size": 0.14},
-		{"count": 5, "y": 0.78, "r": 0.10, "tilt": 0.18, "size": 0.13},
+		{"count": 14, "y": 0.10, "r": 0.28, "tilt": 0.80, "size": 0.135},
+		{"count": 13, "y": 0.27, "r": 0.27, "tilt": 0.66, "size": 0.130},
+		{"count": 11, "y": 0.44, "r": 0.23, "tilt": 0.50, "size": 0.125},
+		{"count": 8, "y": 0.61, "r": 0.16, "tilt": 0.34, "size": 0.120},
+		{"count": 6, "y": 0.77, "r": 0.10, "tilt": 0.18, "size": 0.115},
 	]
 	for ring_index in rings.size():
 		var ring: Dictionary = rings[ring_index]

@@ -63,6 +63,17 @@ uniform float density_gain : hint_range(0.0, 1.0) = 0.35;
 uniform float drift_scale = 0.06;
 uniform float drift_contrast : hint_range(0.0, 1.0) = 0.85;
 
+// NORMAL SOFTENING. How far each item's own normals are bent toward world up.
+// Without it every leaf of one bush takes a wildly different lambert term and a
+// blind pass read the result exactly: "identical quads sit side by side with one
+// near-black and one bright green -- they do not share a lighting response...
+// a heap of large untextured flat quads". A bush is a MASS and its leaves have
+// to light like one. The grass tier does the same thing to its blades for the
+// same reason, and on a renderer with no subsurface term available it is the
+// only thing standing between opaque flat quads and something that reads as
+// foliage.
+uniform float normal_soften : hint_range(0.0, 1.0) = 0.6;
+
 uniform vec3 tint_base : source_color = vec3(0.20, 0.26, 0.11);
 uniform vec3 tint_tip : source_color = vec3(0.42, 0.50, 0.20);
 uniform float tint_jitter : hint_range(0.0, 1.0) = 0.18;
@@ -200,6 +211,8 @@ void vertex() {
 		// mixing toward it washes everything out, which cost a render cycle on
 		// the grass tier before anyone read `terrain_playground.json`'s values.
 		v_colour = own * mix(vec3(1.0), ground_col, ground_blend * (1.0 - v_t));
+
+		NORMAL = normalize(mix(NORMAL, vec3(0.0, 1.0, 0.0), normal_soften));
 	}
 }
 
