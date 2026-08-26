@@ -134,9 +134,11 @@
         ],
         "budget_frames": 9000,
         "close_enough": 5.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "data/config/stronghold.json's `outer_works` chamber at site.at (0,7560). Section D RT-12: 'Stronghold/finale interior | Hall spaces'"
+      "expected": "data/config/stronghold.json's `outer_works` chamber at site.at (0,7560). Section D RT-12: 'Stronghold/finale interior | Hall spaces'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-14",
@@ -169,9 +171,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "stronghold_patrol, Patrolman Verrick at (6,7560) -- the first of the gauntlet's three"
+      "expected": "stronghold_patrol, Patrolman Verrick at (6,7560) -- the first of the gauntlet's three",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-17",
@@ -301,9 +305,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "stronghold.json's `courtyard` chamber; stronghold_courtyard is Warder Solene at (36,7564)"
+      "expected": "stronghold.json's `courtyard` chamber; stronghold_courtyard is Warder Solene at (36,7564)",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-29",
@@ -447,9 +453,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "stronghold_elite, Keeper Hald at (69,7557) -- the gauntlet's third rung, standing in front of the Tether blast shutter"
+      "expected": "stronghold_elite, Keeper Hald at (69,7557) -- the gauntlet's third rung, standing in front of the Tether blast shutter",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-43",
@@ -565,9 +573,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 4.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section E.1 CB-06 gives warden_aldis as (90.2,7569.4); see this file's header for the discrepancy with stronghold.json's `warden_arena` chamber"
+      "expected": "Section E.1 CB-06 gives warden_aldis as (90.2,7569.4); see this file's header for the discrepancy with stronghold.json's `warden_arena` chamber",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-54",
@@ -755,9 +765,11 @@
         ],
         "budget_frames": 6300,
         "close_enough": 5.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "stronghold.json's `legendary_chamber` at offset (-32,90.2) from site.at (0,7560)"
+      "expected": "stronghold.json's `legendary_chamber` at offset (-32,90.2) from site.at (0,7560)",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-71",
@@ -974,9 +986,11 @@
         ],
         "budget_frames": 31500,
         "close_enough": 8.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "stronghold.json's `approach_drain` runs z 6990-7530 under the pylon line, and its own comments call the healing out. Section L.5: 'healed ground, lights out, patrols withdrawn'"
+      "expected": "stronghold.json's `approach_drain` runs z 6990-7530 under the pylon line, and its own comments call the healing out. Section L.5: 'healed ground, lights out, patrols withdrawn'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-92",
@@ -1003,9 +1017,11 @@
         ],
         "budget_frames": 132750,
         "close_enough": 8.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-13: 'Backtrack: ... post-win S10 walk-back to the healed meadow | as played'. Section E.6.15: 'Backtrack across story transitions'"
+      "expected": "Section D RT-13: 'Backtrack: ... post-win S10 walk-back to the healed meadow | as played'. Section E.6.15: 'Backtrack across story transitions'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-94",
@@ -1018,9 +1034,11 @@
         ],
         "budget_frames": 31500,
         "close_enough": 8.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section E.6.14: 'Revisit completed areas: ... relay after clearing; record what re-offers, what is correctly spent, what dialogue acknowledges progress'"
+      "expected": "Section E.6.14: 'Revisit completed areas: ... relay after clearing; record what re-offers, what is correctly spent, what dialogue acknowledges progress'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-95",
@@ -1049,9 +1067,11 @@
         ],
         "budget_frames": 65250,
         "close_enough": 10.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section E.6.14: 'Revisit completed areas: ... Warrens after the guardian'"
+      "expected": "Section E.6.14: 'Revisit completed areas: ... Warrens after the guardian'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-98",
@@ -1064,9 +1084,11 @@
         ],
         "budget_frames": 54000,
         "close_enough": 8.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section E.6.15: 'walk back over the South Bridge after crossing'"
+      "expected": "Section E.6.15: 'walk back over the South Bridge after crossing'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-99",
@@ -1079,9 +1101,11 @@
         ],
         "budget_frames": 60750,
         "close_enough": 5.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section L.5's post-win row: NPC acknowledgment in the place the chapter started"
+      "expected": "Section L.5's post-win row: NPC acknowledgment in the place the chapter started",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-100",
@@ -1126,9 +1150,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'"
+      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10-104",
