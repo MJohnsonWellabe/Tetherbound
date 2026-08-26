@@ -218,9 +218,11 @@
         ],
         "budget_frames": 11700,
         "close_enough": 3.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-04: 'Tournament win -> next objective start (South Bridge road) | (20,12) -> leaving village southbound'. This is where the chapter stops being a village"
+      "expected": "Section D RT-04: 'Tournament win -> next objective start (South Bridge road) | (20,12) -> leaving village southbound'. This is where the chapter stops being a village",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-20",
@@ -280,9 +282,11 @@
         ],
         "budget_frames": 9000,
         "close_enough": 3.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-03: village (10,-10) -> pond (-342,507). The route table's anchors define where each measurement starts and stops; the operator navigates by in-game means"
+      "expected": "Section D RT-03: village (10,-10) -> pond (-342,507). The route table's anchors define where each measurement starts and stops; the operator navigates by in-game means",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-24",
@@ -317,9 +321,11 @@
         ],
         "budget_frames": 9900,
         "close_enough": 4.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-03 ends at the pond (-342,507)"
+      "expected": "Section D RT-03 ends at the pond (-342,507)",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-27",
@@ -394,9 +400,11 @@
         ],
         "budget_frames": 29250,
         "close_enough": 3.5,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905)'"
+      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905)'",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-34",
@@ -461,9 +469,11 @@
         ],
         "budget_frames": 7200,
         "close_enough": 4.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "data/config/map_landmarks.json's `band1_trail_camp`: 'the pond-to-bridge corridor's rest stop ... roughly the corridor's midpoint'"
+      "expected": "data/config/map_landmarks.json's `band1_trail_camp`: 'the pond-to-bridge corridor's rest stop ... roughly the corridor's midpoint'",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-40",
@@ -491,9 +501,11 @@
         ],
         "budget_frames": 21150,
         "close_enough": 6.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-05: pond (-342,507) -> South Bridge (0,1330)"
+      "expected": "Section D RT-05: pond (-342,507) -> South Bridge (0,1330)",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-43",
@@ -520,9 +532,11 @@
         ],
         "budget_frames": 3150,
         "close_enough": 3.5,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section E.1 CB-04: 'S05: south_bridge_grunt (14,1314)'"
+      "expected": "Section E.1 CB-04: 'S05: south_bridge_grunt (14,1314)'",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-45",
@@ -664,9 +678,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-05 ends at the bridge (0,1330); section B: S05's span ends at 'cross'"
+      "expected": "Section D RT-05 ends at the bridge (0,1330); section B: S05's span ends at 'cross'",
+      "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S05-57",
