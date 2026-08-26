@@ -1,0 +1,24 @@
+{
+  "capture_available": false,
+  "capture_requested": false,
+  "display_server": "headless",
+  "frame_grab_ms": {},
+  "frames_absent": 22,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "record_baseline_hz": 0.1,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-selfcheck",
+  "segment": "selfcheck_walk",
+  "segment_script": "tools/gate_f/segments/selfcheck_walk.json",
+  "sha": "e623433990485061fe4d966e6dff761382c262df",
+  "started_wall": "2026-08-25 20:06:21",
+  "trace_hz": 2.0,
+  "trace_rows": 374,
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}

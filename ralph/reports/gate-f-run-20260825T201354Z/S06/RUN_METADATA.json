@@ -1,0 +1,24 @@
+{
+  "capture_available": false,
+  "capture_requested": false,
+  "display_server": "headless",
+  "frame_grab_ms": {},
+  "frames_absent": 528,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "record_baseline_hz": 0.1,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-run-20260825T201354Z",
+  "segment": "S06",
+  "segment_script": "tools/gate_f/segments/S06.json",
+  "sha": "05bbcfd4100d2931e3c03c4e3b7337b4a847c582",
+  "started_wall": "2026-08-26 01:44:44",
+  "trace_hz": 2.0,
+  "trace_rows": 4119,
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}

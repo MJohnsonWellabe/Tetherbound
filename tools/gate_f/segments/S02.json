@@ -150,18 +150,47 @@
       "expected": "the player has control and the fade has finished"
     },
     {
+      "id": "S02-15a",
+      "title": "cross the loft to the head of the stairs",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -21.5,
+          -18.1
+        ],
+        "budget_frames": 1800,
+        "close_enough": 1.5
+      },
+      "expected": "`grandpa_house.gd:146` publishes `stairs_top` at world (-21.5, 3.20, -18.1) for exactly this: the player wakes ON THE LOFT (bed marker at FLOOR_H+0.55) and has to cross it to the stair head before any descent is possible."
+    },
+    {
+      "id": "S02-15b",
+      "title": "down the stairs to the ground floor",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -18.0,
+          -18.1
+        ],
+        "budget_frames": 1800,
+        "close_enough": 1.5
+      },
+      "expected": "`stairs_bottom`, world (-18.0, 0.12, -18.1). This is the step that actually changes floor: y goes from ~4.9 to ~0.1. docs/OPENING_SEQUENCE.md beat 2's 'Walk DOWN through the house to Grandpa' is this descent."
+    },
+    {
       "id": "S02-15",
       "title": "walk down to Grandpa",
       "action": "move_to",
       "args": {
         "at": [
-          -22.0,
-          -16.0
+          -24.4,
+          -14.8
         ],
-        "budget_frames": 3000,
-        "close_enough": 3.0
+        "budget_frames": 2400,
+        "close_enough": 1.5
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)"
+      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)",
+      "observation": "Target changed from the house ORIGIN [-22,-16] to Grandpa's own marker (grandpa_house.gd:137, world -24.4/-14.8), and routed via the two stair markers above. Reason, measured: `move_to` compares x/z only, and the bed is 0.89 m from Grandpa IN X/Z while 3.3 m above him in y -- so the old target was satisfied on the loft and the segment pressed `interact` 31 times through the floor. See tools/opening_fix/FINDING.md on ralph/OPENING-STARTER-FOCUS."
     },
     {
       "id": "S02-16",
@@ -291,16 +320,26 @@
       "expected": "beat 5: 'It is yours; it has a name you typed'"
     },
     {
+      "id": "S02-27b",
+      "title": "let the naming prompt close and `grandpa_named` open",
+      "action": "wait",
+      "args": {
+        "seconds": 5
+      },
+      "expected": "`grandpa_named` is 3 lines (data/dialogue/opening.json) and opens the moment the name is confirmed, not when the player next talks to him. Measured on attempt 2: the 12 taps of S02-28 landed inside the naming prompt's own close and the conversation then sat open for its full 120 s held budget, stalling the walk to the bramblebun. This wait is a transition allowance, deliberately NOT `answer_prompts` on the walk -- that flag is off by default precisely so a harness cannot hide something blocking travel."
+    },
+    {
       "id": "S02-28",
       "title": "hear `grandpa_named` out",
       "action": "press",
       "args": {
         "control": "interact",
         "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "times": 4,
+        "settle_frames": 30
       },
-      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun"
+      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun",
+      "observation": "times reduced 12 -> 20 -> 4. `grandpa_named` is THREE lines (data/dialogue/opening.json), and Grandpa stays re-talkable, so every tap past the third can re-open the conversation the previous tap just closed. 4 taps is three lines plus one. Recorded rather than silently retuned: attempts 2 and 3 both ended with a DialoguePanel owning input for exactly 7201 frames."
     },
     {
       "id": "S02-29",
@@ -322,9 +361,11 @@
         ],
         "budget_frames": 4050,
         "close_enough": 4.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered"
+      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
     },
     {
       "id": "S02-31",
@@ -382,10 +423,11 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 6,
         "settle_frames": 30
       },
-      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)"
+      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)",
+      "observation": "times 14 -> 6. MEASURED, not guessed: S02's own telemetry has the bramblebun at opponent_hp 124.2 full, 43.1 after these 14 quick attacks (~5.8 damage each), and 0.0 after the charged attack that follows -- combat_end at t=283.6, then the aim and throw steps pressed into an empty world and party_size never reached 2. The chapter's whole objective chain then stalls at 'Catch your first wild creature', which is what pinned every downstream objective assert in S02-S05. The catch is supposed to WEAKEN the target, not kill it. 6 quick (~35 damage) leaves ~89, and the charged attack that follows takes it to roughly 30-46 of 124 -- weakened, alive, catchable -- while still exercising the charged-attack verb the next step covers."
     },
     {
       "id": "S02-37",
@@ -602,9 +644,11 @@
         ],
         "budget_frames": 4050,
         "close_enough": 2.5,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval"
+      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
     },
     {
       "id": "S02-57",
@@ -677,6 +721,18 @@
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
     },
     {
+      "id": "S02-63b",
+      "title": "put away the drop confirmation the open press raised",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "B dismisses the 'Drop it? / Cancel' confirmation and leaves the shell open, which is what a player does. DEFECT RECORDED, not worked around silently: `game_menu` and `backpack_drop` are the SAME physical button -- gamepad Start, button 6 in project.godot -- so the press that opens the pause shell also fires the destructive drop verb on the backpack tab the shell opens on. tab_backpack.gd:1345-1370 already carries a guard for exactly this (`_ignore_drop_until_release`) and its comment describes this exact symptom; the guard did not hold here. Observed in S02 attempts 5 and 6: the shell opened on `menu_backpack` with focus on 'Drop it', 5x menu_tab_right never left the backpack tab, and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd on ralph/OPENING-STARTER-FOCUS) confirms the game cycles backpack->creatures->map->quest_log->build->SAVE->settings correctly when the satchel is EMPTY, so the tab machinery is sound and the confirmation is what eats the presses.",
+      "severity_candidate": "SHIP"
+    },
+    {
       "id": "S02-64",
       "title": "cycle right to the Save tab",
       "action": "press",
@@ -684,9 +740,10 @@
         "control": "menu_tab_right",
         "hold": "tap",
         "times": 5,
-        "settle_frames": 12
+        "settle_frames": 45
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "settle_frames raised 12 -> 45. Attempt 5 opened the shell on `menu_backpack` with focus on 'Drop it' and five RB presses left it on `menu_backpack`, so the Save tab was never reached and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd) shows the game cycles correctly -- backpack -> creatures -> map -> quest_log -> build -> SAVE -> settings on five presses -- in a world where the player carries nothing, at 20 frames between presses. The difference in S02 is a full satchel from Grandpa plus the map tab baking its map, which is the exact case this file's own `press` comment warns about: 'a tab switch rebuilds a whole tab body ... back-to-back presses with only the injection's own frames between them can arrive while the previous one is still being digested.'"
     },
     {
       "id": "S02-65",

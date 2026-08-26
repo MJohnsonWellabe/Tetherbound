@@ -1,0 +1,24 @@
+{
+  "capture_available": false,
+  "capture_requested": false,
+  "display_server": "headless",
+  "frame_grab_ms": {},
+  "frames_absent": 30,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "scene=world. 30 s x 2 windows per condition at [-25.4, 4.93, -15.6], order off/telemetry/recording/recording/telemetry/off (reversed to cancel drift). Means: off 5.488, telemetry 4.912, telemetry+recording@0.50Hz 4.990 ms/frame. Deltas vs off: telemetry -0.577 (below the noise floor -- read as 'under ~1.09 ms/frame', not as zero), recording -0.498 (below the noise floor -- read as 'under ~1.09 ms/frame', not as zero). Noise floor 1.090 ms/frame, taken as the widest a single condition disagreed with itself. Display server headless, viewport 1920x1920, frames written 0. Recorder cost measured DIRECTLY as well, because the frame-time difference cannot resolve a 1 ms/frame effect against this noise floor: no frames were recorded, so the grab cost was not measured. CPU frame time on this container only -- no device fps, no VRAM.",
+  "record_baseline_hz": 0.0,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-selfcheck",
+  "segment": "unknown",
+  "segment_script": "",
+  "sha": "e623433990485061fe4d966e6dff761382c262df",
+  "started_wall": "2026-08-25 20:12:12",
+  "trace_hz": 2.0,
+  "trace_rows": 234,
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}

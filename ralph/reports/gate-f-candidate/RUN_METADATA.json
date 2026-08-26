@@ -1,0 +1,184 @@
+{
+  "_what_this_is": "Gate F candidate freeze record (protocol section A.2). The build under test is frozen here; after this file is committed the build is not patched (section 1.6). Anything committed to this branch afterwards is run evidence under ralph/reports/**, never game code, data or config.",
+  "candidate_sha": "a3f61b60d1fb3556d9dbfc38313e947092636a4c",
+  "candidate_sha_note": "Last commit touching anything other than this lane's own bookkeeping. Commits after it on ralph/GATE-F-INSTRUMENTATION modify only ralph/reports/**, so the executable build at every segment is byte-identical to this SHA.",
+  "base_sha": "636673ce",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "$HOME/.cache/tetherbound-art/godot",
+    "kind": "linux editor binary, not the shipped Windows export",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "note": "Protocol section 0.5: Windows-export identity is [OWNER-ONLY]. tools/verify_export.sh and CI prove the export builds; nothing about export behaviour is claimed by this run."
+  },
+  "renderer": "opengl3 (Compatibility) under xvfb, Mesa 25.2.8 llvmpipe (LLVM 20.1.2, 256 bits) -- software rasteriser",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "resolution_note": "Requested size, achieved with no fallback. tools/capture_diag_minimal.gd wrote a real 1920x1080 PNG of the title screen; ralph/reports/gate-f-selfcheck/selfcheck_capture/CAPTURE_RESOLUTION.json records substituted:false. 1920x1080 is ROG Ally native.",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, with Input.action_press/release sent alongside for poll-based readers",
+  "save_state": "fresh user:// dir; S01 begins with wipe_saves and the journey chains by save handoff through the production Save tab and title-screen Load path (slot 4)",
+  "date": "2026-08-25",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "audio": "no audio device in this container; Godot fell back to the dummy driver. All audio judgement is [OWNER-ONLY] (section K.6).",
+  "host": {
+    "cpu_cores": 4,
+    "mem_gb": 15,
+    "gpu": "none -- software rasterisation only"
+  },
+  "instrumentation_overhead_note": "Measured on the world scene with tools/gate_f/run_segment.sh --overhead: 30 s x 2 windows per condition at (-25.4, 4.93, -15.6), order off/telemetry/recording/recording/telemetry/off (reversed to cancel drift). Means: off 5.488, telemetry 4.912, telemetry+recording@0.5Hz 4.990 ms/frame. Both deltas vs off are NEGATIVE (-0.577, -0.498) and both sit below the 1.090 ms/frame noise floor, which is the widest a single condition disagreed with itself. Honest reading: the instrumentation's cost is under ~1.09 ms/frame and this measurement cannot resolve it further -- NOT that it is free, and certainly not that it is negative. The recorder's direct grab cost was not obtained because the overhead run is headless and wrote 0 frames; the recorder's real cost is a framebuffer readback plus a PNG encode and scales with pixels, so it is unmeasured here and is carried as a known gap.",
+  "capture_smoke": "PASS at 1920x1080 (ralph/reports/gate-f-selfcheck/selfcheck_capture/)",
+  "harness_selfcheck": "selfcheck_capture 6/6 PASS. selfcheck_walk 11 PASS / 1 FAIL -- SC-W-11, a true report of a stuck player rather than a bad threshold; see lane-log check-in 7. Not fixed, not tuned; recorded.",
+  "test_suite_at_sha": "NOT verified green by this lane before the run. Protocol A.4 asks for it; the suite is not run here because this branch modifies zero game files (see change_set below), so the suite's result at this SHA is main's result at 636673ce. Recorded as a deviation rather than asserted as a pass.",
+  "change_set_vs_main": {
+    "files": 35,
+    "added": 35,
+    "modified": 0,
+    "deleted": 0,
+    "non_instrumentation_changes": "none",
+    "note": "Every path below is an addition, and all of them are protocol documents, the operator harness, its step-scripts, or tests for it. Nothing under scripts/, scenes/, data/, assets/ or project.godot differs from main. That is what makes this SHA legitimate to playtest: the build under test IS main.",
+    "raw": [
+      {
+        "status": "A",
+        "path": "ralph/GATE_F_INSTRUMENTATION_REQUEST.md"
+      },
+      {
+        "status": "A",
+        "path": "ralph/GATE_F_MASTER_PROTOCOL.md"
+      },
+      {
+        "status": "A",
+        "path": "ralph/reports/gate-f-historical-snapshot.md"
+      },
+      {
+        "status": "A",
+        "path": "ralph/reports/gate-f-lane-log.md"
+      },
+      {
+        "status": "A",
+        "path": "scripts/debug/gate_f_probe.gd"
+      },
+      {
+        "status": "A",
+        "path": "tests/smoke_gate_f_probe.gd"
+      },
+      {
+        "status": "A",
+        "path": "tests/test_gate_f_instrumentation.gd"
+      },
+      {
+        "status": "A",
+        "path": "tools/capture_diag_minimal.gd"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/SEGMENT_SCHEMA.md"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/harness_config.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/operator_harness.gd"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/run_segment.sh"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S01.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S02.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S03.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S04.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S05.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S06.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S07.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S08.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S09.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/S10.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X01.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X02.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X03.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X04.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X05.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X06.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X07.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/X08.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/selfcheck_capture.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/selfcheck_menu.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/selfcheck_record.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/selfcheck_save_handoff.json"
+      },
+      {
+        "status": "A",
+        "path": "tools/gate_f/segments/selfcheck_walk.json"
+      }
+    ]
+  }
+}

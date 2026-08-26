@@ -1,0 +1,30 @@
+{
+  "capture_available": true,
+  "capture_requested": true,
+  "display_server": "X11",
+  "frame_grab_ms": {
+    "amortised_ms_per_frame_at_hz": 0.115,
+    "hz": 0.1,
+    "max_ms": 71.94,
+    "mean_ms": 69.11,
+    "n": 4
+  },
+  "frames_absent": 0,
+  "frames_written": 4,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "record_baseline_hz": 0.1,
+  "rendering_driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "run_id": "gate-f-selfcheck",
+  "segment": "selfcheck_capture",
+  "segment_script": "tools/gate_f/segments/selfcheck_capture.json",
+  "sha": "e623433990485061fe4d966e6dff761382c262df",
+  "started_wall": "2026-08-25 20:07:48",
+  "trace_hz": 2.0,
+  "trace_rows": 4,
+  "viewport_size": [
+    1920,
+    1080
+  ]
+}

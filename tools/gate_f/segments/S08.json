@@ -245,9 +245,11 @@
         ],
         "budget_frames": 45000,
         "close_enough": 5.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-10's first anchor (-345,5060): 'the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place'"
+      "expected": "Section D RT-10's first anchor (-345,5060): 'the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-23",
@@ -297,9 +299,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 4.0,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below"
+      "expected": "Section E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-27",
@@ -392,9 +396,11 @@
         ],
         "budget_frames": 36000,
         "close_enough": 5.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "the high pasture herd; section L.4's riding row needs a Meadowhart in the belt"
+      "expected": "the high pasture herd; section L.4's riding row needs a Meadowhart in the belt",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-36",
@@ -536,8 +542,11 @@
       "id": "S08-49",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the pause shell, opened by its bound button"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the pause shell, opened by its bound button",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
     },
     {
       "id": "S08-50",
@@ -546,10 +555,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 4,
+        "times": 2,
         "settle_frames": 12
       },
-      "expected": "four RB presses reach Build"
+      "expected": "four RB presses reach Build",
+      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
     },
     {
       "id": "S08-51",
@@ -760,9 +770,11 @@
         ],
         "budget_frames": 9000,
         "close_enough": 4.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Section L.4: 'ride RT-10 leg'. Riding must not cost stamina"
+      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Section L.4: 'ride RT-10 leg'. Riding must not cost stamina",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-72",
@@ -939,9 +951,11 @@
         ],
         "budget_frames": 63000,
         "close_enough": 4.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch"
+      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-89",
@@ -1050,9 +1064,11 @@
         ],
         "budget_frames": 99000,
         "close_enough": 4.0,
-        "held_budget_frames": 10800
+        "held_budget_frames": 10800,
+        "answer_prompts": true
       },
-      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in `the_ridgeline_watch`"
+      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in `the_ridgeline_watch`",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-98",
@@ -1090,9 +1106,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.5,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905), patrol_ridgeline'"
+      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905), patrol_ridgeline'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-101",
@@ -1157,9 +1175,11 @@
         ],
         "budget_frames": 3000,
         "close_enough": 3.5,
-        "held_budget_frames": 7200
+        "held_budget_frames": 7200,
+        "answer_prompts": true
       },
-      "expected": "captain_ridge, the third of the three the objective counts"
+      "expected": "captain_ridge, the third of the three the objective counts",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S08-107",
@@ -1308,8 +1328,11 @@
       "id": "S08-121",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
     },
     {
       "id": "S08-122",
@@ -1318,10 +1341,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
     },
     {
       "id": "S08-123",

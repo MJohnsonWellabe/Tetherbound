@@ -1,0 +1,4283 @@
+{
+  "absent": 225,
+  "baseline_hz": 0.5,
+  "frames": [
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 0.41,
+      "trigger": "event:note,load,region_enter",
+      "wall": "2026-08-26 00:32:05",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 0.46,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:32:05",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 0.54,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:32:05",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 0.61,
+      "trigger": "event:flag_set,catch_result",
+      "wall": "2026-08-26 00:32:05",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.02,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 54.49,
+      "trigger": "event:note,region_enter",
+      "wall": "2026-08-26 00:32:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.1,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 56.5,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:01",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.18,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 58.51,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:03",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.26,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 60.52,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.34,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 62.52,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:07",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.42,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 64.52,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:09",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.5,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 66.52,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:11",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.59,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 68.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:13",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.67,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 70.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:15",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.75,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 72.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:17",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.83,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 74.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:19",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.91,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 76.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:21",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 8.99,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 78.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:23",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.07,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 80.53,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:25",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.15,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 82.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:27",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.23,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 84.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:29",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.31,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 86.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:31",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.39,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 88.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:33",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.47,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 90.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:35",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.55,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 92.55,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:37",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.63,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 94.57,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.71,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 96.59,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:41",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.79,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 98.6,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:43",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.87,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 100.6,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:45",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 9.95,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 102.6,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:47",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.03,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 104.6,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:49",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.11,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 106.62,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:51",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.19,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 108.63,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:53",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.27,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 110.63,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:55",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.35,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 112.63,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:57",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.43,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 114.64,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:33:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.51,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 116.64,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:01",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.59,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 118.65,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:03",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.67,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 120.65,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.75,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 122.65,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:07",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.83,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 124.65,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:09",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.91,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 126.65,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:11",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 10.99,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 128.66,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:13",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.07,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 130.66,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:15",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.15,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 132.66,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:17",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.23,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 134.67,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:19",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.31,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 136.67,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:21",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.39,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 138.67,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:23",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.47,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 140.67,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:25",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.55,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 142.68,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:27",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.63,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 144.7,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:29",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.71,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 146.72,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:31",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.79,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 148.72,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:33",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.87,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 150.72,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:35",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 11.95,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 152.73,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:37",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.03,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 154.73,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.11,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 156.74,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:41",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.19,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 158.74,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:43",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.27,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 160.75,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:46",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.35,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 162.75,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:48",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.43,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 164.75,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:50",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.51,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 166.77,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:52",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.6,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 168.78,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:54",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.68,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 170.78,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:56",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.76,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 172.78,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:34:58",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.84,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 174.79,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 12.92,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 176.8,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:02",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 178.8,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.08,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 180.8,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:06",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.16,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 182.81,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.24,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 184.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:10",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.32,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 186.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:12",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.4,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 188.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:14",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.48,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 190.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:16",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.56,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 192.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:18",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.64,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 194.82,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:20",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.72,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 196.83,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:22",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.8,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 198.83,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:24",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.88,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 200.83,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:26",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 13.96,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 202.83,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:28",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.04,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 204.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:30",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.12,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 206.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:32",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.2,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 208.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:34",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.28,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 210.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:36",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.36,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 212.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:38",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.44,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 214.85,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:40",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.52,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 216.86,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:42",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.6,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 218.86,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:44",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.68,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 220.86,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:46",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.76,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 222.86,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:48",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.84,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 224.86,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:50",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 14.92,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 226.87,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:52",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 228.88,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:54",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.08,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 230.89,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:56",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.16,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.96
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 232.89,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:35:58",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.22,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.06,
+        0.9,
+        -8.95
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 234.35,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:35:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.24,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        12.87,
+        0.9,
+        -6.51
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 234.9,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.32,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        15.54,
+        0.9,
+        2.42
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 236.9,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:02",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.4,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        18.93,
+        0.3,
+        11.99
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 238.9,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.4,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.07,
+        0.21,
+        12.36
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 238.98,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.41,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 239.06,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.46,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 240.42,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.46,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 240.51,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-26 00:36:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.48,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 241.01,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:06",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.56,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 242.84,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.56,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 242.93,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.57,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 243.09,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.63,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 244.6,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:09",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.65,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 245.09,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:10",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.73,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 247.09,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:12",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.75,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 247.6,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-26 00:36:12",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.81,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 249.23,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:14",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.9,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 251.33,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:16",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.98,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 253.47,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:18",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 15.99,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 253.73,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:18",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.06,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 255.48,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:20",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.14,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 257.48,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:22",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.22,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 259.49,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:24",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.3,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 261.49,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:26",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.31,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 261.75,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:26",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.32,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 261.83,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:27",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.38,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 263.49,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:28",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.46,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 265.49,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:30",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.5,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 266.5,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:31",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.55,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 267.67,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:32",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.64,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 269.8,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:35",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.72,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 272.0,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:37",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.79,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 273.64,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:38",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.8,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 274.0,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.88,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 276.02,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:41",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 16.96,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 278.02,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:43",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.05,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 280.03,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:45",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.11,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 281.63,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:46",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.11,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 281.71,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:46",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.13,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 282.05,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:47",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.18,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 283.39,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:36:48",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.21,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 284.06,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:49",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.29,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 286.06,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:51",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.3,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 286.38,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-26 00:36:51",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.34,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 287.37,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:52",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.37,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 288.06,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:53",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.38,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 288.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:53",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.42,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 289.39,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:54",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.45,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 290.08,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:55",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.46,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 290.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:55",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.5,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 291.4,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:56",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.53,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 292.1,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:57",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.54,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 292.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:57",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.58,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 293.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:58",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.61,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 294.11,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:36:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.62,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 294.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:36:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.66,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 295.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.69,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 296.12,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:01",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.7,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 296.37,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:01",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.74,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 297.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:02",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.77,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 298.13,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:03",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.78,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 298.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:03",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.82,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 299.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.85,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 300.13,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.86,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 300.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:05",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.9,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 301.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:06",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.93,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 302.15,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:07",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.94,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 302.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:07",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 17.98,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 303.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.01,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 304.16,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:09",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.02,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 304.37,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:09",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.06,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 305.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:10",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.09,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 306.17,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:11",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.1,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 306.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:11",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.14,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 307.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:12",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.17,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 308.18,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:13",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.18,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 308.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:13",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.22,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 309.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:14",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.25,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 310.19,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:15",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.26,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 310.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:15",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.3,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 311.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:16",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.33,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 312.2,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:17",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.34,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 312.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:17",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.38,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 313.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:18",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.41,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 314.21,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:19",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.42,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 314.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:19",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.46,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 315.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:20",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.49,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 316.21,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:21",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.5,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 316.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:21",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.54,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 317.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:22",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.57,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 318.21,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:23",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.58,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 318.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:23",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.62,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 319.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:24",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.65,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 320.22,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:25",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.66,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 320.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:25",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.7,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 321.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:26",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.73,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 322.22,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:27",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.74,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 322.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:27",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.78,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 323.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:28",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.81,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 324.22,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:29",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.82,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 324.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:29",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.86,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 325.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:30",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.89,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 326.22,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:31",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.9,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 326.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-26 00:37:31",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 18.97,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 328.26,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:33",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.06,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 330.35,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:35",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.14,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 332.45,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:37",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.22,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 334.34,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-26 00:37:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.22,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 334.43,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:37:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.23,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 334.66,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.31,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 336.77,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:42",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.4,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 338.9,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:44",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.41,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 339.13,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:37:44",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.41,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 339.21,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:37:44",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.49,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 341.09,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:46",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.57,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 343.18,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:48",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.6,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 343.89,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:37:49",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.65,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 345.18,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:50",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.73,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 347.18,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:52",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.81,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 349.2,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:54",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.89,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 351.2,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:56",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.92,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 351.88,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-26 00:37:57",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 19.97,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 353.22,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:37:58",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 353.89,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:37:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 354.18,
+      "trigger": "event:note,menu_open",
+      "wall": "2026-08-26 00:37:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 354.22,
+      "trigger": "event:menu_open",
+      "wall": "2026-08-26 00:37:59",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 354.77,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:38:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 354.97,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:38:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 355.06,
+      "trigger": "event:note",
+      "wall": "2026-08-26 00:38:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "menu_backpack",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 355.23,
+      "trigger": "cadence",
+      "wall": "2026-08-26 00:38:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 20.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        19.13,
+        0.17,
+        12.53
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "S04",
+      "t": 357.14,
+      "trigger": "event:note,save,menu_close",
+      "wall": "2026-08-26 00:38:02",
+      "weather": "clear"
+    }
+  ],
+  "segment": "S04",
+  "written": 0
+}
