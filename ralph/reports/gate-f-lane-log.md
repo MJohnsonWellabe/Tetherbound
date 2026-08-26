@@ -1721,3 +1721,35 @@ during the `S02-56` walk, not the Start binding.
 This branch was **force-pushed by another actor** mid-run; my commits were
 rebased onto a `ci.yml` change and re-pushed under new SHAs. Content preserved,
 nothing lost. I rebased onto it rather than force-pushing back.
+
+---
+
+## DEFECT-FIX lane — check-in 9 — 2026-08-26 — the engage failure is not the route
+
+Run halted per the hold; see `ralph/reports/gate-f-run-20260826T110000Z/ABORTED.md`.
+On priority 1:
+
+**Measured.** Walking to every member of the practice cluster from the test's own
+start point, each approach independent:
+
+| target | distance | result |
+|---|---|---|
+| `Wild_bramblebun_0_1` | 11.9 m | ARRIVED, frame 102 |
+| `Wild_bramblebun_0_2` | 30.2 m | ARRIVED, frame 299 |
+| `Wild_bramblebun_0_3` | 23.2 m | ARRIVED, frame 228 |
+
+All three reachable, none on a wall, one sampled second under 0.5 m in each.
+
+**So the route is not the defect.** CI reports "stopped 23.7m away" against a
+target that sits 23.2 m from the start — the player covered essentially nothing.
+The block is the **state at catch 3**: the walk begins wherever catch 2's fight
+left the body, not at the start point. Same family as the `smoke_arena_contain`
+race ("the fight could open in solid rock").
+
+**Also ruled out, with numbers:** not a chase (1.4 m/s target, 7 m anchor, 5.0
+m/s player, 125 m budget); not the entombment class (zero failsafe fires through
+a full local pass).
+
+**Next:** log the player's position at the start of each of the three walks
+through the real catch sequence. `stick_navigator` would likely green both tests
+and is still withheld — it would hide this rather than fix it.
