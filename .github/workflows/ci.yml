@@ -200,10 +200,41 @@ jobs:
     # margin for that against whatever else round-robins into the same shard,
     # on top of the per-test fixes; watch for a real per-test cost problem
     # again before reaching for a seventh.
+    #
+    # TEN shards, 2026-08-26. Shard 2 was killed at the ceiling on
+    # ralph/WORLD-GRASS (run 32921480914): the "Run tests" step measured
+    # 10m49s and the job wall time 12m13s once ~1m16s of checkout, cache and
+    # two import passes is counted, against `timeout-minutes: 12`. Everything
+    # else in that run passed, verify-owner-regressions-shard included, so
+    # this one job was the whole reason a green branch could not land.
+    #
+    # WHY MORE SHARDS IS THE RIGHT INSTRUMENT NOW, when the note above and
+    # verify-veg-corridor's own note both argue it is not. Both were written
+    # while ONE FILE exceeded the ceiling by itself, and that is genuinely
+    # unfixable by sharding, which distributes files and cannot split one.
+    # test_veg_corridor.gd now has its own 25-minute job, so that condition no
+    # longer holds: shard 2's remaining cost is spread across 18 separate
+    # files (measured: `--shard=2/6 --skip=test_veg_corridor.gd` selects 18 of
+    # 108), and round-robin over more shards does reduce the worst shard.
+    #
+    # WHY TEN AND NOT SEVEN OR EIGHT. Sizing off the CI number rather than a
+    # guess: 108 files over 6 shards is 18 per shard at 10m49s. Eight shards
+    # gives ~13.5 files, extrapolating to ~8m07s of tests and ~9m23s of wall
+    # time -- about 2.5 minutes of headroom, which is the same thin margin
+    # that produced the last three clips. Ten gives ~11 files, ~6m37s of tests
+    # and ~7m53s of wall time, roughly 1.5x margin against the ceiling. The
+    # cost is four more short jobs, not four more minutes.
+    #
+    # WHAT WOULD NOT BE FIXED BY AN ELEVENTH. Per-file costs inside shard 2
+    # were NOT cleanly measured -- the attempt was invalidated when the
+    # working tree was checked out from under it mid-run -- so if a single
+    # file is later found to dominate a shard again, the remedy is that
+    # file's own job on the test_veg_corridor.gd pattern, NOT a higher N and
+    # NOT a higher ceiling. This file has said that twice; it is still true.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -295,7 +326,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/6 --skip=test_veg_corridor.gd
+            -- --shard=${{ matrix.shard }}/10 --skip=test_veg_corridor.gd
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
