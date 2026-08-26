@@ -93,6 +93,31 @@ uniform float gust : hint_range(0.0, 1.0) = 0.0;
 uniform float gust_speed = 7.0;
 uniform float gust_length = 26.0;
 
+// LEAF-CUT. The instrument the bushes needed and four rounds missed. They
+// failed as five big crossed panels, then twenty quads, then forty-four small
+// leaves, then softened normals and a lifted base tint -- each helped, none
+// fixed it, because the defect was never size, count, tint or lighting. Every
+// leaf was an opaque QUAD, and a rectangle does not read as a leaf however it
+// is lit. A blind critic's words on the last version: "a heap of large
+// untextured flat quads in three flat greens, hard-edged".
+//
+// So the quad is only the leaf's bounding box and this carves the outline out
+// of it in the fragment stage, procedurally, against the leaf-local coordinate
+// `grass_field.gd::_bush_mesh` writes into UV2. It costs NO ASSET, which is the
+// point: `CLAUDE.md` forbids new Meadows art, and the previous round filed
+// "needs a bush asset that is not loose quads" as an art gap. It is not an art
+// gap. `depth_prepass_alpha` and `ALPHA_SCISSOR_THRESHOLD` were already
+// declared for exactly this; `ALPHA` was simply pinned at 1.0.
+//
+// 0 disables it and the tier renders as solid quads again -- correct for the
+// flower, whose petals are already shaped by their own geometry and whose
+// silhouette is settled.
+uniform float leaf_cut : hint_range(0.0, 1.0) = 0.0;
+// How deep the edge notches bite. Enough to break the outline, not so much that
+// the leaf becomes a comb.
+uniform float leaf_serrate : hint_range(0.0, 0.6) = 0.22;
+uniform float leaf_teeth = 5.0;
+
 uniform int allowed_base_mask = 3;
 
 varying float v_t;
@@ -216,6 +241,20 @@ void vertex() {
 	}
 }
 
+// Half-width of the leaf at `v` along its own length: nothing at the stem end,
+// broadest a little under halfway, closing to a point at the tip. 1.99
+// normalises the peak of v^0.45 * (1-v)^0.55 to 1.0, so the outline uses the
+// full width of the quad where it is widest rather than wasting it.
+float leaf_profile(float v, float u, float seed) {
+	float p = 1.99 * pow(clamp(v, 0.0, 1.0), 0.45) * pow(clamp(1.0 - v, 0.0, 1.0), 0.55);
+	// The two edges run at different phases, so the outline is not a mirror of
+	// itself -- a perfectly symmetric leaf still reads as a manufactured shape,
+	// which is the failure this whole function exists to fix.
+	float side = u < 0.0 ? 0.0 : 0.5;
+	p *= 1.0 - leaf_serrate * (0.5 + 0.5 * sin((v * leaf_teeth + seed + side) * 6.2831853));
+	return p;
+}
+
 void fragment() {
 	if (v_fade <= 0.001) {
 		discard;
@@ -224,4 +263,14 @@ void fragment() {
 	ROUGHNESS = 0.95;
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
+	if (leaf_cut > 0.001) {
+		// UV.x is the leaf's own width; UV.y is NOT its length -- that runs up
+		// the whole bush and the tint gradient reads it. UV2 carries the
+		// leaf-local length and this leaf's own seed.
+		float u = (UV.x - 0.5) * 2.0;
+		float mask = leaf_profile(UV2.x, u, UV2.y) - abs(u);
+		// Ramped rather than stepped so the scissor cuts on the outline itself
+		// (mask crosses zero exactly there) instead of on a quantised edge.
+		ALPHA = mix(1.0, clamp(0.5 + mask * 4.0, 0.0, 1.0), leaf_cut);
+	}
 }

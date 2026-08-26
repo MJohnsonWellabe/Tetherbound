@@ -66,6 +66,22 @@ uniform vec3 field_centre = vec3(0.0);
 // same defect with a new mechanism.
 uniform float field_radius = 48.0;
 uniform float fade_start = 30.0;
+// EDGE SHORTENING. `v_fade` gates a fragment discard and the coverage hash
+// gates a vertex cull, so before this the blades only THINNED toward the ring's
+// edge -- at full height, right up to the last one. The carpet therefore
+// STOPPED rather than ran out, and the owner's words on the result were that
+// "the transition from real grass to paint is still very noticable". Pushing
+// `field_radius` out moved that seam without removing it, twice. A blade that
+// shortens as well as thins sinks into the terrain instead, and has nowhere
+// visible to end.
+//
+// `edge_shorten_floor` is the height multiplier at the very edge and
+// `edge_shorten_bias` is the curve: below 1.0 it holds full height through most
+// of the fade and takes it off at the end, which matters because the fade is
+// 30m wide and a linear multiply would dock a third of the height from blades
+// well inside the ring, where they are the ones being looked at.
+uniform float edge_shorten_floor : hint_range(0.0, 1.0) = 0.0;
+uniform float edge_shorten_bias : hint_range(0.05, 4.0) = 0.4;
 
 // Blade size. `height_near`/`height_far` grow the blade with distance so it
 // stays a few pixels tall instead of shimmering away into noise -- the cheap
@@ -266,6 +282,9 @@ void vertex() {
 		// Shorter under a bush as well as sparser. Thinning alone leaves the
 		// survivors at full height, still standing through the leaves.
 		h *= 1.0 - clearing * clearing_shorten;
+		// And shorter at the ring's edge, for the same reason at a different
+		// scale -- see `edge_shorten_floor` above.
+		h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
 
 		// Bend. A blade of grass is not a spike: it leans, and each one leans a
 		// different way. Without the per-blade term the whole field renders as

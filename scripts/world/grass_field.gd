@@ -203,7 +203,8 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			"item_size", "size_jitter", "sink", "slope_lie", "density_gain",
 			"drift_scale", "drift_contrast", "tint_jitter", "ground_blend",
 			"contact_darken", "normal_soften", "sway", "wind_scale", "gust", "gust_speed",
-			"gust_length", "field_radius", "fade_start",
+			"gust_length", "field_radius", "fade_start", "leaf_cut", "leaf_serrate",
+			"leaf_teeth",
 		]:
 			if tier.has(key):
 				mat.set_shader_parameter(key, float(tier[key]))
@@ -256,6 +257,7 @@ func _bush_mesh() -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
+	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 	# A DOME OF MANY SMALL LEAVES, and the "many" is the whole point. Two earlier
 	# versions failed the same way at different scales: five big crossed panels
@@ -265,6 +267,15 @@ func _bush_mesh() -> ArrayMesh:
 	# one then reads as flat however it is lit. Forty-four leaves at an eighth
 	# of the bush size each are individually too small to read as polygons, so
 	# what the eye gets is the mass they make.
+	#
+	# But four rounds of that argument still failed, because none of them
+	# changed the one thing that was wrong: every leaf was an opaque QUAD, and
+	# a rectangle does not read as a leaf however small, however lit, whatever
+	# its tint. So each quad is now only the leaf's BOUNDING BOX, and
+	# `cover_tier.gdshader`'s `leaf_cut` carves the outline out of it in the
+	# fragment stage against the UV2 written below. That is why the geometric
+	# taper that used to narrow the far edge is gone -- the mask does the
+	# tapering now, and doing it twice made the leaf a sliver.
 	var rings := [
 		{"count": 14, "y": 0.10, "r": 0.28, "tilt": 0.80, "size": 0.135},
 		{"count": 13, "y": 0.27, "r": 0.27, "tilt": 0.66, "size": 0.130},
@@ -285,9 +296,14 @@ func _bush_mesh() -> ArrayMesh:
 			var at := out * float(ring["r"]) + Vector3.UP * float(ring["y"])
 			var half := float(ring["size"]) * 0.5
 			var first := verts.size()
+			# Per-leaf random, so the mask does not stamp one identical outline
+			# forty-four times. Golden-ratio step rather than a hash so that
+			# neighbouring leaves in a ring are never close in phase.
+			var leaf_seed := fposmod(float(ring_index) * 0.317 + float(i) * 0.6180339, 1.0)
 			for corner in [Vector2(-1.0, 0.0), Vector2(1.0, 0.0), Vector2(-1.0, 1.0), Vector2(1.0, 1.0)]:
-				# Taper the far edge so a leaf is a blade, not a rectangle.
-				var w := half * (0.30 if corner.y > 0.5 else 0.62)
+				# Full width top and bottom: this quad is the leaf's bounding
+				# box, not the leaf.
+				var w := half * 0.78
 				verts.append(at + side * corner.x * w + up_axis * corner.y * float(ring["size"]))
 				# Weighted toward the leaf's OWN axis rather than toward world up.
 				# An even split put the inner rings' normals nearly straight up, so
@@ -300,8 +316,10 @@ func _bush_mesh() -> ArrayMesh:
 				# `corner.y` is a Variant and `:=` cannot infer a type from it.
 				var t: float = (float(ring["y"]) + corner.y * float(ring["size"])) / 0.95
 				uvs.append(Vector2(corner.x * 0.5 + 0.5, clamp(t, 0.0, 1.0)))
+				# Leaf-local height and this leaf's own seed, for the mask.
+				uv2s.append(Vector2(corner.y, leaf_seed))
 			indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
-	return _mesh_from(verts, normals, uvs, indices)
+	return _mesh_from(verts, normals, uvs, indices, uv2s)
 
 
 ## A flower: a thin stem with a small flat head. The head is what carries the
@@ -310,6 +328,7 @@ func _flower_mesh() -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
+	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 	# Stem.
 	var first := verts.size()
@@ -317,6 +336,7 @@ func _flower_mesh() -> ArrayMesh:
 		verts.append(Vector3(corner.x * 0.016, corner.y * 0.80, 0.0))
 		normals.append(Vector3(0.0, 0.5, 1.0).normalized())
 		uvs.append(Vector2(corner.x * 0.5 + 0.5, corner.y * 0.74))
+		uv2s.append(Vector2(corner.y, 0.0))
 	indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
 	# Head: five petals SPLAYED outward from a centre, wider than the head is
 	# tall. Two earlier versions were wrong in opposite directions. Horizontal
@@ -351,10 +371,11 @@ func _flower_mesh() -> ArrayMesh:
 				verts.append(Vector3.UP * head_y + axis * along + side * (sign_x * half))
 				normals.append((Vector3.UP * 0.85 + out * 0.4).normalized())
 				uvs.append(Vector2(sign_x * 0.5 + 0.5, 0.84 + float(span["at"]) * 0.16))
+				uv2s.append(Vector2(float(span["at"]), float(i) * 0.2))
 			if span_index > 0:
 				var a := start_i + (span_index - 1) * 2
 				indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
-	return _mesh_from(verts, normals, uvs, indices)
+	return _mesh_from(verts, normals, uvs, indices, uv2s)
 
 
 ## Forest litter: flat irregular scraps lying on the ground. Near-zero height,
@@ -363,6 +384,7 @@ func _litter_mesh() -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
+	var uv2s := PackedVector2Array()
 	var indices := PackedInt32Array()
 	for i in 4:
 		var yaw := TAU * float(i) / 4.0 + 0.4 * float(i)
@@ -378,17 +400,30 @@ func _litter_mesh() -> ArrayMesh:
 			# UV.y near 1 everywhere: litter has no base-to-tip gradient, it is
 			# all "tip", so the shader's contact darken does not black it out.
 			uvs.append(Vector2(corner.x * 0.5 + 0.5, 0.85))
+			# Leaf-local, so `leaf_cut` can carve these scraps into fallen
+			# leaves. The comment above calls them "irregular"; as squares they
+			# were not, and the same mask that shapes a bush leaf shapes these.
+			uv2s.append(Vector2(corner.y * 0.5 + 0.5, float(i) * 0.23))
 		indices.append_array([first, first + 1, first + 2, first + 1, first + 3, first + 2])
-	return _mesh_from(verts, normals, uvs, indices)
+	return _mesh_from(verts, normals, uvs, indices, uv2s)
 
 
+## `uv2` carries the LEAF-LOCAL coordinate that `cover_tier.gdshader`'s
+## `leaf_cut` carves its outline against: x runs 0 at the leaf's stem end to 1
+## at its tip, y is a per-leaf random so no two leaves on one bush get the same
+## silhouette. It cannot be folded into UV, because UV.y is already spoken for
+## -- it runs up the whole BUSH, which is what the tint gradient and the contact
+## darken read. Every cover mesh must supply it: a mesh with no UV2 reads (0, 0)
+## in the shader, and a leaf-local height pinned at 0 is a leaf of zero width.
 func _mesh_from(verts: PackedVector3Array, normals: PackedVector3Array,
-		uvs: PackedVector2Array, indices: PackedInt32Array) -> ArrayMesh:
+		uvs: PackedVector2Array, indices: PackedInt32Array,
+		uv2s: PackedVector2Array) -> ArrayMesh:
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = verts
 	arrays[Mesh.ARRAY_NORMAL] = normals
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_TEX_UV2] = uv2s
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
@@ -600,7 +635,7 @@ func _apply_config(cfg: Dictionary) -> void:
 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
-		"gust", "gust_speed", "gust_length",
+		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))

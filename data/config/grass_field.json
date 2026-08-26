@@ -15,6 +15,10 @@
   "centre_bias": 0.62,
   "seed": 20260825,
 
+  "_comment_edge": "How the carpet ENDS, which is a separate defect from where it ends. The owner's words on the last capture were that the transition from real grass to paint is still very noticeable, after field_radius had already been pushed 56 -> 72 to move it. It moved and did not go, because thinning the blades leaves the survivors at FULL HEIGHT: the carpet stops rather than runs out. `edge_shorten_floor` is the height multiplier at the outermost blade and `edge_shorten_bias` the curve -- below 1.0 it holds full height through most of the 30m fade and takes it off over the last part, so the carpet sinks into the terrain instead of being docked a third of its height where the player is actually looking. Free: one pow over a varying the shader already computes.",
+  "edge_shorten_floor": 0.0,
+  "edge_shorten_bias": 0.4,
+
   "_comment_snap": "Metres the ring snaps to as it follows the camera. Not cosmetic: the coverage noise is evaluated in WORLD space while the instances live in LOCAL space, so a continuously-following ring re-rolls which tufts survive every frame and the whole field boils. Snapping means the set only changes when the ring has crossed a cell. Larger is steadier and coarser at the ring's outer edge.",
   "snap": 2.0,
 
@@ -98,6 +102,10 @@
       "ground_blend": 0.35,
       "contact_darken": 0.14,
       "normal_soften": 0.72,
+      "_comment_leaf_cut": "The fix four rounds of tuning could not reach. Each leaf is a quad and a rectangle does not read as a leaf however it is lit -- so cover_tier.gdshader carves a ragged leaf outline out of every quad in the fragment stage. 1.0 is the full cut. Costs no asset, which is why it is the right instrument: CLAUDE.md forbids new Meadows art and the last blind round filed this as an art gap.",
+      "leaf_cut": 1.0,
+      "leaf_serrate": 0.24,
+      "leaf_teeth": 5.0,
       "sway": 0.04,
       "ground": ["grass", "soil", "forest_floor"]
     },
@@ -144,6 +152,10 @@
       "tint_jitter": 0.3,
       "ground_blend": 0.55,
       "contact_darken": 0.2,
+      "_comment_leaf_cut": "Same mask as the bushes, and for the same reason: the mesh comment calls these scraps irregular and as opaque squares they were not. Slightly gentler and coarser-toothed than the bush leaf so a fallen leaf reads as broader than a growing one.",
+      "leaf_cut": 0.9,
+      "leaf_serrate": 0.18,
+      "leaf_teeth": 3.0,
       "sway": 0.0,
       "ground": ["forest_floor"]
     }
