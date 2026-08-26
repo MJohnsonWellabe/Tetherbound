@@ -1036,3 +1036,64 @@ guess.
 Also on the record and not touched: `smoke_step_up.gd` fails on a clean `main`
 checkout (the trainer walks through both a 0.3 m step and a 2 m barrier), and it
 is not in `ci.yml`.
+
+---
+
+## DEFECT-FIX lane — check-in 7 — 2026-08-26 — main merged forward; item 1 does NOT cover the CI engage failure
+
+### `main` is merged forward
+
+`git merge origin/main`, no conflicts, and another session then merged a newer
+`main` (`a9add7bc`, the `verify-unit-tests` 6 → 10 shard change) on top. Branch
+head is `3889b339` and is **0 behind `main`**, so it is inside
+`ralph-sweep.yml`'s 20-commit staleness window and can land.
+
+### Fact 2, measured: my item-1 fix does NOT close the CI failure
+
+The coordinator asked whether `smoke_unstick.gd`'s fix already covers
+`verify-owner-regressions-shard`'s third failure — *"could not engage the real
+wild body at Wild_bramblebun_0_3 (stopped 23.7m away (engage range 6.0m))"* —
+on the grounds that it looks like handover §6.2, a walk that cannot reach its
+target.
+
+I ran `tests/smoke_party_count_after_catches.gd` on the merged branch rather than
+reasoning about it. Result:
+
+- The test **PASSES**: *"three real catches through the real minigame land in
+  Game.party, the on-screen TEAM counter and party strip agree, and the count
+  survives a save/reload."*
+- `grep -c entombed` over the full run log: **0**. The failsafe never fired.
+
+So the answer is no. The engage failure is not the entombment class and my fix
+does not cover it. Whatever green this test now shows belongs to the two race
+fixes that just came from `main`, not to this branch, and I would rather say so
+than take credit for a passing test I did not fix.
+
+Two caveats on that, both important:
+
+1. **One passing run is not proof the engage failure is gone.** It is
+   intermittent by the coordinator's own description — the approach spot is
+   derived from a wild creature that has drifted — so a single pass is
+   consistent with either "fixed by the race fix" or "did not happen to hit it
+   this time."
+2. **§6.2 therefore has at least two distinct failure modes**, not one. My fix
+   closes the sealed-pocket half (a body with no way out in any direction,
+   S05's 1,004 rows at one coordinate). A body that stops 23.7 m short while
+   the ground behind it is open is the other half, and `_recover_if_entombed`
+   deliberately ignores it — the eight-direction probe finding a clear
+   direction is exactly the guard that stops the failsafe firing during
+   ordinary play. Merging the two under one heading would hide that.
+
+### Next
+
+`main`-first, per the owner's answer: land this branch (and the other green
+`ralph/**` branches) through `ralph-sweep.yml`, freeze a candidate from `main`,
+then run S01–S10 and X01–X07 against that SHA.
+
+Standing warning for whoever runs it, from check-in 6: **spot-check colour on a
+late X07 frame against an early one before trusting any of that run's visual
+evidence.** Every frame after the first in a single process came back
+hue-rotated in four separate probes here, deterministically, and I could not
+find the cause. X07's own 79 frames from 2026-08-25 looked normal, so its path
+may not hit it — but that is untested, and X07 is the run's only real visual
+evidence.
