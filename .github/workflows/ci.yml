@@ -84,7 +84,11 @@ jobs:
   # `skipped`, not `success`, and would be refused. Keep this job unconditional.
   changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Was 5, which this job's own checkout outgrew. A `timeout-minutes` kill
+    # reports as CANCELLED, not failed, and every downstream job then skips --
+    # so the run looks like a tidy no-op rather than a job that died. Raised as
+    # a safety net only; `filter: blob:none` below is the actual fix.
+    timeout-minutes: 15
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
@@ -92,6 +96,19 @@ jobs:
         with:
           # Needed to diff against a base that may be many commits back.
           fetch-depth: 0
+          # BLOBLESS. This job runs `git diff --name-only` and `git merge-base`
+          # and nothing else -- both want commits and trees, never file
+          # contents. Without this, `fetch-depth: 0` downloads every version of
+          # every file in the branch's whole ancestry, and this repo's ancestry
+          # is roughly 300 baked scatter binaries per bake.
+          #
+          # It went from a 45-second checkout on 2026-08-26's run 2515 to over
+          # five minutes on run 2520, whose branch consolidated five lanes that
+          # each carried their own full bake -- about eleven thousand large
+          # blobs fetched to look at a list of filenames. Consolidating lanes is
+          # still the right call for CI cost, but it multiplies exactly this,
+          # so the filter is what keeps it affordable.
+          filter: blob:none
 
       - name: Decide whether anything but documentation changed
         id: filter
