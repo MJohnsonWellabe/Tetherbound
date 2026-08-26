@@ -68,6 +68,9 @@ func _init() -> void:
 	files = _apply_only(files)
 	if _aborted:
 		return
+	files = _apply_skip(files)
+	if _aborted:
+		return
 	files = _apply_shard(files)
 	if _aborted:
 		return
@@ -166,6 +169,72 @@ func _apply_only(files: Array[String]) -> Array[String]:
 
 	print("only %s: %d of %d test files" % [spec, matched.size(), files.size()])
 	return matched
+
+
+## Returns `files` with any file matching a `--skip=` selector removed, or
+## every file unchanged when no `--skip` was passed. Comma-separated, matched
+## as a substring of the file name, the same way `--only=` matches.
+##
+## WHY THIS EXISTS. `test_veg_corridor.gd` costs ~10 minutes by itself against
+## `verify-unit-tests`' 12-minute ceiling -- measured 10m11s on
+## ralph/WORLD-GRASS, 6 tests, 1,341,749 assertions, 0 failed. Its two
+## whole-config `RULES.all_placements()` calls are real regression checks and
+## were deliberately left unshrunk when the other layer-reading tests were
+## fixed; see that file's own comments. Once one FILE exceeds the ceiling, more
+## shards cannot help -- sharding distributes files and cannot split one -- so
+## ci.yml runs it in its own job and skips it here. That is this workflow's own
+## stated remedy ("splitting run_tests.gd into two jobs, not raising this
+## further"), applied to the file that actually costs the time.
+##
+## A selector matching nothing is a hard error, and so is skipping every file:
+## both would otherwise look identical to a healthy run, which is the same
+## reasoning `--only=` and `--shard=` already use.
+func _apply_skip(files: Array[String]) -> Array[String]:
+	var empty: Array[String] = []
+	var spec := ""
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--skip="):
+			spec = argument.substr("--skip=".length())
+	if spec == "":
+		return files
+
+	var selectors: Array[String] = []
+	for raw_selector in spec.split(","):
+		var selector := raw_selector.strip_edges()
+		if selector == "":
+			push_error("--skip selector in '%s' is empty" % spec)
+			_aborted = true
+			quit(2)
+			return empty
+		selectors.append(selector)
+
+	var kept: Array[String] = []
+	var skipped := 0
+	for path in files:
+		var file_name := path.get_file()
+		var drop := false
+		for selector in selectors:
+			if file_name.contains(selector):
+				drop = true
+				break
+		if drop:
+			skipped += 1
+		else:
+			kept.append(path)
+
+	if skipped == 0:
+		push_error("--skip=%s matched no test files" % spec)
+		_aborted = true
+		quit(2)
+		return empty
+	if kept.is_empty():
+		push_error("--skip=%s skipped every test file" % spec)
+		_aborted = true
+		quit(2)
+		return empty
+
+	print("skip %s: %d of %d test files removed" % [spec, skipped, files.size()])
+	return kept
 
 
 ## Returns `methods` narrowed to whichever `--only=` selectors matched
