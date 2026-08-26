@@ -204,6 +204,36 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 ## is not flat, and a wing pinned to the gate's y left a gap under its
 ## downhill end big enough to walk through -- which is the same defect one
 ## step smaller.
+## SIGIL-SEAL, second pass. Sizing each wing's COLLIDER from the ground under
+## its own centre is what let the locked gate leak at +6.0m off centre.
+##
+## Measured on the built world (`tools/_probe_sigil_wings.gd`): the causeway
+## falls -1.09m -> -3.71m over the first ten metres of the +1 side, so
+## consecutive wings step down almost a metre each. At the +6.10m seam between
+## wing 0 and wing 1 that left wing 1's top standing 0.84m above local terrain
+## and wing 0's bottom floating 0.32m above it -- a wall the player simply
+## stepped over. `smoke_traversal.gd`'s span check could not see it, because it
+## projects the colliders onto the across-axis and is blind to Y: the barrier
+## read as a contiguous -18.29m..18.29m the whole time it was being walked past.
+##
+## The -1 side passed throughout for no better reason than that its terrain is
+## nearly flat there (-0.43m to -1.39m over the same ten metres). A seal that
+## holds only where the ground happens to be level is not a seal.
+##
+## So the collider is now sized from the wing's WHOLE FOOTPRINT rather than one
+## sample: bottom below the lowest ground it spans, top a full panel-height
+## above the highest. The visible panel still sits on the centre height -- it is
+## the wall's appearance, and stretching it would look worse than it reads.
+##
+## Note this is deliberately NOT "bury the box downward". A fixed-size box
+## pushed down lowers its top by exactly as much as its bottom, which makes the
+## walk-over easier, not harder; that was tried and measured at no effect.
+const WING_FOOTPRINT_SAMPLES := 5
+## How far below the lowest ground the wing spans to sink its base, so a dip
+## between two samples cannot open a gap underneath it.
+const WING_BURY_M := 1.0
+
+
 func _build_wings(world: Node3D, prefabs: RefCounted, at: Vector2, aabb: AABB) -> void:
 	var panel_width: float = aabb.size.x
 	if seal_half_width <= 0.0 or panel_width <= 0.0:
@@ -222,21 +252,38 @@ func _build_wings(world: Node3D, prefabs: RefCounted, at: Vector2, aabb: AABB) -
 				# sealing there, and a panel with no ground under it would
 				# hang in the air looking like a mistake.
 				continue
+			# The ground this wing actually spans, not just the point under its
+			# middle. Samples that come back NaN are over the gorge and are
+			# skipped rather than poisoning the min/max.
+			var lowest := ground
+			var highest := ground
+			for s in WING_FOOTPRINT_SAMPLES:
+				var t: float = -0.5 + float(s) / float(WING_FOOTPRINT_SAMPLES - 1)
+				var sample_offset: float = offset + panel_width * t
+				var sx: float = at.x + cos(yaw) * sample_offset
+				var sz: float = at.y - sin(yaw) * sample_offset
+				var g: float = float(world.call("ground_height_at", sx, sz))
+				if is_nan(g):
+					continue
+				lowest = minf(lowest, g)
+				highest = maxf(highest, g)
 			var wing: Node3D = prefabs.call("instantiate", LEAF_PREFAB)
 			if wing == null:
 				continue
 			wing.name = "GateWing%d_%d" % [side, i]
 			wing.position = Vector3(offset, ground - (position.y), 0.0)
 			add_child(wing)
+			var bottom: float = lowest - WING_BURY_M
+			var top: float = highest + aabb.size.y
 			var wing_body := StaticBody3D.new()
 			wing_body.name = "GateWingCollision%d_%d" % [side, i]
 			var wing_shape := CollisionShape3D.new()
 			var wing_box := BoxShape3D.new()
-			wing_box.size = aabb.size
+			wing_box.size = Vector3(aabb.size.x, top - bottom, aabb.size.z)
 			wing_shape.shape = wing_box
 			wing_body.add_child(wing_shape)
 			wing_body.position = Vector3(
-				offset, ground - (position.y) + aabb.size.y * 0.5, 0.0)
+				offset, (bottom + top) * 0.5 - (position.y), 0.0)
 			add_child(wing_body)
 
 

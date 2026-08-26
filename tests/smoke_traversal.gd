@@ -177,6 +177,12 @@ const STUCK_EDGE_MARGIN := 60.0
 ## rise through as a false wedge.
 const STUCK_SLOPE_PROBE_M: Array[float] = [4.0, 8.0]
 const STUCK_MAX_WALKABLE_DEG := 45.0
+## Nor flag a stall the player could simply walk out of. Eight compass
+## directions at `STUCK_ESCAPE_M` -- far enough to clear the obstacle the walk
+## is pressed against, short enough that an escape route this finds is one the
+## player could actually take. See `_can_walk_away`.
+const STUCK_ESCAPE_DIRECTIONS := 8
+const STUCK_ESCAPE_M := 1.5
 
 
 ## True when any ground near `pos` is too steep for the player to climb, i.e.
@@ -190,6 +196,77 @@ func _blocked_by_unclimbable_ground(field: RefCounted, pos: Vector3) -> bool:
 			var slope: float = field.slope_degrees_at(pos.x + offset.x, pos.z + offset.y)
 			if not is_nan(slope) and slope > STUCK_MAX_WALKABLE_DEG:
 				return true
+	return false
+
+
+## True when the player could walk out of here under their own steam, i.e.
+## something is merely IN THE WAY rather than holding them.
+##
+## OF15's wedge was a prop collider (Captain Halder's capsule), so the check
+## cannot simply excuse every prop. What separates the two is whether the
+## player can leave: a body pressed against a rock has open meadow behind and
+## either side of them; a body snagged on a bad collider does not.
+##
+## This is the prop analogue of `_blocked_by_unclimbable_ground` above, and it
+## exists for the same reason -- the walk holds ONE direction for the whole
+## leg, so the moment it meets any solid object it dead-stops for the rest of
+## it. That makes the constants' stated assumption ("only a snag causes a dead
+## stop, a glancing brush off a rock will not trip it") false for a
+## straight-line hold: a single scattered rock anywhere along a 120m leg reads
+## as a wedge. Measured at the spot this first fired, (53, -65): the blocker is
+## `Vegetation/Rock_Medium_1_Collision` occupying (52..54, -63..-64), the
+## terrain there runs -0.83m to +1.05m over eight metres (about 14 degrees, well
+## inside the slope exclusion), and every direction except backward is clear.
+## That is the meadow working, and it had been failing this test at random on
+## main for days depending on how the runner's physics timing steered the walk.
+##
+## Each probe is placed at the GROUND under it, carrying the player's own
+## height above ground with it. Reusing the player's absolute y instead reads
+## every upslope direction as blocked -- the capsule simply sinks into the
+## rising ground -- which is how the first version of this returned "cannot
+## walk away" at a spot with open meadow on seven sides. Terrain is not this
+## check's business in any case: `_blocked_by_unclimbable_ground` above is
+## what governs ground the player may not climb.
+##
+## Queried with the player's OWN collider rather than a guessed capsule, so
+## "can they fit" means the same thing here as it does in the walk.
+func _can_walk_away(field: RefCounted, player: CharacterBody3D, pos: Vector3) -> bool:
+	var space := player.get_world_3d().direct_space_state
+	var shape: Shape3D = null
+	## The collider's offset from the body's own origin. The player's origin
+	## sits at their feet and the capsule is centred about a metre up, so
+	## placing the bare shape at a ground position buries half of it and every
+	## direction reads as blocked.
+	var shape_offset := Vector3.ZERO
+	for child in player.get_children():
+		var cs := child as CollisionShape3D
+		if cs != null and not cs.disabled and cs.shape != null:
+			shape = cs.shape
+			shape_offset = cs.position
+			break
+	if shape == null:
+		# No collider to reason with. Say nothing rather than excuse a stall
+		# on the strength of a failed lookup.
+		return false
+	var here_ground: float = field.height_at(pos.x, pos.z)
+	if is_nan(here_ground):
+		return false
+	var above_ground: float = pos.y - here_ground
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = shape
+	q.collide_with_areas = false
+	q.collide_with_bodies = true
+	q.exclude = [player.get_rid()]
+	for step in STUCK_ESCAPE_DIRECTIONS:
+		var angle: float = TAU * float(step) / float(STUCK_ESCAPE_DIRECTIONS)
+		var to := Vector2(cos(angle), sin(angle)) * STUCK_ESCAPE_M
+		var ground: float = field.height_at(pos.x + to.x, pos.z + to.y)
+		if is_nan(ground):
+			continue
+		q.transform = Transform3D(Basis(), Vector3(
+			pos.x + to.x, ground + above_ground, pos.z + to.y) + shape_offset)
+		if space.intersect_shape(q, 1).is_empty():
+			return true
 	return false
 
 
@@ -218,7 +295,7 @@ func _near_world_edge(pos: Vector3) -> bool:
 ## Call once per physics frame from inside a walk loop. Appends to
 ## `stuck_log` the first time a stall crosses the sustain threshold; prints
 ## when it releases so the log reads as episodes, not a spam of frames.
-func _stuck_tick(tracker: Dictionary, field: RefCounted, pos: Vector3, grounded: bool, label: String, stuck_log: Array) -> void:
+func _stuck_tick(tracker: Dictionary, field: RefCounted, player: CharacterBody3D, pos: Vector3, grounded: bool, label: String, stuck_log: Array) -> void:
 	if tracker["window_frames"] == 0:
 		tracker["checkpoint"] = pos
 	tracker["window_frames"] = int(tracker["window_frames"]) + 1
@@ -230,7 +307,8 @@ func _stuck_tick(tracker: Dictionary, field: RefCounted, pos: Vector3, grounded:
 	var moved := Vector2(pos.x, pos.z).distance_to(Vector2(checkpoint.x, checkpoint.z))
 
 	if grounded and moved < STUCK_MIN_PROGRESS and not _near_world_edge(pos) \
-			and not _blocked_by_unclimbable_ground(field, pos):
+			and not _blocked_by_unclimbable_ground(field, pos) \
+			and not _can_walk_away(field, player, pos):
 		tracker["stalled_windows"] = int(tracker["stalled_windows"]) + 1
 		if int(tracker["stalled_windows"]) >= STUCK_SUSTAIN_WINDOWS and not bool(tracker["stuck"]):
 			tracker["stuck"] = true
@@ -333,7 +411,7 @@ func _run() -> void:
 		for i in LEG_FRAMES:
 			await physics_frame
 			var pos := player.global_position
-			_stuck_tick(stuck_tracker, stuck_field, pos, player.is_on_floor(), direction, stuck_positions)
+			_stuck_tick(stuck_tracker, stuck_field, player, pos, player.is_on_floor(), direction, stuck_positions)
 			furthest = maxf(furthest, Vector2(pos.x, pos.z).length())
 			lowest = minf(lowest, pos.y)
 
