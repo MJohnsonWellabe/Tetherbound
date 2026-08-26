@@ -423,10 +423,11 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 6,
         "settle_frames": 30
       },
-      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)"
+      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)",
+      "observation": "times 14 -> 6. MEASURED, not guessed: S02's own telemetry has the bramblebun at opponent_hp 124.2 full, 43.1 after these 14 quick attacks (~5.8 damage each), and 0.0 after the charged attack that follows -- combat_end at t=283.6, then the aim and throw steps pressed into an empty world and party_size never reached 2. The chapter's whole objective chain then stalls at 'Catch your first wild creature', which is what pinned every downstream objective assert in S02-S05. The catch is supposed to WEAKEN the target, not kill it. 6 quick (~35 damage) leaves ~89, and the charged attack that follows takes it to roughly 30-46 of 124 -- weakened, alive, catchable -- while still exercising the charged-attack verb the next step covers."
     },
     {
       "id": "S02-37",
