@@ -1,0 +1,1690 @@
+{
+  "id": "X03",
+  "title": "Catching lab (protocol E.2 / section 6)",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.2, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S05-exit (band 1 field) and S08-exit (party of 5).",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
+  "_config": "E.2's own catch config reference: data/config/catching.json -- throw speed 17, gravity 14, max flight 4 s, cooldown 0.9 s; orbs basic/greater/prime; D31 explicit percent.",
+  "_per_throw": "E.2's per-throw record, which every throw below feeds: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behavior during aim/throw/resolve.",
+  "_hard_rules": "A trainer-owned creature CANNOT be caught and the party maximum is five with no storage and no sixth slot (CLAUDE.md). CT-06 and CT-09 are transcribed as expected REFUSALS and as a five-slot presentation check, never as expected successes.",
+  "_no_teleport": "X03 is not a DIAG segment and contains no teleport step.",
+  "_shot_ids": "Protocol G defines the catch family open-endedly as 'GF-15-CATCH-01...n | aim reticle frame + resolve frame per CT class'. The numbering used here keys the shot to the CT case and uses the a/b pair protocol G already uses for GF-22 defect shots: GF-15-CATCH-<nn>a is the aim reticle frame and GF-15-CATCH-<nn>b the resolve frame for case CT-<nn>. CT-01's pair (01a/01b) therefore belongs to the journey's S02, and X03 takes 02 onward.",
+  "steps": [
+    {
+      "id": "X03-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "Protocol E.2's catch lab: the cases natural play avoids. Every journey catch already emits catch_throw / catch_result telemetry; this adds the edges."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-002",
+      "title": "CT-01 is not this segment's",
+      "action": "note",
+      "args": {
+        "text": "E.2 CT-01, the tutorial/required catch, is sited at 'S02, production path' with GF-15. It belongs to the journey lane, and GF-15-CATCH-01a/01b with it."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-003",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X03-004",
+      "title": "seed slot 4 from S05-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S05-exit.json"
+      },
+      "expected": "the journey's S05-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X03-005",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X03-006",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X03-007",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X03-008",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X03-009",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X03-010",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X03-011",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X03-012",
+      "title": "walk into the band 1 field",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks to the band 1 field where the lab's wild throws are taken"
+    },
+    {
+      "id": "X03-013",
+      "title": "rescan the field for points of interest",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds and harvest nodes in range are counted from live queries"
+    },
+    {
+      "id": "X03-014",
+      "title": "CT-02",
+      "action": "note",
+      "args": {
+        "text": "'Close throw (< 5 m) / long throw (near max range) | X03 band 1 field | catch_throw events with distance.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-015",
+      "title": "engage the nearest wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "an attack on a nearby wild starts a fight; catching is available during wild combat"
+    },
+    {
+      "id": "X03-016",
+      "title": "a fight is running",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "X03-017",
+      "title": "close the distance to under 5 m",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 60
+      },
+      "expected": "the player pilots in to under 5 m of the wild"
+    },
+    {
+      "id": "X03-018",
+      "title": "enter aim (CT-02 close throw)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-019",
+      "title": "aim owns input (CT-02 close throw)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-020",
+      "title": "GF-15-CATCH-02a: aim reticle, close throw",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-02a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame for CT-02"
+    },
+    {
+      "id": "X03-021",
+      "title": "release the close throw",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is released at under 5 m; the catch_throw event carries the distance"
+    },
+    {
+      "id": "X03-022",
+      "title": "GF-15-CATCH-02b: resolve, close throw",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-02b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the resolve frame for CT-02's close throw"
+    },
+    {
+      "id": "X03-023",
+      "title": "wait out the throw cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "data/config/catching.json's cooldown is 0.9 s"
+    },
+    {
+      "id": "X03-024",
+      "title": "back off to near max range",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 120
+      },
+      "expected": "the player pilots back toward the arena edge, near the throw's max range"
+    },
+    {
+      "id": "X03-025",
+      "title": "enter aim (CT-02 long throw)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-026",
+      "title": "aim owns input (CT-02 long throw)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-027",
+      "title": "release the long throw",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is released near max range; max flight is 4 s at speed 17 under gravity 14"
+    },
+    {
+      "id": "X03-028",
+      "title": "CT-03",
+      "action": "note",
+      "args": {
+        "text": "'Deliberate miss | aim wide; record miss feedback and orb loss | telemetry + shot.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-029",
+      "title": "wait out the cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the 0.9 s cooldown has passed"
+    },
+    {
+      "id": "X03-030",
+      "title": "enter aim (CT-03 deliberate miss)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-031",
+      "title": "aim owns input (CT-03 deliberate miss)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-032",
+      "title": "aim wide",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 45
+      },
+      "expected": "the right stick swings the aim well off the target"
+    },
+    {
+      "id": "X03-033",
+      "title": "GF-15-CATCH-03a: aim reticle, aimed wide",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-03a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame for CT-03"
+    },
+    {
+      "id": "X03-034",
+      "title": "release the wide throw",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb misses; the miss feedback and the orb loss are recorded"
+    },
+    {
+      "id": "X03-035",
+      "title": "GF-15-CATCH-03b: resolve, miss feedback",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-03b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the resolve frame showing the miss feedback and orb loss"
+    },
+    {
+      "id": "X03-036",
+      "title": "CT-04",
+      "action": "note",
+      "args": {
+        "text": "'Aim cancel | enter aim (combat_aim context), cancel via menu_cancel; verify clean return to combat context, no orb spent | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-037",
+      "title": "wait out the cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the 0.9 s cooldown has passed"
+    },
+    {
+      "id": "X03-038",
+      "title": "enter aim (CT-04 aim cancel)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-039",
+      "title": "aim owns input (CT-04 aim cancel)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-040",
+      "title": "GF-15-CATCH-04a: aim reticle before the cancel",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-04a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame for CT-04"
+    },
+    {
+      "id": "X03-041",
+      "title": "cancel the aim",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "menu_cancel backs out of the aim"
+    },
+    {
+      "id": "X03-042",
+      "title": "clean return to the combat context",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat' again: clean return to combat context, no orb spent"
+    },
+    {
+      "id": "X03-043",
+      "title": "GF-15-CATCH-04b: resolve, back in the fight",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-04b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the frame after the cancel: the camera is back on the creature and no orb was spent"
+    },
+    {
+      "id": "X03-044",
+      "title": "CT-05",
+      "action": "note",
+      "args": {
+        "text": "'Moving target / weakened target | throw at full-HP moving wild vs weakened one; record shown percent vs result | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-045",
+      "title": "wait out the cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the 0.9 s cooldown has passed"
+    },
+    {
+      "id": "X03-046",
+      "title": "enter aim (CT-05 full-HP moving target)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. The opponent is at full HP and moving; the shown percent is D31's explicit percent."
+    },
+    {
+      "id": "X03-047",
+      "title": "aim owns input (CT-05 full-HP moving target)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-048",
+      "title": "GF-15-CATCH-05a: aim reticle, full-HP moving target",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-05a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame for CT-05, with the shown percent legible"
+    },
+    {
+      "id": "X03-049",
+      "title": "throw at the full-HP moving wild",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the shown percent and the result are recorded side by side"
+    },
+    {
+      "id": "X03-050",
+      "title": "weaken the same class of wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 8,
+        "settle_frames": 45
+      },
+      "expected": "attacks bring the opponent low without fainting it"
+    },
+    {
+      "id": "X03-051",
+      "title": "wait out the cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the 0.9 s cooldown has passed"
+    },
+    {
+      "id": "X03-052",
+      "title": "enter aim (CT-05 weakened target)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-053",
+      "title": "aim owns input (CT-05 weakened target)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-054",
+      "title": "throw at the weakened wild",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the shown percent for a weakened target and the result are recorded"
+    },
+    {
+      "id": "X03-055",
+      "title": "GF-15-CATCH-05b: resolve, weakened target",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-05b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the resolve frame for CT-05's weakened throw"
+    },
+    {
+      "id": "X03-056",
+      "title": "CT-06",
+      "action": "note",
+      "args": {
+        "text": "'Invalid states | throw at fainted wild; throw at a trainer-owned creature (must be refused -- hard rule); own deployed creature must not eat the orb (existing invariant) | telemetry + shot of refusal feedback.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-057",
+      "title": "faint the wild rather than catching it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 45
+      },
+      "expected": "the wild is knocked out"
+    },
+    {
+      "id": "X03-058",
+      "title": "wait out the cooldown",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the 0.9 s cooldown has passed"
+    },
+    {
+      "id": "X03-059",
+      "title": "attempt a throw at the fainted wild",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw at a fainted wild is an invalid state: the aim is refused or the throw resolves as a refusal, and the refusal feedback says why"
+    },
+    {
+      "id": "X03-060",
+      "title": "GF-15-CATCH-06a: refusal feedback, fainted wild",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-06a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the shot of the refusal feedback for a throw at a fainted wild"
+    },
+    {
+      "id": "X03-061",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 30
+      },
+      "expected": "the fight resolves and control returns with no stuck modal"
+    },
+    {
+      "id": "X03-062",
+      "title": "walk to the band 1 optional trainer",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks to old_champion_bram (195,905), protocol L.4's band 1 optional trainer"
+    },
+    {
+      "id": "X03-063",
+      "title": "accept the trainer's challenge",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "the trainer's conversation ends in a fight and the trainer stages a send-out"
+    },
+    {
+      "id": "X03-064",
+      "title": "a trainer fight is running",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "X03-065",
+      "title": "attempt a throw at the trainer-owned creature",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "EXPECTED REFUSAL, not a catch. A trainer-owned creature cannot be caught: it is a hard rule, the aim never opens and the orb is never spent. Any outcome other than a stated refusal is a BLOCKER candidate."
+    },
+    {
+      "id": "X03-066",
+      "title": "the aim never opened",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is still 'combat': the aim never opened, so no orb could be spent"
+    },
+    {
+      "id": "X03-067",
+      "title": "GF-15-CATCH-06b: refusal feedback, trainer-owned creature",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-06b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the shot of the refusal feedback for a throw at a trainer-owned creature"
+    },
+    {
+      "id": "X03-068",
+      "title": "let the trainer fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 120
+      },
+      "expected": "the trainer fight resolves; on victory, rewards + control return with no stuck modal"
+    },
+    {
+      "id": "X03-069",
+      "title": "CT-06's third clause: the player's own deployed creature",
+      "action": "note",
+      "args": {
+        "text": "'own deployed creature must not eat the orb (existing invariant)'. The next wild throw is aimed across the player's own deployed creature deliberately, so the invariant is exercised rather than assumed."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-070",
+      "title": "CT-07",
+      "action": "note",
+      "args": {
+        "text": "'Body sizes | small (pipwing), medium (mudsnout), large (meadowhart), aggressive (tuskroot) | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-071",
+      "title": "AMBIGUITY: CT-07 names species, not sites",
+      "action": "note",
+      "args": {
+        "text": "E.2 CT-07 names four body sizes by species and the protocol gives no coordinate for any of them. Transcribed as: walk the band 1 field and the trail-camp spine, engage each of the four as it is encountered, and throw at it. If a species is not encountered in the field the step FAILs and the absence is the finding -- the protocol forbids granting one."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-072",
+      "title": "walk the field looking for a pipwing (small)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          348.0,
+          919.5
+        ]
+      },
+      "expected": "the player walks the band 1 spine between the trail camp (348,919.5) and the field anchor, looking for a pipwing"
+    },
+    {
+      "id": "X03-073",
+      "title": "rescan for a pipwing",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X03-074",
+      "title": "engage the pipwing",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the small body size"
+    },
+    {
+      "id": "X03-075",
+      "title": "deploy a creature into the throw line (pipwing)",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "the player's own deployed creature stands between the thrower and the target: CT-06's invariant is that it must not eat the orb"
+    },
+    {
+      "id": "X03-076",
+      "title": "enter aim (CT-07 pipwing)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-077",
+      "title": "aim owns input (CT-07 pipwing)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-078",
+      "title": "throw at the pipwing",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw at a pipwing (small) body is recorded with its distance, shown percent and result; the player's own deployed creature does not eat the orb"
+    },
+    {
+      "id": "X03-079",
+      "title": "let the pipwing fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the fight resolves before the next body size"
+    },
+    {
+      "id": "X03-080",
+      "title": "walk the field looking for a mudsnout (medium)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks the band 1 spine between the trail camp (348,919.5) and the field anchor, looking for a mudsnout"
+    },
+    {
+      "id": "X03-081",
+      "title": "rescan for a mudsnout",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X03-082",
+      "title": "engage the mudsnout",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the medium body size"
+    },
+    {
+      "id": "X03-083",
+      "title": "deploy a creature into the throw line (mudsnout)",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "the player's own deployed creature stands between the thrower and the target: CT-06's invariant is that it must not eat the orb"
+    },
+    {
+      "id": "X03-084",
+      "title": "enter aim (CT-07 mudsnout)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-085",
+      "title": "aim owns input (CT-07 mudsnout)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-086",
+      "title": "throw at the mudsnout",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw at a mudsnout (medium) body is recorded with its distance, shown percent and result; the player's own deployed creature does not eat the orb"
+    },
+    {
+      "id": "X03-087",
+      "title": "let the mudsnout fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the fight resolves before the next body size"
+    },
+    {
+      "id": "X03-088",
+      "title": "walk the field looking for a meadowhart (large)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          348.0,
+          919.5
+        ]
+      },
+      "expected": "the player walks the band 1 spine between the trail camp (348,919.5) and the field anchor, looking for a meadowhart"
+    },
+    {
+      "id": "X03-089",
+      "title": "rescan for a meadowhart",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X03-090",
+      "title": "engage the meadowhart",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the large body size"
+    },
+    {
+      "id": "X03-091",
+      "title": "deploy a creature into the throw line (meadowhart)",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "the player's own deployed creature stands between the thrower and the target: CT-06's invariant is that it must not eat the orb"
+    },
+    {
+      "id": "X03-092",
+      "title": "enter aim (CT-07 meadowhart)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-093",
+      "title": "aim owns input (CT-07 meadowhart)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-094",
+      "title": "throw at the meadowhart",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw at a meadowhart (large) body is recorded with its distance, shown percent and result; the player's own deployed creature does not eat the orb"
+    },
+    {
+      "id": "X03-095",
+      "title": "let the meadowhart fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the fight resolves before the next body size"
+    },
+    {
+      "id": "X03-096",
+      "title": "walk the field looking for a tuskroot (aggressive)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player walks the band 1 spine between the trail camp (348,919.5) and the field anchor, looking for a tuskroot"
+    },
+    {
+      "id": "X03-097",
+      "title": "rescan for a tuskroot",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "the wilds in range are counted from live queries"
+    },
+    {
+      "id": "X03-098",
+      "title": "engage the tuskroot",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against the aggressive body size"
+    },
+    {
+      "id": "X03-099",
+      "title": "deploy a creature into the throw line (tuskroot)",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "the player's own deployed creature stands between the thrower and the target: CT-06's invariant is that it must not eat the orb"
+    },
+    {
+      "id": "X03-100",
+      "title": "enter aim (CT-07 tuskroot)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-101",
+      "title": "aim owns input (CT-07 tuskroot)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-102",
+      "title": "throw at the tuskroot",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw at a tuskroot (aggressive) body is recorded with its distance, shown percent and result; the player's own deployed creature does not eat the orb"
+    },
+    {
+      "id": "X03-103",
+      "title": "let the tuskroot fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the fight resolves before the next body size"
+    },
+    {
+      "id": "X03-104",
+      "title": "GF-15-CATCH-07a: aim reticle across the body sizes",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-07a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame for CT-07"
+    },
+    {
+      "id": "X03-105",
+      "title": "GF-15-CATCH-07b: resolve across the body sizes",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-07b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the resolve frame for CT-07"
+    },
+    {
+      "id": "X03-106",
+      "title": "CT-08",
+      "action": "note",
+      "args": {
+        "text": "'Party-not-full -> catch -> count | verify party count increments, HUD shows exactly five slots maximum -- nothing may imply a sixth | telemetry + GF-19 shot.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-107",
+      "title": "AMBIGUITY: which GF-19 shot CT-08 means",
+      "action": "note",
+      "args": {
+        "text": "CT-08's evidence column says 'telemetry + GF-19 shot'. The only GF-19 frame about party slots is GF-19-UI-09, 'party strip at 5/5', and protocol L.4 sites that one in segment S08: 'HUD: five slots max, no sixth implied | GF-19-09 at 5/5 party | S08 | shot'. CT-08 is a party-NOT-full case, so GF-19-UI-09 cannot honestly be taken here either. No shot is invented: the count and the slot presentation are recorded in telemetry and this note names the gap."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-108",
+      "title": "AMBIGUITY: what the party count is at S05-exit",
+      "action": "note",
+      "args": {
+        "text": "CT-08 needs a party that is not full, and the protocol never says how many creatures S05-exit holds -- protocol B's span for S03 is 'team of 3' and nothing fixes the count at S05. The two asserts below are written as 4 then 5, so that 'party count increments' is a real verdict rather than an unfalsifiable one. A FAIL on the first of them is a bookkeeping mismatch about the entry save, not a game defect, and the event's own `party` field carries the true count either way."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-109",
+      "title": "party size before the catch",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 4
+      },
+      "expected": "the party is not full; the exact count before the catch is on this event"
+    },
+    {
+      "id": "X03-110",
+      "title": "engage a catchable wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against a wild the party has room for"
+    },
+    {
+      "id": "X03-111",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 45
+      },
+      "expected": "the wild is brought low so the shown percent is workable"
+    },
+    {
+      "id": "X03-112",
+      "title": "enter aim (CT-08 party-not-full catch)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-113",
+      "title": "aim owns input (CT-08 party-not-full catch)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-114",
+      "title": "throw",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw resolves; a success is what CT-08 needs"
+    },
+    {
+      "id": "X03-115",
+      "title": "the party count incremented",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "party count increments by exactly one. The HUD must show exactly five slots maximum -- nothing may imply a sixth."
+    },
+    {
+      "id": "X03-116",
+      "title": "CT-10",
+      "action": "note",
+      "args": {
+        "text": "'Catch -> party UI -> cycling | open Creatures tab, cycle in world (LB), deploy new catch | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-117",
+      "title": "open the Creatures tab",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X03-118",
+      "title": "cycle right to Creatures",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 1,
+        "settle_frames": 12
+      },
+      "expected": "one RB press reaches the Creatures tab"
+    },
+    {
+      "id": "X03-119",
+      "title": "Creatures owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_creatures"
+      },
+      "expected": "input_context is 'menu_creatures' and the new catch is in the list with its nickname"
+    },
+    {
+      "id": "X03-120",
+      "title": "walk the party list",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 5
+      },
+      "expected": "focus walks the party, including the newest member"
+    },
+    {
+      "id": "X03-121",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X03-122",
+      "title": "cycle in the world",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 20
+      },
+      "expected": "LB cycles the party in the world, including the newest catch (L.6 T11)"
+    },
+    {
+      "id": "X03-123",
+      "title": "deploy the new catch",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RB calls out the newly caught creature"
+    },
+    {
+      "id": "X03-124",
+      "title": "CT-11",
+      "action": "note",
+      "args": {
+        "text": "'Save/load after catch | save slot 1, quit to title, load; party intact with nickname | telemetry.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-125",
+      "title": "open the Save tab",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X03-126",
+      "title": "cycle right to Save",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach the Save tab"
+    },
+    {
+      "id": "X03-127",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X03-128",
+      "title": "focus slot 1's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus starts on slot 0's Save button and one d-pad down reaches slot 1's -- slots 1-3 are the ones kept free for natural play coverage"
+    },
+    {
+      "id": "X03-129",
+      "title": "save to slot 1",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 1; the save duration is measured"
+    },
+    {
+      "id": "X03-130",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X03-131",
+      "title": "copy slot 1 out",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X03-ct11-slot1.json"
+      },
+      "expected": "the artefact is preserved in the run directory"
+    },
+    {
+      "id": "X03-132",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X03-133",
+      "title": "quit to the title",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes back up"
+    },
+    {
+      "id": "X03-134",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X03-135",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X03-136",
+      "title": "load slot 1",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "slot 1 loads; the load duration is measured"
+    },
+    {
+      "id": "X03-137",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X03-138",
+      "title": "the party came back intact",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "party intact with nickname: the count is right and the Creatures tab below shows the nickname"
+    },
+    {
+      "id": "X03-139",
+      "title": "check the nickname survived",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X03-140",
+      "title": "cycle right to Creatures",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 1,
+        "settle_frames": 12
+      },
+      "expected": "the Creatures tab shows the caught creature under its nickname"
+    },
+    {
+      "id": "X03-141",
+      "title": "Creatures owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_creatures"
+      },
+      "expected": "input_context is 'menu_creatures'"
+    },
+    {
+      "id": "X03-142",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X03-143",
+      "title": "CT-09",
+      "action": "note",
+      "args": {
+        "text": "'Party-full catch attempt | X03 from S08-exit (5/5): record exactly what the game offers; catching while full is a designed decision point, verify the flow neither silently discards nor implies storage | telemetry + shots.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-144",
+      "title": "the five-creature rule constrains what CT-09 can even expect",
+      "action": "note",
+      "args": {
+        "text": "The player can own only five creatures total, there is no storage, no reserve box and no hidden sixth slot (CLAUDE.md). CT-09 is transcribed as a check on what the game OFFERS at 5/5 -- a designed decision point -- never as an expected sixth catch."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X03-145",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X03-146",
+      "title": "seed slot 4 from S08-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S08-exit.json"
+      },
+      "expected": "the journey's S08-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X03-147",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X03-148",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X03-149",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X03-150",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X03-151",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X03-152",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X03-153",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X03-154",
+      "title": "the party is full",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "5/5: the party maximum, with no storage and no sixth slot"
+    },
+    {
+      "id": "X03-155",
+      "title": "engage a wild at 5/5",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a fight starts against a catchable wild while the party is full"
+    },
+    {
+      "id": "X03-156",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 45
+      },
+      "expected": "the wild is brought low"
+    },
+    {
+      "id": "X03-157",
+      "title": "enter aim (CT-09 party-full)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "combat_manager.gd::_throw_pressed reads interact as the throw button and the aim reticle comes up. "
+    },
+    {
+      "id": "X03-158",
+      "title": "aim owns input (CT-09 party-full)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is 'combat_aim'"
+    },
+    {
+      "id": "X03-159",
+      "title": "GF-15-CATCH-09a: aim reticle at 5/5",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-09a",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the aim reticle frame with the party at 5/5"
+    },
+    {
+      "id": "X03-160",
+      "title": "throw while full",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "record exactly what the game offers. The flow must neither silently discard nor imply storage."
+    },
+    {
+      "id": "X03-161",
+      "title": "GF-15-CATCH-09b: what the game offers at 5/5",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-09b",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "the resolve frame showing exactly what the game offers when a catch lands at 5/5"
+    },
+    {
+      "id": "X03-162",
+      "title": "the party is still five",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "however the decision point resolves, the party is five: no sixth slot exists"
+    },
+    {
+      "id": "X03-163",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 60
+      },
+      "expected": "the fight resolves and control returns"
+    },
+    {
+      "id": "X03-164",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "Per-throw records for Phase B are the catch_throw / catch_result events in this segment's events.jsonl, with the GF-15-CATCH pairs correlated by artefact id."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

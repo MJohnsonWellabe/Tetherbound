@@ -1,0 +1,3047 @@
+{
+  "id": "X05",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
+  "title": "Save and session lifecycle (protocol E.8)",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.8, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: every S0n-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
+  "_slots": "scripts/save/save_game.gd has 5 slots. Slot 0 is autosave; slot 4 is the segment handoff slot; slots 1-3 are the player slots, and E.8 requires all three exercised across the run. This segment rotates 1, 2, 3 across the nine journey exit saves.",
+  "_no_teleport": "X05 is not a DIAG segment and contains no teleport step.",
+  "_gap": "SEGMENT_SCHEMA.md's assert checks cover position (near), party (party_size), flags (flag_set), tracked objective (objective_is) and region (region_is). Satiety, time of day and placed buildings have no assert check, so those three legs of E.6.13's checklist are recorded as event fields (player.satiety, clock_hour, inventory) and read by Phase B rather than verdicted by the harness. Named here rather than quietly dropped.",
+  "steps": [
+    {
+      "id": "X05-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "E.8: 'From every journey exit save: save via tab (all 3 player slots exercised across the run), quit to title, load, verify restoration (checklist in E.6.13); measure duration_ms for each save and load; boot-to-title and title-to-world durations; autosave (slot 0) observed firing and loading; load-the-wrong-older-slot check (loading S03-exit after playing to S06 must restore the older state cleanly, not merge). Title-screen New Game over an existing save must not destroy slots without confirmation.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-002",
+      "title": "round 1 of 9: S02-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S02-exit and the player slot exercised on this round is slot 1."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-003",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-004",
+      "title": "seed slot 4 from S02-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S02-exit.json"
+      },
+      "expected": "the journey's S02-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-005",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-006",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-007",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-008",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-009",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-010",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-011",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-012",
+      "title": "restoration: the world owns input (S02-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-013",
+      "title": "GF-01-TITLE-02: the Load list populated",
+      "action": "capture",
+      "args": {
+        "id": "GF-01-TITLE-02",
+        "class": "1",
+        "hud": "as shipped",
+        "camera_kind": "title",
+        "trigger": "planned",
+        "intended_proof": "load path exists and is legible"
+      },
+      "expected": "a frame of the populated Load list on the X05 revisit"
+    },
+    {
+      "id": "X05-014",
+      "title": "open the pause shell (S02-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-015",
+      "title": "cycle right to the Save tab (S02-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-016",
+      "title": "the Save tab is up (S02-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-017",
+      "title": "focus slot 1's Save button (S02-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 1 d-pad down(s) reach slot 1's"
+    },
+    {
+      "id": "X05-018",
+      "title": "save to slot 1 (S02-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 1 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-019",
+      "title": "give the write a moment (S02-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-020",
+      "title": "copy slot 1 out (S02-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X05-S02-exit-slot1.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-021",
+      "title": "close the shell (S02-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-022",
+      "title": "quit to the title (S02-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-023",
+      "title": "the title owns input (S02-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-024",
+      "title": "move focus to Load Game (S02-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-025",
+      "title": "open the slot list (S02-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-026",
+      "title": "load slot 1 (S02-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-027",
+      "title": "let the loaded world stand up (S02-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-028",
+      "title": "restoration: the world owns input (S02-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-029",
+      "title": "round 2 of 9: S03-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S03-exit and the player slot exercised on this round is slot 2."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-030",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-031",
+      "title": "seed slot 4 from S03-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03-exit.json"
+      },
+      "expected": "the journey's S03-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-032",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-033",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-034",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-035",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-036",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-037",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-038",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-039",
+      "title": "restoration: the world owns input (S03-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-040",
+      "title": "open the pause shell (S03-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-041",
+      "title": "cycle right to the Save tab (S03-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-042",
+      "title": "the Save tab is up (S03-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-043",
+      "title": "focus slot 2's Save button (S03-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 2
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 2 d-pad down(s) reach slot 2's"
+    },
+    {
+      "id": "X05-044",
+      "title": "save to slot 2 (S03-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 2 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-045",
+      "title": "give the write a moment (S03-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-046",
+      "title": "copy slot 2 out (S03-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 2,
+        "name": "X05-S03-exit-slot2.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-047",
+      "title": "close the shell (S03-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-048",
+      "title": "quit to the title (S03-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-049",
+      "title": "the title owns input (S03-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-050",
+      "title": "move focus to Load Game (S03-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-051",
+      "title": "open the slot list (S03-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-052",
+      "title": "load slot 2 (S03-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-053",
+      "title": "let the loaded world stand up (S03-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-054",
+      "title": "restoration: the world owns input (S03-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-055",
+      "title": "round 3 of 9: S04-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S04-exit and the player slot exercised on this round is slot 3."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-056",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-057",
+      "title": "seed slot 4 from S04-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S04-exit.json"
+      },
+      "expected": "the journey's S04-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-058",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-059",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-060",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-061",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-062",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-063",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-064",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-065",
+      "title": "restoration: the world owns input (S04-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-066",
+      "title": "open the pause shell (S04-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-067",
+      "title": "cycle right to the Save tab (S04-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-068",
+      "title": "the Save tab is up (S04-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-069",
+      "title": "focus slot 3's Save button (S04-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 3
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 3 d-pad down(s) reach slot 3's"
+    },
+    {
+      "id": "X05-070",
+      "title": "save to slot 3 (S04-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 3 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-071",
+      "title": "give the write a moment (S04-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-072",
+      "title": "copy slot 3 out (S04-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 3,
+        "name": "X05-S04-exit-slot3.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-073",
+      "title": "close the shell (S04-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-074",
+      "title": "quit to the title (S04-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-075",
+      "title": "the title owns input (S04-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-076",
+      "title": "move focus to Load Game (S04-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-077",
+      "title": "open the slot list (S04-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-078",
+      "title": "load slot 3 (S04-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-079",
+      "title": "let the loaded world stand up (S04-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-080",
+      "title": "restoration: the world owns input (S04-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-081",
+      "title": "round 4 of 9: S05-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S05-exit and the player slot exercised on this round is slot 1."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-082",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-083",
+      "title": "seed slot 4 from S05-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S05-exit.json"
+      },
+      "expected": "the journey's S05-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-084",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-085",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-086",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-087",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-088",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-089",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-090",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-091",
+      "title": "restoration: the world owns input (S05-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-092",
+      "title": "open the pause shell (S05-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-093",
+      "title": "cycle right to the Save tab (S05-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-094",
+      "title": "the Save tab is up (S05-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-095",
+      "title": "focus slot 1's Save button (S05-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 1 d-pad down(s) reach slot 1's"
+    },
+    {
+      "id": "X05-096",
+      "title": "save to slot 1 (S05-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 1 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-097",
+      "title": "give the write a moment (S05-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-098",
+      "title": "copy slot 1 out (S05-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X05-S05-exit-slot1.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-099",
+      "title": "close the shell (S05-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-100",
+      "title": "quit to the title (S05-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-101",
+      "title": "the title owns input (S05-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-102",
+      "title": "move focus to Load Game (S05-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-103",
+      "title": "open the slot list (S05-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-104",
+      "title": "load slot 1 (S05-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-105",
+      "title": "let the loaded world stand up (S05-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-106",
+      "title": "restoration: the world owns input (S05-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-107",
+      "title": "round 5 of 9: S06-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S06-exit and the player slot exercised on this round is slot 2."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-108",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-109",
+      "title": "seed slot 4 from S06-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S06-exit.json"
+      },
+      "expected": "the journey's S06-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-110",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-111",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-112",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-113",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-114",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-115",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-116",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-117",
+      "title": "restoration: the world owns input (S06-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-118",
+      "title": "open the pause shell (S06-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-119",
+      "title": "cycle right to the Save tab (S06-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-120",
+      "title": "the Save tab is up (S06-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-121",
+      "title": "focus slot 2's Save button (S06-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 2
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 2 d-pad down(s) reach slot 2's"
+    },
+    {
+      "id": "X05-122",
+      "title": "save to slot 2 (S06-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 2 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-123",
+      "title": "give the write a moment (S06-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-124",
+      "title": "copy slot 2 out (S06-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 2,
+        "name": "X05-S06-exit-slot2.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-125",
+      "title": "close the shell (S06-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-126",
+      "title": "quit to the title (S06-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-127",
+      "title": "the title owns input (S06-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-128",
+      "title": "move focus to Load Game (S06-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-129",
+      "title": "open the slot list (S06-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-130",
+      "title": "load slot 2 (S06-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-131",
+      "title": "let the loaded world stand up (S06-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-132",
+      "title": "restoration: the world owns input (S06-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-133",
+      "title": "round 6 of 9: S07-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S07-exit and the player slot exercised on this round is slot 3."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-134",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-135",
+      "title": "seed slot 4 from S07-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S07-exit.json"
+      },
+      "expected": "the journey's S07-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-136",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-137",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-138",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-139",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-140",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-141",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-142",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-143",
+      "title": "restoration: the world owns input (S07-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-144",
+      "title": "open the pause shell (S07-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-145",
+      "title": "cycle right to the Save tab (S07-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-146",
+      "title": "the Save tab is up (S07-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-147",
+      "title": "focus slot 3's Save button (S07-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 3
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 3 d-pad down(s) reach slot 3's"
+    },
+    {
+      "id": "X05-148",
+      "title": "save to slot 3 (S07-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 3 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-149",
+      "title": "give the write a moment (S07-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-150",
+      "title": "copy slot 3 out (S07-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 3,
+        "name": "X05-S07-exit-slot3.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-151",
+      "title": "close the shell (S07-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-152",
+      "title": "quit to the title (S07-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-153",
+      "title": "the title owns input (S07-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-154",
+      "title": "move focus to Load Game (S07-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-155",
+      "title": "open the slot list (S07-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-156",
+      "title": "load slot 3 (S07-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-157",
+      "title": "let the loaded world stand up (S07-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-158",
+      "title": "restoration: the world owns input (S07-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-159",
+      "title": "round 7 of 9: S08-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S08-exit and the player slot exercised on this round is slot 1."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-160",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-161",
+      "title": "seed slot 4 from S08-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S08-exit.json"
+      },
+      "expected": "the journey's S08-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-162",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-163",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-164",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-165",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-166",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-167",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-168",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-169",
+      "title": "the party is five at S08-exit",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "5/5: the party maximum, with no storage and no sixth slot"
+    },
+    {
+      "id": "X05-170",
+      "title": "restoration: the world owns input (S08-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-171",
+      "title": "open the pause shell (S08-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-172",
+      "title": "cycle right to the Save tab (S08-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-173",
+      "title": "the Save tab is up (S08-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-174",
+      "title": "focus slot 1's Save button (S08-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 1 d-pad down(s) reach slot 1's"
+    },
+    {
+      "id": "X05-175",
+      "title": "save to slot 1 (S08-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 1 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-176",
+      "title": "give the write a moment (S08-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-177",
+      "title": "copy slot 1 out (S08-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X05-S08-exit-slot1.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-178",
+      "title": "close the shell (S08-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-179",
+      "title": "quit to the title (S08-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-180",
+      "title": "the title owns input (S08-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-181",
+      "title": "move focus to Load Game (S08-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-182",
+      "title": "open the slot list (S08-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-183",
+      "title": "load slot 1 (S08-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-184",
+      "title": "let the loaded world stand up (S08-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-185",
+      "title": "restoration: the world owns input (S08-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-186",
+      "title": "round 8 of 9: S09-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S09-exit and the player slot exercised on this round is slot 2."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-187",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-188",
+      "title": "seed slot 4 from S09-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S09-exit.json"
+      },
+      "expected": "the journey's S09-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-189",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-190",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-191",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-192",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-193",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-194",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-195",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-196",
+      "title": "restoration: the world owns input (S09-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-197",
+      "title": "open the pause shell (S09-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-198",
+      "title": "cycle right to the Save tab (S09-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-199",
+      "title": "the Save tab is up (S09-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-200",
+      "title": "focus slot 2's Save button (S09-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 2
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 2 d-pad down(s) reach slot 2's"
+    },
+    {
+      "id": "X05-201",
+      "title": "save to slot 2 (S09-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 2 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-202",
+      "title": "give the write a moment (S09-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-203",
+      "title": "copy slot 2 out (S09-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 2,
+        "name": "X05-S09-exit-slot2.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-204",
+      "title": "close the shell (S09-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-205",
+      "title": "quit to the title (S09-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-206",
+      "title": "the title owns input (S09-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-207",
+      "title": "move focus to Load Game (S09-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-208",
+      "title": "open the slot list (S09-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-209",
+      "title": "load slot 2 (S09-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-210",
+      "title": "let the loaded world stand up (S09-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-211",
+      "title": "restoration: the world owns input (S09-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-212",
+      "title": "round 9 of 9: S10-exit",
+      "action": "note",
+      "args": {
+        "text": "The entry save is S10-exit and the player slot exercised on this round is slot 3."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-213",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X05-214",
+      "title": "seed slot 4 from S10-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S10-exit.json"
+      },
+      "expected": "the journey's S10-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X05-215",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X05-216",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-217",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-218",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X05-219",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X05-220",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X05-221",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X05-222",
+      "title": "restoration: the world owns input (S10-exit entry)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-223",
+      "title": "open the pause shell (S10-exit)",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the game_menu button opens the pause shell"
+    },
+    {
+      "id": "X05-224",
+      "title": "cycle right to the Save tab (S10-exit)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+    },
+    {
+      "id": "X05-225",
+      "title": "the Save tab is up (S10-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context is 'menu_save'"
+    },
+    {
+      "id": "X05-226",
+      "title": "focus slot 3's Save button (S10-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 3
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and 3 d-pad down(s) reach slot 3's"
+    },
+    {
+      "id": "X05-227",
+      "title": "save to slot 3 (S10-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button writes slot 3 through the production Save tab; the save operation's duration_ms is measured"
+    },
+    {
+      "id": "X05-228",
+      "title": "give the write a moment (S10-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X05-229",
+      "title": "copy slot 3 out (S10-exit)",
+      "action": "save_out",
+      "args": {
+        "slot": 3,
+        "name": "X05-S10-exit-slot3.json"
+      },
+      "expected": "the artefact is preserved in the run directory; save_out saves nothing itself"
+    },
+    {
+      "id": "X05-230",
+      "title": "close the shell (S10-exit)",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X05-231",
+      "title": "quit to the title (S10-exit)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the world is torn down and the real title comes up; the boot-to-title duration_ms is measured on this event"
+    },
+    {
+      "id": "X05-232",
+      "title": "the title owns input (S10-exit)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X05-233",
+      "title": "move focus to Load Game (S10-exit)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X05-234",
+      "title": "open the slot list (S10-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot"
+    },
+    {
+      "id": "X05-235",
+      "title": "load slot 3 (S10-exit)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads; the load operation's duration_ms is measured, and the title-to-world duration with it"
+    },
+    {
+      "id": "X05-236",
+      "title": "let the loaded world stand up (S10-exit)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-237",
+      "title": "restoration: the world owns input (S10-exit round trip)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-238",
+      "title": "autosave",
+      "action": "note",
+      "args": {
+        "text": "E.8: 'autosave (slot 0) observed firing and loading'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-239",
+      "title": "play on until the autosave fires",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 3600
+      },
+      "expected": "a minute of ordinary walking, so the autosave fires on its own trigger rather than being asked for"
+    },
+    {
+      "id": "X05-240",
+      "title": "copy the autosave out",
+      "action": "save_out",
+      "args": {
+        "slot": 0,
+        "name": "X05-autosave-slot0.json"
+      },
+      "expected": "slot 0 exists and is preserved. A FAIL here means the autosave never fired, which is itself the finding."
+    },
+    {
+      "id": "X05-241",
+      "title": "quit to the title",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes back up"
+    },
+    {
+      "id": "X05-242",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-243",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens and auto-focuses the first non-empty slot, which is the autosave"
+    },
+    {
+      "id": "X05-244",
+      "title": "load the autosave",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "slot 0 loads; the load duration is measured"
+    },
+    {
+      "id": "X05-245",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X05-246",
+      "title": "restoration: the world owns input (autosave)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-247",
+      "title": "the wrong-older-slot check",
+      "action": "note",
+      "args": {
+        "text": "E.8: 'load-the-wrong-older-slot check (loading S03-exit after playing to S06 must restore the older state cleanly, not merge)'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-248",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone"
+    },
+    {
+      "id": "X05-249",
+      "title": "seed the S06 state into slot 2",
+      "action": "seed_save",
+      "args": {
+        "slot": 2,
+        "from": "run://S06-exit.json"
+      },
+      "expected": "the later state is in a slot"
+    },
+    {
+      "id": "X05-250",
+      "title": "seed the older S03 state into slot 3",
+      "action": "seed_save",
+      "args": {
+        "slot": 3,
+        "from": "run://S03-exit.json"
+      },
+      "expected": "the older state is in a second slot, so the wrong one can be chosen deliberately"
+    },
+    {
+      "id": "X05-251",
+      "title": "boot the title",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up with two non-empty slots"
+    },
+    {
+      "id": "X05-252",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-253",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on the first non-empty slot, slot 2, the LATER state"
+    },
+    {
+      "id": "X05-254",
+      "title": "load the later state first",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "slot 2 loads, so the older load below happens after playing to S06"
+    },
+    {
+      "id": "X05-255",
+      "title": "let it stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-256",
+      "title": "restoration: the world owns input (later state)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-257",
+      "title": "quit to the title again",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes back up"
+    },
+    {
+      "id": "X05-258",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-259",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens"
+    },
+    {
+      "id": "X05-260",
+      "title": "focus the OLDER slot",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus moves off slot 2 onto slot 3, the older S03 state"
+    },
+    {
+      "id": "X05-261",
+      "title": "load the older slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the older state loads; it must restore cleanly, not merge with the S06 state that was just played"
+    },
+    {
+      "id": "X05-262",
+      "title": "let it stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-263",
+      "title": "restoration: the world owns input (older state)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-264",
+      "title": "the older state did not merge with the later one",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "the S03 state puts the player in the village, not wherever S06 left them: the older state restored cleanly rather than merging"
+    },
+    {
+      "id": "X05-265",
+      "title": "New Game over an existing save",
+      "action": "note",
+      "args": {
+        "text": "E.8: 'Title-screen New Game over an existing save must not destroy slots without confirmation.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-266",
+      "title": "quit to the title",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up with slots 2 and 3 non-empty"
+    },
+    {
+      "id": "X05-267",
+      "title": "focus Start New Game",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses Start New Game"
+    },
+    {
+      "id": "X05-268",
+      "title": "press Start New Game over the existing saves",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "New Game over an existing save must not destroy slots without confirmation: a confirmation must be offered before anything is overwritten"
+    },
+    {
+      "id": "X05-269",
+      "title": "back out of the confirmation",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the confirmation is declined"
+    },
+    {
+      "id": "X05-270",
+      "title": "the slots survived the declined New Game",
+      "action": "save_out",
+      "args": {
+        "slot": 3,
+        "name": "X05-newgame-declined-slot3.json"
+      },
+      "expected": "slot 3 still exists after a declined New Game. A FAIL here means the slot was destroyed without confirmation."
+    },
+    {
+      "id": "X05-271",
+      "title": "the awkward saves",
+      "action": "note",
+      "args": {
+        "text": "E.6 case 13: 'Save in awkward but legal states: mid-Warrens, on the bridge, at night while a creature is bedded, with satchel full, during aim-cancel frame; then load each (X05) and verify full restoration (position, party, flags, satiety, time of day, placed buildings, tracked objective).' The saves themselves are taken in X06; the loads are here, by the protocol's own division."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-272",
+      "title": "empty the live save directory (mid-Warrens)",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the load below cannot be answered by state in memory"
+    },
+    {
+      "id": "X05-273",
+      "title": "seed the mid-Warrens save",
+      "action": "seed_save",
+      "args": {
+        "slot": 1,
+        "from": "run://X06-awkward-mid-Warrens.json"
+      },
+      "expected": "the awkward save X06 took inside the Burrow Warrens chambers is back in user://"
+    },
+    {
+      "id": "X05-274",
+      "title": "boot the title (mid-Warrens)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up"
+    },
+    {
+      "id": "X05-275",
+      "title": "move focus to Load Game (mid-Warrens)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-276",
+      "title": "open the slot list (mid-Warrens)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on slot 1"
+    },
+    {
+      "id": "X05-277",
+      "title": "load the mid-Warrens save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the awkward-state save loads; the load duration is measured"
+    },
+    {
+      "id": "X05-278",
+      "title": "let it stand up (mid-Warrens)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-279",
+      "title": "restoration: the world owns input (awkward: mid-Warrens)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-280",
+      "title": "empty the live save directory (on the bridge)",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the load below cannot be answered by state in memory"
+    },
+    {
+      "id": "X05-281",
+      "title": "seed the on the bridge save",
+      "action": "seed_save",
+      "args": {
+        "slot": 1,
+        "from": "run://X06-awkward-on-the-bridge.json"
+      },
+      "expected": "the awkward save X06 took on the South Bridge is back in user://"
+    },
+    {
+      "id": "X05-282",
+      "title": "boot the title (on the bridge)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up"
+    },
+    {
+      "id": "X05-283",
+      "title": "move focus to Load Game (on the bridge)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-284",
+      "title": "open the slot list (on the bridge)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on slot 1"
+    },
+    {
+      "id": "X05-285",
+      "title": "load the on the bridge save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the awkward-state save loads; the load duration is measured"
+    },
+    {
+      "id": "X05-286",
+      "title": "let it stand up (on the bridge)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-287",
+      "title": "restoration: the world owns input (awkward: on the bridge)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-288",
+      "title": "empty the live save directory (at night while a creature is bedded)",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the load below cannot be answered by state in memory"
+    },
+    {
+      "id": "X05-289",
+      "title": "seed the at night while a creature is bedded save",
+      "action": "seed_save",
+      "args": {
+        "slot": 1,
+        "from": "run://X06-awkward-at-night-while-a-creature-is-bedded.json"
+      },
+      "expected": "the awkward save X06 took at the bedded creature, at night is back in user://"
+    },
+    {
+      "id": "X05-290",
+      "title": "boot the title (at night while a creature is bedded)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up"
+    },
+    {
+      "id": "X05-291",
+      "title": "move focus to Load Game (at night while a creature is bedded)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-292",
+      "title": "open the slot list (at night while a creature is bedded)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on slot 1"
+    },
+    {
+      "id": "X05-293",
+      "title": "load the at night while a creature is bedded save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the awkward-state save loads; the load duration is measured"
+    },
+    {
+      "id": "X05-294",
+      "title": "let it stand up (at night while a creature is bedded)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-295",
+      "title": "restoration: the world owns input (awkward: at night while a creature is bedded)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-296",
+      "title": "empty the live save directory (with satchel full)",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the load below cannot be answered by state in memory"
+    },
+    {
+      "id": "X05-297",
+      "title": "seed the with satchel full save",
+      "action": "seed_save",
+      "args": {
+        "slot": 1,
+        "from": "run://X06-awkward-with-satchel-full.json"
+      },
+      "expected": "the awkward save X06 took wherever the satchel filled is back in user://"
+    },
+    {
+      "id": "X05-298",
+      "title": "boot the title (with satchel full)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up"
+    },
+    {
+      "id": "X05-299",
+      "title": "move focus to Load Game (with satchel full)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-300",
+      "title": "open the slot list (with satchel full)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on slot 1"
+    },
+    {
+      "id": "X05-301",
+      "title": "load the with satchel full save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the awkward-state save loads; the load duration is measured"
+    },
+    {
+      "id": "X05-302",
+      "title": "let it stand up (with satchel full)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-303",
+      "title": "restoration: the world owns input (awkward: with satchel full)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-304",
+      "title": "empty the live save directory (during aim-cancel frame)",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the load below cannot be answered by state in memory"
+    },
+    {
+      "id": "X05-305",
+      "title": "seed the during aim-cancel frame save",
+      "action": "seed_save",
+      "args": {
+        "slot": 1,
+        "from": "run://X06-awkward-during-aim-cancel-frame.json"
+      },
+      "expected": "the awkward save X06 took on the frame a catch aim was cancelled is back in user://"
+    },
+    {
+      "id": "X05-306",
+      "title": "boot the title (during aim-cancel frame)",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title comes up"
+    },
+    {
+      "id": "X05-307",
+      "title": "move focus to Load Game (during aim-cancel frame)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X05-308",
+      "title": "open the slot list (during aim-cancel frame)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on slot 1"
+    },
+    {
+      "id": "X05-309",
+      "title": "load the during aim-cancel frame save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the awkward-state save loads; the load duration is measured"
+    },
+    {
+      "id": "X05-310",
+      "title": "let it stand up (during aim-cancel frame)",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the world stands up"
+    },
+    {
+      "id": "X05-311",
+      "title": "restoration: the world owns input (awkward: during aim-cancel frame)",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal. This event carries the whole restoration record: `pos`, `party`, `player` (hp/stamina/satiety), `flags`, `clock_hour`, `inventory` and `objective`. E.6.13's restoration checklist: position, party, flags, satiety, time of day, placed buildings, tracked objective."
+    },
+    {
+      "id": "X05-312",
+      "title": "VOCABULARY GAP: the shipped website desk check has no action",
+      "action": "note",
+      "args": {
+        "text": "Protocol L.5's last-but-one row assigns X05 a desk check: 'static audit of site/index.html + site/img/*: claims vs current build, stale references, broken links; rendered-in-browser look is [OWNER-ONLY]'. Nothing in SEGMENT_SCHEMA.md's vocabulary reads a file off disk or follows a link, and the harness is a game driver. The desk check therefore happens outside this step-script and its result goes into notes/X05.md by hand; this note is the placeholder so the inventory check at run end can see it was not silently dropped."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X05-313",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "Durations for Phase B are the duration_ms fields on this segment's save / load / region_enter events: every save, every load, every boot-to-title and every title-to-world in the run."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

@@ -1,0 +1,2256 @@
+{
+  "id": "X07",
+  "title": "DIAG world and regional audit (protocol E.7 / section 10)",
+  "lane": "diag",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.7, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry save per protocol B: 'any; teleport permitted'.",
+  "_diag": "This is a DIAG segment. E.7: 'X07 then revisits each region under DIAG teleport for the audit grid -- allowed because this audits the world, not the route.' Protocol 0.6 is absolute and travels with every frame here: NO pacing, navigation, difficulty or economy claim may ever be sourced from a DIAG segment. Every teleport step below carries \"diag\": true.",
+  "_hud": "Protocol G's HUD rule: 'HUD ON default. hud:off is permitted only where marked (composition audit frames), and each hud:off frame requires a paired hud:on context frame within 30 s.' The GF-AUD family is the one place hud:off is allowed. Each region block captures its hud:on gameplay frame FIRST and then its five hud:off composition frames back to back, so the hud:on frame is the pair for all five and is seconds, not 30 s, away.",
+  "_pins": "E.7: 'pin-and-freeze the WorldLook clock using the capture_band3_region.gd pattern -- never the unpinned variant that produced the 2026-08-23 crimson artefact -- and record every pin in telemetry as DIAG'. Every pin below is a note step, and the note is the telemetry record the protocol asks for.",
+  "_unflattering": "E.7: 'the operator supplies frames, including unflattering ones -- do not take only flattering screenshots; the shot plan's fixed positions exist precisely so the frame is the frame'. The positions in this file are fixed before play and may not be moved to improve a composition.",
+  "steps": [
+    {
+      "id": "X07-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "E.7's audit grid over every region. The journey segments capture every ARRIVAL shot naturally (protocol G classes 2-13); this revisits each region under DIAG teleport for the grid."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-002",
+      "title": "VOCABULARY GAP: no action pins the WorldLook clock",
+      "action": "note",
+      "args": {
+        "text": "E.7 requires the pin-and-freeze pattern and warns explicitly against the unpinned variant that produced the 2026-08-23 crimson artefact. SEGMENT_SCHEMA.md's vocabulary has no clock-pin action: `wait` advances the clock and nothing freezes it. Every pin below is therefore recorded as a note -- which is what the protocol asks for -- but the pin itself has to be performed by the harness invocation (tools/gate_f/run_segment.sh, capture_band3_region.gd's own pattern) rather than by a step. Reported before the freeze: a `pin_clock` action is a harness change, and after the freeze the operator cannot make one."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-003",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "expected": "the real world scene stands up with the real autoloads and the point-of-interest scan finds the chapter's content"
+    },
+    {
+      "id": "X07-004",
+      "title": "region: Grandpa's Village",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for Grandpa's Village, at the region's own centre (6,-22) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-005",
+      "title": "DIAG: go to Grandpa's Village",
+      "action": "teleport",
+      "args": {
+        "at": [
+          6.0,
+          -22.0
+        ]
+      },
+      "expected": "the player stands at Grandpa's Village. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-006",
+      "title": "the teleport landed where it said (Grandpa's Village)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          6.0,
+          -22.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-007",
+      "title": "region containment agrees (Grandpa's Village)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "map_state.gd's own containment puts the player in grandpas_village"
+    },
+    {
+      "id": "X07-008",
+      "title": "count what lives here (Grandpa's Village)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-009",
+      "title": "DIAG PIN: Grandpa's Village, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-010",
+      "title": "face the intended entry route direction (Grandpa's Village)",
+      "action": "face",
+      "args": {
+        "at": [
+          6.0,
+          -82.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-011",
+      "title": "GF-AUD-grandpas_village-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at Grandpa's Village, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-012",
+      "title": "GF-AUD-grandpas_village-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-013",
+      "title": "GF-AUD-grandpas_village-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-014",
+      "title": "GF-AUD-grandpas_village-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-015",
+      "title": "GF-AUD-grandpas_village-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-016",
+      "title": "GF-AUD-grandpas_village-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at Grandpa's Village, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-017",
+      "title": "what the Grandpa's Village grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for Grandpa's Village: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-018",
+      "title": "DIAG PIN: Grandpa's Village, night preset",
+      "action": "note",
+      "args": {
+        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-019",
+      "title": "GF-AUD-grandpas_village-night-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-night-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's paired hud:on context frame at Grandpa's Village"
+    },
+    {
+      "id": "X07-020",
+      "title": "GF-AUD-grandpas_village-night-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-night-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's composition frame at Grandpa's Village, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-021",
+      "title": "DIAG PIN: Grandpa's Village, weather variant",
+      "action": "note",
+      "args": {
+        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-022",
+      "title": "GF-AUD-grandpas_village-weather-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-weather-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's paired hud:on context frame at Grandpa's Village"
+    },
+    {
+      "id": "X07-023",
+      "title": "GF-AUD-grandpas_village-weather-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-grandpas_village-weather-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's composition frame at Grandpa's Village, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-024",
+      "title": "region: The Rise",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Rise, at the region's own centre (88,-43) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-025",
+      "title": "DIAG: go to The Rise",
+      "action": "teleport",
+      "args": {
+        "at": [
+          88.0,
+          -43.0
+        ]
+      },
+      "expected": "the player stands at The Rise. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-026",
+      "title": "the teleport landed where it said (The Rise)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          88.0,
+          -43.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-027",
+      "title": "region containment agrees (The Rise)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_rise"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_rise"
+    },
+    {
+      "id": "X07-028",
+      "title": "count what lives here (The Rise)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-029",
+      "title": "DIAG PIN: The Rise, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-030",
+      "title": "face the intended entry route direction (The Rise)",
+      "action": "face",
+      "args": {
+        "at": [
+          88.0,
+          -103.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-031",
+      "title": "GF-AUD-the_rise-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Rise, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-032",
+      "title": "GF-AUD-the_rise-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-033",
+      "title": "GF-AUD-the_rise-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-034",
+      "title": "GF-AUD-the_rise-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-035",
+      "title": "GF-AUD-the_rise-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-036",
+      "title": "GF-AUD-the_rise-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_rise-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Rise, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-037",
+      "title": "what the The Rise grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Rise: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-038",
+      "title": "region: The Pond",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Pond, at the region's own centre (-342,507) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-039",
+      "title": "DIAG: go to The Pond",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -342.0,
+          507.0
+        ]
+      },
+      "expected": "the player stands at The Pond. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-040",
+      "title": "the teleport landed where it said (The Pond)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -342.0,
+          507.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-041",
+      "title": "region containment agrees (The Pond)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_pond"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_pond"
+    },
+    {
+      "id": "X07-042",
+      "title": "count what lives here (The Pond)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-043",
+      "title": "DIAG PIN: The Pond, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-044",
+      "title": "face the intended entry route direction (The Pond)",
+      "action": "face",
+      "args": {
+        "at": [
+          -342.0,
+          447.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-045",
+      "title": "GF-AUD-the_pond-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Pond, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-046",
+      "title": "GF-AUD-the_pond-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-047",
+      "title": "GF-AUD-the_pond-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-048",
+      "title": "GF-AUD-the_pond-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-049",
+      "title": "GF-AUD-the_pond-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-050",
+      "title": "GF-AUD-the_pond-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Pond, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-051",
+      "title": "what the The Pond grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Pond: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-052",
+      "title": "DIAG PIN: The Pond, night preset",
+      "action": "note",
+      "args": {
+        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-053",
+      "title": "GF-AUD-the_pond-night-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-night-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's paired hud:on context frame at The Pond"
+    },
+    {
+      "id": "X07-054",
+      "title": "GF-AUD-the_pond-night-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-night-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's composition frame at The Pond, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-055",
+      "title": "DIAG PIN: The Pond, weather variant",
+      "action": "note",
+      "args": {
+        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-056",
+      "title": "GF-AUD-the_pond-weather-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-weather-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's paired hud:on context frame at The Pond"
+    },
+    {
+      "id": "X07-057",
+      "title": "GF-AUD-the_pond-weather-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_pond-weather-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's composition frame at The Pond, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-058",
+      "title": "region: The Old Quarry",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Old Quarry, at the region's own centre (403,1794) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-059",
+      "title": "DIAG: go to The Old Quarry",
+      "action": "teleport",
+      "args": {
+        "at": [
+          403.0,
+          1794.0
+        ]
+      },
+      "expected": "the player stands at The Old Quarry. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-060",
+      "title": "the teleport landed where it said (The Old Quarry)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          403.0,
+          1794.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-061",
+      "title": "region containment agrees (The Old Quarry)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_old_quarry"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_old_quarry"
+    },
+    {
+      "id": "X07-062",
+      "title": "count what lives here (The Old Quarry)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-063",
+      "title": "DIAG PIN: The Old Quarry, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-064",
+      "title": "face the intended entry route direction (The Old Quarry)",
+      "action": "face",
+      "args": {
+        "at": [
+          403.0,
+          1734.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-065",
+      "title": "GF-AUD-the_old_quarry-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Old Quarry, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-066",
+      "title": "GF-AUD-the_old_quarry-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-067",
+      "title": "GF-AUD-the_old_quarry-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-068",
+      "title": "GF-AUD-the_old_quarry-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-069",
+      "title": "GF-AUD-the_old_quarry-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-070",
+      "title": "GF-AUD-the_old_quarry-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_old_quarry-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Old Quarry, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-071",
+      "title": "what the The Old Quarry grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Old Quarry: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-072",
+      "title": "region: The Burrow Warrens",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Burrow Warrens, at the region's own centre (-420,2470) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-073",
+      "title": "DIAG: go to The Burrow Warrens",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -420.0,
+          2470.0
+        ]
+      },
+      "expected": "the player stands at The Burrow Warrens. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-074",
+      "title": "the teleport landed where it said (The Burrow Warrens)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -420.0,
+          2470.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-075",
+      "title": "region containment agrees (The Burrow Warrens)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_burrow_warrens"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_burrow_warrens"
+    },
+    {
+      "id": "X07-076",
+      "title": "count what lives here (The Burrow Warrens)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-077",
+      "title": "DIAG PIN: The Burrow Warrens, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-078",
+      "title": "face the intended entry route direction (The Burrow Warrens)",
+      "action": "face",
+      "args": {
+        "at": [
+          -420.0,
+          2410.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-079",
+      "title": "GF-AUD-the_burrow_warrens-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Burrow Warrens, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-080",
+      "title": "GF-AUD-the_burrow_warrens-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-081",
+      "title": "GF-AUD-the_burrow_warrens-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-082",
+      "title": "GF-AUD-the_burrow_warrens-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-083",
+      "title": "GF-AUD-the_burrow_warrens-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-084",
+      "title": "GF-AUD-the_burrow_warrens-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_burrow_warrens-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Burrow Warrens, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-085",
+      "title": "what the The Burrow Warrens grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Burrow Warrens: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-086",
+      "title": "region: The Tether Relay",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Tether Relay, at the region's own centre (348,3756) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-087",
+      "title": "DIAG: go to The Tether Relay",
+      "action": "teleport",
+      "args": {
+        "at": [
+          348.0,
+          3756.0
+        ]
+      },
+      "expected": "the player stands at The Tether Relay. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-088",
+      "title": "the teleport landed where it said (The Tether Relay)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          348.0,
+          3756.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-089",
+      "title": "region containment agrees (The Tether Relay)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_tether_relay"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_tether_relay"
+    },
+    {
+      "id": "X07-090",
+      "title": "count what lives here (The Tether Relay)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-091",
+      "title": "DIAG PIN: The Tether Relay, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-092",
+      "title": "face the intended entry route direction (The Tether Relay)",
+      "action": "face",
+      "args": {
+        "at": [
+          348.0,
+          3696.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-093",
+      "title": "GF-AUD-the_tether_relay-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Tether Relay, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-094",
+      "title": "GF-AUD-the_tether_relay-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-095",
+      "title": "GF-AUD-the_tether_relay-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-096",
+      "title": "GF-AUD-the_tether_relay-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-097",
+      "title": "GF-AUD-the_tether_relay-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-098",
+      "title": "GF-AUD-the_tether_relay-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_tether_relay-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Tether Relay, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-099",
+      "title": "what the The Tether Relay grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Tether Relay: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-100",
+      "title": "region: The Long Water",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Long Water, at the region's own centre (-150,4200) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-101",
+      "title": "DIAG: go to The Long Water",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -150.0,
+          4200.0
+        ]
+      },
+      "expected": "the player stands at The Long Water. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-102",
+      "title": "the teleport landed where it said (The Long Water)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -150.0,
+          4200.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-103",
+      "title": "region containment agrees (The Long Water)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_long_water"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_long_water"
+    },
+    {
+      "id": "X07-104",
+      "title": "count what lives here (The Long Water)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-105",
+      "title": "DIAG PIN: The Long Water, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-106",
+      "title": "face the intended entry route direction (The Long Water)",
+      "action": "face",
+      "args": {
+        "at": [
+          -150.0,
+          4140.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-107",
+      "title": "GF-AUD-the_long_water-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Long Water, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-108",
+      "title": "GF-AUD-the_long_water-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-109",
+      "title": "GF-AUD-the_long_water-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-110",
+      "title": "GF-AUD-the_long_water-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-111",
+      "title": "GF-AUD-the_long_water-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-112",
+      "title": "GF-AUD-the_long_water-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_long_water-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Long Water, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-113",
+      "title": "what the The Long Water grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Long Water: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-114",
+      "title": "region: The Ironwood Grove",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Ironwood Grove, at the region's own centre (-345,5060) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-115",
+      "title": "DIAG: go to The Ironwood Grove",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -345.0,
+          5060.0
+        ]
+      },
+      "expected": "the player stands at The Ironwood Grove. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-116",
+      "title": "the teleport landed where it said (The Ironwood Grove)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -345.0,
+          5060.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-117",
+      "title": "region containment agrees (The Ironwood Grove)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ironwood_grove"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_ironwood_grove"
+    },
+    {
+      "id": "X07-118",
+      "title": "count what lives here (The Ironwood Grove)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-119",
+      "title": "DIAG PIN: The Ironwood Grove, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-120",
+      "title": "face the intended entry route direction (The Ironwood Grove)",
+      "action": "face",
+      "args": {
+        "at": [
+          -345.0,
+          5000.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-121",
+      "title": "GF-AUD-the_ironwood_grove-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Ironwood Grove, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-122",
+      "title": "GF-AUD-the_ironwood_grove-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-123",
+      "title": "GF-AUD-the_ironwood_grove-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-124",
+      "title": "GF-AUD-the_ironwood_grove-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-125",
+      "title": "GF-AUD-the_ironwood_grove-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-126",
+      "title": "GF-AUD-the_ironwood_grove-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ironwood_grove-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Ironwood Grove, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-127",
+      "title": "what the The Ironwood Grove grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Ironwood Grove: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-128",
+      "title": "region: The Ridgeline Watch",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for The Ridgeline Watch, at the region's own centre (-250,6490) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-129",
+      "title": "DIAG: go to The Ridgeline Watch",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -250.0,
+          6490.0
+        ]
+      },
+      "expected": "the player stands at The Ridgeline Watch. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-130",
+      "title": "the teleport landed where it said (The Ridgeline Watch)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -250.0,
+          6490.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-131",
+      "title": "region containment agrees (The Ridgeline Watch)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ridgeline_watch"
+      },
+      "expected": "map_state.gd's own containment puts the player in the_ridgeline_watch"
+    },
+    {
+      "id": "X07-132",
+      "title": "count what lives here (The Ridgeline Watch)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-133",
+      "title": "DIAG PIN: The Ridgeline Watch, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-134",
+      "title": "face the intended entry route direction (The Ridgeline Watch)",
+      "action": "face",
+      "args": {
+        "at": [
+          -250.0,
+          6430.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-135",
+      "title": "GF-AUD-the_ridgeline_watch-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at The Ridgeline Watch, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-136",
+      "title": "GF-AUD-the_ridgeline_watch-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-137",
+      "title": "GF-AUD-the_ridgeline_watch-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-138",
+      "title": "GF-AUD-the_ridgeline_watch-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-139",
+      "title": "GF-AUD-the_ridgeline_watch-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-140",
+      "title": "GF-AUD-the_ridgeline_watch-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-the_ridgeline_watch-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at The Ridgeline Watch, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-141",
+      "title": "what the The Ridgeline Watch grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for The Ridgeline Watch: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-142",
+      "title": "region: the Stronghold approach",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for the Stronghold approach, at the region's own centre (-65,7028) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-143",
+      "title": "DIAG: go to the Stronghold approach",
+      "action": "teleport",
+      "args": {
+        "at": [
+          -65.0,
+          7028.0
+        ]
+      },
+      "expected": "the player stands at the Stronghold approach. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-144",
+      "title": "the teleport landed where it said (the Stronghold approach)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -65.0,
+          7028.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-145",
+      "title": "region containment agrees (the Stronghold approach)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "stronghold_approach"
+      },
+      "expected": "map_state.gd's own containment puts the player in stronghold_approach"
+    },
+    {
+      "id": "X07-146",
+      "title": "count what lives here (the Stronghold approach)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-147",
+      "title": "DIAG PIN: the Stronghold approach, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-148",
+      "title": "face the intended entry route direction (the Stronghold approach)",
+      "action": "face",
+      "args": {
+        "at": [
+          -65.0,
+          6968.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-149",
+      "title": "GF-AUD-stronghold_approach-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at the Stronghold approach, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-150",
+      "title": "GF-AUD-stronghold_approach-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-151",
+      "title": "GF-AUD-stronghold_approach-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-152",
+      "title": "GF-AUD-stronghold_approach-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-153",
+      "title": "GF-AUD-stronghold_approach-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-154",
+      "title": "GF-AUD-stronghold_approach-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at the Stronghold approach, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-155",
+      "title": "what the the Stronghold approach grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for the Stronghold approach: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-156",
+      "title": "DIAG PIN: the Stronghold approach, night preset",
+      "action": "note",
+      "args": {
+        "text": "E.7: 'Day/night/weather variants where materially relevant (village, pond, stronghold approach at minimum)'. The clock is pinned and frozen at the night preset. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-157",
+      "title": "GF-AUD-stronghold_approach-night-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-night-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's paired hud:on context frame at the Stronghold approach"
+    },
+    {
+      "id": "X07-158",
+      "title": "GF-AUD-stronghold_approach-night-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-night-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the night variant's composition frame at the Stronghold approach, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-159",
+      "title": "DIAG PIN: the Stronghold approach, weather variant",
+      "action": "note",
+      "args": {
+        "text": "The clock and the weather preset are pinned and frozen for the weather variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-160",
+      "title": "GF-AUD-stronghold_approach-weather-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-weather-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's paired hud:on context frame at the Stronghold approach"
+    },
+    {
+      "id": "X07-161",
+      "title": "GF-AUD-stronghold_approach-weather-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-stronghold_approach-weather-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "the weather variant's composition frame at the Stronghold approach, paired with the hud:on frame captured seconds earlier"
+    },
+    {
+      "id": "X07-162",
+      "title": "region: the Hall",
+      "action": "note",
+      "args": {
+        "text": "E.7 audit grid for the Hall, at the region's own centre (150,7595) from data/config/map_landmarks.json. E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-163",
+      "title": "DIAG: go to the Hall",
+      "action": "teleport",
+      "args": {
+        "at": [
+          150.0,
+          7595.0
+        ]
+      },
+      "expected": "the player stands at the Hall. A DIAG jump rather than a walk, because this audits the world and not the route; the distance and dead-travel accumulators reset so nothing about this jump can reach a pacing figure.",
+      "diag": true
+    },
+    {
+      "id": "X07-164",
+      "title": "the teleport landed where it said (the Hall)",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          150.0,
+          7595.0
+        ],
+        "within": 5.0
+      },
+      "expected": "the player is on the region centre, standing on the ground rather than falling through it"
+    },
+    {
+      "id": "X07-165",
+      "title": "region containment agrees (the Hall)",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "hall"
+      },
+      "expected": "map_state.gd's own containment puts the player in hall"
+    },
+    {
+      "id": "X07-166",
+      "title": "count what lives here (the Hall)",
+      "action": "refresh_pois",
+      "args": {},
+      "expected": "creature/trainer/resource cadence within the region, counted from live queries"
+    },
+    {
+      "id": "X07-167",
+      "title": "DIAG PIN: the Hall, day preset",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at the region's day preset before the frames below, using the capture_band3_region.gd pattern rather than the unpinned variant. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-168",
+      "title": "face the intended entry route direction (the Hall)",
+      "action": "face",
+      "args": {
+        "at": [
+          150.0,
+          7535.0
+        ],
+        "tolerance_deg": 8.0
+      },
+      "expected": "the camera turns on the right stick to the intended entry route direction, so the arrival frame is taken from where a player would arrive"
+    },
+    {
+      "id": "X07-169",
+      "title": "GF-AUD-hall-gameplay",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-gameplay",
+        "class": "audit",
+        "hud": "on",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "normal-gameplay frame (HUD on) at the Hall, HUD on. This is the paired hud:on context frame for the five hud:off frames that follow it in this block (protocol G)."
+    },
+    {
+      "id": "X07-170",
+      "title": "GF-AUD-hall-arrival",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-arrival",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "arrival view (from the intended entry route direction) at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-171",
+      "title": "GF-AUD-hall-landmark",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-landmark",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "signature landmark at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-172",
+      "title": "GF-AUD-hall-terrain",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-terrain",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "terrain/ground close view at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-173",
+      "title": "GF-AUD-hall-ecology",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-ecology",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "ecology/activity frame (wilds visible behaving) at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-174",
+      "title": "GF-AUD-hall-vegetation",
+      "action": "capture",
+      "args": {
+        "id": "GF-AUD-hall-vegetation",
+        "class": "audit",
+        "hud": "off",
+        "camera_kind": "probe",
+        "trigger": "planned",
+        "intended_proof": "regional audit"
+      },
+      "expected": "vegetation density impression with a paired frame at the Hall, HUD off. A composition audit frame; its paired hud:on context frame is the gameplay frame captured seconds earlier in this block."
+    },
+    {
+      "id": "X07-175",
+      "title": "what the the Hall grid recorded",
+      "action": "note",
+      "args": {
+        "text": "Operator record for the Hall: E.7's per-region record: vegetation density impression with a paired frame, creature/trainer/resource cadence within the region (counts from live queries), empty areas (position + frame), invalid prop placement, water intrusion, collision anomalies, repetition, sightlines to the next landmark, path/road legibility, environmental storytelling present or absent, regional identity ('could a player name where they are from this frame alone' -- operator observation), and vision fit."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-176",
+      "title": "AMBIGUITY: the Stronghold approach has no region entry",
+      "action": "note",
+      "args": {
+        "text": "E.7's region list ends 'plus the Stronghold approach and Hall', and data/config/map_landmarks.json has a region for neither -- the Hall is a LANDMARK at (150,7595) and the approach is not in the file at all. The Hall uses its landmark position. The approach uses (-65,7028), the midpoint of RT-11's two anchors -- the sigil gate at (-280,6460) from RT-10 and the Hall threshold at (150,7595) -- which is protocol G's own 'RT-11 mid' for GF-12-APPR-02. Both region_is asserts on those two blocks will FAIL, because no region id contains them; the FAIL is the record that the two places the protocol audits are not named on the map."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-177",
+      "title": "CB-13's fallback lives here",
+      "action": "note",
+      "args": {
+        "text": "E.1 CB-13: 'Lighting variants | at least one night fight (torch conditions) and one rain/fog fight, as natural play allows; else X07 pins and labels DIAG | shots'. Whether natural play delivered them is not knowable at transcription time, so the fallback is transcribed and labelled DIAG. If the journey already produced both, Phase B has two records rather than none; if it did not, the coverage is here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-178",
+      "title": "DIAG LABEL: the CB-13 fallback frames are DIAG",
+      "action": "note",
+      "args": {
+        "text": "Protocol 0.6: no pacing, navigation, difficulty or economy claim may be sourced from a DIAG segment. The fight below is evidence about LIGHTING only -- what a night fight and a weather fight look like -- and carries no difficulty claim."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-179",
+      "title": "DIAG: go to the band 1 field for the lighting fights",
+      "action": "teleport",
+      "args": {
+        "at": [
+          195.0,
+          905.0
+        ]
+      },
+      "expected": "the player stands in the band 1 field, where a wild fight can be staged under a pinned clock",
+      "diag": true
+    },
+    {
+      "id": "X07-180",
+      "title": "DIAG PIN: night, torch conditions",
+      "action": "note",
+      "args": {
+        "text": "The WorldLook clock is pinned and frozen at night for the fight below. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-181",
+      "title": "draw the torch",
+      "action": "press",
+      "args": {
+        "control": "torch_toggle",
+        "hold": "tap"
+      },
+      "expected": "the torch is drawn, so the night fight is under torch conditions"
+    },
+    {
+      "id": "X07-182",
+      "title": "engage a wild at night",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts under the pinned night preset"
+    },
+    {
+      "id": "X07-183",
+      "title": "GF-14-COMBAT-13: the night fight",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-13b",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-13: lighting variants"
+      },
+      "expected": "a frame of a night fight under torch conditions"
+    },
+    {
+      "id": "X07-184",
+      "title": "let the night fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X07-185",
+      "title": "DIAG PIN: rain/fog",
+      "action": "note",
+      "args": {
+        "text": "The weather preset is pinned and frozen at rain or fog for the fight below. This note is the pin's telemetry record, marked DIAG."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X07-186",
+      "title": "engage a wild in rain or fog",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts under the pinned weather preset"
+    },
+    {
+      "id": "X07-187",
+      "title": "GF-14-COMBAT-13-weather: the rain/fog fight",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-13-weather",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "planned",
+        "intended_proof": "CB-13: lighting variants"
+      },
+      "expected": "a frame of a fight in rain or fog"
+    },
+    {
+      "id": "X07-188",
+      "title": "let the weather fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X07-189",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "Every frame in this segment is a GF-AUD or a labelled CB-13 fallback, every pin is recorded above as DIAG, and nothing here may be read as a pacing, navigation, difficulty or economy claim."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}
