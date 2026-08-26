@@ -86,8 +86,19 @@ func _run() -> void:
 	else:
 		if not bool(_game.call("load_game", TEST_SLOT)):
 			_fail("could not reload the just-written save")
-		for f in 10:
-			await physics_frame
+		# `load_game()` restores the party synchronously, but the strip redraws
+		# from it on its own signal, so a FIXED frame budget races that redraw
+		# on a loaded host rather than testing anything.
+		#
+		# Measured, CI run 2476: this job went red on the two HUD assertions
+		# while `Game.party.size()` was 3 -- that check sits above them and
+		# accumulates rather than returning, so its silence is positive
+		# evidence the save round-trip itself was correct and only the on-screen
+		# count lagged. Ten frames was simply not enough on that runner.
+		#
+		# Waiting for the redraw with a ceiling keeps the assertion exactly as
+		# strong: a HUD that never catches up still fails, just not by a race.
+		await _await_hud_reads(3, 240)
 		var party: RefCounted = _game.get("party")
 		if int(party.call("size")) != 3:
 			_fail("party size after reload is %d, expected 3" % int(party.call("size")))
@@ -95,6 +106,21 @@ func _run() -> void:
 
 	_wipe_test_dir()
 	_report()
+
+
+## Wait until the party strip's own TEAM label agrees with `expected`, or
+## `max_frames` physics frames elapse, whichever comes first. Deliberately
+## silent about the outcome: the caller still runs `_check_hud_reads()` and
+## still fails if the HUD never caught up. This only removes the race.
+func _await_hud_reads(expected: int, max_frames: int) -> void:
+	var expected_text := "TEAM  %d / 5" % expected
+	for f in max_frames:
+		var strip: Control = _hud.get("_party_strip") as Control
+		if strip != null:
+			var label: Label = strip.get("_count_label") as Label
+			if label != null and label.text == expected_text:
+				return
+		await physics_frame
 
 
 func _check_hud_reads(expected: int, context: String) -> void:
