@@ -108,6 +108,63 @@ reason not to push throwaways at all.
 - The merge is **fast-forward only**. If main moved while you worked, the
   consolidation fails loudly and you rebase `ralph/<task-id>` on main and push
   again. Never resolve that by force-pushing main.
+
+### Match branches into ONE consolidation branch before spending CI
+
+**Do not sweep green branches one at a time when several are queued.** Merge the
+compatible ones into a single `ralph/CONSOLIDATE-*` branch, run CI once, sweep
+once. This is not a style preference; sweeping serially is self-defeating, and
+the mechanism is in this repo's own tooling:
+
+- `tools/ci/ship_branch.sh` ships a branch only when `origin/main` is already an
+  ancestor of its tip (`git merge-base --is-ancestor origin/main "$SHA"`).
+- Every sweep moves `main`. So the moment one branch lands, every other branch
+  fails that test.
+- A branch that then goes green is **rebased and force-pushed** by the next
+  sweep, which cancels its CI run and rewrites history under any live lane.
+
+So N queued branches cost N full CI rounds plus a rebase round each, not N
+rounds. **Measured 2026-08-26: a full run is ~40 minutes** — about 16 minutes
+queueing for runners plus ~22 minutes for `verify-core-verb-shard`, which is the
+long pole and which no amount of unit-test sharding shortens (run 32926498498:
+jobs created 03:28:31, core-verb started 03:45:02 and ended 04:06:51). Four
+branches swept serially is most of a working day; one consolidation branch is
+forty minutes.
+
+**Probe compatibility first — it costs seconds, not a CI run:**
+
+```
+git checkout -B probe origin/main
+for b in <branches>; do
+  git merge --no-edit "origin/$b" >/dev/null 2>&1
+  git diff --name-only --diff-filter=U | wc -l   # conflict count
+  git merge --abort 2>/dev/null
+done
+```
+
+Merge them in ascending conflict order and push once.
+
+**What does NOT belong in a consolidation.** A branch whose conflict is
+*generated state* rather than source. Measured the same day: `ralph/WORLD-GRASS`
+and `ralph/GRASS-FIELD` each merge onto `main` with **zero** conflicts, but
+against each other they conflict on **257** `data/scatter/**` files, because the
+two carry different bakes (725,949 vs 479,881 placements). Resolving that is a
+re-bake plus a config decision — `"groundmat"` has to join
+`suppress_scatter_layers` in `data/config/grass_field.json`, or both systems
+dress the same ground (`ralph/reports/GRASS_HANDOVER_2026-08-26.md` §1). Land
+that kind of branch on its own, against a settled `main`, with the re-bake in the
+same commit so `data/scatter/playground/manifest.json`'s fingerprint stays valid.
+
+**Two traps worth naming, both paid for on 2026-08-26:**
+
+- A branch more than `MAX_BEHIND` (20) commits behind `main` is silently skipped
+  by the sweep as stale (`.github/workflows/ralph-sweep.yml:89`), and
+  `MAX_BEHIND` is **not** exposed as a dispatch input. One 20-commit landing put
+  three live branches past the cap at once. Merge `main` forward before expecting
+  a sweep to look at a branch.
+- Merge `main` forward, do not rebase, whenever a lane is live on the branch: a
+  merge needs no force-push, keeps the lane's checkout valid, and still satisfies
+  `ship_branch.sh`'s ancestor test.
 - If CI is red, the branch simply does not ship. Fix it on the same branch.
 - CI always runs: clean-checkout import with no script errors, and the Windows
   export. Both are cheap and catch the failures that make the project unopenable.
