@@ -516,3 +516,149 @@ No `main` push, no PR. Nothing touched under `shaders/`,
 `data/config/vegetation.json` or `data/scatter/**` — the grass lane's files. No
 device claim: everything above is a file, a config value or a container
 measurement.
+
+---
+
+## DEFECT-FIX lane — check-in 2 — 2026-08-26 — X07 fix is PUSHED (gates the run); night is red in ordinary play, cause isolated and fixed
+
+### First, the thing the coordinator asked to be told explicitly
+
+**The `X07.json` fix is pushed.** Branch `ralph/GATE-F-DEFECT-FIX`, commit
+`a2b80641`, pushed at 02:47Z, CI run 2490. It contains BOTH X07 changes:
+
+1. the six-per-region camera fix (three of six variant slots were one shot), and
+2. **19 real `pin_clock` steps** replacing 19 `action: "note"` steps that only
+   claimed a pin.
+
+The second one was not on the original work list and matters more for the run.
+X07's own `route.csv` from 2026-08-25 reads `clock_hour` 8.16 → 11.14 across the
+whole segment and `weather: clear` on **all 135 rows**. Every frame labelled
+`-night` and `-weather` was captured mid-morning in clear weather. Without this,
+the overnight X07 re-run would have produced ten more mislabelled day frames.
+
+Nothing else in `tools/gate_f/**` is touched. Both changes are recorded in every
+changed step's own `observation`, per the freeze rule.
+
+### The ordering directive is understood and is being followed
+
+No visual judge, no blind critic pass, no X07-style capture batch until `main`
+is called complete. What has run here is diagnosis and fix verification of
+single named defects — an A/B of one frame, and a twelve-hour sweep of one fixed
+viewpoint measuring one channel ratio. No conclusion about how the game looks
+overall has been drawn or will be until the word comes.
+
+This also **changes which item-4 defects are worth doing tonight**, and that is
+worth saying rather than quietly reordering. `ralph/WORLD-GRASS` and
+`ralph/GRASS-FIELD` are landing grass scale, ground-material tiers, sky and
+clouds, stone and path grit, and narrowed paths. Four of the item-4 findings sit
+directly on top of that work — the near-black trainer (a lighting/key question),
+`the_rise`'s camera inside a hillside (terrain), the floating oversized band-3
+house, and the oxblood boulder in band 1. Diagnosing those against a build that
+is about to be replaced is the wasted cycle the directive is guarding against,
+so they are deferred until `main` settles rather than being worked now. The
+grass lane's own findings (duplicated airborne trainer, band-3 house, band-1
+boulder) came with frames I do not have and coordinates I could not recover from
+config, which is a second, independent reason to wait for them.
+
+### Night renders. It renders RED. Cause isolated, fixed, and the fix is tested.
+
+Check-in 1 said item 2 was "not confirmed" and that I was measuring it. Here is
+the measurement, and it found something worse than the original report.
+
+**Night lighting works.** Twelve-hour sweep, one fixed viewpoint
+(`tools/_capture_day_night_transition.gd`): mean luminance ramps 115.0 at hour
+08 down to 60.8 at hour 23.9, smooth and monotonic through dusk. A 1.89× spread.
+The renderer draws night.
+
+**It draws it crimson.** Same sweep, mean channel values:
+
+| hour | R | G | B | R/B |
+|---|---|---|---|---|
+| 17.90 | 86.4 | 104.1 | 85.8 | 1.01 |
+| 20.50 | 54.0 | 95.2 | 107.0 | **0.50** — cool, correct |
+| 22.00 | 135.0 | 48.1 | 39.5 | **3.42** — blood red |
+| 23.90 | 120.1 | 36.1 | 33.1 | 3.62 |
+
+The dusk ramp is correct right up to 20.50 and then flips. No blend can do that:
+`night`'s palette is cool throughout (`#1b2d5c` sky, `#3d5285` horizon, `#2a3b6e`
+ambient, `#b7c6ea` sun) and `golden`'s is warm, so every intermediate lies
+between a warm and a cool.
+
+**What changes there is a snap, not a blend.** `world_look.gd::_blend_dict` has
+no meaningful blend for a boolean and snaps one at `t >= 0.5`. `night` was the
+only preset declaring `adjustment_enabled`. `golden` is at hour 18 and `night`
+at hour 0, so `t = 0.5` falls at **exactly hour 21.0** — between the last cool
+frame and the first red one.
+
+**My first hypothesis was that the colour grade caused the red. It is the
+opposite, and the A/B says so.** `tools/_probe_night_crimson.gd` boots the world
+once, pins hour 22, freezes the clock, and shoots the same frame twice, changing
+nothing but that flag:
+
+- as shipped, grade **on** — R 41.7 G 77.5 B 94.2, **R/B 0.44**: a correct cool night
+- grade **forced off**, nothing else touched — R 130.1 G 46.6 B 46.2, **R/B 2.82**
+
+Identical geometry, identical shadows, hue rotated to red. So the defect is the
+**toggle**, not either state, and the red follows whichever direction it is
+thrown.
+
+**This is not a capture artefact.** The day is 600 seconds. Tracing the merge:
+`golden → night` snaps the flag false → true at hour 21.0, and `day → golden`
+resolves to no key at all and snaps it back to false. That is **two toggles per
+ten real minutes of ordinary play**, on the renderer the game ships on (D01).
+The world goes red at night for the owner, not just for the harness. It is also,
+almost certainly, the "2026-08-23 crimson artefact" that `X07.json`'s own note
+warns about and attributes to an unpinned clock — the attribution was wrong; the
+clock was never the mechanism.
+
+**The fix** is to stop toggling it. `art.json`'s base `environment` block now
+declares `adjustment_enabled: true` plus the three grade values at 1.0
+(identity), so every preset inherits one always-on, no-op grade;
+`world_look.gd::_apply_environment` sets the flag to a constant `true` and no
+longer reads it from config at all; and `night`'s own `adjustment_enabled` key is
+removed. Night's actual grade is unchanged — `adjustment_saturation` 0.72 and
+`adjustment_contrast` 1.08 — and now **lerps in smoothly from 1.0** instead of
+arriving all at once at hour 21, which quietly fixes a second defect the snap
+was causing.
+
+**Proof it discriminates.** `tests/test_night_grade_never_toggles.gd` pins two
+independent halves, each of which fails alone. On the tree as it stood before
+this branch, the config half fails outright: *"art.json's `night` preset declares
+adjustment_enabled. A per-preset value is exactly what `_blend_dict` snaps at
+t >= 0.5."* That is not a hypothetical — it is the failure I watched it produce
+before removing the key. Both halves now pass, 15 assertions. The test is a
+source-and-config test on purpose, per D02: this harness is pure logic, and the
+rendered proof lives in the two tools, whose numbers it quotes rather than
+re-measures.
+
+A confirming twelve-hour sweep on the fixed build is rendering now; its result
+goes in the next check-in. It is verification of a named fix, not a judging pass.
+
+### Correction to check-in 1
+
+Check-in 1 said that if night came back dark, "the only defect was the label."
+That was wrong, and only half the story: the label WAS a defect and is fixed, but
+underneath it the world has been turning red every night in ordinary play. Both
+are real; the second is the more serious.
+
+### State
+
+| item | status |
+|---|---|
+| 1 — permanent immobility | **fixed, pushed** (`a2b80641`), `smoke_unstick.gd` discriminates |
+| 2 — night/weather | **X07 mislabelling fixed and pushed**; **crimson-night cause isolated and fixed**, render confirming |
+| 3 — X07 three identical cameras | **fixed, pushed** (`a2b80641`) — this is the one that gates the overnight run |
+| 4 — visual defects | four of them deferred pending the grass lanes, with reasons above |
+| 5 — S02 drop-confirmation trigger | not started |
+
+`smoke_step_up.gd` still fails on a clean `main` checkout (the trainer walks
+through both a 0.3 m step and a 2 m barrier). Pre-existing, not in `ci.yml`,
+flagged and not touched.
+
+### Constraints observed
+
+No `main` push, no PR. Nothing touched under `shaders/`,
+`data/config/grass_field.json`, `data/config/terrain_playground.json`,
+`data/config/vegetation.json` or `data/scatter/**`. No device claim anywhere: the
+numbers above are channel means over committed PNGs and values read out of
+config.

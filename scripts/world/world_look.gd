@@ -492,7 +492,28 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# enough moon reads as a dim DAY, not a distinct night mood, exactly the
 	# failure a blind critic named after the first legibility fix landed.
 	# `adjustment_saturation` is Godot's equivalent of that missing filter.
-	env.adjustment_enabled = bool(cfg.get("adjustment_enabled", false))
+	#
+	# ALWAYS ON, never read from config. GATE-F-DEFECT-FIX: toggling
+	# `adjustment_enabled` at runtime turns the whole frame red under the
+	# Compatibility renderer this game ships on (D01), and `_blend_dict` above
+	# has no meaningful blend for a boolean, so it SNAPS one at t >= 0.5 --
+	# which used to flip this flag at exactly hour 21.0 on the golden -> night
+	# segment, and back again on day -> golden, twice per 600-second day.
+	#
+	# Measured both directions, one fixed viewpoint, mean channel values over
+	# the whole frame. A twelve-hour sweep ramps correctly cool to hour 20.50
+	# (R/B 0.50) and then flips at 22.00 (R/B 3.42) and stays red for every
+	# later frame. The A/B that isolates it shoots ONE pinned frame at hour 22
+	# twice, changing nothing but this flag: grade on, R/B 0.44, a correct cool
+	# night; grade off, R/B 2.82 on the identical geometry and shadows.
+	# `tools/_probe_night_crimson.gd` is that probe and carries the numbers.
+	#
+	# The three VALUES still come from config and still lerp, so a preset can
+	# grade as much or as little as it likes -- 1.0 is identity for all three,
+	# and art.json's base `environment` block declares them so every preset
+	# inherits a no-op rather than an absent key. What a preset may no longer
+	# do is turn the pass itself on or off mid-blend.
+	env.adjustment_enabled = true
 	env.adjustment_brightness = float(cfg.get("adjustment_brightness", 1.0))
 	env.adjustment_contrast = float(cfg.get("adjustment_contrast", 1.0))
 	env.adjustment_saturation = float(cfg.get("adjustment_saturation", 1.0))
