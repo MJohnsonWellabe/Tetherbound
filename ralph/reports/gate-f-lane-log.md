@@ -933,3 +933,106 @@ rather than pushed on top of it.
 | 3 — X07 identical cameras | fixed, pushed — gates the overnight run |
 | 4 — visual defects | deferred per the ordering directive |
 | 5 — S02 drop confirmation | **reproduced deterministically**; mechanism explained; fix withheld as an owner decision |
+
+---
+
+## DEFECT-FIX lane — check-in 6 — 2026-08-26 — WITHDRAWING check-in 4's severity claim: night renders correctly; the crimson is a capture artefact
+
+### The claim I am withdrawing
+
+Check-in 4 said: *"a pinned, frozen frame at an ordinary hour renders red, so a
+player reaches it every night"*, and called it a shipping defect on the renderer
+the owner plays. **That is wrong and I am retracting it.**
+
+It rested on one number — the matrix probe's `frozen 22.0 = R/B 2.90`. That was
+that probe's **second** shot. Its first shot (hour 20.5) read 0.54, and I did not
+notice the pattern.
+
+### What a clean first frame actually reads
+
+| probe | shot | hour | R/B |
+|---|---|---|---|
+| first A/B | 1 | 22.0 | **0.44** |
+| matrix | 1 | 20.5 | **0.54** |
+| carrier bisect | 1 | 22.0 | **0.44** |
+| carrier bisect, re-run | 1 | 22.0 | **0.42** |
+
+**Three independent fresh-process first frames at pinned hour 22 read 0.42-0.44.**
+Hour 22 renders a correct cool night. There is no time-of-day defect and no
+player-facing night defect. Night lighting also ramps correctly on luminance —
+115.0 at hour 08 to 60.8 at 23.9, smooth and monotonic, 1.89x.
+
+### What the crimson actually is, and what I could not find
+
+Every frame taken **after the first, in the same process**, comes back red. The
+property bisect was supposed to find which Environment property carries it and
+found that none does:
+
+```
+baseline             R  40.0  G 76.2  B 95.1   R/B 0.42   cool
+ambient-energy-0     R 119.5  G 34.7  B 37.3   R/B 3.20
+exposure-0.6         R 116.1  G 29.8  B 30.1   R/B 3.86
+tonemap-linear       R 132.1  G 46.2  B 45.3   R/B 2.92
+fog-off              R 127.8  G 43.2  B 42.9   R/B 2.98
+sky-energy-1         R 132.1  G 48.5  B 49.4   R/B 2.67
+sky-contribution-0   R 130.6  G 45.9  B 45.0   R/B 2.90
+```
+
+Each property is restored before the next is touched. Turning fog off and zeroing
+sky contribution should barely move the frame; they move it as much as anything
+else. What separates the frames is position, not property.
+
+**The read-back sync theory is also dead.** I added
+`await RenderingServer.frame_post_draw` before every grab — the thing
+`operator_harness.gd::_step_capture` does and these tools never did — and re-ran
+the identical sequence. Shots 2-7 came back **identical to the digit** across the
+two runs (119.5/34.7/37.3, 116.1/29.8/30.1, and so on). A read-back race would
+give different numbers each time. It is deterministic, so it is not a race.
+
+**I have not identified the cause.** Five hypotheses are now dead: the colour
+grade, the `adjustment_enabled` snap, a live clock, the config/blend/weather
+values (ruled out offline — nothing warm exists anywhere in the resolved merge),
+and read-back synchronisation.
+
+### The finding that actually matters for the overnight run
+
+**No multi-frame capture from these tools can be trusted for colour after the
+first frame.** That is the real, reproducible defect, and it is in the evidence
+pipeline, not the game.
+
+It retroactively invalidates the twelve-hour sweep's red readings — including the
+numbers I quoted in check-ins 2 and 3 and in two commit messages — because every
+one of them after the first frame is suspect. It is also, almost certainly, the
+"2026-08-23 crimson artefact" that `X07.json`'s own note records and blames on an
+unpinned clock; that attribution is wrong, but so was mine.
+
+**What this does NOT establish:** that X07 is affected. Its 79 frames from
+2026-08-25 came back looking normal, so its capture path may not hit this. I have
+not tested X07's path and am not claiming it does. Whoever runs the overnight
+chain should spot-check colour on a late frame against an early one — if a late
+X07 frame comes back hue-rotated, this is why, and the visual evidence from that
+run needs re-taking rather than judging.
+
+### Cost of this item, stated honestly
+
+Five world boots at roughly sixteen minutes each, five dead hypotheses, one
+pushed fix that had to be reverted, and one severity claim that had to be
+withdrawn. What it bought: the X07 clock mislabelling is genuinely fixed and
+pushed, night is positively confirmed to render correctly, and the crimson is
+correctly relocated from the game to the capture tooling with five explanations
+eliminated. I am stopping here rather than spending a sixth boot on a sixth
+guess.
+
+### Final state of the lane
+
+| item | status |
+|---|---|
+| 1 — permanent immobility | **fixed, pushed**, `smoke_unstick.gd` fails on the unfixed path |
+| 2 — night/weather | **X07 mislabelling fixed and pushed**; night confirmed to render correctly; crimson relocated to the capture tooling, cause unidentified, five hypotheses eliminated |
+| 3 — X07 identical cameras | **fixed, pushed** — gates the overnight run |
+| 4 — visual defects | deferred per the ordering directive; four of them sit on top of the landing grass lanes |
+| 5 — S02 drop confirmation | **reproduced deterministically**; mechanism explained; fix withheld as an owner decision |
+
+Also on the record and not touched: `smoke_step_up.gd` fails on a clean `main`
+checkout (the trainer walks through both a 0.3 m step and a 2 m barrier), and it
+is not in `ci.yml`.
