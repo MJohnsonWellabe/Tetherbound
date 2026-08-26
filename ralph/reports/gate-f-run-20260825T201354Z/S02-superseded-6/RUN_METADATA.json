@@ -3,7 +3,7 @@
   "capture_requested": false,
   "display_server": "headless",
   "frame_grab_ms": {},
-  "frames_absent": 198,
+  "frames_absent": 181,
   "frames_written": 0,
   "godot": "4.7-stable (official)",
   "harness_errors": [],
@@ -14,9 +14,9 @@
   "segment": "S02",
   "segment_script": "tools/gate_f/segments/S02.json",
   "sha": "9fb9b8d88e16d20b55cfcaef02f2bbd682888bdf",
-  "started_wall": "2026-08-26 00:06:44",
+  "started_wall": "2026-08-25 23:57:50",
   "trace_hz": 2.0,
-  "trace_rows": 562,
+  "trace_rows": 512,
   "viewport_size": [
     1920,
     1920

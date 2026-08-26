@@ -720,6 +720,18 @@
       "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
     },
     {
+      "id": "S02-63b",
+      "title": "put away the drop confirmation the open press raised",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "B dismisses the 'Drop it? / Cancel' confirmation and leaves the shell open, which is what a player does. DEFECT RECORDED, not worked around silently: `game_menu` and `backpack_drop` are the SAME physical button -- gamepad Start, button 6 in project.godot -- so the press that opens the pause shell also fires the destructive drop verb on the backpack tab the shell opens on. tab_backpack.gd:1345-1370 already carries a guard for exactly this (`_ignore_drop_until_release`) and its comment describes this exact symptom; the guard did not hold here. Observed in S02 attempts 5 and 6: the shell opened on `menu_backpack` with focus on 'Drop it', 5x menu_tab_right never left the backpack tab, and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd on ralph/OPENING-STARTER-FOCUS) confirms the game cycles backpack->creatures->map->quest_log->build->SAVE->settings correctly when the satchel is EMPTY, so the tab machinery is sound and the confirmation is what eats the presses.",
+      "severity_candidate": "SHIP"
+    },
+    {
       "id": "S02-64",
       "title": "cycle right to the Save tab",
       "action": "press",
@@ -727,9 +739,10 @@
         "control": "menu_tab_right",
         "hold": "tap",
         "times": 5,
-        "settle_frames": 12
+        "settle_frames": 45
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "settle_frames raised 12 -> 45. Attempt 5 opened the shell on `menu_backpack` with focus on 'Drop it' and five RB presses left it on `menu_backpack`, so the Save tab was never reached and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd) shows the game cycles correctly -- backpack -> creatures -> map -> quest_log -> build -> SAVE -> settings on five presses -- in a world where the player carries nothing, at 20 frames between presses. The difference in S02 is a full satchel from Grandpa plus the map tab baking its map, which is the exact case this file's own `press` comment warns about: 'a tab switch rebuilds a whole tab body ... back-to-back presses with only the injection's own frames between them can arrive while the previous one is still being digested.'"
     },
     {
       "id": "S02-65",
