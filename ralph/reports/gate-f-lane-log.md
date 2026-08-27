@@ -2555,3 +2555,100 @@ matrix explanation for "zero `combat_*` events in all ten journey segments".
 
 **Next:** X07, already launched **in capture mode** — the run's only real visual
 evidence. The colour spot-check is mandatory before any frame from it is trusted.
+
+## Check-in 27 — 2026-08-27 — **SCOPE CHANGE: X08 is REINSTATED by the owner.**
+
+Recorded separately from any segment result so the change is timestamped and
+auditable rather than appearing silently inside a later commit.
+
+**X08 was dropped by owner decision**, carried into this run from
+`GATE_F_HANDOVER_2026-08-26_EVENING.md` §7 and written into this run's freeze
+record (`segments_planned.dropped: ["X08"]`, with a note that no performance
+claim would be sourced from elsewhere to substitute for it).
+
+**The owner has now reversed that**, instructing this lane to run X08 along with
+X02–X06. The owner may change an owner decision; the operator records it and
+complies. `ralph/reports/gate-f-candidate/RUN_METADATA.json` is updated so the
+freeze record does not keep asserting a drop that is no longer true.
+
+### What X08 may and may not produce — unchanged by the reinstatement
+
+§K.1 and §0.4 are **not** relaxed by running the segment. On this container X08
+can honestly produce:
+
+- **CPU** frame/physics time and directly-timed subsystem costs;
+- draw calls / primitives **under this render mode**;
+- placement and instance counts;
+- boot / save / load / transition durations.
+
+It **cannot** produce, and this operator will not record: **device frame rate,
+GPU frame time, VRAM, thermals, battery**. Those remain **[OWNER-ONLY]** on a
+software-rasterised Linux container, and any number resembling them in X08's
+output is a property of llvmpipe, not of the ROG Ally.
+
+The existing measurement that bounds what X08's numbers mean here: capture mode
+on the full Meadows runs at **~3,400 ms/frame (0.29 FPS)** on this box
+(check-in 8). That is the instrument's floor, not the game's performance.
+
+**Revised remaining plan:** X07 (finishing) → X02 → X03 → X04 → X05 → X06 → X08.
+
+## Check-in 28 — 2026-08-27 — **X07: 79 of 80 frames captured and COLOUR-VERIFIED CLEAN. Segment stopped as a BLOCKER at ~31 h remaining cost.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X07/`, with
+`WHY_INCOMPLETE.md` beside it. Ran **3 h 05 m**, stopped at step 184 of 266.
+Nothing deleted.
+
+### The result that matters: the colour artefact does NOT affect X07
+
+The handover's §5 warning was mandatory and is now **discharged with a
+measurement over all 79 frames**, not a spot-check of two:
+
+| check | result |
+|---|---|
+| step change after frame 1 | **none** — frame 1 R/B **1.279**, frame 79 **0.694** |
+| any frame in the 2.9–3.9 artefact band | **none** — max **2.154** |
+| distribution | min 0.614, p25 0.943, median **1.044**, p75 1.135 |
+| 18 frames after the highest reading | mean **1.055** |
+
+The one elevated cluster (1.425 / 2.154 / 1.964) is confined to
+**`the_ridgeline_watch`** and recovers on the very next region
+(`stronghold_approach`, 1.042). A process-position artefact would shift every
+frame after the first **and stay shifted**; this recovers immediately and stays
+recovered. **X07's capture path does not hit it** — the question §5 explicitly
+left "untested" is now answered, and these frames are usable as colour evidence.
+
+Recorded as an observation for the visual judge, **not** as a defect:
+`the_ridgeline_watch` reads distinctly warmer than its neighbours (R/B 1.14–2.15
+against ~1.04). That may be intended — a dry ridge, a pinned hour. It is a thing
+to look at.
+
+### Why the segment was stopped
+
+`operator_harness.gd:622` prices `wait` in **physics frames**:
+`frames = seconds × 60`. In capture mode each is a rendered 1920×1080 llvmpipe
+frame, and **this segment's own telemetry measures that frame at a mean of
+9,416 ms** (recent rows 10,426–10,698 ms, max 21,714 ms — **~0.095 FPS**).
+
+So one `wait 90 seconds` step costs **≈15.75 hours**. Two remained —
+`X07-184` (running at the stop) and `X07-188` — **≈31 hours** to obtain one more
+frame (`GF-14-COMBAT-13-weather`) and the verdict file. Stopped under §A:
+evidence preserved, BLOCKER reported, run continues.
+
+**It was a cost blocker, not a hang** — the process was alive and advancing the
+whole time. `notes/` is empty because verdicts are written at a segment end never
+reached, the same mechanism that emptied `S01-superseded-1/notes/`.
+
+**The 9,416 ms is not a game performance number.** It is llvmpipe with no GPU on
+762,058 props; device frame rate stays **[OWNER-ONLY]** (§K.1). Scale: check-in 8
+measured ~3,400 ms/frame in this mode at **466,922** props — the cost has risen
+~3× with the grass consolidation, which is why the capture-mode ban on the
+journey (check-in 8) was even more right than when it was made.
+
+**Lesson for a successor, and the reason `WHY_INCOMPLETE.md` exists:** a
+capture-mode segment carrying `wait` steps measured in tens of seconds **cannot
+finish on this box**. Price waits against the renderer before launching, or run
+the capture batch on hardware with a GPU. The waits should not be shortened —
+they exist so fights resolve. **`tools/gate_f/**` is frozen and was not
+modified** (§13).
+
+**Next:** X02, already launched. Then X03, X04, X05, X06, X08.
