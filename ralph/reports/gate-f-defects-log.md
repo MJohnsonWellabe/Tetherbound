@@ -379,7 +379,53 @@ These are container numbers on llvmpipe with the renderer off. They are directly
 comparable to Phase B's, which were taken the same way, and they are **not** a
 device measurement — boot time on the ROG Ally is [OWNER-ONLY].
 
+### One optimisation attempted, measured, and REVERTED
+
+Worth recording so the next pass does not spend the same day on it.
+
+`_bake_height_texture()` is called twice per boot over different regions, each
+512x512 = 262,144 `height_at()` samples at ~22 microseconds — about 11.6 s of the
+stall, and the largest single mechanism in it. `height_at()` is a pure function
+of position once its lazy caches are built (every shaping pass guards its own
+`_..._ready` flag at the top of the function and `height_at()` calls all of them
+unconditionally, so one main-thread call warms all of them), so the rows were
+dispatched to `WorkerThreadPool.add_group_task`.
+
+It was verified bit-identical to the serial bake (0 of 16,384 pixels differing,
+`get_data()` equal) and `smoke_pond_water` reported the same geometry counts. It
+was still reverted, for two reasons:
+
+1. **It did not pay.** Normalising against the vegetation scatter, which this
+   change does not touch, the bake went from 0.570x to 0.465x of that phase —
+   about 18% off one phase, ~2.5% off the stall. Nothing like the 3-4x a
+   four-core pool should give.
+2. **The reason it did not pay is a correctness question I could not close.**
+   GDScript lambdas capture locals BY VALUE, and `PackedFloat32Array` is a
+   copy-on-write value type. Every worker thread writing into one captured
+   buffer is either contending on that CoW or racing it; the fact that a 128x128
+   check came back identical does not settle which. Shipping a memory-safety
+   question for 2.5% is the wrong trade.
+
+**This container cannot time this reliably anyway.** Three runs of the same
+build, minutes apart, measured the untouched vegetation scatter at 10,120 /
+14,258 / 16,834 ms and the terrain data load at 3,422 / 3,309 / 20,996 ms. Any
+future attempt has to normalise against an untouched phase, as above, or run
+enough repetitions to see through that.
+
+### Where the next pass should start
+
+1. **`_bake_height_texture`, 512x512 twice.** The threading route is charted and
+   costed above. The other routes nobody has tried: bake ONCE over the union of
+   the two regions rather than twice, or cache the samples the river's waterline
+   search already takes.
+2. **`_build_river()`'s waterline search.** For each of ~400 stations it walks
+   outward in 0.25 m steps to a 17 m limit on both sides — up to 136 `height_at`
+   calls a station. A coarse 1 m walk refined backwards at 0.25 m is the same
+   answer in about a fifth of the calls.
+3. **The vegetation scatter**, which is what `HIST-085` already names.
+
 ### Status
 
-Instrumentation landed; the stall itself is not yet reduced. The next pass has a
-ranked target list and a probe that reports whether a change moved the number.
+Instrumentation landed and pushed; the stall itself is not yet reduced. The next
+pass has a ranked target list, a probe that reports whether a change moved the
+number, and one dead end already walked.
