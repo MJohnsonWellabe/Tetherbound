@@ -278,6 +278,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
 
       - name: Cache Godot editor and export templates
         id: cache-godot
@@ -406,6 +424,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
       - name: Run the corridor vegetation regression checks
         run: |
@@ -441,6 +477,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
       - name: Run the scatter rules regression checks
         run: |
@@ -472,1354 +526,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
       - name: Run the harvest regression checks
         run: |
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_harvest.gd
 
-  verify-playground:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-core-verb-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the playground
-        # Boots the real main scene and asserts the terrain loaded, the player
-        # was placed on it, and it is standing on collision. Unit tests cannot
-        # see any of that. An earlier version of this check passed while NO
-        # terrain was loaded at all, because it read a property that returned
-        # null and skipped its own assertion; it now range-checks instead, and
-        # is verified to fail when the baked terrain is removed.
-        run: godot --headless --path . --script tests/smoke_playground.gd
-
-  verify-input:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-core-verb-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the input path
-        # Injects actions and asserts the character actually moves. Catches the
-        # class of bug where input is read correctly and then silently
-        # discarded — a null camera rig makes every direction resolve to zero
-        # with no error anywhere. It cannot test the DEVICE layer; if hardware
-        # does nothing while this passes, the fault is upstream of Godot.
-        run: godot --headless --path . --script tests/smoke_input.gd
-
-  verify-traversal:
-    runs-on: ubuntu-latest
-    # Generous on purpose: this is the single slowest check in the whole
-    # pipeline (~5m59s measured 2026-08-15) and the one most worth NOT
-    # timing out on a slow runner.
-    timeout-minutes: 15
-    needs: changes
-    if: false # Covered by verify-core-verb-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test traversal
-        # Walks ~190m per leg. A short walk proves only that the spawn point
-        # works: collision_mode silently reverting to Dynamic/Game built ground
-        # in a 64m bubble, and every other check passed inside it while the
-        # player fell to y=-49950 outside it.
-        run: godot --headless --path . --script tests/smoke_traversal.gd
-
-  verify-catching:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-core-verb-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test catching
-        # Aims, misses, and lands a throw through injected input. Asserts the
-        # things the catch maths cannot see: aiming hands the camera to the
-        # trainer and abandons the creature, the orb is a projectile that can go
-        # wide, an orb is spent on a throw and not on a cancel, and a faint is a
-        # refusal rather than long odds.
-        #
-        # LP9: same tick-budget-vs-wall-clock retry as verify-combat below,
-        # for the same measured reason — see that job's comment. The specific
-        # failure this covers: the post-catch re-engage wait (a fixed
-        # respawn-seconds-in-ticks budget) timing out for real under heavy
-        # CI contention, reproduced locally at 16-way oversubscription with
-        # no terrain-embedding signature in the position/velocity watchdog.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_catching.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_catching failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_catching.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-free-build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-gate-a-ui-build-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the free build toggle
-        # A development toggle that changes what everything costs
-        # (docs/decisions/D16). The unit tests cover the cost rule and the
-        # settings file; this covers the parts that decide whether it is usable
-        # and honest: that it is reachable from where the settings screen puts
-        # the cursor with nothing but a stick, that the button says which way it
-        # is set, that the Build tab admits materials are free the whole time it
-        # is on — hidden, this reads later as a costing bug that it is not — and
-        # that a piece really can be built out of an empty satchel and really
-        # cannot once the toggle goes back off.
-        #
-        # It writes the REAL user://settings.json and clears it afterwards; a
-        # cheat left switched on there would follow every later step in this job.
-        run: godot --headless --path . --script tests/smoke_free_build.gd
-
-  verify-combat:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-combat-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test combat
-        # Walks up to a wild creature, engages, and PILOTS the fight to a win through
-        # injected input (docs/decisions/D07). Asserts the things unit tests
-        # cannot see: the creature actually moves on the stick, the arena boundary
-        # holds it in without ending the fight, a swing at empty air is reported
-        # as a miss, a swing at the opponent connects and earns energy, the
-        # opponent closes and telegraphs and leaves an opening, and control and
-        # camera come back afterwards.
-        #
-        # The bug this exists for: the deployed creature became a CharacterBody3D and
-        # spent every run standing invisibly inside the trainer, so the two
-        # bodies shoved each other and launched the player off the playground at
-        # 500 m/s. Every unit test still passed.
-        #
-        # LP9: this scene-boot-and-simulate test is tick-budget-bounded, not
-        # wall-clock-bounded — it waits for a fixed number of physics frames
-        # (e.g. "the enemy never landed a hit in 15 seconds", "the fight never
-        # resolved after 2500 action frames"), which assumes physics ticks
-        # advance at something close to real time. Reproduced locally
-        # (26 instrumented runs escalating from 6-way to 16-way CPU
-        # oversubscription on 4 cores, LP9 in ralph/DONE.md): under heavy
-        # contention ticks can take far longer per tick in wall-clock terms
-        # than uncontended, which can exhaust a tick budget for real even
-        # though the fight logic itself is not stuck — none of those runs
-        # showed LP1's terrain-embedding signature (a per-frame position/
-        # velocity watchdog covering the whole fight, not just LP1's one
-        # teleport, never caught a Y-plunge or an embedded creature). Same
-        # mitigation smoke_aggression already uses below for the same reason
-        # (RB3/LP7): retry once before failing the job, since a second
-        # straight failure is much less likely to be the same transient
-        # contention.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_combat.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_combat failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_combat.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-riding:
-    # Split back out of its neighbour: a merge left this job as a bare header with no `steps:`, which is a workflow-level validation error — GitHub refused to start the WHOLE run, so every job silently stopped running.
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-combat-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test riding
-        # R6.1/R6.2. Mounts the player's own Meadowhart through the real
-        # interact binding and the real interaction arbiter, drives it on the
-        # real movement actions, and gets off again — asserting the things unit
-        # tests are structurally blind to: that the CREATURE is what moves, that
-        # it beats the trainer's own walk speed, that the camera follows the
-        # mount, and that the trainer comes back visible, collidable and on the
-        # ground.
-        #
-        # The two bugs it already caught, both of which every unit test passed
-        # through: a freed Object compares EQUAL to null in GDScript, so both
-        # "the mount was despawned under the rider" guards were dead code and
-        # dismissing your creature mid-ride left an invisible, collisionless
-        # trainer falling through the world.
-        #
-        # LP9: same tick-budget-vs-wall-clock retry as verify-combat above, for
-        # the same measured reason — this is a scene-boot-and-simulate test
-        # whose waits are counted in physics frames, and heavy CI contention can
-        # exhaust a frame budget without anything being stuck.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_riding.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_riding failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_riding.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-boss:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: changes
-    if: false # Covered by verify-combat-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the chapter's climax
-        # R8.3/SG40/R8.4. Mirrors verify-combat's shape because it has the
-        # same shape of risk: a scene-boot-and-simulate test that drives real
-        # input through a real fight. What it covers that no unit test can —
-        # the Warden is REACHABLE (a body on real ground offering a real
-        # prompt), the reveal is readable BEFORE him, the Legendary Chamber's
-        # lever is REFUSED until he falls (spec §28's order is not optional
-        # and that gate is the one place it could be walked around), the boss
-        # fight runs and can be won on the ordinary trainer substrate, the
-        # legendary is freed and `legendary_freed` is set exactly once (SG44's
-        # world event reads it, and a double-fire is worse than none), its
-        # voluntary join reaches the party, and a FULL belt hands it to
-        # R4.10's release ceremony rather than dropping it on the floor.
-        #
-        # LP9's retry, for the same measured reason verify-combat carries it:
-        # this test is tick-budget-bounded rather than wall-clock-bounded, and
-        # under heavy CI contention a budget can be exhausted for real without
-        # the logic being stuck. A second straight failure is much less likely
-        # to be the same transient. The budget here is the largest in the
-        # suite (five creatures back to back, then a scripted sequence), which
-        # is also why this job's timeout is 15 minutes rather than 10.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_boss.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_boss failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_boss.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-warrens:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-regions-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the Burrow Warrens
-        # SD17. Boots the real world, stands the player inside the required
-        # dungeon and pushes at its walls. Asserts what no unit test can see:
-        # the cave is enclosed geometry with a floor you stand on and walls
-        # you cannot walk through, its mouth is actually walkable (the first
-        # build stopped 1.4m short of its own open doorway on a 0.35m sill),
-        # the population and the guardian are placed, the deep branch is shut
-        # before the cleared flag and open after, the Heartstone is
-        # obtainable, and the story reward pays exactly once.
-        run: godot --headless --path . --script tests/smoke_warrens.gd
-
-  verify-relay:
-    # Split back out of its neighbour: a merge left this job as a bare header with no `steps:`, which is a workflow-level validation error — GitHub refused to start the WHOLE run, so every job silently stopped running.
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    needs: changes
-    if: false # Covered by verify-regions-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the Tether Relay Station
-        # SE23. Boots the real world and walks the first mini-stronghold.
-        # Asserts what no unit test can see: the gate is open and the compound
-        # is enterable, the raised gantry and apparatus pad are floors a
-        # CharacterBody3D stands on at the authored height, the ramp is the
-        # route to the console and the pad cannot be climbed from the yard,
-        # the console sets its flag exactly once and is one-way, every lit
-        # conduit dies with it, the `requires_flag` seam SE25 will use refuses
-        # while unset, and D41's drained ground is present and worse here than
-        # at the quarry. The first build put a gantry leg inside the ramp's
-        # own width and this test is what found it — a player who climbed to
-        # within a metre of the only route in and stopped.
-        run: godot --headless --path . --script tests/smoke_relay_station.gd
-
-      - name: Smoke-test the relay cast
-        # SE25/SE27. The other half of the same site, kept as its own script
-        # because it is a different question: beating the relay captain frees
-        # the captive, who hands over the Mill Bridge Gear and then turns up
-        # in the village with changed dialogue. Both agents named their file
-        # smoke_relay.gd; the station's kept its own name on merge.
-        run: godot --headless --path . --script tests/smoke_relay.gd
-
-  verify-stronghold:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-regions-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the stronghold route
-        # R8.2/SG38. Boots the real world, stands the player inside the
-        # stronghold and walks spec §8's five spaces in §8's order. Asserts
-        # what no unit test can see: each space has a floor the player settles
-        # on, the doorways between them are actually cut, the approach ramp is
-        # climbable (the first build of it was a flight of steps whose risers
-        # stopped the player 0.5m into a 26m ramp), the one shutter is shut
-        # before the elite's defeat flag and open after, all three gauntlet
-        # trainers stand in their own spaces with their own teams and flags,
-        # the recovery point really revives a fainted creature, and the
-        # Legendary Chamber's ~15m centrepiece still reports itself as the
-        # placeholder it is.
-        run: godot --headless --path . --script tests/smoke_stronghold.gd
-
-  verify-trainer-battle:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-combat-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test a trainer battle
-        # R8.1. Walks the challenge end to end in the real scene: the trainer
-        # is placed from data/config/trainers.json, the prompt opens their
-        # challenge conversation, the conversation opens a fight, their SECOND
-        # creature comes out when the first one falls, and beating the last of
-        # them sets the SB9 defeat flag, pays the reward and cannot be done
-        # twice. It also presses Throw mid-fight and asserts the refusal:
-        # trainer-owned creatures cannot be caught is a CLAUDE.md hard rule,
-        # and a HUD that merely hides the button would not enforce it.
-        #
-        # Same retry-once mitigation as verify-combat above, for the same
-        # measured reason (LP9): this is a tick-budget-bounded scene-boot-and-
-        # simulate test, and under heavy CI contention a budget can expire for
-        # real without the logic being stuck.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_trainer_battle.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_trainer_battle failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_trainer_battle.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-aggression:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-combat-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test aggression
-        # Two halves, and the second matters more: an aggressive creature must start
-        # a fight on its own, and a peaceful one must never do so no matter how
-        # long the trainer stands next to it. GAME_DESIGN.md §14 allows the
-        # first and forbids the second, and one word in species.json is the only
-        # thing between them.
-        #
-        # RB3 root-caused and fixed this suite's own documented flake (the
-        # trainer's own creature walling them in on a direction reversal) — 36
-        # consecutive clean runs afterward. The retry below is a safety net for
-        # any OTHER non-determinism this scene-boot-and-simulate style of test
-        # is prone to, not a substitute for root-causing a new one: a second
-        # straight failure still fails the job, and per ralph/PROMPT.md a
-        # suspected flake gets reproduced locally and root-caused, not just
-        # retried away.
-        run: |
-          set +e
-          godot --headless --path . --script tests/smoke_aggression.gd
-          code=$?
-          if [ $code -ne 0 ]; then
-            echo "::warning::smoke_aggression failed once; retrying once before failing the job"
-            godot --headless --path . --script tests/smoke_aggression.gd
-            code=$?
-          fi
-          exit $code
-
-  verify-opening:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-gate-a-ui-build-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the opening
-        # Walks the first fifteen minutes end to end: fade in, approach
-        # Grandpa, talk, choose a starter, name it with the pad, and confirm
-        # the creature reaches the real party. This wires SequenceDirector,
-        # InteractionArbiter, DialoguePanel and NamePrompt together for the
-        # first time in the run — a regression here is a player who spawns
-        # with no opening at all, and nothing else in this job would notice.
-        run: godot --headless --path . --script tests/smoke_opening.gd
-
-      - name: Smoke-test the starter picker's input reads
-        # The blind playtest's P0, kept fixed: a `ui_right` and a `menu_confirm`
-        # in the SAME physics frame used to destroy the confirm, so the orb
-        # picker could not be confirmed and the opening could not be finished.
-        # smoke_opening above drives the picker with presses frames apart, which
-        # always worked — this is the collision itself, and it runs in seconds
-        # because it instantiates the picker alone.
-        run: godot --headless --path . --script tests/smoke_starter_picker.gd
-
-      - name: Smoke-test modal stacking
-        # The pause shell must refuse to open over a screen the player has to
-        # answer — the starter orbs, a conversation. It used to open straight on
-        # top of both, drawing over a selector that could no longer be reached.
-        run: godot --headless --path . --script tests/smoke_modal_stacking.gd
-
-  verify-menu:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-gate-a-ui-build-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the menu
-        # Opens the pause menu over the real world and closes it again. Unit
-        # tests cover the satchel's arithmetic and the five-creature cap; none of
-        # them can see the four things that make a menu shippable or not:
-        # the mouse is released and RESTORED to what it was (the world captures
-        # it and never gives it back), the tree actually pauses so the player
-        # is not walking while reading, something holds focus and the focus
-        # neighbours resolve — this ships on a handheld and a menu that needs a
-        # mouse is broken — and the menu yields the Escape/B button while a
-        # fight is running, because `menu_cancel` and `combat_run` share it.
-        #
-        # What it CANNOT check headlessly: mouse capture itself. The dummy
-        # DisplayServer reports VISIBLE whatever was asked for, so the test
-        # verifies the menu records and restores the mode it found and says so
-        # in its own output. The capture is the owner's to confirm on the Ally.
-        run: godot --headless --path . --script tests/smoke_menu.gd
-
-  verify-settings:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: false # Covered by verify-gate-a-ui-build-shard.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two — see
-        # verify-unit-tests' copy of this step for the full reasoning.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Smoke-test the settings screen
-        # Rebinds controls through the real screen with injected input. The unit
-        # tests cover the binding model and the settings file; none of them can
-        # see the parts that decide whether this ships: that the tab is
-        # reachable with the same button that changes tab everywhere else, that
-        # focus moves across the two columns and down the rows (this is the
-        # screen a player visits BECAUSE their controls are wrong, so it is the
-        # last one allowed to need a mouse), that the capture reads raw events
-        # ahead of the Control tree — a focused Button swallows the confirm
-        # button, so a capture that read actions would never see anything — and
-        # that binding `menu_cancel` to A does not close the menu on the very
-        # press that bound it.
-        #
-        # It also exercises the panic chord, which reads the DEVICE rather than
-        # the input map, because it is the way back when the input map is what
-        # the player broke. It cleans up user://settings.json afterwards; a
-        # stray override there would follow every later step in this job.
-        run: godot --headless --path . --script tests/smoke_settings.gd
-
-  # Each shard preserves every smoke test from the former one-test-per-runner
-  # layout. Five functional runners (six including the unit matrix) let several
-  # Ralph branches start together instead of one branch monopolising the runner
-  # allowance with eighteen jobs.
-  # RETRY-ON-REAL-TIME. Every `X || X` below is deliberate, not a hedge added
-  # blind: `smoke_combat.gd`/`riding`/`boss`/`trainer_battle`/`aggression`
-  # already carried this for the same reason `smoke_catching.gd` does -- these
-  # walk a real player through real collision and real-time camera/aim
-  # convergence, frame-budget-bounded, and CI runner load varies run to run in
-  # a way this box cannot reproduce on demand. 2026-08-25 added three more to
-  # the same list: `smoke_opening.gd` (run 2417, stuck 8m short of the gate's
-  # prompt after passing clean twice on the same tree) and
-  # `smoke_gate_a_opening_segment.gd` (run 2415, "right-stick aim could not
-  # line up the real throw reticle", also passed clean before and after on the
-  # same tree) are exactly this shape -- one retry, done.
-  #
-  # `smoke_traversal.gd` is NOT that shape and gets a second retry instead of
-  # one, on purpose. The wedge it reports ("player got wedged ... move_back at
-  # (53, -65)") reproduced on run 2413, went away on runs 2415/2415-rerun and
-  # a local run of the identical tree, then came BACK on run 2417 and again on
-  # 2419 -- where it failed BOTH the original attempt and its one retry, the
-  # same coordinates each time. `tools/_probe_wedge_53_neg65.gd` measured what
-  # is actually there: a ~10-15deg slope with `Rock_Medium_1.gltf` 1.39m away
-  # -- the identical shape `tools/_probe_wedge.gd` already documented for a
-  # DIFFERENT wedge at (-43,-53) in an earlier session ("the player pins
-  # against a rock on a slope rather than sliding off it... the defect is in
-  # how the body slides, and it is bake-independent"). That is a real,
-  # pre-existing defect in the player's own slide/unwedge code, not something
-  # this session's changes caused or should rewrite blind -- CLAUDE.md asks
-  # that changes to traversal philosophy be flagged, not invented under a CI
-  # deadline. What IS this session's to fix is that it now measurably fails
-  # more than once in a row under load, which one retry does not cover; a
-  # second buys margin without hiding a wedge that fails three attempts
-  # straight, which would be the real-bug signal worth trusting.
-  #
-  # A test that reports something the game plainly does on every retry is a
-  # real bug, not a flake -- see ralph/HANDOVER_CONSOLIDATION_2026-08-25.md's
-  # own "six defects, one shape" section for that distinction and why it
-  # matters not to paper over the other kind.
-  # SPLIT 2026-08-26. These five smokes ran SERIALLY in one job, and that job
-  # was the whole pipeline's long pole: 20m23s of test time on run 32926498498,
-  # against a full-run wall clock of ~40 minutes (the other ~16 being runners
-  # queueing). Nothing else came close -- next slowest were
-  # verify-gate-evidence-shard at 14m37s and verify-owner-regressions-shard at
-  # 14m02s. Sharding unit tests can never touch it; this is where the time is.
-  #
-  # Running them in parallel makes the pole the LONGEST SINGLE SMOKE rather than
-  # their sum. That is strictly better and needs no per-smoke measurement to
-  # justify, which matters because this session has already shipped one CI
-  # "fix" whose arithmetic could not have worked.
-  #
-  # smoke_traversal keeps its three attempts and smoke_catching its two, but
-  # those retries now cost only their own job instead of the four smokes queued
-  # behind them. On run 32964091592 traversal genuinely failed, so all three
-  # attempts ran and dragged the whole shard with them -- exactly the shape this
-  # removes.
-  #
-  # `retries` is per-smoke rather than blanket, so a genuinely broken smoke
-  # still fails on its first attempt instead of costing three.
-  #
-  # NOT a fix for why traversal needs retries at all: the player-slide wedge
-  # near world (53,-65). Fix that and this drops again. smoke_unstick guards the
-  # related failsafe (Gate F S05: 1,004 route rows at one coordinate over eight
-  # minutes, stick held throughout) and is seconds long -- with movement.json's
-  # `unstick.enabled` false it fails, so it cannot pass by accident.
-  #
-  # 30 minutes, not 40: the longest chain is now traversal's three ~6-minute
-  # attempts plus setup, not five smokes end to end.
   verify-core-verb-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -1841,6 +571,24 @@ jobs:
             retries: 2
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
       - name: Verify ${{ matrix.smoke }}
         env:
@@ -1865,153 +613,321 @@ jobs:
     timeout-minutes: 22
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: free_build
+            retries: 1
+          - smoke: opening
+            retries: 2
+          - smoke: starter_picker
+            retries: 1
+          - smoke: modal_stacking
+            retries: 1
+          - smoke: menu
+            retries: 1
+          - smoke: settings
+            retries: 1
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
-      - name: Verify Gate A build and controller UI paths
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
         run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_free_build.gd
-          godot --headless --path . --script tests/smoke_opening.gd || godot --headless --path . --script tests/smoke_opening.gd
-          godot --headless --path . --script tests/smoke_starter_picker.gd
-          godot --headless --path . --script tests/smoke_modal_stacking.gd
-          godot --headless --path . --script tests/smoke_menu.gd
-          godot --headless --path . --script tests/smoke_settings.gd
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+
 
   verify-combat-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: combat
+            retries: 2
+          - smoke: riding
+            retries: 2
+          - smoke: boss
+            retries: 2
+          - smoke: trainer_battle
+            retries: 2
+          - smoke: aggression
+            retries: 2
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
-      - name: Verify combat and encounter paths
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
         run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_combat.gd || godot --headless --path . --script tests/smoke_combat.gd
-          godot --headless --path . --script tests/smoke_riding.gd || godot --headless --path . --script tests/smoke_riding.gd
-          godot --headless --path . --script tests/smoke_boss.gd || godot --headless --path . --script tests/smoke_boss.gd
-          godot --headless --path . --script tests/smoke_trainer_battle.gd || godot --headless --path . --script tests/smoke_trainer_battle.gd
-          godot --headless --path . --script tests/smoke_aggression.gd || godot --headless --path . --script tests/smoke_aggression.gd
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+
 
   verify-regions-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: warrens
+            retries: 1
+          - smoke: relay_station
+            retries: 1
+          - smoke: relay
+            retries: 1
+          - smoke: stronghold
+            retries: 1
+          - smoke: wild_streaming
+            retries: 1
+          # GATE-D. smoke_art.gd was in NO ci job at all; ralph/conventions.md
+          # requires it and nothing ran it. Kept here, now as its own leg.
+          - smoke: art
+            retries: 1
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
-      - name: Verify regional progression paths
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
         run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_warrens.gd
-          godot --headless --path . --script tests/smoke_relay_station.gd
-          godot --headless --path . --script tests/smoke_relay.gd
-          godot --headless --path . --script tests/smoke_stronghold.gd
-          # STREAM-D. Not picked up by verify-unit-tests: run_tests.gd globs
-          # test_*.gd only, and this one has to be a standalone SceneTree
-          # script because _tick_streaming() reads Node3D.global_position,
-          # whose getter requires is_inside_tree() -- unreachable from inside
-          # run_tests.gd's synchronous _init(). Named here so it is actually
-          # run by something; a test nobody runs is not a test, and this one
-          # guards the distance activation that the chapter's ~700-1100
-          # authored creatures depend on to stay inside frame budget.
-          godot --headless --path . --script tests/smoke_wild_streaming.gd
-          # GATE-D. smoke_art.gd was in NO ci job at all. ralph/conventions.md
-          # tells every agent to run it by hand for creature and model work,
-          # and it had been failing on main for long enough that agents learned
-          # to expect its failures and ignore them -- which is how ten broken
-          # layer assertions survived. Naming it here means it fails a check
-          # instead of a habit.
-          godot --headless --path . --script tests/smoke_art.gd
-
-  # THE GAP THIS CLOSES. The four shards above preserve "every smoke test from
-  # the former one-test-per-runner layout" -- but that layout never covered
-  # every smoke test. 46 of the 64 files in tests/ were named by no job at all,
-  # and the set that fell through is precisely the set written to prove the
-  # owner's own 2026-08-21 ROG playtest bugs fixed: the Load Game stall, the
-  # party count after catches, the Satchel/hotbar leak, the Build shortcut's
-  # controller ownership, the first trainer battle's camera, arena containment
-  # in the Warrens and the Stronghold, and both Gate A/B evidence runs.
-  #
-  # That is how integration-ABC shipped green with NINE harnesses either failing
-  # or asserting the pre-CONTROLLER-MAP pad map. Nothing was wrong with the
-  # game; nothing was asking. A regression nobody runs is a comment.
-  #
-  # Split across two runners rather than one so neither approaches the 22-minute
-  # ceiling: the two continuous evidence runs (the opening segment and the
-  # tournament bracket) are minutes each on their own.
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
     needs: changes
     if: needs.changes.outputs.code == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: title_load_game
+            retries: 1
+          # KNOWN INTERMITTENT (the catch-3 engage defect). retries stays 1 ON
+          # PURPOSE: a retry would green it and hide the cause, which is the same
+          # reason stick_navigator is withheld from it. One leg of its own means
+          # its flake no longer takes the other six regressions down with it.
+          - smoke: party_count_after_catches
+            retries: 1
+          - smoke: satchel_owns_hotbar
+            retries: 1
+          - smoke: build_owns_creature_cycle
+            retries: 1
+          - smoke: trainer_battle_camera
+            retries: 1
+          - smoke: arena_contain
+            retries: 1
+          - smoke: menu_open_does_not_offer_to_drop
+            retries: 1
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
-      - name: Verify the 2026-08-21 owner playtest regressions
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
         run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_title_load_game.gd
-          godot --headless --path . --script tests/smoke_party_count_after_catches.gd
-          godot --headless --path . --script tests/smoke_satchel_owns_hotbar.gd
-          godot --headless --path . --script tests/smoke_build_owns_creature_cycle.gd
-          godot --headless --path . --script tests/smoke_trainer_battle_camera.gd
-          godot --headless --path . --script tests/smoke_arena_contain.gd
-          godot --headless --path . --script tests/smoke_menu_open_does_not_offer_to_drop.gd
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
 
   verify-gate-evidence-shard:
     runs-on: ubuntu-latest
     timeout-minutes: 22
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-godot
-      - name: Verify the Gate A and Gate B continuous evidence runs
-        run: |
-          set -euo pipefail
-          godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd || godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd
-          godot --headless --path . --script tests/smoke_gate_a_build_house.gd
-          godot --headless --path . --script tests/smoke_gate_a_rest_torch.gd
-          godot --headless --path . --script tests/smoke_post_modal_control.gd
-          godot --headless --path . --script tests/smoke_tournament_bracket.gd
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - smoke: gate_a_opening_segment
+            retries: 2
+          - smoke: gate_a_build_house
+            retries: 1
+          - smoke: gate_a_rest_torch
+            retries: 1
+          - smoke: post_modal_control
+            retries: 1
+          - smoke: tournament_bracket
+            retries: 1
           # GATE-E. The chapter's FINALE, walked continuously in one boot with a
           # full five: in from the entrance, the three gauntlet fights, the
           # recovery point, the elite, the shutter, the reveal, the Warden, the
-          # lever, the release ceremony a full belt forces, the region's
-          # response, and the post-victory acknowledgment that ends the
-          # objective chain. smoke_stronghold.gd proves the route and fights
-          # nobody; smoke_boss.gd starts at the Warden with a level-1 starter.
-          # The seams between them were covered by nothing, and driving them
-          # end to end found three real defects on main (the level-up
-          # announcement aborting mid-string, the recovery point unable to
-          # accept a creature, and `creature_bed_built` set on frame one of a
-          # new save by the stronghold's own authored bed).
-          godot --headless --path . --script tests/smoke_gate_e_finale.gd
-
-  # The continuous-core evidence path, run so it cannot go dark again.
-  #
-  # `--gate-a-continuous-core` gates the village/material/paid-build segments
-  # inside smoke_gate_a_opening_segment.gd, and NO shard has ever passed that
-  # flag. Two worktree runs at integration-ABC (a22534ff) on 2026-08-23 proved
-  # the path has been unreachable since that merge: the harness there dies at
-  # boot on `combat_throw`, and the current harness on that gameplay dies at the
-  # tutorial catch on an empty satchel. So these segments have never executed in
-  # CI or locally, while ralph/DONE.md described the path as working.
-  #
-  # `continue-on-error` is deliberate and TEMPORARY. It is currently RED --
-  # "physical interact on the node did not start the visible axe swing
-  # (arbiter winner=Interactable, equipped=, prop=<null>)" -- and a red required
-  # job would wedge every branch behind a path nobody has ever seen pass. A job
-  # that runs and reports red is strictly better than a flag nothing passes:
-  # the failure is visible on every run instead of invisible forever.
-  #
-  # **Remove `continue-on-error` the moment CONTINUOUS-CORE is fixed.** An
-  # ignored red job that becomes permanent scenery is the same disease as a
-  # green badge that tested nothing.
+          # lever, the release ceremony a full belt forces, the region's response,
+          # and the post-victory acknowledgment that ends the objective chain.
+          # smoke_stronghold.gd proves the route and fights nobody; smoke_boss.gd
+          # starts at the Warden with a level-1 starter. The seams between them
+          # were covered by nothing, and driving them end to end found three real
+          # defects on main.
+          - smoke: gate_e_finale
+            retries: 1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify ${{ matrix.smoke }}
+        env:
+          SMOKE: ${{ matrix.smoke }}
+          RETRIES: ${{ matrix.retries }}
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -2020,6 +936,24 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
       - uses: ./.github/actions/setup-godot
       - name: Verify the village, material and paid-build continuation (KNOWN RED)
         run: |
