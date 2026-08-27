@@ -2652,3 +2652,56 @@ they exist so fights resolve. **`tools/gate_f/**` is frozen and was not
 modified** (§13).
 
 **Next:** X02, already launched. Then X03, X04, X05, X06, X08.
+
+## Check-in 29 — 2026-08-27 — **X02: 149 PASS / 21 FAIL. The build lab builds nothing, and focus will not move right.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X02/`. Logic mode.
+
+### The census, in the segment whose whole subject is building
+
+```
+catch_result: 1  flag_set: 1  load: 2   menu_close: 6  menu_open: 7
+note: 190        region_enter: 4        screenshot: 8  tab_change: 7
+```
+
+**No `build_place`, no `build_cancel`, no `build_dismantle`, no `craft`, no
+`gather`.** §B gives X02 "2×2 enclosed structure, dismantle, refunds"; §E.3 is the
+build/craft/gather study. None of those verbs emitted an event.
+
+### A new member of the focus family — and it is the largest cluster here
+
+**Seven failures, each a different button, all `ui_right`:**
+
+```
+6 x ui_right did not move focus off @Button@69828
+5 x ui_right did not move focus off @Button@69165
+4 x ui_right did not move focus off @Button@67430
+3 x ui_right did not move focus off @Button@66884
+2 x ui_right did not move focus off @Button@66401
+2 x ui_right did not move focus off @Button@65918
+2 x ui_right did not move focus off @Button@65444
+```
+
+Note the shape: the harness escalates its press count (2, 2, 2, 3, 4, 5, 6) and
+focus still does not move. This is the same family as `ui_down`/`ui_up` failures
+in S04, S06, S09 and X01 (where one cell took **130** presses without moving),
+but here it is **horizontal traversal inside the build catalogue**, across seven
+distinct buttons.
+
+Recorded as an observation (§13): §0.1's standing rule is that UI focus
+navigation must use `parse_input_event`, and the harness sends both that and the
+action press — so this is not the poll-only mistake §8 warns about. The presses
+reach the game and focus does not move.
+
+### The rest of the 21
+
+The familiar ownership class: `build_catalogue → build_placement` (2),
+`menu_backpack → world` (2), `world → panel` (2), `menu_save → menu_build`,
+`menu_backpack → menu_settings`, and one `menu_cancel left the shell open`. Plus
+one walk failure — `did not reach (-342, 507) … stopped 659.1 m short at
+(43, -4, -28)` in 2,400 frames.
+
+**severity_candidate: BLOCKER** — candidate only. §E.3's build study produced no
+build events.
+
+**Next:** X03 (catch lab), already launched. Then X04, X05, X06, X08.
