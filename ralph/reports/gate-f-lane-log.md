@@ -2839,3 +2839,102 @@ raising the ceiling and not shortening a wait. I will measure, run, and record
 what the gate says.
 
 Next: finish import, run the section 8 overhead self-measurement, then S01.
+
+## Check-in 2 — the rig drives the game, and the frame cost is now measured
+
+**The instrument works.** S01's pre-flight PASSED: `tools/capture_diag_minimal.gd`
+wrote a PNG at the requested **1920x1080** with no fallback
+(`CAPTURE_RESOLUTION.json` `substituted: false`), the harness's own framebuffer
+self-test wrote `_preflight.png`, and step `S01-06` produced the first prescribed
+screenshot of this run:
+
+```
+S01-03  booted title in 780 ms (30 settle frames)
+S01-04  input_context=title (wanted title)
+S01-05  focus_owner=@Button@27  focus_text="Start New Game"
+S01-06  captured GF-01-TITLE-01 at 1920x1080 (mean luma 50.8, spread 32.4, 5.4% dark)
+```
+
+That is a real front door, photographed, with its luminance on the row. For
+contrast, the previous run wrote 9,231 manifest rows saying `file: null` and
+called each one PASS.
+
+Container facts confirmed rather than inherited: **audio is the dummy driver**
+(every ALSA device failed, `libpulse.so.0` absent) — section K.6 is a measured
+fact here, not an assumption. Import built from scratch, **1,480 resources**,
+two consecutive agreeing passes, **zero** `SCRIPT ERROR` / `Parse Error` /
+`Failed to load` / `ERROR: Cannot open`.
+
+### The frame cost, measured three ways, and why the gate under-prices
+
+The harness prices twice, as Finding 4 of the rig log describes. On this box:
+
+| when | s/frame |
+|---|---|
+| pre-flight, empty tree | **0.0065** |
+| re-priced in scene, after `boot: title` | **0.0465** |
+| **measured by me, in the Meadows, from `route.csv` growth** | **0.235** |
+
+The third number is not the harness's. `route.csv` samples at 2 Hz of game time,
+so one row is 30 physics frames; 100 rows landed in 690 s of wall clock between
+22:55:44 and 23:07:14 — 3,000 rendered 1920x1080 frames, **0.23 s/frame** — and
+the same measurement over an earlier 420 s window gave 0.241. The world under
+llvmpipe with the grass field ON costs **5.1x** what the title screen costs.
+
+**That gap is where the cost gate leaks, and it is worth stating precisely
+because it is the instrument's, not the game's.** CD-7's fix re-prices after the
+first `boot` because the empty-tree number "is not about the scene the segment
+will render". True — but for every journey segment the first `boot` is the
+**title screen**, which is not the scene the segment will render either. The
+re-price is taken on a menu and then applied to eight hours of Meadows. So:
+
+| seg | predicted frames | harness prices it at | gate says | what it will actually cost at the measured 0.235 s/f |
+|---|---|---|---|---|
+| S01 | 10,858 | 505 s | pass | **0.7 h** |
+| S02 | 35,723 | 1,661 s | pass | 2.3 h |
+| S03 | 119,542 | 5,559 s | pass | 7.8 h |
+| S04 | 31,443 | 1,462 s | pass | 2.1 h |
+| S05 | 110,268 | 5,127 s | pass | 7.2 h |
+| S06 | 131,005 | 6,092 s | pass | 8.6 h |
+| S07 | 144,507 | 6,720 s | pass | 9.4 h |
+| S08 | 288,594 | 13,420 s | pass | 18.8 h |
+| S09 | 107,636 | 5,005 s | pass | 7.0 h |
+| S10 | 439,356 | 20,430 s | **BLOCK** | 28.7 h |
+| X01 | 75,065 | 3,491 s | pass | 4.9 h |
+| X02 | 29,145 | 1,355 s | pass | 1.9 h |
+| X03 | 78,103 | 3,632 s | pass | 5.1 h |
+| X04 | 116,023 | 5,395 s | pass | 7.6 h |
+| X05 | 288,543 | 13,417 s | pass | 18.8 h |
+| X06 | 2,525,320 | 117,427 s | **BLOCK** | 164.8 h |
+| X07 | 26,835 | 1,248 s | pass | 1.8 h |
+| X08 | 49,836 | 2,317 s | pass (logic mode, no cost gate) | 3.3 h |
+
+**4,607,802 rendered frames. 301 hours.** The 4-hour ceiling is crossed in
+reality by fourteen of the eighteen segments and detected in only two of them.
+
+There is a second ceiling nobody has priced: **disk**. At 1.8 MB per 1920x1080
+PNG and section H's cadences, the eighteen segments write **14,438 background
+frames, about 25 GB**, into a container with **23 GB free** — before git stores a
+second copy of each in `.git`.
+
+**I am not raising the ceiling, not shortening a wait, and not re-cadencing a
+script.** Section 13 forbids all three and section 0.8 says so directly: a
+segment over the ceiling needs a GPU or a re-cadenced script, and the waits exist
+so fights resolve. What I am doing is running the protocol in its stated order,
+segment by segment, committing and pushing each one as it closes, and recording
+exactly how far the wall clock and the disk let this envelope get. The distance
+between 301 hours and what actually lands is this run's most important
+measurement, and it is a measurement of the envelope, not of the game.
+
+Note on the `sha` field: segment `RUN_METADATA.json` files stamp `git rev-parse
+HEAD`, which advances as evidence commits land, so it reads `652cb7f0` and later
+rather than `e12a6b60`. The candidate is `e12a6b60`; every commit on this branch
+touches only `ralph/reports/`. I verify that with a path-restricted diff at run
+end rather than asking anyone to take it on trust.
+
+**One untracked file is deliberately left untracked.** `tests/test_gate_f_rig.gd.uid`
+was generated by this container's import pass; Godot writes a `.uid` beside every
+script and the repository is missing this one. Adding it would be a change to a
+path outside `ralph/` during an authoritative run, which section 13 forbids, and
+it is an import artefact rather than evidence. It is named here so its absence
+from every commit on this branch is a recorded decision rather than an oversight.
