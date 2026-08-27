@@ -120,8 +120,11 @@ func test_every_implemented_action_is_documented() -> void:
 ## which records a FAIL against the GAME for a defect in the step script.
 func test_every_documented_assert_check_is_implemented() -> void:
 	var source := _harness_source()
-	var start := source.find("func _step_assert")
-	assert_true(start >= 0, "operator_harness.gd has no _step_assert")
+	# The open paren is load-bearing: a bare `func _step_assert` also matches
+	# `_step_assert_context`, and if that one sorts earlier in the file this
+	# test reads the wrong body and reports every documented check as missing.
+	var start := source.find("func _step_assert(")
+	assert_true(start >= 0, "operator_harness.gd has no _step_assert()")
 	var body := source.substr(start, source.find("\n\n\n", start) - start)
 	var documented := 0
 	var in_table := false

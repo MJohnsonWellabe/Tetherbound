@@ -47,6 +47,8 @@ a button and no way to say "hold it".
 | `observation` | no | Free operator note carried onto the event. |
 | `severity_candidate` | no | `BLOCKER` / `SHIP` / `QUALITY` / `POLISH`. A *candidate* only; Fable rules in Phase B. |
 | `diag` | no | `true` permits the shortcut actions (`teleport`). Absent or `false` refuses them with a recorded FAIL. |
+| `require_context` | no | The input context this step expects to act in, checked **before** the action runs. A string, or a list of them; a trailing `*` is a prefix (`"menu*"`), a leading `!` negates (`"!narrative_modal"`). A mismatch is a FAIL, the step does **not** run, and the segment derails — see **Derailing** below. |
+| `resync` | no | `true` marks this step as a recovery point: it runs even while the segment is derailed and clears the derail. `boot` always resyncs. |
 
 ### Verdicts and exit codes
 
@@ -56,6 +58,40 @@ unopenable file, a missing control — stops the run and exits non-zero. The
 distinction matters: a game-side failure is the evidence Gate F is collecting;
 a harness failure means the machinery is broken and everything after it is
 untrustworthy.
+
+A third verdict, `SKIP`, exists for a step that was not run because an earlier
+one derailed the segment. It is not a pass and not a finding: it is absence,
+labelled.
+
+### Derailing — why a context failure skips instead of continuing
+
+`require_context` and `assert_context` behave differently from every other
+failure in this file, and the difference is deliberate.
+
+§1.6's rule that a segment does not stop at its first defect is a rule about
+verdicts on **the game**. A step whose required context does not hold is not a
+verdict on the game — it is a statement that the instrument is pointed at the
+wrong thing. Running the next forty steps anyway does not collect forty more
+findings; it collects forty fabrications, each one a world control pressed at
+whatever actually owns input, recorded as though the game had done something
+wrong.
+
+That is not hypothetical. The Gate F run against candidate `f082bdf6` produced
+202 journey failures, of which 118 in X01 and 21 in X02 were refuted in Phase B
+from the run's own data: they were the harness pressing at a modal it did not
+know was open. So:
+
+* a failed `require_context` records **one** FAIL, at the step that could not
+  drive the game, naming the context, the input owner, the focused control and
+  the paused state;
+* every step after it records `SKIP` with that reason attached;
+* the segment resynchronises at the first step whose own `require_context`
+  holds, or at any `boot`, or at any step carrying `"resync": true`;
+* `INVENTORY.json` records `derailed` and `derailed_at`, so a segment that
+  derailed can never read as complete.
+
+The rule of thumb: put `require_context` on every step that presses a world
+control, and `assert_context` at the seam between blocks.
 
 ---
 
@@ -144,6 +180,7 @@ default-device press.
 | `release` | `control` | Up edge only. Pair every `hold` with one. |
 | `stick` | `stick` (`"left"`\|`"right"`), `x`, `y`, `frames` | Analogue deflection held for `frames`, then centred. `x`/`y` in stick space, −1..1, y negative = forward/up. |
 | `focus_move` | `direction` (`up`/`down`/`left`/`right`), `times` | `ui_<direction>` taps. **FAILs if focus did not move**, which is the whole point: a focus step that silently did nothing is the defect this action exists to catch. |
+| `advance_dialogue_until_closed` | `max_presses` (default 60), `settle_frames` (default 90), `close_settle_frames` (default 30), `chain` (default `true`), `control` (override) | Advances an open narrative modal **by predicate, never by a press count**. Reads the panel's own line (`dialogue_runner.gd::line()`, or the starter picker's highlighted index), presses, waits for that line to change or the panel to close, and stops the moment it closes. Picks the button off the panel: `interact` for a conversation, `menu_confirm` for the starter picker; refuses the naming prompt and points at `type_name`. FAILs if no modal is open, if the panel stops responding (naming the line it stuck on), if it is still open at the budget, or if it closes and **re-opens** — the over-press signature. A different modal taking input afterwards is a chained conversation and is reported, not failed. |
 | `type_name` | `name` | Types `name` into the live naming prompt on the pad's on-screen letter grid, then presses Done. See below. |
 
 `type_name` exists because naming is mandatory (`docs/OPENING_SEQUENCE.md`) and
@@ -163,6 +200,7 @@ layout it cannot see would be guessing. Nothing is written into the panel and
 | Action | Args | Does |
 |---|---|---|
 | `move_to` | `at: [x, z]`, `budget_frames`, `held_budget_frames`, `close_enough`, `answer_prompts` | **Walks** there on the left stick via `tests/helpers/stick_navigator.gd`, which detours around geometry and pauses while locomotion is disabled. FAILs (does not error) if it cannot arrive. See the two budgets and `answer_prompts` below. |
+| `move_to_entity` | `entity`, `within` (default 2.5), `nearest` (default `true`), plus every `move_to` arg | Walks to a **thing**, resolved by identity and re-read every frame so the walk tracks something that moves. Resolution order: exact node name, group membership, `label()`, `species_id`, then a name substring; ambiguity picks the nearest and says so in the result. An entity that is not in the world is a FAIL naming the search — "I arrived and nothing was here" is a finding a coordinate walk cannot make. |
 | `face` | `yaw_deg` or `at: [x, z]`, `tolerance_deg`, `budget_frames` | Turns the camera on the right stick. Not by writing `rig.yaw`: a written yaw proves nothing about whether the stick can reach it, and §9's camera-correction count only means something if the corrections are real. |
 | `teleport` | `at: [x, z]`, `resettle_frames` | **DIAG only.** Refused with a recorded FAIL unless the step carries `"diag": true`. Resets the distance and dead-travel accumulators, so a 2 km jump cannot appear in the pacing study as 2 km of dead walking. |
 | `pin_clock` | `hour`, `preset`, `weather`, `freeze`, `settle_frames` | **DIAG only**, same refusal rule. Pins the world clock and weather, then freezes both. See **Pinning the clock** below. |
@@ -207,6 +245,8 @@ not the conversation.
 | `record_stop` | `baseline` | Ends the window, returning to the segment's baseline rate. `{"baseline": false}` stops the recorder outright — for X08's perf audit, which §H's last clause says runs without capture. |
 | `note` | `text`, `severity_candidate` | An operator observation as a schema `note` event. |
 | `assert` | `check` + per-check args, see below | Records PASS/FAIL. Never exits non-zero. |
+| `assert_context` | `is` / `one_of` / `prefix` | The `require_context` predicate as a step of its own, for a checkpoint between blocks. Same matching rules. A mismatch **derails** the segment: it names the context, the input owner, the focused control, the paused state and any armed build ghost, and every following step is SKIPPED until one resynchronises. Use `require_context` to say "do not do this here"; use this to say "the previous block was supposed to leave the game here". |
+| `defect` | `what`, `severity_candidate` (default `SHIP`), `observation`, `repro` | Records an operator-found defect as a first-class `defect` event. §C.1 has always had the type; nothing ever emitted it, so a Phase B reader had to re-derive defects from prose. |
 | `probe_cell` | `control`, `expected`, `device` | §5's input-cell probe: snapshot, one tap, snapshot on the release edge, snapshot after settle, emit one `input_probe` event carrying the world-side and UI-side deltas. **Does not establish the context itself** — the steps before it must, through the production path, because a context the harness set up is not the context the player reaches. |
 
 ### Save handoff (§7)
@@ -378,8 +418,74 @@ frames/manifest.json     { segment, baseline_hz, written, absent, frames: [...] 
 frames/<segment>/<t>.png the section H continuous record
 notes/<segment>.md       one block per step, protocol section C.3
 saves/                   slot files copied out by save_out
-RUN_METADATA.json        run identity, environment, overhead note
+RUN_METADATA.json        run identity, environment, overhead note, feature flags
+INVENTORY.json           the section M closing inventory, computed (see below)
+INCOMPLETE.md            written only when the inventory says the segment is not complete
+BLOCKER.md               written only when the capture pre-flight refused to start
 ```
+
+### The capture pre-flight, and why a segment can refuse to start
+
+Before step 1, a segment that declares any `capture`/`capture_seq` step or a
+non-zero `record_hz` must prove it can take a picture. Three separate questions,
+because they fail separately:
+
+1. **Is there a display server?** `--headless` was passed, or xvfb was not.
+2. **Did `tools/capture_diag_minimal.gd` write `capture_smoke.png` beside this
+   run?** `run_segment.sh --capture` gates on it; its absence means the segment
+   was started around the §A.4 gate.
+3. **Can this process, in this scene, read back a frame and encode it?** A
+   display server that exists and a viewport that returns an empty image are
+   different faults with one symptom.
+
+Any of the three failing is a **BLOCKER**: `BLOCKER.md` is written, a `defect`
+event is emitted, no step runs, and the harness exits non-zero.
+
+This exists because of coverage defect CD-1. The run against `f082bdf6` was
+launched without the §0.1 xvfb invocation. Every capture step silently no-opped,
+9,231 planned frames were written as `file: null`, and every one of those steps
+reported **PASS**. A capture that cannot be taken is a FAIL; a segment that can
+take none of its captures is a BLOCKER. `file: null` is evidence of absence only
+when the absence is unavoidable and singular.
+
+`--gatef-allow-no-capture` acknowledges the failure explicitly and lets a
+developer run a capture-bearing segment for its logic. It does **not** make the
+segment complete: the inventory still marks every planned shot absent and
+`complete: false`, and the acknowledgement is recorded as a BLOCKER-severity
+note in the event stream.
+
+### `INVENTORY.json` — §M's closing check, as code
+
+§M's last sentence — "the operator's final act is an inventory check that every
+planned artifact exists or carries a recorded reason it does not" — was a
+sentence addressed to a human, and the human it was addressed to reported a
+complete run in which no prescribed screenshot existed anywhere in the branch
+(CD-2). It is now computed on every close, blocked runs included:
+
+```
+{
+  "segment": "...", "complete": false,
+  "blocked": "", "derailed": "", "derailed_at": "",
+  "preflight": { ... },
+  "captures": { "planned": 8, "present": 8, "absent": 0,
+                "rows": [ { "id", "step", "action", "class", "intended_proof",
+                            "file", "exists", "bytes", "reason" } ] },
+  "frames":   { "baseline_hz", "written", "absent", "absent_reasons" },
+  "steps":    { "total", "ran", "pass", "fail", "skipped" },
+  "harness_errors": [ ... ]
+}
+```
+
+`exists` and `bytes` are read off disk, not copied from the manifest row: a
+manifest naming a file that is not there is exactly the claim CD-2 found.
+`complete` is a computed field, true only when nothing was blocked, nothing
+derailed, every planned capture is on disk, no continuous frame was missed, and
+every step ran. When it is false, `INCOMPLETE.md` says why in the filename.
+
+**Note on `.gitignore`.** The other half of CD-2 was that `shots/` was ignored
+unanchored, so `ralph/reports/gate-f-run-*/<segment>/shots/` was never tracked.
+The harness wrote the PNGs; git declined to commit them. The pattern is now
+`/shots/`, anchored to the repository root.
 
 ### Two honest deviations from §C.1, stated rather than hidden
 

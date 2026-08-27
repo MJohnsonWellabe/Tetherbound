@@ -159,6 +159,41 @@ var _capture_step_active := false
 var _notes: Array = []
 var _harness_errors: Array[String] = []
 
+# --- rig integrity (CD-1/CD-2/CD-3, GF-B-002/GF-B-003) -----------------------
+#
+# Three counters below exist because the 2026-08-27 run against `f082bdf6`
+# reported PASS for 9,231 captures it never took and PASS for step after step
+# pressed at a modal that owned input. Both failures share one shape: the
+# harness had no way to say "I could not do that", so it said nothing and the
+# reader read silence as success.
+
+## Non-empty when the capture pre-flight refused to start the segment. Nothing
+## after step 1 runs; the segment is BLOCKED and says so in `INVENTORY.json`.
+var _blocked := ""
+## Non-empty when a step's `require_context` did not hold. The segment is off
+## its rails from that step onward: every following step is SKIPPED, with the
+## derail named, until one whose `require_context` holds resynchronises it.
+## §1.6 still stands -- a failed EXPECTATION continues -- but a step that could
+## not be PERFORMED invalidates the ones after it, and forty assertions taken in
+## the wrong context are forty findings about the harness.
+var _derailed := ""
+var _derailed_at := ""
+## Every capture the segment DECLARED, resolved before the first step runs.
+## `INVENTORY.json` is this list joined to what is on disk at the end.
+var _planned_captures: Array = []
+## Step bookkeeping, so `INVENTORY.json` can say how much of the segment ran.
+var _step_total := 0
+var _step_ran := 0
+var _verdicts := {"PASS": 0, "FAIL": 0, "SKIP": 0}
+## What the pre-flight found, verbatim, in `RUN_METADATA.json` and the inventory.
+var _preflight: Dictionary = {}
+## `--gatef-allow-no-capture`: an explicit, recorded acknowledgement that this
+## invocation cannot capture. It does NOT make the segment complete -- the
+## inventory still marks every planned shot absent and `complete: false` -- it
+## only lets a developer run a capture-bearing segment for its logic while
+## knowing the evidence half is void.
+var _allow_no_capture := false
+
 # --- live counters -----------------------------------------------------------
 
 var _probe: RefCounted = null
@@ -186,6 +221,36 @@ var _prev_combat_running := false
 var _prev_context := ""
 var _prev_levels: Dictionary = {}
 var _prev_party_size := -1
+
+## GF-B-011. Thirteen of §C.1's twenty-nine event types had never been emitted
+## by anything: `dialogue`, `combat_hit`, `combat_switch`, `catch_throw`,
+## `gather`, `craft`, `build_place`, `build_cancel`, `build_dismantle`, `rest`,
+## `feed`, `landmark_discover`, `defect`. A schema that cannot evidence itself
+## is a schema nobody can trust the absence of: a Phase B reader querying
+## `type == "gather"` and finding nothing could not tell "the player never
+## gathered" from "the harness never says that word".
+##
+## Detected the same way every existing detector works -- by comparing live
+## state to the last sample, with no hook anywhere inside gameplay code.
+var _prev_dialogue_line := ""
+var _prev_opponent_hp := -1.0
+var _prev_my_hp := -1.0
+var _prev_catch_phase := ""
+var _prev_active_creature := ""
+var _prev_inventory: Dictionary = {}
+var _prev_placed := -1
+var _prev_pending_build := ""
+var _prev_condition: Dictionary = {}
+var _prev_satiety := -1.0
+var _prev_landmarks := -1
+## The expensive half of the watch -- a 24-slot inventory walk, a landmark list,
+## a per-member condition summary -- runs at 10 Hz rather than 60. §3 asks
+## whether the instrumentation costs more than about 1 ms/frame, and three whole
+## state walks on every physics frame is how an instrument starts measuring
+## itself. 10 Hz is six times the fastest thing being watched: an inventory
+## cannot change twice in 100 ms of play.
+const SLOW_WATCH_EVERY := 6
+var _slow_watch_tick := 0
 
 ## The last physical input injected, for the `input` field of the next event.
 var _last_input := {}
@@ -264,6 +329,9 @@ func _parse_args() -> void:
 			_mode = arg.substr("--gatef-mode=".length())
 		elif arg == "--gatef-capture":
 			_want_capture = true
+		elif arg == "--gatef-allow-no-capture":
+			# Recorded, never silent. See `_allow_no_capture`'s note.
+			_allow_no_capture = true
 		elif arg.begins_with("--gatef-cfg="):
 			# One-off override of a `harness_config.json` key, for a diagnostic
 			# rerun that must not leave an edited config behind. Applied after
@@ -354,6 +422,9 @@ func _close_outputs() -> void:
 	})
 	_write_text(_out_dir.path_join("notes/%s.md" % _segment_id), "\n".join(_notes))
 	_write_json(_out_dir.path_join("RUN_METADATA.json"), _run_metadata())
+	# §M's closing inventory, as code. Last, so it sees every manifest row and
+	# every file the writes above put on disk.
+	_write_inventory()
 
 
 ## §C.5 and §8: the overhead note is part of the run record, not a separate
@@ -381,7 +452,70 @@ func _run_metadata() -> Dictionary:
 		"frame_grab_ms": _grab_summary(),
 		"instrumentation_overhead_note": _overhead_note,
 		"harness_errors": _harness_errors,
+		"capture_preflight": _preflight,
+		"blocked": _blocked,
+		"derailed": _derailed,
+		"derailed_at": _derailed_at,
+		"planned_captures": _planned_captures.size(),
+		"steps_total": _step_total,
+		"steps_ran": _step_ran,
+		"verdicts": _verdicts,
+		# CD-8. The freeze record is supposed to carry graphics settings and did
+		# not, which is how a full Gate F run happened with the procedural grass
+		# field silently off. A run cannot amend a freeze record it did not
+		# write, so it records what the build it is playing actually had on.
+		"feature_flags": _feature_flags(),
 	}
+
+
+## CD-8: every `data/config/` file's boolean/enabled switches, read off disk at
+## run time.
+##
+## §1.2 requires the freeze record to name "graphics settings" and
+## `ralph/reports/gate-f-candidate/RUN_METADATA.json` names none. The
+## consequence is on the record: the 2026-08-26 candidate ran the whole journey
+## with the procedural grass field off and nothing in the run said so, because
+## nothing in the run had ever been asked to look.
+##
+## Read-only, and deliberately NOT a list of flag names kept here -- a list in
+## the harness is a list that goes stale against `data/config/`. Anything whose
+## value is a bool, or whose key looks like a switch, is reported with the file
+## it came from.
+func _feature_flags() -> Dictionary:
+	var out := {}
+	var dir := DirAccess.open("res://data/config")
+	if dir == null:
+		return {"_error": "res://data/config is not readable from this process"}
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir() and name.ends_with(".json"):
+			var parsed := _read_json("res://data/config/%s" % name)
+			var flags := {}
+			_collect_flags(parsed, "", flags)
+			if not flags.is_empty():
+				out[name] = flags
+		name = dir.get_next()
+	dir.list_dir_end()
+	return out
+
+
+## Walk a parsed config and keep the switches. Recurses two levels deeper than
+## the top so a `{"grass": {"enabled": false}}` shape is not reported as "no
+## flags in this file" -- which is the shape the grass field actually has.
+func _collect_flags(node: Variant, prefix: String, out: Dictionary, depth: int = 0) -> void:
+	if typeof(node) != TYPE_DICTIONARY or depth > 4:
+		return
+	for key: Variant in (node as Dictionary).keys():
+		var k := str(key)
+		if k.begins_with("_"):
+			continue
+		var value: Variant = (node as Dictionary)[key]
+		var path := k if prefix.is_empty() else "%s.%s" % [prefix, k]
+		if typeof(value) == TYPE_BOOL:
+			out[path] = value
+		elif typeof(value) == TYPE_DICTIONARY:
+			_collect_flags(value, path, out, depth + 1)
 
 
 var _overhead_note := "not measured in this run (--gatef-mode=overhead measures it)"
@@ -427,6 +561,14 @@ func _play(segment: Dictionary) -> void:
 	_record_next_t = 0.0
 	_note_line("# %s — %s" % [_segment_id, str(segment.get("title", ""))])
 	_note_line("")
+	_step_total = steps.size()
+	_planned_captures = _plan_captures(steps)
+	# CD-1. Before step 1, not after step 40: a segment whose evidence cannot be
+	# taken has to say so at the top, where the operator is still looking, and
+	# the run has to stop rather than spend an hour producing `file: null`.
+	if not await _preflight_capture():
+		_release_everything()
+		return
 	for raw: Variant in steps:
 		if typeof(raw) != TYPE_DICTIONARY:
 			_harness_error("a step is not a JSON object: %s" % str(raw))
@@ -441,6 +583,274 @@ func _play(segment: Dictionary) -> void:
 	_release_everything()
 
 
+# --- capture pre-flight and the closing inventory (CD-1, CD-2, §M) -----------
+
+## Every capture this segment DECLARES, resolved from the step list before a
+## single step runs.
+##
+## `capture_seq` is expanded to the individual ids it will write (`<id>-000`…),
+## because a sequence that produced three of twenty frames is a partial absence
+## and a plan that counted it as one row could not show that.
+func _plan_captures(steps: Array) -> Array:
+	var out: Array = []
+	for raw: Variant in steps:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var step := raw as Dictionary
+		var action := str(step.get("action", ""))
+		if action != "capture" and action != "capture_seq":
+			continue
+		var args: Dictionary = step.get("args", {}) as Dictionary
+		var step_id := str(step.get("id", "?"))
+		var base := str(args.get("id", step_id))
+		if action == "capture":
+			out.append({"id": base, "step": step_id, "action": action,
+				"class": str(args.get("class", "context")),
+				"intended_proof": str(args.get("intended_proof", ""))})
+			continue
+		var hz := maxf(1.0, float(args.get("hz", 5.0)))
+		var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
+		for i in int(hz * seconds):
+			out.append({"id": "%s-%03d" % [base, i], "step": step_id, "action": action,
+				"class": str(args.get("class", "context")),
+				"intended_proof": str(args.get("intended_proof", ""))})
+	return out
+
+
+## CD-1: can this process actually take the pictures the segment plans?
+##
+## The 2026-08-27 run answered that question 9,231 times, one `file: null` at a
+## time, and reported PASS for every one of them. It had been launched without
+## the §0.1 xvfb invocation; every capture step silently no-opped and the
+## segments still read as executed. That is not evidence of absence -- it is a
+## run that did not happen, wearing the shape of one that did.
+##
+## So this asks, once, at the top, and it asks three separate things because
+## they fail separately:
+##
+##   1. Is there a display server at all? (`--headless` was passed, or xvfb was
+##      not.) This is the failure that produced the 9,231.
+##   2. Did `tools/capture_diag_minimal.gd` write its PNG beside this run?
+##      `run_segment.sh` gates capture mode on it; a missing `capture_smoke.png`
+##      means the segment was started by hand, around the gate.
+##   3. Can THIS process, in THIS scene state, actually read back a frame and
+##      encode it? A display server that exists and a viewport that returns an
+##      empty image are different faults with the same symptom.
+##
+## A segment that plans no captures and runs no continuous record needs none of
+## this and is let through -- the self-check `selfcheck_walk`/`selfcheck_save_handoff`
+## are logic segments by design, and blocking them would be the "fixed a rig
+## problem by making a test pass" move in reverse.
+func _preflight_capture() -> bool:
+	var plans_shots := not _planned_captures.is_empty()
+	var plans_record := _record_baseline_hz > 0.0
+	_preflight = {
+		"planned_captures": _planned_captures.size(),
+		"record_baseline_hz": _record_baseline_hz,
+		"display_server": DisplayServer.get_name(),
+		"capture_requested": _want_capture,
+		"capture_available": _capture_available(),
+		"allow_no_capture": _allow_no_capture,
+	}
+	if not (plans_shots or plans_record):
+		_preflight["verdict"] = "not required"
+		_preflight["why"] = "segment declares no captures and no continuous record"
+		_note_line("### preflight — capture not required")
+		_note_line("- %s" % str(_preflight["why"]))
+		_note_line("")
+		return true
+	if not _telemetry_on():
+		_preflight["verdict"] = "not required"
+		_preflight["why"] = "telemetry off (no --gatef-out); nowhere to write a PNG and nothing claiming there was"
+		return true
+
+	var why := ""
+	if not _capture_available():
+		why = ("no display server: DisplayServer reports '%s'. This process cannot render, so all "
+			+ "%d planned capture(s) and every continuous frame would be written as file:null while "
+			+ "the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture "
+			+ "(§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).") % [
+				DisplayServer.get_name(), _planned_captures.size()]
+	else:
+		var smoke := _out_dir.path_join("capture_smoke.png")
+		if not FileAccess.file_exists(smoke) or _file_bytes(smoke) <= 0:
+			why = ("tools/capture_diag_minimal.gd left no capture_smoke.png in %s. run_segment.sh "
+				+ "--capture writes one before it starts a segment, so its absence means this "
+				+ "segment was launched around the §A.4 smoke gate.") % _out_dir
+		else:
+			_preflight["smoke_bytes"] = _file_bytes(smoke)
+			var probe := await _preflight_png()
+			_preflight["self_test"] = probe
+			if not bool(probe.get("ok", false)):
+				why = "this process has a display server but could not write its own PNG: %s" % str(probe.get("why", ""))
+
+	if why.is_empty():
+		_preflight["verdict"] = "PASS"
+		_note_line("### preflight — capture available")
+		_note_line("- display_server: %s, smoke %d bytes, self-test %s" % [
+			DisplayServer.get_name(), int(_preflight.get("smoke_bytes", 0)),
+			str((_preflight.get("self_test", {}) as Dictionary).get("file", ""))])
+		_note_line("")
+		_emit("note", {"observation": "capture pre-flight PASS: %d planned capture(s), display server %s"
+			% [_planned_captures.size(), DisplayServer.get_name()]})
+		return true
+
+	if _allow_no_capture:
+		# Explicitly acknowledged. Still not a run: the inventory marks every
+		# planned shot absent and the segment incomplete, so this can only ever
+		# buy a developer a fast logic pass, never an evidence claim.
+		_preflight["verdict"] = "DEGRADED (--gatef-allow-no-capture)"
+		_preflight["why"] = why
+		_note_line("### preflight — DEGRADED, capture unavailable and acknowledged")
+		_note_line("- %s" % why)
+		_note_line("- this segment CANNOT be marked complete; INVENTORY.json says so.")
+		_note_line("")
+		_emit("note", {"severity_candidate": "BLOCKER",
+			"observation": "capture pre-flight failed and was overridden with --gatef-allow-no-capture: %s" % why})
+		return true
+
+	_blocked = why
+	_preflight["verdict"] = "BLOCKER"
+	_preflight["why"] = why
+	_note_line("### preflight — BLOCKER")
+	_note_line("- %s" % why)
+	_note_line("- no step of this segment was run.")
+	_note_line("")
+	_emit("defect", {"severity_candidate": "BLOCKER", "expected": "the segment can take its planned captures",
+		"actual": why, "observation": "capture pre-flight BLOCKER; segment %s did not run" % _segment_id})
+	_write_text(_out_dir.path_join("BLOCKER.md"),
+		"# BLOCKER — %s did not run\n\n%s\n\nNo step of this segment executed. Per §A's blocker rule the\n"
+		% [_segment_id, why]
+		+ "evidence for this segment is absent, not negative: nothing here is a finding about the game.\n")
+	_harness_error("capture pre-flight BLOCKER: %s" % why)
+	return false
+
+
+## Can this process read back a frame and encode it, here, now?
+func _preflight_png() -> Dictionary:
+	for i in maxi(2, int(_cfg["capture_settle_frames"])):
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var image := root.get_viewport().get_texture().get_image()
+	if image == null or image.is_empty():
+		return {"ok": false, "why": "the viewport returned an empty image"}
+	var rel := "shots/_preflight.png"
+	var err := image.save_png(_out_dir.path_join(rel))
+	if err != OK:
+		return {"ok": false, "why": "save_png returned %d writing %s" % [err, rel]}
+	var bytes := _file_bytes(_out_dir.path_join(rel))
+	if bytes <= 0:
+		return {"ok": false, "why": "%s was written but is %d bytes" % [rel, bytes]}
+	return {"ok": true, "file": rel, "bytes": bytes,
+		"size": [image.get_width(), image.get_height()]}
+
+
+func _file_bytes(path: String) -> int:
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return -1
+	var n := int(f.get_length())
+	f.close()
+	return n
+
+
+## CD-2 / §M as CODE. The protocol's closing inventory check -- "every planned
+## artifact exists or carries a recorded reason it does not" -- was a sentence
+## addressed to a human, and the human it was addressed to reported a complete
+## run in which no prescribed screenshot existed anywhere.
+##
+## Written on every close, blocked runs included. Planned id -> file -> exists
+## -> bytes, joined against what is actually on disk, plus the step ledger, so
+## "this segment is complete" is a computed field rather than a claim.
+func _write_inventory() -> void:
+	var rows: Array = []
+	var by_id := {}
+	for row: Variant in _manifest:
+		by_id[str((row as Dictionary).get("id", ""))] = row
+	var present := 0
+	var absent := 0
+	for plan: Variant in _planned_captures:
+		var entry: Dictionary = plan
+		var out := {"id": str(entry.get("id", "")), "step": str(entry.get("step", "")),
+			"action": str(entry.get("action", "")), "class": str(entry.get("class", "")),
+			"intended_proof": str(entry.get("intended_proof", "")),
+			"file": null, "exists": false, "bytes": 0, "reason": ""}
+		var taken: Variant = by_id.get(out["id"])
+		if taken == null:
+			out["reason"] = ("the step that would have written it never ran"
+				if not _blocked.is_empty() or not _derailed.is_empty()
+				else "no manifest row: the capture step did not execute")
+		else:
+			var row: Dictionary = taken
+			out["reason"] = str(row.get("reason", ""))
+			if row.get("file") != null:
+				out["file"] = str(row["file"])
+				var bytes := _file_bytes(_out_dir.path_join(str(row["file"])))
+				out["bytes"] = bytes
+				# On disk or it did not happen. A manifest row naming a file
+				# that is not there is exactly the claim CD-2 found.
+				out["exists"] = bytes > 0
+				if not out["exists"]:
+					out["reason"] = "manifest names %s and it is %d bytes on disk" % [str(row["file"]), bytes]
+		if bool(out["exists"]):
+			present += 1
+		else:
+			absent += 1
+		rows.append(out)
+	var frames_absent_reasons := {}
+	for f: Variant in _frames:
+		var frame: Dictionary = f
+		if frame.get("file") == null:
+			var reason := str(frame.get("reason", "unrecorded"))
+			frames_absent_reasons[reason] = int(frames_absent_reasons.get(reason, 0)) + 1
+	var complete := _blocked.is_empty() \
+		and absent == 0 \
+		and _derailed.is_empty() \
+		and _harness_errors.is_empty() \
+		and _record_absent == 0 \
+		and _step_ran == _step_total
+	var inventory := {
+		"segment": _segment_id,
+		"run_id": _run_id,
+		"sha": _sha,
+		"complete": complete,
+		"blocked": _blocked,
+		"derailed": _derailed,
+		"derailed_at": _derailed_at,
+		"preflight": _preflight,
+		"captures": {"planned": _planned_captures.size(), "present": present, "absent": absent,
+			"rows": rows},
+		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
+			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
+		"steps": {"total": _step_total, "ran": _step_ran,
+			"pass": int(_verdicts["PASS"]), "fail": int(_verdicts["FAIL"]),
+			"skipped": int(_verdicts["SKIP"])},
+		"harness_errors": _harness_errors,
+	}
+	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
+	if complete:
+		return
+	# A second, unmissable marker. A reader scanning a run directory sees the
+	# filename before they open anything.
+	var lines: Array[String] = ["# %s is INCOMPLETE" % _segment_id, ""]
+	if not _blocked.is_empty():
+		lines.append("- BLOCKED before step 1: %s" % _blocked)
+	if not _derailed.is_empty():
+		lines.append("- DERAILED at step %s: %s" % [_derailed_at, _derailed])
+	if absent > 0:
+		lines.append("- %d of %d planned captures are absent from disk." % [absent, _planned_captures.size()])
+	if _record_absent > 0:
+		lines.append("- %d continuous frames were planned and not written: %s"
+			% [_record_absent, JSON.stringify(frames_absent_reasons)])
+	if _step_ran != _step_total:
+		lines.append("- %d of %d steps ran." % [_step_ran, _step_total])
+	if not _harness_errors.is_empty():
+		lines.append("- harness errors: %s" % JSON.stringify(_harness_errors))
+	lines.append("")
+	lines.append("See INVENTORY.json for the per-capture ledger.")
+	_write_text(_out_dir.path_join("INCOMPLETE.md"), "\n".join(lines))
+
+
 ## One step. Never raises; a step whose expectation fails records a FAIL event
 ## and the run continues (§1.6), because a segment that stops at the first
 ## defect finds one defect.
@@ -452,6 +862,41 @@ func _do_step(step: Dictionary) -> void:
 	var diag := bool(step.get("diag", false))
 	var verdict := "PASS"
 	var actual := ""
+
+	# GF-B-002, primitive 1: assert-context-before-proceeding.
+	#
+	# A step declares the input context it expects to be acting in. The check
+	# happens BEFORE the action, because the failure this exists for is a world
+	# control pressed at a modal: by the time the assertion 40 steps later
+	# notices, the run has recorded 40 findings about a game that was never in
+	# the state the script assumed. Phase B's reading of the f082bdf6 run is
+	# that this one primitive accounts for most of the "input ownership never
+	# handed back" findings -- they are the harness's own presses, not the
+	# game's failure to yield.
+	var guard := _context_guard(step)
+	if not str(guard.get("skip", "")).is_empty():
+		_verdicts["SKIP"] = int(_verdicts["SKIP"]) + 1
+		_emit("note", {"expected": expected, "actual": str(guard["skip"]),
+			"observation": "SKIPPED: %s" % str(guard["skip"])})
+		_note_line("### %s — %s" % [id, str(step.get("title", action))])
+		_note_line("- expected: %s" % expected)
+		_note_line("- actual: %s" % str(guard["skip"]))
+		_note_line("- verdict: SKIP")
+		_note_line("")
+		return
+	if not str(guard.get("fail", "")).is_empty():
+		_verdicts["FAIL"] = int(_verdicts["FAIL"]) + 1
+		_step_ran += 1
+		_emit("defect", {"expected": expected, "actual": str(guard["fail"]),
+			"severity_candidate": step.get("severity_candidate", "SHIP"),
+			"observation": "require_context failed at step %s; the segment is off its rails from here" % id})
+		_note_line("### %s — %s" % [id, str(step.get("title", action))])
+		_note_line("- expected: %s" % expected)
+		_note_line("- actual: %s" % str(guard["fail"]))
+		_note_line("- verdict: FAIL (context guard; the step did not run)")
+		_note_line("")
+		return
+	_step_ran += 1
 
 	match action:
 		"boot":
@@ -470,6 +915,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_stick(args)
 		"move_to":
 			actual = await _step_move_to(args)
+		"move_to_entity":
+			actual = await _step_move_to_entity(args)
 		"face":
 			actual = await _step_face(args)
 		"open_menu":
@@ -478,6 +925,12 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_close_menu(args, id)
 		"focus_move":
 			actual = await _step_focus_move(args, id)
+		"advance_dialogue_until_closed":
+			actual = await _step_advance_dialogue(args, id)
+		"assert_context":
+			actual = _step_context_check(args, id)
+		"defect":
+			actual = _step_defect(args, id)
 		"type_name":
 			actual = await _step_type_name(args, id)
 		"capture":
@@ -526,6 +979,15 @@ func _do_step(step: Dictionary) -> void:
 		return
 	if actual.begins_with("FAIL"):
 		verdict = "FAIL"
+	if actual.begins_with("BLOCKER"):
+		# A step that could not drive the game at all. Distinct from a FAIL,
+		# which is a verdict about the GAME: this one says the instrument could
+		# not take a reading, and everything after it is taken in an unknown
+		# state.
+		verdict = "FAIL"
+		_derailed = actual
+		_derailed_at = id
+	_verdicts[verdict] = int(_verdicts.get(verdict, 0)) + 1
 
 	# Every step gets exactly one event of its own, carrying the protocol's
 	# `expected` verbatim beside what actually happened. A step that already
@@ -538,6 +1000,18 @@ func _do_step(step: Dictionary) -> void:
 		"observation": str(step.get("observation", "")),
 		"severity_candidate": step.get("severity_candidate", null),
 	})
+	# GF-B-011: `defect` is in §C.1's enum and had never once been emitted, so
+	# the schema could not evidence its own most important type. A FAILED step
+	# carrying a severity candidate IS a candidate defect; saying so in the
+	# stream means Phase B can select defects by type instead of re-deriving
+	# them from prose in `actual`.
+	if verdict == "FAIL":
+		_emit("defect", {
+			"expected": expected,
+			"actual": actual,
+			"observation": "step %s (%s) failed" % [id, action],
+			"severity_candidate": step.get("severity_candidate", "SHIP"),
+		})
 
 	_note_line("### %s — %s" % [id, str(step.get("title", action))])
 	_note_line("- expected: %s" % expected)
@@ -560,6 +1034,10 @@ func _event_type_for(action: String) -> String:
 			return "input_probe"
 		"record_start", "record_stop", "pin_clock":
 			return "note"
+		"advance_dialogue_until_closed":
+			return "dialogue"
+		"defect":
+			return "defect"
 		"open_menu":
 			return "menu_open"
 		"close_menu":
@@ -570,6 +1048,86 @@ func _event_type_for(action: String) -> String:
 			return "load"
 		_:
 			return "note"
+
+
+# --- context guard (GF-B-002 primitive 1) ------------------------------------
+
+## Does this step's declared context hold, and is the segment still on rails?
+##
+## Returns `{}` to proceed, `{"fail": why}` for a step that must not run because
+## the game is not where the script thinks it is, `{"skip": why}` for a step
+## being skipped because an earlier one derailed.
+##
+## ## Why a derail SKIPS rather than continuing
+##
+## §1.6 is explicit that a failed EXPECTATION does not stop a segment -- a
+## segment that stops at the first defect finds one defect. That rule is about
+## verdicts on the GAME. A step whose required context does not hold is a
+## different animal: it is a statement that the instrument is pointed at the
+## wrong thing. Running the next forty steps anyway is how the f082bdf6 run
+## produced 118 X01 failures that Phase B then had to refute from the run's own
+## data. So the derail is recorded once, loudly, at the step that could not
+## drive the game, and everything after it is SKIPPED with that reason attached
+## -- absent evidence, honestly labelled, instead of forty fabricated findings.
+##
+## ## Resynchronising
+##
+## A segment recovers the moment a step's own `require_context` holds again,
+## which is the natural shape of the scripts: X01 walks the matrix
+## context-by-context and each block opens with the context it is about. A
+## `boot` starts a fresh scene and always resyncs. `"resync": true` is the
+## explicit escape for a step that re-establishes state some other way.
+func _context_guard(step: Dictionary) -> Dictionary:
+	var id := str(step.get("id", "?"))
+	var action := str(step.get("action", ""))
+	var required: Variant = step.get("require_context", null)
+	var have := str(_probe.call("input_context"))
+	var holds := required == null or _context_matches(have, required)
+
+	if not _derailed.is_empty():
+		if action == "boot" or bool(step.get("resync", false)) or (required != null and holds):
+			_note_line("- resync at %s: input_context is %s; the segment is back on rails "
+				% [id, have] + "(derailed at %s)" % _derailed_at)
+			_emit("note", {"observation": "resync at step %s: input_context=%s (derailed at %s)"
+				% [id, have, _derailed_at]})
+			_derailed = ""
+			_derailed_at = ""
+		else:
+			return {"skip": "SKIPPED: the segment derailed at step %s (%s) and this step declares no "
+				% [_derailed_at, _derailed]
+				+ "resync point. input_context is '%s' now." % have}
+
+	if required == null or holds:
+		return {}
+	_derailed = "required context %s, input_context was '%s'" % [JSON.stringify(required), have]
+	_derailed_at = id
+	var state: Dictionary = _probe.call("input_state")
+	return {"fail": ("BLOCKER step %s (%s) requires context %s and input is owned by '%s' "
+		+ "(owner=%s, focus=%s, tree_paused=%s). The step did NOT run: acting here would have "
+		+ "pressed a world control at whatever holds input, and recorded the result as a defect "
+		+ "in the game.") % [id, action, JSON.stringify(required), have,
+			str(state.get("owner", "")), str(state.get("focus_text", "")),
+			str(state.get("tree_paused", false))]}
+
+
+## Does `have` satisfy `want`?
+##
+## `want` is a string or a list of them. A trailing `*` is a prefix match, which
+## is how `menu*` covers every tab of the pause shell without naming all seven,
+## and a leading `!` negates -- `"!narrative_modal"` is "anything but a modal",
+## which is what most world-verb steps actually mean.
+func _context_matches(have: String, want: Variant) -> bool:
+	if typeof(want) == TYPE_ARRAY:
+		for entry: Variant in (want as Array):
+			if _context_matches(have, entry):
+				return true
+		return false
+	var pattern := str(want)
+	if pattern.begins_with("!"):
+		return not _context_matches(have, pattern.substr(1))
+	if pattern.ends_with("*"):
+		return have.begins_with(pattern.trim_suffix("*"))
+	return have == pattern
 
 
 # --- steps -------------------------------------------------------------------
@@ -729,17 +1287,146 @@ func _step_stick(args: Dictionary) -> String:
 ## straight-line walk in this project failed on the same village wall. Reused
 ## rather than copied: a second copy of it is one that stops being fixed.
 func _step_move_to(args: Dictionary) -> String:
-	var player := _probe.call("player") as Node3D
-	var rig := _probe.call("camera_rig") as Node3D
-	if player == null or rig == null:
-		return "HARNESS-ERROR move_to with no live Player/CameraRig"
 	var at: Array = args.get("at", []) as Array
 	if at.size() < 2:
 		return "HARNESS-ERROR move_to needs at:[x,z]"
+	var here := Vector2(float(at[0]), float(at[1]))
+	# A fixed place: the target callable answers the same thing every time it is
+	# asked. `move_to_entity` hands the same loop a moving answer.
+	return await _walk_loop(args,
+		func() -> Dictionary: return {"ok": true, "at": here,
+			"what": "(%.0f, %.0f)" % [here.x, here.y]})
+
+
+## GF-B-002, primitive 3: walk to a THING, not to a pair of numbers.
+##
+## Every journey step in the protocol is written as "go to the trainer", "reach
+## the gathering node", "approach the pylon" -- and every one of them was
+## transcribed as a coordinate, because a coordinate was all the vocabulary
+## had. Two failure modes follow from that, and both are in the f082bdf6 run:
+##
+##   * The thing moves. A wild creature, a trainer on a patrol, a villager --
+##     the coordinate was where it stood when the segment was written, and the
+##     walk arrives at empty grass and reports the world as broken.
+##   * The thing is not there at all. A coordinate walk cannot tell "I arrived
+##     and nothing was here" from "I arrived"; it reports success either way,
+##     and the missing entity is found forty steps later as an interaction that
+##     did nothing.
+##
+## Resolved by identity and re-read every frame, so the walk tracks. Arriving is
+## `within` metres of where the entity IS, and an entity that cannot be found is
+## a FAIL that names the search -- an honest "not in the world" is a finding.
+func _step_move_to_entity(args: Dictionary) -> String:
+	var spec := str(args.get("entity", ""))
+	if spec.is_empty():
+		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
+	var found := _find_entity(spec, args)
+	if not bool(found.get("ok", false)):
+		return "FAIL %s" % str(found.get("why", ""))
+	var node: Node3D = found["node"]
+	var what := "%s (%s)" % [spec, str(found.get("how", ""))]
+	# `within` rather than `close_enough`: an entity has a body, and the
+	# interaction range the game uses is about reaching it, not about standing
+	# on its origin.
+	var within := float(args.get("within", 2.5))
+	var walk := args.duplicate()
+	walk["close_enough"] = within
+	return await _walk_loop(walk, func() -> Dictionary:
+		if node == null or not is_instance_valid(node) or not node.is_inside_tree():
+			return {"ok": false, "why": "%s left the tree mid-walk" % what}
+		return {"ok": true, "at": Vector2(node.global_position.x, node.global_position.z),
+			"what": what})
+
+
+## Find one live entity by identity.
+##
+## In order: exact node name, membership of a group of that name, a `label()`
+## that matches, a `species_id` that matches, then a unique case-insensitive
+## substring of a node name. Ambiguity is a FAIL naming the candidates -- a
+## walk that silently picked the first of four Grazers is a walk whose evidence
+## nobody can check.
+func _find_entity(spec: String, args: Dictionary) -> Dictionary:
+	var scene := _probe.call("world") as Node
+	if scene == null:
+		return {"ok": false, "why": "no live scene to search for '%s'" % spec}
+	var all: Array[Node3D] = []
+	_collect_node3ds(scene, all)
+	var by_name: Array[Node3D] = []
+	var by_group: Array[Node3D] = []
+	var by_label: Array[Node3D] = []
+	var by_species: Array[Node3D] = []
+	var by_substring: Array[Node3D] = []
+	var lowered := spec.to_lower()
+	for node in all:
+		if str(node.name) == spec:
+			by_name.append(node)
+		if node.is_in_group(StringName(spec)):
+			by_group.append(node)
+		if node.has_method("label") and str(node.call("label")).to_lower() == lowered:
+			by_label.append(node)
+		var species: Variant = node.get("species_id")
+		if species != null and str(species).to_lower() == lowered:
+			by_species.append(node)
+		if str(node.name).to_lower().contains(lowered):
+			by_substring.append(node)
+	for pair: Array in [[by_name, "node name"], [by_group, "group"], [by_label, "label()"],
+			[by_species, "species_id"], [by_substring, "name substring"]]:
+		var hits: Array[Node3D] = pair[0]
+		if hits.is_empty():
+			continue
+		if hits.size() > 1 and not bool(args.get("nearest", true)):
+			return {"ok": false, "why": "'%s' matched %d nodes by %s (%s) and nearest:false was set"
+				% [spec, hits.size(), str(pair[1]), _names_of(hits)]}
+		if hits.size() == 1:
+			return {"ok": true, "node": hits[0], "how": str(pair[1])}
+		# `nearest` (the default) picks the closest to the player and SAYS it
+		# did, with the count -- so a segment that meant a specific one can see
+		# from the note that it was ambiguous.
+		var player := _probe.call("player") as Node3D
+		var best: Node3D = hits[0]
+		if player != null:
+			var best_d := INF
+			for node in hits:
+				var d := player.global_position.distance_to(node.global_position)
+				if d < best_d:
+					best_d = d
+					best = node
+		return {"ok": true, "node": best,
+			"how": "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]}
+	return {"ok": false, "why": "no node named, grouped, labelled or speciesed '%s' among the %d Node3Ds in %s"
+		% [spec, all.size(), scene.name]}
+
+
+func _collect_node3ds(node: Node, out: Array[Node3D]) -> void:
+	for child in node.get_children():
+		if child is Node3D:
+			out.append(child as Node3D)
+		_collect_node3ds(child, out)
+
+
+func _names_of(nodes: Array[Node3D]) -> String:
+	var out: Array[String] = []
+	for node in nodes:
+		out.append(str(node.name))
+		if out.size() >= 6:
+			out.append("...")
+			break
+	return ", ".join(out)
+
+
+## The shared walk. `target_fn` is re-asked EVERY frame, which is what lets one
+## loop serve a fixed coordinate and a moving entity.
+##
+## Walked, never teleported. `tests/helpers/stick_navigator.gd` is the repo's
+## one walker that can get around geometry, and it exists because every
+## straight-line walk in this project failed on the same village wall. Reused
+## rather than copied: a second copy of it is one that stops being fixed.
+func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
+	var player := _probe.call("player") as Node3D
+	var rig := _probe.call("camera_rig") as Node3D
+	if player == null or rig == null:
+		return "HARNESS-ERROR walk with no live Player/CameraRig"
 	var world: Node = _probe.call("world") as Node
-	var target := Vector3(float(at[0]), player.global_position.y, float(at[1]))
-	if world != null and world.has_method("ground_height_at"):
-		target.y = float(world.call("ground_height_at", target.x, target.z))
 	var budget := int(args.get("budget_frames", _cfg["walk_budget_frames"]))
 	var close := float(args.get("close_enough", _cfg["walk_close_enough"]))
 	# Frames the walk will wait, in total, for locomotion to come back before
@@ -762,8 +1449,20 @@ func _step_move_to(args: Dictionary) -> String:
 	var held := 0
 	var arrived := false
 	var held_by := ""
+	var what := "?"
+	var target := player.global_position
 	nav.call("reset")
 	while walked < budget:
+		var aim: Dictionary = target_fn.call()
+		if not bool(aim.get("ok", false)):
+			_stick_left = Vector2.ZERO
+			_drive_sticks()
+			return "FAIL %s" % str(aim.get("why", "the walk lost its target"))
+		var flat: Vector2 = aim["at"]
+		what = str(aim.get("what", "?"))
+		target = Vector3(flat.x, player.global_position.y, flat.y)
+		if world != null and world.has_method("ground_height_at"):
+			target.y = float(world.call("ground_height_at", target.x, target.z))
 		var to := target - player.global_position
 		to.y = 0.0
 		if to.length() <= close:
@@ -791,6 +1490,11 @@ func _step_move_to(args: Dictionary) -> String:
 				# only `interact` walked past Grandpa's conversation and then
 				# sat in front of the starter picker for the whole held budget,
 				# which is how this was found.
+				#
+				# This alternation is a WALK's fallback, not the dialogue
+				# primitive: a step that means to answer a conversation uses
+				# `advance_dialogue_until_closed`, which reads the panel instead
+				# of guessing at it (CD-3).
 				await _inject("interact" if (held / 20) % 2 == 0 else "menu_confirm", HOLD_TAP)
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
@@ -804,14 +1508,14 @@ func _step_move_to(args: Dictionary) -> String:
 	var gap := Vector2(player.global_position.x - target.x,
 		player.global_position.z - target.z).length()
 	if arrived:
-		return "walked %.1f m to (%.0f, %.0f) in %d walking frames (%d held)" % [
-			started.distance_to(player.global_position), target.x, target.z, walked, held]
+		return "walked %.1f m to %s in %d walking frames (%d held)" % [
+			started.distance_to(player.global_position), what, walked, held]
 	if held > held_budget:
 		return ("FAIL locomotion never came back: held %d frames by input_context '%s' while %.1f m "
-			+ "short of (%.0f, %.0f) at %s") % [held, held_by, gap, target.x, target.z,
+			+ "short of %s at %s") % [held, held_by, gap, what,
 				str(player.global_position.round())]
-	return "FAIL did not reach (%.0f, %.0f) in %d walking frames; stopped %.1f m short at %s (%d held)" % [
-		target.x, target.z, budget, gap, str(player.global_position.round()), held]
+	return "FAIL did not reach %s in %d walking frames; stopped %.1f m short at %s (%d held)" % [
+		what, budget, gap, str(player.global_position.round()), held]
 
 
 ## Turn the camera. `yaw_deg` is an absolute world heading; `at:[x,z]` points
@@ -898,6 +1602,208 @@ func _step_close_menu(args: Dictionary, step_id: String) -> String:
 	if after.begins_with("menu"):
 		return "FAIL %s left the shell open: context %s -> %s" % [control, before, after]
 	return "%s closed the shell: context %s -> %s" % [control, before, after]
+
+
+# --- dialogue (GF-B-002 primitive 2 / CD-3) ----------------------------------
+
+## Advance a narrative modal until it is CLOSED, by predicate.
+##
+## CD-3: every segment in the f082bdf6 run advanced dialogue with a guessed
+## fixed press count, and a guess is wrong in both directions. Under-press and
+## the modal is still open when the next step presses a world control at it --
+## which is most of the "input ownership never handed back" family. Over-press
+## and the extra `interact` lands on the interaction arbiter the frame after the
+## panel closed, re-opening the very conversation the previous press ended, and
+## the step after that finds a modal it was told had gone.
+##
+## Neither failure is possible against a predicate. This presses, then WAITS for
+## the panel to say it either moved to a new line or closed, and it never
+## presses again once closed. A panel that stops responding is a FAIL naming the
+## line it stuck on, which is a finding about the game rather than a mystery
+## forty steps downstream.
+##
+## ## Which button
+##
+## Read off the panel, not guessed. `dialogue_panel.gd` advances on `interact`
+## from `_physics_process`; `starter_picker.gd` polls `menu_confirm`;
+## `name_prompt.gd` is a letter grid and is not advanceable at all -- that one
+## is `type_name`, and this step says so rather than mashing confirm through it.
+func _step_advance_dialogue(args: Dictionary, step_id: String) -> String:
+	var max_presses := int(args.get("max_presses", 60))
+	var settle := int(args.get("settle_frames", 90))
+	var allow_chain := bool(args.get("chain", true))
+	var owner := _probe.call("input_owner_node") as Node
+	var context := str(_probe.call("input_context"))
+	if owner == null or not _is_open(owner):
+		return ("BLOCKER advance_dialogue_until_closed at step %s: no narrative modal is open. "
+			+ "input_context is '%s' and the input owner is %s. Advancing nothing would have "
+			+ "sent %s into the world.") % [step_id, context,
+				"nothing" if owner == null else "'%s'" % str(owner.name),
+				str(args.get("control", "the advance button"))]
+	var kind := _panel_kind(owner)
+	if kind == "name_prompt":
+		return ("FAIL the open modal is the naming prompt, which is a letter grid and does not "
+			+ "advance -- use the `type_name` action. Pressing confirm here types one letter "
+			+ "per press and never finds Done.")
+	if kind == "unknown":
+		return ("FAIL '%s' owns input and this harness does not know how to advance it. "
+			+ "Add it to `_panel_kind` rather than guessing at a button.") % str(owner.name)
+	var control := str(args.get("control", "interact" if kind == "dialogue" else "menu_confirm"))
+
+	var lines: Array[String] = []
+	var presses := 0
+	var conversations := 1
+	var first := _line_signature(owner, kind)
+	if not first.is_empty():
+		lines.append(first)
+		_emit("dialogue", {"observation": first,
+			"actual": "line 1 of the conversation %s opened" % str(owner.name)})
+	while presses < max_presses:
+		if not _is_open(owner):
+			break
+		var before := _line_signature(owner, kind)
+		var sent := await _inject(control, HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		presses += 1
+		var moved := await _settle_until(func() -> bool:
+			return not _is_open(owner) or _line_signature(owner, kind) != before, settle)
+		if not _is_open(owner):
+			break
+		if not moved:
+			return ("FAIL the modal did not respond to press %d of %s: still on \"%s\" after %d "
+				+ "frames. It is still open and still owns input (context '%s').") % [
+					presses, control, before, settle, str(_probe.call("input_context"))]
+		var now := _line_signature(owner, kind)
+		lines.append(now)
+		_emit("dialogue", {"observation": now,
+			"actual": "advanced to line %d with %s" % [lines.size(), control]})
+
+	if _is_open(owner):
+		return ("FAIL %s was still open after %d presses of %s (the budget). Last line: \"%s\". "
+			+ "input_context is '%s'.") % [str(owner.name), presses, control,
+				lines[-1] if not lines.is_empty() else "?", str(_probe.call("input_context"))]
+
+	# Closed. Now prove it STAYED closed, and find out whether something else
+	# took input in its place -- a conversation that hands straight to the
+	# starter picker is real game behaviour and belongs in the record; the same
+	# panel re-opening is the over-press signature and is not.
+	for i in maxi(4, int(args.get("close_settle_frames", 30))):
+		await process_frame
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	var after_owner := _probe.call("input_owner_node") as Node
+	var after_context := str(_probe.call("input_context"))
+	if after_owner == owner and _is_open(owner):
+		return ("FAIL %s closed and RE-OPENED within %d frames of the last press -- the advance "
+			+ "button reached the interaction that starts the conversation. %d presses, %d lines.")\
+				% [str(owner.name), int(args.get("close_settle_frames", 30)), presses, lines.size()]
+	if after_owner != null and _is_open(after_owner):
+		var next_kind := _panel_kind(after_owner)
+		if not allow_chain:
+			return ("FAIL %s closed after %d lines and '%s' took input immediately (chain:false). "
+				+ "context '%s'.") % [str(owner.name), lines.size(), str(after_owner.name), after_context]
+		conversations += 1
+		_emit("dialogue", {"observation": "handover: %s closed and %s (%s) took input"
+			% [str(owner.name), str(after_owner.name), next_kind]})
+		return ("advanced %d line(s) over %d press(es); %s closed and handed straight to '%s' "
+			+ "(%s, context '%s') -- a chained modal, not a failure to close") % [
+				lines.size(), presses, str(owner.name), str(after_owner.name), next_kind, after_context]
+	return "advanced %d line(s) over %d press(es) of %s; %s closed, context '%s' -> '%s'" % [
+		lines.size(), presses, control, str(owner.name), context, after_context]
+
+
+## Which advanceable panel is this?
+func _panel_kind(node: Node) -> String:
+	if node == null or node.get_script() == null:
+		return "unknown"
+	var path := str(node.get_script().resource_path)
+	if path.ends_with("dialogue_panel.gd"):
+		return "dialogue"
+	if path.ends_with("starter_picker.gd"):
+		return "starter_picker"
+	if path.ends_with("name_prompt.gd"):
+		return "name_prompt"
+	return "unknown"
+
+
+func _is_open(node: Node) -> bool:
+	if node == null or not is_instance_valid(node) or not node.is_inside_tree():
+		return false
+	if not node.has_method("is_open"):
+		return false
+	return bool(node.call("is_open"))
+
+
+## What the panel is showing, as one comparable string.
+##
+## The PREDICATE this whole step turns on. Read from the panel's own state --
+## `dialogue_runner.gd::line()` for a conversation, the highlighted index for
+## the starter picker -- never from a frame counter, because a frame counter is
+## the guess this replaces.
+func _line_signature(node: Node, kind: String) -> String:
+	if not _is_open(node):
+		return ""
+	if kind == "dialogue" and node.has_method("runner"):
+		var runner: Variant = node.call("runner")
+		if runner == null or not runner.has_method("line"):
+			return ""
+		var line: Dictionary = runner.call("line")
+		if line.is_empty():
+			return ""
+		return "%s: %s" % [str(line.get("speaker", "")), str(line.get("text", ""))]
+	if kind == "starter_picker":
+		var index: Variant = node.get("_index")
+		var species: Variant = node.get("_species")
+		var name := ""
+		if typeof(species) == TYPE_ARRAY and index != null \
+				and int(index) >= 0 and int(index) < (species as Array).size():
+			name = str((species as Array)[int(index)])
+		return "starter_picker[%s] %s" % [str(index), name]
+	return ""
+
+
+# --- explicit context assertion ----------------------------------------------
+
+## `require_context` as a step of its own, for a checkpoint between blocks.
+##
+## Same predicate, same derail. The difference is intent: `require_context` on a
+## step says "do not do this here", and `assert_context` says "the previous
+## block was supposed to leave the game here, and if it did not, stop believing
+## the rest of this segment".
+func _step_context_check(args: Dictionary, step_id: String) -> String:
+	var want: Variant = args.get("is", args.get("one_of", args.get("prefix", null)))
+	if want == null:
+		return "HARNESS-ERROR assert_context step %s names no is/one_of/prefix" % step_id
+	if args.has("prefix"):
+		want = "%s*" % str(args["prefix"])
+	var have := str(_probe.call("input_context"))
+	var state: Dictionary = _probe.call("input_state")
+	if _context_matches(have, want):
+		return "input_context is '%s', which satisfies %s (owner=%s, focus='%s')" % [
+			have, JSON.stringify(want), str(state.get("owner", "")), str(state.get("focus_text", ""))]
+	_derailed = "assert_context wanted %s, input_context was '%s'" % [JSON.stringify(want), have]
+	_derailed_at = step_id
+	return ("BLOCKER input_context is '%s', not %s. owner=%s focus='%s' tree_paused=%s "
+		+ "pending_build='%s'. Every step after this one is skipped until a step resynchronises.") % [
+			have, JSON.stringify(want), str(state.get("owner", "")), str(state.get("focus_text", "")),
+			str(state.get("tree_paused", false)), str(state.get("pending_build", ""))]
+
+
+## An operator-recorded defect, as a first-class event.
+##
+## GF-B-011: `defect` is in §C.1's enum and was never emitted by anything, so a
+## reader could not select defects out of `events.jsonl` -- they had to be
+## re-derived from prose. A step that finds one now says so in the stream.
+func _step_defect(args: Dictionary, step_id: String) -> String:
+	var what := str(args.get("what", ""))
+	if what.is_empty():
+		return "HARNESS-ERROR defect step %s has no what:\"...\"" % step_id
+	var severity := str(args.get("severity_candidate", "SHIP"))
+	_emit("defect", {"actual": what, "severity_candidate": severity,
+		"observation": str(args.get("observation", "")),
+		"repro": args.get("repro", null)})
+	return "recorded defect (%s): %s" % [severity, what]
 
 
 ## Move GUI focus. This is the step that cannot work without
@@ -1186,12 +2092,24 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		"file": null,
 	}
 	if not _capture_available():
-		# §C.4: an absent frame is evidence. The reason is recorded rather than
-		# the row being dropped, so a planned shot cannot go missing silently.
+		# §C.4 says an absent frame is evidence, and it is -- but evidence of
+		# ABSENCE, which is a FAIL, not a PASS.
+		#
+		# This line used to return "capture skipped", which does not begin with
+		# FAIL, so `_do_step` recorded PASS. That is CD-1: the 2026-08-27 run
+		# reported PASS for 9,231 captures it could not take, and a reader of
+		# those notes had no way to see it. §C.4's rule is about not DELETING
+		# the row; it was never a licence to call a missing picture a pass.
+		#
+		# The pre-flight above normally means this is unreachable in a segment
+		# that plans captures. It is kept, and kept failing, because the two
+		# guards protect against different mistakes: the pre-flight catches the
+		# wrong invocation, this catches a display server lost mid-segment.
 		row["reason"] = "headless: this process has no display server and cannot render a frame"
 		_manifest.append(row)
-		_emit("screenshot", {"artifacts": [shot_id], "observation": str(row["reason"])})
-		return "capture %s skipped (headless run); manifest row written with file:null" % shot_id
+		_emit("screenshot", {"artifacts": [shot_id], "observation": str(row["reason"]),
+			"severity_candidate": "BLOCKER"})
+		return "FAIL capture %s could not be taken: %s" % [shot_id, str(row["reason"])]
 	if not _telemetry_on():
 		row["reason"] = "telemetry off: no --gatef-out, nowhere to write a PNG"
 		_manifest.append(row)
@@ -1246,6 +2164,12 @@ func _step_capture_seq(args: Dictionary, step_id: String) -> String:
 		for f in gap:
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
+	if written == 0:
+		return "FAIL capture_seq %s wrote 0 of %d planned frames at %.0f Hz" % [
+			str(args.get("id", step_id)), count, hz]
+	if written < count:
+		return "FAIL capture_seq %s wrote only %d of %d planned frames at %.0f Hz" % [
+			str(args.get("id", step_id)), written, count, hz]
 	return "capture_seq %s: %d/%d frames written at %.0f Hz" % [
 		str(args.get("id", step_id)), written, count, hz]
 
@@ -2172,6 +3096,47 @@ func _watch_for_events() -> void:
 		else:
 			_emit("note", {"observation": "input_context %s -> %s" % [was_ctx, context]})
 
+	# --- combat interior (GF-B-011) -----------------------------------------
+	#
+	# Only while a fight is running: `combat_state()` returns `{}` otherwise and
+	# asking it 60 times a second in the overworld would be pure cost.
+	if fighting:
+		var cs: Dictionary = _probe.call("combat_state")
+		var hps: Array = cs.get("opponent_hp", []) as Array
+		var opponent := float(hps[0]) if not hps.is_empty() else -1.0
+		var mine := float(cs.get("my_hp", -1.0))
+		if _prev_opponent_hp >= 0.0 and opponent >= 0.0 and opponent < _prev_opponent_hp - 0.01:
+			_emit("combat_hit", {"observation": "%s took %.1f damage (%.1f -> %.1f)" % [
+				str(cs.get("opponent_id", "the opponent")), _prev_opponent_hp - opponent,
+				_prev_opponent_hp, opponent]})
+		if _prev_my_hp >= 0.0 and mine >= 0.0 and mine < _prev_my_hp - 0.01:
+			_emit("combat_hit", {"observation": "my creature took %.1f damage (%.1f -> %.1f)" % [
+				_prev_my_hp - mine, _prev_my_hp, mine]})
+		_prev_opponent_hp = opponent
+		_prev_my_hp = mine
+		# The catch phases are `combat_manager.gd`'s own enum, read through the
+		# probe: `absorb` is the throw leaving the hand. `catch_result` already
+		# had a detector (the party growing); this is the other half, and
+		# without it a failed catch left no trace at all.
+		var phase := str(cs.get("phase", ""))
+		if phase == "absorb" and _prev_catch_phase != "absorb":
+			_emit("catch_throw", {"observation": "catch thrown at %s" % str(cs.get("opponent_id", ""))})
+		if _prev_catch_phase == "shaking" and phase == "verdict":
+			_emit("catch_result", {"observation": "catch resolved to a verdict"})
+		_prev_catch_phase = phase
+		var out_now: Variant = _probe.call("active_creature")
+		var out_name := "" if out_now == null else str(out_now)
+		if not _prev_active_creature.is_empty() and not out_name.is_empty() \
+				and out_name != _prev_active_creature:
+			_emit("combat_switch", {"observation": "switched %s -> %s mid-fight"
+				% [_prev_active_creature, out_name]})
+		_prev_active_creature = out_name
+	else:
+		_prev_opponent_hp = -1.0
+		_prev_my_hp = -1.0
+		_prev_catch_phase = ""
+		_prev_active_creature = ""
+
 	var party: Array = _probe.call("party_state")
 	if _prev_party_size >= 0 and party.size() > _prev_party_size:
 		_emit("catch_result", {"observation": "party grew %d -> %d" % [_prev_party_size, party.size()]})
@@ -2186,6 +3151,130 @@ func _watch_for_events() -> void:
 			_emit("faint", {"observation": "%s fainted" % name})
 		_prev_levels[name] = level
 		_prev_levels["%s:hp" % name] = creature.get("hp", 1.0)
+
+	_slow_watch_tick += 1
+	if _slow_watch_tick % SLOW_WATCH_EVERY == 0:
+		_watch_slow(context, party)
+
+
+## The 10 Hz half: inventory, buildings, condition, landmarks, dialogue.
+##
+## Split out for cost (see `SLOW_WATCH_EVERY`) and because these five share a
+## shape the fast half does not -- each is a whole-collection walk whose answer
+## is a set difference rather than a scalar comparison.
+func _watch_slow(context: String, party: Array) -> void:
+	var g := _probe.call("game") as Node
+
+	# --- dialogue -----------------------------------------------------------
+	#
+	# Passive, so a conversation that started on its own -- Grandpa's, which
+	# fires the moment the player walks out of the spawn -- is in the record
+	# even when no `advance_dialogue_until_closed` step drove it.
+	var owner := _probe.call("input_owner_node") as Node
+	var line := ""
+	if owner != null and _panel_kind(owner) == "dialogue":
+		line = _line_signature(owner, "dialogue")
+	if line != _prev_dialogue_line:
+		if not line.is_empty():
+			_emit("dialogue", {"observation": line})
+		_prev_dialogue_line = line
+
+	# --- inventory: gather vs craft vs build cost ---------------------------
+	var inventory: Dictionary = _probe.call("inventory_snapshot")
+	if not _prev_inventory.is_empty() or not inventory.is_empty():
+		var gained: Array[String] = []
+		var lost: Array[String] = []
+		for id: Variant in inventory.keys():
+			var was := int(_prev_inventory.get(id, 0))
+			var now := int(inventory[id])
+			if now > was:
+				gained.append("%s +%d" % [str(id), now - was])
+		for id: Variant in _prev_inventory.keys():
+			var now2 := int(inventory.get(id, 0))
+			var was2 := int(_prev_inventory[id])
+			if now2 < was2:
+				lost.append("%s -%d" % [str(id), was2 - now2])
+		if not (gained.is_empty() and lost.is_empty()):
+			# Which verb this was is decided by WHERE it happened, because the
+			# satchel is the only thing all three touch. A menu is the craft
+			# bench; an armed ghost is a build charging its cost; the world with
+			# neither is a gather. Anything else is a `note` rather than a
+			# guessed verb -- §C.1's own "never emit fabricated values".
+			var pending := str((_probe.call("input_state") as Dictionary).get("pending_build", ""))
+			var moved := "gained [%s] lost [%s]" % [", ".join(gained), ", ".join(lost)]
+			if context.begins_with("menu") or context == "build_catalogue":
+				_emit("craft", {"observation": "%s in %s" % [moved, context]})
+			elif not pending.is_empty() or not _prev_pending_build.is_empty():
+				_emit("note", {"observation": "%s while a build ghost was armed" % moved})
+			elif gained.is_empty():
+				_emit("note", {"observation": "%s in %s" % [moved, context]})
+			else:
+				_emit("gather", {"observation": "%s in %s" % [moved, context]})
+		_prev_inventory = inventory
+
+	# --- buildings ----------------------------------------------------------
+	if g != null:
+		var raw: Variant = g.get("placed_buildings")
+		var placed := (raw as Array).size() if typeof(raw) == TYPE_ARRAY else -1
+		if _prev_placed >= 0 and placed >= 0:
+			if placed > _prev_placed:
+				_emit("build_place", {"observation": "placed_buildings %d -> %d" % [_prev_placed, placed]})
+			elif placed < _prev_placed:
+				_emit("build_dismantle", {"observation": "placed_buildings %d -> %d" % [_prev_placed, placed]})
+		var pending_now := str(g.get("pending_build"))
+		# Armed and then disarmed with nothing new on the ground is a cancel.
+		# Checked against the building count on the SAME sample so a placement
+		# -- which also clears the ghost -- is never miscounted as a cancel.
+		if not _prev_pending_build.is_empty() and pending_now.is_empty() \
+				and placed == _prev_placed:
+			_emit("build_cancel", {"observation": "the '%s' ghost was disarmed without placing"
+				% _prev_pending_build})
+		_prev_pending_build = pending_now
+		_prev_placed = placed
+
+		# --- landmarks ------------------------------------------------------
+		var map: Variant = g.get("map")
+		if map != null and map.has_method("landmarks"):
+			var discovered := 0
+			var newest := ""
+			for entry: Variant in (map.call("landmarks") as Array):
+				var landmark: Dictionary = entry
+				if bool(landmark.get("discovered", false)):
+					discovered += 1
+					newest = str(landmark.get("display_name", landmark.get("id", "")))
+			if _prev_landmarks >= 0 and discovered > _prev_landmarks:
+				_emit("landmark_discover", {"observation": "%d -> %d landmarks discovered (latest: %s)"
+					% [_prev_landmarks, discovered, newest]})
+			_prev_landmarks = discovered
+
+	# --- rest and feed ------------------------------------------------------
+	#
+	# Read off `creature_condition.gd`'s own summary through the probe, which is
+	# what the HUD shows the player. A creature going from not-fed to fed IS the
+	# feed event; there is no other observable moment.
+	for entry: Variant in party:
+		var creature: Dictionary = entry
+		var who := str(creature.get("name", ""))
+		var fed := bool(creature.get("fed", false))
+		var rested := bool(creature.get("rested", false))
+		var was_fed: Variant = _prev_condition.get("%s:fed" % who)
+		var was_rested: Variant = _prev_condition.get("%s:rested" % who)
+		if was_fed != null and fed and not bool(was_fed):
+			_emit("feed", {"observation": "%s is fed" % who})
+		if was_rested != null and rested and not bool(was_rested):
+			_emit("rest", {"observation": "%s is rested" % who})
+		_prev_condition["%s:fed" % who] = fed
+		_prev_condition["%s:rested" % who] = rested
+
+	var vitals: Dictionary = _probe.call("player_vitals")
+	if not vitals.is_empty():
+		var satiety := float(vitals.get("satiety", 0.0))
+		# A rise, not any change: satiety drains continuously by design, and an
+		# event on the drain would fire forever. The threshold is above the
+		# per-100ms drain and below any food's restore.
+		if _prev_satiety >= 0.0 and satiety > _prev_satiety + 1.0:
+			_emit("feed", {"observation": "player satiety %.1f -> %.1f" % [_prev_satiety, satiety]})
+		_prev_satiety = satiety
 
 
 ## Prime the change detectors after a boot, so the first tick does not report
@@ -2206,6 +3295,39 @@ func _seed_change_detection() -> void:
 		_prev_levels[str(creature.get("name", ""))] = int(creature.get("level", 0))
 		_prev_levels["%s:hp" % str(creature.get("name", ""))] = creature.get("hp", 1.0)
 	_have_last_pos = false
+	# The new GF-B-011 detectors, seeded the same way and for the same reason:
+	# a boot must not report every item already in the satchel as newly
+	# gathered, nor every landmark on the save as newly discovered.
+	_prev_dialogue_line = ""
+	_prev_opponent_hp = -1.0
+	_prev_my_hp = -1.0
+	_prev_catch_phase = ""
+	_prev_active_creature = ""
+	_prev_inventory = _probe.call("inventory_snapshot")
+	_prev_condition.clear()
+	for entry: Variant in party:
+		var creature: Dictionary = entry
+		var who := str(creature.get("name", ""))
+		_prev_condition["%s:fed" % who] = bool(creature.get("fed", false))
+		_prev_condition["%s:rested" % who] = bool(creature.get("rested", false))
+	var vitals: Dictionary = _probe.call("player_vitals")
+	_prev_satiety = float(vitals.get("satiety", -1.0)) if not vitals.is_empty() else -1.0
+	var g := _probe.call("game") as Node
+	_prev_placed = -1
+	_prev_pending_build = ""
+	_prev_landmarks = -1
+	if g != null:
+		var raw: Variant = g.get("placed_buildings")
+		_prev_placed = (raw as Array).size() if typeof(raw) == TYPE_ARRAY else -1
+		_prev_pending_build = str(g.get("pending_build"))
+		var map: Variant = g.get("map")
+		if map != null and map.has_method("landmarks"):
+			var discovered := 0
+			for entry2: Variant in (map.call("landmarks") as Array):
+				if bool((entry2 as Dictionary).get("discovered", false)):
+					discovered += 1
+			_prev_landmarks = discovered
+	_slow_watch_tick = 0
 
 
 # --- input-cell snapshots ----------------------------------------------------

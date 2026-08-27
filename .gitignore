@@ -30,9 +30,20 @@ assets_raw/
 logs/
 *.log
 
-# Survey output. Regenerate with tools/survey.sh + tools/contact_sheet.gd.
-shots/
-shots-*/
+# Survey output at the REPOSITORY ROOT. Regenerate with tools/survey.sh +
+# tools/contact_sheet.gd.
+#
+# Anchored with a leading slash, and that slash is load-bearing. Unanchored,
+# `shots/` matched EVERY shots directory at every depth -- including
+# `ralph/reports/gate-f-run-*/<segment>/shots/`, which is where
+# `operator_harness.gd` writes every prescribed Gate F capture and its
+# `manifest.json`. That is the mechanism behind coverage defect CD-2: the
+# harness created the directory and wrote into it, git silently declined to
+# track any of it, and a full Gate F run landed on the branch with no
+# prescribed screenshot in it anywhere. The captures were taken; the evidence
+# was swallowed on the way to the commit.
+/shots/
+/shots-*/
 
 # Python bytecode from the art pipeline tools
 __pycache__/
