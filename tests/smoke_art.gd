@@ -14,6 +14,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
@@ -708,10 +709,27 @@ func _the_meadow_was_dressed() -> void:
 	if per_layer.is_empty():
 		_fail("vegetation stats reports no per-layer counts; the layer check cannot run")
 		return
+	# GRASS-FIELD. When the camera-relative field owns the ground plane,
+	# `vegetation.gd` deliberately leaves its layers unbuilt so the two systems
+	# never both dress the same ground. Those layers SHOULD read zero here, and
+	# asserting otherwise fails a world that is behaving exactly as configured.
+	#
+	# The check is not dropped for them, it is INVERTED: with the field on, a
+	# suppressed layer that still has placements means the suppression silently
+	# stopped working and the player is walking through two carpets. That is the
+	# defect this half exists to catch, and nothing else would notice it -- the
+	# frame just looks slightly too dense.
+	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
 	for layer: String in RULES.config().get("layers", {}).keys():
 		if layer.begins_with("_"):
 			continue
-		if int(per_layer.get(layer, 0)) <= 0:
+		var placed := int(per_layer.get(layer, 0))
+		if suppressed.has(layer):
+			if placed > 0:
+				_fail(("layer '%s' is suppressed by the grass field but still placed " % layer) +
+					("%d props -- both systems are dressing the same ground" % placed))
+			continue
+		if placed <= 0:
 			_fail("layer '%s' has no props in the world" % layer)
 
 
