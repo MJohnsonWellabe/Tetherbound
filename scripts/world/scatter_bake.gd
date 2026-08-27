@@ -164,6 +164,12 @@ static func load_all(world_name: String, drained_out: Dictionary = {}) -> Dictio
 	region_list.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
 		return a.x < b.x or (a.x == b.x and a.y < b.y))
 
+	# GF-B-001. Split timing, printed once, in `vegetation.gd`'s own boot-phase
+	# style. This load is the single largest phase of the New Game stall and
+	# the two halves below behave nothing alike -- one is file I/O and
+	# Dictionary construction, the other is a sort per layer -- so a single
+	# figure for the pair cannot say which one a change moved.
+	var t_read0 := Time.get_ticks_msec()
 	for region in region_list:
 		var path := _region_path(world_name, region)
 		var file := FileAccess.open(path, FileAccess.READ)
@@ -171,25 +177,70 @@ static func load_all(world_name: String, drained_out: Dictionary = {}) -> Dictio
 			push_error("scatter bake manifest names region %s but %s is missing" % [region, path])
 			continue
 		_read_region(file, by_layer_unordered, drained_unordered)
+	var t_read1 := Time.get_ticks_msec()
 
 	var by_layer: Dictionary = {}
+	var placements := 0
 	for layer_name: String in by_layer_unordered.keys():
+		placements += (by_layer_unordered[layer_name] as Array).size()
 		by_layer[layer_name] = _reorder(by_layer_unordered[layer_name])
 	for layer_name: String in drained_unordered.keys():
+		placements += (drained_unordered[layer_name] as Array).size()
 		drained_out[layer_name] = _reorder(drained_unordered[layer_name])
+	print("[scatter bake] load phases (ms): read[%d regions, %d placements]=%d reorder[%d layers]=%d" % [
+		region_list.size(), placements, t_read1 - t_read0,
+		by_layer.size() + drained_out.size(), Time.get_ticks_msec() - t_read1])
 	return by_layer
 
 
 ## `entries` is an Array of `{ order: int, placement: Dictionary }`, gathered
-## across however many region files held pieces of this layer. Sorting by
-## `order` restores the exact array position `all_placements` gave each one.
+## across however many region files held pieces of this layer. `order` restores
+## the exact array position `all_placements` gave each one.
+##
+## GF-B-001. Placed directly rather than sorted. `write_all` stamps each
+## placement with its own index within its layer's kept (or drained) array --
+## `for i in kept_list.size(): _bucket(..., i)` -- and every placement is
+## written to exactly one region file, so the orders gathered here for a layer
+## are exactly the integers 0 .. n-1, each once. A permutation that dense does
+## not need comparing: `out[order] = placement` puts every entry where the sort
+## would have put it, in one pass instead of n log n calls into a GDScript
+## lambda.
+##
+## That was 4,900-5,500 ms of the New Game stall on this box, and unlike the
+## file read above it did not get cheaper on a warm page cache across three
+## repetitions in one process -- it is CPU, and it is the comparator.
+##
+## The density is checked, not assumed. A region file written by some other
+## version of `write_all` could carry orders this reasoning does not cover, and
+## a silently mis-ordered scatter is a real behaviour change: `_mark_harvestable`
+## walks each layer's array by index, so a different order chooses different
+## trees as gatherable. Anything that is not a dense permutation falls back to
+## the original sort, which is kept below verbatim.
 static func _reorder(entries: Array) -> Array[Dictionary]:
+	var count := entries.size()
+	var out: Array[Dictionary] = []
+	out.resize(count)
+	var seen := PackedByteArray()
+	seen.resize(count)
+	var dense := true
+	for entry: Variant in entries:
+		var wrapped: Dictionary = entry
+		var order := int(wrapped["order"])
+		if order < 0 or order >= count or seen[order] == 1:
+			dense = false
+			break
+		seen[order] = 1
+		out[order] = wrapped["placement"]
+	if dense:
+		return out
+
+	push_warning("scatter bake orders are not a dense permutation; sorting instead")
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a["order"]) < int(b["order"]))
-	var out: Array[Dictionary] = []
+	var sorted: Array[Dictionary] = []
 	for entry: Variant in entries:
-		out.append((entry as Dictionary)["placement"])
-	return out
+		sorted.append((entry as Dictionary)["placement"])
+	return sorted
 
 
 static func _read_region(file: FileAccess, by_layer: Dictionary, drained_out: Dictionary) -> void:
