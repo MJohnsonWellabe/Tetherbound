@@ -2486,3 +2486,72 @@ items — and carrying the caveat from check-in 21 that its nearest-POI minimum 
 **Next stage:** X01–X07. **X08 stays dropped** (owner decision). X01 first — it is
 the (control, context) exhaustion matrix, and finding 1 above is exactly what it
 exists to characterise. None of the study segments need the crossing.
+
+## Check-in 26 — 2026-08-27 — **X01: 1085 PASS / 118 FAIL over 975 probes. The journey's four-surface finding is now a characterised class.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X01/`. 1,105 s, **975
+`input_probe` events** — the (control, context) matrix ran in full.
+
+### The headline is a rate, not a catastrophe
+
+**118 failures against 975 probed cells — 87.9% of the matrix behaves.** Input
+routing is *not* broadly broken; the defect is concentrated and nameable. That
+correction matters: the journey lane, where four surfaces each swallowed a
+segment, invites "input is broken", and the matrix says otherwise.
+
+| category | count |
+|---|---|
+| a context refused to change | **75** |
+| the pause shell would not open | **21** |
+| focus owner empty (`focus_owner= focus_text=`) | **10** |
+| `menu_cancel` left the shell open | **6** |
+| focus would not move (`ui_up`/`ui_down`, **up to 130 presses**) | 5 |
+| `locomotion never came back: held 3601 fr` | 1 |
+
+### The 30 distinct failing transitions — the deliverable for Phase B
+
+```
+ 8x menu_map        -> world          3x menu_save      -> menu_settings
+ 7x narrative_modal -> world          2x menu_backpack  -> menu_creatures
+ 6x combat          -> menu           2x menu_build     -> menu_creatures
+ 5x narrative_modal -> menu_backpack  2x menu_map       -> menu_build
+ 5x narrative_modal -> panel          2x menu_settings  -> menu_build
+ 4x menu_creatures  -> menu_quest_log 2x menu_map       -> menu_save
+ 4x world           -> combat         1x narrative_modal-> menu
+ 3x menu_save       -> menu_quest_log 1x menu_map       -> menu_creatures
+ 3x menu_backpack   -> menu_save      1x menu_quest_log -> menu_creatures
+ 3x menu_backpack   -> menu_settings  1x menu_settings  -> menu_creatures
+ … and 10 more, each 1x (build_catalogue -> build_placement,
+   menu_map -> combat_aim, menu_creatures -> world, etc.)
+```
+
+Three families are visible in that table, recorded as grouping only (§13):
+
+1. **Exits to `world` fail — 16 of the 75.** `menu_map → world` (8),
+   `narrative_modal → world` (7), `menu_creatures → world` (1). A surface that
+   will not hand control back is precisely what S03, S04, S05/S07 and S09 each
+   showed once; here it is 16 times across three surfaces.
+2. **`narrative_modal → anything` fails — 19 of the 75**, plus 10 of the 21
+   shell-open refusals name `owner=DialoguePanel`. S04's tournament died on
+   exactly this.
+3. **Tab-to-tab inside the pause shell — the largest family.** Note the harness's
+   own authored observation at `S03-109`: *"the pause shell REOPENS ON THE LAST
+   TAB USED."* Every one of these failures reports arriving at *some* tab, just
+   not the requested one. Whether that documented behaviour and this failure
+   family are the same thing is **Phase B's call, not mine** — but they must be
+   read together, and a reader who assesses the tab failures without that note
+   will over-count them.
+
+### What X01 adds that the journey could not
+
+The journey showed four surfaces failing once each and could not say whether that
+was four bugs or one. **X01 says: it is one behaviour, reproducible across 30
+transition pairs and 6 surfaces, at a 12.1% cell failure rate, and it is
+specifically about *leaving* a context rather than entering one.** `world →
+combat` failing 4× is the same shape seen from the other side — and it is the
+matrix explanation for "zero `combat_*` events in all ten journey segments".
+
+**severity_candidate: BLOCKER** — candidate only, Fable rules in Phase B.
+
+**Next:** X07, already launched **in capture mode** — the run's only real visual
+evidence. The colour spot-check is mandatory before any frame from it is trusted.
