@@ -1,10 +1,74 @@
 {
-  "_comment": "Candidate freeze for the Gate F run of 2026-08-26. Frozen from main AFTER ralph/GATE-F-DEFECT-FIX landed, which is what the owner's answer asked for: everything lands on main first, then a candidate is frozen from main, then the chain runs against that SHA.",
-  "candidate_sha": "14e88c7c65fd12ca5b737f1f6a4b79ae8ae6ff2e",
+  "_comment": "Candidate freeze for the Gate F run of 2026-08-27. Frozen from main at f082bdf6, which carries the grass consolidation (762,058-placement bake), the Sigil Gate wing fix, the stuck-check fix, the CI work, and the previous lane's engage diagnostics. This OVERWRITES the 2026-08-26 freeze at 14e88c7c, which the 2026-08-26 evening handover section 3 declares VOID. Nothing from the aborted gate-f-run-20260826T110000Z may be spliced into this run (section 1.6): all of it belongs to 14e88c7c, which is not the candidate. S01 is re-run from scratch.",
+  "candidate_sha": "f082bdf6265760ca9835e1065361fbbf87475d69",
   "candidate_ref": "main",
-  "frozen_at_utc": "2026-08-26T11:00:00Z",
-  "run_dir": "ralph/reports/gate-f-run-20260826T110000Z",
-  "_comment_what_is_in_it": "This candidate carries the GATE-F-DEFECT-FIX lane: the entombment failsafe (player_controller.gd::_recover_if_entombed plus movement.json's unstick block and tests/smoke_unstick.gd), and the X07.json fix -- six distinct camera variants per region instead of one, and 19 real pin_clock steps replacing 19 notes that only claimed a pin. The previous run's X07 captured every -night and -weather frame at mid-morning in clear weather because of that.",
-  "_comment_what_is_NOT_in_it": "ralph/WORLD-GRASS and ralph/GRASS-FIELD are still open branches and are NOT on main at this SHA. They carry grass scale, the ground-material mid-layer, flower drifts, shader cover tiers, sky and clouds, stone and path grit, and narrowed paths. That is why this run executes the JOURNEY segments S01-S10 only and holds X01-X07: X07 is the run's visual evidence and would audit a presentation that is about to be replaced, which is the wasted cycle the owner's ordering directive exists to prevent.",
-  "_comment_colour_warning": "Standing warning for whoever runs X07 against a later candidate: spot-check colour on a LATE frame against an EARLY one before trusting the batch. In four separate probes on this container every frame after the first in a single process came back hue-rotated, deterministically. Cause unidentified; five explanations eliminated (see ralph/reports/gate-f-lane-log.md check-in 6). X07's own 79 frames from 2026-08-25 looked normal, so its capture path may not hit it -- untested."
+  "frozen_at_utc": "2026-08-27T02:53:03Z",
+  "run_dir": "ralph/reports/gate-f-run-20260827T025303Z",
+  "supersedes": {
+    "candidate_sha": "14e88c7c65fd12ca5b737f1f6a4b79ae8ae6ff2e",
+    "run_dir": "ralph/reports/gate-f-run-20260826T110000Z",
+    "why": "Declared void by ralph/reports/GATE_F_HANDOVER_2026-08-26_EVENING.md section 3. That candidate predates the grass consolidation, the Sigil Gate fix, the stuck-check fix and the CI work."
+  },
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "_comment": "Section 0.5: this run uses the Linux editor binary. tools/verify_export.sh and CI prove the Windows export builds; export-identity behaviour on Windows is [OWNER-ONLY]."
+  },
+  "renderer": "opengl3 / Compatibility under xvfb \u2014 Mesa 25.2.8 llvmpipe (LLVM 20.1.2, 256 bits), software rasterisation",
+  "display_server": "X11 under xvfb-run",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "resolution_substituted": false,
+  "_comment_resolution": "Section A.4 capture smoke (tools/capture_diag_minimal.gd) PASSED at the requested 1920x1080 on this container; the 1280x800 fallback was not needed and nothing is recorded as substituted. 1920x1080 matches ROG Ally native.",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir",
+  "date": "2026-08-27",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "_comment_free_build": "Verified, not assumed: autoload/game_state.gd:266 defaults free_build to false and autoload/game_state.gd:280 defaults debug_teleport to false. Both persist only in user://settings.json, which S01-02's wipe_saves clears. Teleport is therefore off everywhere except where a DIAG- segment turns it on deliberately (section 0.6).",
+  "instrumentation_overhead_note": "Measured on this container with tools/gate_f/run_segment.sh --overhead at the candidate SHA, scene=world, 30 s x 2 windows per condition at [-25.4, 4.93, -15.6], order off/telemetry/recording/recording/telemetry/off (reversed to cancel drift). Means: off 4.341, telemetry 3.945, telemetry+recording@0.50Hz 4.039 ms/frame. Both deltas vs off came out NEGATIVE (telemetry -0.396, recording -0.302) and are below the noise floor of 0.717 ms/frame, taken as the widest a single condition disagreed with itself. Read these as 'under ~0.72 ms/frame', NOT as zero and NOT as a speed-up. IMPORTANT GAP: frames written 0, so the recorder's framebuffer-grab-and-encode cost was NOT measured directly, and the frame-time difference cannot resolve a ~1 ms/frame effect against this noise floor. CPU frame time on this container only \u2014 no device fps, no GPU frame time, no VRAM.",
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "_comment": "Section A.4 makes 'the full test suite is green at the SHA' a COORDINATOR precondition discharged before the freeze, not an operator step, and section 13 forbids the operator substituting a unit-test result for player-path evidence. It was not re-run here: this container was provisioned bare and the suite's test_harvest.gd job alone carries 684,231 assertions. This field exists so Phase B reads the actual state rather than an implied green.",
+    "known_open_defect": "tests/smoke_party_count_after_catches.gd fails INTERMITTENTLY with 'could not engage the real wild body at Wild_bramblebun_0_3 (stopped 23.7m away (engage range 6.0m))'. Open at freeze time, carried forward from the 2026-08-26 evening handover section 2, where four hypotheses are recorded as killed with the measurement that killed each. The failure is self-diagnosing at this SHA via _why_the_engage_failed. NOT an operator concern during the run: if it fires it is recorded and the run continues (section 13)."
+  },
+  "envelope_facts_confirmed_on_this_container": {
+    "audio": "NONE. All ALSA drivers failed to initialise (cannot find card '0', libpulse.so.0 absent) and Godot fell back to the dummy audio driver. Section K.6 audio coverage gap confirmed as a measured container fact, not an inherited claim. Any audio judgement is [OWNER-ONLY].",
+    "world_bake_present": "The world boots and scatters 762,058 props in 43 batches (56,423 harvestable), confirming the grass consolidation is present in this candidate.",
+    "import_cache": "Built from scratch on this container: 2,513 imported resources, stable across two consecutive agreeing passes, with zero SCRIPT ERROR / Parse Error / Failed to load / ERROR: Cannot open \u2014 the same gate .github/actions/setup-godot applies in CI."
+  },
+  "owner_only_gaps": "Unchanged from section K and asserted by NO evidence in this run: device frame rate, GPU frame time, VRAM, thermals/battery, real controller feel, 7-inch handheld legibility, first-time-human navigation/pacing, voluntary engagement, audio, Windows export identity, true continuous video, long-session device soak, mouse-look feel.",
+  "segments_planned": {
+    "journey": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10"
+    ],
+    "study": [
+      "X01",
+      "X02",
+      "X03",
+      "X04",
+      "X05",
+      "X06",
+      "X07",
+      "X08"
+    ],
+    "dropped": [],
+    "_comment_x08": "REINSTATED by the owner on 2026-08-27, reversing the drop carried from GATE_F_HANDOVER_2026-08-26_EVENING.md section 7. X08 is now run. Its scope is UNCHANGED by this: section K.1 still makes device frame rate, GPU frame time, VRAM, thermals and battery [OWNER-ONLY] on a software-rasterised Linux container. X08 here yields CPU frame/physics time, draw calls and primitives under this render mode, placement/instance counts, and boot/save/load/transition durations -- nothing that can be read as device performance.",
+    "_comment_visual_judge": "The visual judge is PERMITTED for this candidate: the ordering constraint that held it \u2014 X07 auditing a presentation that was about to be replaced by the grass work \u2014 is satisfied now that the grass consolidation is on main."
+  },
+  "_comment_colour_warning": "STANDING WARNING for X07, carried forward and still unresolved. Spot-check colour on a LATE frame against an EARLY one before trusting any batch. In four separate probes on this container every frame after the first in a single process came back hue-rotated \u2014 R/B around 2.9-3.9 against a correct 0.42-0.54 \u2014 deterministically. Cause UNIDENTIFIED; five explanations eliminated (colour grade, the adjustment_enabled snap at hour 21.0, a live clock outrunning the renderer, the config/blend/weather values, and read-back synchronisation). Two corrections that must travel with it: (1) NIGHT RENDERS CORRECTLY \u2014 three independent fresh-process first frames at pinned hour 22 read 0.42-0.44; the earlier severity claim was withdrawn. (2) pin_clock does NOT make X07 immune \u2014 the artefact is position-in-process, not clock-driven. X07.json's own note blaming the '2026-08-23 crimson artefact' on an unpinned clock is a WRONG attribution."
 }

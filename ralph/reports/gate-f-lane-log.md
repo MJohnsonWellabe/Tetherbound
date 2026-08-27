@@ -1773,3 +1773,997 @@ No new segments started after this. `_probe_stand_aside.gd`'s finding is in §2:
 the unchecked position write in `_stand_the_trainer_aside` is real but is **not**
 this bug — 8/8 clear in three engagements, and in two of them the trainer was not
 moved at all.
+
+## Check-in 15 — 2026-08-27 — operator lane resumes; **the container arrived bare**; candidate re-frozen at `f082bdf6`
+
+New operator session, picking up from
+`ralph/reports/GATE_F_HANDOVER_2026-08-26_EVENING.md`. Stage: **pre-run
+preconditions discharged, freeze written, S01 next.**
+
+### The environment was not provisioned — this cost the first stage
+
+The briefing assumed a working box. It was not one. `/home/user` was **empty**:
+no repo, no Godot, no import cache, nothing. This is worth recording because a
+successor landing in the same state will otherwise assume a broken checkout.
+
+What it took, in order:
+
+| step | outcome |
+|---|---|
+| clone `MJohnsonWellabe/Tetherbound` | HEAD `f082bdf6` — the expected commit |
+| install Godot | **4.7-stable**, `5b4e0cb0f`, sha256 `f85bbc6b…`, to `run_segment.sh`'s default path |
+| build import cache | **2,513** resources, stable across two agreeing passes |
+| CI's import error gate | **clean** — zero `SCRIPT ERROR` / `Parse Error` / `Failed to load` / `ERROR: Cannot open` |
+| §A.4 capture smoke | **PASS at 1920×1080**, no fallback, nothing recorded as substituted |
+
+**Trap for a successor:** `godot --headless --path . --import` **exits partway
+through each pass** on this container — first pass stopped at 38 files, second
+reached 2,513. CI hides this behind a two-pass `|| true`. A single invocation
+looks like it succeeded (`rc=0`) and leaves the cache half-built, and
+`run_segment.sh`'s own header warns what that produces: resources fail to load
+and **viewpoints render empty instead of erroring**. That is a silent poison for
+every visual verdict in X07. Loop the import until the file count stops growing;
+do not trust one pass.
+
+**Second trap, harness-level, cost three dead processes:** launching a long job
+as `nohup … &` *inside* a backgrounded tool call gets the child reaped when the
+outer call returns — exit 144, truncated logs, no error message. Run the command
+directly as the backgrounded call instead.
+
+### Untracked-file noise is import byproduct, not evidence
+
+The import scan generated **190** sidecars — 177 `.import` files for the
+evidence PNGs under `ralph/reports/`, plus 13 `.gd.uid` files. **None are
+authored content and none are evidence.** The repo tracks **zero** `.import`
+files under `ralph/reports/` (all 728 tracked ones are real assets under
+`addons/` and `assets/`), and `.gitignore` already carries the identical
+precedent for `site/img/*.import` with a comment describing this exact problem.
+
+Excluded them via **`.git/info/exclude`** — machine-local, uncommitted. Two
+reasons, both deliberate: committing them would move the candidate off
+`f082bdf6` for reasons having nothing to do with the game, and 177 loose files
+in the tree is a live hazard for the per-segment evidence commits, where one
+careless `git add -A` sweeps junk into the record. Tree reports clean at
+`f082bdf6`; the repo itself is untouched.
+
+### Candidate re-frozen — the `14e88c7c` record is overwritten
+
+`ralph/reports/gate-f-candidate/RUN_METADATA.json` now records **`f082bdf6`**,
+run dir `gate-f-run-20260827T025303Z`. The void 2026-08-26 freeze is retained
+only as a `supersedes` block naming why it died. **Nothing from the aborted
+`20260826T110000Z` run is spliced in (§1.6); S01 is re-run from scratch.**
+
+Confirmed present in this candidate, from the world boot itself: **762,058 props
+in 43 batches** (56,423 harvestable) — the grass consolidation is really here,
+so **the visual judge is permitted** and X07 audits the presentation that ships.
+
+### §I.7 overhead, and the part of it that is a gap
+
+scene=world, 30 s × 2 windows per condition, order reversed to cancel drift:
+
+| condition | ms/frame | delta vs off |
+|---|---|---|
+| off | 4.341 | — |
+| telemetry | 3.945 | −0.396 |
+| telemetry + recording @ 0.5 Hz | 4.039 | −0.302 |
+
+Both deltas are **negative and below the 0.717 ms/frame noise floor**. They read
+as *"under ~0.72 ms/frame"* — **not** as zero, and **not** as a speed-up.
+
+**The gap, stated rather than buried: frames written 0**, so the recorder's
+framebuffer-grab-and-encode cost was **not measured directly**, and a ~1 ms/frame
+effect cannot be resolved against this noise floor. CPU frame time on this
+container only.
+
+### Two envelope facts confirmed as measurements, not inherited claims
+
+- **Audio is genuinely absent.** Every ALSA driver failed (`cannot find card
+  '0'`, `libpulse.so.0` missing); Godot fell back to the dummy driver. §K.6 is
+  now a measured container fact.
+- **`free_build: false` is verified**, not assumed — `game_state.gd:266`, with
+  `debug_teleport` false at `:280`. Both persist only in `user://settings.json`,
+  which S01-02's `wipe_saves` clears.
+
+### One precondition I am NOT discharging, and why
+
+§A.4's "full test suite green at the SHA" is a **coordinator** duty performed
+before the freeze, and §13 forbids the operator substituting a unit-test result
+for player-path evidence. I did not re-run it: the container was bare and
+`test_harvest.gd` alone carries 684,231 assertions. `suite_state_at_freeze` in
+the freeze record says so explicitly and names the known-open intermittent
+engage defect, so Phase B reads the real state instead of an implied green.
+
+**Next:** S01, then the chain S02–S10, then X01–X07. X08 stays dropped.
+
+## Check-in 16 — 2026-08-27 — **S01: 13 PASS / 1 FAIL.** The counts reproduce exactly; the one failure is the same objective-id question
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S01/`. Logic mode, 354 route
+rows, 21 events, one planned shot carried as `file: null` (§C.4: an absent frame
+is evidence).
+
+**13 PASS / 1 FAIL — the same split as the 2026-08-25 run and the aborted
+2026-08-26 one.** Three independent runs across three different candidate SHAs
+agreeing to the step is worth stating: S01 is stable, and this candidate did not
+regress the front door.
+
+### The one failure is `S01-12`, unchanged
+
+- expected: tracked objective `opening_first_catch`
+- actual: `id=opening:beat:road`, text *"Catch your first wild creature."*
+
+Recorded exactly as it came out. **I did not edit the step-script to match the
+shipped id** — same call my predecessor made, same reason (§13: record, do not
+diagnose). The text a new player reads is the correct first rung; what does not
+exist in the build is the *id* the protocol's §E.5 chain names. Whether that is a
+defect in the game's chain ids or in the protocol's expectation is Phase B's
+call. It matters past this one assertion because §E.5 tracks 24 main-chain
+objectives by id: if the scheme differs throughout, later objective assertions
+fail identically and must be read as **this one question**, not as 24 bugs.
+
+### Mode, inherited and now holding more strongly
+
+The journey runs in **logic mode**, per check-in 8's measurement. Worth noting
+the margin has widened: that ban was set against **466,922** props at
+~3,400 ms/frame under llvmpipe; this candidate scatters **762,058**, 63% more.
+Capture mode on the journey is further out of reach than when the decision was
+made, and **X07 remains the run's only real visual evidence** — which is what
+makes its colour spot-check non-negotiable.
+
+**Next:** S02, already launched.
+
+## Check-in 17 — 2026-08-27 — **S02: 68 PASS / 7 FAIL. The chapter's first fight never stages, and the first catch never happens.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S02/`. 566 route rows, 108
+events, exit save written (`saves/S02-exit.json`). **The segment completed and
+handed off, so this is not a §A BLOCKER** — the chain continues (§13: a failed
+step gets its verdict and its evidence, and the run goes on if it can).
+
+### The single hardest fact, from the telemetry rather than from the verdicts
+
+**S02 contains zero `combat_start`, zero `combat_hit`, zero `combat_end` and zero
+`catch_throw` events.** The complete event-type census for the segment:
+
+```
+catch_result: 1     flag_set: 5     menu_close: 2   menu_open: 2
+note: 73            region_enter: 2 save: 2         screenshot: 16
+tab_change: 5
+```
+
+The one `catch_result` is at `t=254.30` — the **starter grant**, party 0 → 1. It
+is not the wild catch.
+
+### Why six of the seven failures are one line of dominoes, not six defects
+
+`S02-32` "engage the bramblebun" **passes**, and so do `S02-36` (six quick
+attacks) and `S02-37` (the charged attack). They pass because those steps assert
+that **input was injected**, not that anything received it. Against a segment with
+no combat events at all, the reading is that the presses went into an
+unengaged world.
+
+Everything after it is downstream of that:
+
+| step | reported | reads as |
+|---|---|---|
+| `S02-34` | `input_context=world`, wanted `combat` | the fight never took input ownership |
+| `S02-40` | `input_context=world`, wanted `combat_aim` | no aim, because no fight |
+| `S02-45` | party 1, wanted 2 | no catch, because no aim |
+| `S02-46` | still `opening:beat:road` | chain cannot advance past a catch that did not occur |
+| `S02-54` | `road_gate_open` NOT set | S02's span end never reached |
+| `S02-60` | 556 route rows, wanted ≥900 | the segment simply did less |
+
+**The grouping is an observation, not a verdict** (§13). I am recording that these
+six share one point of origin and that the origin is observable in the telemetry;
+which of them is *the* defect, and its severity, is Phase B's call.
+
+The seventh, `S02-11`, is separate and already known: tracked objective
+`opening:beat:road` where §E.5 names `opening_first_catch` — **the same thread as
+`S01-12`**, and the id question, not a gameplay one. (`S02-46` reports an id
+mismatch too, but its expectation is about the chain *advancing* after a catch
+that never happened, so it belongs to the cascade above, not to the id thread.)
+
+**severity_candidate: BLOCKER** — candidate only. This is the chapter's first
+piloted fight and first wild catch, on the production path, in the mandatory
+opening segment. A player following `docs/OPENING_SEQUENCE.md` beats 6–8 does not
+get a fight.
+
+### A step-script note that must NOT be misread as this run's data
+
+`S02-36`'s authored `observation` reads *"MEASURED, not guessed: the bramblebun at
+opponent_hp 124.2 full, 43.1 after these 14 quick attacks … combat_end at
+t=283.6"*. **That is a note written into `S02.json` from an EARLIER run, explaining
+why the step was tuned 14 → 6.** It is not an observation of this run, where no
+`combat_*` event exists at all. A successor skimming the notes file will otherwise
+read it as evidence that combat worked here. It did not.
+
+### What S03 inherits — flagged before it runs, not after
+
+`S02-exit.json` carries **party of 1** (the starter, level 3) and these 7
+progression flags:
+
+```
+opening:beat:wake, opening:beat:house, opening:beat:choose,
+opening:starter_granted, opening:beat:name, tournament_team_fed,
+opening:beat:walk_out
+```
+
+**No `road_gate_open`. No completed `opening:beat:road`.** §B's span for S02 is
+"wake upstairs → starter caught & named → first wild catch → road gate open"; the
+last third did not happen.
+
+S03's entry save is `S02-exit`, so **S03 and everything after it run from a
+degraded entry state.** I am continuing the chain — that is the protocol, and a
+real handoff from a real state is the evidence — but every downstream failure must
+be read against this, and not counted as an independent defect until Phase B has
+separated the two.
+
+**Next:** S03, already launched.
+
+## Check-in 18 — 2026-08-27 — **S03: 210 PASS / 64 FAIL. `panel:SwapPanel` takes input at t=322.88 and holds it for the rest of the segment.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S03/`. 3,201 route rows, 329
+events, exit save written. Segment completed and handed off — not a §A BLOCKER.
+
+### The measurement that organises 46 of the 64 failures
+
+From `route.csv`, not from the verdicts:
+
+| | share of segment |
+|---|---|
+| `input_context = panel:SwapPanel` | **2,686 / 3,201 rows — 83.9%** |
+| player standing at `(22.2, -2.9)` | **2,697 / 3,201 rows — 84.3%** |
+| distinct positions visited, whole segment | **50** |
+
+Those two figures track each other to within 11 rows. First `panel:SwapPanel`
+row is **505/3,201, t=322.88**, and it dominates everything after.
+
+**First occurrence, located (§J):** the transition falls between `S03-61`
+"speak to Oskar" (`interact` ×1, t=322.08, PASS) and `S03-62` "hear him out"
+(`interact` ×10, t=323.87, PASS). The player is parked at `(22.2, -2.9)`;
+Oskar stands at `(22, -6)`. The preceding step `S03-60` walked 6.1 m to him
+normally, `0 held`. **I am recording the sequence and the correlation. I am not
+naming a cause** (§13) — that `panel:SwapPanel` becomes the owner here, and never
+yields, is the observable.
+
+### The 64, grouped by what they report
+
+| thread | count | what the steps report |
+|---|---|---|
+| `panel:SwapPanel` owns input where another context was wanted | **23** | `menu_build` ×4, `build_placement` ×5, prefix `build` ×5, `menu_backpack` ×1, and 8 where map/inventory "did not open the pause shell: `panel:SwapPanel -> panel:SwapPanel (owner=SwapPanel)`" |
+| walks that never leave `(22.0, 1.0, -3.0)` | **23** | every one "did not reach … in 3000 walking frames; stopped N m short at (22.0, 1.0, -3.0) **(0 held)**" |
+| objective id | **7** | all read `opening:beat:road` where §E.5 wanted `village_tools`, `tournament_train_team`, `tournament_build_home`, `tournament_build_team`, `tournament_build_creature_beds`, `tournament_sleep`, `tournament_feed_team` |
+| flags never set | **4** | `home_materials_gathered`, `home_built`, `creature_bed_built_3`, `player_slept_at_home` |
+| party size | **2** | 1 where 2 and 3 were wanted |
+| distance | **1** | walked **102.9 m** this segment, wanted ≥ 600 |
+
+**`0 held` on all 23 failed walks is the detail worth carrying.** The handover
+teaches reading exactly this distinction on the engage defect: *"THE BODY DID NOT
+MOVE — blocked at the start, not short of the target"* versus a long walk that
+ended somewhere unhelpful. Every failed walk here is the **first** case, from one
+identical coordinate.
+
+### Event census — the verbs S03 exists to exercise are absent
+
+```
+catch_result: 1   flag_set: 4    load: 2        menu_close: 12  menu_open: 20
+note: 267         region_enter: 2 save: 2       screenshot: 14  tab_change: 5
+```
+
+**No `gather`, no `craft`, no `build_place`, no `build_dismantle`, no `rest`, no
+`feed`, no `combat_*`.** §B's span for S03 is "Tam's tools → team of 3 → training
+→ gathering → home + 3 creature beds → sleep → feed". None of those verbs emitted
+an event.
+
+**severity_candidate: BLOCKER** — candidate only, Phase B rules.
+
+### A caveat in the step-scripts that bears directly on this
+
+`S03-60`'s authored observation records that **`answer_prompts` is turned ON for
+journey walks**, with its own trade stated: *"the schema says this flag must stay
+off in any segment whose subject is whether something blocks travel, so these
+segments can no longer evidence 'a narrative modal blocked the player from
+travelling'."* That caveat is now load-bearing: a panel **is** holding input
+across 84% of this segment, and the harness is auto-answering prompts while it
+does. Phase B should weigh the two together rather than reading either alone.
+
+### Carried forward, not re-counted
+
+The 7 objective-id failures all report `opening:beat:road` — the chain never
+advanced past S02, so these are **downstream of check-in 17's cascade**, and are
+the same thread as `S01-12`. The 2 party-size failures and the one
+`input_context=world (wanted combat)` are likewise S02 carryover. Counting S01–S03
+as 72 independent defects would be wrong: so far they resolve to **the S02 engage
+cascade, the S03 `panel:SwapPanel` capture, and the objective-id naming
+question.**
+
+**Next:** S04, already launched, entering from `S03-exit`.
+
+## Check-in 19 — 2026-08-27 — **S04: 54 PASS / 18 FAIL. Same shape as S03, different panel: `DialoguePanel` takes input at the tournament ground and holds it.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S04/`. 573 route rows, exit
+save written, handed off. Not a §A BLOCKER.
+
+### The onset, located
+
+`input_context = narrative_modal` from **row 359, t=243.75**, and it runs to the
+final row — **208 narrative_modal rows against 5 `world`** in that tail. The
+segment ends parked at **(20.4, 12.4)**: the tournament ground, §D's RT-02
+terminus at (20,12). One failure names the owner outright:
+
+> `game_menu did not open the pause shell: context narrative_modal -> narrative_modal (owner=DialoguePanel)`
+
+The player enters S04 standing at **(22.2, -2.9)** — S03's parked coordinate,
+carried in `S03-exit`'s `player_pose` — walks **15.5 m** to the tournament ground,
+a dialogue opens, and nothing after it takes input.
+
+### The 18
+
+| thread | count | reported |
+|---|---|---|
+| `narrative_modal` / `DialoguePanel` owns input | **6** | 3× wanted `combat`, 1× wanted `menu_save`, 1× shell would not open (`owner=DialoguePanel`), 1× "4 × `ui_down` did not move focus off nothing" |
+| tournament flags never set | **7** | `tournament_entered`, `_quarter_won`, `_semi_won`, `_won`, `_team_ready`, `_training_ready`, `_condition_ready` |
+| objective id (carryover) | **2** | `opening:beat:road` where `tournament_enter`, `head_to_south_bridge` wanted |
+| party size (carryover) | **1** | 1 where 3 wanted |
+| segment ran short | **2** | walked 15.5 m (wanted ≥60); 566 route rows (wanted ≥1200) |
+
+**The tournament — S04's entire subject — did not run.** Zero `combat_*` events
+again. **severity_candidate: BLOCKER**, candidate only.
+
+### One genuinely NEW fact, and it is a useful one
+
+**`panel:SwapPanel` does not appear anywhere in S04.** S03 ended with it holding
+84% of the segment; S04 boots fresh, loads `S03-exit` through the production
+title-screen Load path, and comes up clean in `world`.
+
+So the S03 capture is **session-scoped, not persisted state** — it does not
+survive save/load, and it is not carried in the save file. That narrows what
+Phase B has to consider, and it is the kind of thing only a save-handoff chain
+would ever have shown.
+
+### The shape now repeating across three segments
+
+| segment | what should have owned input | what did |
+|---|---|---|
+| S02 | `combat`, then `combat_aim` | **nothing** — stayed `world`, zero `combat_*` events |
+| S03 | `menu_build`, `build_placement`, `menu_backpack` | **`panel:SwapPanel`**, 83.9% of segment |
+| S04 | `combat`, `menu_save` | **`narrative_modal` / `DialoguePanel`**, to the last row |
+
+Stated as an observation, not a diagnosis (§13): in each case a surface **holds
+input ownership that the protocol expected to pass elsewhere**, and in each case
+the steps that inject input still report PASS, because they assert the injection
+and not its receipt. That is §8's defect class — the one this protocol was
+written to hunt — arriving in the journey lane rather than in X01 where it was
+meant to be cornered deliberately.
+
+**Next:** S05, already launched, entering from `S04-exit`.
+
+## Check-in 20 — 2026-08-27 — **S05: 69 PASS / 7 FAIL — the healthiest segment of the run, and the first real §D evidence**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S05/`. 1,246 route rows,
+700.9 s elapsed, exit save written.
+
+**Traversal works.** `input_context` is `world` for **1,153 / 1,245 rows
+(92.6%)**, `narrative_modal` only 6.6%. No panel captured the segment. The player
+crossed regions for real — `grandpas_village → corridor → the_pond → corridor` —
+and five `region_enter` events fired. After three segments where a surface held
+input, this is the contrast that makes the earlier ones legible: the journey lane
+is not uniformly broken.
+
+### §D finding — one dead-travel interval over threshold
+
+§D: *"any dead-travel interval ≥ 250 m is a finding; 150–250 m is a watch item."*
+
+| | |
+|---|---|
+| length | **329.8 m** |
+| start | t=591.0 s, **(300, 962)**, `corridor`, hour 5.33, clear |
+| end | t=644.5 s, **(68, 1196)**, `corridor`, hour 7.47, clear |
+| duration | 53 s |
+| nearest POI across the interval | **min 30.2 m**, median 62.8 m |
+
+On RT-05, pond → South Bridge. **The detail worth carrying: the nearest POI never
+came within 30.2 m**, and §F sets the POI radius that resets the meter at
+**30 m**. The interval survives by 0.2 m. Recorded as the measurement; whether it
+is intentional breathing room, an exploration opportunity, or dead time is
+**Fable's Phase B call**, not mine.
+
+Counts: **1 finding ≥250 m, 0 watch items** in 150–250 m. The next eight
+intervals are 99.8, 99.2, 58.6, 57.8, 54.9, 53.2, 45.7 m — a long way below
+threshold, so this one is isolated rather than the top of a distribution.
+
+### The 7 failures
+
+| reported | thread |
+|---|---|
+| `input_context=narrative_modal` (wanted `combat`) | the South Bridge fight — same shape as S03/S04 |
+| `flag south_bridge_open NOT set` | downstream of that fight |
+| `15.3 m from (0, 1330), wanted within 8.0` | stopped just short of the bridge anchor |
+| `input_context=menu_backpack` (wanted `menu_save`) | a panel holding where another was wanted |
+| party size 1 (wanted 3) | S02/S03 carryover — the team was never built |
+| `opening:beat:road` (wanted `head_to_south_bridge`) | objective-id thread |
+| 1,238 route rows (wanted ≥3000) | segment ran short |
+
+Zero `combat_*` events again. **severity_candidate: SHIP** for the South Bridge
+fight — candidate only, and deliberately *not* BLOCKER like S02–S04: this segment
+delivered its traversal, its regions and its pacing evidence, and failed at one
+gated fight rather than wholesale.
+
+**Next:** S06, already launched, entering from `S05-exit`.
+
+## Check-in 21 — 2026-08-27 — **S06: 86 PASS / 17 FAIL. The player walks 9.2 km and never leaves the corridor.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S06/`. 4,106 route rows,
+**2,176 s (36 min)**, **9,180 m walked**, exit save written. `input_context` is
+`world` for **99.1%** — no panel captured this segment either.
+
+### Regions never reached
+
+`region_enter` fired 3 times; the region sequence is
+`grandpas_village → corridor` and **stops there**. Two steps report it directly:
+`region=corridor (wanted the_old_quarry)` and
+`region=corridor (wanted the_burrow_warrens)`. `warrens_cleared` never sets.
+
+### Eleven walks fail, at two coordinates, every one `0 held`
+
+| target | stopped at | short by |
+|---|---|---|
+| (403, 1794) | **(22.0, 0.0, 172.0)** | 1666.2 m |
+| (315, 1668) | **(22.0, 0.0, 172.0)** | 1524.5 m |
+| (-420, 2470) | (14.0, −3.0, 1322.0) | 1227.7 m |
+| (-373, 2632) | (14.0, −3.0, 1323.0) | 1365.0 m |
+| (-357, 2650) | (16.0, −3.0, 1321.0) | 1380.6 m |
+| (-357, 2632) | (14.0, −3.0, 1323.0) | 1360.9 m |
+| (-357, 2616) | (8.0, −2.0, 1317.0) | 1349.3 m |
+| (-357, 2616) | (15.0, −3.0, 1321.0) | 1347.3 m |
+| (-342, 2650) | (15.0, −6.0, 1325.0) | 1371.9 m |
+| (-259, 2256) | (13.0, −4.0, 1324.0) | 971.8 m |
+
+Generous budgets were spent — **6,300, 18,900 and 44,100 walking frames** on
+three of them, far above the harness's 2,400 default — so these are not budget
+timeouts.
+
+**The second cluster sits at z ≈ 1317–1325.** S05 ended 15.3 m from the South
+Bridge anchor at **(0, 1330)** with **`south_bridge_open` NOT set**. The
+observation, recorded without a causal claim (§13): every failed walk in that
+cluster stops within ~10 m of the bridge line, on the near side, in a segment
+whose entry save carries the bridge flag unset. The first cluster, `(22, 172)`,
+is separate and earlier — **846 rows, 21% of the segment, dwelt on that one
+coordinate**.
+
+### §D — two more findings and a watch item, and a pattern in the POI minima
+
+| | length | t | from → to | nearest POI (min) |
+|---|---|---|---|---|
+| **FINDING** | **538.7 m** | 261→825 s (563 s) | (33,146) → (−69,620) | **31.2 m** |
+| **FINDING** | **425.8 m** | 1071→1142 s (70 s) | (−99,774) → (−177,1189) | **31.3 m** |
+| watch | 217.4 m | 1150→1205 s (55 s) | (−187,1241) → (−239,1333) | **31.7 m** |
+
+**Worth carrying to Phase B as a measurement about the metric itself:** across
+S05 and S06, **all four** over-threshold or watch intervals have nearest-POI
+minima in a narrow band — **30.2, 31.2, 31.3, 31.7 m** — against §F's **30 m**
+reset radius. Every one clears the bar by between 0.2 and 1.7 m. That makes the
+dead-travel counts **highly sensitive to the exact radius chosen**: a 32 m radius
+would erase all four. Recording the sensitivity, not proposing a number — the
+classification and any retuning are Phase B's.
+
+Run totals so far: **3 findings ≥250 m, 1 watch item.**
+
+### The rest of the 17
+
+`input_context=world (wanted combat)` (zero `combat_*` events again), party size
+1 (wanted 3), the objective-id thread (`opening:beat:road` where
+`clear_the_burrow_warrens` wanted), and one focus failure — `1 × ui_down did not
+move focus off @Button@64790`.
+
+**severity_candidate: BLOCKER** — candidate only. Two named regions of Band 2 are
+unreachable on the production path.
+
+**Next:** S07, already launched, entering from `S06-exit`.
+
+## Check-in 22 — 2026-08-27 — **S07: 75 PASS / 23 FAIL. 17.3 km "walked" without leaving a pocket — and that voids the distance figures for S06 too.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S07/`. 4,484 route rows,
+2,375 s, exit save written. `input_context` `world` 99.8% — no panel capture.
+
+### The instrumentation result that must travel with S06 and S07
+
+One step failed in a way that is worth more than the twenty-two others:
+
+> `dead_travel peaked at 0.3 m this segment (wanted >= 150.0); 10973.1 m walked in total`
+
+The player covered **17,270 m** by summed route deltas, and the dead-travel meter
+**never exceeded 0.3 m**. Both are true, and together they say the distance is not
+travel:
+
+| | S06 | S07 |
+|---|---|---|
+| distance by route deltas | 9,180 m | **17,270 m** |
+| distinct positions visited | 664 | **188** |
+| rows within 40 m of the bridge line (z≈1320) | 48% | **100%** |
+| peak dead-travel | 538.7 m | **0.3 m** |
+
+**S07 never left a pocket at the South Bridge.** All four failed walks stop at
+z≈1318 — the same near-side line as S06's second cluster — every one `0 held`.
+The 17.3 km is the harness re-attempting a blocked route, back and forth, always
+inside 30 m of the same POIs, which is exactly why the dead-travel meter keeps
+resetting to zero.
+
+**Recorded explicitly so Phase B cannot be misled by a headline number:
+"distance walked" for S06 and S07 is NOT pacing evidence, and neither segment
+contributes a usable §D chapter total.** §D's own rule is that its numbers come
+from `route.csv` of a journey that progressed; these two did not progress.
+S05 remains the only journey segment so far whose distance means what §D means
+by it.
+
+### The rest of the 23
+
+Regions `grandpas_village → corridor`, stopping there again: `region=corridor`
+where `the_long_water` and `the_tether_relay` were wanted. Four Band 3 flags
+never set — `relay_disabled`, `relay_captain_defeated`, `captive_rescued`,
+`mill_crossing_restored`. Four more objective-id failures, all reading
+`opening:beat:road` where `disable_the_relay`, `defeat_the_relay_captain`,
+`rescue_the_captive` and `restore_the_mill_crossing` were wanted. Plus the
+standing party-size 1 (wanted 3), one `input_context=world (wanted combat)`, and
+one `menu_backpack` where `menu_save` was wanted. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 3 is unreachable.
+
+### Where the journey actually stands
+
+S05 crossed to the bridge and could not open it. **S06 and S07 are both spent
+against that same closed crossing** — 26.5 km of walking between them, two
+regions each, none reached. The journey chain is intact in the sense that every
+segment ran and handed off, but from S06 onward it is **re-running the same
+blocked step at successive band targets**, and its telemetry describes that,
+not the Meadows.
+
+**Next:** S08, already launched, entering from `S07-exit`.
+
+## Check-in 23 — 2026-08-27 — **S08: 112 PASS / 22 FAIL. Same blocked crossing, third time; 35.9 km across 174 positions.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S08/`. 9,127 route rows,
+**4,757 s (79 min)**, exit save written, `world` 99.6%.
+
+Recording this one tersely on purpose: **it is the S07 result again, larger.**
+
+| | S06 | S07 | **S08** |
+|---|---|---|---|
+| distance by route deltas | 9,180 m | 17,270 m | **35,936 m** |
+| distinct positions | 664 | 188 | **174** |
+| peak dead-travel | 538.7 m | 0.3 m | **0.0 m** |
+| top dwell coordinate | (22,172) | (8,1317) | **(8,1317), 1,334 rows** |
+| regions reached | corridor | corridor | **corridor** |
+
+**35.9 km of walking across 174 distinct positions, with the dead-travel meter
+at 0.0 for the entire segment.** The same "peaked at 0.4 m … 23,794.2 m walked"
+failure S07 produced. `S08`'s walks stop at z≈1321 — the South Bridge line, for
+the third consecutive segment. **Its distance is not travel and contributes no
+§D total**, on the same grounds recorded in check-in 22.
+
+The 22: Band 4 regions never entered (`the_ironwood_grove`, `the_ridgeline_watch`),
+four flags never set (`defeated_captain_field`, `_ridge`, `_riverwatch`,
+`hall_approach_open`), two more objective-id failures, one
+`input_context=world (wanted combat_aim)`, and — new only in its wording — **three
+separate party-size failures reading 1 where 3, 4 and 5 were wanted**, because
+S08 is where the roster should reach five. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 4 unreachable.
+
+### Operator note on the remaining journey cost, stated rather than acted on
+
+S06–S08 have now spent **~2h 40m of container time** re-demonstrating one blocked
+crossing at three successive band targets, and S08 alone was 79 minutes. S09 and
+S10 will enter from `S08-exit`, which carries the same unset crossing, and are
+expected to produce the same result against Band 5 and the finale.
+
+**I am running them anyway.** §J is explicit that a failed step gets its verdict
+and the run continues where continuation is possible, and continuation is
+possible — every segment so far has handed off. **X08 was dropped by owner
+decision; dropping S09/S10 would be operator judgment substituting for it**, and
+§13 does not give me that. The cost is recorded here so the owner can make that
+call knowingly for a future run rather than discovering it afterwards.
+
+Worth stating alongside it: **the study lane is not affected by this block.** X07
+is `DIAG-` and teleport-sited, X01 is a menu/input matrix from `S03-exit` and
+`S08-exit`, X02 is a build lab. None of them need the crossing, so the run's
+highest-value remaining evidence — including its only real visual evidence — is
+still fully available.
+
+**Next:** S09, already launched.
+
+## Check-in 24 — 2026-08-27 — **S09: 63 PASS / 12 FAIL. Blocked crossing, fourth time — and a fourth distinct panel holding input.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S09/`. 3,373 route rows,
+1,795 s, exit save written. Same result as S06–S08: **11,771 m across 164
+distinct positions, peak dead-travel 0.0 m**, 721 rows on `(8,1317)`, regions
+`grandpas_village → corridor`. Its distance is not travel and contributes no
+§D total. All four failed walks stop at z≈1317–1319 against Band 5 targets at
+z≈7140–7595 — short by 5.8–6.3 km — with budgets up to **49,500 walking frames**
+spent. `6279.6 m from (150, 7595), wanted within 12.0`.
+
+### The one new thing: a fourth surface, same behaviour
+
+> `map did not open the pause shell: context build_catalogue -> build_catalogue (owner=@Canvas…)`
+
+`build_catalogue` holds **332 rows** and refuses the map, and a separate step
+reports `input_context=build_catalogue (wanted menu_save)`. That makes **four
+distinct surfaces** exhibiting the identical behaviour across the journey:
+
+| segment | surface holding input | wanted |
+|---|---|---|
+| S03 | `panel:SwapPanel` | `menu_build`, `build_placement`, `menu_backpack` |
+| S04 | `narrative_modal` (`owner=DialoguePanel`) | `combat`, `menu_save` |
+| S05, S07 | `menu_backpack` | `menu_save` |
+| **S09** | **`build_catalogue`** (`owner=@Canvas…`) | `menu_map`, `menu_save` |
+
+Recorded as an observation, not a diagnosis (§13). But four different surfaces,
+in four different segments, each holding ownership that the protocol expected to
+pass elsewhere, is a **class**, not four coincidences — and `4 × ui_down did not
+move focus off @Button@215786` here is the same focus-stuck report S04 and S06
+produced. **This is the run's central finding, and X01 is the segment built to
+corner it.**
+
+Remaining 12: the standing objective-id thread, party size 1 (wanted 5), one
+`input_context=world (wanted combat)`, and the `dead_travel peaked at 0.6 m …
+7,209.9 m walked` pair. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 5 unreachable.
+
+**Next:** S10, already launched — the last journey segment.
+
+## Check-in 25 — 2026-08-27 — **S10 in; the JOURNEY LANE (S01–S10) IS COMPLETE. 839 PASS / 202 FAIL.**
+
+Stage boundary. Evidence:
+`ralph/reports/gate-f-run-20260827T025303Z/S01…S10/`, every segment committed and
+pushed as it landed.
+
+### S10 — 89 PASS / 31 FAIL
+
+10,645 route rows, **5,539 s (92 min)**, 40,881 m by route deltas, 703 distinct
+positions, exit save written. **95% of its rows sit within 40 m of the bridge
+line**; top dwell `(8,1317)` at 1,011 rows. Region sequence
+`grandpas_village → corridor → grandpas_village`.
+
+The finale did not run: **seven flags never set** —
+`defeated_stronghold_patrol`, `_courtyard`, `_elite`, `defeated_warden`,
+`legendary_freed`, `legendary_settled`, `meadows_acknowledged`. Five more
+objective-id failures, four party-size failures reading 1 where 5 was wanted, two
+`input_context=world (wanted combat)`, one `menu_backpack` where `menu_save`
+wanted, one empty focus owner (`focus_owner= focus_text=`).
+
+Its peak dead-travel is **485.0 m**, which would be a §D finding — **but it is
+recorded as NOT contributing to any §D chapter total**, on the same grounds as
+S06–S09: the segment did not progress, and 95% of it is one pocket.
+**severity_candidate: BLOCKER**, candidate only.
+
+### The journey lane, whole
+
+| segment | PASS | FAIL | reached |
+|---|---|---|---|
+| S01 | 13 | 1 | title, New Game |
+| S02 | 68 | 7 | starter; **no first fight, no first catch** |
+| S03 | 210 | 64 | village; `SwapPanel` holds 83.9% |
+| S04 | 54 | 18 | tournament ground; **tournament never runs** |
+| S05 | 69 | 7 | **pond, South Bridge — the last real progress** |
+| S06 | 86 | 17 | corridor only |
+| S07 | 75 | 23 | corridor only |
+| S08 | 112 | 22 | corridor only |
+| S09 | 63 | 12 | corridor only |
+| S10 | 89 | 31 | corridor only |
+| **total** | **839** | **202** | **80.6% pass** |
+
+**Every segment ran and handed off. There was no §A BLOCKER at any point** — the
+chain is complete and resumable from any exit save.
+
+### What the 202 actually are
+
+Not 202 defects. They resolve to a small set:
+
+1. **Input ownership is taken and not passed on.** Four distinct surfaces, four
+   segments: `panel:SwapPanel` (S03), `narrative_modal`/`DialoguePanel` (S04),
+   `menu_backpack` (S05, S07, S10), `build_catalogue` (S09) — plus the same
+   focus-stuck report in S04, S06, S09 and an empty focus owner in S10. **The
+   run's central finding.**
+2. **No fight ever stages.** Zero `combat_*` events in **all ten** segments.
+   The party never exceeds 1. Every band's gate flags stay unset.
+3. **The South Bridge is never opened**, and from S06 on the chain re-runs that
+   one blocked crossing against successive band targets.
+4. **The objective-id naming question**, ~20 failures, all reading
+   `opening:beat:road`. One question, not twenty.
+
+### The §D position, stated honestly
+
+**Only S05 produced usable pacing evidence.** S06–S10 walked
+9.2 + 17.3 + 35.9 + 11.8 + 40.9 km — **115 km between them** — across 164–703
+distinct positions each, with peak dead-travel of 0.0–0.6 m in three of them.
+**That distance is retry churn, not travel, and no §D chapter total may be built
+from it.** A chapter-time projection against the 3–4 h D42 target is
+**not available from this run** and must not be inferred from elapsed wall clock.
+
+Confirmed §D findings, S05 only: **one interval ≥250 m (329.8 m)**, zero watch
+items — and carrying the caveat from check-in 21 that its nearest-POI minimum was
+30.2 m against a 30 m reset radius.
+
+**Next stage:** X01–X07. **X08 stays dropped** (owner decision). X01 first — it is
+the (control, context) exhaustion matrix, and finding 1 above is exactly what it
+exists to characterise. None of the study segments need the crossing.
+
+## Check-in 26 — 2026-08-27 — **X01: 1085 PASS / 118 FAIL over 975 probes. The journey's four-surface finding is now a characterised class.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X01/`. 1,105 s, **975
+`input_probe` events** — the (control, context) matrix ran in full.
+
+### The headline is a rate, not a catastrophe
+
+**118 failures against 975 probed cells — 87.9% of the matrix behaves.** Input
+routing is *not* broadly broken; the defect is concentrated and nameable. That
+correction matters: the journey lane, where four surfaces each swallowed a
+segment, invites "input is broken", and the matrix says otherwise.
+
+| category | count |
+|---|---|
+| a context refused to change | **75** |
+| the pause shell would not open | **21** |
+| focus owner empty (`focus_owner= focus_text=`) | **10** |
+| `menu_cancel` left the shell open | **6** |
+| focus would not move (`ui_up`/`ui_down`, **up to 130 presses**) | 5 |
+| `locomotion never came back: held 3601 fr` | 1 |
+
+### The 30 distinct failing transitions — the deliverable for Phase B
+
+```
+ 8x menu_map        -> world          3x menu_save      -> menu_settings
+ 7x narrative_modal -> world          2x menu_backpack  -> menu_creatures
+ 6x combat          -> menu           2x menu_build     -> menu_creatures
+ 5x narrative_modal -> menu_backpack  2x menu_map       -> menu_build
+ 5x narrative_modal -> panel          2x menu_settings  -> menu_build
+ 4x menu_creatures  -> menu_quest_log 2x menu_map       -> menu_save
+ 4x world           -> combat         1x narrative_modal-> menu
+ 3x menu_save       -> menu_quest_log 1x menu_map       -> menu_creatures
+ 3x menu_backpack   -> menu_save      1x menu_quest_log -> menu_creatures
+ 3x menu_backpack   -> menu_settings  1x menu_settings  -> menu_creatures
+ … and 10 more, each 1x (build_catalogue -> build_placement,
+   menu_map -> combat_aim, menu_creatures -> world, etc.)
+```
+
+Three families are visible in that table, recorded as grouping only (§13):
+
+1. **Exits to `world` fail — 16 of the 75.** `menu_map → world` (8),
+   `narrative_modal → world` (7), `menu_creatures → world` (1). A surface that
+   will not hand control back is precisely what S03, S04, S05/S07 and S09 each
+   showed once; here it is 16 times across three surfaces.
+2. **`narrative_modal → anything` fails — 19 of the 75**, plus 10 of the 21
+   shell-open refusals name `owner=DialoguePanel`. S04's tournament died on
+   exactly this.
+3. **Tab-to-tab inside the pause shell — the largest family.** Note the harness's
+   own authored observation at `S03-109`: *"the pause shell REOPENS ON THE LAST
+   TAB USED."* Every one of these failures reports arriving at *some* tab, just
+   not the requested one. Whether that documented behaviour and this failure
+   family are the same thing is **Phase B's call, not mine** — but they must be
+   read together, and a reader who assesses the tab failures without that note
+   will over-count them.
+
+### What X01 adds that the journey could not
+
+The journey showed four surfaces failing once each and could not say whether that
+was four bugs or one. **X01 says: it is one behaviour, reproducible across 30
+transition pairs and 6 surfaces, at a 12.1% cell failure rate, and it is
+specifically about *leaving* a context rather than entering one.** `world →
+combat` failing 4× is the same shape seen from the other side — and it is the
+matrix explanation for "zero `combat_*` events in all ten journey segments".
+
+**severity_candidate: BLOCKER** — candidate only, Fable rules in Phase B.
+
+**Next:** X07, already launched **in capture mode** — the run's only real visual
+evidence. The colour spot-check is mandatory before any frame from it is trusted.
+
+## Check-in 27 — 2026-08-27 — **SCOPE CHANGE: X08 is REINSTATED by the owner.**
+
+Recorded separately from any segment result so the change is timestamped and
+auditable rather than appearing silently inside a later commit.
+
+**X08 was dropped by owner decision**, carried into this run from
+`GATE_F_HANDOVER_2026-08-26_EVENING.md` §7 and written into this run's freeze
+record (`segments_planned.dropped: ["X08"]`, with a note that no performance
+claim would be sourced from elsewhere to substitute for it).
+
+**The owner has now reversed that**, instructing this lane to run X08 along with
+X02–X06. The owner may change an owner decision; the operator records it and
+complies. `ralph/reports/gate-f-candidate/RUN_METADATA.json` is updated so the
+freeze record does not keep asserting a drop that is no longer true.
+
+### What X08 may and may not produce — unchanged by the reinstatement
+
+§K.1 and §0.4 are **not** relaxed by running the segment. On this container X08
+can honestly produce:
+
+- **CPU** frame/physics time and directly-timed subsystem costs;
+- draw calls / primitives **under this render mode**;
+- placement and instance counts;
+- boot / save / load / transition durations.
+
+It **cannot** produce, and this operator will not record: **device frame rate,
+GPU frame time, VRAM, thermals, battery**. Those remain **[OWNER-ONLY]** on a
+software-rasterised Linux container, and any number resembling them in X08's
+output is a property of llvmpipe, not of the ROG Ally.
+
+The existing measurement that bounds what X08's numbers mean here: capture mode
+on the full Meadows runs at **~3,400 ms/frame (0.29 FPS)** on this box
+(check-in 8). That is the instrument's floor, not the game's performance.
+
+**Revised remaining plan:** X07 (finishing) → X02 → X03 → X04 → X05 → X06 → X08.
+
+## Check-in 28 — 2026-08-27 — **X07: 79 of 80 frames captured and COLOUR-VERIFIED CLEAN. Segment stopped as a BLOCKER at ~31 h remaining cost.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X07/`, with
+`WHY_INCOMPLETE.md` beside it. Ran **3 h 05 m**, stopped at step 184 of 266.
+Nothing deleted.
+
+### The result that matters: the colour artefact does NOT affect X07
+
+The handover's §5 warning was mandatory and is now **discharged with a
+measurement over all 79 frames**, not a spot-check of two:
+
+| check | result |
+|---|---|
+| step change after frame 1 | **none** — frame 1 R/B **1.279**, frame 79 **0.694** |
+| any frame in the 2.9–3.9 artefact band | **none** — max **2.154** |
+| distribution | min 0.614, p25 0.943, median **1.044**, p75 1.135 |
+| 18 frames after the highest reading | mean **1.055** |
+
+The one elevated cluster (1.425 / 2.154 / 1.964) is confined to
+**`the_ridgeline_watch`** and recovers on the very next region
+(`stronghold_approach`, 1.042). A process-position artefact would shift every
+frame after the first **and stay shifted**; this recovers immediately and stays
+recovered. **X07's capture path does not hit it** — the question §5 explicitly
+left "untested" is now answered, and these frames are usable as colour evidence.
+
+Recorded as an observation for the visual judge, **not** as a defect:
+`the_ridgeline_watch` reads distinctly warmer than its neighbours (R/B 1.14–2.15
+against ~1.04). That may be intended — a dry ridge, a pinned hour. It is a thing
+to look at.
+
+### Why the segment was stopped
+
+`operator_harness.gd:622` prices `wait` in **physics frames**:
+`frames = seconds × 60`. In capture mode each is a rendered 1920×1080 llvmpipe
+frame, and **this segment's own telemetry measures that frame at a mean of
+9,416 ms** (recent rows 10,426–10,698 ms, max 21,714 ms — **~0.095 FPS**).
+
+So one `wait 90 seconds` step costs **≈15.75 hours**. Two remained —
+`X07-184` (running at the stop) and `X07-188` — **≈31 hours** to obtain one more
+frame (`GF-14-COMBAT-13-weather`) and the verdict file. Stopped under §A:
+evidence preserved, BLOCKER reported, run continues.
+
+**It was a cost blocker, not a hang** — the process was alive and advancing the
+whole time. `notes/` is empty because verdicts are written at a segment end never
+reached, the same mechanism that emptied `S01-superseded-1/notes/`.
+
+**The 9,416 ms is not a game performance number.** It is llvmpipe with no GPU on
+762,058 props; device frame rate stays **[OWNER-ONLY]** (§K.1). Scale: check-in 8
+measured ~3,400 ms/frame in this mode at **466,922** props — the cost has risen
+~3× with the grass consolidation, which is why the capture-mode ban on the
+journey (check-in 8) was even more right than when it was made.
+
+**Lesson for a successor, and the reason `WHY_INCOMPLETE.md` exists:** a
+capture-mode segment carrying `wait` steps measured in tens of seconds **cannot
+finish on this box**. Price waits against the renderer before launching, or run
+the capture batch on hardware with a GPU. The waits should not be shortened —
+they exist so fights resolve. **`tools/gate_f/**` is frozen and was not
+modified** (§13).
+
+**Next:** X02, already launched. Then X03, X04, X05, X06, X08.
+
+## Check-in 29 — 2026-08-27 — **X02: 149 PASS / 21 FAIL. The build lab builds nothing, and focus will not move right.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/X02/`. Logic mode.
+
+### The census, in the segment whose whole subject is building
+
+```
+catch_result: 1  flag_set: 1  load: 2   menu_close: 6  menu_open: 7
+note: 190        region_enter: 4        screenshot: 8  tab_change: 7
+```
+
+**No `build_place`, no `build_cancel`, no `build_dismantle`, no `craft`, no
+`gather`.** §B gives X02 "2×2 enclosed structure, dismantle, refunds"; §E.3 is the
+build/craft/gather study. None of those verbs emitted an event.
+
+### A new member of the focus family — and it is the largest cluster here
+
+**Seven failures, each a different button, all `ui_right`:**
+
+```
+6 x ui_right did not move focus off @Button@69828
+5 x ui_right did not move focus off @Button@69165
+4 x ui_right did not move focus off @Button@67430
+3 x ui_right did not move focus off @Button@66884
+2 x ui_right did not move focus off @Button@66401
+2 x ui_right did not move focus off @Button@65918
+2 x ui_right did not move focus off @Button@65444
+```
+
+Note the shape: the harness escalates its press count (2, 2, 2, 3, 4, 5, 6) and
+focus still does not move. This is the same family as `ui_down`/`ui_up` failures
+in S04, S06, S09 and X01 (where one cell took **130** presses without moving),
+but here it is **horizontal traversal inside the build catalogue**, across seven
+distinct buttons.
+
+Recorded as an observation (§13): §0.1's standing rule is that UI focus
+navigation must use `parse_input_event`, and the harness sends both that and the
+action press — so this is not the poll-only mistake §8 warns about. The presses
+reach the game and focus does not move.
+
+### The rest of the 21
+
+The familiar ownership class: `build_catalogue → build_placement` (2),
+`menu_backpack → world` (2), `world → panel` (2), `menu_save → menu_build`,
+`menu_backpack → menu_settings`, and one `menu_cancel left the shell open`. Plus
+one walk failure — `did not reach (-342, 507) … stopped 659.1 m short at
+(43, -4, -28)` in 2,400 frames.
+
+**severity_candidate: BLOCKER** — candidate only. §E.3's build study produced no
+build events.
+
+**Next:** X03 (catch lab), already launched. Then X04, X05, X06, X08.
+
+## Check-in 30 — 2026-08-27 — **STOOD DOWN on the coordinator's order. And CD-2 is wrong: the 79 X07 frames exist, and are now recovered.**
+
+Stop order received 13:43Z. **No segments started after it.** X03 had already
+completed. X04, X05, X06, X08 never started. Everything pushed to
+`ralph/GATE-F-RUN-20260827` through `72922aff`. Handover at
+`ralph/reports/GATE_F_OPERATOR_STANDDOWN_2026-08-27.md`.
+
+### The correction, because the rig lane is about to act on it
+
+CD-2: *"no `shots/` directory exists anywhere in the run, and git has never
+carried one"* → X07's 79 artefacts *"do not exist on disk."*
+
+**`shots/` exists in every segment. X07's held 79 real 1920×1080 PNGs, ~1.5 MB
+each, 134 MB.** I read their pixels — check-in 28's colour verification was a
+from-scratch PNG decode over all 79, not a manifest read.
+
+git carried none of them, and the cause is one line:
+
+```
+$ git check-ignore -v .../X07/shots/GF-14-COMBAT-13b.png
+.gitignore:34:shots/	.../X07/shots/GF-14-COMBAT-13b.png
+```
+
+`.gitignore:34` is a bare **`shots/`** written for `tools/survey.sh` output. **A
+bare directory pattern matches at any depth**, so it swallows every Gate F
+segment's `shots/` — this run and every previous one. And `git add <dir>` skips
+ignored contents **silently**, which is how fourteen per-segment commits looked
+clean while the frames stayed behind.
+
+**Recovered in `89c87b56` via `git add -f`.** I did **not** edit `.gitignore`:
+that is a repo change and belongs to the rig lane (§13).
+
+Phase B read the repository, saw no frames, and reasonably concluded none were
+produced. **Reading the container instead reverses that.** The capture path
+worked: 79 of 80 planned frames at the requested 1920×1080, no fallback, and the
+hue-rotation artefact demonstrably absent.
+
+### Where CD-1 is right, stated plainly
+
+Its mechanism holds and its core criticism is correct: **a capture step that
+cannot produce its evidence returned PASS.** The `file: null` row is
+§C.4-compliant — an absent frame is evidence — but the **PASS verdict on top of
+it** asserts a success that did not happen. `SKIPPED`/`N/A` would carry the same
+information honestly.
+
+The framing needs one correction: the journey ran logic mode **by a recorded
+operator decision** (check-in 8, restated 16 and 26), not by a missing
+invocation. `run_segment.sh` applies xvfb only in capture mode (`:192` smoke,
+`:241` segment); logic mode is deliberately `--headless` with no driver, because
+`--headless` **with** a driver hangs forever. X07 *did* run under xvfb, and its
+`CAPTURE_RESOLUTION.json` records the smoke passing at 1920×1080.
+
+### Final state
+
+**2205 PASS / 373 FAIL** across the 13 segments that wrote verdicts, plus X07
+stopped at step 184/266 with 79/80 frames.
+
+Not run: **X04, X05, X06, X08.** X08 was dropped by owner decision, reinstated by
+the owner earlier today (check-in 27), then overtaken by the stop order.
+
+I did not fix the rig, modify the harness, or touch `.gitignore`. Standing down.

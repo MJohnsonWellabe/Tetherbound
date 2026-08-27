@@ -1,0 +1,7 @@
+{
+  "requested": [1920, 1080],
+  "used": [1920, 1080],
+  "substituted": false,
+  "why": "capture smoke passed at the requested size",
+  "smoke": "capture_smoke.png"
+}
