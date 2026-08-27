@@ -170,6 +170,11 @@ const HOTBAR_MESSAGE_SECONDS := 2.2
 ## `_hotbar_message` above just with a longer hold -- a location card is meant
 ## to be noticed, not glanced at.
 const REGION_BANNER_SECONDS := 3.2
+## The banner's own slot, lifted out of `_build_region_banner()`'s inline
+## offsets so `_build_objective_hint_card()` can place itself under the banner
+## rather than at a hand-tuned y that would silently stop being under it.
+const REGION_BANNER_TOP := 120.0
+const REGION_BANNER_HEIGHT := 48.0
 
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
@@ -304,6 +309,95 @@ const OBJECTIVE_BLOCK_HEIGHT := 170.0
 ## bearing to read as touching. Not yet clipping today, but one longer quest
 ## string away from it.
 const OBJECTIVE_INSET := 20.0
+
+## OBJECTIVE-HINT-ON-HUD (`HIST-036`, OP23-04 / OP23-09) -- the objective card.
+##
+## WHY THIS IS NOT A SECOND LINE IN THE OBJECTIVE BLOCK, which is the obvious
+## place and the one the backlog assumed. `tools/_probe_objective_hint_height.gd`
+## measures all 13 authored hints through `quest_log.gd::hint_text()` at the
+## block's real inner width and font, and the backlog's estimate was optimistic:
+##
+##   inner 380, font 38 (the block today)  worst hint 318 px, 6 lines
+##   inner 380, font 35 (legibility floor) worst hint 294 px
+##   inner 544, font 38 (widened to the central third's edge) worst 265 px
+##   inner 544, font 35 (both levers at once)                 worst 196 px
+##
+## The block's own top edge is fixed under the minimap at y 310 and the bottom
+## dock begins at y 620, so 310 px is every pixel that exists there -- and the
+## tracked line the hint stacks under is itself up to 159 px of that. Even both
+## levers pulled at once (a wider block AND text at the smallest size this HUD
+## is allowed to draw) overflows into the hotbar. There is no version of "under
+## the objective" that fits, which is why this ships as a card instead of as
+## the one-line change it looks like.
+##
+##   inner 800, font 38   worst hint 159 px
+##   inner 1100, font 38  worst hint 106 px -- every hint, 2 lines, no
+##                        font compromise and nothing shortened
+##
+## So the hint gets width instead of height, as a centred timed card.
+## `smoke_prompt_hotbar_dock.gd`'s own rule is what makes the position legal: "persistent inventory shortcuts may
+## frame that lane, but must not cover it; contextual prompts intentionally
+## remain centred" -- this is contextual and transient, the same standing the
+## region banner a few functions down already has.
+## WIDTH IS THE CENTRE GUTTER, not a taste call, and it is the tighter of the
+## two constraints on this card. Both HUD columns run the full height of the
+## screen -- the left one is the party strip (rows 420 wide from
+## `CREATURE_BLOCK_X` 56) or the creature panel standing in its place (real
+## measured width 435, i.e. out to x 491); the right one is the minimap and the
+## objective block, whose left edge is `1920 - HUD_INSET - OBJECTIVE_MAX_WIDTH`
+## = x 1444. So a centred card clears both only up to
+## 2 x (min(960 - 496, 1444 - 960) - GAP) = 900. A first render at 1140 -- the
+## width the hint measurements alone wanted -- put the card's corner straight
+## over the objective block's plate, which is the compositing defect this HUD
+## keeps having, so the gutter wins and the hint wraps to four lines instead of
+## two.
+const OBJECTIVE_HINT_CARD_WIDTH := 900.0
+## `UITokens.panel_box()`'s own content margin. The card is one paragraph on a
+## plate; there is nothing inside it that needs the objective block's roomier
+## `OBJECTIVE_INSET`, and at four lines of hint the band below has no 8px to
+## spare on padding.
+const OBJECTIVE_HINT_CARD_INSET := 16.0
+## Placed off `_build_region_banner()`'s own bottom edge rather than at a hand
+## tuned y, so a region announcement and an objective card can be up together
+## -- entering a region is exactly the moment an objective is likely to advance
+## -- and neither can be moved into the other by editing one of them. Small,
+## because the band below is tight and two centred transient cards stacked
+## close read as one column rather than as two floating boxes.
+const OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER := 10.0
+
+## WHY THE CARD CARRIES THE HINT ALONE, and not the tracked line above it.
+## Measured, not assumed. The band this card lives in is bounded above by the
+## region banner's bottom (y 168) and below by the top of the bottom dock --
+## which is NOT the dock's y 620 anchor: the dock is a bottom-aligned VBox and
+## grows upward, and `smoke_prompt_hotbar_dock.gd`'s own worst case (hotbar
+## message showing AND a wrapped two-line prompt) puts the hotbar panel's top
+## edge at y 388. So the real band is 220 px.
+##
+## In the gutter the worst authored hint wraps to four lines (159 px) at this
+## HUD's readable font, and to four lines at the legibility floor too, so the
+## smaller font buys nothing and is not taken. That makes the card 191 px into
+## a 220 px band. Adding the tracked line above it costs another 63 px and does
+## not fit at all. The tracked line is on screen in the objective block at the
+## same moment anyway, having just changed, and every authored hint is a
+## complete self-contained sentence naming its own subject ("The old key lies
+## in the grass a few steps off the road..."), so the card loses nothing by not
+## repeating it.
+##
+## The clearance that leaves is about 19 px, against an adversarial dock state.
+## That is thin, and it is why `smoke_objective_hint_card.gd` measures every
+## authored hint against every other HUD widget's live rect rather than
+## trusting these numbers: a longer hint authored later fails that test loudly
+## instead of landing on the hotbar in someone's playtest.
+
+## How long a revealed card stays up: a fixed acquisition cost plus real
+## reading time. 200 wpm is the low end of comfortable adult prose reading,
+## which is the right end to size a game HUD from, and the seconds in front of
+## it are the glance -- the player has to notice the card before they start
+## reading it. Per-hint rather than a constant, because a window long enough
+## for the opening's 21-word key-and-gate hint would leave a 9-word one sitting
+## on screen well after it had been read.
+const OBJECTIVE_HINT_SECONDS_BASE := 2.5
+const OBJECTIVE_HINT_SECONDS_PER_WORD := 0.3
 
 ## OP21-11: the owner's own words were "should sit under the hotbar" — moved
 ## from RG3's original upper-left placement into `Root/BottomDock`'s
@@ -502,6 +596,21 @@ var _objective_eyebrow_label: Label = null
 ## no objective left to track. See that function's own comment.
 var _objective_block: Control = null
 var _objective_last_text := ""
+## The block's backing panel. Held as a field because it is the visible edge --
+## `_update_objective()`'s own comment already notes that the panel, not the
+## text, is what the player sees -- and `_layout_objective_block()` has to
+## resize it with the block whenever the tracked line rewraps.
+var _objective_backing: PanelContainer = null
+
+## OBJECTIVE-HINT-ON-HUD. The card, its label, its backing plate and its reveal
+## deadline -- the deadline in the same `Time.get_ticks_msec()` seconds
+## `_region_banner_until` already uses, because this HUD already had a
+## timed-reveal idiom and a second one for the same job would be worse than a
+## shared one. 0.0 means "not revealed" and the card is hidden.
+var _objective_hint_card: Control = null
+var _objective_hint_card_backing: PanelContainer = null
+var _objective_hint_label: Label = null
+var _objective_hint_until := 0.0
 
 ## --- region banner ---------------------------------------------------------------
 
@@ -551,6 +660,7 @@ func _ready() -> void:
 	_mount_stamina_arc()
 	_mount_minimap()
 	_build_objective_block()
+	_build_objective_hint_card()
 	_build_region_banner()
 	_build_exploration_legend()
 	_style_hotbar()
@@ -1749,6 +1859,7 @@ func _build_objective_block() -> void:
 	backing.size = block.size
 	backing.add_theme_stylebox_override("panel", UITokens.panel_box())
 	block.add_child(backing)
+	_objective_backing = backing
 
 	var eyebrow := Label.new()
 	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1809,7 +1920,7 @@ func _build_objective_block() -> void:
 ## moving 3D background to check it against.
 func _strengthen_objective_contrast() -> void:
 	var wide_outline := int(round(UITokens.OUTLINE_SIZE * 1.5))
-	for label in [_objective_eyebrow_label, _objective_text_label]:
+	for label in [_objective_eyebrow_label, _objective_text_label, _objective_hint_label]:
 		if label == null:
 			continue
 		label.add_theme_constant_override("outline_size", wide_outline)
@@ -1836,14 +1947,182 @@ func _soften_vitals_contrast() -> void:
 		label.add_theme_constant_override("shadow_offset_y", 0)
 
 
+## Size the objective block's plate to the tracked line it actually holds.
+##
+## FOUND WHILE MEASURING `HIST-036`, not looked for, and a defect in its own
+## right. `OBJECTIVE_BLOCK_HEIGHT` is a fixed 170, which leaves 94px of interior
+## for the tracked line -- and four authored lines wrap past that, the longest
+## ("Build a Creature Bed for each of your entrants. 0/3") to 165px. A `Label`
+## does not clip by default, so the overflow drew straight out through the
+## bottom of `_build_objective_block()`'s backing plate and onto the terrain:
+## a 51px spill, measured, and precisely the "floating on sky and terrain, one
+## lighting change from vanishing" failure HUD-POPUP added that plate to fix.
+##
+## This adds no occupied pixels to the HUD -- the text was already drawn there;
+## only the plate behind it was missing. `OBJECTIVE_BLOCK_HEIGHT` remains the
+## floor and the block is that height exactly for every line that fits, which
+## is what the `maxf` says.
+##
+## Called on objective change rather than every frame: measuring a wrapped
+## label shapes its text, and this panel changes about twenty-five times in a
+## chapter.
+func _layout_objective_block() -> void:
+	if _objective_block == null or _objective_text_label == null:
+		return
+	var inner_width := OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0
+	var text_top := 36.0 + OBJECTIVE_INSET
+	var text_floor := OBJECTIVE_BLOCK_HEIGHT - 36.0 - OBJECTIVE_INSET * 2.0
+
+	_objective_text_label.size.x = inner_width
+	var text_height := maxf(text_floor, _wrapped_height(_objective_text_label))
+	_objective_text_label.size = Vector2(inner_width, text_height)
+
+	var height := maxf(OBJECTIVE_BLOCK_HEIGHT, text_top + text_height + OBJECTIVE_INSET)
+	_objective_block.size = Vector2(OBJECTIVE_MAX_WIDTH, height)
+	if _objective_backing != null:
+		_objective_backing.size = _objective_block.size
+
+
+## A wrapped `Label`'s real height at its current width.
+##
+## `Label` has no `get_content_height()` in Godot 4.7 -- that is
+## `RichTextLabel`'s, and reaching for it here parses but fails at runtime.
+## Lines x line height is the number, and it is only correct once the label's
+## `size.x` is already the width it will wrap at, so every caller sets that
+## first.
+func _wrapped_height(label: Label) -> float:
+	if label == null:
+		return 0.0
+	return float(label.get_line_count()) * float(label.get_line_height())
+
+
+## OBJECTIVE-HINT-ON-HUD (`HIST-036`, OP23-04 / OP23-09). The card that finally
+## draws `quest_log.gd::tracked_hint()`, which has been written and tested since
+## OP23-04 with nothing rendering it.
+##
+## See `OBJECTIVE_HINT_CARD_WIDTH`'s header for the measurement that put the
+## hint here instead of under the objective block, which is where the backlog
+## expected it and where it does not fit at any width or font size the HUD
+## allows. Nothing is shortened -- the backlog names shortening the hints as
+## explicitly not the fix, because the teaching is the point of them.
+##
+## Built hidden and sized on reveal: the label wraps against real text, so
+## there is no correct height until there is text.
+func _build_objective_hint_card() -> void:
+	var card := Control.new()
+	card.name = "ObjectiveHintCard"
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.visible = false
+	# `_build_region_banner()` runs after this one, so the banner's own bottom
+	# is read from its authored offset rather than from a node that does not
+	# exist yet. `_region_banner_bottom()` is the one place that knows it.
+	card.position = Vector2(
+		(1920.0 - OBJECTIVE_HINT_CARD_WIDTH) * 0.5,
+		_region_banner_bottom() + OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER
+	)
+	card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, 0.0)
+	_root.add_child(card)
+	_objective_hint_card = card
+
+	var backing := PanelContainer.new()
+	backing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backing.position = Vector2.ZERO
+	backing.add_theme_stylebox_override("panel", UITokens.panel_box())
+	card.add_child(backing)
+	_objective_hint_card_backing = backing
+
+	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+
+	_objective_hint_label = Label.new()
+	_objective_hint_label.name = "CardHint"
+	_objective_hint_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_objective_hint_label.position = Vector2(
+		OBJECTIVE_HINT_CARD_INSET, OBJECTIVE_HINT_CARD_INSET
+	)
+	_objective_hint_label.size = Vector2(inner, 0.0)
+	_objective_hint_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	# `TEXT_PRIMARY` and centred. The card holds one thing and holds it for a
+	# few seconds, so there is no hierarchy inside it to express and nothing to
+	# step down from -- and HUD-EMPHASIS already had to move the objective
+	# block's eyebrow OFF the quieter colours after a blind critic read them as
+	# vanishing against a moving 3D backdrop, which is exactly the background
+	# this card sits on.
+	_objective_hint_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_objective_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_objective_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	card.add_child(_objective_hint_label)
+
+
+## The bottom edge of `_build_region_banner()`'s slot, in authored canvas
+## coordinates. Read off the same offsets that function sets, so the card
+## under it cannot drift if the banner is ever moved.
+func _region_banner_bottom() -> float:
+	return REGION_BANNER_TOP + REGION_BANNER_HEIGHT
+
+
+## Show the card for this rung, or take it down if the rung authors no hint.
+##
+## Duration is per-hint; see the two `OBJECTIVE_HINT_SECONDS_*` constants.
+##
+## REVEALING ON WORLD ENTRY IS WANTED, and is worth saying out loud because the
+## HUD is rebuilt with `_objective_last_text` empty every time the world scene
+## mounts, so the first poll always looks like a change. `GF-B-006` had to fix
+## the mirror image of this on the party strip -- a first-poll reveal of an
+## EMPTY roster -- and the difference is the content: a player who has just
+## loaded into their current rung is exactly the player who needs to be told
+## how to finish it. An empty hint reveals nothing either way, which is every
+## beat past tournament entry: OP23-04's directive authors `how` for the
+## opening ladder only.
+func _reveal_objective_hint(hint: String) -> void:
+	if _objective_hint_card == null:
+		return
+	if hint.strip_edges().is_empty():
+		_hide_objective_hint_card()
+		return
+
+	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	_objective_hint_label.text = hint
+	_objective_hint_label.size.x = inner
+	_objective_hint_label.size = Vector2(inner, _wrapped_height(_objective_hint_label))
+
+	var height := OBJECTIVE_HINT_CARD_INSET * 2.0 + _objective_hint_label.size.y
+	_objective_hint_card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, height)
+	_objective_hint_card_backing.size = _objective_hint_card.size
+	_objective_hint_card.visible = true
+
+	var words := hint.split(" ", false).size()
+	var seconds := OBJECTIVE_HINT_SECONDS_BASE + float(words) * OBJECTIVE_HINT_SECONDS_PER_WORD
+	_objective_hint_until = Time.get_ticks_msec() / 1000.0 + seconds
+
+
+func _hide_objective_hint_card() -> void:
+	_objective_hint_until = 0.0
+	if _objective_hint_card != null:
+		_objective_hint_card.visible = false
+
+
+## The reveal's own clock. Split from `_update_objective()` because that
+## function returns early on the (overwhelmingly common) frame where the
+## objective has not changed, which is every frame a reveal is actually
+## counting down through.
+func _tick_objective_hint() -> void:
+	if _objective_hint_until <= 0.0:
+		return
+	if Time.get_ticks_msec() / 1000.0 < _objective_hint_until:
+		return
+	_hide_objective_hint_card()
+
+
 func _update_objective() -> void:
 	if _game == null:
 		return
 	var text := str(_game.get("objective_text"))
 	if text == _objective_last_text:
+		_tick_objective_hint()
 		return
 	_objective_last_text = text
 	_objective_text_label.text = text
+	_reveal_objective_hint(str(_game.get("objective_hint")))
 	# An empty tracked line means there is no objective, and a panel is not the
 	# way to say that. `quest_log.gd` returns "" once every `main` entry's flag
 	# is set -- which is the state the chapter ENDS in, after the legendary
@@ -1855,6 +2134,7 @@ func _update_objective() -> void:
 	# Hidden rather than emptied, because the backing panel is the visible part.
 	if _objective_block != null:
 		_objective_block.visible = not text.strip_edges().is_empty()
+	_layout_objective_block()
 
 
 # --- region banner ---------------------------------------------------------------
@@ -1873,8 +2153,8 @@ func _build_region_banner() -> void:
 	_region_banner.anchor_right = 0.5
 	_region_banner.offset_left = -400.0
 	_region_banner.offset_right = 400.0
-	_region_banner.offset_top = 120.0
-	_region_banner.offset_bottom = 168.0
+	_region_banner.offset_top = REGION_BANNER_TOP
+	_region_banner.offset_bottom = REGION_BANNER_TOP + REGION_BANNER_HEIGHT
 	_region_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_region_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_region_banner.add_theme_font_size_override("font_size", 40)
