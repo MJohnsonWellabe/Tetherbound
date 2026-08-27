@@ -2409,3 +2409,80 @@ Remaining 12: the standing objective-id thread, party size 1 (wanted 5), one
 **severity_candidate: BLOCKER** — candidate only. Band 5 unreachable.
 
 **Next:** S10, already launched — the last journey segment.
+
+## Check-in 25 — 2026-08-27 — **S10 in; the JOURNEY LANE (S01–S10) IS COMPLETE. 839 PASS / 202 FAIL.**
+
+Stage boundary. Evidence:
+`ralph/reports/gate-f-run-20260827T025303Z/S01…S10/`, every segment committed and
+pushed as it landed.
+
+### S10 — 89 PASS / 31 FAIL
+
+10,645 route rows, **5,539 s (92 min)**, 40,881 m by route deltas, 703 distinct
+positions, exit save written. **95% of its rows sit within 40 m of the bridge
+line**; top dwell `(8,1317)` at 1,011 rows. Region sequence
+`grandpas_village → corridor → grandpas_village`.
+
+The finale did not run: **seven flags never set** —
+`defeated_stronghold_patrol`, `_courtyard`, `_elite`, `defeated_warden`,
+`legendary_freed`, `legendary_settled`, `meadows_acknowledged`. Five more
+objective-id failures, four party-size failures reading 1 where 5 was wanted, two
+`input_context=world (wanted combat)`, one `menu_backpack` where `menu_save`
+wanted, one empty focus owner (`focus_owner= focus_text=`).
+
+Its peak dead-travel is **485.0 m**, which would be a §D finding — **but it is
+recorded as NOT contributing to any §D chapter total**, on the same grounds as
+S06–S09: the segment did not progress, and 95% of it is one pocket.
+**severity_candidate: BLOCKER**, candidate only.
+
+### The journey lane, whole
+
+| segment | PASS | FAIL | reached |
+|---|---|---|---|
+| S01 | 13 | 1 | title, New Game |
+| S02 | 68 | 7 | starter; **no first fight, no first catch** |
+| S03 | 210 | 64 | village; `SwapPanel` holds 83.9% |
+| S04 | 54 | 18 | tournament ground; **tournament never runs** |
+| S05 | 69 | 7 | **pond, South Bridge — the last real progress** |
+| S06 | 86 | 17 | corridor only |
+| S07 | 75 | 23 | corridor only |
+| S08 | 112 | 22 | corridor only |
+| S09 | 63 | 12 | corridor only |
+| S10 | 89 | 31 | corridor only |
+| **total** | **839** | **202** | **80.6% pass** |
+
+**Every segment ran and handed off. There was no §A BLOCKER at any point** — the
+chain is complete and resumable from any exit save.
+
+### What the 202 actually are
+
+Not 202 defects. They resolve to a small set:
+
+1. **Input ownership is taken and not passed on.** Four distinct surfaces, four
+   segments: `panel:SwapPanel` (S03), `narrative_modal`/`DialoguePanel` (S04),
+   `menu_backpack` (S05, S07, S10), `build_catalogue` (S09) — plus the same
+   focus-stuck report in S04, S06, S09 and an empty focus owner in S10. **The
+   run's central finding.**
+2. **No fight ever stages.** Zero `combat_*` events in **all ten** segments.
+   The party never exceeds 1. Every band's gate flags stay unset.
+3. **The South Bridge is never opened**, and from S06 on the chain re-runs that
+   one blocked crossing against successive band targets.
+4. **The objective-id naming question**, ~20 failures, all reading
+   `opening:beat:road`. One question, not twenty.
+
+### The §D position, stated honestly
+
+**Only S05 produced usable pacing evidence.** S06–S10 walked
+9.2 + 17.3 + 35.9 + 11.8 + 40.9 km — **115 km between them** — across 164–703
+distinct positions each, with peak dead-travel of 0.0–0.6 m in three of them.
+**That distance is retry churn, not travel, and no §D chapter total may be built
+from it.** A chapter-time projection against the 3–4 h D42 target is
+**not available from this run** and must not be inferred from elapsed wall clock.
+
+Confirmed §D findings, S05 only: **one interval ≥250 m (329.8 m)**, zero watch
+items — and carrying the caveat from check-in 21 that its nearest-POI minimum was
+30.2 m against a 30 m reset radius.
+
+**Next stage:** X01–X07. **X08 stays dropped** (owner decision). X01 first — it is
+the (control, context) exhaustion matrix, and finding 1 above is exactly what it
+exists to characterise. None of the study segments need the crossing.
