@@ -225,6 +225,66 @@ of having one.
 
 ---
 
+## Finding 7 — two things `interact_with` caught that were not game defects
+
+Both worth recording, because both are the shape a blunter instrument would
+have filed as findings about the game.
+
+**The segment author asked to stand out of reach.** `SC-R-15` walked to within
+2.5 m of a harvest node and pressed. `harvest_node.gd` configures its
+`Interactable` at a **2.4 m** radius from a prompt node sitting 0.6 m above the
+node's origin, so 2.5 m in 3D is outside the game's own reach. `interact_with`
+refused rather than pressing into nothing, and named the distance. The fix was
+in the segment (`within: 1.5`), not in the game — which is `interact_with`
+earning its keep on the *transcriber* rather than on the build.
+
+**A live prompt whose press does nothing observable.** With `within: 1.5` the
+prompt is live — *"Strip meadow grass"* — the press reaches its provider, and
+nothing changes: no context, focus, satchel, build, party or flag. That is
+`harvest_node.gd::_on_gathered` behaving as written: the player boots with an
+empty satchel and nothing equipped, and a bare-handed press for a resource that
+needs a tool is refused with the node left standing.
+
+The step now carries `expect_change: false`, which the harness requires an
+operator to write down **before** playing — the default is FAIL, so a press
+that quietly did nothing can never be read as one that was expected to.
+
+Whether that refusal is *legible* to a player is a real question and this lane
+does not answer it. An instrument check must not: the answer needs a HUD frame
+and a journey segment, and `interact_with`'s no-op detection is exactly the
+mechanism that would surface it there.
+
+---
+
+## Finding 8 — an assertion that cannot be evaluated is not a verdict
+
+`selfcheck_context`'s first run reported
+
+```
+SC-X-10  FAIL  mouse_mode=visible (wanted captured)
+```
+
+against §E.4's restoration checklist — on a build that restores the mouse
+fine. The run was headless. A process with no display server has no mouse to
+capture and `Input.MOUSE_MODE_CAPTURED` never holds in it, so that check FAILs
+every time it runs in logic mode, saying nothing whatever about the game.
+
+This is precisely the class Phase B had to refute from the run's own data:
+three of the four loudest findings against `f082bdf6` were the instrument's,
+not the build's. So the distinction is now in the harness, and it is a
+distinction, not a softening:
+
+* a capture that cannot be **taken** is a **FAIL** — the evidence is missing
+  and that is a real deficiency in the run;
+* a measurement that cannot be **made** is a **SKIP** — the game never got a
+  chance to be wrong.
+
+Collapsing them in either direction produces a lie. `mouse_captured` run
+without a display server now returns SKIP and names the reason and the
+invocation that would give a verdict.
+
+---
+
 ## What landed
 
 Against `COVERAGE_DEFECTS.md`'s own numbering. CD-1…CD-7 are instrument work

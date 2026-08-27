@@ -1,0 +1,92 @@
+{
+  "shots": [
+    {
+      "camera_kind": "gameplay",
+      "class": "context",
+      "clock_hour": 0.0,
+      "file": "shots/SC-C-title.png",
+      "hud": "on",
+      "id": "SC-C-title",
+      "intended_proof": "capture mode reaches the framebuffer at the requested resolution",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 1.320239,
+      "trigger": "planned",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "class": "context",
+      "clock_hour": 0.0,
+      "file": "shots/SC-C-seq-000.png",
+      "hud": "on",
+      "id": "SC-C-seq-000",
+      "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 1.788474,
+      "trigger": "planned",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "class": "context",
+      "clock_hour": 0.0,
+      "file": "shots/SC-C-seq-001.png",
+      "hud": "on",
+      "id": "SC-C-seq-001",
+      "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 2.165246,
+      "trigger": "planned",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "class": "context",
+      "clock_hour": 0.0,
+      "file": "shots/SC-C-seq-002.png",
+      "hud": "on",
+      "id": "SC-C-seq-002",
+      "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 2.518757,
+      "trigger": "planned",
+      "weather": ""
+    }
+  ]
+}

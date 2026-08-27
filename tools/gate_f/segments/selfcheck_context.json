@@ -5,20 +5,23 @@
   "record_hz": 0,
   "_comment": "NOT a protocol segment. This is the regression for GF-B-002's first primitive. It deliberately puts the game into a context a world control does not belong in, then asks a step to press one -- and asserts that the step refuses, that the segment derails, that the steps after it are SKIPPED rather than run, and that a later step resynchronises it. Every one of those four is a behaviour the f082bdf6 run did not have, and 118 X01 failures plus 21 X02 failures were the cost.",
   "_comment_expected_fails": "SC-X-05 is an EXPECTED FAIL and SC-X-06 and SC-X-07 are EXPECTED SKIPs. They are the point of the segment, not defects in it. A run in which SC-X-05 PASSES is a run in which the guard is not working, and a run in which SC-X-06 executes is a run that would have gone on to record forty findings about a game that was never in the state the script assumed.",
-
   "steps": [
     {
       "id": "SC-X-01",
       "title": "boot the real Meadows",
       "action": "boot",
-      "args": { "scene": "world" },
+      "args": {
+        "scene": "world"
+      },
       "expected": "the real world scene stands up"
     },
     {
       "id": "SC-X-02",
       "title": "the world owns input",
       "action": "assert_context",
-      "args": { "is": "world" },
+      "args": {
+        "is": "world"
+      },
       "expected": "input_context is 'world' before anything is opened"
     },
     {
@@ -32,14 +35,18 @@
       "id": "SC-X-04",
       "title": "the shell owns input",
       "action": "assert_context",
-      "args": { "prefix": "menu" },
+      "args": {
+        "prefix": "menu"
+      },
       "expected": "input_context begins 'menu'. The next step is the one this segment exists for."
     },
     {
       "id": "SC-X-05",
       "title": "a world control at an open menu must NOT be pressed",
       "action": "press",
-      "args": { "control": "interact" },
+      "args": {
+        "control": "interact"
+      },
       "require_context": "world",
       "expected": "FAIL naming the guard: the step declares it acts in 'world', input is owned by the menu, and the press does not happen. In the f082bdf6 run this press DID happen, into whatever was open, and whatever it did was recorded as a finding about the game.",
       "observation": "EXPECTED FAIL. This is the whole segment."
@@ -48,7 +55,9 @@
       "id": "SC-X-06",
       "title": "the step after a derail is SKIPPED, not run",
       "action": "press",
-      "args": { "control": "interact" },
+      "args": {
+        "control": "interact"
+      },
       "expected": "SKIP. A step with no require_context, after a derail, is skipped with the derail named -- absence, labelled. It is not a pass and not a finding.",
       "observation": "EXPECTED SKIP."
     },
@@ -56,7 +65,10 @@
       "id": "SC-X-07",
       "title": "and so is the assertion that would have been taken in the wrong state",
       "action": "assert",
-      "args": { "check": "input_context", "equals": "world" },
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
       "expected": "SKIP. This is the shape that produced the run's loudest findings: forty assertions taken after the harness had already lost the thread, each reported as a defect in the game.",
       "observation": "EXPECTED SKIP."
     },
@@ -64,7 +76,9 @@
       "id": "SC-X-08",
       "title": "a step whose own context holds resynchronises the segment",
       "action": "assert_context",
-      "args": { "prefix": "menu" },
+      "args": {
+        "prefix": "menu"
+      },
       "require_context": "menu*",
       "expected": "the shell is still open, this step's require_context holds, and the segment comes back on rails. A derail that could never be recovered would make one bad step void a whole segment."
     },
@@ -79,21 +93,28 @@
       "id": "SC-X-10",
       "title": "the mouse came back",
       "action": "assert",
-      "args": { "check": "mouse_captured", "equals": true },
-      "expected": "§E.4's restoration checklist: the shell releases the mouse on open and must restore it on close"
+      "args": {
+        "check": "mouse_captured",
+        "equals": true
+      },
+      "expected": "§E.4's restoration checklist: the shell releases the mouse on open and must restore it on close. Under --capture this is a real verdict. In LOGIC mode it is a SKIP and says so: a process with no display server has no mouse to capture, so mouse mode says nothing about the game. An assertion that cannot be EVALUATED is not a verdict -- the first run of this segment reported `mouse_mode=visible (wanted captured)` as a FAIL against a build that restores it fine, which is the harness-artefact class this whole lane exists to remove."
     },
     {
       "id": "SC-X-11",
       "title": "and the world owns input again",
       "action": "assert_context",
-      "args": { "is": "world" },
+      "args": {
+        "is": "world"
+      },
       "expected": "input_context is 'world': the segment is fully recovered and a later step would mean what it says"
     },
     {
       "id": "SC-X-12",
       "title": "close the segment",
       "action": "note",
-      "args": { "text": "INVENTORY.json's steps block is the evidence: total 12, and the pass/fail/skipped split must read 9/1/2 for this segment to have proved anything." },
+      "args": {
+        "text": "SC-X-05 is an EXPECTED FAIL and SC-X-06/SC-X-07 are EXPECTED SKIPs; they are the point of the segment. SC-X-10 is a third SKIP in logic mode and a real verdict under --capture. INVENTORY.json's `derails` array records the derail at SC-X-05 and its resync at SC-X-08, so a segment that lost the thread and found it again cannot close looking clean."
+      },
       "expected": "a note event closes the segment"
     }
   ]

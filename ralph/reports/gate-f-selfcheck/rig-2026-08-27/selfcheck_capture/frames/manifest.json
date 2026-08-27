@@ -1,0 +1,100 @@
+{
+  "absent": 0,
+  "baseline_hz": 0.1,
+  "frames": [
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": "frames/selfcheck_capture/000001.62.png",
+      "grab_ms": 62.35,
+      "hud": "on",
+      "hz": 0.1,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 1.62,
+      "trigger": "event:note,region_enter,screenshot",
+      "wall": "2026-08-27 16:02:01",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": "frames/selfcheck_capture/000002.02.png",
+      "grab_ms": 73.38,
+      "hud": "on",
+      "hz": 0.1,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 2.02,
+      "trigger": "event:note,screenshot",
+      "wall": "2026-08-27 16:02:02",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": "frames/selfcheck_capture/000002.38.png",
+      "grab_ms": 71.53,
+      "hud": "on",
+      "hz": 0.1,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 2.38,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-27 16:02:02",
+      "weather": ""
+    },
+    {
+      "camera_kind": "gameplay",
+      "clock_hour": 0.0,
+      "file": "frames/selfcheck_capture/000002.71.png",
+      "grab_ms": 68.55,
+      "hud": "on",
+      "hz": 0.1,
+      "input_context": "title",
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "segment": "selfcheck_capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "t": 2.71,
+      "trigger": "event:screenshot",
+      "wall": "2026-08-27 16:02:02",
+      "weather": ""
+    }
+  ],
+  "segment": "selfcheck_capture",
+  "written": 4
+}

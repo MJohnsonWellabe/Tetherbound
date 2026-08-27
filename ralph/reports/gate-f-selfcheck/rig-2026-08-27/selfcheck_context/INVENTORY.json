@@ -1,0 +1,53 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [
+    {
+      "action": "press",
+      "at": "SC-X-05",
+      "context": "menu_backpack",
+      "resynced_at": "SC-X-08",
+      "skipped": 2,
+      "why": "required context \"world\", input_context was 'menu_backpack'"
+    }
+  ],
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "written": 0
+  },
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": false,
+    "capture_requested": false,
+    "display_server": "headless",
+    "measured_frame_cost_s": 0.005983,
+    "planned_captures": 0,
+    "predicted_frames": 295,
+    "predicted_segment_cost_s": 1.8,
+    "record_baseline_hz": 0.0,
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "rig-2026-08-27",
+  "segment": "selfcheck_context",
+  "sha": "ec6e199779ee77bb924b871b31213f2d92b3c33e",
+  "steps": {
+    "fail": 1,
+    "pass": 8,
+    "ran": 9,
+    "refused": 1,
+    "skipped": 3,
+    "total": 12
+  }
+}

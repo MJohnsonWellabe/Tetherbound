@@ -1172,6 +1172,10 @@ func _do_step(step: Dictionary) -> void:
 			var checked := _step_assert(args)
 			actual = str(checked.get("actual", ""))
 			verdict = "PASS" if bool(checked.get("ok", false)) else "FAIL"
+			if bool(checked.get("skip", false)):
+				# The check could not be evaluated in this envelope. `actual`
+				# already begins SKIPPED, which the ledger below reads.
+				verdict = "SKIP"
 		"note":
 			actual = str(args.get("text", ""))
 		"save_out":
@@ -1967,6 +1971,13 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",
 		"pending_build", "party_size", "flags", "active_creature"])
 	if changed == "none":
+		if not bool(args.get("expect_change", true)):
+			# An acknowledged no-op. Requires the step to say so in advance, so
+			# a press that quietly did nothing can never be read as one that
+			# was expected to: the default is FAIL, and this is the exception
+			# an operator writes down before playing.
+			return ("pressed `interact` on \"%s\" (provider '%s') and nothing observable changed "
+				+ "-- the step declared expect_change:false") % [prompt, provider_name]
 		return ("FAIL pressed `interact` with the prompt \"%s\" live (provider '%s') and nothing "
 			+ "changed: no context, focus, satchel, build, party or flag moved.") % [prompt, provider_name]
 	return "pressed `interact` on \"%s\" (provider '%s'): %s" % [prompt, provider_name, changed]
@@ -2799,6 +2810,26 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			# a camera bug rather than a menu one -- `smoke_menu.gd` exists
 			# partly for this and had no verdict on the operator side.
 			var want_captured := bool(args.get("equals", true))
+			# An assertion that cannot be EVALUATED is not a verdict on the
+			# game. A process with no display server has no mouse to capture,
+			# and `Input.MOUSE_MODE_CAPTURED` never holds in it -- so this
+			# check run headless reports the pause shell as failing to restore
+			# the mouse, every time, on a build where it restores it fine.
+			#
+			# That is precisely the harness-artefact class Phase B had to
+			# refute from the run's own data: three of the four loudest
+			# findings against candidate f082bdf6 were the instrument's, not
+			# the game's. A capture that cannot be TAKEN is a FAIL, because
+			# the evidence is missing and that is a real deficiency in the run.
+			# A measurement that cannot be MADE is a SKIP, because the game
+			# never got a chance to be wrong. The two are not the same and
+			# collapsing them in either direction produces a lie.
+			if not _capture_available():
+				return {"ok": true, "skip": true,
+					"actual": ("SKIPPED mouse_captured: this process has no display server "
+						+ "(DisplayServer reports '%s'), so mouse mode says nothing about the game. "
+						+ "Run this segment under tools/gate_f/run_segment.sh --capture for a "
+						+ "verdict.") % DisplayServer.get_name()}
 			var mode := int((_probe.call("input_state") as Dictionary).get("mouse_mode", 0))
 			var captured := mode == Input.MOUSE_MODE_CAPTURED
 			return {"ok": captured == want_captured,

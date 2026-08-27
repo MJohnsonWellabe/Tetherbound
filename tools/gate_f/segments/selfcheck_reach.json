@@ -160,13 +160,14 @@
     },
     {
       "id": "SC-R-15",
-      "title": "the harvest prompt is live",
+      "title": "the harvest prompt is live, and the press reaches it",
       "action": "interact_with",
       "require_context": "world",
-      "expected": "a live prompt from the node the walk arrived at, and a press that changes the satchel or the world",
-      "observation": "the satchel delta is the `gather` event this proves; see events.jsonl. It is also the live proof that gate_f_probe.gd::inventory_snapshot reads the right key -- before this lane it read `count` where inventory.gd writes `n`, so every quantity was zero and the gather detector compared two identical dictionaries forever.",
+      "expected": "a live prompt from the node the walk arrived at -- \"Strip meadow grass\" -- and a press that reaches its provider. `expect_change: false`, written down in advance and for a reason: the player boots with an empty satchel and nothing equipped, and harvest_node.gd's `_on_gathered` refuses a bare-handed press for a resource that needs a tool, leaving the node where it is. So there is nothing for _cell_snapshot to see, and the acknowledgement is the honest verdict. What this step still proves is the whole of what it is here for: within the game's own 2.4 m radius the arbiter offers a prompt, interact_with presses it, and outside that radius the same step refuses to press at all.",
+      "observation": "Whether a bare-handed refusal is LEGIBLE to a player -- the press produces no context, focus, satchel, build, party or flag change that this harness can observe -- is a question about the game, and an instrument check must not pretend to answer it. Recorded in ralph/reports/gate-f-rig-log.md as a candidate for a journey segment to look at with a HUD frame.",
       "args": {
-        "entity": "poi:gather"
+        "entity": "poi:gather",
+        "expect_change": false
       }
     },
     {

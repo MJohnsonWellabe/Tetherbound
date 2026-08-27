@@ -1,0 +1,188 @@
+{
+  "blocked": "",
+  "capture_available": true,
+  "capture_preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.43,
+    "capture_available": true,
+    "capture_requested": true,
+    "display_server": "X11",
+    "measured_frame_cost_s": 0.006813,
+    "measured_frame_cost_s_in_scene": 0.032425,
+    "planned_captures": 4,
+    "predicted_frames": 113,
+    "predicted_segment_cost_s": 0.8,
+    "predicted_segment_cost_s_in_scene": 4.1,
+    "record_baseline_hz": 0.1,
+    "self_test": {
+      "bytes": 10596,
+      "file": "shots/_preflight.png",
+      "ok": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    "smoke_bytes": 10616,
+    "verdict": "PASS"
+  },
+  "capture_requested": true,
+  "config_flags": {
+    "art.json": {
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_ranger.hair.visible": true,
+      "villager_smith.hair.visible": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": false,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "barriers.enabled": true,
+      "dead_ground.enabled": true,
+      "patrols.enabled": true,
+      "tether_lights.enabled": true,
+      "vegetation.enabled": true
+    },
+    "movement.json": {
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false,
+      "unstick.enabled": true
+    },
+    "performance.json": {
+      "debug_overlay_on_boot": false,
+      "scatter_lod_ranges": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "river.failsafe": true,
+      "shader.enable_macro_variation": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.bushes.collides": false,
+      "layers.deadfall.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false,
+      "layers.grove.collides": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.saplings.collides": true,
+      "layers.trees.collides": true
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "grass_field.json:enabled",
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "display_server": "X11",
+  "frame_grab_ms": {
+    "amortised_ms_per_frame_at_hz": 0.115,
+    "hz": 0.1,
+    "max_ms": 73.38,
+    "mean_ms": 68.95,
+    "n": 4
+  },
+  "frames_absent": 0,
+  "frames_written": 4,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "measured_frame_cost_s": 0.032425,
+  "planned_captures": 4,
+  "predicted_segment_cost_s": 4.1,
+  "record_baseline_hz": 0.1,
+  "rendering_driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "run_id": "rig-2026-08-27",
+  "segment": "selfcheck_capture",
+  "segment_script": "tools/gate_f/segments/selfcheck_capture.json",
+  "sha": "ec6e199779ee77bb924b871b31213f2d92b3c33e",
+  "started_wall": "2026-08-27 16:02:03",
+  "steps_ran": 6,
+  "steps_refused": 0,
+  "steps_total": 6,
+  "trace_hz": 2.0,
+  "trace_rows": 4,
+  "verdicts": {
+    "FAIL": 0,
+    "PASS": 6,
+    "SKIP": 0
+  },
+  "viewport_size": [
+    1920,
+    1080
+  ]
+}
