@@ -91,6 +91,18 @@ const FIRE_COLOUR := Color(1.0, 0.55, 0.16)
 ## with a fire in it, rather than as another piece of masonry.
 const IRON_COLOUR := Color("#2a2622")
 
+## The lamp housing, as multiples of the lens radius. Both are constrained, not
+## chosen: `_build_tether_lamps()`'s own comment has the arithmetic and the
+## defect each one closes.
+##
+## The housing must be NARROWER than the lens, or it rings the lens in black
+## from the front. And it must sit far enough back that its front face is inside
+## the lens sphere -- `RATIO < sqrt(1 - (OFFSET - HEIGHT/2)^2)` with height 0.9
+## -- or it stands proud of the lens and hides it from the other side.
+## `tests/test_tether_lamp.gd` asserts both.
+const HOUSING_RADIUS_RATIO := 0.75
+const HOUSING_OFFSET_RATIO := 1.1
+
 ## The local z the ramp meets the plinth at -- landmark.gd's own PLINTH_CENTRE.z
 ## minus PLINTH_HALF_Z, i.e. the plinth's south edge.
 const RAMP_TOP_Z := -10.0
@@ -361,11 +373,38 @@ func _build_tether_lamps() -> void:
 
 		# The housing, so a lamp reads as bolted to the stone rather than as a
 		# glowing ball floating off the wall.
+		#
+		# GF-B-004: 1.25 -> 0.75 radius, and the offset 0.8 -> 1.1. At 1.25 the
+		# housing was WIDER than the lens and its front face stood PROUD of the
+		# lens's own front pole (for the gate-passage lamp: a 0.25 disc spanning
+		# z 0.07-0.25 in front of a 0.20 sphere spanning -0.20-+0.20). The
+		# consequences run in both directions along the lamp's own axis:
+		#
+		#   from +Z the lens is entirely hidden. Its whole silhouette fits
+		#   inside the housing disc AND sits behind it, so the lamp renders as a
+		#   solid black circle -- `IRON_COLOUR` is `#2a2622`, deliberately below
+		#   the castle's darkest stone. That is the object Gate F reported as "a
+		#   solid black unshaded sphere" at the hall gateway. It is not a
+		#   missing mesh and not an unassigned material; it is this backplate,
+		#   correctly materialled, pointed at the camera.
+		#
+		#   from -Z, the side the lamp is meant to be read from, the housing
+		#   still rings the lens in black because it is wider than it. That ring
+		#   is very probably what `STRONGHOLD-R2` was looking at when it read
+		#   the lamp as "a flat pale disc with a dark ring round it -- a coin
+		#   stuck on the tower" and spent the fix on emission energy: the
+		#   emission was clipping AND the ring was the housing.
+		#
+		# Narrower than the lens and pushed back behind its equator, the housing
+		# is swallowed by the sphere from the front and emerges only behind it.
+		# The lamp then reads as a teal ball on a small dark mount from the
+		# front and from every oblique angle, and as a dark disc only from
+		# directly behind -- which is what the back of a work lamp is.
 		var housing := MeshInstance3D.new()
 		housing.name = "Housing"
 		var can := CylinderMesh.new()
-		can.top_radius = radius * 1.25
-		can.bottom_radius = radius * 1.25
+		can.top_radius = radius * HOUSING_RADIUS_RATIO
+		can.bottom_radius = radius * HOUSING_RADIUS_RATIO
 		can.height = radius * 0.9
 		var iron := StandardMaterial3D.new()
 		iron.albedo_color = IRON_COLOUR
@@ -374,7 +413,7 @@ func _build_tether_lamps() -> void:
 		can.material = iron
 		housing.mesh = can
 		housing.rotation.x = PI * 0.5
-		housing.position = Vector3(0.0, 0.0, radius * 0.8)
+		housing.position = Vector3(0.0, 0.0, radius * HOUSING_OFFSET_RATIO)
 		lamp.add_child(housing)
 
 		var light := OmniLight3D.new()

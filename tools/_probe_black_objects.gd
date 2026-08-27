@@ -102,6 +102,16 @@ func _inspect(instance: MeshInstance3D, surface: int, path: String) -> void:
 	var y := instance.global_position.y
 	var where := "%s[%d] %s at %s" % [
 		path, surface, instance.mesh.get_class(), instance.global_position]
+	# GF-B-004: every SPHERE in the world, unconditionally, whatever its
+	# material. The real Gate F frame (landed with main, after `.gitignore`
+	# stopped eating the run's captures) shows the reported object clearly: a
+	# hard-edged black CIRCLE in the sky, with one warm lit sliver on its
+	# lower-left rim. That is a lit 3D sphere with a dark surface, and the
+	# fastest way to name it is to list the spheres.
+	if instance.mesh is SphereMesh:
+		_rows.append([y, "SPHERE", "%s[%d] radius=%.2f %s" % [
+			path, surface, (instance.mesh as SphereMesh).radius, instance.global_position]])
+
 	var material: Material = instance.get_active_material(surface)
 	if material == null:
 		_rows.append([y, "NO MATERIAL", where])

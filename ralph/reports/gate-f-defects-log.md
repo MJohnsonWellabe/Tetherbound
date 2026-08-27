@@ -510,9 +510,65 @@ other.
 Same audit, re-run after the fix: **`none found`, 0 suspect surfaces.**
 `smoke_art` passes.
 
-### Status
+### IDENTIFIED — the frames landed with `main`, and the object has a name
 
-`GF-B-004` itself: **not reproducible from the scene graph.** Reopen it from a
-frame if the rig lane's re-run produces one — and check that frame against
-`tools/_probe_black_objects.gd` first, which answers in 7 minutes what a capture
-answers in 55.
+Merging `main` forward (the `LAND-0827` consolidation) brought in the Gate F run
+captures. `.gitignore` had been eating them; CD-2 corrected that, and
+`ralph/reports/gate-f-run-20260827T025303Z/X07/shots/GF-AUD-hall-arrival.png` is
+the reported frame.
+
+**The object is `TetherOccupation/TetherLamps/TetherLamp_*/Housing` — a tether
+lamp's own iron backplate, seen along the lamp's axis.** Not a missing mesh and
+not an unassigned material; the item's premise is wrong on both counts.
+
+How it was pinned without a 55-minute capture. Extending
+`tools/_probe_black_objects.gd` to list every `SphereMesh` in the live world
+returns **17**, and only four are at the stronghold — the four tether lamp
+lenses, at world (152.0, 40.14, 7615.0) r 0.34, (157.6/146.4, 19.74, 7584.05)
+r 0.22, and (152.0, 13.74, 7587.4) r 0.20. Everything else is a rank badge at
+r 0.03–0.04 or the warrens Heartstone in band 2. There is nothing else round at
+that site.
+
+Then the arithmetic, which is the whole defect. `_build_tether_lamps()` built the
+housing at **1.25× the lens radius**, offset **0.8** radii along +Z. For the gate
+passage lamp (r 0.20) that is a 0.25-wide iron disc spanning z 0.070–0.250 in
+front of a 0.20 sphere spanning −0.20–+0.20. Looking down the axis from +Z the
+housing is both **wider than the lens's entire silhouette and in front of it**,
+so the lamp renders as a solid black circle. `IRON_COLOUR` is `#2a2622`, chosen
+deliberately to sit below the castle's darkest stone — so the disc is as black as
+the frame shows. The crop
+(`docs/evidence/gate-f-defects/GF-B-004/reported-object-crop.png`) shows exactly
+that: a hard-edged black circle with one warm lit sliver on its rim.
+
+**And it explains a second finding nobody connected.** `STRONGHOLD-R2` read this
+lamp as *"a flat pale disc with a dark ring round it — a coin stuck on the
+tower"* and spent its fix on emission energy (2.4 → 1.15). The emission was
+clipping, and the dark ring was the housing, which is wider than the lens from
+every angle including the intended one.
+
+### The fix
+
+`HOUSING_RADIUS_RATIO` 1.25 → **0.75** and `HOUSING_OFFSET_RATIO` 0.8 → **1.1**,
+both named constants now rather than inlined. Narrower than the lens and pushed
+back behind its equator, the housing is swallowed by the sphere from the front
+and emerges only behind it: the lamp reads as a teal ball on a small dark mount
+from the front and from every oblique angle, and shows teal around a dark centre
+even from directly behind. It still reaches past the lens, so it still mounts the
+lamp to the stone, which is the job it was added for.
+
+`tests/test_tether_lamp.gd` — four assertions, pure arithmetic (D02: no
+stronghold, no terrain, no renderer). Verified non-vacuous: the old numbers fail
+three of the four.
+
+### What is NOT claimed
+
+The frame cannot be retaken from the camera that produced it.
+`tools/gate_f/segments/X07.json`'s `hall` block teleports the player to z 7595
+and faces them at z 7535 — **south, back down the road they arrived on**, 180°
+from the approach. A camera reconstructed from that pose lands inside the
+masonry (`hall-reconstructed-camera.png`, same failure `GF-B-008` reports at
+`the_rise`, at a second site). So this is a mechanism that provably produces the
+photographed artefact, confirmed by geometry and by a complete inventory of the
+round objects at that site — not a re-photographed before/after. **That is a
+rig-lane finding** (`tools/gate_f/**` untouched here) and it is handed over, not
+fixed.
