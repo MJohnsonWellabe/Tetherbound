@@ -11,6 +11,7 @@ extends Node3D
 ## seed spots or disappear — either is fine, nothing else depends on them.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
@@ -95,6 +96,15 @@ func _build_visual() -> void:
 			wrapper.add_child((resource as PackedScene).instantiate())
 			wrapper.scale = Vector3.ONE * _model_scale
 			_apply_material_fixups(wrapper, _model_path)
+			# GF-B-010's rule, after the retint above rather than instead of
+			# it: a model no vegetation layer claims (most harvest nodes --
+			# wood, berries) keeps its IMPORTED material, and a material that
+			# carries metallic with no metallic texture is a glTF export
+			# omission that renders as a black silhouette in daylight. The
+			# band-1 `log_large` deposit was doing exactly that. See
+			# `imported_materials.gd`'s header. A no-op for anything the
+			# retint already replaced, and for every pack that ships an ORM map.
+			IMPORTED_MATERIALS.make_dielectric(wrapper)
 			_visual = wrapper
 		elif resource is Mesh:
 			var mesh := MeshInstance3D.new()

@@ -27,6 +27,7 @@ const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 ## case a loose prop needs it: an oxblood Team Tether banner at an occupied
 ## site, without sourcing or generating a second banner mesh.
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 
 var _placed := 0
 var _prefabs: RefCounted = null
@@ -116,6 +117,15 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	else:
 		push_error("prop missing: %s (looked for .gltf/.glb/.obj under %s)" % [model, dir])
 		return
+
+	# GF-B-010's rule, applied to props: a surface that imports as metal with
+	# no metallic texture to modulate it is a glTF export omission, and renders
+	# as a black silhouette in daylight. See `imported_materials.gd`'s header --
+	# it is also, on the evidence, why `ralph/BLOCKED.md` records the
+	# `environment/nature` pack as not rendering correctly through this
+	# function. A no-op for every pack that ships an ORM map, which is most of
+	# them.
+	IMPORTED_MATERIALS.make_dielectric(root)
 
 	var at: Array = spec.get("at", [0.0, 0.0])
 	var x := float(at[0])

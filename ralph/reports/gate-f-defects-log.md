@@ -429,3 +429,90 @@ enough repetitions to see through that.
 Instrumentation landed and pushed; the stall itself is not yet reduced. The next
 pass has a ranked target list, a probe that reports whether a change moved the
 number, and one dead end already walked.
+
+---
+
+## `GF-B-004` — black placeholder sphere in the Meadows Hall gateway — **NOT REPRODUCED; two other black objects found and fixed**
+
+### What was done instead of a capture
+
+The frame behind this item took a software-rasterised stronghold capture to
+produce. On the grass-on build that is **55 minutes** of llvmpipe
+(`tools/_capture_gate_f_defect_sites.gd`, measured this session). The question
+the item actually asks — *which object is that, and why is it black* — is a
+property of the SCENE GRAPH, not of the pixels.
+
+So `tools/_probe_black_objects.gd` stands the real world up with the renderer
+OFF (~7 minutes) and asks every mesh in it directly, reporting three classes:
+**NO MATERIAL**, **NEAR-BLACK** (dark albedo with no texture to carry detail),
+and **FULLY METALLIC** (`metallic ≥ 0.9` with no metallic texture — the exact
+condition `GF-B-010` turned out to be). Sorted by height, because "in the sky
+through the arch" says the thing is above the player.
+
+### The sphere is not there
+
+Over the whole live world, including the stronghold (`[stronghold] 5 spaces on
+the route … 15 approach pylon(s)` — it built), **the highest suspect surface of
+any kind sits at y ≈ 40**, which is the castle's own tallest tower lamp. There
+is no object floating above the stronghold at all, and no surface anywhere with
+a missing material.
+
+What this does and does not establish. It is exhaustive over `MeshInstance3D`
+surfaces in the live tree, so a missing-material or unmodulated-metallic sphere
+is ruled out — which is what the item's own "almost certainly a missing mesh or
+an unassigned material" reading proposed. It does **not** rule out a mesh with a
+genuinely dark TEXTURE, non-`MeshInstance3D` geometry (CSG, particles, a
+`Sprite3D`), or a sky/shader artefact. And the Phase B frame was taken on
+candidate `f082bdf6`, before the grass branch landed.
+
+### The reconstructed `hall` camera is inside the masonry
+
+`docs/evidence/gate-f-defects/GF-B-004/hall-reconstructed-camera.png`. Built
+from `tools/gate_f/segments/X07.json`'s own `hall` teleport and `face` pair,
+with the eye where `camera_rig.gd` would put it. The frame is a slot of world
+seen between a floor slab and a ceiling slab — the same failure `GF-B-008`
+reports at `the_rise`, at a second site. **That is a rig-lane finding**
+(`tools/gate_f/**` is theirs, untouched here) and it is reported, not fixed:
+X07's `hall` camera does not photograph the arch, so no capture from it can
+judge this item either way.
+
+### What the search DID find, and it is fixed
+
+**Two `log_large` props were rendering as black metal**, for exactly the reason
+`GF-B-010` did:
+
+| where | why it kept the imported material |
+|---|---|
+| `Props/old_champion_rest/log_large` | `props.gd::place()` instantiates a .glb and draws it as it came |
+| a band-1 harvest deposit at (338.5, 929.0) | `harvest_node.gd::_build_visual()` retints only models a vegetation layer claims; `log_large` is claimed by none |
+
+`assets/environment/nature/log_large.glb` declares `metallicFactor` absent (glTF
+default 1.0) with no ORM map — same class, different pack.
+
+**And this is very likely why `ralph/BLOCKED.md` records the whole
+`environment/nature` pack as not rendering correctly through `props.gd`.** All 27
+of its models ship the same omission. `data/config/bands/*/props.json` carries
+several `_why` notes routing around it — *"renders with an untextured near-white
+placeholder material"*, *"one of only two models in that pack that render
+correctly through props.gd"* — and models were swapped out for Kenney
+replacements to dodge it. It was the material, not the models. Re-testing that
+pack against the fix is a follow-up worth someone's time; it may hand back two
+dozen usable props.
+
+The fix is `scripts/world/imported_materials.gd::make_dielectric()` — one rule
+in one place, called from `props.gd` and `harvest_node.gd`.
+`character_model.gd` keeps its own inline copy because there it has to compose
+with the palette tint and the shared-material cache; both comments point at each
+other.
+
+### Verification
+
+Same audit, re-run after the fix: **`none found`, 0 suspect surfaces.**
+`smoke_art` passes.
+
+### Status
+
+`GF-B-004` itself: **not reproducible from the scene graph.** Reopen it from a
+frame if the rig lane's re-run produces one — and check that frame against
+`tools/_probe_black_objects.gd` first, which answers in 7 minutes what a capture
+answers in 55.
