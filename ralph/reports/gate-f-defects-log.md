@@ -121,9 +121,35 @@ green.
   it is still correct for a rig that does arrive carrying emission, and it is the
   only written record of why an emission floor has to be additive.
 
+### In-world confirmation
+
+Same viewpoints, `tools/_probe_grass_pass.gd`, before and after the fix, day
+pinned and frozen. `docs/evidence/gate-f-defects/GF-B-010-inworld/`.
+
+**Band 4, high pasture, an NPC about a metre from the player.** Before: a
+jet-black cut-out with only its rank badge readable, beside a dull player.
+After: a Team Tether officer in oxblood with a cap, a mask, a chest badge,
+gloves and boots, beside a player whose satchel, collar and jacket all read.
+This is the frame `GF-B-010`'s acceptance criteria ask for.
+
+**Band 2, forest floor.** The player's median luminance over its own image
+region goes **9.9 → 64.9** (max 207 → 231). That is the same rig, the same
+frame position, the same sun.
+
+The band-2 NPC, ~35m away, moves much less (median 0.0 → 4.1) and still reads
+dark at normal exposure. That is a SECOND cause and it is worth stating
+separately rather than folding into this one: brightened 3.2x, the same crop
+shows a complete, correctly shaded figure — cap, face, cross-straps, badge,
+belt, boots. The materials are right; the surface is genuinely very dark.
+`grunt_lod0_texture_0.png` measures mean luminance **0.148** against the
+trainer's 0.280 and Grandpa's 0.309, and the rank palette then MULTIPLIES it
+(grunt `#8a8a8a` = 0.54), so the body lands near 0.08. See the note below on
+the rank ramp: it is a look decision, it needs a visual pass, and it is a
+different item from this one.
+
 ### Status
 
-Fixed and pushed. In-world confirmation in bands 2 and 4 still to capture.
+**Fixed, pushed, and confirmed in-world.**
 
 ---
 
@@ -250,3 +276,110 @@ Passing: `test_hud_widgets` (28/110), `smoke_hud_handheld_legibility`,
 
 `HIST-036` (`OBJECTIVE-HINT-ON-HUD`) was sequenced after this item and is now
 unblocked.
+
+---
+
+## `GF-B-013` — signpost text does not read — **FIXED**
+
+### The cause
+
+Two numbers, and the second one is the loud half.
+
+`_label_scale()` fits the label to the plank, so the board's dimensions ARE the
+text size. At `ARM_LENGTH` 0.95 × `ARM_HEIGHT` 0.16 the two constraints bound
+almost exactly together for a real destination name — "Watchtower Spur" fitted at
+0.00261 m/px by width and 0.00207 by height, so ~7cm letters on a sign the player
+is expected to read at walking speed.
+
+But the reason it read as a *smear* rather than as *small* is `outline_size = 10`.
+`Label3D`'s outline is in the same font pixels as `font_size`, so 10 against a
+48pt face is an outline ~21% of the em thick, growing outward from every contour —
+including the inside ones. It floods the counter of an `o` or an `e` shut and
+closes the gaps between adjacent letters, so a word stops being letters and
+becomes one pale blob with dark marks in it. Bigger boards alone would not have
+fixed this: the ratio is what breaks, and the ratio does not care how large the
+glyphs are.
+
+### The fix
+
+`scripts/world/signpost.gd`: `outline_size` 10 → 4 (~8% of the em — still a
+legibility edge against both the pale sky and the dark structures these labels
+cross, which is the job it was added for), `ARM_LENGTH` 0.95 → 1.20,
+`ARM_HEIGHT` 0.16 → 0.24, and the text's share of the board 0.62 → 0.68.
+
+`POST_HEIGHT` is untouched at 2.35. R9.4 cut this assembly down after a blind
+critic measured it ~1.5x oversized against the 1.4m well beside it, and that
+ruling stands — a 0.24m board on a 2.35m post is the proportion a real fingerpost
+carries. The four arms still clear each other (`ARM_SPACING` 0.44 − 0.24 = 0.20m
+of air) and the topmost still sits under the post cap.
+
+### Evidence
+
+`docs/evidence/gate-f-defects/GF-B-013/`, band 4 high pasture, same viewpoint
+before and after. Before: `ntchtoxxer` — letters merged, counters gone. After:
+`Watchtower Spur`, every letter distinct. (The leading `W` sits behind the post
+from this exact camera, which is a property of reading a fingerpost from beside
+its post; the label runs post-to-tip on this face by design — see `_build_arm()`'s
+own comment on why each face reads left-to-right from its own side.)
+
+---
+
+## `GF-B-001` — ~50 s frozen screen on New Game — **MEASURED AND ATTRIBUTED on current `main`; not yet reduced**
+
+### The re-measurement the coordinator asked for
+
+`tools/_probe_new_game_stall.gd`, headless (renderer OFF — the same
+configuration Phase B measured in, and the reason no GPU change touches this).
+Drives the real front door: the configured title scene, its own focused Start New
+Game button, activated through the same physical joypad binding
+`tests/smoke_title_new_game.gd` uses.
+
+**The grass field did NOT fix it.** Press → settled on current `main`, grass ON:
+**40,954 ms**. Phase B measured 49,230–50,720 ms with the field off. It has moved
+some, in this container, and it is still the better part of a minute.
+
+One correction to how this has been described: **"press → world in tree" is
+2,214 ms and means nothing.** `playground_world.gd::_ready()` awaits
+`process_frame` twice while Terrain3D builds its data, so the scene is in the
+tree long before it has stood up, and everything expensive happens after. The
+honest figure is press → settled.
+
+### Where it goes
+
+`scripts/boot/boot_log.gd` grew a `phase()` alongside its existing `line()`, so
+each boot line now carries the cost of the step that just finished, and
+`boot_phase_ms()` hands the same figures back in-process. The world, the water
+build and the settlement build are marked up. One measured launch:
+
+| ms | % | phase |
+|---:|---:|---|
+| 10,120 | 26.6% | vegetation scatter |
+| 9,384 | 24.6% | **water: river** |
+| 5,763 | 15.1% | **water: shader material + height bake** |
+| 3,698 | 9.7% | **water: pond** |
+| 3,422 | 9.0% | terrain `data_directory` assigned |
+| 2,089 | 5.5% | settlement remainder (signpost, landmark, perimeter, harvest nodes) |
+| 975 | 2.6% | settlement: grandpa house |
+| 643 | 1.7% | ground materials/shader |
+| 611 | 1.6% | settlement: props |
+| 392 | 1.0% | settlement: village NPCs |
+| 341 | 0.9% | settlement: village |
+| 294 | 0.8% | water: jetty |
+| 241 | 0.6% | first frame presented |
+| <60 | | shoreline fan, shore flora, dressing, stream, terrain node |
+| **38,079** | | **total of the phases** |
+
+**`HIST-085` points at the scatter, and the scatter is a quarter of it. Water is
+19,230 ms — half the stall — and nothing in the register has ever looked at it.**
+The single largest line item in the whole boot is `_build_river()`.
+
+### What is not claimed
+
+These are container numbers on llvmpipe with the renderer off. They are directly
+comparable to Phase B's, which were taken the same way, and they are **not** a
+device measurement — boot time on the ROG Ally is [OWNER-ONLY].
+
+### Status
+
+Instrumentation landed; the stall itself is not yet reduced. The next pass has a
+ranked target list and a probe that reports whether a change moved the number.

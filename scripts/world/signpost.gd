@@ -39,8 +39,23 @@ const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 ## height where a sign is actually read.
 const POST_HEIGHT := 2.35
 const POST_RADIUS := 0.09
-const ARM_LENGTH := 0.95
-const ARM_HEIGHT := 0.16
+## GF-B-013: 0.95 -> 1.20, and the board 0.16 -> 0.24 deep.
+##
+## `_label_scale()` fits the text to the board, so the board's dimensions ARE
+## the label's size. At 0.95 x 0.16 the two constraints bound almost exactly
+## together for a real destination name -- "Watchtower Spur" fitted at 0.00261
+## m/px by width and 0.00207 by height -- which put ~7cm letters on a sign the
+## player is expected to read at walking speed from the approach. Gate F's band-4
+## frame shows the result: the name reads as a smear.
+##
+## Still a fingerpost a person could have planted. R9.4 cut this whole assembly
+## down after a blind critic measured it at ~1.5x oversized against the 1.4m
+## well beside it, and that ruling stands -- `POST_HEIGHT` is untouched at 2.35,
+## and a 0.24m board on a 2.35m post is the proportion real fingerposts carry.
+## The four arms still clear each other at `ARM_SPACING` (0.44 - 0.24 = 0.20m of
+## air between boards) and the topmost still sits under the post cap.
+const ARM_LENGTH := 1.20
+const ARM_HEIGHT := 0.24
 const ARM_THICKNESS := 0.05
 ## Arms stack up the post, closest destination lowest.
 ##
@@ -218,7 +233,22 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		# this out directly. A light outline holds the dark ink readable
 		# against both the pale sky and dark structures, the two backgrounds
 		# these labels actually cross.
-		text.outline_size = 10
+		# GF-B-013: 10 -> 4.
+		#
+		# `outline_size` is in the same font pixels as `font_size`, so 10 against
+		# a 48pt face is an outline ~21% of the em thick, growing outward from
+		# every contour -- including the INSIDE contours. At that size it floods
+		# the counter of an `o` or an `e` shut and closes the gaps between
+		# adjacent letters, so a word stops being letters and becomes one pale
+		# blob with dark marks in it. That is the "illegible smear" reading, and
+		# it is why bigger boards alone would not have fixed this: the ratio is
+		# what breaks, and the ratio does not care how large the glyphs are.
+		#
+		# 4 is ~8% of the em -- a legibility edge that still holds the dark ink
+		# against both the pale sky and the dark structures these labels cross,
+		# which is the job the outline was added for (R7.1-visual round 1, when
+		# it was 0 and letters vanished over a roof).
+		text.outline_size = 4
 		text.outline_modulate = Color("#f4ecd8")
 		arm.add_child(text)
 
@@ -230,7 +260,10 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 ## or width binds first means a new destination name can be any length and the
 ## sign stays a sign.
 func _label_scale(label: String) -> float:
-	var by_height := (ARM_HEIGHT * 0.62) / float(LABEL_FONT_SIZE)
+	# GF-B-013: 0.62 -> 0.68 of the board's depth. The remaining third is the
+	# margin above and below the text; at 0.62 with a 4px outline instead of a
+	# 10px one there is more clear board than the letters need.
+	var by_height := (ARM_HEIGHT * 0.68) / float(LABEL_FONT_SIZE)
 	# 0.55 em is a serviceable mean advance for mixed-case Latin text; the
 	# 0.86 keeps a margin of board visible at each end rather than filling it
 	# edge to edge.

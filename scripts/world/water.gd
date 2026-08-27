@@ -35,6 +35,10 @@ extends Node3D
 ## it is to get out of the water, exactly like a fall.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## GF-B-001: `_build_water()` measured 20 s of a ~50 s New Game stall, which
+## the world-level boot log could only report as one lump. Each step below marks
+## its own phase so the next pass knows which one to work on.
+const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const CONFIG_PATH := "res://data/config/water.json"
 const HAZARD_CONFIG_PATH := "res://data/config/water_hazard.json"
 const SHADER := preload("res://shaders/water.gdshader")
@@ -99,7 +103,9 @@ func build() -> void:
 	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 
 	var material := _build_material(_region())
+	BOOT_LOG.phase("water: shader material + height bake")
 	_build_pond(material)
+	BOOT_LOG.phase("water: pond")
 	# The stream carries the same shader with more opaque water: at 0.35m
 	# deep, a see-through surface is mostly its own carved, wet-darkened,
 	# partly self-shadowed bed, which rendered as a dark strip against the
@@ -118,16 +124,22 @@ func build() -> void:
 	stream_material.set_shader_parameter("flow_speed", float(surface_cfg.get("flow_speed", 1.1)))
 	stream_material.set_shader_parameter("flow_stretch", float(surface_cfg.get("flow_stretch", 0.6)))
 	_build_stream(stream_material, stream)
+	BOOT_LOG.phase("water: stream")
 
 	_build_river()
+	BOOT_LOG.phase("water: river")
 
 	var centre := Vector2(float(pond_centre[0]), float(pond_centre[1]))
 	# The shoreline fan is shared by every shore-anchored layer below —
 	# computed once so they all agree about where the waterline is.
 	var shore := _shoreline(centre)
+	BOOT_LOG.phase("water: shoreline fan")
 	_build_shore_flora(shore, centre)
+	BOOT_LOG.phase("water: shore flora")
 	_build_dressing(shore, centre)
+	BOOT_LOG.phase("water: dressing")
 	_build_jetty(centre)
+	BOOT_LOG.phase("water: jetty")
 	print("[water] pond quads %d, stream points %d, reeds %d, marginals %d, bank flowers %d, rocks %d, driftwood %d, lilypads %d, jetty %d, level %.1f" % [
 		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"],
 		_stats["marginals"], _stats["bank_flowers"], _stats["rocks"], _stats["driftwood"],

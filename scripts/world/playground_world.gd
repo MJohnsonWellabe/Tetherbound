@@ -261,12 +261,12 @@ func _ready() -> void:
 	# RG7. Mid-session Load restores persistent flags into an already-built
 	# Meadows scene; this world owns reconciling its authored one-shot props.
 	add_to_group("progression_restore")
-	BOOT_LOG.line("playground: _ready start, building Terrain3D node")
+	BOOT_LOG.phase("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
 		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
 		return
-	BOOT_LOG.line("playground: terrain node created, waiting for Terrain3DData")
+	BOOT_LOG.phase("playground: terrain node created, waiting for Terrain3DData")
 
 	# data_directory MUST be set after the node is in the tree and a frame has
 	# passed. Terrain3D builds its Terrain3DData on first frame, and assigning
@@ -277,12 +277,12 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
-	BOOT_LOG.line("playground: terrain data_directory assigned")
+	BOOT_LOG.phase("playground: terrain data_directory assigned")
 
 	_apply_dynamic_collision()
 
 	_apply_ground_materials()
-	BOOT_LOG.line("playground: ground materials/shader applied")
+	BOOT_LOG.phase("playground: ground materials/shader applied")
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
 	# it the extension logs an error every physics frame and stops processing.
@@ -296,19 +296,19 @@ func _ready() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and game.has_method("apply_loaded_player_pose"):
 		game.call("apply_loaded_player_pose")
-	BOOT_LOG.line("playground: player placed on terrain")
+	BOOT_LOG.phase("playground: player placed on terrain")
 	_dress_the_meadow()
-	BOOT_LOG.line("playground: vegetation scatter built (instance/batch count above)")
+	BOOT_LOG.phase("playground: vegetation scatter built (instance/batch count above)")
 	_build_water()
-	BOOT_LOG.line("playground: water built (pond, stream, reeds — counts above)")
+	BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
 	_build_settlement()
-	BOOT_LOG.line("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
+	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	_capture_mouse_if_free()
 	get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
-	BOOT_LOG.line("playground: _ready complete, waiting for first frame")
+	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
 	await get_tree().process_frame
-	BOOT_LOG.line("playground: first frame presented")
+	BOOT_LOG.phase("playground: first frame presented")
 
 
 ## Sets dynamic collision (mode, radius, shape size) and reads every value
@@ -777,21 +777,25 @@ func _build_settlement() -> void:
 		# Door on the east wall faces the village square.
 		add_child(house)
 		house.call("build", _camera_rig, _player)
+		BOOT_LOG.phase("settlement: grandpa house")
 
 	var village: Node3D = VILLAGE.new()
 	village.name = "Village"
 	add_child(village)
 	village.call("build")
+	BOOT_LOG.phase("settlement: village")
 
 	var props: Node3D = PROPS.new()
 	props.name = "Props"
 	add_child(props)
 	props.call("build")
+	BOOT_LOG.phase("settlement: props")
 
 	var village_npcs: Node3D = VILLAGE_NPCS.new()
 	village_npcs.name = "VillageNPCs"
 	add_child(village_npcs)
 	village_npcs.call("build", _player)
+	BOOT_LOG.phase("settlement: village NPCs")
 
 	# R8.1: the people who challenge you. After the villagers, so a trainer
 	# standing too close to one is visible in the same pass rather than a
