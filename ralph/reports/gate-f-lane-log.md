@@ -1874,3 +1874,39 @@ the freeze record says so explicitly and names the known-open intermittent
 engage defect, so Phase B reads the real state instead of an implied green.
 
 **Next:** S01, then the chain S02–S10, then X01–X07. X08 stays dropped.
+
+## Check-in 16 — 2026-08-27 — **S01: 13 PASS / 1 FAIL.** The counts reproduce exactly; the one failure is the same objective-id question
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S01/`. Logic mode, 354 route
+rows, 21 events, one planned shot carried as `file: null` (§C.4: an absent frame
+is evidence).
+
+**13 PASS / 1 FAIL — the same split as the 2026-08-25 run and the aborted
+2026-08-26 one.** Three independent runs across three different candidate SHAs
+agreeing to the step is worth stating: S01 is stable, and this candidate did not
+regress the front door.
+
+### The one failure is `S01-12`, unchanged
+
+- expected: tracked objective `opening_first_catch`
+- actual: `id=opening:beat:road`, text *"Catch your first wild creature."*
+
+Recorded exactly as it came out. **I did not edit the step-script to match the
+shipped id** — same call my predecessor made, same reason (§13: record, do not
+diagnose). The text a new player reads is the correct first rung; what does not
+exist in the build is the *id* the protocol's §E.5 chain names. Whether that is a
+defect in the game's chain ids or in the protocol's expectation is Phase B's
+call. It matters past this one assertion because §E.5 tracks 24 main-chain
+objectives by id: if the scheme differs throughout, later objective assertions
+fail identically and must be read as **this one question**, not as 24 bugs.
+
+### Mode, inherited and now holding more strongly
+
+The journey runs in **logic mode**, per check-in 8's measurement. Worth noting
+the margin has widened: that ban was set against **466,922** props at
+~3,400 ms/frame under llvmpipe; this candidate scatters **762,058**, 63% more.
+Capture mode on the journey is further out of reach than when the decision was
+made, and **X07 remains the run's only real visual evidence** — which is what
+makes its colour spot-check non-negotiable.
+
+**Next:** S02, already launched.
