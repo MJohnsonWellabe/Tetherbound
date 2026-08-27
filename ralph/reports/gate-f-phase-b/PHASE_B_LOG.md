@@ -97,3 +97,54 @@ economy, difficulty, tournament, story or the finale. Those are **coverage
 gaps**, not clean bills of health.
 
 Quarantine still held.
+
+---
+
+## Check-in 3 — deliverables 1 and 2 frozen (§16.2 discharged)
+
+Written and committed **before** any quarantine break:
+
+- `ADJUDICATION.md` — §14 blind analysis, §14 root-cause clustering, the
+  defect-vs-artifact adjudication, the X07 visual read.
+- `PROVISIONAL_BACKLOG.md` — 13 items (4 SHIP BLOCKER, 7 QUALITY BLOCKER,
+  2 POLISH), 5 named unresolved questions with settling experiments, and an
+  explicit coverage-gap list.
+- `PROVISIONAL_BACKLOG.sha256` — the §16.2 version hash.
+
+```
+ff3d5e6594196b64e13e71efead885edd61f8f558ef080311c9807bee5a6b23d  PROVISIONAL_BACKLOG.md
+9f8266ee2502a758351b6d40334ca4770759301c743e087f96bcbb585e5e1db5  ADJUDICATION.md
+```
+
+Additional findings since check-in 2, all in the provisional backlog:
+
+- **~50 s blocking frame at world stand-up**, 6/8 segments, t≈56 s, 49–51 s,
+  measured **headless** so no rasteriser is involved. Whole-journey CPU p95 is
+  8.31 ms over 36,744 samples — the shape is otherwise healthy. This is the
+  run's clearest real game defect.
+- **No prescribed screenshot exists anywhere in the run.**
+  `operator_harness.gd:1212` writes captures to `shots/<id>.png`; there is no
+  `shots/` directory and no `GF-*.png` file in the run, and git has never
+  carried one. 551 PNGs total in 921 MB = X07's 550 background frames plus
+  `capture_smoke.png`. X07's `WHY_INCOMPLETE.md` claims 79 completed captures;
+  23 of those 79 timestamps have no background frame within 3 s, including the
+  §E.7-required HUD-on `-gameplay` frame for all 11 regions.
+- **13 of the §C.1 event types have no emitter at all** — so their absence
+  proves nothing, and `catch_result` fires on party growth (the starter
+  loading), not on a catch.
+- **The `inventory` telemetry field is wrong**: it reports all-zero against a
+  save containing 15 orbs. No `save`/`load` event carries `duration_ms`.
+- **X07 visual read**: the world is genuinely attractive; the Tether Relay is
+  the run's strongest frame; but a **black placeholder sphere hangs in the Hall
+  gateway**, The Rise's arrival renders black, the Old Quarry does not read as a
+  quarry, relay/Hall ground is untextured, an NPC renders as an unlit
+  silhouette, the hotbar shows placeholder glyphs, and the `TEAM 0/5` roster
+  draws over the centre of the screen.
+- **S05 pacing** (the only valid sample): one dead-travel interval ≥250 m —
+  **329.8 m over 53.9 s** — against a corridor whose median
+  `nearest_poi_dist_m` is **9.9 m**. The route is well populated; this is one
+  gap, not a pattern. **No chapter total and no 3–4 h D42 projection exists from
+  this run**, and none can be inferred from elapsed wall clock.
+
+**Quarantine breaks now**, deliberately and on the record, to begin §16.3
+historical reconciliation. Everything above is frozen and hashed.
