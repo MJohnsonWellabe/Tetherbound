@@ -34,29 +34,43 @@ func _must_stay_scatter() -> Array[String]:
 	return out
 
 
-## The default is OFF, and it stays off until a real ROG Ally says otherwise.
+## The flag is an OWNER decision. What is pinned is that the flag and the
+## suppression list always agree about which system owns the ground.
 ##
-## This is the whole safety story for the change and it is a one-word edit to
-## break. No container in this project can measure GPU cost -- `PERF-ROG-GPU`
-## records that the Compatibility renderer counts MultiMesh batches rather than
-## instances and that this box rasterises in software -- so "it looked fine
-## here" is not evidence about the only hardware that matters.
-func test_the_field_ships_off_until_a_handheld_pass_says_otherwise() -> void:
-	assert_false(FIELD.is_enabled(),
-		"data/config/grass_field.json has `enabled` true. The grass field replaces " +
-		"the ground plane with a shader carpet whose cost cannot be measured in " +
-		"this container at all (PERF-ROG-GPU). It ships off until an ROG Ally " +
-		"pass says it is affordable; turning it on is an owner decision, not a " +
-		"lane's.")
-
-
-## Off means ABSENT, not cheap. A disabled field that still built a 170,000
-## instance MultiMesh and skipped drawing it would be the worst of both.
-func test_disabled_means_no_layers_are_suppressed() -> void:
-	assert_true(FIELD.suppressed_layers().is_empty(),
-		"the field is disabled but suppressed_layers() is non-empty -- vegetation.gd " +
-		"would drop ground cover that nothing replaces, leaving the meadow barer " +
-		"than either system alone")
+## This test previously asserted the field ships OFF, and that was right while
+## the question was open. No container in this project can measure GPU cost --
+## `PERF-ROG-GPU` records that the Compatibility renderer counts MultiMesh
+## batches rather than instances and that this box rasterises in software -- so
+## "it looked fine here" was never evidence about the only hardware that
+## matters, and the flag was reserved for the owner.
+##
+## The owner turned it on for handheld evaluation on 2026-08-27. That is the
+## decision the old assertion existed to reserve, so continuing to pin the flag
+## to one value would now block the owner rather than a lane. Reverting is still
+## a one-word edit, which is the safety story the flag was built for.
+##
+## What no frame catches, and what is still guarded here, is the flag and the
+## suppression list DISAGREEING. Either system alone dresses the ground; both at
+## once is z-fighting at every blade, and neither at all is a bare meadow. So
+## the flag may be either value and the suppression must follow it.
+func test_the_flag_and_the_suppression_list_agree() -> void:
+	var names: Array = FIELD.config().get("suppress_scatter_layers", [])
+	var suppressed: Dictionary = FIELD.suppressed_layers()
+	if FIELD.is_enabled():
+		for entry: Variant in names:
+			assert_true(suppressed.has(str(entry)),
+				"the field is ON but '%s' is not suppressed -- the scatter carpet " % str(entry) +
+				"and the shader carpet would both dress the same ground")
+		assert_eq(suppressed.size(), names.size(),
+			"the field is ON and suppressed_layers() does not match " +
+			"suppress_scatter_layers exactly")
+	else:
+		# Off means ABSENT, not cheap. A disabled field that still suppressed
+		# layers would leave the meadow barer than either system alone.
+		assert_true(suppressed.is_empty(),
+			"the field is disabled but suppressed_layers() is non-empty -- vegetation.gd " +
+			"would drop ground cover that nothing replaces, leaving the meadow barer " +
+			"than either system alone")
 
 
 ## Every name on the suppression list has to be a layer that actually exists.
