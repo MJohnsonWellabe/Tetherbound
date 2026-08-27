@@ -103,6 +103,11 @@ var _cfg := {
 	"segment_cost_ceiling_s": 14400.0,
 	## Frames timed during the pre-flight to measure what one costs here.
 	"cost_probe_frames": 20,
+	## A prescribed capture whose frame is this flat AND this dark is a picture
+	## of an obstruction, not of the game. Calibrated against X07's own 79
+	## frames -- see `_frame_stats`.
+	"degenerate_dark_fraction": 0.65,
+	"degenerate_stddev": 35.0,
 }
 
 # --- run identity and output -------------------------------------------------
@@ -1100,6 +1105,14 @@ func _write_inventory() -> void:
 		else:
 			var row: Dictionary = taken
 			out["reason"] = str(row.get("reason", ""))
+			# Carried into the ledger so "show me the frames with no contrast"
+			# is a sort over INVENTORY.json rather than an afternoon of opening
+			# PNGs one at a time -- which is how the 2026-08-27 run's two
+			# useless frames stayed unnoticed among 79 good ones.
+			if row.has("luma"):
+				out["luma"] = row["luma"]
+			if row.has("degenerate"):
+				out["degenerate"] = str(row["degenerate"])
 			if row.get("file") != null:
 				out["file"] = str(row["file"])
 				var bytes := _file_bytes(_out_dir.path_join(str(row["file"])))
@@ -2685,6 +2698,97 @@ func _write_frame(trigger: String) -> void:
 	_record_written += 1
 
 
+## Mean luminance, standard deviation and dark fraction of a frame.
+##
+## Sampled every 8th pixel in both axes -- 32,400 samples at 1920x1080, which is
+## plenty for a distribution and cheap enough to run on every prescribed shot.
+##
+## Recorded on EVERY capture, whatever the verdict. That is most of the value:
+## the 2026-08-27 run produced 79 X07 frames and the only way to find the bad
+## ones was to open them one at a time. Three numbers per row makes "show me the
+## frames with no contrast" a sort rather than an afternoon.
+static func _frame_stats(image: Image) -> Dictionary:
+	var w := image.get_width()
+	var h := image.get_height()
+	if w == 0 or h == 0:
+		return {}
+	var step := 8
+	var total := 0.0
+	var samples := 0
+	var dark := 0
+	var values: Array[float] = []
+	for y in range(0, h, step):
+		for x in range(0, w, step):
+			var c := image.get_pixel(x, y)
+			# Rec. 709 luma, on the 0-255 scale the thresholds are quoted in.
+			var luma := (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) * 255.0
+			values.append(luma)
+			total += luma
+			samples += 1
+			if luma < 24.0:
+				dark += 1
+	if samples == 0:
+		return {}
+	var mean := total / float(samples)
+	var acc := 0.0
+	for v in values:
+		acc += (v - mean) * (v - mean)
+	return {
+		"mean_luma": snappedf(mean, 0.1),
+		"stddev_luma": snappedf(sqrt(acc / float(samples)), 0.1),
+		"dark_fraction": snappedf(float(dark) / float(samples), 0.001),
+	}
+
+
+## Is this frame a picture of an obstruction rather than of the game?
+##
+## The defects lane reported that X07's `hall` and `the_rise` audit cameras end
+## up INSIDE masonry. Checked against the recovered frames, that diagnosis does
+## not hold: `hall-gameplay` is a clean exterior of the stronghold gate (mean
+## luma 72.8, 2.4% dark) and all six `the_rise` frames share ONE camera
+## position -- four of them are wide, fully-lit vistas. A camera inside solid
+## geometry would be black at every yaw.
+##
+## Two of the six are still useless, and that is the real defect: at those yaws
+## the camera's near field is filled by something opaque. So the check is on the
+## IMAGE, not on a physics query -- it catches a buried camera, an occluded near
+## field, a fade caught mid-frame and a black screen alike, and it needs no
+## assumption about why.
+##
+## Calibrated against X07's own 79 frames. The separation is clean and it is not
+## the one you would guess -- mean luminance does NOT work, because the darkest
+## frames in the set are legitimate NIGHT frames:
+##
+##   frame                             mean  stddev  frac<24
+##   the_pond-night-gameplay           25.1    41.1    0.584   <- legitimate
+##   the_rise-gameplay                 26.6    29.0    0.755   <- degenerate
+##   the_rise-arrival                  26.6    29.0    0.755   <- degenerate
+##   the_pond-night-arrival            26.8    43.0    0.584   <- legitimate
+##   (next darkest of the other 75)    48.2    48.8    0.284
+##
+## The night frames are DARKER in the mean and still have sky, moon and
+## silhouette, so they hold their contrast. The degenerate pair is flat. Dark
+## fraction separates at 0.584 / 0.755 and stddev at 43.0 / 29.0; the defaults
+## sit between both, and both must trip together.
+##
+## Note the dark fraction tops out near 0.755 rather than 1.0 because the HUD is
+## in the frame. The thresholds are measured against that reality, not against
+## an idealised bare viewport.
+func _degenerate_reason(stats: Dictionary) -> String:
+	if stats.is_empty():
+		return ""
+	var dark := float(stats.get("dark_fraction", 0.0))
+	var spread := float(stats.get("stddev_luma", 255.0))
+	if dark <= float(_cfg["degenerate_dark_fraction"]) or spread >= float(_cfg["degenerate_stddev"]):
+		return ""
+	return ("%.1f%% of the frame is below luma 24 and its luminance spread is only %.1f "
+		+ "(mean %.1f). That is a photograph of an obstruction, not of the game: a camera "
+		+ "inside geometry, a near field filled by something opaque, or a fade caught "
+		+ "mid-frame. A legitimate night frame is darker in the mean and keeps its contrast "
+		+ "-- X07's own night captures sit at %.0f%% dark with a spread of ~42.") % [
+			dark * 100.0, spread, float(stats.get("mean_luma", 0.0)), 58.4]
+
+
 func _step_capture(args: Dictionary, step_id: String) -> String:
 	var shot_id := str(args.get("id", step_id))
 	var row := {
@@ -2746,14 +2850,24 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		return "FAIL capture %s could not be written (%d)" % [shot_id, err]
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
+	var stats := _frame_stats(image)
+	row["luma"] = stats
 	_manifest.append(row)
 	_capture_step_active = false
 	# Push the recorder's next cadence frame past this shot rather than letting
 	# it fire on the very next tick with an identical image.
 	if _record_hz > 0.0:
 		_record_next_t = maxf(_record_next_t, _t() + (1.0 / maxf(0.01, _record_hz)))
+	var degenerate := _degenerate_reason(stats)
+	if not degenerate.is_empty():
+		row["degenerate"] = degenerate
+		_emit("screenshot", {"artifacts": [shot_id], "severity_candidate": "SHIP",
+			"observation": "degenerate frame: %s" % degenerate})
+		return "FAIL capture %s is a degenerate frame. %s" % [shot_id, degenerate]
 	_emit("screenshot", {"artifacts": [shot_id]})
-	return "captured %s at %dx%d" % [shot_id, image.get_width(), image.get_height()]
+	return "captured %s at %dx%d (mean luma %.1f, spread %.1f, %.1f%% dark)" % [shot_id,
+		image.get_width(), image.get_height(), float(stats.get("mean_luma", 0.0)),
+		float(stats.get("stddev_luma", 0.0)), float(stats.get("dark_fraction", 0.0)) * 100.0]
 
 
 ## A timed run of frames, for a motion the operator has to be able to watch

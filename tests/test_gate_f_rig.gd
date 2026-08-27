@@ -36,6 +36,7 @@ const HARNESS_PATH := "res://tools/gate_f/operator_harness.gd"
 const SCHEMA_PATH := "res://tools/gate_f/SEGMENT_SCHEMA.md"
 const PROTOCOL_PATH := "res://ralph/GATE_F_MASTER_PROTOCOL.md"
 const GITIGNORE_PATH := "res://.gitignore"
+const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 
 
 func _harness_source() -> String:
@@ -739,3 +740,65 @@ func test_the_gitignore_shots_rule_is_the_one_that_was_wrong() -> void:
 	assert_eq(survey_code, 0,
 		"the repository-root shots/ (tools/survey.sh output) is no longer ignored; anchoring the "
 		+ "pattern was supposed to narrow it, not remove it. %s" % str(survey))
+
+
+# --- a capture that photographs an obstruction is not evidence ---------------
+
+func test_a_degenerate_frame_is_measured_and_failed() -> void:
+	# The defects lane reported X07's `hall` and `the_rise` audit cameras end up
+	# INSIDE masonry. Checked against the recovered frames that diagnosis does
+	# not hold — `hall-gameplay` is a clean exterior at mean luma 72.8 and 2.4%
+	# dark, and all six `the_rise` frames share ONE camera position with four of
+	# them wide, fully-lit vistas. A camera inside solid geometry is black at
+	# every yaw.
+	#
+	# Two of the six are still useless, so the check is on the IMAGE rather than
+	# on a physics query: it catches a buried camera, an occluded near field, a
+	# fade caught mid-frame and a black screen alike, without needing to know
+	# which.
+	var source := _harness_source()
+	assert_true(source.contains("static func _frame_stats("),
+		"every prescribed capture must carry its own luminance statistics — finding the two bad "
+		+ "frames among X07's 79 otherwise means opening them one at a time")
+	assert_true(source.contains("func _degenerate_reason("), "there is no degenerate-frame check")
+	var cap := source.substr(source.find("func _step_capture("))
+	cap = cap.substr(0, cap.find("\nfunc _step_capture_seq"))
+	assert_true(cap.contains("row[\"luma\"] = stats"),
+		"the statistics must reach the manifest row whatever the verdict")
+	assert_true(cap.contains("return \"FAIL capture %s is a degenerate frame."),
+		"a frame that photographs an obstruction is not evidence and must FAIL")
+
+
+func test_the_degenerate_thresholds_separate_night_from_useless() -> void:
+	# The calibration, pinned. Mean luminance does NOT separate these: the two
+	# darkest frames in X07's set are legitimate NIGHT captures and are darker
+	# in the mean than the degenerate pair. What separates them is that a night
+	# scene keeps its contrast — sky, moon, silhouette — and an obstruction does
+	# not. Both conditions must trip together or a night audit frame is thrown
+	# away as broken.
+	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	assert_true(typeof(cfg) == TYPE_DICTIONARY, "harness_config.json is not a JSON object")
+	var dark_gate := float((cfg as Dictionary).get("degenerate_dark_fraction", -1.0))
+	var spread_gate := float((cfg as Dictionary).get("degenerate_stddev", -1.0))
+	# Measured on X07's own frames, by the same code that applies the gate.
+	var night_dark := 0.584
+	var night_spread := 41.1
+	var bad_dark := 0.755
+	var bad_spread := 29.0
+	var next_darkest_dark := 0.284
+	assert_true(dark_gate > night_dark and dark_gate < bad_dark,
+		"degenerate_dark_fraction (%.3f) must sit between the legitimate night frames (%.3f) and "
+			% [dark_gate, night_dark]
+		+ "the degenerate ones (%.3f)" % bad_dark)
+	assert_true(spread_gate > bad_spread and spread_gate < night_spread,
+		"degenerate_stddev (%.1f) must sit between the degenerate frames' spread (%.1f) and the "
+			% [spread_gate, bad_spread]
+		+ "night frames' (%.1f)" % night_spread)
+	# And the gate must be an AND, or the night frames fail on darkness alone.
+	var source := _harness_source()
+	var body := source.substr(source.find("func _degenerate_reason("))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("or spread >= float(_cfg[\"degenerate_stddev\"])"),
+		"both conditions must hold for a frame to be called degenerate; darkness alone would "
+		+ "throw away every legitimate night capture (the next-darkest 75 frames sit at %.3f dark)"
+			% next_darkest_dark)

@@ -8,6 +8,11 @@
       "hud": "on",
       "id": "SC-C-title",
       "intended_proof": "capture mode reaches the framebuffer at the requested resolution",
+      "luma": {
+        "dark_fraction": 0.054,
+        "mean_luma": 50.8,
+        "stddev_luma": 32.4
+      },
       "pos": [
         0.0,
         0.0,
@@ -18,7 +23,7 @@
         1920,
         1080
       ],
-      "t": 1.235507,
+      "t": 1.673401,
       "trigger": "planned",
       "weather": ""
     },
@@ -30,6 +35,11 @@
       "hud": "on",
       "id": "SC-C-seq-000",
       "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "luma": {
+        "dark_fraction": 0.054,
+        "mean_luma": 51.1,
+        "stddev_luma": 32.2
+      },
       "pos": [
         0.0,
         0.0,
@@ -40,7 +50,7 @@
         1920,
         1080
       ],
-      "t": 1.739037,
+      "t": 2.280875,
       "trigger": "planned",
       "weather": ""
     },
@@ -52,6 +62,11 @@
       "hud": "on",
       "id": "SC-C-seq-001",
       "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "luma": {
+        "dark_fraction": 0.054,
+        "mean_luma": 51.1,
+        "stddev_luma": 32.2
+      },
       "pos": [
         0.0,
         0.0,
@@ -62,7 +77,7 @@
         1920,
         1080
       ],
-      "t": 2.145647,
+      "t": 2.745226,
       "trigger": "planned",
       "weather": ""
     },
@@ -74,6 +89,11 @@
       "hud": "on",
       "id": "SC-C-seq-002",
       "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+      "luma": {
+        "dark_fraction": 0.054,
+        "mean_luma": 51.1,
+        "stddev_luma": 32.2
+      },
       "pos": [
         0.0,
         0.0,
@@ -84,7 +104,7 @@
         1920,
         1080
       ],
-      "t": 2.517029,
+      "t": 3.179837,
       "trigger": "planned",
       "weather": ""
     }

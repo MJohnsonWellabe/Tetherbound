@@ -403,7 +403,8 @@ different verdict from the one this lane shipped:
 > **PASS verdict on top of it** asserts a success that did not happen.
 > `SKIPPED`/`N/A` would carry the same information honestly.
 
-That is a fair reading and it is not what landed, for two reasons.
+That is a fair reading and it is not what landed, for two reasons. **The
+coordinator confirmed this call on 2026-08-27: keep FAIL.**
 
 **The written spec says FAIL.** CD-1's own permanent-template change is
 explicit: *"a planned capture that cannot be taken is a **FAIL**, and a segment
@@ -552,6 +553,91 @@ The merge brings the operator's recovered evidence into this tree: **79 X07
 frames** under `ralph/reports/gate-f-run-20260827T025303Z/X07/shots/`. Finding 2
 is now confirmable from primary evidence in the working copy rather than from
 the operator's report of it.
+
+---
+
+## Finding 11 — the camera-in-masonry report is half wrong, and the half that
+## is right has a different cause
+
+The defects lane reported that X07's `hall` teleport/face pair puts the
+reconstructed camera **inside the masonry** — *"a slot of world between a floor
+slab and a ceiling slab"* — and that `the_rise` has the same failure, raising
+the possibility that `GF-B-004` (black sphere) and `GF-B-008` (black Rise
+arrival) are rig artefacts rather than game defects. They flagged it rather than
+fixing it because `tools/gate_f/**` is this lane's.
+
+The merge brought the operator's 79 recovered X07 frames into this tree, so this
+was checkable against primary evidence rather than reasoning.
+
+**`hall` is not buried.** `GF-AUD-hall-gameplay.png` is a clean, well-lit
+exterior of the stronghold gate with the player standing in front of it and the
+HUD legible — mean luma 72.8, spread 43.2, **2.4%** of the frame below luma 24.
+**And `GF-B-004`'s black sphere is plainly visible in the archway.** On this
+evidence it is a real rendering artefact in the world, not a camera artefact.
+`GF-B-004` should stay a game defect.
+
+**`the_rise` is not buried either, though two of its frames are useless.** All
+six `the_rise` captures were taken at the *same camera position* —
+`[88.0, 2.22, -43.0]`, from `events.jsonl` — with only yaw varying between them.
+Four of the six are wide, fully-lit vistas of the village on the rise
+(`the_rise-landmark` is mean luma 111.9). **A camera inside solid geometry is
+black at every yaw.** What is actually happening is that at two of the six yaws
+the camera's near field is filled by something opaque.
+
+So `GF-B-008` does look like a rig artefact — the frame is useless — but not for
+the stated reason, and the proposed fix would not have caught it. A
+"refuse if the camera is inside collision geometry" check answers a question
+neither of these frames was asking.
+
+### What landed instead
+
+The check is on the **image**, which catches a buried camera, an occluded near
+field, a fade caught mid-frame and a black screen alike without needing to know
+which. Every prescribed capture now carries its own luminance statistics — mean,
+spread, dark fraction — on its manifest and inventory row, and a frame that is
+both very dark and very flat FAILs.
+
+Most of the value is the statistics rather than the gate. The 2026-08-27 run
+produced 79 X07 frames and the only way to find the two bad ones was to open
+them one at a time; three numbers per row turns that into a sort.
+
+**Calibrated against those 79 frames, and the separation is not the obvious
+one.** Mean luminance does not work, because the two darkest frames in the set
+are legitimate night captures:
+
+| frame | mean | stddev | frac < 24 | |
+|---|---|---|---|---|
+| `the_pond-night-gameplay` | 25.1 | 41.1 | 0.584 | legitimate |
+| `the_rise-gameplay` | 26.6 | 29.0 | **0.755** | degenerate |
+| `the_rise-arrival` | 26.6 | 29.0 | **0.755** | degenerate |
+| `the_pond-night-arrival` | 26.8 | 43.0 | 0.584 | legitimate |
+| *next darkest of the other 75* | 48.2 | 48.8 | 0.284 | |
+
+The night frames are *darker in the mean* and keep their contrast — sky, moon,
+silhouette — while the degenerate pair is flat. The gate is therefore dark
+fraction **AND** spread, both, with the thresholds between the two populations.
+
+Two validations worth recording:
+
+* **The GDScript implementation was cross-checked against the Python
+  measurement that set the thresholds**, on the same frames, and agrees to the
+  decimal on all seven sampled. A threshold calibrated with one measurement and
+  applied by another is a threshold nobody has actually tested.
+* **Both conditions are required, and a real capture proves it.** This repo's
+  own title screen measures mean 50.8 / spread **32.4** / 5.4% dark. Its spread
+  is *below* the gate — it is a deliberately flat dark UI — and only the
+  dark-fraction half keeps it from being thrown away as broken.
+
+### One more thing the telemetry shows
+
+The six `hall` captures were taken with `region=corridor`, while step `X07-165`
+asserts `region_is == hall`. That assertion failed and the captures went ahead
+anyway, filed under the name `hall`. The context guard this lane built covers
+`require_context` and `assert_context`; it does **not** derail on a failed
+ordinary `assert`, and on reflection it should not — an `assert` is a verdict on
+the game and §1.6 says the run continues. But a capture *named* for a place the
+run has just measured itself not to be in is worth the coordinator's attention
+when X07 is re-transcribed.
 
 ---
 

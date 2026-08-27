@@ -13,6 +13,11 @@
         "file": "shots/SC-C-title.png",
         "id": "SC-C-title",
         "intended_proof": "capture mode reaches the framebuffer at the requested resolution",
+        "luma": {
+          "dark_fraction": 0.054,
+          "mean_luma": 50.8,
+          "stddev_luma": 32.4
+        },
         "reason": "",
         "step": "SC-C-03"
       },
@@ -24,6 +29,11 @@
         "file": "shots/SC-C-seq-000.png",
         "id": "SC-C-seq-000",
         "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+        "luma": {
+          "dark_fraction": 0.054,
+          "mean_luma": 51.1,
+          "stddev_luma": 32.2
+        },
         "reason": "",
         "step": "SC-C-05"
       },
@@ -35,6 +45,11 @@
         "file": "shots/SC-C-seq-001.png",
         "id": "SC-C-seq-001",
         "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+        "luma": {
+          "dark_fraction": 0.054,
+          "mean_luma": 51.1,
+          "stddev_luma": 32.2
+        },
         "reason": "",
         "step": "SC-C-05"
       },
@@ -46,6 +61,11 @@
         "file": "shots/SC-C-seq-002.png",
         "id": "SC-C-seq-002",
         "intended_proof": "a frame sequence produces one manifest row per frame, so a single missing frame is visible rather than averaged away",
+        "luma": {
+          "dark_fraction": 0.054,
+          "mean_luma": 51.1,
+          "stddev_luma": 32.2
+        },
         "reason": "",
         "step": "SC-C-05"
       }
@@ -65,16 +85,21 @@
   "harness_errors": [],
   "preflight": {
     "allow_no_capture": false,
-    "boot_cost_s": 0.41,
+    "boot_cost_s": 0.53,
     "capture_available": true,
     "capture_requested": true,
     "display_server": "X11",
-    "measured_frame_cost_s": 0.00562,
-    "measured_frame_cost_s_in_scene": 0.030257,
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "/home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server"
+    },
+    "measured_frame_cost_s": 0.007425,
+    "measured_frame_cost_s_in_scene": 0.043469,
     "planned_captures": 4,
     "predicted_frames": 113,
-    "predicted_segment_cost_s": 0.6,
-    "predicted_segment_cost_s_in_scene": 3.8,
+    "predicted_segment_cost_s": 0.8,
+    "predicted_segment_cost_s_in_scene": 5.4,
     "record_baseline_hz": 0.1,
     "self_test": {
       "bytes": 10596,
@@ -90,7 +115,7 @@
   },
   "run_id": "rig-2026-08-27",
   "segment": "selfcheck_capture",
-  "sha": "a35f0dd3fd15dc2a82a0ae03006decb10706ba09",
+  "sha": "130103264457fe02859a3da5464f2dab1c02f45e",
   "steps": {
     "fail": 0,
     "pass": 6,

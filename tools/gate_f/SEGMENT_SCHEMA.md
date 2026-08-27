@@ -277,7 +277,7 @@ not the conversation.
 
 | Action | Args | Does |
 |---|---|---|
-| `capture` | `id`, `class`, `hud` (`on`/`off`), `camera_kind`, `trigger`, `intended_proof` | One PNG plus a `shots/manifest.json` row. Under a headless process it writes the row with `file: null` and a reason — an absent frame is evidence (§C.4), so a planned shot is never silently dropped. |
+| `capture` | `id`, `class`, `hud` (`on`/`off`), `camera_kind`, `trigger`, `intended_proof` | One PNG plus a `shots/manifest.json` row, carrying that frame's own `luma` statistics (mean, spread, dark fraction) and **FAILing when the frame is degenerate** — see **A frame that photographs an obstruction** below. Under a headless process it writes the row with `file: null` and a reason — an absent frame is evidence (§C.4), so a planned shot is never silently dropped. |
 | `capture_seq` | `id`, `hz`, `seconds`, plus every `capture` arg | A timed run of frames, each its own manifest row, so a single missing frame is visible rather than averaged away. **Blocks** — nothing else happens while it runs. |
 | `record_start` | `hz`, `label`, `hud`, `camera_kind` | Raises the §H background frame rate for a window. Does **not** block: frames are taken from the per-frame tick every other step already drives, so walking, fighting and menus keep happening. |
 | `record_stop` | `baseline` | Ends the window, returning to the segment's baseline rate. `{"baseline": false}` stops the recorder outright — for X08's perf audit, which §H's last clause says runs without capture. |
@@ -503,6 +503,46 @@ developer run a capture-bearing segment for its logic. It does **not** make the
 segment complete: the inventory still marks every planned shot absent and
 `complete: false`, and the acknowledgement is recorded as a BLOCKER-severity
 note in the event stream.
+
+### A frame that photographs an obstruction is not evidence
+
+Every prescribed capture carries its own luminance statistics — mean, standard
+deviation, and the fraction below luma 24 — on its manifest and inventory row.
+That is most of the value on its own: the 2026-08-27 run produced 79 X07 frames
+and the only way to find the bad ones was to open them one at a time. Three
+numbers per row makes *"show me the frames with no contrast"* a sort.
+
+A capture whose frame is both very dark **and** very flat is a photograph of an
+obstruction rather than of the game, and it FAILs. The check is on the **image**,
+not on a physics query, so it catches a camera inside geometry, a near field
+filled by something opaque, a fade caught mid-frame and a black screen alike —
+without needing to know which.
+
+**Calibrated against X07's own 79 recovered frames, and the separation is not the
+one you would guess.** Mean luminance does *not* work: the two darkest frames in
+that set are legitimate night captures.
+
+| frame | mean | stddev | frac < 24 | |
+|---|---|---|---|---|
+| `the_pond-night-gameplay` | 25.1 | 41.1 | 0.584 | legitimate |
+| `the_rise-gameplay` | 26.6 | 29.0 | **0.755** | degenerate |
+| `the_rise-arrival` | 26.6 | 29.0 | **0.755** | degenerate |
+| `the_pond-night-arrival` | 26.8 | 43.0 | 0.584 | legitimate |
+| *next darkest of the other 75* | 48.2 | 48.8 | 0.284 | |
+
+A night scene is *darker in the mean* and still holds its contrast — sky, moon,
+silhouette. An obstruction is flat. So the gate is dark fraction **AND** spread,
+with `degenerate_dark_fraction` (0.65) and `degenerate_stddev` (35.0) sitting
+between the two populations.
+
+Both conditions are required, and a real capture shows why: this repo's own
+title screen measures mean 50.8 / spread **32.4** / 5.4% dark. Its spread is
+*below* the gate — it is a deliberately flat dark UI — and only the dark-fraction
+half keeps it from being thrown away.
+
+The dark fraction tops out near 0.755 rather than 1.0 because the HUD is in the
+frame. These numbers are measured against that reality, not against a bare
+viewport.
 
 ### Costing a segment before launching it
 

@@ -3,16 +3,21 @@
   "capture_available": true,
   "capture_preflight": {
     "allow_no_capture": false,
-    "boot_cost_s": 0.41,
+    "boot_cost_s": 0.53,
     "capture_available": true,
     "capture_requested": true,
     "display_server": "X11",
-    "measured_frame_cost_s": 0.00562,
-    "measured_frame_cost_s_in_scene": 0.030257,
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "/home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server"
+    },
+    "measured_frame_cost_s": 0.007425,
+    "measured_frame_cost_s_in_scene": 0.043469,
     "planned_captures": 4,
     "predicted_frames": 113,
-    "predicted_segment_cost_s": 0.6,
-    "predicted_segment_cost_s_in_scene": 3.8,
+    "predicted_segment_cost_s": 0.8,
+    "predicted_segment_cost_s_in_scene": 5.4,
     "record_baseline_hz": 0.1,
     "self_test": {
       "bytes": 10596,
@@ -48,7 +53,7 @@
       "rest.clear_on_faint": true
     },
     "grass_field.json": {
-      "enabled": false,
+      "enabled": true,
       "stones.enabled": true
     },
     "meadow_healing.json": {
@@ -117,7 +122,6 @@
     }
   },
   "config_flags_off": [
-    "grass_field.json:enabled",
     "movement.json:camera.invert_y",
     "movement.json:torch.shadows",
     "performance.json:debug_overlay_on_boot",
@@ -150,10 +154,10 @@
   "derails": [],
   "display_server": "X11",
   "frame_grab_ms": {
-    "amortised_ms_per_frame_at_hz": 0.11,
+    "amortised_ms_per_frame_at_hz": 0.12,
     "hz": 0.1,
-    "max_ms": 72.12,
-    "mean_ms": 65.95,
+    "max_ms": 75.1,
+    "mean_ms": 71.98,
     "n": 4
   },
   "frames_absent": 0,
@@ -161,21 +165,21 @@
   "godot": "4.7-stable (official)",
   "harness_errors": [],
   "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
-  "measured_frame_cost_s": 0.030257,
+  "measured_frame_cost_s": 0.043469,
   "planned_captures": 4,
-  "predicted_segment_cost_s": 3.8,
+  "predicted_segment_cost_s": 5.4,
   "record_baseline_hz": 0.1,
   "rendering_driver": "llvmpipe (LLVM 20.1.2, 256 bits)",
   "run_id": "rig-2026-08-27",
   "segment": "selfcheck_capture",
   "segment_script": "tools/gate_f/segments/selfcheck_capture.json",
-  "sha": "a35f0dd3fd15dc2a82a0ae03006decb10706ba09",
-  "started_wall": "2026-08-27 17:03:08",
+  "sha": "130103264457fe02859a3da5464f2dab1c02f45e",
+  "started_wall": "2026-08-27 19:40:01",
   "steps_ran": 6,
   "steps_refused": 0,
   "steps_total": 6,
   "trace_hz": 2.0,
-  "trace_rows": 4,
+  "trace_rows": 5,
   "verdicts": {
     "FAIL": 0,
     "PASS": 6,
