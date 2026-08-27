@@ -2188,3 +2188,73 @@ delivered its traversal, its regions and its pacing evidence, and failed at one
 gated fight rather than wholesale.
 
 **Next:** S06, already launched, entering from `S05-exit`.
+
+## Check-in 21 — 2026-08-27 — **S06: 86 PASS / 17 FAIL. The player walks 9.2 km and never leaves the corridor.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S06/`. 4,106 route rows,
+**2,176 s (36 min)**, **9,180 m walked**, exit save written. `input_context` is
+`world` for **99.1%** — no panel captured this segment either.
+
+### Regions never reached
+
+`region_enter` fired 3 times; the region sequence is
+`grandpas_village → corridor` and **stops there**. Two steps report it directly:
+`region=corridor (wanted the_old_quarry)` and
+`region=corridor (wanted the_burrow_warrens)`. `warrens_cleared` never sets.
+
+### Eleven walks fail, at two coordinates, every one `0 held`
+
+| target | stopped at | short by |
+|---|---|---|
+| (403, 1794) | **(22.0, 0.0, 172.0)** | 1666.2 m |
+| (315, 1668) | **(22.0, 0.0, 172.0)** | 1524.5 m |
+| (-420, 2470) | (14.0, −3.0, 1322.0) | 1227.7 m |
+| (-373, 2632) | (14.0, −3.0, 1323.0) | 1365.0 m |
+| (-357, 2650) | (16.0, −3.0, 1321.0) | 1380.6 m |
+| (-357, 2632) | (14.0, −3.0, 1323.0) | 1360.9 m |
+| (-357, 2616) | (8.0, −2.0, 1317.0) | 1349.3 m |
+| (-357, 2616) | (15.0, −3.0, 1321.0) | 1347.3 m |
+| (-342, 2650) | (15.0, −6.0, 1325.0) | 1371.9 m |
+| (-259, 2256) | (13.0, −4.0, 1324.0) | 971.8 m |
+
+Generous budgets were spent — **6,300, 18,900 and 44,100 walking frames** on
+three of them, far above the harness's 2,400 default — so these are not budget
+timeouts.
+
+**The second cluster sits at z ≈ 1317–1325.** S05 ended 15.3 m from the South
+Bridge anchor at **(0, 1330)** with **`south_bridge_open` NOT set**. The
+observation, recorded without a causal claim (§13): every failed walk in that
+cluster stops within ~10 m of the bridge line, on the near side, in a segment
+whose entry save carries the bridge flag unset. The first cluster, `(22, 172)`,
+is separate and earlier — **846 rows, 21% of the segment, dwelt on that one
+coordinate**.
+
+### §D — two more findings and a watch item, and a pattern in the POI minima
+
+| | length | t | from → to | nearest POI (min) |
+|---|---|---|---|---|
+| **FINDING** | **538.7 m** | 261→825 s (563 s) | (33,146) → (−69,620) | **31.2 m** |
+| **FINDING** | **425.8 m** | 1071→1142 s (70 s) | (−99,774) → (−177,1189) | **31.3 m** |
+| watch | 217.4 m | 1150→1205 s (55 s) | (−187,1241) → (−239,1333) | **31.7 m** |
+
+**Worth carrying to Phase B as a measurement about the metric itself:** across
+S05 and S06, **all four** over-threshold or watch intervals have nearest-POI
+minima in a narrow band — **30.2, 31.2, 31.3, 31.7 m** — against §F's **30 m**
+reset radius. Every one clears the bar by between 0.2 and 1.7 m. That makes the
+dead-travel counts **highly sensitive to the exact radius chosen**: a 32 m radius
+would erase all four. Recording the sensitivity, not proposing a number — the
+classification and any retuning are Phase B's.
+
+Run totals so far: **3 findings ≥250 m, 1 watch item.**
+
+### The rest of the 17
+
+`input_context=world (wanted combat)` (zero `combat_*` events again), party size
+1 (wanted 3), the objective-id thread (`opening:beat:road` where
+`clear_the_burrow_warrens` wanted), and one focus failure — `1 × ui_down did not
+move focus off @Button@64790`.
+
+**severity_candidate: BLOCKER** — candidate only. Two named regions of Band 2 are
+unreachable on the production path.
+
+**Next:** S07, already launched, entering from `S06-exit`.
