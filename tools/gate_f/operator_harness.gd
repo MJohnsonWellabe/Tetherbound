@@ -779,38 +779,82 @@ func _preflight_capture(steps: Array) -> bool:
 		_preflight["why"] = "telemetry off (no --gatef-out); nowhere to write a PNG and nothing claiming there was"
 		return true
 
-	var why := ""
+	# Two kinds of reason to refuse, and they are NOT interchangeable.
+	#
+	# `capture_why` is "this invocation cannot take pictures". That is what
+	# `--gatef-allow-no-capture` acknowledges, and acknowledging it buys a
+	# developer a logic pass over a capture-bearing segment at the price of
+	# never being able to call it complete.
+	#
+	# `hard_why` is a refusal the flag has no business waiving: a segment
+	# priced over the ceiling, or a freeze record that contradicts what this
+	# process can see. Neither is about pictures. An earlier cut of this
+	# function ran all four reasons through one string, so the display-server
+	# message overwrote the cost message and the acknowledgement flag waved
+	# through a cost breach -- which would have reproduced X07's fifteen wasted
+	# hours with a flag on it.
+	var capture_why := ""
+	var hard_why := ""
 	if predicted > ceiling:
-		why = ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames at a "
-			+ "MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- they "
-			+ "exist so fights resolve -- so this segment needs a GPU or a re-cadenced script, not "
-			+ "a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in.") % [
+		hard_why = ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames "
+			+ "at a MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- "
+			+ "they exist so fights resolve -- so this segment needs a GPU or a re-cadenced script, "
+			+ "not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in.") % [
 				predicted, predicted / 3600.0, ceiling, frames, frame_cost]
-	# CD-8b: a contradicted freeze record is a blocker in the direction that
-	# cost the last run everything -- the record promised a display server and
-	# there is none.
-	elif not str(_preflight.get("contradiction", "")).is_empty() and not _capture_available():
-		why = "the freeze record contradicts this process: %s" % str(_preflight["contradiction"])
+	# CD-8b, and only in the direction that cost the last run everything: the
+	# record promised a display server and there is none. The reverse -- a
+	# record saying headless on a box that can render -- is recorded in
+	# `_preflight.contradiction` and does not stop anything, because it cannot
+	# cause a segment to produce nothing.
+	if not str(_preflight.get("contradiction", "")).is_empty() and not _capture_available():
+		var claimed := "the freeze record contradicts this process: %s" % str(_preflight["contradiction"])
+		hard_why = claimed if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, claimed]
 	if not _capture_available():
-		why = ("no display server: DisplayServer reports '%s'. This process cannot render, so all "
-			+ "%d planned capture(s) and every continuous frame would be written as file:null while "
-			+ "the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture "
+		capture_why = ("no display server: DisplayServer reports '%s'. This process cannot render, "
+			+ "so all %d planned capture(s) and every continuous frame would be written as file:null "
+			+ "while the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture "
 			+ "(§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).") % [
 				DisplayServer.get_name(), _planned_captures.size()]
 	else:
 		var smoke := _out_dir.path_join("capture_smoke.png")
 		if not FileAccess.file_exists(smoke) or _file_bytes(smoke) <= 0:
-			why = ("tools/capture_diag_minimal.gd left no capture_smoke.png in %s. run_segment.sh "
-				+ "--capture writes one before it starts a segment, so its absence means this "
-				+ "segment was launched around the §A.4 smoke gate.") % _out_dir
+			capture_why = ("tools/capture_diag_minimal.gd left no capture_smoke.png in %s. "
+				+ "run_segment.sh --capture writes one before it starts a segment, so its absence "
+				+ "means this segment was launched around the §A.4 smoke gate.") % _out_dir
 		else:
 			_preflight["smoke_bytes"] = _file_bytes(smoke)
 			var probe := await _preflight_png()
 			_preflight["self_test"] = probe
 			if not bool(probe.get("ok", false)):
-				why = "this process has a display server but could not write its own PNG: %s" % str(probe.get("why", ""))
+				capture_why = ("this process has a display server but could not write its own PNG: %s"
+					% str(probe.get("why", "")))
+
+	# A capture failure the operator acknowledged in advance stops being the
+	# reason to refuse -- and is still recorded, at BLOCKER severity, and still
+	# makes the segment incomplete.
+	if not capture_why.is_empty() and _allow_no_capture:
+		_preflight["verdict"] = "DEGRADED (--gatef-allow-no-capture)"
+		_preflight["degraded_why"] = capture_why
+		_note_line("### preflight — DEGRADED, capture unavailable and acknowledged")
+		_note_line("- %s" % capture_why)
+		_note_line("- this segment CANNOT be marked complete; INVENTORY.json says so.")
+		_note_line("")
+		_emit("note", {"severity_candidate": "BLOCKER",
+			"observation": "capture pre-flight failed and was overridden with --gatef-allow-no-capture: %s"
+				% capture_why})
+		capture_why = ""
+
+	var why := hard_why
+	if why.is_empty():
+		why = capture_why
+	elif not capture_why.is_empty():
+		why = "%s ALSO: %s" % [hard_why, capture_why]
 
 	if why.is_empty():
+		if not str(_preflight.get("degraded_why", "")).is_empty():
+			# Acknowledged and degraded, not passing. `verdict` is already
+			# DEGRADED and the inventory will mark every planned shot absent.
+			return true
 		_preflight["verdict"] = "PASS"
 		_note_line("### preflight — capture available")
 		_note_line("- display_server: %s, smoke %d bytes, self-test %s" % [
@@ -819,20 +863,6 @@ func _preflight_capture(steps: Array) -> bool:
 		_note_line("")
 		_emit("note", {"observation": "capture pre-flight PASS: %d planned capture(s), display server %s"
 			% [_planned_captures.size(), DisplayServer.get_name()]})
-		return true
-
-	if _allow_no_capture:
-		# Explicitly acknowledged. Still not a run: the inventory marks every
-		# planned shot absent and the segment incomplete, so this can only ever
-		# buy a developer a fast logic pass, never an evidence claim.
-		_preflight["verdict"] = "DEGRADED (--gatef-allow-no-capture)"
-		_preflight["why"] = why
-		_note_line("### preflight — DEGRADED, capture unavailable and acknowledged")
-		_note_line("- %s" % why)
-		_note_line("- this segment CANNOT be marked complete; INVENTORY.json says so.")
-		_note_line("")
-		_emit("note", {"severity_candidate": "BLOCKER",
-			"observation": "capture pre-flight failed and was overridden with --gatef-allow-no-capture: %s" % why})
 		return true
 
 	_blocked = why
@@ -1018,6 +1048,7 @@ func _write_inventory() -> void:
 			var reason := str(frame.get("reason", "unrecorded"))
 			frames_absent_reasons[reason] = int(frames_absent_reasons.get(reason, 0)) + 1
 	var complete := _blocked.is_empty() \
+		and str(_preflight.get("degraded_why", "")).is_empty() \
 		and absent == 0 \
 		and _derails.is_empty() \
 		and _step_refused == 0 \

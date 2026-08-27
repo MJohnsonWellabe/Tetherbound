@@ -557,3 +557,42 @@ func test_missing_evidence_fails_the_process_but_a_failed_expectation_does_not()
 		+ "A missing ARTEFACT is the absence of evidence and must.")
 	assert_true(source.contains("_evidence_missing = absent > 0"),
 		"CD-2's regression: fail the segment if any manifest row claims a capture whose file is absent")
+
+
+# --- the pre-flight's two kinds of refusal are not interchangeable ----------
+
+func test_the_no_capture_acknowledgement_cannot_waive_a_cost_breach() -> void:
+	# `--gatef-allow-no-capture` says "I know this invocation cannot take
+	# pictures". It does not say "ignore the ceiling", and an earlier cut of
+	# `_preflight_capture` ran all four reasons to refuse through one string —
+	# so the display-server message overwrote the cost message, and the
+	# acknowledgement flag waved through a cost breach. That combination would
+	# have reproduced X07's fifteen wasted hours with a flag on it.
+	var source := _harness_source()
+	var pre := source.substr(source.find("func _preflight_capture("))
+	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
+	assert_true(pre.contains("var capture_why :=") and pre.contains("var hard_why :="),
+		"the pre-flight must keep 'cannot take pictures' and 'must not start at all' apart")
+	# The acknowledgement clears only the capture reason.
+	assert_true(pre.contains("if not capture_why.is_empty() and _allow_no_capture:"),
+		"--gatef-allow-no-capture must only be able to clear a CAPTURE reason")
+	assert_false(pre.contains("if _allow_no_capture:\n\t\t_preflight[\"verdict\"] = \"DEGRADED"),
+		"the acknowledgement must not be a blanket override of every refusal")
+	var gate := pre.substr(pre.find("if predicted > ceiling:"))
+	gate = gate.substr(0, gate.find("\n\tif not _capture_available():"))
+	assert_true(gate.contains("hard_why = "),
+		"a cost breach must be a hard refusal, not a capture one")
+
+
+func test_a_degraded_preflight_never_reads_as_a_pass() -> void:
+	var source := _harness_source()
+	var pre := source.substr(source.find("func _preflight_capture("))
+	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
+	assert_true(pre.contains("DEGRADED (--gatef-allow-no-capture)"),
+		"an acknowledged capture failure must carry its own verdict word")
+	assert_true(pre.contains("if not str(_preflight.get(\"degraded_why\", \"\")).is_empty():"),
+		"a degraded pre-flight must return before it can be stamped PASS")
+	var inv := source.substr(source.find("func _write_inventory("))
+	inv = inv.substr(0, inv.find("\n\n\n"))
+	assert_true(inv.contains("degraded_why"),
+		"a DEGRADED run can never be complete, however much of it happened to write")

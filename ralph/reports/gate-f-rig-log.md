@@ -285,6 +285,52 @@ invocation that would give a verdict.
 
 ---
 
+## Finding 9 — the pre-flight had two of its own bugs, and they were the
+## expensive kind
+
+Found by reading the finished branch adversarially rather than by running it,
+and then confirmed by running it.
+
+`_preflight_capture` had four reasons to refuse a segment and ran all four
+through **one string**. Two consequences:
+
+1. The display-server message **overwrote** the cost message, so a segment that
+   was both too expensive and unable to capture reported only the second.
+2. `--gatef-allow-no-capture` waved through **any** of the four — including a
+   cost-ceiling breach, which has nothing to do with pictures.
+
+The second is the expensive one. It would have reproduced X07's fifteen wasted
+hours *with a flag on it*, which is worse than the original defect: a run that
+was explicitly told to proceed.
+
+The two kinds of refusal are now separate and named. `capture_why` is "this
+invocation cannot take pictures" — the thing the acknowledgement flag exists to
+acknowledge. `hard_why` is a refusal the flag has no business waiving: over the
+cost ceiling, or a freeze record that contradicts what the process can see.
+
+Both paths are now proved by running them, not by reading them:
+
+```
+$ tools/gate_f/run_segment.sh --allow-no-capture selfcheck_capture
+run_segment: WARNING -- selfcheck_capture plans captures and is running WITHOUT a display
+run_segment:            server by explicit --allow-no-capture. INVENTORY.json will
+run_segment:            mark every planned shot absent and the segment incomplete.
+run_segment: INVENTORY.json says selfcheck_capture is INCOMPLETE
+  exit=1   complete=False   absent=4/4   verdict=DEGRADED (--gatef-allow-no-capture)
+
+$ tools/gate_f/run_segment.sh --allow-no-capture <a segment with a 60000 s wait>
+  exit=1   complete=False   verdict=BLOCKER   steps ran: 0 of 3
+BLOCKER.md: predicted cost 21276 s (5.9 h) exceeds the 14400 s ceiling: 3600016
+  planned frames at a MEASURED 0.006 s/frame on this box. The protocol's waits
+  are not the problem -- they exist so fights resolve -- so this segment needs a
+  GPU or a re-cadenced script, not a shorter wait.
+```
+
+The acknowledged run executes its logic and can never be complete. The
+over-budget run does not start, flag or no flag.
+
+---
+
 ## What landed
 
 Against `COVERAGE_DEFECTS.md`'s own numbering. CD-1…CD-7 are instrument work
