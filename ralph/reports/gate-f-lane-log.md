@@ -2767,3 +2767,75 @@ Not run: **X04, X05, X06, X08.** X08 was dropped by owner decision, reinstated b
 the owner earlier today (check-in 27), then overtaken by the stop order.
 
 I did not fix the rig, modify the harness, or touch `.gitignore`. Standing down.
+
+---
+
+# Gate F RUN 2 — operator lane log
+
+Branch `ralph/GATE-F-RUN-2`. Candidate `e12a6b60` (head of `main`).
+Run directory `ralph/reports/gate-f-run-20260827T223957Z`.
+Everything below this rule belongs to the second authoritative run. The lane log
+above it is the f082bdf6 run and is not amended.
+
+## Check-in 1 — container stood up, candidate frozen
+
+**Container was bare.** No Godot, no import cache. Installed 4.7-stable from the
+release zip; `sha256 f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75`,
+**byte-identical to the binary the f082bdf6 run recorded**, so binary identity is
+not a variable between the two runs. Import running from scratch (4 cores,
+llvmpipe, no GPU); the f082bdf6 freeze recorded 2,513 imported resources.
+
+**Freeze record written** to `ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json`.
+Per section A.2 as amended by CD-8 it enumerates `data/config/` feature flags,
+read mechanically by the same recursive walk the harness uses rather than
+hand-listed. 15 config files carry switches; 26 are OFF.
+
+**The flag of record has changed state since the last candidate.**
+`grass_field.json:enabled` is **TRUE** on `e12a6b60`. On `f082bdf6` it was
+FALSE, which is CD-8's own example: the procedural ground cover was absent from
+every frame of that run and no artefact anywhere said so. On this candidate the
+camera-relative field owns the ground plane, `vegetation.gd` suppresses the four
+scatter layers named in `suppress_scatter_layers` (grass, drygrass, flowers,
+groundmat), and grass, bushes, flowers, litter, stones and wind render from the
+field instead. Recorded in `config_flag_of_record` with the ring parameters, and
+carried again in every segment's own `RUN_METADATA.json`.
+
+`display_server` is stated as the **capture-mode** fact (`X11 under xvfb-run`)
+deliberately, with the logic-mode reality (`none`) in its own adjacent field. The
+pre-flight reads this key and a capture-bearing segment run without a display
+server must BLOCK against it — that is CD-8b working, not a mis-record.
+
+**The cost arithmetic, before anything is run.** Section 0.8 prices `wait` in
+rendered frames. Priced every segment's step-script with `_predict_frames`'s own
+arithmetic against the `segment_cost_ceiling_s` of 14400 s:
+
+| seg | steps | captures | predicted frames | @0.006 s/f (logic) | @1.0 s/f | @10.5 s/f |
+|---|---|---|---|---|---|---|
+| S01 | 14 | 1 | 10,858 | 65 s | 3.0 h | 31.7 h |
+| S02 | 75 | 8 | 35,723 | 214 s | 9.9 h | 104 h |
+| S03 | 274 | 7 | 119,542 | 717 s | 33.2 h | 349 h |
+| S04 | 72 | 6 | 31,443 | 189 s | 8.7 h | 91.7 h |
+| S05 | 76 | 9 | 110,268 | 662 s | 30.6 h | 322 h |
+| S06 | 103 | 7 | 131,005 | 786 s | 36.4 h | 382 h |
+| S07 | 98 | 5 | 144,507 | 867 s | 40.1 h | 422 h |
+| S08 | 134 | 7 | 288,594 | 1,732 s | 80.2 h | 842 h |
+| S09 | 75 | 4 | 107,636 | 646 s | 29.9 h | 314 h |
+| S10 | 120 | 7 | 439,356 | 2,636 s | 122 h | 1,282 h |
+| X01 | 1,203 | 8 | 75,065 | 450 s | 20.9 h | 219 h |
+| X02 | 170 | 4 | 29,145 | 175 s | 8.1 h | 85.0 h |
+| X03 | 164 | 14 | 78,103 | 469 s | 21.7 h | 228 h |
+| X04 | 121 | 8 | 116,023 | 696 s | 32.2 h | 338 h |
+| X05 | 313 | 1 | 288,543 | 1,731 s | 80.2 h | 842 h |
+| X06 | 314 | 0 | 2,525,320 | 15,152 s | 702 h | 7,366 h |
+| X07 | 266 | 80 | 26,835 | 161 s | 7.5 h | 78.3 h |
+| X08 | 62 | 0 | 49,836 | 299 s | 13.8 h | 145 h |
+
+The frame cost is not yet measured on this box; `10.5 s/frame` is the previous
+run's llvmpipe number at 1920x1080 and is quoted only as a scale. What the table
+already fixes, before any measurement, is the **break-even**: to clear the 4-hour
+ceiling a segment needs `14400 / predicted_frames` seconds per frame — 1.33 s for
+S01, 0.54 s for X07, 0.12 s for S03, 0.033 s for S10, 0.0057 s for X06. I am not
+raising the ceiling and not shortening a wait. I will measure, run, and record
+what the gate says.
+
+Next: finish import, run the section 8 overhead self-measurement, then S01.

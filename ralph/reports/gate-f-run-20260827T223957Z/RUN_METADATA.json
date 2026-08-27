@@ -1,0 +1,363 @@
+{
+  "_comment": "Candidate freeze for the SECOND authoritative Gate F run. Frozen from main at e12a6b60, the head that carries the whole GATE-F-RIG lane: the capture pre-flight (CD-1), the computed INVENTORY.json and the anchored /shots/ gitignore (CD-2), the dialogue predicate (CD-3), in-context matrix cells (CD-4), move_to_entity/interact_with (CD-5), the thirteen missing event emitters and the inventory-key fix (CD-6), the twice-measured cost model (CD-7), config_flags (CD-8) and the freeze-record reconciliation (CD-8b), plus the degenerate-frame luminance gate. This SUPERSEDES the 2026-08-27 freeze at f082bdf6, whose run Phase B judged to have measured the instrument rather than the game (8.0% capture rate, three of four loudest findings harness artefacts, 9,231 planned frames written file:null while reporting PASS, five of eight study segments never run). Nothing from gate-f-run-20260827T025303Z may be spliced into this run (protocol section 1.6).",
+  "candidate_sha": "e12a6b60a617db571fbedef5f5f13cd725024e8e",
+  "candidate_ref": "main",
+  "frozen_at_utc": "2026-08-27T22:40:44Z",
+  "run_dir": "ralph/reports/gate-f-run-20260827T223957Z",
+  "branch": "ralph/GATE-F-RUN-2",
+  "supersedes": {
+    "candidate_sha": "f082bdf6265760ca9835e1065361fbbf87475d69",
+    "run_dir": "ralph/reports/gate-f-run-20260827T025303Z",
+    "why": "Phase B's judgement: that run measured the instrument, not the game. The instrument has since been rebuilt on this candidate."
+  },
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "_comment": "Section 0.5: this run uses the Linux editor binary. tools/verify_export.sh and CI prove the Windows export builds; export-identity behaviour on Windows is [OWNER-ONLY]. This sha256 is byte-identical to the binary the f082bdf6 run recorded, so binary identity is not a variable between the two runs."
+  },
+  "renderer": "opengl3 / Compatibility under xvfb -- llvmpipe software rasterisation (see renderer_measured)",
+  "renderer_measured": "pending: written back by the first capture-mode pre-flight on this container",
+  "display_server": "X11 under xvfb-run",
+  "_comment_display_server": "CD-8b. This field is the CAPTURE-MODE fact and is deliberately stated as such: the operator harness's pre-flight reads this key, and a capture-bearing segment run WITHOUT a display server must BLOCK against it. That is the defect CD-8b exists to stop -- the f082bdf6 record said 'X11 under xvfb-run' while 9,231 frame-manifest rows in the same run said 'headless: this process has no display server', and nothing reconciled them. LOGIC-MODE invocations on this container are '--headless' with NO rendering driver and therefore have no display server at all; that is correct and intended (section 0.2: --headless WITH a driver hangs forever) and is recorded in display_server_logic_mode below. Every segment's own RUN_METADATA.json carries what its process actually OBSERVED, written back by the pre-flight.",
+  "display_server_logic_mode": "none (--headless, no rendering driver) -- capture steps are refused in this mode by run_segment.sh and by the harness pre-flight",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "resolution_substituted": "pending: written by the first capture-mode smoke (CAPTURE_RESOLUTION.json)",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir (S01-02 wipe_saves)",
+  "date": "2026-08-27",
+  "operator": "sonnet-agent (Gate F operator, run 2)",
+  "free_build": false,
+  "_comment_free_build": "autoload/game_state.gd defaults free_build and debug_teleport to false and both persist only in user://settings.json, which S01-02's wipe_saves clears. Teleport is off everywhere except where a DIAG- segment turns it on deliberately (section 0.6).",
+  "instrumentation_overhead_note": "pending: tools/gate_f/run_segment.sh --overhead, run on this container before the journey",
+  "config_flags": {
+    "art.json": {
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_smith.hair.visible": true,
+      "villager_ranger.hair.visible": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "vegetation.enabled": true,
+      "dead_ground.enabled": true,
+      "tether_lights.enabled": true,
+      "barriers.enabled": true,
+      "patrols.enabled": true
+    },
+    "movement.json": {
+      "unstick.enabled": true,
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false
+    },
+    "performance.json": {
+      "scatter_lod_ranges": false,
+      "debug_overlay_on_boot": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "shader.enable_macro_variation": true,
+      "river.failsafe": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.trees.collides": true,
+      "layers.grove.collides": true,
+      "layers.saplings.collides": true,
+      "layers.deadfall.collides": false,
+      "layers.bushes.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "_comment_config_flags": "Section A.2 as amended by CD-8. Read MECHANICALLY from data/config/*.json by the same recursive walk the harness uses (any bool, any nesting depth to 4, keys beginning '_' skipped), not hand-listed. Every segment's own RUN_METADATA.json carries the same fields, read at its own run time, because a run cannot amend a freeze record it did not write.",
+  "config_flag_of_record": {
+    "flag": "grass_field.json:enabled",
+    "value": true,
+    "why_called_out": "This is CD-8's own example and it has CHANGED STATE since the last candidate. On f082bdf6 it was FALSE, so the procedural ground cover was absent from every frame of that run and no artefact anywhere said so; a reviewer judging ground cover was judging the baked scatter while believing they were judging the shipped ground system. It is TRUE on this candidate. The camera-relative field owns the ground plane, vegetation.gd suppresses the four scatter layers named in suppress_scatter_layers (grass, drygrass, flowers, groundmat), and grass, bushes, flowers, litter, stones and wind render from the field instead.",
+    "ring": {
+      "enabled": true,
+      "tuft_count": 300000,
+      "field_radius": 72.0,
+      "fade_start": 42.0,
+      "centre_bias": 0.62,
+      "seed": 20260825,
+      "edge_shorten_floor": 0.0,
+      "edge_shorten_bias": 0.4,
+      "snap": 2.0,
+      "blades_per_tuft": 6,
+      "blade_segments": 4,
+      "blade_width": 1.0,
+      "height_near": 0.4,
+      "height_far": 0.62,
+      "height_jitter": 0.38,
+      "density_gain": 0.82,
+      "clump_scale": 0.11,
+      "clump_contrast": 0.78,
+      "tint_base": "#354410",
+      "tint_tip": "#66803a",
+      "ground_blend": 0.55,
+      "translucency": 0.18,
+      "bend": 0.26,
+      "shade_jitter": 0.18,
+      "gust": 0.7,
+      "gust_speed": 7.0,
+      "gust_length": 26.0,
+      "wind_strength": 0.1,
+      "wind_scale": 0.09,
+      "wind_dir": [
+        0.86,
+        0.51
+      ],
+      "stones": {
+        "enabled": true,
+        "count": 90000,
+        "centre_bias": 0.58,
+        "seed": 771131,
+        "sides": 7,
+        "stone_size": 0.105,
+        "size_jitter": 0.85,
+        "sink": 0.42,
+        "density_gain": 0.72,
+        "clump_scale": 0.16,
+        "clump_contrast": 0.6,
+        "tint_stone": "#8c8377",
+        "tint_jitter": 0.38,
+        "ground_blend": 0.35,
+        "contact_darken": 0.45,
+        "stray_chance": 0.05,
+        "verge_gain": 0.55,
+        "ground": [
+          "rock",
+          "path"
+        ]
+      },
+      "clearing_strength": 0.9,
+      "clearing_floor": 0.76,
+      "clearing_shorten": 0.5,
+      "cover_tiers": [
+        {
+          "_why": "Small bushes. A blind pass found the world jumps from 50cm grass straight to 6m canopy with nothing between -- 'a forest you can see straight through at knee height' -- and counted two mid-height plants across twelve frames. This is that missing band. Sparse and heavily drifted on purpose: understorey gathers, it does not carpet, and the meadow's negative space is what GROUND-LAYERS measured as worth keeping.",
+          "name": "bushes",
+          "mesh": "bush",
+          "enabled": true,
+          "clears_grass": true,
+          "_comment_count_ring": "Scaled with the ring: field_radius 56 -> 72 is 1.65x the disc, so a count held constant would have thinned every generated tier by a third at the same moment the ring stopped being visible.",
+          "count": 14800,
+          "seed": 5512207,
+          "centre_bias": 0.6,
+          "item_size": 0.85,
+          "size_jitter": 0.5,
+          "sink": 0.06,
+          "density_gain": 0.3,
+          "drift_scale": 0.05,
+          "drift_contrast": 0.88,
+          "tint_base": "#3a4c1c",
+          "tint_tip": "#6b8438",
+          "tint_jitter": 0.2,
+          "ground_blend": 0.35,
+          "_comment_contact": "Was 0.14, which was itself a correction after a round where the bushes read as dark blobs. Raised because a blind pass measured the opposite failure at the boundary -- 'no contact darkening where they meet the ground' -- and because the correction is different in kind now: leaf_root_darken below carries the internal shading that 0.14 was trying not to overdo, so the bush no longer needs its whole base lifted to avoid reading as a blob.",
+          "contact_darken": 0.3,
+          "normal_soften": 0.72,
+          "_comment_leaf_cut": "The fix four rounds of tuning could not reach. Each leaf is a quad and a rectangle does not read as a leaf however it is lit -- so cover_tier.gdshader carves a ragged leaf outline out of every quad in the fragment stage. 1.0 is the full cut. Costs no asset, which is why it is the right instrument: CLAUDE.md forbids new Meadows art and the last blind round filed this as an art gap.",
+          "leaf_cut": 1.0,
+          "leaf_serrate": 0.2,
+          "leaf_teeth": 3.6,
+          "_comment_leaf_shade": "The SECOND half of the same defect, and a different one from the outline. With the quads cut to leaf shapes a blind pass stopped calling the bushes a heap of flat quads and started calling them flat clipart with zero shading gradient -- because tint_base/tint_tip run up the whole BUSH, so every leaf in one ring shares an albedo and the ring reads as a band of one flat fill. leaf_root_darken shades each leaf dark at its stem and lit at its tip; leaf_tint_jitter stops any two being quite the same. Both read the UV2 the outline mask already fetches.",
+          "_comment_wood": "The branches the owner asked for. tint_wood is what the trunk and the six arcing sticks take instead of the leaf gradient -- a dry olive-brown rather than a tree bark, because at 0.85m tall these are shrub twigs seen against grass, and a true bark brown reads as a stick lying in the field.",
+          "tint_wood": "#4a3f22",
+          "leaf_root_darken": 0.62,
+          "leaf_tint_jitter": 0.28,
+          "sway": 0.04,
+          "ground": [
+            "grass",
+            "soil",
+            "forest_floor"
+          ]
+        },
+        {
+          "_why": "Flower drifts. The defect this answers was measured rather than judged: a blind pass counted flowers appearing EXACTLY TWICE in twelve frames, both the same violet bush asset, each 'a single isolated ball of saturated violet with a hard base', against moong-02 running a pink drift across ~40% of frame width and the keyart putting purple, gold and white wildflowers in every panel. The numbers here are shaped by that: a LOW drift_scale (0.03) means broad patches rather than a sprinkle, and a high drift_contrast means genuinely empty ground between them. Prompt 72 asked for the same thing in its own words -- 'the reference pink drifts are tight and irregular'. Colour is the one place this tier deliberately leaves the meadow palette: palette.json reserves flower_gold #d9b340 as an accent and the keyart carries lilac, so the bloom is lilac over an olive stalk. It is NOT oxblood and must never drift toward it -- that red is reserved for Team Tether and three blind passes have confirmed the reservation is still clean.",
+          "name": "flowers",
+          "mesh": "flower",
+          "enabled": true,
+          "count": 14800,
+          "seed": 8830145,
+          "centre_bias": 0.6,
+          "item_size": 0.62,
+          "size_jitter": 0.3,
+          "sink": 0.04,
+          "density_gain": 0.34,
+          "drift_scale": 0.04,
+          "drift_contrast": 0.93,
+          "tint_base": "#4a5a26",
+          "tint_tip": "#c2a8d4",
+          "tint_jitter": 0.16,
+          "ground_blend": 0.25,
+          "contact_darken": 0.3,
+          "sway": 0.05,
+          "gust": 0.8,
+          "ground": [
+            "grass",
+            "soil"
+          ]
+        },
+        {
+          "_why": "Forest litter. Band 2 is called forest floor and a blind pass found it carrying meadow grass and sand under the trees -- 'no leaf litter, no needles, no moss, no fungi, no fallen branches' -- and separately that 'a player walking these four bands would not know the region had changed'. This is the band-differentiating dressing, and it is restricted to the forest_floor ground type so it appears where the terrain already says there are trees rather than being scattered everywhere and hoping. slope_lie 1.0 lays it ON the ground following the gradient, which is what makes litter read as litter and not as flat cards standing on a slope; sway 0 because leaves on the ground do not move in a breeze.",
+          "name": "litter",
+          "mesh": "litter",
+          "enabled": true,
+          "count": 49000,
+          "seed": 3341882,
+          "centre_bias": 0.55,
+          "item_size": 0.55,
+          "size_jitter": 0.6,
+          "sink": 0.0,
+          "slope_lie": 1.0,
+          "density_gain": 0.7,
+          "drift_scale": 0.09,
+          "drift_contrast": 0.7,
+          "tint_base": "#4a3b23",
+          "tint_tip": "#7a6134",
+          "tint_jitter": 0.3,
+          "ground_blend": 0.55,
+          "contact_darken": 0.2,
+          "_comment_leaf_cut": "Same mask as the bushes, and for the same reason: the mesh comment calls these scraps irregular and as opaque squares they were not. Slightly gentler and coarser-toothed than the bush leaf so a fallen leaf reads as broader than a growing one.",
+          "leaf_cut": 0.9,
+          "leaf_serrate": 0.18,
+          "leaf_teeth": 3.0,
+          "sway": 0.0,
+          "ground": [
+            "forest_floor"
+          ]
+        }
+      ],
+      "forbidden_ground": [
+        "rock",
+        "path"
+      ]
+    }
+  },
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "_comment": "Section A.4 makes 'the full suite is green at the SHA' a COORDINATOR precondition discharged before the freeze, not an operator step, and section 13 forbids the operator substituting a unit-test result for player-path evidence. This container was provisioned bare and the suite's test_harvest.gd job alone carries 684,231 assertions. This field exists so Phase B reads the actual state rather than an implied green. The candidate is the head of main, whose CI state is the coordinator's record, not this run's.",
+    "known_open_defect": "tests/smoke_party_count_after_catches.gd fails INTERMITTENTLY with 'could not engage the real wild body ... (stopped 23.7m away, engage range 6.0m)'. Carried forward from the f082bdf6 freeze; the rig log's closing section records it as a GAME-side engage failure, not a rig one. Not an operator concern during the run: if it fires it is recorded and the run continues (section 13)."
+  },
+  "envelope_facts_confirmed_on_this_container": {
+    "cpu": "4 cores",
+    "memory_gb": 15,
+    "disk_free_gb": 23,
+    "godot_install": "installed fresh in this container from the 4.7-stable release zip; the container was bare",
+    "import_cache": "pending: built from scratch in this container, see IMPORT.md",
+    "audio": "pending: recorded from the first boot's driver line",
+    "world_bake_present": "pending: recorded from the first world boot's scatter line"
+  },
+  "owner_only_gaps": "Section K, asserted by NO evidence in this run: device frame rate, GPU frame time, VRAM, thermals/battery, real controller feel, 7-inch handheld legibility, first-time-human navigation/pacing, voluntary engagement, audio, Windows export identity, true continuous video, long-session device soak, mouse-look feel.",
+  "segments_planned": {
+    "journey": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10"
+    ],
+    "study": [
+      "X01",
+      "X02",
+      "X03",
+      "X04",
+      "X05",
+      "X06",
+      "X07",
+      "X08"
+    ],
+    "order": "S01-S10 first (each seeds the next from its exit save), then X01-X08. X08 reinstated by owner decision."
+  },
+  "instrumentation_landed_pre_freeze": "The whole GATE-F-RIG lane is IN the candidate, not applied over it: this run's HEAD is the rig lane's own merge into main. Section 1.5 satisfied. No code, data or config is changed during the run (section 13)."
+}
