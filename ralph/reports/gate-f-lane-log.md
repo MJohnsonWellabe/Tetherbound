@@ -1773,3 +1773,104 @@ No new segments started after this. `_probe_stand_aside.gd`'s finding is in §2:
 the unchecked position write in `_stand_the_trainer_aside` is real but is **not**
 this bug — 8/8 clear in three engagements, and in two of them the trainer was not
 moved at all.
+
+## Check-in 15 — 2026-08-27 — operator lane resumes; **the container arrived bare**; candidate re-frozen at `f082bdf6`
+
+New operator session, picking up from
+`ralph/reports/GATE_F_HANDOVER_2026-08-26_EVENING.md`. Stage: **pre-run
+preconditions discharged, freeze written, S01 next.**
+
+### The environment was not provisioned — this cost the first stage
+
+The briefing assumed a working box. It was not one. `/home/user` was **empty**:
+no repo, no Godot, no import cache, nothing. This is worth recording because a
+successor landing in the same state will otherwise assume a broken checkout.
+
+What it took, in order:
+
+| step | outcome |
+|---|---|
+| clone `MJohnsonWellabe/Tetherbound` | HEAD `f082bdf6` — the expected commit |
+| install Godot | **4.7-stable**, `5b4e0cb0f`, sha256 `f85bbc6b…`, to `run_segment.sh`'s default path |
+| build import cache | **2,513** resources, stable across two agreeing passes |
+| CI's import error gate | **clean** — zero `SCRIPT ERROR` / `Parse Error` / `Failed to load` / `ERROR: Cannot open` |
+| §A.4 capture smoke | **PASS at 1920×1080**, no fallback, nothing recorded as substituted |
+
+**Trap for a successor:** `godot --headless --path . --import` **exits partway
+through each pass** on this container — first pass stopped at 38 files, second
+reached 2,513. CI hides this behind a two-pass `|| true`. A single invocation
+looks like it succeeded (`rc=0`) and leaves the cache half-built, and
+`run_segment.sh`'s own header warns what that produces: resources fail to load
+and **viewpoints render empty instead of erroring**. That is a silent poison for
+every visual verdict in X07. Loop the import until the file count stops growing;
+do not trust one pass.
+
+**Second trap, harness-level, cost three dead processes:** launching a long job
+as `nohup … &` *inside* a backgrounded tool call gets the child reaped when the
+outer call returns — exit 144, truncated logs, no error message. Run the command
+directly as the backgrounded call instead.
+
+### Untracked-file noise is import byproduct, not evidence
+
+The import scan generated **190** sidecars — 177 `.import` files for the
+evidence PNGs under `ralph/reports/`, plus 13 `.gd.uid` files. **None are
+authored content and none are evidence.** The repo tracks **zero** `.import`
+files under `ralph/reports/` (all 728 tracked ones are real assets under
+`addons/` and `assets/`), and `.gitignore` already carries the identical
+precedent for `site/img/*.import` with a comment describing this exact problem.
+
+Excluded them via **`.git/info/exclude`** — machine-local, uncommitted. Two
+reasons, both deliberate: committing them would move the candidate off
+`f082bdf6` for reasons having nothing to do with the game, and 177 loose files
+in the tree is a live hazard for the per-segment evidence commits, where one
+careless `git add -A` sweeps junk into the record. Tree reports clean at
+`f082bdf6`; the repo itself is untouched.
+
+### Candidate re-frozen — the `14e88c7c` record is overwritten
+
+`ralph/reports/gate-f-candidate/RUN_METADATA.json` now records **`f082bdf6`**,
+run dir `gate-f-run-20260827T025303Z`. The void 2026-08-26 freeze is retained
+only as a `supersedes` block naming why it died. **Nothing from the aborted
+`20260826T110000Z` run is spliced in (§1.6); S01 is re-run from scratch.**
+
+Confirmed present in this candidate, from the world boot itself: **762,058 props
+in 43 batches** (56,423 harvestable) — the grass consolidation is really here,
+so **the visual judge is permitted** and X07 audits the presentation that ships.
+
+### §I.7 overhead, and the part of it that is a gap
+
+scene=world, 30 s × 2 windows per condition, order reversed to cancel drift:
+
+| condition | ms/frame | delta vs off |
+|---|---|---|
+| off | 4.341 | — |
+| telemetry | 3.945 | −0.396 |
+| telemetry + recording @ 0.5 Hz | 4.039 | −0.302 |
+
+Both deltas are **negative and below the 0.717 ms/frame noise floor**. They read
+as *"under ~0.72 ms/frame"* — **not** as zero, and **not** as a speed-up.
+
+**The gap, stated rather than buried: frames written 0**, so the recorder's
+framebuffer-grab-and-encode cost was **not measured directly**, and a ~1 ms/frame
+effect cannot be resolved against this noise floor. CPU frame time on this
+container only.
+
+### Two envelope facts confirmed as measurements, not inherited claims
+
+- **Audio is genuinely absent.** Every ALSA driver failed (`cannot find card
+  '0'`, `libpulse.so.0` missing); Godot fell back to the dummy driver. §K.6 is
+  now a measured container fact.
+- **`free_build: false` is verified**, not assumed — `game_state.gd:266`, with
+  `debug_teleport` false at `:280`. Both persist only in `user://settings.json`,
+  which S01-02's `wipe_saves` clears.
+
+### One precondition I am NOT discharging, and why
+
+§A.4's "full test suite green at the SHA" is a **coordinator** duty performed
+before the freeze, and §13 forbids the operator substituting a unit-test result
+for player-path evidence. I did not re-run it: the container was bare and
+`test_harvest.gd` alone carries 684,231 assertions. `suite_state_at_freeze` in
+the freeze record says so explicitly and names the known-open intermittent
+engage defect, so Phase B reads the real state instead of an implied green.
+
+**Next:** S01, then the chain S02–S10, then X01–X07. X08 stays dropped.
