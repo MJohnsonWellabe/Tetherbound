@@ -1997,3 +1997,82 @@ be read against this, and not counted as an independent defect until Phase B has
 separated the two.
 
 **Next:** S03, already launched.
+
+## Check-in 18 — 2026-08-27 — **S03: 210 PASS / 64 FAIL. `panel:SwapPanel` takes input at t=322.88 and holds it for the rest of the segment.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S03/`. 3,201 route rows, 329
+events, exit save written. Segment completed and handed off — not a §A BLOCKER.
+
+### The measurement that organises 46 of the 64 failures
+
+From `route.csv`, not from the verdicts:
+
+| | share of segment |
+|---|---|
+| `input_context = panel:SwapPanel` | **2,686 / 3,201 rows — 83.9%** |
+| player standing at `(22.2, -2.9)` | **2,697 / 3,201 rows — 84.3%** |
+| distinct positions visited, whole segment | **50** |
+
+Those two figures track each other to within 11 rows. First `panel:SwapPanel`
+row is **505/3,201, t=322.88**, and it dominates everything after.
+
+**First occurrence, located (§J):** the transition falls between `S03-61`
+"speak to Oskar" (`interact` ×1, t=322.08, PASS) and `S03-62` "hear him out"
+(`interact` ×10, t=323.87, PASS). The player is parked at `(22.2, -2.9)`;
+Oskar stands at `(22, -6)`. The preceding step `S03-60` walked 6.1 m to him
+normally, `0 held`. **I am recording the sequence and the correlation. I am not
+naming a cause** (§13) — that `panel:SwapPanel` becomes the owner here, and never
+yields, is the observable.
+
+### The 64, grouped by what they report
+
+| thread | count | what the steps report |
+|---|---|---|
+| `panel:SwapPanel` owns input where another context was wanted | **23** | `menu_build` ×4, `build_placement` ×5, prefix `build` ×5, `menu_backpack` ×1, and 8 where map/inventory "did not open the pause shell: `panel:SwapPanel -> panel:SwapPanel (owner=SwapPanel)`" |
+| walks that never leave `(22.0, 1.0, -3.0)` | **23** | every one "did not reach … in 3000 walking frames; stopped N m short at (22.0, 1.0, -3.0) **(0 held)**" |
+| objective id | **7** | all read `opening:beat:road` where §E.5 wanted `village_tools`, `tournament_train_team`, `tournament_build_home`, `tournament_build_team`, `tournament_build_creature_beds`, `tournament_sleep`, `tournament_feed_team` |
+| flags never set | **4** | `home_materials_gathered`, `home_built`, `creature_bed_built_3`, `player_slept_at_home` |
+| party size | **2** | 1 where 2 and 3 were wanted |
+| distance | **1** | walked **102.9 m** this segment, wanted ≥ 600 |
+
+**`0 held` on all 23 failed walks is the detail worth carrying.** The handover
+teaches reading exactly this distinction on the engage defect: *"THE BODY DID NOT
+MOVE — blocked at the start, not short of the target"* versus a long walk that
+ended somewhere unhelpful. Every failed walk here is the **first** case, from one
+identical coordinate.
+
+### Event census — the verbs S03 exists to exercise are absent
+
+```
+catch_result: 1   flag_set: 4    load: 2        menu_close: 12  menu_open: 20
+note: 267         region_enter: 2 save: 2       screenshot: 14  tab_change: 5
+```
+
+**No `gather`, no `craft`, no `build_place`, no `build_dismantle`, no `rest`, no
+`feed`, no `combat_*`.** §B's span for S03 is "Tam's tools → team of 3 → training
+→ gathering → home + 3 creature beds → sleep → feed". None of those verbs emitted
+an event.
+
+**severity_candidate: BLOCKER** — candidate only, Phase B rules.
+
+### A caveat in the step-scripts that bears directly on this
+
+`S03-60`'s authored observation records that **`answer_prompts` is turned ON for
+journey walks**, with its own trade stated: *"the schema says this flag must stay
+off in any segment whose subject is whether something blocks travel, so these
+segments can no longer evidence 'a narrative modal blocked the player from
+travelling'."* That caveat is now load-bearing: a panel **is** holding input
+across 84% of this segment, and the harness is auto-answering prompts while it
+does. Phase B should weigh the two together rather than reading either alone.
+
+### Carried forward, not re-counted
+
+The 7 objective-id failures all report `opening:beat:road` — the chain never
+advanced past S02, so these are **downstream of check-in 17's cascade**, and are
+the same thread as `S01-12`. The 2 party-size failures and the one
+`input_context=world (wanted combat)` are likewise S02 carryover. Counting S01–S03
+as 72 independent defects would be wrong: so far they resolve to **the S02 engage
+cascade, the S03 `panel:SwapPanel` capture, and the objective-id naming
+question.**
+
+**Next:** S04, already launched, entering from `S03-exit`.
