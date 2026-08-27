@@ -148,3 +148,43 @@ Additional findings since check-in 2, all in the provisional backlog:
 
 **Quarantine breaks now**, deliberately and on the record, to begin §16.3
 historical reconciliation. Everything above is frozen and hashed.
+
+---
+
+## Check-in 4 — deliverables 3 and 4 (quarantine broken, on the record)
+
+Quarantine broken at commit `092c229`, after the provisional backlog was hashed.
+Opened: `ralph/reports/gate-f-historical-snapshot.md` (208 items).
+
+- `RECONCILIATION.md` — all **162 player-facing** historical items classified
+  into exactly one §16.3 category, with the §16.5 capture rate.
+- `COVERAGE_DEFECTS.md` — §16.4 loop, CD-1…CD-7.
+
+**Capture rate: 13/162 = 8.0% independent rediscovery; 8.6% broader.**
+
+| category | n |
+|---|---|
+| REDISCOVERED | 13 |
+| STILL VALID — NOT NATURALLY ENCOUNTERED | 8 |
+| COVERED BY BROADER ROOT CAUSE | 1 |
+| NOT REPRODUCED | 2 |
+| **MISSED BY GATE F / COVERAGE DEFECT** | **138** |
+
+I did not soften this. The live temptation was to file misses as "not naturally
+encountered" — which reads as the run's limitation rather than the gate's
+failure. Category 2 is for items a comprehensive run had no path to; **these had
+a path, because Phase A planned it**, and the run did not walk it. Only 8 are
+genuine declared §K gaps.
+
+Per §16.5's own rule, **the historical backlog remains operationally
+authoritative**. The Gate F backlog does not replace it on this run's evidence.
+
+The 13 rediscoveries were made blind and several are sharper than the historical
+entry — notably `HIST-085` "boot time on the device", now a measured 49–51 s
+blocking frame reproduced in 6 of 8 segments with the renderer switched off.
+
+138 misses reduce to **seven** causes (CD-1…CD-7), all instrument, all to be
+fixed outside a run before a new candidate is frozen.
+
+Next: deliverables 5 and 6 — final authoritative backlog and the six §15
+summaries.
