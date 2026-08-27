@@ -2705,3 +2705,65 @@ one walk failure — `did not reach (-342, 507) … stopped 659.1 m short at
 build events.
 
 **Next:** X03 (catch lab), already launched. Then X04, X05, X06, X08.
+
+## Check-in 30 — 2026-08-27 — **STOOD DOWN on the coordinator's order. And CD-2 is wrong: the 79 X07 frames exist, and are now recovered.**
+
+Stop order received 13:43Z. **No segments started after it.** X03 had already
+completed. X04, X05, X06, X08 never started. Everything pushed to
+`ralph/GATE-F-RUN-20260827` through `72922aff`. Handover at
+`ralph/reports/GATE_F_OPERATOR_STANDDOWN_2026-08-27.md`.
+
+### The correction, because the rig lane is about to act on it
+
+CD-2: *"no `shots/` directory exists anywhere in the run, and git has never
+carried one"* → X07's 79 artefacts *"do not exist on disk."*
+
+**`shots/` exists in every segment. X07's held 79 real 1920×1080 PNGs, ~1.5 MB
+each, 134 MB.** I read their pixels — check-in 28's colour verification was a
+from-scratch PNG decode over all 79, not a manifest read.
+
+git carried none of them, and the cause is one line:
+
+```
+$ git check-ignore -v .../X07/shots/GF-14-COMBAT-13b.png
+.gitignore:34:shots/	.../X07/shots/GF-14-COMBAT-13b.png
+```
+
+`.gitignore:34` is a bare **`shots/`** written for `tools/survey.sh` output. **A
+bare directory pattern matches at any depth**, so it swallows every Gate F
+segment's `shots/` — this run and every previous one. And `git add <dir>` skips
+ignored contents **silently**, which is how fourteen per-segment commits looked
+clean while the frames stayed behind.
+
+**Recovered in `89c87b56` via `git add -f`.** I did **not** edit `.gitignore`:
+that is a repo change and belongs to the rig lane (§13).
+
+Phase B read the repository, saw no frames, and reasonably concluded none were
+produced. **Reading the container instead reverses that.** The capture path
+worked: 79 of 80 planned frames at the requested 1920×1080, no fallback, and the
+hue-rotation artefact demonstrably absent.
+
+### Where CD-1 is right, stated plainly
+
+Its mechanism holds and its core criticism is correct: **a capture step that
+cannot produce its evidence returned PASS.** The `file: null` row is
+§C.4-compliant — an absent frame is evidence — but the **PASS verdict on top of
+it** asserts a success that did not happen. `SKIPPED`/`N/A` would carry the same
+information honestly.
+
+The framing needs one correction: the journey ran logic mode **by a recorded
+operator decision** (check-in 8, restated 16 and 26), not by a missing
+invocation. `run_segment.sh` applies xvfb only in capture mode (`:192` smoke,
+`:241` segment); logic mode is deliberately `--headless` with no driver, because
+`--headless` **with** a driver hangs forever. X07 *did* run under xvfb, and its
+`CAPTURE_RESOLUTION.json` records the smoke passing at 1920×1080.
+
+### Final state
+
+**2205 PASS / 373 FAIL** across the 13 segments that wrote verdicts, plus X07
+stopped at step 184/266 with 79/80 frames.
+
+Not run: **X04, X05, X06, X08.** X08 was dropped by owner decision, reinstated by
+the owner earlier today (check-in 27), then overtaken by the stop order.
+
+I did not fix the rig, modify the harness, or touch `.gitignore`. Standing down.
