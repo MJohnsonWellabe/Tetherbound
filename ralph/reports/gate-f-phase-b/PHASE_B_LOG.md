@@ -188,3 +188,36 @@ fixed outside a run before a new candidate is frozen.
 
 Next: deliverables 5 and 6 — final authoritative backlog and the six §15
 summaries.
+
+---
+
+## Check-in 5 — deliverables 5 and 6; Phase B complete
+
+- `FINAL_BACKLOG.md` — 13 items in the §15 format across three tiers, with
+  historical context merged into the 13 rediscovered items. Three merges changed
+  an item materially:
+  - `HIST-018` reveals the quickbar crosses are **Kenney d-pad badges** with
+    *no suitable asset in any pack* — owner-art-blocked, not a missing-icon bug.
+  - `HIST-052` supplies the lead I lacked for the black-render items:
+    `GATE-E-STRONGHOLD-ART` found **`art.json` putting the sun in the NORTH
+    sky**, never re-checked. A north sun would leave south-facing approach
+    geometry unlit — plausibly one cause behind GF-B-004, GF-B-008 and GF-B-010,
+    and it reconciles the historical near-black/near-white LOD pair.
+  - `HIST-163`/`HIST-165` turn my single quarry finding into a **three-site
+    systemic item**: the landmark kit contains no landmark geometry.
+- `SUMMARIES.md` — Top 10 experience failures, systemic root causes,
+  regional/world plan, performance plan (bounded by [OWNER-ONLY]), regression
+  plan, retest plan.
+- `README.md` — reading order and the three takeaways.
+
+**§16.6 scope decision, stated explicitly.** I did **not** rewrite the 138
+`MISSED BY GATE F` items into the §15 format. Doing so would manufacture the
+appearance of evidence I do not have. They stay in the historical register,
+which per §16.5's own rule remains operationally authoritative. The Gate F
+backlog is additive on this run.
+
+**Gate verdict: Gate F does not pass** (§18 — the candidate did not survive the
+full authoritative protocol; roughly a quarter of it executed). The candidate is
+largely **unjudged**, not judged bad.
+
+Phase B complete. Nothing outstanding.
