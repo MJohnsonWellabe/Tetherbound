@@ -595,44 +595,7 @@ func _pond_cells() -> Dictionary:
 	var step := maxf(float(_water_cfg.get("pond", {}).get("grid_step", 2.0)), 0.5)
 	var cols := int(ceil(region.size.x / step))
 	var rows := int(ceil(region.size.y / step))
-
-	# GF-B-001. One sample per lattice POINT, not four per cell.
-	#
-	# Every interior corner is shared by four cells, so asking `height_at` for
-	# each cell's own four corners asks the same question up to four times.
-	# This region is 337 x 569 m -- `_region()` unions the pond with an
-	# authored stream 465 m up the map, see the lane log -- which at a 2 m grid
-	# is 48,165 cells, and the `break` below only fires on the 2,538 that turn
-	# out to be wet. So the loop was up to 192,660 `height_at` calls for 48,620
-	# distinct points, and `height_at` is the whole New Game stall.
-	#
-	# Identical, not merely equivalent: the lattice asks the same predicate at
-	# the same points. The one place it could differ is that a cell's right
-	# corner used to be `pos.x + col * step + step` and is now
-	# `pos.x + (col + 1) * step`; those agree exactly whenever `step` is a
-	# dyadic rational, which the authored 2.0 is. Even at a step where they
-	# parted by an ulp the sampled point would move ~1e-13 m and the predicate
-	# would have to be balanced on that same knife edge to notice. The quad
-	# count is what actually says so, and `smoke_pond_water` checks it.
 	var lattice_cols := cols + 1
-	var wet_point := PackedByteArray()
-	wet_point.resize(lattice_cols * (rows + 1))
-	for row in rows + 1:
-		var lz := region.position.y + row * step
-		var base := row * lattice_cols
-		for col in lattice_cols:
-			var lx := region.position.x + col * step
-			wet_point[base + col] = 1 if float(_field.call("height_at", lx, lz)) < _level + 0.5 else 0
-	BOOT_LOG.phase("water: pond wet-lattice scan (%d points)" % wet_point.size())
-
-	var wet_cells: Dictionary = {}
-	for row in rows:
-		var lower := row * lattice_cols
-		var upper := lower + lattice_cols
-		for col in cols:
-			if wet_point[lower + col] == 1 or wet_point[lower + col + 1] == 1 \
-					or wet_point[upper + col] == 1 or wet_point[upper + col + 1] == 1:
-				wet_cells[Vector2i(col, row)] = true
 
 	var terrain_cfg: Dictionary = _terrain_config()
 	var centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
@@ -640,8 +603,47 @@ func _pond_cells() -> Dictionary:
 		int((float(centre[0]) - region.position.x) / step),
 		int((float(centre[1]) - region.position.y) / step)
 	)
+
+	# GF-B-001. Sample the lattice ALONG the flood fill, not ahead of it.
+	#
+	# Two rounds of the same mistake were already taken out of here. The first
+	# asked `height_at` for each cell's own four corners, which is up to four
+	# questions per shared corner: 192,660 calls for 48,620 distinct points.
+	# That became one pass over the lattice -- and a full pass over the lattice
+	# is still 48,620 calls to decide 2,538 cells, because `_region()` unions
+	# the pond's basin with an authored stream 465 m up the map (see the lane
+	# log) and the rect is 337 x 569 m of which the pond is 5.3%.
+	#
+	# The fill below only ever KEEPS the seed's own connected component; every
+	# other wet cell in the rect is computed and then discarded. So the fill
+	# does not need the lattice in advance -- it needs each cell's four corners
+	# at the moment it considers that cell, and it only ever considers the
+	# component and the ring of dry cells around it. `_wet_point` memoises into
+	# the same `PackedByteArray` the full pass used to fill, with a second
+	# array marking which entries have been decided.
+	#
+	# Identical, not merely equivalent, and for a stronger reason than the
+	# last round's: the predicate, the sampled points and the connectivity are
+	# untouched. The full pass computed `wet_cells` over the whole rect and the
+	# fill then intersected it with the seed's component; this computes the
+	# same predicate at the same points, lazily, over exactly that component
+	# and its boundary. Any cell whose wetness the fill never asks about is a
+	# cell the fill could not have kept. `smoke_pond_water`'s quad count and
+	# the mask's texel count are what say so.
+	var wet_point := PackedByteArray()
+	wet_point.resize(lattice_cols * (rows + 1))
+	var point_known := PackedByteArray()
+	point_known.resize(lattice_cols * (rows + 1))
+	var sampled := [0]
+
 	var kept: Dictionary = {}
-	if wet_cells.has(seed_cell):
+	# The bounds test comes first and is not redundant: the original built its
+	# `wet_cells` over [0,cols) x [0,rows) and asked `wet_cells.has(seed_cell)`,
+	# so a seed outside the rect took the fallback. Asking `_wet_cell` directly
+	# would index off the end of the lattice instead.
+	var seed_inside := (seed_cell.x >= 0 and seed_cell.y >= 0
+		and seed_cell.x < cols and seed_cell.y < rows)
+	if seed_inside and _wet_cell(seed_cell, region, step, lattice_cols, wet_point, point_known, sampled):
 		var frontier: Array[Vector2i] = [seed_cell]
 		kept[seed_cell] = true
 		while not frontier.is_empty():
@@ -651,15 +653,59 @@ func _pond_cells() -> Dictionary:
 				Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)
 			]:
 				var next := cell + offset
-				if wet_cells.has(next) and not kept.has(next):
+				if next.x < 0 or next.y < 0 or next.x >= cols or next.y >= rows:
+					continue
+				if kept.has(next):
+					continue
+				if _wet_cell(next, region, step, lattice_cols, wet_point, point_known, sampled):
 					kept[next] = true
 					frontier.append(next)
 	else:
+		# The basin is not where the config says it is. Fall back to the
+		# original whole-rect pass and keep every wet cell, which is what this
+		# branch has always done -- the warning is the point, and a degraded
+		# pond is better than none.
 		push_warning("pond centre cell is not below the waterline; keeping every wet cell unfiltered")
-		kept = wet_cells
+		for row in rows:
+			for col in cols:
+				var cell := Vector2i(col, row)
+				if _wet_cell(cell, region, step, lattice_cols, wet_point, point_known, sampled):
+					kept[cell] = true
+	BOOT_LOG.phase("water: pond wet-lattice scan (%d of %d lattice points)" % [
+		sampled[0], wet_point.size()])
 
 	_pond_cells_cache = {"step": step, "kept": kept}
 	return _pond_cells_cache
+
+
+## Does this cell touch water? Any of its four corners near or below the
+## waterline, with each corner's height sampled at most once for the whole
+## fill and remembered in `wet_point`.
+##
+## The corner heights are the same points and the same predicate the whole-rect
+## pass used: `region.position + (col, row) * step`, tested against
+## `_level + 0.5`.
+func _wet_cell(
+	cell: Vector2i, region: Rect2, step: float, lattice_cols: int,
+	wet_point: PackedByteArray, point_known: PackedByteArray, sampled: Array
+) -> bool:
+	var wet := false
+	for corner: Vector2i in [
+		cell, cell + Vector2i(1, 0), cell + Vector2i(0, 1), cell + Vector2i(1, 1)
+	]:
+		var index := corner.y * lattice_cols + corner.x
+		if point_known[index] == 0:
+			point_known[index] = 1
+			sampled[0] += 1
+			var lx := region.position.x + corner.x * step
+			var lz := region.position.y + corner.y * step
+			wet_point[index] = 1 if float(_field.call("height_at", lx, lz)) < _level + 0.5 else 0
+		# Not an early return: every corner is memoised whether or not the
+		# answer is already known, so a later cell sharing this corner still
+		# finds it decided.
+		if wet_point[index] == 1:
+			wet = true
+	return wet
 
 
 ## GF-B-001 / STALL-2. Which texels of the pond region's height texture the
