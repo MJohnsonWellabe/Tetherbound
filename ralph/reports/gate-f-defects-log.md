@@ -572,3 +572,52 @@ photographed artefact, confirmed by geometry and by a complete inventory of the
 round objects at that site — not a re-photographed before/after. **That is a
 rig-lane finding** (`tools/gate_f/**` untouched here) and it is handed over, not
 fixed.
+
+---
+
+## `GF-B-008` — The Rise renders black — **NOT A GAME DEFECT. Handed to the rig lane.**
+
+### Two frames of the same site
+
+`docs/evidence/gate-f-defects/GF-B-008/`.
+
+**The reported frame** (`GF-AUD-the_rise-arrival.png`, landed with `main`): the
+viewport is opaque near-black — median luminance **17.2**, p90 **31.1** over the
+whole non-HUD area — with one hard vertical edge at x ≈ 1490 where a warm brown
+band starts, and a dark green wash at the bottom-right corner. The minimap in the
+same frame renders terrain correctly. That is not a dark region; that is a camera
+inside a solid, seeing its backfaces with a sliver of the world past the near
+plane.
+
+**The same site, same day, from a camera reconstructed out of X07's own data**
+(`tools/_capture_gate_f_defect_sites.gd`: the `the_rise` teleport and `face`
+pair, with the eye placed where `camera_rig.gd` would put it for that pair —
+`camera.distance` behind along the look bearing, `camera.height` up,
+`pitch_start_deg` tilted, all read from `movement.json`): a **correctly lit rocky
+slope**, sky, clouds, trees, boulders, and the sun itself in frame.
+
+### So the region is fine and the camera is not
+
+Phase B's `RC-5` proposed a north sun for this item. The reconstruction rules
+that out on its own evidence: the sun is visible in the frame and the slope is
+lit by it.
+
+What the reconstruction does reproduce is the other half of the visual pass's own
+description — *"~70% of frame is one smeared slope with a circular blend seam"*.
+X07's `the_rise` teleport puts the player at the foot of a steep rise facing
+straight into it, so even a camera that is NOT buried spends most of the frame on
+one slope. The run's own camera goes further and ends up inside it.
+
+This is the second site where X07's pose data does not photograph what the site
+is: the `hall` block faces the player 180° from the approach and lands the same
+reconstruction inside the gatehouse masonry (see `GF-B-004`).
+
+### Handed over, not fixed
+
+`tools/gate_f/**` is the rig lane's and is untouched by this lane. **There is no
+game change to make here** — changing terrain or lighting to make a buried camera
+produce a nice frame would be fixing a game that is fine. What the rig lane needs
+is a `the_rise` teleport/face pair that stands the player where the region reads,
+and the same review of `hall`.
+
+Both frames are committed so the comparison does not have to be re-rendered.
