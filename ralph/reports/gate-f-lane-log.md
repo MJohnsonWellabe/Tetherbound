@@ -2317,3 +2317,55 @@ blocked step at successive band targets**, and its telemetry describes that,
 not the Meadows.
 
 **Next:** S08, already launched, entering from `S07-exit`.
+
+## Check-in 23 — 2026-08-27 — **S08: 112 PASS / 22 FAIL. Same blocked crossing, third time; 35.9 km across 174 positions.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S08/`. 9,127 route rows,
+**4,757 s (79 min)**, exit save written, `world` 99.6%.
+
+Recording this one tersely on purpose: **it is the S07 result again, larger.**
+
+| | S06 | S07 | **S08** |
+|---|---|---|---|
+| distance by route deltas | 9,180 m | 17,270 m | **35,936 m** |
+| distinct positions | 664 | 188 | **174** |
+| peak dead-travel | 538.7 m | 0.3 m | **0.0 m** |
+| top dwell coordinate | (22,172) | (8,1317) | **(8,1317), 1,334 rows** |
+| regions reached | corridor | corridor | **corridor** |
+
+**35.9 km of walking across 174 distinct positions, with the dead-travel meter
+at 0.0 for the entire segment.** The same "peaked at 0.4 m … 23,794.2 m walked"
+failure S07 produced. `S08`'s walks stop at z≈1321 — the South Bridge line, for
+the third consecutive segment. **Its distance is not travel and contributes no
+§D total**, on the same grounds recorded in check-in 22.
+
+The 22: Band 4 regions never entered (`the_ironwood_grove`, `the_ridgeline_watch`),
+four flags never set (`defeated_captain_field`, `_ridge`, `_riverwatch`,
+`hall_approach_open`), two more objective-id failures, one
+`input_context=world (wanted combat_aim)`, and — new only in its wording — **three
+separate party-size failures reading 1 where 3, 4 and 5 were wanted**, because
+S08 is where the roster should reach five. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 4 unreachable.
+
+### Operator note on the remaining journey cost, stated rather than acted on
+
+S06–S08 have now spent **~2h 40m of container time** re-demonstrating one blocked
+crossing at three successive band targets, and S08 alone was 79 minutes. S09 and
+S10 will enter from `S08-exit`, which carries the same unset crossing, and are
+expected to produce the same result against Band 5 and the finale.
+
+**I am running them anyway.** §J is explicit that a failed step gets its verdict
+and the run continues where continuation is possible, and continuation is
+possible — every segment so far has handed off. **X08 was dropped by owner
+decision; dropping S09/S10 would be operator judgment substituting for it**, and
+§13 does not give me that. The cost is recorded here so the owner can make that
+call knowingly for a future run rather than discovering it afterwards.
+
+Worth stating alongside it: **the study lane is not affected by this block.** X07
+is `DIAG-` and teleport-sited, X01 is a menu/input matrix from `S03-exit` and
+`S08-exit`, X02 is a build lab. None of them need the crossing, so the run's
+highest-value remaining evidence — including its only real visual evidence — is
+still fully available.
+
+**Next:** S09, already launched.
