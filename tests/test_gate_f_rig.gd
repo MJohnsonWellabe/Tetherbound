@@ -596,3 +596,56 @@ func test_a_degraded_preflight_never_reads_as_a_pass() -> void:
 	inv = inv.substr(0, inv.find("\n\n\n"))
 	assert_true(inv.contains("degraded_why"),
 		"a DEGRADED run can never be complete, however much of it happened to write")
+
+
+# --- CD-2's real mechanism: evidence git will not carry ----------------------
+
+func test_the_inventory_asks_whether_git_will_carry_the_captures() -> void:
+	# CD-2 was never a harness defect. The 2026-08-27 run's X07 took 79 real
+	# 1920x1080 PNGs; `.gitignore` held a bare `shots/`, which matches at ANY
+	# depth, and git carried none of them. `git add <dir>` skips ignored
+	# contents silently — exit 0, no output — so fourteen per-segment evidence
+	# commits looked clean while carrying no frames.
+	#
+	# An inventory that only checks the working tree cannot see that. A file
+	# that exists and can never be committed is not evidence: it lives on a
+	# container that gets reclaimed.
+	var source := _harness_source()
+	assert_true(source.contains("func _uncommittable("),
+		"the closing inventory must ask whether git will actually take what was written")
+	var body := source.substr(source.find("func _uncommittable("))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("\"check-ignore\""),
+		"ask git rather than reimplementing gitignore matching — every subtlety that made CD-2 "
+		+ "possible lives in that command, and a second implementation is a second set of answers")
+	assert_true(body.contains("_git_check = \"unknown:"),
+		"a git that cannot answer must be recorded as UNKNOWN, never as clean. This check exists "
+		+ "because a silent success was mistaken for a real one; it must not repeat that shape.")
+	# ...and an unanswerable check must not fail every run either. That would be
+	# this lane's own mistake in mirror image: making the rig refuse work it can
+	# do. Only a real, named ignore counts.
+	assert_true(body.contains("return out")
+		and not body.contains("return [{\"file\": \"*\""),
+		"an unanswerable git check must not be reported as an uncommittable file")
+	var inv := source.substr(source.find("func _write_inventory("))
+	inv = inv.substr(0, inv.find("\n\n\n"))
+	assert_true(inv.contains("and uncommittable.is_empty()"),
+		"a segment whose captures git will not carry cannot be complete")
+	assert_true(inv.contains("or not uncommittable.is_empty()"),
+		"uncommittable evidence must exit non-zero, like any other missing artefact")
+
+
+func test_the_gitignore_shots_rule_is_the_one_that_was_wrong() -> void:
+	# Belt and braces with test_the_run_shots_directory_is_not_gitignored: that
+	# one checks the pattern text, this one checks the actual behaviour through
+	# git, on the path that matters.
+	var probe := "ralph/reports/gate-f-selfcheck/rig-2026-08-27/selfcheck_capture/shots/SC-C-title.png"
+	assert_true(FileAccess.file_exists("res://%s" % probe),
+		"the committed capture evidence is gone; this test's premise has changed")
+	var out: Array = []
+	var code := OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"),
+		"check-ignore", "-v", probe], out, true)
+	# 1 = not ignored, which is what it must be. 0 would mean a rule still
+	# swallows the run evidence; 128 means git could not answer here.
+	assert_ne(code, 0,
+		"a .gitignore rule matches the committed Gate F capture evidence: %s" % str(out))

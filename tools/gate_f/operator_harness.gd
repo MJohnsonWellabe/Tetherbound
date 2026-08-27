@@ -221,6 +221,10 @@ var _predicted_cost_s := 0.0
 ## Set by `_write_inventory` when a planned capture is not on disk. Distinct
 ## from a FAIL verdict, which never fails the process.
 var _evidence_missing := false
+## What `git check-ignore` was able to say about this segment's captures.
+## Carried into `INVENTORY.json` verbatim: "unknown" must read as unknown and
+## never as clean.
+var _git_check := "not run"
 ## CD-7's second measurement. The pre-flight runs BEFORE step 1, on an empty
 ## tree, so the frame cost it measures is an empty tree's -- which under xvfb
 ## is nothing like the Meadows'. The prediction is therefore re-taken and
@@ -699,10 +703,20 @@ static func _plan_captures(steps: Array) -> Array:
 ## CD-1: can this process actually take the pictures the segment plans?
 ##
 ## The 2026-08-27 run answered that question 9,231 times, one `file: null` at a
-## time, and reported PASS for every one of them. It had been launched without
-## the §0.1 xvfb invocation; every capture step silently no-opped and the
-## segments still read as executed. That is not evidence of absence -- it is a
-## run that did not happen, wearing the shape of one that did.
+## time, and reported PASS for every one of them.
+##
+## The cause is not that somebody forgot the §0.1 invocation. The operator's
+## check-in 30 is explicit: the journey and study lanes ran logic mode by a
+## RECORDED DECISION, and that decision was legitimate -- `run_segment.sh`
+## applies xvfb only in capture mode, and logic mode is deliberately
+## `--headless` with no driver because `--headless` WITH one hangs forever.
+## What was illegitimate is that nothing stopped a capture-BEARING segment
+## being run that way, and that the steps then said PASS. That is not evidence
+## of absence -- it is a run that did not happen, wearing the shape of one that
+## did.
+##
+## Which is why this is a gate and not a convention: the operator's choice
+## stays available, through `--gatef-allow-no-capture`, and stays recorded.
 ##
 ## So this asks, once, at the top, and it asks three separate things because
 ## they fail separately:
@@ -711,7 +725,7 @@ static func _plan_captures(steps: Array) -> Array:
 ##      not.) This is the failure that produced the 9,231.
 ##   2. Did `tools/capture_diag_minimal.gd` write its PNG beside this run?
 ##      `run_segment.sh` gates capture mode on it; a missing `capture_smoke.png`
-##      means the segment was started by hand, around the gate.
+##      means this segment did not come through the capture path.
 ##   3. Can THIS process, in THIS scene state, actually read back a frame and
 ##      encode it? A display server that exists and a viewport that returns an
 ##      empty image are different faults with the same symptom.
@@ -820,7 +834,7 @@ func _preflight_capture(steps: Array) -> bool:
 		if not FileAccess.file_exists(smoke) or _file_bytes(smoke) <= 0:
 			capture_why = ("tools/capture_diag_minimal.gd left no capture_smoke.png in %s. "
 				+ "run_segment.sh --capture writes one before it starts a segment, so its absence "
-				+ "means this segment was launched around the §A.4 smoke gate.") % _out_dir
+				+ "means this segment did not come through the capture path.") % _out_dir
 		else:
 			_preflight["smoke_bytes"] = _file_bytes(smoke)
 			var probe := await _preflight_png()
@@ -989,6 +1003,65 @@ func _measure_frame_cost() -> float:
 	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(frames)
 
 
+## Which of these captures will git refuse to carry?
+##
+## Asked of `git check-ignore` rather than by reimplementing gitignore matching
+## here. Every subtlety that made CD-2 possible -- a bare directory pattern
+## matching at any depth, negations, precedence between `.gitignore` files --
+## lives in that command, and a second implementation of it in GDScript would be
+## a second set of answers.
+##
+## An unavailable or unhappy git is reported as "unknown", never as "fine": this
+## check exists because a silent success was mistaken for a real one, and it
+## must not repeat that shape itself.
+func _uncommittable(rows: Array) -> Array:
+	var out: Array = []
+	var paths := PackedStringArray()
+	var by_path := {}
+	for entry: Variant in rows:
+		var row: Dictionary = entry
+		if not bool(row.get("exists", false)):
+			continue
+		var abs_path := _out_dir.path_join(str(row.get("file", "")))
+		paths.append(abs_path)
+		by_path[abs_path] = str(row.get("file", ""))
+	if paths.is_empty():
+		return out
+	var args := PackedStringArray(["check-ignore", "-v"])
+	args.append_array(paths)
+	var output: Array = []
+	# exit 0 = at least one path IS ignored; 1 = none are; anything else is git
+	# failing to answer.
+	var code := OS.execute("git", args, output, true)
+	if code == 1:
+		_git_check = "clean: git will carry all %d capture(s)" % paths.size()
+		return out
+	if code != 0:
+		# 128 is git's "I cannot answer that" -- most often because the run
+		# directory is outside a work tree, which is a perfectly ordinary way
+		# to run a segment and says nothing bad about the captures.
+		#
+		# Recorded, never guessed, and NOT a completeness failure. An
+		# unanswerable check that failed every run would be this lane's own
+		# mistake in mirror image: making the rig refuse work it can do.
+		_git_check = "unknown: git check-ignore returned %d (is %s inside a work tree?)" % [
+			code, _out_dir]
+		push_warning("gate-f harness: %s" % _git_check)
+		return out
+	_git_check = "checked %d capture(s) against git" % paths.size()
+	for chunk: Variant in output:
+		for line in str(chunk).split("\n"):
+			# `<source>:<line>:<pattern>\t<path>`
+			var parts := line.split("\t")
+			if parts.size() < 2:
+				continue
+			var hit := parts[parts.size() - 1].strip_edges()
+			if not by_path.has(hit):
+				continue
+			out.append({"file": str(by_path[hit]), "rule": parts[0].strip_edges()})
+	return out
+
+
 func _file_bytes(path: String) -> int:
 	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
@@ -1047,7 +1120,27 @@ func _write_inventory() -> void:
 		if frame.get("file") == null:
 			var reason := str(frame.get("reason", "unrecorded"))
 			frames_absent_reasons[reason] = int(frames_absent_reasons.get(reason, 0)) + 1
+	# CD-2's real mechanism, checked at the segment that wrote the files.
+	#
+	# The 2026-08-27 run's X07 took 79 real 1920x1080 PNGs and git carried none
+	# of them: `.gitignore` held a bare `shots/`, which matches at any depth, so
+	# it swallowed every Gate F segment's own captures. `git add <dir>` skips
+	# ignored contents SILENTLY -- exit 0, no output -- which is how fourteen
+	# per-segment evidence commits looked clean while carrying no frames.
+	#
+	# An inventory that only checks the working tree cannot see that. A file
+	# that exists and can never be committed is not evidence: it lives on a
+	# container that gets reclaimed. So the last question the inventory asks is
+	# whether git will actually take what was written.
+	var uncommittable := _uncommittable(rows)
+	for entry: Variant in uncommittable:
+		var row: Dictionary = entry
+		for candidate: Variant in rows:
+			var target: Dictionary = candidate
+			if str(target.get("file", "")) == str(row.get("file", "")):
+				target["git_ignored_by"] = str(row.get("rule", ""))
 	var complete := _blocked.is_empty() \
+		and uncommittable.is_empty() \
 		and str(_preflight.get("degraded_why", "")).is_empty() \
 		and absent == 0 \
 		and _derails.is_empty() \
@@ -1069,6 +1162,8 @@ func _write_inventory() -> void:
 			"rows": rows},
 		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
 			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
+		"uncommittable": uncommittable,
+		"git_check": _git_check,
 		"steps": {"total": _step_total, "ran": _step_ran, "refused": _step_refused,
 			"pass": int(_verdicts["PASS"]), "fail": int(_verdicts["FAIL"]),
 			"skipped": int(_verdicts["SKIP"])},
@@ -1076,7 +1171,10 @@ func _write_inventory() -> void:
 		"harness_errors": _harness_errors,
 	}
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
-	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0
+	# A capture git will never carry is, from the run's point of view, a missing
+	# artefact: it lives on a container that gets reclaimed.
+	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
+		or not uncommittable.is_empty()
 	if complete:
 		return
 	# A second, unmissable marker. A reader scanning a run directory sees the
@@ -1094,6 +1192,13 @@ func _write_inventory() -> void:
 		lines.append("- %d step(s) were REFUSED by the context guard and did not run." % _step_refused)
 	if absent > 0:
 		lines.append("- %d of %d planned captures are absent from disk." % [absent, _planned_captures.size()])
+	if not uncommittable.is_empty():
+		lines.append("- %d capture(s) exist on disk and git WILL NOT CARRY THEM:" % uncommittable.size())
+		for entry: Variant in uncommittable:
+			var row: Dictionary = entry
+			lines.append("  - %s  (ignored by %s)" % [str(row.get("file", "")), str(row.get("rule", ""))])
+		lines.append("  `git add <dir>` skips these silently and exits 0. Committing this segment "
+			+ "would look clean and carry nothing.")
 	if _record_absent > 0:
 		lines.append("- %d continuous frames were planned and not written: %s"
 			% [_record_absent, JSON.stringify(frames_absent_reasons)])

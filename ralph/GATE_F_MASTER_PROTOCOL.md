@@ -76,10 +76,17 @@ Envelope facts every segment inherits:
    (§0.1). No pacing, navigation, difficulty, or economy claim may ever be
    sourced from a `DIAG-` segment.
 7. **A segment that cannot produce its evidence must refuse to start.**
-   Added 2026-08-27 from CD-1. The 2026-08-27 run against `f082bdf6` was
-   launched without the fact-2 invocation above; every capture step silently
+   Added 2026-08-27 from CD-1; **framing corrected the same day** from the
+   operator's check-in 30. The 2026-08-27 run's journey and study lanes ran in
+   **logic mode by a recorded operator decision** (check-ins 8, 16, 26) — not,
+   as CD-1's first draft had it, by a missing invocation. `run_segment.sh`
+   applies xvfb only in capture mode, and logic mode is deliberately
+   `--headless` with no driver because `--headless` *with* one hangs forever.
+   The decision was legitimate; what was not is that nothing stopped a
+   **capture-bearing** segment being run that way. Every capture step silently
    no-opped, 9,231 planned frames were written as `file: null`, and every one
-   of those steps reported **PASS**. The harness now runs a capture pre-flight
+   of those steps reported **PASS**. That an operator may choose logic mode is
+   exactly why the combination needs a gate rather than a convention. The harness now runs a capture pre-flight
    before step 1 of any segment declaring a capture or a continuous record —
    display server, `capture_diag_minimal.gd` PNG, and its own framebuffer
    readback — and BLOCKs on any of the three. `tools/gate_f/run_segment.sh`

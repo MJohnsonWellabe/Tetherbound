@@ -8,6 +8,15 @@ independently found 13 of 162 known player-facing issues — **8.0%** — and th
 of the four loudest findings in it were harness artefacts, refuted by the run's
 own data. That is a defect in the instrument, not a verdict on the game.
 
+**Read Finding 2 first.** The coordinator's brief gave this lane a diagnosis of
+CD-2 that is wrong, corrected mid-lane from the Gate F operator's check-in 30.
+The captures were taken; `.gitignore` swallowed them. The capture path was not
+rewritten and did not need to be.
+
+The run's own final numbers, from the operator: **2205 PASS / 373 FAIL** across
+the 13 segments that wrote verdicts, X07 stopped at step 184 of 266 with **79 of
+80 frames taken**, and X04, X05, X06 and X08 never ran.
+
 ---
 
 ## Finding 1 — the lane's own specification was not on `main`
@@ -49,35 +58,132 @@ of was against `f082bdf6`, whose freeze record is not on `main` either.
 
 ---
 
-## Finding 2 — CD-2's other half was `.gitignore`, not the harness
+## Finding 2 — CD-2 is not a harness defect at all. It is `.gitignore`.
+
+**Corrected 2026-08-27 after the coordinator's stand-down notice and the Gate F
+operator's check-in 30 on `ralph/GATE-F-RUN-20260827`.** An earlier draft of
+this log said the two halves "compound" and that the headless journey segments
+produced no PNGs, "so none did". That last clause was wrong and it is the whole
+point of the correction, so it is restated here rather than edited away.
 
 `COVERAGE_DEFECTS.md` reads: *"`operator_harness.gd:1212` writes to
 `shots/<id>.png`. No `shots/` directory exists anywhere in the run and git has
-never carried one."*
+never carried one."* The second half is true. **The first half is false, and
+this lane must not act on it.**
 
-Both halves of that are true and they have different causes.
+The operator, who had the files on its own disk, reports:
 
-`_open_outputs()` has always created `<run>/<segment>/shots/` and
-`_step_capture` has always written into it. What was never true is that git
-carried any of it: `.gitignore` line 34 read
+> `shots/` exists in every segment. X07's held **79 real 1920×1080 PNGs**, ~1.5
+> MB each, 134 MB. I read their pixels — check-in 28's colour verification was a
+> from-scratch PNG decode over all 79, not a manifest read.
+
+**The capture path works and was not rewritten by this lane.** X07 ran under
+xvfb, its `CAPTURE_RESOLUTION.json` records the smoke passing at 1920×1080, and
+it produced 79 of 80 planned frames with no resolution fallback. Phase B read
+the *repository*, saw no frames, and reasonably concluded none were produced.
+Reading the *container* reverses that.
+
+### The one line
 
 ```
-shots/
+$ git check-ignore -v .../X07/shots/GF-14-COMBAT-13b.png
+.gitignore:34:shots/	.../X07/shots/GF-14-COMBAT-13b.png
 ```
 
-**unanchored**, which in gitignore syntax matches a directory of that name *at
-every depth* — including `ralph/reports/gate-f-run-*/<segment>/shots/`. The
-comment above it says "Survey output. Regenerate with tools/survey.sh", so the
-pattern was written for the repository-root `shots/` and has been quietly
-swallowing every Gate F capture and every `shots/manifest.json` since the
-harness was written.
+`.gitignore` line 34 was a bare `shots/`, written for `tools/survey.sh` output.
+**A bare directory pattern matches at any depth**, so it swallowed every Gate F
+segment's own `shots/` — this run and every previous one, since the harness was
+written.
 
-Anchored to `/shots/`. Verified both ways with `git check-ignore -v`.
+And `git add <dir>` skips ignored contents **silently**. Verified here from
+first principles rather than taken on trust:
 
-The two halves compound: the run that *could* have produced PNGs (CD-1's
-segments ran headless, so none did) would have had them dropped on the way to
-the commit, and the reviewer's "no prescribed screenshot exists anywhere" would
-have been true either way, for a second reason nobody had looked for.
+```
+$ printf 'shots/\n' > .gitignore && mkdir -p run/seg/shots
+$ echo frame > run/seg/shots/a.png && echo notes > run/seg/notes.md
+$ git add run          # exit 0, no output at all
+$ git diff --cached --name-only
+.gitignore
+run/seg/notes.md       # the frame is simply not there
+$ git commit -m x      # succeeds
+```
+
+That is how **fourteen** per-segment evidence commits looked clean while
+carrying no frames.
+
+### What this lane changed, and what it did not
+
+Anchored to `/shots/`, which is the permanent fix. The operator recovered X07's
+79 frames with `git add -f` in `89c87b56` and deliberately did **not** touch
+`.gitignore`, because a repo change belongs to this lane under §13.
+
+Two checks the coordinator asked for before changing that pattern:
+
+**What else was the bare pattern eating?** Nothing. Every `shots/`-writing tool
+in the repository (`tools/survey.sh`, `tools/contact_sheet.gd` and the rest)
+writes under the *repository-root* `shots/`, which `/shots/` still ignores. The
+only nested `shots/` directories that exist anywhere are the Gate F per-segment
+ones — precisely what the pattern was wrongly swallowing. `shots-*/` matched
+nothing at any depth. The anchor is exactly scoped: nothing else loses its
+ignore.
+
+**Does `ralph/.gdignore` interact with it?** No, and the two are complementary.
+`.gdignore` is a **Godot** mechanism and `.gitignore` is a **git** one; they do
+not see each other. `ralph/.gdignore` stops Godot importing everything under
+`ralph/` — including this lane's committed evidence PNGs, which is why the
+import no longer churns through them — while git now carries those same files.
+Confirmed: `git check-ignore` returns 1 (not ignored) for
+`ralph/reports/gate-f-selfcheck/rig-2026-08-27/selfcheck_capture/shots/SC-C-title.png`,
+and ten PNGs are committed on this branch. Root `shots/.gdignore` is untouched
+and still keeps the survey output out of the import.
+
+### The inventory check is not weakened by this — it is sharpened
+
+CD-2's fix was never really about the capture path, and the closing inventory is
+what would have caught this: **it turns a silent `git add` no-op into a loud
+failure.** A segment that believes it committed 79 frames and committed none is
+exactly the shape `INVENTORY.json` exists to make impossible, because `exists`
+and `bytes` are read off disk and `complete` is computed rather than claimed.
+
+So the inventory now asks git directly. At close it runs `git check-ignore -v`
+over every capture that exists on disk, and a capture git will not carry is an
+**uncommittable artefact**: named in `INVENTORY.json`, named with its rule in
+`INCOMPLETE.md`, `complete` false, process exit non-zero. A file that exists and
+can never be committed is not evidence — it lives on a container that gets
+reclaimed.
+
+Asked of `git check-ignore` rather than by reimplementing gitignore matching in
+GDScript. Every subtlety that made CD-2 possible — a bare directory pattern
+matching at any depth, negations, precedence between `.gitignore` files — lives
+in that command, and a second implementation of it would be a second set of
+answers.
+
+Proven both ways, inside the repository, by temporarily restoring the bare
+pattern:
+
+```
+### A: pre-fix .gitignore
+run_segment: INVENTORY.json says selfcheck_capture is INCOMPLETE
+  - 4 capture(s) exist on disk and git WILL NOT CARRY THEM:
+    - shots/SC-C-title.png    (ignored by .gitignore:45:shots/)
+    - shots/SC-C-seq-000.png  (ignored by .gitignore:45:shots/)
+    - shots/SC-C-seq-001.png  (ignored by .gitignore:45:shots/)
+    - shots/SC-C-seq-002.png  (ignored by .gitignore:45:shots/)
+    `git add <dir>` skips these silently and exits 0. Committing this segment
+    would look clean and carry nothing.
+
+### B: fixed .gitignore
+run_segment: INVENTORY.json says selfcheck_capture is COMPLETE.
+  complete=True  git_check=clean: git will carry all 4 capture(s)  uncommittable=[]
+```
+
+A first cut of this check ran the segment into `/tmp`, outside the work tree,
+where `git check-ignore` exits 128 — and reported the segment incomplete for
+that. Wrong: an *unanswerable* check is not an uncommittable file. It is now
+recorded as `git_check: "unknown: …"`, which must read as unknown and never as
+clean, and it does not fail completeness. Failing every run on a box where git
+cannot answer would be this lane's own mistake in mirror image — making the rig
+refuse work it can do.
 
 ---
 
@@ -287,6 +393,39 @@ Collapsing them in either direction produces a lie. `mouse_captured` run
 without a display server now returns SKIP and names the reason and the
 invocation that would give a verdict.
 
+### Why the untakeable capture stays a FAIL, against the operator's suggestion
+
+The Gate F operator, in check-in 30, agrees CD-1's core criticism is right — *"a
+capture step that cannot produce its evidence returned PASS"* — and proposes a
+different verdict from the one this lane shipped:
+
+> The `file: null` row is §C.4-compliant — an absent frame is evidence — but the
+> **PASS verdict on top of it** asserts a success that did not happen.
+> `SKIPPED`/`N/A` would carry the same information honestly.
+
+That is a fair reading and it is not what landed, for two reasons.
+
+**The written spec says FAIL.** CD-1's own permanent-template change is
+explicit: *"a planned capture that cannot be taken is a **FAIL**, and a segment
+that cannot take any of its planned captures is a **BLOCKER** at step 1."* This
+lane implements the specification it was given; changing a verdict the coverage
+loop chose is the coordinator's call, not the rig lane's.
+
+**And the two cases are genuinely different.** A prescribed capture is evidence
+the run *owes* — §G defines every non-defect entry before play, and the operator
+may not delete or re-stage one. A run that does not pay a debt it entered into
+has a real deficiency, and FAIL is what that is. A `mouse_captured` assertion is
+a *question about the game* that this envelope cannot ask at all; nothing is
+owed and nothing is missing. Debt versus unanswerable question.
+
+In practice the disagreement is nearly moot, which is worth saying plainly. With
+the pre-flight in place a capture-bearing segment either has a display server —
+so its captures are real — or it BLOCKs at step 1, or it runs explicitly
+DEGRADED under `--gatef-allow-no-capture` with every planned shot marked absent.
+The `_step_capture` FAIL is now only reachable when a display server is lost
+*mid-segment*, which is unambiguously a failure. It is kept as defence in depth,
+not as the primary control.
+
 ---
 
 ## Finding 9 — the pre-flight had two of its own bugs, and they were the
@@ -346,7 +485,7 @@ was re-run by this lane.
 | | What it was | What landed |
 |---|---|---|
 | **CD-1** | Capture steps under a headless process returned `"capture … skipped"`, which does not begin with `FAIL`, so the step recorded **PASS**. 9,231 times. | Capture pre-flight before step 1 of any segment declaring a capture or a continuous record: display server, `capture_diag_minimal.gd` PNG beside the run, and the process's own framebuffer readback. Any of the three failing is a BLOCKER; no step runs. `--gatef-allow-no-capture` acknowledges it explicitly and still cannot mark the segment complete. An untakeable capture now returns `FAIL`. `run_segment.sh` refuses the same combination before Godot starts. |
-| **CD-2** | No prescribed screenshot exists anywhere in the run. | §M's closing inventory runs as code: `INVENTORY.json` per segment, planned id → file → **exists** → **bytes** read off disk, `complete` computed rather than claimed, `INCOMPLETE.md` written when it is false, non-zero exit on a missing artefact. Plus the `.gitignore` anchor — see Finding 2. |
+| **CD-2** | No prescribed screenshot exists anywhere **in the repository** — but the frames were taken; `.gitignore` swallowed them. See Finding 2: this is not a harness defect and the capture path was not rewritten. | §M's closing inventory runs as code: `INVENTORY.json` per segment, planned id → file → **exists** → **bytes** read off disk, `complete` computed rather than claimed, `INCOMPLETE.md` written when it is false, non-zero exit on a missing artefact. Plus the `.gitignore` anchor — see Finding 2. |
 | **CD-3** | Dialogue advance was a guessed fixed press count. Under-press and the modal sits open for the next step to press at; over-press and the extra `interact` re-opens the conversation the previous press closed. `X01-463` held 3,601 frames in `narrative_modal`. | `advance_dialogue_until_closed`: a predicate over the panel's own line (`dialogue_runner.gd::line()`, or the starter picker's index), stopping the instant `is_open()` goes false. The button is read off the panel — `interact` for a conversation, `menu_confirm` for the picker, the naming prompt refused with a pointer at `type_name`. Detects and FAILs a close-then-reopen. CD-3's stated regression is enforced inside the step: after it, `input_context` must not be `narrative_modal`. |
 | **CD-4** | 303 of X01's 418 cells (72.5%) were injected in a context other than the one the step names. | `probe_cell` takes `intended_context`; out of context the cell is **SKIPPED**, never PASS and never FAIL. `intended_context` and `context_before` are first-class fields on `input_probe`. Deliberately not `require_context`: a 418-cell matrix that derailed at the first drift would be worse evidence than one that reports which cells were real. |
 | **CD-5** | `move_to` compares x/z only; the bed is 0.89 m from Grandpa in plan view and 3.3 m above him. | `move_to_entity` resolves by identity (`poi:<kind>`, script path, node name, group, `label()`, `species_id`, unique substring), re-reads the position every frame, and arrives in **3D**. A walk that closed the plan-view gap and cannot close the vertical one reports the vertical fact. `interact_with` presses only when the arbiter has a live prompt, refuses a prompt belonging to another provider, and FAILs when the press changes nothing. |

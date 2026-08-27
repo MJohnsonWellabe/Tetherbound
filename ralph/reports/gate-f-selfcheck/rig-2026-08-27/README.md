@@ -38,8 +38,12 @@ present, each row carrying the byte count read **off disk**.
 Before this lane the second invocation was the one every segment of the
 2026-08-27 run actually used, and it reported PASS for every capture step.
 
-`shots/` is committed here at all only because `.gitignore`'s `shots/` pattern
-was unanchored and matched at every depth. See the lane log's Finding 2.
+`shots/` is committable here at all only because `.gitignore`'s `shots/`
+pattern was unanchored and matched at every depth, swallowing every Gate F
+segment's own captures since the harness was written. That — not a broken
+capture path — is what CD-2 actually was: the 2026-08-27 run's X07 took **79
+real 1920×1080 PNGs** and git carried none of them, while `git add <dir>` exited
+0 and said nothing. See the lane log's Finding 2.
 
 ### What the pre-flight measured
 
@@ -125,11 +129,18 @@ Every segment directory holds what §M asks for: `RUN_METADATA.json`,
 `INCOMPLETE.md` is present exactly when `INVENTORY.json` says `complete` is
 false. As run here:
 
-| segment | complete | pass | fail | refused | skipped | captures |
-|---|---|---|---|---|---|---|
-| `selfcheck_capture` | **true** | 6 | 0 | 0 | 0 | 4 / 4 |
-| `selfcheck_reach`   | **true** | 14 | 2 | 0 | 0 | — |
-| `selfcheck_context` | false | 8 | 1 | 1 | 3 | — |
+| segment | complete | pass | fail | refused | skipped | captures | `git_check` |
+|---|---|---|---|---|---|---|---|
+| `selfcheck_capture` | **true** | 6 | 0 | 0 | 0 | 4 / 4 | clean: git will carry all 4 |
+| `selfcheck_reach`   | **true** | 14 | 2 | 0 | 0 | — | not run (no captures) |
+| `selfcheck_context` | false | 8 | 1 | 1 | 3 | — | not run (no captures) |
+
+`git_check` is the last question the inventory asks, and it is CD-2's actual
+mechanism: *will git carry what was written?* Proven both ways by temporarily
+restoring the bare `shots/` pattern and re-running `selfcheck_capture` inside
+the repository — with it, all four captures are flagged
+`ignored by .gitignore:45:shots/` and the segment is INCOMPLETE; without it,
+`clean: git will carry all 4 capture(s)`.
 
 `selfcheck_reach` is **complete with two failures**, and that pair of facts is
 the distinction this lane is built on: a FAIL is a verdict on the **game** and

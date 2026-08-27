@@ -61,19 +61,20 @@
     "baseline_hz": 0.1,
     "written": 4
   },
+  "git_check": "clean: git will carry all 4 capture(s)",
   "harness_errors": [],
   "preflight": {
     "allow_no_capture": false,
-    "boot_cost_s": 0.44,
+    "boot_cost_s": 0.41,
     "capture_available": true,
     "capture_requested": true,
     "display_server": "X11",
-    "measured_frame_cost_s": 0.00629,
-    "measured_frame_cost_s_in_scene": 0.032481,
+    "measured_frame_cost_s": 0.00562,
+    "measured_frame_cost_s_in_scene": 0.030257,
     "planned_captures": 4,
     "predicted_frames": 113,
-    "predicted_segment_cost_s": 0.7,
-    "predicted_segment_cost_s_in_scene": 4.1,
+    "predicted_segment_cost_s": 0.6,
+    "predicted_segment_cost_s_in_scene": 3.8,
     "record_baseline_hz": 0.1,
     "self_test": {
       "bytes": 10596,
@@ -89,7 +90,7 @@
   },
   "run_id": "rig-2026-08-27",
   "segment": "selfcheck_capture",
-  "sha": "81ad5a089c334b926c65327e4a235710dca87f84",
+  "sha": "a35f0dd3fd15dc2a82a0ae03006decb10706ba09",
   "steps": {
     "fail": 0,
     "pass": 6,
@@ -97,5 +98,6 @@
     "refused": 0,
     "skipped": 0,
     "total": 6
-  }
+  },
+  "uncommittable": []
 }

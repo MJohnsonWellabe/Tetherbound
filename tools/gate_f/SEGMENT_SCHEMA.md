@@ -472,8 +472,9 @@ because they fail separately:
 
 1. **Is there a display server?** `--headless` was passed, or xvfb was not.
 2. **Did `tools/capture_diag_minimal.gd` write `capture_smoke.png` beside this
-   run?** `run_segment.sh --capture` gates on it; its absence means the segment
-   was started around the §A.4 gate.
+   run?** `run_segment.sh --capture` gates on it, so its absence means this
+   segment did not come through the capture path — either started by hand, or
+   started in logic mode.
 3. **Can this process, in this scene, read back a frame and encode it?** A
    display server that exists and a viewport that returns an empty image are
    different faults with one symptom.
@@ -481,10 +482,19 @@ because they fail separately:
 Any of the three failing is a **BLOCKER**: `BLOCKER.md` is written, a `defect`
 event is emitted, no step runs, and the harness exits non-zero.
 
-This exists because of coverage defect CD-1. The run against `f082bdf6` was
-launched without the §0.1 xvfb invocation. Every capture step silently no-opped,
-9,231 planned frames were written as `file: null`, and every one of those steps
-reported **PASS**. A capture that cannot be taken is a FAIL; a segment that can
+This exists because of coverage defect CD-1. The run against `f082bdf6` ran its
+journey and study lanes in logic mode **by a recorded operator decision**, which
+was legitimate — `run_segment.sh` applies xvfb only in capture mode, and logic
+mode is deliberately `--headless` with no driver because `--headless` *with* one
+hangs forever. What was not legitimate is that nothing stopped a
+**capture-bearing** segment being run that way: every capture step silently
+no-opped, 9,231 planned frames were written as `file: null`, and every one of
+those steps reported **PASS**.
+
+That an operator may legitimately choose logic mode is precisely why the
+combination needs a gate rather than a convention — and why
+`--gatef-allow-no-capture` exists, so the choice stays available and stays
+recorded. A capture that cannot be taken is a FAIL; a segment that can
 take none of its captures is a BLOCKER. `file: null` is evidence of absence only
 when the absence is unavoidable and singular.
 
@@ -552,10 +562,25 @@ freeze record's claim, writes back what it actually observed, and BLOCKs when th
 record promises a display server this process does not have. A metadata field
 asserting a capability is not evidence that the capability existed.
 
-**Note on `.gitignore`.** The other half of CD-2 was that `shots/` was ignored
-unanchored, so `ralph/reports/gate-f-run-*/<segment>/shots/` was never tracked.
-The harness wrote the PNGs; git declined to commit them. The pattern is now
-`/shots/`, anchored to the repository root.
+**Will git carry it?** This is what CD-2 actually was, and it is the last
+question the inventory asks. `shots/` was ignored *unanchored*, and a bare
+directory pattern matches at **any depth**, so
+`ralph/reports/gate-f-run-*/<segment>/shots/` was never tracked. The harness
+wrote the PNGs — X07 took 79 real 1920×1080 frames — and git declined to carry
+them, while `git add <dir>` skipped them **silently**, exit 0, no output. That
+is how fourteen per-segment evidence commits looked clean while carrying no
+frames.
+
+The pattern is now `/shots/`, anchored to the repository root. And at close the
+inventory runs `git check-ignore -v` over every capture on disk: one git will
+not carry is an **uncommittable artefact** — named with its rule in
+`INVENTORY.json`/`INCOMPLETE.md`, `complete` false, exit non-zero. A file that
+exists and can never be committed is not evidence; it lives on a container that
+gets reclaimed.
+
+`git_check` records what git was able to say. A git that cannot answer — a run
+directory outside a work tree, say — reads `unknown: …` and does **not** fail
+the segment: an unanswerable check is not an uncommittable file.
 
 ### Two honest deviations from §C.1, stated rather than hidden
 

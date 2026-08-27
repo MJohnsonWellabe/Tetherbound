@@ -16,13 +16,14 @@
     "baseline_hz": 0.0,
     "written": 0
   },
+  "git_check": "not run",
   "harness_errors": [],
   "preflight": {
     "allow_no_capture": false,
     "capture_available": false,
     "capture_requested": false,
     "display_server": "headless",
-    "measured_frame_cost_s": 0.005916,
+    "measured_frame_cost_s": 0.005917,
     "planned_captures": 0,
     "predicted_frames": 7934,
     "predicted_segment_cost_s": 46.9,
@@ -32,7 +33,7 @@
   },
   "run_id": "rig-2026-08-27",
   "segment": "selfcheck_reach",
-  "sha": "ec6e199779ee77bb924b871b31213f2d92b3c33e",
+  "sha": "a35f0dd3fd15dc2a82a0ae03006decb10706ba09",
   "steps": {
     "fail": 2,
     "pass": 14,
@@ -40,5 +41,6 @@
     "refused": 0,
     "skipped": 0,
     "total": 16
-  }
+  },
+  "uncommittable": []
 }
