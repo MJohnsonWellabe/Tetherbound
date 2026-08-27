@@ -621,3 +621,79 @@ is a `the_rise` teleport/face pair that stands the player where the region reads
 and the same review of `hall`.
 
 Both frames are committed so the comparison does not have to be re-rendered.
+
+---
+
+## `environment/nature` pack retest — **the metallic fix does NOT unblock it, and my own earlier claim was wrong**
+
+### Correcting the record first
+
+My `GF-B-004` commit said the absent `metallicFactor` was *"very likely why
+`ralph/BLOCKED.md` records the whole `environment/nature` pack as not rendering
+correctly through `props.gd`"*. **That was speculation and it is wrong.**
+`BLOCKED.md`'s BAND1-D1 entry had already measured the real cause and my claim
+would have sent the next reader past it.
+
+### What the pack actually is
+
+Read out of all 27 .glb files: **every one ships zero images.** Not one texture
+between them. Every material is a bare `baseColorFactor`, and those factors are
+palette-atlas placeholders, not colours:
+
+| material | used by | factor (linear) | renders as |
+|---|---:|---|---|
+| `grass` | 17 of 27 | (0.17, 0.85, 0.72) | bright **cyan-turquoise** |
+| `leafsGreen` | 5 | (0.16, 0.79, 0.67) | also cyan-turquoise, not green |
+| `woodBark` | 9 | (0.89, 0.51, 0.34) | orange |
+| `dirt` | 5 | (0.89, 0.51, 0.34) | orange |
+| `woodInner` | 4 | (0.96, 0.84, 0.73) | near-white |
+
+`BLOCKED.md` quotes these in sRGB (`grass` (0.45, 0.93, 0.87)); same numbers,
+different space. Its diagnosis — *"authored against a palette atlas the glTF
+import does not apply"* — is exact.
+
+### Verified against the real render path, not by inspection
+
+`tools/_probe_nature_pack.gd`: one model per distinct material in the pack, plus
+a `stylized_nature` control, loaded and instantiated the way `props.gd::place()`
+does **including its `make_dielectric()` call**, under the environment
+`world_look.gd` builds from `art.json`'s `day` block.
+
+`docs/evidence/gate-f-defects/nature-pack/after-make-dielectric.png`. The models
+are **lit now** — the metallic correction does work, and the black is gone — and
+they are a cyan bush, a cyan oak canopy on a pale trunk, and a near-white log,
+rock and stump. `albedo_texture` is `none` on every surface; the control's is
+`Leaves_TwistedTree_C.png`.
+
+**So the pack is not handed back.** `make_dielectric()` changed it from black to
+wrong-coloured.
+
+### But the block is one model wide today, not twenty-seven
+
+The other half of `BLOCKED.md`'s entry — *"the shared scatter layers use the same
+pack, so flat cyan shards appear in open field far outside this camp"* — is
+**stale**. Counted across every config in `data/`:
+
+- `data/config/vegetation.json` references the pack **zero** times. The scatter
+  does not use it at all any more.
+- The only live placement in the entire world is **`log_large`**, twice — the two
+  props this lane already found rendering black and fixed.
+- Every other band prop that once came from this pack now names
+  `res://assets/environment/stylized_nature`, which ships real textures.
+
+That matches the audit: `tools/_probe_black_objects.gd` over the whole live world
+found exactly those two `log_large` surfaces and nothing else from the pack.
+
+### What would unblock it, and who owns that
+
+The colours are flat and **keyed by material name**, which is precisely what
+`vegetation.gd::_tint_for()`'s `retint` map already consumes — that map currently
+holds two Quaternius bark entries and nothing for `grass`, `leafsGreen`, `dirt`,
+`woodBark` or `woodInner`. Five entries would give the whole pack plausible
+colour, with no new art and no generation.
+
+Not done here, for two reasons, both of which belong to someone else's decision:
+`data/config/vegetation.json` is coordinator-owned under
+`ralph/GATE_D_LANE_CONTRACT.md` §3, and `props.gd` does not read the retint map
+at all today — routing it through is a real change to how props are coloured,
+not a defect fix. Recommended, costed, and left.
