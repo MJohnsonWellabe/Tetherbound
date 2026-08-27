@@ -2369,3 +2369,43 @@ highest-value remaining evidence — including its only real visual evidence —
 still fully available.
 
 **Next:** S09, already launched.
+
+## Check-in 24 — 2026-08-27 — **S09: 63 PASS / 12 FAIL. Blocked crossing, fourth time — and a fourth distinct panel holding input.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S09/`. 3,373 route rows,
+1,795 s, exit save written. Same result as S06–S08: **11,771 m across 164
+distinct positions, peak dead-travel 0.0 m**, 721 rows on `(8,1317)`, regions
+`grandpas_village → corridor`. Its distance is not travel and contributes no
+§D total. All four failed walks stop at z≈1317–1319 against Band 5 targets at
+z≈7140–7595 — short by 5.8–6.3 km — with budgets up to **49,500 walking frames**
+spent. `6279.6 m from (150, 7595), wanted within 12.0`.
+
+### The one new thing: a fourth surface, same behaviour
+
+> `map did not open the pause shell: context build_catalogue -> build_catalogue (owner=@Canvas…)`
+
+`build_catalogue` holds **332 rows** and refuses the map, and a separate step
+reports `input_context=build_catalogue (wanted menu_save)`. That makes **four
+distinct surfaces** exhibiting the identical behaviour across the journey:
+
+| segment | surface holding input | wanted |
+|---|---|---|
+| S03 | `panel:SwapPanel` | `menu_build`, `build_placement`, `menu_backpack` |
+| S04 | `narrative_modal` (`owner=DialoguePanel`) | `combat`, `menu_save` |
+| S05, S07 | `menu_backpack` | `menu_save` |
+| **S09** | **`build_catalogue`** (`owner=@Canvas…`) | `menu_map`, `menu_save` |
+
+Recorded as an observation, not a diagnosis (§13). But four different surfaces,
+in four different segments, each holding ownership that the protocol expected to
+pass elsewhere, is a **class**, not four coincidences — and `4 × ui_down did not
+move focus off @Button@215786` here is the same focus-stuck report S04 and S06
+produced. **This is the run's central finding, and X01 is the segment built to
+corner it.**
+
+Remaining 12: the standing objective-id thread, party size 1 (wanted 5), one
+`input_context=world (wanted combat)`, and the `dead_travel peaked at 0.6 m …
+7,209.9 m walked` pair. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 5 unreachable.
+
+**Next:** S10, already launched — the last journey segment.
