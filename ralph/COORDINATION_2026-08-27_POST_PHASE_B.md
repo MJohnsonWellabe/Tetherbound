@@ -105,3 +105,43 @@ Not findings, recorded so they are not chased: three `WARN no collision under
 before terrain streams in, and are a property of how the tool travels rather than
 how a player does. And every frame is llvmpipe software rasterisation —
 composition, density and silhouette are trustworthy, frame times are not.
+
+## CORRECTION to CD-2, from the operator's stand-down — the frames EXIST
+
+Check-in 30 on `ralph/reports/gate-f-lane-log.md`, written after the stop order.
+**Read this before doing any CD-2 work; the rig lane's brief was issued with the
+wrong diagnosis.**
+
+CD-2 states that no `shots/` directory exists anywhere in the run and that X07's
+79 artefacts "do not exist on disk". **That is wrong.** `shots/` existed in every
+segment; X07's held 79 real 1920x1080 PNGs, about 1.5 MB each, 134 MB total. The
+operator decoded their pixels — check-in 28's colour verification was a
+from-scratch PNG decode over all 79, not a manifest read.
+
+What is true is that **git carried none of them**, and the cause is one line:
+
+    $ git check-ignore -v .../X07/shots/GF-14-COMBAT-13b.png
+    .gitignore:34:shots/    .../X07/shots/GF-14-COMBAT-13b.png
+
+`.gitignore:34` is a bare `shots/` written for `tools/survey.sh` output. **A bare
+directory pattern matches at any depth**, so it swallows every Gate F segment's
+own `shots/` — this run and every previous one. And `git add <dir>` skips ignored
+contents **silently**, so fourteen per-segment commits looked like they worked.
+
+**This changes the fix.** CD-2's remedy was written as "the harness never wrote
+the files"; the real remedy is an ignore rule scoped to the survey output rather
+than matching at any depth, plus an inventory check that would have caught the
+silent skip. The inventory check is still needed — it is what turns a silent
+`git add` no-op into a failure — but the harness's capture path is not the
+defect it was thought to be.
+
+CD-1 is unaffected: segments genuinely ran without a display server, and capture
+steps genuinely returned PASS having produced nothing. Both remain true.
+
+**Coordinator's own miss, recorded so the pattern is visible.** While capturing
+the grass frames I ran `git check-ignore` on my own output and got this exact
+line back, `.gitignore:34:shots/`, and read it as correct behaviour for a
+scratch render directory. It is correct for that. I did not connect it to Gate F's
+missing evidence, which was sitting in the same session's context. The operator,
+who had the files on disk, did. Two correct local readings, one missed
+system-level consequence.
