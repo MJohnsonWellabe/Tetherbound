@@ -582,6 +582,58 @@ gets reclaimed.
 directory outside a work tree, say — reads `unknown: …` and does **not** fail
 the segment: an unanswerable check is not an uncommittable file.
 
+### Event types — §C.1's enum, restated here because CI cannot see the protocol
+
+`ralph/GATE_F_MASTER_PROTOCOL.md` §C.1 is the source of truth for this list. It
+is restated here for one concrete reason: **`verify-unit-tests` sparse-checks
+out `!/ralph/`**, so a test that parses the enum from the protocol reads an
+empty file in CI and can enforce nothing. That is not hypothetical — it is how
+`test_every_schema_event_type_is_emitted_by_something` went red on run 2579
+while passing locally.
+
+So `tests/test_gate_f_rig.gd` parses this table, which is always in the
+checkout, and asserts every member is emitted by something in
+`operator_harness.gd` (GF-B-011). A second test cross-checks this list against
+§C.1 **whenever the protocol is readable** — locally, and in any full-checkout
+job — so the two cannot drift apart silently. Where the protocol is absent that
+test says so in its message rather than passing quietly.
+
+Adding a type to §C.1 means adding it here and giving it an emitter. A type
+nobody emits is an instrumentation defect (§C.5): its absence from a run proves
+nothing, and Phase B may not read it as evidence.
+
+| Event type |
+|---|
+| `objective` |
+| `dialogue` |
+| `combat_start` |
+| `combat_hit` |
+| `combat_switch` |
+| `combat_end` |
+| `catch_throw` |
+| `catch_result` |
+| `gather` |
+| `craft` |
+| `build_place` |
+| `build_cancel` |
+| `build_dismantle` |
+| `rest` |
+| `feed` |
+| `menu_open` |
+| `menu_close` |
+| `tab_change` |
+| `save` |
+| `load` |
+| `region_enter` |
+| `landmark_discover` |
+| `flag_set` |
+| `level_up` |
+| `faint` |
+| `input_probe` |
+| `screenshot` |
+| `note` |
+| `defect` |
+
 ### Two honest deviations from §C.1, stated rather than hidden
 
 1. **`input_state` is an extra field on every event.** The schema has one

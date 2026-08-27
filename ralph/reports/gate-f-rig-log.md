@@ -474,6 +474,87 @@ over-budget run does not start, flag or no flag.
 
 ---
 
+## Finding 10 — two of this lane's own tests were coupled to the repository,
+## not to behaviour
+
+CI run 2579 on `f1aa42c2` was red with two failures, both in
+`tests/test_gate_f_rig.gd`, both passing locally:
+
+```
+test_every_schema_event_type_is_emitted_by_something
+  (could not parse §C.1's event enum out of GATE_F_MASTER_PROTOCOL.md; got [])
+test_the_gitignore_shots_rule_is_the_one_that_was_wrong
+  (the committed capture evidence is gone; this test's premise has changed)
+```
+
+One cause, and it is mine. `.github/workflows/ci.yml`'s `verify-unit-tests`
+sparse-checks out **`!/ralph/`** — deliberately, since those trees are 1.20 GB
+of the 2.08 GB tip and no verification job reads them. Both tests read files
+under `ralph/`: one the protocol document, one a committed evidence PNG. Neither
+exists in that checkout, and neither should.
+
+Neither assertion was weakened.
+
+**The enum test.** `tools/gate_f/SEGMENT_SCHEMA.md` now carries §C.1's enum as a
+table, and the test parses it from there — the schema doc is in every checkout,
+which is why the sibling tests in `test_gate_f_instrumentation.gd` have always
+been able to parse it. So GF-B-011 is now enforced **in CI, where it previously
+could not run at all**. A second test,
+`test_the_schema_doc_and_the_protocol_agree_on_the_enum`, cross-checks the
+restatement against §C.1 whenever the protocol is readable, and where it is not
+it *prints why* instead of passing quietly — a restated list whose drift guard
+silently no-ops is a list that drifts.
+
+Worth noting the failure mode that did **not** happen: the test went red rather
+than vacuously green only because it asserts the parse found something before
+asserting over the result. That guard is the important half and it is kept.
+
+**The gitignore test.** Rewritten to ask git about a *path* rather than a
+*file*. `git check-ignore` answers about paths whether or not they exist, so the
+rule can be pinned without coupling the test to any artefact:
+
+```gdscript
+var run_path := "ralph/reports/gate-f-run-20260101T000000Z/S01/shots/GF-01-EXAMPLE.png"
+```
+
+It also now asserts the converse — that the repository-root `shots/` is *still*
+ignored — because anchoring the pattern was meant to narrow it, not remove it.
+
+### Proved, not assumed
+
+Both fixes were run under CI's actual condition by hiding `ralph/`:
+
+```
+$ mv ralph /tmp/ && godot --headless --script tests/run_tests.gd -- --only=gate_f
+    (skipped: res://ralph/GATE_F_MASTER_PROTOCOL.md is not in this checkout —
+     verify-unit-tests sparse-checks out !/ralph/. The enum was checked against
+     SEGMENT_SCHEMA.md only; run this locally or in a full checkout to verify
+     the two agree.)
+51 tests, 26303 assertions, 0 failed
+```
+
+And both negative controls still bite, so neither test has been made vacuous:
+
+```
+add `nobody_emits_this` to the schema table  → FAIL, naming it
+restore the bare `shots/` pattern            → FAIL, naming the run path
+```
+
+### `main` merged forward
+
+`main` moved to `7f18ccee` while this lane ran; `ralph/LAND-0827` carries Phase
+B, the Gate F evidence, the grass field ON and the coordination docs. Merged
+forward — **merge, never rebase**, since a rebase replays the scatter re-bake
+commits onto the new base and conflicts on every binary `region_*.bin`. Clean,
+no conflicts.
+
+The merge brings the operator's recovered evidence into this tree: **79 X07
+frames** under `ralph/reports/gate-f-run-20260827T025303Z/X07/shots/`. Finding 2
+is now confirmable from primary evidence in the working copy rather than from
+the operator's report of it.
+
+---
+
 ## What landed
 
 Against `COVERAGE_DEFECTS.md`'s own numbering. CD-1…CD-7 are instrument work

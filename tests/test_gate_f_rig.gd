@@ -242,35 +242,71 @@ func test_the_entity_walk_reuses_the_repos_one_navigator() -> void:
 
 # --- GF-B-011: every §C.1 event type is emitted somewhere --------------------
 
-## The §C.1 enum, parsed from the protocol rather than listed here.
+## The §C.1 event enum, parsed from `SEGMENT_SCHEMA.md`.
+##
+## **Not from the protocol, and that is a fix rather than a shortcut.**
+## `verify-unit-tests` sparse-checks out `!/ralph/` (ci.yml: the four excluded
+## trees are 1.20 GB of the 2.08 GB tip and no job reads any of them), so
+## `res://ralph/GATE_F_MASTER_PROTOCOL.md` **does not exist in CI**. An earlier
+## cut of this test parsed the enum from there, read an empty file, produced an
+## empty list and went red on run 2579 while passing locally.
+##
+## It went red rather than vacuously green only because it asserts the parse
+## found something first. That guard is kept below and is the important half:
+## a parser that yields `[]` and then asserts over an empty set passes while
+## checking nothing, which is the exact shape of dishonest test this repo has
+## already shipped a real bug behind.
+##
+## `tools/gate_f/SEGMENT_SCHEMA.md` is in every checkout — the sibling tests in
+## `test_gate_f_instrumentation.gd` already parse it — so the GF-B-011 rule now
+## runs everywhere. `test_the_schema_doc_and_the_protocol_agree_on_the_enum`
+## below keeps the two documents from drifting.
 func _schema_event_types() -> Array[String]:
+	return _event_types_in(FileAccess.get_file_as_string(SCHEMA_PATH), "| Event type |")
+
+
+## Every `lower_snake` identifier in backticks in the one-column table that
+## follows `header`.
+func _event_types_in(text: String, header: String) -> Array[String]:
 	var out: Array[String] = []
-	for line in FileAccess.get_file_as_string(PROTOCOL_PATH).split("\n"):
-		if not line.begins_with("| `type` |"):
+	for line in text.split("\n"):
+		if not line.begins_with(header):
 			continue
-		for chunk in line.split("`"):
-			var name := chunk.strip_edges()
-			# The enum members are bare lower_snake words between backticks;
-			# the row's prose ("str", "enum:", "ENV-OK") is not.
-			if name.is_empty() or name != name.to_lower():
-				continue
-			# The enum members are bare `lower_snake` identifiers. The row also
-			# carries table punctuation and prose between backticks, and a
-			# parser that kept those reported "|" as an unemitted event type.
-			if not name.is_valid_identifier():
-				continue
-			if name in ["type", "str", "enum"]:
-				continue
-			if not out.has(name):
-				out.append(name)
-		break
+		if header == "| `type` |":
+			# §C.1's row is one long cell: `type` | str | enum: `a`, `b`, ... |
+			# so every backticked identifier on the line is a member.
+			for chunk in line.split("`"):
+				var member := chunk.strip_edges()
+				if member.is_valid_identifier() and member == member.to_lower() \
+						and not member in ["type", "str", "enum"] and not out.has(member):
+					out.append(member)
+			return out
+		continue
+	# A one-column table: read down its first cell until the table ends.
+	var in_table := false
+	for line in text.split("\n"):
+		if line.begins_with(header):
+			in_table = true
+			continue
+		if not in_table:
+			continue
+		if not line.begins_with("|"):
+			break
+		if line.begins_with("|---"):
+			continue
+		var name := line.split("|")[1].strip_edges().trim_prefix("`").trim_suffix("`")
+		if name.is_valid_identifier() and name == name.to_lower() and not out.has(name):
+			out.append(name)
 	return out
 
 
 func test_every_schema_event_type_is_emitted_by_something() -> void:
 	var types := _schema_event_types()
 	assert_true(types.size() >= 25,
-		"could not parse §C.1's event enum out of GATE_F_MASTER_PROTOCOL.md; got %s" % str(types))
+		"could not parse the event-type table out of SEGMENT_SCHEMA.md; got %s. This assertion "
+			% str(types)
+		+ "exists so an unreadable or reformatted source fails LOUDLY: a parser that yields [] "
+		+ "and then asserts over an empty set passes while checking nothing.")
 	var source := _harness_source()
 	var missing: Array[String] = []
 	for name in types:
@@ -284,6 +320,34 @@ func test_every_schema_event_type_is_emitted_by_something() -> void:
 		+ "them: %s. An enum with an unemitted member reads exactly like an enum without one — "
 		+ "a Phase B reader querying type == 'gather' cannot tell 'the player never gathered' "
 		+ "from 'the harness never says that word'.") % str(missing))
+
+
+func test_the_schema_doc_and_the_protocol_agree_on_the_enum() -> void:
+	# The drift guard for the test above. SEGMENT_SCHEMA.md restates §C.1's enum
+	# so the rule can be enforced in a checkout that excludes `ralph/`; this
+	# checks the restatement is faithful wherever the protocol IS readable.
+	#
+	# In CI it cannot run, and it says so rather than passing quietly — an
+	# unrunnable check reported as a pass is how a restated list starts drifting
+	# from the document it claims to restate.
+	var protocol := FileAccess.get_file_as_string(PROTOCOL_PATH)
+	if protocol.is_empty():
+		print("    (skipped: %s is not in this checkout — verify-unit-tests sparse-checks out "
+			% PROTOCOL_PATH + "!/ralph/. The enum was checked against SEGMENT_SCHEMA.md only; "
+			+ "run this locally or in a full checkout to verify the two agree.)")
+		return
+	var from_protocol := _event_types_in(protocol, "| `type` |")
+	assert_true(from_protocol.size() >= 25,
+		"could not parse §C.1's event enum out of %s; got %s" % [PROTOCOL_PATH, str(from_protocol)])
+	var from_schema := _schema_event_types()
+	for name in from_protocol:
+		assert_true(from_schema.has(name),
+			"§C.1 names event type '%s' and SEGMENT_SCHEMA.md's table does not. The restated list "
+				% name
+			+ "has drifted from the protocol, and CI enforces GF-B-011 against the restatement.")
+	for name in from_schema:
+		assert_true(from_protocol.has(name),
+			"SEGMENT_SCHEMA.md's event table names '%s' and §C.1 does not." % name)
 
 
 func test_the_expensive_detectors_do_not_run_every_frame() -> void:
@@ -637,15 +701,41 @@ func test_the_inventory_asks_whether_git_will_carry_the_captures() -> void:
 
 func test_the_gitignore_shots_rule_is_the_one_that_was_wrong() -> void:
 	# Belt and braces with test_the_run_shots_directory_is_not_gitignored: that
-	# one checks the pattern text, this one checks the actual behaviour through
-	# git, on the path that matters.
-	var probe := "ralph/reports/gate-f-selfcheck/rig-2026-08-27/selfcheck_capture/shots/SC-C-title.png"
-	assert_true(FileAccess.file_exists("res://%s" % probe),
-		"the committed capture evidence is gone; this test's premise has changed")
+	# one reads the pattern text, this one asks GIT what the pattern actually
+	# does — which is the thing that mattered, since a bare `shots/` reads
+	# perfectly innocent and matches at every depth.
+	#
+	# Asked about a PATH, not a file. An earlier cut asserted on a committed
+	# evidence PNG and went red on run 2579 because `verify-unit-tests`
+	# sparse-checks out `!/ralph/`, so the file it named is legitimately absent
+	# there. `git check-ignore` answers about paths whether or not they exist,
+	# so the rule can be checked without coupling this test to any artefact.
+	var run_path := "ralph/reports/gate-f-run-20260101T000000Z/S01/shots/GF-01-EXAMPLE.png"
 	var out: Array = []
 	var code := OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"),
-		"check-ignore", "-v", probe], out, true)
-	# 1 = not ignored, which is what it must be. 0 would mean a rule still
-	# swallows the run evidence; 128 means git could not answer here.
+		"check-ignore", "-v", run_path], out, true)
+	if code > 1:
+		# git could not answer — no work tree, no git on PATH. Recorded, not
+		# guessed: this is the same rule the harness applies to its own
+		# check-ignore call, and for the same reason. An unanswerable check
+		# reported as a pass is how CD-2 survived in the first place.
+		print("    (skipped: git check-ignore returned %d — no work tree or no git here. " % code
+			+ "The pattern text is still checked by "
+			+ "test_the_run_shots_directory_is_not_gitignored.)")
+		return
+	# 1 = no rule matches, which is what a Gate F run's own captures must get.
+	# 0 = something still swallows them, which is CD-2 alive again.
 	assert_ne(code, 0,
-		"a .gitignore rule matches the committed Gate F capture evidence: %s" % str(out))
+		("a .gitignore rule matches a Gate F run's own capture path: %s\n%s\n"
+		+ "A bare directory pattern matches at ANY depth. That is CD-2: the harness wrote the "
+		+ "PNGs — X07 took 79 real 1920x1080 frames — git carried none of them, and "
+		+ "`git add <dir>` skipped them silently at exit 0, so fourteen per-segment evidence "
+		+ "commits looked clean while carrying no frames.") % [run_path, str(out)])
+	# And the rule it was written for must still work, or anchoring it broke the
+	# thing it was protecting.
+	var survey: Array = []
+	var survey_code := OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"),
+		"check-ignore", "-v", "shots/survey/example.png"], survey, true)
+	assert_eq(survey_code, 0,
+		"the repository-root shots/ (tools/survey.sh output) is no longer ignored; anchoring the "
+		+ "pattern was supposed to narrow it, not remove it. %s" % str(survey))
