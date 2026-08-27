@@ -93,6 +93,43 @@ know was open. So:
 The rule of thumb: put `require_context` on every step that presses a world
 control, and `assert_context` at the seam between blocks.
 
+### Matrix cells — `intended_context`, which does NOT derail
+
+`probe_cell` is the exception, and the exception is deliberate.
+
+X01 walks 418 (control, context) cells in sequence. A press that changes context
+is not undone, so the next cell fires into whatever the last one opened. In the
+`f082bdf6` run **303 of 418 cells (72.5%) were injected in a context other than
+the one the step names**; eight different surfaces were all actually probed
+inside `menu_map`, twelve named surfaces were never entered at all, and the
+matrix's headline "1085 PASS / 118 FAIL" therefore describes mostly nothing. Its
+only trustworthy content was the 115 in-context cells — which were 115/115 clean.
+
+So a cell names `intended_context` rather than `require_context`:
+
+* out of context, the cell is **SKIPPED** and the segment moves to the next cell;
+* it does **not** derail, because a 418-cell matrix that stopped at the first
+  drift would be worse evidence than one that reports which cells were real;
+* `intended_context` and `context_before` are fields on the `input_probe` event,
+  so counting in-context coverage is one query rather than a regex over prose.
+
+Report in-context coverage as a headline number beside the pass rate. A matrix at
+27% in-context coverage must not be reported as 87.9% behaving.
+
+### Reaching a thing, not a coordinate
+
+`move_to` compares x and z only, and that is a defect with a measured price.
+Grandpa's bed is 0.89 m from him in plan view and **3.3 m above him**, so `S02-15`
+"arrived" and then pressed `interact` 31 times through the floor. The same shape
+recurs as 65 `did not reach (x,z)` failures, and it is why the chapter's first
+wild fight never staged.
+
+*Reached* means: within interaction range of the **entity**, prompt live. Not
+within a radius of a literal coordinate. That is what `move_to_entity`
+(3D arrival by default) and `interact_with` (prompt asserted before the press)
+are for, and a journey step written as "go to the trainer" should be transcribed
+with them rather than with a pair of numbers.
+
 ---
 
 ## Controls
@@ -200,7 +237,8 @@ layout it cannot see would be guessing. Nothing is written into the panel and
 | Action | Args | Does |
 |---|---|---|
 | `move_to` | `at: [x, z]`, `budget_frames`, `held_budget_frames`, `close_enough`, `answer_prompts` | **Walks** there on the left stick via `tests/helpers/stick_navigator.gd`, which detours around geometry and pauses while locomotion is disabled. FAILs (does not error) if it cannot arrive. See the two budgets and `answer_prompts` below. |
-| `move_to_entity` | `entity`, `within` (default 2.5), `nearest` (default `true`), plus every `move_to` arg | Walks to a **thing**, resolved by identity and re-read every frame so the walk tracks something that moves. Resolution order: exact node name, group membership, `label()`, `species_id`, then a name substring; ambiguity picks the nearest and says so in the result. An entity that is not in the world is a FAIL naming the search — "I arrived and nothing was here" is a finding a coordinate walk cannot make. |
+| `move_to_entity` | `entity`, `within` (default 2.5), `nearest` (default `true`), `close_3d` (default `true`), plus every `move_to` arg | Walks to a **thing**, resolved by identity and re-read every frame so the walk tracks something that moves. Resolution order: exact node name, group membership, `label()`, `species_id`, then a name substring; ambiguity picks the nearest and says so in the result. An entity that is not in the world is a FAIL naming the search — "I arrived and nothing was here" is a finding a coordinate walk cannot make. |
+| `interact_with` | `entity` (optional), `expect_prompt`, `check_provider` (default `true`), `hold`, `settle_frames` | Presses `interact` **only when `interaction_arbiter.gd` has a live prompt**, and refuses otherwise with what the arbiter could see instead — including how far the named entity is in 3D and how much of that is vertical. Also refuses when the prompt belongs to a different provider, or when `expect_prompt` does not appear in it: a prompt from the wrong provider is how a step meaning to talk to Grandpa opens a chest, and it reads as a successful interaction either way. FAILs if the press changed nothing. |
 | `face` | `yaw_deg` or `at: [x, z]`, `tolerance_deg`, `budget_frames` | Turns the camera on the right stick. Not by writing `rig.yaw`: a written yaw proves nothing about whether the stick can reach it, and §9's camera-correction count only means something if the corrections are real. |
 | `teleport` | `at: [x, z]`, `resettle_frames` | **DIAG only.** Refused with a recorded FAIL unless the step carries `"diag": true`. Resets the distance and dead-travel accumulators, so a 2 km jump cannot appear in the pacing study as 2 km of dead walking. |
 | `pin_clock` | `hour`, `preset`, `weather`, `freeze`, `settle_frames` | **DIAG only**, same refusal rule. Pins the world clock and weather, then freezes both. See **Pinning the clock** below. |
@@ -247,7 +285,7 @@ not the conversation.
 | `assert` | `check` + per-check args, see below | Records PASS/FAIL. Never exits non-zero. |
 | `assert_context` | `is` / `one_of` / `prefix` | The `require_context` predicate as a step of its own, for a checkpoint between blocks. Same matching rules. A mismatch **derails** the segment: it names the context, the input owner, the focused control, the paused state and any armed build ghost, and every following step is SKIPPED until one resynchronises. Use `require_context` to say "do not do this here"; use this to say "the previous block was supposed to leave the game here". |
 | `defect` | `what`, `severity_candidate` (default `SHIP`), `observation`, `repro` | Records an operator-found defect as a first-class `defect` event. §C.1 has always had the type; nothing ever emitted it, so a Phase B reader had to re-derive defects from prose. |
-| `probe_cell` | `control`, `expected`, `device` | §5's input-cell probe: snapshot, one tap, snapshot on the release edge, snapshot after settle, emit one `input_probe` event carrying the world-side and UI-side deltas. **Does not establish the context itself** — the steps before it must, through the production path, because a context the harness set up is not the context the player reaches. |
+| `probe_cell` | `control`, `expected`, `device`, `intended_context` | §5's input-cell probe: snapshot, one tap, snapshot on the release edge, snapshot after settle, emit one `input_probe` event carrying the world-side and UI-side deltas. **Does not establish the context itself** — the steps before it must, through the production path, because a context the harness set up is not the context the player reaches. `intended_context` names the context the cell is *about*: if input is somewhere else the cell is **SKIPPED (context not reached)**, never PASS and never FAIL, and `intended_context`/`context_before` are first-class fields on the `input_probe` event so in-context coverage is one query. See **Matrix cells** below. |
 
 ### Save handoff (§7)
 
@@ -258,6 +296,8 @@ natural play coverage.
 |---|---|---|
 | `save_out` | `slot` (default 4), `name` | Copies the slot file out of `user://` into `<run>/saves/`. **Does not save anything** — the operator saves through the production Save tab, and this only preserves the artefact. |
 | `seed_save` | `slot`, `from` | Copies a slot file back into `user://` before a title boot, so the next segment's Load Game finds the last one's ending state. |
+| `await_save` | `slot` (default 4), `timeout_s` (default 30) | Place immediately **after** the Save tab's confirm press. Waits for the slot file on disk to change and emits a `save` event carrying the measured `duration_ms` — button to file, which is the interval a player experiences. FAILs if nothing lands: the confirm either did not reach the serializer or the write failed silently. Does not save anything itself. |
+| `await_load` | `timeout_s` (default 180) | The other half. Place immediately **after** the title screen's Load press. Waits for a live world scene with a live Player, emits a `load` event with the measured `duration_ms`, and re-primes the change detectors the way `boot` does — otherwise everything on the loaded save reports as having just happened. |
 | `wipe_saves` | `keep_slots` | Empties the live save directory. The wipe half of the round trip: a load that found the state still in memory would prove nothing. |
 
 All three ask the **live** `Game.save_system` for the slot path rather than
@@ -454,6 +494,23 @@ segment complete: the inventory still marks every planned shot absent and
 `complete: false`, and the acknowledgement is recorded as a BLOCKER-severity
 note in the event stream.
 
+### Costing a segment before launching it
+
+`wait` is priced in **rendered frames** in capture mode: `_step_wait` converts
+seconds to physics frames, and under xvfb every physics frame is a rendered
+1920×1080 frame. On llvmpipe at ~10.5 s per frame, one `{"seconds": 90}` step
+costs about 15.75 hours. X07 stopped at step 184 of 266 with two such steps still
+ahead of it — roughly 31 more hours (CD-7).
+
+So the pre-flight measures what a frame actually costs here, prices the whole
+step-script against it, and records both in `RUN_METADATA.json` as
+`measured_frame_cost_s` and `predicted_segment_cost_s`. A segment predicted over
+`segment_cost_ceiling_s` (default 4 h, in `harness_config.json`) is a **BLOCKER**
+and does not start.
+
+The fix for a segment over the ceiling is a GPU or a re-cadenced script — **not**
+a shorter wait. The protocol's waits exist so fights resolve.
+
 ### `INVENTORY.json` — §M's closing check, as code
 
 §M's last sentence — "the operator's final act is an inventory check that every
@@ -481,6 +538,19 @@ manifest naming a file that is not there is exactly the claim CD-2 found.
 `complete` is a computed field, true only when nothing was blocked, nothing
 derailed, every planned capture is on disk, no continuous frame was missed, and
 every step ran. When it is false, `INCOMPLETE.md` says why in the filename.
+
+**Exit code.** A failed *expectation* never fails the process (§1.6) — that is
+the evidence Gate F collects. A missing *artefact* does: the harness exits
+non-zero when a planned capture is not on disk, when a continuous frame was
+planned and not written, or when the segment was blocked. Absence of evidence is
+not evidence.
+
+**The freeze record is cross-checked.** The candidate's `RUN_METADATA.json`
+recorded `"display_server": "X11 under xvfb-run"` while every frame manifest in
+the run said the opposite, 9,231 times over (CD-8b). The pre-flight now reads the
+freeze record's claim, writes back what it actually observed, and BLOCKs when the
+record promises a display server this process does not have. A metadata field
+asserting a capability is not evidence that the capability existed.
 
 **Note on `.gitignore`.** The other half of CD-2 was that `shots/` was ignored
 unanchored, so `ralph/reports/gate-f-run-*/<segment>/shots/` was never tracked.

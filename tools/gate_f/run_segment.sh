@@ -58,6 +58,7 @@ FALLBACK_W=1280
 FALLBACK_H=800
 
 MODE="logic"
+ALLOW_NO_CAPTURE="no"
 SEGMENT=""
 RUN_DIR="${GATE_F_RUN_DIR:-}"
 
@@ -67,6 +68,11 @@ usage: tools/gate_f/run_segment.sh [--capture] [--overhead] [--run-dir DIR] <seg
 
   --capture      run under xvfb + opengl3 so screenshot steps produce PNGs.
                  Gated on tools/capture_diag_minimal.gd succeeding first.
+  --allow-no-capture
+                 run a segment that declares captures in LOGIC mode anyway,
+                 acknowledging that its evidence half is void. The segment can
+                 never be marked complete. Without it, that combination is
+                 refused -- see the CD-1 gate below.
   --overhead     run the section 8 instrumentation-overhead self-measurement
                  instead of a segment. Takes no segment argument.
   --run-dir DIR  write into an existing run directory instead of making a new
@@ -82,6 +88,7 @@ while [[ $# -gt 0 ]]; do
 	case "$1" in
 		--capture) MODE="capture"; shift ;;
 		--overhead) MODE="overhead"; shift ;;
+		--allow-no-capture) ALLOW_NO_CAPTURE="yes"; shift ;;
 		--run-dir) RUN_DIR="$2"; shift 2 ;;
 		-h|--help) usage; exit 0 ;;
 		-*) echo "unknown flag: $1" >&2; usage; exit 2 ;;
@@ -157,6 +164,45 @@ fi
 
 OUT_DIR="$RUN_DIR/$SEGMENT_ID"
 
+# --- CD-1's runner-side gate --------------------------------------------------
+#
+# A segment whose step-script contains a planned capture may not be launched in
+# logic mode. That is not a style rule: it is what the run against candidate
+# f082bdf6 actually did. Every journey and study segment went through this
+# script WITHOUT --capture, the harness wrote 9,231 manifest rows saying
+# `file: null`, each capture step reported PASS, and the run was handed to
+# Phase B as complete evidence with no prescribed screenshot in it anywhere.
+#
+# The harness has its own pre-flight and will BLOCK on the same fact. This gate
+# is here as well, and deliberately, because the two catch it at different
+# costs: the harness catches it after a 60-second world stand-up, and this
+# catches it before Godot starts. A run that is going to refuse should refuse
+# in the first second.
+#
+# --allow-no-capture forwards the harness's acknowledged-degraded flag, for a
+# developer running a capture-bearing segment for its logic. It still cannot
+# produce a complete segment.
+segment_plans_captures() {
+	local path="$1"
+	[[ -f "$path" ]] || return 1
+	grep -Eq '"action"[[:space:]]*:[[:space:]]*"capture(_seq)?"' "$path"
+}
+
+if [[ "$MODE" == "logic" && -n "$SEGMENT_PATH" ]] && segment_plans_captures "$SEGMENT_PATH"; then
+	if [[ "$ALLOW_NO_CAPTURE" != "yes" ]]; then
+		echo "run_segment: $SEGMENT_ID declares planned captures and this is LOGIC mode." >&2
+		echo "run_segment: logic mode has no display server, so every one of those captures would" >&2
+		echo "             be written as file:null while the steps reported PASS. That is coverage" >&2
+		echo "             defect CD-1 and it is how a whole Gate F run produced no screenshots." >&2
+		echo "run_segment: use --capture, or --allow-no-capture to run it for its logic knowing" >&2
+		echo "             the segment CANNOT be marked complete." >&2
+		exit 2
+	fi
+	echo "run_segment: WARNING -- $SEGMENT_ID plans captures and is running WITHOUT a display"
+	echo "run_segment:            server by explicit --allow-no-capture. INVENTORY.json will"
+	echo "run_segment:            mark every planned shot absent and the segment incomplete."
+fi
+
 # Restart protection. Deliberately refuses rather than renaming: see the header.
 if [[ -e "$OUT_DIR" ]]; then
 	echo "run_segment: $OUT_DIR already exists." >&2
@@ -175,6 +221,9 @@ if [[ -n "$SEGMENT_PATH" ]]; then
 fi
 if [[ "$MODE" == "overhead" ]]; then
 	HARNESS_ARGS+=(--gatef-mode=overhead)
+fi
+if [[ "$ALLOW_NO_CAPTURE" == "yes" ]]; then
+	HARNESS_ARGS+=(--gatef-allow-no-capture)
 fi
 
 run_logic() {
@@ -248,6 +297,19 @@ if [[ "$MODE" == "capture" ]]; then
 	run_capture || STATUS=$?
 else
 	run_logic || STATUS=$?
+fi
+
+# CD-2's post-step: the harness computes the inventory, and the runner reads its
+# verdict out loud. A batch script watching exit codes must not have to open a
+# JSON file to find out that a segment produced nothing.
+if [[ -f "$OUT_DIR/INVENTORY.json" ]]; then
+	if grep -q '"complete": true' "$OUT_DIR/INVENTORY.json"; then
+		echo "run_segment: INVENTORY.json says $SEGMENT_ID is COMPLETE."
+	else
+		echo "run_segment: INVENTORY.json says $SEGMENT_ID is INCOMPLETE -- see $OUT_DIR/INCOMPLETE.md" >&2
+	fi
+elif [[ "$MODE" != "overhead" ]]; then
+	echo "run_segment: no INVENTORY.json was written; the segment did not reach its close." >&2
 fi
 
 echo "run_segment: $SEGMENT_ID finished with status $STATUS; artefacts in $OUT_DIR"

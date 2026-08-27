@@ -264,7 +264,17 @@ func inventory_snapshot() -> Dictionary:
 		var id := str(stack.get("id", ""))
 		if id.is_empty():
 			continue
-		out[id] = int(out.get(id, 0)) + int(stack.get("count", 0))
+		# `n`, not `count`. `autoload/inventory.gd` stores a stack as
+		# `{"id": ..., "n": ...}` -- `stack_at()` returns a duplicate of that
+		# dictionary and every reader in the game uses `n`. Reading `count`
+		# returned the default 0 for every occupied slot, so this accessor
+		# reported `{"axe": 0, "berries": 0, "orb_basic": 0, ...}`: the right
+		# item ids with every quantity zero. That is coverage defect CD-6's
+		# second half -- S03's `save` event described a satchel holding
+		# `orb_basic x15, potion_small x3, berries x5, revive x2` as all zeros.
+		# It also silently disabled the `gather` and `craft` detectors, which
+		# compare two snapshots that were always equal.
+		out[id] = int(out.get(id, 0)) + int(stack.get("n", 0))
 	return out
 
 

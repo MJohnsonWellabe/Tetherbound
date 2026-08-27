@@ -93,6 +93,16 @@ var _cfg := {
 	"record_window_hz": 0.5,
 	"record_forced_frames": true,
 	"overhead_scene": "world",
+	# CD-7. The ceiling a predicted segment cost may not exceed, in seconds.
+	# X07 stopped at step 184 of 266 with two `{"seconds": 90}` steps still
+	# ahead of it: at the measured llvmpipe cost of ~10.5 s per rendered frame
+	# those two alone were ~31 hours. The protocol's waits are not the problem
+	# -- they exist so fights resolve -- so the fix is to price the segment
+	# before launching it and refuse, rather than to discover it 15 hours in.
+	# Four hours; a segment over it needs a GPU or a re-cadenced script.
+	"segment_cost_ceiling_s": 14400.0,
+	## Frames timed during the pre-flight to measure what one costs here.
+	"cost_probe_frames": 20,
 }
 
 # --- run identity and output -------------------------------------------------
@@ -193,6 +203,12 @@ var _preflight: Dictionary = {}
 ## only lets a developer run a capture-bearing segment for its logic while
 ## knowing the evidence half is void.
 var _allow_no_capture := false
+## CD-7's two measured numbers, kept for `RUN_METADATA.json`.
+var _frame_cost_s := 0.0
+var _predicted_cost_s := 0.0
+## Set by `_write_inventory` when a planned capture is not on disk. Distinct
+## from a FAIL verdict, which never fails the process.
+var _evidence_missing := false
 
 # --- live counters -----------------------------------------------------------
 
@@ -297,7 +313,11 @@ func _run() -> void:
 		await _play(segment)
 
 	_close_outputs()
-	quit(1 if not _harness_errors.is_empty() else 0)
+	# §1.6: a failed EXPECTATION is evidence and does not fail the process. A
+	# missing ARTEFACT is not evidence, it is the absence of evidence, and
+	# CD-2's regression asks for exactly this: "fail the segment if any
+	# manifest row claims a capture whose file is absent".
+	quit(1 if (not _harness_errors.is_empty() or _evidence_missing) else 0)
 
 
 # --- command line ------------------------------------------------------------
@@ -453,6 +473,8 @@ func _run_metadata() -> Dictionary:
 		"instrumentation_overhead_note": _overhead_note,
 		"harness_errors": _harness_errors,
 		"capture_preflight": _preflight,
+		"measured_frame_cost_s": snappedf(_frame_cost_s, 0.000001),
+		"predicted_segment_cost_s": snappedf(_predicted_cost_s, 0.1),
 		"blocked": _blocked,
 		"derailed": _derailed,
 		"derailed_at": _derailed_at,
@@ -464,7 +486,12 @@ func _run_metadata() -> Dictionary:
 		# not, which is how a full Gate F run happened with the procedural grass
 		# field silently off. A run cannot amend a freeze record it did not
 		# write, so it records what the build it is playing actually had on.
-		"feature_flags": _feature_flags(),
+		"config_flags": _config_flags(),
+		# Every flag that is OFF, gathered into one field. CD-8 asks for the
+		# divergent-from-default flags to be called out so a reviewer sees them
+		# without diffing; the configs carry no machine-readable defaults, and a
+		# subsystem switched off is the case that actually changed what rendered.
+		"config_flags_off": _config_flags_off(),
 	}
 
 
@@ -481,7 +508,7 @@ func _run_metadata() -> Dictionary:
 ## the harness is a list that goes stale against `data/config/`. Anything whose
 ## value is a bool, or whose key looks like a switch, is reported with the file
 ## it came from.
-func _feature_flags() -> Dictionary:
+func _config_flags() -> Dictionary:
 	var out := {}
 	var dir := DirAccess.open("res://data/config")
 	if dir == null:
@@ -516,6 +543,28 @@ func _collect_flags(node: Variant, prefix: String, out: Dictionary, depth: int =
 			out[path] = value
 		elif typeof(value) == TYPE_DICTIONARY:
 			_collect_flags(value, path, out, depth + 1)
+
+
+## The switches that are OFF, as `["grass_field.json:enabled", ...]`.
+##
+## CD-8's whole example is one of these: `data/config/grass_field.json` has
+## `"enabled": false` on the candidate, `grass_field.gd::_ready()` returns
+## before building anything, and the procedural ground cover is therefore
+## absent from every frame of the run -- with no artefact anywhere saying so.
+## A reviewer judging ground cover from those frames was judging the baked
+## scatter while believing they were judging the shipped ground system.
+func _config_flags_off() -> Array:
+	var out: Array = []
+	var flags := _config_flags()
+	for file: Variant in flags.keys():
+		var block: Variant = flags[file]
+		if typeof(block) != TYPE_DICTIONARY:
+			continue
+		for key: Variant in (block as Dictionary).keys():
+			if not bool((block as Dictionary)[key]):
+				out.append("%s:%s" % [str(file), str(key)])
+	out.sort()
+	return out
 
 
 var _overhead_note := "not measured in this run (--gatef-mode=overhead measures it)"
@@ -566,7 +615,7 @@ func _play(segment: Dictionary) -> void:
 	# CD-1. Before step 1, not after step 40: a segment whose evidence cannot be
 	# taken has to say so at the top, where the operator is still looking, and
 	# the run has to stop rather than spend an hour producing `file: null`.
-	if not await _preflight_capture():
+	if not await _preflight_capture(steps):
 		_release_everything()
 		return
 	for raw: Variant in steps:
@@ -591,7 +640,10 @@ func _play(segment: Dictionary) -> void:
 ## `capture_seq` is expanded to the individual ids it will write (`<id>-000`…),
 ## because a sequence that produced three of twenty frames is a partial absence
 ## and a plan that counted it as one row could not show that.
-func _plan_captures(steps: Array) -> Array:
+## Static so `tests/test_gate_f_rig.gd` can call it directly. A SceneTree
+## subclass cannot be instantiated in a unit test, and the alternative --
+## grepping the source for the behaviour -- tests the spelling, not the rule.
+static func _plan_captures(steps: Array) -> Array:
 	var out: Array = []
 	for raw: Variant in steps:
 		if typeof(raw) != TYPE_DICTIONARY:
@@ -641,7 +693,7 @@ func _plan_captures(steps: Array) -> Array:
 ## this and is let through -- the self-check `selfcheck_walk`/`selfcheck_save_handoff`
 ## are logic segments by design, and blocking them would be the "fixed a rig
 ## problem by making a test pass" move in reverse.
-func _preflight_capture() -> bool:
+func _preflight_capture(steps: Array) -> bool:
 	var plans_shots := not _planned_captures.is_empty()
 	var plans_record := _record_baseline_hz > 0.0
 	_preflight = {
@@ -652,11 +704,45 @@ func _preflight_capture() -> bool:
 		"capture_available": _capture_available(),
 		"allow_no_capture": _allow_no_capture,
 	}
+	# CD-8b: the freeze record and the artefacts must not contradict each other.
+	#
+	# `ralph/reports/gate-f-candidate/RUN_METADATA.json` recorded
+	# `"display_server": "X11 under xvfb-run"`, and every journey segment's
+	# frame manifest said the opposite -- 9,231 rows of "headless: this process
+	# has no display server". The freeze record and the evidence disagreed
+	# about the single fact that decided whether §11 could execute at all, and
+	# nothing reconciled them for the length of the run. A metadata field
+	# asserting a capability is not evidence that the capability existed, so
+	# the pre-flight writes back what it FOUND and fails on a contradiction.
+	var claim := _freeze_display_claim()
+	if not str(claim.get("claim", "")).is_empty():
+		_preflight["freeze_record"] = claim
+		var claims_server := not str(claim["claim"]).to_lower().contains("headless")
+		var have_server := _capture_available()
+		if claims_server and not have_server:
+			_preflight["contradiction"] = ("the freeze record at %s says display_server=%s; this "
+				+ "process has none") % [str(claim.get("from", "")), str(claim["claim"])]
+		elif have_server and not claims_server:
+			_preflight["contradiction"] = ("the freeze record at %s says display_server=%s; this "
+				+ "process HAS one") % [str(claim.get("from", "")), str(claim["claim"])]
+
+	# CD-7: price the segment before launching it.
+	var frames := _predict_frames(steps)
+	var frame_cost := await _measure_frame_cost()
+	var predicted := float(frames) * frame_cost
+	_frame_cost_s = frame_cost
+	_predicted_cost_s = predicted
+	_preflight["predicted_frames"] = frames
+	_preflight["measured_frame_cost_s"] = snappedf(frame_cost, 0.000001)
+	_preflight["predicted_segment_cost_s"] = snappedf(predicted, 0.1)
+	var ceiling := float(_cfg["segment_cost_ceiling_s"])
+
 	if not (plans_shots or plans_record):
 		_preflight["verdict"] = "not required"
 		_preflight["why"] = "segment declares no captures and no continuous record"
 		_note_line("### preflight — capture not required")
 		_note_line("- %s" % str(_preflight["why"]))
+		_note_line("- predicted cost %.0f s over %d frames at %.4f s/frame" % [predicted, frames, frame_cost])
 		_note_line("")
 		return true
 	if not _telemetry_on():
@@ -665,6 +751,17 @@ func _preflight_capture() -> bool:
 		return true
 
 	var why := ""
+	if predicted > ceiling:
+		why = ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames at a "
+			+ "MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- they "
+			+ "exist so fights resolve -- so this segment needs a GPU or a re-cadenced script, not "
+			+ "a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in.") % [
+				predicted, predicted / 3600.0, ceiling, frames, frame_cost]
+	# CD-8b: a contradicted freeze record is a blocker in the direction that
+	# cost the last run everything -- the record promised a display server and
+	# there is none.
+	elif not str(_preflight.get("contradiction", "")).is_empty() and not _capture_available():
+		why = "the freeze record contradicts this process: %s" % str(_preflight["contradiction"])
 	if not _capture_available():
 		why = ("no display server: DisplayServer reports '%s'. This process cannot render, so all "
 			+ "%d planned capture(s) and every continuous frame would be written as file:null while "
@@ -726,6 +823,28 @@ func _preflight_capture() -> bool:
 	return false
 
 
+## What the freeze record claims about the display server, and where it says it.
+##
+## Two places, nearest first: the run directory's own `RUN_METADATA.json`
+## (§A.2, written by the coordinator at freeze) and the candidate freeze record.
+## Absent from both is fine and reported as such -- a missing claim cannot
+## contradict anything. A PRESENT and wrong claim is CD-8b.
+func _freeze_display_claim() -> Dictionary:
+	var candidates: Array[String] = []
+	if not _out_dir.is_empty():
+		candidates.append(_out_dir.get_base_dir().path_join("RUN_METADATA.json"))
+	candidates.append(ProjectSettings.globalize_path(
+		"res://ralph/reports/gate-f-candidate/RUN_METADATA.json"))
+	for path in candidates:
+		var record := _read_json(path)
+		if record.is_empty():
+			continue
+		for key in ["display_server", "renderer"]:
+			if record.has(key) and not str(record[key]).is_empty():
+				return {"from": path, "key": key, "claim": str(record[key])}
+	return {}
+
+
 ## Can this process read back a frame and encode it, here, now?
 func _preflight_png() -> Dictionary:
 	for i in maxi(2, int(_cfg["capture_settle_frames"])):
@@ -743,6 +862,72 @@ func _preflight_png() -> Dictionary:
 		return {"ok": false, "why": "%s was written but is %d bytes" % [rel, bytes]}
 	return {"ok": true, "file": rel, "bytes": bytes,
 		"size": [image.get_width(), image.get_height()]}
+
+
+## CD-7: what will this segment cost, in seconds, on THIS box?
+##
+## `_step_wait` converts seconds to physics frames, and in capture mode every
+## physics frame is a rendered 1920x1080 frame. A protocol written in seconds
+## has to be costed in FRAMES before it is launched. This counts the frames
+## each step will advance -- upper bounds where a step has a budget, because a
+## budget is what it may actually spend -- and multiplies by the measured cost
+## of one frame here.
+static func _predict_frames(steps: Array) -> int:
+	var total := 0
+	for raw: Variant in steps:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var step := raw as Dictionary
+		var args: Dictionary = step.get("args", {}) as Dictionary
+		match str(step.get("action", "")):
+			"boot":
+				total += int(args.get("settle_frames", 240))
+			"wait":
+				var frames := int(args.get("frames", 0))
+				if float(args.get("seconds", 0.0)) > 0.0:
+					frames = maxi(frames, int(float(args["seconds"]) * 60.0))
+				total += frames
+			"stick":
+				total += int(args.get("frames", 10))
+			"move_to", "move_to_entity":
+				# The WALK budget, not an estimate of the walk: a segment is
+				# only safe to launch if its worst case fits.
+				total += int(args.get("budget_frames", 2400))
+			"face":
+				total += int(args.get("budget_frames", 240))
+			"press":
+				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
+			"press_multi", "focus_move", "open_menu", "close_menu", "probe_cell", "interact_with":
+				total += 12
+			"advance_dialogue_until_closed":
+				total += int(args.get("max_presses", 60)) * 4
+			"capture":
+				total += 6
+			"capture_seq":
+				var hz := maxf(1.0, float(args.get("hz", 5.0)))
+				var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
+				total += int(hz * seconds) * (6 + int(60.0 / hz))
+			"teleport":
+				total += int(args.get("resettle_frames", 60))
+			"pin_clock":
+				total += int(args.get("settle_frames", 30))
+			_:
+				total += 1
+	return total
+
+
+## Seconds one frame costs here, measured rather than assumed.
+##
+## `Performance.TIME_PROCESS` is a CPU number and misses the readback; this
+## times wall clock across real frames, which is the number the prediction
+## needs. In logic mode it is a fraction of a millisecond; under llvmpipe at
+## 1920x1080 it was measured at ~10.5 s.
+func _measure_frame_cost() -> float:
+	var frames := maxi(4, int(_cfg["cost_probe_frames"]))
+	var started := Time.get_ticks_usec()
+	for i in frames:
+		await process_frame
+	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(frames)
 
 
 func _file_bytes(path: String) -> int:
@@ -828,6 +1013,7 @@ func _write_inventory() -> void:
 		"harness_errors": _harness_errors,
 	}
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
+	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0
 	if complete:
 		return
 	# A second, unmissable marker. A reader scanning a run directory sees the
@@ -917,6 +1103,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_move_to(args)
 		"move_to_entity":
 			actual = await _step_move_to_entity(args)
+		"interact_with":
+			actual = await _step_interact_with(args, id)
 		"face":
 			actual = await _step_face(args)
 		"open_menu":
@@ -947,6 +1135,10 @@ func _do_step(step: Dictionary) -> void:
 			actual = str(args.get("text", ""))
 		"save_out":
 			actual = _step_save_out(args)
+		"await_save":
+			actual = await _step_await_save(args, id)
+		"await_load":
+			actual = await _step_await_load(args, id)
 		"seed_save":
 			actual = _step_seed_save(args)
 		"wipe_saves":
@@ -979,6 +1171,13 @@ func _do_step(step: Dictionary) -> void:
 		return
 	if actual.begins_with("FAIL"):
 		verdict = "FAIL"
+	if actual.begins_with("SKIPPED"):
+		# CD-4: "context not reached" is neither a pass nor a finding, and the
+		# f082bdf6 run conflated it with both. 303 of X01's 418 cells were
+		# injected in a context other than the one the step named, and the
+		# matrix's headline "1085 PASS / 118 FAIL" therefore described mostly
+		# nothing.
+		verdict = "SKIP"
 	if actual.begins_with("BLOCKER"):
 		# A step that could not drive the game at all. Distinct from a FAIL,
 		# which is a verdict about the GAME: this one says the instrument could
@@ -1045,6 +1244,10 @@ func _event_type_for(action: String) -> String:
 		"save_out":
 			return "save"
 		"seed_save":
+			return "load"
+		"await_save":
+			return "save"
+		"await_load":
 			return "load"
 		_:
 			return "note"
@@ -1116,7 +1319,9 @@ func _context_guard(step: Dictionary) -> Dictionary:
 ## is how `menu*` covers every tab of the pause shell without naming all seven,
 ## and a leading `!` negates -- `"!narrative_modal"` is "anything but a modal",
 ## which is what most world-verb steps actually mean.
-func _context_matches(have: String, want: Variant) -> bool:
+## Static: see `_plan_captures`. This is the predicate the whole context guard
+## turns on and it is worth testing directly.
+static func _context_matches(have: String, want: Variant) -> bool:
 	if typeof(want) == TYPE_ARRAY:
 		for entry: Variant in (want as Array):
 			if _context_matches(have, entry):
@@ -1331,11 +1536,14 @@ func _step_move_to_entity(args: Dictionary) -> String:
 	var within := float(args.get("within", 2.5))
 	var walk := args.duplicate()
 	walk["close_enough"] = within
+	# CD-5: an entity has a height. Overridable, because a walk to a landmark's
+	# marker legitimately does not care.
+	walk["close_3d"] = bool(args.get("close_3d", true))
 	return await _walk_loop(walk, func() -> Dictionary:
 		if node == null or not is_instance_valid(node) or not node.is_inside_tree():
 			return {"ok": false, "why": "%s left the tree mid-walk" % what}
 		return {"ok": true, "at": Vector2(node.global_position.x, node.global_position.z),
-			"what": what})
+			"y": node.global_position.y, "what": what})
 
 
 ## Find one live entity by identity.
@@ -1429,6 +1637,14 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	var world: Node = _probe.call("world") as Node
 	var budget := int(args.get("budget_frames", _cfg["walk_budget_frames"]))
 	var close := float(args.get("close_enough", _cfg["walk_close_enough"]))
+	# CD-5. Arrival is a 3D question when the target is a THING.
+	#
+	# `move_to` compares x and z only, and the operator diagnosed the cost of
+	# that himself: Grandpa's bed is 0.89 m from him in plan view and 3.3 m
+	# above him, so S02-15 "arrived", pressed `interact` 31 times through the
+	# floor, and recorded 31 findings about an interaction that was never in
+	# range. Steering stays flat -- you walk in x/z -- but arriving does not.
+	var close_3d := bool(args.get("close_3d", false))
 	# Frames the walk will wait, in total, for locomotion to come back before
 	# giving up. `stick_navigator.gd` waits ten minutes and then returns false;
 	# a harness cannot afford that, because a walk that hangs produces NO
@@ -1461,13 +1677,33 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 		var flat: Vector2 = aim["at"]
 		what = str(aim.get("what", "?"))
 		target = Vector3(flat.x, player.global_position.y, flat.y)
-		if world != null and world.has_method("ground_height_at"):
+		if aim.has("y"):
+			# An entity knows where it is vertically; the terrain query does
+			# not know it is standing on a bed frame, on a deck, or in a tree.
+			target.y = float(aim["y"])
+		elif world != null and world.has_method("ground_height_at"):
 			target.y = float(world.call("ground_height_at", target.x, target.z))
 		var to := target - player.global_position
 		to.y = 0.0
 		if to.length() <= close:
-			arrived = true
-			break
+			if not close_3d:
+				arrived = true
+				break
+			var solid := player.global_position.distance_to(target)
+			if solid <= close:
+				arrived = true
+				break
+			# Directly under (or over) it and unable to close the gap by
+			# walking. Reported as the vertical fact it is, rather than as an
+			# arrival: this is the exact shape that produced 31 interacts
+			# through a floor.
+			_stick_left = Vector2.ZERO
+			_drive_sticks()
+			await physics_frame
+			return ("FAIL reached %s in plan view (%.2f m in x/z) but it is %.2f m away in 3D -- "
+				+ "%.2f m of that is vertical. Walking cannot close it, and an `interact` from "
+				+ "here would press through the floor.") % [what, to.length(), solid,
+					absf(target.y - player.global_position.y)]
 		if not bool(nav.call("can_walk")):
 			# Locomotion is off: a fight, a fade, a conversation. Frames spent
 			# held are not frames spent walking, so they do not count against
@@ -1516,6 +1752,88 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 				str(player.global_position.round())]
 	return "FAIL did not reach %s in %d walking frames; stopped %.1f m short at %s (%d held)" % [
 		what, budget, gap, str(player.global_position.round()), held]
+
+
+## CD-5: press `interact` only when there is something to interact WITH.
+##
+## `interaction_arbiter.gd` is the one place `interact` is read outside combat.
+## It publishes a prompt when a provider is in range and clears it when one is
+## not, and `prompt()`, `winner()` and `winning_provider()` are already public.
+## So "is this press going to do anything?" is a question with an answer, and
+## the harness has been pressing without asking it.
+##
+## The cost of not asking is on the record: S02-15 pressed `interact` 31 times
+## through a floor, and S02-32 pressed it once at a walked-to coordinate where
+## the chapter's first wild fight was supposed to stage -- S02-34 then measured
+## `input_context=world` and the whole rest of the segment ran without a fight
+## having happened.
+##
+## A press with no live prompt is a FAIL that says so, and names what the
+## arbiter could see instead. That is a finding about reach, which is what it
+## always was.
+func _step_interact_with(args: Dictionary, step_id: String) -> String:
+	var arbiter := _probe.call("interaction_arbiter") as Node
+	if arbiter == null:
+		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
+	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
+		return ("FAIL the interaction arbiter is DISABLED -- a conversation, a naming prompt or "
+			+ "a fight owns the screen (input_context '%s'). No prompt is offered here and "
+			+ "`interact` would go to whatever does own input.") % str(_probe.call("input_context"))
+	var prompt := str(arbiter.call("prompt")) if arbiter.has_method("prompt") else ""
+	var spec := str(args.get("entity", ""))
+	var player := _probe.call("player") as Node3D
+	if prompt.is_empty():
+		var nearest := ""
+		if not spec.is_empty():
+			var found := _find_entity(spec, args)
+			if bool(found.get("ok", false)) and player != null:
+				var node: Node3D = found["node"]
+				nearest = " The nearest '%s' is %.2f m away in 3D (%.2f m in x/z, %.2f m vertical)." % [
+					spec, player.global_position.distance_to(node.global_position),
+					Vector2(player.global_position.x - node.global_position.x,
+						player.global_position.z - node.global_position.z).length(),
+					absf(player.global_position.y - node.global_position.y)]
+			else:
+				nearest = " '%s' could not be found in the world at all." % spec
+		return ("FAIL no interact prompt is live, so `interact` was NOT pressed: there is nothing "
+			+ "here to interact with.%s") % nearest
+	# The prompt is live. Is it the RIGHT one? A prompt from the wrong provider
+	# is how a step that meant to talk to Grandpa opens a chest instead, and it
+	# reads in the notes as a successful interaction either way.
+	var want_text := str(args.get("expect_prompt", ""))
+	if not want_text.is_empty() and not prompt.to_lower().contains(want_text.to_lower()):
+		return ("FAIL the live prompt is \"%s\", which does not contain \"%s\" -- pressing here "
+			+ "would activate a different provider. Not pressed.") % [prompt, want_text]
+	var provider: Object = arbiter.call("winning_provider") if arbiter.has_method("winning_provider") else null
+	var provider_name := "?" if provider == null else str((provider as Node).name if provider is Node else provider)
+	if not spec.is_empty() and bool(args.get("check_provider", true)):
+		var found2 := _find_entity(spec, args)
+		if bool(found2.get("ok", false)) and provider is Node:
+			var node2: Node3D = found2["node"]
+			var owner_node := provider as Node
+			# The provider is usually a prompt child of the entity rather than
+			# the entity itself, so relatedness -- not identity -- is the test.
+			var related := owner_node == node2 or node2.is_ancestor_of(owner_node) \
+				or owner_node.is_ancestor_of(node2)
+			if not related:
+				return ("FAIL the live prompt \"%s\" belongs to '%s', which is not '%s' nor part "
+					+ "of it. Not pressed: this press would have activated the wrong thing.") % [
+						prompt, provider_name, spec]
+	var before := _cell_snapshot()
+	var sent := await _inject("interact", _hold_frames(args.get("hold", "tap")))
+	if not bool(sent.get("ok", false)):
+		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+	for i in maxi(2, int(args.get("settle_frames", 20))):
+		await process_frame
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	var after := _cell_snapshot()
+	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",
+		"pending_build", "party_size", "flags", "active_creature"])
+	if changed == "none":
+		return ("FAIL pressed `interact` with the prompt \"%s\" live (provider '%s') and nothing "
+			+ "changed: no context, focus, satchel, build, party or flag moved.") % [prompt, provider_name]
+	return "pressed `interact` on \"%s\" (provider '%s'): %s" % [prompt, provider_name, changed]
 
 
 ## Turn the camera. `yaw_deg` is an absolute world heading; `at:[x,z]` points
@@ -1709,12 +2027,21 @@ func _step_advance_dialogue(args: Dictionary, step_id: String) -> String:
 		return ("advanced %d line(s) over %d press(es); %s closed and handed straight to '%s' "
 			+ "(%s, context '%s') -- a chained modal, not a failure to close") % [
 				lines.size(), presses, str(owner.name), str(after_owner.name), next_kind, after_context]
+	# CD-3's own regression, verbatim: "after any dialogue step, `input_context`
+	# must not be `narrative_modal`." Checked here rather than left to the next
+	# step's `require_context`, because the next step is where the cost lands
+	# and this is where the cause is.
+	if after_context == "narrative_modal":
+		return ("FAIL %s reports closed after %d line(s) but input_context is still "
+			+ "'narrative_modal' and no panel says it is open. Input has not been handed back; "
+			+ "the next world control pressed would go to whatever is holding it.") % [
+				str(owner.name), lines.size()]
 	return "advanced %d line(s) over %d press(es) of %s; %s closed, context '%s' -> '%s'" % [
 		lines.size(), presses, control, str(owner.name), context, after_context]
 
 
 ## Which advanceable panel is this?
-func _panel_kind(node: Node) -> String:
+static func _panel_kind(node: Node) -> String:
 	if node == null or node.get_script() == null:
 		return "unknown"
 	var path := str(node.get_script().resource_path)
@@ -2189,6 +2516,40 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 		return "HARNESS-ERROR probe_cell step %s has no control" % step_id
 	var device := str(args.get("device", ""))
 	var before := _cell_snapshot()
+	# CD-4. A cell is coverage only if the probe happened in the named context.
+	#
+	# X01 walks a list of (control, context) cells and presses each in sequence.
+	# A press that changes context is not undone, so the next cell fires into
+	# whatever the last one opened: eight different surfaces were all actually
+	# probed inside `menu_map`, twelve named surfaces were never entered at all,
+	# and the matrix's only trustworthy content was the 115 cells that did land
+	# in their own context -- which were 115/115 clean.
+	#
+	# `intended_context` rather than `require_context` deliberately. A cell in
+	# the wrong context is SKIPPED and the segment carries on to the next cell;
+	# it does not derail, because a matrix of 418 cells that stopped at the
+	# first drift would be worse evidence than one that reports which cells
+	# were real. The mismatch is a first-class field so counting it is one
+	# query rather than a regex over `expected`.
+	var intended: Variant = args.get("intended_context", null)
+	var context_before := str(before.get("context", ""))
+	if intended != null and not _context_matches(context_before, intended):
+		_emit("input_probe", {
+			"input": {"device": "synthetic", "device_kind": device, "action": control,
+				"edge": "none"},
+			"intended_context": intended,
+			"context_before": context_before,
+			"expected": str(args.get("expected", "")),
+			"actual": "SKIPPED (context not reached)",
+			"observation": ("cell control=%s device=%s was NOT probed: it names context %s and "
+				+ "input was owned by '%s' (owner=%s, focus=%s). Pressing anyway would have "
+				+ "measured a different surface under this cell's name.") % [control,
+					device if not device.is_empty() else "default", JSON.stringify(intended),
+					context_before, str(before.get("focus_owner", "")), str(before.get("focus_text", ""))],
+		})
+		return ("SKIPPED cell %s: names context %s, input_context was '%s'. Not probed, and not "
+			+ "counted as either a pass or a failure.") % [control, JSON.stringify(intended),
+				context_before]
 	var sent := await _inject(control, HOLD_TAP, device)
 	if not bool(sent.get("ok", false)):
 		if bool(sent.get("device_miss", false)):
@@ -2196,6 +2557,8 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 			# real matrix answer, and an empty cell is not.
 			_emit("input_probe", {"input": {"device": "synthetic", "device_kind": device,
 					"action": control, "edge": "none"},
+				"intended_context": intended,
+				"context_before": context_before,
 				"expected": str(args.get("expected", "")),
 				"actual": str(sent.get("why", "")),
 				"observation": "cell control=%s device=%s context=%s: no binding for that device"
@@ -2218,6 +2581,11 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 		"inventory", "pending_build"])
 	_emit("input_probe", {
 		"input": _last_input,
+		# Present on every probed cell, not only the skipped ones: "this cell
+		# was in context" has to be a positive fact a post-processor can count,
+		# or in-context coverage stays a number nobody can produce.
+		"intended_context": intended,
+		"context_before": context_before,
 		"expected": str(args.get("expected", "")),
 		"actual": "world=[%s] ui=[%s] release_edge=[%s]" % [world_effect, ui_effect, release_effect],
 		"observation": "cell control=%s context_before=%s context_after=%s focus_before=%s focus_after=%s" % [
@@ -2371,6 +2739,69 @@ func _mouse_mode_name(mode: int) -> String:
 
 
 # --- save handoff (§7) -------------------------------------------------------
+
+## Wait for a production save to land, and TIME it.
+##
+## CD-6's second half: no `save` or `load` event in the f082bdf6 run carried
+## `duration_ms`, so §18's required save/load timings do not exist. The harness
+## must not call `Game.save_game()` -- §7's whole point is that the operator
+## saves the way a player does -- but it can watch the artefact appear. Placed
+## immediately after the Save tab's confirm press, this measures the interval a
+## player actually experiences: button to file on disk.
+func _step_await_save(args: Dictionary, step_id: String) -> String:
+	var slot := int(args.get("slot", 4))
+	var path := _slot_path(slot)
+	var was := FileAccess.get_modified_time(path) if FileAccess.file_exists(path) else 0
+	var was_bytes := _file_bytes(path)
+	var timeout := float(args.get("timeout_s", 30.0))
+	var started := Time.get_ticks_usec()
+	while (float(Time.get_ticks_usec() - started) / 1000000.0) < timeout:
+		await process_frame
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		if not FileAccess.file_exists(path):
+			continue
+		var now := FileAccess.get_modified_time(path)
+		var bytes := _file_bytes(path)
+		if now > was or bytes != was_bytes:
+			var ms := float(Time.get_ticks_usec() - started) / 1000.0
+			_emit("save", {"duration_ms": snappedf(ms, 0.01),
+				"observation": "slot %d written: %d bytes" % [slot, bytes]})
+			return "slot %d landed %.0f ms after the press (%d bytes)" % [slot, ms, bytes]
+	return ("FAIL slot %d did not change within %.0f s of this step (step %s). The Save tab's "
+		+ "confirm either did not reach the serializer or the write failed silently.") % [
+			slot, timeout, step_id]
+
+
+## Wait for a production load to finish, and TIME it.
+##
+## The other half of §18's pair. Placed immediately after the title screen's
+## Load press: it waits for a live world scene with a live Player and reports
+## the interval, which is the load a player experiences rather than the
+## serializer's own cost.
+func _step_await_load(args: Dictionary, step_id: String) -> String:
+	var timeout := float(args.get("timeout_s", 180.0))
+	var started := Time.get_ticks_usec()
+	while (float(Time.get_ticks_usec() - started) / 1000000.0) < timeout:
+		await process_frame
+		await physics_frame
+		if (_probe.call("player") as Node3D) != null:
+			var ms := float(Time.get_ticks_usec() - started) / 1000.0
+			# The change detectors have to be re-primed here for the same
+			# reason `boot` primes them: everything on the loaded save would
+			# otherwise be reported as having just happened.
+			_probe.call("refresh_pois")
+			_seed_change_detection()
+			_frame_ms.clear()
+			_emit("load", {"duration_ms": snappedf(ms, 0.01),
+				"observation": "a live Player exists %.0f ms after the Load press" % ms})
+			return "the world came up %.0f ms after the press" % ms
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return ("FAIL no live Player within %.0f s of this step (step %s); input_context is '%s'. "
+		+ "The Load path did not reach a playable world.") % [timeout, step_id,
+			str(_probe.call("input_context"))]
+
+
 
 ## Copy a slot file OUT of `user://` into the run directory after a save made
 ## through the production Save tab.
@@ -3076,7 +3507,14 @@ func _watch_for_events() -> void:
 	var fighting := bool(state.get("combat_running", false))
 	if fighting != _prev_combat_running:
 		_prev_combat_running = fighting
-		_emit("combat_start" if fighting else "combat_end")
+		# Spelled out rather than a ternary inside the call: `tests/test_gate_f_rig.gd`
+		# checks that every §C.1 event type is emitted by SOMETHING, by looking
+		# for the literal, and a type that only ever exists inside a conditional
+		# expression reads to that check as a type nothing emits.
+		if fighting:
+			_emit("combat_start")
+		else:
+			_emit("combat_end")
 		if not fighting:
 			# A fight that ended may have removed a wild creature from the
 			# world; the POI cache has to hear about it or dead-travel keeps

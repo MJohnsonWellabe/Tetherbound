@@ -35,5 +35,11 @@
   "overhead_scene": "world",
 
   "_comment_overhead_seconds": "Length of each half of the section 8 overhead self-measurement (once with telemetry on, once off). 60 s each, per the request's own wording.",
-  "overhead_seconds": 60.0
+  "overhead_seconds": 60.0,
+
+  "_comment_segment_cost_ceiling_s": "Coverage defect CD-7. `wait` is priced in RENDERED frames in capture mode: _step_wait converts seconds to physics frames and under xvfb every physics frame is a rendered 1920x1080 frame. On llvmpipe at ~10.5 s per frame one {\"seconds\": 90} step costs about 15.75 hours, and X07 stopped at step 184 of 266 with two of them still ahead of it -- roughly 31 more hours. The pre-flight measures what a frame costs on THIS box, prices the whole step-script against it, and refuses to start a segment predicted over this ceiling. Four hours. Raising it does not make a segment finish faster; a segment over the ceiling needs a GPU or a re-cadenced script, and the protocol's waits are not the thing to shorten because they exist so fights resolve.",
+  "segment_cost_ceiling_s": 14400.0,
+
+  "_comment_cost_probe_frames": "Frames the pre-flight times to measure what one costs here. Wall clock across real frames, not Performance.TIME_PROCESS, because the readback and PNG encode are most of the cost in capture mode and the CPU monitor does not see them. 20 frames is about 3.5 minutes under llvmpipe at 1920x1080 and under a second in logic mode.",
+  "cost_probe_frames": 20
 }
