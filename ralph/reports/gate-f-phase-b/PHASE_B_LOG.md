@@ -43,3 +43,57 @@ finale staging — has **no evidence in this run** and cannot be answered
 either way. That is a coverage gap, not a pass.
 
 Next: journey telemetry and operator notes, S01→S10.
+
+---
+
+## Check-in 2 — first-order adjudication complete (game defect vs. harness artifact)
+
+The brief named three findings that would dominate my reading. I measured all
+three before writing a single backlog item. **All three are harness artifacts.**
+Detail and method in `ADJUDICATION.md`; headline results:
+
+**Finding 1 — "input ownership taken and never handed back."** Refuted.
+- X01's matrix: of 418 (control, context) cells, only **115 were injected in
+  the context the step names**. 303 (72.5%) were injected somewhere else
+  entirely — 8 different named surfaces were all actually probed in
+  `menu_map`. **All 115 in-context cells PASSED. Zero confirmed collisions.**
+- `menu_cancel` closed a menu successfully **84 times** in X01 (from every tab
+  including Settings, Save, Quests, Build); 138 close/leave steps passed
+  against 6 failures, and those 6 read as T07's own "one layer per press".
+- The `panel:SwapPanel` hold in S03 — 1,391 s, 83.9% of the segment, the
+  strongest-looking defect in the whole run — is an artifact. The panel is
+  Oskar's creature shop (`shop:creatures:oskar`). During the entire hold the
+  harness pressed 125 inputs and **`menu_cancel` zero times**, which is the
+  one action `swap_panel.gd:126` listens for. Code inspection confirms the
+  panel sets `PROCESS_MODE_ALWAYS`, grabs focus on open, and closes on B.
+- The Settings 126-cell stress case, rebind and panic reset (X01-1015…1033)
+  ran **entirely inside `narrative_modal`** — an unanswered dialogue. "130 ×
+  ui_down did not move focus" is ui_down against a dialogue box. Focus works:
+  the same run logs `focus_owner -> @Button@94239`.
+
+**Finding 2 — "no fight ever stages."** Refuted, by this run's own data.
+X01 t=753.13 stages a real fight: opponent Bramblebun, `opponent_hp 100.7`,
+`my_hp 117.6`, **`target_on_screen: true`**, `narrative_modal → combat`, clean
+`combat_end` back to `world` 13.3 s later. Combat stages, acquires its target,
+owns input and hands it back. The journey lane's zero `combat_*` is the
+harness failing to engage, not the game failing to fight.
+
+**Finding 3 — "the South Bridge never opens."** Confirmed as an observation,
+but as a **cascade**, not an independent defect — see check-in 3.
+
+**The root cause of the journey lane is a single one.** The tracked objective
+reads `opening:beat:road` / "Catch your first wild creature." in **all 1,456
+journey events, S01 event 1 through S10 event 196.** It never advances because
+the first wild catch never happens; the operator's own S02-36 note measures
+why (the catch step-script killed the bramblebun — hp 124.2 → 0.0 — before the
+orb was thrown, and the retuned attempt then never staged the fight at all).
+Every downstream symptom — party stuck at 1, all gate flags unset, the bridge
+shut, 26 "objective did not advance" failures, S06–S10's 115 km of churn — is
+one cause with ten segments of consequences.
+
+**What this costs the run.** The journey lane cannot support conclusions about
+combat, catching, gathering, crafting, building, care/rest, progression,
+economy, difficulty, tournament, story or the finale. Those are **coverage
+gaps**, not clean bills of health.
+
+Quarantine still held.
