@@ -102,8 +102,8 @@ func build() -> void:
 	var stream: Dictionary = terrain_cfg.get("water", {}).get("stream", {})
 	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 
-	var material := _build_material(_region())
-	BOOT_LOG.phase("water: shader material + height bake")
+	var material := _build_material(_region(), "pond")
+	BOOT_LOG.phase("water: pond shader material remainder")
 	_build_pond(material)
 	BOOT_LOG.phase("water: pond")
 	# The stream carries the same shader with more opaque water: at 0.35m
@@ -366,7 +366,7 @@ func _terrain_config() -> Dictionary:
 ## rect would read every one of its texels as clamped ceiling and render deep
 ## navy water over a phantom chasm — the exact failure this function's
 ## `height_min`/`height_max` comment already records once.
-func _build_material(region: Rect2) -> ShaderMaterial:
+func _build_material(region: Rect2, tag: String = "pond") -> ShaderMaterial:
 	var surface: Dictionary = _water_cfg.get("surface", {})
 
 	var material := ShaderMaterial.new()
@@ -391,7 +391,13 @@ func _build_material(region: Rect2) -> ShaderMaterial:
 			height_max = maxf(height_max, h)
 	height_min -= 1.0
 	height_max += 1.0
-	material.set_shader_parameter("terrain_height", _bake_height_texture(region, height_min, height_max))
+	BOOT_LOG.phase("water: %s height RANGE scan (step 4)" % tag)
+	# GF-B-001 wants the 512x512 bake separated from the step-4 scan above it.
+	# Both walk the same rect and one of them is 4,096 times the samples of the
+	# other, so a single mark covering the pair says nothing useful.
+	var height_texture := _bake_height_texture(region, height_min, height_max)
+	BOOT_LOG.phase("water: %s height BAKE (512x512)" % tag)
+	material.set_shader_parameter("terrain_height", height_texture)
 	material.set_shader_parameter("height_min", height_min)
 	material.set_shader_parameter("height_max", height_max)
 
@@ -486,18 +492,43 @@ func _build_pond(material: ShaderMaterial) -> void:
 	# region grew a plate — the carved stream channel collected a chain of
 	# them, and blind round 4 found their exposed edges as "orphaned quads"
 	# and an angular sliver poking over a bank.
+	# GF-B-001. One sample per lattice POINT, not four per cell.
+	#
+	# Every interior corner is shared by four cells, so asking `height_at` for
+	# each cell's own four corners asks the same question up to four times.
+	# This region is 337 x 569 m -- `_region()` unions the pond with an
+	# authored stream 465 m up the map, see the lane log -- which at a 2 m grid
+	# is 48,165 cells, and the `break` below only fires on the 2,538 that turn
+	# out to be wet. So the loop was up to 192,660 `height_at` calls for 48,620
+	# distinct points, and `height_at` is the whole New Game stall.
+	#
+	# Identical, not merely equivalent: the lattice asks the same predicate at
+	# the same points. The one place it could differ is that a cell's right
+	# corner used to be `pos.x + col * step + step` and is now
+	# `pos.x + (col + 1) * step`; those agree exactly whenever `step` is a
+	# dyadic rational, which the authored 2.0 is. Even at a step where they
+	# parted by an ulp the sampled point would move ~1e-13 m and the predicate
+	# would have to be balanced on that same knife edge to notice. The quad
+	# count is what actually says so, and `smoke_pond_water` checks it.
+	var lattice_cols := cols + 1
+	var wet_point := PackedByteArray()
+	wet_point.resize(lattice_cols * (rows + 1))
+	for row in rows + 1:
+		var lz := region.position.y + row * step
+		var base := row * lattice_cols
+		for col in lattice_cols:
+			var lx := region.position.x + col * step
+			wet_point[base + col] = 1 if float(_field.call("height_at", lx, lz)) < _level + 0.5 else 0
+	BOOT_LOG.phase("water: pond wet-lattice scan (%d points)" % wet_point.size())
+
 	var wet_cells: Dictionary = {}
 	for row in rows:
-		var z0 := region.position.y + row * step
+		var lower := row * lattice_cols
+		var upper := lower + lattice_cols
 		for col in cols:
-			var x0 := region.position.x + col * step
-			for corner: Vector2 in [
-				Vector2(x0, z0), Vector2(x0 + step, z0),
-				Vector2(x0, z0 + step), Vector2(x0 + step, z0 + step)
-			]:
-				if float(_field.call("height_at", corner.x, corner.y)) < _level + 0.5:
-					wet_cells[Vector2i(col, row)] = true
-					break
+			if wet_point[lower + col] == 1 or wet_point[lower + col + 1] == 1 \
+					or wet_point[upper + col] == 1 or wet_point[upper + col + 1] == 1:
+				wet_cells[Vector2i(col, row)] = true
 
 	var terrain_cfg: Dictionary = _terrain_config()
 	var centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
@@ -623,9 +654,10 @@ func _build_river() -> void:
 			bank_points.append(p + across * (side * d))
 		left.append(found[0])
 		right.append(found[1])
+	BOOT_LOG.phase("water: river waterline search (%d stations)" % samples.size())
 
 	var region := _river_region(samples, reaches)
-	var material: ShaderMaterial = _build_material(region).duplicate()
+	var material: ShaderMaterial = _build_material(region, "river").duplicate()
 	# The river runs deep (6-9m through the middle reaches) and its bed is
 	# raw cut earth rather than the pond's shallow silt, so it takes the
 	# stream's more opaque shallow alpha: without it the whole channel reads
@@ -682,6 +714,7 @@ func _build_river() -> void:
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	_stats["river_quads"] = quads
+	BOOT_LOG.phase("water: river surface mesh (%d quads)" % quads)
 
 	# The banks. `R7.1-remainder-2`'s open question was whether water would do
 	# more for the set's missing middle distance than more vegetation tuning;
@@ -696,6 +729,8 @@ func _build_river() -> void:
 	_stats["river_reeds"] = _build_plant_band(cfg.get("reeds", {}), bank_points)
 	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points)
 	_level = previous
+	BOOT_LOG.phase("water: river bank bands (%d reeds, %d scrub)" % [
+		_stats["river_reeds"], _stats["river_scrub"]])
 
 
 ## The rect the river's height texture covers: its own channel, padded. Kept

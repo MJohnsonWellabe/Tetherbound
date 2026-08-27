@@ -84,12 +84,14 @@ Two further findings from reading the config rather than the prose:
   `terrain_playground.json` spans x ∈ [−1024, 1021] over nineteen points. Its
   bake rect is 2,091 × 186.5 m, so the height texture the shader reads depth
   from is **4.08 m per texel along the course** and 0.36 m across it.
-- **The pond's bake rect is 361 × 609 m, not the ~192 × 192 its comments
+- **The pond's bake rect is 337 × 569 m, not the ~192 × 192 its comments
   assume.** `_region()` unions the pond's own below-water extent with the
   authored stream's points, and the stream sits at (−142, 80) while the pond
   centre is at (−395, 545) — 465 m apart. The single 512×512 texture is
-  stretched across the gap, so the pond gets ~0.71 × 1.19 m per texel while most
-  of the rect is ground neither the pond mesh nor the stream ribbon ever covers.
+  stretched across the gap, so the pond gets **0.658 × 1.111 m per texel** while
+  most of the rect is ground neither the pond mesh nor the stream ribbon ever
+  covers: the pond mesh is 2,538 quads at a 2 m grid, 10,152 m² of a 191,753 m²
+  rect, or 5.3% of it.
 
 Neither is this lane's to fix — both are water QUALITY defects, not stall
 defects, and the second in particular wants the stream given its own region the
@@ -180,3 +182,105 @@ function further down in `_apply_flats`, still live in its neighbour.
 `test_playground_heightfield.gd`, `test_river_crossings_stay_open.gd`,
 `test_terrain_adaptation.gd`, `test_water_hazard.gd` and the rest of the
 heightfield/terrain/water/river selection: 44 tests, 1,453 assertions, 0 failed.
+
+## The pond's wet scan asked the same question four times
+
+`_build_pond` decides which grid cells carry water by testing each cell's four
+corners against the waterline. Every interior corner is shared by four cells, so
+that asked `height_at` for the same point up to four times: 48,165 cells at a 2 m
+grid over the 337 × 569 m region, up to 192,660 calls for 48,620 distinct
+points, and the early `break` only fires on the 2,538 cells that turn out to be
+wet.
+
+Sampled once per lattice point into a `PackedByteArray` of wetness flags, which
+the cell loop then reads four entries out of. Same predicate, same points; the
+one place it could differ is that a cell's right corner used to be
+`pos.x + col * step + step` and is now `pos.x + (col + 1) * step`, and those
+agree exactly for any dyadic `step`, which the authored 2.0 is.
+`smoke_pond_water` reports 2,538 quads before and after.
+
+## Where water goes now — every phase named
+
+`water.gd` and `_build_material` grew sub-phase marks so the remainder is
+attributed rather than summarised: the 512×512 bake is separated from the step-4
+height-range scan that precedes it (one is 4,096 times the samples of the other,
+so a single mark over the pair says nothing), and `_build_river`'s waterline
+search, bake, mesh commit and bank bands are marked individually.
+
+| ms | phase | before |
+|---:|---|---:|
+| 2,174 | water: river height BAKE (512×512) | — |
+| 1,777 | water: pond height BAKE (512×512) | — |
+| 419 | water: river waterline search (520 stations) | — |
+| 414 | water: jetty | 294 |
+| 328 | water: pond wet-lattice scan (48,620 points) | — |
+| 197 | water: river height RANGE scan (step 4) | — |
+| 108 | water: pond height RANGE scan (step 4) | — |
+| 93 | everything else in water | — |
+| **5,510** | **water total** | **19,230** |
+
+**Water is 5,510 ms against the 19,230 ms the defects lane measured — 0.29×, a
+3.5× cut** — and it is no longer half the stall. It is 12% of it.
+
+The honest caveat, and it cuts both ways. This run's untouched phases were
+*worse* than the defects lane's, not better: the vegetation scatter measured
+20,131 ms against 10,120 ms and the terrain load 8,578 ms against 3,422 ms, on a
+box whose own variance the defects lane already recorded at 2× and 6×. So the
+3.5× is a floor rather than a claim of precision — the water phases fell by that
+much while everything around them was getting slower. The tight, repeated,
+checksum-guarded micro-probe above is the evidence; this table is the
+confirmation that it reached the real boot.
+
+### What is left, and what it would cost
+
+**The two 512×512 bakes are now 3,951 ms — 72% of what water still spends.**
+Everything else in water is under half a second.
+
+The bake's cost is `height_at` and nothing else: 2,174 ms over 262,144 texels is
+8.29 µs a texel, against the micro-probe's 8.27 µs/call for the same region with
+no image writing at all. A `PackedFloat32Array` fill handed to
+`Image.create_from_data` in place of 262,144 `Image.set_pixel` calls was written
+and measured against exactly that, and it is worth about 0.2 µs a texel, ~0.1 s
+across both bakes. Not shipped: a change with no measurable payoff is churn.
+`tools/_probe_water_bake_identity.gd` stays, because it is what a future attempt
+at the bake needs to prove it did not move the water.
+
+What WOULD pay is sampling fewer texels, and both bakes have most of theirs
+going to ground the shader can never read:
+
+- **The river.** Its rect is 2,091 × 186.5 m and its channel is at most 38 m
+  wide. The surface mesh reaches the measured waterline plus half a metre, and a
+  fragment shader only runs on fragments of that mesh, so texels further than
+  that from the centreline are never sampled. `_build_river` already has
+  `left[]`, `right[]` and `samples[]` in hand before it calls `_build_material`,
+  so the band is derivable exactly. Roughly a quarter of the rect is in it —
+  call it 1,600 ms.
+- **The pond.** Its mesh is 2,538 quads, 10,152 m² of a 191,753 m² rect: 5.3%.
+  The wet lattice that says which cells those are is now computed anyway, but
+  `_build_pond` runs after `_build_material`, so using it would mean reordering
+  the two. The stream ribbon shares this material and would have to be in the
+  mask as well. Call it 1,600 ms.
+
+Both are exact for every pixel the shader can sample and neither is bit-identical
+as a texture, so neither can be checked the way this lane has checked everything
+else so far — the check has to be "identical within the mesh's own footprint,
+dilated by a texel for bilinear filtering", against the mesh that was actually
+built. That is a real verification and it is not a cheap one.
+
+### Not this lane's, but now the top of the list
+
+With water at 12%, the New Game stall is **the vegetation scatter (20,131 ms,
+44.5%) and the Terrain3D data load (8,578 ms, 19.0%)**.
+
+The scatter is `HIST-085`'s. One thing this lane can hand it: **the scatter did
+not respond to `height_at` getting 5× faster.** It measured 20,131 ms here
+against 20,718 ms on the run immediately before the change and 10,120 ms on the
+defects lane's box — i.e. it tracked box load and ignored the optimisation
+entirely. That is consistent with `scatter_bake.gd`'s own claim that placements
+are "pure of the heightfield" and served from the disk bake, and it means the
+scatter's 20 s is instancing, batching or collision, NOT terrain queries.
+Whoever takes `HIST-085` should not start by profiling `height_at`.
+
+The terrain load is Terrain3D reading its region files, and it is the most
+volatile number on this box: 3,422 / 3,309 / 20,996 ms for the defects lane,
+39,987 / 8,578 ms here. It is disk, and this container's disk is shared.
