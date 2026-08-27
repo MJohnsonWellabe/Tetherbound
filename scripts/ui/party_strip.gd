@@ -37,9 +37,36 @@ const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
 # occupied name/level stacks grow while vacant rows stayed short, invalidating
 # the mount's five-row height and putting slot 5 over ACTIVE COMPANION.
-const ROW_SIZE := Vector2(250.0, 96.0)  # 76 -> 96: room for STRIP_READABLE_FONT_SIZE's bigger text without clipping
+## GF-B-006: 96 -> 62. The height was two stacked `STRIP_READABLE_FONT_SIZE`
+## lines; `_build_row()` now lays the name, level and status tags on ONE line,
+## so a row is one text line plus its margins. No font size changes and nothing
+## is dropped -- see `_build_row()`'s own comment. `TOTAL_HEIGHT` falls 540 ->
+## 370, which is what makes the strip fit the left column.
+##
+## 62 is MEASURED, not chosen: a `PanelContainer` grows past its
+## `custom_minimum_size` to fit its content, so a declared height under the real
+## one makes `TOTAL_HEIGHT` a lie and every bound derived from it wrong. Built
+## with real entries, the five rows report combined minimum heights of 62 (the
+## selected row, which carries a border), 60 (a row showing the KO badge) and 58
+## (a vacant row). 62 is the largest, so the declared height is an upper bound
+## on every row state rather than a guess at the common one. A first render of
+## this change declared 58 and the fifth row drew 10px into the vitals plate.
+##
+## WIDTH grows 250 -> 420, and that is not a cosmetic choice: at 250 the fixed
+## furniture in a one-line row (rail, 40px chip, "Lv 1", the HP bar and their
+## separations) leaves the name about 30px, and a first render of this change
+## photographed the roster reading "Te / Rip / Lv 1 KO / Bro / Tus" -- every
+## creature elided to its first syllable, which is worse than the defect being
+## fixed. 420 gives the name ~220px, against the ~238 it had on its own line in
+## the two-line design, so no name that fitted before stops fitting.
+##
+## The room is there because the strip is in the LEFT COLUMN now: 56 + 420 = 476,
+## and the central third of the authored canvas starts at 640. It is checked, not
+## assumed -- `test_hud_widgets.gd::test_party_strip_clears_the_centre_of_the_viewport`
+## fails if this width ever grows past that margin.
+const ROW_SIZE := Vector2(420.0, 62.0)
 const ROW_SEPARATION := 6
-const ROW_MARGIN := 6
+const ROW_MARGIN := 4  # 6 -> 4, alongside ROW_SIZE.y: a one-line row needs less breathing room than a two-line one
 const HEADER_HEIGHT := 30.0
 const HEADER_GAP := 6.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
@@ -58,7 +85,10 @@ const CHIP_SIZE := Vector2(40.0, 40.0)
 ## spare.
 const STRIP_READABLE_FONT_SIZE := 36
 const RAIL_WIDTH := 4.0
-const HP_BAR_SIZE := Vector2(72.0, 8.0)
+## 72 -> 56 alongside the one-line row: the bar shares its line with the name
+## now instead of sitting beside a two-line stack, and 16px of bar buys 16px of
+## name. A fraction still reads at 56px -- this bar has never carried a number.
+const HP_BAR_SIZE := Vector2(56.0, 8.0)
 
 ## Fainted always reads as fainted, whether or not the slot happens to also be
 ## the (impossible, but not this file's job to assume) selected one.
@@ -430,19 +460,40 @@ func _build_row(slot_index: int) -> PanelContainer:
 	_slot_labels.append(slot_label)
 	chip.add_child(slot_label)
 
-	var info := VBoxContainer.new()
+	# GF-B-006: ONE text line per row, not two stacked ones.
+	#
+	# The name used to sit in a VBox above a second line carrying the level and
+	# the KO/REST tags, which made every row two `STRIP_READABLE_FONT_SIZE`
+	# lines tall -- and five of those plus a header is `TOTAL_HEIGHT` 540, over
+	# half the authored canvas, which is what `HIST-136`/OP23-09 ("the HUD takes
+	# up far too much screen") and Gate F's own frame are both about. Nothing is
+	# dropped and no text shrinks: the level and the tags move ONTO the name's
+	# line, where there is room for them, and the row loses the line it did not
+	# need. That is what lets the strip stand in the left column at all -- see
+	# `playground_hud.gd::party_strip_position()` for why the left column is the
+	# only place on this canvas that is out of the player's forward view.
+	var info := HBoxContainer.new()
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	info.add_theme_constant_override("separation", 2)
+	info.add_theme_constant_override("separation", 6)
 	hbox.add_child(info)
 
 	var name_label := Label.new()
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.add_theme_font_size_override("font_size", STRIP_READABLE_FONT_SIZE)
+	# The name is the row's variable-length element, so it takes the slack and
+	# elides; the level and the tags keep their own minimum widths beside it.
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.clip_text = true
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_name_labels.append(name_label)
 	info.add_child(name_label)
 
+	# Kept as its own container so the level, the KO badge and the REST tag stay
+	# one group with their own separation -- the comments below on the badge's
+	# `PanelContainer` and `modulate` compensation are about being inside a
+	# Container, and that is still true here.
 	var level_row := HBoxContainer.new()
 	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	level_row.add_theme_constant_override("separation", 6)

@@ -115,6 +115,28 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 ## does for `LEGEND_GLYPH_PX`.
 const HOTBAR_GLYPH_PX := 36
 const HOTBAR_COUNT_FONT_SIZE := 36
+## GF-B-005: the item's own icon, 28 -> 64.
+##
+## The strip photographed as "one red B and four identical white/red cross
+## marks" across five different regions, while the satchel actually held orbs,
+## potions, berries and revives. Two things made that true at once. `HIST-018`
+## has the first: the four crosses ARE the Kenney d-pad badges, and every d-pad
+## variant in the pack (Default, Double, `_outline`, `_round`, Xbox, Gamecube)
+## uses the same plus-sign-with-one-differentiated-arm, so at true render size
+## the four bindings are one shape repeated. Replacing that art is
+## OWNER-BLOCKED -- `CLAUDE.md` forbids spending a generation without
+## owner-supplied reference art, and the register's own ruling is that no
+## suitable asset exists.
+##
+## The second is this number, and it is not blocked: the badge was drawn at 36
+## and the ITEM at 28, so the least distinguishing element in the slot was also
+## the biggest. Inverting that is the half of the acceptance criteria this lane
+## can actually satisfy -- "each filled slot's contents are identifiable, and
+## the binding badge is secondary to the item rather than covering it."
+##
+## 64, not larger: the slot is 112 wide with about 104 of inner width, and the
+## icon shares its column with the badge and the count below it.
+const HOTBAR_ICON_PX := 64
 
 ## The item id that means "I am building". `data/items/items.json`'s hammer,
 ## which already existed as a workbench tool -- CONTROLLER-MAP gave it the
@@ -236,6 +258,13 @@ const VITALS_WIDTH := 300.0
 ## icon asset is exactly the kind of spend `CLAUDE.md`/`conventions.md`
 ## reserve for an owner-supplied reference sheet, which does not exist for
 ## this glyph.
+## How far the vitals cluster's backing plate is drawn OUTSIDE the cluster's own
+## rect, on every side. Named (it was an inlined 8.0) because
+## `party_strip_position()` has to clear the plate, not the cluster: the strip
+## rests directly above it, and a first render of GF-B-006 measured the roster's
+## fifth row drawing into the plate while every rect check against the CLUSTER
+## passed. What the player sees is the plate.
+const VITALS_PLATE_OVERHANG := 8.0
 const VITALS_BAR_HEIGHT := 20.0
 const VITALS_ROW_GAP := 10.0
 const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
@@ -1083,34 +1112,71 @@ static func creature_block_position(canvas_height: float, creature_panel_height:
 	)
 
 
-## HUD-POPUP: the strip's own screen region now, not a hug against the
-## creature panel -- see `PARTY_STRIP_X`'s own old header for why (kept as a
-## width FLOOR below, not the real answer any more). Top-anchored at
-## `TOP_SAFE_INSET`; the only vertical constraint is `Root/BottomDock`'s own
-## nominal top (`BOTTOM_DOCK_TOP_OFFSET`), which the strip is transient
-## enough not to need the persistent column's full `LEFT_STACK_CLEARANCE`
-## margin against -- a few seconds of reveal, not a permanent fixture. At
-## both supported canvas heights (1080, 1200) `TOP_SAFE_INSET + TOTAL_HEIGHT`
-## (56 + 540 = 596) clears the dock's nominal top (620 at 1080, 740 at 1200)
-## with real margin, so the vertical floor is normally a no-op.
+## GF-B-006 / `HIST-136` (OP23-09, owner: "the HUD takes up far too much
+## screen"). The strip rests in the LEFT COLUMN, bottom-aligned a gap above the
+## player vitals cluster.
 ##
-## `creature_panel_width` -- the FIRST version of this fix took `PARTY_STRIP_X`
-## as a fixed constant off `CREATURE_BLOCK_MIN_WIDTH`, and a real render with
-## a seeded creature immediately reopened the exact defect this task fixes:
-## the panel's real width (435, once an HP value column, a type tag and a
-## portrait actually have content) grows past its 374px floor the same way
-## its HEIGHT already does -- `_build_creature_block()`'s own comment names
-## "READY TO CALL OUT" as the string that needs the floor to be a floor, not
-## a cap, and a live creature's stats push the panel wider still. The strip
-## now takes the panel's REAL measured width from `_reflow_left_stack()`
-## every call, the same dynamic `creature_h` already gets, so a live
-## `Rect2.intersects()` check (`smoke_hud_handheld_legibility.gd`) is what
-## caught this, not a second guess at the right constant.
-static func party_strip_position(canvas_height: float, strip_height: float, creature_panel_width: float) -> Vector2:
-	var dock_top: float = canvas_height + BOTTOM_DOCK_TOP_OFFSET
-	var ceiling: float = dock_top - strip_height
-	var x: float = CREATURE_BLOCK_X + maxf(creature_panel_width, CREATURE_BLOCK_MIN_WIDTH) + PARTY_ACTIVE_GAP
-	return Vector2(x, minf(TOP_SAFE_INSET, maxf(0.0, ceiling)))
+## It used to rest to the RIGHT of the creature panel, in "its own screen
+## region" -- the HUD-POPUP fix whose reasoning is kept below, because it solved
+## a real compositing defect and its solution is still half of this one. What it
+## could not know is where that region lands: at the authored 1920 canvas the
+## panel's real width is 435, so the strip started at x 505 and ran to 755, and
+## the central third begins at 640. Gate F photographed the result -- `TEAM 0/5`
+## and five `OPEN SLOT` rows stacked over the middle of the viewport, directly
+## over the ground the player is walking into. It also crosses the full-height
+## 440px trainer/camera focus lane that `smoke_prompt_hotbar_dock.gd` already
+## forbids the hotbar from touching.
+##
+## There is no third place. Measured at the authored canvas: the creature panel
+## occupies x 56-491, the minimap and objective block own the right column down
+## to y 480, and the bottom dock starts at 620. Anything placed right of the
+## creature panel and wide enough to hold a species name at this HUD's own
+## legibility floor is inside the central third by construction. So the strip
+## comes back to the left column, and the two changes that let it fit are:
+##
+## 1. `party_strip.gd` lays each row on ONE text line rather than two, so
+##    `TOTAL_HEIGHT` is 350 rather than 540;
+## 2. the creature panel STANDS DOWN while the strip is revealed
+##    (`_yield_creature_block_to_party_strip()`), because the strip is a
+##    superset of it -- the panel names the active creature, and the strip names
+##    the active creature with its four team-mates around it, which is the whole
+##    point of a roster reveal.
+##
+## That second change is what makes the original HUD-POPUP defect impossible
+## rather than merely avoided. Disjoint rects still both draw; two widgets that
+## are never on screen together cannot composite through each other at all. The
+## vitals cluster is NOT stood down -- HP and satiety are safety information --
+## so the bottom bound below is a real constraint, not a formality, and
+## `test_party_strip_never_overlaps_player_vitals` still holds on geometry.
+##
+## --- the HUD-POPUP reasoning this replaces, kept because it is still why the
+## --- strip may not simply be drawn over the creature panel:
+##
+## the party strip used to hug the creature panel from directly above
+## (`party_strip_position()`'s old header spelled out the tradeoff: its own
+## `TOTAL_HEIGHT`, 540, never fit in the room actually left above a
+## correctly bottom-anchored creature panel at either supported canvas
+## height, so the clamp let the reveal draw its bottom rows straight over
+## the panel behind it). A blind critic then confirmed exactly that frame --
+## the panel's own title compositing through a party row's name, its HP
+## readout floating over the row beneath it, six distinct collisions from
+## one shared rect. Of the critic's three fixes (opaque the popup, move it
+## off the list, or hide the list while the popup is open), that pass took
+## "move it off the list". Chosen over "hide the list": OP21-12's whole point
+## was showing the roster DURING a cycle, not replacing it with the
+## single-creature panel at the exact moment the player most wants to see
+## where the new active creature sits among all five. This pass does the
+## inverse of that rejected option -- it hides the SINGLE-CREATURE PANEL
+## while the ROSTER is up, which keeps OP21-12's requirement intact.
+static func party_strip_position(canvas_height: float, strip_height: float) -> Vector2:
+	# Bottom-aligned against the vitals cluster rather than top-anchored at
+	# `TOP_SAFE_INSET`: the vitals cluster is the fixture the strip must clear,
+	# and deriving from it means a change to `VITALS_HEIGHT` or to the strip's
+	# own row height can never silently push the two into each other.
+	var bottom: float = vitals_position(canvas_height).y - VITALS_PLATE_OVERHANG - PARTY_ACTIVE_GAP
+	# ...but never above the top safe inset, which is where the reveal lines up
+	# with the minimap and objective block's own top row.
+	return Vector2(CREATURE_BLOCK_X, maxf(TOP_SAFE_INSET, bottom - strip_height))
 
 
 ## Places the whole left column from the CANVAS BOTTOM every time `_root`'s
@@ -1169,7 +1235,7 @@ func _reflow_left_stack() -> void:
 
 	if _party_strip != null and _party_strip_script != null:
 		var strip_h: float = float(_party_strip_script.get("TOTAL_HEIGHT"))
-		var strip_pos := party_strip_position(canvas_h, strip_h, creature_w)
+		var strip_pos := party_strip_position(canvas_h, strip_h)
 		if _party_strip.has_method("set_rest_position"):
 			_party_strip.call("set_rest_position", strip_pos)
 		else:
@@ -1223,7 +1289,24 @@ func _update_party_strip() -> void:
 			"resting": bool(creature.get("resting")),
 		})
 	_party_strip.call("update_from_party", entries, index, active_out)
-	_party_strip.call("show_strip")
+	# GF-B-006: an EMPTY roster does not reveal.
+	#
+	# The reveal fires on any change to the party's index, revision or
+	# called-out state -- including the very first poll after the HUD mounts,
+	# when the change-guard above is comparing against its `-999` sentinel. With
+	# no creatures caught yet that put `TEAM 0/5` and five `OPEN SLOT` rows on
+	# screen at world load, which is the exact frame Gate F photographed
+	# (`X07/frames/X07/000312.88.png`), and it is the state the player is in for
+	# the whole opening: from the first step out of the village until the first
+	# catch. There is nothing to reveal. A roster reveal exists to show where a
+	# newly active creature sits among five; five empty slots answer a question
+	# nobody asked and cover the ground the player is walking into to do it.
+	#
+	# `update_from_party` still ran above, so the rows are current the moment
+	# the first catch gives the strip something to say -- and that catch is
+	# itself a `revision` change, so it reveals then, which is the right moment.
+	if not entries.is_empty():
+		_party_strip.call("show_strip")
 
 	var total := entries.size()
 	var next_label := str(entries[index].get("label", "")) if index >= 0 and index < total else ""
@@ -1270,8 +1353,8 @@ func _build_vitals_cluster() -> void:
 	# growing to cover anything more.
 	var vitals_plate := Panel.new()
 	vitals_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vitals_plate.position = Vector2(-40.0, -8.0)
-	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT + 16.0)
+	vitals_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
+	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
 	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_vitals_cluster.add_child(vitals_plate)
 
@@ -2239,7 +2322,8 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# number in the hotbar that actually matters. Out-of-stock still
 			# greys, same as before; in-stock now reads at full contrast.
 			var text_colour := Color(0.4, 0.42, 0.39) if stack.is_empty() else UITokens.TEXT_PRIMARY
-			var icon_bbcode := "[img=28x28]%s[/img]" % icon_path if not icon_path.is_empty() else ""
+			var icon_bbcode := "[img=%dx%d]%s[/img]" % [HOTBAR_ICON_PX, HOTBAR_ICON_PX, icon_path] \
+				if not icon_path.is_empty() else ""
 			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
 			# resolution, the smallest text on the whole HUD and, per the
 			# blind critic, illegible without magnification.
@@ -2252,8 +2336,31 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# is right-aligned and cannot move left without covering the central
 			# focus lane `smoke_prompt_hotbar_dock.gd` guards, so width was the
 			# one axis with nothing to give.
+			# GF-B-005: ITEM FIRST, binding underneath.
+			#
+			# The order used to be glyph, icon, count -- the binding badge on
+			# the top line, at the largest size in the slot, over an item icon
+			# drawn at 28. Reading top to bottom, the first thing the slot said
+			# was which button it was on, and the four d-pad badges say that
+			# identically (see `HOTBAR_ICON_PX`). Now the icon leads at 64 and
+			# the badge sits under it with the count, which is the hierarchy the
+			# quick-bar is for: what is in the slot, then how to reach it.
+			#
+			# The badge keeps `HOTBAR_GLYPH_PX` rather than shrinking to make
+			# the point: 36 authored is exactly `MIN_PHYSICAL_GLYPH_PX` at the
+			# Ally's real content scale (36 * 0.667 = 24), so it is already at
+			# this HUD's legibility floor and cannot go smaller.
+			# `smoke_hud_handheld_legibility.gd` asserts that floor directly.
+			#
+			# Three lines, not two with the badge and the count sharing one:
+			# the slot is 112 wide (~104 inner) and a tool's durability
+			# ("40/40" at `HOTBAR_COUNT_FONT_SIZE`) needs ~95px on its own, so
+			# a badge beside it overflows and `scroll_active = false` cuts it
+			# mid-glyph -- the exact defect the old comment on this format
+			# string recorded. The slot grew instead (see the note on Slot1 in
+			# `playground_hud.tscn`); height is the axis with room.
 			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
-				glyph, icon_bbcode, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
+				icon_bbcode, glyph, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
@@ -2364,6 +2471,29 @@ func _yield_left_stack_to_combat_hud() -> void:
 		_party_strip.visible = not combat
 	if _vitals_cluster != null:
 		_vitals_cluster.visible = not combat
+	_yield_creature_block_to_party_strip()
+
+
+## GF-B-006: the single-creature panel stands down for as long as the roster
+## reveal is up.
+##
+## The two now share the left column -- see `party_strip_position()`'s header
+## for why there is nowhere else on this canvas to put a five-row roster that is
+## not over the player's forward view. They are never both needed: the panel
+## names the ACTIVE creature, and the strip names the active creature with its
+## four team-mates around it and the active one's own row rail lit. Hiding the
+## subset while the superset is up is what makes HUD-POPUP's compositing defect
+## impossible rather than merely avoided -- two disjoint rects still both draw.
+##
+## Runs LAST, after `_yield_left_stack_to_combat_hud()`'s own writes above, for
+## the same reason that function runs after `_update_party_strip()`: whichever
+## write happens last this frame is the one that survives, and a fight must
+## still take the whole column down regardless of what the roster is doing.
+func _yield_creature_block_to_party_strip() -> void:
+	if _creature_block == null or _party_strip == null:
+		return
+	if _party_strip.visible:
+		_creature_block.visible = false
 
 
 func _use_hotbar_slot(slot_index: int) -> void:

@@ -134,6 +134,17 @@ alignment = 1
 ; exactly. This does not touch which glyph a legend/hotbar row shows or
 ; `input_glyph.gd` itself (owned by `ralph/DPAD-COLLISION`) -- only the size
 ; text renders at when a glyph image is not the thing being drawn.
+; Slot height 152 -> 180 on all five (GF-B-005). The slot now draws the ITEM
+; ICON at `playground_hud.gd::HOTBAR_ICON_PX` (64, up from an inlined 28) on the
+; top line, with the binding badge and the count under it -- the quick-bar
+; photographed as five near-identical d-pad badges over 28px item art, so the
+; badge and the item swapped places and the item grew. Three stacked lines at
+; 64 + 36 + 36 plus leading do not fit 152. Width is still the axis with nothing
+; to give, for the reason the original note below gives; `smoke_prompt_hotbar_dock.gd`
+; measured 172px of clearance between this dock and the contextual prompt, which
+; is what this 28px pays out of.
+;
+; The original note, still the reason the slot is short and tall rather than wide:
 ; Slot height 104 -> 152 on all five. A tool slot used to draw its item icon and
 ; its durability on ONE line -- a 28px inline icon plus "40/40" at
 ; HOTBAR_COUNT_FONT_SIZE (36) needs ~119px, against ~104px of inner width -- and
@@ -147,7 +158,7 @@ alignment = 1
 ; about 8px of slack at its current width. Height is free -- the same test
 ; measures 172px of clearance between this dock and the contextual prompt.
 [node name="Slot1" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 152)
+custom_minimum_size = Vector2(112, 180)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1"]
@@ -162,7 +173,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot2" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 152)
+custom_minimum_size = Vector2(112, 180)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2"]
@@ -177,7 +188,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot3" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 152)
+custom_minimum_size = Vector2(112, 180)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3"]
@@ -192,7 +203,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot4" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 152)
+custom_minimum_size = Vector2(112, 180)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4"]
@@ -207,7 +218,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot5" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 152)
+custom_minimum_size = Vector2(112, 180)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5"]

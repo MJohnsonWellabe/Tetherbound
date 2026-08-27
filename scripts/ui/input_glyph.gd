@@ -98,7 +98,15 @@ const GLYPHS := {
 	## keyboard entry: `party_cycle` is bound to C and no C keycap has been
 	## extracted from the Kenney pack, so a desktop player gets `icon()`'s
 	## "[C]" fallback, read live off the InputMap.
-	"party_cycle": {"gamepad": "xbox_lb.png"},
+	## GF-B-006's second half ("one glyph language per device"). This entry had
+	## a pad glyph and no keyboard one, so `icon()` fell through to the bracket
+	## fallback and the persistent exploration legend rendered `M` / `I` / `R`
+	## as real keycap images beside a bare, greyed `[C]` -- three glyphs and one
+	## piece of text, on the one HUD row that is up during ordinary exploration.
+	## `party_cycle`'s keyboard binding really is C (`project.godot`,
+	## physical_keycode 67); the keycap was simply never extracted from the
+	## already-vendored CC0 pack. `docs/ASSET_LEDGER.md` carries the row.
+	"party_cycle": {"keyboard": "keyboard_c.png", "gamepad": "xbox_lb.png"},
 
 	## HD2's quick-access hotbar. Five slots, each its own single direct
 	## press on both devices (no select-then-confirm step) -- true parity is

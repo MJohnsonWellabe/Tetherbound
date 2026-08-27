@@ -124,3 +124,129 @@ green.
 ### Status
 
 Fixed and pushed. In-world confirmation in bands 2 and 4 still to capture.
+
+---
+
+## `GF-B-005` — quickbar shows d-pad badges, not contents — **FIXED (the half that is not owner-blocked)**
+
+### What was in the frame
+
+Five slots, each drawing the binding badge at 36px on the TOP line and the item's
+own icon at an inlined 28px beneath it. So the largest, first-read element in
+every slot was the button, and on a controller four of the five buttons are d-pad
+directions.
+
+`HIST-018`'s finding is the other half and it stands: every d-pad variant in the
+Kenney pack (Default, Double, `_outline`, `_round`, Xbox, Gamecube) uses the same
+plus-sign-with-one-differentiated-arm, none of them readable at true render size,
+and `Generic/` has no d-pad art at all. **Replacing that art is owner-blocked** —
+`CLAUDE.md` forbids spending a generation without owner-supplied reference art,
+and the register's ruling is that no suitable asset exists. Not attempted here.
+
+### The fix
+
+`playground_hud.gd::_update_hotbar()`: the item icon leads at `HOTBAR_ICON_PX`
+(64, was an inlined 28) and the badge moves under it with the count. The badge
+keeps `HOTBAR_GLYPH_PX` (36) rather than shrinking to make the point — 36
+authored is exactly `MIN_PHYSICAL_GLYPH_PX` at the Ally's content scale
+(36 × 0.667 = 24), so it is already at this HUD's legibility floor.
+
+Three stacked lines at 64 + 36 + 36 do not fit a 152px slot, so the slots grew to
+180 (`playground_hud.tscn`). Width could not give: `smoke_prompt_hotbar_dock.gd`
+fails the build if the dock reaches the central 440px focus lane, and it measured
+172px of clearance below the dock, which is what the 28px comes out of. That test
+passes on the new height, reporting the gap still at 172px.
+
+### Evidence
+
+`docs/evidence/gate-f-defects/GF-B-005-006/`, 1920×1080, gamepad pinned, a
+stocked bar (orb ×10, potion ×3, berries ×12, revive ×2, axe 40/40 — the axe
+because a tool draws a durability pair, the widest thing a slot ever holds).
+Before: five near-identical crosses over item art too small to identify. After:
+orb, potion, berries, revive and axe are each identifiable, with the binding
+underneath.
+
+---
+
+## `GF-B-006` — team roster over the centre of the screen — **FIXED**
+
+### What was in the frame, and why
+
+`TEAM 0/5` and five `OPEN SLOT` rows, 250×540, at x 505–755 on the authored
+1920 canvas. Two separate faults:
+
+1. **It revealed with an empty roster.** `_update_party_strip()` calls
+   `show_strip()` on any change to the party's index, revision or called-out
+   state — including the first poll after the HUD mounts, when the change-guard
+   is still comparing against its `-999` sentinel. With no creatures caught that
+   put five empty slots on screen at world load, and it is the player's state for
+   the whole opening, from the first step out of the village until the first
+   catch.
+2. **Where it rested.** The HUD-POPUP pass had moved it to "its own screen
+   region" to the right of the creature panel, fixing a real compositing defect.
+   The panel's real width is 435, so that region begins at x 505 — and the
+   central third begins at 640. It also crosses the full-height 440px
+   trainer/camera focus lane that `smoke_prompt_hotbar_dock.gd` already forbids
+   the hotbar from touching.
+
+### There is no third region
+
+Measured at the authored canvas: creature panel x 56–491; minimap x 1624–1864,
+y 56–296; objective block x 1444–1864, y 310–480; bottom dock from y 620.
+Anything placed right of the creature panel and wide enough to hold a species
+name at this HUD's legibility floor is inside the central third by construction.
+
+### The fix
+
+- **Empty rosters do not reveal.** `update_from_party` still runs, so the rows are
+  current the moment the first catch gives the strip something to say — and that
+  catch is itself a `revision` change, so it reveals then, which is the right
+  moment.
+- **The strip returns to the left column**, bottom-aligned a gap above the vitals
+  cluster's backing plate. Two changes make it fit: each row lays the name, level
+  and status tags on ONE line instead of two (`TOTAL_HEIGHT` 540 → 370, no font
+  size changed and nothing dropped), and the single-creature panel stands down
+  for as long as the reveal is up (`_yield_creature_block_to_party_strip()`).
+- Rows widen 250 → 420 to pay for the one-line layout. A first render of the
+  change photographed the roster reading "Te / Rip / Lv 1 KO / Bro / Tus" — every
+  name elided to its first syllable, worse than the defect. At 420 the name gets
+  ~220px against the ~238 it had on its own line before, so no name that fitted
+  before stops fitting. 56 + 420 = 476, and the central third starts at 640.
+- **Glyph language**, the item's second half: `party_cycle` had a gamepad glyph
+  and no keyboard one, so the persistent exploration legend drew `M` / `I` / `R`
+  as keycap images beside a bare bracket `[C]`. `keyboard_c.png` extracted from
+  the already-vendored CC0 Kenney pack (`docs/ASSET_LEDGER.md` carries the row);
+  the binding really is C, the keycap was simply never pulled.
+
+### Two things this turned up
+
+- **`TOTAL_HEIGHT` was a lie waiting to happen.** A `PanelContainer` grows past
+  its `custom_minimum_size`, so a declared row height under the real one makes
+  every bound derived from it wrong. Measured with real entries, the rows report
+  62 (selected, which carries a border), 60 (showing the KO badge) and 58
+  (vacant); `ROW_SIZE.y` is now the largest of those, not a guess at the common
+  one. A first render at 58 drew the fifth row 10px into the vitals plate.
+- **The vitals plate is drawn outside the vitals rect.** 8px on every side, and
+  it is what the player sees. Every rect check in the suite was against the
+  CLUSTER, so the overlap above passed its tests. Named as
+  `VITALS_PLATE_OVERHANG` and used by both the plate and the strip's bound.
+
+### Regression coverage
+
+`test_hud_widgets.gd` gains `test_party_strip_clears_the_centre_of_the_viewport`
+(the central third AND `smoke_prompt_hotbar_dock.gd`'s own 440px focus lane, so
+the two widgets are held to one rule) and
+`test_party_strip_fits_the_left_column_above_the_vitals_cluster`.
+`test_party_strip_no_longer_overlaps_the_creature_panel` is replaced rather than
+deleted: the two now share a rect on purpose, so
+`smoke_hud_handheld_legibility.gd` checks MUTUAL EXCLUSION on the live scene
+instead — reveal the strip, pump frames, the panel must be gone. That is
+strictly stronger than disjoint rects, which still both draw. Verified
+non-vacuous: disabling the stand-down turns it red.
+
+Passing: `test_hud_widgets` (28/110), `smoke_hud_handheld_legibility`,
+`smoke_prompt_hotbar_dock`, `smoke_exploration_legend`, `smoke_hud_no_sixth_slot`,
+`smoke_dpad_hotbar_vs_cycle`, `smoke_satchel_owns_hotbar`.
+
+`HIST-036` (`OBJECTIVE-HINT-ON-HUD`) was sequenced after this item and is now
+unblocked.

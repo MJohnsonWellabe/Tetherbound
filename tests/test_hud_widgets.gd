@@ -129,57 +129,109 @@ func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
 
 
 ## `party_strip_position()` never draws the reveal above `TOP_SAFE_INSET`,
-## regardless of canvas height -- the strip's own screen region (see its own
-## header) means this is normally a plain top anchor, not an engaged clamp,
-## but the function still has a defensive floor for a canvas short enough
-## that `TOP_SAFE_INSET + TOTAL_HEIGHT` would overrun `Root/BottomDock`'s
-## nominal top. This test proves the bound holds at both supported canvas
-## heights.
+## regardless of canvas height. GF-B-006 turned this from a top anchor with a
+## defensive floor into a BOTTOM alignment against the vitals cluster with the
+## same floor (see that function's own header for why the strip came back to the
+## left column), so the floor is the thing that can now realistically engage --
+## on a short canvas the strip would want to start above the screen. This proves
+## the bound holds, and that it is NOT engaged at either supported height, which
+## is what says the strip is resting where it was designed to rather than being
+## clamped into place.
 func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
 	for canvas_h in [1080.0, 1200.0]:
 		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
-			canvas_h, PARTY_STRIP.TOTAL_HEIGHT, PLAYGROUND_HUD.CREATURE_BLOCK_MIN_WIDTH
+			canvas_h, PARTY_STRIP.TOTAL_HEIGHT
 		)
 		assert_true(
-			strip_pos.y >= 0.0 - 0.001,
-			"party strip top (%.1f) must never draw above the screen at canvas height %.0f" % [
+			strip_pos.y >= PLAYGROUND_HUD.TOP_SAFE_INSET - 0.001,
+			"party strip top (%.1f) must never draw above TOP_SAFE_INSET at canvas height %.0f" % [
 				strip_pos.y, canvas_h,
 			]
 		)
-		assert_almost_eq(
-			strip_pos.y, PLAYGROUND_HUD.TOP_SAFE_INSET, 0.001,
-			"party strip should rest at TOP_SAFE_INSET, not an engaged clamp, at canvas height %.0f -- " % canvas_h +
-			"if this fails, TOTAL_HEIGHT or BOTTOM_DOCK_TOP_OFFSET moved enough to eat the defensive floor's margin"
+		assert_true(
+			strip_pos.y > PLAYGROUND_HUD.TOP_SAFE_INSET + 0.001,
+			"party strip should rest clear of its defensive floor at canvas height %.0f -- " % canvas_h +
+			"if this fails, TOTAL_HEIGHT or VITALS_HEIGHT grew enough that the reveal no longer fits the left column"
 		)
 
 
-## HUD-POPUP: the top defect a blind critic found -- the creature panel's
-## own title/HP/type readout compositing directly on top of party rows 3 and
-## 4 ("R**Kite**ADY TO CALL OUT" was one specific byproduct of the two
-## widgets sharing a rect). Checked on real `Rect2` geometry, not just a Y
-## comparison, so a future width change to either widget cannot silently
-## reopen this without tripping the test.
+## GF-B-006 replaces HUD-POPUP's disjoint-rect contract with a stronger one.
 ##
-## `creature_w` is deliberately NOT `CREATURE_BLOCK_MIN_WIDTH` here -- the
-## first version of this fix used exactly that constant as a fixed guess at
-## the panel's real width, and a live render with a seeded creature (an HP
-## value column, a type tag, a portrait) immediately measured the panel at
-## 435, well past its 374px floor, reopening the same collision this test
-## exists to catch. 435 is that measured value, not a round number, so this
-## test would have failed against BOTH the pre-fix design (same x as the
-## panel) and the first, width-naive version of the actual fix.
-func test_party_strip_no_longer_overlaps_the_creature_panel() -> void:
-	var creature_h := 230.0
-	var creature_w := 435.0
+## HUD-POPUP's own defect is worth restating, because this test still exists to
+## prevent it: a blind critic found the creature panel's title/HP/type readout
+## compositing directly on top of party rows 3 and 4 ("R**Kite**ADY TO CALL OUT"
+## was one specific byproduct of the two widgets sharing a rect). That pass fixed
+## it by moving the strip to its own screen region, right of the panel -- which
+## put the strip over the middle of the viewport, which is GF-B-006.
+##
+## There is no third region (see `playground_hud.gd::party_strip_position()`),
+## so the strip is back in the left column and the two DO share a rect again.
+## What makes the compositing impossible now is not geometry but mutual
+## exclusion: `_yield_creature_block_to_party_strip()` hides the panel for as
+## long as the strip is revealed. Two widgets that are never on screen together
+## cannot composite through each other at all, which is strictly stronger than
+## two disjoint rects that both draw.
+##
+## So this test asserts the two things that now carry the guarantee: the strip
+## clears the CENTRAL THIRD of the authored viewport (the defect), and it fits
+## the left column at every supported canvas height (what makes the yield
+## sufficient rather than a way to hide an overflow).
+func test_party_strip_clears_the_centre_of_the_viewport() -> void:
+	var authored_width := 1920.0
+	var central_third := Rect2(
+		Vector2(authored_width / 3.0, 0.0),
+		Vector2(authored_width / 3.0, 4096.0)
+	)
+	# The full-height lane `smoke_prompt_hotbar_dock.gd` already forbids the
+	# hotbar from covering, asserted here against the same numbers so the two
+	# widgets are held to one rule rather than two.
+	var focus_lane := Rect2(
+		Vector2(authored_width * 0.5 - 220.0, 0.0),
+		Vector2(440.0, 4096.0)
+	)
 	for canvas_h in [1080.0, 1200.0]:
-		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(canvas_h, PARTY_STRIP.TOTAL_HEIGHT, creature_w)
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(canvas_h, PARTY_STRIP.TOTAL_HEIGHT)
 		var strip_rect := Rect2(strip_pos, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT))
-		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
-		var creature_rect := Rect2(creature_pos, Vector2(creature_w, creature_h))
 		assert_false(
-			strip_rect.intersects(creature_rect),
-			"party strip %s must never intersect the creature panel %s at canvas height %.0f" % [
-				strip_rect, creature_rect, canvas_h,
+			strip_rect.intersects(central_third),
+			"party strip %s is inside the central third %s at canvas height %.0f -- this is GF-B-006" % [
+				strip_rect, central_third, canvas_h,
+			]
+		)
+		assert_false(
+			strip_rect.intersects(focus_lane),
+			"party strip %s covers the trainer/camera focus lane %s at canvas height %.0f" % [
+				strip_rect, focus_lane, canvas_h,
+			]
+		)
+
+
+## The strip must FIT the left column, not merely start in it. Without this,
+## `_yield_creature_block_to_party_strip()` would be hiding an overflow rather
+## than resolving a designed overlap: a strip taller than the room between
+## `TOP_SAFE_INSET` and the vitals cluster would run under the vitals (which is
+## never hidden -- HP and satiety are safety information) or off the top.
+func test_party_strip_fits_the_left_column_above_the_vitals_cluster() -> void:
+	for canvas_h in [1080.0, 1200.0]:
+		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(canvas_h, PARTY_STRIP.TOTAL_HEIGHT)
+		var strip_bottom: float = strip_pos.y + PARTY_STRIP.TOTAL_HEIGHT
+		var vitals_top: float = PLAYGROUND_HUD.vitals_position(canvas_h).y
+		# The PLATE, not the cluster rect: the vitals backing panel is drawn
+		# `VITALS_PLATE_OVERHANG` outside the cluster on every side, and it is
+		# what the player sees. A first render of GF-B-006 had the roster's
+		# fifth row drawing into the plate while every check against the
+		# cluster passed.
+		var plate_top: float = vitals_top - PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
+		assert_true(
+			strip_bottom <= plate_top - PLAYGROUND_HUD.PARTY_ACTIVE_GAP + 0.001,
+			"party strip bottom (%.1f) must stay a gap clear of the vitals plate top (%.1f) at canvas height %.0f" % [
+				strip_bottom, plate_top, canvas_h,
+			]
+		)
+		assert_true(
+			strip_pos.y >= PLAYGROUND_HUD.TOP_SAFE_INSET - 0.001,
+			"party strip top (%.1f) must stay below TOP_SAFE_INSET at canvas height %.0f" % [
+				strip_pos.y, canvas_h,
 			]
 		)
 
@@ -194,7 +246,7 @@ func test_party_strip_no_longer_overlaps_the_creature_panel() -> void:
 func test_party_strip_never_overlaps_player_vitals() -> void:
 	for canvas_h in [1080.0, 1200.0]:
 		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(
-			canvas_h, PARTY_STRIP.TOTAL_HEIGHT, PLAYGROUND_HUD.CREATURE_BLOCK_MIN_WIDTH
+			canvas_h, PARTY_STRIP.TOTAL_HEIGHT
 		)
 		var strip_rect := Rect2(strip_pos, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT))
 		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)

@@ -109,6 +109,7 @@ func _run() -> void:
 	_check_left_stack_clears_bottom_dock()
 	_check_creature_panel_children_stay_inside_it()
 	_check_party_strip_never_overlaps_creature_panel_or_vitals()
+	await _check_creature_panel_stands_down_while_the_roster_is_up()
 	_check_objective_text_physical_size()
 	_check_vitals_value_physical_size()
 	await _check_cycle_banner_fits_without_clipping()
@@ -311,12 +312,25 @@ func _assert_descendants_inside(node: Node, bounds: Rect2) -> void:
 		_assert_descendants_inside(child, bounds)
 
 
-## HUD-POPUP task 1, proven on the LIVE scene rather than just the pure
-## position math `test_hud_widgets.gd` checks: `Root/PartyStrip`'s real
-## global rect must never intersect the creature panel's or the vitals
-## cluster's. `set_rest_position()` snaps `.position` immediately while the
-## strip is not visible (see that function's own header), so this holds even
-## though nothing in this harness ever triggers a reveal.
+## GF-B-006, on the LIVE scene rather than the pure position math
+## `test_hud_widgets.gd` checks.
+##
+## Two claims, and they are different claims now. `Root/PartyStrip`'s real
+## global rect must still never intersect the VITALS cluster's -- HP and satiety
+## are safety information and are never stood down, so that stays a geometric
+## guarantee. Against the CREATURE PANEL it is no longer geometric: the strip is
+## back in the left column (there is nowhere else on this canvas that is not over
+## the player's forward view -- see `playground_hud.gd::party_strip_position()`)
+## and the two share a rect on purpose, with
+## `_yield_creature_block_to_party_strip()` hiding the panel for as long as the
+## strip is revealed. So the panel claim is checked as MUTUAL EXCLUSION, driven
+## through the real HUD by revealing the strip and pumping frames, which is
+## strictly stronger than disjoint rects: two widgets that are never on screen
+## together cannot composite through each other at all.
+##
+## `set_rest_position()` snaps `.position` immediately while the strip is not
+## visible (see that function's own header), so the vitals half holds without a
+## reveal; the panel half has to force one.
 func _check_party_strip_never_overlaps_creature_panel_or_vitals() -> void:
 	var strip := _hud.get_node_or_null(^"Root/PartyStrip") as Control
 	var creature_block := _hud.get_node_or_null(^"Root/CreatureBlock") as Control
@@ -324,20 +338,39 @@ func _check_party_strip_never_overlaps_creature_panel_or_vitals() -> void:
 	if strip == null or creature_block == null or vitals == null:
 		_fail("HUD did not build PartyStrip/CreatureBlock/VitalsCluster for the overlap check")
 		return
-	var creature_panel: Control = creature_block.get_child(0) as Control if creature_block.get_child_count() > 0 else null
-	if creature_panel == null:
-		_fail("creature block has no panel child for the overlap check")
-		return
 	var strip_rect := strip.get_global_rect()
-	var creature_rect := creature_panel.get_global_rect()
 	var vitals_rect := vitals.get_global_rect()
-	if strip_rect.intersects(creature_rect):
-		_fail("party strip overlaps the creature panel at %dx%d (strip %s, panel %s)" % [
-			HANDHELD_SIZE.x, HANDHELD_SIZE.y, strip_rect, creature_rect,
-		])
 	if strip_rect.intersects(vitals_rect):
 		_fail("party strip overlaps the player vitals cluster at %dx%d (strip %s, vitals %s)" % [
 			HANDHELD_SIZE.x, HANDHELD_SIZE.y, strip_rect, vitals_rect,
+		])
+
+
+## The mutual-exclusion half of the claim above, driven rather than inspected:
+## reveal the strip, let the HUD's own `_process` run, and the creature panel
+## must be gone. Separate from the rect check because it needs frames.
+func _check_creature_panel_stands_down_while_the_roster_is_up() -> void:
+	var strip := _hud.get_node_or_null(^"Root/PartyStrip") as Control
+	var creature_block := _hud.get_node_or_null(^"Root/CreatureBlock") as Control
+	if strip == null or creature_block == null:
+		_fail("HUD did not build PartyStrip/CreatureBlock for the stand-down check")
+		return
+	# Forced visible rather than assumed: this harness boots the HUD with no
+	# creature called out, so the block may already be down for its own reasons
+	# and the check would pass vacuously. `_yield_left_stack_to_combat_hud()`
+	# writes `visible = not combat` unconditionally every frame BEFORE the
+	# stand-down runs, so out of combat the only thing that can put it back to
+	# false below is the stand-down itself.
+	creature_block.visible = true
+	strip.call("show_strip")
+	for i in 3:
+		await process_frame
+	if not strip.visible:
+		_fail("show_strip() did not reveal the party strip; the stand-down check cannot mean anything")
+		return
+	if creature_block.visible:
+		_fail("the creature panel is still drawn while the roster reveal is up at %dx%d -- the two share a rect and would composite (strip %s, block %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, strip.get_global_rect(), creature_block.get_global_rect(),
 		])
 
 
