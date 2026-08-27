@@ -72,7 +72,91 @@ func _run() -> void:
 
 	print("\nCHECKSUM %d   -- must not change across a performance-only edit" % _fingerprint(by_layer, drained))
 
-	quit(0)
+	quit(0 if _skipping_reads_the_same_layers(by_layer, drained, suppressed) else 1)
+
+
+## GF-B-001. `load_all` can be told which layers not to build, and walks past
+## them with `_skip_placements` -- a seek whose arithmetic has to match
+## `_write_placement`'s record layout exactly. If it does not, the file
+## position after a skipped layer is wrong and every layer AFTER it in that
+## region reads garbage, or reads nothing, or reads someone else's placements.
+##
+## Nothing about that failure is loud. The layers being skipped are the ones
+## the grass field replaces, so a desynchronised read shows up as trees and
+## bushes in the wrong places, or missing, on a build where the scatter counts
+## still look plausible.
+##
+## So this loads the bake BOTH ways in the same process and requires the
+## surviving layers to be element-for-element identical: same count, same
+## order, same model, position, yaw, scale and normal. The skipped layers must
+## be absent, and the count reported back through `skipped_out` must equal what
+## the unskipped load actually held.
+func _skipping_reads_the_same_layers(
+	full: Dictionary, full_drained: Dictionary, suppressed: Dictionary
+) -> bool:
+	var drained: Dictionary = {}
+	var skipped: Dictionary = {}
+	var started := Time.get_ticks_usec()
+	var partial: Dictionary = BAKE.load_all(WORLD, drained, suppressed, skipped)
+	print("\nload_all with %d layers skipped: %.0f ms" % [
+		suppressed.size(), float(Time.get_ticks_usec() - started) / 1000.0])
+
+	var ok := true
+	for layer_name: String in suppressed.keys():
+		if partial.has(layer_name) or drained.has(layer_name):
+			print("   FAIL: %s was skipped and came back anyway" % layer_name)
+			ok = false
+		var want: int = (full[layer_name] as Array).size() if full.has(layer_name) else 0
+		var got := int(skipped.get(layer_name, 0))
+		if got != want:
+			print("   FAIL: %s reported %d skipped, the full load held %d" % [layer_name, got, want])
+			ok = false
+
+	for source: Array in [[full, partial, "kept"], [full_drained, drained, "drained"]]:
+		var reference: Dictionary = source[0]
+		var candidate: Dictionary = source[1]
+		for layer_name: String in reference.keys():
+			if suppressed.has(layer_name):
+				continue
+			if not candidate.has(layer_name):
+				print("   FAIL: %s (%s) is missing from the skipped load" % [layer_name, source[2]])
+				ok = false
+				continue
+			var a: Array = reference[layer_name]
+			var b: Array = candidate[layer_name]
+			if a.size() != b.size():
+				print("   FAIL: %s (%s) has %d placements, the full load had %d" % [
+					layer_name, source[2], b.size(), a.size()])
+				ok = false
+				continue
+			var differing := 0
+			for i in a.size():
+				if not _same_placement(a[i], b[i]):
+					differing += 1
+			if differing > 0:
+				print("   FAIL: %s (%s): %d of %d placements differ" % [
+					layer_name, source[2], differing, a.size()])
+				ok = false
+
+	print("\n=== skipping four layers against reading all of them ===")
+	if ok:
+		var checked := 0
+		for layer_name: String in partial.keys():
+			checked += (partial[layer_name] as Array).size()
+		for layer_name: String in drained.keys():
+			checked += (drained[layer_name] as Array).size()
+		print("   IDENTICAL: %d placements, same order, across %d layers" % [checked, partial.size()])
+	return ok
+
+
+func _same_placement(a: Dictionary, b: Dictionary) -> bool:
+	if str(a["model"]) != str(b["model"]):
+		return false
+	if a["position"] != b["position"] or a["yaw"] != b["yaw"] or a["scale"] != b["scale"]:
+		return false
+	if a.has("normal") != b.has("normal"):
+		return false
+	return not a.has("normal") or a["normal"] == b["normal"]
 
 
 ## Every placement the load produced, in the order it produced them, as one
