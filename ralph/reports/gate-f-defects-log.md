@@ -697,3 +697,54 @@ Not done here, for two reasons, both of which belong to someone else's decision:
 `ralph/GATE_D_LANE_CONTRACT.md` §3, and `props.gd` does not read the retint map
 at all today — routing it through is a real change to how props are coloured,
 not a defect fix. Recommended, costed, and left.
+
+---
+
+## `GF-B-007` — the Old Quarry does not read as a quarry — **BLOCKED. Not started, nothing generated.**
+
+Checked before starting, as instructed. It is blocked twice over, on two
+different owners, and neither block is this lane's to lift.
+
+### 1. The geography is terrain, and terrain is coordinator-owned
+
+`old_quarry.json`'s own header says it: *"Deliberately NOT everything about the
+place: the ground it stands on is `terrain_playground.json`…"*. What the quarry
+script builds is **two ruin foundations and two pylons** — that is the entire
+contents of `old_quarry.json`. The pit, the cut face and the benches — the
+features whose absence the item is actually about (*"No pit, no rock face, no
+worked stone, no excavation"*) — are terrain.
+
+And the terrain does address it, at a scale that explains the frame.
+`terrain_playground.json`'s `flats[8]` is the quarry's working floor: **radius
+8.0 m**, centred (400, 1800), with a deliberately steep skirt whose own comment
+reads *"that ramp IS the cut face, and above 42 degrees the bake's own band rule
+paints it as rock."* An 8-metre floor with a skirt is a bench, not a quarry, and
+it is why the arrival view reads as meadow with a signpost in it.
+
+So the fix is a `terrain_playground.json` edit — a file `ralph/GATE_D_LANE_CONTRACT.md`
+§3 puts with the coordinator and which no lane may edit — and it carries a
+scatter re-bake behind it.
+
+### 2. The dressing is on the blocked-on-art list
+
+`HIST-008` is explicitly *"(blocked-on-art list)"* and names mill machinery and a
+well shaft among its seven items. `HIST-163` records why the mill has no wheel:
+**the Medieval Village MegaKit has no mill machinery**, which is why the old
+`TowerWindmill` was removed *and not replaced*. `HIST-165` cross-references the
+well to the same list.
+
+A quarry crane, a hoist, cut blocks with tool marks, a spoil heap that reads as
+worked rather than scattered — all the same class, and `CLAUDE.md` is
+unambiguous: a new mesh needs owner-supplied reference art, and Meshy generations
+are reserved for Team Tether hero objects (pylons, relay apparatus, the tether
+machine). A quarry crane is none of those.
+
+### What is left that a lane could do, for the record
+
+Arranging existing `stylized_nature` rocks into spoil heaps and a worked face
+would help the read and needs no new art. It would also be dressing a bench that
+is eight metres across, so it cannot carry the item on its own, and doing it
+first would make the terrain change harder to judge. Sequenced after the terrain,
+not before it.
+
+**Stopped here rather than generating anything.**
