@@ -284,3 +284,100 @@ Whoever takes `HIST-085` should not start by profiling `height_at`.
 The terrain load is Terrain3D reading its region files, and it is the most
 volatile number on this box: 3,422 / 3,309 / 20,996 ms for the defects lane,
 39,987 / 8,578 ms here. It is disk, and this container's disk is shared.
+
+## The river's bake spent 82% of itself on ground the shader cannot read
+
+The river's rect is 2,091 × 186.5 m and its channel is at most 38 m across. The
+surface is a ribbon reaching the measured waterline plus half a metre, and a
+fragment shader runs only on fragments of the mesh it is assigned to — this
+material is `material_override` on one node, `RiverSurface` — so a texel that
+surface does not lie over is never read, whatever is in it.
+
+`_build_river` already has `samples[]`, `left[]` and `right[]` in hand before it
+calls `_build_material`, so the footprint is derivable exactly. The quad between
+stations `i` and `i+1` lies entirely within `R` of the segment joining them,
+where `R` is the largest of the four measured half-widths plus that half metre:
+each of its four corners is within `R` of one endpoint, the set of points within
+`R` of a segment is convex, and a quad is the convex hull of its corners. Marked
+as the axis-aligned box around that segment rather than the stadium — a
+conservative superset — and grown by two texels per axis for bilinear filtering.
+
+Unsampled texels are filled with the **ceiling**, not the floor, deliberately. If
+a mask were ever wrong, an unsampled texel decodes as ground a metre above the
+highest ground in the rect, so the shader reads negative depth and feathers the
+surface away. The failure mode is missing water, which is visible immediately,
+rather than water lying over a phantom chasm — the failure `_build_material`'s
+own comment records costing two blind rounds and a CPU replication of the shader
+to find.
+
+### How it is verified
+
+Not against the reasoning that produced it. A mask a few texels too small
+produces a band of wrong depth along one bank, and no headless test would see
+it: the geometry counts do not change, and neither does anything else a test
+currently asserts.
+
+`tools/_probe_river_bake_mask.gd` stands the real composer up, takes the
+`RiverSurface` mesh **that was actually built**, rasterises its 780 triangles
+into texel space as bounding boxes (a superset of true coverage, so the test is
+stricter than the mesh), dilates by one texel for bilinear filtering, and
+compares the shipped texture against a full unmasked bake over every texel in
+that set. The mask code has no say in which texels get checked.
+
+    mesh: 2340 vertices, 780 triangles
+    the built mesh, dilated by one texel, covers 36301 of 262144 texels (13.8%)
+    IDENTICAL: 0 of 36301 differ from a full unmasked bake
+    214740 filled with the ceiling and never sampled -- 81.9% of the bake saved
+
+**`water: river height BAKE` fell from 2,174 ms to 498 ms** — 0.229×, which
+tracks the 18.1% of texels still sampled. Building the mask costs 19 ms.
+
+## Where the lane finished
+
+| ms | phase | before |
+|---:|---|---:|
+| 1,793 | water: pond height BAKE (512×512) | — |
+| 498 | water: river height BAKE (512×512) | — |
+| 435 | water: river waterline search (520 stations) | — |
+| 418 | water: jetty | 294 |
+| 331 | water: pond wet-lattice scan (48,620 points) | — |
+| 202 | water: river height RANGE scan (step 4) | — |
+| 106 | water: pond height RANGE scan (step 4) | — |
+| 116 | everything else in water, mask build included | — |
+| **3,899** | **water total** | **19,230** |
+
+**Water is 3,899 ms against 19,230 — 0.203×, a 4.9× cut**, and 9.3% of a 41,919
+ms instrumented stand-up rather than half of it. Press → settled on this run was
+45,347 ms; the defects lane measured 40,954 ms, on a box where the phases this
+lane never touched were meanwhile measuring 19,744 ms against 10,120 (vegetation
+scatter) and 7,927 against 3,422 (terrain load). The stall total is not this
+lane's to claim either way — the water rows are.
+
+### The one remaining water item worth anything
+
+**The pond's bake, 1,793 ms — 46% of what water still spends.** Its mesh is
+2,538 quads, 10,152 m² of a 191,753 m² rect: 5.3%, so it wastes even more of
+itself than the river's did. Two things make it harder than the river:
+`_build_pond` runs *after* `_build_material`, so the wet lattice that says which
+cells carry water would have to be computed first and the two reordered; and the
+stream ribbon shares this material, so its course has to be in the mask too.
+Both are tractable. `_probe_river_bake_mask.gd` is the shape the verification
+takes — read the built mesh, not the mask.
+
+Everything else in water is under half a second.
+
+### A trap this container sets, now guarded
+
+`tools/_probe_new_game_stall.gd` leaves a `user://saves/slot_0.json` behind,
+because it really does press New Game and the world really does save. **The next
+run of it, and the next run of `tests/smoke_title_new_game.gd`, then fail** —
+the title takes its overwrite path instead of changing scene, the world never
+arrives, and the probe reports 3,000 quiet frames as though the stall had
+vanished. It reads exactly like a code regression. An hour went into proving it
+was not one (the same failure reproduces with `water.gd` stashed back to
+`origin/main`).
+
+The probe now refuses to run when `user://saves` is non-empty and says why. It
+does not delete anything: a probe that silently removes a save is a worse
+failure than one that refuses to start. Clear the directory by hand — it is
+container-local state, not repository content.

@@ -366,7 +366,7 @@ func _terrain_config() -> Dictionary:
 ## rect would read every one of its texels as clamped ceiling and render deep
 ## navy water over a phantom chasm — the exact failure this function's
 ## `height_min`/`height_max` comment already records once.
-func _build_material(region: Rect2, tag: String = "pond") -> ShaderMaterial:
+func _build_material(region: Rect2, tag: String = "pond", mask := PackedByteArray()) -> ShaderMaterial:
 	var surface: Dictionary = _water_cfg.get("surface", {})
 
 	var material := ShaderMaterial.new()
@@ -395,7 +395,7 @@ func _build_material(region: Rect2, tag: String = "pond") -> ShaderMaterial:
 	# GF-B-001 wants the 512x512 bake separated from the step-4 scan above it.
 	# Both walk the same rect and one of them is 4,096 times the samples of the
 	# other, so a single mark covering the pair says nothing useful.
-	var height_texture := _bake_height_texture(region, height_min, height_max)
+	var height_texture := _bake_height_texture(region, height_min, height_max, mask)
 	BOOT_LOG.phase("water: %s height BAKE (512x512)" % tag)
 	material.set_shader_parameter("terrain_height", height_texture)
 	material.set_shader_parameter("height_min", height_min)
@@ -437,16 +437,97 @@ func _build_material(region: Rect2, tag: String = "pond") -> ShaderMaterial:
 ## a hard white staircase. Float costs 1MB once and removes the artefact at
 ## its source. (This build targets desktop GL, where linear filtering of
 ## float textures is universal.)
-func _bake_height_texture(region: Rect2, height_min: float, height_max: float) -> ImageTexture:
+func _bake_height_texture(
+	region: Rect2, height_min: float, height_max: float, mask := PackedByteArray()
+) -> ImageTexture:
 	var image := Image.create_empty(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE, false, Image.FORMAT_RF)
 	var span := maxf(height_max - height_min, 0.001)
+	var masked := mask.size() == HEIGHT_MAP_SIZE * HEIGHT_MAP_SIZE
+	# GF-B-001. Texels the shader can never read are filled with the ceiling
+	# rather than sampled. See `_river_surface_mask` for why that is sound and
+	# for the one place it is used; with no mask this is the bake it always
+	# was, texel for texel.
+	#
+	# The ceiling and not the floor, deliberately. If a mask were ever wrong,
+	# an unsampled texel decodes as ground at `height_max` -- a metre above the
+	# highest ground in the rect -- so the shader reads negative depth and
+	# feathers the surface away. The failure mode is missing water, which is
+	# visible immediately, rather than water lying over a phantom chasm, which
+	# is the failure `_build_material`'s own comment records taking two blind
+	# rounds and a CPU replication of the shader to find.
 	for py in HEIGHT_MAP_SIZE:
 		var wz := region.position.y + (float(py) + 0.5) / HEIGHT_MAP_SIZE * region.size.y
+		var row := py * HEIGHT_MAP_SIZE
 		for px in HEIGHT_MAP_SIZE:
+			if masked and mask[row + px] == 0:
+				image.set_pixel(px, py, Color(1.0, 0.0, 0.0))
+				continue
 			var wx := region.position.x + (float(px) + 0.5) / HEIGHT_MAP_SIZE * region.size.x
 			var h := float(_field.call("height_at", wx, wz))
 			image.set_pixel(px, py, Color(clampf((h - height_min) / span, 0.0, 1.0), 0.0, 0.0))
 	return ImageTexture.create_from_image(image)
+
+
+## GF-B-001. Which texels of the river's height texture the river's own surface
+## can actually sample.
+##
+## The river's rect is 2,091 x 186.5 m and its channel is at most 38 m across,
+## so three quarters of that texture covers ground that has no water on it. A
+## fragment shader runs only on fragments of the mesh it is assigned to, and
+## this material is `material_override` on one node -- `RiverSurface` -- so a
+## texel the surface does not lie over is never read, whatever is in it.
+##
+## The surface is a ribbon: for each pair of consecutive stations that both
+## carry water it emits one quad, offset perpendicular to the course by the
+## measured waterline plus half a metre on each side. So the quad between
+## stations `i` and `i+1` lies entirely within `R` of the SEGMENT joining them,
+## where `R` is the largest of the four measured half-widths plus that half
+## metre: each of its four corners is within `R` of one of the two endpoints,
+## the set of points within `R` of a segment is convex, and a quad is the
+## convex hull of its corners.
+##
+## Marked as the axis-aligned box around that segment rather than the stadium
+## itself -- a conservative superset costs a few extra texels and cannot be
+## wrong in the direction that matters -- and grown by two texels on each axis
+## so bilinear filtering at the mesh's own edge still reads only sampled
+## neighbours.
+##
+## `tools/_probe_river_bake_mask.gd` is what proves this rather than the
+## argument above: it stands the real composer up, reads the vertices out of
+## the `RiverSurface` mesh that was actually built, and checks the shipped
+## texture against a full unmasked bake over every texel that mesh touches.
+func _river_surface_mask(
+	region: Rect2, samples: Array[Vector2], left: Array[float], right: Array[float]
+) -> PackedByteArray:
+	var mask := PackedByteArray()
+	mask.resize(HEIGHT_MAP_SIZE * HEIGHT_MAP_SIZE)
+	if region.size.x <= 0.0 or region.size.y <= 0.0:
+		return PackedByteArray()
+	var texel_x := region.size.x / HEIGHT_MAP_SIZE
+	var texel_y := region.size.y / HEIGHT_MAP_SIZE
+	var pad_x := texel_x * 2.0
+	var pad_y := texel_y * 2.0
+	for i in samples.size() - 1:
+		# The same test the mesh loop applies before emitting a quad, so the
+		# mask covers exactly the stations that produce surface.
+		if left[i] < 0.0 or left[i + 1] < 0.0:
+			continue
+		var a := samples[i]
+		var b := samples[i + 1]
+		var reach := maxf(maxf(left[i], right[i]), maxf(left[i + 1], right[i + 1])) + 0.5
+		var lo_x := minf(a.x, b.x) - reach - pad_x
+		var hi_x := maxf(a.x, b.x) + reach + pad_x
+		var lo_y := minf(a.y, b.y) - reach - pad_y
+		var hi_y := maxf(a.y, b.y) + reach + pad_y
+		var px0 := clampi(int(floor((lo_x - region.position.x) / texel_x)), 0, HEIGHT_MAP_SIZE - 1)
+		var px1 := clampi(int(ceil((hi_x - region.position.x) / texel_x)), 0, HEIGHT_MAP_SIZE - 1)
+		var py0 := clampi(int(floor((lo_y - region.position.y) / texel_y)), 0, HEIGHT_MAP_SIZE - 1)
+		var py1 := clampi(int(ceil((hi_y - region.position.y) / texel_y)), 0, HEIGHT_MAP_SIZE - 1)
+		for py in range(py0, py1 + 1):
+			var row := py * HEIGHT_MAP_SIZE
+			for px in range(px0, px1 + 1):
+				mask[row + px] = 1
+	return mask
 
 
 ## Procedural scrolling-wave normal map. FastNoiseLite via NoiseTexture2D,
@@ -657,7 +738,13 @@ func _build_river() -> void:
 	BOOT_LOG.phase("water: river waterline search (%d stations)" % samples.size())
 
 	var region := _river_region(samples, reaches)
-	var material: ShaderMaterial = _build_material(region, "river").duplicate()
+	var mask := _river_surface_mask(region, samples, left, right)
+	var sampled := 0
+	for flag: int in mask:
+		sampled += flag
+	BOOT_LOG.phase("water: river surface mask (%d of %d texels, %.1f%%)" % [
+		sampled, mask.size(), 100.0 * float(sampled) / maxf(1.0, float(mask.size()))])
+	var material: ShaderMaterial = _build_material(region, "river", mask).duplicate()
 	# The river runs deep (6-9m through the middle reaches) and its bed is
 	# raw cut earth rather than the pond's shallow silt, so it takes the
 	# stream's more opaque shallow alpha: without it the whole channel reads
