@@ -94,3 +94,89 @@ Two further findings from reading the config rather than the prose:
 Neither is this lane's to fix — both are water QUALITY defects, not stall
 defects, and the second in particular wants the stream given its own region the
 way `SE21` gave the river one. Recorded here so they are not lost.
+
+## PERF3 — `height_at()` is 5x faster, and the ground did not move
+
+The stall is `height_at()` call volume, so the first thing to try is not
+calling it less — it is making the call cost less, which pays out across every
+phase of the boot rather than only in water.
+
+**Measured with `tools/_probe_heightfield_cost.gd`, three repetitions of each
+grid in one process:**
+
+| grid | before | after | speedup |
+|---|---:|---:|---:|
+| pond bake region | 33.42 µs/call | **6.60 µs/call** | **5.06×** |
+| river bake region | 40.40 µs/call | **8.27 µs/call** | **4.89×** |
+| open meadow (control) | 32.49 µs/call | **6.51 µs/call** | **4.99×** |
+
+Repetition spread after the change is 4.9% on the worst grid, so the gap is
+about thirty times the noise. This is not a "the box was quiet this time"
+result.
+
+**And the ground is bit-identical.** All three checksums are unchanged across
+786,432 sampled heights:
+
+    pond bake region       CHECKSUM 1894580249   (unchanged)
+    river bake region      CHECKSUM  761512845   (unchanged)
+    open meadow (control)  CHECKSUM 2171315405   (unchanged)
+
+`smoke_pond_water` reports the same geometry it reported before the change,
+every count: 2,538 pond quads, 46 stream points, 152 reeds, 32 marginals, 72
+bank flowers, 40 rocks, 5 driftwood, 49 lilypads, 18 jetty pieces, 390 river
+quads, 159 river bank reeds, 57 river bank scrub. Run against `origin/main`'s
+heightfield and against this one, in this container, back to back.
+
+### What it was spending it on
+
+Three things, all of them the same mistake at different scales, and all of them
+a continuation of what `PERF1` and `PERF2` already record in this file: those
+cached the parses that BUILD something and left the scalar re-reads around them
+alone.
+
+1. **Four noise fields sampled and thrown away, on almost every call.**
+   `_rise_relief` sampled the domain warp (two 2-octave FBMs), the ridged rib
+   field and the crumble field (a 4-octave ridged fractal, twice) at the TOP of
+   the function, above the loop that decides whether any rise is even in range.
+   Twelve octave evaluations, against the seven that `height_at`'s own hills and
+   detail layers cost — so the rise relief was more expensive than the terrain.
+   Six rises with radii in the tens of metres sit on a 2,048 × 8,192 m corridor,
+   so the overwhelming majority of queries gated out on the first
+   `distance >= radius` having paid all twelve. Deferred to the first peak that
+   actually passes its rim gate; all four are pure functions of x and z, so
+   sampling them later is the same number, which is what the checksums say.
+
+2. **No bounding-box reject on any authored feature except the stream.**
+   Seven spoke carves, six crossing carves, the outlet's sill and eighteen river
+   course segments, each read out of a `Dictionary` — seven to twelve keys — on
+   every query, to establish a contribution that is exactly zero for all but one
+   or two of them. `_prepared_carve_depth` returns `depth * across * along` and
+   both factors saturate to zero outside the profile, so one `Rect2` test per
+   feature is the same answer. `_stream_carve` has always done this on the
+   stream's course; nothing else on the map did.
+
+   The river segments are the biggest single item, and they are why the
+   `water: river` phase costs 3,621 ms more than `water: shader material +
+   height bake` when both do exactly one 512×512 bake: the river's existing
+   whole-course `Rect2` rejects most of the map, and rejects **nothing at all**
+   for the river's own bake, where every sample is inside those bounds by
+   construction. That is the 8 µs gap between the river grid and the control
+   grid in the table above, and it is now 1.8 µs.
+
+3. **`_apply_flats` walked eleven building pads reading five `Dictionary` keys
+   out of each**, on a hot path with no early reject, for pads that occupy a few
+   hundred metres of an 8,192 m corridor. Five parallel `PackedFloat64Array`s
+   instead. The centres stay as pairs of GDScript doubles rather than a
+   `PackedVector2Array` — 32-bit components would round the centre before the
+   subtraction instead of after it, which is the last-bits shift the loop's own
+   comment has always warned about.
+
+Also removed: `_apply_spawn_pad` re-derived `_raw_height` at the pad centre —
+the whole hills/detail/valley/rise stack — on every query that landed inside the
+spawn pad. It is a constant. That is precisely the defect `PERF2` found one
+function further down in `_apply_flats`, still live in its neighbour.
+
+`tests/test_heightfield_cost.gd` (PERF2's own cost-ratio guard),
+`test_playground_heightfield.gd`, `test_river_crossings_stay_open.gd`,
+`test_terrain_adaptation.gd`, `test_water_hazard.gd` and the rest of the
+heightfield/terrain/water/river selection: 44 tests, 1,453 assertions, 0 failed.

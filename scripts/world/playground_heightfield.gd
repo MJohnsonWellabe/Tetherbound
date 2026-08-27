@@ -70,7 +70,23 @@ var _river_ready := false
 ## The rest is ordinary re-parsing: rebuilding the stream's 25 Vector2s, each
 ## spoke's rotated carve axis, and the outlet's two profiles per call.
 var _flats_ready := false
-var _flats: Array = []
+## PERF3: five parallel arrays rather than eleven Dictionaries. `_apply_flats`
+## is on `height_at`'s hot path with no early reject of its own -- it walks
+## every authored pad on every query and reads five keys out of each before it
+## can even measure the distance that rules ten of them out. The pads are the
+## village and they occupy a few hundred metres of an 8,192 m corridor, so
+## almost every one of those reads answers "not this one".
+##
+## The centres stay as pairs of GDScript floats, NOT as a `PackedVector2Array`:
+## `PackedVector2Array` holds 32-bit components, so packing them would round
+## the centre before the subtraction instead of after it and shift the finished
+## height by ~1e-6 m. The loop below has always been careful about this and the
+## reason is in its own comment.
+var _flat_cx := PackedFloat64Array()
+var _flat_cz := PackedFloat64Array()
+var _flat_radius := PackedFloat64Array()
+var _flat_skirt := PackedFloat64Array()
+var _flat_target := PackedFloat64Array()
 
 var _stream_ready := false
 var _stream_points := PackedVector2Array()
@@ -108,8 +124,93 @@ var _road_bands: Array = []
 
 var _outlet_ready := false
 var _outlet_sill: Dictionary = {}
+var _outlet_sill_bounds := Rect2()
 var _outlet_channel: Dictionary = {}
 var _outlet_full := 0.001
+
+## PERF3. The last layer of the same lesson `PERF1` and `PERF2` record above,
+## and the reason `GF-B-001`'s New Game stall is what it is.
+##
+## Those two cached the parses that BUILD something: the flats, the stream's
+## points, each carve's rotated axis, the road polylines. What they left
+## behind is the plain SCALAR re-reads that surround those structures --
+## `_config.get("rises", {})`, `float(peak.get("height", 40.0))`,
+## `float(water.get("shore_step", 0.0))` -- and there are on the order of a
+## hundred of them on one `height_at()` call, spread over eleven shaping
+## passes. At the volume this function is called at, a Dictionary lookup that
+## returns the same number every time is not a rounding error in the cost, it
+## IS the cost: two 512x512 water bakes are 524,288 calls between them before
+## the scatter or the settlement have asked a single question.
+##
+## Every value here is a pure function of `_config`, which is assigned once in
+## `_init` and never written again, so caching the parse cannot move the
+## ground. `tools/_probe_heightfield_cost.gd` checksums all 262,144 heights of
+## three fixed grids for exactly this reason -- the numbers below are only
+## allowed to make `height_at` faster, never different.
+##
+## The bounds arrays are the other half, and they are a bigger saving than the
+## scalars. A carve or a river segment that is nowhere near the sampled point
+## contributes EXACTLY zero -- `_prepared_carve_depth` returns `depth * across
+## * along` and both factors saturate to zero outside the profile -- but it
+## costs seven Dictionary reads and two dot products to find that out. One
+## `Rect2` test per feature answers it instead, which is the trick
+## `_stream_carve` has always used on the stream's own course and nothing else
+## on this map had. The rects are grown by a metre so a float's worth of
+## rounding can never reject a point with a real contribution.
+var _shape_ready := false
+
+var _hills_amplitude := 15.0
+var _detail_amplitude := 2.2
+
+var _has_valley := false
+var _valley_cx := 0.0
+var _valley_cz := 0.0
+var _valley_radius := 0.0
+var _valley_depth_m := 0.0
+
+## The rises, with the `radius <= 0.0` entries already dropped, in the authored
+## order -- `_rise_cone` sums over them, so the order is part of the answer.
+var _peak_cx := PackedFloat64Array()
+var _peak_cz := PackedFloat64Array()
+var _peak_radius := PackedFloat64Array()
+var _peak_height := PackedFloat64Array()
+var _rise_sharpness := 2.1
+
+var _relief_off := true
+var _form_amplitude := 0.0
+var _form_terrace_step := 0.0
+var _form_terrace_strength := 0.0
+var _form_rim_in := 0.03
+var _form_rim_out := 0.18
+var _form_bias := 0.25
+var _form_riser := 0.38
+var _form_dip_x := 0.0
+var _form_dip_z := 0.0
+var _form_bed_wobble := 0.0
+var _form_bed_fracture := 0.0
+var _form_bed_thickness := 0.0
+var _form_rubble := 0.0
+var _form_warp_amplitude := 14.0
+
+var _has_spawn_pad := false
+var _spawn_cx := 0.0
+var _spawn_cz := 0.0
+var _spawn_radius := 0.0
+var _spawn_flatten := 0.85
+## The pad's own target height: `_raw_height` at the pad centre, which is a
+## constant and was being recomputed -- hills, detail, valley and the whole
+## ridged/terraced rise stack -- for every query that landed inside the pad.
+## The same defect `PERF2` found in `_apply_flats`, one function further down.
+var _spawn_centre_height := 0.0
+
+var _shore_step_m := 0.0
+var _shore_level := 0.0
+var _has_shore_step := false
+
+var _river_end_fade := 0.001
+var _river_segment_bounds: Array[Rect2] = []
+var _spoke_carve_bounds: Array[Rect2] = []
+var _crossing_carve_bounds: Array[Rect2] = []
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -273,6 +374,97 @@ func _init(config: Dictionary = {}) -> void:
 	_fracture.frequency = float(form.get("bed_fracture_frequency", 0.085))
 	_fracture.fractal_octaves = 3
 
+	# Last, because `_spawn_centre_height` evaluates `_raw_height`, which reads
+	# every field this function has just finished setting.
+	_build_shape_cache()
+
+
+## PERF3. Every scalar `height_at`'s eleven shaping passes used to re-read out
+## of `_config` on every call, resolved once. See the field block above.
+func _build_shape_cache() -> void:
+	_shape_ready = true
+
+	var hills: Dictionary = _config.get("hills", {})
+	var detail: Dictionary = _config.get("detail", {})
+	_hills_amplitude = float(hills.get("amplitude", 15.0))
+	_detail_amplitude = float(detail.get("amplitude", 2.2))
+
+	var valley: Dictionary = _config.get("valley", {})
+	if not valley.is_empty():
+		var valley_centre: Array = valley.get("centre", [0.0, 0.0])
+		_valley_cx = float(valley_centre[0])
+		_valley_cz = float(valley_centre[1])
+		_valley_radius = float(valley.get("radius", 150.0))
+		_valley_depth_m = float(valley.get("depth", 22.0))
+		_has_valley = _valley_radius > 0.0
+
+	var rises: Dictionary = _config.get("rises", {})
+	_rise_sharpness = float(rises.get("sharpness", 2.1))
+	for entry: Variant in rises.get("peaks", []):
+		var peak: Dictionary = entry
+		var radius := float(peak.get("radius", 60.0))
+		if radius <= 0.0:
+			continue
+		var peak_centre: Array = peak.get("centre", [0.0, 0.0])
+		_peak_cx.append(float(peak_centre[0]))
+		_peak_cz.append(float(peak_centre[1]))
+		_peak_radius.append(radius)
+		_peak_height.append(float(peak.get("height", 40.0)))
+
+	var form: Dictionary = _config.get("rock_form", {})
+	_form_amplitude = float(form.get("amplitude", 0.0))
+	_form_terrace_step = float(form.get("terrace_height", 0.0))
+	_form_terrace_strength = float(form.get("terrace_strength", 0.0))
+	_relief_off = _form_amplitude <= 0.0 and (_form_terrace_step <= 0.0 or _form_terrace_strength <= 0.0)
+	_form_rim_in = float(form.get("rim_in", 0.03))
+	_form_rim_out = float(form.get("rim_out", 0.18))
+	_form_bias = float(form.get("bias", 0.25))
+	_form_riser = clampf(float(form.get("terrace_riser", 0.38)), 0.02, 1.0)
+	var bed_dip: Array = form.get("bed_dip", [0.0, 0.0])
+	_form_dip_x = float(bed_dip[0]) if bed_dip.size() > 0 else 0.0
+	_form_dip_z = float(bed_dip[1]) if bed_dip.size() > 1 else 0.0
+	_form_bed_wobble = float(form.get("bed_wobble", 0.0))
+	_form_bed_fracture = float(form.get("bed_fracture", 0.0))
+	_form_bed_thickness = float(form.get("bed_thickness_jitter", 0.0))
+	_form_rubble = float(form.get("rubble_amplitude", 0.0))
+	_form_warp_amplitude = float(form.get("warp_amplitude", 14.0))
+
+	var water: Dictionary = _config.get("water", {})
+	_shore_step_m = float(water.get("shore_step", 0.0))
+	_has_shore_step = _shore_step_m > 0.0 and water.has("level")
+	if _has_shore_step:
+		_shore_level = float(water.get("level"))
+
+	_river_end_fade = maxf(float(_config.get("river", {}).get("end_fade", 14.0)), 0.001)
+
+	var pad: Dictionary = _config.get("spawn_pad", {})
+	if not pad.is_empty():
+		var pad_centre: Array = pad.get("centre", [0.0, 0.0])
+		_spawn_cx = float(pad_centre[0])
+		_spawn_cz = float(pad_centre[1])
+		_spawn_radius = float(pad.get("radius", 34.0))
+		_spawn_flatten = float(pad.get("flatten", 0.85))
+		_has_spawn_pad = _spawn_radius > 0.0
+		if _has_spawn_pad:
+			_spawn_centre_height = _raw_height(_spawn_cx, _spawn_cz)
+
+
+## The axis-aligned box outside which a prepared carve contributes exactly
+## zero: its rotated profile's half-extents, projected onto the world axes,
+## plus a metre of slack. `L` and `W` are the distances at which `along` and
+## `across` saturate -- past either, `_prepared_carve_depth`'s product has a
+## zero factor in it, whatever the other factor is.
+func _carve_bounds(prepared: Dictionary) -> Rect2:
+	if prepared.is_empty():
+		return Rect2()
+	var centre: Vector2 = prepared["centre"]
+	var axis: Vector2 = prepared["axis"]
+	var along: float = float(prepared["half_length"]) + float(prepared["fade"])
+	var across: float = float(prepared["half_width"]) + float(prepared["rim"])
+	var hx := absf(axis.x) * along + absf(axis.y) * across
+	var hy := absf(axis.y) * along + absf(axis.x) * across
+	return Rect2(centre - Vector2(hx, hy), Vector2(hx, hy) * 2.0).grow(1.0)
+
 
 static func load_config() -> Dictionary:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
@@ -293,11 +485,8 @@ func world_bounds() -> Dictionary:
 
 ## Ground height in metres at a world XZ position.
 func height_at(x: float, z: float) -> float:
-	var hills: Dictionary = _config.get("hills", {})
-	var detail: Dictionary = _config.get("detail", {})
-
-	var height := _hills.get_noise_2d(x, z) * float(hills.get("amplitude", 15.0))
-	height += _detail.get_noise_2d(x, z) * float(detail.get("amplitude", 2.2))
+	var height := _hills.get_noise_2d(x, z) * _hills_amplitude
+	height += _detail.get_noise_2d(x, z) * _detail_amplitude
 
 	height -= _valley_depth(x, z)
 	height += _rise_height(x, z)
@@ -343,12 +532,20 @@ func _spoke_carve(x: float, z: float) -> float:
 			var prepared := _prepare_carve(carve)
 			if not prepared.is_empty():
 				_spoke_carves.append(prepared)
+				_spoke_carve_bounds.append(_carve_bounds(prepared))
 	if _spoke_carves.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
 	var deepest := 0.0
-	for prepared: Dictionary in _spoke_carves:
-		deepest = maxf(deepest, _prepared_carve_depth(spot, prepared))
+	# PERF3. Seven built spokes, and on this map no two of them are anywhere
+	# near each other -- their carves sit at z 413-498, z 7523-7548 and z
+	# 1049-1119 on a corridor 8,192 m deep. A query pays one `Rect2` test each
+	# to establish that instead of seven Dictionary reads and two dot
+	# products, and outside the box the answer was always exactly 0.0.
+	for i in _spoke_carves.size():
+		if not _spoke_carve_bounds[i].has_point(spot):
+			continue
+		deepest = maxf(deepest, _prepared_carve_depth(spot, _spoke_carves[i]))
 	return deepest
 
 
@@ -375,12 +572,15 @@ func _crossing_carve(x: float, z: float) -> float:
 			var prepared := _prepare_carve(carve)
 			if not prepared.is_empty():
 				_crossing_carves.append(prepared)
+				_crossing_carve_bounds.append(_carve_bounds(prepared))
 	if _crossing_carves.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
 	var deepest := 0.0
-	for prepared: Dictionary in _crossing_carves:
-		deepest = maxf(deepest, _prepared_carve_depth(spot, prepared))
+	for i in _crossing_carves.size():
+		if not _crossing_carve_bounds[i].has_point(spot):
+			continue
+		deepest = maxf(deepest, _prepared_carve_depth(spot, _crossing_carves[i]))
 	return deepest
 
 
@@ -415,8 +615,21 @@ func _river_carve(x: float, z: float) -> float:
 	if not _river_bounds.has_point(spot):
 		return 0.0
 	var deepest := 0.0
-	var end_fade := maxf(float(_config.get("river", {}).get("end_fade", 14.0)), 0.001)
-	for segment: Dictionary in _river_segments:
+	var end_fade := _river_end_fade
+	# PERF3, and the single largest saving in this file. The river's own
+	# `Rect2` above rejects most of the map in one test, but it rejects
+	# nothing at all for the river's OWN bake: every one of those 262,144
+	# samples is inside the river's bounds by construction, so every one of
+	# them used to walk all eighteen course segments and read twelve
+	# Dictionary keys out of each -- and the course is 2,091 m long, so a
+	# sample is within reach of one or two of those segments and provably
+	# contributes zero for the other sixteen. `_probe_heightfield_cost.gd`
+	# measured the river grid at 40.40 us/call against an open-meadow control
+	# grid of the same size at 32.49; this is what that 8 us was.
+	for si in _river_segments.size():
+		if not _river_segment_bounds[si].has_point(spot):
+			continue
+		var segment: Dictionary = _river_segments[si]
 		var pa: Vector2 = segment["a"]
 		var ab: Vector2 = segment["ab"]
 		var length: float = segment["length"]
@@ -475,6 +688,13 @@ func _build_river_cache() -> void:
 			"rim_a": float(a.get("rim", 5.0)), "rim_b": float(b.get("rim", 5.0)),
 			"station": station, "total": total,
 		})
+		# Outside this box the nearest point of the segment is further than
+		# `reach`, which is exactly the test three lines into `_river_carve`'s
+		# loop -- so rejecting here is the same answer, reached without
+		# reading the segment at all.
+		_river_segment_bounds.append(
+			Rect2(Vector2(minf(pa.x, pb.x), minf(pa.y, pb.y)),
+				Vector2(absf(pb.x - pa.x), absf(pb.y - pa.y))).grow(reach + 1.0))
 		station += length
 		for p: Vector2 in [pa, pb]:
 			lo = Vector2(minf(lo.x, p.x - reach), minf(lo.y, p.y - reach))
@@ -562,11 +782,17 @@ func _outlet_shape(x: float, z: float) -> float:
 		var outlet: Dictionary = _config.get("water", {}).get("outlet", {})
 		var sill_cfg: Dictionary = outlet.get("sill", {})
 		_outlet_sill = _prepare_carve(sill_cfg)
+		_outlet_sill_bounds = _carve_bounds(_outlet_sill)
 		_outlet_channel = _prepare_carve(outlet.get("channel", {}))
 		_outlet_full = maxf(float(sill_cfg.get("depth", 0.0)), 0.001)
 	if _outlet_sill.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
+	# The sill is one 65 x 72 m bar at the pond's neck. Outside it `raise_by`
+	# is zero and the function already returns early, so the Rect2 just gets
+	# there without reading seven Dictionary keys first.
+	if not _outlet_sill_bounds.has_point(spot):
+		return 0.0
 	var raise_by := _prepared_carve_depth(spot, _outlet_sill)
 	if raise_by <= 0.0:
 		# Outside the bar there is nothing to cut through, and cutting anyway
@@ -627,19 +853,14 @@ func _prepared_carve_depth(spot: Vector2, carve: Dictionary) -> float:
 
 
 func _valley_depth(x: float, z: float) -> float:
-	var valley: Dictionary = _config.get("valley", {})
-	if valley.is_empty():
+	if not _has_valley:
 		return 0.0
-	var centre: Array = valley.get("centre", [0.0, 0.0])
-	var radius := float(valley.get("radius", 150.0))
-	if radius <= 0.0:
-		return 0.0
-	var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
-	if distance >= radius:
+	var distance := Vector2(x - _valley_cx, z - _valley_cz).length()
+	if distance >= _valley_radius:
 		return 0.0
 	# smoothstep rather than a linear cone, so the basin has no crease at its rim.
-	var falloff := 1.0 - smoothstep(0.0, 1.0, distance / radius)
-	return falloff * float(valley.get("depth", 22.0))
+	var falloff := 1.0 - smoothstep(0.0, 1.0, distance / _valley_radius)
+	return falloff * _valley_depth_m
 
 
 func _rise_height(x: float, z: float) -> float:
@@ -651,22 +872,16 @@ func _rise_height(x: float, z: float) -> float:
 ## is unchanged from the original M1 recipe — everything OF11 added lives in
 ## `_rise_relief`, which is exactly zero at each rise's rim.
 func _rise_cone(x: float, z: float) -> float:
-	var rises: Dictionary = _config.get("rises", {})
-	var sharpness := float(rises.get("sharpness", 2.1))
 	var total := 0.0
-	for entry: Variant in rises.get("peaks", []):
-		var peak: Dictionary = entry
-		var radius := float(peak.get("radius", 60.0))
-		if radius <= 0.0:
-			continue
-		var centre: Array = peak.get("centre", [0.0, 0.0])
-		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+	for i in _peak_radius.size():
+		var radius: float = _peak_radius[i]
+		var distance := Vector2(x - _peak_cx[i], z - _peak_cz[i]).length()
 		if distance >= radius:
 			continue
 		var t := 1.0 - (distance / radius)
 		# pow above 1 steepens the flanks while keeping the summit rounded,
 		# which is what makes these testable slopes rather than smooth domes.
-		total += pow(smoothstep(0.0, 1.0, t), 1.0 / sharpness) * float(peak.get("height", 40.0))
+		total += pow(smoothstep(0.0, 1.0, t), 1.0 / _rise_sharpness) * _peak_height[i]
 	return total
 
 
@@ -710,57 +925,70 @@ func _rise_cone(x: float, z: float) -> float:
 ## old summit gate is part of why the rise read as a grass dome with a grey
 ## bruise on its side.
 func _rise_relief(x: float, z: float) -> float:
-	var form: Dictionary = _config.get("rock_form", {})
-	var amplitude := float(form.get("amplitude", 0.0))
-	var terrace_step := float(form.get("terrace_height", 0.0))
-	var terrace_strength := float(form.get("terrace_strength", 0.0))
-	if amplitude <= 0.0 and (terrace_step <= 0.0 or terrace_strength <= 0.0):
+	if _relief_off:
 		return 0.0
 
-	var rises: Dictionary = _config.get("rises", {})
-	var sharpness := float(rises.get("sharpness", 2.1))
-	var rim_in := float(form.get("rim_in", 0.03))
-	var rim_out := float(form.get("rim_out", 0.18))
-	var bias := float(form.get("bias", 0.25))
-	var riser := clampf(float(form.get("terrace_riser", 0.38)), 0.02, 1.0)
-	var bed_dip: Array = form.get("bed_dip", [0.0, 0.0])
-	var dip_x := float(bed_dip[0]) if bed_dip.size() > 0 else 0.0
-	var dip_z := float(bed_dip[1]) if bed_dip.size() > 1 else 0.0
-	var bed_wobble := float(form.get("bed_wobble", 0.0))
-	var bed_fracture := float(form.get("bed_fracture", 0.0))
-	var bed_thickness := float(form.get("bed_thickness_jitter", 0.0))
-	var rubble := float(form.get("rubble_amplitude", 0.0))
+	var amplitude := _form_amplitude
+	var terrace_step := _form_terrace_step
+	var terrace_strength := _form_terrace_strength
+	var bias := _form_bias
+	var riser := _form_riser
+	var dip_x := _form_dip_x
+	var dip_z := _form_dip_z
+	var bed_wobble := _form_bed_wobble
+	var bed_fracture := _form_bed_fracture
+	var bed_thickness := _form_bed_thickness
+	var rubble := _form_rubble
 
-	var warp_amp := float(form.get("warp_amplitude", 14.0))
-	var warped_x := x + _warp_x.get_noise_2d(x, z) * warp_amp
-	var warped_z := z + _warp_z.get_noise_2d(x, z) * warp_amp
-	var ridge := _ridge.get_noise_2d(warped_x, warped_z) - bias
-	# Round 3: close-range crumble. A critic standing at the foot of the rise
-	# reported "zero surface micro-detail — no grain, no crumble... a smooth
-	# surface with a repeating displacement." The rib field alone has one
-	# scale, and everything between its ribs is the bare cone. Sampling the
-	# SAME ridged field at 3.4x the coordinate rate (offset so it does not
-	# correlate with itself) gives metre-scale creases for free, without a
-	# seventh noise object: creases, again, not bumps, so the extra detail
-	# reads as fractured rock rather than as a lumpier dome.
-	var crumble := _ridge.get_noise_2d(x * 3.4 + 917.0, z * 3.4 - 431.0) - bias
+	# PERF3. The warp, the rib field and the crumble used to be sampled HERE,
+	# above the loop, on every call. Between them that is a 4-octave ridged
+	# fractal twice and a 2-octave FBM twice -- twelve octave evaluations,
+	# against the seven that `height_at`'s own hills and detail layers cost --
+	# and on this map they were thrown away almost every time. Six rises with
+	# radii in the tens of metres sit on a 2048 x 8192 m corridor, so the
+	# overwhelming majority of queries reach the loop below, gate out on the
+	# first `distance >= radius`, and return zero having sampled four noise
+	# fields for nothing. The bake alone did that 262,144 times.
+	#
+	# Deferred to the first peak that actually passes its rim gate. All four
+	# are pure functions of x and z, so sampling them later is the same
+	# number; `_probe_heightfield_cost.gd`'s checksums are what say so rather
+	# than this comment.
+	var warped_ready := false
+	var ridge := 0.0
+	var crumble := 0.0
 
 	var total := 0.0
-	for entry: Variant in rises.get("peaks", []):
-		var peak: Dictionary = entry
-		var radius := float(peak.get("radius", 60.0))
-		if radius <= 0.0:
-			continue
-		var centre: Array = peak.get("centre", [0.0, 0.0])
-		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+	for i in _peak_radius.size():
+		var radius: float = _peak_radius[i]
+		var centre_x: float = _peak_cx[i]
+		var centre_z: float = _peak_cz[i]
+		var distance := Vector2(x - centre_x, z - centre_z).length()
 		if distance >= radius:
 			continue
 		var t := 1.0 - (distance / radius)
-		var gate := smoothstep(rim_in, rim_out, t)
+		var gate := smoothstep(_form_rim_in, _form_rim_out, t)
 		if gate <= 0.0:
 			continue
 
-		var cone := pow(smoothstep(0.0, 1.0, t), 1.0 / sharpness) * float(peak.get("height", 40.0))
+		if not warped_ready:
+			warped_ready = true
+			var warp_amp := _form_warp_amplitude
+			var warped_x := x + _warp_x.get_noise_2d(x, z) * warp_amp
+			var warped_z := z + _warp_z.get_noise_2d(x, z) * warp_amp
+			ridge = _ridge.get_noise_2d(warped_x, warped_z) - bias
+			# Round 3: close-range crumble. A critic standing at the foot of
+			# the rise reported "zero surface micro-detail — no grain, no
+			# crumble... a smooth surface with a repeating displacement." The
+			# rib field alone has one scale, and everything between its ribs
+			# is the bare cone. Sampling the SAME ridged field at 3.4x the
+			# coordinate rate (offset so it does not correlate with itself)
+			# gives metre-scale creases for free, without a seventh noise
+			# object: creases, again, not bumps, so the extra detail reads as
+			# fractured rock rather than as a lumpier dome.
+			crumble = _ridge.get_noise_2d(x * 3.4 + 917.0, z * 3.4 - 431.0) - bias
+
+		var cone := pow(smoothstep(0.0, 1.0, t), 1.0 / _rise_sharpness) * _peak_height[i]
 		var carve := (ridge * amplitude + crumble * rubble) * gate
 		var relief := carve
 		if terrace_step > 0.0 and terrace_strength > 0.0:
@@ -787,7 +1015,7 @@ func _rise_relief(x: float, z: float) -> float:
 			#   planes either — thick beds in some places, thin in others,
 			#   which is the difference between sedimentary rock and a stack
 			#   of coins.
-			var dip := (x - float(centre[0])) * dip_x + (z - float(centre[1])) * dip_z
+			var dip := (x - centre_x) * dip_x + (z - centre_z) * dip_z
 			var wobble := _outcrop.get_noise_2d(x, z) * terrace_step * bed_wobble
 			# Round 3, and the fix for the defect two independent blind
 			# critics named in a row: "identical sawtooth grooves at identical
@@ -832,20 +1060,14 @@ func _terrace(height: float, step: float, riser: float) -> float:
 
 
 func _apply_spawn_pad(x: float, z: float, height: float) -> float:
-	var pad: Dictionary = _config.get("spawn_pad", {})
-	if pad.is_empty():
+	if not _has_spawn_pad:
 		return height
-	var centre: Array = pad.get("centre", [0.0, 0.0])
-	var radius := float(pad.get("radius", 34.0))
-	if radius <= 0.0:
-		return height
-	var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
-	if distance >= radius:
+	var distance := Vector2(x - _spawn_cx, z - _spawn_cz).length()
+	if distance >= _spawn_radius:
 		return height
 	# Pull toward the height at the pad's own centre, strongest in the middle.
-	var strength := float(pad.get("flatten", 0.85)) * (1.0 - smoothstep(0.0, 1.0, distance / radius))
-	var centre_height := _raw_height(float(centre[0]), float(centre[1]))
-	return lerpf(height, centre_height, strength)
+	var strength := _spawn_flatten * (1.0 - smoothstep(0.0, 1.0, distance / _spawn_radius))
+	return lerpf(height, _spawn_centre_height, strength)
 
 
 ## Building pads. Unlike the spawn pad's gentle 0.85 pull, these flatten FULLY
@@ -886,10 +1108,9 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 	var total_weight := 0.0
 	var weighted_target := 0.0
 	var max_weight := 0.0
-	for prepared: Dictionary in _flats:
-		var radius: float = prepared["radius"]
-		var skirt: float = prepared["skirt"]
-		var target: float = prepared["target"]
+	for i in _flat_radius.size():
+		var radius: float = _flat_radius[i]
+		var skirt: float = _flat_skirt[i]
 		# The centre is kept as two GDScript floats, NOT as a Vector2: Vector2
 		# is 32-bit, so packing it would round the centre before the subtraction
 		# instead of after it, and shift the finished height by ~1e-6 m. That is
@@ -897,7 +1118,7 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 		# scatter gates placements on thresholds read off this value, so a
 		# last-bits change silently moves instances (the identity requirement
 		# PERF1 records for the same reason).
-		var distance := Vector2(x - float(prepared["cx"]), z - float(prepared["cz"])).length()
+		var distance := Vector2(x - _flat_cx[i], z - _flat_cz[i]).length()
 		if distance <= radius:
 			# Two authored pads never overlap cores today (checked by the
 			# pad-flatness test) but if a future one ever did, the nearer
@@ -905,14 +1126,14 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 			var fraction := distance / maxf(radius, 0.0001)
 			if fraction < core_fraction:
 				core_fraction = fraction
-				core_height = target
+				core_height = _flat_target[i]
 				in_core = true
 			continue
 		if distance >= radius + skirt:
 			continue
 		var weight := 1.0 - smoothstep(radius, radius + skirt, distance)
 		total_weight += weight
-		weighted_target += weight * target
+		weighted_target += weight * _flat_target[i]
 		max_weight = maxf(max_weight, weight)
 
 	if in_core:
@@ -931,7 +1152,6 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 ## would recurse into itself.
 func _build_flat_cache() -> void:
 	_flats_ready = true
-	_flats = []
 	for entry: Variant in _config.get("flats", []):
 		if not entry is Dictionary:
 			continue
@@ -939,13 +1159,11 @@ func _build_flat_cache() -> void:
 		var centre: Array = flat.get("centre", [0.0, 0.0])
 		var cx := float(centre[0])
 		var cz := float(centre[1])
-		_flats.append({
-			"cx": cx,
-			"cz": cz,
-			"radius": float(flat.get("radius", 10.0)),
-			"skirt": float(flat.get("skirt", 8.0)),
-			"target": float(flat.get("height", _raw_height(cx, cz))),
-		})
+		_flat_cx.append(cx)
+		_flat_cz.append(cz)
+		_flat_radius.append(float(flat.get("radius", 10.0)))
+		_flat_skirt.append(float(flat.get("skirt", 8.0)))
+		_flat_target.append(float(flat.get("height", _raw_height(cx, cz))))
 
 
 ## The still-water surface height in metres, or NAN when the config has no
@@ -1040,12 +1258,9 @@ func _build_stream_cache() -> void:
 ## step steepens only the last stretch of bank and deepens the shallows'
 ## colour ramp; ground at or above the waterline is untouched.
 func _shore_step(height: float) -> float:
-	var water: Dictionary = _config.get("water", {})
-	var step := float(water.get("shore_step", 0.0))
-	if step <= 0.0 or not water.has("level"):
+	if not _has_shore_step:
 		return 0.0
-	var level := float(water.get("level"))
-	return step * (1.0 - smoothstep(level - 0.4, level + 0.3, height))
+	return _shore_step_m * (1.0 - smoothstep(_shore_level - 0.4, _shore_level + 0.3, height))
 
 
 ## Public read of the carve for the water composer: the stream's surface
@@ -1411,10 +1626,8 @@ func _append_line(out: Array, points: Array, spec: Dictionary = {}) -> void:
 ## Height before the spawn pad flattening, used as the pad's own target so the
 ## pad does not recurse into itself.
 func _raw_height(x: float, z: float) -> float:
-	var hills: Dictionary = _config.get("hills", {})
-	var detail: Dictionary = _config.get("detail", {})
-	var height := _hills.get_noise_2d(x, z) * float(hills.get("amplitude", 15.0))
-	height += _detail.get_noise_2d(x, z) * float(detail.get("amplitude", 2.2))
+	var height := _hills.get_noise_2d(x, z) * _hills_amplitude
+	height += _detail.get_noise_2d(x, z) * _detail_amplitude
 	height -= _valley_depth(x, z)
 	height += _rise_height(x, z)
 	return height
