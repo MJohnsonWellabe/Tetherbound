@@ -1910,3 +1910,90 @@ made, and **X07 remains the run's only real visual evidence** — which is what
 makes its colour spot-check non-negotiable.
 
 **Next:** S02, already launched.
+
+## Check-in 17 — 2026-08-27 — **S02: 68 PASS / 7 FAIL. The chapter's first fight never stages, and the first catch never happens.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S02/`. 566 route rows, 108
+events, exit save written (`saves/S02-exit.json`). **The segment completed and
+handed off, so this is not a §A BLOCKER** — the chain continues (§13: a failed
+step gets its verdict and its evidence, and the run goes on if it can).
+
+### The single hardest fact, from the telemetry rather than from the verdicts
+
+**S02 contains zero `combat_start`, zero `combat_hit`, zero `combat_end` and zero
+`catch_throw` events.** The complete event-type census for the segment:
+
+```
+catch_result: 1     flag_set: 5     menu_close: 2   menu_open: 2
+note: 73            region_enter: 2 save: 2         screenshot: 16
+tab_change: 5
+```
+
+The one `catch_result` is at `t=254.30` — the **starter grant**, party 0 → 1. It
+is not the wild catch.
+
+### Why six of the seven failures are one line of dominoes, not six defects
+
+`S02-32` "engage the bramblebun" **passes**, and so do `S02-36` (six quick
+attacks) and `S02-37` (the charged attack). They pass because those steps assert
+that **input was injected**, not that anything received it. Against a segment with
+no combat events at all, the reading is that the presses went into an
+unengaged world.
+
+Everything after it is downstream of that:
+
+| step | reported | reads as |
+|---|---|---|
+| `S02-34` | `input_context=world`, wanted `combat` | the fight never took input ownership |
+| `S02-40` | `input_context=world`, wanted `combat_aim` | no aim, because no fight |
+| `S02-45` | party 1, wanted 2 | no catch, because no aim |
+| `S02-46` | still `opening:beat:road` | chain cannot advance past a catch that did not occur |
+| `S02-54` | `road_gate_open` NOT set | S02's span end never reached |
+| `S02-60` | 556 route rows, wanted ≥900 | the segment simply did less |
+
+**The grouping is an observation, not a verdict** (§13). I am recording that these
+six share one point of origin and that the origin is observable in the telemetry;
+which of them is *the* defect, and its severity, is Phase B's call.
+
+The seventh, `S02-11`, is separate and already known: tracked objective
+`opening:beat:road` where §E.5 names `opening_first_catch` — **the same thread as
+`S01-12`**, and the id question, not a gameplay one. (`S02-46` reports an id
+mismatch too, but its expectation is about the chain *advancing* after a catch
+that never happened, so it belongs to the cascade above, not to the id thread.)
+
+**severity_candidate: BLOCKER** — candidate only. This is the chapter's first
+piloted fight and first wild catch, on the production path, in the mandatory
+opening segment. A player following `docs/OPENING_SEQUENCE.md` beats 6–8 does not
+get a fight.
+
+### A step-script note that must NOT be misread as this run's data
+
+`S02-36`'s authored `observation` reads *"MEASURED, not guessed: the bramblebun at
+opponent_hp 124.2 full, 43.1 after these 14 quick attacks … combat_end at
+t=283.6"*. **That is a note written into `S02.json` from an EARLIER run, explaining
+why the step was tuned 14 → 6.** It is not an observation of this run, where no
+`combat_*` event exists at all. A successor skimming the notes file will otherwise
+read it as evidence that combat worked here. It did not.
+
+### What S03 inherits — flagged before it runs, not after
+
+`S02-exit.json` carries **party of 1** (the starter, level 3) and these 7
+progression flags:
+
+```
+opening:beat:wake, opening:beat:house, opening:beat:choose,
+opening:starter_granted, opening:beat:name, tournament_team_fed,
+opening:beat:walk_out
+```
+
+**No `road_gate_open`. No completed `opening:beat:road`.** §B's span for S02 is
+"wake upstairs → starter caught & named → first wild catch → road gate open"; the
+last third did not happen.
+
+S03's entry save is `S02-exit`, so **S03 and everything after it run from a
+degraded entry state.** I am continuing the chain — that is the protocol, and a
+real handoff from a real state is the evidence — but every downstream failure must
+be read against this, and not counted as an independent defect until Phase B has
+separated the two.
+
+**Next:** S03, already launched.
