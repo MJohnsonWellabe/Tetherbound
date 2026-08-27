@@ -2135,3 +2135,56 @@ written to hunt — arriving in the journey lane rather than in X01 where it was
 meant to be cornered deliberately.
 
 **Next:** S05, already launched, entering from `S04-exit`.
+
+## Check-in 20 — 2026-08-27 — **S05: 69 PASS / 7 FAIL — the healthiest segment of the run, and the first real §D evidence**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S05/`. 1,246 route rows,
+700.9 s elapsed, exit save written.
+
+**Traversal works.** `input_context` is `world` for **1,153 / 1,245 rows
+(92.6%)**, `narrative_modal` only 6.6%. No panel captured the segment. The player
+crossed regions for real — `grandpas_village → corridor → the_pond → corridor` —
+and five `region_enter` events fired. After three segments where a surface held
+input, this is the contrast that makes the earlier ones legible: the journey lane
+is not uniformly broken.
+
+### §D finding — one dead-travel interval over threshold
+
+§D: *"any dead-travel interval ≥ 250 m is a finding; 150–250 m is a watch item."*
+
+| | |
+|---|---|
+| length | **329.8 m** |
+| start | t=591.0 s, **(300, 962)**, `corridor`, hour 5.33, clear |
+| end | t=644.5 s, **(68, 1196)**, `corridor`, hour 7.47, clear |
+| duration | 53 s |
+| nearest POI across the interval | **min 30.2 m**, median 62.8 m |
+
+On RT-05, pond → South Bridge. **The detail worth carrying: the nearest POI never
+came within 30.2 m**, and §F sets the POI radius that resets the meter at
+**30 m**. The interval survives by 0.2 m. Recorded as the measurement; whether it
+is intentional breathing room, an exploration opportunity, or dead time is
+**Fable's Phase B call**, not mine.
+
+Counts: **1 finding ≥250 m, 0 watch items** in 150–250 m. The next eight
+intervals are 99.8, 99.2, 58.6, 57.8, 54.9, 53.2, 45.7 m — a long way below
+threshold, so this one is isolated rather than the top of a distribution.
+
+### The 7 failures
+
+| reported | thread |
+|---|---|
+| `input_context=narrative_modal` (wanted `combat`) | the South Bridge fight — same shape as S03/S04 |
+| `flag south_bridge_open NOT set` | downstream of that fight |
+| `15.3 m from (0, 1330), wanted within 8.0` | stopped just short of the bridge anchor |
+| `input_context=menu_backpack` (wanted `menu_save`) | a panel holding where another was wanted |
+| party size 1 (wanted 3) | S02/S03 carryover — the team was never built |
+| `opening:beat:road` (wanted `head_to_south_bridge`) | objective-id thread |
+| 1,238 route rows (wanted ≥3000) | segment ran short |
+
+Zero `combat_*` events again. **severity_candidate: SHIP** for the South Bridge
+fight — candidate only, and deliberately *not* BLOCKER like S02–S04: this segment
+delivered its traversal, its regions and its pacing evidence, and failed at one
+gated fight rather than wholesale.
+
+**Next:** S06, already launched, entering from `S05-exit`.
