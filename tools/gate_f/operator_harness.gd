@@ -188,12 +188,24 @@ var _blocked := ""
 ## the wrong context are forty findings about the harness.
 var _derailed := ""
 var _derailed_at := ""
+## Every derail this segment suffered, resynced ones included.
+##
+## `_derailed` is cleared by a resync, which is correct -- and it means a
+## segment that lost the thread and found it again would close with an empty
+## `derailed` field and look clean. It is not clean: the steps between the
+## derail and the resync did not run, and a reader has to be able to see that
+## without diffing the notes file.
+var _derails: Array = []
 ## Every capture the segment DECLARED, resolved before the first step runs.
 ## `INVENTORY.json` is this list joined to what is on disk at the end.
 var _planned_captures: Array = []
 ## Step bookkeeping, so `INVENTORY.json` can say how much of the segment ran.
 var _step_total := 0
 var _step_ran := 0
+## Steps the context guard refused to run. Distinct from `_step_ran` and from
+## a SKIP: a refusal is one step that could not be performed, a skip is the
+## consequence for the ones after it.
+var _step_refused := 0
 var _verdicts := {"PASS": 0, "FAIL": 0, "SKIP": 0}
 ## What the pre-flight found, verbatim, in `RUN_METADATA.json` and the inventory.
 var _preflight: Dictionary = {}
@@ -209,6 +221,14 @@ var _predicted_cost_s := 0.0
 ## Set by `_write_inventory` when a planned capture is not on disk. Distinct
 ## from a FAIL verdict, which never fails the process.
 var _evidence_missing := false
+## CD-7's second measurement. The pre-flight runs BEFORE step 1, on an empty
+## tree, so the frame cost it measures is an empty tree's -- which under xvfb
+## is nothing like the Meadows'. The prediction is therefore re-taken and
+## re-checked immediately after the first `boot`, where the number is finally
+## about the scene the segment will actually render.
+var _predicted_frames := 0
+var _cost_gated := false
+var _reprice_done := false
 
 # --- live counters -----------------------------------------------------------
 
@@ -481,6 +501,8 @@ func _run_metadata() -> Dictionary:
 		"planned_captures": _planned_captures.size(),
 		"steps_total": _step_total,
 		"steps_ran": _step_ran,
+		"steps_refused": _step_refused,
+		"derails": _derails,
 		"verdicts": _verdicts,
 		# CD-8. The freeze record is supposed to carry graphics settings and did
 		# not, which is how a full Gate F run happened with the procedural grass
@@ -624,6 +646,11 @@ func _play(segment: Dictionary) -> void:
 			continue
 		var step := raw as Dictionary
 		await _do_step(step)
+		if not _blocked.is_empty():
+			# The post-boot cost gate. Everything after this would be spent
+			# proving the prediction right at the price it predicted.
+			_harness_error("segment BLOCKED after step %s: %s" % [str(step.get("id", "?")), _blocked])
+			break
 		if not _harness_errors.is_empty():
 			# A harness error means the run's own machinery is broken (a bad
 			# step script, an unopenable file). Unlike a failed EXPECTATION,
@@ -735,6 +762,8 @@ func _preflight_capture(steps: Array) -> bool:
 	_preflight["predicted_frames"] = frames
 	_preflight["measured_frame_cost_s"] = snappedf(frame_cost, 0.000001)
 	_preflight["predicted_segment_cost_s"] = snappedf(predicted, 0.1)
+	_predicted_frames = frames
+	_cost_gated = plans_shots or plans_record
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
 
 	if not (plans_shots or plans_record):
@@ -990,7 +1019,9 @@ func _write_inventory() -> void:
 			frames_absent_reasons[reason] = int(frames_absent_reasons.get(reason, 0)) + 1
 	var complete := _blocked.is_empty() \
 		and absent == 0 \
-		and _derailed.is_empty() \
+		and _derails.is_empty() \
+		and _step_refused == 0 \
+		and int(_verdicts["SKIP"]) == 0 \
 		and _harness_errors.is_empty() \
 		and _record_absent == 0 \
 		and _step_ran == _step_total
@@ -1007,9 +1038,10 @@ func _write_inventory() -> void:
 			"rows": rows},
 		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
 			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
-		"steps": {"total": _step_total, "ran": _step_ran,
+		"steps": {"total": _step_total, "ran": _step_ran, "refused": _step_refused,
 			"pass": int(_verdicts["PASS"]), "fail": int(_verdicts["FAIL"]),
 			"skipped": int(_verdicts["SKIP"])},
+		"derails": _derails,
 		"harness_errors": _harness_errors,
 	}
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
@@ -1021,15 +1053,22 @@ func _write_inventory() -> void:
 	var lines: Array[String] = ["# %s is INCOMPLETE" % _segment_id, ""]
 	if not _blocked.is_empty():
 		lines.append("- BLOCKED before step 1: %s" % _blocked)
-	if not _derailed.is_empty():
-		lines.append("- DERAILED at step %s: %s" % [_derailed_at, _derailed])
+	for entry: Variant in _derails:
+		var derail: Dictionary = entry
+		lines.append("- DERAILED at step %s (%s): %s" % [str(derail.get("at", "?")),
+			str(derail.get("action", "?")), str(derail.get("why", ""))])
+		lines.append("  - %d step(s) skipped; resynced at %s" % [int(derail.get("skipped", 0)),
+			str(derail.get("resynced_at", "never -- the segment never recovered"))])
+	if _step_refused > 0:
+		lines.append("- %d step(s) were REFUSED by the context guard and did not run." % _step_refused)
 	if absent > 0:
 		lines.append("- %d of %d planned captures are absent from disk." % [absent, _planned_captures.size()])
 	if _record_absent > 0:
 		lines.append("- %d continuous frames were planned and not written: %s"
 			% [_record_absent, JSON.stringify(frames_absent_reasons)])
 	if _step_ran != _step_total:
-		lines.append("- %d of %d steps ran." % [_step_ran, _step_total])
+		lines.append("- %d of %d steps executed (%d refused, %d skipped)." % [
+			_step_ran, _step_total, _step_refused, int(_verdicts["SKIP"])])
 	if not _harness_errors.is_empty():
 		lines.append("- harness errors: %s" % JSON.stringify(_harness_errors))
 	lines.append("")
@@ -1072,7 +1111,9 @@ func _do_step(step: Dictionary) -> void:
 		return
 	if not str(guard.get("fail", "")).is_empty():
 		_verdicts["FAIL"] = int(_verdicts["FAIL"]) + 1
-		_step_ran += 1
+		# NOT `_step_ran`: the step was refused, not executed. Counting a
+		# refusal as a run is how a derailed segment reads as having happened.
+		_step_refused += 1
 		_emit("defect", {"expected": expected, "actual": str(guard["fail"]),
 			"severity_candidate": step.get("severity_candidate", "SHIP"),
 			"observation": "require_context failed at step %s; the segment is off its rails from here" % id})
@@ -1186,6 +1227,8 @@ func _do_step(step: Dictionary) -> void:
 		verdict = "FAIL"
 		_derailed = actual
 		_derailed_at = id
+		_derails.append({"at": id, "action": action, "why": actual,
+			"context": str(_probe.call("input_context")), "resynced_at": null, "skipped": 0})
 	_verdicts[verdict] = int(_verdicts.get(verdict, 0)) + 1
 
 	# Every step gets exactly one event of its own, carrying the protocol's
@@ -1293,9 +1336,14 @@ func _context_guard(step: Dictionary) -> Dictionary:
 				% [id, have] + "(derailed at %s)" % _derailed_at)
 			_emit("note", {"observation": "resync at step %s: input_context=%s (derailed at %s)"
 				% [id, have, _derailed_at]})
+			if not _derails.is_empty():
+				(_derails[-1] as Dictionary)["resynced_at"] = id
 			_derailed = ""
 			_derailed_at = ""
 		else:
+			if not _derails.is_empty():
+				var last: Dictionary = _derails[-1]
+				last["skipped"] = int(last.get("skipped", 0)) + 1
 			return {"skip": "SKIPPED: the segment derailed at step %s (%s) and this step declares no "
 				% [_derailed_at, _derailed]
 				+ "resync point. input_context is '%s' now." % have}
@@ -1304,6 +1352,8 @@ func _context_guard(step: Dictionary) -> Dictionary:
 		return {}
 	_derailed = "required context %s, input_context was '%s'" % [JSON.stringify(required), have]
 	_derailed_at = id
+	_derails.append({"at": id, "action": action, "why": _derailed, "context": have,
+		"resynced_at": null, "skipped": 0})
 	var state: Dictionary = _probe.call("input_state")
 	return {"fail": ("BLOCKER step %s (%s) requires context %s and input is owned by '%s' "
 		+ "(owner=%s, focus=%s, tree_paused=%s). The step did NOT run: acting here would have "
@@ -1375,7 +1425,60 @@ func _step_boot(args: Dictionary) -> String:
 	# rows are distinguishable without reading the segment script back.
 	_emit("region_enter", {"duration_ms": ms,
 		"observation": "boot:%s settled over %d physics frames" % [which, settle]})
-	return "booted %s in %.0f ms (%d settle frames)" % [which, ms, settle]
+	var repriced := await _reprice_after_boot(ms)
+	return "booted %s in %.0f ms (%d settle frames)%s" % [which, ms, settle, repriced]
+
+
+## CD-7, second half: re-price the segment now that a scene is standing.
+##
+## The pre-flight's frame cost is measured before step 1, on an EMPTY tree.
+## Under xvfb that is nothing like the Meadows -- 762k props through a software
+## rasteriser -- so a prediction built on it would clear a ceiling the real
+## segment cannot. The first honest measurement is only available once a scene
+## is up, which is here. Also the only place the boot's own cost becomes
+## known: the world stand-up is whole seconds in a single frame and no
+## per-frame model can predict it.
+##
+## Returns a string for the boot step's own result line, so the two numbers are
+## visible in `notes/` beside each other rather than only in the metadata.
+func _reprice_after_boot(boot_ms: float) -> String:
+	if _reprice_done or not _cost_gated:
+		return ""
+	_reprice_done = true
+	var before := _frame_cost_s
+	var now := await _measure_frame_cost()
+	# The boot is a one-off cost, not a per-frame one, and it is REAL: 67 s of
+	# world construction that no frame count anticipated.
+	var predicted := (boot_ms / 1000.0) + (float(_predicted_frames) * now)
+	_frame_cost_s = now
+	_predicted_cost_s = predicted
+	_preflight["measured_frame_cost_s_in_scene"] = snappedf(now, 0.000001)
+	_preflight["predicted_segment_cost_s_in_scene"] = snappedf(predicted, 0.1)
+	_preflight["boot_cost_s"] = snappedf(boot_ms / 1000.0, 0.01)
+	var ceiling := float(_cfg["segment_cost_ceiling_s"])
+	var line := ("; re-priced in scene: %.4f s/frame (was %.4f on the empty tree), "
+		+ "%d frames + %.0f s boot = %.0f s predicted") % [now, before, _predicted_frames,
+			boot_ms / 1000.0, predicted]
+	if predicted <= ceiling:
+		_emit("note", {"observation": "cost re-priced after boot:%s (ceiling %.0f s)" % [line, ceiling]})
+		return line
+	# Over the ceiling with a scene actually standing. This is the number X07
+	# needed and did not have: it stopped at step 184 of 266, ~15 hours in.
+	var why := ("re-priced after boot, this segment predicts %.0f s (%.1f h), over the %.0f s "
+		+ "ceiling: %d planned frames at a MEASURED %.3f s/frame in THIS scene, plus a %.0f s "
+		+ "boot. The pre-flight's empty-tree measurement said %.4f s/frame and cleared it. A GPU "
+		+ "or a re-cadenced script -- not a shorter wait.") % [predicted, predicted / 3600.0,
+			ceiling, _predicted_frames, now, boot_ms / 1000.0, before]
+	_derailed = why
+	_derailed_at = "boot"
+	_derails.append({"at": "boot", "action": "boot", "why": why,
+		"context": str(_probe.call("input_context")), "resynced_at": null, "skipped": 0})
+	_emit("defect", {"severity_candidate": "BLOCKER", "actual": why,
+		"observation": "CD-7 cost gate tripped after boot"})
+	_write_text(_out_dir.path_join("BLOCKER.md"),
+		"# BLOCKER — %s is too expensive to finish here\n\n%s\n" % [_segment_id, why])
+	_blocked = why
+	return "; " + why
 
 
 func _step_wait(args: Dictionary) -> String:
@@ -1548,11 +1651,22 @@ func _step_move_to_entity(args: Dictionary) -> String:
 
 ## Find one live entity by identity.
 ##
-## In order: exact node name, membership of a group of that name, a `label()`
-## that matches, a `species_id` that matches, then a unique case-insensitive
-## substring of a node name. Ambiguity is a FAIL naming the candidates -- a
-## walk that silently picked the first of four Grazers is a walk whose evidence
-## nobody can check.
+## Six forms, tried in order:
+##
+##   `poi:<kind>`   -- `poi:gather`, `poi:wild`, `poi:rest`, `poi:trainer`,
+##                     `poi:landmark`, `poi:tm`, `poi:key`. Classified by
+##                     `gate_f_probe.gd::_poi_kind`, the same script-path table
+##                     the dead-travel meter uses. This is the form a journey
+##                     step usually wants: a harvest node has no name worth
+##                     writing down, and there are hundreds of them.
+##   `<name>.gd`    -- anything running that script.
+##   exact node name, group membership, a matching `label()`, a matching
+##   `species_id`, then a unique case-insensitive substring of a node name.
+##
+## Several matches picks the nearest to the player and SAYS so, with the count
+## and the candidates -- a walk that silently picked the first of four Grazers
+## is a walk whose evidence nobody can check. `nearest: false` makes ambiguity
+## a FAIL instead.
 func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	var scene := _probe.call("world") as Node
 	if scene == null:
@@ -1564,8 +1678,26 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	var by_label: Array[Node3D] = []
 	var by_species: Array[Node3D] = []
 	var by_substring: Array[Node3D] = []
+	var by_kind: Array[Node3D] = []
+	var by_script: Array[Node3D] = []
 	var lowered := spec.to_lower()
+	# `poi:<kind>` and `<script>.gd` exist because the things a journey step
+	# most often means -- a harvest node, a wild creature, a camp -- have no
+	# name worth writing down. `gate_f_probe.gd` already classifies them by
+	# script path for the dead-travel meter, and `_poi_kind` is asked here
+	# rather than reimplemented: a second copy of that table is a second answer
+	# to "is this a point of interest".
+	var want_kind := spec.substr(4).to_lower() if lowered.begins_with("poi:") else ""
 	for node in all:
+		if not want_kind.is_empty():
+			if str(_probe.call("_poi_kind", node)).to_lower() == want_kind:
+				by_kind.append(node)
+			continue
+		if lowered.ends_with(".gd"):
+			var script: Script = node.get_script()
+			if script != null and str(script.resource_path).to_lower().ends_with(lowered):
+				by_script.append(node)
+			continue
 		if str(node.name) == spec:
 			by_name.append(node)
 		if node.is_in_group(StringName(spec)):
@@ -1577,8 +1709,9 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 			by_species.append(node)
 		if str(node.name).to_lower().contains(lowered):
 			by_substring.append(node)
-	for pair: Array in [[by_name, "node name"], [by_group, "group"], [by_label, "label()"],
-			[by_species, "species_id"], [by_substring, "name substring"]]:
+	for pair: Array in [[by_kind, "poi kind"], [by_script, "script path"], [by_name, "node name"],
+			[by_group, "group"], [by_label, "label()"], [by_species, "species_id"],
+			[by_substring, "name substring"]]:
 		var hits: Array[Node3D] = pair[0]
 		if hits.is_empty():
 			continue
@@ -1601,8 +1734,11 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 					best = node
 		return {"ok": true, "node": best,
 			"how": "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]}
-	return {"ok": false, "why": "no node named, grouped, labelled or speciesed '%s' among the %d Node3Ds in %s"
-		% [spec, all.size(), scene.name]}
+	var how := "of point-of-interest kind" if not want_kind.is_empty() \
+		else ("running the script" if lowered.ends_with(".gd") \
+		else "named, grouped, labelled or speciesed")
+	return {"ok": false, "why": "no node %s '%s' among the %d Node3Ds in %s"
+		% [how, spec, all.size(), scene.name]}
 
 
 func _collect_node3ds(node: Node, out: Array[Node3D]) -> void:

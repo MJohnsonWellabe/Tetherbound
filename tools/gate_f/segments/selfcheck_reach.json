@@ -1,0 +1,182 @@
+{
+  "id": "selfcheck_reach",
+  "title": "Harness self-check (CD-5): walking to a THING, and pressing interact only when there is one",
+  "lane": "diag",
+  "record_hz": 0,
+  "_comment": "NOT a protocol segment. This is the regression coverage defect CD-5 asks for by name -- \"walk to Grandpa, to a harvest node and to a wild creature, asserting the prompt each time\" -- exercising `move_to_entity`, `interact_with` and `advance_dialogue_until_closed` against the real Meadows. A unit test that mocked an entity would pass on a harness that walks nowhere.",
+  "_comment_where_the_world_boots": "Booting meadows_playground.tscn puts the player IN GRANDPA'S BED, INSIDE THE HOUSE. This segment's own first two runs found that: `BedPrompt` offers \"Get up\" at t=63 s, and after getting up, 6000 navigator-driven walking frames toward a villager 44 m away left the player oscillating inside a four-metre box around (-22.6, -15) with heading swinging 73 -> -21 -> 69 -> 89 degrees and ZERO frames held -- locomotion was never disabled, the walk simply could not find the door. `stick_navigator.gd` is the repo's one walker that detours around geometry and its own header says every straight-line walk in this project failed on the same village wall; leaving a building is past what it does. That is a finding about the walker, recorded in ralph/reports/gate-f-rig-log.md, and it is not what this segment is for.",
+  "_comment_why_diag": "So the segment teleports out of the house, and says so. Same precedent and same reasoning as `selfcheck_walk`: an instrument check must not become a test of the opening sequence or of a building's navmesh. The teleport is marked `diag: true`, is recorded as a teleport, and resets the distance accumulators so nothing about the jump reaches a pacing figure. Everything this segment actually measures -- entity resolution, 3D arrival, the prompt assertion, the dialogue predicate -- happens on foot after it.",
+  "_comment_why_tam": "Tam, not Mira. `village_npcs.json` moved Mira INDOORS in OF31 (she stands behind her counter inside cottage_a at [18.99, -1.01]), which would make this segment fail on the same doorway again. Tam is outdoors at [8, -16], \"south of the well, by the yard fence toward Grandpa's\" -- open ground, a short walk from the drop point, and he opens a real conversation.",
+  "steps": [
+    {
+      "id": "SC-R-01",
+      "title": "boot the real Meadows",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "expected": "the real world scene stands up with the village cast placed"
+    },
+    {
+      "id": "SC-R-02",
+      "title": "input is in the world before anything is pressed",
+      "action": "assert_context",
+      "args": {
+        "is": "world"
+      },
+      "expected": "input_context is 'world'. This is the seam: every step below presses or walks, and if a modal owns input none of them mean what they say."
+    },
+    {
+      "id": "SC-R-03",
+      "title": "an entity that is not in the world is a FAIL, not an arrival",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "NoSuchVillagerExistsHere",
+        "budget_frames": 60
+      },
+      "expected": "FAIL naming the search. A coordinate walk cannot tell 'I arrived and nothing was here' from 'I arrived'; this step exists to prove the entity walk can.",
+      "observation": "EXPECTED FAIL: negative control for _find_entity. A PASS means the resolver matched something it should not have."
+    },
+    {
+      "id": "SC-R-04",
+      "title": "a prompt belonging to something else must not be pressed",
+      "action": "interact_with",
+      "args": {
+        "entity": "Tam"
+      },
+      "expected": "FAIL. The only live prompt at the spawn belongs to `BedPrompt`, not to Tam, so `interact_with` must refuse rather than activate the wrong provider. That refusal is CD-5's S02-15 in miniature: the bed is the exact object the operator watched a segment press `interact` at 31 times through a floor.",
+      "observation": "EXPECTED FAIL: negative control for the provider check. A PASS means interact_with pressed a prompt belonging to something other than the entity it was given."
+    },
+    {
+      "id": "SC-R-05",
+      "title": "get out of bed, the way a player does",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Get up"
+      },
+      "require_context": "world",
+      "expected": "the bed's own prompt is live and belongs to the bed, so the press happens and something changes. Named with `expect_prompt` and no `entity`: this step is about the prompt that IS live, which is the other half of what interact_with is for."
+    },
+    {
+      "id": "SC-R-06",
+      "title": "DIAG: out of the house, onto open ground by the well",
+      "action": "teleport",
+      "diag": true,
+      "args": {
+        "at": [
+          4.0,
+          -14.0
+        ]
+      },
+      "expected": "the player stands on open ground a short walk from Tam. See this file's `_comment_why_diag`: leaving the house on foot is past what stick_navigator.gd does, and proving that is not this segment's job."
+    },
+    {
+      "id": "SC-R-07",
+      "title": "the teleport landed on the ground",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          4.0,
+          -14.0
+        ],
+        "within": 3.0
+      },
+      "expected": "the player is where the jump said, standing on the terrain rather than falling through it"
+    },
+    {
+      "id": "SC-R-08",
+      "title": "walk to Tam, tracking his live position",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "Tam",
+        "within": 2.0,
+        "budget_frames": 3600
+      },
+      "require_context": "world",
+      "expected": "the walk resolves Tam by node name, re-reads his position every frame, and ends within 2 m of him IN 3D -- not within 2 m of where he stood when this file was written, and not 3 m above him"
+    },
+    {
+      "id": "SC-R-09",
+      "title": "still in the world after the walk",
+      "action": "assert_context",
+      "args": {
+        "is": "world"
+      },
+      "resync": true,
+      "expected": "nothing took input during the walk. If a conversation opened on the way, this says so HERE rather than letting the next step press into it."
+    },
+    {
+      "id": "SC-R-10",
+      "title": "the prompt is live, and it is Tam's",
+      "action": "interact_with",
+      "args": {
+        "entity": "Tam",
+        "expect_prompt": "Tam"
+      },
+      "require_context": "world",
+      "expected": "interaction_arbiter.gd offers 'Greet Tam', the winning provider is part of Tam, and the press changes something. A press that changed nothing is a FAIL: that is the 31-interacts-through-a-floor case."
+    },
+    {
+      "id": "SC-R-11",
+      "title": "greeting Tam opened his conversation",
+      "action": "assert_context",
+      "args": {
+        "is": "narrative_modal"
+      },
+      "expected": "input_context is 'narrative_modal': the press reached dialogue_panel.gd rather than doing nothing"
+    },
+    {
+      "id": "SC-R-12",
+      "title": "advance the conversation by predicate until it closes",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 80
+      },
+      "require_context": "narrative_modal",
+      "expected": "the panel's own line is read, pressed past, and the loop stops the moment is_open() goes false -- never a guessed press count, and never a press after close, which would re-open the conversation through the interaction arbiter (CD-3)"
+    },
+    {
+      "id": "SC-R-13",
+      "title": "input came back",
+      "action": "assert_context",
+      "args": {
+        "is": "world"
+      },
+      "resync": true,
+      "expected": "CD-3's own regression, verbatim: after any dialogue step, input_context must not be 'narrative_modal'"
+    },
+    {
+      "id": "SC-R-14",
+      "title": "walk to a harvest node, resolved by point-of-interest kind",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:gather",
+        "within": 1.5,
+        "budget_frames": 3600
+      },
+      "require_context": "world",
+      "expected": "the second of CD-5's three named targets. Harvest nodes are scattered in their hundreds and none has a name worth writing down, so this resolves by the same script-path table gate_f_probe.gd::_poi_kind uses for the dead-travel meter. The nearest is picked and the result says how many matched. `within` is 1.5 m and not 2.5: harvest_node.gd configures its Interactable at a 2.4 m radius, from a prompt node sitting 0.6 m above the node's origin, so a walk that stopped at 2.5 m in 3D was outside the game's own reach. The first run of this segment asked for 2.5 and SC-R-15 correctly refused to press -- which is interact_with earning its keep on the segment author rather than on the game."
+    },
+    {
+      "id": "SC-R-15",
+      "title": "the harvest prompt is live",
+      "action": "interact_with",
+      "require_context": "world",
+      "expected": "a live prompt from the node the walk arrived at, and a press that changes the satchel or the world",
+      "observation": "the satchel delta is the `gather` event this proves; see events.jsonl. It is also the live proof that gate_f_probe.gd::inventory_snapshot reads the right key -- before this lane it read `count` where inventory.gd writes `n`, so every quantity was zero and the gather detector compared two identical dictionaries forever.",
+      "args": {
+        "entity": "poi:gather"
+      }
+    },
+    {
+      "id": "SC-R-16",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "SC-R-03 and SC-R-04 are EXPECTED FAILs and are the negative controls for _find_entity and for interact_with's provider check. Every other FAIL here is a real one. INVENTORY.json's `derails` array records any derail even after a resync, so a segment that lost the thread and found it again cannot close looking clean."
+      },
+      "expected": "a note event closes the segment"
+    }
+  ]
+}

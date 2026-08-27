@@ -75,6 +75,34 @@ Envelope facts every segment inherits:
    `DIAG-`, which exist for audits that are not player-experience claims
    (§0.1). No pacing, navigation, difficulty, or economy claim may ever be
    sourced from a `DIAG-` segment.
+7. **A segment that cannot produce its evidence must refuse to start.**
+   Added 2026-08-27 from CD-1. The 2026-08-27 run against `f082bdf6` was
+   launched without the fact-2 invocation above; every capture step silently
+   no-opped, 9,231 planned frames were written as `file: null`, and every one
+   of those steps reported **PASS**. The harness now runs a capture pre-flight
+   before step 1 of any segment declaring a capture or a continuous record —
+   display server, `capture_diag_minimal.gd` PNG, and its own framebuffer
+   readback — and BLOCKs on any of the three. `tools/gate_f/run_segment.sh`
+   refuses the same combination before Godot starts.
+8. **`wait` is priced in RENDERED frames in capture mode.** Added 2026-08-27
+   from CD-7. `_step_wait` converts seconds to physics frames, and under xvfb
+   every physics frame is a rendered 1920×1080 frame; at llvmpipe's measured
+   ~10.5 s/frame one `{"seconds": 90}` step costs ~15.75 hours. X07 stopped at
+   step 184 of 266 with two of them still ahead. **A protocol written in
+   seconds must be costed in frames before it is launched, or run on hardware
+   with a GPU.** The pre-flight measures the frame cost on the box, prices the
+   step-script, records both in `RUN_METADATA.json`, and refuses a segment
+   over the configured ceiling. The fix for a refused segment is a GPU or a
+   re-cadenced script — **not** a shorter wait; the waits exist so fights
+   resolve.
+9. **A candidate is a build *and* its configuration.** Added 2026-08-27 from
+   CD-8. `data/config/grass_field.json` has `"enabled": false` on the
+   2026-08-26 candidate, so the procedural ground cover is absent from every
+   frame of that run — and no artefact anywhere says so. A reviewer judging
+   ground cover from those frames was judging the baked scatter while
+   believing they were judging the shipped ground system. **A flag that
+   decides which subsystem renders the world is part of the freeze, and a
+   reviewer must never have to infer it from source.**
 
 ### 0.1 Two lanes of segments
 
@@ -108,7 +136,22 @@ Before S01, the coordinator (not the operator) must:
    sha256), `renderer` (opengl3/compatibility under xvfb, software), `resolution`,
    `input_mode` ("synthetic joypad + keyboard via parse_input_event"),
    `save_state` ("fresh user:// dir"), `date`, `operator` ("sonnet-agent"),
-   `free_build` (false), `instrumentation_overhead_note` (§I.7 measurement).
+   `free_build` (false), `instrumentation_overhead_note` (§I.7 measurement),
+   and **`config_flags`** — the state of every gameplay- or render-affecting
+   flag under `data/config/`, read from the files MECHANICALLY rather than
+   hand-listed (CD-8; §1.2 calls these graphics settings, and a boolean that
+   decides which of two ground systems dresses the whole world is one). Any
+   flag that is OFF is called out in its own field so a reviewer sees it
+   without diffing. The harness writes both into every segment's own
+   `RUN_METADATA.json` as well, because a run cannot amend a freeze record it
+   did not write.
+
+   **A metadata field asserting a capability is not evidence that the
+   capability existed** (CD-8b). This record claimed `"display_server": "X11
+   under xvfb-run"` while all 9,231 frame-manifest rows in the same run said
+   "headless: this process has no display server", and nothing reconciled them
+   for the length of the run. The capture pre-flight now reads this record's
+   claim, writes back what it observed, and BLOCKs on a contradiction.
 3. Snapshot unresolved historical items for §16 reconciliation (coordinator
    bookkeeping; the operator never reads it).
 4. Verify the capture smoke writes a PNG (`tools/capture_diag_minimal.gd`)
@@ -259,6 +302,19 @@ occurrence) and may not delete or re-stage planned ones. A planned shot
 that cannot be taken is recorded in the manifest with `file: null` and a
 reason — an absent frame is evidence too.
 
+**Amended 2026-08-27 (CD-1).** "Evidence too" was never a licence to call a
+missing picture a pass, and it was read as one: the harness returned "capture
+… skipped", which does not begin with FAIL, so the step recorded PASS — 9,231
+times, across a whole run. So:
+
+> **A planned capture that cannot be taken is a FAIL. A segment that cannot
+> take any of its planned captures is a BLOCKER at step 1.** `file: null` is
+> evidence of absence only when the absence is **unavoidable and singular**;
+> 9,231 of them is a run that did not happen.
+
+The `file: null` row is still written — the rule above is about the VERDICT,
+not about deleting the row.
+
 ### C.5 Instrumentation honesty
 
 Telemetry reads **live game state** (real quest log, real party, real
@@ -266,6 +322,24 @@ vitals, real input owner), never a parallel reimplementation. If the
 2 Hz trace or capture cadence measurably alters frame times, the harness
 records that in `RUN_METADATA.json` (`instrumentation_overhead_note`)
 rather than hiding it (§3 last clause).
+
+**Added 2026-08-27 (CD-6).** *A schema field that no code writes is an
+instrumentation defect, and Phase B may not treat its absence as evidence.*
+Thirteen of §C.1's twenty-nine event types — `dialogue`, `combat_hit`,
+`combat_switch`, `catch_throw`, `gather`, `craft`, `build_place`,
+`build_cancel`, `build_dismantle`, `rest`, `feed`, `landmark_discover`,
+`defect` — were in the schema and in nothing else, so their absence from the
+2026-08-27 run proved nothing, and the inferences most available from that
+evidence ("no gathering happened", "no orb was thrown") were unsupportable.
+Every type in the §C.1 enum must now be emitted by something or explicitly
+marked `not-instrumented`; `tests/test_gate_f_rig.gd` parses the enum out of
+this document and fails the suite otherwise. Half a schema is worse than a
+small one.
+
+The same clause covers a field that is written but wrong.
+`inventory_snapshot()` read each stack's `count` where `autoload/inventory.gd`
+writes `n`, so every `inventory` field in the run carried the right item ids
+with every quantity zero.
 
 ---
 
@@ -418,6 +492,20 @@ during placement, input leakage events, full resource ledger
 (gathered/spent/refunded).
 
 ### E.4 Controller/menu exhaustion matrix (§8) — X01
+
+**Amended 2026-08-27 (CD-4).** *A cell is coverage only if the probe happened
+in the named context.* Each cell is `enter(context) → assert(context) → probe
+→ restore`; a cell whose context assert fails is **`SKIPPED (context not
+reached)`**, never PASS and never FAIL — those are different facts and the
+2026-08-27 run conflated them. Report **in-context coverage as a headline
+number beside the pass rate**: that run's matrix injected 303 of 418 cells
+(72.5%) in a context other than the one the step named — eight surfaces were
+all actually probed inside `menu_map` and twelve were never entered at all —
+and its "1085 PASS / 118 FAIL" therefore describes mostly nothing. **A matrix
+at 27% in-context coverage must not be reported as 87.9% behaving.** Its only
+trustworthy content was the 115 in-context cells, which were 115/115 clean.
+`input_probe` carries `intended_context` and `context_before` as first-class
+fields so this is one query rather than a regex over `expected`.
 
 **Goal: input ownership collisions.** The authoritative context map is
 `data/config/input_contexts.json`; the physical map is `project.godot`
@@ -627,10 +715,33 @@ over an existing save must not destroy slots without confirmation.
 - **Pathing stall:** an AI combatant stationary > 3 s while in combat.
 - **Input leakage:** an input consumed by a surface producing an effect
   in a second surface, either same-frame or on the release edge.
+- **Reached** (added 2026-08-27, CD-5): within interaction range of the
+  **entity**, with its prompt live. **Not** within a radius of a literal
+  coordinate. `move_to` compared x and z only: Grandpa's bed is 0.89 m from
+  him in plan view and **3.3 m above him**, so `S02-15` "arrived" and pressed
+  `interact` 31 times through the floor, and the same shape recurs as 65
+  `did not reach (x,z)` failures. A journey step written as "go to the
+  trainer" is transcribed with `move_to_entity` and `interact_with`, which
+  resolve a thing and assert its prompt, not with a pair of numbers.
 
 ---
 
 ## G. Prescribed screenshot plan (§11)
+
+**Amended 2026-08-27 (CD-1, CD-2).** Two rules sit above everything in this
+section, because the 2026-08-27 run satisfied the whole of it on paper and
+produced no prescribed screenshot anywhere:
+
+> 1. A planned capture that **cannot** be taken is a **FAIL**, and a segment
+>    that can take none of them is a **BLOCKER at step 1**.
+> 2. A capture is **"completed" only when its file exists on disk** (§11).
+>    X07's own `WHY_INCOMPLETE.md` reported "captures completed: 79" for
+>    artefacts that do not exist — and 23 of those 79 timestamps have no
+>    background frame within 3 s of them either (worst gap 257 s), including
+>    the §E.7-required HUD-on `-gameplay` frame for **all 11 regions**.
+
+Both are enforced by the harness rather than promised by the operator: see
+§M's inventory.
 
 Defined before play. IDs are `GF-<class>-<seq>`; every capture logs a
 `screenshot` event carrying its telemetry timestamp. **HUD rule default:
@@ -816,6 +927,30 @@ continue as a BLOCKER (§A) rather than improvising around it. The
 operator does not diagnose root causes, does not consult historical
 backlog/DONE, and does not read this repo's defect history mid-run.
 
+**Added 2026-08-27 (CD-3).** *No step may encode a guessed repetition count
+for a state-changing UI. Reach a state, then assert it.* Dialogue advance was
+scripted as a fixed press count, which is wrong in both directions: under-press
+and the modal sits open for the next step to press a world control at;
+over-press and the extra `interact` reaches the interaction arbiter and
+re-opens the conversation the previous press closed (the operator recorded it
+at `S02-28`: *"every tap past the third can re-open the conversation the
+previous tap just closed"*). The downstream cost was total — `X01-463` held
+**3,601 frames** in `narrative_modal` 15.8 m short of Bram, and every X01
+surface after it (Settings, rebind, panic reset, shop, tournament, craft,
+storage, swap, bed, combat_aim, riding) was probed inside that dialogue.
+`advance_dialogue_until_closed` replaces the count with a predicate over the
+panel's own line, and **after any dialogue step `input_context` must not be
+`narrative_modal`**.
+
+**And its general form.** A step must verify the input context it expects
+actually owns input **before** acting, and fail loudly when it does not. A
+failed `require_context` records one FAIL at the step that could not drive the
+game; every step after it is `SKIP`ped with the derail named, until one
+resynchronises. §1.6's "the run continues" is a rule about verdicts on the
+GAME; a step that could not be PERFORMED invalidates the ones after it, and
+forty assertions taken in the wrong context are forty findings about the
+harness.
+
 ---
 
 ## K. Known coverage gaps — owner's own pass required
@@ -973,6 +1108,35 @@ At run end the coordinator hands Fable, unedited: this protocol; the
 frozen vision/spec docs; `RUN_METADATA.json`; all telemetry, notes,
 manifests, frames, shots, saves and logs; `RESTARTS.md`. **No developer
 commentary, no proposed fixes, no historical backlog** until Fable's
-provisional backlog is versioned (§16.2). The operator's final act is an
-inventory check that every planned artifact exists or carries a recorded
-reason it does not.
+provisional backlog is versioned (§16.2).
+
+**The inventory check is a harness step, not an operator promise, and its
+output is a committed artefact** (amended 2026-08-27, CD-2). It was a sentence
+addressed to a human — *"the operator's final act is an inventory check that
+every planned artifact exists or carries a recorded reason it does not"* — and
+the human it was addressed to reported a complete run in which no prescribed
+screenshot existed anywhere on the branch. It now runs as code on every
+segment close, blocked segments included, and writes
+`<run>/<segment>/INVENTORY.json`:
+
+```
+{ "segment", "complete",           # `complete` is COMPUTED, never claimed
+  "blocked", "derailed", "derailed_at", "preflight",
+  "captures": { "planned", "present", "absent",
+                "rows": [ { "id", "step", "action", "class", "intended_proof",
+                            "file", "exists", "bytes", "reason" } ] },
+  "frames":   { "baseline_hz", "written", "absent", "absent_reasons" },
+  "steps":    { "total", "ran", "pass", "fail", "skipped" },
+  "harness_errors": [ ] }
+```
+
+`exists` and `bytes` are read off **disk**, not copied from the manifest row:
+a manifest naming a file that is not there is exactly the claim CD-2 found.
+**A segment cannot be marked complete without it**, `INCOMPLETE.md` is written
+whenever `complete` is false, and a missing artefact exits the process
+non-zero (a failed *expectation* still does not — §1.6).
+
+The other half of CD-2 was outside the harness entirely: `.gitignore` matched
+`shots/` unanchored, so `ralph/reports/gate-f-run-*/<segment>/shots/` was never
+tracked. The harness wrote the PNGs and git declined to commit them. The
+pattern is now anchored to the repository root.
