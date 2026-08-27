@@ -5,8 +5,8 @@
     {
       "camera_kind": "gameplay",
       "clock_hour": 0.0,
-      "file": "frames/selfcheck_capture/000001.62.png",
-      "grab_ms": 62.35,
+      "file": "frames/selfcheck_capture/000001.61.png",
+      "grab_ms": 64.11,
       "hud": "on",
       "hz": 0.1,
       "input_context": "title",
@@ -20,16 +20,16 @@
         1920,
         1080
       ],
-      "t": 1.62,
+      "t": 1.61,
       "trigger": "event:note,region_enter,screenshot",
-      "wall": "2026-08-27 16:02:01",
+      "wall": "2026-08-27 16:43:56",
       "weather": ""
     },
     {
       "camera_kind": "gameplay",
       "clock_hour": 0.0,
-      "file": "frames/selfcheck_capture/000002.02.png",
-      "grab_ms": 73.38,
+      "file": "frames/selfcheck_capture/000002.03.png",
+      "grab_ms": 72.14,
       "hud": "on",
       "hz": 0.1,
       "input_context": "title",
@@ -43,16 +43,16 @@
         1920,
         1080
       ],
-      "t": 2.02,
+      "t": 2.03,
       "trigger": "event:note,screenshot",
-      "wall": "2026-08-27 16:02:02",
+      "wall": "2026-08-27 16:43:56",
       "weather": ""
     },
     {
       "camera_kind": "gameplay",
       "clock_hour": 0.0,
-      "file": "frames/selfcheck_capture/000002.38.png",
-      "grab_ms": 71.53,
+      "file": "frames/selfcheck_capture/000002.40.png",
+      "grab_ms": 70.07,
       "hud": "on",
       "hz": 0.1,
       "input_context": "title",
@@ -66,16 +66,16 @@
         1920,
         1080
       ],
-      "t": 2.38,
+      "t": 2.4,
       "trigger": "event:screenshot",
-      "wall": "2026-08-27 16:02:02",
+      "wall": "2026-08-27 16:43:57",
       "weather": ""
     },
     {
       "camera_kind": "gameplay",
       "clock_hour": 0.0,
-      "file": "frames/selfcheck_capture/000002.71.png",
-      "grab_ms": 68.55,
+      "file": "frames/selfcheck_capture/000002.76.png",
+      "grab_ms": 62.0,
       "hud": "on",
       "hz": 0.1,
       "input_context": "title",
@@ -89,9 +89,9 @@
         1920,
         1080
       ],
-      "t": 2.71,
+      "t": 2.76,
       "trigger": "event:screenshot",
-      "wall": "2026-08-27 16:02:02",
+      "wall": "2026-08-27 16:43:57",
       "weather": ""
     }
   ],

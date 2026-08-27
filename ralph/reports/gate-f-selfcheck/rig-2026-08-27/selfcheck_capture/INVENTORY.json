@@ -64,15 +64,15 @@
   "harness_errors": [],
   "preflight": {
     "allow_no_capture": false,
-    "boot_cost_s": 0.43,
+    "boot_cost_s": 0.44,
     "capture_available": true,
     "capture_requested": true,
     "display_server": "X11",
-    "measured_frame_cost_s": 0.006813,
-    "measured_frame_cost_s_in_scene": 0.032425,
+    "measured_frame_cost_s": 0.00629,
+    "measured_frame_cost_s_in_scene": 0.032481,
     "planned_captures": 4,
     "predicted_frames": 113,
-    "predicted_segment_cost_s": 0.8,
+    "predicted_segment_cost_s": 0.7,
     "predicted_segment_cost_s_in_scene": 4.1,
     "record_baseline_hz": 0.1,
     "self_test": {
@@ -89,7 +89,7 @@
   },
   "run_id": "rig-2026-08-27",
   "segment": "selfcheck_capture",
-  "sha": "ec6e199779ee77bb924b871b31213f2d92b3c33e",
+  "sha": "81ad5a089c334b926c65327e4a235710dca87f84",
   "steps": {
     "fail": 0,
     "pass": 6,

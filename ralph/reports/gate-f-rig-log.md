@@ -23,10 +23,14 @@ did not exist in the checkout:
 | `ralph/reports/gate-f-phase-b/FINAL_BACKLOG.md` | no |
 | `ralph/reports/GATE_F_OPERATOR_STANDDOWN_2026-08-27.md` | no |
 | `ralph/GATE_F_MASTER_PROTOCOL.md`, `ralph/GATE_F_PROTOCOL.md` | yes |
+| `ralph/.gdignore` | yes (`b6ad894a`) |
 
 They are on the unmerged branch **`origin/ralph/GATE-F-PHASE-B`** (`ae3ee33d`),
-which `git ls-remote` shows but which nothing routed to. `ralph/.gdignore` did
-not exist either, though the brief says it does; it is created on this branch.
+which `git ls-remote` shows but which nothing routed to.
+
+(`ralph/.gdignore` **is** on `main`, from `b6ad894a`, exactly as the brief
+says. An earlier draft of this log claimed otherwise; that was wrong and this
+line is the correction. The import does not churn through the evidence PNGs.)
 
 This matters beyond bookkeeping. The brief's summary of the coverage defects is
 accurate but partial: it names CD-1, CD-2, CD-3, CD-8 and GF-B-011. The actual
@@ -376,10 +380,15 @@ Nine, all from the "permanent template change" clause of the defect they close:
 
 ### Tests
 
-`tests/test_gate_f_rig.gd`, 29 tests. `--only=gate_f` runs 35 across both Gate F
+`tests/test_gate_f_rig.gd`, 31 tests. `--only=gate_f` runs 48 across both Gate F
 files, green. Three pure helpers (`_context_matches`, `_plan_captures`,
 `_predict_frames`) were made `static` so they can be called directly rather than
 grepped for — a source-level test checks the spelling, not the rule.
+
+The **full unit suite** is green at the head of this branch: four shards,
+`--shard=1/4` through `4/4`, all exit 0. `tests/smoke_gate_f_probe.gd` — the
+live half, which the probe's inventory-key fix is under — passes:
+*"gate-f probe: OK — every accessor agreed with the live game it reads."*
 
 ### Self-check segments
 
