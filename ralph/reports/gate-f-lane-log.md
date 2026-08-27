@@ -1753,3 +1753,23 @@ a full local pass).
 **Next:** log the player's position at the start of each of the three walks
 through the real catch sequence. `stick_navigator` would likely green both tests
 and is still withheld — it would hide this rather than fix it.
+## DEFECT-FIX lane — check-in 10 — 2026-08-27 — stood down; handover written
+
+Owner decision, cost rotation. **Standing down.** A fresh session resumes from
+`ralph/reports/GATE_F_HANDOVER_2026-08-26_EVENING.md`.
+
+Everything from this lane is on `main` at `0d83213e` or earlier; all three of my
+branches were swept and auto-deleted. Nothing is stranded.
+
+The handover carries, in full: the open catch-3 engage defect with all four dead
+hypotheses and the measurement that killed each; how to read the new
+`_why_the_engage_failed` output and why its two cases want opposite fixes; why
+`stick_navigator` is deliberately withheld; the void candidate freeze; what the
+aborted `20260826T110000Z` run may and may not be spliced into (nothing —
+§1.6); the colour-artefact warning and the two corrections that must travel with
+it; the standing rules; and the cost model.
+
+No new segments started after this. `_probe_stand_aside.gd`'s finding is in §2:
+the unchecked position write in `_stand_the_trainer_aside` is real but is **not**
+this bug — 8/8 clear in three engagements, and in two of them the trainer was not
+moved at all.
