@@ -2076,3 +2076,62 @@ cascade, the S03 `panel:SwapPanel` capture, and the objective-id naming
 question.**
 
 **Next:** S04, already launched, entering from `S03-exit`.
+
+## Check-in 19 — 2026-08-27 — **S04: 54 PASS / 18 FAIL. Same shape as S03, different panel: `DialoguePanel` takes input at the tournament ground and holds it.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S04/`. 573 route rows, exit
+save written, handed off. Not a §A BLOCKER.
+
+### The onset, located
+
+`input_context = narrative_modal` from **row 359, t=243.75**, and it runs to the
+final row — **208 narrative_modal rows against 5 `world`** in that tail. The
+segment ends parked at **(20.4, 12.4)**: the tournament ground, §D's RT-02
+terminus at (20,12). One failure names the owner outright:
+
+> `game_menu did not open the pause shell: context narrative_modal -> narrative_modal (owner=DialoguePanel)`
+
+The player enters S04 standing at **(22.2, -2.9)** — S03's parked coordinate,
+carried in `S03-exit`'s `player_pose` — walks **15.5 m** to the tournament ground,
+a dialogue opens, and nothing after it takes input.
+
+### The 18
+
+| thread | count | reported |
+|---|---|---|
+| `narrative_modal` / `DialoguePanel` owns input | **6** | 3× wanted `combat`, 1× wanted `menu_save`, 1× shell would not open (`owner=DialoguePanel`), 1× "4 × `ui_down` did not move focus off nothing" |
+| tournament flags never set | **7** | `tournament_entered`, `_quarter_won`, `_semi_won`, `_won`, `_team_ready`, `_training_ready`, `_condition_ready` |
+| objective id (carryover) | **2** | `opening:beat:road` where `tournament_enter`, `head_to_south_bridge` wanted |
+| party size (carryover) | **1** | 1 where 3 wanted |
+| segment ran short | **2** | walked 15.5 m (wanted ≥60); 566 route rows (wanted ≥1200) |
+
+**The tournament — S04's entire subject — did not run.** Zero `combat_*` events
+again. **severity_candidate: BLOCKER**, candidate only.
+
+### One genuinely NEW fact, and it is a useful one
+
+**`panel:SwapPanel` does not appear anywhere in S04.** S03 ended with it holding
+84% of the segment; S04 boots fresh, loads `S03-exit` through the production
+title-screen Load path, and comes up clean in `world`.
+
+So the S03 capture is **session-scoped, not persisted state** — it does not
+survive save/load, and it is not carried in the save file. That narrows what
+Phase B has to consider, and it is the kind of thing only a save-handoff chain
+would ever have shown.
+
+### The shape now repeating across three segments
+
+| segment | what should have owned input | what did |
+|---|---|---|
+| S02 | `combat`, then `combat_aim` | **nothing** — stayed `world`, zero `combat_*` events |
+| S03 | `menu_build`, `build_placement`, `menu_backpack` | **`panel:SwapPanel`**, 83.9% of segment |
+| S04 | `combat`, `menu_save` | **`narrative_modal` / `DialoguePanel`**, to the last row |
+
+Stated as an observation, not a diagnosis (§13): in each case a surface **holds
+input ownership that the protocol expected to pass elsewhere**, and in each case
+the steps that inject input still report PASS, because they assert the injection
+and not its receipt. That is §8's defect class — the one this protocol was
+written to hunt — arriving in the journey lane rather than in X01 where it was
+meant to be cornered deliberately.
+
+**Next:** S05, already launched, entering from `S04-exit`.
