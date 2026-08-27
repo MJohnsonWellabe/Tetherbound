@@ -292,6 +292,37 @@ side of that call. It is also the most volatile number on this box — 3,422 /
 it is disk, and this container's disk is shared. Cutting it means fewer or
 smaller regions, which is a world-data decision, not a stall fix.
 
+## The whole-boot view, as confirmation rather than as evidence
+
+One clean run of `tools/_probe_new_game_stall.gd` on the lane tip — it really
+presses New Game, so it gets one run and then refuses until its save is cleared
+by hand:
+
+| ms | % | phase |
+|---:|---:|---|
+| 30,380 | 65.9% | playground: terrain `data_directory` assigned |
+| 5,756 | 12.5% | playground: vegetation scatter built |
+| 2,857 | 6.2% | playground: settlement |
+| 1,843 | 4.0% | settlement: grandpa house |
+| 917 | 2.0% | playground: ground materials/shader applied |
+| 917 | 2.0% | settlement: props |
+| 711 | 1.5% | water: jetty |
+| … | | every remaining water row is under 0.8% |
+| **46,099** | | **total of the phases above** |
+
+**The total is not a claim.** The terrain row landed on the high end of its own
+recorded range this run — 3,422 / 3,309 / 20,996 ms for the defects lane,
+39,987 / 8,578 for the water lane, 30,380 here — and that single row is 66% of
+the figure. This box's disk is shared and that number is disk.
+
+What the table *is* good for is the shape. Water was ~50% of the instrumented
+stand-up when the defects lane measured it and 9.3% when the water lane
+finished; every water row here together is about 1,270 ms, and the largest of
+them (`water: jetty`, 711 ms) is a first-in-process mesh load, not a per-boot
+cost — the phase probe measures it at 581 / 1 / 2 ms across three builds. The
+vegetation scatter was 26.6% (defects lane) and 44.5% (water lane); it is
+5,756 ms and 12.5% here. Neither is the stall any more.
+
 ## Tests
 
     tests/run_tests.gd --only=heightfield,terrain,water,pad,carve,river,scatter
