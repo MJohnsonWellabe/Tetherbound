@@ -2258,3 +2258,62 @@ move focus off @Button@64790`.
 unreachable on the production path.
 
 **Next:** S07, already launched, entering from `S06-exit`.
+
+## Check-in 22 — 2026-08-27 — **S07: 75 PASS / 23 FAIL. 17.3 km "walked" without leaving a pocket — and that voids the distance figures for S06 too.**
+
+Evidence: `ralph/reports/gate-f-run-20260827T025303Z/S07/`. 4,484 route rows,
+2,375 s, exit save written. `input_context` `world` 99.8% — no panel capture.
+
+### The instrumentation result that must travel with S06 and S07
+
+One step failed in a way that is worth more than the twenty-two others:
+
+> `dead_travel peaked at 0.3 m this segment (wanted >= 150.0); 10973.1 m walked in total`
+
+The player covered **17,270 m** by summed route deltas, and the dead-travel meter
+**never exceeded 0.3 m**. Both are true, and together they say the distance is not
+travel:
+
+| | S06 | S07 |
+|---|---|---|
+| distance by route deltas | 9,180 m | **17,270 m** |
+| distinct positions visited | 664 | **188** |
+| rows within 40 m of the bridge line (z≈1320) | 48% | **100%** |
+| peak dead-travel | 538.7 m | **0.3 m** |
+
+**S07 never left a pocket at the South Bridge.** All four failed walks stop at
+z≈1318 — the same near-side line as S06's second cluster — every one `0 held`.
+The 17.3 km is the harness re-attempting a blocked route, back and forth, always
+inside 30 m of the same POIs, which is exactly why the dead-travel meter keeps
+resetting to zero.
+
+**Recorded explicitly so Phase B cannot be misled by a headline number:
+"distance walked" for S06 and S07 is NOT pacing evidence, and neither segment
+contributes a usable §D chapter total.** §D's own rule is that its numbers come
+from `route.csv` of a journey that progressed; these two did not progress.
+S05 remains the only journey segment so far whose distance means what §D means
+by it.
+
+### The rest of the 23
+
+Regions `grandpas_village → corridor`, stopping there again: `region=corridor`
+where `the_long_water` and `the_tether_relay` were wanted. Four Band 3 flags
+never set — `relay_disabled`, `relay_captain_defeated`, `captive_rescued`,
+`mill_crossing_restored`. Four more objective-id failures, all reading
+`opening:beat:road` where `disable_the_relay`, `defeat_the_relay_captain`,
+`rescue_the_captive` and `restore_the_mill_crossing` were wanted. Plus the
+standing party-size 1 (wanted 3), one `input_context=world (wanted combat)`, and
+one `menu_backpack` where `menu_save` was wanted. Zero `combat_*` events.
+
+**severity_candidate: BLOCKER** — candidate only. Band 3 is unreachable.
+
+### Where the journey actually stands
+
+S05 crossed to the bridge and could not open it. **S06 and S07 are both spent
+against that same closed crossing** — 26.5 km of walking between them, two
+regions each, none reached. The journey chain is intact in the sense that every
+segment ran and handed off, but from S06 onward it is **re-running the same
+blocked step at successive band targets**, and its telemetry describes that,
+not the Meadows.
+
+**Next:** S08, already launched, entering from `S07-exit`.
