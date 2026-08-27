@@ -381,3 +381,38 @@ The probe now refuses to run when `user://saves` is non-empty and says why. It
 does not delete anything: a probe that silently removes a save is a worse
 failure than one that refuses to start. Clear the directory by hand — it is
 container-local state, not repository content.
+
+## Tests
+
+    tests/run_tests.gd --only=heightfield,terrain,water,pad,carve,river,scatter
+    77 tests, 959,795 assertions, 0 failed
+
+`test_scatter_rules.gd` is in that selection on purpose. `height_at` is what the
+scatter gates placements on, and its `test_the_meadow_is_the_same_every_run` and
+`test_the_spawn_pad_stays_clear` are the tests that would catch a change to it
+moving instances. So is `test_heightfield_cost.gd`, which is `PERF2`'s own
+cost-ratio guard on the function this lane rewrote.
+
+`tests/smoke_pond_water.gd`: 2,538 pond quads, 46 stream points, 152 reeds, 32
+marginals, 72 bank flowers, 40 rocks, 5 driftwood, 49 lilypads, 18 jetty pieces,
+390 river quads, 159 river bank reeds, 57 river bank scrub — every count
+identical to `origin/main`, checked back to back in this container.
+`tests/smoke_title_new_game.gd`: passes.
+
+## Summary of what moved
+
+| | before | after |
+|---|---:|---:|
+| `height_at()`, pond bake region | 33.42 µs/call | **6.60** |
+| `height_at()`, river bake region | 40.40 µs/call | **8.27** |
+| `height_at()`, open meadow control | 32.49 µs/call | **6.51** |
+| `water: river` phases | 9,384 ms | **1,182** |
+| `water: shader material + height bake` phases | 5,763 ms | **1,900** |
+| `water: pond` phases | 3,698 ms | **357** |
+| water total | 19,230 ms | **3,899** |
+| water's share of the instrumented stand-up | ~50% | **9.3%** |
+
+Nothing here changes what the world looks like. Three checksums over 786,432
+sampled heights are unchanged, every `smoke_pond_water` count is unchanged, and
+the one texture that is no longer baked in full is identical over all 36,301
+texels the mesh that reads it can touch.
