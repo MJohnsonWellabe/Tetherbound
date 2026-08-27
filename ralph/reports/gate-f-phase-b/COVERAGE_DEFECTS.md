@@ -18,7 +18,8 @@ Every entry below names which segment must be re-run.
 ## CD-1 — Segments with planned captures ran with no display server
 
 **Why it missed.** `run_segment.sh` launched the journey and study lanes without
-the §0.1 xvfb invocation. Nothing stopped them. The harness wrote 9,231 manifest
+the §0.1 xvfb invocation — while the freeze record claimed X11 under xvfb was
+present (CD-8b). Nothing stopped them. The harness wrote 9,231 manifest
 rows saying `file: null` and the segments reported PASS on the capture steps
 ("capture GF-… skipped (headless run); manifest row written with file:null").
 A step that cannot produce its evidence returned **PASS**.
@@ -216,6 +217,69 @@ costed in frames before it is launched, or run on hardware with a GPU.*
 
 ---
 
+## CD-8 — The freeze record does not enumerate feature flags that change what is rendered
+
+**Added 2026-08-27 after publication, from a Coordinator fact and verified
+against the candidate. This is the one coverage defect the run's own evidence
+could never have exposed** — which is exactly why it belongs here.
+
+**Why it missed.** `ralph/reports/gate-f-candidate/RUN_METADATA.json` is thorough
+about the *envelope*: renderer, display server, resolution, input mode, save
+state, `free_build`, binary sha256, instrumentation overhead, suite state. It
+records **nothing about `data/config/` feature flags that materially change what
+is rendered**. `data/config/grass_field.json` has `"enabled": false` on the
+candidate; `grass_field.gd::_ready()` returns before building anything and
+`playground_world.gd::_stand_up_the_grass_field()` returns before the node enters
+the tree, so **the procedural ground cover is absent from every frame in this
+run** — and no artifact anywhere says so. A reviewer judging ground cover from
+these frames would be judging the baked scatter while believing they were judging
+the shipped ground system, with nothing in the evidence to correct them.
+
+§1.2 requires graphics settings to be part of the freeze record. A boolean that
+decides which of two ground systems dresses the entire world is a graphics
+setting.
+
+**Action to add.** The freeze step enumerates the state of every gameplay- or
+render-affecting flag in `data/config/`, mechanically — read the files, do not
+hand-list them — into the freeze record.
+
+**Evidence to add.** `RUN_METADATA.json` gains `config_flags: {file: {flag:
+value}}`, generated at freeze. Any flag whose value differs from the file's own
+documented default is called out in its own field, so a reviewer sees it without
+diffing.
+
+**Regression to add.** Freeze-time check: fail the freeze if a known
+render-owning flag is absent from `config_flags`. Runtime: the world prints which
+ground system stood up, so the run's own log carries it (`playground_world.gd`
+already prints the scatter line; the disabled branch prints nothing).
+
+**Permanent template change.** §A.2's metadata list gains **`config_flags`**, and
+§0 gains a ninth envelope fact: *a candidate is a build **and** its
+configuration. A flag that decides which subsystem renders the world is part of
+the freeze, and a reviewer must never have to infer it from source.*
+
+**Re-run:** none. This is a freeze-record defect, not a segment defect — but no
+future Gate F may freeze without it.
+
+### CD-8b — the freeze record and the artifacts contradict each other
+
+Found while verifying CD-8. `RUN_METADATA.json` records:
+
+> `"display_server": "X11 under xvfb-run"`
+
+**Every journey segment's frame manifest says the opposite** — 9,231 rows of
+*"headless: this process has no display server and cannot render a frame"*. The
+freeze record and the evidence disagree about the single fact that determined
+whether §11 could execute at all, and nothing reconciled them for the length of
+the run.
+
+**Action to add.** The capture pre-flight of **CD-1** must *write back* what it
+actually found, and fail when the observed display-server state contradicts the
+freeze record. A metadata field asserting a capability is not evidence that the
+capability existed.
+
+---
+
 ## Coverage that is a declared §K gap, not a defect
 
 Eight of the 162 trace to §K's pre-registered [OWNER-ONLY] limitations —
@@ -240,5 +304,17 @@ CD-1 through CD-7 are all **instrument** work and all land **outside** a run
 4. **CD-4** — makes the matrix mean something.
 5. **CD-6** — makes absence-of-evidence interpretable.
 6. **CD-7** — makes the study lane finishable at all.
+7. **CD-8** — cheapest of all, and lands at freeze time rather than in the
+   harness. Do it with the re-freeze.
+
+**CD-5's confidence is raised to HIGH, and it gains a cheaper reproduction.**
+`RUN_METADATA.json`'s `suite_state_at_freeze.known_open_defect` records, **at
+freeze time**, that `tests/smoke_party_count_after_catches.gd` fails
+intermittently with *"could not engage the real wild body at Wild_bramblebun_0_3
+(stopped 23.7m away (engage range 6.0m))"*, with four hypotheses already killed
+and the failure self-diagnosing at this SHA via `_why_the_engage_failed`. That is
+the same defect this pass reconstructed independently from S02 telemetry — and it
+means the run was launched knowing the chapter's **first required player action**
+was unreliable. Start CD-5 from that test, not from a re-run of S02.
 
 Then re-freeze a candidate (§1.1) and re-run. **Not before.**

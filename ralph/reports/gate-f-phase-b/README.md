@@ -14,6 +14,7 @@ Read in this order:
 | 4 | `COVERAGE_DEFECTS.md` | §16.4 — CD-1…CD-7, the seven causes behind 138 misses, folded into the permanent protocol template |
 | 5 | `FINAL_BACKLOG.md` | §15/§16.6 — 13 items in full format, history merged |
 | 6 | `SUMMARIES.md` | the six §15 summaries |
+| — | `ADDENDUM_GRASS_FIELD.md` | post-publication: the candidate has the procedural grass field **OFF**. Verified, scoped, corrections listed. Read before judging any ground-cover finding |
 | — | `PHASE_B_LOG.md` | check-in log; records exactly when quarantine was broken |
 
 ## The three things to take away

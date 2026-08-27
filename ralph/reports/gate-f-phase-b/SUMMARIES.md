@@ -59,6 +59,16 @@ regions. **Journey arrivals were never photographed**, so every judgment below i
 from a DIAG teleport camera, not the player's intended approach vector — which is
 itself a finding (`GF-B-003`).
 
+**Which ground system these judgments are about.** Every ground plane in these
+frames is the **baked scatter** (762,058 placements). The procedural
+camera-relative grass field is `"enabled": false` on the candidate and never
+enters the tree — **absent by configuration, not failing**
+(`ADDENDUM_GRASS_FIELD.md`). Whether it ships enabled is a **reserved, unresolved
+owner decision** gated on a handheld pass that no container here can perform. It
+therefore **gates the ground-plane portion of this plan**: the ground-cover rows
+below judge the scatter as the candidate renders it, and must be re-judged if
+that decision changes. Nothing here recommends a default.
+
 | region | state | work |
 |---|---|---|
 | **Grandpa's Village** | reads as a settled place; layered, legible | none from this evidence beyond the HUD items |
@@ -98,6 +108,15 @@ are not claimed.
 | **world stand-up** | **one frame of 49,230–50,720 ms**, 6 of 8 segments, t≈56 s | `GF-B-001`. Headless — no rasterisation involved |
 | title boot | ~380 ms | fine |
 | save / load durations | **not instrumented** | `GF-B-011`; §18 requires them |
+
+**Configuration this was measured in.** The grass field is `"enabled": false`,
+so nothing is suppressed and the scatter builds every layer — the ~50 s stand-up
+is the **maximum-placement** case. The config states the field would suppress
+625,227 of 725,949 carpet placements (86%). **That is not a licence to read
+"enable the field and the freeze goes away"**: it trades a measurable CPU cost
+for an unmeasurable GPU one, and the config itself flags the ring as a 43% vertex
+increase on the most expensive tier, unmeasured on device. [OWNER-ONLY], reserved,
+not recommended here.
 
 **What is explicitly not a performance number.** X07's ~9,416 ms/frame is
 llvmpipe software-rasterising **762,058 props** with no GPU. It says nothing

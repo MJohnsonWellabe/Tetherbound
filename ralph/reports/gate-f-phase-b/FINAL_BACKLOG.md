@@ -156,7 +156,14 @@ These four do not need a working harness. They can proceed now, in parallel.
   **49,443 ms**; S09 ≈49,917 ms. Notes `S02-04` "booted title in 381 ms",
   `S02-07` "waited 10800 physics frames".
 - **Measured data:** exactly **one** blocking frame of 49–51 s per segment at
-  t≈56 s, **6 of 8** journey segments. Against it, whole-journey CPU is healthy:
+  t≈56 s, **6 of 8** journey segments. **Measured in the maximum-placement
+  configuration:** the grass field is `"enabled": false`, so
+  `suppressed_layers()` returns empty and the scatter builds every layer
+  (`grass`, `drygrass`, `flowers`, `groundmat`) — all 762,058 placements, nothing
+  suppressed. **This does not mean enabling the field would fix the freeze**: it
+  would trade a CPU cost this container can measure for a GPU cost it cannot, and
+  that decision is [OWNER-ONLY]. Fix this item on its own terms. See
+  `ADDENDUM_GRASS_FIELD.md`. Against it, whole-journey CPU is healthy:
   36,744 samples, mean 15.8 ms, **p95 8.31 ms**. Measured **headless** — no
   rasteriser is involved, so this is CPU world stand-up and no GPU will fix it.
 - **Historical context merged:** `HIST-085` records the title-screen half as
@@ -316,6 +323,14 @@ These four do not need a working harness. They can proceed now, in parallel.
 `QUALITY BLOCKER` · confidence **MEDIUM** · cluster **RC-5** · size **M** · role: environment/art developer
 **Merges part of `HIST-174`** (the relay plaza slabs half, *"not addressed anywhere found"*).
 
+- **Which ground system this is about — scoped, not assumed.** Both the relay
+  plaza and the meadow in these frames are dressed by the **baked scatter**
+  (762,058 placements). The procedural camera-relative grass field is
+  `"enabled": false` on the candidate and never enters the tree, so it is
+  **absent by configuration, not failing** — see `ADDENDUM_GRASS_FIELD.md`. This
+  item is therefore a finding **against the scatter system**: the comparison is
+  meadow-scatter vs. plaza-scatter **inside the same frame**, which is why it
+  holds regardless of the flag.
 - **Player-visible problem:** the two most story-critical spaces stand on flat,
   uniform, detail-free ground while ordinary meadow 200 m away has grass,
   variation and scatter. The escalation reads as *less finished*, not *drained*.
@@ -327,6 +342,16 @@ These four do not need a working harness. They can proceed now, in parallel.
 - **Regression coverage:** visual-judge pass.
 - **Player-path retest:** S07 relay arrival; S09 Hall approach.
 - **Visual review:** **required**.
+- **Dependencies — an open owner decision may moot part of this.** Whether the
+  procedural grass field ships enabled is **reserved to the owner** and
+  unresolved: `grass_field.json`'s own comment says *"do not turn on by default
+  until a handheld pass says it is affordable"*, and no container in this project
+  can measure GPU cost ([OWNER-ONLY]). If it ships enabled it would suppress the
+  `grass`/`drygrass`/`flowers`/`groundmat` layers and re-dress the open ground —
+  which could change what the relay and Hall plazas need. **Do not pre-empt that
+  decision.** Scope the plaza work after it, or scope it to surface treatment
+  that is true under either system (debris, tracks, spoil, wear), which is the
+  safer half and the half this frame actually argues for.
 - **Parallel-safety:** safe.
 
 ## GF-B-008 — The Rise's arrival renders black

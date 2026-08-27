@@ -63,6 +63,28 @@ frame reproduced 6/8 segments with the renderer off.
 
 ---
 
+## Addendum — one classification that needs a caveat, not a change
+
+`HIST-041` (*"the ground is a picture of grass, not grass"*) is classified
+`MISSED BY GATE F / COVERAGE DEFECT` and stays there. But it needs a warning
+attached, added after publication (`ADDENDUM_GRASS_FIELD.md`):
+
+The fix that entry describes lives in `grass_field.json` as `ground_blend`,
+documented there as *"the fix for the defect three blind rounds named: it mixes
+the terrain's OWN colour map into the base of every blade, so growth appears to
+come out of the ground instead of standing on a picture of it."* That field is
+`"enabled": false` on the candidate.
+
+So `HIST-041`'s remedy exists, is built, and **is switched off in the build under
+test** — gated behind an unresolved owner decision that no container here can
+settle. **Nobody may close `HIST-041` from this run's frames in either
+direction:** they cannot show the fix working (it is absent) and they do not show
+the defect in the system that would carry the fix. The same caution applies to
+`HIST-169`, `HIST-190`, `HIST-191`, `HIST-192` and `HIST-193` — every ground-cover
+item whose remedy may live in the disabled field.
+
+---
+
 ## Classification — all 162 player-facing items
 
 

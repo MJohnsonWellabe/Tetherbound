@@ -221,3 +221,60 @@ full authoritative protocol; roughly a quarter of it executed). The candidate is
 largely **unjudged**, not judged bad.
 
 Phase B complete. Nothing outstanding.
+
+---
+
+## Check-in 6 — post-publication addendum: the grass field is OFF on the candidate
+
+Coordinator fact received 2026-08-27T13:16Z, after all six deliverables were
+published. **I verified every claim against the candidate before acting on any
+of it** — `git show f082bdf6:data/config/grass_field.json` (`"enabled": false`),
+`grass_field.gd:82/88/97` (flag read; `suppressed_layers()` returns `{}` when
+disabled; `_ready()` returns early), `playground_world.gd:709` (node never enters
+the tree), and a grep of the whole run directory for any `grass_field` trace
+(none). All six claims hold.
+
+**Nothing had to be withdrawn.** I never observed and never named the procedural
+field, so no item claimed it was missing, wrong or regressed. `GF-B-009` compares
+plaza ground against meadow ground **inside the same frame** — both scatter — so
+it stands. What was missing was scoping.
+
+Corrections applied (`ADDENDUM_GRASS_FIELD.md` records all of them):
+
+1. `GF-B-009` now names the scatter system explicitly and carries the reserved
+   owner decision as a dependency that may moot part of it.
+2. `SUMMARIES.md` §3 names which ground system each regional judgment is about.
+3. `SUMMARIES.md` §4 and `GF-B-001` record that the ~50 s stand-up was measured
+   in the **maximum-placement** configuration — with an explicit warning **not**
+   to read that as "enabling the field fixes the freeze": it trades a measurable
+   CPU cost for an unmeasurable GPU one. [OWNER-ONLY], reserved, not recommended.
+4. `COVERAGE_DEFECTS.md` gains **CD-8** — the freeze record enumerates no
+   `data/config/` feature flags, though §1.2 requires graphics settings. This is
+   the one coverage defect the run's own evidence could never have exposed.
+5. `RECONCILIATION.md` gains a caveat: `HIST-041`'s remedy (`ground_blend`) lives
+   in the disabled field, so nobody may close it from these frames in either
+   direction. Same caution for `HIST-169`/`190`/`191`/`192`/`193`.
+6. **`PROVISIONAL_BACKLOG.md` deliberately NOT edited.** It is the hashed §16.2
+   record of what Gate F found blind; a later fact does not get retconned into
+   it. `sha256sum -c` still verifies OK.
+
+**Two things I found while verifying, which the Coordinator did not raise:**
+
+- **CD-8b — the freeze record contradicts the artifacts.**
+  `RUN_METADATA.json` says `"display_server": "X11 under xvfb-run"`; 9,231
+  manifest rows say *"headless: this process has no display server"*. They
+  disagree about the single fact that decided whether §11 could execute, and
+  nothing reconciled them for the whole run. Strengthens `GF-B-003`.
+- **CD-5's confidence rises to HIGH.** `RUN_METADATA.json`'s
+  `suite_state_at_freeze.known_open_defect` records, at freeze time, that
+  `tests/smoke_party_count_after_catches.gd` fails intermittently with *"could
+  not engage the real wild body … (stopped 23.7m away (engage range 6.0m))"* —
+  **the same defect I reconstructed independently from S02 telemetry.** The run
+  was launched knowing the chapter's first required player action was unreliable.
+  CD-5 now has a self-diagnosing reproduction already in the suite, far cheaper
+  than re-running S02. Whether that state should have blocked the freeze is a
+  coordinator judgment I raise rather than answer.
+
+**No conclusion in any deliverable is reversed by this fact.** The gate verdict,
+the three refuted headline findings, the 8.0% capture rate and the Top 10 are
+unchanged.
