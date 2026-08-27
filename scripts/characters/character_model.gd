@@ -326,15 +326,21 @@ func art_transform() -> Transform3D:
 ## (`Material_1`, confirmed against the source .glb) so `palette` and `tint`
 ## currently colour the same one surface either way — the difference is real
 ## once a rig has more than one, which NP4's modular bases will.
+## GF-B-010: the walk now runs for EVERY character, tinted or not, because it
+## is also where the rigs' imported `metallic` is corrected -- and the four
+## rigs that needed correcting most (trainer, Grandpa, the Warden, the grunt)
+## are exactly the four that declare neither `palette` nor `tint` and so used
+## to return here before touching a material. An absent tint reads as the
+## identity multiply `#ffffff`, which is what `art.json` already writes
+## explicitly for all five villagers, so this changes no colour anywhere: see
+## `_shared_variant_material()` for why white is algebraically a no-op through
+## both the albedo and the emission branch.
 func _apply_palette(cfg: Dictionary) -> void:
 	if _art == null:
 		return
 	var palette: Dictionary = cfg.get("palette", {})
 	if palette.is_empty():
-		var tint := str(cfg.get("tint", ""))
-		if tint == "":
-			return
-		palette = {"*": tint}
+		palette = {"*": str(cfg.get("tint", "#ffffff"))}
 	_palette_node(_art, palette)
 
 
@@ -349,7 +355,7 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 				else "surface_%d" % surface
 			var hex: String = str(palette.get(name, palette.get("*", "")))
 			if hex == "":
-				continue
+				hex = "#ffffff"
 			instance.set_surface_override_material(
 				surface, _shared_variant_material(source, name, Color(hex)))
 	for child in node.get_children():
@@ -362,6 +368,20 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## to repeat. `vegetation.gd::_retint()`'s `_tint_for()` proves the same
 ## pattern for foliage (`ralph/BACKLOG.md`'s `SA1-lod`, keyed by everything
 ## that can change the output); this is that cache for humans.
+##
+## STALE-PROSE WARNING, GF-B-010, 2026-08-27. Everything below about emission
+## describes rigs the project no longer ships. Measured on today's six .glb
+## files (`tools/_probe_npc_materials.gd`): `emission_enabled` is FALSE on every
+## body material, `emission_texture` is null and `emission_operator` is 0. The
+## rigs were rebuilt since `NP2`/`STRANDED-P3` were written. The emission block
+## at the bottom of this function is therefore dead for every character in the
+## game today -- kept, not deleted, because it is correct for any rig that does
+## arrive carrying emission, and because deleting it would throw away the one
+## written record of why an emission floor has to be additive. Read it as
+## history, not as a description of the assets.
+##
+## What was ACTUALLY crushing Team Tether to black is the `metallic` correction
+## in the body of this function, not any of this: see its own comment.
 ## Found doing `NP2`: every one of these three rigs' source materials ships
 ## with `emission_enabled = true` and an `emission_texture` set to the SAME
 ## painted texture as `albedo_texture`, at a full white `emission` multiplier
@@ -400,6 +420,40 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	if finish.has("metallic"):
 		material.metallic = float(finish["metallic"])
 		material.metallic_specular = float(finish.get("metallic_specular", 0.5))
+	elif material.metallic > 0.0 and material.metallic_texture == null:
+		# GF-B-010, the actual cause of "an NPC renders as an unlit black
+		# silhouette in daylight", reproduced and A/B'd in a controlled frame
+		# (`tools/_probe_npc_metallic_ab.gd`): all six humanoid rigs render as
+		# jet-black cut-outs beside a correctly lit crate, and forcing this one
+		# property restores every fold, strap and boot.
+		#
+		# glTF 2.0's default for an ABSENT `metallicFactor` is 1.0, not 0.
+		# Every one of the six rigs' .glb materials omits it -- checked in the
+		# JSON chunk of trainer, Grandpa, villager_male, villager_female, the
+		# Warden and the grunt -- so Godot imports each body as
+		# `metallic = 1.0, roughness = 1.0`: a fully-rough METAL. A metal has
+		# no diffuse term at all; its only response is a specular lobe that
+		# roughness 1.0 spreads to nothing, so the body returns almost no light
+		# whichever way the sun points. That is why the sun-azimuth hypothesis
+		# could not explain it, and why the grass, trees, terrain and props in
+		# the same frame are fine.
+		#
+		# The props are the proof rather than a counter-example. They omit
+		# `metallicFactor` too, but they ship an ORM/metallic-roughness texture
+		# (the crate: `T_Trim_Furniture_ORM.png`, blue channel), and the
+		# per-texel blue multiplies that 1.0 back down to dielectric. So does
+		# every Tetherbound creature .glb. The six humanoid rigs are the one
+		# class in the project that carries a metallic factor with NO texture
+		# to modulate it, which is exactly the condition tested here -- a rig
+		# that later ships a real ORM map keeps whatever that map says, and a
+		# rank badge that deliberately asks for metal (`finish`, above) is
+		# handled by the branch that owns it.
+		#
+		# Roughness is deliberately left alone. It is the same absent-default
+		# 1.0, but a fully rough dielectric is a correct matte cloth, and
+		# picking a sheen for six rigs is a look decision this defect does not
+		# license.
+		material.metallic = 0.0
 	if finish.has("roughness"):
 		material.roughness = float(finish["roughness"])
 	if material.emission_enabled:
