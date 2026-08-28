@@ -365,3 +365,110 @@ Two things it had to get right to mean anything, both paid for:
   `_yield_bottom_to_build_menu()` fails the run naming ten widgets through the
   box — `Prompt (RichTextLabel)` among them, which is the reported symptom
   itself.
+
+---
+
+## 2026-08-28 — RC-5b, named landmarks have no landmark geometry
+
+The coordinator's instruction was to check `HIST-008`/`HIST-119` for owner-art
+blocks **before** starting, and to say so and move on rather than generating
+anything. Checked, and then checked against the installed kit itself rather
+than against the register's word for it.
+
+### What the installed village kit actually contains
+
+`assets/buildings/quaternius_medieval/` holds **64 modules**. The 18 prefabs in
+`building_prefabs.json` use a subset, and **nine modules are used by no prefab
+at all**: `Roof_Dormer_RoundTile`, every `Overhang_Plaster_*` and
+`Overhang_Roof*` piece, `Roof_FrontSupports`, `Roof_Support2` and
+`Prop_Support`. `tools/_probe_village_kit_modules.gd` (new) reports each
+candidate's AABB relative to its own origin, because the recipe format is a
+bare `at`/`yaw_deg` with **no offset or facing convention written down
+anywhere**, and `tools/_capture_kit_module_card.gd` (new) renders one module at
+four yaws so an author can see which way it points before writing a placement.
+Both exist because the first cost of reaching for an unused module is finding
+out how it is oriented, and guessing costs the same render and then another.
+
+There is **no well, no mill machinery and no gate module** in the kit. That
+confirms what the register says about `HIST-163` and `HIST-165` from a
+different direction, and it is the same ground the defects lane refused
+`GF-B-007` on today.
+
+### Per item
+
+- **`HIST-163` — the mill has no mill in it: BLOCKED, not started.** No wheel,
+  sails, hopper, race or axle exists in any installed kit. A new mesh needs
+  owner-supplied reference art and Meshy is reserved for Team Tether hero
+  objects; a mill wheel is neither. Nothing generated.
+- **`HIST-165` — the well has no well: BLOCKED for the shaft, partly not.**
+  Same absence for the winch and shaft. Worth recording for whoever picks it
+  up, since it is not in the register: `Bucket_Wooden_1` and `Rope_1` **are**
+  installed (`assets/props/quaternius_fantasy/`), so the bucket-and-rope half
+  needs no new art. The shaft mouth and water are primitives, not assets. Not
+  attempted here — a bucket on a well that still has no hole is dressing.
+- **`HIST-166` — bridges and gates are overlapped fence panels: BLOCKED.** The
+  kit has `Wall_Arch` and fence pieces and nothing gate-like. Not started.
+- **`HIST-164` — three named landmarks are two kits used twice: PARTIAL, and
+  shipped.** Below.
+
+### `HIST-164` — the inn — **PARTIAL**
+
+**Re-derived before touching anything.** The inn and `farmhouse_shell` have
+**identical module histograms** — 74 modules against 75, and the one extra is a
+door leaf, which is not visible from outside. `docs/evidence/hist-164/
+twins-*-before.png` is the frame the critic described: the two standing side by
+side, differing only in the inn's one extra roof-tile retint.
+
+**Shipped, with no new art:**
+
+- A **second chimney** at the opposite end of the ridge — `Prop_Chimney`, a
+  different module from the `Prop_Chimney2` already there, so the two do not
+  read as one stack duplicated. It is 3.18 tall against 3.00, and it is the
+  only silhouette difference this building has at the distance the square sees
+  it from.
+- **Per-material differentiation**: `MI_WoodTrim` to dark stained oak and
+  `MI_Plaster` to a warm limewash. Half-timbering is the dominant texture on
+  both buildings, so those two named surfaces change how the whole facade
+  reads, where the roof alone changes one band of it. Named surfaces, not
+  `art.json`'s single multiply over every surface, which spec §21 names as the
+  failure. The prefab's existing `_why_retint` — which claimed the roof tint
+  "is the whole of how it reads as its own building rather than a second copy
+  of the farmhouse shell" — is amended in place with the finding that
+  contradicts it, rather than replaced.
+
+**A process note worth carrying.** The first pass at this edit round-tripped
+`building_prefabs.json` through `json.dumps(indent=2)`, which reformatted every
+hand-compacted collider row and `at` array in the file — a 426-line diff over
+seventeen prefabs this lane never looked at, for a 5-line change. Caught before
+push and redone as a targeted text patch: **18 lines**. A data file in this repo
+is hand-formatted and a formatter is not a neutral tool on it.
+
+`docs/evidence/hist-164/twins-*-after.png`, same camera, same lighting, same
+neighbour.
+
+**What was tried and rejected, with the measurement.** Four dormers —
+`Roof_Dormer_RoundTile`, in the kit, used by nothing, and the single clearest
+"rooms upstairs to let" signal available. Three trial renders established the
+facing (yaw 0 faces +x; the module card alone was not enough) and the seat
+(y ≈ 7.2 at x 2.6 — the roof's AABB is misleading, its local max y is 4.89 but
+the visible ridge is nearer y 9.1, and a first trial at y 8.0–9.2 floated every
+dormer above the ridge). Then the front elevation showed why it cannot work:
+**the module is sized for a bigger roof than the inn has.** It is 1.90 m deep
+against a slope run of about 4.1 m and 2.67 m tall against a total eave-to-ridge
+rise of about 2.8 m, so at any seat it either overhangs the eave — visibly
+detached in `twins-front-*` — or tops the ridge.
+
+`scale` **is** supported per module and 0.65 would fit. It was **not** taken:
+`HIST-038` (`STRONGHOLD-MERLONS`) is an open item about exactly that — a
+uniform per-module scale producing "three merlon sizes in one castle
+silhouette" — and a dormer whose roof tiles are two-thirds the size of the tiles
+they sit on is the same defect on a smaller building.
+
+**Why this is partial and not closed.** The massing is unchanged. The inn is
+still the same footprint, the same roof module and the same window pattern as
+the farmhouse, and that is half of what "the same kit used the same way twice"
+means. Changing it needs a different roof/footprint combination — the kit does
+carry `Roof_RoundTiles_4x4/4x6/4x8/6x4/6x6/6x8/6x10`, so an L-plan or a wider
+inn is possible without new art — but that is a re-authoring of a 75-module
+recipe with its own door, room and collider specs, and it wants owner sight
+before someone spends it. **The ranger station half of the item is untouched.**
