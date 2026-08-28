@@ -268,6 +268,7 @@ var _cost_gated := false
 ## §H/§G evidence split, owner decision 2026-08-27. "logic" | "capture" | "both".
 ## `both` is what every segment written before the split means, and is the
 ## default, so an unconverted segment keeps its old meaning exactly.
+var _objective_ids: Dictionary = {}
 var _evidence_lane := "both"
 ## On a logic lane: who owes the §G frames this lane is not taking, and which
 ## ids they are. A delegation that nobody has accepted is a BLOCKER at step 1 --
@@ -784,6 +785,43 @@ func _play(segment: Dictionary) -> void:
 ## Static so `tests/test_gate_f_rig.gd` can call it directly. A SceneTree
 ## subclass cannot be instantiated in a unit test, and the alternative --
 ## grepping the source for the behaviour -- tests the spelling, not the rule.
+## `objective_is` speaks the protocol's id space; the probe speaks the game's.
+##
+## Two different ids name one beat. `data/progression/objectives.json` gives
+## each main entry an `id` -- `opening_first_catch` -- and a `flag_id` -- the
+## progression flag that closes it, `opening:beat:road`. §E.5 tracks "24 main-
+## chain objectives from `opening_first_catch`", so every `objective_is` in
+## every segment was transcribed in ENTRY ids. `gate_f_probe.gd::tracked_
+## objective()` returns the FLAG id, deliberately and under its own smoke test
+## (`tests/smoke_gate_f_probe.gd`), because a flag id is what Phase B can cite
+## and check against the store.
+##
+## Neither side is wrong and neither should move: the probe's contract is
+## tested, and rewriting the segments into flag ids would make them stop
+## matching the protocol they were transcribed from. So the COMPARISON
+## resolves, and says in its own `actual` text which space it matched on.
+##
+## Found on the first segment of run 3: S01-12 asserted `opening_first_catch`,
+## the game was tracking exactly the right beat with exactly the right text,
+## and the step recorded FAIL. Twenty-six asserts across ten segments would
+## have failed the same way -- a whole run of findings about the instrument
+## wearing the shape of findings about the game, which is the specific failure
+## round 2 of this rig exists to stop repeating.
+func _objective_flag_id(entry_id: String) -> String:
+	if entry_id.is_empty():
+		return ""
+	if _objective_ids.is_empty():
+		var doc := _read_json("res://data/progression/objectives.json")
+		for raw: Variant in (doc.get("main", []) as Array):
+			if typeof(raw) != TYPE_DICTIONARY:
+				continue
+			var entry := raw as Dictionary
+			var id := str(entry.get("id", ""))
+			if not id.is_empty():
+				_objective_ids[id] = str(entry.get("flag_id", ""))
+	return str(_objective_ids.get(entry_id, ""))
+
+
 static func _plan_captures(steps: Array) -> Array:
 	var out: Array = []
 	for raw: Variant in steps:
@@ -3643,9 +3681,15 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"objective_is":
 			var want := str(args.get("id", ""))
 			var obj: Dictionary = _probe.call("tracked_objective")
-			return {"ok": str(obj.get("id", "")) == want,
-				"actual": "tracked objective id=%s text=%s (wanted %s)" % [
-					str(obj.get("id", "")), str(obj.get("text", "")), want]}
+			var have := str(obj.get("id", ""))
+			var resolved := _objective_flag_id(want)
+			var matched := "flag_id" if have == want else (
+				"entry id -> flag_id" if not resolved.is_empty() and have == resolved else "")
+			return {"ok": not matched.is_empty(),
+				"actual": "tracked objective id=%s text=%s (wanted %s%s)%s" % [
+					have, str(obj.get("text", "")), want,
+					"" if resolved.is_empty() or resolved == want else " = flag_id %s" % resolved,
+					"" if matched.is_empty() else " [matched on %s]" % matched]}
 		"party_size":
 			var want := int(args.get("equals", -1))
 			var have := (_probe.call("party_state") as Array).size()
