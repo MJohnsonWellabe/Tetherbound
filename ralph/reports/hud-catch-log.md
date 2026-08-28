@@ -463,3 +463,49 @@ long.
   adjectives — but if the answer is "catching should be probability-based and
   the wait is the drama", then items 2 and 3 are working as intended and only
   the readout was ever broken.
+
+
+---
+
+## Verification run
+
+All five tests the brief named as strict-on-purpose, plus the full unit suite,
+on the final tree:
+
+| check | result |
+|---|---|
+| `tests/run_tests.gd` (whole unit suite) | **1478 tests, 0 failed** |
+| `smoke_hud_handheld_legibility.gd` | PASS |
+| `smoke_prompt_hotbar_dock.gd` | OK |
+| `test_hud_widgets.gd` | 28 tests, 0 failed |
+| `smoke_exploration_legend.gd` | PASS |
+| `smoke_hud_no_sixth_slot.gd` | PASS |
+| `smoke_combat_hud_left_column.gd` | PASS (roster fits 308 against a deepest child of 308) |
+| `smoke_catching.gd` | OK, with the new advertised-chance guard |
+| `smoke_controller_catching.gd` | OK — **was failing on clean `origin/main`** |
+
+Nothing in `smoke_hud_handheld_legibility.gd` was relaxed. Every removed line is
+a render-pixel size computation replaced by its angular equivalent; no overlap,
+containment or structural check was touched, and the file gained three checks it
+never had (two size ceilings and a live-scene occupancy ceiling). The one
+behavioural change is the legend/prompt overlap check now requiring the prompt to
+be visible, because a `VBoxContainer` does not lay out hidden children — and
+`smoke_prompt_hotbar_dock.gd` covers the visible case in four states with real
+prompt text.
+
+## Summary of the two items
+
+**HUD scale.** The cause was a content scale the device does not have, applied
+as a 1.5x multiplier to every size on the HUD for months. Persistent occupancy
+**27.37% -> 14.75%** of the canvas. The floor it was protecting is now derived
+from panel geometry in `scripts/ui/hud_scale.gd`, every element still clears it,
+and the suite gained the ceilings that would have caught this the first time.
+
+**Catching.** Two defects, both about the game telling the player the truth. The
+reticle advertised a dead-centre chance regardless of aim — and the throw did not
+use the aim either, because the strike offset saturated its clamp on every
+throw, making `centre_bonus` unreachable and the entire aiming skill decorative.
+Both fixed; the difficulty consequence is measured and stated. The odds curve,
+the wall-clock cost of a failure, the shake channel and the lock-target size are
+diagnosed with numbers and left for the owner, because they are all answers to
+"how hard should catching be" rather than defects.
