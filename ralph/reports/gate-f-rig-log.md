@@ -1138,6 +1138,22 @@ S01C's reads `{"largest_evidence_png_bytes": 65297,
 
 ### Tests
 
+The **full unit suite is green at the head of this branch**, after `main` was
+merged forward: four shards, real exit codes rather than a pipeline's, **1,485
+tests, 0 failed**, every shard `godot_exit=0`.
+
+```
+shard 1/4 godot_exit=0  326 tests, 1664611 assertions, 0 failed
+shard 2/4 godot_exit=0  308 tests,    3005 assertions, 0 failed
+shard 3/4 godot_exit=0  375 tests,  960804 assertions, 0 failed
+shard 4/4 godot_exit=0  476 tests,  725538 assertions, 0 failed
+```
+
+(The first attempt at this piped each shard through `tail -2`, so the summary
+line was pushed off by Godot's exit-time RID-leak warnings and the pipeline's
+exit code was `tail`'s. Two shards' verdicts were therefore unknown and are not
+what is reported above; the run quoted here is the re-run that captured both.)
+
 `tests/test_gate_f_rig.gd` is 49 tests (was 36); `--only=gate_f` runs **66
 across both Gate F files, green**. Thirteen are new and each names the finding
 it guards. One existing test was **changed**, deliberately and not to make
