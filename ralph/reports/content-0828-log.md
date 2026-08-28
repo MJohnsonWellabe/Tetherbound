@@ -221,7 +221,16 @@ move is on it is the item's name and the detail panel's job. The detail panel
 already reads power, type, slot and the compatibility list from `move_db.gd` and
 `tm_db.gd` rather than duplicating them.
 
-**The world pickup is the defect, and the reason is sharper than "primitive".**
+**The owner later gave the answer himself, in §8 of the playtest:** *"the tms
+are everywhere that they look bad b there cardboard cards."* That is the word
+for it, and it names the world pickup exactly — the before-frame
+(`05-tm-pickup-before.png`) is a flat tan rectangle standing upright in a
+field, which is a cardboard card. §8 says all three surfaces, and the reason it
+gives is *the asset* rather than the presentation: a TM is represented as a flat
+card. On the two UI surfaces it is not — `gen_item_icons.py` draws a disc — but
+the object the player walks up to was, and that is the one this lane changed.
+
+**So the world pickup is the defect, and the reason is sharper than "primitive".**
 What stood in the world was a 0.32 × 0.46 × 0.04 m flat box with a 0.16 m
 **white box** glued to its front as a "rune" — two untextured primitives, knee
 high, in a world where the warrens' own rootstone deposits were given real rocks
@@ -256,7 +265,122 @@ colour tuned by type. No new asset, nothing sourced, no ledger entry needed.
 
 ---
 
-## 3. Some locations still look poor — **STOOD DOWN, with evidence**
+## 3. Some locations look lame — **REFRAMED by the owner, and built into item 1**
+
+The owner localised this mid-lane, and it changed the item:
+
+> *"burrow warrens and the castle are the lame looking locations. basically
+> everywhere we had to build an under ground or build a building"*
+
+**That is a better diagnosis than the backlog's, and a different kind of claim.**
+The register had been filing individual sites — `GF-B-007` (the quarry does not
+read as a quarry), `HIST-163`/`165` (no mill wheel, no well shaft), `HIST-166`
+(bridges are overlapped fence panels). The owner named the *class*: every space
+this project **constructs** reads worse than every space it **grows**. The
+terrain, the scatter, the grass and the sightlines drew no complaint at all.
+
+That is a claim about method, and it lands on this lane's own room. The
+coordinator's direction was to build items 1 and 3 together rather than in
+sequence, because the chamber holding the alpha and the prize is the one room in
+the dungeon a player is meant to remember.
+
+### What the frames showed, once I looked at them as an answer to this question
+
+`04-vault-prize-after.png` from the first round of item 1 is the whole
+complaint in one image: a **perfect rectangular box.** Four flat walls meeting
+at hard 90° corners, a flat ceiling, a flat floor, one triplanar texture at one
+scale across all of it, one prop. Thirty metres away through the wall is a
+meadow with hundreds of pieces of variety per comparable area.
+
+It does not read as unfinished because the rock texture is bad. **It reads as
+unfinished because a cave does not have corners.**
+
+### What shipped
+
+`_build_interior_rock()` breaks the three junctions that say "box", and nothing
+else: the **wall/floor** line, with rock banked along the inside of every wall;
+the **wall/ceiling** line, in the four ceiling corners only; and the **flat
+floor**, with scree thinning inward from the walls. Plus the playtest's own
+other named direction — **lighting authored per space rather than inherited**:
+every chamber previously had one dim pool of roughly the same energy in roughly
+the same place, which lights a room evenly and therefore says nothing about it.
+The den's fill drops and a warm key washes the guardian's half, so the alpha
+stands in warm light in a room that falls off cool around it.
+
+Three rules keep the fix from becoming the problem it replaced: everything sits
+within `edge_band_m` of a wall, so the middle of every room is untouched and a
+den fight keeps the arena `combat_arena_bounds_at()` promises it; nothing goes
+in a doorway (`_doorways`, recorded by `_build_passages()`); and **none of it
+has colliders**, which is the rule `_build_site_skirt()`'s own comment already
+states — this is dressing, and a pebble that stops a player is a bug.
+`smoke_warrens.gd` still walks the whole cave, entrance to branch chamber, 52 m.
+
+### Two rounds of this were wrong, and the frames are why I know
+
+Worth recording, because both mistakes are the kind that reasoning does not
+catch:
+
+- **Round 1 tinted the rock with `mound.tint` and the cave filled with green.**
+  That value was tuned against the outcrop standing in direct sun. `_tint_rock()`
+  *multiplies* `albedo_color`, which is the right tool outside — it keeps each
+  rock's own shading and two blind rounds tuned the mound with it — but under
+  0.3–1.5 energy pools the multiply does almost none of the work and what
+  survives is the model's own mint texture. **Round 2 tried a much warmer tint
+  and it was still green.** The fix was to stop guessing at multipliers: the
+  interior rock now wears the *same triplanar `Rock030` material the chamber
+  wall behind it wears*. Triplanar is what makes that legal on models whose UVs
+  were authored for something else — it projects from world space and needs no
+  UVs, the same reason the walls use it on primitive boxes. The result is not a
+  rock tinted to look like the cave; it is the cave's own stone in a rock shape.
+- **Round 2 capped rock HEIGHT and said nothing about WIDTH.** A five-metre-wide
+  boulder sitting correctly against the den wall still reaches two and a half
+  metres into the room, and one of them ended up between the camera and the
+  guardian — the exact failure this pass exists to replace. Both caps are now in
+  metres against each piece's *measured* bounds, because these models arrive at
+  different sizes and a scale number means nothing across them.
+- **Round 1's key light lit the ceiling.** Put at y=3.9 with a 9.5 m range it
+  washed the roof while the guardian went to silhouette — and taught the other
+  half: the guardian is a wild body with a `home` and it **wanders**, so a tight
+  spot on its authored stand cannot track it. It is a broad wash over its half
+  of the den instead.
+
+### What is still flat, honestly
+
+The junctions are broken and the rooms read as rock rather than as boxes, but
+**the walls themselves are still flat planes** and the ceiling is still a slab
+between its corners. This pass changes what the room's *edges* do; it does not
+give the space vertical interest, level changes, or a silhouette. That is the
+larger half of the owner's diagnosis and it is not done here.
+
+### The other named site
+
+**The stronghold is untouched, deliberately.** The coordinator's instruction was
+not to start it until the Warrens is right, and getting the method correct once
+in a room that matters is worth more than two half-passes. What this lane
+learned that transfers: the junctions matter more than the surfaces; a kit's
+material has to be re-derived for the light it is actually seen in; and cap
+dressing by measured metres, not by scale factors.
+
+### The register's own sites remain art-blocked, and that is unchanged
+
+`GF-B-007` is blocked twice over — the quarry's pit and cut face are
+`terrain_playground.json`, which `GATE_D_LANE_CONTRACT.md` §3 puts with the
+coordinator and which carries a scatter re-bake behind it, and the dressing half
+(a crane, a hoist, cut blocks) is `HIST-008`'s blocked-on-art list. The
+`ralph/HIST-CLUSTERS` lane landed RC-5b on `main` the same day and probed the
+installed kit directly rather than trusting the register: 64 modules, nine used
+by no prefab, and **no well, no mill machinery and no gate module** in it. That
+independently confirms `HIST-163`/`165`/`166` as art-blocked, and that lane
+shipped the one slice that was not (`HIST-164`, the inn).
+
+None of that changes. What changed is that the owner's complaint was never
+really about those sites.
+
+## Superseded: the earlier stand-down on item 3
+
+### Original assessment, kept for the record
+
+
 
 > *"some locations still look lame"*
 
@@ -301,10 +425,10 @@ Half-scale before/after pairs are committed at **`docs/evidence/content-0828/`**
 
 | frame | before | after |
 |---|---|---|
-| `02-alpha-close` | a dark shape two-thirds hidden behind a boulder | a plated alpha filling the frame, mote aura visible on its flank |
-| `01-den-alpha-and-door` | green rock across the ceiling and the far half of the room | a clean stone den; the alpha reads instantly against the ordinary Trailpup standing in front of it |
+| `02-alpha-close` | a dark shape two-thirds hidden behind a boulder | a plated alpha lit in a stone room, with the lit branch door in the same frame |
+| `01-den-alpha-and-door` | green rock across the ceiling and the far half of the room | a den of banked stone under a warm key; the alpha reads instantly against the ordinary Trailpup standing in front of it |
 | `03-vault-door-shut` | a flat brown panel filling a hole in a wall | the same panel with a lit seam down it — a sealed way on |
-| `04-vault-prize` | a vault two-thirds filled with green rock | a clean stone chamber, the heartstone alone on its plinth |
+| `04-vault-prize` | a vault two-thirds filled with green rock | a chamber whose wall/floor line is banked with the cave's own stone, the heartstone the bright thing in it |
 | `05/06-tm-pickup` | a tan rectangle standing in a field | the disc its own icon draws, on a plinth, catching light at both walk-up and decision distance |
 
 **The exterior was re-checked, because lifting rocks could have regressed work
@@ -360,6 +484,22 @@ your own.
   `docs/ASSET_LEDGER.md` entry is due. Every texture used here
   (`creature_burrowback_lod0_base_color_alpha.png` and its emissive sibling) was
   already installed and already ledgered.
+- **Playtest §7 (grass through indoor buildings): the Warrens is NOT affected,
+  and that is a measured negative rather than an assumption.** `grass_field.gd`
+  is another lane's file and this lane did not touch it. But the cave is a named
+  interior and the playtest asks explicitly whether the defect reaches "the
+  Warrens' surface entrances, the stronghold, jetties, bridges". Every interior
+  frame this lane rendered — mouth, hall, den, vault, across five capture rounds
+  — has a clean stone floor with no grass in it. The mechanism agrees: the cave
+  floor is a built slab sitting `floor_clearance` above the terrain and the cave
+  stands proud of the meadow, so any grass the field puts on that terrain is
+  *under* the floor, occluded. The grass lane should not spend time on the
+  Warrens on the strength of the "everywhere" wording.
+- **Playtest §8 asks whether a TM qualifies for new art. That is an owner call
+  and this lane did not make it.** What shipped is the material/form/presentation
+  work §8 itself says is available without art: the world prop is no longer a
+  card. If the owner does supply reference art for a TM, the disc built here is
+  the shape to replace, and `tm_pickup.gd` is the only file that draws it.
 - **The boulder fix is not scoped to the Warrens' payoff and is worth flagging
   as such.** It changes `_place_rock()`, which every mound rock in the cave goes
   through. It was in scope because it is the Warrens and because the alpha work

@@ -96,6 +96,10 @@ var _chambers: Dictionary = {}          # id -> chamber dict
 var _markers: Dictionary = {}           # name -> global Vector3
 var _materials: Dictionary = {}
 var _footprint: Array = []              # local AABB rectangles [minx, minz, maxx, maxz]
+## CONTENT-0828. `[centre, radius]` per passage, in local metres. Filled by
+## `_build_passages()` and read by `_build_interior_rock()`.
+var _doorways: Array = []
+
 var _vault_door: StaticBody3D = null
 var _vault_door_mesh: MeshInstance3D = null
 var _guardian: Node3D = null
@@ -152,6 +156,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_mound()
 	_build_deposits()
 	_build_dressing()
+	_build_interior_rock()
 	_build_prize()
 	_sync_vault_door()
 
@@ -379,6 +384,10 @@ func _build_passages() -> void:
 		var height := float(passage.get("height", 2.6))
 		var lateral := a.z if along_x else a.x
 		var centre := Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
+		# CONTENT-0828. Kept so the interior rock pass can stay out of the
+		# doorways -- a boulder in a passage mouth is a wall the player has to
+		# walk round in the one place a cave gives them no room to.
+		_doorways.append([centre, maxf(width, length) * 0.5 + 1.6])
 
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
 		var ceiling_size := Vector3(length, 0.8, width + _wall_t * 2.0)
@@ -739,6 +748,261 @@ func _build_mound() -> void:
 				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
 					continue
 				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint)
+
+
+## CONTENT-0828. What turns these rooms from boxes into a cave.
+##
+## The owner localised the "some locations look lame" complaint on 2026-08-28
+## and it is a claim about METHOD, not about assets:
+##
+##   *"burrow warrens and the castle are the lame looking locations. basically
+##   everywhere we had to build an under ground or build a building"*
+##
+## The terrain, the scatter and the grass drew no complaint. The two spaces
+## this project ASSEMBLES did. And the before-frames of this cave say exactly
+## why: `docs/evidence/content-0828/04-vault-prize-after.png` is a perfect
+## rectangular box -- four flat walls meeting at hard 90-degree corners, a flat
+## ceiling, a flat floor, one triplanar texture at one scale across all of it.
+## The meadow next door has hundreds of pieces of variety per comparable area.
+## The room does not read as unfinished because the rock texture is bad; it
+## reads as unfinished because a cave does not have corners.
+##
+## So this breaks the three junctions that say "box", and nothing else:
+##
+##   * the wall/floor line, with boulders banked along the inside of each wall;
+##   * the wall/ceiling line, with rock tucked into the ceiling corners;
+##   * the flat floor plane, with scree thinning inward from the walls.
+##
+## Three rules keep it from becoming the problem it is fixing. **It hugs the
+## walls** -- everything sits within `edge_band_m` of a wall face, so the
+## middle of every room is untouched and a fight in the den still has the arena
+## `combat_arena_bounds_at()` promises it. **It stays out of the doorways**
+## (`_doorways`, recorded by `_build_passages()`), because a boulder in a
+## passage mouth is a wall in the one place a cave gives no room to walk round.
+## And **it has no colliders** -- the models are plain glTF instances, the same
+## as `_build_site_skirt()`'s ground cover, whose own comment states the rule
+## this follows: dressing, and a pebble that stops a player is a bug.
+##
+## Deliberately the SAME nature family the outcrop outside is built from and
+## tinted with the same `mound.tint`, per D24's one-nature-family rule: the
+## stone inside the hill and the stone showing above it are the same stone.
+## No new mesh, nothing sourced, and nothing here needs owner art -- this is
+## the composition-and-dressing half the playtest's own 4a says is available
+## while modelling is blocked.
+func _build_interior_rock() -> void:
+	var cfg: Dictionary = _config.get("interior_rock", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	var scree_models: Array[PackedScene] = _load_models(cfg.get("scree_models", []))
+	if models.is_empty():
+		return
+
+	var holder := Node3D.new()
+	holder.name = "InteriorRock"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 828828))
+	# The interior's OWN tint, not the mound's. See this block's `_comment_tint`
+	# in burrow_warrens.json: the mound value was tuned against rock standing in
+	# direct sun, and under the cave's dim cool pools it let the nature pack's
+	# mint-grey back through -- the exact green a blind critic called "a heap of
+	# enormous cabbages" on the mound, now inside the room. Falls back to the
+	# mound's value so the key stays optional.
+	var tint := Color(str(cfg.get("tint",
+		_config.get("mound", {}).get("tint", "#ffffff"))))
+	var band := float(cfg.get("edge_band_m", 1.7))
+	var placed := 0
+
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 4.0))
+		var half := Vector2(size.x * 0.5, size.y * 0.5)
+
+		# --- the wall/floor line ------------------------------------------
+		# Walked as four edges at a fixed spacing, the same way the mound walks
+		# its perimeter, so the two read as one continuous rock mass either
+		# side of the wall rather than two unrelated decisions.
+		var step := maxf(float(cfg.get("wall_spacing_m", 3.2)), 1.0)
+		var base_scale: Array = cfg.get("wall_scale", [0.8, 1.5])
+		for edge in 4:
+			var along_x := edge < 2
+			var length: float = size.x if along_x else size.y
+			var steps := maxi(int(length / step), 1)
+			for i in steps + 1:
+				var t := float(i) / float(steps)
+				var inward := rng.randf_range(0.15, band)
+				var at := Vector3.ZERO
+				if along_x:
+					var z_side: float = -1.0 if edge == 0 else 1.0
+					at = Vector3(centre.x + lerpf(-half.x, half.x, t), _floor_y,
+						centre.z + z_side * (half.y - inward))
+				else:
+					var x_side: float = -1.0 if edge == 2 else 1.0
+					at = Vector3(centre.x + x_side * (half.x - inward), _floor_y,
+						centre.z + lerpf(-half.y, half.y, t))
+				at.x += rng.randf_range(-0.5, 0.5)
+				at.z += rng.randf_range(-0.5, 0.5)
+				if _blocks_a_doorway(at):
+					continue
+				# Sunk so the boulder grows out of the floor rather than
+				# standing on it, which is the difference between rock and
+				# furniture. Capped against the room's own height so a wall
+				# boulder can never become a ceiling one.
+				var drop := float(cfg.get("wall_sink_m", 0.45))
+				_place_interior_rock(holder, models, rng, at + Vector3.DOWN * drop,
+					base_scale, tint, height * float(cfg.get("wall_height_cap", 0.55)),
+					float(cfg.get("wall_width_cap_m", 1.9)))
+				placed += 1
+
+		# --- the wall/ceiling line ----------------------------------------
+		# Four corners only. The ceiling's MIDDLE stays clear on purpose: that
+		# is where the mound's roof rocks used to hang through, and a frame
+		# with rock over the guardian's head is the frame this pass exists to
+		# stop producing.
+		var corner_scale: Array = cfg.get("corner_scale", [1.1, 1.9])
+		for cx in [-1.0, 1.0]:
+			for cz in [-1.0, 1.0]:
+				var at := Vector3(
+					centre.x + cx * (half.x - rng.randf_range(0.2, 1.0)),
+					_floor_y + height + float(cfg.get("corner_lift_m", 0.35)),
+					centre.z + cz * (half.y - rng.randf_range(0.2, 1.0)))
+				if _blocks_a_doorway(at):
+					continue
+				_place_interior_rock(holder, models, rng, at, corner_scale, tint,
+					height * 0.4, float(cfg.get("corner_width_cap_m", 2.2)))
+				placed += 1
+
+		# --- the floor plane ----------------------------------------------
+		# Weighted to the walls with the same `pow(randf(), n)` the site skirt
+		# uses and for the same reason: what reads as scree is thick at the
+		# foot of the rock and thin toward the middle of the room.
+		if not scree_models.is_empty():
+			var scree_count := int(cfg.get("scree_per_chamber", 18))
+			var scree_scale: Array = cfg.get("scree_scale", [0.35, 0.95])
+			for i in scree_count:
+				var edge_bias: float = 1.0 - pow(rng.randf(), 2.2)
+				var side := rng.randi() % 2
+				var at := Vector3(
+					centre.x + rng.randf_range(-half.x, half.x),
+					_floor_y - 0.05,
+					centre.z + rng.randf_range(-half.y, half.y))
+				# Pull it toward whichever wall pair this piece belongs to.
+				if side == 0:
+					at.z = centre.z + signf(at.z - centre.z) * lerpf(0.3, half.y - 0.2, edge_bias)
+				else:
+					at.x = centre.x + signf(at.x - centre.x) * lerpf(0.3, half.x - 0.2, edge_bias)
+				if _blocks_a_doorway(at):
+					continue
+				_place_interior_rock(holder, scree_models, rng, at, scree_scale, tint,
+					float(cfg.get("scree_height_cap_m", 0.5)),
+					float(cfg.get("scree_width_cap_m", 1.0)))
+				placed += 1
+
+	if placed > 0:
+		print("[warrens] %d pieces of interior rock across %d chambers" % [
+			placed, _chambers.size()])
+
+
+## Is this local point in a passage mouth?
+func _blocks_a_doorway(at: Vector3) -> bool:
+	for entry: Array in _doorways:
+		var centre: Vector3 = entry[0]
+		if Vector2(at.x - centre.x, at.z - centre.z).length() < float(entry[1]):
+			return true
+	return false
+
+
+## One piece of interior rock. `height_cap` above zero re-scales the piece down
+## if it would stand taller than that -- measured, not assumed, because these
+## models arrive at different sizes and a wall boulder that reaches the ceiling
+## is the intrusion this pass replaced.
+func _place_interior_rock(holder: Node3D, models: Array[PackedScene],
+		rng: RandomNumberGenerator, at: Vector3, scale_range: Array,
+		tint: Color, height_cap: float, width_cap: float) -> void:
+	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+	if art == null:
+		return
+	var low := float(scale_range[0]) if scale_range.size() > 0 else 0.8
+	var high := float(scale_range[1]) if scale_range.size() > 1 else 1.4
+	art.scale = Vector3.ONE * rng.randf_range(low, high)
+	art.position = at
+	art.rotation = Vector3(
+		rng.randf_range(-0.25, 0.25),
+		rng.randf_range(-PI, PI),
+		rng.randf_range(-0.25, 0.25))
+	holder.add_child(art)
+	# Measured, then re-scaled to fit -- twice, because a boulder can be wrong
+	# in two directions and round 2 of this pass only checked one. `height_cap`
+	# kept a wall rock from becoming a ceiling rock and said nothing about
+	# WIDTH, and the frames showed the cost: a five-metre-wide rock sitting
+	# correctly against the den wall still reaches two and a half metres into
+	# the room, and one of them ended up between the camera and the guardian --
+	# the exact failure this pass replaced. Both caps are applied to the
+	# measured bounds rather than to the scale factor, because these models
+	# arrive at different sizes and a scale number means nothing across them.
+	var fit := 1.0
+	var box := _bounds_of(art)
+	if height_cap > 0.0 and box.size.y > height_cap and box.size.y > 0.01:
+		fit = minf(fit, height_cap / box.size.y)
+	if width_cap > 0.0:
+		var widest: float = maxf(box.size.x, box.size.z)
+		if widest > width_cap and widest > 0.01:
+			fit = minf(fit, width_cap / widest)
+	if fit < 1.0:
+		art.scale *= fit
+	_wear_the_cave_stone(art, tint)
+
+
+## Round 2 of this pass tinted these rocks and the frames said no twice: at
+## `mound.tint` and again at a much warmer value, the nature pack's mint-grey
+## came back through and the cave filled with green.
+##
+## `_tint_rock()` MULTIPLIES `albedo_color`, which is the right tool outside --
+## it keeps each rock's own shading and texture variation under strong sun, and
+## two blind rounds tuned the mound with it. Inside, under 0.3-1.5 energy
+## pools, the multiply is doing almost none of the work: what survives is the
+## model's own texture, and that texture is mint.
+##
+## So stop guessing at multipliers and give the interior rock the SAME material
+## the wall behind it is made of -- `_material(colour, 0, textured)`, the
+## triplanar `Rock030` stone every chamber wall and ceiling already wears
+## (MAT-BLOCKOUT). Triplanar is what makes this legal on models whose UVs were
+## authored for something else: it projects from world space and needs no UVs
+## at all, which is the same reason the walls use it on primitive boxes of
+## varying size. The result is not a rock that has been tinted to look like the
+## cave. It is the cave's own stone, in a rock shape.
+##
+## `tint` is kept as the per-piece variation: each rock takes the site's rock
+## colour nudged toward its own value, so the bank along a wall is not one flat
+## sheet of identical stone.
+func _wear_the_cave_stone(node: Node, tint: Color) -> void:
+	var stone := _material(_rock().lerp(tint, 0.35), 0.0, true)
+	for child in _mesh_boxes_nodes(node):
+		var instance := child as MeshInstance3D
+		var mesh := instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			instance.set_surface_override_material(surface, stone)
+
+
+func _mesh_boxes_nodes(node: Node) -> Array[Node]:
+	var found: Array[Node] = []
+	if node is MeshInstance3D:
+		found.append(node)
+	for child in node.get_children():
+		found.append_array(_mesh_boxes_nodes(child))
+	return found
+
+
+func _load_models(paths: Variant) -> Array[PackedScene]:
+	var loaded: Array[PackedScene] = []
+	for path: Variant in (paths if paths is Array else []):
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	return loaded
 
 
 ## Ground cover for the ground this site cleared.
