@@ -325,6 +325,33 @@
       ]
     }
   ],
+  "_comment_interior_structure": "CONTENT-0828B. Owner playtest 2026-08-28 sec4a: 'burrow warrens and the castle are the lame looking locations. basically everywhere we had to build an under ground or build a building.' He named a CLASS of space rather than two sites, so the answer is a shared method -- scripts/world/interior_structure.gd, which burrow_warrens.json consumes from the same file with a different vocabulary. That file's header carries the mechanism; the short version is that a chamber assembled from six flat boxes has exactly two scales of incident (the room, and its props) where the meadow outside has five or six, and the missing MIDDLE scale is why an interior reads as blockout however good its texture is. The five passes supply it: a vertical member at a repeating pitch along every wall (`bays`), a jointed band at mid-height (`course`), ceiling ribs landed on the same divisions so wall and roof read as one structure (`ribs`), a jamb-and-lintel frame around every cut opening (`reveals`), and a post in each internal corner (`corners`). None of it is solid, none of it enters a doorway, and none of it reaches further into a room than interior_structure.gd's MAX_PROJECT_M -- half the metre `combat_arena_bounds_at()` reserves from every wall, so the Warden fight keeps the arena it was tuned against. `enabled: false` turns the whole pass off. ALL TUNABLE.",
+  "_comment_interior_structure_castle": "This building's VOCABULARY, against the cave's. `jitter: 0` is the difference in code: masonry lands on its pitch exactly, and any lean at all reads as a mistake rather than as rock. `bay_pitch_m` 3.6 against the cave's 2.9 -- these spaces are 16-28m across and up to 22m tall, and the cave's tighter pitch would crowd a hall. This does NOT replace `trim` above: those are Team Tether girders and conduit, faction hardware bolted onto the stone, and they say who occupies the building; this is the building. Roles take the castle's own three stone values via stronghold.gd::_structure_colour (`stone` for shafts and corners, `stone_light` for capitals and the course, `stone_dark` for ribs and reveals) so nothing here introduces a fourth stone -- add a `tints` block here to override any role. The value steps matter more than they look: every interior light in this complex sets shadow_enabled=false, so a member proud of a wall is lit almost exactly like the wall behind it and only the value separates them.",
+  "interior_structure": {
+    "enabled": true,
+    "seed": 76310,
+    "jitter": 0.0,
+    "bay_pitch_m": 3.6,
+    "bay_width_m": 0.86,
+    "bay_project_m": 0.36,
+    "capital_height_m": 0.46,
+    "capital_project_m": 0.18,
+    "course": true,
+    "course_at": 0.52,
+    "course_height_m": 0.38,
+    "course_project_m": 0.24,
+    "course_joint_m": 0.26,
+    "ribs": true,
+    "rib_width_m": 0.7,
+    "rib_drop_m": 0.44,
+    "reveals": true,
+    "reveal_width_m": 0.5,
+    "reveal_lintel_m": 0.48,
+    "reveal_depth_m": 2.0,
+    "corners": true,
+    "corner_width_m": 1.0,
+    "corner_project_m": 0.48
+  },
   "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight.",
   "conduits": [
     {

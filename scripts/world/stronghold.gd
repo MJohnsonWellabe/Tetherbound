@@ -61,6 +61,14 @@ const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
 
+## CONTENT-0828B. The shared constructed-interior method. The owner named the
+## castle and the Warrens together as "the lame looking locations. basically
+## everywhere we had to build an under ground or build a building", so the two
+## consume ONE method rather than getting a dressing pass each. See
+## interior_structure.gd's header for the mechanism and
+## `interior_structure` in stronghold.json for this building's vocabulary of it.
+const INTERIOR_STRUCTURE := preload("res://scripts/world/interior_structure.gd")
+
 ## STRONGHOLD-MAT. Every wall/floor box in this file was a flat
 ## StandardMaterial3D colour with no texture at all -- the same class of bug
 ## `MAT-BLOCKOUT` already fixed for the Warrens (`burrow_warrens.gd::_material`)
@@ -155,6 +163,13 @@ var _approach_pylons := 0
 var _approach_drain: Node3D = null
 var _footprint: Array = []              # local AABB rects [minx, minz, maxx, maxz]
 var _doors: Array = []                  # [{flag, body, mesh}]
+## CONTENT-0828B. `[centre, radius]` per passage and one entry per passage END,
+## both in complex-local metres, both filled by `_build_passages()`. The
+## structure pass keeps its members out of the first and stands a frame in the
+## second. Recorded here rather than re-derived because the passage arithmetic
+## that produces them is not trivial and a second copy of it would drift.
+var _doorways: Array = []
+var _openings: Array = []
 var _trainers: Node3D = null
 var _bed: Node3D = null
 var _machine: Node3D = null
@@ -215,6 +230,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_passages()
 	_build_approach_ramp()
 	_build_trim()
+	_build_structure()
 	_build_conduits()
 	_build_lights()
 	_build_interior_area()
@@ -638,6 +654,16 @@ func _build_passages() -> void:
 		var centre := Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
 		var roofed := not bool((_chambers[from] as Dictionary).get("open", false)) \
 			or not bool((_chambers[to] as Dictionary).get("open", false))
+		_doorways.append([centre, maxf(width, length) * 0.5 + 1.6])
+		# Both ends: each room sees its own opening, and a frame at the passage
+		# MIDPOINT is a frame inside the tunnel that nobody standing in either
+		# room can see. `along_x` flips because the reveal pass is told about
+		# the HOLE, whose width runs across the passage, not about the tunnel.
+		for edge: float in [a_edge, b_edge]:
+			_openings.append({
+				"centre": Vector3(edge, 0.0, lateral) if along_x else Vector3(lateral, 0.0, edge),
+				"along_x": not along_x, "width": width, "height": height,
+			})
 
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
 		var ceiling_size := Vector3(length, 1.0, width + _wall_t * 2.0)
@@ -794,6 +820,74 @@ func _build_trim() -> void:
 					material, true)
 			_:
 				push_warning("stronghold.json trim has an unknown kind '%s'" % str(spec.get("kind", "")))
+
+
+## CONTENT-0828B. The shared constructed-interior method, in the fortress's own
+## vocabulary.
+##
+## `_build_trim()` above is NOT this and is deliberately left alone: its bands
+## and pillars are Team Tether HARDWARE bolted onto the stone, authored one
+## entry at a time in oxblood and teal, and they say who occupies the building.
+## They were never architecture, and 21 hand-placed faction girders cannot give
+## a 28-metre hall a scale reference -- which is what the owner was looking at
+## when he called this one of the two lame locations.
+##
+## This building's vocabulary is `jitter: 0` -- masonry is regular, and the
+## members have to land on their pitch exactly or the rhythm reads as an
+## accident -- and the castle's own three stone values for the roles, so the
+## works stay the same palette the curtain wall and the plinth already use
+## (D24: one village family) rather than introducing a fourth stone.
+##
+## The `legendary_chamber` is the room this matters most in and the reason the
+## pass is worth its nodes: 28x28 metres and 22 metres tall, lit by two
+## shadowless omnis, with a single object in the middle of it. Before this it
+## had nothing at all between the machine and the walls for the eye to measure
+## the room against, so the largest interior in the chapter read as the
+## smallest kind of space there is -- a box.
+func _build_structure() -> void:
+	var cfg: Dictionary = _config.get("interior_structure", {})
+	if cfg.is_empty():
+		return
+	var chambers: Array = []
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		chambers.append({
+			"id": id, "centre": _local_of(chamber.get("at", [])),
+			"size": _size_of(chamber.get("size", [])),
+			"height": float(chamber.get("height", 6.0)),
+			# A yard has no ceiling to rib, and `interior_structure.gd` reads
+			# this to skip that one pass. The bays, course and corners still
+			# run: the outer works and the courtyard are walled spaces and
+			# their walls are as flat as any interior one.
+			"open": bool(chamber.get("open", false)),
+		})
+	var placed: int = INTERIOR_STRUCTURE.new().dress(self, {
+		"chambers": chambers, "doorways": _doorways, "openings": _openings,
+		"floor_y": _floor_y, "config": cfg,
+		"material_for": func(role: String) -> StandardMaterial3D:
+			return _material(_structure_colour(role), 0.0, true),
+	})
+	if placed > 0:
+		print("[stronghold] %d structural members across %d spaces" % [placed, _chambers.size()])
+
+
+## One of the castle's own three stone values per role, so a member reads as
+## built out of the same fortress rather than as a decal on it. Tunable from
+## `interior_structure.tints`.
+##
+## The steps are deliberate and they are doing the job light cannot: every
+## interior light in this building sets `shadow_enabled = false`
+## (`_build_lights`, a Compatibility-renderer cost decision this pass does not
+## reopen), so a shaft standing proud of a wall is lit almost identically to
+## the wall behind it. If the value does not separate them, nothing will.
+func _structure_colour(role: String) -> Color:
+	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
+	if tints.has(role):
+		return Color(str(tints[role]))
+	match role:
+		"capital", "course": return _stone_light()
+		"rib", "reveal": return _stone_dark()
+		_: return _stone()
 
 
 ## Lit cable runs along the floor between chambers, all of them pointing at the

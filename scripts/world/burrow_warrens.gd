@@ -58,6 +58,14 @@ const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 ## cave's Team Tether dressing -- see `_build_dressing()`.
 const PROPS := preload("res://scripts/world/props.gd")
 
+## CONTENT-0828B. The shared constructed-interior method -- the bay rhythm,
+## the course, the ceiling ribs, the door reveals and the corner posts that
+## every space this project BUILDS was missing. See interior_structure.gd's
+## header for why the owner named a class of space rather than a list of
+## sites, and `interior_structure` in burrow_warrens.json for this cave's own
+## vocabulary of it.
+const INTERIOR_STRUCTURE := preload("res://scripts/world/interior_structure.gd")
+
 ## OP21-25. See `combat_arena_bounds_at()` below -- how far inside a chamber's
 ## wall FACE the fight boundary is required to sit. Clearance for a body's own
 ## radius, not a fudge factor.
@@ -108,6 +116,11 @@ var _footprint: Array = []              # local AABB rectangles [minx, minz, max
 ## CONTENT-0828. `[centre, radius]` per passage, in local metres. Filled by
 ## `_build_passages()` and read by `_build_interior_rock()`.
 var _doorways: Array = []
+## CONTENT-0828B. One entry per END of every passage -- the hole this cave
+## actually cut in a chamber wall, which is where a reveal has to stand. The
+## passage MIDPOINT (which `_doorways` records) is inside the tunnel, and a
+## frame there is a frame nobody standing in either room can see.
+var _openings: Array = []
 
 var _vault_door: StaticBody3D = null
 var _vault_door_mesh: MeshInstance3D = null
@@ -166,6 +179,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_deposits()
 	_build_dressing()
 	_build_interior_rock()
+	_build_structure()
 	_build_prize()
 	_sync_vault_door()
 
@@ -397,6 +411,15 @@ func _build_passages() -> void:
 		# doorways -- a boulder in a passage mouth is a wall the player has to
 		# walk round in the one place a cave gives them no room to.
 		_doorways.append([centre, maxf(width, length) * 0.5 + 1.6])
+		# CONTENT-0828B. Both ends, because both rooms see their own opening.
+		# `along_x` flips: a passage running along x cuts a hole whose WIDTH
+		# runs along z, and the reveal pass is told about the hole, not the
+		# tunnel.
+		for edge: float in [a_edge, b_edge]:
+			_openings.append({
+				"centre": Vector3(edge, 0.0, lateral) if along_x else Vector3(lateral, 0.0, edge),
+				"along_x": not along_x, "width": width, "height": height,
+			})
 
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
 		var ceiling_size := Vector3(length, 0.8, width + _wall_t * 2.0)
@@ -930,6 +953,67 @@ func _build_interior_rock() -> void:
 	if placed > 0:
 		print("[warrens] %d pieces of interior rock across %d chambers" % [
 			placed, _chambers.size()])
+
+
+## CONTENT-0828B. The shared constructed-interior method, in the cave's own
+## vocabulary.
+##
+## `_build_interior_rock()` above already broke this cave's wall/floor and
+## wall/ceiling LINES with banked stone, and its own report was honest about
+## what that left: "the walls themselves are still flat planes and the ceiling
+## is still a slab between its corners... it does not give the space vertical
+## interest, level changes, or a silhouette." That remainder is what this call
+## is for, and it is the same call `stronghold.gd` makes -- the owner named
+## constructed space as a class, so the answer is one method with two
+## vocabularies rather than two dressing passes.
+##
+## The cave's vocabulary is `jitter` above zero (rock ribbing leans and varies;
+## masonry does not) and its own stone for every role: `_material(colour, 0,
+## true)` is the triplanar Rock030 the chamber walls already wear, which is the
+## finding the previous pass paid two rounds for -- a tint MULTIPLIED over the
+## nature pack's mint-grey stays mint under a 0.3-1.5 energy pool, and only
+## wearing the wall's actual material makes a member read as this cave's stone.
+##
+## The role tints are small deliberate value steps rather than one flat stone,
+## because these rooms are lit by shadowless omnis (`_build_lights`) and no
+## light in here is going to model the form for us: a member the same value as
+## the wall behind it is invisible however well it is shaped.
+func _build_structure() -> void:
+	var cfg: Dictionary = _config.get("interior_structure", {})
+	if cfg.is_empty():
+		return
+	var chambers: Array = []
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		chambers.append({
+			"id": id, "centre": centre,
+			"size": _size_of(chamber.get("size", [])),
+			"height": float(chamber.get("height", 4.0)), "open": false,
+		})
+	var placed: int = INTERIOR_STRUCTURE.new().dress(self, {
+		"chambers": chambers, "doorways": _doorways, "openings": _openings,
+		"floor_y": _floor_y, "config": cfg,
+		"material_for": func(role: String) -> StandardMaterial3D:
+			return _material(_structure_colour(role), 0.0, true),
+	})
+	if placed > 0:
+		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
+
+
+## One value step per role, off this cave's own rock colour. Darker where a
+## member should sit back, lighter where it should catch what little light
+## there is. Tunable from `interior_structure.tints`; the defaults are the
+## values the blind rounds settled on.
+func _structure_colour(role: String) -> Color:
+	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
+	if tints.has(role):
+		return Color(str(tints[role]))
+	var rock := _rock()
+	match role:
+		"capital", "course": return rock.lightened(0.16)
+		"rib", "reveal": return rock.darkened(0.12)
+		_: return rock
 
 
 ## Is this local point in a passage mouth?
