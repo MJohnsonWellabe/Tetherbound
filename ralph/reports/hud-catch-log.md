@@ -90,7 +90,7 @@ device never renders at.
 The glyph floor is the one that is about rasterisation rather than the eye, so
 it is **measured, not assumed**. `tools/_probe_glyph_ladder.gd` (new) renders
 the real pad glyphs at 1:1 authored pixels across a ladder;
-`shots/hud_scale/glyph_ladder_zoom.png` is that render at 4x nearest-neighbour.
+`ralph/reports/hud-catch/shots/hud-04-glyph-ladder-zoom.png` is that render at 4x nearest-neighbour.
 The Kenney badges' two-letter art is mush at 20px, marginal at 22, cleanly
 resolved at 24, comfortable at 26. Not 36.
 
@@ -129,14 +129,14 @@ Two things fell out that are worth naming:
   chip, HP bar, separations are fixed furniture — so scaling the row with the
   font takes far more than its share out of the name column. At 336 with the
   bar cut to 44, the roster now shows **"Galewisp" in full**, which the
-  1.5x-inflated HUD never did. See `shots/hud_scale/roster_compare.png`.
+  1.5x-inflated HUD never did. See `ralph/reports/hud-catch/shots/hud-03-roster-before-over-after.png`.
 
 ### Evidence
 
-- `shots/hud_scale/before.png`, `shots/hud_scale/after.png` — the HUD through
+- `ralph/reports/hud-catch/shots/hud-01-before.png`, `hud-02-after.png` — the HUD through
   the real render path at 1920x1080, opengl3 under xvfb.
-- `shots/hud_scale/roster_compare.png` — the roster column, before over after.
-- `shots/hud_scale/glyph_ladder.png`, `glyph_ladder_zoom.png` — the render the
+- `ralph/reports/hud-catch/shots/hud-03-roster-before-over-after.png` — the roster column, before over after.
+- `ralph/reports/hud-catch/shots/hud-04-glyph-ladder-zoom.png` — the render the
   glyph floor is derived from.
 
 ### What I did not prove
@@ -365,15 +365,15 @@ aiming past their own companion — but which of the two it is depends on whethe
 Rendered through the real path (`xvfb-run`, `opengl3`, never `--headless` with
 a real driver):
 
-- `shots/catch/01-aiming-full-health.png` — the new **NOT ON TARGET** state in a
+- `ralph/reports/hud-catch/shots/catch-02-aim-after.png` — the new **NOT ON TARGET** state in a
   live fight. The ring marks the wild creature; the caption says the screen-centre
   ray is not on it. Before this pass that same frame showed a confident
   percentage.
-- `shots/catch/07-aiming-weakened.png` — the locked state, ring and number.
+- `ralph/reports/hud-catch/shots/catch-03-locked-state.png` — the locked state, ring and number.
   (The 100% is `capture_catch_sequence.gd` pinning `chance.min` to 0.999 so the
   dice reliably produce a catch for the frame; the live cap is `chance.max`
   0.95.)
-- `shots/catch_aim/reticle_states.png` — the three states side by side: locked
+- `ralph/reports/hud-catch/shots/catch-01-reticle-states.png` — the three states side by side: locked
   dead-centre, locked but clipping, and not on target.
 - `tests/test_catch_math.gd` — six new assertions pinning the placement
   arithmetic; `tests/smoke_catching.gd` — the advertised-chance guard, driven
@@ -398,7 +398,7 @@ Neither is this lane's to change, and neither is asserted as a defect.
 
 ### A controller-first defect on the catching path, found in this lane's frames
 
-`shots/hud_scale/after.png` is captured with the device pinned to GAMEPAD. Every
+`ralph/reports/hud-catch/shots/hud-02-after.png` is captured with the device pinned to GAMEPAD. Every
 glyph on it is a pad glyph — Y, RB, LB, B. And the objective hint card in the
 centre of it reads:
 
@@ -537,7 +537,7 @@ changed.
 | everything else | ≥ 1.05 m | clears |
 
 The owner guessed bramblebun was "both". **It is**, and here is the frame
-arithmetic from `shots/catch/01-aiming-full-health.png` — a real bramblebun at
+arithmetic from `ralph/reports/hud-catch/shots/catch-02-aim-after.png` — a real bramblebun at
 throwing range in real grass:
 
 - Inside the creature's own bounding box, only **35%** of the pixels are
@@ -649,3 +649,137 @@ feel from an earlier playtest. The result should be *easier to aim*, not
 *impossible to miss*: a throw pointed away from the creature still misses, and
 `accuracy_bonus` still pays more for a centred trajectory than a clipped one now
 that it actually functions.
+
+## Render verdict — what the frames actually show
+
+Two render iterations, because the first was wrong and the frames said so.
+
+**Iteration 1 was a regression.** The ribbon's width was specified in metres, and
+the near end of the arc leaves the hand less than a metre from the aim camera —
+so a 0.09 m band subtended about ten degrees and drew a teal **slab** across the
+middle of the screen, over the player's own creature. Fixed by making the width
+a constant **angle** from the eye (~1.2° across), clamped at both ends, flared
+2.4× toward the landing point, with the first 1.6 m from the eye not drawn.
+
+**Iteration 1 also exposed a contradiction I had introduced.** The cone visibly
+ended *on* the Bramblebun under a caption reading **NOT ON TARGET** — because
+the arc asks "does the predicted flight reach the body" while the reticle asked
+"is the screen-centre ray inside k × body_radius". The player reads the picture,
+so the words now follow it: `catch_aim_is_locked()` reports on-target when the
+assist is eligible **or** the previewed flight lands, and such a throw is scored
+on where that flight passes rather than on a reticle offset it will not resolve
+at. The assist gate itself is unchanged.
+
+**Iteration 2** (`ralph/reports/hud-catch/shots/catch-02-aim-after.png`) shows all three §2a
+requirements landing: the cone is a clear band instead of a one-pixel wire, the
+camera has acquired the creature (it is centred, where the pre-change frame had
+it off to the side and unlocked), and the reticle reads CAPTURE CHANCE at an aim
+that previously read NOT ON TARGET. *(The 0% is `capture_catch_sequence.gd`
+pinning `chance.max` to 0.001 to force a breakout for that frame, not a product
+value.)*
+
+### What the frames do NOT prove
+
+**The creature-height change is not verified on screen.** I measured the after
+frame the same way as the before frame and got 24% creature / 76% grass against
+the before frame's 35% / 65% — i.e. apparently *worse*. **That comparison is not
+valid and I am not reporting it as a result either way:** target acquisition
+changed the camera, so the two frames have different angle, distance and
+framing, and a hand-placed measurement box across two different framings
+measures the box as much as the creature.
+
+The height change rests on geometry that is solid on its own terms — the field
+stands 0.25–0.86 m and Bramblebun moved from 0.78 m (inside that range) to
+0.96 m (above it) — but **the on-screen gain is unproven**. The controlled test
+is the next step: the same creature, the same camera pose, rendered at 0.78 and
+at 0.96, which is the only way to separate the height change from the camera
+change. That is the honest state of it.
+
+### One cost worth naming
+
+The cone draws over the world (`no_depth_test`), which is what stops grass
+swallowing it — and it therefore also draws over **creatures**. At ~1.2° wide
+that is a stripe across the player's own creature rather than the slab iteration
+1 produced, and it is visible in the frame. The alternative is the original
+defect, since the grass is frozen by owner directive. Flagging it as a
+deliberate trade rather than an oversight.
+
+
+---
+
+# Evidence relocated, and a gap it exposed
+
+`.gitignore` anchors `/shots/`, so **none of this lane's frames were in the
+repo** — the log referenced evidence nobody else could open. Everything cited
+above now lives in `ralph/reports/hud-catch/shots/`, which is a nested `shots/`
+directory and therefore carried. Checked with `git check-ignore` rather than
+assumed.
+
+---
+
+# §2b answered with a controlled A/B — and one lever does not work
+
+The previous entry said the height change was unproven because target
+acquisition had moved the camera between the before and after frames. This is
+that test done properly.
+
+`tools/_probe_grass_separation.gd`: one world boot, **one fixed camera pose**, a
+Bramblebun at 7.6 m in real grass, rendered four ways — the two levers crossed
+so each can be attributed separately, which is what the coordinator's rule
+requires (*"if a creature clears the grass and is still invisible, height was
+never its problem"*).
+
+`ralph/reports/hud-catch/shots/grass-compare.png` is the 2×2.
+
+| variant | visible creature | contrast |
+|---|---|---|
+| **A** 0.78 m, no rim (what the owner played) | 7.0% | 1.15 : 1 |
+| **B** 0.96 m, no rim | **10.8%** | 1.08 : 1 |
+| **C** 0.78 m, rim 0.22 | 7.1% | 1.14 : 1 |
+| **D** 0.96 m, rim 0.22 | 10.9% | 1.06 : 1 |
+
+**Scale works: +56% visible creature area** (7.0% → 10.8%). That is the "too
+small to see" half of the owner's report, answered.
+
+**The rim at 0.22 is a measured no-op**: +0.1 percentage point, and contrast
+*unchanged* (1.15→1.14, 1.08→1.06). Confirmed applied, not silently skipped —
+the probe counts rim-enabled surfaces and reports 1 for C/D against 0 for A/B,
+precisely so a faint lever and an unapplied one could be told apart.
+
+**So I set it back to 0 rather than ship it.** The mechanism stays, opted out,
+with the measurement in the species note. Why it fails is consistent with the
+code that already worked: `_apply_alpha_presence()` runs its rim at **0.65** and
+pairs it with an aura *and* a repainted colourway. On a self-lit material — the
+painted albedo wired into the emission slot — a rim under `FIELD_RIM_MAX` (0.30)
+does not register, and the strengths that would register are the alpha's own
+identity tell.
+
+## Per-species levers, as asked
+
+Measured against a tuft standing 0.25–0.86 m, not eyeballed:
+
+| species | height | clears tall grass? | lever used | why |
+|---|---|---|---|---|
+| **bramblebun** | 0.78 → **0.96** | now yes | **modest scale** (+23%) | Owner named it, and it was the only species failing *both* tests. Scale is proven above; the colour half is **not fixed** — see below. |
+| **pipwing** | 0.60 → **0.76** | **still no** (0.86) | **modest scale** (+27%) | Shortest in the roster. Its colour is the roster's second-best separation (1.66:1), so height genuinely is its problem. Fully clearing the tallest tuft needs +43%, which is past modest — so it clears the *near* field and no further. **The remainder is habitat or behaviour, not more scale.** |
+| everything else | 0.95–2.60 m | yes | **none** | All clear the field. Eleven of them measure under 1.35:1 against grass tips on placeholder colour, so they are contrast *candidates* — but that figure is a proxy (the real look comes from the GLB texture, and `placeholder.colour` is documented as "retained only for the fallback capsule"), and none has a rendered measurement. I am not changing art on a proxy. |
+
+## What is still unsolved, plainly
+
+**The "colour of the grass" half.** Even at 0.96 m the Bramblebun measures
+**1.08 : 1** luminance against the field — this repo's own `vegetation.json`
+calls 1.00:1 invisible. Scale made it *findable* (nearly twice the pixels); it
+did not make it *separate*. Contrast actually dips slightly with scale, because
+more of the creature's mid-tone body shows and the average moves toward the
+grass.
+
+Two things would work, and **both are owner decisions rather than mine**:
+
+1. **A repainted colourway.** `_swap_colourway_textures()` is the one lever that
+   demonstrably changes how these self-lit models read, and it is a texture — an
+   art asset, which CLAUDE.md says needs owner-supplied reference art.
+2. **A strong rim on ordinary creatures**, which requires deciding that an
+   alpha's identity tell can be carried by its aura and colourway alone.
+
+I have not picked between them. The measurement says the problem is real and
+that the cheap lever does not touch it.

@@ -1,0 +1,196 @@
+extends SceneTree
+
+## OWNER DIRECTIVE 2026-08-28 §2b, judged the way the owner will judge it: a
+## wild creature at throwing range, in real grass, with the throw cone up.
+##
+##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+##     --rendering-driver opengl3 --resolution 1280x800 \
+##     --script tools/_probe_grass_separation.gd -- --out=ralph/reports/hud-catch/shots
+##
+## NEVER `--headless` with a real rendering driver -- see
+## `tools/_capture_ui_survey.gd`'s header for that trap and what it has cost.
+##
+## Why this exists rather than reusing `capture_catch_sequence.gd`: that tool's
+## aim frame moved between runs because THIS LANE also added target acquisition,
+## so the before and after frames had different camera poses and a hand-placed
+## measurement box across two framings measures the box. A controlled A/B has
+## to hold the camera still and change one thing at a time, which is what this
+## does: one world boot, one fixed camera pose, four variants of the same
+## Bramblebun rendered from it.
+##
+##   A  0.78m, no rim   -- what the owner played
+##   B  0.96m, no rim   -- scale alone
+##   C  0.78m, rim 0.22 -- rim alone
+##   D  0.96m, rim 0.22 -- what ships
+##
+## Both levers are isolated on purpose. The coordinator's rule is that if a
+## creature clears the grass and is still invisible then height was never its
+## problem -- C and B are what let that be answered instead of assumed.
+
+const SCENE := "res://scenes/world/meadows_playground.tscn"
+const SPECIES_ID := "bramblebun"
+const SETTLE_FRAMES := 300
+const POSE_FRAMES := 24
+
+## Metres from the camera to the creature: the throwing range the launch log
+## reports for a real fight (7.4-8.1m across four commits).
+const RANGE := 7.6
+const EYE_HEIGHT := 1.78
+
+var _out_dir := "res://ralph/reports/hud-catch/shots"
+var _world: Node = null
+var _camera: Camera3D = null
+var _body: Node3D = null
+var _written: Array[String] = []
+
+
+func _init() -> void:
+	_run()
+
+
+func _run() -> void:
+	if DisplayServer.get_name() == "headless":
+		print("headless has no renderer; run under xvfb-run")
+		quit(1)
+		return
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--out="):
+			_out_dir = arg.substr(6)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+
+	_world = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(_world)
+	for i in SETTLE_FRAMES:
+		await physics_frame
+
+	# A patch of open meadow with the grass field on. Taken from the same area
+	# `capture_catch_sequence.gd` fights in, so the field is the one the owner
+	# played rather than a bare test plane.
+	var stand := Vector3(36.0, 0.0, -50.0)
+	stand.y = _ground(stand)
+
+	_camera = Camera3D.new()
+	_world.add_child(_camera)
+	_camera.global_position = stand + Vector3(0.0, EYE_HEIGHT, 0.0)
+	var look_at := stand + Vector3(RANGE, 0.0, 0.0)
+	look_at.y = _ground(look_at)
+	_camera.look_at(look_at + Vector3(0.0, 0.45, 0.0), Vector3.UP)
+	_camera.fov = 52.0
+	_camera.make_current()
+
+	# Re-bind the grass field to THIS camera, or the whole probe is worthless.
+	# `grass_field.gd::_process` grows its ring around the camera
+	# `playground_world.gd` bound at startup, and a probe that mints its own
+	# camera gets a creature standing on baked ground cover with no field around
+	# it at all. A first run did exactly that and produced four frames of a
+	# rabbit on a lawn -- which cannot answer a question about tall grass.
+	# `bind()` is grass_field.gd's own public API; nothing in that file changes.
+	var field := _find_grass_field(_world)
+	if field == null:
+		print("WARNING: no GrassField in the scene; these frames do not test the field")
+	else:
+		field.call("bind", field.get("_terrain"), _camera)
+		for i in 30:
+			await physics_frame
+		print("grass field re-bound to the probe camera")
+
+	for variant: Dictionary in [
+		{"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0},
+		{"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0},
+		{"tag": "C-0.78-rim", "height": 0.78, "rim": 0.22},
+		{"tag": "D-0.96-rim", "height": 0.96, "rim": 0.22},
+	]:
+		await _shoot(variant, look_at)
+
+	print("")
+	for line: String in _written:
+		print("  %s" % line)
+	print("%d frames -> %s" % [_written.size(), _out_dir])
+	print("Software rendering: composition, contrast and readability only.")
+	quit(0)
+
+
+## One variant. The species table is edited in place around each shot so both
+## levers really do run through the production path -- `creature_body.gd` reads
+## `placeholder.height` and `placeholder.field_rim` from it -- rather than being
+## faked by scaling a node, which is the invisible discrepancy PW2 forbids and
+## which would not exercise the rim at all.
+func _shoot(variant: Dictionary, at: Vector3) -> void:
+	var species := load("res://scripts/creatures/creature_species.gd")
+	var table: Dictionary = species.call("placeholder", SPECIES_ID)
+	var original_height: float = float(table.get("height", 0.78))
+	var original_rim: float = float(table.get("field_rim", 0.0))
+	table["height"] = float(variant["height"])
+	table["field_rim"] = float(variant["rim"])
+
+	if _body != null and is_instance_valid(_body):
+		_body.queue_free()
+		await process_frame
+	_body = _spawn(at)
+	if _body == null:
+		print("FAIL: could not spawn %s" % SPECIES_ID)
+		return
+	for i in POSE_FRAMES:
+		await physics_frame
+	print("  %s: rim materials on the model = %d" % [variant["tag"], _count_rim(_body)])
+
+	var path := "%s/grass-%s.png" % [_out_dir, variant["tag"]]
+	var image := get_root().get_texture().get_image()
+	image.save_png(ProjectSettings.globalize_path(path))
+	_written.append("%-14s height %.2f rim %.2f -> %s" % [
+		variant["tag"], float(variant["height"]), float(variant["rim"]), path])
+
+	table["height"] = original_height
+	table["field_rim"] = original_rim
+
+
+## The same three steps `encounter_director.gd` takes for a real wild spawn:
+## instantiate the scriptless body scene, attach `wild_creature.gd`, then
+## `populate(species, player)`. Anything less would not run the production
+## dressing path and the rim would never be applied.
+func _spawn(at: Vector3) -> Node3D:
+	var scene: PackedScene = load("res://scenes/creatures/creature.tscn")
+	if scene == null:
+		return null
+	var body: Node3D = scene.instantiate()
+	body.set_script(load("res://scripts/creatures/wild_creature.gd"))
+	body.name = "GrassProbe_%s" % SPECIES_ID
+	_world.add_child(body)
+	body.global_position = at
+	body.call("populate", SPECIES_ID, null)
+	body.global_position = at
+	return body
+
+
+## How many of the body's surfaces actually carry a rim. A frame where the rim
+## reads faintly and a frame where it was never applied look identical, and
+## only one of them is a tuning question.
+func _count_rim(node: Node) -> int:
+	var count := 0
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var material := instance.get_active_material(surface)
+			if material is BaseMaterial3D and (material as BaseMaterial3D).rim_enabled:
+				count += 1
+	for child in node.get_children():
+		count += _count_rim(child)
+	return count
+
+
+func _find_grass_field(node: Node) -> Node:
+	if node.get_script() != null \
+			and String(node.get_script().resource_path).ends_with("grass_field.gd"):
+		return node
+	for child in node.get_children():
+		var found := _find_grass_field(child)
+		if found != null:
+			return found
+	return null
+
+
+func _ground(at: Vector3) -> float:
+	if _world != null and _world.has_method("ground_height_at"):
+		return float(_world.call("ground_height_at", at.x, at.z))
+	return 0.0
