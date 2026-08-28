@@ -10,8 +10,8 @@ captured 8% of what it was asked to and four of Phase B's findings turned out to
 be the instrument; the only defence against repeating that is to say, of every
 finding, which of the two it is about — before anyone has to guess.
 
-Three of the four below were found by running. The fourth was found by reading
-the artefacts of a segment that had already produced a wrong answer.
+Four of the five below were found by running. The other was found by reading the
+artefacts of a segment that had already produced a wrong answer.
 
 ---
 
@@ -152,13 +152,81 @@ genuinely is not there" half is still open.
 
 ---
 
-## What these four have in common
+## RIG-5 — a modal that owns input produces a false *navigation* finding
 
-None of them is about Tetherbound. Two of them (RIG-1, RIG-2) would have
-produced, between them, 26 false failures and a run that stopped after two
-segments — and both would have been read, in a Phase B that saw only the
-artefacts, as evidence about the game.
+**Severity: BLOCKER for evidence quality.** Not fixed. This is round 1's
+refuted-findings defect, still open, on the one step class the round-2 fix does
+not cover.
+
+Found live in S03. The sequence, from `events.jsonl` and `route.csv`:
+
+```
+t=269.3  walked 6.1 m to (22,-6)                       ctx=world
+t=269.3  a DialoguePanel opens (Oskar)                 ctx=narrative_modal
+t=269.4  press interact  -> flag oskar_trade_open
+t=269.8  ctx=panel:SwapPanel   owner=SwapPanel   focus="1.  Moss  Lv 3"
+t=271.2  press interact x10                            ctx=panel:SwapPanel
+t=321.2  FAIL did not reach (16,-28) in 3000 walking frames;
+         stopped 25.9 m short at (22.0, 1.0, -3.0)  (0 held)
+t=372.5  FAIL did not reach (12,-22) in 3000 walking frames;
+         stopped 21.7 m short at (22.0, 1.0, -3.0)  (0 held)
+```
+
+The player did not move a metre for **105+ seconds of play**. Read cold, those
+two failures say *the village has a spot you cannot walk out of* — a SHIP-severity
+world defect. **It is nothing of the kind.** Oskar is a creature vendor;
+`sequence_director.gd::_maybe_open_shop()` opens `swap_panel.gd` for him;
+`swap_panel.gd` closes on **`menu_cancel`**, and the step script pressed
+`interact` twelve times and never pressed cancel. The game did exactly what it
+should.
+
+Two separate holes, and the second is the one that matters:
+
+1. **The step script has no exit from a vendor panel.** It assumed `interact`
+   dismisses what `interact` opened.
+2. **`move_to` did not know the panel was there.** `stick_navigator.gd` decides
+   "held" by asking `player.locomotion_enabled()`, and that flag is set by
+   `sequence_director` for narrative modals, by `encounter_director` for combat,
+   by `throw_aim`, and by `player_death` — **but not by any station or vendor
+   panel**, which pause the tree instead. So the navigator saw locomotion as
+   enabled, pressed the stick into a paused tree for 3,000 frames, and reported
+   a *navigation* failure with `(0 held)`.
+
+The schema promises the opposite: *"The FAIL message names the `input_context`
+that held it."* It names it only when frames were counted as held — so the
+message is silent in exactly the case where it was needed.
+
+**Why this is the important one.** The schema's own derail rule was written for
+this class after Phase B refuted 202 journey failures, of which *"118 in X01 and
+21 in X02 … were the harness pressing at a modal it did not know was open."* The
+round-2 fix routes `require_context` and `assert_context` through a derail. It
+does **not** cover `move_to` / `move_to_entity`, and travel steps are where a
+journey segment spends most of its time. The defect class that produced 139
+refuted findings in round 1 is still live on the most common step in the
+protocol.
+
+**Recommended fix**, in the order they matter: give `move_to`'s held-detection a
+second source of truth — the input context, treating any `panel:*`,
+`narrative_modal` or `menu*` context as held, rather than only
+`locomotion_enabled()`; then name that context in the FAIL text whether or not
+frames were counted as held; then add the missing `close_menu` to the step
+scripts that open a vendor.
+
+---
+
+## What these five have in common
+
+None of them is about Tetherbound. Three of them — RIG-1, RIG-2, RIG-5 — would
+have been read, in a Phase B that saw only the artefacts, as evidence about the
+game: 26 objectives that never advanced, a chapter too expensive to play, and a
+village with a spot you cannot walk out of. All three are the instrument.
 
 RIG-3 and RIG-4 are quieter and the same shape: an instrument that does not
 measure what it says it measures, and an instrument that keeps recording after
 it has stopped pointing at anything.
+
+RIG-5 deserves the last word, because it is not a new defect. It is the one
+Phase B already found in round 1, already diagnosed, and already half-fixed —
+and the half that was left is the half a journey segment spends most of its time
+in. A rig that fixes the modal problem for asserts and not for walking has not
+fixed the modal problem.
