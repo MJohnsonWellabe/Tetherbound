@@ -360,6 +360,55 @@ may be worth treating as a bug rather than a tuning value — the trainer is
 aiming past their own companion — but which of the two it is depends on whether
 "reposition to get a clean line" is meant to be part of the skill.
 
+### Evidence
+
+Rendered through the real path (`xvfb-run`, `opengl3`, never `--headless` with
+a real driver):
+
+- `shots/catch/01-aiming-full-health.png` — the new **NOT ON TARGET** state in a
+  live fight. The ring marks the wild creature; the caption says the screen-centre
+  ray is not on it. Before this pass that same frame showed a confident
+  percentage.
+- `shots/catch/07-aiming-weakened.png` — the locked state, ring and number.
+  (The 100% is `capture_catch_sequence.gd` pinning `chance.min` to 0.999 so the
+  dice reliably produce a catch for the frame; the live cap is `chance.max`
+  0.95.)
+- `shots/catch_aim/reticle_states.png` — the three states side by side: locked
+  dead-centre, locked but clipping, and not on target.
+- `tests/test_catch_math.gd` — six new assertions pinning the placement
+  arithmetic; `tests/smoke_catching.gd` — the advertised-chance guard, driven
+  through a real fight.
+
+### Two things noticed in the frames, for whoever owns them
+
+Neither is this lane's to change, and neither is asserted as a defect.
+
+- **The wild creature is hard to see in the grass.** In
+  `01-aiming-full-health.png` the target is most of the way hidden by the grass
+  field at throwing range. That is the field the owner has called *awesome* and
+  said must not change, and `scripts/world/grass_field.gd` belongs to another
+  lane — noting it only because "I can't see what I'm aiming at" would be a
+  plausible independent contributor to "catching sucks", and it is visible in
+  this lane's own frames.
+- **The unlocked caption is deliberately quiet** (`TEXT_MUTED` over a bright
+  outdoor scene). The reasoning is that the loud state — teal or amber ring, big
+  number — is the GOOD state and its absence is the signal, rather than a red
+  warning flashing through every aim adjustment. If the owner reads it as too
+  easy to miss, it is one colour constant.
+
+### A red test on `main`, fixed here
+
+`smoke_controller_catching.gd` fails on clean `origin/main` with *"intentional
+physical throw never resolved"*. Verified by checking out `origin/main`'s tree
+and running it. The cause is a stale assertion, not a product bug: the test
+counted a miss by matching the string `"the orb went wide"`, and `orb.gd`
+stopped emitting that when miss messages became per-cause — the exact change
+`throw_aim.gd`'s own `orb_missed` signal documents (*"Carries the sentence to
+show the player, because 'the orb went wide' was printed for every miss
+regardless of what happened"*). It now counts the signal that means miss.
+Passing here. Worth the coordinator knowing it was red on `main` and for how
+long.
+
 ### What I did not prove
 
 - **How catching feels.** [OWNER-ONLY]. I measured the arithmetic, the wiring
