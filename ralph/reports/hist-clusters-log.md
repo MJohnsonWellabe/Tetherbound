@@ -315,3 +315,53 @@ to change; what must not change is which edge the code reads.
 [OWNER-ONLY]. The `AllyPanel`'s authored offsets in `combat_hud.tscn` still
 disagree with its real size by 41 px; nothing reads them any more, and they
 were left alone rather than re-tuned by hand.
+
+---
+
+### `HIST-014` — the world HUD ghosts under the dialogue panel — **CLOSED (symptom already gone; guard added, design question left open)**
+
+**What it was.** While Grandpa is talking, *"RB — Call out Terrapup"* shows
+through the top edge of his dialogue box. The register names the root cause as
+the five station panels being wired to `input_owner.gd::set_world_hud_visible()`
+while the dialogue panel was not — and flags an open design question ahead of
+any fix: **a conversation is not a menu, so hiding the whole HUD may not be
+wanted.**
+
+**Verified on current `main`: the reported symptom is gone, by a different
+route than the register expected.** `dialogue_panel.gd` still does not call
+`set_world_hud_visible()`, and does not need to for this symptom.
+`playground_hud.gd::_yield_bottom_to_build_menu()` hides the hotbar **and** the
+contextual prompt on `INPUT_OWNER.current(tree) != null`, and
+`_exploration_legend_should_show()` stands the legend down on the same
+predicate — and `dialogue_panel.gd` joins `INPUT_OWNER.GROUP`. So all three
+bottom-dock widgets leave while a conversation owns input, the prompt among
+them. Nothing else the HUD draws reaches the box's band (x 211–1709, y 772–1024
+at 1080).
+
+Measured rather than reasoned: with a five-creature roster revealed, a stocked
+hotbar and a real "Call out Terrapup" prompt, **46** visible painting widgets
+are on screen during `grandpa_house` and none intersects the box.
+
+**The design question is deliberately not answered here.** `set_world_hud_visible`
+is still not wired to the dialogue panel, and whether it should be is a
+preference about what a conversation ought to look like, not a defect — the
+item says so itself. Nothing was invented in either direction.
+
+**Coverage.** `tests/smoke_dialogue_clears_the_world_hud.gd` (new, in the CI
+matrix) guards the **outcome**, not the mechanism: no visible world-HUD widget
+may composite through the dialogue box, and whatever stands down must come
+back. A later lane can answer the design question either way and this file has
+no opinion about how.
+
+Two things it had to get right to mean anything, both paid for:
+
+- **Container rects are not drawn content.** A first run failed on
+  `Root/BottomDock` — a full-width `VBoxContainer` that spans the box's whole
+  band and paints nothing, while all three of its children were correctly stood
+  down. The check now walks the tree and skips the pure layout/grouping classes
+  by name, which is also stricter: a single label left drawing inside a
+  container whose own rect sits elsewhere would be caught.
+- **Non-vacuity.** Removing the `INPUT_OWNER.current(...)` term from
+  `_yield_bottom_to_build_menu()` fails the run naming ten widgets through the
+  box — `Prompt (RichTextLabel)` among them, which is the reported symptom
+  itself.

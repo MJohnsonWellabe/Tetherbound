@@ -644,6 +644,9 @@ jobs:
           # HIST-013. Mounts combat_hud.tscn only, no fight and no world.
           - smoke: combat_hud_left_column
             retries: 1
+          # HIST-014. HUD scene plus the dialogue panel over a stand-in world.
+          - smoke: dialogue_clears_the_world_hud
+            retries: 1
     steps:
       - uses: actions/checkout@v4
         with:
