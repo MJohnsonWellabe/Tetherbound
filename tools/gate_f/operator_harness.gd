@@ -290,6 +290,8 @@ var _reprices: Array = []
 var _cost_rechecks := 0
 ## 0 = not asked yet, 1 = inside a work tree, -1 = not. See `_inside_work_tree`.
 var _work_tree_cached := 0
+## Largest evidence PNG actually written. See `_note_png_bytes`.
+var _evidence_png_bytes := 0
 var _disk: Dictionary = {}
 
 # --- live counters -----------------------------------------------------------
@@ -1462,7 +1464,12 @@ func _write_inventory() -> void:
 			"skipped": int(_verdicts["SKIP"]),
 			"delegated": int(_verdicts.get("DELEGATED", 0))},
 		"cost": {"reprices": _reprices, "frame_cost_s": snappedf(_frame_cost_s, 0.000001)},
+		# The estimate the gate acted on, and beside it what the segment
+		# actually wrote. The second is the input the NEXT pre-flight wants: an
+		# estimate is only as good as its per-frame size, and the pre-flight's
+		# self-test photographs an empty tree. Measured, not predicted.
 		"disk": _disk,
+		"disk_actual": _disk_actual(),
 		"derails": _derails,
 		"harness_errors": _harness_errors,
 	}
@@ -2081,7 +2088,10 @@ func _price_disk(frames_remaining: int) -> Dictionary:
 	if not _capture_available() or not _telemetry_on():
 		_disk = out
 		return out
-	var per_png := float(_preflight.get("png_bytes", 0.0))
+	# The self-test is the floor, not the answer: it photographs an empty tree.
+	# A real evidence frame, once one exists, is what this segment's frames
+	# actually cost.
+	var per_png := maxf(float(_preflight.get("png_bytes", 0.0)), float(_evidence_png_bytes))
 	if per_png <= 0.0:
 		out["why"] = "no measured PNG size (the pre-flight self-test did not write one)"
 		_disk = out
@@ -3261,8 +3271,52 @@ func _write_frame(trigger: String) -> void:
 		return
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
+	var wrote := _file_bytes(_out_dir.path_join(rel))
+	row["bytes"] = wrote
+	_note_png_bytes(wrote)
 	_frames.append(row)
 	_record_written += 1
+
+
+## What this segment actually put on disk, from the rows that recorded it.
+##
+## Deliberately summed from the manifests rather than by walking the directory:
+## a byte count that agrees with the rows is a byte count a reader can reconcile
+## against them, and a directory walk would also sweep up `_preflight.png` and
+## `capture_smoke.png`, which are instrument artefacts and not evidence.
+func _disk_actual() -> Dictionary:
+	var shot_bytes := 0
+	for entry: Variant in _manifest:
+		shot_bytes += int((entry as Dictionary).get("bytes", 0))
+	var frame_bytes := 0
+	for entry: Variant in _frames:
+		frame_bytes += int((entry as Dictionary).get("bytes", 0))
+	return {
+		"shot_bytes": shot_bytes,
+		"frame_bytes": frame_bytes,
+		"total_bytes": shot_bytes + frame_bytes,
+		"largest_evidence_png_bytes": _evidence_png_bytes,
+		"preflight_self_test_png_bytes": int(_preflight.get("png_bytes", 0)),
+	}
+
+
+## The largest evidence PNG this segment has actually written.
+##
+## The disk estimate starts from the pre-flight self-test, which is the only
+## measurement available before step 1 -- and it is a frame of an EMPTY TREE.
+## Measured on S01C: the self-test was 10,596 bytes and the real title frame was
+## **65,297**, a 6x under-estimate. Pricing a segment's disk against the cheapest
+## possible frame is the same mistake as pricing its time against the cheapest
+## possible scene, which is the defect this whole round exists to fix -- so as
+## soon as a real frame exists, the estimate uses it.
+##
+## The MAX rather than the mean, deliberately. A budget is what a segment may
+## still spend, and a scene that has produced one 200 kB frame will produce
+## more; an average dragged down by a title screen would clear a ceiling the
+## rest of the segment cannot.
+func _note_png_bytes(bytes: int) -> void:
+	if bytes > _evidence_png_bytes:
+		_evidence_png_bytes = bytes
 
 
 ## Mean luminance, standard deviation and dark fraction of a frame.
@@ -3417,6 +3471,8 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		return "FAIL capture %s could not be written (%d)" % [shot_id, err]
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
+	row["bytes"] = _file_bytes(_out_dir.path_join(rel))
+	_note_png_bytes(int(row["bytes"]))
 	var stats := _frame_stats(image)
 	row["luma"] = stats
 	_manifest.append(row)

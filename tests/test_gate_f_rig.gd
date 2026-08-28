@@ -907,9 +907,12 @@ func test_the_preflight_prices_disk_as_well_as_time() -> void:
 		+ "its time does")
 	var body := source.substr(source.find("func _price_disk("))
 	body = body.substr(0, body.find("\n\n\n"))
-	assert_true(body.contains("_preflight.get(\"png_bytes\""),
-		"bytes per PNG must be MEASURED — the pre-flight self-test writes a real frame of the real "
-		+ "scene at the real capture resolution")
+	assert_true(body.contains("_preflight.get(\"png_bytes\"")
+		and body.contains("_evidence_png_bytes"),
+		"bytes per PNG must be MEASURED, and the pre-flight self-test is only the FLOOR: it "
+		+ "photographs an empty tree. On S01C it was 10,596 bytes against a real title frame of "
+		+ "65,297 — a 6x under-estimate, which is the same mistake as pricing a segment's time "
+		+ "against the cheapest possible scene. Once a real evidence frame exists, use it.")
 	assert_true(body.contains("_inside_work_tree()"),
 		"evidence has to be committable to survive the container, so the .git copy is part of the "
 		+ "bill — but only where the run directory actually is inside a work tree")

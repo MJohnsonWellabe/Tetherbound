@@ -1113,8 +1113,28 @@ All at step 1, all with **0 steps executed**, all exit 1.
 | capture lane owing an id it never shoots | *"…claims to owe [\"GF-99-FAKE-03\"] but no capture step in this segment takes them…"* — **and, in the same refusal**, the CD-8b contradiction, because a capture lane running headless against a record that says X11 is exactly the fault CD-8b exists for |
 | logic lane handing `S01C` an id its `owes` does not accept | *"…hands 1 id(s) to \"S01C\" that its \"owes\" list does not accept: [\"GF-13-FINALE-03\"]. An unaccepted delegation is how a segment would become capture-incomplete forever without anything ever saying so."* |
 | **the cost gate re-pricing in scene** (`selfcheck_walk`, ceiling forced to 120 s) | pre-flight priced it at **70.7 s on the empty tree and let it through**; `boot:world` re-priced it at **157 s against the 46 s of budget left** and stopped it. Segment ran 1 of 12 steps. This is the defect's exact shape, reproduced and then caught. |
-| **the disk gate** (`S01C`, reserve forced to 20 kB below free) | *"disk: predicted 85 kB of evidence (8 files at a measured 11 kB each, ×1 for the copy git has to carry) … against 23.71 GB free with a 23.71 GB reserve."* Run **with `--gatef-allow-no-capture`**, which did not waive it — a `hard_why`, like cost. |
+| **the disk gate** (`S01C`, reserve forced to 20 kB below free) | *"disk: predicted 85 kB of evidence (8 files at a measured 11 kB each, ×1 for the copy git has to carry), of which the bulk is 1 prescribed shot(s) and up to 7 event-forced frame(s) — against 23.71 GB free with a 23.71 GB reserve."* Run **with `--gatef-allow-no-capture`**, which did not waive it — a `hard_why`, like cost. |
 | **the run-level ledger**, S01 alone in a run directory | S01's own `INVENTORY.json` says `complete: true`; `run_inventory.py` exits **1** with *"UNPAID DELEGATION: S01 handed GF-01-TITLE-01 to S01C and the capture lane never ran in this run directory."* This is the case the whole design exists for. |
+
+### One more thing reading it back found: the disk estimate was priced off an
+### empty tree
+
+The pre-flight self-test is the only PNG that exists before step 1, and it
+photographs an **empty tree**. S01C measured it at **10,596 bytes** and then
+wrote a real title frame of **65,297** — a 6× under-estimate, which is the
+same mistake as pricing a segment's time against the cheapest possible scene
+and would have been a strange thing to ship in the round that exists to fix
+that. The estimate now takes `max(self-test, largest evidence frame written so
+far)`, and the max rather than the mean: a budget is what a segment may still
+spend, and an average dragged down by a title screen would clear a ceiling the
+rest of the segment cannot.
+
+`INVENTORY.json` also closes with `disk_actual` — shot bytes, frame bytes, the
+largest evidence PNG, and the self-test beside it — because that is the input
+the *next* pre-flight wants, and it is a measurement rather than a prediction.
+S01C's reads `{"largest_evidence_png_bytes": 65297,
+"preflight_self_test_png_bytes": 10596, "total_bytes": 65297}`, which is the
+6× gap stated in the artefact rather than in this log.
 
 ### Tests
 
