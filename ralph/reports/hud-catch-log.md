@@ -649,3 +649,57 @@ feel from an earlier playtest. The result should be *easier to aim*, not
 *impossible to miss*: a throw pointed away from the creature still misses, and
 `accuracy_bonus` still pays more for a centred trajectory than a clipped one now
 that it actually functions.
+
+## Render verdict — what the frames actually show
+
+Two render iterations, because the first was wrong and the frames said so.
+
+**Iteration 1 was a regression.** The ribbon's width was specified in metres, and
+the near end of the arc leaves the hand less than a metre from the aim camera —
+so a 0.09 m band subtended about ten degrees and drew a teal **slab** across the
+middle of the screen, over the player's own creature. Fixed by making the width
+a constant **angle** from the eye (~1.2° across), clamped at both ends, flared
+2.4× toward the landing point, with the first 1.6 m from the eye not drawn.
+
+**Iteration 1 also exposed a contradiction I had introduced.** The cone visibly
+ended *on* the Bramblebun under a caption reading **NOT ON TARGET** — because
+the arc asks "does the predicted flight reach the body" while the reticle asked
+"is the screen-centre ray inside k × body_radius". The player reads the picture,
+so the words now follow it: `catch_aim_is_locked()` reports on-target when the
+assist is eligible **or** the previewed flight lands, and such a throw is scored
+on where that flight passes rather than on a reticle offset it will not resolve
+at. The assist gate itself is unchanged.
+
+**Iteration 2** (`shots/catch/01-aiming-full-health.png`) shows all three §2a
+requirements landing: the cone is a clear band instead of a one-pixel wire, the
+camera has acquired the creature (it is centred, where the pre-change frame had
+it off to the side and unlocked), and the reticle reads CAPTURE CHANCE at an aim
+that previously read NOT ON TARGET. *(The 0% is `capture_catch_sequence.gd`
+pinning `chance.max` to 0.001 to force a breakout for that frame, not a product
+value.)*
+
+### What the frames do NOT prove
+
+**The creature-height change is not verified on screen.** I measured the after
+frame the same way as the before frame and got 24% creature / 76% grass against
+the before frame's 35% / 65% — i.e. apparently *worse*. **That comparison is not
+valid and I am not reporting it as a result either way:** target acquisition
+changed the camera, so the two frames have different angle, distance and
+framing, and a hand-placed measurement box across two different framings
+measures the box as much as the creature.
+
+The height change rests on geometry that is solid on its own terms — the field
+stands 0.25–0.86 m and Bramblebun moved from 0.78 m (inside that range) to
+0.96 m (above it) — but **the on-screen gain is unproven**. The controlled test
+is the next step: the same creature, the same camera pose, rendered at 0.78 and
+at 0.96, which is the only way to separate the height change from the camera
+change. That is the honest state of it.
+
+### One cost worth naming
+
+The cone draws over the world (`no_depth_test`), which is what stops grass
+swallowing it — and it therefore also draws over **creatures**. At ~1.2° wide
+that is a stripe across the player's own creature rather than the slab iteration
+1 produced, and it is visible in the frame. The alternative is the original
+defect, since the grass is frozen by owner directive. Flagging it as a
+deliberate trade rather than an oversight.
