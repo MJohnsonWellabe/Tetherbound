@@ -1042,8 +1042,7 @@ Round 1's standard: prove it by running it, and say what was not proved.
 
 ### The split, end to end, on this container
 
-One run directory, `rig2-b`, with a lane-aware freeze record written **before**
-the run:
+One run directory, with a lane-aware freeze record written **before** the run:
 
 ```json
 { "lanes": { "logic":   {"display_server": "headless"},
@@ -1054,7 +1053,7 @@ the run:
 |---|---|---|
 | **S01** (logic) | `run_segment.sh S01` — headless | **COMPLETE**, exit 0. 14/14 steps ran: 12 PASS, 1 FAIL, **1 DELEGATED**. `DELEGATED.md` names `GF-01-TITLE-01` and `S01C`. 362 `route.csv` rows, 0 frames. |
 | **S01C** (capture) | `run_segment.sh --capture S01C` — xvfb, 1920×1080, smoke passed with no fallback | **COMPLETE**, exit 0. 7/7 PASS. `shots/GF-01-TITLE-01.png`, **65,297 bytes**, on its manifest row, `exists: true` read off disk. |
-| **the run** | `run_inventory.py rig2-b` | `1/1 prescribed frames present on disk`, **run is COMPLETE**, exit 0. |
+| **the run** | `run_inventory.py <run>` | `1/1 prescribed frames present on disk`, **run is COMPLETE**, exit 0. |
 
 The frame S01C took measures **mean luma 50.8, spread 32.4, 5.4% dark** — the
 same three numbers the 2026-08-27 run recorded for the same id. Same evidence,
@@ -1069,9 +1068,9 @@ is refused for the contradiction — see the negatives below, third row.
 ### The two clocks, separated and visible in one file
 
 S01's `route.csv` runs **t = 0.72 → 180.88** while its `wall` column runs
-**02:04:03 → 02:08:12**. 180 play seconds; **249 wall seconds**. 362 rows is
+**02:19:22 → 02:23:30**. 181 play seconds; **250 wall seconds**. 362 rows is
 exactly 2 Hz over 181 play seconds. Before this change the same file would have
-reported the 180 s wait as ~249 s of "elapsed time" and handed that to §D.
+reported the 180 s wait as ~250 s of "elapsed time" and handed that to §D.
 
 ### The cost gate, and the case a per-boot re-price alone would still miss
 
@@ -1079,10 +1078,10 @@ S01's ledger:
 
 | at | s/frame | frames left | predicted | budget left |
 |---|---|---|---|---|
-| pre-flight (empty tree) | 0.0059 | 10,856 | 71 s | 14,400 s |
-| `boot:title` | 0.0065 | 10,856 | 72 s | 14,399 s |
-| **in-play, step 8** | **0.591** | 10,805 | **6,387 s** | 14,328 s |
-| in-play, step 8 | 0.0167 | 10,805 | 180 s | 14,326 s |
+| pre-flight (empty tree) | 0.0059 | 10,858 | 64 s | 14,400 s |
+| `boot:title` | 0.0065 | 10,826 | 71 s | 14,399 s |
+| **in-play, step 8** | **0.590** | 10,805 | **6,372 s** | 14,329 s |
+| in-play, step 8 | 0.0167 | 10,805 | 180 s | 14,327 s |
 
 **There is no `boot:world` row, and that is the point.** On the New Game path
 the world is stood up by the button press, not by a `boot` step — so a re-price
@@ -1092,6 +1091,16 @@ stand-up. Fixing only the "re-price after the *right* boot" half would have
 left this hole open.
 
 91 rechecks ran; 3 rows are in the ledger, which is the log-a-move rule working.
+
+(The ledger above is from the *second* run of the pair. Reading the first one
+back found a real arithmetic error in this lane's own code: `_reprice` priced
+the remainder from the boot step it had just finished, so a 240-frame settle
+was charged twice — once as frames and again as the `boot_ms` beside them,
+which at the run-2 price is ~1,560 s of phantom cost, enough to refuse a
+segment that fits. A re-price after a completed step now prices from the next
+one; the in-play recheck still prices from the current one, because a
+half-spent step may still spend the rest of its budget. Both runs of the pair
+are identical in every other number, including the frame's three luma figures.)
 
 ### Every new refusal, run rather than read
 

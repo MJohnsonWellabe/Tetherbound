@@ -1940,14 +1940,21 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 		return ""
 	var before := _frame_cost_s
 	var now := await _measure_frame_cost()
-	return _apply_price(reason, now, boot_ms, before, true)
+	# From the step AFTER this one: the boot's own settle frames are spent, and
+	# its real cost is `boot_ms`, added separately. Charging both would price a
+	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
+	# BLOCKER measured, which is enough to refuse a segment that fits.
+	return _apply_price(reason, now, boot_ms, before, true, _step_index + 1)
 
 
 ## The arithmetic half of `_reprice`, split out so the periodic in-play recheck
 ## can reuse it with a cost it OBSERVED rather than one it stopped to measure.
+## `from_index` is the first step still to be paid for. A re-price taken after a
+## COMPLETED step passes the next one; the in-play recheck passes the current
+## one, because a step half-spent may still spend the rest of its budget.
 func _apply_price(reason: String, now: float, boot_ms: float, before: float,
-		verbose: bool) -> String:
-	var remaining_frames := _predict_frames_from(_steps, _step_index)
+		verbose: bool, from_index: int) -> String:
+	var remaining_frames := _predict_frames_from(_steps, from_index)
 	var spent := _wall_t()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
 	var budget := ceiling - spent
@@ -2039,7 +2046,7 @@ func _cost_recheck() -> void:
 	var observed := elapsed / float(_cost_window_frames)
 	_cost_window_frames = 0
 	_cost_window_usec = Time.get_ticks_usec()
-	_apply_price("in-play", observed, 0.0, _frame_cost_s, false)
+	_apply_price("in-play", observed, 0.0, _frame_cost_s, false, _step_index)
 
 
 ## Frames this segment has still to advance, from `at` onward.
