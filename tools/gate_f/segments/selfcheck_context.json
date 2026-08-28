@@ -2,6 +2,8 @@
   "id": "selfcheck_context",
   "title": "Harness self-check (CD-1/CD-4): the context guard fails at the step that could not drive the game",
   "lane": "diag",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "Section H/G evidence split, owner decision 2026-08-27. This self-check has no prescribed capture and exists to prove the harness can drive the game; it is the logic lane by design. Declaring it turns the continuous record off explicitly rather than leaving it to record_default_hz, which is what made a logic-only self-check trip the capture pre-flight.",
   "record_hz": 0,
   "_comment": "NOT a protocol segment. This is the regression for GF-B-002's first primitive. It deliberately puts the game into a context a world control does not belong in, then asks a step to press one -- and asserts that the step refuses, that the segment derails, that the steps after it are SKIPPED rather than run, and that a later step resynchronises it. Every one of those four is a behaviour the f082bdf6 run did not have, and 118 X01 failures plus 21 X02 failures were the cost.",
   "_comment_expected_fails": "SC-X-05 is an EXPECTED FAIL and SC-X-06 and SC-X-07 are EXPECTED SKIPs. They are the point of the segment, not defects in it. A run in which SC-X-05 PASSES is a run in which the guard is not working, and a run in which SC-X-06 executes is a run that would have gone on to record forty findings about a game that was never in the state the script assumed.",
@@ -97,7 +99,7 @@
         "check": "mouse_captured",
         "equals": true
       },
-      "expected": "§E.4's restoration checklist: the shell releases the mouse on open and must restore it on close. Under --capture this is a real verdict. In LOGIC mode it is a SKIP and says so: a process with no display server has no mouse to capture, so mouse mode says nothing about the game. An assertion that cannot be EVALUATED is not a verdict -- the first run of this segment reported `mouse_mode=visible (wanted captured)` as a FAIL against a build that restores it fine, which is the harness-artefact class this whole lane exists to remove."
+      "expected": "\u00a7E.4's restoration checklist: the shell releases the mouse on open and must restore it on close. Under --capture this is a real verdict. In LOGIC mode it is a SKIP and says so: a process with no display server has no mouse to capture, so mouse mode says nothing about the game. An assertion that cannot be EVALUATED is not a verdict -- the first run of this segment reported `mouse_mode=visible (wanted captured)` as a FAIL against a build that restores it fine, which is the harness-artefact class this whole lane exists to remove."
     },
     {
       "id": "SC-X-11",

@@ -188,7 +188,36 @@ segment_plans_captures() {
 	grep -Eq '"action"[[:space:]]*:[[:space:]]*"capture(_seq)?"' "$path"
 }
 
-if [[ "$MODE" == "logic" && -n "$SEGMENT_PATH" ]] && segment_plans_captures "$SEGMENT_PATH"; then
+# Which evidence lane the segment declares (section H/G split, owner decision
+# 2026-08-27). `both` is what every segment written before the split means and
+# is the default, so an unconverted segment behaves exactly as it did.
+segment_evidence_lane() {
+	local path="$1"
+	[[ -f "$path" ]] || { echo both; return; }
+	local lane
+	lane="$(grep -Eo '"evidence_lane"[[:space:]]*:[[:space:]]*"[a-z]+"' "$path" \
+		| head -n1 | grep -Eo '"[a-z]+"$' | tr -d '"')"
+	echo "${lane:-both}"
+}
+
+EVIDENCE_LANE="both"
+if [[ -n "$SEGMENT_PATH" ]]; then
+	EVIDENCE_LANE="$(segment_evidence_lane "$SEGMENT_PATH")"
+fi
+
+# The evidence split's runner-side consequence. A LOGIC lane is *supposed* to
+# run headless with its capture steps handed to a named capture lane -- so
+# CD-1's refusal below, which exists to stop a capture-bearing segment being run
+# where it cannot take pictures, must not fire on it. That is not a hole in
+# CD-1: the harness still checks, before step 1, that the capture lane named in
+# the file exists, declares itself a capture lane, and accepts every id handed
+# to it. A delegation nobody accepted is a BLOCKER there. The debt moves; it
+# does not evaporate.
+if [[ "$MODE" == "logic" && "$EVIDENCE_LANE" == "logic" ]] && segment_plans_captures "$SEGMENT_PATH"; then
+	echo "run_segment: $SEGMENT_ID declares evidence_lane=logic. Its prescribed captures are"
+	echo "run_segment:            DELEGATED to its declared capture lane, not taken here, and the"
+	echo "run_segment:            harness refuses to start if that lane does not accept them."
+elif [[ "$MODE" == "logic" && -n "$SEGMENT_PATH" ]] && segment_plans_captures "$SEGMENT_PATH"; then
 	if [[ "$ALLOW_NO_CAPTURE" != "yes" ]]; then
 		echo "run_segment: $SEGMENT_ID declares planned captures and this is LOGIC mode." >&2
 		echo "run_segment: logic mode has no display server, so every one of those captures would" >&2
@@ -292,6 +321,13 @@ EOF
 		--script "$HARNESS" -- "${HARNESS_ARGS[@]}" --gatef-capture
 }
 
+if [[ "$MODE" == "capture" && "$EVIDENCE_LANE" == "logic" ]]; then
+	echo "run_segment: WARNING -- $SEGMENT_ID is the LOGIC lane and is being run under xvfb." >&2
+	echo "run_segment:            It will take no frame and keep no continuous record, and every" >&2
+	echo "run_segment:            physics frame will be rasterised in software for nothing. Run it" >&2
+	echo "run_segment:            without --capture; run its capture lane with it." >&2
+fi
+
 STATUS=0
 if [[ "$MODE" == "capture" ]]; then
 	run_capture || STATUS=$?
@@ -310,6 +346,15 @@ if [[ -f "$OUT_DIR/INVENTORY.json" ]]; then
 	fi
 elif [[ "$MODE" != "overhead" ]]; then
 	echo "run_segment: no INVENTORY.json was written; the segment did not reach its close." >&2
+fi
+
+# The run-level half of the ledger. A logic lane is complete when it has done
+# what ITS LANE owed; whether the frames it handed over actually exist is a
+# question about the whole run directory, and this is where it gets asked.
+if [[ "$EVIDENCE_LANE" == "logic" && -f "$OUT_DIR/DELEGATED.md" ]]; then
+	echo "run_segment: $SEGMENT_ID delegated prescribed frames -- see $OUT_DIR/DELEGATED.md"
+	echo "run_segment: check the debt over the whole run with:"
+	echo "             tools/gate_f/run_inventory.py '$RUN_DIR'"
 fi
 
 echo "run_segment: $SEGMENT_ID finished with status $STATUS; artefacts in $OUT_DIR"

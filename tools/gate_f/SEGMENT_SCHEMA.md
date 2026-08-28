@@ -32,7 +32,10 @@ a button and no way to say "hold it".
 | `title` | no | Human title, copied into `notes/<segment>.md`'s heading. |
 | `lane` | no | `journey` or `diag`. Informational; the per-step `diag` flag is what actually permits a shortcut. |
 | `steps` | yes | Ordered array. Executed in order, no branching. |
-| `record_hz` | no | §H background frame rate for the whole segment. Default 0.1 (journey); the mandatory high-risk list uses 0.5; `0` turns the continuous record off. See **Continuous evidence** below. |
+| `record_hz` | no | §H background frame rate for the whole segment, **in play seconds** (§H.2). Default 0.1 (journey); the mandatory high-risk list uses 0.5; `0` turns the continuous record off. Forced to `0` on a logic lane. See **Continuous evidence** below. |
+| `evidence_lane` | no | §H.1 evidence split (owner decision 2026-08-27). `"logic"`, `"capture"` or `"both"`. Default `"both"`, which is what every segment written before the split means. See **Evidence lanes** below. |
+| `capture_lane` | on a logic lane with captures | The segment id that owes the §G frames this lane hands over. Checked, before step 1, to exist, to declare `evidence_lane: "capture"`, and to accept every id handed to it. |
+| `owes` | on a capture lane | The §G ids this segment accepts responsibility for. Every one must actually be taken by a `capture`/`capture_seq` step in this file, or the segment is a BLOCKER at step 1. |
 | `record_hud` | no | `hud` value stamped on background frame rows. Default `on`. |
 | `record_camera_kind` | no | `camera_kind` stamped on background frame rows. Default `gameplay`. |
 
@@ -49,6 +52,39 @@ a button and no way to say "hold it".
 | `diag` | no | `true` permits the shortcut actions (`teleport`). Absent or `false` refuses them with a recorded FAIL. |
 | `require_context` | no | The input context this step expects to act in, checked **before** the action runs. A string, or a list of them; a trailing `*` is a prefix (`"menu*"`), a leading `!` negates (`"!narrative_modal"`). A mismatch is a FAIL, the step does **not** run, and the segment derails — see **Derailing** below. |
 | `resync` | no | `true` marks this step as a recovery point: it runs even while the segment is derailed and clears the derail. `boot` always resyncs. |
+
+### Evidence lanes
+
+Added 2026-08-27, owner decision, recorded in `ralph/GATE_F_MASTER_PROTOCOL.md`
+§H.1 with the measurement behind it. In short: a rendered frame of the Meadows
+costs 12,721 ms on the Gate F container against 6.1 ms in logic mode, and the
+eighteen protocol segments ask for 4,607,802 physics frames. Continuous
+recording of every frame is what is unaffordable, not capture — a targeted
+probe took 14 real 1920×1080 frames in ~28 minutes on the same box.
+
+| `evidence_lane` | runs | owes | `record_hz` |
+|---|---|---|---|
+| `"logic"` | headless, for mechanics, telemetry and step verdicts | step verdicts, `events.jsonl`, `route.csv`, saves | forced to `0` |
+| `"capture"` | under xvfb, at named states | every id in its own `owes`, on disk | `0` baseline; bounded `record_start`/`record_stop` windows are fine |
+| `"both"` | as before the split | its own §G frames **and** its own §H record | as declared |
+
+On a logic lane a `capture`/`capture_seq` step is not skipped, refused or
+failed — it is **DELEGATED**, which is its own verdict word, counted separately
+from PASS, FAIL and SKIP, and written into `INVENTORY.json` under
+`captures.delegated` with `captures.delegated_to`. The segment is complete when
+it has done what **its lane** owes. Whether the handed-over frames exist is a
+question about the whole run directory, answered by
+`tools/gate_f/run_inventory.py` → `RUN_INVENTORY.json` / `RUN_INCOMPLETE.md`.
+
+Three declarations are refused at step 1, because each of them is a debt that
+would otherwise quietly stop existing:
+
+* a logic lane with prescribed captures and no `capture_lane`;
+* a `capture_lane` that does not exist, is not `evidence_lane: "capture"`, or
+  whose `owes` does not accept every id handed to it;
+* a capture lane whose `owes` names an id no step of it actually shoots.
+
+`S01.json` (logic) and `S01C.json` (capture) are the worked pair.
 
 ### Verdicts and exit codes
 
@@ -385,6 +421,18 @@ somebody chose. Two directories, two manifests, one timestamp axis joining them.
 
 Filenames are zero-padded seconds (`000092.69.png`) so the directory sorts in
 time order instead of putting 100 s before 9 s.
+
+**The rate is in PLAY seconds, and was wall seconds until 2026-08-28.** §H's
+"PNG every 2 s (0.5 Hz)" is 2 s of the game's own elapsed time. Under the
+12,721 ms rendered frame the run-2 BLOCKER measured, the old wall-clock cadence
+fired on **every rendered frame**: S01 planned ~90 frames and was on course for
+~5,400, about 10 GB, into 23 GB free. See §H.2.
+
+**The continuous record is not what a segment relies on any more.** §H.1's
+evidence split (owner decision 2026-08-27) moves prescribed frames to a capture
+lane that takes them at named states. A logic lane keeps no record at all, and
+a capture lane keeps only bounded windows. The mechanism below is unchanged and
+is what those windows use.
 
 **`capture`/`capture_seq` beat the recorder, deterministically.** The recorder
 stands down for the whole of a capture step and its next cadence frame is pushed
