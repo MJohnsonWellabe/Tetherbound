@@ -12,6 +12,7 @@ extends Node3D
 ## and rest with starter."
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
@@ -30,10 +31,18 @@ const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
 ## vendored `Textures/colormap.png` their MTL/glTF both point at.
 const BEDROLL := "res://assets/props/kenney_survival/bedroll.obj"
 const BEDROLL_SCALE := 2.6
+## FIRST-HOUR-FUN-REBUILD. The player-built Camp is the compact mandatory
+## campsite, so it must visibly carry the promised shelter as well as the fire
+## and bedroll it already had. This owner-reference-derived tent is already
+## installed and used by authored Meadows camps; BUILD_PIECE instantiates its
+## glb scene with the same collision/ghost behavior as other placeables.
+const TENT := "res://assets/props/generated_camp/camp_tent.glb"
+const TENT_POSITION := Vector3(-1.65, 0.0, -0.85)
 
 const FADE_SECONDS := 1.2
 
 var _ghost_meshes: Array[MeshInstance3D] = []
+var _ghost_tent: Node3D = null
 ## R2.4. Instantiated once, on the first "Craft" activation — most camps are
 ## visited for rest and never opened for crafting, so building the panel's
 ## whole node tree up front would be work most players never see the result
@@ -79,6 +88,15 @@ func build_real() -> void:
 
 func _spawn_meshes(solid: bool) -> void:
 	_ghost_meshes.clear()
+	_ghost_tent = null
+	var tent := BUILD_PIECE.new()
+	add_child(tent)
+	tent.position = TENT_POSITION
+	if solid:
+		tent.call("build_real", TENT)
+	else:
+		tent.call("build_ghost", TENT)
+		_ghost_tent = tent
 	var fire := _mesh(BONFIRE, Vector3.ZERO, 0.55)
 	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
 	# believed to be one combined mesh whose flame could not be addressed --
@@ -136,6 +154,8 @@ func tint_ghost(ok: bool) -> void:
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		m.material_override = material
+	if _ghost_tent != null and is_instance_valid(_ghost_tent):
+		_ghost_tent.call("tint_ghost", ok)
 
 
 ## Rest: fade out, new day, everyone healed, fade in. The fade is the same

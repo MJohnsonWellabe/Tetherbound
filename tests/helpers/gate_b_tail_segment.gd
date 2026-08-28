@@ -1,6 +1,6 @@
 extends RefCounted
 
-## Gate B's TAIL, as one reusable segment: house -> creature bed -> camp ->
+## Gate B's TAIL, as one reusable segment: compact camp -> creature beds ->
 ## the nights that make a team rested -> the marshal's entry gate -> the three
 ## fought rounds -> the objective that points at the South Bridge.
 ##
@@ -14,7 +14,7 @@ extends RefCounted
 ##
 ## It is deliberately HARDER than the tail the continuous file used to assert:
 ##
-## * the creature bed and the camp are PLACED, through the real build menu and
+## * the creature beds and composed camp are PLACED, through the real build menu and
 ##   the real placer, out of the materials the authored gather route actually
 ##   supplies -- the old tail called `build_real()` on whatever bed it could
 ##   find in the world, which is a bed the player never built;
@@ -119,9 +119,9 @@ var _move_y_sign := 1.0
 ## through the village is `gate_a_npc_gather_segment.gd`'s territory and is
 ## owned by another lane; this segment is about what happens at each END of
 ## that walk.
-## `skip_house` exists for ITERATION ONLY and is never set by the continuous
-## run: the controller house is ten minutes of walking on a loaded box, and a
-## defect in the bed/camp/nights/bracket half should not cost ten minutes to see
+## `skip_house` is retained as an environment-compatible iteration switch. It
+## now grants the compact campsite rather than a house shell, so a defect in
+## the bed/camp/nights/bracket half does not require replaying construction.
 ## twice. `tests/smoke_gate_b_tail.gd` sets it from GATEB_TAIL_SKIP_HOUSE and
 ## says so in its own output, so a passing run that skipped it cannot be
 ## mistaken for a passing run that did not.
@@ -143,24 +143,9 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	_load_engage_distance()
 
 	if skip_house:
-		if not await _stand_in_the_house_that_was_granted():
+		if not await _stand_in_the_campsite_that_was_granted():
 			return _result()
-	elif not await _raise_the_house():
-		return _result()
-	# THE CAMP COMES BEFORE THE BEDS.
-	#
-	# GATEB-COORD: `home_progress.gd`'s rule for what counts as a home is a
-	# camp PLUS one floor, wall, roof and door (`progression.json`'s
-	# `home.required_pieces`) -- the camp is the bedroll the next objective
-	# tells the player to sleep at, and it is what makes the shell a home
-	# rather than a shed. So `home_built` cannot be set by raising the house
-	# alone, and this segment used to assert it there and fail with
-	#
-	#   the house went up and 'home_built' is unset
-	#
-	# after building the house perfectly. The camp is now placed straight
-	# after the shell, which is where the flag and the objective move.
-	if not await _place_the_camp():
+	elif not await _place_the_camp():
 		return _result()
 	if not await _place_the_creature_beds():
 		return _result()
@@ -198,20 +183,6 @@ func _load_engage_distance() -> void:
 	_engage_distance = maxf(float(quick.get("lunge", 3.6)), float(quick.get("range", 2.6)))
 
 
-## --- 1: the house -------------------------------------------------------------
-
-func _raise_the_house() -> bool:
-	var built: Dictionary = await BUILD_SEGMENT.new().run(_tree, _world, _player, _rig)
-	if not bool(built.get("passed", false)):
-		for line: Variant in (built.get("failures", []) as Array):
-			_fail("house: %s" % str(line))
-		for line: Variant in (built.get("transcript", []) as Array):
-			transcript.append("house | %s" % str(line))
-		return false
-	transcript.append("raised the small home's shell; %s left" % _stock())
-	return true
-
-
 ## The HUD's one tracked line, after a beat has landed. A beat that fires its
 ## flag without the objective moving is a beat the player cannot see they
 ## finished, and `data/progression/objectives.json` is the game's own record of
@@ -223,12 +194,12 @@ func _objective_should_read(fragment: String, after: String) -> void:
 			% [after, tracked] + "the beat that says '%s'" % fragment)
 
 
-## Iteration mode. The house is REGISTERED rather than raised -- the same
+## Iteration mode. The compact campsite is REGISTERED rather than placed -- the same
 ## `register_building` bookkeeping a real placement performs, read back by
 ## `build_placer.restore_from_game()`, which is the production call site that
 ## decides `home_built`. Its exact material cost is still spent, so everything
-## downstream sees the stock a real house leaves behind.
-func _stand_in_the_house_that_was_granted() -> bool:
+## downstream sees the stock a real campsite leaves behind.
+func _stand_in_the_campsite_that_was_granted() -> bool:
 	var placer := _tree.get_first_node_in_group(&"build_placer")
 	if placer == null:
 		_fail("no BuildPlacer in the world")
@@ -236,8 +207,8 @@ func _stand_in_the_house_that_was_granted() -> bool:
 	var i := 0
 	for id: String in HOME_PROGRESS.required_pieces().keys():
 		for _copy in int(HOME_PROGRESS.required_pieces()[id]):
-			# Ten metres off the patch centre, so the granted shell does not sit
-			# on the cells the bed and the camp are placed in below.
+			# Ten metres off the patch centre, so the granted campsite does not sit
+			# on the cells the creature beds are placed in below.
 			_game.call("register_building", id, Vector3(
 				BUILD_PATCH_XZ.x - 12.0 + i * 2.0, 0.0, BUILD_PATCH_XZ.y + 10.0), 0.0, false)
 			i += 1
@@ -260,11 +231,11 @@ func _stand_in_the_house_that_was_granted() -> bool:
 			break
 	for _f in 20:
 		await _tree.physics_frame
-	transcript.append("ITERATION MODE: the house was registered, not raised; %s left" % _stock())
+	transcript.append("ITERATION MODE: the campsite was registered, not placed; %s left" % _stock())
 	return true
 
 
-## --- 2/3: the bed and the camp, out of what the gather route supplies ---------
+## --- 2/3: camp, care beds and rest, out of what the gather route supplies -----
 
 ## OWNER DIRECTIVE 2026-08-23 §1: three creature beds before the tournament,
 ## one per entrant.
@@ -286,6 +257,12 @@ func _place_the_creature_beds() -> bool:
 		if not _flag("creature_bed_built"):
 			_fail("a creature bed was placed by the player and 'creature_bed_built' is unset")
 			return false
+		if index == 0:
+			if not _flag("home_built"):
+				_fail(("the camp and first Creature Bed are standing but home_built is unset; "
+					+ "home_progress.gd wants %s") % str(HOME_PROGRESS.required_pieces()))
+				return false
+			_objective_should_read("Care for your team", "home_built")
 	_bed = _beds[0]
 	transcript.append("placed %d creature beds through the build menu, one per entrant; %s left"
 		% [_beds.size(), _stock()])
@@ -293,21 +270,19 @@ func _place_the_creature_beds() -> bool:
 	return true
 
 
-## The camp, and with it the home. See `run()`'s note on why this beat -- not
-## the shell -- is where `home_built` lands.
+## The camp supplies the opening's tent, fire and player bedroll but is
+## intentionally incomplete until a Creature Bed is in place. This proves the
+## required camp is a real care setup, not an architecture shell.
 func _place_the_camp() -> bool:
 	_camp = await _place_fixture("camp")
 	if _camp == null:
 		return false
-	if not _flag("home_built"):
-		_fail(("the shell and the camp are both standing and 'home_built' is unset; "
-			+ "home_progress.gd wants %s and the world holds %d placed pieces")
-			% [str(HOME_PROGRESS.required_pieces()),
-				(_game.get("placed_buildings") as Array).size()])
+	if _flag("home_built"):
+		_fail("a camp alone set home_built; the opening must also require a Creature Bed")
 		return false
-	transcript.append("placed the camp the player sleeps at; that makes it a home; %s left"
+	transcript.append("placed the camp's tent, fire and bedroll; a Creature Bed is still needed; %s left"
 		% _stock())
-	_objective_should_read("Creature Bed", "home_built")
+	_objective_should_read("Make camp", "camp")
 	return true
 
 

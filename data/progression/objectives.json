@@ -43,35 +43,35 @@
     {
       "id": "tournament_gather_materials",
       "flag_id": "home_materials_gathered",
-      "label": "Gather materials for your campsite.",
-      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush. Your camp and workbench make more team preparation possible.",
-      "_comment": "FIRST-HOUR-FUN. This threshold is derived from the actual camp and workbench costs by home_progress.gd. Gathering is taught as preparation for the team, never as a detached house-building chore."
+      "label": "Gather supplies for your team's camp.",
+      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush. Your camp lets the team rest and recover.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. Gathering has a creature-training purpose: the compact camp gives the player a tent, fire and bedroll, and the Creature Bed gives one companion a physical recovery place. The legacy flag is set once the player holds the exact costs of `home.required_pieces` in progression.json, which now names camp + creature bed rather than a house shell."
     },
     {
       "id": "tournament_build_home",
       "flag_id": "home_built",
-      "label": "Make a campsite for your team.",
-      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Camp, then a Workbench for Orbs and equipment.",
-      "_comment": "FIRST-HOUR-FUN. `home_built` now means the existing camp plus a workbench, as configured in progression.json. It deliberately does not demand floors, walls, roofs or doors: the opening needs a fast useful camp, not an architecture class."
+      "label": "Make camp for your team.",
+      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Camp (tent, fire and bedroll), then a Creature Bed.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. This is deliberately a compact campsite, not a mandatory floor/wall/roof/door exercise. `camp` is the composed tent + fire + player bedroll; the following Creature Bed makes care physical. The Workbench stays optional until Mira teaches why it is useful. The legacy home_built flag is retained for save compatibility; home_progress.gd reads progression.json's camp + creature-bed requirement."
     },
     {
       "id": "tournament_build_creature_beds",
       "flag_id": "creature_bed_built_3",
-      "label": "Build a Creature Bed for each of your entrants.",
+      "label": "Care for your team: build a Creature Bed for each entrant.",
       "count_flags": [
         "creature_bed_built",
         "creature_bed_built_2",
         "creature_bed_built_3"
       ],
-      "how": "One creature to a bed -- a team of three needs three. Place them by your camp with the hammer.",
-      "_comment": "OWNER DIRECTIVE 2026-08-23 (ralph/OWNER_DIRECTIVES_2026-08-23.md section 1): \"Three creature beds before the tournament... Each of the three entrants gets its own bed. Adjust the guided tutorial chain (OP23-04) to teach building all three.\" This was ONE bed and one flag, which taught the object and then went quiet -- a player who built one and slept arrived at sign-up with two tired creatures and no line anywhere telling them why. `count_flags` is SF34's existing feature doing exactly the job its own comment describes (\"a three-part objective that reads the same at 0/3 and at 2/3\"), so the row reads \"... 1/3\" while the player is mid-build. The three flags are written by scripts/build/home_progress.gd::maybe_set_creature_beds() counting real placed beds in `Game.placed_buildings`, so a save/load answers the same way a live placement does. THE COUNT IS NOT AUTHORED TWICE: tests/test_quest_log.gd pins this list's length against `data/config/tournament.json`'s `min_party_size`, which is what decides how many creatures are entered, so raising the entry size and forgetting the beds fails a test instead of shipping a chain that asks for the wrong number. The GATHER BUDGET that makes three affordable is the Gate B lane's (ralph/GATEB-PATH lineage), per the same directive -- this file only teaches it."
+      "how": "One creature to a bed -- a tournament team of three needs three. Place them beside your camp with the hammer, then {interact} at each bed to let a tired creature rest.",
+      "_comment": "The physical care lesson follows the camp: a player sees that each entrant needs a bed and then uses it in the next rung. `count_flags` reads 1/3 and 2/3 while the player is mid-build; the three flags are written from real placed beds by home_progress.gd. The count is pinned to tournament.json's min_party_size in test_quest_log.gd, so the camp teaches the actual tournament team's needs rather than a separate arbitrary number."
     },
     {
       "id": "tournament_sleep",
       "flag_id": "player_slept_at_home",
-      "label": "Sleep until morning in your new home.",
-      "how": "Put a creature in each bed with {interact}, then {interact} at the camp. Only creatures left in a bed wake rested.",
-      "_comment": "CONTRACT flag. `camp.gd::_on_rest()` already does the fade/advance-day/heal-the-party rest interaction; this fires on that same rest so completion requires the actual sleep, not just placing the bed."
+      "label": "Rest at camp until morning.",
+      "how": "Put each creature in a bed with {interact}, then {interact} at the camp. Only creatures physically resting in beds wake recovered and rested.",
+      "_comment": "The visible resolution of the care lesson. camp.gd completes occupied creature-bed rests only when the player actually sleeps; a placed but empty bed does not recover anyone. This fires on that completed rest, not when the prompt merely opens."
     },
     {
       "id": "tournament_feed_team",

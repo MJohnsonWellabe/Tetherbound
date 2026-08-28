@@ -14,7 +14,7 @@ const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 
 const CFG := {
 	"home": {
-		"required_pieces": {"camp": 1, "floor": 1, "wall": 2},
+		"required_pieces": {"camp": 1, "creature_bed": 1},
 	},
 }
 
@@ -28,7 +28,7 @@ func before_each() -> void:
 
 
 func test_required_pieces_reads_the_given_config() -> void:
-	assert_eq(HOME_PROGRESS.required_pieces(CFG), {"camp": 1, "floor": 1, "wall": 2})
+	assert_eq(HOME_PROGRESS.required_pieces(CFG), {"camp": 1, "creature_bed": 1})
 
 
 func test_pieces_built_counts_by_id_ignoring_position() -> void:
@@ -48,18 +48,15 @@ func test_home_built_is_false_short_of_any_single_requirement() -> void:
 	var placed := [
 		{"id": "camp", "position": [0, 0, 0]},
 		{"id": "floor", "position": [1, 0, 0]},
-		{"id": "wall", "position": [2, 0, 0]},
 	]
 	assert_false(HOME_PROGRESS.home_built(placed, CFG),
-		"one wall short of the required two must not read as a finished home")
+		"a camp alone must not read as a complete preparation camp")
 
 
 func test_home_built_is_true_once_every_requirement_is_met() -> void:
 	var placed := [
 		{"id": "camp", "position": [0, 0, 0]},
-		{"id": "floor", "position": [1, 0, 0]},
-		{"id": "wall", "position": [2, 0, 0]},
-		{"id": "wall", "position": [3, 0, 0]},
+		{"id": "creature_bed", "position": [1, 0, 0]},
 	]
 	assert_true(HOME_PROGRESS.home_built(placed, CFG))
 
@@ -67,11 +64,9 @@ func test_home_built_is_true_once_every_requirement_is_met() -> void:
 func test_home_built_is_true_with_extra_pieces_beyond_the_minimum() -> void:
 	var placed := [
 		{"id": "camp", "position": [0, 0, 0]},
-		{"id": "floor", "position": [1, 0, 0]},
+		{"id": "creature_bed", "position": [1, 0, 0]},
 		{"id": "floor", "position": [1, 0, 1]},
 		{"id": "wall", "position": [2, 0, 0]},
-		{"id": "wall", "position": [3, 0, 0]},
-		{"id": "wall", "position": [4, 0, 0]},
 	]
 	assert_true(HOME_PROGRESS.home_built(placed, CFG))
 
@@ -83,15 +78,12 @@ func test_home_built_fails_closed_on_empty_config() -> void:
 
 func test_materials_threshold_sums_real_buildable_costs() -> void:
 	var camp_cost: Dictionary = db.buildable("camp")
-	var floor_cost: Dictionary = db.buildable("floor")
-	var wall_cost: Dictionary = db.buildable("wall")
+	var creature_bed_cost: Dictionary = db.buildable("creature_bed")
 	var expected := {}
 	for requirement in camp_cost.get("cost", []):
 		expected[str(requirement["id"])] = int(expected.get(str(requirement["id"]), 0)) + int(requirement["n"])
-	for requirement in floor_cost.get("cost", []):
+	for requirement in creature_bed_cost.get("cost", []):
 		expected[str(requirement["id"])] = int(expected.get(str(requirement["id"]), 0)) + int(requirement["n"])
-	for requirement in wall_cost.get("cost", []):
-		expected[str(requirement["id"])] = int(expected.get(str(requirement["id"]), 0)) + int(requirement["n"]) * 2
 
 	var threshold := HOME_PROGRESS.materials_threshold(db, CFG)
 	for item_id: String in expected.keys():

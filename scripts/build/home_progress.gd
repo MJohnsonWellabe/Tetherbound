@@ -1,6 +1,6 @@
 extends RefCounted
 
-## GATEB-FLAGS (68-CHAPTER/17-RG18). "What counts as a home" for the two
+## FIRST-HOUR-FUN-REBUILD. What counts as an opening camp for the two legacy
 ## CONTRACT flags data/progression/objectives.json left for the building
 ## lane to decide -- `home_built` and `home_materials_gathered`.
 ##
@@ -14,12 +14,15 @@ extends RefCounted
 ## first, camp second, whichever) answers the question the same way live
 ## placement does.
 ##
-## The rule: a home is the tutorial campsite -- the existing `camp` gives the
-## player a physical fire and bedroll, and the workbench turns nearby gathering
-## into more orbs and useful preparation. Floors, walls, roofs and doors stay
-## available for players who enjoy building, but are never an opening gate.
+## The rule: the camp is the fire + player bedroll, already the literal sleep
+## spot (`camp.gd::_on_rest`) the next objective asks the player to use; the
+## tent/fire/bedroll composition establishes the player's rest place; the
+## creature bed makes it a real care camp. The optional Workbench remains the
+## natural preparation station once Mira teaches Orb crafting.
+## This replaces the old floor/wall/roof/door shell: free-building remains
+## available, but it is not a mandatory architecture lesson in the opening.
 ##
-## `data/config/progression.json`'s `home.required_pieces` is the ONE place
+## `data/config/progression.json`'s legacy-named `home.required_pieces` is the ONE place
 ## that count lives. `materials_threshold()` below sums those same pieces'
 ## own `buildables.json` costs rather than typing a second number by hand,
 ## so "gather enough for a home" and "build a home" can never drift apart --
