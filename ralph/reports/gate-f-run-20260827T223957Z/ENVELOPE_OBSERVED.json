@@ -1,0 +1,56 @@
+{
+  "_comment": "Envelope facts OBSERVED during the run, kept SEPARATE from RUN_METADATA.json on purpose. The freeze record was written before the run and read by every pre-flight; editing it afterwards so it agrees with the evidence is CD-8b's own sin in mirror image, even when the edit would only fill in a placeholder. Its 'pending' fields stay pending; this file answers them. Nothing here is a finding about the game.",
+  "godot": "4.7.stable.official.5b4e0cb0f, linux editor binary, sha256 f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75 (identical to the f082bdf6 run's binary)",
+  "container": {
+    "cpu_cores": 4,
+    "memory_gb": 15,
+    "disk_free_gb_at_start": 23,
+    "gpu": "none; Mesa llvmpipe software rasterisation"
+  },
+  "import_cache": {
+    "built": "from scratch in this container",
+    "resources": 1480,
+    "passes": "two consecutive agreeing passes (second completed in 6.3 s)",
+    "errors": "zero SCRIPT ERROR / Parse Error / Failed to load / ERROR: Cannot open"
+  },
+  "audio": {
+    "observed": "all ALSA drivers failed (cannot find card '0'), libpulse.so.0 absent; Godot fell back to the dummy driver",
+    "meaning": "section K.6's audio gap is a MEASURED container fact in this run, not an inherited claim. Any audio judgement is [OWNER-ONLY]."
+  },
+  "capture_path": {
+    "smoke": "tools/capture_diag_minimal.gd wrote a PNG at the requested 1920x1080",
+    "resolution_substituted": false,
+    "preflight_self_test": "the harness wrote its own _preflight.png",
+    "prescribed_captures_taken": 1,
+    "which": "GF-01-TITLE-01, mean luma 50.8 / spread 32.4 / 5.4% dark"
+  },
+  "world_bake_observed": {
+    "_comment": "Verbatim from the world stand-up in both S01 (capture) and X08 (logic). This is CD-8's flag doing its work, visible in the boot log rather than inferred from a config file.",
+    "vegetation": "[vegetation] grass field is on; 661543 placements across 4 layers left unbuilt (grass, drygrass, flowers, groundmat)",
+    "grass_field_tiers": "[grass_field] 3 cover tier(s) up",
+    "grass_field_bound": "[grass_field] bound: 300000 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots",
+    "scatter": "[playground] scattered 100515 props in 29 batches (56423 harvestable, 0 already chopped, 113/51556 collision resident)",
+    "vegetation_boot_ms": "placements=14601 mark_harvestable=507 group_by_model=96 register_mesh_assets=35 build_batches_total=4745 update_mmis=248",
+    "note": "On f082bdf6 the same stand-up scattered 762,058 props with the grass field OFF. On this candidate 661,543 of those placements are handed to the camera-relative field instead, leaving 100,515 baked. That is the state change CD-8 exists to put on the record."
+  },
+  "grass_field_differs_between_modes": {
+    "capture_mode_S01": "[grass_field] stone tier: rid_valid=true height_map=RID(14177687044162) region_map=1024 entries",
+    "logic_mode_X08": "[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries",
+    "meaning": "A REAL caveat on X08's numbers, recorded rather than smoothed over: in logic mode the grass field's stone tier binds no height map and no region map, so X08's CPU frame times were taken with that tier not fully stood up. Not a defect claim -- headless has no renderer to bind against -- but X08's per-site figures are not the same workload S01 was rendering."
+  },
+  "measured_frame_cost": {
+    "capture_mode_meadows_rendered_frame_ms": 12721.0,
+    "capture_mode_meadows_physics_frame_s_lower_bound": 6.465,
+    "capture_mode_route_row_delta_s": {
+      "median": 6.465,
+      "mean": 6.752,
+      "n": 527
+    },
+    "logic_mode_meadows_frame_ms": 6.1,
+    "title_screen_s_per_frame_as_the_gate_measured_it": 0.0465,
+    "empty_tree_s_per_frame": 0.0065,
+    "ratio_capture_to_logic": 2069
+  },
+  "instrumentation_overhead_note": "Measured with tools/gate_f/run_segment.sh --overhead at the candidate, scene=world, LOGIC mode, 30 s x 2 windows per condition at [-25.4, 4.93, -15.6], order off/telemetry/recording/recording/telemetry/off. Means: off 6.406, telemetry 6.034, telemetry+recording@0.5Hz 5.937 ms/frame. Both deltas vs off are NEGATIVE and below the 1.072 ms/frame noise floor: read as 'under ~1.07 ms/frame', NOT as zero and NOT as a speed-up. IMPORTANT GAP, unchanged from the previous run and now known to matter far more than it looked: frames written 0, because a headless process cannot render, so the recorder's framebuffer-grab-and-encode cost was NOT measured. In capture mode it is not a ~1 ms/frame effect -- S01's route.csv puts a rendered 1920x1080 frame at 12,721 ms. The overhead run is filed at overhead/ and its INVENTORY.json correctly reports INCOMPLETE with '30 continuous frames were planned and not written'.",
+  "owner_only_unchanged": "device frame rate, GPU frame time, VRAM, thermals/battery, real controller feel, 7-inch handheld legibility, first-time-human navigation/pacing, voluntary engagement, audio, Windows export identity, true continuous video, long-session device soak, mouse-look feel"
+}

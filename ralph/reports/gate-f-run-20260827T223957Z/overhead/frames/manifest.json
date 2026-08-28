@@ -1,0 +1,578 @@
+{
+  "absent": 30,
+  "baseline_hz": 0.0,
+  "frames": [
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.56,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 131.0,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:12:54",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.64,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 133.0,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:12:56",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.72,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 135.0,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:12:58",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.8,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 137.01,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:00",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.88,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 139.01,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:02",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 10.96,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 141.02,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:04",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.04,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 143.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:06",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.12,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 145.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:08",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.2,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 147.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:10",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.28,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 149.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:12",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.36,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 151.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:14",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.44,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 153.05,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:16",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.52,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 155.05,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:18",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.6,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 157.05,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:20",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.68,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 159.07,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:23",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.76,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 161.0,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:24",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.84,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 163.0,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:26",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 11.92,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 165.02,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:28",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.0,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 167.03,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:30",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.08,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 169.04,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:32",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.16,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 171.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:34",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.24,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 173.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:37",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.32,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 175.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:39",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.4,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 177.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:41",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.48,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 179.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:43",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.56,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 181.06,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:45",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.64,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 183.07,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:47",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.72,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 185.07,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:49",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.8,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 187.07,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:51",
+      "weather": "clear"
+    },
+    {
+      "camera_kind": "probe",
+      "clock_hour": 12.88,
+      "file": null,
+      "hud": "on",
+      "hz": 0.5,
+      "input_context": "world",
+      "pos": [
+        -25.4,
+        4.93,
+        -15.6
+      ],
+      "reason": "headless: this process has no display server and cannot render a frame",
+      "segment": "unknown",
+      "t": 189.08,
+      "trigger": "cadence",
+      "wall": "2026-08-28 00:13:53",
+      "weather": "clear"
+    }
+  ],
+  "segment": "unknown",
+  "written": 0
+}

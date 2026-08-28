@@ -3027,3 +3027,83 @@ steady state. Recorded as measured; classifying it is Phase B's.
 
 No code, data or config changed. `git diff e12a6b60..HEAD -- . ':(exclude)ralph/'`
 is empty. Everything is on `ralph/GATE-F-RUN-2`, pushed per segment.
+
+## Check-in 4 — overhead measured, envelope recorded, run stands down
+
+**Overhead self-measurement (section I.7, a required `RUN_METADATA.json` field)
+ran.** Logic mode, scene=world, six 30 s windows in reversed order: telemetry
+−0.372 ms/frame and telemetry+recording −0.469 ms/frame against a 1.072 ms/frame
+noise floor. Both deltas are negative and below the floor: read as *under ~1.07
+ms/frame*, not as zero and not as a speed-up.
+
+Its `INVENTORY.json` says **INCOMPLETE**, correctly, and the reason is the one
+that matters: *"30 continuous frames were planned and not written: headless: this
+process has no display server and cannot render a frame."* So the recorder's
+grab-and-encode cost is **still unmeasured**, exactly as it was on the previous
+candidate — and this run has shown it is not the ~1 ms/frame effect the note
+implies. S01 puts a rendered 1920x1080 frame at **12,721 ms**.
+
+**Envelope facts are recorded in `ENVELOPE_OBSERVED.json`, deliberately separate
+from the freeze record.** I wrote the freeze record before the run with several
+fields marked `pending`, and every pre-flight read it. Editing it afterwards so
+it agrees with the evidence is CD-8b's sin in mirror image even when the edit
+only fills a placeholder, so the placeholders stay and a second file answers
+them.
+
+### The grass field, confirmed at run time rather than from the config
+
+Identical lines in both S01 (capture) and X08 (logic):
+
+```
+[vegetation] grass field is on; 661543 placements across 4 layers left unbuilt
+             (grass, drygrass, flowers, groundmat)
+[grass_field] 3 cover tier(s) up
+[grass_field] bound: 300000 tufts, radius 72m, region_size 256, vertex_spacing 2.0
+[playground] scattered 100515 props in 29 batches (56423 harvestable)
+```
+
+On `f082bdf6` the same stand-up scattered **762,058** props with the field OFF.
+On this candidate **661,543** of those are handed to the camera-relative field
+and **100,515** stay baked. That is the state change CD-8 exists to put on the
+record, and it is now in the boot log of two segments rather than inferred from
+a boolean.
+
+### One caveat on X08 that I am not smoothing over
+
+The stone tier binds differently in the two modes:
+
+```
+S01 (capture): stone tier: rid_valid=true height_map=RID(14177687044162) region_map=1024 entries
+X08 (logic):   stone tier: rid_valid=true height_map=<null>              region_map=-1   entries
+```
+
+Headless has no renderer to bind against, so this is not a defect claim. But it
+means **X08's per-site CPU numbers were taken with the grass field's stone tier
+not fully stood up** — they are not the same workload S01 was rendering. Phase B
+should not read X08 as a measurement of the shipped ground system's cost.
+
+### Standing down
+
+The run is complete as far as this envelope allows:
+
+| | state |
+|---|---|
+| S01 | partial — 8 steps PASS incl. `GF-01-TITLE-01`; stopped inside step 09 |
+| S02 | BLOCKER at step 1 (CD-8b), 0 of 75 steps run, preserved |
+| S03–S10, X01–X07 | **not run** — capture mode ~8,283 h, logic mode refused |
+| X08 | **complete** — 62/62 PASS, clean |
+| overhead | ran, INCOMPLETE for the recorded reason |
+
+`BLOCKER_RUN.md` is the run-level report and names the three decisions that are
+the coordinator's, not mine: run on a GPU box; decide whether a capture-free
+logic lane is wanted at all and freeze a record that says so *beforehand*; and
+fix the cost re-price, the two wall-clock gates and the missing disk budget.
+
+**Capture rate against the 162 known player-facing issues: I am not computing
+one, and no one should.** Fourteen of eighteen segments never ran. A denominator
+of 162 against a run that executed one segment and a fifth of another would be a
+number about nothing. That comparison is Phase B's to make, from evidence that
+exists.
+
+No code, data or config was changed at any point. `git diff e12a6b60..HEAD --
+. ':(exclude)ralph/'` is empty — checked, not asserted.
