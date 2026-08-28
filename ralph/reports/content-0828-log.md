@@ -289,12 +289,79 @@ the time on items 1 and 2 instead, per the coordinator's own instruction.
 
 ## Evidence
 
-`tools/capture_content_0828.gd` renders six frames through the real render path
-(`xvfb-run` + `opengl3`, never `--headless` with a real driver) at the camera
-stands the changes are about: the den with the alpha and the lit door in one
-frame, the alpha close, the shut door head-on, the vault prize, and the TM prop
-at walk-up and at decision distance. `--before` writes to a separate directory
-so the same stands can be run against a stashed tree.
+`tools/capture_content_0828.gd` renders six stands through the real render path
+(`xvfb-run` + `opengl3` at 1280x800; never `--headless` with a real driver).
+`--before` writes to a separate directory so the same stands can be run against
+a stashed tree, which is how the before set was taken — `origin/main`'s
+`burrow_warrens.gd`, `tm_pickup.gd` and `burrow_warrens.json` checked out over
+this branch, then checked back.
+
+Half-scale before/after pairs are committed at **`docs/evidence/content-0828/`**
+(the container is ephemeral and `shots/` is gitignored):
+
+| frame | before | after |
+|---|---|---|
+| `02-alpha-close` | a dark shape two-thirds hidden behind a boulder | a plated alpha filling the frame, mote aura visible on its flank |
+| `01-den-alpha-and-door` | green rock across the ceiling and the far half of the room | a clean stone den; the alpha reads instantly against the ordinary Trailpup standing in front of it |
+| `03-vault-door-shut` | a flat brown panel filling a hole in a wall | the same panel with a lit seam down it — a sealed way on |
+| `04-vault-prize` | a vault two-thirds filled with green rock | a clean stone chamber, the heartstone alone on its plinth |
+| `05/06-tm-pickup` | a tan rectangle standing in a field | the disc its own icon draws, on a plinth, catching light at both walk-up and decision distance |
+
+**The exterior was re-checked, because lifting rocks could have regressed work
+two blind rounds paid for.** `tools/capture_warrens_63.gd` — the BAND2-63 pass's
+own probe, unchanged — was re-run against this branch. The knoll still reads as
+a stacked rock outcrop with its courses running all the way up, and the mouth
+still reads as a hole in a stone face flanked by boulders. Nothing moved out
+there, which is what clamping against each chamber's *interior* rect rather than
+its walled footprint was for.
 
 Frames are for an independent critic; `ralph/conventions.md` forbids grading
 your own.
+
+### Honest limits of this evidence
+
+- **`01-den-alpha-and-door` does not deliver its own brief.** The stand was
+  chosen to put the alpha and the lit door in one photograph, and at the angle
+  the cave actually has, the door is out of frame. The claim that the door is
+  visible from the den floor rests on `03`, which is a head-on stand, not on a
+  frame showing both at once. Worth re-framing on the next pass.
+- **Nothing here is a played run.** These are camera stands in a live scene, not
+  a player walking the dungeon. The fight with Earth Fist, the door sinking on
+  the guardian's death, and whether the payout lands as a *moment* are all
+  unmeasured by this lane — they need the walked segment, and the only Warrens
+  walk this project has is `ralph/BAND2_WARRENS_EVIDENCE_2026-08-23.md`, which
+  predates all of it.
+- **Software GL.** Composition, silhouette and relative value are trustworthy;
+  fine lighting judgement is not. Device frame rate, GPU cost and controller
+  feel remain `[OWNER-ONLY]`.
+
+## Tests
+
+- `tests/smoke_warrens.gd` — passes. It also gained an assertion: the clear
+  reward now checks **every** item its own config names, not just coin and
+  rootstone. `test_chapter_rewards.gd` checks that the *audit* names real items,
+  and the audit is a different file from the config the dungeon actually reads,
+  so an id typo'd in `burrow_warrens.json` would have pushed an error, paid
+  nothing, and been caught by nothing. Asserted against the config's own list
+  rather than numbers repeated in the test, so retuning the payout stays a data
+  edit. Output: `90 coin, 5 rootstone, 2 orb_greater, 1 revive`.
+- `run_tests.gd --only=chapter_rewards,moves,trainers_data,recipes` — 127 tests,
+  2128 assertions, 0 failed.
+
+## For the coordinator
+
+- **No cross-lane files touched.** Nothing under `tools/gate_f/**`,
+  `scripts/world/grass_field.gd`, `scripts/world/water.gd` or the HUD.
+- **One shared file, one line:** `data/config/chapter_rewards.json`'s Burrow
+  Warrens row. It is the reward audit, and leaving it stating a payout that no
+  longer ships would make it wrong.
+- **`tests/smoke_warrens.gd`** gained the reward assertion described above.
+- **No new asset, no sourced asset, no Meshy generation**, so no
+  `docs/ASSET_LEDGER.md` entry is due. Every texture used here
+  (`creature_burrowback_lod0_base_color_alpha.png` and its emissive sibling) was
+  already installed and already ledgered.
+- **The boulder fix is not scoped to the Warrens' payoff and is worth flagging
+  as such.** It changes `_place_rock()`, which every mound rock in the cave goes
+  through. It was in scope because it is the Warrens and because the alpha work
+  was unreadable without it, but a coordinator re-baking or re-siting this cave
+  should know the mound now measures its rocks.
