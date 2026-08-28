@@ -667,28 +667,50 @@ def _punch(base: Image.Image, mark: Image.Image, box) -> Image.Image:
 
 
 def _icon_tm(mark: Image.Image) -> Image.Image:
-    """OF29. A TM is a held item now, not a flag, so it needs a satchel icon.
+    """OF29. A TM is a held item, so it needs a satchel icon.
 
-    A keyed disc: a circle with a flat chord cut off the bottom (so it is a
-    disc/chip, not another sphere -- `icon_orb_basic` already owns the plain
-    circle silhouette) and a rim groove, with the taught move's own slot glyph
-    punched through the middle. `stone_rush` is a charged move and
-    `burrow_strike` a quick one, so the two shipped TMs never render the same
-    icon without either of them needing a bespoke drawing.
+    TM-ORB, 2026-08-28: this was a flat disc, and its own docstring explained
+    why -- "a disc/chip, not another sphere, because `icon_orb_basic` already
+    owns the plain circle silhouette". That reasoning inverted when the owner
+    supplied a TM Orb board and the world pickup became an actual sphere
+    (`assets/props/tm_orb/`, `scripts/world/tm_pickup.gd`). An icon that says
+    "chip" for an object that is visibly a ball is worse than the collision it
+    was avoiding, so it is a sphere now.
+
+    It still cannot be mistaken for the capture orb, and the difference is
+    structural rather than a matter of degree. `icon_orb_basic` is two TILTED
+    CROSSING bands with a DIAMOND gem where they meet. This is CONCENTRIC
+    rings around a ROUND core -- which is also what the board draws, so the
+    icon and the 3D object now say the same thing.
+
+    The taught move's own slot glyph is still punched through the core, for
+    the reason the original gave: "TM, and it goes in your quick slot" is what
+    a player needs before spending it, and WHICH move is the item's name and
+    the detail panel's job rather than twenty near-identical 64px drawings.
     """
     img = new_canvas()
     d = ImageDraw.Draw(img)
-    cx, cy, r = 128, 122, 102
+    cx, cy, r = 128, 128, 100
     d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
-    # flat chord off the bottom -- the silhouette cue that says "disc", not
-    # "ball", at 64px where the rim groove alone would blur away
-    d.rectangle((cx - r, cy + r * 0.74, cx + r, S), fill=CLEAR)
-    # rim groove
-    d.ellipse(
-        (cx - r * 0.86, cy - r * 0.86, cx + r * 0.86, cy + r * 0.86),
-        outline=CLEAR, width=int(STROKE * 0.8),
-    )
-    return _punch(img, mark, (cx - 52, cy - 52, cx + 52, cy + 52))
+
+    # Concentric rings, cut out of the body. Two of them: enough to read as
+    # banded at 64px, few enough not to turn into moire when downscaled.
+    for f in (0.86, 0.60):
+        rr = r * f
+        d.ellipse((cx - rr, cy - rr, cx + rr, cy + rr),
+                  outline=CLEAR, width=int(STROKE * 0.7))
+
+    # Four radial nodes on the outer ring, at the diagonals so they do not
+    # line up with the punched glyph's own axes. These are the board's
+    # brass junction blocks, reduced to the smallest mark that survives 64px.
+    nr = r * 0.86
+    for dx, dy in ((0.707, 0.707), (-0.707, 0.707), (0.707, -0.707), (-0.707, -0.707)):
+        nx, ny = cx + nr * dx, cy + nr * dy
+        k = STROKE * 0.62
+        d.ellipse((nx - k, ny - k, nx + k, ny + k), fill=CLEAR)
+
+    # The core the move glyph sits in, matching the board's recessed socket.
+    return _punch(img, mark, (cx - 46, cy - 46, cx + 46, cy + 46))
 
 
 def icon_tm_quick() -> Image.Image:

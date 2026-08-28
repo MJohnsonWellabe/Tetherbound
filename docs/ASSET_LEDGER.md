@@ -104,3 +104,59 @@ were committed at some point and a licence audit should be able to see that.
   looks cohesive on a store page can fall apart under one directional light.
 - If the game is ever distributed publicly, audit this table and purchase or
   replace anything that needs it.
+
+## TM Orb — `assets/props/tm_orb/` (2026-08-28)
+
+| | |
+|---|---|
+| Source | Meshy.ai image-to-3D, refine tier |
+| Task id | `01a04868-43bf-78c4-ba6b-1cbb3dc6dce8` (refine of preview candidate `01a0483f-3343-706e-b4e3-d13fdc4ca62a`) |
+| Reference | `docs/art/reference/tm_orb_board.png`, **owner-supplied 2026-08-28** |
+| Licence | Meshy paid generation on the project's own account; generated from the owner's own reference board, no third-party asset ingested |
+| Geometry | 30,774 tris, 37,080 verts, one mesh, one primitive, UV0 present |
+
+Selected from three preview candidates. Chosen on the board's own lead
+criterion — a clean sphere silhouette — measured rather than eyeballed:
+bounding-box sphericity 0.991 against 0.976 and 0.974 for the other two. It was
+also the only candidate with a well-formed spiral core AND continuous banding;
+candidate A's socket was an empty dome with no spiral at all, and candidate B
+drifted into the cracked-panel look the prompt explicitly ruled out.
+
+### The generated material does NOT deliver the board, and that is expected
+
+The board asks for a *"subtle emissive core"* with *"emissive intensity
+(dynamic)"* and ten type variants as hue swaps. The generated glTF has **one
+material, one base-colour texture, no emissive channel and no
+metallic-roughness texture** — `metallicFactor` 0.0, `roughnessFactor` 0.8. The
+glow in the render is **painted into albedo**, so out of the box it does not
+emit, cannot be driven dynamically, and a naive hue rotation for a type variant
+would shift the stone and brass along with the core.
+
+So the generation supplies **form**, and the material is authored here:
+
+- `tm_orb_0.jpg` — the generated albedo. **Not committed separately**: Godot's
+  glTF import extracts the texture embedded in `tm_orb.glb` to this path, and it
+  is byte-identical to what Meshy returned (sha256 verified), so a hand-copied
+  second PNG was 2.9 MB of exact duplicate and was removed.
+- `tm_orb_emissive_mask.png` — the core, extracted by hue. The core occupies
+  **3.36% of texels** and is the only content in the 160–220° hue band above
+  0.25 saturation, so it separates cleanly despite being scattered across the
+  atlas. This is the channel the board's dynamic intensity drives.
+- `tm_orb_shell.png` — the albedo with the core texels neutralised to greyscale,
+  so tinting the core cannot drag the stone with it.
+
+**One mesh, ten materials.** The ten type variants are hue/emissive swaps over
+this single body, the same economy `character_model.gd` already uses for
+villager palettes. Do not generate nine more orbs.
+
+### Owner authorisation
+
+CLAUDE.md reserves Meshy for Team Tether hero objects. This generation was
+**directed by the owner on 2026-08-28 with a supplied reference board**, which
+satisfies the actual gate — the same reasoning already recorded in
+`tools/art_pipeline/meshy.py` for the BAND1-D1 camp set: the hero-objects line
+exists to stop an autonomous firing spending speculatively, not to stop the
+owner directing a generation themselves.
+
+Cost: 60 credits for three previews, 40 for the refine of the winner. Preview
+first, spend only on the winner, per the pipeline's own rule.

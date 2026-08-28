@@ -47,7 +47,7 @@ func setup(tm_id: String) -> void:
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
-	_prompt.position = Vector3.UP * (DISC_CENTRE_Y + 0.34)
+	_prompt.position = Vector3.UP * (ORB_CENTRE_Y + 0.34)
 	_prompt.call("configure", "Learn %s" % str(_tms.call("display_name", _tm_id)), 2.4, true)
 	_prompt.connect("activated", _on_picked_up)
 	add_child(_prompt)
@@ -106,7 +106,7 @@ func _deactivate() -> void:
 ##     catching the sun. The disc's `colour` comes from `data/moves/tms.json`
 ##     (already per-TM, already tuned by type) and has to survive as diffuse.
 ##   * Size. The old prop was 0.46 m tall and two of the five TMs in the world
-##     stand in open meadow. At `DISC_RADIUS` plus the plinth this reads about
+##     stand in open meadow. At the orb's diameter plus the plinth this reads about
 ##     0.8 m -- a waist-high marker, the same register as a signpost, which is
 ##     what a piece of found knowledge planted in the world should be.
 ##   * A light of its own, not just emission. `tm_earthshatter` and the
@@ -119,13 +119,35 @@ func _deactivate() -> void:
 ## decides whether to walk over, a turning disc is the only cue that survives
 ## when the silhouette is 20 px wide. Five TM props exist in the whole world
 ## (`playground_world.gd::TM_AT`), so this is five rotation writes a frame.
-const DISC_RADIUS := 0.24
-const DISC_THICKNESS := 0.055
+## TM-ORB, 2026-08-28. The owner supplied a reference board and directed the
+## generation (docs/art/reference/tm_orb_board.png, ledger entry in
+## docs/ASSET_LEDGER.md), so the disc this file built is superseded by an orb.
+##
+## What the disc version got RIGHT is kept, because it was paid for and none of
+## it is about the shape: the plinth, the slow spin, the short-range light, and
+## the reasoning behind each. See the header above -- it is that lane's, and it
+## still applies word for word to a sphere.
+##
+## Scale is the one number that changed with the shape. The board's own note is
+## 18-22cm, which is the object's size in the fiction; a 20cm ball lying in the
+## grass is a 20cm ball nobody finds, and the owner has separately reported
+## creatures being lost in this same grass. So the orb is board-sized and
+## PLINTHED, which is also how the board's own "Vendor / Display" panel draws
+## it -- the object stays 20cm and the assembly reads waist-high.
+const ORB_MESH_PATH := "res://assets/props/tm_orb/tm_orb.glb"
+const ORB_SHELL_PATH := "res://assets/props/tm_orb/tm_orb_shell.png"
+const ORB_EMISSIVE_MASK_PATH := "res://assets/props/tm_orb/tm_orb_emissive_mask.png"
+const ORB_DIAMETER_M := 0.20
+## Measured off the generated mesh's AABB (1.8998 x 1.9012 x 1.8607), stated
+## rather than hidden as a magic ratio so a re-export at another scale is one
+## edit.
+const ORB_SOURCE_DIAMETER_M := 1.899
+const ORB_EMISSION_ENERGY := 1.6
 const PLINTH_HEIGHT := 0.16
 const SPIN_DEGREES_PER_SECOND := 22.0
+## Eye height for the assembly: plinth, then the orb sitting proud of it.
+const ORB_CENTRE_Y := PLINTH_HEIGHT + ORB_DIAMETER_M * 0.5 - 0.02
 
-## How far the disc's centre sits above the prop's own origin.
-const DISC_CENTRE_Y := PLINTH_HEIGHT + DISC_RADIUS + 0.12
 
 var _spinner: Node3D = null
 
@@ -133,107 +155,67 @@ var _spinner: Node3D = null
 func _build_visual() -> void:
 	var colour: Color = _tms.call("colour", _tm_id) if _tms != null else Color(0.6, 0.6, 0.6)
 
-	# The disc face. Bright, self-lit, and the TM's own type colour.
-	var face := StandardMaterial3D.new()
-	face.albedo_color = colour
-	face.metallic = 0.1
-	face.roughness = 0.42
-	face.emission_enabled = true
-	face.emission = colour
-	face.emission_energy_multiplier = 1.1
-
-	# The rim and the plinth: the same stone value every other planted prop in
-	# this project uses, deliberately NOT the type colour, so the disc reads as
-	# an inset plate rather than the whole object being one flat tint.
+	# The plinth, unchanged from the disc version: the same stone value every
+	# other planted prop uses, deliberately NOT the type colour, so the orb
+	# reads as an object set on something rather than one flat tint.
 	var stone := StandardMaterial3D.new()
 	stone.albedo_color = Color("#544c42")
 	stone.metallic = 0.0
 	stone.roughness = 0.9
 
-	# The mark punched through the icon is a starburst; here it is raised
-	# instead of cut, because a hole in a 5 cm disc is invisible at any
-	# distance a player reads this from and a proud boss catches light.
-	var mark := StandardMaterial3D.new()
-	mark.albedo_color = Color(1.0, 0.97, 0.9)
-	mark.emission_enabled = true
-	mark.emission = colour.lightened(0.55)
-	mark.emission_energy_multiplier = 1.9
-	mark.roughness = 0.35
-
 	var plinth := MeshInstance3D.new()
-	plinth.name = "Plinth"
 	var plinth_mesh := CylinderMesh.new()
-	plinth_mesh.top_radius = 0.16
-	plinth_mesh.bottom_radius = 0.22
+	plinth_mesh.top_radius = ORB_DIAMETER_M * 0.62
+	plinth_mesh.bottom_radius = ORB_DIAMETER_M * 0.78
 	plinth_mesh.height = PLINTH_HEIGHT
 	plinth.mesh = plinth_mesh
 	plinth.material_override = stone
 	plinth.position = Vector3.UP * (PLINTH_HEIGHT * 0.5)
 	add_child(plinth)
 
-	# Everything that turns hangs off this, so the plinth stays put.
 	_spinner = Node3D.new()
-	_spinner.name = "Disc"
-	_spinner.position = Vector3.UP * DISC_CENTRE_Y
+	_spinner.name = "Orb"
+	_spinner.position = Vector3.UP * ORB_CENTRE_Y
 	add_child(_spinner)
 
-	# A cylinder's axis is +Y; tipping it a quarter turn about X stands it on
-	# edge like a coin, which is the icon's own silhouette.
-	var disc := MeshInstance3D.new()
-	var disc_mesh := CylinderMesh.new()
-	disc_mesh.top_radius = DISC_RADIUS
-	disc_mesh.bottom_radius = DISC_RADIUS
-	disc_mesh.height = DISC_THICKNESS
-	disc.mesh = disc_mesh
-	disc.material_override = face
-	disc.rotation.x = deg_to_rad(90.0)
-	_spinner.add_child(disc)
+	# A .glb imports as a PackedScene, NOT a Mesh. Assigning the loaded
+	# resource straight to MeshInstance3D.mesh type-fails and renders nothing
+	# at all, silently -- found by rendering this and getting empty background.
+	var orb: Node3D = null
+	var packed: PackedScene = load(ORB_MESH_PATH) as PackedScene
+	if packed != null:
+		orb = packed.instantiate() as Node3D
+	if orb == null:
+		# Degrade to a plain tinted sphere rather than to an invisible pickup.
+		var fallback := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = ORB_DIAMETER_M * 0.5
+		sphere.height = ORB_DIAMETER_M
+		fallback.mesh = sphere
+		fallback.material_override = _orb_material(colour)
+		_spinner.add_child(fallback)
+		push_warning("tm_pickup: %s did not load as a PackedScene" % ORB_MESH_PATH)
+	else:
+		# material_override on the parent Node3D does nothing; it has to go on
+		# the instantiated MeshInstance3D children.
+		var mat := _orb_material(colour)
+		for child in orb.get_children():
+			if child is MeshInstance3D:
+				(child as MeshInstance3D).material_override = mat
+		orb.scale = Vector3.ONE * (ORB_DIAMETER_M / ORB_SOURCE_DIAMETER_M)
+		_spinner.add_child(orb)
 
-	# The rim groove the icon draws as a cut line, as real geometry.
-	var rim := MeshInstance3D.new()
-	var torus := TorusMesh.new()
-	torus.inner_radius = DISC_RADIUS * 0.94
-	torus.outer_radius = DISC_RADIUS * 1.12
-	rim.mesh = torus
-	rim.material_override = stone
-	rim.rotation.x = deg_to_rad(90.0)
-	_spinner.add_child(rim)
-
-	# The slot glyph: a centre boss and four short radial spokes, on both faces
-	# so the prop is not blank from behind as it turns.
-	for side in [1.0, -1.0]:
-		var boss := MeshInstance3D.new()
-		var boss_mesh := CylinderMesh.new()
-		boss_mesh.top_radius = 0.052
-		boss_mesh.bottom_radius = 0.052
-		boss_mesh.height = 0.03
-		boss.mesh = boss_mesh
-		boss.material_override = mark
-		boss.rotation.x = deg_to_rad(90.0)
-		boss.position = Vector3(0.0, 0.0, side * (DISC_THICKNESS * 0.5 + 0.012))
-		_spinner.add_child(boss)
-
-		for spoke_index in 4:
-			var spoke := MeshInstance3D.new()
-			var spoke_mesh := BoxMesh.new()
-			spoke_mesh.size = Vector3(0.028, 0.115, 0.018)
-			spoke.mesh = spoke_mesh
-			spoke.material_override = mark
-			spoke.rotation.z = deg_to_rad(45.0 + 90.0 * float(spoke_index))
-			var angle := deg_to_rad(45.0 + 90.0 * float(spoke_index))
-			spoke.position = Vector3(
-				-sin(angle) * 0.13, cos(angle) * 0.13,
-				side * (DISC_THICKNESS * 0.5 + 0.006))
-			_spinner.add_child(spoke)
-
-	# Presence at distance and in the dark. Short range on purpose: this is a
-	# prop that says "here", not a light source the level is lit by.
+	# Presence at distance and in the dark, kept verbatim from the disc
+	# version. Short range on purpose: this is a prop that says "here", not a
+	# light source the level is lit by. Emission alone paints the mesh and
+	# throws nothing under the Compatibility renderer, so without this the
+	# prop has no presence until the player is already on top of it.
 	var glow := OmniLight3D.new()
 	glow.name = "Glow"
 	glow.light_color = colour
 	glow.light_energy = 1.15
 	glow.omni_range = 4.0
-	glow.position = Vector3.UP * DISC_CENTRE_Y
+	glow.position = Vector3.UP * ORB_CENTRE_Y
 	add_child(glow)
 
 	set_process(true)
@@ -244,6 +226,42 @@ func _process(delta: float) -> void:
 		set_process(false)
 		return
 	_spinner.rotate_y(deg_to_rad(SPIN_DEGREES_PER_SECOND) * delta)
+
+
+## The orb's material: pale stone and brass from the shell map, with the TM's
+## type colour confined to the emissive core.
+func _orb_material(colour: Color) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	var shell: Texture2D = load(ORB_SHELL_PATH) if ResourceLoader.exists(ORB_SHELL_PATH) else null
+	if shell == null:
+		mat.albedo_color = colour
+		mat.metallic = 0.05
+		mat.roughness = 0.5
+		mat.emission_enabled = true
+		mat.emission = colour
+		mat.emission_energy_multiplier = 0.9
+		return mat
+	mat.albedo_texture = shell
+	mat.albedo_color = Color(1.0, 1.0, 1.0)
+	# LOW metallic, as the disc version's header argues: a high-metallic
+	# StandardMaterial3D takes nearly all its colour from specular environment
+	# reflection, which this renderer's flat ambient cannot supply, so it goes
+	# dark everywhere but the facet catching the sun.
+	mat.metallic = 0.0
+	mat.roughness = 0.8
+	var mask: Texture2D = load(ORB_EMISSIVE_MASK_PATH) if ResourceLoader.exists(ORB_EMISSIVE_MASK_PATH) else null
+	if mask != null:
+		mat.emission_enabled = true
+		mat.emission_texture = mask
+		mat.emission = colour
+		mat.emission_energy_multiplier = ORB_EMISSION_ENERGY
+		# MULTIPLY, not the default ADD. Godot computes ADD as
+		# (emission + emission_tex) * energy, so the colour is emitted over the
+		# WHOLE mesh and the texture only adds on top -- the mask gates
+		# nothing. Rendered as a uniformly green orb with a blown-out core
+		# before this line.
+		mat.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+	return mat
 
 
 func _on_picked_up() -> void:
