@@ -275,6 +275,11 @@ var _evidence_lane := "both"
 ## the whole point of writing the debt down is that it cannot evaporate.
 var _capture_lane := ""
 var _delegated_captures: Array = []
+## RIG-9. The §H continuous-record WINDOWS a logic lane handed to its capture
+## lane, kept apart from `_delegated_captures` because a window is not a §G id
+## and must not be checked against the capture lane's `owes` list, which names
+## frames. Same rule though: debt transferred and recorded, never erased.
+var _delegated_records: Array = []
 ## On a capture lane: the §G ids it accepts responsibility for.
 var _segment_owes: Array = []
 ## The step list and where in it we are, so a re-price can cost the REMAINDER
@@ -1244,6 +1249,27 @@ func _check_evidence_lane(steps: Array) -> String:
 			+ "accept: %s. An unaccepted delegation is how a segment would become "
 			+ "capture-incomplete forever without anything ever saying so.") % [
 				unaccepted.size(), _capture_lane, str(unaccepted)]
+	# RIG-9's other half. A §H continuous-record window is a second kind of
+	# evidence debt and it needs the same guarantee the §G ids get: the lane it
+	# is handed to has to actually open one. Checked structurally, by looking for
+	# `record_start` in the capture lane's own steps, because "the capture lane
+	# will surely record something" is the assumption CD-1 already paid for once.
+	var windows := 0
+	for raw: Variant in steps:
+		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("action", "")) == "record_start":
+			windows += 1
+	if windows > 0:
+		var target_windows := 0
+		for raw: Variant in (target.get("steps", []) as Array):
+			if typeof(raw) == TYPE_DICTIONARY \
+					and str((raw as Dictionary).get("action", "")) == "record_start":
+				target_windows += 1
+		if target_windows == 0:
+			return ("evidence_lane=logic declares %d §H continuous-record window(s) and hands them "
+				+ "to \"%s\", which opens none. §H.1 lets a capture lane run BOUNDED record "
+				+ "windows around a named state -- that is where these belong. A window handed "
+				+ "to a lane that never records is a debt that has quietly stopped existing."
+				) % [windows, _capture_lane]
 	return ""
 
 
@@ -1500,7 +1526,8 @@ func _write_inventory() -> void:
 			"owes": _segment_owes,
 			"rows": rows},
 		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
-			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
+			"absent": _record_absent, "absent_reasons": frames_absent_reasons,
+			"delegated_windows": _delegated_records},
 		"uncommittable": uncommittable,
 		"git_check": _git_check,
 		"steps": {"total": _step_total, "ran": _step_ran, "refused": _step_refused,
@@ -1522,17 +1549,23 @@ func _write_inventory() -> void:
 	# finished cleanly is COMPLETE for what it owed, and a reader scanning the
 	# run directory must still be able to see, without opening anything, that
 	# frames are owed elsewhere. `run_inventory.py` is what checks they arrived.
-	if _evidence_lane == "logic" and not _delegated_captures.is_empty():
+	if _evidence_lane == "logic" \
+			and not (_delegated_captures.is_empty() and _delegated_records.is_empty()):
 		var owed: Array[String] = []
 		for entry: Variant in _delegated_captures:
 			owed.append("- %s  (step %s)" % [str((entry as Dictionary).get("id", "")),
 				str((entry as Dictionary).get("step", ""))])
+		for entry: Variant in _delegated_records:
+			var rec := entry as Dictionary
+			owed.append("- §H continuous-record window \"%s\" at %.2f Hz  (step %s)" % [
+				str(rec.get("label", "")), float(rec.get("hz", 0.0)), str(rec.get("step", ""))])
 		_write_text(_out_dir.path_join("DELEGATED.md"),
-			("# %s is the LOGIC lane\n\n%d prescribed §G frame(s) are owed by capture lane `%s`, "
+			("# %s is the LOGIC lane\n\n%d item(s) of evidence are owed by capture lane `%s`, "
 			+ "not by this\nsegment. This segment is judged against what its lane owes; the debt "
 			+ "itself is\nchecked over the whole run directory by `tools/gate_f/run_inventory.py`, "
 			+ "which is\nthe level at which \"does this frame exist anywhere\" can be answered.\n\n%s\n")
-			% [_segment_id, _delegated_captures.size(), _capture_lane, "\n".join(owed)])
+			% [_segment_id, _delegated_captures.size() + _delegated_records.size(),
+				_capture_lane, "\n".join(owed)])
 	# A capture git will never carry is, from the run's point of view, a missing
 	# artefact: it lives on a container that gets reclaimed.
 	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
@@ -1629,6 +1662,35 @@ func _do_step(step: Dictionary) -> void:
 	# it. The verdict word is its own so it can never be read as either a PASS
 	# or a FAIL, and `run_inventory.py` is what turns the handover back into a
 	# debt at the level where it can actually be paid.
+	# RIG-9, found in this run at S05. `record_hz` is zeroed for a logic lane at
+	# segment load, but `record_start` set `_record_hz` from its own args and
+	# re-armed the recorder anyway -- so a headless lane spent the window asking
+	# for frames it cannot take, wrote 46 `absent` rows, and was marked
+	# INCOMPLETE. That is precisely the outcome §H.1 forbids: "A logic-lane
+	# segment is judged against what ITS LANE owes, and is not
+	# 'capture-incomplete forever' for a frame it never undertook to take."
+	# S06-S09 each declare the same two windows and would each have inherited it.
+	if _evidence_lane == "logic" and (action == "record_start" or action == "record_stop"):
+		var window := str(args.get("label", id))
+		if action == "record_start":
+			_delegated_records.append({"label": window, "step": id,
+				"hz": float(args.get("hz", _cfg["record_window_hz"]))})
+			actual = ("DELEGATED the §H record window \"%s\" to capture lane %s "
+				+ "(this is the logic lane; it keeps no continuous record)") % [window, _capture_lane]
+		else:
+			actual = ("DELEGATED the close of the §H record window to capture lane %s "
+				+ "(this is the logic lane; no window was opened here)") % _capture_lane
+		_verdicts["DELEGATED"] = int(_verdicts.get("DELEGATED", 0)) + 1
+		_emit("note", {"expected": expected, "actual": actual,
+			"observation": "evidence split: the logic lane keeps no §H continuous record"})
+		_note_line("### %s — %s" % [id, str(step.get("title", action))])
+		_note_line("- expected: %s" % expected)
+		_note_line("- actual: %s" % actual)
+		_note_line("- events: t=%.2f" % _play_t())
+		_note_line("- verdict: DELEGATED")
+		_note_line("")
+		return
+
 	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq"):
 		var handed := str(args.get("id", id))
 		actual = ("DELEGATED %s to capture lane %s (this is the logic lane; it takes no frames)"
