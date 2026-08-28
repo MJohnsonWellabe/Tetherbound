@@ -103,6 +103,34 @@ var _cfg := {
 	"segment_cost_ceiling_s": 14400.0,
 	## Frames timed during the pre-flight to measure what one costs here.
 	"cost_probe_frames": 20,
+	## ...but never spend more than this measuring. Added 2026-08-28: the probe
+	## was written when a frame cost 6 ms, and 20 of them cost 0.12 s. The run-2
+	## BLOCKER measured 6.465 s per in-world frame under llvmpipe, at which
+	## price the same 20-frame probe costs over two minutes EVERY time a scene
+	## comes up. The measurement stops as soon as it has both a floor on the
+	## sample count and enough elapsed time to be meaningful.
+	"cost_probe_budget_s": 20.0,
+	"cost_probe_min_frames": 4,
+	## How often, in physics frames actually ticked, the segment re-prices its
+	## REMAINDER against what frames are costing right now. A one-shot price
+	## taken on a title screen and applied to hours of Meadows is the defect
+	## this exists for; a price that is never revisited is the same defect with
+	## a longer fuse.
+	"cost_recheck_frames": 120,
+	## How far the measured frame cost has to move before a recheck is worth a
+	## row in the ledger. A heartbeat that logs the same number a hundred times
+	## buries the two rows that matter and bloats every artefact carrying them.
+	"cost_log_change_fraction": 0.25,
+	## Disk. Added 2026-08-28 from the run-2 BLOCKER: at §H's planned cadences
+	## the eighteen segments were about 25 GB before the frame-cost multiplier,
+	## into a container with 23 GB free, and nothing anywhere had priced it.
+	## Bytes are estimated from a MEASURED PNG (the pre-flight self-test at the
+	## real capture resolution), never from an assumed size.
+	"disk_reserve_bytes": 2147483648.0,
+	## A run directory inside a work tree costs its bytes TWICE: once in the
+	## working tree and once in `.git` when the evidence is committed, which it
+	## must be or it dies with the container.
+	"disk_git_factor": 2.0,
 	## A prescribed capture whose frame is this flat AND this dark is a picture
 	## of an obstruction, not of the game. Calibrated against X07's own 79
 	## frames -- see `_frame_stats`.
@@ -211,7 +239,7 @@ var _step_ran := 0
 ## a SKIP: a refusal is one step that could not be performed, a skip is the
 ## consequence for the ones after it.
 var _step_refused := 0
-var _verdicts := {"PASS": 0, "FAIL": 0, "SKIP": 0}
+var _verdicts := {"PASS": 0, "FAIL": 0, "SKIP": 0, "DELEGATED": 0}
 ## What the pre-flight found, verbatim, in `RUN_METADATA.json` and the inventory.
 var _preflight: Dictionary = {}
 ## `--gatef-allow-no-capture`: an explicit, recorded acknowledgement that this
@@ -237,12 +265,40 @@ var _git_check := "not run"
 ## about the scene the segment will actually render.
 var _predicted_frames := 0
 var _cost_gated := false
-var _reprice_done := false
+## §H/§G evidence split, owner decision 2026-08-27. "logic" | "capture" | "both".
+## `both` is what every segment written before the split means, and is the
+## default, so an unconverted segment keeps its old meaning exactly.
+var _evidence_lane := "both"
+## On a logic lane: who owes the §G frames this lane is not taking, and which
+## ids they are. A delegation that nobody has accepted is a BLOCKER at step 1 --
+## the whole point of writing the debt down is that it cannot evaporate.
+var _capture_lane := ""
+var _delegated_captures: Array = []
+## On a capture lane: the §G ids it accepts responsibility for.
+var _segment_owes: Array = []
+## The step list and where in it we are, so a re-price can cost the REMAINDER
+## rather than re-costing steps that have already been paid for.
+var _steps: Array = []
+var _step_index := 0
+## Rolling in-play cost sampling: physics frames ticked, and the wall clock at
+## the top of the current sampling window.
+var _cost_window_frames := 0
+var _cost_window_usec := 0
+## Every re-price this segment took, in order, so the notes show a cost that
+## moved rather than one number that happened to be the last.
+var _reprices: Array = []
+var _cost_rechecks := 0
+## 0 = not asked yet, 1 = inside a work tree, -1 = not. See `_inside_work_tree`.
+var _work_tree_cached := 0
+var _disk: Dictionary = {}
 
 # --- live counters -----------------------------------------------------------
 
 var _probe: RefCounted = null
+## Wall clock origin (the box) and PLAY clock origin (the game). Two clocks,
+## kept apart on purpose since the run-2 BLOCKER: see `_wall_t()`/`_play_t()`.
 var _t0_usec := 0
+var _t0_frames := 0
 var _boot_usec := 0
 var _distance_m := 0.0
 var _since_interaction_s := 0.0
@@ -335,6 +391,7 @@ func _run() -> void:
 
 	_probe = PROBE.new(self)
 	_t0_usec = Time.get_ticks_usec()
+	_t0_frames = Engine.get_physics_frames()
 
 	if _mode == "overhead":
 		await _run_overhead_probe()
@@ -495,6 +552,26 @@ func _run_metadata() -> Dictionary:
 		"viewport_size": [_viewport_size().x, _viewport_size().y],
 		"trace_hz": _cfg["trace_hz"],
 		"trace_rows": _trace_rows,
+		# Which clock every consumer reads, said out loud so nobody has to infer
+		# it from the source again. Added 2026-08-28 from the run-2 BLOCKER.
+		"clocks": {
+			"route_csv_t": "play (Engine.get_physics_frames() / physics_ticks_per_second)",
+			"events_jsonl_t": "play",
+			"frames_manifest_t": "play",
+			"route_csv_wall": "wall datetime, so the two clocks can be lined up",
+			"trace_hz_and_record_hz": "play seconds",
+			"cost_gate_and_disk_gate": "wall (they are questions about the box)",
+			"duration_ms": "wall (a boot/save/load cost is a wall-clock fact)",
+			"play_seconds_elapsed": snappedf(_play_t(), 0.01),
+			"wall_seconds_elapsed": snappedf(_wall_t(), 0.01),
+		},
+		"evidence_lane": _evidence_lane,
+		"capture_lane": _capture_lane,
+		"delegated_captures": _delegated_captures.map(func(r: Variant) -> String:
+			return str((r as Dictionary).get("id", ""))),
+		"owes": _segment_owes,
+		"cost_reprices": _reprices,
+		"disk": _disk,
 		"record_baseline_hz": _record_baseline_hz,
 		"frames_written": _record_written,
 		"frames_absent": _record_absent,
@@ -625,6 +702,7 @@ func _capture_available() -> bool:
 
 func _play(segment: Dictionary) -> void:
 	var steps: Array = segment.get("steps", []) as Array
+	_steps = steps
 	if steps.is_empty():
 		_die("segment %s has no steps" % _segment_id)
 		return
@@ -632,7 +710,19 @@ func _play(segment: Dictionary) -> void:
 	# journey segment, 0.5 Hz for the mandatory high-risk list; `record_hz: 0`
 	# turns the continuous record off for a segment that must not have it
 	# (X08's perf audit, per §H's own last clause).
+	# §H/§G evidence split (owner decision 2026-08-27). A logic lane runs the
+	# journey headless for mechanics, telemetry and step verdicts; it takes no
+	# prescribed shot and keeps no continuous record, and it names the capture
+	# lane that owes what it did not take.
+	_evidence_lane = str(segment.get("evidence_lane", "both"))
+	_capture_lane = str(segment.get("capture_lane", ""))
+	_segment_owes = segment.get("owes", []) as Array
 	_record_baseline_hz = float(segment.get("record_hz", _cfg["record_default_hz"]))
+	if _evidence_lane == "logic":
+		# Not "the operator forgot to set record_hz": the continuous record is
+		# the thing the split exists to remove. 4.6 million rendered frames is
+		# what was unaffordable, not capture.
+		_record_baseline_hz = 0.0
 	_record_hz = _record_baseline_hz
 	_record_args = {
 		"hud": str(segment.get("record_hud", "on")),
@@ -642,14 +732,27 @@ func _play(segment: Dictionary) -> void:
 	_note_line("# %s — %s" % [_segment_id, str(segment.get("title", ""))])
 	_note_line("")
 	_step_total = steps.size()
-	_planned_captures = _plan_captures(steps)
+	if _evidence_lane == "logic":
+		# The ids stay written down; they move from "this segment owes them" to
+		# "this segment handed them to a named lane". Round 1 made an untakeable
+		# capture a FAIL, which was right when the alternative was 9,231 false
+		# PASSes. With the lanes split the question changes: a segment is judged
+		# against what ITS LANE owes, and the debt itself is judged one level up,
+		# by `tools/gate_f/run_inventory.py` over the whole run directory. Debt
+		# transferred and recorded -- never debt erased.
+		_planned_captures = []
+		_delegated_captures = _plan_captures(steps)
+	else:
+		_planned_captures = _plan_captures(steps)
 	# CD-1. Before step 1, not after step 40: a segment whose evidence cannot be
 	# taken has to say so at the top, where the operator is still looking, and
 	# the run has to stop rather than spend an hour producing `file: null`.
 	if not await _preflight_capture(steps):
 		_release_everything()
 		return
-	for raw: Variant in steps:
+	for i in steps.size():
+		_step_index = i
+		var raw: Variant = steps[i]
 		if typeof(raw) != TYPE_DICTIONARY:
 			_harness_error("a step is not a JSON object: %s" % str(raw))
 			continue
@@ -743,6 +846,9 @@ func _preflight_capture(steps: Array) -> bool:
 	var plans_shots := not _planned_captures.is_empty()
 	var plans_record := _record_baseline_hz > 0.0
 	_preflight = {
+		"evidence_lane": _evidence_lane,
+		"capture_lane": _capture_lane,
+		"delegated_captures": _delegated_captures.size(),
 		"planned_captures": _planned_captures.size(),
 		"record_baseline_hz": _record_baseline_hz,
 		"display_server": DisplayServer.get_name(),
@@ -772,6 +878,16 @@ func _preflight_capture(steps: Array) -> bool:
 			_preflight["contradiction"] = ("the freeze record at %s says display_server=%s; this "
 				+ "process HAS one") % [str(claim.get("from", "")), str(claim["claim"])]
 
+	# §H/§G evidence split: the handover has to be REAL before a step runs.
+	#
+	# The failure this guards is the one round 1 argued about one level down. A
+	# logic-lane segment that lists ids nobody takes would be a segment that
+	# quietly stops owing its evidence, which is exactly the shape of the 9,231
+	# `file: null` PASSes: a debt discharged by not mentioning it. So the
+	# delegation is checked against the capture lane's own declaration, on disk,
+	# before step 1, and an unbacked one is a hard refusal.
+	var lane_why := _check_evidence_lane(steps)
+
 	# CD-7: price the segment before launching it.
 	var frames := _predict_frames(steps)
 	var frame_cost := await _measure_frame_cost()
@@ -782,17 +898,15 @@ func _preflight_capture(steps: Array) -> bool:
 	_preflight["measured_frame_cost_s"] = snappedf(frame_cost, 0.000001)
 	_preflight["predicted_segment_cost_s"] = snappedf(predicted, 0.1)
 	_predicted_frames = frames
-	_cost_gated = plans_shots or plans_record
+	var plans_evidence := plans_shots or plans_record
+	# The cost gate is about THE BOX'S TIME, not about pictures, so it applies
+	# to every segment that has somewhere to write. Round 1 gated only
+	# capture-bearing segments, which was defensible while capture was the only
+	# expensive thing; the evidence split (§H, 2026-08-27) makes a logic lane
+	# the normal way to run a journey, and a logic lane can spend a week too.
+	_cost_gated = _telemetry_on()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
 
-	if not (plans_shots or plans_record):
-		_preflight["verdict"] = "not required"
-		_preflight["why"] = "segment declares no captures and no continuous record"
-		_note_line("### preflight — capture not required")
-		_note_line("- %s" % str(_preflight["why"]))
-		_note_line("- predicted cost %.0f s over %d frames at %.4f s/frame" % [predicted, frames, frame_cost])
-		_note_line("")
-		return true
 	if not _telemetry_on():
 		_preflight["verdict"] = "not required"
 		_preflight["why"] = "telemetry off (no --gatef-out); nowhere to write a PNG and nothing claiming there was"
@@ -805,21 +919,26 @@ func _preflight_capture(steps: Array) -> bool:
 	# developer a logic pass over a capture-bearing segment at the price of
 	# never being able to call it complete.
 	#
-	# `hard_why` is a refusal the flag has no business waiving: a segment
-	# priced over the ceiling, or a freeze record that contradicts what this
-	# process can see. Neither is about pictures. An earlier cut of this
-	# function ran all four reasons through one string, so the display-server
-	# message overwrote the cost message and the acknowledgement flag waved
-	# through a cost breach -- which would have reproduced X07's fifteen wasted
-	# hours with a flag on it.
+	# `hard_why` is a refusal the flag has no business waiving: a segment priced
+	# over the time ceiling, a segment that cannot fit its evidence on the disk,
+	# or a freeze record that contradicts what this process can see. None of the
+	# three is about pictures. An earlier cut of this function ran all four
+	# reasons through one string, so the display-server message overwrote the
+	# cost message and the acknowledgement flag waved through a cost breach --
+	# which would have reproduced X07's fifteen wasted hours with a flag on it.
 	var capture_why := ""
 	var hard_why := ""
+	if not lane_why.is_empty():
+		hard_why = lane_why
 	if predicted > ceiling:
-		hard_why = ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames "
+		var cost_why := ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames "
 			+ "at a MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- "
-			+ "they exist so fights resolve -- so this segment needs a GPU or a re-cadenced script, "
-			+ "not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in.") % [
+			+ "they exist so fights resolve -- so this segment needs a GPU or a split evidence "
+			+ "lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 "
+			+ "hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the "
+			+ "re-price after each boot is the honest one.") % [
 				predicted, predicted / 3600.0, ceiling, frames, frame_cost]
+		hard_why = cost_why if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, cost_why]
 	# CD-8b, and only in the direction that cost the last run everything: the
 	# record promised a display server and there is none. The reverse -- a
 	# record saying headless on a box that can render -- is recorded in
@@ -829,12 +948,13 @@ func _preflight_capture(steps: Array) -> bool:
 		var claimed := "the freeze record contradicts this process: %s" % str(_preflight["contradiction"])
 		hard_why = claimed if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, claimed]
 	if not _capture_available():
-		capture_why = ("no display server: DisplayServer reports '%s'. This process cannot render, "
-			+ "so all %d planned capture(s) and every continuous frame would be written as file:null "
-			+ "while the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture "
-			+ "(§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).") % [
-				DisplayServer.get_name(), _planned_captures.size()]
-	else:
+		if plans_evidence:
+			capture_why = ("no display server: DisplayServer reports '%s'. This process cannot render, "
+				+ "so all %d planned capture(s) and every continuous frame would be written as file:null "
+				+ "while the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture "
+				+ "(§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).") % [
+					DisplayServer.get_name(), _planned_captures.size()]
+	elif plans_evidence:
 		var smoke := _out_dir.path_join("capture_smoke.png")
 		if not FileAccess.file_exists(smoke) or _file_bytes(smoke) <= 0:
 			capture_why = ("tools/capture_diag_minimal.gd left no capture_smoke.png in %s. "
@@ -847,6 +967,34 @@ func _preflight_capture(steps: Array) -> bool:
 			if not bool(probe.get("ok", false)):
 				capture_why = ("this process has a display server but could not write its own PNG: %s"
 					% str(probe.get("why", "")))
+			else:
+				# The measured input to the disk estimate: a real frame of a
+				# real scene at the real capture resolution, encoded by the
+				# same code path every evidence frame will use.
+				_preflight["png_bytes"] = int(probe.get("bytes", 0))
+
+	# The disk gate. Third of the run-2 BLOCKER's three findings and the one
+	# nothing had ever asked about: at §H's cadences the eighteen segments were
+	# ~25 GB before the frame-cost multiplier, into 23 GB free, doubled again by
+	# the copy git has to carry. Priced here because a segment that cannot fit
+	# its evidence must refuse at step 1, exactly as one that cannot afford its
+	# time does.
+	if plans_evidence:
+		var disk := _price_disk(frames)
+		_preflight["disk"] = disk
+		if bool(disk.get("over", false)):
+			var disk_why := "disk: %s" % str(disk.get("why", ""))
+			hard_why = disk_why if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, disk_why]
+
+	if not plans_evidence and hard_why.is_empty():
+		_preflight["verdict"] = "not required"
+		_preflight["why"] = "segment declares no captures and no continuous record"
+		_note_line("### preflight — capture not required")
+		_note_line("- %s" % str(_preflight["why"]))
+		_note_line("- predicted cost %.0f s over %d frames at %.4f s/frame (re-priced after each boot)"
+			% [predicted, frames, frame_cost])
+		_note_line("")
+		return true
 
 	# A capture failure the operator acknowledged in advance stops being the
 	# reason to refuse -- and is still recorded, at BLOCKER severity, and still
@@ -917,9 +1065,33 @@ func _freeze_display_claim() -> Dictionary:
 		var record := _read_json(path)
 		if record.is_empty():
 			continue
+		# Lane-aware, and ONLY where the freeze record itself says so.
+		#
+		# The evidence split (2026-08-27) makes a run that is headless for its
+		# logic lane and X11 for its capture lane the normal shape, and a single
+		# flat `display_server` cannot describe it truthfully. So a record MAY
+		# carry `"lanes": {"logic": {...}, "capture": {...}}` and this reads the
+		# entry for the lane the segment declared.
+		#
+		# This is a refinement of CD-8b and deliberately not a softening of it.
+		# A record with no `lanes` block still binds every segment by its flat
+		# claim, exactly as before -- so a run that wants a logic lane must SAY
+		# SO IN THE FREEZE RECORD BEFORE THE RUN, which is precisely what the
+		# run-2 operator asked the coordinator to decide rather than amending a
+		# record mid-run to get a segment to start. The contradiction check
+		# below is unchanged and is still not waivable by the acknowledgement
+		# flag.
+		var lanes: Dictionary = record.get("lanes", {}) as Dictionary
+		if lanes.has(_evidence_lane):
+			var lane: Dictionary = lanes[_evidence_lane] as Dictionary
+			for key in ["display_server", "renderer"]:
+				if lane.has(key) and not str(lane[key]).is_empty():
+					return {"from": path, "key": "lanes.%s.%s" % [_evidence_lane, key],
+						"claim": str(lane[key]), "lane": _evidence_lane}
 		for key in ["display_server", "renderer"]:
 			if record.has(key) and not str(record[key]).is_empty():
-				return {"from": path, "key": key, "claim": str(record[key])}
+				return {"from": path, "key": key, "claim": str(record[key]),
+					"lane": "(all lanes; the record declares none)"}
 	return {}
 
 
@@ -940,6 +1112,93 @@ func _preflight_png() -> Dictionary:
 		return {"ok": false, "why": "%s was written but is %d bytes" % [rel, bytes]}
 	return {"ok": true, "file": rel, "bytes": bytes,
 		"size": [image.get_width(), image.get_height()]}
+
+
+## §H/§G evidence split: is this segment's declaration coherent, and is its
+## handover actually accepted?
+##
+## Owner decision, 2026-08-27. The measurement behind it: a rendered frame of
+## the Meadows costs 12,721 ms on this container against 6.1 ms in logic mode,
+## and the protocol's eighteen segments ask for 4,607,802 physics frames --
+## about 8,283 hours in capture mode. Continuous recording of every frame is
+## what is unaffordable, not capture itself: `tools/_probe_grass_pass.gd` took
+## 14 real 1920x1080 frames across four bands in about 28 minutes on this same
+## box with the grass field ON. Frames from targeted probes are cheap; 4.6
+## million rendered physics frames are not.
+##
+## So a segment declares which lane it is:
+##
+##   "logic"   -- the journey, run headless, for mechanics, telemetry and step
+##                verdicts. Takes no prescribed frame and keeps no continuous
+##                record. MUST name a `capture_lane`, and every §G id its steps
+##                would have taken is handed to it.
+##   "capture" -- the prescribed screenshots, taken at named states. MUST
+##                declare `owes`, and every id in `owes` must actually be shot
+##                by one of its own steps. A lane that claims an id it never
+##                takes is CD-1 wearing a different hat.
+##   "both"    -- what every segment written before the split means. Unchanged.
+##
+## Returns "" when the declaration is coherent, or the refusal text.
+func _check_evidence_lane(steps: Array) -> String:
+	if _evidence_lane == "both":
+		if not _capture_lane.is_empty():
+			return ("this segment declares capture_lane=%s but no evidence_lane. A handover with "
+				+ "no lane to hand FROM is a declaration that does nothing; say "
+				+ "\"evidence_lane\": \"logic\" or drop the key.") % _capture_lane
+		return ""
+	if _evidence_lane == "capture":
+		var owes: Array = _segment_owes
+		if owes.is_empty():
+			return ("evidence_lane=capture with an empty \"owes\": a capture lane exists to pay a "
+				+ "named debt. List the §G ids it takes, or make this segment evidence_lane=both.")
+		var planned := {}
+		for entry: Variant in _planned_captures:
+			planned[str((entry as Dictionary).get("id", ""))] = true
+		var missing: Array[String] = []
+		for id: Variant in owes:
+			if not planned.has(str(id)):
+				missing.append(str(id))
+		if not missing.is_empty():
+			return ("evidence_lane=capture claims to owe %s but no capture step in this segment "
+				+ "takes them. A lane that claims an id it never shoots is exactly the 2026-08-27 "
+				+ "run's `file: null` PASS with a different label on it.") % str(missing)
+		return ""
+	if _evidence_lane != "logic":
+		return ("unknown evidence_lane \"%s\": expected \"logic\", \"capture\" or \"both\"."
+			% _evidence_lane)
+	# --- logic lane -----------------------------------------------------------
+	if _delegated_captures.is_empty():
+		# Nothing to hand over. A journey segment with no §G frame in it is
+		# perfectly ordinary (X06 has none) and needs no capture lane.
+		return ""
+	if _capture_lane.is_empty():
+		return ("evidence_lane=logic with %d prescribed capture(s) in its steps and no "
+			+ "\"capture_lane\". The split moves a debt; it does not cancel one. Name the "
+			+ "segment that takes these frames.") % _delegated_captures.size()
+	var path := "res://tools/gate_f/segments/%s.json" % _capture_lane
+	var target := _read_json(path)
+	if target.is_empty():
+		return ("evidence_lane=logic delegates to \"%s\" and %s does not exist or does not parse. "
+			+ "A handover to a file that is not there is a debt that has quietly stopped existing."
+			) % [_capture_lane, path]
+	if str(target.get("evidence_lane", "")) != "capture":
+		return ("evidence_lane=logic delegates to \"%s\", which declares evidence_lane=%s. Only a "
+			+ "capture lane can accept a capture debt.") % [
+				_capture_lane, str(target.get("evidence_lane", "(none)"))]
+	var accepted := {}
+	for id: Variant in (target.get("owes", []) as Array):
+		accepted[str(id)] = true
+	var unaccepted: Array[String] = []
+	for entry: Variant in _delegated_captures:
+		var id := str((entry as Dictionary).get("id", ""))
+		if not accepted.has(id):
+			unaccepted.append(id)
+	if not unaccepted.is_empty():
+		return ("evidence_lane=logic hands %d id(s) to \"%s\" that its \"owes\" list does not "
+			+ "accept: %s. An unaccepted delegation is how a segment would become "
+			+ "capture-incomplete forever without anything ever saying so.") % [
+				unaccepted.size(), _capture_lane, str(unaccepted)]
+	return ""
 
 
 ## CD-7: what will this segment cost, in seconds, on THIS box?
@@ -1002,10 +1261,21 @@ static func _predict_frames(steps: Array) -> int:
 ## 1920x1080 it was measured at ~10.5 s.
 func _measure_frame_cost() -> float:
 	var frames := maxi(4, int(_cfg["cost_probe_frames"]))
+	var floor_frames := maxi(1, int(_cfg["cost_probe_min_frames"]))
+	var budget := maxf(0.5, float(_cfg["cost_probe_budget_s"]))
 	var started := Time.get_ticks_usec()
+	var taken := 0
 	for i in frames:
 		await process_frame
-	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(frames)
+		taken += 1
+		# The probe must not become the cost it is measuring. At the 6.465 s
+		# per frame the run-2 BLOCKER measured in the Meadows, twenty frames is
+		# over two minutes -- every time a scene comes up. Once there are enough
+		# samples to mean something AND enough elapsed time to be resolvable,
+		# stop; the answer does not get better and the segment is paying for it.
+		if taken >= floor_frames and float(Time.get_ticks_usec() - started) / 1e6 >= budget:
+			break
+	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(maxi(1, taken))
 
 
 ## Which of these captures will git refuse to carry?
@@ -1171,7 +1441,17 @@ func _write_inventory() -> void:
 		"derailed": _derailed,
 		"derailed_at": _derailed_at,
 		"preflight": _preflight,
+		# §H/§G evidence split. `planned` is what THIS LANE owes; `delegated` is
+		# what it handed over and to whom. Completeness below is judged against
+		# the first. The second is judged one level up, over the whole run
+		# directory, by `tools/gate_f/run_inventory.py` -- because that is the
+		# level at which "does this frame exist anywhere" is answerable.
+		"evidence_lane": _evidence_lane,
 		"captures": {"planned": _planned_captures.size(), "present": present, "absent": absent,
+			"delegated_to": _capture_lane,
+			"delegated": _delegated_captures.map(func(r: Variant) -> String:
+				return str((r as Dictionary).get("id", ""))),
+			"owes": _segment_owes,
 			"rows": rows},
 		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
 			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
@@ -1179,11 +1459,29 @@ func _write_inventory() -> void:
 		"git_check": _git_check,
 		"steps": {"total": _step_total, "ran": _step_ran, "refused": _step_refused,
 			"pass": int(_verdicts["PASS"]), "fail": int(_verdicts["FAIL"]),
-			"skipped": int(_verdicts["SKIP"])},
+			"skipped": int(_verdicts["SKIP"]),
+			"delegated": int(_verdicts.get("DELEGATED", 0))},
+		"cost": {"reprices": _reprices, "frame_cost_s": snappedf(_frame_cost_s, 0.000001)},
+		"disk": _disk,
 		"derails": _derails,
 		"harness_errors": _harness_errors,
 	}
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
+	# An unmissable filename for the other half of the split. A logic lane that
+	# finished cleanly is COMPLETE for what it owed, and a reader scanning the
+	# run directory must still be able to see, without opening anything, that
+	# frames are owed elsewhere. `run_inventory.py` is what checks they arrived.
+	if _evidence_lane == "logic" and not _delegated_captures.is_empty():
+		var owed: Array[String] = []
+		for entry: Variant in _delegated_captures:
+			owed.append("- %s  (step %s)" % [str((entry as Dictionary).get("id", "")),
+				str((entry as Dictionary).get("step", ""))])
+		_write_text(_out_dir.path_join("DELEGATED.md"),
+			("# %s is the LOGIC lane\n\n%d prescribed §G frame(s) are owed by capture lane `%s`, "
+			+ "not by this\nsegment. This segment is judged against what its lane owes; the debt "
+			+ "itself is\nchecked over the whole run directory by `tools/gate_f/run_inventory.py`, "
+			+ "which is\nthe level at which \"does this frame exist anywhere\" can be answered.\n\n%s\n")
+			% [_segment_id, _delegated_captures.size(), _capture_lane, "\n".join(owed)])
 	# A capture git will never carry is, from the run's point of view, a missing
 	# artefact: it lives on a container that gets reclaimed.
 	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
@@ -1273,6 +1571,27 @@ func _do_step(step: Dictionary) -> void:
 		_note_line("")
 		return
 	_step_ran += 1
+
+	# §H/§G evidence split. On a logic lane a prescribed capture is not skipped,
+	# refused or failed -- it is HANDED OVER, to the capture lane this segment
+	# named before it started, which the pre-flight has already checked accepts
+	# it. The verdict word is its own so it can never be read as either a PASS
+	# or a FAIL, and `run_inventory.py` is what turns the handover back into a
+	# debt at the level where it can actually be paid.
+	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq"):
+		var handed := str(args.get("id", id))
+		actual = ("DELEGATED %s to capture lane %s (this is the logic lane; it takes no frames)"
+			% [handed, _capture_lane])
+		_verdicts["DELEGATED"] = int(_verdicts.get("DELEGATED", 0)) + 1
+		_emit("screenshot", {"expected": expected, "actual": actual,
+			"observation": "evidence split: the logic lane does not take %s" % handed})
+		_note_line("### %s — %s" % [id, str(step.get("title", action))])
+		_note_line("- expected: %s" % expected)
+		_note_line("- actual: %s" % actual)
+		_note_line("- events: t=%.2f" % _play_t())
+		_note_line("- verdict: DELEGATED")
+		_note_line("")
+		return
 
 	match action:
 		"boot":
@@ -1411,7 +1730,7 @@ func _do_step(step: Dictionary) -> void:
 	_note_line("### %s — %s" % [id, str(step.get("title", action))])
 	_note_line("- expected: %s" % expected)
 	_note_line("- actual: %s" % actual)
-	_note_line("- events: t=%.2f" % _t())
+	_note_line("- events: t=%.2f" % _play_t())
 	_note_line("- verdict: %s" % verdict)
 	if not str(step.get("observation", "")).is_empty():
 		_note_line("- observation: %s" % str(step.get("observation")))
@@ -1578,60 +1897,270 @@ func _step_boot(args: Dictionary) -> String:
 	# rows are distinguishable without reading the segment script back.
 	_emit("region_enter", {"duration_ms": ms,
 		"observation": "boot:%s settled over %d physics frames" % [which, settle]})
-	var repriced := await _reprice_after_boot(ms)
+	# Re-price against THIS scene, every boot, not just the first. A journey
+	# segment's first boot is the title screen; the scene it spends its hours in
+	# is the one that comes up second.
+	var repriced := await _reprice("boot:%s" % which, ms)
 	return "booted %s in %.0f ms (%d settle frames)%s" % [which, ms, settle, repriced]
 
 
-## CD-7, second half: re-price the segment now that a scene is standing.
+## CD-7, second half: re-price the REMAINDER of the segment against the scene
+## it is actually standing in, every time that scene changes.
 ##
-## The pre-flight's frame cost is measured before step 1, on an EMPTY tree.
-## Under xvfb that is nothing like the Meadows -- 762k props through a software
-## rasteriser -- so a prediction built on it would clear a ceiling the real
-## segment cannot. The first honest measurement is only available once a scene
-## is up, which is here. Also the only place the boot's own cost becomes
-## known: the world stand-up is whole seconds in a single frame and no
-## per-frame model can predict it.
+## Round 1 shipped this as a one-shot after the FIRST boot, on the reasoning
+## that "the pre-flight's frame cost is measured on an empty tree". That
+## reasoning is right and the implementation was still wrong, because **for
+## every journey segment the first boot is the title screen**, which is not the
+## scene the segment spends its time in either. The run-2 BLOCKER measured all
+## three prices on the same box, same segment, same day:
 ##
-## Returns a string for the boot step's own result line, so the two numbers are
-## visible in `notes/` beside each other rather than only in the metadata.
-func _reprice_after_boot(boot_ms: float) -> String:
-	if _reprice_done or not _cost_gated:
+##   | when                            | s/frame | S01 predicted |
+##   |---------------------------------|---------|---------------|
+##   | pre-flight, empty tree          |  0.0065 |          71 s |
+##   | re-priced after `boot: title`   |  0.0465 | 505 s  <- used|
+##   | measured, in the Meadows        |  6.465  |      70,197 s |
+##
+## A 139x under-price against the row cadence and 274x against `TIME_PROCESS`.
+## At the real price the 14,400 s ceiling buys 2,225 frames and the SMALLEST of
+## the eighteen segments asks for 26,835. Every capture-bearing segment should
+## have blocked. Two did.
+##
+## So this now runs after EVERY boot, and the periodic in-play recheck in
+## `_tick` runs between them. Three things changed with it:
+##
+##   1. It prices the frames that are LEFT (`_predict_frames_from`), not the
+##      whole segment. Re-charging a segment for a boot it has already paid for
+##      would refuse work that is genuinely affordable.
+##   2. It measures the budget that is LEFT: the ceiling minus the wall clock
+##      already spent. A ceiling is a bound on the run, not on each estimate.
+##   3. The disk estimate is re-taken with it, because the frames remaining is
+##      the input to both.
+func _reprice(reason: String, boot_ms: float = 0.0) -> String:
+	if not _cost_gated:
 		return ""
-	_reprice_done = true
 	var before := _frame_cost_s
 	var now := await _measure_frame_cost()
-	# The boot is a one-off cost, not a per-frame one, and it is REAL: 67 s of
-	# world construction that no frame count anticipated.
-	var predicted := (boot_ms / 1000.0) + (float(_predicted_frames) * now)
-	_frame_cost_s = now
-	_predicted_cost_s = predicted
-	_preflight["measured_frame_cost_s_in_scene"] = snappedf(now, 0.000001)
-	_preflight["predicted_segment_cost_s_in_scene"] = snappedf(predicted, 0.1)
-	_preflight["boot_cost_s"] = snappedf(boot_ms / 1000.0, 0.01)
+	return _apply_price(reason, now, boot_ms, before, true)
+
+
+## The arithmetic half of `_reprice`, split out so the periodic in-play recheck
+## can reuse it with a cost it OBSERVED rather than one it stopped to measure.
+func _apply_price(reason: String, now: float, boot_ms: float, before: float,
+		verbose: bool) -> String:
+	var remaining_frames := _predict_frames_from(_steps, _step_index)
+	var spent := _wall_t()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
-	var line := ("; re-priced in scene: %.4f s/frame (was %.4f on the empty tree), "
-		+ "%d frames + %.0f s boot = %.0f s predicted") % [now, before, _predicted_frames,
-			boot_ms / 1000.0, predicted]
-	if predicted <= ceiling:
-		_emit("note", {"observation": "cost re-priced after boot:%s (ceiling %.0f s)" % [line, ceiling]})
+	var budget := ceiling - spent
+	var predicted := (boot_ms / 1000.0) + (float(remaining_frames) * now)
+	_frame_cost_s = now
+	_predicted_cost_s = spent + predicted
+	_predicted_frames = remaining_frames
+	var disk := _price_disk(remaining_frames)
+	var disk_over_now := bool(disk.get("over", false))
+	var record := {
+		"at": reason,
+		"step_index": _step_index,
+		"frame_cost_s": snappedf(now, 0.000001),
+		"was_frame_cost_s": snappedf(before, 0.000001),
+		"frames_remaining": remaining_frames,
+		"wall_spent_s": snappedf(spent, 0.1),
+		"budget_remaining_s": snappedf(budget, 0.1),
+		"predicted_remaining_s": snappedf(predicted, 0.1),
+	}
+	# The ledger records a price that MOVED, not a heartbeat. A recheck every
+	# 120 frames over a 12,000-frame segment is a hundred rows saying the same
+	# 16.6 ms, which buries the two rows that matter -- the boot re-price and
+	# the moment the number changed -- and bloats every artefact carrying it.
+	# A boot and a refusal are always kept; an in-play sample is kept when it
+	# moves the price by more than the logged fraction.
+	var material := reason.begins_with("boot") or predicted > budget \
+		or bool(disk_over_now) or _reprices.is_empty()
+	if not material:
+		var last: Dictionary = _reprices[_reprices.size() - 1]
+		var was := maxf(1e-9, float(last.get("frame_cost_s", 0.0)))
+		material = absf(now - was) / was >= float(_cfg["cost_log_change_fraction"])
+	if material:
+		_reprices.append(record)
+	_cost_rechecks += 1
+	_preflight["reprices"] = _reprices
+	_preflight["cost_rechecks"] = _cost_rechecks
+	_preflight["measured_frame_cost_s_in_scene"] = snappedf(now, 0.000001)
+	_preflight["predicted_segment_cost_s_in_scene"] = snappedf(_predicted_cost_s, 0.1)
+	if boot_ms > 0.0:
+		_preflight["boot_cost_s"] = snappedf(boot_ms / 1000.0, 0.01)
+	var line := ("; re-priced at %s: %.4f s/frame (was %.4f), %d frames left + %.0f s boot "
+		+ "= %.0f s against %.0f s of budget left") % [reason, now, before, remaining_frames,
+			boot_ms / 1000.0, predicted, budget]
+	if predicted <= budget and not disk_over_now:
+		if verbose:
+			_emit("note", {"observation": "cost re-priced%s" % line})
 		return line
-	# Over the ceiling with a scene actually standing. This is the number X07
-	# needed and did not have: it stopped at step 184 of 266, ~15 hours in.
-	var why := ("re-priced after boot, this segment predicts %.0f s (%.1f h), over the %.0f s "
-		+ "ceiling: %d planned frames at a MEASURED %.3f s/frame in THIS scene, plus a %.0f s "
-		+ "boot. The pre-flight's empty-tree measurement said %.4f s/frame and cleared it. A GPU "
-		+ "or a re-cadenced script -- not a shorter wait.") % [predicted, predicted / 3600.0,
-			ceiling, _predicted_frames, now, boot_ms / 1000.0, before]
+	var why := ""
+	if predicted > budget:
+		why = ("re-priced at %s, the REST of this segment predicts %.0f s (%.1f h) against %.0f s "
+			+ "of the %.0f s ceiling left: %d planned frames at a MEASURED %.3f s/frame in THIS "
+			+ "scene, plus a %.0f s boot. The last price was %.4f s/frame. A GPU or a split "
+			+ "evidence lane -- not a shorter wait; the waits exist so fights resolve.") % [
+				reason, predicted, predicted / 3600.0, budget, ceiling, remaining_frames, now,
+				boot_ms / 1000.0, before]
+	if disk_over_now:
+		var disk_why := str(disk.get("why", ""))
+		why = disk_why if why.is_empty() else "%s ALSO: %s" % [why, disk_why]
+	record["blocked"] = why
 	_derailed = why
-	_derailed_at = "boot"
-	_derails.append({"at": "boot", "action": "boot", "why": why,
+	_derailed_at = reason
+	_derails.append({"at": reason, "action": "reprice", "why": why,
 		"context": str(_probe.call("input_context")), "resynced_at": null, "skipped": 0})
 	_emit("defect", {"severity_candidate": "BLOCKER", "actual": why,
-		"observation": "CD-7 cost gate tripped after boot"})
+		"observation": "CD-7 cost gate tripped at %s" % reason})
 	_write_text(_out_dir.path_join("BLOCKER.md"),
 		"# BLOCKER — %s is too expensive to finish here\n\n%s\n" % [_segment_id, why])
 	_blocked = why
 	return "; " + why
+
+
+## The periodic in-play recheck, called from `_tick`.
+##
+## It costs nothing: the price it uses is the wall clock the segment has ALREADY
+## spent divided by the physics frames it actually ticked, which is the most
+## honest number available and the only one that tracks a scene getting more
+## expensive as the player walks into it. `_reprice`'s stop-and-measure is for
+## the moment a scene CHANGES, where there is no history to read.
+func _cost_recheck() -> void:
+	if not _cost_gated or not _blocked.is_empty():
+		return
+	_cost_window_frames += 1
+	if _cost_window_usec == 0:
+		_cost_window_usec = Time.get_ticks_usec()
+		return
+	if _cost_window_frames < int(_cfg["cost_recheck_frames"]):
+		return
+	var elapsed := float(Time.get_ticks_usec() - _cost_window_usec) / 1_000_000.0
+	var observed := elapsed / float(_cost_window_frames)
+	_cost_window_frames = 0
+	_cost_window_usec = Time.get_ticks_usec()
+	_apply_price("in-play", observed, 0.0, _frame_cost_s, false)
+
+
+## Frames this segment has still to advance, from `at` onward.
+static func _predict_frames_from(steps: Array, at: int) -> int:
+	if at <= 0:
+		return _predict_frames(steps)
+	if at >= steps.size():
+		return 0
+	return _predict_frames(steps.slice(at))
+
+
+## What this segment will still WRITE, in bytes, and whether the box has room.
+##
+## Added 2026-08-28 from the run-2 BLOCKER's third finding: "disk is a ceiling
+## nobody has priced". S01 was on course for about 5,400 PNGs -- roughly 10 GB,
+## into 23 GB free -- and a second copy into `.git` to be committable at all.
+## The eighteen segments were about 25 GB at §H's planned cadences before the
+## frame-cost multiplier was applied.
+##
+## Every input is measured rather than assumed:
+##
+##   * bytes per PNG comes from the pre-flight self-test, which wrote a real
+##     frame of the real scene at the real capture resolution;
+##   * free space comes from `df`, asked of the run directory itself;
+##   * the doubling for `.git` applies only if the run directory is inside a
+##     work tree, which is asked of git.
+##
+## A process that cannot render writes no frames, so the estimate is zero and
+## the gate is silent -- disk is not a reason to refuse a logic lane.
+func _price_disk(frames_remaining: int) -> Dictionary:
+	var out := {"applies": false}
+	if not _capture_available() or not _telemetry_on():
+		_disk = out
+		return out
+	var per_png := float(_preflight.get("png_bytes", 0.0))
+	if per_png <= 0.0:
+		out["why"] = "no measured PNG size (the pre-flight self-test did not write one)"
+		_disk = out
+		return out
+	# Cadence frames are priced in PLAY seconds, because that is what the
+	# recorder now counts in. Forced frames are bounded by one per remaining
+	# step: §H coalesces every event raised on a tick into a single frame.
+	var play_seconds := float(frames_remaining) / float(maxi(1, Engine.physics_ticks_per_second))
+	var cadence_frames := int(play_seconds * maxf(_record_hz, _record_baseline_hz))
+	var forced_frames := maxi(0, _steps.size() - _step_index)
+	var taken := {}
+	for entry: Variant in _manifest:
+		taken[str((entry as Dictionary).get("id", ""))] = true
+	var shots := 0
+	for entry: Variant in _planned_captures:
+		if not taken.has(str((entry as Dictionary).get("id", ""))):
+			shots += 1
+	var files := cadence_frames + forced_frames + shots
+	var factor := float(_cfg["disk_git_factor"]) if _inside_work_tree() else 1.0
+	var bytes := float(files) * per_png * factor
+	var free_bytes := _free_bytes(_out_dir)
+	var reserve := float(_cfg["disk_reserve_bytes"])
+	out = {
+		"applies": true,
+		"png_bytes": int(per_png),
+		"cadence_frames": cadence_frames,
+		"forced_frames_upper_bound": forced_frames,
+		"shots_remaining": shots,
+		"files": files,
+		"git_factor": factor,
+		"predicted_bytes": int(bytes),
+		"free_bytes": int(free_bytes),
+		"reserve_bytes": int(reserve),
+		"over": false,
+	}
+	if free_bytes <= 0.0:
+		out["why"] = "df could not answer for %s; disk NOT gated" % _out_dir
+		_disk = out
+		return out
+	if bytes > (free_bytes - reserve):
+		out["over"] = true
+		out["why"] = ("predicted %.1f GB of evidence (%d files at a measured %.0f kB, x%.0f for the "
+			+ "copy git has to carry) against %.1f GB free with a %.1f GB reserve. §H's cadence is "
+			+ "not the problem -- the continuous record is. A split evidence lane, a bigger disk, "
+			+ "or fewer segments per container.") % [bytes / 1e9, files, per_png / 1000.0, factor,
+				free_bytes / 1e9, reserve / 1e9]
+	_disk = out
+	return out
+
+
+## Free bytes on the filesystem holding `path`, asked of `df`.
+##
+## Godot has no free-space API. `df -Pk` is POSIX-specified output: one header
+## line, then `filesystem 1024-blocks used available capacity mounted-on`.
+## Anything unexpected returns 0, which the caller reads as "not gated" rather
+## than as "no room" -- a disk check that refused every run it could not measure
+## would be this lane's own mistake in mirror image.
+func _free_bytes(path: String) -> float:
+	if path.is_empty():
+		return 0.0
+	var output: Array = []
+	if OS.execute("df", PackedStringArray(["-Pk", path]), output, true) != 0:
+		return 0.0
+	var lines := str("" if output.is_empty() else output[0]).split("\n", false)
+	if lines.size() < 2:
+		return 0.0
+	var fields := lines[1].split(" ", false)
+	if fields.size() < 4:
+		return 0.0
+	return float(fields[3]) * 1024.0
+
+
+func _inside_work_tree() -> bool:
+	if _out_dir.is_empty():
+		return false
+	# Cached: the disk price is re-taken on every cost recheck, and spawning
+	# git a few hundred times to re-answer a question whose answer cannot
+	# change mid-segment would make the gate cost more than it saves.
+	if _work_tree_cached != 0:
+		return _work_tree_cached == 1
+	var output: Array = []
+	var code := OS.execute("git", PackedStringArray(
+		["-C", _out_dir, "rev-parse", "--is-inside-work-tree"]), output, true)
+	var inside := code == 0 and str("" if output.is_empty() else output[0]).strip_edges() == "true"
+	_work_tree_cached = 1 if inside else -1
+	return inside
 
 
 func _step_wait(args: Dictionary) -> String:
@@ -1639,9 +2168,20 @@ func _step_wait(args: Dictionary) -> String:
 	var frames := int(args.get("frames", 0))
 	if seconds > 0.0:
 		frames = maxi(frames, int(seconds * float(Engine.physics_ticks_per_second)))
+	var done := 0
 	for i in frames:
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		done += 1
+		# The one loop that honours a mid-step cost abort, and the one that
+		# needs to: `wait` is where the protocol's hours live. S01-09 asks for
+		# 10,800 physics frames, which is 19.4 hours at the price the run-2
+		# BLOCKER measured, and a gate that could only act at the NEXT step
+		# boundary would watch the whole of it go past. Every other
+		# frame-advancing step is bounded by a walk or a press budget and stops
+		# at its own boundary, which the step loop then sees.
+		if not _blocked.is_empty():
+			return "FAIL waited %d of %d physics frames before the cost gate stopped it" % [done, frames]
 	return "waited %d physics frames" % frames
 
 
@@ -2570,7 +3110,7 @@ func _step_record_start(args: Dictionary) -> String:
 	_record_args = args.duplicate()
 	# Due immediately, so a window that exists to catch a transition gets a
 	# frame at its start rather than one interval later.
-	_record_next_t = _t()
+	_record_next_t = _play_t()
 	var label := str(args.get("label", ""))
 	_emit("note", {"observation": "record_start: background frames raised to %.2f Hz%s"
 		% [hz, "" if label.is_empty() else " (%s)" % label]})
@@ -2588,7 +3128,7 @@ func _step_record_stop(args: Dictionary) -> String:
 	var to_baseline := bool(args.get("baseline", true))
 	_record_hz = _record_baseline_hz if to_baseline else 0.0
 	_record_args = {}
-	_record_next_t = _t() + (1.0 / maxf(0.01, _record_hz)) if _record_hz > 0.0 else 0.0
+	_record_next_t = _play_t() + (1.0 / maxf(0.01, _record_hz)) if _record_hz > 0.0 else 0.0
 	_emit("note", {"observation": "record_stop: background frames now %.2f Hz" % _record_hz})
 	if _record_hz > 0.0:
 		return "window ended; back to the segment baseline of %.2f Hz" % _record_hz
@@ -2611,7 +3151,7 @@ func _recorder_tick() -> void:
 	if not _telemetry_on() or _capture_step_active:
 		return
 	var forced := not _record_forced_by.is_empty()
-	var due := _record_hz > 0.0 and _t() >= _record_next_t
+	var due := _record_hz > 0.0 and _play_t() >= _record_next_t
 	if not (forced or due):
 		return
 	var trigger := "cadence"
@@ -2623,7 +3163,7 @@ func _recorder_tick() -> void:
 		trigger = "event:" + ",".join(_record_forced_by)
 		_record_forced_by.clear()
 	if due:
-		_record_next_t = _t() + (1.0 / maxf(0.01, _record_hz))
+		_record_next_t = _play_t() + (1.0 / maxf(0.01, _record_hz))
 	_write_frame(trigger)
 
 
@@ -2649,7 +3189,7 @@ func _force_frame(type: String) -> void:
 ## Files as `frames/<segment>/<t>.png` per §H, with `t` zero-padded so the
 ## directory sorts in time order rather than lexically scrambling 9 s and 100 s.
 func _write_frame(trigger: String) -> void:
-	var t := _t()
+	var t := _play_t()
 	var clock: Dictionary = _probe.call("clock_weather")
 	var row := {
 		"t": snappedf(t, 0.01),
@@ -2795,7 +3335,7 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		"id": shot_id,
 		"class": str(args.get("class", "context")),
 		"segment": _segment_id,
-		"t": _t(),
+		"t": _play_t(),
 		"trigger": str(args.get("trigger", "planned")),
 		"pos": _pos_array(),
 		"camera_kind": str(args.get("camera_kind", "gameplay")),
@@ -2857,7 +3397,7 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	# Push the recorder's next cadence frame past this shot rather than letting
 	# it fire on the very next tick with an identical image.
 	if _record_hz > 0.0:
-		_record_next_t = maxf(_record_next_t, _t() + (1.0 / maxf(0.01, _record_hz)))
+		_record_next_t = maxf(_record_next_t, _play_t() + (1.0 / maxf(0.01, _record_hz)))
 	var degenerate := _degenerate_reason(stats)
 	if not degenerate.is_empty():
 		row["degenerate"] = degenerate
@@ -3688,11 +4228,43 @@ func _shortcut_for(tab: String) -> String:
 
 # --- telemetry ---------------------------------------------------------------
 
-## Seconds since the segment started. Monotonic; `Time.get_ticks_usec()` does
-## not move when the tree is paused but wall clock does, and a menu segment
-## spends most of its length paused.
-func _t() -> float:
+## WALL seconds since the segment started, on the box.
+##
+## This is the cost of running the segment, not the length of anything that
+## happened in the game. Under llvmpipe at 1920x1080 the 2026-08-27 run measured
+## a median 6.465 s between two consecutive in-world frames; on that box one
+## wall second is a sixth of a physics step.
+##
+## **Nothing whose meaning is "how long did this take the player" may read
+## this.** Use `_play_t()`. The consumers that legitimately do read wall time
+## are the ones asking about the box: the cost gate, the disk gate, the frame
+## grab timings, `duration_ms` on a boot/save/load, and the `wall` datetime
+## column that lets a reader line the two clocks up.
+func _wall_t() -> float:
 	return float(Time.get_ticks_usec() - _t0_usec) / 1_000_000.0
+
+
+## PLAY seconds since the segment started: the elapsed time the GAME believes
+## in, counted in the only unit the game has -- its own physics steps.
+##
+## Added 2026-08-28 from the run-2 BLOCKER. `route.csv`'s `t` and the §H
+## recorder both read `_wall_t()`, and §D takes elapsed time,
+## `since_interaction_s` and every dead-travel interval out of `route.csv`
+## *precisely because* "harness wall time lies" (§D's own words). It was harness
+## wall time. Distances were unaffected; every duration in the pacing study was
+## inflated by the ratio between a 6.465 s frame and the 1/60 s the game thinks
+## it just simulated -- a factor of about 388 on that box, and a different
+## factor on any other, which is the part that makes the numbers uncomparable
+## rather than merely large.
+##
+## `Engine.get_physics_frames()` is the right source and an accumulator is not:
+## it advances on every physics step the engine actually ran, including the
+## steps a slow rendered frame packs in (Godot runs up to
+## `Engine.max_physics_steps_per_frame` of them per drawn frame), and it keeps
+## advancing while the tree is paused -- which is most of a menu segment.
+func _play_t() -> float:
+	return float(Engine.get_physics_frames() - _t0_frames) \
+		/ float(maxi(1, Engine.physics_ticks_per_second))
 
 
 ## One event, with the whole §C.1 record filled from live state.
@@ -3710,7 +4282,7 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 		"run_id": _run_id,
 		"sha": _sha,
 		"segment": _segment_id,
-		"t": snappedf(_t(), 0.001),
+		"t": snappedf(_play_t(), 0.001),
 		"wall": Time.get_datetime_string_from_system(true, true),
 		"type": type,
 		"region": str(_probe.call("region_at", pos)),
@@ -3819,9 +4391,12 @@ func _tick(delta: float) -> void:
 		if float(_probe.call("nearest_poi_dist", here)) <= PROBE.POI_RADIUS_M:
 			_dead_travel_m = 0.0
 	_watch_for_events()
-	if _t() >= _next_trace_t:
+	# CD-7's third half. Cheap by construction: it divides wall already spent by
+	# frames already ticked, and only acts every `cost_recheck_frames`.
+	_cost_recheck()
+	if _play_t() >= _next_trace_t:
 		_write_trace_row()
-		_next_trace_t = _t() + (1.0 / maxf(0.1, float(_cfg["trace_hz"])))
+		_next_trace_t = _play_t() + (1.0 / maxf(0.1, float(_cfg["trace_hz"])))
 	# Last, so an event raised by `_watch_for_events` above gets its forced
 	# frame on THIS tick rather than the next one.
 	_recorder_tick()
@@ -3868,7 +4443,7 @@ func _write_trace_row() -> void:
 	var clock: Dictionary = _probe.call("clock_weather")
 	var poi := INF if player == null else float(_probe.call("nearest_poi_dist", pos))
 	_route.store_line("%.2f,%s,%.2f,%.2f,%.2f,%.1f,%s,%.2f,%s,%.3f,%.3f,%.2f,%s,%s" % [
-		_t(), Time.get_datetime_string_from_system(true, true),
+		_play_t(), Time.get_datetime_string_from_system(true, true),
 		pos.x, pos.y, pos.z, heading,
 		str(_probe.call("region_at", pos)),
 		float(clock.get("hour", 0.0)), str(clock.get("weather", "")),
@@ -4394,7 +4969,7 @@ func _overhead_verdict(delta: float, noise: float) -> String:
 func _idle_frame_ms(frames: int, condition: String) -> float:
 	var restore_hz := _record_hz
 	_record_hz = float(_cfg["record_window_hz"]) if condition == "recording" else 0.0
-	_record_next_t = _t()
+	_record_next_t = _play_t()
 	var samples: Array[float] = []
 	for i in frames:
 		await physics_frame
