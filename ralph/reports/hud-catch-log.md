@@ -90,7 +90,7 @@ device never renders at.
 The glyph floor is the one that is about rasterisation rather than the eye, so
 it is **measured, not assumed**. `tools/_probe_glyph_ladder.gd` (new) renders
 the real pad glyphs at 1:1 authored pixels across a ladder;
-`shots/hud_scale/glyph_ladder_zoom.png` is that render at 4x nearest-neighbour.
+`ralph/reports/hud-catch/shots/hud-04-glyph-ladder-zoom.png` is that render at 4x nearest-neighbour.
 The Kenney badges' two-letter art is mush at 20px, marginal at 22, cleanly
 resolved at 24, comfortable at 26. Not 36.
 
@@ -129,14 +129,14 @@ Two things fell out that are worth naming:
   chip, HP bar, separations are fixed furniture — so scaling the row with the
   font takes far more than its share out of the name column. At 336 with the
   bar cut to 44, the roster now shows **"Galewisp" in full**, which the
-  1.5x-inflated HUD never did. See `shots/hud_scale/roster_compare.png`.
+  1.5x-inflated HUD never did. See `ralph/reports/hud-catch/shots/hud-03-roster-before-over-after.png`.
 
 ### Evidence
 
-- `shots/hud_scale/before.png`, `shots/hud_scale/after.png` — the HUD through
+- `ralph/reports/hud-catch/shots/hud-01-before.png`, `hud-02-after.png` — the HUD through
   the real render path at 1920x1080, opengl3 under xvfb.
-- `shots/hud_scale/roster_compare.png` — the roster column, before over after.
-- `shots/hud_scale/glyph_ladder.png`, `glyph_ladder_zoom.png` — the render the
+- `ralph/reports/hud-catch/shots/hud-03-roster-before-over-after.png` — the roster column, before over after.
+- `ralph/reports/hud-catch/shots/hud-04-glyph-ladder-zoom.png` — the render the
   glyph floor is derived from.
 
 ### What I did not prove
@@ -365,15 +365,15 @@ aiming past their own companion — but which of the two it is depends on whethe
 Rendered through the real path (`xvfb-run`, `opengl3`, never `--headless` with
 a real driver):
 
-- `shots/catch/01-aiming-full-health.png` — the new **NOT ON TARGET** state in a
+- `ralph/reports/hud-catch/shots/catch-02-aim-after.png` — the new **NOT ON TARGET** state in a
   live fight. The ring marks the wild creature; the caption says the screen-centre
   ray is not on it. Before this pass that same frame showed a confident
   percentage.
-- `shots/catch/07-aiming-weakened.png` — the locked state, ring and number.
+- `ralph/reports/hud-catch/shots/catch-03-locked-state.png` — the locked state, ring and number.
   (The 100% is `capture_catch_sequence.gd` pinning `chance.min` to 0.999 so the
   dice reliably produce a catch for the frame; the live cap is `chance.max`
   0.95.)
-- `shots/catch_aim/reticle_states.png` — the three states side by side: locked
+- `ralph/reports/hud-catch/shots/catch-01-reticle-states.png` — the three states side by side: locked
   dead-centre, locked but clipping, and not on target.
 - `tests/test_catch_math.gd` — six new assertions pinning the placement
   arithmetic; `tests/smoke_catching.gd` — the advertised-chance guard, driven
@@ -398,7 +398,7 @@ Neither is this lane's to change, and neither is asserted as a defect.
 
 ### A controller-first defect on the catching path, found in this lane's frames
 
-`shots/hud_scale/after.png` is captured with the device pinned to GAMEPAD. Every
+`ralph/reports/hud-catch/shots/hud-02-after.png` is captured with the device pinned to GAMEPAD. Every
 glyph on it is a pad glyph — Y, RB, LB, B. And the objective hint card in the
 centre of it reads:
 
@@ -537,7 +537,7 @@ changed.
 | everything else | ≥ 1.05 m | clears |
 
 The owner guessed bramblebun was "both". **It is**, and here is the frame
-arithmetic from `shots/catch/01-aiming-full-health.png` — a real bramblebun at
+arithmetic from `ralph/reports/hud-catch/shots/catch-02-aim-after.png` — a real bramblebun at
 throwing range in real grass:
 
 - Inside the creature's own bounding box, only **35%** of the pixels are
@@ -670,7 +670,7 @@ assist is eligible **or** the previewed flight lands, and such a throw is scored
 on where that flight passes rather than on a reticle offset it will not resolve
 at. The assist gate itself is unchanged.
 
-**Iteration 2** (`shots/catch/01-aiming-full-health.png`) shows all three §2a
+**Iteration 2** (`ralph/reports/hud-catch/shots/catch-02-aim-after.png`) shows all three §2a
 requirements landing: the cone is a clear band instead of a one-pixel wire, the
 camera has acquired the creature (it is centred, where the pre-change frame had
 it off to the side and unlocked), and the reticle reads CAPTURE CHANCE at an aim
@@ -703,3 +703,14 @@ that is a stripe across the player's own creature rather than the slab iteration
 1 produced, and it is visible in the frame. The alternative is the original
 defect, since the grass is frozen by owner directive. Flagging it as a
 deliberate trade rather than an oversight.
+
+
+---
+
+# Evidence relocated, and a gap it exposed
+
+`.gitignore` anchors `/shots/`, so **none of this lane's frames were in the
+repo** — the log referenced evidence nobody else could open. Everything cited
+above now lives in `ralph/reports/hud-catch/shots/`, which is a nested `shots/`
+directory and therefore carried. Checked with `git check-ignore` rather than
+assumed.

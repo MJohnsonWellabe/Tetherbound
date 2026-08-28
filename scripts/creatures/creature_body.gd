@@ -32,6 +32,10 @@ const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 ## wants per-species alpha colours they belong in the species table, not in a
 ## global.
 const ALPHA_RIM_STRENGTH := 0.65
+## The field-separation rim's ceiling, for the reason `_apply_field_separation()`
+## gives: an alpha's rim is its identity tell, so an ordinary creature's must
+## stay clearly under it. Species opt in below this via `placeholder.field_rim`.
+const FIELD_RIM_MAX := 0.30
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
 
@@ -491,13 +495,57 @@ func _apply_alpha_presence() -> void:
 		_aura.queue_free()
 		_aura = null
 	if not alpha or shiny:
+		_apply_field_separation()
 		return
 	if _has_model:
-		_rim_light_node(_model)
+		_rim_light_node(_model, ALPHA_RIM_STRENGTH, "alpha")
 	_aura = ALPHA_AURA.attach(self, _radius * 1.5, _height, ALPHA_AURA_COLOUR)
 
 
-func _rim_light_node(node: Node) -> void:
+## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
+## some are now too small to see or they're the color of the grass."
+##
+## The other half of that directive from `_build_placeholder`'s `height`, and
+## the half that scale cannot reach. Measured on a real render of a Bramblebun
+## at throwing range in real grass
+## (`ralph/reports/hud-catch/shots/01-before-aim.png`): where the creature is
+## visible at all, hue separation is fine (47 degrees, tan against green) but
+## LUMINANCE contrast is 1.15:1 -- and this repo's own `vegetation.json` quotes
+## a blind critic calling 1.00:1 "invisible". Hue discrimination falls off with
+## angular size far faster than value does, which is why 47 degrees of hue is
+## not rescuing it at throwing range on a 7-inch panel.
+##
+## RIM rather than a brighter albedo, and that choice is not mine -- it is the
+## one `_apply_alpha_presence()` above already made, for a reason that applies
+## identically here and is recorded in its own header: these models are self-lit
+## (the painted albedo is wired into the emission slot), so an albedo change
+## "would compile, pass a material-only unit test, and still be invisible in a
+## render". The rim term brightens exactly the silhouette EDGE, which is the
+## part of an animal a player can still resolve when the body is behind grass.
+## It also leaves the creature's own colours alone, which is the "prefer the
+## levers that do not change silhouette" instruction: a rim does not restyle the
+## animal, it outlines it.
+##
+## STRENGTH is deliberately well under the alpha's, and per-species opt-in
+## rather than global. An alpha's rim is its identity tell; if every creature in
+## the Meadows wore the same rim at the same strength the tell would be gone.
+## At `FIELD_RIM_STRENGTH` an alpha still reads as more than twice the rim, and
+## still carries the aura and the `_alpha` colourway that this does not.
+##
+## Opt-in per species via `placeholder.field_rim` so the lever is applied where
+## a measurement says it is needed and nowhere else -- see this species' own
+## note in `data/creatures/species.json` for its number.
+func _apply_field_separation() -> void:
+	if not _has_model:
+		return
+	var strength := clampf(
+		float(SPECIES.placeholder(species_id).get("field_rim", 0.0)), 0.0, FIELD_RIM_MAX)
+	if strength <= 0.0:
+		return
+	_rim_light_node(_model, strength, "field")
+
+
+func _rim_light_node(node: Node, strength: float, tag: String) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
 		var mesh: Mesh = instance.mesh
@@ -506,15 +554,16 @@ func _rim_light_node(node: Node) -> void:
 			if not (source is BaseMaterial3D):
 				continue
 			var material := source as BaseMaterial3D
-			if not material.resource_name.ends_with("_alpha_rim"):
+			var suffix := "_%s_rim" % tag
+			if not material.resource_name.ends_with(suffix):
 				material = material.duplicate() as BaseMaterial3D
-				material.resource_name = "%s_alpha_rim" % material.resource_name
+				material.resource_name = "%s%s" % [material.resource_name, suffix]
 				instance.set_surface_override_material(surface, material)
 			material.rim_enabled = true
-			material.rim = ALPHA_RIM_STRENGTH
+			material.rim = strength
 			material.rim_tint = ALPHA_RIM_TINT
 	for child in node.get_children():
-		_rim_light_node(child)
+		_rim_light_node(child, strength, tag)
 
 
 ## Walks the model's surfaces looking for materials whose albedo texture has
