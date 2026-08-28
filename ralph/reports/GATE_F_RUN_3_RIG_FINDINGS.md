@@ -10,10 +10,11 @@ captured 8% of what it was asked to and four of Phase B's findings turned out to
 be the instrument; the only defence against repeating that is to say, of every
 finding, which of the two it is about — before anyone has to guess.
 
-Five of the six below were found by running. The other was found by reading the
-artefacts of a segment that had already produced a wrong answer.
+Five of the seven below were found by running; two were found by reading the
+artefacts of segments that had already produced wrong answers.
 
-**If only one of these is read, read RIG-6.**
+**If only one of these is read, read RIG-7 — it contains RIG-3, RIG-4, RIG-5 and
+RIG-6 as instances.**
 
 ---
 
@@ -276,7 +277,81 @@ segment a reviewer can read. Fifty-eight fabrications is not.
 
 ---
 
-## What these six have in common
+## RIG-7 — every primitive round 2 built to fix a coverage defect has zero callers
+
+**Severity: BLOCKER for evidence quality. RIG-3, RIG-4, RIG-5 and RIG-6 are four
+instances of this one fact.** Not fixed: it is an edit to eighteen step scripts.
+
+Counted mechanically across all eighteen protocol segments (`grep -o '"<action>"'`
+over `S01–S10`, `X01–X08`):
+
+| primitive | built for | callers |
+|---|---|---:|
+| `interact_with` | CD-5 — press `interact` only when the arbiter has a live prompt, and name what it could see instead | **0** |
+| `move_to_entity` | reach a **thing**, re-resolved every frame, rather than a coordinate | **0** |
+| `advance_dialogue_until_closed` | CD-3 — advance a modal by reading its line, not by a press count | **0** |
+| `assert_context` | the derail rule, written after Phase B refuted 202 round-1 failures | **0** |
+| `require_context` | same | **0** |
+| `await_load` | §I.4's load duration — button to playable world | **0** |
+| `await_save` | §I.4's save duration | **0** |
+| `defect` | §C.1's first-class defect event | **0** |
+
+And what the segments call instead:
+
+| | count |
+|---|---:|
+| `press` with `control: interact` — blind, no prompt check | **263** |
+| `move_to` — walk to a coordinate | **137** |
+| `assert{check: input_context / context_prefix}` — records FAIL, does not derail | **307** |
+
+`assert_context` and `require_context` appear in exactly two files in the
+repository: `selfcheck_context.json` and `selfcheck_reach.json`, the self-checks
+written to prove they work. They do work. Nothing that produces evidence calls
+them.
+
+**This is not an inference about intent — the harness says it out loud.**
+`_step_interact_with`'s own header, on `main` today:
+
+> *"The cost of not asking is on the record: S02-15 pressed `interact` 31 times
+> through a floor, and **S02-32 pressed it once at a walked-to coordinate where
+> the chapter's first wild fight was supposed to stage** — S02-34 then measured
+> `input_context=world` and the whole rest of the segment ran without a fight
+> having happened."*
+
+S02-32 is still `{"action": "press", "control": "interact"}` on this candidate,
+and in run 3 it did the same thing again. The defect was diagnosed, the fix was
+written, the fix was documented against the exact step that needed it, and the
+step was never changed.
+
+**Measured consequence, this run.** At the two engage attempts that failed:
+
+| | S02-32 | S03-32 |
+|---|---|---|
+| scripted target | (30, −40) | (30, −40) |
+| where the player came to rest | (26.78, −38.32) | (27.77, −37.13) |
+| distance from the scripted coordinate | 3.9 m | 3.6 m |
+| nearest POI, 2D | 5.74 m | **6.57 m** |
+| `encounter_director.gd` engage range, 3D | 6.0 m | 6.0 m |
+| what the step did | blind `press interact` | blind `press interact` |
+| what was recorded about why nothing happened | **nothing** | **nothing** |
+
+S03's nearest point of interest was **outside** the engage range at the moment
+the button was pressed. Whether the wild body was that POI or forty metres away
+is not answerable from these artefacts — and *that* is the finding. `move_to_entity`
+would have walked to the creature or failed saying "I arrived and nothing was
+here"; `interact_with` would have named what the arbiter could see and how far
+away it was, vertically and in plan. Both exist. Neither is called.
+
+**Recommended fix, in priority order.** Convert the 307 context asserts to
+`assert_context` and add `require_context` to travel and menu steps (RIG-6 — it
+alone turns S03's 64 failures into ~7). Then convert the engage/interact presses
+to `interact_with` and the encounter walks to `move_to_entity` (this finding).
+Then `await_load` (RIG-3). None of it is harness work. All of it is the step
+scripts.
+
+---
+
+## What these seven have in common
 
 None of them is about Tetherbound. Three of them — RIG-1, RIG-2, RIG-5 — would
 have been read, in a Phase B that saw only the artefacts, as evidence about the
@@ -287,14 +362,20 @@ RIG-3 and RIG-4 are quieter and the same shape: an instrument that does not
 measure what it says it measures, and an instrument that keeps recording after
 it has stopped pointing at anything.
 
-RIG-5 and RIG-6 deserve the last word, because between them they are not a new
-defect. They are the one Phase B already found in round 1, already diagnosed,
-and already fixed — in the harness. The fix was never wired into a single
-segment that produces evidence, and the two self-check files that exercise it
-are the only places in the protocol it appears.
+RIG-7 is the one to carry forward, because it is not really seven findings. It
+is one, and it is not "the rig is broken" — the rig is in good repair. Every
+primitive named in that table works, is documented with the defect it was built
+for, and is exercised by a passing self-check.
 
-That is the shape to watch for. Round 2 did not fail to build the mechanism; it
-built it, tested it, and left all eighteen segments calling the old form. A rig
-improvement that no segment invokes is indistinguishable, in the artefacts, from
-one that was never made — and S03's 64-failure ledger, 58 of them one modal, is
-what that looks like from Phase B's side of the wall.
+**They are simply never called.** Round 2 of the rig fixed the harness and did
+not rewire the protocol, and eighteen step scripts still say what they said
+before the fixes existed. From Phase B's side of the wall a fix nobody invokes is
+indistinguishable from a fix nobody made — and S03's ledger, 64 failures of which
+58 are one unclosed panel, is exactly what that looks like when it arrives as
+evidence.
+
+The corollary is the thing to be careful about next time. Run 1 was judged by
+what fraction of the backlog it recaptured. Round 2 answered by improving the
+instrument. The measurement this run adds is that improving an instrument nobody
+points differently changes nothing you can see in the artefacts: S03's signal
+rate is 9%, against round 1's 8%, on a harness with six more safeguards in it.
