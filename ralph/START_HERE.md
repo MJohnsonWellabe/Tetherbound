@@ -4,6 +4,55 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
+## CURRENT STATE — 2026-08-28
+
+**This section supersedes both dated sections below.** They are kept as
+history; do not open the lanes they name.
+
+`main` is at `883c0cf3`+. A Windows build of it is published and
+playable at the repo's `latest` release tag.
+
+**Read these, in this order, before selecting work:**
+
+1. `CLAUDE.md`
+2. `ralph/OWNER_PLAYTEST_2026-08-28.md` — newest owner-play evidence.
+   Under CLAUDE.md's precedence it outranks every other doc in this repo
+   for what it covers.
+3. `ralph/ACTIVE_TASKS.md` — read its 2026-08-28 block at the top. The
+   rest of that file is stale and says "Gates E/F: not started", which
+   is false.
+4. `ralph/COORDINATION_2026-08-27_POST_PHASE_B.md` — the live 13-item
+   triaged backlog, in two tiers.
+5. `ralph/ACTIVE_GAME_PLAN.md` — gate and package order.
+
+**Lanes in flight as of 2026-08-28 19:20 UTC.** Check each is still live
+before duplicating its work:
+
+| branch | scope |
+|---|---|
+| `ralph/GATE-F-RUN-3` | Gate F run 3 — evidence split extended to every segment, then the logic lanes |
+| `ralph/CONTENT-0828B` | Burrow Warrens payoff, and the constructed-interior method (Warrens + castle) |
+| `ralph/GRASS-FAR` | a cheap distant tier past the 72m grass cutoff — owner-approved 2026-08-28 |
+| `ralph/GOLDEN-HOUR` | golden hour renders pure black; investigate before fixing |
+
+**Two standing owner constraints that bind any lane touching them:**
+
+- **Do not change the look of the near grass.** Owner, 2026-08-28: "don't
+  change the look of my grass. it's awesome." The distant-tier work is
+  scoped to beyond 72m for exactly this reason.
+- **Do not fix the golden-hour frame blind.** Owner asked for the
+  decisive test first. `ralph/reports/finding-golden-hour-black-frame.md`
+  has three hypotheses already ruled out.
+
+**On the backlog.** Gate F REGENERATES the backlog rather than appending
+to it (protocol §16.2), and its reviewer receives the run evidence blind.
+`ralph/BACKLOG.md` — 4,043 lines, ~127 open items, newest section
+2026-08-25 — is a history ledger and is materially out of date. Consult
+it for a task you have already selected; never cold-read it to choose
+one. It gets reconciled once run 3's backlog is versioned.
+
+---
+
 ## CURRENT STATE — 2026-08-25, two lanes open
 
 Read `ralph/HANDOVER_2026-08-25_CI_GREEN_AND_TWO_LANES.md` first. It records

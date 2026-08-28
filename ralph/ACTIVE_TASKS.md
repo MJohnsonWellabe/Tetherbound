@@ -1,5 +1,64 @@
 # Active Tasks — compact Meadows manifest
 
+## STATE AS OF 2026-08-28 — READ THIS BLOCK FIRST
+
+**Everything below the next horizontal rule is dated 2026-08-23 and is
+five days stale. It is kept for its P1-P6 package vocabulary and its
+evidence trail, NOT as a description of where the project is.** In
+particular its line "Gates E/F: not started" is FALSE and has been since
+2026-08-26. Do not route off it.
+
+`main` is at `883c0cf3`+. What has actually happened since 2026-08-23:
+
+- **Gate F has run three times.** Run 1 (2026-08-27) captured 8% of what
+  it was asked to; Phase B's blind analysis established that the number
+  was substantially INSTRUMENT failure, not a verdict on the game. The
+  rig was rebuilt twice (`GATE-F-RIG`, `GATE-F-RIG-2`) and run 3 is in
+  flight now on `ralph/GATE-F-RUN-3`.
+- **The current triaged backlog is NOT this file and NOT `BACKLOG.md`.**
+  It is the 13-item, two-tier list in
+  `ralph/COORDINATION_2026-08-27_POST_PHASE_B.md`. Several of its items
+  are already closed by work landed on 2026-08-27/28.
+- **`ralph/BACKLOG.md` is 4,043 lines and ~127 open items, newest dated
+  section 2026-08-25.** It is a HISTORY LEDGER. It does not contain the
+  2026-08-28 owner playtest, the Gate F findings, or anything landed
+  since. Consult it for a selected task; never cold-read it to choose
+  one. Per CLAUDE.md that was already the rule — this note records that
+  the file is now also materially out of date.
+- **A 2026-08-28 owner playtest happened and is canon** —
+  `ralph/OWNER_PLAYTEST_2026-08-28.md`. Under CLAUDE.md's precedence it
+  outranks every other doc in this repo for what it covers. Six of its
+  eight items are fixed and in the published build: grass re-roll, grass
+  through buildings, TM orb art, HUD scale, catch/aim feel, and the
+  controller throw binding. Two remain open and are in flight: the
+  Burrow Warrens payoff, and Warrens/castle presentation.
+
+### Why this file has not simply been rewritten
+
+Gate F's protocol regenerates the backlog rather than appending to it
+(§16.2), and its reviewer must receive the run evidence blind — "no
+developer commentary, no proposed fixes, no historical backlog" until
+the provisional backlog is versioned. Rewriting the task list from Gate
+F's in-flight findings before that happens would contaminate exactly the
+independence the protocol is built to protect.
+
+So this block fixes the ROUTING, which is a statement of fact about what
+landed, and deliberately leaves the BACKLOG CONTENT alone, which is
+Gate F's job. When run 3 finishes and its backlog is versioned, this
+file and `BACKLOG.md` get reconciled against it in one pass.
+
+### Where current work actually comes from, today
+
+1. `ralph/OWNER_PLAYTEST_2026-08-28.md` — newest owner evidence, wins.
+2. `ralph/COORDINATION_2026-08-27_POST_PHASE_B.md` — the live 13-item
+   triaged list.
+3. `ralph/ACTIVE_GAME_PLAN.md` — gate/package order.
+4. `ralph/BACKLOG.md` — ledger, consulted per selected task only.
+
+---
+
+## Historical manifest (2026-08-23) — retained for its package vocabulary
+
 **Current objective:** drive the chapter to a full A–F playthrough.
 **Read first:** `ralph/ASSESSMENT_2026-08-23.md` — the full-evidence
 reconciliation of every gate against current `main` (b923e202+). It

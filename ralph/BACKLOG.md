@@ -1,5 +1,31 @@
 # Backlog
 
+> **STATUS, 2026-08-28 — this file is a HISTORY LEDGER, not the current
+> work list.**
+>
+> ~127 open items. Newest dated section: **2026-08-25**. It does NOT
+> contain the 2026-08-28 owner playtest, the Gate F run findings, or
+> anything landed on 2026-08-27/28.
+>
+> **The current triaged backlog is the 13-item, two-tier list in
+> `ralph/COORDINATION_2026-08-27_POST_PHASE_B.md`.** Newest owner
+> evidence is `ralph/OWNER_PLAYTEST_2026-08-28.md` and outranks
+> everything here for what it covers.
+>
+> Per CLAUDE.md, this file is consulted for a task you have ALREADY
+> selected — never cold-read to choose one. That was already the rule;
+> this note adds that the file is now also materially out of date.
+>
+> **Nothing here has been closed or rewritten from Gate F's in-flight
+> findings, deliberately.** Gate F regenerates the backlog rather than
+> appending to it (protocol §16.2) and its reviewer must receive the run
+> evidence blind — "no developer commentary, no proposed fixes, no
+> historical backlog" until the provisional backlog is versioned.
+> Reconciling this file against those findings early would contaminate
+> the independence the protocol exists to protect. The reconciliation
+> pass happens once run 3's backlog is versioned.
+
+
 Ordered. Work top-down. **This file is the state of the project.**
 
 Legend — `🔒` needs Meshy credits. `model:` the cheapest tier that can do the
