@@ -641,6 +641,9 @@ jobs:
           # stand-in for one, seconds.
           - smoke: station_panels_hide_world_hud
             retries: 1
+          # HIST-013. Mounts combat_hud.tscn only, no fight and no world.
+          - smoke: combat_hud_left_column
+            retries: 1
     steps:
       - uses: actions/checkout@v4
         with:

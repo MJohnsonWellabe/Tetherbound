@@ -65,10 +65,41 @@ const SLOTS := 5
 ## assumed -- `test_hud_widgets.gd::test_party_strip_clears_the_centre_of_the_viewport`
 ## fails if this width ever grows past that margin.
 const ROW_SIZE := Vector2(420.0, 62.0)
-const ROW_SEPARATION := 6
+## 6 -> 2, and `HEADER_GAP` 6 -> 4 alongside it: together they pay for the 24px
+## `HEADER_HEIGHT` below was under-reporting. Measured, the left column at the
+## shorter supported canvas (1080) offers 380px between `TOP_SAFE_INSET` and the
+## vitals plate's own `PARTY_ACTIVE_GAP`, and five rows plus an honest header
+## want 394 -- so once the header stopped lying, the strip did not fit, and
+## `test_hud_widgets.gd`'s two column bounds said so immediately.
+##
+## Taken from the separations rather than from `ROW_SIZE.y` or `HEADER_HEIGHT`,
+## because those two are MEASURED heights and shaving either just re-tells the
+## same lie one layer down. Every row is a `PanelContainer` with its own plate,
+## border and `ROW_MARGIN` (4), so the rows stay visually separate at 2px of
+## gap between plates -- this is the same call `ROW_MARGIN`'s own 6 -> 4 note
+## records `GF-B-006` making for the one-line row design.
+##
+## WORTH THE OWNER KNOWING: at 1080 the roster at its five-creature cap now uses
+## essentially the whole left column. There is no room in that column for a
+## sixth row, a taller row, or a second header line without moving the widget.
+const ROW_SEPARATION := 2
 const ROW_MARGIN := 4  # 6 -> 4, alongside ROW_SIZE.y: a one-line row needs less breathing room than a two-line one
-const HEADER_HEIGHT := 30.0
-const HEADER_GAP := 6.0
+## MEASURED, not declared. The header is a `PanelContainer` holding one label
+## at `STRIP_READABLE_FONT_SIZE` (36) with 2px content margins, and a
+## `PanelContainer` grows past its `custom_minimum_size` to fit its content --
+## the same trap `ROW_SIZE.y`'s own header records `GF-B-006` paying for on the
+## rows. 30 was the declared number and the header really draws at **54**, so
+## `TOTAL_HEIGHT` was 24px short and every bound derived from it was wrong by
+## that much: `playground_hud.gd::party_strip_position()`, `test_hud_widgets`'s
+## gap assertions, and `combat_hud.gd::_party_strip_position()`, which is half
+## of why `HIST-013` ("the combat HUD overlaps itself") was still reproducible.
+##
+## `GF-B-006` measured the rows and stopped there; this is the same defect one
+## widget up. Pinned now rather than re-measured by hand next time:
+## `smoke_combat_hud_left_column.gd` asserts the live stack against
+## `TOTAL_HEIGHT` and fails naming the child that grew.
+const HEADER_HEIGHT := 54.0
+const HEADER_GAP := 4.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 const CHIP_SIZE := Vector2(40.0, 40.0)
 ## Local floor for this widget's own small text (TEAM count, level, KO/REST

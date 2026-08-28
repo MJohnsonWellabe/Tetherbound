@@ -240,3 +240,78 @@ still passing.
   edge). The two guards this lane added *were* wired into the matrix; wiring
   the three pre-existing ones is a CI-cost decision for whoever owns the
   pipeline, and is left as a finding rather than taken unilaterally.
+
+---
+
+### `HIST-013` — the combat HUD overlaps itself — **CLOSED**
+
+**What it was.** In a fight, the active creature's name and level print on top
+of another team member's, its HP bar runs under the mini-bar, and an "Energy"
+label floats loose under the pile — *"the player cannot read their own team
+during combat."* Located precisely by a blind pass (frames 10 and 11,
+bottom-left). The register's note on what was left is exact: *"the remaining
+overlap is the plate's own height or the strip's row count."*
+
+It is both, and a third thing besides. `tests/smoke_combat_hud_left_column.gd`
+(new) mounts `combat_hud.tscn` and measures. On `main` it fails three ways:
+
+1. **`AllyPanel` grows 41 px above its own offsets.** Authored top y 874 on a
+   1080 canvas, real top **y 833**. It is a bottom-anchored `PanelContainer`
+   with `grow_vertical = 0` whose content needs more than the 150 px the scene
+   gives it, and a Control forced past its minimum size grows its cached rect
+   without writing that growth back to its offsets.
+   `_party_strip_position()` computed from `offset_top`, so the roster was
+   placed against an edge the plate is not at. The arithmetic was right about
+   the wrong edge, which is why correcting it downstream could never have
+   found this.
+2. **The roster therefore overlapped the plate** — strip ending y 852.5 against
+   a plate top of y 833.
+3. **`party_strip.gd::HEADER_HEIGHT` was 24 px short.** Declared 30, real
+   **54**: the header is a `PanelContainer` holding one label at
+   `STRIP_READABLE_FONT_SIZE` (36) with 2 px margins, and a `PanelContainer`
+   grows past its `custom_minimum_size`. This is precisely the trap `GF-B-006`
+   recorded paying for on the *rows* earlier today — *"a declared row height
+   under the real one makes every bound derived from it wrong"* — surviving one
+   widget up, in the header, unmeasured.
+
+**And (3) was live in the exploration HUD too, not only in combat.** With the
+strip's real content at 394 px against a declared 370, the strip's fifth row was
+drawing **10 px into the vitals plate — at both supported canvas heights**
+(1080: real bottom 460 vs plate top 450; 1200: 580 vs 570). The same 10 px
+`GF-B-006`'s own commit message describes catching in a first render and
+fixing. `docs/evidence/hist-013/party-strip-before.png` shows it: the plate's
+top edge cuts across the bottom of the Tuskroot row.
+
+**Fixed.**
+
+- `combat_hud.gd::_party_strip_position()` measures from `AllyPanel`'s **real
+  rect**, keeping the authored offset only as the fallback for the one call
+  from `_ready()` that runs before the panel has been laid out.
+- `party_strip.gd::HEADER_HEIGHT` 30 → **54**, the measured height.
+- `ROW_SEPARATION` 6 → 2 and `HEADER_GAP` 6 → 4 pay for those 24 px. Taken from
+  the separations rather than from `ROW_SIZE.y` or `HEADER_HEIGHT`, because
+  those two are measured heights and shaving either just re-tells the same lie
+  one layer down. Every row is a plated `PanelContainer` with its own border
+  and `ROW_MARGIN`, so five rows still read as five —
+  `docs/evidence/hist-013/party-strip-after.png`, same seeded five-creature
+  roster, same crop, one thing different.
+
+**For the owner.** At the 1080 canvas the roster at its five-creature cap now
+uses essentially the whole left column between the top safe inset and the
+vitals plate. There is no room there for a taller row, a second header line, or
+any sixth entry without moving the widget. That is a constraint discovered by
+measuring, not a preference.
+
+**Coverage.** `smoke_combat_hud_left_column.gd`, wired into the CI matrix,
+asserts four things on the live scene: that `_party_strip_position()` measures
+from the plate's **real** top (so putting the offset arithmetic back fails,
+whatever the drift is that day), that the roster clears the plate, that the
+strip's live stack fits `TOTAL_HEIGHT` — naming the child that grew when it
+does not — and that no child of the plate escapes it. The 41 px offset drift is
+**printed, not asserted**: the panel is allowed to grow, and the scene is free
+to change; what must not change is which edge the code reads.
+
+**Not claimed.** How the denser roster reads in hand on a 7" panel is
+[OWNER-ONLY]. The `AllyPanel`'s authored offsets in `combat_hud.tscn` still
+disagree with its real size by 41 px; nothing reads them any more, and they
+were left alone rather than re-tuned by hand.
