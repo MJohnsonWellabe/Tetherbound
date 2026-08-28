@@ -75,10 +75,16 @@ const VIEWPOINTS := [
 	},
 	{
 		# The prize the door is shut on: the heartstone on its plinth, and the
-		# vault's Elder Terrapup. Shot from the doorway a player walks through.
+		# vault's Elder Terrapup. Shot from just INSIDE the vault, not from the
+		# passage -- the first run of this file put the eye at local (10, 40),
+		# which is the 0.6 m gap between the den's footprint rect and the
+		# vault's, where `built_floor_height_at()` has no opinion. The camera
+		# fell back to the site's own origin height, ended up inside geometry,
+		# and the frame never came back. `_cave_point()` now refuses a stand
+		# with no floor under it instead of guessing one.
 		"name": "04-vault-prize",
-		"eye": Vector2(10.0, 40.0), "eye_h": 1.7,
-		"target": Vector2(15.5, 41.0), "target_h": 0.9,
+		"eye": Vector2(11.8, 40.0), "eye_h": 1.7,
+		"target": Vector2(15.0, 41.0), "target_h": 0.9,
 	},
 ]
 
@@ -94,7 +100,12 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var before := "--before" in OS.get_cmdline_user_args() or "--before" in OS.get_cmdline_args()
+	var argv: PackedStringArray = OS.get_cmdline_user_args() + OS.get_cmdline_args()
+	var before := "--before" in argv
+	# Each frame costs ~40 s under software GL and the cave costs ~8 minutes to
+	# stand up, so a run that only needs the TM prop should not pay for both.
+	var want_warrens := not ("--tm-only" in argv)
+	var want_tm := not ("--warrens-only" in argv)
 	var out_dir := "res://shots/content_0828_before" if before else "res://shots/content_0828"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out_dir))
 
@@ -165,7 +176,7 @@ func _run() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
-	for entry: Variant in VIEWPOINTS:
+	for entry: Variant in (VIEWPOINTS if want_warrens else []):
 		var view: Dictionary = entry
 		var name_value := str(view["name"])
 		var eye: Vector3 = _cave_point(warrens, view, "eye")
@@ -174,6 +185,9 @@ func _run() -> void:
 			var guardian: Node3D = warrens.call("guardian") as Node3D
 			if guardian != null and is_instance_valid(guardian):
 				target = guardian.global_position + Vector3.UP * 0.8
+		if eye.is_equal_approx(Vector3.INF) or target.is_equal_approx(Vector3.INF):
+			failures.append("%s: stand is outside the cave footprint" % name_value)
+			continue
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
 		torch.visible = true
@@ -188,8 +202,10 @@ func _run() -> void:
 	# an exterior stand and a hand-held light beside it would flatter the prop
 	# in a way no player's walk-up does.
 	torch.visible = false
-	var tm_ground := float(world.call("ground_height_at", TM_AT.x, TM_AT.y))
-	if is_nan(tm_ground):
+	var tm_ground := float(world.call("ground_height_at", TM_AT.x, TM_AT.y)) if want_tm else NAN
+	if not want_tm:
+		pass
+	elif is_nan(tm_ground):
 		failures.append("05-tm-pickup: no ground under the TM site")
 	else:
 		var tm_target := Vector3(TM_AT.x, tm_ground + 0.55, TM_AT.y)
@@ -229,7 +245,11 @@ func _cave_point(warrens: Node3D, view: Dictionary, key: String) -> Vector3:
 	var world_flat: Vector3 = warrens.to_global(Vector3(flat.x, 0.0, flat.y))
 	var floor_y := float(warrens.call("built_floor_height_at", world_flat.x, world_flat.z))
 	if is_nan(floor_y):
-		floor_y = world_flat.y
+		# Not a stand this cave claims -- a passage gap, or a number typed
+		# wrong. Say so rather than guessing a height and photographing rock.
+		push_error("%s.%s is cave-local (%.1f, %.1f), which is not inside any chamber footprint"
+			% [str(view.get("name", "?")), key, flat.x, flat.y])
+		return Vector3.INF
 	return Vector3(world_flat.x, floor_y + float(view.get("%s_h" % key, 1.7)), world_flat.z)
 
 

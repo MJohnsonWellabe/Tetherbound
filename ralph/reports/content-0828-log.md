@@ -86,6 +86,53 @@ reason to be there, and found the branch afterwards — if at all. And the rares
 catch in the chapter, the vault's Terrapup, had no name on it: it read as one
 more aggressive animal in a dark room.
 
+### A fourth finding, and it was only findable in frames
+
+The before-capture is the reason this section exists. Rendered through the real
+path at the stands the alpha work is about, the den and the vault came back with
+**huge faceted olive slabs standing inside them** — one of them between the
+camera and the guardian in `02-alpha-close`, the single frame that exists to
+show the guardian, and two more filling the vault around the heartstone in
+`04-vault-prize`.
+
+They are the **mound's own boulders, hanging through the ceilings into the
+rooms.**
+
+The arithmetic that puts them there is in `_build_mound()` and `_place_rock()`.
+Roof rocks are placed at `top = _floor_y + chamber height + 0.8` and then moved
+**down** by `sink_m` (1.2), so the model's origin lands 0.4 m *below* the
+ceiling it is meant to sit on — and is then scaled by up to `roof_scale`'s 2.8.
+Nothing measured the result, so whatever hangs below that origin hangs into the
+room, multiplied by the scale factor. Perimeter rocks reach the same way from
+the side: their top course sits at `_floor_y + tallest - 1.0` on the footprint's
+bounding-box edge, which for the den's far wall, the vault's `+x` wall and the
+warren's `-x` wall **is** a chamber wall, with 1.2 m of jitter and up to 3.6×
+scale to carry it through.
+
+BAND2-63-WARRENS is where this became visible, and understandably: it lowered
+every ceiling by 0.6–1.2 m to stop the cave reading as a six-metre grey slab on
+the skyline, which was the right call, and neither `sink_m` nor the roof grid
+was re-checked against the new ceilings. Its own blind rounds never caught it
+because the interior frames it took were the mouth, the hall and the dressing —
+not the two deep rooms, which are the two the payoff lives in.
+
+**This matters more than anything else in item 1.** No rim light, colourway or
+mote aura rescues a creature standing inside a boulder, and no lit door reads in
+a room full of them. The alpha work and the door work are both downstream of
+this being fixed.
+
+**Fixed the way this codebase already fixes this class of problem.**
+`creature_body.gd::_fit()` measures an imported model's bounds rather than
+trusting a hand-tuned per-asset offset, because every model arrives differently;
+`_keep_rock_out_of_the_rooms()` does the same — measure what was actually
+instantiated *and scaled*, and if its underside is below the ceiling of a
+chamber it stands over, lift it until it is not. Bounds are walked with an
+accumulated transform rather than read off `global_transform`, because
+`_build_mound()` runs inside `build()` and must not depend on whether the node
+is in the tree yet. A rock over open ground is untouched, so the outcrop's
+silhouette from the road — which two blind rounds tuned — is the silhouette that
+was tuned.
+
 ### What shipped
 
 Owner's chosen shape — the alpha is the obstacle, the prize is behind it — with

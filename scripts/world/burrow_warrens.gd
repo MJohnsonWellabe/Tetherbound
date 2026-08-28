@@ -835,7 +835,95 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 		rng.randf_range(-PI, PI),
 		rng.randf_range(-0.18, 0.18))
 	holder.add_child(art)
+	_keep_rock_out_of_the_rooms(art)
 	_tint_rock(art, tint)
+
+
+## CONTENT-0828. The one thing `_place_rock()` never checked: whether the
+## boulder it just dropped ends up INSIDE the cave.
+##
+## Found in frames, not in reasoning. The 2026-08-28 before-capture of the den
+## and the vault came back with huge faceted olive slabs filling both rooms,
+## one of them standing between the camera and the guardian in the single shot
+## that exists to show the guardian. They are these rocks.
+##
+## The arithmetic that puts them there. Roof rocks are placed at `top =
+## _floor_y + chamber height + 0.8` and then moved DOWN by `sink_m` (1.2), so
+## the model's own origin lands 0.4 m BELOW the ceiling it is supposed to be
+## sitting on -- and is then scaled by up to `roof_scale`'s 2.8. Nothing
+## measured the result. Whatever hangs below that origin hangs into the room,
+## multiplied by the scale factor. Perimeter rocks reach the same way from the
+## side: their top course sits at `_floor_y + tallest - 1.0` on the footprint's
+## bounding-box edge, which for the den's far wall, the vault's +x wall and the
+## warren's -x wall IS a chamber wall, with 1.2 m of jitter and up to 3.6x
+## scale to carry it through.
+##
+## BAND2-63-WARRENS is where this became visible: it lowered every ceiling by
+## 0.6-1.2 m to stop the cave reading as a six-metre slab on the skyline, which
+## was right, and neither `sink_m` nor the roof grid was re-checked against the
+## new ceilings.
+##
+## The fix is the technique this codebase already uses for exactly this class
+## of problem -- `creature_body.gd::_fit()` measures an imported model's bounds
+## rather than trusting a hand-tuned offset per asset, because every model
+## arrives differently. Same here: measure what was actually instantiated and
+## scaled, and if its underside is below the ceiling of a chamber it stands
+## over, lift it until it is not. A rock over open ground is untouched, so the
+## outcrop's silhouette from the road is the silhouette that was tuned.
+func _keep_rock_out_of_the_rooms(art: Node3D) -> void:
+	var ceiling := _ceiling_over(art.position.x, art.position.z)
+	if is_inf(ceiling):
+		return
+	var lowest := _lowest_point_of(art)
+	if is_inf(lowest):
+		return
+	if lowest < ceiling:
+		art.position.y += ceiling - lowest
+
+
+## The highest ceiling of any chamber whose footprint contains this local
+## `(x, z)`, or -INF where the point stands over open ground.
+##
+## Highest rather than nearest because chamber rects are allowed to touch: a
+## rock over the seam between two rooms has to clear the taller of them. Rects
+## are recomputed from each chamber rather than read out of `_footprint` by
+## index, so this cannot drift if anything else ever appends to that array.
+func _ceiling_over(x: float, z: float) -> float:
+	var best := -INF
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		if absf(x - centre.x) > size.x * 0.5 + _wall_t:
+			continue
+		if absf(z - centre.z) > size.y * 0.5 + _wall_t:
+			continue
+		best = maxf(best, _floor_y + float(chamber.get("height", 4.0)))
+	return best
+
+
+## The lowest point anything under `art` actually draws, in THIS node's own
+## local frame -- the frame `_floor_y` and the chamber heights are in.
+##
+## Walked with an accumulated transform rather than read off
+## `global_transform`, because `_build_mound()` runs during `build()` and must
+## not depend on whether this node is in the tree yet. `art.transform` is the
+## starting frame because `Mound` sits at identity under this node.
+func _lowest_point_of(art: Node3D) -> float:
+	return _lowest_under(art, art.transform)
+
+
+func _lowest_under(node: Node, xform: Transform3D) -> float:
+	var lowest := INF
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		if instance.mesh != null:
+			lowest = (xform * instance.get_aabb()).position.y
+	for child in node.get_children():
+		var child_3d := child as Node3D
+		var next := xform * child_3d.transform if child_3d != null else xform
+		lowest = minf(lowest, _lowest_under(child, next))
+	return lowest
 
 
 ## The nature pack's rocks ship a cool mint-grey. Beside this cave's own warm
