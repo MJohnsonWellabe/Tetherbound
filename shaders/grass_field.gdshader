@@ -283,9 +283,16 @@ uint lattice_bits(uvec3 v) {
 	return v.x;
 }
 
-float lattice_rand(ivec2 cid, int tag, uint salt) {
+// `tag` is BOTH halves of the slot tag, and it has to be: a cell carries items
+// from several nested layers at once, layer 0's item 5 and layer 3's item 5
+// share a tag.x, and hashing on tag.x alone put them at the same hashed spot.
+// They then rendered exactly on top of each other and the field came out at
+// the base layer's density with every other layer invisible underneath it --
+// a third of the meadow's grass, silently, and it looked like a density bug
+// in the plan rather than a hash that could not tell two items apart.
+float lattice_rand(ivec2 cid, ivec2 tag, uint salt) {
 	uvec3 v = uvec3(uint(cid.x + 4194304), uint(cid.y + 4194304),
-			uint(tag) * 9781u + salt);
+			uint(tag.x * 131 + tag.y) * 9781u + salt);
 	return float(lattice_bits(v)) * (1.0 / 4294967296.0);
 }
 
@@ -321,15 +328,15 @@ void vertex() {
 			* LATTICE_SLOTS + 0.5));
 	int lattice_layer = clamp(tag.y - 1, 0, 15);
 
-	vec2 lattice_jit = vec2(lattice_rand(cid, tag.x, 11u),
-			lattice_rand(cid, tag.x, 29u)) - 0.5;
+	vec2 lattice_jit = vec2(lattice_rand(cid, tag, 11u),
+			lattice_rand(cid, tag, 29u)) - 0.5;
 	vec2 world_xz = (vec2(cid) + 0.5) * lattice_cell
 			+ lattice_jit * lattice_cell * lattice_jitter;
 	// What the geometry has to be shifted by to stand there instead of on the
 	// cell tag, in the instance's own space -- the basis is identity now.
 	vec2 lattice_shift = world_xz - anchor;
-	float item_yaw = lattice_rand(cid, tag.x, 53u) * 6.2831853;
-	float item_rank = lattice_rand(cid, tag.x, 71u);
+	float item_yaw = lattice_rand(cid, tag, 53u) * 6.2831853;
+	float item_rank = lattice_rand(cid, tag, 71u);
 
 	// Per-BLADE seed. UV2.x is which blade of the tuft this vertex belongs to
 	// (see grass_field.gd::_tuft_mesh). Hashing on the tuft position alone
