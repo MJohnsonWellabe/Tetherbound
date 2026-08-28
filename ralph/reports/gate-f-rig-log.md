@@ -720,3 +720,430 @@ which is CD-1's fix demonstrating itself.
   That is a **game-side** engage failure, not a rig one. This lane built the
   instrument that can now express it (`move_to_entity` + `interact_with`); the
   fix belongs to whoever owns that test.
+
+---
+---
+
+# Round 2 — branch `ralph/GATE-F-RIG-2`
+
+Round 1 rebuilt the instrument. The 2026-08-27 run
+(`ralph/reports/gate-f-run-20260827T223957Z`) is the first Gate F run since the
+rebuild that **photographed the game** — `GF-01-TITLE-01` exists on disk,
+1920×1080, mean luma 50.8, on its manifest row, where the previous run wrote
+9,231 rows saying `file: null` and called each one PASS. The pre-flight passed,
+the context guard held, the dialogue predicate worked, S01 booted the title in
+780 ms and stood the Meadows up on the New Game path.
+
+And then the run measured three defects in the instrument that stop the
+protocol executing, filed them as a run-level BLOCKER rather than improvising
+around them, and stood down. This round fixes those three and records the
+protocol amendment the owner approved on the back of them.
+
+**Everything round 1 got right is still here and was not touched:** the capture
+pre-flight, the context guard, the dialogue predicate, entity walks,
+`INVENTORY.json` asking `git check-ignore`, the image-quality gate, and CD-8b
+refusing a freeze record that contradicts the process. The operator proved
+CD-8b works by *running into it* and did **not** edit the freeze record to get
+past it. That behaviour stays possible; see Finding 15.
+
+## The constraint this lane worked under, stated first
+
+The 12,721 ms rendered frame is **llvmpipe software rasterisation with no
+GPU**. It is not a statement about the game. `data/config/grass_field.json` is
+settled, owner-approved art that this lane did not open and must not:
+`git diff main...HEAD -- data/ scripts/ scenes/ assets/ project.godot` is empty
+and is checked below rather than asserted. Device frame rate remains
+**[OWNER-ONLY]** (§0.4). A content change to make a software rasteriser faster
+would be optimising for the wrong target.
+
+---
+
+## Finding 12 — `route.csv` measured the box, not the game, and §D says that is
+## the one thing it must not do
+
+`_t()` was `Time.get_ticks_usec() - _t0_usec`. Two consumers read it and both
+were wrong for it.
+
+**`route.csv`'s `t` and its 2 Hz cadence.** §D takes elapsed time,
+`since_interaction_s` and every dead-travel interval out of `route.csv`
+*precisely because* — its own words — "harness wall time lies (the 2026-08-23
+evidence records exactly why)". It was harness wall time. Distances were
+unaffected: `_distance_m` and `_dead_travel_m` accumulate per physics step and
+always did. Every **duration** was inflated by the ratio between a 6.465 s
+frame and the 1/60 s the game believed it had just simulated — a factor of
+about 388 on that box, and **a different factor on any other box**, which is
+the part that makes the numbers uncomparable rather than merely large.
+
+**The continuous recorder.** `_record_next_t = _t() + 1/hz`, so §H's "PNG every
+2 s (0.5 Hz)" was 2 s of *wall*. Under a 12.7 s frame it is due on every
+rendered frame. §H planned ~90 frames for S01; the segment was on course for
+~5,400, roughly 10 GB, into a container with 23 GB free — and a second copy
+into `.git` to be committable at all.
+
+### What play time is, and why not an accumulator
+
+`_play_t()` is `(Engine.get_physics_frames() - _t0_frames) /
+Engine.physics_ticks_per_second` — the elapsed time the game believes in,
+counted in the only unit it has.
+
+An accumulator (`_play_t += delta` in `_tick`) was the obvious alternative and
+is worse in two ways. It only advances where a step calls `_tick`, so a boot
+settle or a `capture`'s settle frames would be free; and it misses the physics
+steps a slow rendered frame packs in — Godot runs up to
+`Engine.max_physics_steps_per_frame` per drawn frame, which is exactly what the
+run-2 BLOCKER's "the 12,721 ms rendered frame is consistent with about two
+physics steps inside it" describes. `Engine.get_physics_frames()` counts the
+steps the engine actually ran, and keeps counting while the tree is paused,
+which is most of a menu segment.
+
+### Which clock each consumer now reads, and why
+
+Said out loud in `RUN_METADATA.json`'s new `clocks` block, so nobody has to
+infer it from source again — which is how this went unnoticed through every run
+since the harness was written.
+
+| consumer | clock | why |
+|---|---|---|
+| `route.csv` `t`; the 2 Hz trace cadence | **play** | §D's numbers are about the game |
+| `events.jsonl` `t`; `frames/…` manifest `t`; the note file's `events: t=` | **play** | one shared axis, or §H's timestamp correlation does not join |
+| `record_hz` / `trace_hz` | **play seconds** | a cadence in wall seconds is a cadence in box speed |
+| `since_interaction_s`, `_distance_m`, dead travel | **play** | already per-physics-step; unchanged |
+| `route.csv`'s `wall` column | wall datetime | the join between the two clocks; unchanged |
+| the cost gate, the disk gate | **wall** | they are questions about the box |
+| `duration_ms` on boot/save/load; `frame_grab_ms` | **wall** | a boot cost is a wall-clock fact |
+| `frame_ms` / `physics_ms` columns | neither — `Performance` monitors | unchanged |
+
+The 14 `route.csv` columns are **unchanged**, so nothing downstream re-parses.
+§C.2 is amended to say what `t` means rather than the schema being widened.
+
+**What this does not fix:** every run before 2026-08-28 has durations inflated
+by that run's own frame cost. They are not retro-correctable from the artefacts
+— `wall` gives the wall elapsed but not the physics-step count — and they are
+not comparable across boxes. Any §D number quoted from a pre-2026-08-28 run
+should be read as the harness's, not the game's.
+
+---
+
+## Finding 13 — the cost gate re-priced on a title screen and applied it to
+## hours of Meadows
+
+Round 1's Finding 4 is right about *why* to re-price and shipped it as a
+one-shot after the **first** boot. For every journey segment the first boot is
+the **title screen**, which is not the scene the segment spends its time in
+either. Three prices, same box, same segment, same day, from the run's own
+artefacts:
+
+| | s/frame | S01 predicted |
+|---|---|---|
+| pre-flight, empty tree | 0.0065 | 71 s |
+| re-priced after `boot: title` | 0.0465 | **505 s** — what the gate used |
+| measured, in the Meadows | **6.465** | **70,197 s** |
+
+139× under-price against the row cadence, 274× against `TIME_PROCESS`. At the
+real price the 14,400 s ceiling buys 2,225 frames and the *smallest* of the
+eighteen segments asks for 26,835. **Every capture-bearing segment should have
+blocked. Two did.**
+
+Four changes, and the first is the one that matters:
+
+1. **Re-price after every boot**, named for the scene (`boot:title`,
+   `boot:world`). `_reprice_done` is gone.
+2. **Price the remainder, against the remaining budget.** `_predict_frames_from`
+   costs the steps that are *left*; the budget is the ceiling minus the wall
+   clock already spent. Re-charging a segment for a boot it has already paid
+   for would refuse work that is genuinely affordable, which is the same class
+   of error in the other direction.
+3. **Re-check in play**, every `cost_recheck_frames` (120) ticked frames, from
+   wall-already-spent over frames-already-ticked. That costs nothing and it is
+   the only number that tracks a scene getting more expensive as the player
+   walks into it. `_reprice`'s stop-and-measure is reserved for the moment a
+   scene *changes*, where there is no history to read.
+4. **`wait` honours a mid-step abort.** `wait` is where the protocol's hours
+   live: S01-09 asks for 10,800 physics frames, 19.4 hours at the measured
+   price, and a gate that could only act at the next *step* boundary would
+   watch the whole of it go past. Every other frame-advancing loop is bounded
+   by a walk or a press budget and stops at its own boundary, which the step
+   loop then sees — **this is the one loop that aborts mid-step, and that is a
+   deliberate limit, not an oversight.**
+
+Two smaller corrections that came with it:
+
+- **The cost probe must not become the cost it measures.** `cost_probe_frames`
+  is 20, which was 0.12 s when a frame cost 6 ms and is over two minutes at
+  6.465 s — *every time a scene comes up*. It now stops at
+  `cost_probe_budget_s` (20 s) once it has `cost_probe_min_frames` samples.
+- **The ceiling now applies to every segment with somewhere to write**, not
+  only capture-bearing ones. Round 1 gated only segments planning evidence,
+  which was defensible while capture was the only expensive thing. The evidence
+  split makes a logic lane the normal way to run a journey, and a logic lane
+  can spend a week too.
+
+**The ledger records a price that moved, not a heartbeat.** The first cut logged
+every recheck and produced ~100 identical rows saying 16.6 ms for one
+twelve-step self-check, which buries the two rows that matter and bloats every
+artefact carrying them. A boot re-price and any refusal are always kept; an
+in-play sample is kept when it moves the price by ≥ `cost_log_change_fraction`
+(25%). `cost_rechecks` carries the count of the ones not kept, so the sampling
+itself stays auditable.
+
+---
+
+## Finding 14 — disk was a ceiling nobody had priced
+
+At §H's planned cadences the eighteen segments were ~25 GB **before** the
+frame-cost multiplier, into a container with 23 GB free, and doubled again by
+the copy `.git` must carry for the evidence to survive the container at all.
+Nothing anywhere had asked.
+
+The pre-flight now prices bytes beside seconds, from **measured inputs only**:
+
+- **bytes per PNG** from the pre-flight self-test — a real frame of the real
+  scene at the real capture resolution, encoded by the same code path every
+  evidence frame will use. Not an assumed size.
+- **free space** from `df -Pk` asked of the run directory itself.
+- **×2 for `.git`** applied only where `git rev-parse --is-inside-work-tree`
+  says the run directory is inside one. Cached: the answer cannot change
+  mid-segment and spawning git a few hundred times to re-ask would make the
+  gate cost more than it saves.
+- **file count** = cadence frames (predicted *play* seconds × `record_hz`) +
+  one forced frame per remaining step (§H coalesces every event raised on a
+  tick into a single frame, so that is the bound) + the prescribed shots not
+  yet taken.
+
+Two rules it follows deliberately:
+
+- A **`df` that cannot answer reads as NOT GATED**, never as "no room". A disk
+  check that refused every run it could not measure would be this lane's own
+  mistake in mirror image — the same reasoning `_uncommittable` uses for a git
+  that cannot answer.
+- A process that **cannot render writes no frames**, so the estimate is zero
+  and the gate is silent. **Disk is never a reason to refuse a logic lane.**
+
+A disk breach is a **`hard_why`**, like a cost breach: it has nothing to do with
+whether this invocation can take pictures, so `--gatef-allow-no-capture` cannot
+waive it. That is round 1's Finding 9 applied to a third refusal.
+
+---
+
+## Finding 15 — the evidence split, and why a logic lane's completeness is a
+## different question from a capture lane's
+
+**Owner decision, 2026-08-27.** Recorded in `ralph/GATE_F_MASTER_PROTOCOL.md`
+§H.1 with the measurement behind it, and in `§0.3`, `§G` and `§M` where those
+sections make claims the split changes.
+
+### The measurement
+
+A rendered frame of the Meadows costs 12,721 ms on this container; the same
+scene in logic mode costs 6.1 ms. The eighteen segments ask for 4,607,802
+physics frames — about 8,283 hours in capture mode.
+
+The decisive second measurement is what *is* affordable: `tools/_probe_grass_pass.gd`
+took **14 real 1920×1080 frames across four bands in about 28 minutes on this
+container with the grass field ON**. Frames from targeted probes are cheap.
+**4.6 million rendered physics frames are not.** Continuous *recording* is what
+this envelope cannot afford — not capture.
+
+### What a segment declares
+
+`evidence_lane`, default `"both"`, which is exactly what every segment written
+before the split means, so nothing unconverted changes behaviour.
+
+| | runs | owes | `record_hz` |
+|---|---|---|---|
+| `"logic"` | headless, for mechanics, telemetry and step verdicts, at 6.1 ms/frame | its step verdicts, `events.jsonl`, `route.csv`, saves | forced to `0` |
+| `"capture"` | under xvfb, at named states | every id in its own `owes`, on disk | `0` baseline; **bounded** `record_start`/`record_stop` windows are fine |
+| `"both"` | as before | its own §G frames **and** its own §H record | as declared |
+
+A capture lane reaches a named state the same way the journey did. A title
+screen needs only a boot — which is why `S01`/`S01C` is the worked pair and why
+it was runnable here. Anything deeper is seeded from the logic lane's nearest
+save (`seed_save` → `boot` → `await_load`) and staged forward by a short
+scripted approach. **§0.6 still holds**: production paths only, `free_build`
+off, no granted state, because the state being photographed was produced by
+production play. Some §G frames — mid-dialogue, mid-fight — are not saveable
+states and need that staging preamble; that is seconds of play per frame
+instead of hours, and it is stated here rather than discovered later.
+
+### The completeness argument — this is the careful part
+
+Round 1's Finding 8 drew a line: *a capture that cannot be **taken** is a FAIL,
+because the evidence is owed; a measurement that cannot be **made** is a SKIP,
+because nothing is owed.* Debt versus unanswerable question. That was right,
+and it was right specifically because the alternative was 9,231 false PASSes.
+
+The split adds a third case that is neither, and getting it wrong in either
+direction reproduces a known failure:
+
+- Call a delegated capture a **FAIL** and every logic-lane segment is
+  permanently incomplete for frames it never undertook to take. The instrument
+  would report a deficiency that does not exist, which is the class Phase B had
+  to refute from the f082bdf6 run's own data — three of its four loudest
+  findings were the instrument's.
+- Call it a **PASS**, or drop it silently, and the debt is discharged by not
+  mentioning it. That is the *exact shape* of the 9,231 `file: null` PASSes,
+  wearing a different label.
+
+So the resolution is **the debt moves up a level, and is checked there**:
+
+1. A capture a lane **owed** and did not take is still a **FAIL**, at that
+   segment. `INVENTORY.json`, unchanged. CD-1 is untouched.
+2. A capture a lane **handed over** is a **DELEGATION** — its own verdict word,
+   counted separately from PASS, FAIL and SKIP, written into `INVENTORY.json`
+   under `captures.delegated` / `delegated_to` and into an unmissable
+   `DELEGATED.md` beside `INCOMPLETE.md`. The segment is complete when it has
+   done what **its lane** owes.
+3. A delegation **nobody paid** is a **run-level deficiency**, and
+   `tools/gate_f/run_inventory.py` is where that is answered — over the whole
+   run directory, reading every `INVENTORY.json` and every shot **off disk by
+   size**, writing `RUN_INVENTORY.json` and `RUN_INCOMPLETE.md` and exiting
+   non-zero. It asks `git check-ignore` too, for the same reason the
+   per-segment inventory does: evidence git will not carry dies with the
+   container.
+
+The level matters. "Does this frame exist anywhere in this run?" is not a
+question a segment can answer, and asking it of a segment is what forced the
+FAIL-vs-PASS false choice in the first place.
+
+**And the debt cannot evaporate quietly.** Three declarations are refused at
+step 1, before any frame is spent:
+
+- a logic lane with prescribed captures and no `capture_lane`;
+- a `capture_lane` that does not exist, does not declare
+  `evidence_lane: "capture"`, or whose `owes` list does not accept every id
+  handed to it;
+- a capture lane whose `owes` names an id no step of it actually shoots — CD-1
+  wearing a different hat.
+
+The check runs **before** the frame-cost probe, so a typo costs nothing.
+
+### CD-8b is refined, not weakened
+
+A run that is headless for its logic lane and X11 for its capture lane cannot
+be described by one flat `display_server`. `RUN_METADATA.json` may therefore
+carry `"lanes": {"logic": {...}, "capture": {...}}`, and the pre-flight reads
+the entry for the lane the segment declared.
+
+**A record with no `lanes` block still binds every segment by its flat claim**,
+exactly as before. So a run that wants a logic lane must **say so in the freeze
+record before the run** — which is precisely what the run-2 operator asked the
+coordinator to decide, rather than amending a record mid-run to get a segment to
+start. That is still the sin CD-8b exists to prevent, the contradiction is still
+a `hard_why`, and `--gatef-allow-no-capture` still cannot waive it. Proved by
+running it: see the negatives table below, where a logic lane run against the
+stale candidate record — which claims X11 and knows nothing about lanes — is
+refused exactly as the operator's `S02` was.
+
+---
+
+## What was run, and what was not proved
+
+Round 1's standard: prove it by running it, and say what was not proved.
+
+### The split, end to end, on this container
+
+One run directory, `rig2-b`, with a lane-aware freeze record written **before**
+the run:
+
+```json
+{ "lanes": { "logic":   {"display_server": "headless"},
+             "capture": {"display_server": "X11 under xvfb-run"} } }
+```
+
+| | invocation | result |
+|---|---|---|
+| **S01** (logic) | `run_segment.sh S01` — headless | **COMPLETE**, exit 0. 14/14 steps ran: 12 PASS, 1 FAIL, **1 DELEGATED**. `DELEGATED.md` names `GF-01-TITLE-01` and `S01C`. 362 `route.csv` rows, 0 frames. |
+| **S01C** (capture) | `run_segment.sh --capture S01C` — xvfb, 1920×1080, smoke passed with no fallback | **COMPLETE**, exit 0. 7/7 PASS. `shots/GF-01-TITLE-01.png`, **65,297 bytes**, on its manifest row, `exists: true` read off disk. |
+| **the run** | `run_inventory.py rig2-b` | `1/1 prescribed frames present on disk`, **run is COMPLETE**, exit 0. |
+
+The frame S01C took measures **mean luma 50.8, spread 32.4, 5.4% dark** — the
+same three numbers the 2026-08-27 run recorded for the same id. Same evidence,
+different lane, at the cost of a boot instead of a segment.
+
+**CD-8b was exercised, not assumed.** S01C's pre-flight resolved its claim from
+`lanes.capture.display_server` and recorded the key it used:
+`{"key": "lanes.capture.display_server", "lane": "capture", "claim": "X11 under
+xvfb-run"}`. And a capture-lane segment run *headless* against the same record
+is refused for the contradiction — see the negatives below, third row.
+
+### The two clocks, separated and visible in one file
+
+S01's `route.csv` runs **t = 0.72 → 180.88** while its `wall` column runs
+**02:04:03 → 02:08:12**. 180 play seconds; **249 wall seconds**. 362 rows is
+exactly 2 Hz over 181 play seconds. Before this change the same file would have
+reported the 180 s wait as ~249 s of "elapsed time" and handed that to §D.
+
+### The cost gate, and the case a per-boot re-price alone would still miss
+
+S01's ledger:
+
+| at | s/frame | frames left | predicted | budget left |
+|---|---|---|---|---|
+| pre-flight (empty tree) | 0.0059 | 10,856 | 71 s | 14,400 s |
+| `boot:title` | 0.0065 | 10,856 | 72 s | 14,399 s |
+| **in-play, step 8** | **0.591** | 10,805 | **6,387 s** | 14,328 s |
+| in-play, step 8 | 0.0167 | 10,805 | 180 s | 14,326 s |
+
+**There is no `boot:world` row, and that is the point.** On the New Game path
+the world is stood up by the button press, not by a `boot` step — so a re-price
+that only fires on `boot` would have carried the title screen's 0.0065 s/frame
+through the whole segment. The in-play recheck is what caught the 0.591 s/frame
+stand-up. Fixing only the "re-price after the *right* boot" half would have
+left this hole open.
+
+91 rechecks ran; 3 rows are in the ledger, which is the log-a-move rule working.
+
+### Every new refusal, run rather than read
+
+All at step 1, all with **0 steps executed**, all exit 1.
+
+| what | refusal |
+|---|---|
+| logic lane → a capture lane that does not exist | *"evidence_lane=logic delegates to \"NoSuchLane\" and res://tools/gate_f/segments/NoSuchLane.json does not exist or does not parse. A handover to a file that is not there is a debt that has quietly stopped existing."* |
+| logic lane with captures and no `capture_lane` | *"…with 1 prescribed capture(s) in its steps and no \"capture_lane\". The split moves a debt; it does not cancel one."* |
+| capture lane owing an id it never shoots | *"…claims to owe [\"GF-99-FAKE-03\"] but no capture step in this segment takes them…"* — **and, in the same refusal**, the CD-8b contradiction, because a capture lane running headless against a record that says X11 is exactly the fault CD-8b exists for |
+| logic lane handing `S01C` an id its `owes` does not accept | *"…hands 1 id(s) to \"S01C\" that its \"owes\" list does not accept: [\"GF-13-FINALE-03\"]. An unaccepted delegation is how a segment would become capture-incomplete forever without anything ever saying so."* |
+| **the cost gate re-pricing in scene** (`selfcheck_walk`, ceiling forced to 120 s) | pre-flight priced it at **70.7 s on the empty tree and let it through**; `boot:world` re-priced it at **157 s against the 46 s of budget left** and stopped it. Segment ran 1 of 12 steps. This is the defect's exact shape, reproduced and then caught. |
+| **the disk gate** (`S01C`, reserve forced to 20 kB below free) | *"disk: predicted 85 kB of evidence (8 files at a measured 11 kB each, ×1 for the copy git has to carry) … against 23.71 GB free with a 23.71 GB reserve."* Run **with `--gatef-allow-no-capture`**, which did not waive it — a `hard_why`, like cost. |
+| **the run-level ledger**, S01 alone in a run directory | S01's own `INVENTORY.json` says `complete: true`; `run_inventory.py` exits **1** with *"UNPAID DELEGATION: S01 handed GF-01-TITLE-01 to S01C and the capture lane never ran in this run directory."* This is the case the whole design exists for. |
+
+### Tests
+
+`tests/test_gate_f_rig.gd` is 49 tests (was 36); `--only=gate_f` runs **66
+across both Gate F files, green**. Thirteen are new and each names the finding
+it guards. One existing test was **changed**, deliberately and not to make
+something pass: `test_the_verdict_ledger_counts_skips_separately` asserted the
+literal `{"PASS", "FAIL", "SKIP"}` ledger and now asserts `DELEGATED` alongside
+them, with the reason in the message.
+
+---
+
+## What this lane did NOT prove, and what it left for others
+
+- **Nothing about the game.** This lane is not the judge. S01's one FAIL —
+  `S01-12`, tracked objective `opening:beat:road` where the step expected
+  `opening_first_catch` — is a step verdict the logic lane produced, not a
+  finding, and whether it is a segment-script transcription question or a game
+  question is the operator's and Phase B's to say.
+- **Seventeen of the eighteen segments are still `evidence_lane: "both"`, and
+  still block on cost.** That is correct: the gate now prices them honestly
+  instead of under-pricing them by 139×. Converting them is authoring work —
+  each needs a capture lane that reaches its named states from the logic lane's
+  saves — and it belongs to the run lane, not here. Writing seventeen stub
+  capture segments that claim ids they cannot reach would be worse than
+  writing none, and the pre-flight would refuse them anyway.
+- **The mid-step cost abort covers `wait` only.** Every other frame-advancing
+  loop stops at its own budget and the step loop then sees the block. Stated as
+  a limit rather than left to be discovered.
+- **No capture lane deeper than a title screen has been run.** The
+  `seed_save` → `boot` → `await_load` → staging-preamble pattern is the
+  documented route to a mid-journey state and the harness has all four steps,
+  but this lane exercised only the case that needs none of them. That is the
+  largest untested claim in this round and it is named here rather than
+  implied.
+- **Pre-2026-08-28 `route.csv` durations are not retro-correctable.** The
+  artefacts carry wall datetimes but not physics-step counts.
+- **Nothing in `scripts/`, `scenes/`, `data/`, `assets/` or `project.godot` was
+  touched**, `data/config/grass_field.json` included.
+  `git diff --stat origin/main...HEAD -- scripts/ scenes/ data/ assets/ project.godot`
+  is **empty**, and that is checked rather than asserted.

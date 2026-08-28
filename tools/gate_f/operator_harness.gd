@@ -2116,13 +2116,33 @@ func _price_disk(frames_remaining: int) -> Dictionary:
 		return out
 	if bytes > (free_bytes - reserve):
 		out["over"] = true
-		out["why"] = ("predicted %.1f GB of evidence (%d files at a measured %.0f kB, x%.0f for the "
-			+ "copy git has to carry) against %.1f GB free with a %.1f GB reserve. §H's cadence is "
-			+ "not the problem -- the continuous record is. A split evidence lane, a bigger disk, "
-			+ "or fewer segments per container.") % [bytes / 1e9, files, per_png / 1000.0, factor,
-				free_bytes / 1e9, reserve / 1e9]
+		# What DOMINATES matters more than the total: a segment over budget on
+		# cadence frames is telling you to split its evidence lane, and one over
+		# budget on prescribed shots is telling you the box is simply full.
+		var dominant := "the continuous record (%d cadence frames at %.2f Hz)" % [
+			cadence_frames, maxf(_record_hz, _record_baseline_hz)]
+		if cadence_frames <= (shots + forced_frames):
+			dominant = "%d prescribed shot(s) and up to %d event-forced frame(s)" % [
+				shots, forced_frames]
+		out["why"] = ("predicted %s of evidence (%d files at a measured %s each, x%.0f for the "
+			+ "copy git has to carry), of which the bulk is %s -- against %s free with a %s "
+			+ "reserve. A split evidence lane (§H.1), a bigger disk, or fewer segments per "
+			+ "container.") % [_bytes_h(bytes), files, _bytes_h(per_png), factor, dominant,
+				_bytes_h(free_bytes), _bytes_h(reserve)]
 	_disk = out
 	return out
+
+
+## Bytes at a scale a human reads. 84,768 printed as "0.0 GB" is a number that
+## tells a reader nothing and reads like a bug in the gate.
+static func _bytes_h(n: float) -> String:
+	if n >= 1e9:
+		return "%.2f GB" % (n / 1e9)
+	if n >= 1e6:
+		return "%.1f MB" % (n / 1e6)
+	if n >= 1e3:
+		return "%.0f kB" % (n / 1e3)
+	return "%d B" % int(n)
 
 
 ## Free bytes on the filesystem holding `path`, asked of `df`.
