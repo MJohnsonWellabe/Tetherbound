@@ -509,3 +509,143 @@ Both fixed; the difficulty consequence is measured and stated. The odds curve,
 the wall-clock cost of a failure, the shake channel and the lock-target size are
 diagnosed with numbers and left for the owner, because they are all answers to
 "how hard should catching be" rather than defects.
+
+---
+
+# Owner correction, 2026-08-28 §2a / §2b
+
+The owner localised "catching sucks" and **corrected this lane's theory**. My
+press-F finding is a real defect and a "Controller first" violation, but it is
+not why catching feels bad. The cause is **aiming**, in three parts, plus
+creatures that vanish in the grass.
+
+## §2b first, because it is measurable and it gates §2a
+
+You cannot aim at what you cannot see, so this got measured before anything was
+changed.
+
+**The field.** `data/config/grass_field.json`: `height_near` 0.40,
+`height_far` 0.62, `height_jitter` 0.38 — so a tuft stands **0.25–0.86 m**.
+
+**The roster against it.** Two creatures are shorter than their own tall grass:
+
+| species | height | vs 0.86 m tall grass |
+|---|---|---|
+| pipwing | 0.60 m | **shorter** |
+| bramblebun | 0.78 m | **shorter** |
+| mudsnout | 0.95 m | clears |
+| everything else | ≥ 1.05 m | clears |
+
+The owner guessed bramblebun was "both". **It is**, and here is the frame
+arithmetic from `shots/catch/01-aiming-full-health.png` — a real bramblebun at
+throwing range in real grass:
+
+- Inside the creature's own bounding box, only **35%** of the pixels are
+  creature. The other **65% is grass in front of it.**
+- Whole-box luminance against the surrounding field: **1.02 : 1**. This repo's
+  own `vegetation.json` quotes a blind critic calling **1.00:1 "invisible"**.
+- Where the creature *is* visible: hue separation is actually fine
+  (**47°** — tan 39° against grass 85°), but luminance contrast is
+  **1.15 : 1**. So the problem is **value, not hue**. Hue discrimination falls
+  off with angular size far faster than value does, which is why 47° of hue is
+  not rescuing it on a 7-inch panel at throwing range.
+
+### What I changed on the creature side (the grass is untouched)
+
+**Size, measured rather than eyeballed.** `bramblebun` 0.78 → **0.96 m**,
+`pipwing` 0.60 → **0.76 m**. 0.96 clears the tallest tuft by 0.10 m. Both are
+deliberately modest — the smallest step that puts the silhouette above the
+field, not a size that makes a rabbit read as a mid-tier creature.
+
+This moves gameplay as well as art, and that is correct rather than a side
+effect: `creature_body.gd`'s own header says `height`/`radius` drive the
+capsule, the hit cone's reach and — through `body_radius()` — the catch
+accuracy bonus, and that scaling the art alone is the invisible discrepancy
+`PW2` forbids. A bigger creature is genuinely easier to hit and the odds say so.
+
+### What I did NOT change, and the specific reason
+
+**The value/material separation — the half the measurement says matters most.**
+
+`creature_body.gd` carries an explicit warning against exactly the fix I was
+about to make: these creature assets ship `emission_enabled = true` with the
+same painted texture as both `albedo_texture` and `emission_texture` at a full
+white multiplier — a self-lit painted look. Emission is additive and reads
+independently of lighting, so *"an albedo-only tint here would compile, pass a
+material-only unit test, and still be invisible in a render."*
+
+A rim/fresnel term is a **lighting response**, so it is at risk of being swamped
+the same way. Shipping one without a render to prove it lands would be exactly
+the failure that file warns about. That needs a render iteration, which is the
+next thing to do here — not a guess dressed as a fix.
+
+## §2a — the aiming, all three requirements
+
+### 1. "The cone of visibility of where the ball is going needs to be way more obvious"
+
+Four compounding causes, all in `throw_preview.gd`:
+
+1. The arc was drawn with `PRIMITIVE_LINES` — **one pixel wide**. At the 1920
+   authored canvas that is 0.05% of screen width, over a field measured at 65%
+   blade coverage.
+2. It faded to `FADE_FAR_ALPHA` **0.25** along its length, so it was at its
+   *least* visible **at the landing point** — the one part being read.
+3. `no_depth_test = false`, so grass blades drew over it. The same blades hiding
+   the creature were hiding the aim.
+4. The landing marker was a 0.34 m ring lying **flat** in grass standing up to
+   0.86 m — the indicator was inside the thing obscuring it.
+
+Rebuilt as a **camera-facing ribbon** with real world-space width that widens
+from 0.045 m at the hand to 0.16 m at the landing point (which is what makes it
+read as a *cone* rather than a wire, and is honest — the far end is where the
+real spread is), a **dark casing** under it so it separates from both sunlit
+tips (luminance 0.46) and shadowed bases (0.24), an alpha ramp **inverted** to
+be strongest at the landing end, drawn **over** the grass, and a landing marker
+that **stands up** out of the field: a 1.15 m stalk (clearing the 0.86 m tallest
+tuft) with a bead on top, plus a bigger ring.
+
+The ribbon is camera-facing so it keeps its apparent width edge-on — which is
+the throw the player makes most often.
+
+### 2. "When you go into throwing, it needs to aim you onto the creature"
+
+`try_begin_aim()` now **acquires**. The rig's yaw and pitch snap to the target's
+centre of mass from the eye the aim camera is about to use.
+
+**Which target, since the directive asked me to say:** the one the fight is
+already about. `arm()` is handed exactly one `_target` by `combat_manager.gd`
+when the fight opens, and catching is only available inside a fight — so there
+is no nearest-creature search to get wrong and **no ambiguity when several
+creatures are in range**. The encounter already chose. That is deliberately
+narrower than a free-roam lock-on would need, and it is the right rule here: it
+can never acquire a creature the player is not fighting.
+
+**Snapped, not glided**, because the camera is already cutting to a different
+profile on that frame and a glide on top of a cut reads as drift.
+
+### 3. "Aim assist needs to be stronger"
+
+Two separate mechanisms, both widened:
+
+- **Hard launch assist**: `launch_assist_reticle_fraction` 1.0 → **1.7**. At 1.0
+  the player had to put the screen-centre ray inside the creature's own collider
+  — 0.312 m at ~7.5 m, about **2.4 degrees of arc**, with the stick already
+  slowed to 0.55. In a real fight the launch log shows four consecutive commits
+  missing that window at offsets 0.415, 0.517, 0.305, 0.442. **Three of the four
+  are inside 1.7×.**
+- **Soft aim magnet**: the pull band in `_aim_direction()` widened from
+  (0.5, 1.0) body-widths to **(1.0, 2.5)** — full pull out to a whole body-width,
+  tapering to nothing at two and a half.
+
+**On the caution about it playing itself.** The assist window is deliberately
+*not* pushed further, and the reason is structural rather than taste: that same
+fraction is what `catch_aim_is_locked()` reports to the HUD, so widening it past
+the creature's visible silhouette would start telling the player they are on
+target when they can plainly see they are not — which is the defect this lane
+spent the morning fixing one layer up. The soft magnet stays a **smoothstep**,
+never a snap, for the reason the existing code already records: the binary
+version made the aim jump as the reticle swept past, the "grabbed the stick"
+feel from an earlier playtest. The result should be *easier to aim*, not
+*impossible to miss*: a throw pointed away from the creature still misses, and
+`accuracy_bonus` still pays more for a centred trajectory than a clipped one now
+that it actually functions.
