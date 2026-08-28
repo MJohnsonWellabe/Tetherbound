@@ -629,6 +629,24 @@ jobs:
             retries: 1
           - smoke: settings
             retries: 1
+          # HIST-036. Mounts the HUD scene only, no world -- seconds, not
+          # minutes. Added because a guard CI never runs is not a guard, and
+          # the three HUD smokes that already exist
+          # (hud_handheld_legibility, prompt_hotbar_dock, exploration_legend)
+          # are in no job in this file, which is its own gap and is recorded
+          # in ralph/reports/hist-clusters-log.md rather than fixed here.
+          - smoke: objective_hint_card
+            retries: 1
+          # HIST-153. No world scene either -- five panels over a two-node
+          # stand-in for one, seconds.
+          - smoke: station_panels_hide_world_hud
+            retries: 1
+          # HIST-013. Mounts combat_hud.tscn only, no fight and no world.
+          - smoke: combat_hud_left_column
+            retries: 1
+          # HIST-014. HUD scene plus the dialogue panel over a stand-in world.
+          - smoke: dialogue_clears_the_world_hud
+            retries: 1
     steps:
       - uses: actions/checkout@v4
         with:
