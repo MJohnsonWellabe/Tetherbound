@@ -28,6 +28,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## which is the "a test that passes because the feature is absent" failure this
 ## repo already paid for once.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const STARTER_SPECIES := ["terrapup", "ripplet", "galewisp"]
 
 
 const CREEK_HOLLOW_ORDERS := [6, 7, 8, 1018, 1019, 1020, 1045, 1900]
@@ -163,14 +164,13 @@ func test_no_evolved_form_spawns_wild() -> void:
 			"'%s' is an evolved form and spawns wild; evolutions are earned, not encountered (D20)" % id)
 
 
-func test_starter_species_never_appear_in_ordinary_wild_population_data() -> void:
-	# The opening choice has to stay meaningful. This deliberately examines the
-	# merged outdoor population table only: authored trainer teams and a future
-	# story encounter are not ordinary wild population entries.
-	var starters := ["terrapup", "ripplet", "galewisp"]
+func test_starter_species_never_spawn_in_the_ordinary_wild_population() -> void:
+	# First-Hour Fun Rebuild: the first creature of each starter species must be
+	# the opening choice. This reads the merged band table, so it covers every
+	# field pocket including Creek Hollow rather than only the original head file.
 	for id: String in _spawned_species():
-		assert_false(starters.has(id),
-			"'%s' is an opening starter and must not appear in ordinary wild population data" % id)
+		assert_false(STARTER_SPECIES.has(id),
+			"'%s' is a starter species and must remain unique to the opening choice, not an ordinary wild" % id)
 
 
 # --- respawn -----------------------------------------------------------------
