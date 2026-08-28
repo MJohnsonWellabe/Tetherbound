@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_creek_hollow": "FIRST-HOUR-FUN-REBUILD. The relocated pond valley is the nearby Creek Hollow destination. Its population is deliberately a compact set of eight normal-weather individuals across six catchable species, plus the established optional elder just off the loop: enough to make the basin feel alive without recreating the old route-density swarm at a single destination. `habitat` is presentation metadata for authoring/tests; encounter_director.gd intentionally ignores it. The existing pond, mill, footbridge, ranger station, reed arcs, grove scatter and west-bank hollow provide the water edge, open bank, rocky/mill shoulder, grove and overhang equivalents; no new meshes or terrain carve are introduced here.",
   "spawns": [
     {
       "order": 0,
@@ -29,6 +30,7 @@
       "order": 6,
       "species": "paddlenewt",
       "count": 2,
+      "habitat": "creek_edge",
       "centre": [
         -370.0,
         0.0,
@@ -41,6 +43,7 @@
       "order": 7,
       "species": "mosshell",
       "count": 1,
+      "habitat": "rock_overhang",
       "centre": [
         -380.0,
         0.0,
@@ -52,7 +55,8 @@
     {
       "order": 8,
       "species": "brooktail",
-      "count": 2,
+      "count": 1,
+      "habitat": "water_edge",
       "centre": [
         -360.0,
         0.0,
@@ -283,64 +287,43 @@
       "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~605m arc, 27m lateral, left side of the spine."
     },
     {
-      "order": 1017,
-      "species": "reedwing",
-      "count": 5,
-      "centre": [
-        -357.1,
-        0.0,
-        468.1
-      ],
-      "radius": 17.0,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~660m arc, 39m lateral, right side of the spine."
-    },
-    {
       "order": 1018,
       "species": "bramblebun",
-      "count": 3,
+      "count": 1,
+      "habitat": "open_basin",
       "centre": [
         -432.2,
         0.0,
         485.5
       ],
       "radius": 14.2,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~715m arc, 15m lateral, left side of the spine."
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. The old route-density cluster is the open-basin catch in Creek Hollow: one visible Bramblebun pulls a player a few metres off the direct mill/pond line instead of filling the basin with a swarm."
     },
     {
       "order": 1019,
-      "species": "mosshell",
-      "count": 4,
+      "species": "mudsnout",
+      "count": 1,
+      "habitat": "rocky_shoulder",
       "centre": [
         -345.0,
         0.0,
         595.0
       ],
       "radius": 15.6,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~770m arc, 27m lateral, right side of the spine. Nudged off the mill/footbridge footprint by hand -- see tools/_gen_band1_density.py's own OVERRIDES."
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. One Mudsnout holds the dry rocky shoulder above the mill/footbridge. This retains the hand-checked clearance from the crossing while giving the pocket a Ground catch that is not another starter species."
     },
     {
       "order": 1020,
       "species": "pipwing",
-      "count": 5,
+      "count": 1,
+      "habitat": "grove",
       "centre": [
         -383.7,
         0.0,
         597.0
       ],
       "radius": 17.0,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~825m arc, 39m lateral, left side of the spine."
-    },
-    {
-      "order": 1021,
-      "species": "reedwing",
-      "count": 3,
-      "centre": [
-        -308.0,
-        0.0,
-        583.1
-      ],
-      "radius": 14.2,
-      "_why_d1": "BAND1-D1-DENSITY. Owner directive 2026-08-22 (density comparison to Pokemon/Palworld/Valheim): route cluster at ~880m arc, 15m lateral, right side of the spine."
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. The small grove-side Pipwing is deliberately off the obvious water edge: it gives a player a different silhouette/type and a reason to circle the basin rather than catch everything directly beside the path."
     },
     {
       "order": 1022,
@@ -621,14 +604,15 @@
     {
       "order": 1045,
       "species": "brooktail",
-      "count": 4,
+      "count": 1,
+      "habitat": "far_water_edge",
       "centre": [
         -420.0,
         0.0,
         610.0
       ],
       "radius": 17.6,
-      "_why_d1": "BAND1-D1-DENSITY off-route habitat pocket. far shore of the pond, past the approved lush pocket -- a second pond-edge pull for a player who circles the water rather than crossing at the mill."
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. Far-shore Brooktail: an optional second water catch for a player who circles the pond instead of stopping at the mill. One individual preserves the pull without turning the shore into a swarm."
     },
     {
       "order": 1046,

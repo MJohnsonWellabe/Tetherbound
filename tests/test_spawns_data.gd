@@ -30,6 +30,11 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 
+const CREEK_HOLLOW_ORDERS := [6, 7, 8, 1018, 1019, 1020, 1045, 1900]
+const CREEK_HOLLOW_VISIBLE_POPULATION := 9
+const CREEK_HOLLOW_SPECIES := ["paddlenewt", "mosshell", "brooktail", "bramblebun", "mudsnout", "pipwing"]
+
+
 func _config() -> Dictionary:
 	return BAND_CONTENT.load_config(SPAWNS_PATH, "spawns")
 
@@ -173,6 +178,53 @@ func test_starter_species_never_appear_in_ordinary_wild_population_data() -> voi
 func test_the_respawn_delay_is_a_real_duration() -> void:
 	assert_true(float(_config().get("respawn_seconds", 0.0)) > 0.0,
 		"respawn_seconds must be positive; zero would put a beaten creature back on its feet mid-faint")
+
+
+# --- First-Hour Fun Rebuild: Creek Hollow -----------------------------------
+
+func test_creek_hollow_is_a_compact_multi_habitat_first_adventure() -> void:
+	# The relocated pond/mill valley is the first compact wild destination, not
+	# another corridor-density strip. These explicit order IDs are intentional:
+	# they preserve encounter_director's seeded placement while making the
+	# experience target reviewable without guessing from world co-ordinates.
+	var hollow_entries: Array[Dictionary] = []
+	for entry: Variant in _spawns():
+		var spawn: Dictionary = entry
+		var centre: Array = spawn.get("centre", [])
+		if centre.size() != 3:
+			continue
+		# The authored valley footprint, including the far-water loop and the
+		# optional west-bank hollow. This makes a later density pass adding an
+		# eleventh creature here fail rather than silently undoing this tuning.
+		var in_hollow := float(centre[0]) >= -520.0 and float(centre[0]) <= -300.0 \
+			and float(centre[2]) >= 460.0 and float(centre[2]) <= 640.0
+		if in_hollow and str(spawn.get("time", "")) == "" and (spawn.get("weather", []) as Array).is_empty():
+			hollow_entries.append(spawn)
+	assert_eq(hollow_entries.size(), CREEK_HOLLOW_ORDERS.size(),
+		"Creek Hollow lost an authored habitat pocket")
+
+	var visible_population := 0
+	var species: Array[String] = []
+	var habitats: Array[String] = []
+	var orders: Array[int] = []
+	for spawn: Dictionary in hollow_entries:
+		orders.append(int(spawn.get("order", -1)))
+		var id := str(spawn.get("species", ""))
+		if not species.has(id):
+			species.append(id)
+		var habitat := str(spawn.get("habitat", ""))
+		if habitat != "" and not habitats.has(habitat):
+			habitats.append(habitat)
+		visible_population += int(spawn.get("count", 0))
+
+	assert_eq(visible_population, CREEK_HOLLOW_VISIBLE_POPULATION,
+		"Creek Hollow should read as a compact 6-10-creature pocket in normal traversal")
+	assert_eq(orders, CREEK_HOLLOW_ORDERS,
+		"Creek Hollow's compact population must remain the authored habitat set, not a corridor spillover")
+	assert_eq(species, CREEK_HOLLOW_SPECIES,
+		"Creek Hollow must retain its six early catch choices across water, open, rock and grove")
+	for habitat: String in ["creek_edge", "water_edge", "rock_overhang", "open_basin", "rocky_shoulder", "grove", "far_water_edge"]:
+		assert_true(habitats.has(habitat), "Creek Hollow is missing its '%s' habitat opportunity" % habitat)
 
 
 # --- R5.3: spawn conditions ---------------------------------------------------
