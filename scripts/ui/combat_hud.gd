@@ -604,7 +604,14 @@ func _update_capture_reticle() -> void:
 
 	var resolving_now: bool = bool(_manager.call("is_resolving_catch"))
 	if resolving_now and not _was_resolving_catch:
-		_capture_reticle.call("play_contract", _last_reticle_screen_pos)
+		# The RESOLVED chance, not the last one the aim advertised -- see
+		# `combat_manager.gd::last_catch_chance()`. The contract is the one beat
+		# in the whole sequence that can tell the player what their placement
+		# was worth, and it was showing them the aim's dead-centre figure.
+		_capture_reticle.call(
+			"play_contract", _last_reticle_screen_pos,
+			float(_manager.call("last_catch_chance"))
+		)
 	_was_resolving_catch = resolving_now
 
 	if not bool(_manager.call("is_aiming")):
@@ -628,7 +635,14 @@ func _update_capture_reticle() -> void:
 
 	var screen_pos: Vector2 = camera.unproject_position(world_pos)
 	_last_reticle_screen_pos = screen_pos
-	_capture_reticle.call("update_target", screen_pos, chance, true)
+	# `locked` is the fourth argument and it is the point of this pass: the
+	# ring used to draw the same way, with the same percentage, whether the
+	# player was on the creature or pointing into the grass beside it. See
+	# `combat_manager.gd::catch_aim_is_locked()`.
+	_capture_reticle.call(
+		"update_target", screen_pos, chance, true,
+		bool(_manager.call("catch_aim_is_locked"))
+	)
 
 
 ## --- switching input (D32 §9.4, remapped by CONTROLLER-MAP) -----------------

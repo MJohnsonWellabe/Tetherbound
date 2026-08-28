@@ -101,7 +101,7 @@ theme_override_constants/separation = 30
 ; This separates persistent item shortcuts from the centred contextual verb;
 ; it does not change either action layer or any of their bindings.
 [node name="HotbarPanel" type="PanelContainer" parent="Root/BottomDock"]
-custom_minimum_size = Vector2(660, 0)
+custom_minimum_size = Vector2(524, 0)
 size_flags_horizontal = 8
 mouse_filter = 2
 
@@ -134,6 +134,16 @@ alignment = 1
 ; exactly. This does not touch which glyph a legend/hotbar row shows or
 ; `input_glyph.gd` itself (owned by `ralph/DPAD-COLLISION`) -- only the size
 ; text renders at when a glyph image is not the thing being drawn.
+; HUD-SCALE (owner playtest 2026-08-28, the SECOND "the hud on screen is way
+; too big"). Slot 112x180 -> 88x132, panel floor 660 -> 524, and the base font
+; 36 -> 26. GF-B-005's note below is still correct about the ORDER of the three
+; lines and about width being the tight axis; what it could not know is that
+; every size it was fitting to had been inflated 1.5x by a 0.667 content scale
+; the owner's 1920x1080 device does not have -- see `scripts/ui/hud_scale.gd`.
+; Three lines at 44 (icon) + 26 (badge) + 26 (count) plus leading fit 132, the
+; same way three lines at 64 + 36 + 36 fitted 180. Nothing is dropped and the
+; item still leads the badge by the same 1.7x.
+;
 ; Slot height 152 -> 180 on all five (GF-B-005). The slot now draws the ITEM
 ; ICON at `playground_hud.gd::HOTBAR_ICON_PX` (64, up from an inlined 28) on the
 ; top line, with the binding badge and the count under it -- the quick-bar
@@ -158,12 +168,12 @@ alignment = 1
 ; about 8px of slack at its current width. Height is free -- the same test
 ; measures 172px of clearance between this dock and the contextual prompt.
 [node name="Slot1" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 180)
+custom_minimum_size = Vector2(88, 132)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -173,12 +183,12 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot2" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 180)
+custom_minimum_size = Vector2(88, 132)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -188,12 +198,12 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot3" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 180)
+custom_minimum_size = Vector2(88, 132)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -203,12 +213,12 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot4" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 180)
+custom_minimum_size = Vector2(88, 132)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -218,12 +228,12 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot5" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(112, 180)
+custom_minimum_size = Vector2(88, 132)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -246,11 +256,15 @@ text = ""
 ; just under the same ~16px arm's-length floor `HUD_READABLE_FONT_SIZE`
 ; (`playground_hud.gd`) already raised every other label on this HUD to
 ; clear.
+; HUD-SCALE: 36 -> 32, `playground_hud.gd::HUD_SENTENCE_FONT_SIZE`. This line
+; is the one piece of HUD text that is genuinely a sentence, so it keeps the
+; larger of the two tiers; the note above is right that it must not be the
+; smallest thing on screen, and it still is not.
 [node name="Prompt" type="RichTextLabel" parent="Root/BottomDock"]
-custom_minimum_size = Vector2(800, 0)
+custom_minimum_size = Vector2(640, 0)
 size_flags_horizontal = 4
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 32
 horizontal_alignment = 1
 bbcode_enabled = true
 fit_content = true
