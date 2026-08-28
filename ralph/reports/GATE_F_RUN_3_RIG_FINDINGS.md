@@ -10,11 +10,15 @@ captured 8% of what it was asked to and four of Phase B's findings turned out to
 be the instrument; the only defence against repeating that is to say, of every
 finding, which of the two it is about — before anyone has to guess.
 
-Five of the seven below were found by running; two were found by reading the
+Six of the eleven below were found by running; five were found by reading the
 artefacts of segments that had already produced wrong answers.
 
-**If only one of these is read, read RIG-7 — it contains RIG-3, RIG-4, RIG-5 and
-RIG-6 as instances.**
+**If only one of these is read, read RIG-7 — it contains RIG-3, RIG-4, RIG-5,
+RIG-6 and RIG-11 as instances.**
+
+**If a second is read, read RIG-11.** It is the reason there is not one
+`combat_start` event in this entire run, and the reason the finding that looked
+most like a dead end in the chapter turned out to be ours.
 
 ---
 
@@ -351,18 +355,193 @@ scripts.
 
 ---
 
-## What these seven have in common
+## RIG-8 — the instrument cannot see either of the two things that decide an `interact`
 
-None of them is about Tetherbound. Three of them — RIG-1, RIG-2, RIG-5 — would
-have been read, in a Phase B that saw only the artefacts, as evidence about the
-game: 26 objectives that never advanced, a chapter too expensive to play, and a
-village with a spot you cannot walk out of. All three are the instrument.
+**Severity: BLOCKER for evidence quality.** Not fixed.
 
-RIG-3 and RIG-4 are quieter and the same shape: an instrument that does not
-measure what it says it measures, and an instrument that keeps recording after
-it has stopped pointing at anything.
+S02's most consequential FAIL was a press that did nothing. Reconstructing why,
+from the artefacts alone, turned out to be impossible — and the two facts that
+would have settled it in one row each are both absent from every event this run
+recorded.
 
-RIG-7 is the one to carry forward, because it is not really seven findings. It
+`scripts/debug/gate_f_probe.gd` records no:
+
+- **deployed-creature state.** `encounter_director.gd::_engageable()` returns
+  null when no creature is out, *before it measures any distance*, so "is a
+  creature deployed" is the first gate on every fight in the game. The probe's
+  `active_creature()` reads `Game.party.active()` — the party's active
+  **member**, not the body standing in the world. S02's telemetry therefore says
+  `"active_creature": "Moss"` on all 118 rows, and that is equally consistent
+  with a creature standing beside the player and with no creature deployed at
+  all. The distinguishing call, `ally_body()`, is public and never asked.
+- **interaction prompt.** The single most informative thing on screen at the
+  moment of a press is the line the game is offering, and
+  `interaction_arbiter.gd::prompt()` / `winning_provider()` are both public.
+  Neither is in `input_state`, which carries `owner`, `focus_text`,
+  `combat_running`, `combat_aiming` and `mouse_mode`. A press that lands on the
+  wrong provider, or on a non-actionable status line, is indistinguishable in
+  the record from a press the game ignored.
+
+The cost is on the record. `DIAG-S02-ENCOUNTER/FINDING.md` had to drive the
+entire production opening in a purpose-built probe to establish something a
+two-field addition to `input_state` would have shown in S02's own `events.jsonl`:
+that the encounter works, and that what was missing was a deployed creature. And
+even that probe cannot say which of the harness's own deviations left S02
+without one twenty seconds after `adopt_starter()` demonstrably built it, because
+the segment that would have to answer has already been run and cannot be
+re-interrogated.
+
+**A re-run of S02 is not worth taking until this is closed**, because it would
+produce the same unreadable record.
+
+---
+
+## RIG-9 — a logic lane re-armed the §H recorder and marked itself INCOMPLETE
+
+**Severity: SHIP for evidence quality.** Fixed, commit `4e23c92`.
+
+`record_hz` is zeroed for a logic lane when the segment loads — the evidence
+split doing its job. `_step_record_start` then set `_record_hz` straight from its
+own args and re-armed the recorder anyway.
+
+S05 is where it showed. The segment ran all 76 of its steps — 54 PASS, 9 FAIL,
+13 DELEGATED, no derail, no harness error — and was written out **INCOMPLETE**:
+
+```
+46 continuous frames were planned and not written:
+  {"headless: this process has no display server and cannot render a frame": 46}
+```
+
+on a lane that had undertaken to take none. That is the outcome §H.1 forbids in
+its own words: a logic-lane segment *"is judged against what ITS LANE owes, and
+is not 'capture-incomplete forever' for a frame it never undertook to take."*
+S06, S07, S08 and S09 each declare the same two windows and would each have
+inherited it.
+
+The windows are now handed over on the same terms as a prescribed §G frame —
+their own DELEGATED verdict, a `frames.delegated_windows` ledger in
+`INVENTORY.json`, and a line in `DELEGATED.md` naming the window, its rate and
+its step. Debt transferred and recorded, never erased: the pre-flight also
+refuses a logic lane whose named capture lane opens no window of its own, which
+is the guarantee the §G ids already had and these did not.
+
+---
+
+## RIG-10 — `save_out` promotes whatever is in the slot, including the save the segment was handed
+
+**Severity: BLOCKER for evidence quality.** Not fixed.
+
+`S03-exit.json`, `S04-exit.json` and `S05-exit.json` are **byte-identical**,
+md5 `62344f09b811`. Two segments in a row handed on the save they had been given
+and reported it as a PASS.
+
+Neither S04 nor S05 ever reached the Save tab, and both said so in their own
+notes:
+
+```
+S04-64  FAIL game_menu did not open the pause shell:
+        context narrative_modal -> narrative_modal (owner=DialoguePanel)
+S04-66  input_context=narrative_modal (wanted menu_save)          FAIL
+S05-65  input_context=menu_backpack (wanted menu_save)            FAIL
+```
+
+and then:
+
+```
+S04-69  slot 4 copied to saves/S04-exit.json (1415100 bytes)      PASS
+S05-69  slot 4 copied to saves/S05-exit.json (1415100 bytes)      PASS
+```
+
+`_step_save_out` checks only that the slot **file exists**:
+
+```gdscript
+if not FileAccess.file_exists(src):
+    return "FAIL slot %d has no file at %s -- did the Save tab actually write?" % [slot, src]
+```
+
+That check can never fire, because `seed_save` put the previous segment's file in
+that slot at step 3 of the same segment. The question it was written to ask —
+*did the Save tab actually write?* — is exactly the question it does not ask.
+
+This is CD-1's `file: null` PASS wearing different clothes: an artefact that
+exists, is named for this segment, and was produced by a different one. Its
+consequence is structural rather than cosmetic — **S05 did not start from the
+world S04 left; it started from the world S03 left**, and §B's whole save-handoff
+design, which exists so that a blocker restarts at the last gate rather than the
+chapter, is silently not in force.
+
+The fix is a hash or mtime taken at `seed_save` and compared at `save_out`, with
+a FAIL when the slot is unchanged. It is **not** taken during this run: with
+RIG-4 still open (a `seed_save` whose source is missing does not stop the
+segment), failing the handoff would leave every following segment running on the
+title screen, which is worse evidence, not better. What is taken instead is
+`HANDOFF_PROVENANCE.md`, which states for every segment which save it actually
+entered from.
+
+---
+
+## RIG-11 — no journey segment ever calls its creature out, so no journey segment after S02 can fight
+
+**Severity: BLOCKER.** Not fixed. **This is the largest single evidence loss in
+the run.**
+
+There is not one `combat_start` event in this run. Not a fight that went badly —
+no fight at all, across five completed segments including an entire tournament:
+
+| segment | events | `combat_start` |
+|---|---|---|
+| S01 | 22 | 0 |
+| S02 | 118 | 0 |
+| S03 | 397 | 0 |
+| S04 | 151 | 0 |
+| S05 | 131 | 0 |
+
+The harness does emit that type, on an edge of `combat_running`
+(`operator_harness.gd:4748`), so the absence is real rather than an instrument
+blind spot.
+
+The mechanism is fully measured in `DIAG-S02-ENCOUNTER/FINDING.md`:
+
+1. `_engageable()` returns null when no creature is deployed, before distance.
+2. A load restores the party and deploys **nothing** — measured on S02's own exit
+   save through `save_game.gd::load_slot()`: party 1, `ally_body()` null, zero
+   `AllyCreature` nodes in the tree. `_sync_active_creature()` declines to summon
+   when nothing is out, and says so: *"Nothing out to swap; the new active
+   creature comes out on next recall."*
+3. Every journey segment from S03 on begins with a load.
+4. **`creature_recall` appears zero times in S01–S10.** It appears in `X01`,
+   `X02`, `X03`, `X03C` and `X06`.
+
+The game is not hiding this. With a party and no deployed body it shows a
+**non-actionable** line naming the button — `[RB]  Call out Moss` — and
+`interact`, which is X, correctly does nothing. The harness pressed X.
+
+So every combat, catch, party-size, gate-flag and objective assertion from S03
+onward is a statement about the rig. S04's tournament could not have been won by
+any input; S05's South Bridge fight could not have been fought. **`tournament_won`
+and `south_bridge_open` being unset are not findings about the chapter.**
+
+This is RIG-7's thesis in its most expensive instance: the primitive exists, is
+correct, and is never called.
+
+---
+
+## What these eleven have in common
+
+None of them is about Tetherbound. Four of them — RIG-1, RIG-2, RIG-5 and
+RIG-11 — would have been read, in a Phase B that saw only the artefacts, as
+evidence about the game: 26 objectives that never advanced, a chapter too
+expensive to play, a village with a spot you cannot walk out of, and an opening
+whose first fight never happens followed by a tournament nobody wins. All four
+are the instrument.
+
+RIG-3, RIG-4, RIG-8 and RIG-10 are quieter and the same shape: an instrument that
+does not measure what it says it measures, an instrument that keeps recording
+after it has stopped pointing at anything, an instrument that cannot see the two
+values that decide the verb it presses most, and an instrument that certifies a
+handoff it did not perform.
+
+RIG-7 is the one to carry forward, because it is not really eleven findings. It
 is one, and it is not "the rig is broken" — the rig is in good repair. Every
 primitive named in that table works, is documented with the defect it was built
 for, and is exercised by a passing self-check.
@@ -373,6 +552,11 @@ before the fixes existed. From Phase B's side of the wall a fix nobody invokes i
 indistinguishable from a fix nobody made — and S03's ledger, 64 failures of which
 58 are one unclosed panel, is exactly what that looks like when it arrives as
 evidence.
+
+RIG-11 is the same sentence with a larger number attached. `creature_recall` is
+not a primitive the rig lacks; it is one five study segments use correctly and no
+journey segment uses at all. One press, in ten places, is the difference between
+a run that can evidence the chapter's combat and a run that cannot.
 
 The corollary is the thing to be careful about next time. Run 1 was judged by
 what fraction of the backlog it recaptured. Round 2 answered by improving the
