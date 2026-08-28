@@ -1161,6 +1161,21 @@ const MAX_BUILT := 24
 ## away rather than a silent failure here.
 const PLACED_GROUP := "placed_building"
 const BUILDING_ID_META := "building_id"
+## The group any placed structure may put itself in to say "nothing grows on
+## the ground I am standing on", carrying its own radius in metres as
+## `CLEAR_RADIUS_META`. `village.gd` and `burrow_warrens.gd` use it.
+##
+## WHY A GROUP RATHER THAN MORE CONFIG. `vegetation.json`'s `footprints` is the
+## right home for a building's footprint and it is the list this file reads
+## first -- but it is hashed into `scatter_bake.gd::config_fingerprint`, so
+## adding an entry to it invalidates the committed scatter bake and costs a
+## re-bake of 256 binary region files. That is the correct price for the
+## SCATTER's own placements and the wrong one for a structure that only the
+## runtime field grows through. A structure that knows its own extents can say
+## so from its own code instead, which also covers everything a baked list
+## cannot: geometry built at load, and geometry the player builds.
+const CLEAR_GROUP := "grass_clear"
+const CLEAR_RADIUS_META := "grass_clear_radius"
 
 ## The authored footprints, resolved once. `scatter_rules.gd` merges them per
 ## band and caches; this only keeps the flattened (x, z, radius) form.
@@ -1206,6 +1221,21 @@ func _visible_footprints(centre: Vector3) -> PackedVector3Array:
 	for spot: Vector3 in authored_footprints():
 		if Vector2(spot.x - centre.x, spot.y - centre.z).length() <= reach + spot.z:
 			found.append(spot)
+	# Structures that declared their own footprint at build time -- village
+	# buildings with a floor, the Warrens' approach apron, anything else that
+	# knows its own extents. See CLEAR_GROUP above for why these are not in
+	# `vegetation.json` with the authored seven.
+	if is_inside_tree():
+		for node: Node in get_tree().get_nodes_in_group(CLEAR_GROUP):
+			var structure := node as Node3D
+			if structure == null or not is_instance_valid(structure):
+				continue
+			var radius := float(structure.get_meta(CLEAR_RADIUS_META, 0.0))
+			if radius <= 0.0:
+				continue
+			var here := structure.global_position
+			if Vector2(here.x - centre.x, here.z - centre.z).length() <= reach + radius:
+				found.append(Vector3(here.x, here.z, radius))
 	var ids: Array = cfg.get("built_clear_ids", ["floor"])
 	var piece_radius := float(cfg.get("built_piece_radius", 1.45))
 	if is_inside_tree() and piece_radius > 0.0 and not ids.is_empty():

@@ -59,16 +59,36 @@ const FOV := 70.0
 const EYE_UP := 1.5
 const EYE_BACK := 3.5
 
-## name, world XZ, and which way the camera faces (it stands `EYE_BACK` back
-## along this and looks down the length of it). `nofield` marks the site that
-## also gets the attribution exposure.
+## One entry per site: name, world XZ, which way the camera faces (it stands
+## `EYE_BACK` back along this and looks down its length), the floor height to
+## stand the camera on, and whether the site also gets the attribution
+## exposure.
+##
+## `floor_y` is NAN for anything whose floor IS the terrain, which is most of
+## them -- the camera then sits on the height the heightfield reports.  It is a
+## number for a structure whose floor is BUILT above the ground, and the
+## stronghold is why the field exists: its floor is at y 8.56 while the terrain
+## under it is at -0.65, so a camera seated on the terrain stands nine metres
+## below the room, inside the foundation void, photographing ground no player
+## will ever see and reporting it as an interior. The first run of this tool
+## did exactly that.
 const SITES := [
-	["grandpa-house", Vector2(-22.0, -16.0), Vector2(1.0, 0.0), true],
-	["inn", Vector2(-1.5, -9.0), Vector2(1.0, 0.0), false],
-	["workshop", Vector2(2.0, 2.0), Vector2(1.0, 0.0), false],
-	["warrens-mouth", Vector2(-357.0, 2610.0), Vector2(0.0, 1.0), false],
-	["relay-station", Vector2(350.0, 3760.0), Vector2(0.0, 1.0), false],
-	["stronghold", Vector2(0.0, 7560.0), Vector2(1.0, 0.0), false],
+	{"name": "grandpa-house", "at": Vector2(-22.0, -16.0), "face": Vector2(1.0, 0.0),
+		"floor_y": NAN, "attribute": true},
+	{"name": "inn", "at": Vector2(-1.5, -9.0), "face": Vector2(1.0, 0.0),
+		"floor_y": NAN, "attribute": false},
+	{"name": "workshop", "at": Vector2(2.0, 2.0), "face": Vector2(1.0, 0.0),
+		"floor_y": NAN, "attribute": true},
+	{"name": "cottage-a", "at": Vector2(18.0, -2.0), "face": Vector2(1.0, 0.0),
+		"floor_y": NAN, "attribute": false},
+	{"name": "cottage-b", "at": Vector2(21.0, -14.0), "face": Vector2(1.0, 0.0),
+		"floor_y": NAN, "attribute": false},
+	{"name": "warrens-mouth", "at": Vector2(-357.0, 2610.0), "face": Vector2(0.0, 1.0),
+		"floor_y": NAN, "attribute": false},
+	{"name": "relay-station", "at": Vector2(350.0, 3760.0), "face": Vector2(0.0, 1.0),
+		"floor_y": NAN, "attribute": false},
+	{"name": "stronghold", "at": Vector2(0.0, 7560.0), "face": Vector2(1.0, 0.0),
+		"floor_y": 8.56, "attribute": true},
 ]
 
 var _field: RefCounted = null
@@ -141,8 +161,8 @@ func _run() -> void:
 		return
 
 	for entry: Variant in SITES:
-		var site: Array = entry
-		if only != "" and not (only in str(site[0])):
+		var site: Dictionary = entry
+		if only != "" and not (only in str(site["name"])):
 			continue
 		await _shoot(site)
 
@@ -151,21 +171,21 @@ func _run() -> void:
 	quit(0)
 
 
-func _shoot(site: Array) -> void:
-	var name: String = str(site[0])
-	var at: Vector2 = site[1]
-	var facing: Vector2 = (site[2] as Vector2).normalized()
-	var attribute: bool = bool(site[3])
+func _shoot(site: Dictionary) -> void:
+	var name: String = str(site["name"])
+	var at: Vector2 = site["at"]
+	var facing: Vector2 = (site["face"] as Vector2).normalized()
+	var floor_y: float = float(site["floor_y"])
 
 	# Two seatings, the way every probe in this repo does it: the analytic
-	# height first so Terrain3D has somewhere to stream to, then the surface
-	# that actually arrived.
-	_place(at, _field.height_at(at.x, at.y))
-	_frame(at, facing)
+	# height first so Terrain3D has somewhere to stream to, then again once the
+	# world around the seat has arrived.
+	_place(at)
+	_frame(at, facing, floor_y)
 	for i in ARRIVE_FRAMES:
 		await physics_frame
-	_place(at, _field.height_at(at.x, at.y))
-	_frame(at, facing)
+	_place(at)
+	_frame(at, facing, floor_y)
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -173,14 +193,14 @@ func _shoot(site: Array) -> void:
 	await _expose("%s-before" % name)
 	_set_built(true)
 	await _expose("%s-after" % name)
-	if attribute:
+	if bool(site["attribute"]):
 		_show_field(false)
 		for i in 8:
 			await physics_frame
 		await _expose("%s-nofield" % name)
 		_show_field(true)
-	print("  %-16s at (%.0f, %.0f), ground %.2f, %d footprint(s) in reach" % [
-		name, at.x, at.y, _field.height_at(at.x, at.y), _built_count()])
+	print("  %-16s at (%.0f, %.0f), floor %.2f, %d footprint(s) in reach" % [
+		name, at.x, at.y, _floor_of(at, floor_y), _built_count()])
 
 
 ## Force the exclusion off (the build the owner played) or back to whatever the
@@ -242,18 +262,28 @@ func _expose(name: String) -> void:
 		print("FAIL %s: save_png" % name)
 
 
-func _place(at: Vector2, ground: float) -> void:
-	_player.global_position = Vector3(at.x, ground + 0.4, at.y)
+## The player is carried to every site because the terrain, the encounter
+## director and the vegetation streamer all populate around their POSITION, not
+## around the camera's. Seated on the terrain even where the camera is not: the
+## player is hidden and only needs to be in the right place.
+func _place(at: Vector2) -> void:
+	_player.global_position = Vector3(at.x, float(_field.height_at(at.x, at.y)) + 0.4, at.y)
 	if _player is CharacterBody3D:
 		(_player as CharacterBody3D).velocity = Vector3.ZERO
 
 
 ## The camera stands back along `facing` and looks down its length at the floor.
-## Height comes from the ANALYTIC heightfield, not from a downward raycast: a
-## ray cast from above lands on the roof of the building this tool exists to
-## look inside.
-func _frame(at: Vector2, facing: Vector2) -> void:
-	var ground: float = _field.height_at(at.x, at.y)
+## Height comes from the ANALYTIC heightfield rather than a downward raycast: a
+## ray cast from above lands on the ROOF of the building this tool exists to
+## look inside. A site whose floor is built above the terrain overrides it.
+func _frame(at: Vector2, facing: Vector2, floor_y: float) -> void:
+	var ground := _floor_of(at, floor_y)
 	var eye := at - facing * EYE_BACK
 	_camera.global_position = Vector3(eye.x, ground + EYE_UP, eye.y)
 	_camera.look_at(Vector3(at.x, ground + 0.15, at.y), Vector3.UP)
+
+
+func _floor_of(at: Vector2, floor_y: float) -> float:
+	if is_nan(floor_y):
+		return float(_field.height_at(at.x, at.y))
+	return floor_y

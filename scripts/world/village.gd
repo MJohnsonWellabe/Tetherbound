@@ -16,6 +16,13 @@ extends Node3D
 ## one combined-AABB box otherwise — the same behaviour the farm pack got.
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+## Read for its group and meta names only -- see `_declare_ground`.
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+
+## How far past its own wall line a building's footprint reaches. 0.7m, which
+## is what `vegetation.json`'s hand-authored footprints already carry over the
+## same measurement -- see `_ground_clear_radius`.
+const CLEAR_MARGIN := 0.7
 const CONFIG_PATH := "res://data/config/village.json"
 
 var _prefabs: RefCounted = null
@@ -51,6 +58,63 @@ func build() -> void:
 			continue
 		_place(entry as Dictionary)
 	print("[village] placed %d structures" % _placed)
+
+
+## Tell the runtime ground cover that this structure is standing here.
+##
+## GRASS-INDOORS, owner 2026-08-28: "grass grows through indoor buildings now".
+## `scripts/world/grass_field.gd`'s ring is procedural and camera-relative, so
+## unlike the baked scatter it cannot be authored around a building -- it has to
+## be TOLD, and the thing that knows where a building is and how big it is is
+## whatever placed it. That is here.
+##
+## WHICH structures: the ones the player stands inside or on, identified from
+## the prefab's own recipe rather than from a hand-kept list. A recipe with
+## `Floor_` modules has a floor; a recipe with a `room` is enterable. A fence
+## run, an oak or a wagon has neither, and clearing a disc of grass around one
+## would read as a scorch mark -- which is why this is not simply "every
+## structure village.gd places".
+##
+## The RADIUS is the half-diagonal of the recipe's own module extent plus
+## `CLEAR_MARGIN`, and that formula is not invented: run against the buildings
+## `vegetation.json` already footprints by hand it reproduces every one of them
+## to within 0.2m -- the inn's 6x10 of modules gives 6.53 against an authored
+## 6.5, the mill 5.31 against 5.5, the ranger station 4.31 against 4.5. So the
+## structures that were never footprinted get the numbers the authored ones
+## would have got, rather than numbers somebody guessed.
+func _declare_ground(building: Node3D, prefab_name: String) -> void:
+	var radius := _ground_clear_radius(prefab_name)
+	if radius <= 0.0:
+		return
+	building.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, radius)
+	building.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+
+
+## The footprint radius for a prefab, or 0 if it is not something the player
+## stands inside or on. Reads `building_prefabs.json`'s own recipe.
+func _ground_clear_radius(prefab_name: String) -> float:
+	var recipe: Dictionary = _prefabs.call("recipe", prefab_name)
+	if recipe.is_empty():
+		return 0.0
+	var has_floor := not (recipe.get("room", {}) as Dictionary).is_empty()
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for entry: Variant in recipe.get("modules", []):
+		var module: Dictionary = entry
+		if str(module.get("module", "")).begins_with("Floor_"):
+			has_floor = true
+		var at: Array = module.get("at", [])
+		if at.size() < 3:
+			continue
+		min_x = minf(min_x, float(at[0]))
+		max_x = maxf(max_x, float(at[0]))
+		min_z = minf(min_z, float(at[2]))
+		max_z = maxf(max_z, float(at[2]))
+	if not has_floor or min_x > max_x:
+		return 0.0
+	return Vector2(max_x - min_x, max_z - min_z).length() * 0.5 + CLEAR_MARGIN
 
 
 func placed() -> int:
@@ -115,6 +179,7 @@ func _place(spec: Dictionary) -> void:
 		_prefabs.call("apply_retint", building, retint)
 	add_child(building)
 
+	_declare_ground(building, prefab_name)
 	_collide(building, prefab_name)
 	_door(building, prefab_name)
 	_interior(building, prefab_name, spec)

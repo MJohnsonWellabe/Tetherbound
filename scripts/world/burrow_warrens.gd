@@ -44,6 +44,15 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+## Read for its group and meta names only -- see `_build_approach_apron`.
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+
+## How far past the approach ramp's own edge its ground clearance reaches. The
+## same 0.7m `village.gd` gives a building over its wall line, for the same
+## reason: the last hand's-breadth of grass at a paved edge is grass leaning
+## ON the paving, not grass growing through it.
+const APRON_CLEAR_MARGIN := 0.7
+
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 ## BAND2-63-WARRENS. The above-ground prop placer, reused underground for the
 ## cave's Team Tether dressing -- see `_build_dressing()`.
@@ -457,6 +466,23 @@ func _build_approach_apron() -> void:
 		var top: float = lerpf(_floor_y, end_local, t)
 		_box(Vector3(width, _skirt, run / float(steps) + 0.15),
 			Vector3(0.0, top - _skirt * 0.5, z), _floor_colour())
+
+	# GRASS-INDOORS, owner 2026-08-28. The runtime ground cover
+	# (`scripts/world/grass_field.gd`) is procedural and camera-relative, so it
+	# cannot be authored around placed geometry the way the baked scatter is --
+	# it grew straight up through these steps, on the one approach every player
+	# who enters the Warrens walks down. It has to be told, and this function is
+	# the only thing that knows where the ramp is and how long it runs, so it
+	# tells it here rather than somebody transcribing the numbers into a config.
+	# The marker is a bare Node3D at the ramp's own midpoint, because the ramp
+	# itself is ten separate boxes and the field wants one circle.
+	var apron := Node3D.new()
+	apron.name = "ApronGround"
+	apron.position = Vector3(0.0, 0.0, outer_z - run * 0.5)
+	add_child(apron)
+	apron.set_meta(GRASS_FIELD.CLEAR_RADIUS_META,
+			Vector2(width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
+	apron.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 
 
 func _build_lights() -> void:
