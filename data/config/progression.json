@@ -75,14 +75,11 @@
     "_comment": "D47. How many raw stat points one creature may ever gain from elixirs, per stat. The cap is what keeps a permanent booster a prize rather than a grind -- uncapped, coins plus patience convert straight into an arbitrarily strong creature, which is the outcome D37 refused when it kept individuality rolls out of the player's hands. 24 is roughly a handful of levels' worth on a mid-game stat: worth hunting for, never a substitute for levelling. TUNABLE.",
     "cap_per_stat": 24
   },
-  "_comment_gateb_home": "GATEB-FLAGS (68-CHAPTER/17-RG18). What counts as 'a home' for the two building-owned CONTRACT flags data/progression/objectives.json's tournament ladder left unwired -- home_built, home_materials_gathered. Read by scripts/build/home_progress.gd, which explains the reasoning in full; the short version is 'the tutorial camp, enclosed by the smallest room a player would naturally build around it'. required_pieces is the ONE number that decides both flags: home_built is met once GameState.placed_buildings holds at least this many of each id, and home_materials_gathered's threshold is these same pieces' own data/items/buildables.json costs, summed -- never a second hand-typed figure. TUNABLE.",
+  "_comment_gateb_home": "FIRST-HOUR-FUN. The opening teaches a useful campsite, not general house construction. The existing camp supplies the physical campfire and player bedroll; a Creature Bed is tracked separately for the team, and the workbench is the preparation payoff. `required_pieces` therefore names only the camp and workbench. scripts/build/home_progress.gd derives both the material threshold and completion flag from this one table, so the gather step stays proportional to the actual campsite rather than silently retaining a roof-and-walls grind. TUNABLE.",
   "home": {
     "required_pieces": {
       "camp": 1,
-      "floor": 1,
-      "wall": 1,
-      "roof": 1,
-      "door": 1
+      "workbench": 1
     }
   }
 }

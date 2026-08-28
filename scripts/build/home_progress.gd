@@ -14,14 +14,10 @@ extends RefCounted
 ## first, camp second, whichever) answers the question the same way live
 ## placement does.
 ##
-## The rule: a home is the tutorial camp -- fire + bedroll, already the
-## literal sleep spot (`camp.gd::_on_rest`) the very next objective asks the
-## player to use -- enclosed by the smallest room a player would naturally
-## build around it: one floor tile, one wall, a roof, and a usable door.
-## That is more than a campfire alone (which is why `home_built` is not just
-## "has a camp"), short of a fully sealed four-wall box (which would need
-## the adjacency framework this file exists to avoid), and it is exactly
-## the piece set `buildables.json`'s own `structures` tab already offers.
+## The rule: a home is the tutorial campsite -- the existing `camp` gives the
+## player a physical fire and bedroll, and the workbench turns nearby gathering
+## into more orbs and useful preparation. Floors, walls, roofs and doors stay
+## available for players who enjoy building, but are never an opening gate.
 ##
 ## `data/config/progression.json`'s `home.required_pieces` is the ONE place
 ## that count lives. `materials_threshold()` below sums those same pieces'

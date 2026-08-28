@@ -43,16 +43,16 @@
     {
       "id": "tournament_gather_materials",
       "flag_id": "home_materials_gathered",
-      "label": "Gather wood and stone for a home.",
-      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush.",
-      "_comment": "CONTRACT flag. Tam/the Quarry Foreman already narrate the WHY (OF30/OW9, data/dialogue/village.json) -- this is the WHAT, set once the player holds enough of the baseline materials the next build step (a home) actually costs."
+      "label": "Gather materials for your campsite.",
+      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush. Your camp and workbench make more team preparation possible.",
+      "_comment": "FIRST-HOUR-FUN. This threshold is derived from the actual camp and workbench costs by home_progress.gd. Gathering is taught as preparation for the team, never as a detached house-building chore."
     },
     {
       "id": "tournament_build_home",
       "flag_id": "home_built",
-      "label": "Build a small home of your own.",
-      "how": "Select the hammer on the hotbar and {interact} to open Build. A camp, a floor, a wall, a roof and a door.",
-      "_comment": "CONTRACT flag. The smallest coherent completion rule (RG18) is the owning building lane's call -- a placed `camp` plus enough structure to read as 'a home', not a second housing-validation system authored here. The `how` line's piece list is `data/config/progression.json`'s `home.required_pieces` said in words; home_progress.gd reads the config and this line describes it, so a change there is a change to one sentence here rather than to a second rule. \"Select the hammer and Interact\" is the pad's ONLY route into build mode (CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1) and half of what used to break it is already fixed on main -- the hammer no longer forfeits the button to a non-actionable status line (tests/test_hammer_keeps_the_interact_button.gd). The other half is owner directive 2026-08-23 section 3, \"Build wins while the hammer is out\", which moves a DEPLOYED creature's \"Put away\" offer off Interact for the duration; that is the Gate B / OP23-FIXPACK lane's to land. This sentence is true today with nothing deployed and true always once that lands. If that ruling were ever reversed, this is the line to re-word."
+      "label": "Make a campsite for your team.",
+      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Camp, then a Workbench for Orbs and equipment.",
+      "_comment": "FIRST-HOUR-FUN. `home_built` now means the existing camp plus a workbench, as configured in progression.json. It deliberately does not demand floors, walls, roofs or doors: the opening needs a fast useful camp, not an architecture class."
     },
     {
       "id": "tournament_build_creature_beds",

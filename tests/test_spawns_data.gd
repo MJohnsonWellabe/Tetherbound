@@ -158,6 +158,16 @@ func test_no_evolved_form_spawns_wild() -> void:
 			"'%s' is an evolved form and spawns wild; evolutions are earned, not encountered (D20)" % id)
 
 
+func test_starter_species_never_appear_in_ordinary_wild_population_data() -> void:
+	# The opening choice has to stay meaningful. This deliberately examines the
+	# merged outdoor population table only: authored trainer teams and a future
+	# story encounter are not ordinary wild population entries.
+	var starters := ["terrapup", "ripplet", "galewisp"]
+	for id: String in _spawned_species():
+		assert_false(starters.has(id),
+			"'%s' is an opening starter and must not appear in ordinary wild population data" % id)
+
+
 # --- respawn -----------------------------------------------------------------
 
 func test_the_respawn_delay_is_a_real_duration() -> void:
