@@ -1,0 +1,162 @@
+# gate-f-run-20260828T183531Z is INCOMPLETE
+
+- 70 of 70 prescribed frame(s) exist nowhere in this run directory:
+  - GF-01-TITLE-01  (owed by: -; delegated: S01 -> S01C)
+  - GF-02-START-01  (owed by: -; delegated: S02 -> S02C)
+  - GF-02-START-02  (owed by: -; delegated: S02 -> S02C)
+  - GF-02-START-03  (owed by: -; delegated: S02 -> S02C)
+  - GF-03-VILLAGE-01  (owed by: -; delegated: S02 -> S02C)
+  - GF-03-VILLAGE-02  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-04-TOURN-01  (owed by: -; delegated: S04 -> S04C)
+  - GF-04-TOURN-02  (owed by: -; delegated: S04 -> S04C)
+  - GF-04-TOURN-03  (owed by: -; delegated: S04 -> S04C)
+  - GF-05-MEADOW-01  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-06-POND-01  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-06-POND-02  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-07-BRIDGE-01  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-07-BRIDGE-02  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-14-COMBAT-01  (owed by: -; delegated: S02 -> S02C)
+  - GF-14-COMBAT-02  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-14-COMBAT-03  (owed by: -; delegated: S04 -> S04C)
+  - GF-14-COMBAT-04a  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-14-COMBAT-09a  (owed by: -; delegated: S04 -> S04C)
+  - GF-14-COMBAT-13a  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-15-CATCH-01  (owed by: -; delegated: S02 -> S02C)
+  - GF-15-CATCH-02  (owed by: -; delegated: S02 -> S02C)
+  - GF-18-MAP-01  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-18-MAP-03  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-19-UI-08a  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - GF-19-UI-10  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-20-NIGHT-01  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-20-NIGHT-02  (owed by: -; delegated: S03 -> S03C, S03-superseded-1 -> S03C)
+  - GF-21-WEATHER-01  (owed by: -; delegated: S02 -> S02C)
+  - GF-21-WEATHER-02  (owed by: -; delegated: S05 -> S05C, S05-superseded-2 -> S05C)
+  - S04-SEQ-final-000  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-001  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-002  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-003  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-004  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-005  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-006  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-007  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-008  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-009  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-010  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-011  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-012  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-013  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-014  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-015  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-016  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-017  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-018  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-019  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-020  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-021  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-022  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-023  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-024  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-025  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-026  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-027  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-028  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-029  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-030  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-031  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-032  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-033  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-034  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-035  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-036  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-037  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-038  (owed by: -; delegated: S04 -> S04C)
+  - S04-SEQ-final-039  (owed by: -; delegated: S04 -> S04C)
+- UNPAID DELEGATION: S01 handed GF-01-TITLE-01 to S01C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-02-START-01 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-02-START-02 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-02-START-03 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-03-VILLAGE-01 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-03-VILLAGE-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-03-VILLAGE-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed GF-04-TOURN-01 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed GF-04-TOURN-02 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed GF-04-TOURN-03 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-05-MEADOW-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-05-MEADOW-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-06-POND-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-06-POND-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-06-POND-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-06-POND-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-07-BRIDGE-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-07-BRIDGE-01 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-07-BRIDGE-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-07-BRIDGE-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-14-COMBAT-01 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-14-COMBAT-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-14-COMBAT-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed GF-14-COMBAT-03 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-14-COMBAT-04a to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-14-COMBAT-04a to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed GF-14-COMBAT-09a to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-14-COMBAT-13a to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-14-COMBAT-13a to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-15-CATCH-01 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-15-CATCH-02 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-18-MAP-01 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-18-MAP-01 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-18-MAP-03 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-18-MAP-03 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-19-UI-08a to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-19-UI-08a to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-19-UI-10 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-19-UI-10 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-20-NIGHT-01 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-20-NIGHT-01 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03 handed GF-20-NIGHT-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S03-superseded-1 handed GF-20-NIGHT-02 to S03C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S02 handed GF-21-WEATHER-01 to S02C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05 handed GF-21-WEATHER-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S05-superseded-2 handed GF-21-WEATHER-02 to S05C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-000 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-001 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-002 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-003 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-004 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-005 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-006 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-007 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-008 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-009 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-010 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-011 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-012 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-013 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-014 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-015 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-016 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-017 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-018 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-019 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-020 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-021 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-022 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-023 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-024 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-025 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-026 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-027 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-028 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-029 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-030 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-031 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-032 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-033 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-034 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-035 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-036 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-037 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-038 to S04C and the capture lane never ran in this run directory.
+- UNPAID DELEGATION: S04 handed S04-SEQ-final-039 to S04C and the capture lane never ran in this run directory.
+- segment(s) whose own INVENTORY.json says INCOMPLETE: S03-superseded-1, S05-superseded-2
+
+See RUN_INVENTORY.json for the per-frame ledger.
