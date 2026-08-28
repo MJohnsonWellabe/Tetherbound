@@ -64,7 +64,31 @@ const SLOTS := 5
 ## and the central third of the authored canvas starts at 640. It is checked, not
 ## assumed -- `test_hud_widgets.gd::test_party_strip_clears_the_centre_of_the_viewport`
 ## fails if this width ever grows past that margin.
-const ROW_SIZE := Vector2(420.0, 62.0)
+## HUD-SCALE (owner playtest 2026-08-28, second "too big" report): 420x62 ->
+## 336x46.
+##
+## A first cut to 304 -- the naive 26/36 scaling of the width alongside the
+## font -- reopened the exact elision defect the note above records: a render
+## came back reading "Galew" where 420 had held "Galewi...". Scaling the row
+## with the font is wrong because most of a row is NOT text: the rail, the
+## species chip, the HP bar and the separations are fixed furniture, so
+## shrinking the row by 28% takes far more than 28% out of the name column,
+## which is the only part that was ever the constraint. 336 with the bar cut
+## to 44 gives the name about 165px against the ~159 the font drop asks for,
+## so no name that fitted at 420/36 stops fitting at 336/26.
+##
+## Height is 48, and it is fitted to the SELECTED row rather than the ordinary
+## one. That distinction cost a test failure worth recording: a first cut to 46
+## fitted the unselected row exactly (a 36px label at
+## `STRIP_READABLE_FONT_SIZE` 26 plus 2 x `ROW_MARGIN`), and
+## `smoke_combat_hud_left_column.gd` immediately caught the roster running 2px
+## past `TOTAL_HEIGHT` -- because `UITokens.slot_box(true)` puts an `EDGE`
+## border on all four sides of the selected row, and a `PanelContainer` counts
+## its stylebox margins in its own minimum size. Exactly one row is selected at
+## any time, so the strip is always 2px taller than a row-height fitted to the
+## other four. The old 62 was fitted the same way; that was not obvious from
+## the number and is why this note exists.
+const ROW_SIZE := Vector2(336.0, 48.0)
 ## 6 -> 2, and `HEADER_GAP` 6 -> 4 alongside it: together they pay for the 24px
 ## `HEADER_HEIGHT` below was under-reporting. Measured, the left column at the
 ## shorter supported canvas (1080) offers 380px between `TOP_SAFE_INSET` and the
@@ -79,29 +103,45 @@ const ROW_SIZE := Vector2(420.0, 62.0)
 ## gap between plates -- this is the same call `ROW_MARGIN`'s own 6 -> 4 note
 ## records `GF-B-006` making for the one-line row design.
 ##
-## WORTH THE OWNER KNOWING: at 1080 the roster at its five-creature cap now uses
-## essentially the whole left column. There is no room in that column for a
-## sixth row, a taller row, or a second header line without moving the widget.
-const ROW_SEPARATION := 2
+## HUD-SCALE restores this to 6. The pressure that forced it to 2 was the
+## honest header plus five 62px rows wanting 394 of a 380px column; at
+## `STRIP_READABLE_FONT_SIZE` 26 the rows are 48 and the header is 40, so the
+## same five rows and header want 308 and the column has room again. The note
+## above is right that the 2px gap was a cost, not a preference -- this gives
+## it back rather than banking the space.
+##
+## WORTH THE OWNER KNOWING, and no longer true: at 1080 the roster at its
+## five-creature cap used essentially the whole left column. After HUD-SCALE it
+## uses about two thirds of it.
+const ROW_SEPARATION := 6
 const ROW_MARGIN := 4  # 6 -> 4, alongside ROW_SIZE.y: a one-line row needs less breathing room than a two-line one
 ## MEASURED, not declared. The header is a `PanelContainer` holding one label
-## at `STRIP_READABLE_FONT_SIZE` (36) with 2px content margins, and a
+## at `STRIP_READABLE_FONT_SIZE` with 2px content margins, and a
 ## `PanelContainer` grows past its `custom_minimum_size` to fit its content --
 ## the same trap `ROW_SIZE.y`'s own header records `GF-B-006` paying for on the
-## rows. 30 was the declared number and the header really draws at **54**, so
-## `TOTAL_HEIGHT` was 24px short and every bound derived from it was wrong by
-## that much: `playground_hud.gd::party_strip_position()`, `test_hud_widgets`'s
-## gap assertions, and `combat_hud.gd::_party_strip_position()`, which is half
-## of why `HIST-013` ("the combat HUD overlaps itself") was still reproducible.
+## rows. 30 was the declared number and the header really drew at **54** at the
+## old 36px font, so `TOTAL_HEIGHT` was 24px short and every bound derived from
+## it was wrong by that much: `playground_hud.gd::party_strip_position()`,
+## `test_hud_widgets`'s gap assertions, and `combat_hud.gd::_party_strip_position()`,
+## which is half of why `HIST-013` ("the combat HUD overlaps itself") was still
+## reproducible.
 ##
-## `GF-B-006` measured the rows and stopped there; this is the same defect one
-## widget up. Pinned now rather than re-measured by hand next time:
+## `GF-B-006` measured the rows and stopped there; that fix was the same defect
+## one widget up. HUD-SCALE re-measures rather than re-scales, because a scaled
+## guess here is exactly the lie both notes above record paying for: at
+## `STRIP_READABLE_FONT_SIZE` 26 the live header draws **40**, confirmed by
+## instrumenting the real widget, not by taking 54 * 26/36 (which gives 39 --
+## close enough to look right and still wrong, which is the whole point).
+##
+## Pinned rather than re-measured by hand next time:
 ## `smoke_combat_hud_left_column.gd` asserts the live stack against
 ## `TOTAL_HEIGHT` and fails naming the child that grew.
-const HEADER_HEIGHT := 54.0
+const HEADER_HEIGHT := 40.0
 const HEADER_GAP := 4.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
-const CHIP_SIZE := Vector2(40.0, 40.0)
+## HUD-SCALE: 40 -> 30. A species chip is recognised as a silhouette rather
+## than read, so it has no lettering floor; 30 authored px is 18.5 arcmin.
+const CHIP_SIZE := Vector2(30.0, 30.0)
 ## Local floor for this widget's own small text (TEAM count, level, KO/REST
 ## tags) -- deliberately not `UI_TOKENS.FONT_TINY`, which a dozen other
 ## screens this lane does not own also draw with (see
@@ -114,12 +154,21 @@ const CHIP_SIZE := Vector2(40.0, 40.0)
 ## measure exactly 16px with no margin; any world-brightness change behind
 ## the translucent rows pushes them under"). 36 clears it with ~0.9px to
 ## spare.
-const STRIP_READABLE_FONT_SIZE := 36
+## HUD-SCALE: 36 -> 26. Same correction as
+## `playground_hud.gd::HUD_READABLE_FONT_SIZE`, and for the same reason -- the
+## "~16 physical px at 0.667 scale" bar this constant was raised to clear was
+## computed through a content scale the owner's 1920x1080 device does not
+## have. 26 is `HUD_SCALE.GLANCE_CAP_ARCMIN`: a roster row is a name, a level
+## and a tag, all recognised rather than read.
+const STRIP_READABLE_FONT_SIZE := 26
 const RAIL_WIDTH := 4.0
 ## 72 -> 56 alongside the one-line row: the bar shares its line with the name
 ## now instead of sitting beside a two-line stack, and 16px of bar buys 16px of
 ## name. A fraction still reads at 56px -- this bar has never carried a number.
-const HP_BAR_SIZE := Vector2(56.0, 8.0)
+## HUD-SCALE: 56 -> 44. The note above is still the reason this bar is short:
+## it has never carried a number, so a fraction still reads. The 12px it gives
+## up go straight to the name column, which is the row's real constraint.
+const HP_BAR_SIZE := Vector2(44.0, 8.0)
 
 ## Fainted always reads as fainted, whether or not the slot happens to also be
 ## the (impossible, but not this file's job to assume) selected one.
@@ -161,7 +210,7 @@ const CYCLE_BANNER_SECONDS := 1.3
 ## pair, not the shortest one that happened to work. Widened again from 820
 ## to 900 alongside `CYCLE_DEST_FONT_SIZE` (HUD-EMPHASIS) -- the destination
 ## name now renders noticeably wider than it did at the old uniform size.
-const CYCLE_BANNER_WIDTH := 900.0
+const CYCLE_BANNER_WIDTH := 680.0  ## HUD-SCALE: 900 -> 680, tracking CYCLE_DEST_FONT_SIZE 46 -> 34.
 ## HUD-EMPHASIS root-cause: a blind critic measured the destination name --
 ## "the single word the player cycled to find out" -- as the SMALLEST text
 ## on the whole screen (10px), smaller than the creature being left behind
@@ -185,10 +234,16 @@ const CYCLE_BANNER_WIDTH := 900.0
 ## `CYCLE_DEST_FONT_SIZE` * 0.667 (Ally content scale) * 0.7 (cap-height
 ## ratio, `smoke_hud_handheld_legibility.gd::CAP_HEIGHT_RATIO`) ~= 21.5
 ## physical px, comfortably past the ~18px floor the critic asked for.
-const CYCLE_SOURCE_FONT_SIZE := 24
-const CYCLE_ARROW_FONT_SIZE := 30
-const CYCLE_DEST_FONT_SIZE := 46
-const CYCLE_POSITION_FONT_SIZE := 34
+## HUD-SCALE: 24/30/46/34 -> 22/24/34/26. The RANKING these four encode is the
+## point (destination dominant, source small and grey, position quiet) and it
+## is preserved exactly; only the absolute scale comes down, and the smallest
+## of them -- the source name at 22 -- still sits at 11.0 arcmin cap height,
+## on `HUD_SCALE.GLANCE_CAP_ARCMIN`. The destination stays the loudest text on
+## this widget at 34.
+const CYCLE_SOURCE_FONT_SIZE := 22
+const CYCLE_ARROW_FONT_SIZE := 24
+const CYCLE_DEST_FONT_SIZE := 34
+const CYCLE_POSITION_FONT_SIZE := 26
 ## 42 -> 50 -> 66: even after `CYCLE_BANNER_WIDTH` stopped the text from
 ## wrapping to a second (clipped) line, a live measurement found the single
 ## real line at `STRIP_READABLE_FONT_SIZE` (34) rendering ~47px tall --
@@ -196,7 +251,12 @@ const CYCLE_POSITION_FONT_SIZE := 34
 ## for `CYCLE_DEST_FONT_SIZE` (46, up from the old uniform 34): the same
 ## ~1.38x padding ratio puts a single line at that size around 63px, so 66
 ## keeps a few px of headroom rather than landing exactly on the edge.
-const CYCLE_BANNER_HEIGHT := 66.0
+## HUD-SCALE: 66 -> 50. The derivation above is kept exactly -- the same
+## ~1.38x outline/line-height padding ratio applied to the new
+## `CYCLE_DEST_FONT_SIZE` (34) gives ~47px, so 50 keeps the same few px of
+## headroom the 66 kept at 46. `smoke_hud_handheld_legibility.gd` measures the
+## real banner against this box, so an over-cut fails rather than clips.
+const CYCLE_BANNER_HEIGHT := 50.0
 
 var _pinned := false
 var _fade_timer := 0.0

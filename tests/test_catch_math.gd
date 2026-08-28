@@ -247,3 +247,142 @@ func test_a_common_species_at_low_health_costs_about_five_orbs_or_fewer() -> voi
 		("a common Meadows creature at low HP should cost about 5 orbs or " +
 		"fewer even on a merely-clipped throw, got %.2f expected orbs " +
 		"(chance %.3f)") % [expected_orbs, chance])
+
+
+## --- placement: does aiming change the outcome at all? ----------------------
+
+const ORB := preload("res://scripts/combat/orb.gd")
+
+
+## The defect that made the whole aiming skill decorative.
+##
+## `orb.gd::_check_target()` fires when the orb's centre is within
+## `body_radius + radius` -- 0.312 + 0.60 = 0.912 m for a Bramblebun -- and
+## reported the strike offset as the distance at that same sample, clamped to
+## `body_radius`. But the orb moves 0.283 m per 60Hz tick at `speed` 17, and
+## only its ENDPOINT was sampled, so the first sample inside 0.912 m was never
+## inside 0.312 m and the clamp saturated every time.
+##
+## Result: a dead-centre throw and one 0.30 m wide both reported 0.312 and both
+## scored at `edge_bonus`. `centre_bonus` was unreachable. Every
+## `catch launch: strike` line in the repo's own logs reads `offset=0.312`,
+## including throws where the launch assist led the orb to the body centre.
+##
+## This test is the guard. It works on the segment arithmetic directly, which is
+## where the fix lives, and it fails if the endpoint-only sampling ever returns.
+func test_a_dead_centre_throw_is_scored_better_than_a_wide_one() -> void:
+	var centre := Vector3(7.5, 1.0, 0.0)
+	var body_radius := 0.312
+	# One physics step of an orb at 17 m/s, arriving at the body. The step
+	# ENDS 0.826 m from the centre -- the geometry the old code sampled.
+	var step := 0.283
+
+	var centred_from := centre + Vector3(step, 0.0, 0.0)
+	var centred_to := centre - Vector3(step, 0.0, 0.0)
+	var centred := ORB.closest_approach(centred_from, centred_to, centre)
+
+	var wide_from := centred_from + Vector3(0.0, 0.0, 0.30)
+	var wide_to := centred_to + Vector3(0.0, 0.0, 0.30)
+	var wide := ORB.closest_approach(wide_from, wide_to, centre)
+
+	assert_true(centred < wide,
+		"a throw through the centre must measure closer than one 0.30m wide (centred %.3f, wide %.3f)" % [centred, wide])
+	assert_true(centred < 0.01,
+		"a throw straight through the centre must measure ~0 off centre, got %.3f" % centred)
+
+	var centred_bonus := CATCH.accuracy_bonus(minf(centred, body_radius), body_radius)
+	var wide_bonus := CATCH.accuracy_bonus(minf(wide, body_radius), body_radius)
+	assert_true(centred_bonus > wide_bonus,
+		"aiming must change the catch chance: centred scored %.3f, wide scored %.3f -- equal means the accuracy term is dead and the reticle is decoration" % [centred_bonus, wide_bonus])
+
+
+## The endpoint of a step can be far outside the body while the step itself
+## passed straight through it. Sampling only the endpoint therefore both
+## mis-scored placement AND let a fast orb tunnel through a small creature.
+func test_the_swept_step_catches_a_pass_through_the_body() -> void:
+	var centre := Vector3.ZERO
+	var from := Vector3(-0.5, 0.0, 0.0)
+	var to := Vector3(0.5, 0.0, 0.0)
+	assert_almost_eq(ORB.closest_approach(from, to, centre), 0.0, 0.001,
+		"a step passing through the centre must measure zero")
+	assert_almost_eq(ORB.closest_approach(from, to, Vector3(0.0, 0.0, 0.25)), 0.25, 0.001,
+		"a step passing 0.25m beside the centre must measure 0.25")
+
+
+## Past either end of the segment the answer is the endpoint distance, not the
+## distance to the infinite line -- an orb that stopped short has not passed the
+## creature.
+func test_closest_approach_does_not_extrapolate_past_the_step() -> void:
+	var from := Vector3(2.0, 0.0, 0.0)
+	var to := Vector3(3.0, 0.0, 0.0)
+	assert_almost_eq(ORB.closest_approach(from, to, Vector3.ZERO), 2.0, 0.001,
+		"a step that never reached the target must measure its nearest endpoint")
+
+
+## The second half of the same defect, and the subtler one.
+##
+## Fixing the swept step alone was not enough. The hit test fires on the step
+## that first brings the orb within `body_radius + orb_radius` -- 0.912 m,
+## because the orb is a forgiving 0.60 m sphere -- and the orb stops there. So
+## the triggering step ENTERS the forgiveness sphere and never reaches the body,
+## and measuring placement over that step still scored a perfect throw as a
+## graze: a live `assist=true` throw aimed at the body centre logged
+## `closest=0.821`, which the clamp pinned at `body_radius` exactly as before
+## the fix.
+##
+## What `accuracy_bonus()` is asking is how well AIMED the throw was, which is a
+## property of the trajectory rather than of wherever a generous collision
+## sphere made first contact. Hence `closest_approach_ahead()`. After it, the
+## same live throw logged `closest=0.158`.
+func test_placement_is_scored_on_the_trajectory_not_where_the_orb_stopped() -> void:
+	var centre := Vector3.ZERO
+	var body_radius := 0.312
+	var orb_radius := 0.60
+
+	# The orb arriving dead on the centre, stopped at the surface of its own
+	# forgiveness sphere -- the exact geometry the hit test produces.
+	var heading := Vector3(-1.0, 0.0, 0.0)
+	var contact := Vector3(body_radius + orb_radius, 0.0, 0.0)
+
+	var over_the_step := ORB.closest_approach(
+		contact, contact + heading * 0.283, centre
+	)
+	var over_the_trajectory := ORB.closest_approach_ahead(contact, heading, centre)
+
+	assert_true(over_the_step > body_radius,
+		"the step that triggers the hit stops short of the body (%.3f) -- this is why measuring it alone saturated the clamp" % over_the_step)
+	assert_almost_eq(over_the_trajectory, 0.0, 0.001,
+		"a throw heading straight through the centre must score as dead centre, got %.3f" % over_the_trajectory)
+
+	assert_almost_eq(
+		CATCH.accuracy_bonus(minf(over_the_trajectory, body_radius), body_radius),
+		float(CATCH.config().get("chance", {}).get("centre_bonus", 1.45)), 0.001,
+		"a dead-centre trajectory must earn centre_bonus; anything less means the bonus is unreachable in play"
+	)
+
+
+## A throw genuinely passing wide still scores wide. The fix must make aiming
+## matter, not make every throw free.
+func test_a_wide_trajectory_still_scores_at_the_edge() -> void:
+	var centre := Vector3.ZERO
+	var body_radius := 0.312
+	var heading := Vector3(-1.0, 0.0, 0.0)
+	var contact := Vector3(0.9, 0.0, 0.35)  ## passing 0.35m to the side
+
+	var offset := ORB.closest_approach_ahead(contact, heading, centre)
+	assert_almost_eq(offset, 0.35, 0.001, "a throw passing 0.35m wide must measure 0.35m")
+	assert_almost_eq(
+		CATCH.accuracy_bonus(minf(offset, body_radius), body_radius),
+		float(CATCH.config().get("chance", {}).get("edge_bonus", 0.80)), 0.001,
+		"a trajectory outside the body must still score at edge_bonus"
+	)
+
+
+## An orb already past the creature measures from where it is, never from a
+## closest approach it has already flown through.
+func test_a_departing_orb_does_not_score_a_closest_approach_it_has_passed() -> void:
+	var centre := Vector3.ZERO
+	var away := Vector3(1.0, 0.0, 0.0)
+	var position := Vector3(0.8, 0.0, 0.0)
+	assert_almost_eq(ORB.closest_approach_ahead(position, away, centre), 0.8, 0.001,
+		"an orb moving away from the creature must measure its current distance")

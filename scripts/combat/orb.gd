@@ -307,6 +307,10 @@ func _physics_process(delta: float) -> void:
 
 func _tick_flight(delta: float) -> void:
 	_life += delta
+	# Where the orb was before this tick moved it. Both the hit test and the
+	# miss forensics measure the segment travelled rather than the endpoint --
+	# see `_check_target()`'s header for what sampling only the endpoint cost.
+	var before := global_position
 	_velocity.y -= _gravity * delta
 	global_position += _velocity * delta
 	# Spin, so a placeholder sphere still reads as an object in flight rather
@@ -319,8 +323,8 @@ func _tick_flight(delta: float) -> void:
 		_path.remove_at(0)
 	_draw_trail()
 
-	_note_closest_approach()
-	if _check_target():
+	_note_closest_approach(before)
+	if _check_target(before):
 		return
 	if _life >= _max_life:
 		_end_reason = "flight_time"
@@ -451,18 +455,96 @@ func is_resting() -> bool:
 
 
 ## The nearest the orb came to the target's centre, sampled every flight frame.
-func _note_closest_approach() -> void:
+func _note_closest_approach(from: Vector3) -> void:
 	if _target == null or not is_instance_valid(_target):
 		return
 	var centre: Vector3 = _target.call("centre") if _target.has_method("centre") \
 		else _target.global_position
-	var offset := global_position.distance_to(centre)
+	# The same segment the hit test uses, so a "closest approach" printed in the
+	# miss forensics is the real one rather than whichever endpoint a discrete
+	# 0.28m step happened to land on.
+	var offset := closest_approach(from, global_position, centre)
 	if offset < _closest:
 		_closest = offset
 		_closest_at = global_position
 
 
-func _check_target() -> bool:
+## Closest the segment `from`->`to` ever comes to `point`.
+##
+## Static and dependency-free so `tests/test_catch_math.gd` can pin it: this is
+## the arithmetic that decides whether aiming affects a catch at all, and it was
+## wrong for long enough that nobody noticed the accuracy system had stopped
+## working.
+static func closest_approach(from: Vector3, to: Vector3, point: Vector3) -> float:
+	var step := to - from
+	var length_squared := step.length_squared()
+	if length_squared <= 0.000001:
+		return from.distance_to(point)
+	var t := clampf((point - from).dot(step) / length_squared, 0.0, 1.0)
+	return (from + step * t).distance_to(point)
+
+
+## How close the orb's flight PASSES the point, measuring forward along its
+## current heading rather than stopping at the end of this tick's step.
+##
+## This is the one that scores placement, and the distinction from
+## `closest_approach()` above is the whole reason aiming still did not matter
+## after the swept-segment fix. The hit test fires on the step that first brings
+## the orb within `body_radius + radius` -- 0.912 m for a Bramblebun, because
+## the orb is a forgiving 0.60 m sphere -- and the orb stops there. So the
+## segment that triggered the hit ENTERS the forgiveness sphere and never
+## reaches the body: measured over that step alone, a perfectly aimed throw
+## reported 0.821 m off centre, which the clamp then pinned at `body_radius`
+## exactly as before. Confirmed live: an `assist=true` throw aimed at the body
+## centre logged `closest=0.821`.
+##
+## What the accuracy bonus is asking is "how well aimed was this", and that is a
+## property of the TRAJECTORY, not of wherever a 0.60 m collision sphere
+## happened to make first contact. So placement is scored against the forward
+## ray. Clamped at t >= 0 so an orb already moving away from the creature
+## measures from where it is, never from a closest approach it has passed.
+static func closest_approach_ahead(from: Vector3, direction: Vector3, point: Vector3) -> float:
+	var heading := direction
+	if heading.length_squared() <= 0.000001:
+		return from.distance_to(point)
+	heading = heading.normalized()
+	var t := maxf((point - from).dot(heading), 0.0)
+	return (from + heading * t).distance_to(point)
+
+
+## Did this step's travel bring the orb onto the target, and how well placed was
+## it?
+##
+## `from` is where the orb was before this tick moved it. That argument is the
+## whole fix, and the defect it repairs had made the aiming skill decorative:
+##
+## The hit test fires when the orb's centre is within `body_radius + _radius` --
+## 0.312 + 0.60 = 0.912 m for a Bramblebun. The reported offset was the distance
+## at that same sample, clamped to `body_radius`. But an orb at `speed` 17 moves
+## 0.283 m per 60Hz tick and only its ENDPOINT was ever sampled, so the first
+## sample inside 0.912 m is essentially never inside 0.312 m -- and the clamp
+## then pinned it at the maximum. Simulated across the aim range, a dead-centre
+## throw and one 0.30 m off both reported exactly 0.312 and both scored at
+## `edge_bonus` 0.80. Confirmed in real fights: every `catch launch: strike`
+## line in `smoke_catching.gd` and `tools/capture_catch_sequence.gd` logs
+## `offset=0.312`, including one with `assist=true` leading the orb to the body
+## centre.
+##
+## So `centre_bonus` (1.45) was unreachable, `accuracy_bonus()` was a constant,
+## and aiming changed the catch chance by exactly nothing -- while
+## `catching.json` calls that term "the ONLY reason the aiming skill exists",
+## `test_catch_math.gd` asserts the two bonuses differ, and the HUD drew a
+## reticle promising the player their placement mattered.
+##
+## The old comment below anticipated the OPPOSITE failure and guarded against
+## it. The guard was right to exist and overshot: it stopped every throw
+## counting as dead centre by making every throw count as dead edge.
+##
+## Measuring the swept SEGMENT rather than the endpoint fixes both halves --
+## placement is scored against where the orb actually passed the body, and an
+## orb fast enough to step over a small creature between two samples no longer
+## sails through it.
+func _check_target(from: Vector3) -> bool:
 	if _target == null or not is_instance_valid(_target) or not _target.visible:
 		return false
 	var centre: Vector3 = _target.call("centre") if _target.has_method("centre") \
@@ -471,18 +553,32 @@ func _check_target() -> bool:
 	if _target.has_method("body_radius"):
 		body_radius = float(_target.call("body_radius"))
 
-	var offset := global_position.distance_to(centre)
-	if offset > body_radius + _radius:
+	# Two different questions, deliberately answered by two different measures.
+	#
+	# DID IT HIT is about the collision sphere and is answered over the step
+	# actually travelled, so a fast orb cannot step over a small creature
+	# between two 60Hz samples.
+	if closest_approach(from, global_position, centre) > body_radius + _radius:
 		return false
+	# HOW WELL WAS IT AIMED is about the trajectory -- see
+	# `closest_approach_ahead()` for why measuring it over the triggering step
+	# scores even a perfect throw as a graze.
+	var offset := closest_approach_ahead(from, _velocity, centre)
 
 	_phase = Phase.HANGING
 	_velocity = Vector3.ZERO
 	if _orb_material != null:
 		_orb_material.emission_energy_multiplier = REST_EMISSION
-	# Reported as distance from the centre, clamped at the body's own radius, so
-	# the accuracy bonus is scored against the creature rather than against the
-	# orb's generous collision sphere. Widening `radius` to forgive the input
-	# must not silently make every throw count as dead centre.
+	# Still clamped at the body's own radius, for the original reason: the
+	# accuracy bonus is scored against the CREATURE, not against the orb's
+	# generous collision sphere, so widening `radius` to forgive the input must
+	# not silently make every throw count as dead centre.
+	# Both numbers, because the clamped one alone is what hid the endpoint-only
+	# defect for so long: every strike logged `offset=0.312` and that looked
+	# like a plausible edge hit rather than a saturated clamp.
+	print("catch launch: placement closest=%.3f clamped=%.3f body_radius=%.3f orb_radius=%.2f" % [
+		offset, minf(offset, body_radius), body_radius, _radius,
+	])
 	struck.emit(_target, minf(offset, body_radius))
 	return true
 

@@ -36,6 +36,14 @@ enum State { IDLE, AIMING, THROWN }
 ## going where you pointed, near enough that it is not effectively parallel.
 const AIM_REACH := 12.0
 
+## The soft aim magnet's band, in multiples of the target's body WIDTH (twice
+## its radius). Inside `AIM_PULL_INNER` the aim point is fully pulled onto the
+## creature; past `AIM_PULL_OUTER` it is not pulled at all; between them it
+## smoothsteps. See `_aim_direction()` for the owner directive these came from
+## and for why the falloff must stay smooth.
+const AIM_PULL_INNER := 1.0
+const AIM_PULL_OUTER := 2.5
+
 var state: State = State.IDLE
 
 var _player: Node3D = null
@@ -93,6 +101,18 @@ static func first_hit_belongs_to_target(collider: Node, target: Node) -> bool:
 ## completely unassisted.
 var _committed_assist_point := Vector3.INF
 var _released_assist_point := Vector3.INF
+
+## Last `launch_assist_diagnostics()` result, refreshed once per physics tick
+## while aiming. Read by `combat_manager.gd::catch_chance_now()` so the number
+## the reticle shows is the number the throw would actually resolve at -- see
+## that function's header for why it used to be neither.
+var _aim_report: Dictionary = {}
+
+
+## The live aim, for a caller that needs to know where this throw would land
+## rather than whether an assist is legal. Empty between aims.
+func aim_report() -> Dictionary:
+	return _aim_report if state == State.AIMING else {}
 
 
 func _ready() -> void:
@@ -228,6 +248,12 @@ func _physics_process(delta: float) -> void:
 
 func _tick_aiming(delta: float) -> void:
 	_update_preview()
+	# Refreshed on the PHYSICS tick and cached, not recomputed by the HUD's
+	# draw frame: `launch_assist_diagnostics()` casts a ray, and
+	# `combat_hud.gd` now reads this every frame it draws the capture reticle.
+	# One ray per physics tick is the same cost the throw already pays; one per
+	# draw frame is not.
+	_aim_report = launch_assist_diagnostics()
 
 	# Backing out is free and spends nothing, INCLUDING during the release
 	# wind-up — the orb is only spent in _release() itself. The cancel used to
@@ -288,8 +314,61 @@ func try_begin_aim(target_can_be_caught: bool, refusal: String) -> bool:
 	# amendment to D07's stationary-trainer sub-rule, scoped to exactly the
 	# aim/throw window -- general combat still holds the trainer still.
 	_set_trainer_movable(true)
+	_acquire_target()
 	aim_entered.emit()
 	return true
+
+
+## OWNER DIRECTIVE 2026-08-28 §2a.2: "when you go into throwing, it needs to aim
+## you onto the creature."
+##
+## Entering the aim used to leave the camera wherever exploration had left it,
+## which on a controller means the player raises the orb and then has to hunt
+## for the creature with the right stick before they can even start aiming --
+## and the aim camera has just swung to an over-the-shoulder profile with a
+## 1.45m shoulder offset, so the view they hunt from is not the view they had.
+## The frames from `smoke_catching.gd`'s own fights show the cost: four consecutive
+## commits with `reason=reticle_outside_body`, and the run's first throw logged
+## the target 7.5m off the screen ray.
+##
+## So raising the orb ACQUIRES. The rig's yaw and pitch are pointed at the
+## target's centre of mass from the eye the aim camera is about to use.
+##
+## WHICH target: the one the fight is already about. `arm()` is handed exactly
+## one `_target` by `combat_manager.gd` when the fight opens, and catching is
+## only available inside a fight, so there is no nearest-creature search to get
+## wrong and no ambiguity when several creatures are in range -- the encounter
+## already chose. That is a deliberately narrower rule than a free-roam lock-on
+## would need, and it is the right one here: it can never acquire a creature the
+## player is not fighting.
+##
+## Snapped rather than glided. The camera is already cutting to a different
+## profile on this same frame, so a glide would be a second motion on top of a
+## cut and would read as drift rather than as acquisition.
+func _acquire_target() -> void:
+	if _camera_rig == null or _player == null:
+		return
+	if _target == null or not is_instance_valid(_target) or not _target.has_method("centre"):
+		return
+	var centre: Vector3 = _target.call("centre")
+	var eye := _player.global_position + Vector3.UP * _spawn_height
+	var to_target := centre - eye
+	if to_target.length_squared() < 0.0001:
+		return
+	# `camera_rig.gd` measures yaw the same way the player's own facing does:
+	# atan2(-x, -z). Taken from `smoke_catching.gd::_aim_camera_along()`, which
+	# is the existing caller that already had to know this.
+	_camera_rig.set("yaw", atan2(-to_target.x, -to_target.z))
+	var flat := Vector2(to_target.x, to_target.z).length()
+	if flat > 0.01:
+		var cfg: Dictionary = CATCH.config().get("aim", {})
+		var pitch := atan2(to_target.y, flat)
+		_camera_rig.set("pitch", clampf(
+			pitch,
+			deg_to_rad(float(cfg.get("pitch_min_deg", -35.0))),
+			deg_to_rad(float(cfg.get("pitch_max_deg", 20.0)))
+		))
+	return
 
 
 func _apply_aim_camera() -> void:
@@ -304,6 +383,7 @@ func _set_trainer_movable(movable: bool) -> void:
 
 
 func _leave_aim() -> void:
+	_aim_report = {}
 	state = State.IDLE
 	_windup = 0.0
 	_committed_assist_point = Vector3.INF
@@ -642,7 +722,22 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 			var body := 1.0
 			if _target.has_method("body_radius"):
 				body = float(_target.call("body_radius")) * 2.0
-			var pull := 1.0 - smoothstep(body * 0.5, body, nearest.distance_to(centre))
+			# OWNER DIRECTIVE 2026-08-28 §2a.3, the second half of "aim assist
+			# needs to be stronger". This is the SOFT pull -- how much a
+			# near-miss reticle is drawn toward the creature before the throw is
+			# even committed -- and it is separate from the launch assist above,
+			# which is a hard lead granted only inside the reticle window.
+			#
+			# The band was `body * 0.5` to `body`, i.e. full pull only inside
+			# half a body-width and nothing at all past one. `AIM_PULL_INNER`
+			# and `AIM_PULL_OUTER` widen both ends: full pull out to a whole
+			# body-width, tapering to nothing at two and a half. The falloff
+			# stays a smoothstep for the reason the note above records -- the
+			# binary version made the aim jump as the reticle swept past, the
+			# "grabbed the stick" feel from an earlier playtest -- so this is a
+			# larger, gentler magnet, not a snap.
+			var pull := 1.0 - smoothstep(
+				body * AIM_PULL_INNER, body * AIM_PULL_OUTER, nearest.distance_to(centre))
 			aim_point = aim_point.lerp(centre, pull)
 
 	# BALLISTIC, not a straight line. This is the fix for the throw mechanic's

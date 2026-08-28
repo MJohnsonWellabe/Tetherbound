@@ -113,8 +113,13 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 ## bbcode format string) so `smoke_hud_handheld_legibility.gd` can assert real
 ## physical pixel sizes against the values actually drawn, the way it already
 ## does for `LEGEND_GLYPH_PX`.
-const HOTBAR_GLYPH_PX := 36
-const HOTBAR_COUNT_FONT_SIZE := 36
+## HUD-SCALE: 36 -> 26 on both. The badge sat exactly on the old
+## render-pixel floor (36 authored x 0.667 = 24), which is the reason this
+## pair was never cut before -- and that floor was measuring the wrong thing.
+## 26 is `HUD_SCALE.GLYPH_ARCMIN`, measured off a 1:1 render of the real pad
+## badges rather than derived through a scale factor the device does not have.
+const HOTBAR_GLYPH_PX := 26
+const HOTBAR_COUNT_FONT_SIZE := 26
 ## GF-B-005: the item's own icon, 28 -> 64.
 ##
 ## The strip photographed as "one red B and four identical white/red cross
@@ -136,7 +141,14 @@ const HOTBAR_COUNT_FONT_SIZE := 36
 ##
 ## 64, not larger: the slot is 112 wide with about 104 of inner width, and the
 ## icon shares its column with the badge and the count below it.
-const HOTBAR_ICON_PX := 64
+##
+## HUD-SCALE: 64 -> 44. GF-B-005's ordering rule is what matters here and it
+## survives -- the ITEM stays clearly the largest thing in the slot (44 against
+## a 26px badge and a 26px count), which is the same 1.7x lead it had at 64
+## against 36. What changes is that the whole slot stops being sized as though
+## it were going to be downscaled by a third. 44 authored px subtends 27.1
+## arcmin, which is still half again the glyph floor.
+const HOTBAR_ICON_PX := 44
 
 ## The item id that means "I am building". `data/items/items.json`'s hammer,
 ## which already existed as a workbench tool -- CONTROLLER-MAP gave it the
@@ -205,6 +217,24 @@ const CREATURE_BLOCK_X := 56.0
 ## Mirrors `Root/BottomDock`'s own `offset_top` in the .tscn exactly -- see
 ## the header above. Keep the two in sync if either changes; each file's
 ## comment points at the other.
+## HUD-SCALE tried -340 here, on the reasoning that the dock's contents had
+## lost ~120px and a dock still reserving 460 would hold the left column that
+## much higher than it needs to be. **That reasoning was wrong and the
+## measurement says so**, which is worth leaving in the file rather than
+## quietly reverting.
+##
+## `Root/BottomDock` is a `VBoxContainer` with `grow_vertical = 0`, so its own
+## rect is CONTENT-sized and grows upward past these offsets -- it never
+## reserved 460 in the first place. Measured on the live HUD at both supported
+## canvases: the quiet dock is 290 tall, which puts its real top 386 above the
+## canvas bottom, i.e. already well above the 340 nominal. So -340 did not free
+## any space; it moved the NOMINAL top BELOW the real one, and
+## `left_stack_bottom()` placed the vitals cluster 6px inside the dock.
+## `smoke_hud_handheld_legibility.gd` caught it immediately.
+##
+## Back to -460, which clears the quiet dock (386) and its transient message
+## row (416) with margin. The left column's real constraint was never this
+## constant.
 const BOTTOM_DOCK_TOP_OFFSET := -460.0
 ## Clear space kept between the left column's lowest element and
 ## BottomDock's nominal top -- generous enough to survive BottomDock's own
@@ -252,7 +282,11 @@ const CREATURE_BLOCK_MIN_WIDTH := 374.0
 ## constant here -- see that function's own header for why a fixed guess at
 ## the panel's width reopened this same defect once already.
 
-const VITALS_WIDTH := 300.0
+## HUD-SCALE: 300 -> 244, tracking `VITALS_VALUE_FONT` down from 38 to 26.
+## The caption column, both bars and both value labels all derive their own
+## x/width from this constant and `VITALS_CAPTION_WIDTH` below, so this is the
+## one number the cluster's geometry needs.
+const VITALS_WIDTH := 244.0
 ## HUD-POPUP task 3/4: the "100 / 100" HP value used to draw at
 ## `UITokens.FONT_LABEL` (23) -- ~10.7 physical px cap height at the Ally's
 ## 0.667 canvas_items scale, the exact sub-16px violation the critic named.
@@ -280,7 +314,10 @@ const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
 ## caption has real room at this font size; the satiety bar and its value
 ## label both derive their own x/width FROM this constant already, so
 ## nothing downstream needed a second fix.
-const VITALS_CAPTION_WIDTH := 104.0
+## HUD-SCALE: 104 -> 76. This was widened to 104 so "FOOD" (4 capitals at the
+## old 38px `VITALS_VALUE_FONT`) had room; at 26 the same four capitals need
+## about 73px, so the column follows the font that set it.
+const VITALS_CAPTION_WIDTH := 76.0
 const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
 const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value
@@ -291,13 +328,37 @@ const VITALS_HEIGHT := VITALS_SATIETY_ROW_Y + 34.0 + 6.0
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
-const MINIMAP_SIZE := Vector2(240.0, 240.0)
+## HUD-SCALE: 240 -> 184. The minimap is a permanently-present 2.78% of the
+## canvas and is read as a shape (a triangle on a field), not as text, so it
+## has no lettering floor to clear at all -- it was simply drawn at the same
+## inflated scale as everything else. 184 keeps the player arrow and the
+## marker dots at the same fraction of the map they had.
+const MINIMAP_SIZE := Vector2(184.0, 184.0)
 
-const OBJECTIVE_MAX_WIDTH := 420.0
+## HUD-SCALE: 420 -> 348, following the objective text down from
+## `HUD_READABLE_FONT_SIZE` (38) to `HUD_SENTENCE_FONT_SIZE` (32). The width
+## exists to hold a quest line without wrapping past its own box, so it tracks
+## the font it was fitted to rather than being cut independently.
+const OBJECTIVE_MAX_WIDTH := 348.0
 ## HUD-POPUP task 3: grown from 90 to hold the quest subtext at
 ## `HUD_READABLE_FONT_SIZE` (38) without wrapping past its own box -- see
 ## `_build_objective_block()`'s header for the rest of that fix.
-const OBJECTIVE_BLOCK_HEIGHT := 170.0
+## HUD-SCALE: 170 -> 152, and DERIVED rather than hand-tuned. A first cut to
+## 124 was measured overflowing: the quest line still wraps to two lines at
+## `OBJECTIVE_MAX_WIDTH`, and two lines at `HUD_SENTENCE_FONT_SIZE` render ~93
+## px tall, which with the eyebrow row and the top inset needs ~149. Hard
+## numbers on both axes are how the old 170 stopped tracking the fonts inside
+## it, so the height now says what it is made of.
+const OBJECTIVE_EYEBROW_ROW := 36.0
+## Rendered height of one line at `HUD_SENTENCE_FONT_SIZE`, including the
+## font's own leading. 1.45 is measured, not assumed: two lines at the
+## previous 38px font rendered 109px (109 / 2 / 38 = 1.43), and at 32px they
+## render 93 (93 / 2 / 32 = 1.45).
+const SENTENCE_LINE_RATIO := 1.45
+const OBJECTIVE_LINES := 2
+const OBJECTIVE_BLOCK_HEIGHT := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET \
+	+ float(OBJECTIVE_LINES) * float(HUD_SENTENCE_FONT_SIZE) * SENTENCE_LINE_RATIO \
+	+ OBJECTIVE_INSET
 ## Padding between the new backing panel's edge and the eyebrow/subtext
 ## labels inside it -- both were flush to the block's own right edge back
 ## when the block WAS the text's bounding box; now that a panel is drawn
@@ -418,23 +479,39 @@ const OBJECTIVE_HINT_SECONDS_PER_WORD := 0.3
 ## 1280x800 (canvas_items stretch, scale 1280/1920 = 0.667), that was ~16
 ## physical px. 44px authored -> ~29 physical px, comfortably past the
 ## established floor with margin for "more legible", not just "not the worst".
-## OP21 handheld remainder: a blind critic measured the 44/24 pair above at
-## real 1280x800 physical pixels and found the LABEL text -- not the glyph --
-## still only 11px cap height, well under its own ~16px arm's-length bar
-## (`UITokens.FONT_TINY`-scale text was the actual offender; the glyph image
-## was already fine at 44 authored / ~29 physical). 24 -> 36 hits ~16.8
-## physical cap height at this project's 0.667 canvas_items scale factor
-## (36 * 0.667 * ~0.7 cap-height ratio); glyph raised the same 1.5x to stay
-## proportional to the now-larger label beside it.
-const LEGEND_GLYPH_PX := 66
-const LEGEND_FONT_SIZE := 36
+## HUD-SCALE (owner playtest 2026-08-28, "the hud on screen is way too big",
+## the SECOND report). 66/36 -> 26/26.
+##
+## The 66/36 pair above was arrived at by multiplying a target through a
+## `1280/1920 = 0.667` content scale. `scripts/ui/hud_scale.gd`'s header sets
+## out at length why that scale is not real -- the Ally is 1920x1080, the
+## authored canvas is 1920x1080, and `canvas_items` stretch makes an authored
+## pixel a fixed fraction of the PANEL at any render resolution anyway. The
+## practical effect was a 1.5x inflation applied to a floor that was already
+## met, and this legend paid the most for it: at 66 authored px its glyphs
+## subtend 40.7 arcmin at arm's length, which is over twice the size at which
+## the same badge art resolves cleanly.
+##
+## 26 is `HUD_SCALE.GLYPH_ARCMIN` (16.0') and `GLANCE_CAP_ARCMIN` (11.0')
+## respectively -- both measured floors, not guesses; see
+## `tools/_probe_glyph_ladder.gd` for the render the glyph floor comes from.
+const LEGEND_GLYPH_PX := 26
+const LEGEND_FONT_SIZE := 26
 ## Shared local floor for every other micro-label this file draws that the
 ## same critic measured at 9px -- "ACTIVE COMPANION", "Lv 1"/"GROUND", the
 ## hotbar item count. Deliberately NOT `UITokens.FONT_TINY`: that constant is
 ## shared by a dozen other screens this lane does not own (menu tabs, combat,
 ## the minimap), so bumping it here would move text this task never measured.
-## 38 * 0.667 * ~0.7 ~= 17.7 physical px, clearing the ~16px bar with margin.
-const HUD_READABLE_FONT_SIZE := 38
+## HUD-SCALE: 38 -> 26, and the constant is now DERIVED rather than asserted.
+## 38 puts a cap height of 16.4 arcmin on every tag on this HUD -- newspaper
+## body text, at reading distance, for the string "Lv 1". `HUD_SCALE`'s
+## GLANCE tier is the right one for a label you recognise rather than read;
+## the sentence-shaped text on this HUD (the objective line) takes
+## `HUD_SENTENCE_FONT_SIZE` below instead, so the two stop sharing one number.
+const HUD_READABLE_FONT_SIZE := 26
+## Text on this HUD that is an actual sentence and is parsed rather than
+## recognised. See `HUD_SCALE.SENTENCE_CAP_ARCMIN`.
+const HUD_SENTENCE_FONT_SIZE := 32
 ## RichTextLabel's `fit_content` measures height against its CURRENT width,
 ## and a freshly-built PanelContainer with no width hint of its own has none
 ## yet -- the label wrapped to a near-zero column and reported an absurd
@@ -447,15 +524,36 @@ const HUD_READABLE_FONT_SIZE := 38
 ## below deliberately adds NO further vertical margin on top of that; this
 ## exact double-margin mistake already shipped once (see the function's own
 ## history comment) and squeezed the glyph row down to an 8px label.
-const LEGEND_SIZE := Vector2(1700.0, 112.0)
+## HUD-SCALE: 1700x112 -> 940x64. This was the single largest widget on the
+## HUD -- 9.18% of the canvas, measured by `tools/_measure_hud_footprint.gd`,
+## for a bar that reminds the player of four buttons. Its width was a hand-fitted
+## minimum for the entries at the old 66px glyph and 36px font; both are 26 now,
+## so the same five entries need roughly 55% of the width. Height is the 26px
+## glyph plus `UITokens.panel_box()`'s own 16+16px margins, which is 58, rounded
+## up to 76 for the label's own line leading -- the SAME derivation the old 112
+## used (44 + 32 + slack), not a new one.
+##
+## 76 rather than 64, and that 12px is measured: a first cut to 64 left the
+## label 32px of inner height against a real `get_content_height()` of 36 for
+## a 26px glyph row, and `smoke_exploration_legend.gd::_check_authored_layout`
+## failed on exactly that clip. Godot's line box for an inline image is taller
+## than the image; the old 112 carried the same ~10px of slack over 44 + 32.
+##
+## Still a floor rather than a cap: `SHRINK_END` + `fit_content` means a longer
+## entry set grows the panel instead of clipping it, which is what
+## `smoke_exploration_legend.gd` checks.
+const LEGEND_SIZE := Vector2(940.0, 76.0)
 
 const MAX_BUFF_CHIPS := 3
-const BUFF_CHIP_SIZE := 28.0
+const BUFF_CHIP_SIZE := 20.0  ## HUD-SCALE: 28 -> 20, matching PARTY_PIP_SIZE as it always has.
 ## HUD-POPUP task 2: 18 -> 28, matching `BUFF_CHIP_SIZE`'s own footprint. A
 ## blind critic measured the old 18-authored pips at ~13 physical px with a
 ## ~2px selection ring, "a squint at arm's length." See `_update_party_pips()`'s
 ## own header for the rest of this task's pip work.
-const PARTY_PIP_SIZE := 28.0
+## HUD-SCALE: 28 -> 20. A pip is a dot with a ring, read as a count and a
+## position rather than as a symbol, so `GLYPH_ARCMIN`'s lettering floor does
+## not apply; 20 authored px is still 12.3 arcmin, comfortably resolvable.
+const PARTY_PIP_SIZE := 20.0
 
 const HP_DANGER_BELOW := 0.30
 const HP_PULSE_SPEED := 3.0
@@ -1763,7 +1861,22 @@ func _mount_minimap() -> void:
 	_minimap.position = Vector2(
 		1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x, UITokens.HUD_INSET
 	)
+	# HUD-SCALE: `MINIMAP_SIZE` used to feed the POSITION only -- `minimap.gd`
+	# carries its own 240x240 `custom_minimum_size` and won, so cutting the
+	# constant moved the widget without resizing it (caught by
+	# `tools/_measure_hud_footprint.gd` still reporting 240x240 after the cut).
+	# Sized here rather than in `minimap.gd` so that widget keeps its own
+	# default for anything that mounts it outside this HUD.
+	_minimap.custom_minimum_size = MINIMAP_SIZE
 	_root.add_child(_minimap)
+	# AFTER `add_child`, and that ordering is load-bearing: assigning `size` on
+	# the line above left the widget at 240x240 with a 184x184 combined
+	# minimum, because `Control.set_size()` clamps against a minimum-size cache
+	# that `minimap.gd::_init()`'s own 240 had populated and the assignment two
+	# lines earlier had not yet invalidated. Measured, not guessed --
+	# `tools/_measure_hud_footprint.gd` kept reporting a 240x240 minimap after
+	# `MINIMAP_SIZE` was already 184 and the widget's POSITION had moved.
+	_minimap.size = MINIMAP_SIZE
 
 
 ## Baked lazily and once: `map_baker.gd::bake_cached` is a real terrain bake
@@ -1885,13 +1998,14 @@ func _build_objective_block() -> void:
 
 	_objective_text_label = Label.new()
 	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_objective_text_label.position = Vector2(OBJECTIVE_INSET, 36.0 + OBJECTIVE_INSET)
+	_objective_text_label.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET)
 	_objective_text_label.size = Vector2(
-		OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, OBJECTIVE_BLOCK_HEIGHT - 36.0 - OBJECTIVE_INSET * 2.0
+		OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0,
+		OBJECTIVE_BLOCK_HEIGHT - OBJECTIVE_EYEBROW_ROW - OBJECTIVE_INSET * 2.0
 	)
 	# HUD-POPUP task 3: was `UITokens.FONT_LABEL` (23, ~10.7 physical px cap
 	# height) -- see this function's own header.
-	_objective_text_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	_objective_text_label.add_theme_font_size_override("font_size", HUD_SENTENCE_FONT_SIZE)
 	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	# LEFT, not RIGHT (DEFECT 4b, blind visual review of
 	# `shots/ui/10-combat-hud.png` and `shots/ui/07-minimap.png`): quest text
@@ -2147,6 +2261,10 @@ func _update_objective() -> void:
 ## objective block above already makes.
 func _build_region_banner() -> void:
 	_region_banner = Label.new()
+	# Named so a footprint measurement can tell this transient card apart from
+	# the persistent HUD; it was an anonymous child of Root and
+	# `tools/_measure_hud_footprint.gd` counted its 800x55 box as persistent.
+	_region_banner.name = "RegionBanner"
 	_region_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_region_banner.visible = false
 	_region_banner.anchor_left = 0.5
@@ -2157,7 +2275,11 @@ func _build_region_banner() -> void:
 	_region_banner.offset_bottom = REGION_BANNER_TOP + REGION_BANNER_HEIGHT
 	_region_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_region_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_region_banner.add_theme_font_size_override("font_size", 40)
+	# HUD-SCALE: 40 -> 34. A region title card is transient and deliberately
+	# the loudest text on this HUD, so it keeps a clear lead over the sentence
+	# tier (32) and the glance tier (26) -- it is just no longer sized as
+	# though it were about to be downscaled by a third.
+	_region_banner.add_theme_font_size_override("font_size", 34)
 	_region_banner.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_root.add_child(_region_banner)
 

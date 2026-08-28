@@ -149,7 +149,8 @@
       },
       "placeholder": {
         "colour": "#7a8a3f",
-        "height": 0.78,
+        "_comment_height_0828": "0.78 -> 0.96. OWNER DIRECTIVE 2026-08-28 section 2b: 'creatures need to stand out in the grass. some are now too small to see... bramble bun might be both.' Measured rather than eyeballed, as that directive asks: data/config/grass_field.json puts a tuft at height_near 0.40 to height_far 0.62 with height_jitter 0.38, so the field stands 0.25-0.86m -- and Bramblebun at 0.78 was SHORTER than its own tall grass. A frame of the real thing at throwing range (shots/catch/01-aiming-full-health.png) measured only 35% of the creature's own bounding box actually showing creature; the other 65% was blades in front of it. 0.96 clears the tallest tuft by 0.10m. Deliberately modest, per CLAUDE.md's 'modest scale' lever: this is the smallest step that puts the whole silhouette above the field rather than a size that would make a rabbit read as a mid-tier creature. NOTE this moves gameplay too, and that is correct -- creature_body.gd's own header says height and radius drive the capsule, the hit cone's reach and (through body_radius()) the catch accuracy bonus, and scaling the art alone is the invisible discrepancy PW2 forbids. TUNABLE.",
+        "height": 0.96,
         "radius": 0.312,
         "footprint_allowance": 2.2,
         "model": "res://assets/creatures/tetherbound/bramblebun/models/creature_bramblebun_lod0.glb",
@@ -586,7 +587,8 @@
       },
       "placeholder": {
         "colour": "#c3ccd4",
-        "height": 0.6,
+        "_comment_height_0828": "0.6 -> 0.76, same owner directive and the same measurement as bramblebun's note above. Pipwing was the SHORTEST creature in the roster against a field standing 0.25-0.86m. Its colour is not the problem -- #c3ccd4 measures 1.73:1 luminance against the grass tips, the best separation of any early species -- so this is purely the 'too small to see' half. Raised less than bramblebun because it starts smaller and is meant to stay a small bird; 0.76 clears the near field and most of the far field without making it read as a mid-tier creature. TUNABLE.",
+        "height": 0.76,
         "radius": 0.227,
         "_comment_size": "0.60m after D69's widening (was 1.35m under D19, 1.20m under R0.7). Still the shortest in the roster, consistent with D13/the roster canon naming Pipwing and Bramblebun the smallest pair -- and now actually reads as the chick it is. A blind round measured the old 1.35m against the ruler and called it out: 'the smallest creature in the game is a metre-tall rabbit, the chick is 1.3m'.",
         "_comment_footprint": "Spread wings in the model's base pose, same shape of problem as every bird so far; a smaller, more conservative allowance than Duskhush/Galecrest's 3.4/4.2 since Pipwing's own sheet calls it 'tiny and round' rather than broad-winged -- verified against the standalone height-fit script with no clamp warning.",

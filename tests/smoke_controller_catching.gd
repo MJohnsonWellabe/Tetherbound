@@ -63,6 +63,17 @@ func _run() -> void:
 	_manager.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _resolutions.append(success))
 	var throw: Node = _manager.call("throw_aim")
 	throw.connect("orb_struck", func(_target: Node3D, _offset: float) -> void: _strikes += 1)
+	# A miss is counted from the SIGNAL THAT MEANS MISS, not by matching the
+	# sentence the HUD happens to print. `_on_catch_refused()` below used to
+	# increment on `reason == "the orb went wide"`, and `throw_aim.gd`'s
+	# `orb_missed` signal carries a note saying exactly why that string no
+	# longer exists: "Carries the sentence to show the player, because 'the orb
+	# went wide' was printed for every miss regardless of what happened." Once
+	# `orb.gd` started building a per-cause message ("...hit the ground", with
+	# the distance), nothing matched and every deliberate-miss check in this
+	# file timed out with "intentional physical throw never resolved". Failing
+	# on clean `main` before this lane touched it.
+	throw.connect("orb_missed", func(_message: String) -> void: _misses += 1)
 
 	if not await _walk_to_and_engage():
 		_finish()
@@ -354,9 +365,11 @@ func _stop_right_stick() -> void:
 	_send_axis(JOY_AXIS_RIGHT_Y, 0.0)
 
 
-func _on_catch_refused(reason: String) -> void:
-	if reason == "the orb went wide":
-		_misses += 1
+## Kept connected for the refusals it also carries (out of range, a trained
+## creature, a target that fainted mid-flight) -- but a physical miss is counted
+## from `orb_missed` above rather than from this message's wording.
+func _on_catch_refused(_reason: String) -> void:
+	pass
 
 
 func _fail(message: String) -> void:

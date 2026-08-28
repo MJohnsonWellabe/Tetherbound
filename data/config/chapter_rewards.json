@@ -83,13 +83,16 @@
       "activity": "Burrow Warrens clear",
       "required": true,
       "reward": {
-        "xp_bonus": "see burrow_warrens.json",
-        "rootstone": "deposits",
+        "coins": 90,
+        "rootstone": 5,
+        "orb_greater": 2,
+        "revive": 1,
+        "xp_bonus": 140,
         "heartstone": 1
       },
-      "enables": "Rootstone for the saddle and the Greater Orb, and the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot).",
-      "understood_when_received": false,
-      "note": "The Heartstone is the one reward whose use is NOT obvious on pickup — progression.json's evolution block names it but nothing says so at the moment it is taken. Left as-is: it sits in an optional branch chamber off the critical path, so a player who finds it has already chosen to explore, and spelling it out would pre-empt the evolution discovery. Flagged here rather than silently passed."
+      "enables": "Plus 4 rootstone and 1 stone from the cave's own wall deposits. Two Greater Orbs the moment the branch door goes down, with the game's only wild Terrapup standing behind it; rootstone for the saddle and the Greater Orb recipe; and the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot).",
+      "understood_when_received": true,
+      "note": "CONTENT-0828, owner playtest 2026-08-28 (\"there needs to be a point to going in the burrows warren\"). This row is where that complaint shows up as a number. The old payout was 45 coins, 4 rootstone and 60 xp \u2014 the chapter's ONE REQUIRED DUNGEON, five resident fights and a level-14 guardian at a measured 5-9 minutes, paying LESS than Pell, the optional picket standing 35 m outside its own door (40 coins, 2 potions, 3 orbs), and under a third of relay_captain Vance one band later. A boss that pays picket money is a boss with no point. Same reward SHAPE as every other row here \u2014 no second economy, per this file's own _comment_no_new_systems \u2014 at boss scale. The Greater Orbs are the deliberate part and they follow this region's own established logic: trainers.json says Pell pays BASIC orbs because \"the reward for clearing the door is the means to catch what is behind it\", so the guardian pays GREATER orbs because what is behind HIM, through the door his defeat just opened, is the only wild Terrapup in the game (burrow_warrens.json _comment_spawns_special) at level 13. The Heartstone's use is legible at the moment it is taken \u2014 BAND2-63-WARRENS put the evolution lead into the pickup line itself \u2014 which is what flips understood_when_received; the earlier false predates that change."
     },
     {
       "activity": "relay_picket_hess",

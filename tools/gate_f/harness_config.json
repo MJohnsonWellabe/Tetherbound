@@ -43,6 +43,20 @@
   "_comment_cost_probe_frames": "Frames the pre-flight times to measure what one costs here. Wall clock across real frames, not Performance.TIME_PROCESS, because the readback and PNG encode are most of the cost in capture mode and the CPU monitor does not see them. 20 frames is about 3.5 minutes under llvmpipe at 1920x1080 and under a second in logic mode.",
   "cost_probe_frames": 20,
 
+  "_comment_cost_probe_budget_s": "Added 2026-08-28 from the run-2 BLOCKER. The probe must not become the cost it is measuring. cost_probe_frames was written when a frame cost 6 ms, where 20 of them cost 0.12 s; the run-2 run measured 6.465 s per in-world frame under llvmpipe, at which price the same probe costs over two minutes -- and the re-price now runs after EVERY boot, not once. The probe stops as soon as it has both cost_probe_min_frames samples and this many seconds of elapsed time; the answer does not get better after that and the segment is paying for it.",
+  "cost_probe_budget_s": 20.0,
+  "cost_probe_min_frames": 4,
+
+  "_comment_cost_recheck_frames": "Added 2026-08-28. How often, in physics frames actually ticked, a segment re-prices its REMAINDER against what frames are costing right now. Free by construction: it divides wall already spent by frames already ticked, so it needs no probe. It exists because a scene gets more expensive as the player walks into it, and because the world stand-up on a New Game is not a `boot` step -- S01's own run shows the in-play recheck catching 0.591 s/frame where no boot re-price could have.",
+  "cost_recheck_frames": 120,
+
+  "_comment_cost_log_change_fraction": "How far the measured frame cost has to move before a recheck earns a row in the ledger. A recheck every 120 frames over a 12,000-frame segment is a hundred rows saying the same 16.6 ms, which buries the two rows that matter and bloats every artefact carrying them. Boot re-prices and refusals are always kept, and `cost_rechecks` carries the count of the ones that were not, so the sampling stays auditable.",
+  "cost_log_change_fraction": 0.25,
+
+  "_comment_disk": "Added 2026-08-28 from the run-2 BLOCKER's third finding: disk is a ceiling nobody had priced. At section H's planned cadences the eighteen segments were about 25 GB BEFORE the frame-cost multiplier, into a container with 23 GB free, and doubled again by the copy .git has to carry for the evidence to survive the container. The pre-flight now estimates bytes from a MEASURED PNG (its own self-test, at the real capture resolution) against a real `df`, and refuses a segment that cannot fit -- a hard refusal, like cost, that --gatef-allow-no-capture cannot waive. disk_reserve_bytes is what is left alone (2 GiB); disk_git_factor is 1.0 outside a work tree and applies only where git says the run directory is inside one. A df that cannot answer reads as NOT GATED, never as no room.",
+  "disk_reserve_bytes": 2147483648,
+  "disk_git_factor": 2.0,
+
   "_comment_degenerate": "A prescribed capture whose frame is this flat AND this dark is a photograph of an obstruction rather than of the game -- a camera inside geometry, a near field filled by something opaque, a fade caught mid-frame. Calibrated against X07's own 79 recovered frames, and the separation is not the one you would guess: mean luminance does NOT work, because the two DARKEST frames in that set are legitimate night captures. the_pond-night-gameplay is mean 25.1 / stddev 41.1 / 58.4% below luma 24; the_rise-gameplay is mean 26.6 / stddev 29.0 / 75.5% dark. The night frame is darker in the mean and still holds its contrast -- sky, moon, silhouette -- while the degenerate one is flat. So the test is dark fraction AND spread, both, and the thresholds sit between the two populations with the next-darkest of the other 75 frames at 0.284 / 48.8. The dark fraction tops out near 0.755 rather than 1.0 because the HUD is in the frame; these numbers are measured against that reality, not against a bare viewport.",
   "degenerate_dark_fraction": 0.65,
   "degenerate_stddev": 35.0

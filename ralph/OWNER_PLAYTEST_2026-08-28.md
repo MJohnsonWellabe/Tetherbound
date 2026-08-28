@@ -159,3 +159,131 @@ holding the alpha and the prize is the one room in that dungeon a player is
 meant to remember. If constructed space is the weakness, that chamber is where
 fixing it matters most, and the two items should be built together rather than
 in sequence.
+
+---
+
+## 7. REGRESSION — grass grows through indoor buildings
+
+> *"grass grows through indoor buildings now"*
+
+**"Now" is the important word: this is a regression introduced by enabling the
+grass field on 2026-08-27**, and it is live in the build the owner is playing.
+
+**Mechanism, read out of `grass_field.gd`.** The field's ONLY exclusion is
+terrain *texture* names:
+
+    for entry: Variant in cfg.get("forbidden_ground", ["rock", "path"]):
+        ...
+    _material.set_shader_parameter("forbidden_base_mask", mask)
+
+That keeps grass off painted rock and painted path. It has **no concept of a
+building footprint, a floor, or an interior.** A structure standing on
+grass-painted terrain therefore has grass growing up through it, because from
+the field's point of view that ground is still grass.
+
+The old scatter did not have this problem in the same way: its placements are
+baked, and `playground_heightfield.gd::_apply_flats` flattens eleven building
+pads that the bake is authored around. The runtime field never learned any of
+that.
+
+**There is already a precedent for the fix in the same file.** `grass_field.gd`
+carries a channel described as *"Tell the grass where the bushes gather, so it
+gives way to them"* — so a mechanism for the field yielding to other content
+exists and works. Buildings plausibly want the same treatment rather than a new
+one.
+
+**This does not license changing the look.** The owner's standing instruction
+holds: density, colour, silhouette, wind and the cover tiers stay as they are.
+Grass should stop existing inside buildings; it should look identical
+everywhere else.
+
+Worth checking while in there, since they share a cause: whether grass also grows
+through any other placed structure — the Warrens' surface entrances, the
+stronghold, jetties, bridges, or the player's own built pieces. The owner named
+buildings; the defect is "the field does not know about placed geometry".
+
+---
+
+## 8. TMs are cardboard cards — all three surfaces
+
+> *"the tms are everywhere that they look bad b there cardboard cards."*
+
+So the answer to "which surface" is **all of them**, and the reason is the asset
+rather than the presentation: a TM is represented as a flat card. World pickup
+(`tm_pickup.gd`), backpack entry (`tab_backpack.gd`) and reward moment
+(`chapter_rewards.json`, `trade.json`) all show the same thing, so fixing one
+surface fixes none of it.
+
+A TM is a permanent, chapter-scale reward — `chapter_rewards.json` hands them out
+at chapter beats and `trade.json` sells four of them. It should read as an
+object worth crossing a map for. A flat card reads as a placeholder.
+
+Note the standing constraint: a new mesh needs owner-supplied reference art, and
+Meshy is reserved for Team Tether hero objects. Whether a TM qualifies for new
+art is an owner call, not a lane's — but material, form and presentation work is
+available without it.
+
+---
+
+## 2a. WHY catching sucks — owner names it, and it is aiming
+
+Asked to localise, and correcting a lane's theory:
+
+> *"that's not why catching sucks. the cone of visibility of where the ball is
+> going needs to be way more obvious. when you go into throwing, it needs to aim
+> you onto the creature. aim assist needs to be stronger."*
+
+Three separate requirements, all about **aiming**, none about throw physics,
+catch probability or the catch UI:
+
+1. **The throw cone must be far more legible.** The player cannot currently see
+   where the orb is going. This is a readability problem in the aiming
+   indicator itself — not a tuning value.
+2. **Entering throw mode must aim you at the creature.** Today the player enters
+   the mode pointing wherever the camera was. The owner wants the act of raising
+   the orb to acquire the target.
+3. **Aim assist must be stronger** once aiming.
+
+**The lane's earlier finding is NOT the cause.** It found that the first catch's
+objective hint renders "press F" because `combat_throw` has exactly one binding
+in `project.godot` — keyboard F, no joypad event — so the glyph resolver has
+nothing else to name. That is a genuine defect and a violation of CLAUDE.md's
+"Controller first" hard rule, and it should still be fixed. It is not why
+catching feels bad. Recorded so the correction travels with the finding.
+
+## 2b. Creatures do not stand out in the grass — a CREATURE fix, not a grass fix
+
+> *"creatures need to stand out in the grass. some are now too small to see or
+> they're the color of the grass. bramble bun might be both."*
+
+**"Now" dates this to the grass field going on**, and the HUD/catch lane
+independently reached the same observation from its own frames before the owner
+said it — *"the wild creature is most of the way hidden by the grass field at
+throwing range"* — which it correctly flagged as belonging to another lane
+rather than acting on.
+
+**The fix is on the creature side. The grass does not change.** The owner has
+said three times that the grass is awesome and must not be touched; density,
+colour, silhouette, wind and cover tiers are frozen. Thinning grass to reveal
+creatures would trade a feature the owner loves for a problem that has a cheaper
+answer.
+
+Two distinct causes named, and `bramblebun` is suspected of both:
+
+- **Too small to see.** A creature shorter than the grass it stands in is
+  invisible regardless of colour. Compare measured creature heights against the
+  field's tuft height — `bramblebun` is the smallest of the early roster.
+- **The colour of the grass.** A green creature in green cover has no
+  separation. This is a value/hue/saturation problem, and CLAUDE.md explicitly
+  sanctions the tools: *"differentiate with materials, textures, modest scale,
+  animation, VFX, traits, habitat, behavior and encounter context"* — and
+  forbids new meshes for the Meadows.
+
+So the available levers are modest scale, material and texture separation,
+animation (motion breaks camouflage where colour does not), rim or fresnel
+treatment, and VFX. This is the same class of fix as `GF-B-010`'s material work,
+not a content rebuild.
+
+**This directly feeds 2a.** Aim assist cannot help a player aim at something they
+cannot see, and a throw cone is only legible against a target that reads. The two
+should be judged together in the same frames.
