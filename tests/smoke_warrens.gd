@@ -411,6 +411,11 @@ func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
 	progression.call("set_flag", "warrens_cleared", false)
 	var before_coin := int(inventory.call("count", "coin"))
 	var before_rootstone := int(inventory.call("count", "rootstone"))
+	_before.clear()
+	for entry: Variant in _clear_reward().get("items", []):
+		var id := str((entry as Dictionary).get("id", ""))
+		if id != "":
+			_before[id] = int(inventory.call("count", id))
 
 	if not bool(warrens.call("grant_clear_reward")):
 		_fail("the first clear paid nothing")
@@ -420,6 +425,30 @@ func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
 		after_coin - before_coin, after_rootstone - before_rootstone])
 	if after_coin <= before_coin and after_rootstone <= before_rootstone:
 		_fail("clearing the warrens granted nothing at all")
+
+	# CONTENT-0828. Coin and rootstone alone are not the payout any more, and
+	# checking only those two would have missed the part the design turns on.
+	# The clear pays two Greater Orbs on purpose: the door the guardian's
+	# defeat just opened has the only wild Terrapup in the game behind it
+	# (burrow_warrens.json `_comment_spawns_special`), so the reward for
+	# beating the alpha is the means to catch what it was standing in front
+	# of. An item id typo'd in that file pushes an error and pays nothing, and
+	# nothing else in the suite would have caught it: `test_chapter_rewards.gd`
+	# checks the AUDIT names real items, and the audit is a different file from
+	# the config the dungeon actually reads. So the assertion is against the
+	# config's own list rather than against numbers repeated here -- retuning
+	# the payout stays a data edit, dropping an item on the floor does not.
+	var reward: Dictionary = _clear_reward()
+	for entry: Variant in reward.get("items", []):
+		var item: Dictionary = entry as Dictionary
+		var id := str(item.get("id", ""))
+		var want := int(item.get("count", 0))
+		if id == "" or want <= 0:
+			continue
+		var moved: int = int(inventory.call("count", id)) - int(_before.get(id, 0))
+		print("  clear reward: %d %s" % [moved, id])
+		if moved < want:
+			_fail("the clear reward names %d %s and the satchel gained %d" % [want, id, moved])
 
 	if bool(warrens.call("grant_clear_reward")):
 		_fail("clearing the warrens a second time paid again; the story reward is not once-only")
@@ -431,6 +460,24 @@ func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
 
 
 ## --- harness ---------------------------------------------------------------
+
+## What each reward item's count was before the payout, keyed by item id.
+var _before: Dictionary = {}
+
+
+## The clear reward as the dungeon's own config declares it. Read here rather
+## than duplicated as literals so retuning the payout stays a data edit.
+func _clear_reward() -> Dictionary:
+	var file := FileAccess.open("res://data/config/burrow_warrens.json", FileAccess.READ)
+	if file == null:
+		_fail("burrow_warrens.json will not open")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		_fail("burrow_warrens.json did not parse as an object")
+		return {}
+	return ((parsed as Dictionary).get("clear", {}) as Dictionary).get("reward", {}) as Dictionary
+
 
 func _put_down(player: CharacterBody3D, at: Vector3) -> void:
 	player.global_position = at

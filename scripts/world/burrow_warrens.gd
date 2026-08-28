@@ -105,6 +105,10 @@ var _chambers: Dictionary = {}          # id -> chamber dict
 var _markers: Dictionary = {}           # name -> global Vector3
 var _materials: Dictionary = {}
 var _footprint: Array = []              # local AABB rectangles [minx, minz, maxx, maxz]
+## CONTENT-0828. `[centre, radius]` per passage, in local metres. Filled by
+## `_build_passages()` and read by `_build_interior_rock()`.
+var _doorways: Array = []
+
 var _vault_door: StaticBody3D = null
 var _vault_door_mesh: MeshInstance3D = null
 var _guardian: Node3D = null
@@ -161,6 +165,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_mound()
 	_build_deposits()
 	_build_dressing()
+	_build_interior_rock()
 	_build_prize()
 	_sync_vault_door()
 
@@ -388,6 +393,10 @@ func _build_passages() -> void:
 		var height := float(passage.get("height", 2.6))
 		var lateral := a.z if along_x else a.x
 		var centre := Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
+		# CONTENT-0828. Kept so the interior rock pass can stay out of the
+		# doorways -- a boulder in a passage mouth is a wall the player has to
+		# walk round in the one place a cave gives them no room to.
+		_doorways.append([centre, maxf(width, length) * 0.5 + 1.6])
 
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
 		var ceiling_size := Vector3(length, 0.8, width + _wall_t * 2.0)
@@ -414,6 +423,18 @@ func _build_passages() -> void:
 ## The one door in the cave. A rock slab filling the passage, removed for good
 ## once the guardian is down (`_sync_vault_door`). No prompt, no UI, no key:
 ## it is a mechanism, the same way SC14's bridge is.
+##
+## CONTENT-0828: the slab also has to be SEEN, from the den floor, while the
+## alpha is still alive. The owner's report is that there is no point going in,
+## and a sealed grey box the same colour as the wall it sits in is a wall --
+## the player fought the guardian in a room with no visible reason to be there
+## and only discovered the branch afterwards, if at all. `seam` is that reason:
+## a thin emissive line down the door's own face and a warm light on the vault
+## side of it, so what the player can see across the den is a shut way on with
+## something lit behind it. That is the whole difference between a fight at the
+## end of a corridor and a fight for what is through the door, and it is the
+## `encounter context` lever CLAUDE.md names -- no new mesh, no new system, and
+## the light dies with the door it belongs to.
 func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: float) -> void:
 	var size := Vector3(0.6, height, width) if along_x else Vector3(width, height, 0.6)
 	var colour := Color(str(_config.get("site", {}).get("vault_door_colour", "#6d5f4a")))
@@ -425,6 +446,7 @@ func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: flo
 	_vault_door_mesh.position = Vector3(centre.x, _floor_y + height * 0.5, centre.z)
 	_vault_door_mesh.name = "VaultDoor"
 	add_child(_vault_door_mesh)
+	_build_vault_door_seam(along_x, width, height, size)
 
 	_vault_door = StaticBody3D.new()
 	_vault_door.name = "VaultDoorBody"
@@ -435,6 +457,61 @@ func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: flo
 	_vault_door.add_child(shape)
 	_vault_door.position = _vault_door_mesh.position
 	add_child(_vault_door)
+
+
+## The lit half of the door above. Parented to the door MESH, not to the cave,
+## so `_sync_vault_door()` hiding the slab takes the seam and the glow with it
+## in one move and there is no second thing to remember to switch off.
+##
+## All of it is tunable from `site.vault_door_seam`; setting `energy` to 0
+## turns the whole treatment off without touching this file.
+func _build_vault_door_seam(along_x: bool, width: float, height: float, size: Vector3) -> void:
+	var cfg: Dictionary = _config.get("site", {}).get("vault_door_seam", {})
+	var energy := float(cfg.get("energy", 1.1))
+	if energy <= 0.0:
+		return
+	var glow := Color(str(cfg.get("colour", "#e0a761")))
+	var seam_w := float(cfg.get("width_m", 0.14))
+
+	# The seam runs floor-to-lintel down the middle of the face the den sees.
+	# `size` is the slab; the strip is a hair proud of it on both sides so it
+	# does not z-fight the face it is drawn on, and it reads from the vault
+	# side too for a player walking back out.
+	var strip := MeshInstance3D.new()
+	strip.name = "VaultDoorSeam"
+	var bar := BoxMesh.new()
+	bar.size = Vector3(size.x + 0.04, height * 0.86, seam_w) if along_x \
+		else Vector3(seam_w, height * 0.86, size.z + 0.04)
+	strip.mesh = bar
+	var lit := StandardMaterial3D.new()
+	lit.albedo_color = glow
+	lit.emission_enabled = true
+	lit.emission = glow
+	lit.emission_energy_multiplier = float(cfg.get("emission", 1.6))
+	lit.roughness = 0.6
+	strip.material_override = lit
+	_vault_door_mesh.add_child(strip)
+
+	# Warm spill on the VAULT side, at knee height: the light of the room the
+	# door is shut on, leaking around it. Offset along the passage axis so it
+	# sits behind the slab rather than inside it.
+	var lamp := OmniLight3D.new()
+	lamp.name = "VaultDoorGlow"
+	lamp.light_color = glow
+	lamp.light_energy = energy
+	lamp.omni_range = float(cfg.get("range_m", 6.0))
+	var push := float(cfg.get("spill_offset_m", 0.9))
+	# `+x` is toward the vault when the passage runs along x (the vault sits at
+	# local x=15 against the den's 0); otherwise `+z`. Read off the chamber
+	# rather than hardcoded so a relocated cave keeps the light on the right
+	# side of its own door.
+	var vault_centre := _local_of((_chambers.get("vault", {}) as Dictionary).get("at", []))
+	var den_centre := _local_of((_chambers.get("den", {}) as Dictionary).get("at", []))
+	var toward: Vector3 = (vault_centre - den_centre).normalized()
+	if toward.length() < 0.5:
+		toward = Vector3.RIGHT if along_x else Vector3.BACK
+	lamp.position = toward * push + Vector3.UP * (height * -0.5 + 0.8)
+	_vault_door_mesh.add_child(lamp)
 
 
 ## The way in, and the reason this is not just a doorway: the cave floor sits
@@ -699,6 +776,261 @@ func _build_mound() -> void:
 				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint)
 
 
+## CONTENT-0828. What turns these rooms from boxes into a cave.
+##
+## The owner localised the "some locations look lame" complaint on 2026-08-28
+## and it is a claim about METHOD, not about assets:
+##
+##   *"burrow warrens and the castle are the lame looking locations. basically
+##   everywhere we had to build an under ground or build a building"*
+##
+## The terrain, the scatter and the grass drew no complaint. The two spaces
+## this project ASSEMBLES did. And the before-frames of this cave say exactly
+## why: `docs/evidence/content-0828/04-vault-prize-after.png` is a perfect
+## rectangular box -- four flat walls meeting at hard 90-degree corners, a flat
+## ceiling, a flat floor, one triplanar texture at one scale across all of it.
+## The meadow next door has hundreds of pieces of variety per comparable area.
+## The room does not read as unfinished because the rock texture is bad; it
+## reads as unfinished because a cave does not have corners.
+##
+## So this breaks the three junctions that say "box", and nothing else:
+##
+##   * the wall/floor line, with boulders banked along the inside of each wall;
+##   * the wall/ceiling line, with rock tucked into the ceiling corners;
+##   * the flat floor plane, with scree thinning inward from the walls.
+##
+## Three rules keep it from becoming the problem it is fixing. **It hugs the
+## walls** -- everything sits within `edge_band_m` of a wall face, so the
+## middle of every room is untouched and a fight in the den still has the arena
+## `combat_arena_bounds_at()` promises it. **It stays out of the doorways**
+## (`_doorways`, recorded by `_build_passages()`), because a boulder in a
+## passage mouth is a wall in the one place a cave gives no room to walk round.
+## And **it has no colliders** -- the models are plain glTF instances, the same
+## as `_build_site_skirt()`'s ground cover, whose own comment states the rule
+## this follows: dressing, and a pebble that stops a player is a bug.
+##
+## Deliberately the SAME nature family the outcrop outside is built from and
+## tinted with the same `mound.tint`, per D24's one-nature-family rule: the
+## stone inside the hill and the stone showing above it are the same stone.
+## No new mesh, nothing sourced, and nothing here needs owner art -- this is
+## the composition-and-dressing half the playtest's own 4a says is available
+## while modelling is blocked.
+func _build_interior_rock() -> void:
+	var cfg: Dictionary = _config.get("interior_rock", {})
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array[PackedScene] = _load_models(cfg.get("models", []))
+	var scree_models: Array[PackedScene] = _load_models(cfg.get("scree_models", []))
+	if models.is_empty():
+		return
+
+	var holder := Node3D.new()
+	holder.name = "InteriorRock"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 828828))
+	# The interior's OWN tint, not the mound's. See this block's `_comment_tint`
+	# in burrow_warrens.json: the mound value was tuned against rock standing in
+	# direct sun, and under the cave's dim cool pools it let the nature pack's
+	# mint-grey back through -- the exact green a blind critic called "a heap of
+	# enormous cabbages" on the mound, now inside the room. Falls back to the
+	# mound's value so the key stays optional.
+	var tint := Color(str(cfg.get("tint",
+		_config.get("mound", {}).get("tint", "#ffffff"))))
+	var band := float(cfg.get("edge_band_m", 1.7))
+	var placed := 0
+
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 4.0))
+		var half := Vector2(size.x * 0.5, size.y * 0.5)
+
+		# --- the wall/floor line ------------------------------------------
+		# Walked as four edges at a fixed spacing, the same way the mound walks
+		# its perimeter, so the two read as one continuous rock mass either
+		# side of the wall rather than two unrelated decisions.
+		var step := maxf(float(cfg.get("wall_spacing_m", 3.2)), 1.0)
+		var base_scale: Array = cfg.get("wall_scale", [0.8, 1.5])
+		for edge in 4:
+			var along_x := edge < 2
+			var length: float = size.x if along_x else size.y
+			var steps := maxi(int(length / step), 1)
+			for i in steps + 1:
+				var t := float(i) / float(steps)
+				var inward := rng.randf_range(0.15, band)
+				var at := Vector3.ZERO
+				if along_x:
+					var z_side: float = -1.0 if edge == 0 else 1.0
+					at = Vector3(centre.x + lerpf(-half.x, half.x, t), _floor_y,
+						centre.z + z_side * (half.y - inward))
+				else:
+					var x_side: float = -1.0 if edge == 2 else 1.0
+					at = Vector3(centre.x + x_side * (half.x - inward), _floor_y,
+						centre.z + lerpf(-half.y, half.y, t))
+				at.x += rng.randf_range(-0.5, 0.5)
+				at.z += rng.randf_range(-0.5, 0.5)
+				if _blocks_a_doorway(at):
+					continue
+				# Sunk so the boulder grows out of the floor rather than
+				# standing on it, which is the difference between rock and
+				# furniture. Capped against the room's own height so a wall
+				# boulder can never become a ceiling one.
+				var drop := float(cfg.get("wall_sink_m", 0.45))
+				_place_interior_rock(holder, models, rng, at + Vector3.DOWN * drop,
+					base_scale, tint, height * float(cfg.get("wall_height_cap", 0.55)),
+					float(cfg.get("wall_width_cap_m", 1.9)))
+				placed += 1
+
+		# --- the wall/ceiling line ----------------------------------------
+		# Four corners only. The ceiling's MIDDLE stays clear on purpose: that
+		# is where the mound's roof rocks used to hang through, and a frame
+		# with rock over the guardian's head is the frame this pass exists to
+		# stop producing.
+		var corner_scale: Array = cfg.get("corner_scale", [1.1, 1.9])
+		for cx in [-1.0, 1.0]:
+			for cz in [-1.0, 1.0]:
+				var at := Vector3(
+					centre.x + cx * (half.x - rng.randf_range(0.2, 1.0)),
+					_floor_y + height + float(cfg.get("corner_lift_m", 0.35)),
+					centre.z + cz * (half.y - rng.randf_range(0.2, 1.0)))
+				if _blocks_a_doorway(at):
+					continue
+				_place_interior_rock(holder, models, rng, at, corner_scale, tint,
+					height * 0.4, float(cfg.get("corner_width_cap_m", 2.2)))
+				placed += 1
+
+		# --- the floor plane ----------------------------------------------
+		# Weighted to the walls with the same `pow(randf(), n)` the site skirt
+		# uses and for the same reason: what reads as scree is thick at the
+		# foot of the rock and thin toward the middle of the room.
+		if not scree_models.is_empty():
+			var scree_count := int(cfg.get("scree_per_chamber", 18))
+			var scree_scale: Array = cfg.get("scree_scale", [0.35, 0.95])
+			for i in scree_count:
+				var edge_bias: float = 1.0 - pow(rng.randf(), 2.2)
+				var side := rng.randi() % 2
+				var at := Vector3(
+					centre.x + rng.randf_range(-half.x, half.x),
+					_floor_y - 0.05,
+					centre.z + rng.randf_range(-half.y, half.y))
+				# Pull it toward whichever wall pair this piece belongs to.
+				if side == 0:
+					at.z = centre.z + signf(at.z - centre.z) * lerpf(0.3, half.y - 0.2, edge_bias)
+				else:
+					at.x = centre.x + signf(at.x - centre.x) * lerpf(0.3, half.x - 0.2, edge_bias)
+				if _blocks_a_doorway(at):
+					continue
+				_place_interior_rock(holder, scree_models, rng, at, scree_scale, tint,
+					float(cfg.get("scree_height_cap_m", 0.5)),
+					float(cfg.get("scree_width_cap_m", 1.0)))
+				placed += 1
+
+	if placed > 0:
+		print("[warrens] %d pieces of interior rock across %d chambers" % [
+			placed, _chambers.size()])
+
+
+## Is this local point in a passage mouth?
+func _blocks_a_doorway(at: Vector3) -> bool:
+	for entry: Array in _doorways:
+		var centre: Vector3 = entry[0]
+		if Vector2(at.x - centre.x, at.z - centre.z).length() < float(entry[1]):
+			return true
+	return false
+
+
+## One piece of interior rock. `height_cap` above zero re-scales the piece down
+## if it would stand taller than that -- measured, not assumed, because these
+## models arrive at different sizes and a wall boulder that reaches the ceiling
+## is the intrusion this pass replaced.
+func _place_interior_rock(holder: Node3D, models: Array[PackedScene],
+		rng: RandomNumberGenerator, at: Vector3, scale_range: Array,
+		tint: Color, height_cap: float, width_cap: float) -> void:
+	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
+	if art == null:
+		return
+	var low := float(scale_range[0]) if scale_range.size() > 0 else 0.8
+	var high := float(scale_range[1]) if scale_range.size() > 1 else 1.4
+	art.scale = Vector3.ONE * rng.randf_range(low, high)
+	art.position = at
+	art.rotation = Vector3(
+		rng.randf_range(-0.25, 0.25),
+		rng.randf_range(-PI, PI),
+		rng.randf_range(-0.25, 0.25))
+	holder.add_child(art)
+	# Measured, then re-scaled to fit -- twice, because a boulder can be wrong
+	# in two directions and round 2 of this pass only checked one. `height_cap`
+	# kept a wall rock from becoming a ceiling rock and said nothing about
+	# WIDTH, and the frames showed the cost: a five-metre-wide rock sitting
+	# correctly against the den wall still reaches two and a half metres into
+	# the room, and one of them ended up between the camera and the guardian --
+	# the exact failure this pass replaced. Both caps are applied to the
+	# measured bounds rather than to the scale factor, because these models
+	# arrive at different sizes and a scale number means nothing across them.
+	var fit := 1.0
+	var box := _bounds_of(art)
+	if height_cap > 0.0 and box.size.y > height_cap and box.size.y > 0.01:
+		fit = minf(fit, height_cap / box.size.y)
+	if width_cap > 0.0:
+		var widest: float = maxf(box.size.x, box.size.z)
+		if widest > width_cap and widest > 0.01:
+			fit = minf(fit, width_cap / widest)
+	if fit < 1.0:
+		art.scale *= fit
+	_wear_the_cave_stone(art, tint)
+
+
+## Round 2 of this pass tinted these rocks and the frames said no twice: at
+## `mound.tint` and again at a much warmer value, the nature pack's mint-grey
+## came back through and the cave filled with green.
+##
+## `_tint_rock()` MULTIPLIES `albedo_color`, which is the right tool outside --
+## it keeps each rock's own shading and texture variation under strong sun, and
+## two blind rounds tuned the mound with it. Inside, under 0.3-1.5 energy
+## pools, the multiply is doing almost none of the work: what survives is the
+## model's own texture, and that texture is mint.
+##
+## So stop guessing at multipliers and give the interior rock the SAME material
+## the wall behind it is made of -- `_material(colour, 0, textured)`, the
+## triplanar `Rock030` stone every chamber wall and ceiling already wears
+## (MAT-BLOCKOUT). Triplanar is what makes this legal on models whose UVs were
+## authored for something else: it projects from world space and needs no UVs
+## at all, which is the same reason the walls use it on primitive boxes of
+## varying size. The result is not a rock that has been tinted to look like the
+## cave. It is the cave's own stone, in a rock shape.
+##
+## `tint` is kept as the per-piece variation: each rock takes the site's rock
+## colour nudged toward its own value, so the bank along a wall is not one flat
+## sheet of identical stone.
+func _wear_the_cave_stone(node: Node, tint: Color) -> void:
+	var stone := _material(_rock().lerp(tint, 0.35), 0.0, true)
+	for child in _mesh_boxes_nodes(node):
+		var instance := child as MeshInstance3D
+		var mesh := instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			instance.set_surface_override_material(surface, stone)
+
+
+func _mesh_boxes_nodes(node: Node) -> Array[Node]:
+	var found: Array[Node] = []
+	if node is MeshInstance3D:
+		found.append(node)
+	for child in node.get_children():
+		found.append_array(_mesh_boxes_nodes(child))
+	return found
+
+
+func _load_models(paths: Variant) -> Array[PackedScene]:
+	var loaded: Array[PackedScene] = []
+	for path: Variant in (paths if paths is Array else []):
+		var packed: PackedScene = load(str(path)) as PackedScene
+		if packed != null:
+			loaded.append(packed)
+	return loaded
+
+
 ## Ground cover for the ground this site cleared.
 ##
 ## `_clear_the_ground_the_cave_stands_on()` takes every scattered tree, rock
@@ -793,7 +1125,116 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 		rng.randf_range(-PI, PI),
 		rng.randf_range(-0.18, 0.18))
 	holder.add_child(art)
+	_keep_rock_out_of_the_rooms(art)
 	_tint_rock(art, tint)
+
+
+## CONTENT-0828. The one thing `_place_rock()` never checked: whether the
+## boulder it just dropped ends up INSIDE the cave.
+##
+## Found in frames, not in reasoning. The 2026-08-28 before-capture of the den
+## and the vault came back with huge faceted olive slabs filling both rooms,
+## one of them standing between the camera and the guardian in the single shot
+## that exists to show the guardian. They are these rocks.
+##
+## The arithmetic that puts them there. Roof rocks are placed at `top =
+## _floor_y + chamber height + 0.8` and then moved DOWN by `sink_m` (1.2), so
+## the model's own origin lands 0.4 m BELOW the ceiling it is supposed to be
+## sitting on -- and is then scaled by up to `roof_scale`'s 2.8. Nothing
+## measured the result. Whatever hangs below that origin hangs into the room,
+## multiplied by the scale factor. Perimeter rocks reach the same way from the
+## side: their top course sits at `_floor_y + tallest - 1.0` on the footprint's
+## bounding-box edge, which for the den's far wall, the vault's +x wall and the
+## warren's -x wall IS a chamber wall, with 1.2 m of jitter and up to 3.6x
+## scale to carry it through.
+##
+## BAND2-63-WARRENS is where this became visible: it lowered every ceiling by
+## 0.6-1.2 m to stop the cave reading as a six-metre slab on the skyline, which
+## was right, and neither `sink_m` nor the roof grid was re-checked against the
+## new ceilings.
+##
+## The fix is the technique this codebase already uses for exactly this class
+## of problem -- `creature_body.gd::_fit()` measures an imported model's bounds
+## rather than trusting a hand-tuned offset per asset, because every model
+## arrives differently. Same here: measure what was actually instantiated and
+## scaled, and if its underside is below the ceiling of a chamber it stands
+## over, lift it until it is not. A rock over open ground is untouched, so the
+## outcrop's silhouette from the road is the silhouette that was tuned.
+func _keep_rock_out_of_the_rooms(art: Node3D) -> void:
+	var box := _bounds_of(art)
+	if box.size == Vector3.ZERO:
+		return
+	# The rock's OWN extent, not the point it was placed at. The first version
+	# of this tested only `art.position`, and the vault came back still full of
+	# rock: perimeter boulders are placed ON the footprint's bounding-box edge
+	# with up to 1.2 m of jitter, so their origin sits legitimately OUTSIDE the
+	# room while up to 3.6x of scaled geometry reaches back through the wall.
+	# Three walls do this and they are the three the bounding box touches --
+	# the den's far wall, the vault's +x wall and the warren's -x wall.
+	var ceiling := _ceiling_over_box(box)
+	if is_inf(ceiling):
+		return
+	if box.position.y < ceiling:
+		art.position.y += ceiling - box.position.y
+
+
+## The highest ceiling of any chamber this box actually reaches INTO, or -INF
+## when it clears every room.
+##
+## Tested against each chamber's INTERIOR rect, deliberately without the wall
+## thickness the other footprint tests add. A boulder standing against the
+## outside of a wall is the outcrop doing its job -- two blind rounds tuned
+## those courses so the cave's mass is broken all the way up rather than
+## reading as a grey slab with a hedge on top. Only geometry that comes past
+## the wall's inner face is in a room, and only that is moved.
+##
+## Highest rather than nearest because chamber rects are allowed to touch: a
+## rock over the seam between two rooms has to clear the taller of them.
+func _ceiling_over_box(box: AABB) -> float:
+	var best := -INF
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		if box.position.x + box.size.x < centre.x - size.x * 0.5:
+			continue
+		if box.position.x > centre.x + size.x * 0.5:
+			continue
+		if box.position.z + box.size.z < centre.z - size.y * 0.5:
+			continue
+		if box.position.z > centre.z + size.y * 0.5:
+			continue
+		best = maxf(best, _floor_y + float(chamber.get("height", 4.0)))
+	return best
+
+
+## The AABB of everything a placed model draws, in THIS node's own local frame
+## -- the frame `_floor_y` and the chamber rects are in.
+##
+## Walked with an accumulated transform rather than read off
+## `global_transform`, because `_build_mound()` runs during `build()` and must
+## not depend on whether this node is in the tree yet. `art.transform` is the
+## starting frame because `Mound` sits at identity under this node.
+func _bounds_of(art: Node3D) -> AABB:
+	var box := AABB()
+	var seeded := false
+	for pair: Array in _mesh_boxes(art, art.transform):
+		var found: AABB = pair[0]
+		box = found if not seeded else box.merge(found)
+		seeded = true
+	return box if seeded else AABB()
+
+
+func _mesh_boxes(node: Node, xform: Transform3D) -> Array:
+	var found: Array = []
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		if instance.mesh != null:
+			found.append([xform * instance.get_aabb()])
+	for child in node.get_children():
+		var child_3d := child as Node3D
+		found.append_array(_mesh_boxes(child, xform * child_3d.transform if child_3d != null else xform))
+	return found
 
 
 ## The nature pack's rocks ship a cool mint-grey. Beside this cave's own warm
@@ -977,6 +1418,24 @@ func _spawn_population(director: Node) -> void:
 				"name": "Warrens_%s_%d" % [str(spec.get("species", "")), n + 1],
 			})
 			if body != null:
+				# CONTENT-0828. Optional, and used by exactly one entry today:
+				# the vault's Terrapup is the ONLY wild Terrapup in the whole
+				# game (`_comment_spawns_special`), and nothing told the player
+				# that. It read as one more aggressive animal in a dark room,
+				# so a player who fled it or beat it never learned they had
+				# just passed the rarest catch in the chapter. A name is the
+				# cheapest honest signal and it is the same two-object write
+				# `_dress_the_guardian()` documents at length: the BODY's
+				# `display_name` is what the engage prompt shows, the INSTANCE's
+				# `nickname` is what the combat plate shows, and writing the
+				# nickname rather than the instance's `display_name` keeps the
+				# species underneath so catching it does not lose what it is.
+				var label := str(spec.get("nickname", ""))
+				if label != "":
+					body.set("display_name", label)
+					var body_instance: Object = body.get("instance")
+					if body_instance != null:
+						body_instance.set("nickname", label)
 				_population.append(body)
 
 	var guardian: Dictionary = _config.get("guardian", {})
@@ -1001,41 +1460,90 @@ func _spawn_population(director: Node) -> void:
 ## What makes the thing at the bottom read as the thing at the bottom.
 ##
 ## Prompt 63's acceptance asks for a guardian that is `memorable, not standard
-## fight + HP`, and level 14 on an otherwise ordinary Burrowback body is
-## exactly the second thing: the engage prompt said `Engage Burrowback`, the
-## combat plate said `Burrowback`, and it stood the same height as the level-11
-## Trailpup one room back. Both changes here are PRESENTATION and are the kind
-## CLAUDE.md explicitly names as the alternative to a new mesh (D23) or an
-## invented legendary (spec Sec20).
+## fight + HP`, and the owner's 2026-08-28 playtest reports the same thing from
+## the other end -- "there needs to be a point to going in the burrows warren.
+## like a prize at the bottom or an alpha animal or something." The cave HAS a
+## guardian and a prize; what it did not have was a guardian that reads as an
+## alpha, and this game already knows how to build one.
 ##
-##   * The name goes on TWO different objects because two different screens
-##     read two different things: `encounter_director.gd`'s engage prompt reads
-##     the BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the
-##     INSTANCE through `creature_instance.label()`, which prefers `nickname`
-##     and falls back to the species name. Writing the nickname rather than
-##     overwriting the instance's own `display_name` is what keeps the species
-##     underneath -- a player who CATCHES the guardian (legal, and this cave
-##     says so out loud) gets a creature called Warren Guardian that still
-##     knows it is a Burrowback. That is the bug encounter_director.gd:463
-##     already documents, not to be reintroduced here.
-##   * `art_scale` multiplies the model pivot only. The capsule, the hit cone's
-##     reach and the catch accuracy bonus are all built from species.json's
-##     `height`/`radius` by `creature_body.gd::_build_placeholder()` on
-##     purpose, so scaling the body itself would silently retune the fight;
-##     scaling the silhouette makes it bigger without touching a single number
-##     the fight is balanced on.
+## CONTENT-0828: this now routes the guardian through the SAME alpha
+## presentation every ordinary field cluster uses -- `encounter_director.gd`'s
+## `_make_alpha()` is the reference and this is deliberately the same three
+## calls in the same order, because the chapter's boss reading as less of an
+## alpha than a roadside duskhush was the actual defect:
+##
+##   * `apply_size_multiplier()` replaces the old `art_scale`. The old key
+##     multiplied the MODEL PIVOT only, on the stated reasoning that scaling
+##     the body would retune the fight. That reasoning is backwards and
+##     `creature_body.gd`'s own PW2 note says so at the declaration of
+##     `body_scale`: the collider, the hit cone's reach and the catch accuracy
+##     bonus all read `_height`/`_radius`, so scaling only the art gives a
+##     three-metre silhouette with a field burrowback's capsule -- a throw or a
+##     swing that visually connects resolves against a body that is not there.
+##     That is the invisible discrepancy PW2 forbids, and it is why every band
+##     alpha in `data/config/bands/*/spawns.json` uses the multiplier instead.
+##     Scale drops 1.4 -> `scale` (1.35) because it is now a real reach change
+##     and not just a picture.
+##   * `set_alpha(true)` is the half that costs nothing and was simply never
+##     called here. `creature_burrowback_lod0_base_color_alpha.png` and its
+##     emissive sibling are ALREADY INSTALLED -- the heavier-stone-plates
+##     repaint CREATURE-IDENTITY-2 authored for exactly this species -- plus
+##     the silhouette rim and the ring of drifting motes. D23 forbids a new
+##     mesh and spec Sec20 forbids inventing a legendary; material, texture,
+##     modest scale, VFX and encounter context are what CLAUDE.md names as the
+##     differentiation that IS allowed, and all of it was sitting unused.
+##   * `signature_move` gives the fight a shape instead of a bigger number.
+##     `creature_instance.gd` holds `move_quick`/`move_charged` as plain fields
+##     resolved through `move_db.gd`, so this is a per-instance override and
+##     not a species edit -- ordinary burrowbacks out in the meadow are
+##     untouched. `earth_fist` (1.4x power against `tremor_roll`'s 1.0, 0.62s
+##     windup, 72-degree cone) is deliberately DIRECTIONAL: `earthshatter` is
+##     the harder move and is exactly wrong here, because a 360-degree 7.5m
+##     move inside a den whose `combat_arena_bounds_at()` clearance is about
+##     six metres cannot be stepped out of, and an unavoidable hit is not a
+##     memorable fight. A longer windup the player can read and walk around
+##     is. Level stays 14: SH47/D42 lowered it deliberately against measured
+##     pacing and this pass does not reopen that.
+##
+## The name still goes on TWO different objects because two different screens
+## read two different things: `encounter_director.gd`'s engage prompt reads the
+## BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the INSTANCE
+## through `creature_instance.label()`, which prefers `nickname` and falls back
+## to the species name. Writing the nickname rather than overwriting the
+## instance's own `display_name` is what keeps the species underneath -- a
+## player who CATCHES the guardian (legal, and this cave says so out loud) gets
+## a creature called Warren Guardian that still knows it is a Burrowback, and
+## keeps its Earth Fist. That is the bug encounter_director.gd:463 already
+## documents, not to be reintroduced here.
 func _dress_the_guardian(spec: Dictionary) -> void:
 	var nickname := str(spec.get("nickname", ""))
+	var instance: Object = _guardian.get("instance")
 	if nickname != "":
 		_guardian.set("display_name", nickname)
-		var instance: Object = _guardian.get("instance")
 		if instance != null:
 			instance.set("nickname", nickname)
-	var art_scale := float(spec.get("art_scale", 1.0))
-	if not is_equal_approx(art_scale, 1.0) and _guardian.has_method("model_pivot"):
-		var pivot: Node3D = _guardian.call("model_pivot") as Node3D
-		if pivot != null:
-			pivot.scale = Vector3.ONE * art_scale
+
+	# Per-instance, never a species edit: the meadow's own burrowbacks keep
+	# `species.json`'s `tremor_roll`.
+	if instance != null:
+		var quick := str(spec.get("signature_quick", ""))
+		if quick != "":
+			instance.set("move_quick", quick)
+		var charged := str(spec.get("signature_move", ""))
+		if charged != "":
+			instance.set("move_charged", charged)
+
+	# Order matters and is the same order `_make_alpha()` uses: the multiplier
+	# rebuilds the art from the species look, which would discard the dressing
+	# if `set_alpha()` had already applied it.
+	var scale := float(spec.get("scale", spec.get("art_scale", 1.0)))
+	if not is_equal_approx(scale, 1.0) and _guardian.has_method("apply_size_multiplier"):
+		_guardian.call("apply_size_multiplier", scale)
+	if _guardian.has_method("set_alpha"):
+		_guardian.call("set_alpha", true)
+	# Same marker `_make_alpha()` sets, so anything asking "is this an alpha"
+	# gets one answer for the field and the dungeon alike.
+	_guardian.set_meta("alpha", true)
 
 
 ## --- clearing --------------------------------------------------------------
@@ -1083,7 +1591,8 @@ func grant_clear_reward() -> bool:
 		_sync_vault_door()
 		return false
 	progression.call("set_flag", _clear_flag())
-	_sync_vault_door()
+	# The one call that animates: this is the moment the guardian fell.
+	_sync_vault_door(true)
 
 	var reward: Dictionary = _config.get("clear", {}).get("reward", {})
 	var game := get_node_or_null(^"/root/Game")
@@ -1131,15 +1640,60 @@ func grant_clear_reward() -> bool:
 
 ## The branch door follows the flag, both at build time (a returning player
 ## walks into an open branch) and the moment the guardian falls.
-func _sync_vault_door() -> void:
+##
+## CONTENT-0828: `animate` is what separates those two cases. At BUILD time the
+## flag is already set and the door must simply not be there -- a returning
+## player walking into an open branch must not watch a door they already opened
+## grind down again. At the moment the guardian falls it is the payoff beat, so
+## the slab SINKS into the floor rather than blinking out of existence. Same
+## mechanism either way (`is_cleared()` is still the only authority and the
+## collider is still what actually stops a player), just shown rather than
+## skipped -- the door is the one moving part in the cave and the only thing
+## the player's win visibly does to the world.
+func _sync_vault_door(animate := false) -> void:
 	var open := is_cleared()
 	if _vault_door != null:
 		_vault_door.process_mode = Node.PROCESS_MODE_DISABLED if open else Node.PROCESS_MODE_INHERIT
 		for child in _vault_door.get_children():
 			if child is CollisionShape3D:
 				(child as CollisionShape3D).disabled = open
-	if _vault_door_mesh != null:
-		_vault_door_mesh.visible = not open
+	if _vault_door_mesh == null:
+		return
+	if not open:
+		_vault_door_mesh.visible = true
+		_vault_door_mesh.position.y = _door_shut_y()
+		return
+	if not animate or not is_inside_tree():
+		_vault_door_mesh.visible = false
+		return
+	# Down by its own height plus the skirt the walls already extend below the
+	# floor, so it is genuinely gone under the slab rather than parked with its
+	# top edge showing. Hidden at the end because a mesh sunk into geometry is
+	# still drawn.
+	var mesh: MeshInstance3D = _vault_door_mesh
+	var drop := _door_travel()
+	var seconds := float(_config.get("site", {}).get("vault_door_seam", {}).get("open_seconds", 1.4))
+	var tween := create_tween()
+	tween.tween_property(mesh, "position:y", _door_shut_y() - drop, seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(func() -> void:
+		if is_instance_valid(mesh):
+			mesh.visible = false)
+
+
+## Where the slab sits when it is shut. Recomputed rather than remembered so a
+## re-sync after an animated open cannot leave the door parked underground.
+func _door_shut_y() -> float:
+	var height := 0.0
+	var box: BoxMesh = _vault_door_mesh.mesh as BoxMesh if _vault_door_mesh != null else null
+	if box != null:
+		height = box.size.y
+	return _floor_y + height * 0.5
+
+
+func _door_travel() -> float:
+	var box: BoxMesh = _vault_door_mesh.mesh as BoxMesh if _vault_door_mesh != null else null
+	return ((box.size.y if box != null else 3.0) + _skirt * 0.5)
 
 
 func branch_is_open() -> bool:
