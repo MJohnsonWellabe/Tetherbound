@@ -120,12 +120,29 @@ uniform float ground_blend : hint_range(0.0, 1.0) = 0.55;
 // hand-over does not read as a line.
 uniform float drift_scale = 0.11;
 uniform float drift_contrast : hint_range(0.0, 1.0) = 0.78;
-// Mottle. A second, finer noise that moves the tint between base and tip. It is
-// what replaces the near field's per-tuft shade jitter at a scale the eye can
-// still see from an overlook -- without it the far ground is one flat fill,
-// which is the defect being fixed wearing a different colour.
+// Mottle. The noise that moves the tint between base and tip and, through
+// `mottle_value`, moves its brightness too. It is what replaces the near
+// field's per-tuft shade jitter at a scale the eye can still see from an
+// overlook.
+//
+// IT IS NOT DECORATION, it is the whole reason the sheet is not a flat filter.
+// A blend at `strength` dilutes whatever texture the terrain's own albedo had
+// by exactly that fraction, so a wash with no texture of its own leaves the far
+// ground SMOOTHER than it found it -- measured on the first version of this
+// shader as an 11% drop in edge energy across the 03-rise-overlook mid band,
+// which is the original defect (flat painted ground) made slightly flatter and
+// tinted green. `mottle_value` is what pays that back.
+//
+// `mottle_detail` is a second octave at ~3x the frequency, and
+// `mottle_detail_range` is where it stops: a 1m feature at 400m is a sub-pixel
+// flicker, not texture, and under minification it aliases into crawling
+// speckle rather than reading as ground. Full inside half the range, gone at
+// the range.
 uniform float mottle_scale = 0.34;
 uniform float mottle_strength : hint_range(0.0, 1.0) = 0.7;
+uniform float mottle_value : hint_range(0.0, 1.0) = 0.30;
+uniform float mottle_detail : hint_range(0.0, 1.0) = 0.75;
+uniform float mottle_detail_range = 260.0;
 
 // Which terrain textures the sheet refuses, as a bitmask over base texture id,
 // set from `grass_field.json`'s `forbidden_ground` by name. Refusing `path` is
@@ -140,9 +157,18 @@ uniform vec3 built[24];
 uniform int built_count = 0;
 uniform vec3 built_bounds = vec3(0.0);
 
-varying float v_alpha;
+// The noise below is evaluated in the FRAGMENT stage, and that is not a style
+// choice. The sheet's vertices are `far_cell` (6m) apart while the mottle's
+// finest feature is about a metre -- sampling it per vertex undersamples it by
+// six times, so the first version of this shader carried a mottle uniform that
+// contributed almost nothing to the frame and the far ground came out as a
+// flat tint. World position is what crosses the stage boundary instead; it
+// interpolates exactly, so the fragment reconstructs the same field the vertex
+// would have, at the resolution it is actually being looked at.
+varying vec2 v_world_xz;
 varying vec3 v_ground_colour;
-varying float v_mottle;
+varying float v_ramp;
+varying float v_dist;
 
 // ---------------------------------------------------------------------------
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader, exactly as
@@ -257,22 +283,20 @@ void vertex() {
 	bool hole = bool(control >> 2u & 0x1u);
 	bool forbidden = ((forbidden_base_mask >> base_id) & 1) == 1;
 
-	float dist = length(world_xz - field_centre.xz);
+	v_world_xz = world_xz;
+	v_dist = length(world_xz - field_centre.xz);
 	// IN over the grass ring's own fade, OUT over a band four times as wide.
 	// The asymmetry is the whole edge argument: the near hand-over happens
 	// where there is still real grass to hide behind, the far one has only its
 	// own slowness and the haze.
-	float ramp = smoothstep(fade_in_start, fade_in_end, dist)
-			* (1.0 - smoothstep(fade_out_start, far_radius, dist));
-
-	// The grass tier's own drift field, evaluated with the grass tier's own
-	// numbers, so the far ground's open patches continue the near field's.
-	float drift = mix(1.0, value_noise(world_xz * drift_scale), drift_contrast);
-	v_mottle = value_noise(world_xz * mottle_scale);
-
-	v_alpha = strength * ramp * drift;
+	v_ramp = smoothstep(fade_in_start, fade_in_end, v_dist)
+			* (1.0 - smoothstep(fade_out_start, far_radius, v_dist));
+	// The exclusions stay per-VERTEX, unlike the noise. They are decided by the
+	// control map, which is itself only sampled per terrain texel, and letting
+	// them interpolate over a cell gives the path verges a few metres of
+	// feather instead of a stepped edge -- which is what they want anyway.
 	if (off_map || hole || forbidden || on_built_ground(world_xz)) {
-		v_alpha = 0.0;
+		v_ramp = 0.0;
 	}
 
 	// Sit the sheet on the ground it sampled. `lift` is why the depth test does
@@ -281,16 +305,37 @@ void vertex() {
 }
 
 void fragment() {
-	if (v_alpha <= 0.002) {
+	if (v_ramp <= 0.002) {
 		discard;
 	}
+	// The GRASS TIER'S drift field, at fragment resolution. This gates the
+	// alpha, so the far ground has genuinely open patches in the same
+	// world-space places the near field has them rather than a uniform veil.
+	float drift = mix(1.0, value_noise(v_world_xz * drift_scale), drift_contrast);
+
+	// Two octaves. The fine one is dropped with distance -- see
+	// `mottle_detail_range` -- because past that it is smaller than a pixel and
+	// contributes crawling speckle instead of texture.
+	float coarse = value_noise(v_world_xz * mottle_scale);
+	float detail = mottle_detail * (1.0 - smoothstep(mottle_detail_range * 0.5,
+			mottle_detail_range, v_dist));
+	float mottle = coarse;
+	if (detail > 0.001) {
+		mottle = clamp(coarse + (value_noise(v_world_xz * mottle_scale * 3.1) - 0.5)
+				* detail, 0.0, 1.0);
+	}
+
 	// Multiplied by the terrain's colour map, not mixed toward it. That map is
 	// a near-white multiplier over the terrain's albedo (`terrain_playground
 	// .json`'s own entries are #f7f8f2, #fbfbf6), so mixing toward it washes
 	// the tint out -- the grass shader carries the same note against the same
 	// mistake.
-	vec3 tint = mix(tint_base, tint_tip, mix(0.5, v_mottle, mottle_strength));
-	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend);
-	ALPHA = v_alpha;
+	vec3 tint = mix(tint_base, tint_tip, mix(0.5, mottle, mottle_strength));
+	// And the mottle moves BRIGHTNESS as well as hue. Hue variation alone
+	// cannot pay back the contrast the blend dilutes; this is the term that
+	// keeps the far ground from coming out smoother than the paint it replaced.
+	float value = 1.0 + (mottle - 0.5) * 2.0 * mottle_value;
+	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value;
+	ALPHA = strength * v_ramp * drift;
 	ROUGHNESS = 1.0;
 }

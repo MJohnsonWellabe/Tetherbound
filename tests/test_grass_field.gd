@@ -245,7 +245,8 @@ func test_the_far_shader_exists_and_carries_its_uniforms() -> void:
 		"_vertex_density", "field_centre", "far_cell", "fade_in_start",
 		"fade_in_end", "fade_out_start", "far_radius", "strength", "lift",
 		"tint_base", "tint_tip", "ground_blend", "drift_scale", "drift_contrast",
-		"mottle_scale", "mottle_strength", "forbidden_base_mask",
+		"mottle_scale", "mottle_strength", "mottle_value", "mottle_detail",
+		"mottle_detail_range", "forbidden_base_mask",
 		"built", "built_count", "built_bounds",
 	]:
 		assert_true(shader.code.contains("uniform") and shader.code.contains(uniform),

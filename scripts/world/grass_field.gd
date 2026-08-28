@@ -583,6 +583,7 @@ func _build_far_cover(cfg: Dictionary) -> void:
 	for key: String in [
 		"fade_in_start", "fade_in_end", "fade_out_start", "far_radius",
 		"strength", "lift", "ground_blend", "mottle_scale", "mottle_strength",
+		"mottle_value", "mottle_detail", "mottle_detail_range",
 	]:
 		if far_cfg.has(key):
 			_far_material.set_shader_parameter(key, float(far_cfg[key]))
