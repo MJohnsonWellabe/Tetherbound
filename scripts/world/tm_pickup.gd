@@ -82,6 +82,19 @@ func _deactivate() -> void:
 ## the ground. Emissive for the same reason key_pickup.gd's key is: the
 ## Compatibility renderer's flat ambient leaves a purely-diffuse small prop
 ## unreadable at a distance (see that file's own material comment).
+## TM-ORB asset paths and scale. The board's own scale note is 18-22cm; 0.20
+## is the middle of it. The generated mesh measures ~1.899m across its
+## bounding box, so the ratio below is what brings it to game scale -- stated
+## as a measured source diameter rather than a magic number, so a re-export at
+## a different scale is one edit.
+const ORB_MESH_PATH := "res://assets/props/tm_orb/tm_orb.glb"
+const ORB_SHELL_PATH := "res://assets/props/tm_orb/tm_orb_shell.png"
+const ORB_EMISSIVE_MASK_PATH := "res://assets/props/tm_orb/tm_orb_emissive_mask.png"
+const ORB_DIAMETER_M := 0.20
+const ORB_SOURCE_DIAMETER_M := 1.899
+const ORB_EMISSION_ENERGY := 1.6
+
+
 func _build_visual() -> void:
 	var colour: Color = _tms.call("colour", _tm_id) if _tms != null else Color(0.6, 0.6, 0.6)
 
@@ -93,26 +106,94 @@ func _build_visual() -> void:
 	material.emission = colour
 	material.emission_energy_multiplier = 0.9
 
-	var slab := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = Vector3(0.32, 0.46, 0.04)
-	slab.mesh = box
-	slab.material_override = material
-	slab.position = Vector3.UP * 0.28
-	add_child(slab)
+	# TM-ORB, 2026-08-28. This was two BoxMeshes -- a 4cm slab with a 1cm rune
+	# stuck to its face -- which is exactly what the owner's playtest called
+	# "cardboard cards". Replaced with the orb generated from their reference
+	# board (docs/art/reference/tm_orb_board.png, ledger entry in
+	# docs/ASSET_LEDGER.md).
+	#
+	# ONE MESH, TEN MATERIALS. `tm_db.colour()` already returns a colour per
+	# TM, and the board draws the ten type variants as hue swaps over one
+	# body, so the mesh is shared and only the material differs -- the same
+	# economy character_model.gd uses for villager palettes.
+	#
+	# The shell map has the core texels neutralised to greyscale and the core
+	# rides the emissive mask, so tinting the core CANNOT drag the stone and
+	# brass with it. Tinting the generated albedo directly would have.
+	# A .glb imports as a PackedScene, NOT a Mesh. Assigning the loaded
+	# resource straight to MeshInstance3D.mesh type-fails and renders
+	# nothing at all -- silently, with no error in a release build. Found by
+	# rendering this and getting an empty frame, which is why it is a
+	# comment and not a bug.
+	var orb: Node3D = null
+	var packed: PackedScene = load(ORB_MESH_PATH) as PackedScene
+	if packed != null:
+		orb = packed.instantiate() as Node3D
+	if orb == null:
+		# Degrade to the old plain shape rather than to an invisible pickup.
+		var fallback := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = ORB_DIAMETER_M * 0.5
+		sphere.height = ORB_DIAMETER_M
+		fallback.mesh = sphere
+		fallback.material_override = _orb_material(colour)
+		fallback.position = Vector3.UP * (ORB_DIAMETER_M * 0.5)
+		add_child(fallback)
+		push_warning("tm_pickup: %s did not load as a PackedScene" % ORB_MESH_PATH)
+		return
+	# The material rides on the instantiated MeshInstance3D children rather
+	# than on the parent: material_override on a Node3D does nothing.
+	var mat := _orb_material(colour)
+	for child in orb.get_children():
+		if child is MeshInstance3D:
+			(child as MeshInstance3D).material_override = mat
+	# The board's scale note is 18-22cm; the generated mesh measures 1.8998m
+	# across its AABB, so it is scaled rather than trusted.
+	orb.scale = Vector3.ONE * (ORB_DIAMETER_M / ORB_SOURCE_DIAMETER_M)
+	orb.position = Vector3.UP * (ORB_DIAMETER_M * 0.5)
+	add_child(orb)
 
-	var rune := MeshInstance3D.new()
-	var rune_mesh := BoxMesh.new()
-	rune_mesh.size = Vector3(0.16, 0.16, 0.01)
-	rune.mesh = rune_mesh
-	var rune_material := StandardMaterial3D.new()
-	rune_material.albedo_color = Color(1.0, 1.0, 1.0)
-	rune_material.emission_enabled = true
-	rune_material.emission = Color(1.0, 1.0, 1.0)
-	rune_material.emission_energy_multiplier = 1.4
-	rune.material_override = rune_material
-	rune.position = Vector3(0.0, 0.28, 0.026)
-	add_child(rune)
+
+## The orb's material: pale stone and brass from the shell map, with the type
+## colour confined to the emissive core.
+##
+## `material` above is left as it was and is no longer used for the body --
+## it stays because the fallback path below still wants a plain tinted
+## material when the generated textures are missing.
+func _orb_material(colour: Color) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	var shell: Texture2D = load(ORB_SHELL_PATH) if ResourceLoader.exists(ORB_SHELL_PATH) else null
+	if shell == null:
+		# Degrade to a tinted sphere rather than to nothing. An absent texture
+		# should look plain, not invisible.
+		mat.albedo_color = colour
+		mat.metallic = 0.05
+		mat.roughness = 0.5
+		mat.emission_enabled = true
+		mat.emission = colour
+		mat.emission_energy_multiplier = 0.9
+		return mat
+	mat.albedo_texture = shell
+	mat.albedo_color = Color(1.0, 1.0, 1.0)
+	mat.metallic = 0.0
+	mat.roughness = 0.8
+	var mask: Texture2D = load(ORB_EMISSIVE_MASK_PATH) if ResourceLoader.exists(ORB_EMISSIVE_MASK_PATH) else null
+	if mask != null:
+		# The mask is the board's "emissive intensity (dynamic)" channel: the
+		# generated glTF ships NO emissive at all -- its glow is painted into
+		# albedo -- so this is authored rather than imported.
+		mat.emission_enabled = true
+		mat.emission_texture = mask
+		mat.emission = colour
+		mat.emission_energy_multiplier = ORB_EMISSION_ENERGY
+		# MULTIPLY, not the default ADD. Godot's spatial shader computes
+		# ADD as (emission + emission_tex) * energy, so the emission COLOUR
+		# is emitted over the whole mesh and the texture only adds on top --
+		# the mask gates nothing. Rendered as a green orb with a white core
+		# before this line existed. MULTIPLY makes the mask what decides
+		# where the colour appears, which is the point of having one.
+		mat.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+	return mat
 
 
 func _on_picked_up() -> void:

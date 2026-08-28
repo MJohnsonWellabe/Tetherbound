@@ -134,7 +134,10 @@ would shift the stone and brass along with the core.
 
 So the generation supplies **form**, and the material is authored here:
 
-- `tm_orb_basecolor.png` — the generated albedo, kept verbatim as the record.
+- `tm_orb_0.jpg` — the generated albedo. **Not committed separately**: Godot's
+  glTF import extracts the texture embedded in `tm_orb.glb` to this path, and it
+  is byte-identical to what Meshy returned (sha256 verified), so a hand-copied
+  second PNG was 2.9 MB of exact duplicate and was removed.
 - `tm_orb_emissive_mask.png` — the core, extracted by hue. The core occupies
   **3.36% of texels** and is the only content in the 160–220° hue band above
   0.25 saturation, so it separates cleanly despite being scattered across the
