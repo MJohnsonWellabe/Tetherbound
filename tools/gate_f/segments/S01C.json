@@ -1,0 +1,85 @@
+{
+  "id": "S01C",
+  "title": "S01 CAPTURE lane: the front door, photographed",
+  "lane": "journey",
+  "evidence_lane": "capture",
+  "owes": [
+    "GF-01-TITLE-01"
+  ],
+  "record_hz": 0,
+  "_comment": "Section H/G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md section H.1. This is the CAPTURE lane for S01: it takes the prescribed section G frame at the named state, rather than recording continuously through the segment. S01 runs the same opening headless for its mechanics and telemetry and hands this id here.",
+  "_comment_why_this_is_the_same_evidence": "GF-01-TITLE-01's named state is 'title screen fully loaded, S01' and the production path to it is a wiped user:// and a boot. That is what this segment does, step for step, from the same fresh save S01-02 makes -- so the frame is of the same state S01 photographed on 2026-08-27 (1920x1080, mean luma 50.8, spread 32.4, 5.4% dark), taken from the same production path, at a cost of a boot and a handful of frames rather than of the segment. Section 0.6 is satisfied: free_build off, no teleport, no granted items, no debug state.",
+  "_comment_states_a_save_cannot_restore": "Not every section G frame is reachable this cheaply. A title screen needs only a boot; a mid-dialogue or mid-fight frame is not a saveable state and its capture lane has to be seeded from the logic lane's nearest save (seed_save + boot + await_load) and then staged forward by a short scripted approach. That is still seconds of play per frame instead of hours, and it is the authoring pattern the remaining segments' capture lanes follow.",
+  "steps": [
+    {
+      "id": "S01C-01",
+      "action": "note",
+      "title": "declare the lane",
+      "args": {
+        "text": "CAPTURE lane for S01. Section H.1: the prescribed screenshots are taken at named states by this lane; S01 runs the journey headless for its logic. This segment owes exactly GF-01-TITLE-01 and the harness has already checked, before step 1, that a capture step here takes it."
+      },
+      "expected": "a note event opens the segment"
+    },
+    {
+      "id": "S01C-02",
+      "action": "wipe_saves",
+      "title": "fresh user:// (section B: S01's entry save is 'none (fresh)')",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "no save slots exist, so the title screen is the one a first-time player sees"
+    },
+    {
+      "id": "S01C-03",
+      "action": "boot",
+      "title": "boot the title screen",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the title scene stands up and the harness re-prices against it"
+    },
+    {
+      "id": "S01C-04",
+      "action": "assert",
+      "title": "the game is actually at the title",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context == title; a frame taken in another context is a frame of something else"
+    },
+    {
+      "id": "S01C-05",
+      "action": "assert",
+      "title": "the title screen owns focus",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "a Control holds focus, so the frame shows a live front door rather than a dead one"
+    },
+    {
+      "id": "S01C-06",
+      "action": "capture",
+      "title": "GF-01-TITLE-01",
+      "args": {
+        "id": "GF-01-TITLE-01",
+        "class": "1",
+        "hud": "as shipped",
+        "camera_kind": "title cam",
+        "trigger": "title screen fully loaded, S01",
+        "intended_proof": "front door is a real game's front door; save slots legible"
+      },
+      "expected": "a 1920x1080 PNG exists on disk on its manifest row, non-degenerate"
+    },
+    {
+      "id": "S01C-07",
+      "action": "note",
+      "title": "close",
+      "args": {
+        "text": "The debt S01 handed over is paid here. tools/gate_f/run_inventory.py is what checks that over the whole run directory: a delegation nobody paid is a run-level deficiency even when both segments' own inventories are complete."
+      },
+      "expected": "a note event closes the segment"
+    }
+  ]
+}

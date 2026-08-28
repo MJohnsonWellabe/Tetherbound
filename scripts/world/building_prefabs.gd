@@ -142,6 +142,14 @@ func load_recipes() -> bool:
 	return not _recipes.is_empty()
 
 
+## The raw recipe for a prefab, or an empty Dictionary. Read-only: callers that
+## need to know a prefab's own SHAPE -- `village.gd` asking whether a structure
+## has a floor and how wide its modules run -- should ask the recipe rather than
+## keep a second list of building sizes somewhere else.
+func recipe(prefab_name: String) -> Dictionary:
+	return _recipes.get(prefab_name, {})
+
+
 func has_prefab(prefab_name: String) -> bool:
 	return _recipes.has(prefab_name)
 

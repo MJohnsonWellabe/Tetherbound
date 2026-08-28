@@ -433,8 +433,11 @@ func test_the_verdict_ledger_counts_skips_separately() -> void:
 	# A SKIP is not a pass and not a finding. Folding it into either is how a
 	# derailed segment reads as executed.
 	var source := _harness_source()
-	assert_true(source.contains("_verdicts := {\"PASS\": 0, \"FAIL\": 0, \"SKIP\": 0}"),
-		"the verdict ledger must count SKIP separately from PASS and FAIL")
+	assert_true(source.contains("_verdicts := {\"PASS\": 0, \"FAIL\": 0, \"SKIP\": 0, \"DELEGATED\": 0}"),
+		"the verdict ledger must count SKIP separately from PASS and FAIL — and, since the "
+		+ "2026-08-27 evidence split, DELEGATED separately from all three. A prescribed frame a "
+		+ "logic lane handed to its capture lane is neither a success, a finding, nor a question "
+		+ "the envelope could not ask.")
 	assert_true(source.contains("\"skipped\": int(_verdicts[\"SKIP\"])"),
 		"INVENTORY.json must report the skips, or a derailed segment reads as executed")
 
@@ -802,3 +805,238 @@ func test_the_degenerate_thresholds_separate_night_from_useless() -> void:
 		"both conditions must hold for a frame to be called degenerate; darkness alone would "
 		+ "throw away every legitimate night capture (the next-darkest 75 frames sit at %.3f dark)"
 			% next_darkest_dark)
+
+# --- run-2 BLOCKER, finding 1: two clocks that were both wall clock ----------
+
+func test_route_and_the_recorder_are_driven_by_play_time_not_wall_time() -> void:
+	# §D takes elapsed time, `since_interaction_s` and every dead-travel
+	# interval out of route.csv *precisely because* "harness wall time lies" —
+	# and until 2026-08-28 route.csv's `t` and its 2 Hz cadence WERE harness
+	# wall time, as was §H's "PNG every 2 s". On a box where one rendered frame
+	# costs 6.465 s that inflates every duration by ~388x, and fires the 0.5 Hz
+	# recorder on every rendered frame: S01 planned ~90 frames and was on course
+	# for ~5,400, about 10 GB, into 23 GB free.
+	var source := _harness_source()
+	assert_true(source.contains("func _play_t() -> float:"),
+		"there must be a play clock distinct from the wall clock")
+	assert_true(source.contains("Engine.get_physics_frames() - _t0_frames"),
+		"play time is the elapsed time the GAME believes in, counted in physics steps — not an "
+		+ "accumulator, which would miss the steps a slow rendered frame packs in")
+	var trace := source.substr(source.find("func _write_trace_row("))
+	trace = trace.substr(0, trace.find("\n\n\n"))
+	assert_true(trace.contains("_play_t()") and not trace.contains("_wall_t()"),
+		"route.csv's `t` must be play time; §D's whole point is that it is not wall time")
+	var tick := source.substr(source.find("func _tick(delta: float) -> void:"))
+	tick = tick.substr(0, tick.find("\n\n\n"))
+	assert_true(tick.contains("if _play_t() >= _next_trace_t:"),
+		"the 2 Hz trace cadence must be 2 Hz of PLAY")
+	var rec := source.substr(source.find("func _recorder_tick() -> void:"))
+	rec = rec.substr(0, rec.find("\n\n\n"))
+	assert_true(rec.contains("_play_t() >= _record_next_t"),
+		"§H's 'PNG every 2 s' must be 2 s of PLAY, or a slow box records every frame it draws")
+	assert_false(rec.contains("_wall_t()"),
+		"nothing in the recorder cadence may read wall time")
+
+
+func test_the_run_records_which_clock_each_consumer_reads() -> void:
+	# The instrument said neither, and a reader had to infer it from source —
+	# which is how it went unnoticed through every run since the harness was
+	# written.
+	var source := _harness_source()
+	assert_true(source.contains("\"clocks\": {"),
+		"RUN_METADATA.json must say which clock each consumer reads")
+	assert_true(source.contains("\"route_csv_t\": \"play"),
+		"and it must name route.csv's `t` specifically, since that is the one §D reads")
+	assert_true(source.contains("\"cost_gate_and_disk_gate\": \"wall"),
+		"the gates about the BOX must stay on wall time; they are not questions about the game")
+
+
+# --- run-2 BLOCKER, finding 2: the cost gate priced the wrong scene ----------
+
+func test_the_cost_gate_reprices_after_every_boot_not_only_the_first() -> void:
+	# For every journey segment the FIRST boot is the title screen. Measured on
+	# one box, one segment, one day: 0.0065 s/frame on the empty tree, 0.0465
+	# re-priced on the title (what the gate used — 505 s predicted for S01), and
+	# 6.465 in the Meadows (70,197 s). 139x under-price. Every capture-bearing
+	# segment should have blocked; two did.
+	var source := _harness_source()
+	assert_false(source.contains("_reprice_done"),
+		"the re-price must not be a one-shot: the scene the segment spends its hours in is the one "
+		+ "that comes up SECOND")
+	assert_true(source.contains("await _reprice(\"boot:%s\" % which, ms)"),
+		"every boot must re-price, and the price must be named for the scene it was taken in")
+	assert_true(source.contains("static func _predict_frames_from("),
+		"a re-price must cost the frames that are LEFT; re-charging for a boot already paid for "
+		+ "would refuse work that is genuinely affordable")
+	assert_true(source.contains("func _cost_recheck() -> void:"),
+		"and it must re-check as the price changes, not only when a scene changes")
+
+
+func test_a_wait_stops_when_the_cost_gate_trips_mid_step() -> void:
+	# S01-09 asks for 10,800 physics frames — 19.4 hours at the measured price.
+	# A gate that could only act at the next STEP boundary would watch all of it
+	# go past.
+	var source := _harness_source()
+	var body := source.substr(source.find("func _step_wait(args: Dictionary) -> String:"))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("if not _blocked.is_empty():"),
+		"`wait` is where the protocol's hours live and must honour a mid-step abort")
+	assert_true(body.contains("FAIL waited %d of %d physics frames"),
+		"and it must say how far it got, not report a completed wait")
+
+
+func test_the_frame_cost_probe_cannot_become_the_cost_it_measures() -> void:
+	var source := _harness_source()
+	var body := source.substr(source.find("func _measure_frame_cost() -> float:"))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("cost_probe_budget_s"),
+		"20 frames is 0.12 s at 6 ms and over two minutes at 6.465 s — EVERY time a scene comes up")
+	assert_true(body.contains("cost_probe_min_frames"),
+		"and it must still take enough samples to mean something")
+
+
+# --- run-2 BLOCKER, finding 3: disk was a ceiling nobody had priced ----------
+
+func test_the_preflight_prices_disk_as_well_as_time() -> void:
+	# At §H's planned cadences the eighteen segments were ~25 GB before the
+	# frame-cost multiplier, into a container with 23 GB free, doubled again by
+	# the copy `.git` has to carry.
+	var source := _harness_source()
+	assert_true(source.contains("func _price_disk("),
+		"a segment that cannot fit its evidence must refuse, exactly as one that cannot afford "
+		+ "its time does")
+	var body := source.substr(source.find("func _price_disk("))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("_preflight.get(\"png_bytes\"")
+		and body.contains("_evidence_png_bytes"),
+		"bytes per PNG must be MEASURED, and the pre-flight self-test is only the FLOOR: it "
+		+ "photographs an empty tree. On S01C it was 10,596 bytes against a real title frame of "
+		+ "65,297 — a 6x under-estimate, which is the same mistake as pricing a segment's time "
+		+ "against the cheapest possible scene. Once a real evidence frame exists, use it.")
+	assert_true(body.contains("_inside_work_tree()"),
+		"evidence has to be committable to survive the container, so the .git copy is part of the "
+		+ "bill — but only where the run directory actually is inside a work tree")
+	assert_true(body.contains("if not _capture_available()"),
+		"a process that cannot render writes no frames; disk must never be a reason to refuse a "
+		+ "logic lane")
+	var free := source.substr(source.find("func _free_bytes("))
+	free = free.substr(0, free.find("\n\n\n"))
+	assert_true(free.contains("return 0.0"),
+		"a df that cannot answer must read as NOT GATED, never as no room. A disk check that "
+		+ "refused every run it could not measure would be this lane's own mistake in mirror image.")
+
+
+func test_a_disk_breach_is_a_hard_refusal_the_acknowledgement_cannot_waive() -> void:
+	var source := _harness_source()
+	var pre := source.substr(source.find("func _preflight_capture("))
+	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
+	var disk := pre.substr(pre.find("\tif plans_evidence:\n\t\tvar disk := _price_disk(frames)"))
+	disk = disk.substr(0, disk.find("\n\n"))
+	assert_true(disk.contains("hard_why = disk_why"),
+		"disk has nothing to do with whether this invocation can take pictures, so "
+		+ "--gatef-allow-no-capture must not be able to waive it")
+
+
+# --- the §H/§G evidence split (owner decision, 2026-08-27) -------------------
+
+func test_a_logic_lane_hands_its_captures_over_rather_than_failing_them() -> void:
+	# Round 1 made an untakeable capture a FAIL, which was right when the
+	# alternative was 9,231 false PASSes. With the lanes split the question moves
+	# one level up: a segment is judged against what ITS LANE owes, and the debt
+	# is checked over the whole run directory. Debt transferred and recorded —
+	# never debt erased.
+	var source := _harness_source()
+	assert_true(source.contains("if _evidence_lane == \"logic\" and (action == \"capture\" or action == \"capture_seq\"):"),
+		"a logic lane must not execute a prescribed capture")
+	assert_true(source.contains("_verdicts[\"DELEGATED\"]"),
+		"and the verdict must be its own word: a delegation is neither a pass, a finding, nor a "
+		+ "question the envelope could not ask")
+	assert_true(source.contains("_write_text(_out_dir.path_join(\"DELEGATED.md\")"),
+		"a reader scanning the run directory must see the debt without opening anything, the same "
+		+ "way INCOMPLETE.md works")
+
+
+func test_an_unbacked_delegation_is_a_blocker_at_step_one() -> void:
+	# The failure this guards is CD-1's shape one level up: a debt discharged by
+	# not mentioning it.
+	var source := _harness_source()
+	assert_true(source.contains("func _check_evidence_lane("),
+		"the handover has to be REAL before a step runs")
+	var body := source.substr(source.find("func _check_evidence_lane("))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("does not exist or does not parse"),
+		"a handover to a file that is not there is a debt that has quietly stopped existing")
+	assert_true(body.contains("Only a\" + \"\n\t\t\t\t+ \" capture lane can accept a capture debt.")
+		or body.contains("capture lane can accept a capture debt"),
+		"only a capture lane may accept a capture debt")
+	assert_true(body.contains("does not accept: %s")
+		or body.contains("\\\"owes\\\" list does not "),
+		"an unaccepted delegation is how a segment would become capture-incomplete forever without "
+		+ "anything ever saying so")
+	assert_true(body.contains("no capture step in this segment"),
+		"and a capture lane that claims an id it never shoots is CD-1 wearing a different hat")
+
+
+func test_the_lane_check_runs_before_the_cost_probe() -> void:
+	# A typo in a delegation should not cost a frame-cost measurement, which on
+	# the Gate F container is tens of seconds.
+	var source := _harness_source()
+	var pre := source.substr(source.find("func _preflight_capture("))
+	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
+	assert_true(pre.find("var lane_why := _check_evidence_lane(steps)")
+		< pre.find("var frame_cost := await _measure_frame_cost()"),
+		"the cheap check goes first")
+
+
+func test_the_freeze_record_may_describe_lanes_and_still_binds_without_them() -> void:
+	# CD-8b must keep working. A run that is headless for its logic lane and X11
+	# for its capture lane cannot be described by one flat display_server — but a
+	# record with NO lanes block must still bind every segment by its flat claim,
+	# so a run that wants a logic lane has to say so in the freeze record BEFORE
+	# the run. Amending a freeze record mid-run to get a segment to start is the
+	# sin CD-8b exists to prevent, and the run-2 operator proved the refusal works
+	# by running into it and NOT editing the record.
+	var source := _harness_source()
+	var body := source.substr(source.find("func _freeze_display_claim("))
+	body = body.substr(0, body.find("\n\n\n"))
+	assert_true(body.contains("record.get(\"lanes\", {})"),
+		"the freeze record may carry a per-lane display-server claim")
+	assert_true(body.contains("(all lanes; the record declares none)"),
+		"and a record with no lanes block must still bind every segment by its flat claim")
+	var pre := source.substr(source.find("func _preflight_capture("))
+	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
+	assert_true(pre.contains("contradiction") and pre.contains("hard_why = claimed"),
+		"the contradiction is still a HARD refusal, not one the acknowledgement flag can waive")
+
+
+func test_the_worked_split_pair_declares_both_halves() -> void:
+	var logic := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tools/gate_f/segments/S01.json")) as Dictionary
+	var capture := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tools/gate_f/segments/S01C.json")) as Dictionary
+	assert_eq(str(logic.get("evidence_lane", "")), "logic")
+	assert_eq(str(logic.get("capture_lane", "")), "S01C")
+	assert_eq(float(logic.get("record_hz", -1.0)), 0.0,
+		"a logic lane keeps no continuous record; that is the thing the split removes")
+	assert_eq(str(capture.get("evidence_lane", "")), "capture")
+	assert_true((capture.get("owes", []) as Array).has("GF-01-TITLE-01"),
+		"the capture lane must accept the id the logic lane hands it")
+	var takes := false
+	for raw: Variant in (capture.get("steps", []) as Array):
+		var step: Dictionary = raw
+		if str(step.get("action", "")) == "capture" \
+				and str((step.get("args", {}) as Dictionary).get("id", "")) == "GF-01-TITLE-01":
+			takes = true
+	assert_true(takes, "and it must actually shoot it")
+
+
+func test_the_run_level_inventory_checks_the_debt_was_paid() -> void:
+	var ledger := FileAccess.get_file_as_string("res://tools/gate_f/run_inventory.py")
+	assert_false(ledger.is_empty(), "the run-level ledger must exist")
+	assert_true(ledger.contains("unpaid_delegations"),
+		"a delegation nobody paid is a run-level deficiency even where every segment is complete")
+	assert_true(ledger.contains("check-ignore"),
+		"and it must ask git the same question the per-segment inventory does — evidence git will "
+		+ "not carry dies with the container")
+	assert_true(ledger.contains("os.path.getsize"),
+		"present must mean present ON DISK, not present in a manifest row")
