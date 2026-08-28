@@ -10,8 +10,10 @@ captured 8% of what it was asked to and four of Phase B's findings turned out to
 be the instrument; the only defence against repeating that is to say, of every
 finding, which of the two it is about — before anyone has to guess.
 
-Four of the five below were found by running. The other was found by reading the
+Five of the six below were found by running. The other was found by reading the
 artefacts of a segment that had already produced a wrong answer.
+
+**If only one of these is read, read RIG-6.**
 
 ---
 
@@ -214,7 +216,67 @@ scripts that open a vendor.
 
 ---
 
-## What these five have in common
+## RIG-6 — the derail mechanism is never invoked by any segment in the protocol
+
+**Severity: BLOCKER for evidence quality. This is the most important finding in
+this document.** Not fixed: it is an edit to eighteen step scripts.
+
+RIG-5 explained *how* one unclosed panel could produce a false navigation
+finding. This is why it produced **fifty-eight** of them.
+
+S03 ran all 274 steps and recorded 64 failures. Sorted by where they fall
+relative to the `SwapPanel` that opened at t=269.8 and never closed:
+
+| | count |
+|---|---:|
+| failures **before** the panel opened | **6** |
+| failures **after** it, every one a step pressing at a panel that owned input | **58** |
+
+The 58 are not 58 findings. They are one modal, counted 58 times. Every
+`move_to` among them fails from the identical position `(22.0, 1.0, -3.0)`;
+every menu, build and map step fails with `context panel:SwapPanel`. Handed to
+Phase B unlabelled they say: *the build system is broken, the map will not open,
+the inventory will not open, focus navigation is broken, and there is a spot in
+the village you cannot walk out of.* **All five are false.**
+
+The harness already has the mechanism that prevents this, written after Phase B
+refuted 202 of round 1's journey failures. The schema states it plainly:
+
+> *"a failed `require_context` records **one** FAIL, at the step that could not
+> [run] … Running the next forty steps anyway does not collect forty more
+> findings; it collects forty fabrications."*
+
+**Counted across all eighteen protocol segments:**
+
+| form | derails? | occurrences |
+|---|---|---:|
+| `assert` with `check: input_context` / `context_prefix` | **no** | **307** |
+| `assert_context` | yes | **0** |
+| step-level `require_context` | yes | **0** |
+
+Both derailing forms appear **only** in `selfcheck_context.json` and
+`selfcheck_reach.json` — the two segments written to test that the mechanism
+works. It does work. No segment that produces evidence has ever used it.
+
+So round 2's headline fix is, as the protocol is actually authored, dead code.
+Every one of the 307 context checks in the run takes the form that records a
+FAIL and carries on to the next step.
+
+**What it costs, measured on this run rather than argued.** S03 alone: 64
+recorded failures, of which 6 are about the game and 58 are one modal. That is a
+**9% signal rate** — and round 1's whole indictment was that it captured 8% of
+what it was asked to. The number has not moved, and this is the mechanism.
+
+**Recommended fix.** Convert the 307 `assert{check: input_context}` /
+`{check: context_prefix}` steps to `assert_context`, which is what they were
+always saying, and add `require_context` to the step classes that must not run
+in the wrong place — every `move_to`, `open_menu`, `interact_with` and
+`press` that assumes the world owns input. One derail and 57 honest SKIPs is a
+segment a reviewer can read. Fifty-eight fabrications is not.
+
+---
+
+## What these six have in common
 
 None of them is about Tetherbound. Three of them — RIG-1, RIG-2, RIG-5 — would
 have been read, in a Phase B that saw only the artefacts, as evidence about the
@@ -225,8 +287,14 @@ RIG-3 and RIG-4 are quieter and the same shape: an instrument that does not
 measure what it says it measures, and an instrument that keeps recording after
 it has stopped pointing at anything.
 
-RIG-5 deserves the last word, because it is not a new defect. It is the one
-Phase B already found in round 1, already diagnosed, and already half-fixed —
-and the half that was left is the half a journey segment spends most of its time
-in. A rig that fixes the modal problem for asserts and not for walking has not
-fixed the modal problem.
+RIG-5 and RIG-6 deserve the last word, because between them they are not a new
+defect. They are the one Phase B already found in round 1, already diagnosed,
+and already fixed — in the harness. The fix was never wired into a single
+segment that produces evidence, and the two self-check files that exercise it
+are the only places in the protocol it appears.
+
+That is the shape to watch for. Round 2 did not fail to build the mechanism; it
+built it, tested it, and left all eighteen segments calling the old form. A rig
+improvement that no segment invokes is indistinguishable, in the artefacts, from
+one that was never made — and S03's 64-failure ledger, 58 of them one modal, is
+what that looks like from Phase B's side of the wall.
