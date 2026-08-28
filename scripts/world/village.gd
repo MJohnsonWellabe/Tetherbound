@@ -70,10 +70,15 @@ func build() -> void:
 ##
 ## WHICH structures: the ones the player stands inside or on, identified from
 ## the prefab's own recipe rather than from a hand-kept list. A recipe with
-## `Floor_` modules has a floor; a recipe with a `room` is enterable. A fence
-## run, an oak or a wagon has neither, and clearing a disc of grass around one
-## would read as a scorch mark -- which is why this is not simply "every
-## structure village.gd places".
+## `Floor_` modules has a floor to stand on; one with a `room` is fitted out
+## inside; one with a `door` can be walked into even when its inside is bare
+## ground, which is `cottage_a` exactly -- no room, no floor modules, a door,
+## and a meadow growing in it that you can see through its own windows.
+##
+## A fence run, a wagon, an oak, a gate leaf and the castle shell have none of
+## the three and are all correctly left alone. The castle is the one that
+## matters: its modules span 36x44, so a rule that took every structure would
+## have cleared a 29m disc of meadow around it.
 ##
 ## The RADIUS is the half-diagonal of the recipe's own module extent plus
 ## `CLEAR_MARGIN`, and that formula is not invented: run against the buildings
@@ -96,7 +101,8 @@ func _ground_clear_radius(prefab_name: String) -> float:
 	var recipe: Dictionary = _prefabs.call("recipe", prefab_name)
 	if recipe.is_empty():
 		return 0.0
-	var has_floor := not (recipe.get("room", {}) as Dictionary).is_empty()
+	var has_floor := not (recipe.get("room", {}) as Dictionary).is_empty() \
+			or not (recipe.get("door", {}) as Dictionary).is_empty()
 	var min_x := INF
 	var max_x := -INF
 	var min_z := INF

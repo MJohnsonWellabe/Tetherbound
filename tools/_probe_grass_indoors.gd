@@ -79,16 +79,26 @@ const SITES := [
 		"floor_y": NAN, "attribute": false},
 	{"name": "workshop", "at": Vector2(2.0, 2.0), "face": Vector2(1.0, 0.0),
 		"floor_y": NAN, "attribute": true},
+	# The cottages are 4m across, so the 3.5m default setback puts the camera in
+	# their own wall. 1.6m keeps it inside the room.
 	{"name": "cottage-a", "at": Vector2(18.0, -2.0), "face": Vector2(1.0, 0.0),
-		"floor_y": NAN, "attribute": false},
+		"floor_y": NAN, "attribute": true, "back": 1.6},
 	{"name": "cottage-b", "at": Vector2(21.0, -14.0), "face": Vector2(1.0, 0.0),
-		"floor_y": NAN, "attribute": false},
+		"floor_y": NAN, "attribute": false, "back": 1.6},
 	{"name": "warrens-mouth", "at": Vector2(-357.0, 2610.0), "face": Vector2(0.0, 1.0),
 		"floor_y": NAN, "attribute": false},
 	{"name": "relay-station", "at": Vector2(350.0, 3760.0), "face": Vector2(0.0, 1.0),
 		"floor_y": NAN, "attribute": false},
 	{"name": "stronghold", "at": Vector2(0.0, 7560.0), "face": Vector2(1.0, 0.0),
 		"floor_y": 8.56, "attribute": true},
+	# THE RISK THIS CHANGE CARRIES, photographed on purpose. Every footprint
+	# above is a disc of ground with no cover on it, and the owner's standing
+	# instruction is that the meadow looks identical everywhere else. A disc
+	# that reaches past a wall reads as a scorch mark around the building, so
+	# the village is shot from outside, from far enough back that the ground
+	# between the buildings is most of the frame.
+	{"name": "village-exterior", "at": Vector2(8.0, -6.0), "face": Vector2(0.35, -1.0),
+		"floor_y": NAN, "attribute": true, "back": 22.0},
 ]
 
 var _field: RefCounted = null
@@ -176,16 +186,17 @@ func _shoot(site: Dictionary) -> void:
 	var at: Vector2 = site["at"]
 	var facing: Vector2 = (site["face"] as Vector2).normalized()
 	var floor_y: float = float(site["floor_y"])
+	var back: float = float(site.get("back", EYE_BACK))
 
 	# Two seatings, the way every probe in this repo does it: the analytic
 	# height first so Terrain3D has somewhere to stream to, then again once the
 	# world around the seat has arrived.
 	_place(at)
-	_frame(at, facing, floor_y)
+	_frame(at, facing, floor_y, back)
 	for i in ARRIVE_FRAMES:
 		await physics_frame
 	_place(at)
-	_frame(at, facing, floor_y)
+	_frame(at, facing, floor_y, back)
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -276,11 +287,13 @@ func _place(at: Vector2) -> void:
 ## Height comes from the ANALYTIC heightfield rather than a downward raycast: a
 ## ray cast from above lands on the ROOF of the building this tool exists to
 ## look inside. A site whose floor is built above the terrain overrides it.
-func _frame(at: Vector2, facing: Vector2, floor_y: float) -> void:
+func _frame(at: Vector2, facing: Vector2, floor_y: float, back: float) -> void:
 	var ground := _floor_of(at, floor_y)
-	var eye := at - facing * EYE_BACK
+	var eye := at - facing * back
 	_camera.global_position = Vector3(eye.x, ground + EYE_UP, eye.y)
-	_camera.look_at(Vector3(at.x, ground + 0.15, at.y), Vector3.UP)
+	# Aimed at the floor for an interior, and at standing height for an
+	# exterior -- a distant camera pitched into the ground shows only ground.
+	_camera.look_at(Vector3(at.x, ground + (0.15 if back <= 6.0 else 1.6), at.y), Vector3.UP)
 
 
 func _floor_of(at: Vector2, floor_y: float) -> float:
