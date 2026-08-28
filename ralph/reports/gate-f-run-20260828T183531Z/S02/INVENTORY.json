@@ -1,0 +1,350 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-02-START-01",
+      "GF-21-WEATHER-01",
+      "GF-02-START-02",
+      "GF-02-START-03",
+      "GF-14-COMBAT-01",
+      "GF-15-CATCH-01",
+      "GF-15-CATCH-02",
+      "GF-03-VILLAGE-01"
+    ],
+    "delegated_to": "S02C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": true,
+  "cost": {
+    "frame_cost_s": 0.046584,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006476,
+        "frames_remaining": 35690,
+        "predicted_remaining_s": 231.6,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.00595
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14357.7,
+        "frame_cost_s": 0.346564,
+        "frames_remaining": 35677,
+        "predicted_remaining_s": 12364.4,
+        "step_index": 6,
+        "wall_spent_s": 42.3,
+        "was_frame_cost_s": 0.006476
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14355.6,
+        "frame_cost_s": 0.016675,
+        "frames_remaining": 35677,
+        "predicted_remaining_s": 594.9,
+        "step_index": 6,
+        "wall_spent_s": 44.4,
+        "was_frame_cost_s": 0.346564
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14167.2,
+        "frame_cost_s": 0.053255,
+        "frames_remaining": 17931,
+        "predicted_remaining_s": 954.9,
+        "step_index": 21,
+        "wall_spent_s": 232.8,
+        "was_frame_cost_s": 0.016773
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14165.2,
+        "frame_cost_s": 0.016649,
+        "frames_remaining": 17931,
+        "predicted_remaining_s": 298.5,
+        "step_index": 21,
+        "wall_spent_s": 234.8,
+        "was_frame_cost_s": 0.053255
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14154.1,
+        "frame_cost_s": 0.024333,
+        "frames_remaining": 17101,
+        "predicted_remaining_s": 416.1,
+        "step_index": 32,
+        "wall_spent_s": 245.9,
+        "was_frame_cost_s": 0.016548
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14152.1,
+        "frame_cost_s": 0.016716,
+        "frames_remaining": 17101,
+        "predicted_remaining_s": 285.9,
+        "step_index": 32,
+        "wall_spent_s": 247.9,
+        "was_frame_cost_s": 0.024333
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14139.5,
+        "frame_cost_s": 0.022006,
+        "frames_remaining": 13038,
+        "predicted_remaining_s": 286.9,
+        "step_index": 35,
+        "wall_spent_s": 260.5,
+        "was_frame_cost_s": 0.016703
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14135.8,
+        "frame_cost_s": 0.030861,
+        "frames_remaining": 12647,
+        "predicted_remaining_s": 390.3,
+        "step_index": 39,
+        "wall_spent_s": 264.2,
+        "was_frame_cost_s": 0.022006
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14133.7,
+        "frame_cost_s": 0.017385,
+        "frames_remaining": 12635,
+        "predicted_remaining_s": 219.7,
+        "step_index": 40,
+        "wall_spent_s": 266.3,
+        "was_frame_cost_s": 0.030861
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14123.1,
+        "frame_cost_s": 0.037075,
+        "frames_remaining": 11767,
+        "predicted_remaining_s": 436.3,
+        "step_index": 51,
+        "wall_spent_s": 276.9,
+        "was_frame_cost_s": 0.016554
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14121.1,
+        "frame_cost_s": 0.016896,
+        "frames_remaining": 11767,
+        "predicted_remaining_s": 198.8,
+        "step_index": 51,
+        "wall_spent_s": 278.9,
+        "was_frame_cost_s": 0.037075
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14045.4,
+        "frame_cost_s": 0.046584,
+        "frames_remaining": 134,
+        "predicted_remaining_s": 6.2,
+        "step_index": 71,
+        "wall_spent_s": 354.6,
+        "was_frame_cost_s": 0.016555
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.49,
+    "capture_available": false,
+    "capture_lane": "S02C",
+    "capture_requested": false,
+    "cost_rechecks": 151,
+    "delegated_captures": 8,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless",
+      "from": "ralph/reports/gate-f-run-20260828T183531Z/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.00595,
+    "measured_frame_cost_s_in_scene": 0.046584,
+    "planned_captures": 0,
+    "predicted_frames": 35723,
+    "predicted_segment_cost_s": 212.6,
+    "predicted_segment_cost_s_in_scene": 360.9,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006476,
+        "frames_remaining": 35690,
+        "predicted_remaining_s": 231.6,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.00595
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14357.7,
+        "frame_cost_s": 0.346564,
+        "frames_remaining": 35677,
+        "predicted_remaining_s": 12364.4,
+        "step_index": 6,
+        "wall_spent_s": 42.3,
+        "was_frame_cost_s": 0.006476
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14355.6,
+        "frame_cost_s": 0.016675,
+        "frames_remaining": 35677,
+        "predicted_remaining_s": 594.9,
+        "step_index": 6,
+        "wall_spent_s": 44.4,
+        "was_frame_cost_s": 0.346564
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14167.2,
+        "frame_cost_s": 0.053255,
+        "frames_remaining": 17931,
+        "predicted_remaining_s": 954.9,
+        "step_index": 21,
+        "wall_spent_s": 232.8,
+        "was_frame_cost_s": 0.016773
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14165.2,
+        "frame_cost_s": 0.016649,
+        "frames_remaining": 17931,
+        "predicted_remaining_s": 298.5,
+        "step_index": 21,
+        "wall_spent_s": 234.8,
+        "was_frame_cost_s": 0.053255
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14154.1,
+        "frame_cost_s": 0.024333,
+        "frames_remaining": 17101,
+        "predicted_remaining_s": 416.1,
+        "step_index": 32,
+        "wall_spent_s": 245.9,
+        "was_frame_cost_s": 0.016548
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14152.1,
+        "frame_cost_s": 0.016716,
+        "frames_remaining": 17101,
+        "predicted_remaining_s": 285.9,
+        "step_index": 32,
+        "wall_spent_s": 247.9,
+        "was_frame_cost_s": 0.024333
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14139.5,
+        "frame_cost_s": 0.022006,
+        "frames_remaining": 13038,
+        "predicted_remaining_s": 286.9,
+        "step_index": 35,
+        "wall_spent_s": 260.5,
+        "was_frame_cost_s": 0.016703
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14135.8,
+        "frame_cost_s": 0.030861,
+        "frames_remaining": 12647,
+        "predicted_remaining_s": 390.3,
+        "step_index": 39,
+        "wall_spent_s": 264.2,
+        "was_frame_cost_s": 0.022006
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14133.7,
+        "frame_cost_s": 0.017385,
+        "frames_remaining": 12635,
+        "predicted_remaining_s": 219.7,
+        "step_index": 40,
+        "wall_spent_s": 266.3,
+        "was_frame_cost_s": 0.030861
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14123.1,
+        "frame_cost_s": 0.037075,
+        "frames_remaining": 11767,
+        "predicted_remaining_s": 436.3,
+        "step_index": 51,
+        "wall_spent_s": 276.9,
+        "was_frame_cost_s": 0.016554
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14121.1,
+        "frame_cost_s": 0.016896,
+        "frames_remaining": 11767,
+        "predicted_remaining_s": 198.8,
+        "step_index": 51,
+        "wall_spent_s": 278.9,
+        "was_frame_cost_s": 0.037075
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14045.4,
+        "frame_cost_s": 0.046584,
+        "frames_remaining": 134,
+        "predicted_remaining_s": 6.2,
+        "step_index": 71,
+        "wall_spent_s": 354.6,
+        "was_frame_cost_s": 0.016555
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-20260828T183531Z",
+  "segment": "S02",
+  "sha": "3bd423da3b5e2fa4f7f64ad4e367a874571b3280",
+  "steps": {
+    "delegated": 8,
+    "fail": 6,
+    "pass": 61,
+    "ran": 75,
+    "refused": 0,
+    "skipped": 0,
+    "total": 75
+  },
+  "uncommittable": []
+}
