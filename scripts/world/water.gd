@@ -78,6 +78,10 @@ var _hazard_overlay: ColorRect = null
 var _terrain_cfg: Dictionary = {}
 var _region_cache := Rect2()
 var _region_ready := false
+## GF-B-001 / STALL-2. The pond's wet-cell set, computed before the height
+## bake so the bake can be masked to it, and read back by `_build_pond`.
+var _pond_cells_cache: Dictionary = {}
+var _pond_cells_ready := false
 var _stats := {
 	"pond_quads": 0, "stream_points": 0, "reeds": 0,
 	# EV5-remainder — the waterside dressing the blind rounds asked for.
@@ -102,7 +106,18 @@ func build() -> void:
 	var stream: Dictionary = terrain_cfg.get("water", {}).get("stream", {})
 	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 
-	var material := _build_material(_region(), "pond")
+	# GF-B-001. The mask is computed before the material because it is what
+	# says which texels of the material's height texture are worth baking --
+	# 94% of that rect is ground neither surface lies over. It carries the
+	# pond's wet-cell scan with it, which `_build_pond` below then reads back
+	# rather than repeating.
+	var pond_mask := _pond_surface_mask(_region())
+	var pond_sampled := 0
+	for flag: int in pond_mask:
+		pond_sampled += flag
+	BOOT_LOG.phase("water: pond surface mask (%d of %d texels, %.1f%%)" % [
+		pond_sampled, pond_mask.size(), 100.0 * float(pond_sampled) / maxf(1.0, float(pond_mask.size()))])
+	var material := _build_material(_region(), "pond", pond_mask)
 	BOOT_LOG.phase("water: pond shader material remainder")
 	_build_pond(material)
 	BOOT_LOG.phase("water: pond")
@@ -555,61 +570,32 @@ func _noise_plain(noise_seed: int, frequency: float) -> NoiseTexture2D:
 	return texture
 
 
-## The pond: a flat grid at the water level, keeping only quads that touch
-## water. The mesh edge is never the shoreline — the shader feathers alpha to
-## zero exactly where depth reaches zero — so the grid just has to reach past
-## the shore everywhere, which "any corner within half a metre of waterline
-## height" comfortably guarantees at 2m cells.
-func _build_pond(material: ShaderMaterial) -> void:
+## The wet cells of the pond grid: the basin's own connected component of
+## cells that touch water, keyed `Vector2i(col, row)` over `_region()`.
+##
+## GF-B-001 / STALL-2. This used to live inside `_build_pond`, which runs
+## AFTER `_build_material`. But this set IS the pond surface's footprint, and
+## the footprint is what says which texels of the height texture that surface
+## can ever sample -- so the answer has to exist BEFORE the bake, not after it.
+## Hoisted here and cached; `_build_pond` reads it back and builds exactly the
+## mesh it built before, and the scan itself still runs once.
+##
+## Candidate cells: any corner near or below the waterline (0.5m margin keeps
+## the shader's feathered shoreline inside kept geometry). Then a flood fill
+## from the pond centre keeps only the basin's own connected component:
+## without it, every dip under `level + 0.5` anywhere in the region grew a
+## plate -- the carved stream channel collected a chain of them, and blind
+## round 4 found their exposed edges as "orphaned quads" and an angular sliver
+## poking over a bank.
+func _pond_cells() -> Dictionary:
+	if _pond_cells_ready:
+		return _pond_cells_cache
+	_pond_cells_ready = true
 	var region := _region()
 	var step := maxf(float(_water_cfg.get("pond", {}).get("grid_step", 2.0)), 0.5)
 	var cols := int(ceil(region.size.x / step))
 	var rows := int(ceil(region.size.y / step))
-
-	# Candidate cells: any corner near or below the waterline (0.5m margin
-	# keeps the shader's feathered shoreline inside kept geometry). Then a
-	# flood fill from the pond centre keeps only the basin's own connected
-	# component: without it, every dip under `level + 0.5` anywhere in the
-	# region grew a plate — the carved stream channel collected a chain of
-	# them, and blind round 4 found their exposed edges as "orphaned quads"
-	# and an angular sliver poking over a bank.
-	# GF-B-001. One sample per lattice POINT, not four per cell.
-	#
-	# Every interior corner is shared by four cells, so asking `height_at` for
-	# each cell's own four corners asks the same question up to four times.
-	# This region is 337 x 569 m -- `_region()` unions the pond with an
-	# authored stream 465 m up the map, see the lane log -- which at a 2 m grid
-	# is 48,165 cells, and the `break` below only fires on the 2,538 that turn
-	# out to be wet. So the loop was up to 192,660 `height_at` calls for 48,620
-	# distinct points, and `height_at` is the whole New Game stall.
-	#
-	# Identical, not merely equivalent: the lattice asks the same predicate at
-	# the same points. The one place it could differ is that a cell's right
-	# corner used to be `pos.x + col * step + step` and is now
-	# `pos.x + (col + 1) * step`; those agree exactly whenever `step` is a
-	# dyadic rational, which the authored 2.0 is. Even at a step where they
-	# parted by an ulp the sampled point would move ~1e-13 m and the predicate
-	# would have to be balanced on that same knife edge to notice. The quad
-	# count is what actually says so, and `smoke_pond_water` checks it.
 	var lattice_cols := cols + 1
-	var wet_point := PackedByteArray()
-	wet_point.resize(lattice_cols * (rows + 1))
-	for row in rows + 1:
-		var lz := region.position.y + row * step
-		var base := row * lattice_cols
-		for col in lattice_cols:
-			var lx := region.position.x + col * step
-			wet_point[base + col] = 1 if float(_field.call("height_at", lx, lz)) < _level + 0.5 else 0
-	BOOT_LOG.phase("water: pond wet-lattice scan (%d points)" % wet_point.size())
-
-	var wet_cells: Dictionary = {}
-	for row in rows:
-		var lower := row * lattice_cols
-		var upper := lower + lattice_cols
-		for col in cols:
-			if wet_point[lower + col] == 1 or wet_point[lower + col + 1] == 1 \
-					or wet_point[upper + col] == 1 or wet_point[upper + col + 1] == 1:
-				wet_cells[Vector2i(col, row)] = true
 
 	var terrain_cfg: Dictionary = _terrain_config()
 	var centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
@@ -617,8 +603,47 @@ func _build_pond(material: ShaderMaterial) -> void:
 		int((float(centre[0]) - region.position.x) / step),
 		int((float(centre[1]) - region.position.y) / step)
 	)
+
+	# GF-B-001. Sample the lattice ALONG the flood fill, not ahead of it.
+	#
+	# Two rounds of the same mistake were already taken out of here. The first
+	# asked `height_at` for each cell's own four corners, which is up to four
+	# questions per shared corner: 192,660 calls for 48,620 distinct points.
+	# That became one pass over the lattice -- and a full pass over the lattice
+	# is still 48,620 calls to decide 2,538 cells, because `_region()` unions
+	# the pond's basin with an authored stream 465 m up the map (see the lane
+	# log) and the rect is 337 x 569 m of which the pond is 5.3%.
+	#
+	# The fill below only ever KEEPS the seed's own connected component; every
+	# other wet cell in the rect is computed and then discarded. So the fill
+	# does not need the lattice in advance -- it needs each cell's four corners
+	# at the moment it considers that cell, and it only ever considers the
+	# component and the ring of dry cells around it. `_wet_point` memoises into
+	# the same `PackedByteArray` the full pass used to fill, with a second
+	# array marking which entries have been decided.
+	#
+	# Identical, not merely equivalent, and for a stronger reason than the
+	# last round's: the predicate, the sampled points and the connectivity are
+	# untouched. The full pass computed `wet_cells` over the whole rect and the
+	# fill then intersected it with the seed's component; this computes the
+	# same predicate at the same points, lazily, over exactly that component
+	# and its boundary. Any cell whose wetness the fill never asks about is a
+	# cell the fill could not have kept. `smoke_pond_water`'s quad count and
+	# the mask's texel count are what say so.
+	var wet_point := PackedByteArray()
+	wet_point.resize(lattice_cols * (rows + 1))
+	var point_known := PackedByteArray()
+	point_known.resize(lattice_cols * (rows + 1))
+	var sampled := [0]
+
 	var kept: Dictionary = {}
-	if wet_cells.has(seed_cell):
+	# The bounds test comes first and is not redundant: the original built its
+	# `wet_cells` over [0,cols) x [0,rows) and asked `wet_cells.has(seed_cell)`,
+	# so a seed outside the rect took the fallback. Asking `_wet_cell` directly
+	# would index off the end of the lattice instead.
+	var seed_inside := (seed_cell.x >= 0 and seed_cell.y >= 0
+		and seed_cell.x < cols and seed_cell.y < rows)
+	if seed_inside and _wet_cell(seed_cell, region, step, lattice_cols, wet_point, point_known, sampled):
 		var frontier: Array[Vector2i] = [seed_cell]
 		kept[seed_cell] = true
 		while not frontier.is_empty():
@@ -628,12 +653,152 @@ func _build_pond(material: ShaderMaterial) -> void:
 				Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)
 			]:
 				var next := cell + offset
-				if wet_cells.has(next) and not kept.has(next):
+				if next.x < 0 or next.y < 0 or next.x >= cols or next.y >= rows:
+					continue
+				if kept.has(next):
+					continue
+				if _wet_cell(next, region, step, lattice_cols, wet_point, point_known, sampled):
 					kept[next] = true
 					frontier.append(next)
 	else:
+		# The basin is not where the config says it is. Fall back to the
+		# original whole-rect pass and keep every wet cell, which is what this
+		# branch has always done -- the warning is the point, and a degraded
+		# pond is better than none.
 		push_warning("pond centre cell is not below the waterline; keeping every wet cell unfiltered")
-		kept = wet_cells
+		for row in rows:
+			for col in cols:
+				var cell := Vector2i(col, row)
+				if _wet_cell(cell, region, step, lattice_cols, wet_point, point_known, sampled):
+					kept[cell] = true
+	BOOT_LOG.phase("water: pond wet-lattice scan (%d of %d lattice points)" % [
+		sampled[0], wet_point.size()])
+
+	_pond_cells_cache = {"step": step, "kept": kept}
+	return _pond_cells_cache
+
+
+## Does this cell touch water? Any of its four corners near or below the
+## waterline, with each corner's height sampled at most once for the whole
+## fill and remembered in `wet_point`.
+##
+## The corner heights are the same points and the same predicate the whole-rect
+## pass used: `region.position + (col, row) * step`, tested against
+## `_level + 0.5`.
+func _wet_cell(
+	cell: Vector2i, region: Rect2, step: float, lattice_cols: int,
+	wet_point: PackedByteArray, point_known: PackedByteArray, sampled: Array
+) -> bool:
+	var wet := false
+	for corner: Vector2i in [
+		cell, cell + Vector2i(1, 0), cell + Vector2i(0, 1), cell + Vector2i(1, 1)
+	]:
+		var index := corner.y * lattice_cols + corner.x
+		if point_known[index] == 0:
+			point_known[index] = 1
+			sampled[0] += 1
+			var lx := region.position.x + corner.x * step
+			var lz := region.position.y + corner.y * step
+			wet_point[index] = 1 if float(_field.call("height_at", lx, lz)) < _level + 0.5 else 0
+		# Not an early return: every corner is memoised whether or not the
+		# answer is already known, so a later cell sharing this corner still
+		# finds it decided.
+		if wet_point[index] == 1:
+			wet = true
+	return wet
+
+
+## GF-B-001 / STALL-2. Which texels of the pond region's height texture the
+## two surfaces that read it -- `PondSurface` and `StreamSurface` -- can
+## actually sample.
+##
+## The same argument `_river_surface_mask` sets out, and the same failure
+## direction. The pond's rect is 337 x 569 m because `_region()` unions the
+## pond's own basin with an authored stream 465 m up the map; the pond mesh is
+## 2,538 quads at a 2 m grid, 10,152 m of a 191,753 m rect -- 5.3% of it --
+## and the stream ribbon is a 2.4 m band along an 84 m course. Everything else
+## in that rect is ground with no water on it, and a fragment shader runs only
+## on fragments of the mesh it is assigned to, so a texel neither surface lies
+## over is never read, whatever is in it.
+##
+## The pond half is EXACT rather than estimated: `_pond_cells()` has already
+## decided which cells become quads, and the mesh is precisely those cells.
+## Each is marked as its own world box grown by two texels per axis, so
+## bilinear filtering at the mesh's edge still reads only sampled neighbours.
+##
+## The stream half is a conservative superset, by the river's own convexity
+## argument. `_build_stream` resamples the authored polyline and emits, for
+## each consecutive pair, a quad offset perpendicular by `half * _width_swell`,
+## which never exceeds `half * 1.25`. Every resampled point lies on the
+## authored polyline, so every quad lies within `half * 1.25` of some authored
+## segment -- each of its corners is within that of one endpoint, the set of
+## points within R of a segment is convex, and a quad is the convex hull of its
+## corners. Marked as the axis-aligned box around each authored segment, which
+## is a superset of the stadium and cannot be wrong in the direction that
+## matters. Marked over the WHOLE authored course, not the trimmed range
+## `_build_stream` ends up meshing, because a superset is free here and the
+## trim depends on carve depths this function has no reason to re-derive.
+##
+## `tools/_probe_pond_bake_mask.gd` is what proves this rather than the
+## argument above: it stands the real composer up, reads the vertices out of
+## the two meshes that were actually built, and checks the shipped texture
+## against a full unmasked bake over every texel they touch.
+func _pond_surface_mask(region: Rect2) -> PackedByteArray:
+	var mask := PackedByteArray()
+	mask.resize(HEIGHT_MAP_SIZE * HEIGHT_MAP_SIZE)
+	if region.size.x <= 0.0 or region.size.y <= 0.0:
+		return PackedByteArray()
+	var texel_x := region.size.x / HEIGHT_MAP_SIZE
+	var texel_y := region.size.y / HEIGHT_MAP_SIZE
+	var pad_x := texel_x * 2.0
+	var pad_y := texel_y * 2.0
+
+	var cells := _pond_cells()
+	var step: float = cells["step"]
+	for cell: Vector2i in (cells["kept"] as Dictionary).keys():
+		var x0 := region.position.x + cell.x * step
+		var z0 := region.position.y + cell.y * step
+		_mark_box(mask, region, texel_x, texel_y,
+			x0 - pad_x, z0 - pad_y, x0 + step + pad_x, z0 + step + pad_y)
+
+	var stream: Dictionary = _terrain_config().get("water", {}).get("stream", {})
+	var points: Array = stream.get("points", [])
+	# 1.25 is `_width_swell`'s maximum, 1 + 0.15 + 0.1.
+	var reach := float(stream.get("width", 2.4)) * 0.5 * 1.25
+	for i in maxi(points.size() - 1, 0):
+		var a := Vector2(float(points[i][0]), float(points[i][1]))
+		var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+		_mark_box(mask, region, texel_x, texel_y,
+			minf(a.x, b.x) - reach - pad_x, minf(a.y, b.y) - reach - pad_y,
+			maxf(a.x, b.x) + reach + pad_x, maxf(a.y, b.y) + reach + pad_y)
+	return mask
+
+
+## Set every texel of `mask` that the world-space box touches.
+func _mark_box(
+	mask: PackedByteArray, region: Rect2, texel_x: float, texel_y: float,
+	lo_x: float, lo_y: float, hi_x: float, hi_y: float
+) -> void:
+	var px0 := clampi(int(floor((lo_x - region.position.x) / texel_x)), 0, HEIGHT_MAP_SIZE - 1)
+	var px1 := clampi(int(ceil((hi_x - region.position.x) / texel_x)), 0, HEIGHT_MAP_SIZE - 1)
+	var py0 := clampi(int(floor((lo_y - region.position.y) / texel_y)), 0, HEIGHT_MAP_SIZE - 1)
+	var py1 := clampi(int(ceil((hi_y - region.position.y) / texel_y)), 0, HEIGHT_MAP_SIZE - 1)
+	for py in range(py0, py1 + 1):
+		var row := py * HEIGHT_MAP_SIZE
+		for px in range(px0, px1 + 1):
+			mask[row + px] = 1
+
+
+## The pond: a flat grid at the water level, keeping only quads that touch
+## water. The mesh edge is never the shoreline — the shader feathers alpha to
+## zero exactly where depth reaches zero — so the grid just has to reach past
+## the shore everywhere, which "any corner within half a metre of waterline
+## height" comfortably guarantees at 2m cells.
+func _build_pond(material: ShaderMaterial) -> void:
+	var region := _region()
+	var cells := _pond_cells()
+	var step: float = cells["step"]
+	var kept: Dictionary = cells["kept"]
 
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)

@@ -302,29 +302,44 @@ func build(world_size: float, terrain: Node) -> void:
 	# what let this task tell "big" from "not worth touching" instead of
 	# guessing from the shape of the code.
 	var t_load0 := Time.get_ticks_msec()
+	# GF-B-001. Which layers the grass field has taken over is known HERE,
+	# before the load, so the bake reader is told not to build them at all --
+	# see the drop loop below, which used to read 661,543 placements off disk
+	# and erase them one dictionary at a time. Only the bake path can be told;
+	# `all_placements` computes what it computes and the loop still handles it.
+	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
+	var skipped: Dictionary = {}
 	var by_layer: Dictionary
 	if BAKE.is_fresh(BAKE_WORLD_NAME, base_seed):
-		by_layer = BAKE.load_all(BAKE_WORLD_NAME, _drained)
+		by_layer = BAKE.load_all(BAKE_WORLD_NAME, _drained, suppressed, skipped)
 	else:
 		by_layer = RULES.all_placements(field, world_size, base_seed, _drained)
 	var t_load1 := Time.get_ticks_msec()
 
 	# GRASS-FIELD. When the shader carpet owns the ground plane, the layers it
-	# replaces are dropped HERE -- after the bake is read, before anything is
-	# grouped, marked harvestable or given a mesh asset -- so a suppressed layer
-	# costs nothing beyond the bytes already on disk. The two systems must never
-	# both dress the same ground: doubled ground cover is not twice as good, it
-	# is z-fighting at every blade.
+	# replaces are dropped before anything is grouped, marked harvestable or
+	# given a mesh asset, so a suppressed layer costs nothing beyond the bytes
+	# already on disk. The two systems must never both dress the same ground:
+	# doubled ground cover is not twice as good, it is z-fighting at every
+	# blade.
+	#
+	# GF-B-001: on the bake path they are now declined at READ time -- the
+	# loop below sees them already gone and counts them out of `skipped`. It
+	# still runs, and it still erases, because a stale bake sends the build
+	# through `all_placements`, which computes every layer whatever this says.
 	#
 	# Deliberately NOT a re-bake. The bake stays exactly as committed and the
 	# scatter path stays intact behind the flag, which is what lets the owner
 	# A/B the two ground systems on an ROG Ally -- the one piece of hardware no
 	# container in this project can measure (`PERF-ROG-GPU`) and the only one
 	# whose answer counts.
-	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
 	if not suppressed.is_empty():
 		var dropped := 0
 		for layer_name: String in suppressed.keys():
+			# Already declined at read time on the bake path; still present,
+			# and still dropped here, when a stale bake sent the build down
+			# `all_placements` instead.
+			dropped += int(skipped.get(layer_name, 0))
 			if by_layer.has(layer_name):
 				dropped += (by_layer[layer_name] as Array).size()
 				by_layer.erase(layer_name)
