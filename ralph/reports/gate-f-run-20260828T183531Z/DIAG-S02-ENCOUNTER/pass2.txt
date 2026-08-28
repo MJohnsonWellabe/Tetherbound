@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+=== DIAG-S02-ENCOUNTER =========================================
+candidate: the GAME at main@26f0db4; this file is rig and writes nothing
+--- PASS 2: S02's own exit save, loaded through save_game.gd ----
+  load_slot(2) -> true
+[S02-exit] A. wild bodies: director.wild_creatures()=909, nodes named Wild_*=897
+[S02-exit]    MISMATCH: the director's list and the tree disagree.
+[S02-exit]    director.wild_creature() (the practice creature) = Wild_bramblebun_0_2
+[S02-exit]    nearest to S02's walk TARGET   (30.00, -40.00): Wild_bramblebun_0_3 at 33.70, -39.75  -> 3.70 m  (visible=true alive=true aggressive=false)
+[S02-exit]    nearest to S02's PRESS POINT   (26.78, -38.32): Wild_bramblebun_0_2 at 22.25, -42.19  -> 5.95 m  (visible=true alive=true aggressive=false)
+[S02-exit]    engage_range read from data/config/combat.json flow = 6.00 m
+[S02-exit] B. director.ally_body() = NULL — nothing is deployed
+[S02-exit]    Game.party size = 1
+[S02-exit]    >>> a party of 1 and NO deployed body. _engageable() returns null
+[S02-exit]    >>> before it ever measures a distance, so NOTHING is engageable
+[S02-exit]    >>> anywhere in the world, at any range, with any press.
+[S02-exit] C. standing at S02's own press point: 26.78, -38.32  (5.99 m from the practice creature)
+[S02-exit]    director.prompt()          = "[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Call out Moss"
+[S02-exit]    director.owns_active_prompt= true
+[S02-exit]    director.interaction_offer = {"actionable":false,"distance":0.0,"label":"[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Call out Moss","priority":-1}
+[S02-exit]    arbiter.prompt()           = "[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Call out Moss"
+[S02-exit]    arbiter.winning_provider() = res://scripts/combat/encounter_director.gd
+[S02-exit]    pressed interact: is_fighting false -> false   >>> NO FIGHT
+[S02-exit] C. standing at arm's length (1.7 m): 23.45, -40.99  (1.71 m from the practice creature)
+[S02-exit]    director.prompt()          = "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Call out Moss"
+[S02-exit]    director.owns_active_prompt= true
+[S02-exit]    director.interaction_offer = {"actionable":false,"distance":0.0,"label":"[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Call out Moss","priority":-1}
+[S02-exit]    arbiter.prompt()           = "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Call out Moss"
+[S02-exit]    arbiter.winning_provider() = res://scripts/combat/encounter_director.gd
+[S02-exit]    pressed interact: is_fighting false -> false   >>> NO FIGHT
+=== END DIAG-S02-ENCOUNTER =====================================

@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+=== DIAG-S02-ENCOUNTER =========================================
+candidate: the GAME at main@26f0db4; this file is rig and writes nothing
+--- PASS 3: the LIVE opening path, no save, no grant -----------
+[live] party at boot = 0, ally_body = null
+[live] Grandpa is grandpa_lod0 at -24.40, 1.32, -14.80
+[live] before talking: input_context-ish owner = 
+[live] after one interact at Grandpa: owner = DialoguePanel (res://scripts/ui/dialogue_panel.gd)
+[live] briefing advanced with 11 presses; owner now = StarterPicker (res://scripts/ui/starter_picker.gd)
+[live] owner after settle = StarterPicker (res://scripts/ui/starter_picker.gd)   party = 0
+[live] after picker confirm: owner = NamePrompt (res://scripts/ui/name_prompt.gd)   party = 0
+[live] after the naming pad: owner = DialoguePanel (res://scripts/ui/dialogue_panel.gd)   party = 1
+[live] closed the reply in 3 taps; owner now = 
+[live] === THE ANSWER ===========================================
+[live] party size after the opening      = 1
+[live] director.ally_body()              = AllyCreature
+[live] nodes named AllyCreature in tree  = 1
+[live] C. standing at S02's own press point: 26.78, -38.32  (5.99 m from the practice creature)
+[live]    director.prompt()          = "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun"
+[live]    director.owns_active_prompt= true
+[live]    director.interaction_offer = {"actionable":true,"distance":5.99045133590698,"label":"Engage Bramblebun","priority":0}
+[live]    arbiter.prompt()           = "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun"
+[live]    arbiter.winning_provider() = res://scripts/combat/encounter_director.gd
+[live]    pressed interact: is_fighting false -> true   >>> A FIGHT STARTED
+[live] C. standing at arm's length (1.7 m): 25.59, -39.59  (3.04 m from the practice creature)
+[live]    director.prompt()          = ""
+[live]    director.owns_active_prompt= false
+[live]    director.interaction_offer = {}
+[live]    arbiter.prompt()           = ""
+[live]    arbiter.winning_provider() = null
+[live]    pressed interact: is_fighting true -> true   >>> NO FIGHT
+=== END DIAG-S02-ENCOUNTER =====================================

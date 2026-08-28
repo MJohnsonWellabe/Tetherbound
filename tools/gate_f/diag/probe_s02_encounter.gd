@@ -83,6 +83,8 @@ const WALK_TARGET := Vector3(30.0, 0.0, -40.0)
 ## Read out of S02/telemetry/events.jsonl, not guessed.
 const PRESS_POINT := Vector3(26.78, 0.53, -38.32)
 
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+
 const EXIT_SAVE := "ralph/reports/gate-f-run-20260828T183531Z/S02/saves/S02-exit.json"
 
 
@@ -142,7 +144,7 @@ func _run() -> void:
 	if _only == 0 or _only == 3:
 		print("")
 		print("--- PASS 3: the LIVE opening path, no save, no grant -----------")
-		await _pass3()
+		await _pass3(world, player, director, arbiter)
 
 	print("")
 	print("=== END DIAG-S02-ENCOUNTER =====================================")
@@ -185,23 +187,12 @@ func _pass2(world: Node, player: CharacterBody3D, director: Node, arbiter: Node)
 ## S02 drove, with the same synthetic input, and NOTHING granted. The one DIAG
 ## shortcut is placement: the player is put next to Grandpa and later next to the
 ## bramblebun instead of walking, because this probe makes no claim about walking.
-func _pass3() -> void:
-	var world: Node = (load(SCENE) as PackedScene).instantiate()
-	root.add_child(world)
-	current_scene = world
-	for i in SETTLE_FRAMES:
-		await physics_frame
-
-	var player := world.get_node_or_null(^"Player") as CharacterBody3D
-	var director := world.get_node_or_null(^"EncounterDirector")
-	var arbiter: Node = null
-	for n in _descendants(world):
-		if n.has_method("winning_provider"):
-			arbiter = n
-			break
-	if player == null or director == null:
-		print("[live] FATAL: no Player/EncounterDirector in the second world")
-		return
+func _pass3(world: Node, player: CharacterBody3D, director: Node, arbiter: Node) -> void:
+	# The world `_run()` already stood up, NOT a second one. The first revision
+	# built its own and inherited the `Game` autoload's already-loaded party from
+	# pass 2, so `sequence_director.gd::_starter_already_granted()` was true and
+	# the whole starter sequence was skipped. Run this pass with `--diag-pass=3`
+	# and nothing else, so the process has loaded nothing.
 
 	print("[live] party at boot = %d, ally_body = %s"
 		% [_party_size(), "null" if director.call("ally_body") == null else "present"])
@@ -256,16 +247,43 @@ func _pass3() -> void:
 			await physics_frame
 	print("[live] after picker confirm: owner = %s   party = %d" % [_owner_name(), _party_size()])
 
-	# Beat 5: the naming pad. Confirm whatever default the grid lands on rather
-	# than typing -- the name's CONTENT is not what this probe is about.
-	var pad_tries := 0
-	while _owner_name().contains("NamePrompt") and pad_tries < 40:
-		_send_action("menu_confirm")
-		for i in 15:
-			await physics_frame
-		pad_tries += 1
-	for i in 240:
+	# Beat 5: the naming pad, walked the way the harness walks it. The name's
+	# CONTENT is not what this probe is about, so it types one letter and
+	# confirms Done -- but it has to be typed on the real grid, because Done on
+	# an empty entry is not necessarily accepted and a guessed press count is
+	# the thing CD-3 exists to forbid.
+	var owner := INPUT_OWNER.current(self)
+	if owner != null and owner.has_method("entry"):
+		var entry: Variant = owner.call("entry")
+		var grid := load("res://scripts/ui/name_entry.gd") as GDScript
+		if entry != null and grid != null:
+			await _walk_to_cell(entry, grid, "M")
+			_send_action("menu_confirm")
+			for i in 20:
+				await physics_frame
+			await _walk_to_cell(entry, grid, grid.DONE)
+			_send_action("menu_confirm")
+			for i in 20:
+				await physics_frame
+	for i in 300:
 		await physics_frame
+	print("[live] after the naming pad: owner = %s   party = %d" % [_owner_name(), _party_size()])
+
+	# `grandpa_named` opens the instant the name is confirmed, and S02 closed it
+	# (S02-28, four taps) before it walked. The first revision of this pass did
+	# not, and measured the world through an open conversation: the director was
+	# offering an actionable "Engage Bramblebun" at 1.71 m while
+	# `arbiter.winning_provider()` was null and `interact` did nothing -- which is
+	# `interaction_arbiter.gd` being correctly DEAF while a modal owns input
+	# (OF25), not a defect. Advance to the end by the predicate, per CD-3, never
+	# by a count.
+	var closes := 0
+	while _owner_name() != "" and closes < 40:
+		_send_interact()
+		for i in 20:
+			await physics_frame
+		closes += 1
+	print("[live] closed the reply in %d taps; owner now = %s" % [closes, _owner_name()])
 
 	var ally: Variant = director.call("ally_body")
 	print("")
@@ -293,12 +311,36 @@ func _pass3() -> void:
 		await _press_from(world, player, director, arbiter, close, "live", "arm's length (1.7 m)")
 
 
+## One d-pad tap at a time onto `cell`, the same walk
+## `operator_harness.gd::_walk_to_name_cell()` does.
+func _walk_to_cell(entry: Variant, grid: GDScript, cell: String) -> bool:
+	var target := Vector2i(-1, -1)
+	var rows: Array = grid.ROWS
+	for r in rows.size():
+		var row: Array = rows[r]
+		for c in row.size():
+			if str(row[c]) == cell:
+				target = Vector2i(r, c)
+	if target.x < 0:
+		return false
+	for i in 20:
+		if int(entry.get("row")) == target.x:
+			break
+		_send_action("ui_down")
+		for f in 6:
+			await physics_frame
+	for i in 20:
+		if int(entry.get("column")) == target.y:
+			break
+		_send_action("ui_right")
+		for f in 6:
+			await physics_frame
+	return str(entry.call("selected")) == cell
+
+
 ## Whichever panel currently owns input, by class/script name, or "" for none.
 func _owner_name() -> String:
-	var owner: Variant = null
-	var io := load("res://scripts/ui/input_owner.gd")
-	if io != null and io.has_method("current"):
-		owner = io.call("current", self)
+	var owner: Variant = INPUT_OWNER.current(self)
 	if owner == null:
 		return ""
 	var node := owner as Node
@@ -633,8 +675,11 @@ func _pass4(world: Node, player: CharacterBody3D, director: Node, arbiter: Node)
 		print("[s02] >>> The offer stood the whole time, so distance from THIS point")
 		print("[s02] >>> is not what stopped S02, and the cause is elsewhere.")
 
-	# And the confirmation: walk in and press, so "could not" is not inferred
-	# from a prompt string alone.
+	# The exact reproduction of S02-32: one `interact`, from the coordinates S02
+	# pressed at, with a creature out. Not inferred from a prompt string.
+	await _press_from(world, player, director, arbiter, PRESS_POINT, "s02", "S02's own press point, creature out")
+
+	# And the control, at a range nothing could argue with.
 	var practice2: Variant = director.call("wild_creature")
 	if practice2 != null:
 		var close := (practice2 as Node3D).global_position + Vector3(1.0, 0.0, 1.0)
