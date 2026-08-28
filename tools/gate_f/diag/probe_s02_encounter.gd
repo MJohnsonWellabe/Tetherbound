@@ -133,6 +133,12 @@ func _run() -> void:
 	if _only == 0 or _only == 2:
 		await _pass2(world, player, director, arbiter)
 
+	if _only == 4:
+		await _pass4(world, player, director, arbiter)
+
+	if _only == 5:
+		await _pass5(world, player, director, arbiter)
+
 	if _only == 0 or _only == 3:
 		print("")
 		print("--- PASS 3: the LIVE opening path, no save, no grant -----------")
@@ -526,3 +532,204 @@ func _descendants(node: Node) -> Array[Node]:
 	for child in node.get_children():
 		out.append_array(_descendants(child))
 	return out
+
+
+## PASS 4 — the one that settles S02, and why passes 2 and 3 could not.
+##
+## Passes 2 and 3 both found no follower body, but both had loaded or inherited a
+## save, and S02's encounter failed on a LIVE process that had never loaded
+## anything. On that live path `sequence_director.gd::_adopt()` calls
+## `encounter_director.gd::adopt_starter()`, whose own job is to build "the one
+## real follower body" — and S02's telemetry proves that call succeeded: the
+## party grew 0 -> 1 carrying the name the pad typed, which `_adopt()` only
+## reaches after `adopt_starter()` returns true. So S02 HAD a creature out, and
+## the null-ally explanation that covers S03 onward does not cover S02.
+##
+## What is left is distance, and distance here is not a constant. So this pass
+## grants the starter through the game's own `adopt_starter()` — the same
+## function, with the same arguments, that the naming prompt's own handler calls;
+## the DIAG shortcut is past the naming UI, not past the deploy path — stands the
+## player exactly where S02 stood, and then WATCHES, because the thing S02 aimed
+## at moves.
+##
+## `S02-30` is `move_to {"at": [30, -40], "close_enough": 4.0}`: a hardcoded
+## point. `data/config/combat.json` gives a wild creature `wander_radius` 7.0 m
+## around its home and `_engageable()` a reach of 6.0 m. A step that arrives
+## anywhere inside a 4 m disc of a point, to engage something that roams a 7 m
+## disc of its own, against a 6 m reach, is a step whose success is a coin toss —
+## and S02 pressed once.
+func _pass4(world: Node, player: CharacterBody3D, director: Node, arbiter: Node) -> void:
+	print("--- PASS 4: live, a creature actually out, and the wander envelope -")
+	print("[s02] at boot: party = %d, ally_body = %s"
+		% [_party_size(), "null" if director.call("ally_body") == null else "present"])
+
+	var adopted: bool = await director.call("adopt_starter", "ripplet", "Moss")
+	for i in 120:
+		await physics_frame
+	var ally: Variant = director.call("ally_body")
+	print("[s02] adopt_starter(\"ripplet\", \"Moss\") -> %s" % adopted)
+	print("[s02] director.ally_body() now         = %s"
+		% ["NULL" if ally == null else str((ally as Node3D).name)])
+	if ally == null:
+		print("[s02] >>> the deploy path itself is broken; nothing below can be read.")
+		return
+
+	var here := PRESS_POINT
+	if world.has_method("ground_height_at"):
+		here.y = float(world.call("ground_height_at", here.x, here.z)) + 1.0
+	player.global_position = here
+	player.velocity = Vector3.ZERO
+	for i in 60:
+		await physics_frame
+
+	# S02 stood still here for 15.5 s of play (t=219.4 engage -> t=234.9 catch
+	# resolve) and pressed once. Sample twice that, so the reading is about the
+	# envelope rather than about one lucky or unlucky instant.
+	print("")
+	print("[s02] standing at S02's own press point (%.2f, %.2f). Sampling the offer" % [here.x, here.z])
+	print("[s02] the game makes there, once a play-second, for 30 s:")
+	print("")
+	print("      t     nearest wild   dist    offer")
+	var in_range := 0
+	var samples := 0
+	var min_d := INF
+	var max_d := 0.0
+	var first_engage_t := -1.0
+	for sec in 30:
+		for i in 60:
+			await physics_frame
+		var practice: Variant = director.call("wild_creature")
+		var d := -1.0
+		var who := "(none)"
+		if practice != null:
+			who = str((practice as Node3D).name)
+			d = player.global_position.distance_to((practice as Node3D).global_position)
+			min_d = minf(min_d, d)
+			max_d = maxf(max_d, d)
+		var offer: Variant = director.call("interaction_offer", player.global_position)
+		var label := str((offer as Dictionary).get("label", "")) if offer is Dictionary else ""
+		var engageable := label.contains("Engage")
+		samples += 1
+		if engageable:
+			in_range += 1
+			if first_engage_t < 0.0:
+				first_engage_t = float(sec)
+		print("   %5d   %-22s %6.2f  %s" % [sec, who, d, _plain(label)])
+
+	print("")
+	print("[s02] === THE ANSWER ===========================================")
+	print("[s02] engage_range                        = 6.00 m")
+	print("[s02] nearest wild creature, over 30 s    = %.2f m min, %.2f m max" % [min_d, max_d])
+	print("[s02] samples where the game offered Engage = %d of %d" % [in_range, samples])
+	if in_range == 0:
+		print("[s02] >>> From the place S02 actually stood, the game NEVER offered")
+		print("[s02] >>> an engagement in 30 s. One `interact` there could not have")
+		print("[s02] >>> started a fight at any moment in the window S02 pressed in.")
+	elif in_range < samples:
+		print("[s02] >>> The offer came and went while the player stood still. A")
+		print("[s02] >>> single press at a fixed point is a coin toss against a")
+		print("[s02] >>> creature that wanders.")
+	else:
+		print("[s02] >>> The offer stood the whole time, so distance from THIS point")
+		print("[s02] >>> is not what stopped S02, and the cause is elsewhere.")
+
+	# And the confirmation: walk in and press, so "could not" is not inferred
+	# from a prompt string alone.
+	var practice2: Variant = director.call("wild_creature")
+	if practice2 != null:
+		var close := (practice2 as Node3D).global_position + Vector3(1.0, 0.0, 1.0)
+		await _press_from(world, player, director, arbiter, close, "s02", "arm's length, creature out")
+
+
+## The prompt with its BBCode glyph tag stripped, so a table stays a table.
+func _plain(label: String) -> String:
+	var out := label
+	while out.contains("[img=") and out.contains("[/img]"):
+		var a := out.find("[img=")
+		var b := out.find("[/img]") + 6
+		out = out.substr(0, a) + out.substr(b)
+	return out.strip_edges()
+
+
+## PASS 5 — is the load path broken, or merely un-pressed?
+##
+## The census that makes this the question: across S01-S05 of this run there is
+## not one `combat_start` event. Not a fight that went badly — no fight at all,
+## in five segments, including a whole tournament. Pass 2 measured why: after
+## `save_game.gd::load_slot()` the party is restored but no follower body is,
+## `_sync_active_creature()` declines to summon when nothing is out ("the new
+## active creature comes out on next recall"), and `_engageable()` returns null
+## on a null ally BEFORE it ever measures a distance. Every journey segment from
+## S03 on begins with a load.
+##
+## Two very different findings fit that, and only one of them is about the game:
+##
+##   GAME — a loaded save cannot fight. The player is stranded with a party they
+##          cannot deploy, and the chapter is unplayable from any save.
+##   RIG  — a loaded save needs one press of `creature_recall` to put the
+##          creature back out, exactly as the on-screen line says, and no journey
+##          step-script in this protocol ever presses it. S01-S10 contain zero
+##          occurrences of the action; X01, X02, X03 and X06 contain it.
+##
+## So this loads S02's exit save, presses the button the game's own prompt names,
+## and then tries to engage. If a fight starts, the game was never broken here
+## and the whole downstream silence is the harness's.
+func _pass5(world: Node, player: CharacterBody3D, director: Node, arbiter: Node) -> void:
+	print("--- PASS 5: after a load, press the button the prompt names --------")
+	if not _seed_save():
+		print("[load] could not seed the exit save; PASS 5 cannot run")
+		return
+	var game := root.get_node_or_null(^"/root/Game")
+	var saver: Object = _saver(game) if game != null else null
+	if saver == null:
+		print("[load] no save system reachable; PASS 5 cannot run")
+		return
+	print("[load] load_slot(%d) -> %s" % [SLOT, bool(saver.call("load_slot", game, SLOT))])
+	for i in LOAD_SETTLE_FRAMES:
+		await physics_frame
+
+	print("[load] after the load: party = %d, ally_body = %s"
+		% [_party_size(), "NULL" if director.call("ally_body") == null else "present"])
+	var offer_before: Variant = director.call("interaction_offer", player.global_position)
+	print("[load] the line the game shows      = %s"
+		% _plain(str((offer_before as Dictionary).get("label", "")) if offer_before is Dictionary else ""))
+	print("[load] ...and it is actionable      = %s"
+		% (bool((offer_before as Dictionary).get("actionable", false)) if offer_before is Dictionary else false))
+	print("[load] ...which is why `interact` does nothing: the verb it names is")
+	print("[load]    `creature_recall`, RB, and `interact` is X.")
+	print("")
+
+	# The press the prompt asks for. Same shape as every other synthetic press
+	# here: the parsed physical event and the action beside it.
+	var ev := InputEventJoypadButton.new()
+	ev.button_index = JOY_BUTTON_RIGHT_SHOULDER
+	ev.pressed = true
+	Input.parse_input_event(ev)
+	Input.action_press("creature_recall")
+	await physics_frame
+	var up := InputEventJoypadButton.new()
+	up.button_index = JOY_BUTTON_RIGHT_SHOULDER
+	up.pressed = false
+	Input.parse_input_event(up)
+	Input.action_release("creature_recall")
+	for i in 180:
+		await physics_frame
+
+	var ally: Variant = director.call("ally_body")
+	print("[load] one press of creature_recall -> ally_body = %s"
+		% ["STILL NULL" if ally == null else str((ally as Node3D).name)])
+	if ally == null:
+		print("[load] >>> the game cannot put the creature back out after a load.")
+		print("[load] >>> That is a GAME finding and it strands every save.")
+		return
+
+	var practice: Variant = director.call("wild_creature")
+	if practice == null:
+		print("[load] no wild creature to try; inconclusive")
+		return
+	var close := (practice as Node3D).global_position + Vector3(1.0, 0.0, 1.0)
+	await _press_from(world, player, director, arbiter, close, "load", "arm's length, after one RB")
+	print("[load] === THE ANSWER ===========================================")
+	print("[load] If a fight started above, the load path is sound and every")
+	print("[load] silent segment from S03 on is the harness never pressing a")
+	print("[load] button the game puts on screen and no journey step contains.")
