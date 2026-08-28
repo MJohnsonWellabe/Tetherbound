@@ -1,0 +1,321 @@
+{
+  "_comment": "Candidate freeze for GATE F RUN 3, the first run against the completed §H.1 evidence split. Written BEFORE segment 1 and not amended during the run: CD-8b's whole subject is a freeze record that claimed a capability the run did not have, and §H.1 is explicit that a run wanting a logic lane must say so here beforehand rather than editing this file to get a segment to start.",
+  "candidate_sha": "26f0db4f1f2006150e3578947fc8124fcdf76bee",
+  "candidate_ref": "main",
+  "_comment_candidate": "The GAME is frozen at main@26f0db4. This run changes no game code, data or config; see rig_sha.",
+  "rig_sha": "82fd6c9c3943b5a58868144dbf89c4b13df7e101",
+  "rig_ref": "ralph/GATE-F-RUN-3",
+  "_comment_rig": "The rig commits on top of the candidate. They touch tools/gate_f/ only: the §H.1 split extended from S01 to every remaining segment, and one instrument fix. Recorded separately from candidate_sha so a reader is never left inferring whether a finding about the game came from a build edited to produce it.",
+  "_comment_discarded_attempt": "An earlier attempt at this run (gate-f-run-20260828T182723Z) ran S01 only and was DISCARDED, not superseded, before any second segment. It found that `objective_is` compared the protocol's entry ids against the probe's flag ids and would have failed all 26 of those asserts across ten segments for a reason about the instrument. The fix is rig_sha's second commit. Nothing from that attempt is spliced into this run (§1.6); its directory is gone and its only finding is the one recorded here.",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "_comment": "§0.5. Byte-identical to the binary run 2 used, so the envelope measurements carried forward below are about the same executable."
+  },
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none -- godot --headless --path . --script, NO --rendering-driver",
+      "_comment": "§H.1's per-lane block, and the reason this run can start at all. A flat display_server field cannot describe a run that is headless for its logic and X11 for its capture, and a record with no `lanes` block binds EVERY segment by its flat claim -- which is why the 2026-08-27 candidate record blocks every logic segment run against it (verified: it does). --headless WITH a rendering driver hangs forever; --headless with none is correct and fast, and is what every segment of this run actually used."
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility under xvfb — llvmpipe software rasterisation",
+      "_comment": "Declared, and NOT EXERCISED IN THIS RUN. No capture lane was run in this container and none should be. This entry says what the capture lanes need, not what happened."
+    }
+  },
+  "resolution": [
+    1920,
+    1080
+  ],
+  "resolution_substituted": false,
+  "_comment_resolution": "The capture lanes' requested size. No capture smoke was run in this container because no capture lane was run.",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir",
+  "date": "2026-08-28",
+  "operator": "claude-opus-5 agent, Tetherbound lane session ralph/GATE-F-RUN-3",
+  "free_build": false,
+  "_comment_free_build": "autoload/game_state.gd defaults free_build and debug_teleport to false and both persist only in user://settings.json, which the first wipe_saves clears. Teleport is off everywhere except the DIAG segments that turn it on deliberately (§0.6).",
+  "instrumentation_overhead_note": "NOT re-measured in this container. Run 2's measurement stands as the last one taken (off 4.341, telemetry 3.945, telemetry+recording@0.50Hz 4.039 ms/frame, all deltas inside a 0.717 ms/frame noise floor, frames written 0 so the readback cost was never measured directly). It is also LESS load-bearing than it was: the recorder is off on every segment of this run by construction, because evidence_lane=logic forces record_hz to 0.",
+  "envelope_facts_confirmed_on_this_container": {
+    "why_no_capture_lane_ran": "12,721 ms per rendered frame against 6.1 ms of game logic under llvmpipe with no GPU. The eighteen segments ask for 4,607,802 physics frames; in capture mode that is ~8,283 hours. Measured in run 2 and carried forward rather than re-measured. It is a fact about the box, not about the game. The capture lanes are authored, checked and UNPAID: they need a GPU host.",
+    "logic_frame_cost_measured_here": "The logic lane's own price, measured by the pre-flight on this container: 0.0059 s/frame on the empty tree, 0.0065 s/frame re-priced on the title, 0.0166 s/frame in the standing Meadows. Higher than run 2's quoted 6.1 ms and still ~765x cheaper than a rendered frame.",
+    "import_cache": "Built from scratch on this container. 1,492 files under .godot/imported, identical across two consecutive passes, exit 0 both times, and zero SCRIPT ERROR / Parse Error / Failed to load / ERROR: Cannot open in either log.",
+    "audio": "Expected NONE (no ALSA card, no libpulse in this image). Any audio judgement is [OWNER-ONLY].",
+    "disk_free_at_freeze_bytes": 24068370432
+  },
+  "config_flags": {
+    "art.json": {
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_smith.hair.visible": true,
+      "villager_ranger.hair.visible": true
+    },
+    "burrow_warrens.json": {
+      "interior_rock.enabled": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "vegetation.enabled": true,
+      "dead_ground.enabled": true,
+      "tether_lights.enabled": true,
+      "barriers.enabled": true,
+      "patrols.enabled": true
+    },
+    "movement.json": {
+      "unstick.enabled": true,
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false
+    },
+    "performance.json": {
+      "scatter_lod_ranges": false,
+      "debug_overlay_on_boot": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "shader.enable_macro_variation": true,
+      "river.failsafe": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.trees.collides": true,
+      "layers.grove.collides": true,
+      "layers.saplings.collides": true,
+      "layers.deadfall.collides": false,
+      "layers.bushes.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "_comment_config_flags": "§A.2 / CD-8, read mechanically from data/config/*.json rather than hand-listed. The one CD-8 was written about has CHANGED since run 2: grass_field.json:enabled is TRUE on this candidate, so the procedural ground cover is present and the boot log confirms it builds (315,232 tufts). It is absent from config_flags_off for that reason, not by omission. Nothing in config_flags_off is a finding by itself -- the vegetation collides/casts_shadow flags are settled art and performance decisions.",
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "_comment": "§A.4 makes a green suite a COORDINATOR precondition before the freeze, not an operator step, and §13 forbids substituting a unit-test result for player-path evidence. It was not re-run here: this container was provisioned bare. This field exists so a reader sees the actual state rather than an implied green."
+  },
+  "owner_only_gaps": "Unchanged from §K and asserted by NO evidence in this run: device frame rate, GPU frame time, VRAM, thermals/battery, real controller feel, 7-inch handheld legibility, first-time-human navigation/pacing, voluntary engagement, audio, Windows export identity, true continuous video, long-session device soak, mouse-look feel.",
+  "segments_planned": {
+    "logic_lanes_run_here": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "X01",
+      "X02",
+      "X03",
+      "X04",
+      "X05",
+      "X06",
+      "X07",
+      "X08"
+    ],
+    "capture_lanes_authored_and_NOT_run": [
+      "S01C",
+      "S02C",
+      "S03C",
+      "S04C",
+      "S05C",
+      "S06C",
+      "S07C",
+      "S08C",
+      "S09C",
+      "S10C",
+      "X01C",
+      "X02C",
+      "X03C",
+      "X04C",
+      "X05C",
+      "X07C"
+    ],
+    "_comment": "Sixteen capture lanes owe 274 prescribed frames between them. None was run in this container. tools/gate_f/run_inventory.py reports that debt over this run directory at the end; a delegation nobody paid is a run-level deficiency and is meant to read as one."
+  },
+  "segment_declarations": {
+    "S01": {
+      "evidence_lane": "logic",
+      "capture_lane": "S01C",
+      "owes": 0
+    },
+    "S02": {
+      "evidence_lane": "logic",
+      "capture_lane": "S02C",
+      "owes": 0
+    },
+    "S03": {
+      "evidence_lane": "logic",
+      "capture_lane": "S03C",
+      "owes": 0
+    },
+    "S04": {
+      "evidence_lane": "logic",
+      "capture_lane": "S04C",
+      "owes": 0
+    },
+    "S05": {
+      "evidence_lane": "logic",
+      "capture_lane": "S05C",
+      "owes": 0
+    },
+    "S06": {
+      "evidence_lane": "logic",
+      "capture_lane": "S06C",
+      "owes": 0
+    },
+    "S07": {
+      "evidence_lane": "logic",
+      "capture_lane": "S07C",
+      "owes": 0
+    },
+    "S08": {
+      "evidence_lane": "logic",
+      "capture_lane": "S08C",
+      "owes": 0
+    },
+    "S09": {
+      "evidence_lane": "logic",
+      "capture_lane": "S09C",
+      "owes": 0
+    },
+    "S10": {
+      "evidence_lane": "logic",
+      "capture_lane": "S10C",
+      "owes": 0
+    },
+    "X01": {
+      "evidence_lane": "logic",
+      "capture_lane": "X01C",
+      "owes": 0
+    },
+    "X02": {
+      "evidence_lane": "logic",
+      "capture_lane": "X02C",
+      "owes": 0
+    },
+    "X03": {
+      "evidence_lane": "logic",
+      "capture_lane": "X03C",
+      "owes": 0
+    },
+    "X04": {
+      "evidence_lane": "logic",
+      "capture_lane": "X04C",
+      "owes": 0
+    },
+    "X05": {
+      "evidence_lane": "logic",
+      "capture_lane": "X05C",
+      "owes": 0
+    },
+    "X06": {
+      "evidence_lane": "logic",
+      "capture_lane": "",
+      "owes": 0
+    },
+    "X07": {
+      "evidence_lane": "logic",
+      "capture_lane": "X07C",
+      "owes": 0
+    },
+    "X08": {
+      "evidence_lane": "logic",
+      "capture_lane": "",
+      "owes": 0
+    }
+  },
+  "clocks": {
+    "route_csv_t": "play",
+    "events_jsonl_t": "play",
+    "record_hz": "play seconds",
+    "since_interaction_s": "play",
+    "dead_travel": "play",
+    "route_csv_wall": "wall datetime",
+    "cost_gate": "wall",
+    "disk_gate": "wall",
+    "duration_ms": "wall",
+    "_comment": "§H.2. Play time is Engine.get_physics_frames() over physics_ticks_per_second. In logic mode the two clocks run close together; the distinction still matters because §D's pacing numbers must be about the game."
+  }
+}
