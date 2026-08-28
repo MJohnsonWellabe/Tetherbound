@@ -677,7 +677,26 @@ func _refuse_switch() -> void:
 ## `combat_hud.tscn`), so adding it to the canvas height gives the panel's
 ## real top in pixels.
 func _party_strip_position() -> Vector2:
-	var ally_top: float = _root.size.y + _ally_panel.offset_top
+	# THE PANEL'S REAL TOP, not the one its offsets declare. `AllyPanel` is a
+	# bottom-anchored `PanelContainer` with `grow_vertical = 0`, so when its
+	# content needs more than the 150px `combat_hud.tscn` gives it, it grows
+	# UPWARD -- and a Control forced past its minimum size grows its cached
+	# rect without writing that growth back to its offsets (the distinction
+	# `smoke_prompt_hotbar_dock.gd`'s own header draws). Measured on the live
+	# scene: authored top 874 on a 1080-tall canvas, real top **833**. The
+	# roster was being placed against an edge 41px below where the plate
+	# actually is, which is the other half of `HIST-013` -- "the active-creature
+	# plate composites over the roster's fifth row" -- and no amount of
+	# correcting the arithmetic downstream could have found it, because the
+	# arithmetic was right about the wrong edge.
+	#
+	# The authored offset stays as the fallback for exactly one case: this is
+	# called from `_ready()` to seed the strip's rest position, before the
+	# panel has been laid out and while its rect is still degenerate. Every
+	# call after that is from `_update_party_strip()` with a real rect.
+	var ally_rect := _ally_panel.get_global_rect()
+	var ally_top: float = ally_rect.position.y if ally_rect.size.y > 0.0 \
+			else _root.size.y + _ally_panel.offset_top
 	var strip_h: float = _party_strip.size.y if _party_strip != null else 0.0
 	return Vector2(SWITCH_PANEL_X, ally_top - strip_h - SWITCH_PANEL_GAP)
 
