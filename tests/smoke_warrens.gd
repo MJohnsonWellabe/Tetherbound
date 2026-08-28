@@ -30,6 +30,10 @@ extends SceneTree
 ## that the clearing PATH exists and pays once, which is `SD17`'s own done-when.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+## CONTENT-0828B. The species' own unscaled size, so the guardian's alpha
+## multiplier is checked against the animal rather than against a number
+## copied into this file.
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SETTLE_FRAMES := 240
 const PUSH_FRAMES := 240
 ## The walked route (`_the_route_can_be_walked`): how close counts as arrived,
@@ -327,6 +331,55 @@ func _the_population_and_the_guardian_are_placed(warrens: Node3D) -> void:
 	var den: Vector3 = warrens.call("marker", "den")
 	if guardian.global_position.distance_to(den) > 14.0:
 		_fail("the guardian is not in its own chamber")
+
+	# CONTENT-0828B. The owner's complaint was that the descent has no payoff,
+	# and CONTENT-0828's answer to it was that the cave HAD an alpha and a
+	# prize but the alpha did not READ as one -- it wore the ordinary
+	# burrowback texture at a model-only scale, so a roadside duskhush looked
+	# more like an alpha than the chapter's boss. Every part of that answer was
+	# presentation, and NOTHING asserted any of it: the whole payoff could
+	# regress to a big ordinary burrowback and this test would still pass and
+	# still print the same line. Asserted against the config rather than
+	# against numbers repeated here, so retuning the guardian stays a data edit.
+	var spec: Dictionary = _warrens_config().get("guardian", {})
+	if not guardian.has_meta("alpha"):
+		_fail("the guardian is not marked as an alpha; encounter_director's own "
+			+ "field alphas are, and the dungeon boss reading as less of an alpha "
+			+ "than a roadside spawn is the defect CONTENT-0828 fixed")
+	var want_scale := float(spec.get("scale", 1.0))
+	if want_scale > 1.0:
+		# The GAMEPLAY size, not the art pivot, and read through the public
+		# accessors rather than off `body_scale`. `body_scale` is the
+		# BEFORE-populate input field; the guardian is dressed AFTER the
+		# director has spawned it, so it goes through
+		# `apply_size_multiplier()`, which scales the live `_height`/`_radius`
+		# and leaves `body_scale` at 1.0. Asserting the field would have
+		# reported a bug that is not there and missed the one that would be.
+		#
+		# What is actually being asserted: `body_height()`/`body_radius()` are
+		# what the capsule, the hit cone's reach and the catch accuracy bonus
+		# all read, so if these moved with the silhouette then the fight moved
+		# with it too -- and if they did not, the guardian is a big picture over
+		# a field-sized body, which `creature_body.gd` calls "the invisible
+		# discrepancy PW2 forbids": a swing that visually connects resolving
+		# against a body that is not there.
+		var look: Dictionary = SPECIES.placeholder(str(guardian.get("species_id")))
+		var want_height := float(look.get("height", 0.0)) * want_scale
+		if want_height > 0.0 and not is_equal_approx(float(guardian.call("body_height")), want_height):
+			_fail("the guardian's body height is %.2f m but its species at %.2fx is %.2f m; "
+				% [float(guardian.call("body_height")), want_scale, want_height]
+				+ "the silhouette scaled and the capsule, reach and catch odds did not")
+	var want_move := str(spec.get("signature_move", ""))
+	if want_move != "" and instance != null:
+		var charged := str(instance.get("move_charged"))
+		if charged != want_move:
+			_fail("the guardian's charged move is '%s' but its config asks for '%s'; "
+				% [charged, want_move]
+				+ "the signature move is what makes this a different fight rather than a longer one")
+	print("guardian reads as an alpha: %.2f m tall (species %.2f m), charged move %s" % [
+		float(guardian.call("body_height")),
+		float(SPECIES.placeholder(str(guardian.get("species_id"))).get("height", 0.0)),
+		str(instance.get("move_charged")) if instance != null else "?"])
 
 
 ## Freeze the residents where they stand — physics off, aggression off. NOT

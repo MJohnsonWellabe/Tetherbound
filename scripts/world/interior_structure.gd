@@ -332,30 +332,45 @@ func _reveals(openings: Array, floor_y: float, config: Dictionary) -> void:
 		_member(head, Vector3(at.x, floor_y + height + lintel * 0.5, at.z), "reveal")
 
 
-## Pass 5 -- a post in each internal corner.
+## Pass 5 -- a pier in each internal corner.
 ##
 ## The prior Warrens pass found this in frames and wrote it down: "it reads as
 ## unfinished because a cave does not have corners." A fortress hall does not
 ## have them either -- a 90-degree meeting of two flat planes is a modelling
-## artefact, not a building. One post per corner removes four of them per room
-## for four nodes, which is the best ratio in this file.
+## artefact, not a building.
+##
+## TWO members per corner, not one, and the reason is the arena clamp rather
+## than taste. A single square post big enough to read in a 28-metre hall
+## reaches `width * 0.707` diagonally into the room, which blows through
+## MAX_PROJECT_M the moment the post is wider than about 0.7 m. An L of two
+## slabs -- one against each wall, each projecting exactly `corner_project_m`
+## and running `corner_width_m` ALONG its own wall -- reads as a corner pier at
+## any size the room wants while never leaving the margin combat is promised.
+## It is also simply the right shape: a pier is what a corner of a built room
+## has, and a square column standing in a corner is furniture.
 func _corners(centre: Vector3, size: Vector2, height: float, floor_y: float,
 		doorways: Array, config: Dictionary) -> void:
 	if not bool(config.get("corners", true)):
 		return
-	var post := maxf(float(config.get("corner_width_m", 0.9)), MIN_MEMBER_M)
+	var run := maxf(float(config.get("corner_width_m", 0.9)), MIN_MEMBER_M)
 	var reach := _project(config, "corner_project_m", 0.44)
 	var half := size * 0.5
-	var width := minf(post, reach * 2.0)
 	for cx in [-1.0, 1.0]:
 		for cz in [-1.0, 1.0]:
-			var at := Vector3(
-				centre.x + cx * (half.x - reach * 0.5),
-				floor_y + height * 0.5,
-				centre.z + cz * (half.y - reach * 0.5))
-			if _in_a_doorway(at, doorways):
+			# The corner itself, for the doorway test -- a passage cut close to
+			# a corner would otherwise get a pier standing in its mouth.
+			var corner := Vector3(centre.x + cx * half.x, 0.0, centre.z + cz * half.y)
+			if _in_a_doorway(corner, doorways):
 				continue
-			_member(Vector3(width, height, width), at, "corner")
+			# The leaf against the +/-z wall, running along x, and the leaf
+			# against the +/-x wall, running along z. Each sits flush with its
+			# own wall's inner face and reaches `reach` into the room.
+			_member(Vector3(run, height, reach),
+				Vector3(centre.x + cx * (half.x - run * 0.5), floor_y + height * 0.5,
+					centre.z + cz * (half.y - reach * 0.5)), "corner")
+			_member(Vector3(reach, height, run),
+				Vector3(centre.x + cx * (half.x - reach * 0.5), floor_y + height * 0.5,
+					centre.z + cz * (half.y - run * 0.5)), "corner")
 
 
 ## --- shared -----------------------------------------------------------------

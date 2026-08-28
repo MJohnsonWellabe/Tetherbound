@@ -90,6 +90,34 @@ const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.
 const ROCK_UV_SCALE := 0.46
 const ROCK_TINT := Color("#fff2e0")
 
+## CONTENT-0828B. THE FLOOR HAD NO TEXTURE AT ALL, and it is the largest
+## surface in every room in this dungeon.
+##
+## Found in a frame, not in the code: `W1-den-wide` came back with a fully
+## textured wall and ceiling standing on a flat unbroken brown plane. The cause
+## is one defaulted argument -- `_box()` takes `textured := false` and
+## `_build_chambers()`/`_build_passages()` pass `_floor_colour()` and stop
+## there, while every wall and ceiling beside them passes `true, true`. This is
+## the same class of bug MAT-BLOCKOUT already fixed for the walls and
+## STRONGHOLD-MAT for the fortress ("one model family, reached down a code path
+## that never warmed its material"); the floor was simply the surface neither
+## pass looked at. `stronghold.gd` textures its own floors, so this was a
+## Warrens-only omission.
+##
+## A DIFFERENT texture from the walls, deliberately, and this is the half that
+## is a design call rather than a bug fix. A cave floor is not the same
+## material as a cave wall -- it is what has fallen off the walls and been
+## walked on. Giving the floor the wall's own Rock030 would fix "untextured"
+## and leave the room a single material from floor to ceiling, which is the
+## other half of what makes these spaces read as blockout. `Ground030` is the
+## dirt/pebble surface `build_playground_terrain.gd` already uses for the
+## meadow's own paths (its comment calls it "a real dirt/pebble pathway
+## photo"), so this is the same material family the player has been walking on
+## all chapter, indoors.
+const FLOOR_ALBEDO := preload("res://assets/environment/terrain/Ground030_Color.jpg")
+const FLOOR_NORMAL := preload("res://assets/environment/terrain/Ground030_NormalGL.jpg")
+const FLOOR_UV_SCALE := 0.30
+
 ## The cave is a narrow, low place; the village's default third-person arm
 ## puts the camera through the rock. Same seam grandpa_house.gd uses.
 const INTERIOR_PROFILE := {
@@ -276,6 +304,51 @@ func _floor_colour() -> Color:
 	return Color(str(_config.get("site", {}).get("floor_colour", "#4a423a")))
 
 
+## The cave floor's own material. Triplanar for the same reason every other
+## surface in here is: these are procedurally-sized primitive boxes with no
+## authored UVs, so the texture has to project itself from world space.
+##
+## `uv1_scale` is looser than the wall's (0.30 against ROCK_UV_SCALE's 0.46)
+## because a floor is seen at a grazing angle across its whole length and a
+## tight tile reads as noise at that angle -- the wall is seen face-on and
+## wants the finer grain.
+func _floor_material() -> StandardMaterial3D:
+	var key := "floor"
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.98
+	m.albedo_texture = FLOOR_ALBEDO
+	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.6)
+	m.normal_enabled = true
+	m.normal_texture = FLOOR_NORMAL
+	m.normal_scale = 1.8
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
+	_materials[key] = m
+	return m
+
+
+## A box whose material is supplied rather than derived from a colour -- the
+## floor is the one surface in this cave that is not made of the wall's stone.
+func _floor_box(size: Vector3, at: Vector3) -> void:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = _floor_material()
+	mesh.position = at
+	add_child(mesh)
+	var body := StaticBody3D.new()
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = size
+	shape.shape = box_shape
+	body.add_child(shape)
+	body.position = at
+	add_child(body)
+
+
 ## Every chamber: a floor plinth (it reaches `skirt` metres down so the cave
 ## does not float where the hillside falls away below the mouth), a ceiling
 ## slab, and four walls split around whatever passages meet them.
@@ -287,8 +360,8 @@ func _build_chambers() -> void:
 		var height := float(chamber.get("height", 4.0))
 		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
 
-		_box(Vector3(outer.x, _skirt, outer.y),
-			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_colour())
+		_floor_box(Vector3(outer.x, _skirt, outer.y),
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
 		_box(Vector3(outer.x, 0.8, outer.y),
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 
@@ -426,7 +499,7 @@ func _build_passages() -> void:
 		if not along_x:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 0.8, length)
-		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_colour())
+		_floor_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
 		_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 
 		for s in [-1.0, 1.0]:
@@ -564,8 +637,12 @@ func _build_approach_apron() -> void:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
-		_box(Vector3(width, _skirt, run / float(steps) + 0.15),
-			Vector3(0.0, top - _skirt * 0.5, z), _floor_colour())
+		# Same dirt as the chambers' own floors. This ramp is OUTDOORS, in
+		# daylight, beside textured terrain and the mound's own boulders, and
+		# a flat untextured colour reads worse out there than it does in the
+		# dark -- it is the last thing a player sees before going in.
+		_floor_box(Vector3(width, _skirt, run / float(steps) + 0.15),
+			Vector3(0.0, top - _skirt * 0.5, z))
 
 	# GRASS-INDOORS, owner 2026-08-28. The runtime ground cover
 	# (`scripts/world/grass_field.gd`) is procedural and camera-relative, so it
@@ -978,6 +1055,43 @@ func _build_interior_rock() -> void:
 ## because these rooms are lit by shadowless omnis (`_build_lights`) and no
 ## light in here is going to model the form for us: a member the same value as
 ## the wall behind it is invisible however well it is shaped.
+## The structure members' own material.
+##
+## NOT `_material(colour, 0, true)`, and the frames are why. That function
+## lerps its colour 75% toward `ROCK_TINT` -- a MAT-BLOCKOUT round-2 decision
+## tuned for the WALLS, and correct for them -- which leaves a member only a
+## quarter of its configured colour. The first round of this pass used it and
+## every shaft came back the same value as the wall behind it: present in the
+## geometry, invisible in the photograph.
+##
+## That matters more here than anywhere else in the cave, because every light
+## in these chambers is a shadowless omni (`_build_lights`). Outdoors the sun
+## models a proud form for free; in here a box standing 32cm off a wall is lit
+## almost exactly like the wall, so if the VALUE does not separate them,
+## nothing will. So the member keeps the cave's own stone texture -- that
+## finding stands, and a tinted nature-pack rock still comes back mint -- and
+## takes its colour at nearly full strength instead.
+##
+## The coarser `uv1_scale` is the second separator and costs nothing: the same
+## stone at a different grain reads as a different piece of stone, which is
+## what a rib standing against a wall actually is.
+func _structure_material(colour: Color) -> StandardMaterial3D:
+	var key := "structure_%s" % colour.to_html()
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.95
+	m.albedo_texture = ROCK_ALBEDO
+	m.albedo_color = colour.lerp(ROCK_TINT, 0.2)
+	m.normal_enabled = true
+	m.normal_texture = ROCK_NORMAL
+	m.normal_scale = 2.4
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * (ROCK_UV_SCALE * 0.55)
+	_materials[key] = m
+	return m
+
+
 func _build_structure() -> void:
 	var cfg: Dictionary = _config.get("interior_structure", {})
 	if cfg.is_empty():
@@ -995,7 +1109,7 @@ func _build_structure() -> void:
 		"chambers": chambers, "doorways": _doorways, "openings": _openings,
 		"floor_y": _floor_y, "config": cfg,
 		"material_for": func(role: String) -> StandardMaterial3D:
-			return _material(_structure_colour(role), 0.0, true),
+			return _structure_material(_structure_colour(role)),
 	})
 	if placed > 0:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
@@ -1009,11 +1123,16 @@ func _structure_colour(role: String) -> Color:
 	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
 	if tints.has(role):
 		return Color(str(tints[role]))
+	# Structure is a LIGHTER stone than the infill it stands against, and the
+	# recessed line and the overhead members are darker. That is not decoration:
+	# it is what dressed stone against rubble actually looks like, and it is the
+	# only cue available in rooms lit by shadowless omnis. Round 1 returned the
+	# wall's own `site.rock` for shafts and corners -- the member was literally
+	# the same colour as the wall -- and the frames showed exactly nothing.
 	var rock := _rock()
 	match role:
-		"capital", "course": return rock.lightened(0.16)
-		"rib", "reveal": return rock.darkened(0.12)
-		_: return rock
+		"course", "rib": return rock.darkened(0.42)
+		_: return rock.lightened(0.34)
 
 
 ## Is this local point in a passage mouth?
@@ -1422,13 +1541,31 @@ func _build_prize() -> void:
 	add_child(holder)
 
 	# A cut stone on a plinth, lit from inside. Primitive, like every other
-	# placeholder prop in this project, but emissive so it reads as the one
-	# thing in a dark room that is worth walking to.
-	_box(Vector3(1.0, 0.5, 1.0), Vector3(at.x, _floor_y + 0.25, at.z), _rock())
+	# prop in this project, but emissive so it reads as the one thing in a dark
+	# room that is worth walking to.
+	#
+	# CONTENT-0828B: the plinth was ONE UNTEXTURED BOX, and `W3-vault` is the
+	# frame that says why that matters -- the object at the bottom of the
+	# chapter's one required dungeon, the thing the whole descent is for, was a
+	# flat grey cube with a pink dome on it, in the same idiom the owner
+	# rejected for the TM ("cardboard cards"). `_box()` defaults `textured` to
+	# false and this call never passed it, the same defaulted argument that
+	# left every floor in the cave untextured.
+	#
+	# STEPPED, not one block, and that is the cheap half of the fix: two courses
+	# with the lower one proud reads as something that was BUILT to hold an
+	# object, where a single cube reads as a crate. It is the same base-course
+	# cue `stronghold.gd::_wall_piece` already puts under every wall in the
+	# fortress, at prop scale.
+	_box(Vector3(1.24, 0.18, 1.24), Vector3(at.x, _floor_y + 0.09, at.z), _rock(), true, true)
+	_box(Vector3(0.96, 0.42, 0.96), Vector3(at.x, _floor_y + 0.39, at.z), _rock(), true, true)
 	var gem := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
-	sphere.radius = 0.22
-	sphere.height = 0.44
+	# Was 0.22. A 44cm stone on a metre plinth across a dark eight-metre room
+	# is a bright dot; the light around it was doing all the work of saying
+	# something is there, and the object itself none.
+	sphere.radius = 0.30
+	sphere.height = 0.60
 	gem.mesh = sphere
 	gem.material_override = _material(Color("#c8564a"), 2.0)
 	holder.add_child(gem)

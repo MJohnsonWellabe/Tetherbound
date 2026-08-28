@@ -521,8 +521,19 @@ func _build_chambers() -> void:
 		_box(Vector3(outer.x, _skirt, outer.y),
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
 		if not bool(chamber.get("open", false)):
+			# CONTENT-0828B: this was `_material(_timber())` -- a flat untextured
+			# colour, on a slab up to 28x28 m. It is the single largest surface
+			# in every roofed space in the complex and `C2-warden-arena` and
+			# `C3-tether-approach` both came back with a plain tan plane filling
+			# the top third of the frame. Same defaulted `textured` argument
+			# STRONGHOLD-MAT already fixed for the walls and floors here and
+			# MAT-BLOCKOUT for the Warrens; the ceiling was the surface neither
+			# pass looked at. Textured now, and darker: a lit ceiling competes
+			# with everything below it, and the ribs `_build_structure()` hangs
+			# under it only read as ribs against a ground they are darker than.
 			_box(Vector3(outer.x, 1.0, outer.y),
-				Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_timber()))
+				Vector3(centre.x, _floor_y + height + 0.5, centre.z),
+				_material(_timber().darkened(0.35), 0.0, true))
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(centre, size, height, side, _opening_on(id, side))
@@ -672,8 +683,11 @@ func _build_passages() -> void:
 			ceiling_size = Vector3(width + _wall_t * 2.0, 1.0, length)
 		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
 		if roofed:
+			# Same untextured-ceiling fix as `_build_chambers()`. This one is
+			# seen END-ON above every doorway, which is where `C3` caught it:
+			# a flat tan block over the way through, reading as cardboard.
 			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z),
-				_material(_timber()))
+				_material(_timber().darkened(0.35), 0.0, true))
 
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
@@ -884,10 +898,15 @@ func _structure_colour(role: String) -> Color:
 	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
 	if tints.has(role):
 		return Color(str(tints[role]))
+	# Structure is a LIGHTER stone than the infill it stands against; the
+	# recessed course and the overhead ribs are darker. Round 1 returned
+	# `_stone()` for shafts and corners -- the same value `_wall_material(false)`
+	# gives the wall behind them -- and `C1`/`C2` came back with walls that had
+	# no members in them at all. Dressed stone against rubble is what this
+	# actually is, and under shadowless omnis the value is the only cue there is.
 	match role:
-		"capital", "course": return _stone_light()
-		"rib", "reveal": return _stone_dark()
-		_: return _stone()
+		"course", "rib": return _stone_dark()
+		_: return _stone_light().lightened(0.22)
 
 
 ## Lit cable runs along the floor between chambers, all of them pointing at the
