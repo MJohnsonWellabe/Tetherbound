@@ -289,6 +289,9 @@ var _cost_window_usec := 0
 ## moved rather than one number that happened to be the last.
 var _reprices: Array = []
 var _cost_rechecks := 0
+## CD-7c: an in-play sample over the ceiling arms a refusal that the NEXT
+## window confirms or clears. See `_apply_price`.
+var _cost_over_armed := false
 ## 0 = not asked yet, 1 = inside a work tree, -1 = not. See `_inside_work_tree`.
 var _work_tree_cached := 0
 ## Largest evidence PNG actually written. See `_note_png_bytes`.
@@ -1988,6 +1991,11 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 		return ""
 	var before := _frame_cost_s
 	var now := await _measure_frame_cost()
+	# The scene has changed, so the rolling window either side of the change is
+	# not one price. Reset it here rather than in each caller: a window that
+	# straddles a boot or a load is the whole of CD-7c.
+	_cost_window_frames = 0
+	_cost_window_usec = 0
 	# From the step AFTER this one: the boot's own settle frames are spent, and
 	# its real cost is `boot_ms`, added separately. Charging both would price a
 	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
@@ -2047,9 +2055,38 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		+ "= %.0f s against %.0f s of budget left") % [reason, now, before, remaining_frames,
 			boot_ms / 1000.0, predicted, budget]
 	if predicted <= budget and not disk_over_now:
+		# A window that came in under budget clears any armed refusal: the
+		# spike that armed it was a transient, which is the case this exists
+		# to tell apart from a scene that really is unaffordable.
+		_cost_over_armed = false
 		if verbose:
 			_emit("note", {"observation": "cost re-priced%s" % line})
 		return line
+	# CD-7c, second half. A boot/load re-price STOPS AND MEASURES a settled
+	# scene, so it may refuse immediately. The in-play recheck cannot: it
+	# divides wall already spent by frames already ticked, so any one-off cost
+	# inside its 120-frame window -- a world stand-up, a region streaming in --
+	# lands on every frame of that window. S01's own ledger shows the shape: an
+	# in-play sample of 0.671 s/frame, then 0.017 s/frame two seconds later. The
+	# first number is not a price, it is a construction.
+	#
+	# So an in-play sample that trips the ceiling ARMS the refusal and the next
+	# window decides it. A scene that is genuinely too expensive is still too
+	# expensive 120 frames later and still blocks, at a cost of about two
+	# seconds of play. A transient disarms itself. Disk is exempt: bytes on
+	# disk are not a transient.
+	if predicted > budget and reason == "in-play" and not disk_over_now and not _cost_over_armed:
+		_cost_over_armed = true
+		record["armed"] = ("in-play sample over budget: %.0f s predicted against %.0f s left. "
+			+ "Armed, not blocked -- an in-play price is an average over a window and a scene "
+			+ "stand-up inside one is a construction, not a per-frame cost. The next window "
+			+ "decides.") % [predicted, budget]
+		if not material:
+			_reprices.append(record)
+		return "; " + str(record["armed"])
+	if predicted <= budget:
+		_cost_over_armed = false
+
 	var why := ""
 	if predicted > budget:
 		why = ("re-priced at %s, the REST of this segment predicts %.0f s (%.1f h) against %.0f s "
@@ -3882,7 +3919,19 @@ func _step_await_load(args: Dictionary, step_id: String) -> String:
 			_frame_ms.clear()
 			_emit("load", {"duration_ms": snappedf(ms, 0.01),
 				"observation": "a live Player exists %.0f ms after the Load press" % ms})
-			return "the world came up %.0f ms after the press" % ms
+			# CD-7c. §H's amendment says the harness "re-prices after EVERY
+			# boot" -- but a journey segment does not BOOT into its world, it
+			# LOADS into it, and nothing re-priced here. The consequence was
+			# measured on run 3's S03: the load spent 42.8 s of wall building
+			# the world, the in-play recheck divided that by the 122 physics
+			# frames that had ticked, got 0.351 s/frame -- 21x the real in-scene
+			# price -- projected it across 119,472 remaining frames, and refused
+			# a segment that costs minutes. So a load re-prices and resets the
+			# sampling window, for the same reason and in the same place a boot
+			# does: a scene has just CHANGED, and the history either side of the
+			# change is not one price.
+			var repriced := await _reprice("load", ms)
+			return "the world came up %.0f ms after the press%s" % [ms, repriced]
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	return ("FAIL no live Player within %.0f s of this step (step %s); input_context is '%s'. "
 		+ "The Load path did not reach a playable world.") % [timeout, step_id,
