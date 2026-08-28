@@ -1,0 +1,36 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "frames": {
+    "absent": 30,
+    "absent_reasons": {
+      "headless: this process has no display server and cannot render a frame": 30
+    },
+    "baseline_hz": 0.0,
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {},
+  "run_id": "gate-f-run-20260827T223957Z",
+  "segment": "unknown",
+  "sha": "a2d44e27847e2f14640939102ffecd867225be56",
+  "steps": {
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 0
+  },
+  "uncommittable": []
+}

@@ -2767,3 +2767,343 @@ Not run: **X04, X05, X06, X08.** X08 was dropped by owner decision, reinstated b
 the owner earlier today (check-in 27), then overtaken by the stop order.
 
 I did not fix the rig, modify the harness, or touch `.gitignore`. Standing down.
+
+---
+
+# Gate F RUN 2 — operator lane log
+
+Branch `ralph/GATE-F-RUN-2`. Candidate `e12a6b60` (head of `main`).
+Run directory `ralph/reports/gate-f-run-20260827T223957Z`.
+Everything below this rule belongs to the second authoritative run. The lane log
+above it is the f082bdf6 run and is not amended.
+
+## Check-in 1 — container stood up, candidate frozen
+
+**Container was bare.** No Godot, no import cache. Installed 4.7-stable from the
+release zip; `sha256 f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75`,
+**byte-identical to the binary the f082bdf6 run recorded**, so binary identity is
+not a variable between the two runs. Import running from scratch (4 cores,
+llvmpipe, no GPU); the f082bdf6 freeze recorded 2,513 imported resources.
+
+**Freeze record written** to `ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json`.
+Per section A.2 as amended by CD-8 it enumerates `data/config/` feature flags,
+read mechanically by the same recursive walk the harness uses rather than
+hand-listed. 15 config files carry switches; 26 are OFF.
+
+**The flag of record has changed state since the last candidate.**
+`grass_field.json:enabled` is **TRUE** on `e12a6b60`. On `f082bdf6` it was
+FALSE, which is CD-8's own example: the procedural ground cover was absent from
+every frame of that run and no artefact anywhere said so. On this candidate the
+camera-relative field owns the ground plane, `vegetation.gd` suppresses the four
+scatter layers named in `suppress_scatter_layers` (grass, drygrass, flowers,
+groundmat), and grass, bushes, flowers, litter, stones and wind render from the
+field instead. Recorded in `config_flag_of_record` with the ring parameters, and
+carried again in every segment's own `RUN_METADATA.json`.
+
+`display_server` is stated as the **capture-mode** fact (`X11 under xvfb-run`)
+deliberately, with the logic-mode reality (`none`) in its own adjacent field. The
+pre-flight reads this key and a capture-bearing segment run without a display
+server must BLOCK against it — that is CD-8b working, not a mis-record.
+
+**The cost arithmetic, before anything is run.** Section 0.8 prices `wait` in
+rendered frames. Priced every segment's step-script with `_predict_frames`'s own
+arithmetic against the `segment_cost_ceiling_s` of 14400 s:
+
+| seg | steps | captures | predicted frames | @0.006 s/f (logic) | @1.0 s/f | @10.5 s/f |
+|---|---|---|---|---|---|---|
+| S01 | 14 | 1 | 10,858 | 65 s | 3.0 h | 31.7 h |
+| S02 | 75 | 8 | 35,723 | 214 s | 9.9 h | 104 h |
+| S03 | 274 | 7 | 119,542 | 717 s | 33.2 h | 349 h |
+| S04 | 72 | 6 | 31,443 | 189 s | 8.7 h | 91.7 h |
+| S05 | 76 | 9 | 110,268 | 662 s | 30.6 h | 322 h |
+| S06 | 103 | 7 | 131,005 | 786 s | 36.4 h | 382 h |
+| S07 | 98 | 5 | 144,507 | 867 s | 40.1 h | 422 h |
+| S08 | 134 | 7 | 288,594 | 1,732 s | 80.2 h | 842 h |
+| S09 | 75 | 4 | 107,636 | 646 s | 29.9 h | 314 h |
+| S10 | 120 | 7 | 439,356 | 2,636 s | 122 h | 1,282 h |
+| X01 | 1,203 | 8 | 75,065 | 450 s | 20.9 h | 219 h |
+| X02 | 170 | 4 | 29,145 | 175 s | 8.1 h | 85.0 h |
+| X03 | 164 | 14 | 78,103 | 469 s | 21.7 h | 228 h |
+| X04 | 121 | 8 | 116,023 | 696 s | 32.2 h | 338 h |
+| X05 | 313 | 1 | 288,543 | 1,731 s | 80.2 h | 842 h |
+| X06 | 314 | 0 | 2,525,320 | 15,152 s | 702 h | 7,366 h |
+| X07 | 266 | 80 | 26,835 | 161 s | 7.5 h | 78.3 h |
+| X08 | 62 | 0 | 49,836 | 299 s | 13.8 h | 145 h |
+
+The frame cost is not yet measured on this box; `10.5 s/frame` is the previous
+run's llvmpipe number at 1920x1080 and is quoted only as a scale. What the table
+already fixes, before any measurement, is the **break-even**: to clear the 4-hour
+ceiling a segment needs `14400 / predicted_frames` seconds per frame — 1.33 s for
+S01, 0.54 s for X07, 0.12 s for S03, 0.033 s for S10, 0.0057 s for X06. I am not
+raising the ceiling and not shortening a wait. I will measure, run, and record
+what the gate says.
+
+Next: finish import, run the section 8 overhead self-measurement, then S01.
+
+## Check-in 2 — the rig drives the game, and the frame cost is now measured
+
+**The instrument works.** S01's pre-flight PASSED: `tools/capture_diag_minimal.gd`
+wrote a PNG at the requested **1920x1080** with no fallback
+(`CAPTURE_RESOLUTION.json` `substituted: false`), the harness's own framebuffer
+self-test wrote `_preflight.png`, and step `S01-06` produced the first prescribed
+screenshot of this run:
+
+```
+S01-03  booted title in 780 ms (30 settle frames)
+S01-04  input_context=title (wanted title)
+S01-05  focus_owner=@Button@27  focus_text="Start New Game"
+S01-06  captured GF-01-TITLE-01 at 1920x1080 (mean luma 50.8, spread 32.4, 5.4% dark)
+```
+
+That is a real front door, photographed, with its luminance on the row. For
+contrast, the previous run wrote 9,231 manifest rows saying `file: null` and
+called each one PASS.
+
+Container facts confirmed rather than inherited: **audio is the dummy driver**
+(every ALSA device failed, `libpulse.so.0` absent) — section K.6 is a measured
+fact here, not an assumption. Import built from scratch, **1,480 resources**,
+two consecutive agreeing passes, **zero** `SCRIPT ERROR` / `Parse Error` /
+`Failed to load` / `ERROR: Cannot open`.
+
+### The frame cost, measured three ways, and why the gate under-prices
+
+The harness prices twice, as Finding 4 of the rig log describes. On this box:
+
+| when | s/frame |
+|---|---|
+| pre-flight, empty tree | **0.0065** |
+| re-priced in scene, after `boot: title` | **0.0465** |
+| **measured by me, in the Meadows, from `route.csv` growth** | **0.235** |
+
+The third number is not the harness's. `route.csv` samples at 2 Hz of game time,
+so one row is 30 physics frames; 100 rows landed in 690 s of wall clock between
+22:55:44 and 23:07:14 — 3,000 rendered 1920x1080 frames, **0.23 s/frame** — and
+the same measurement over an earlier 420 s window gave 0.241. The world under
+llvmpipe with the grass field ON costs **5.1x** what the title screen costs.
+
+**That gap is where the cost gate leaks, and it is worth stating precisely
+because it is the instrument's, not the game's.** CD-7's fix re-prices after the
+first `boot` because the empty-tree number "is not about the scene the segment
+will render". True — but for every journey segment the first `boot` is the
+**title screen**, which is not the scene the segment will render either. The
+re-price is taken on a menu and then applied to eight hours of Meadows. So:
+
+| seg | predicted frames | harness prices it at | gate says | what it will actually cost at the measured 0.235 s/f |
+|---|---|---|---|---|
+| S01 | 10,858 | 505 s | pass | **0.7 h** |
+| S02 | 35,723 | 1,661 s | pass | 2.3 h |
+| S03 | 119,542 | 5,559 s | pass | 7.8 h |
+| S04 | 31,443 | 1,462 s | pass | 2.1 h |
+| S05 | 110,268 | 5,127 s | pass | 7.2 h |
+| S06 | 131,005 | 6,092 s | pass | 8.6 h |
+| S07 | 144,507 | 6,720 s | pass | 9.4 h |
+| S08 | 288,594 | 13,420 s | pass | 18.8 h |
+| S09 | 107,636 | 5,005 s | pass | 7.0 h |
+| S10 | 439,356 | 20,430 s | **BLOCK** | 28.7 h |
+| X01 | 75,065 | 3,491 s | pass | 4.9 h |
+| X02 | 29,145 | 1,355 s | pass | 1.9 h |
+| X03 | 78,103 | 3,632 s | pass | 5.1 h |
+| X04 | 116,023 | 5,395 s | pass | 7.6 h |
+| X05 | 288,543 | 13,417 s | pass | 18.8 h |
+| X06 | 2,525,320 | 117,427 s | **BLOCK** | 164.8 h |
+| X07 | 26,835 | 1,248 s | pass | 1.8 h |
+| X08 | 49,836 | 2,317 s | pass (logic mode, no cost gate) | 3.3 h |
+
+**4,607,802 rendered frames. 301 hours.** The 4-hour ceiling is crossed in
+reality by fourteen of the eighteen segments and detected in only two of them.
+
+There is a second ceiling nobody has priced: **disk**. At 1.8 MB per 1920x1080
+PNG and section H's cadences, the eighteen segments write **14,438 background
+frames, about 25 GB**, into a container with **23 GB free** — before git stores a
+second copy of each in `.git`.
+
+**I am not raising the ceiling, not shortening a wait, and not re-cadencing a
+script.** Section 13 forbids all three and section 0.8 says so directly: a
+segment over the ceiling needs a GPU or a re-cadenced script, and the waits exist
+so fights resolve. What I am doing is running the protocol in its stated order,
+segment by segment, committing and pushing each one as it closes, and recording
+exactly how far the wall clock and the disk let this envelope get. The distance
+between 301 hours and what actually lands is this run's most important
+measurement, and it is a measurement of the envelope, not of the game.
+
+Note on the `sha` field: segment `RUN_METADATA.json` files stamp `git rev-parse
+HEAD`, which advances as evidence commits land, so it reads `652cb7f0` and later
+rather than `e12a6b60`. The candidate is `e12a6b60`; every commit on this branch
+touches only `ralph/reports/`. I verify that with a path-restricted diff at run
+end rather than asking anyone to take it on trust.
+
+**One untracked file is deliberately left untracked.** `tests/test_gate_f_rig.gd.uid`
+was generated by this container's import pass; Godot writes a `.uid` beside every
+script and the repository is missing this one. Adding it would be a change to a
+path outside `ralph/` during an authoritative run, which section 13 forbids, and
+it is an import artefact rather than evidence. It is named here so its absence
+from every commit on this branch is a recorded decision rather than an oversight.
+
+## Check-in 3 — S01 stopped, S02 BLOCKED, X08 complete, run-level BLOCKER filed
+
+Correcting check-in 2 before anything else: **its 0.235 s/frame was wrong.** I
+derived it assuming `route.csv` samples every 30 physics frames. It does not —
+`_tick` writes a row when `_t() >= _next_trace_t` and `_t()` is **wall clock**,
+so the trace is wall-gated at 2 Hz and writes at most one row per physics frame.
+Row cadence is therefore a *lower bound on frame cost*, not a frame counter. The
+corrected measurement is in `BLOCKER_RUN.md` and is 27x larger.
+
+### The numbers
+
+| measure | value |
+|---|---|
+| `route.csv` in-world row-to-row wall delta | **median 6.465 s** (n=527) |
+| `Performance.TIME_PROCESS`, rendered frame, Meadows under xvfb | **median 12,721 ms** |
+| same scene, logic mode (X08) | **6.1 ms** |
+| what the cost gate priced S01 at | **0.0465 s/frame → 505 s** |
+
+Two independent measurements of the rendered cost, agreeing at ~2 physics steps
+per rendered frame. Capture mode is **2,069x** logic mode on this box.
+
+### S01 — stopped, evidence preserved
+
+Eight steps PASS including the prescribed capture; stopped inside step S01-09,
+549 of 10,800 physics frames in, at 66 minutes. The step wanted **19.4 hours**
+and the segment was on course for ~5,400 continuous-record PNGs (~10 GB) into
+23 GB of free disk. No `INVENTORY.json` exists and that is the honest signal —
+`run_segment.sh` says so itself. `S01/STOPPED.md` carries the full record.
+
+### S02 — BLOCKER at step 1, provoked deliberately and preserved
+
+Before concluding the degraded lane was unavailable I **ran it**:
+
+```
+$ tools/gate_f/run_segment.sh --allow-no-capture S02
+gate-f harness ERROR: capture pre-flight BLOCKER: the freeze record contradicts
+  this process: ... says display_server=X11 under xvfb-run; this process has none
+  exit=1   steps ran: 0 of 75   INVENTORY.json: INCOMPLETE
+```
+
+CD-8b working exactly as designed, against the freeze record I wrote before the
+run and deliberately stated as the capture-mode fact. `hard_why` is not waivable
+by the acknowledgement flag — Finding 9's fix. **I did not edit the freeze
+record to get past it**: amending a freeze record so a segment will start is
+CD-8b's own sin in mirror image.
+
+So the journey lane is unavailable in **both** modes. That is the run-level
+BLOCKER, filed at `BLOCKER_RUN.md`.
+
+### X08 — ran, complete, clean
+
+The one segment of eighteen that declares neither a capture nor a continuous
+record, so the pre-flight returns *"not required"* and no cost gate applies;
+section E.9 prescribes `--headless` for its CPU half anyway. **Its evidence is
+not degraded and carries no caveat beyond section K's standing [OWNER-ONLY]
+list.**
+
+```
+steps: 62 total, 62 ran, 62 PASS, 0 FAIL, 0 SKIP, 0 refused
+harness_errors: []   complete: true
+```
+
+World boot **71,506 ms**; **1,022 points of interest** in the tree, stable at
+every one of the six sites; `input_context=world` held through every 60 s
+stand-still and 60 s walk window; all six DIAG teleports landed within 0.0 m of
+their site.
+
+CPU frame time by site — **this container, software rasteriser, logic mode.
+Device frame rate, GPU frame time, VRAM and thermals are [OWNER-ONLY] and are
+asserted by nothing here:**
+
+| site | n | frame_ms avg | p95 | max | physics avg |
+|---|---|---|---|---|---|
+| village | 262 | 5.99 | 7.60 | 10.19 | 11.85 |
+| band1 | 263 | 7.47 | 8.89 | **38.35** | 10.24 |
+| band2 | 264 | 8.00 | 9.36 | 29.35 | 15.26 |
+| band3 | 265 | 7.73 | 9.57 | 26.06 | 13.81 |
+| band4 | 264 | 6.54 | 8.27 | 11.07 | 10.99 |
+| stronghold | 264 | 7.24 | 8.79 | 26.08 | 12.90 |
+
+Whole segment avg 7.15 ms, worst frame 38.35 ms. The five worst frames all fall
+at a teleport arrival — (0, 700) and (0, 2200) — i.e. at streaming-in, not in
+steady state. Recorded as measured; classifying it is Phase B's.
+
+### Bookkeeping
+
+No code, data or config changed. `git diff e12a6b60..HEAD -- . ':(exclude)ralph/'`
+is empty. Everything is on `ralph/GATE-F-RUN-2`, pushed per segment.
+
+## Check-in 4 — overhead measured, envelope recorded, run stands down
+
+**Overhead self-measurement (section I.7, a required `RUN_METADATA.json` field)
+ran.** Logic mode, scene=world, six 30 s windows in reversed order: telemetry
+−0.372 ms/frame and telemetry+recording −0.469 ms/frame against a 1.072 ms/frame
+noise floor. Both deltas are negative and below the floor: read as *under ~1.07
+ms/frame*, not as zero and not as a speed-up.
+
+Its `INVENTORY.json` says **INCOMPLETE**, correctly, and the reason is the one
+that matters: *"30 continuous frames were planned and not written: headless: this
+process has no display server and cannot render a frame."* So the recorder's
+grab-and-encode cost is **still unmeasured**, exactly as it was on the previous
+candidate — and this run has shown it is not the ~1 ms/frame effect the note
+implies. S01 puts a rendered 1920x1080 frame at **12,721 ms**.
+
+**Envelope facts are recorded in `ENVELOPE_OBSERVED.json`, deliberately separate
+from the freeze record.** I wrote the freeze record before the run with several
+fields marked `pending`, and every pre-flight read it. Editing it afterwards so
+it agrees with the evidence is CD-8b's sin in mirror image even when the edit
+only fills a placeholder, so the placeholders stay and a second file answers
+them.
+
+### The grass field, confirmed at run time rather than from the config
+
+Identical lines in both S01 (capture) and X08 (logic):
+
+```
+[vegetation] grass field is on; 661543 placements across 4 layers left unbuilt
+             (grass, drygrass, flowers, groundmat)
+[grass_field] 3 cover tier(s) up
+[grass_field] bound: 300000 tufts, radius 72m, region_size 256, vertex_spacing 2.0
+[playground] scattered 100515 props in 29 batches (56423 harvestable)
+```
+
+On `f082bdf6` the same stand-up scattered **762,058** props with the field OFF.
+On this candidate **661,543** of those are handed to the camera-relative field
+and **100,515** stay baked. That is the state change CD-8 exists to put on the
+record, and it is now in the boot log of two segments rather than inferred from
+a boolean.
+
+### One caveat on X08 that I am not smoothing over
+
+The stone tier binds differently in the two modes:
+
+```
+S01 (capture): stone tier: rid_valid=true height_map=RID(14177687044162) region_map=1024 entries
+X08 (logic):   stone tier: rid_valid=true height_map=<null>              region_map=-1   entries
+```
+
+Headless has no renderer to bind against, so this is not a defect claim. But it
+means **X08's per-site CPU numbers were taken with the grass field's stone tier
+not fully stood up** — they are not the same workload S01 was rendering. Phase B
+should not read X08 as a measurement of the shipped ground system's cost.
+
+### Standing down
+
+The run is complete as far as this envelope allows:
+
+| | state |
+|---|---|
+| S01 | partial — 8 steps PASS incl. `GF-01-TITLE-01`; stopped inside step 09 |
+| S02 | BLOCKER at step 1 (CD-8b), 0 of 75 steps run, preserved |
+| S03–S10, X01–X07 | **not run** — capture mode ~8,283 h, logic mode refused |
+| X08 | **complete** — 62/62 PASS, clean |
+| overhead | ran, INCOMPLETE for the recorded reason |
+
+`BLOCKER_RUN.md` is the run-level report and names the three decisions that are
+the coordinator's, not mine: run on a GPU box; decide whether a capture-free
+logic lane is wanted at all and freeze a record that says so *beforehand*; and
+fix the cost re-price, the two wall-clock gates and the missing disk budget.
+
+**Capture rate against the 162 known player-facing issues: I am not computing
+one, and no one should.** Fourteen of eighteen segments never ran. A denominator
+of 162 against a run that executed one segment and a fifth of another would be a
+number about nothing. That comparison is Phase B's to make, from evidence that
+exists.
+
+No code, data or config was changed at any point. `git diff e12a6b60..HEAD --
+. ':(exclude)ralph/'` is empty — checked, not asserted.

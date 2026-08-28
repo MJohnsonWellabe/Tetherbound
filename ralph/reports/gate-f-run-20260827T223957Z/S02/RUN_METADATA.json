@@ -1,0 +1,178 @@
+{
+  "blocked": "the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+  "capture_available": false,
+  "capture_preflight": {
+    "allow_no_capture": true,
+    "capture_available": false,
+    "capture_requested": false,
+    "contradiction": "the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+    "degraded_why": "no display server: DisplayServer reports 'headless'. This process cannot render, so all 8 planned capture(s) and every continuous frame would be written as file:null while the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture (§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).",
+    "display_server": "headless",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json",
+      "key": "display_server"
+    },
+    "measured_frame_cost_s": 0.005919,
+    "planned_captures": 8,
+    "predicted_frames": 35723,
+    "predicted_segment_cost_s": 211.4,
+    "record_baseline_hz": 0.5,
+    "verdict": "BLOCKER",
+    "why": "the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  },
+  "capture_requested": false,
+  "config_flags": {
+    "art.json": {
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_ranger.hair.visible": true,
+      "villager_smith.hair.visible": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "barriers.enabled": true,
+      "dead_ground.enabled": true,
+      "patrols.enabled": true,
+      "tether_lights.enabled": true,
+      "vegetation.enabled": true
+    },
+    "movement.json": {
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false,
+      "unstick.enabled": true
+    },
+    "performance.json": {
+      "debug_overlay_on_boot": false,
+      "scatter_lod_ranges": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "river.failsafe": true,
+      "shader.enable_macro_variation": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.bushes.collides": false,
+      "layers.deadfall.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false,
+      "layers.grove.collides": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.saplings.collides": true,
+      "layers.trees.collides": true
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "display_server": "headless",
+  "frame_grab_ms": {},
+  "frames_absent": 0,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  ],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "measured_frame_cost_s": 0.005919,
+  "planned_captures": 8,
+  "predicted_segment_cost_s": 211.4,
+  "record_baseline_hz": 0.5,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-run-20260827T223957Z",
+  "segment": "S02",
+  "segment_script": "tools/gate_f/segments/S02.json",
+  "sha": "c65d9a85cff0e3be09065d52526791dbd96d1bdb",
+  "started_wall": "2026-08-27 23:53:14",
+  "steps_ran": 0,
+  "steps_refused": 0,
+  "steps_total": 75,
+  "trace_hz": 2.0,
+  "trace_rows": 0,
+  "verdicts": {
+    "FAIL": 0,
+    "PASS": 0,
+    "SKIP": 0
+  },
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}
