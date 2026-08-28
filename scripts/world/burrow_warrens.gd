@@ -405,6 +405,18 @@ func _build_passages() -> void:
 ## The one door in the cave. A rock slab filling the passage, removed for good
 ## once the guardian is down (`_sync_vault_door`). No prompt, no UI, no key:
 ## it is a mechanism, the same way SC14's bridge is.
+##
+## CONTENT-0828: the slab also has to be SEEN, from the den floor, while the
+## alpha is still alive. The owner's report is that there is no point going in,
+## and a sealed grey box the same colour as the wall it sits in is a wall --
+## the player fought the guardian in a room with no visible reason to be there
+## and only discovered the branch afterwards, if at all. `seam` is that reason:
+## a thin emissive line down the door's own face and a warm light on the vault
+## side of it, so what the player can see across the den is a shut way on with
+## something lit behind it. That is the whole difference between a fight at the
+## end of a corridor and a fight for what is through the door, and it is the
+## `encounter context` lever CLAUDE.md names -- no new mesh, no new system, and
+## the light dies with the door it belongs to.
 func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: float) -> void:
 	var size := Vector3(0.6, height, width) if along_x else Vector3(width, height, 0.6)
 	var colour := Color(str(_config.get("site", {}).get("vault_door_colour", "#6d5f4a")))
@@ -416,6 +428,7 @@ func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: flo
 	_vault_door_mesh.position = Vector3(centre.x, _floor_y + height * 0.5, centre.z)
 	_vault_door_mesh.name = "VaultDoor"
 	add_child(_vault_door_mesh)
+	_build_vault_door_seam(along_x, width, height, size)
 
 	_vault_door = StaticBody3D.new()
 	_vault_door.name = "VaultDoorBody"
@@ -426,6 +439,61 @@ func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: flo
 	_vault_door.add_child(shape)
 	_vault_door.position = _vault_door_mesh.position
 	add_child(_vault_door)
+
+
+## The lit half of the door above. Parented to the door MESH, not to the cave,
+## so `_sync_vault_door()` hiding the slab takes the seam and the glow with it
+## in one move and there is no second thing to remember to switch off.
+##
+## All of it is tunable from `site.vault_door_seam`; setting `energy` to 0
+## turns the whole treatment off without touching this file.
+func _build_vault_door_seam(along_x: bool, width: float, height: float, size: Vector3) -> void:
+	var cfg: Dictionary = _config.get("site", {}).get("vault_door_seam", {})
+	var energy := float(cfg.get("energy", 1.1))
+	if energy <= 0.0:
+		return
+	var glow := Color(str(cfg.get("colour", "#e0a761")))
+	var seam_w := float(cfg.get("width_m", 0.14))
+
+	# The seam runs floor-to-lintel down the middle of the face the den sees.
+	# `size` is the slab; the strip is a hair proud of it on both sides so it
+	# does not z-fight the face it is drawn on, and it reads from the vault
+	# side too for a player walking back out.
+	var strip := MeshInstance3D.new()
+	strip.name = "VaultDoorSeam"
+	var bar := BoxMesh.new()
+	bar.size = Vector3(size.x + 0.04, height * 0.86, seam_w) if along_x \
+		else Vector3(seam_w, height * 0.86, size.z + 0.04)
+	strip.mesh = bar
+	var lit := StandardMaterial3D.new()
+	lit.albedo_color = glow
+	lit.emission_enabled = true
+	lit.emission = glow
+	lit.emission_energy_multiplier = float(cfg.get("emission", 1.6))
+	lit.roughness = 0.6
+	strip.material_override = lit
+	_vault_door_mesh.add_child(strip)
+
+	# Warm spill on the VAULT side, at knee height: the light of the room the
+	# door is shut on, leaking around it. Offset along the passage axis so it
+	# sits behind the slab rather than inside it.
+	var lamp := OmniLight3D.new()
+	lamp.name = "VaultDoorGlow"
+	lamp.light_color = glow
+	lamp.light_energy = energy
+	lamp.omni_range = float(cfg.get("range_m", 6.0))
+	var push := float(cfg.get("spill_offset_m", 0.9))
+	# `+x` is toward the vault when the passage runs along x (the vault sits at
+	# local x=15 against the den's 0); otherwise `+z`. Read off the chamber
+	# rather than hardcoded so a relocated cave keeps the light on the right
+	# side of its own door.
+	var vault_centre := _local_of((_chambers.get("vault", {}) as Dictionary).get("at", []))
+	var den_centre := _local_of((_chambers.get("den", {}) as Dictionary).get("at", []))
+	var toward: Vector3 = (vault_centre - den_centre).normalized()
+	if toward.length() < 0.5:
+		toward = Vector3.RIGHT if along_x else Vector3.BACK
+	lamp.position = toward * push + Vector3.UP * (height * -0.5 + 0.8)
+	_vault_door_mesh.add_child(lamp)
 
 
 ## The way in, and the reason this is not just a doorway: the cave floor sits
@@ -951,6 +1019,24 @@ func _spawn_population(director: Node) -> void:
 				"name": "Warrens_%s_%d" % [str(spec.get("species", "")), n + 1],
 			})
 			if body != null:
+				# CONTENT-0828. Optional, and used by exactly one entry today:
+				# the vault's Terrapup is the ONLY wild Terrapup in the whole
+				# game (`_comment_spawns_special`), and nothing told the player
+				# that. It read as one more aggressive animal in a dark room,
+				# so a player who fled it or beat it never learned they had
+				# just passed the rarest catch in the chapter. A name is the
+				# cheapest honest signal and it is the same two-object write
+				# `_dress_the_guardian()` documents at length: the BODY's
+				# `display_name` is what the engage prompt shows, the INSTANCE's
+				# `nickname` is what the combat plate shows, and writing the
+				# nickname rather than the instance's `display_name` keeps the
+				# species underneath so catching it does not lose what it is.
+				var label := str(spec.get("nickname", ""))
+				if label != "":
+					body.set("display_name", label)
+					var body_instance: Object = body.get("instance")
+					if body_instance != null:
+						body_instance.set("nickname", label)
 				_population.append(body)
 
 	var guardian: Dictionary = _config.get("guardian", {})
@@ -975,41 +1061,90 @@ func _spawn_population(director: Node) -> void:
 ## What makes the thing at the bottom read as the thing at the bottom.
 ##
 ## Prompt 63's acceptance asks for a guardian that is `memorable, not standard
-## fight + HP`, and level 14 on an otherwise ordinary Burrowback body is
-## exactly the second thing: the engage prompt said `Engage Burrowback`, the
-## combat plate said `Burrowback`, and it stood the same height as the level-11
-## Trailpup one room back. Both changes here are PRESENTATION and are the kind
-## CLAUDE.md explicitly names as the alternative to a new mesh (D23) or an
-## invented legendary (spec Sec20).
+## fight + HP`, and the owner's 2026-08-28 playtest reports the same thing from
+## the other end -- "there needs to be a point to going in the burrows warren.
+## like a prize at the bottom or an alpha animal or something." The cave HAS a
+## guardian and a prize; what it did not have was a guardian that reads as an
+## alpha, and this game already knows how to build one.
 ##
-##   * The name goes on TWO different objects because two different screens
-##     read two different things: `encounter_director.gd`'s engage prompt reads
-##     the BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the
-##     INSTANCE through `creature_instance.label()`, which prefers `nickname`
-##     and falls back to the species name. Writing the nickname rather than
-##     overwriting the instance's own `display_name` is what keeps the species
-##     underneath -- a player who CATCHES the guardian (legal, and this cave
-##     says so out loud) gets a creature called Warren Guardian that still
-##     knows it is a Burrowback. That is the bug encounter_director.gd:463
-##     already documents, not to be reintroduced here.
-##   * `art_scale` multiplies the model pivot only. The capsule, the hit cone's
-##     reach and the catch accuracy bonus are all built from species.json's
-##     `height`/`radius` by `creature_body.gd::_build_placeholder()` on
-##     purpose, so scaling the body itself would silently retune the fight;
-##     scaling the silhouette makes it bigger without touching a single number
-##     the fight is balanced on.
+## CONTENT-0828: this now routes the guardian through the SAME alpha
+## presentation every ordinary field cluster uses -- `encounter_director.gd`'s
+## `_make_alpha()` is the reference and this is deliberately the same three
+## calls in the same order, because the chapter's boss reading as less of an
+## alpha than a roadside duskhush was the actual defect:
+##
+##   * `apply_size_multiplier()` replaces the old `art_scale`. The old key
+##     multiplied the MODEL PIVOT only, on the stated reasoning that scaling
+##     the body would retune the fight. That reasoning is backwards and
+##     `creature_body.gd`'s own PW2 note says so at the declaration of
+##     `body_scale`: the collider, the hit cone's reach and the catch accuracy
+##     bonus all read `_height`/`_radius`, so scaling only the art gives a
+##     three-metre silhouette with a field burrowback's capsule -- a throw or a
+##     swing that visually connects resolves against a body that is not there.
+##     That is the invisible discrepancy PW2 forbids, and it is why every band
+##     alpha in `data/config/bands/*/spawns.json` uses the multiplier instead.
+##     Scale drops 1.4 -> `scale` (1.35) because it is now a real reach change
+##     and not just a picture.
+##   * `set_alpha(true)` is the half that costs nothing and was simply never
+##     called here. `creature_burrowback_lod0_base_color_alpha.png` and its
+##     emissive sibling are ALREADY INSTALLED -- the heavier-stone-plates
+##     repaint CREATURE-IDENTITY-2 authored for exactly this species -- plus
+##     the silhouette rim and the ring of drifting motes. D23 forbids a new
+##     mesh and spec Sec20 forbids inventing a legendary; material, texture,
+##     modest scale, VFX and encounter context are what CLAUDE.md names as the
+##     differentiation that IS allowed, and all of it was sitting unused.
+##   * `signature_move` gives the fight a shape instead of a bigger number.
+##     `creature_instance.gd` holds `move_quick`/`move_charged` as plain fields
+##     resolved through `move_db.gd`, so this is a per-instance override and
+##     not a species edit -- ordinary burrowbacks out in the meadow are
+##     untouched. `earth_fist` (1.4x power against `tremor_roll`'s 1.0, 0.62s
+##     windup, 72-degree cone) is deliberately DIRECTIONAL: `earthshatter` is
+##     the harder move and is exactly wrong here, because a 360-degree 7.5m
+##     move inside a den whose `combat_arena_bounds_at()` clearance is about
+##     six metres cannot be stepped out of, and an unavoidable hit is not a
+##     memorable fight. A longer windup the player can read and walk around
+##     is. Level stays 14: SH47/D42 lowered it deliberately against measured
+##     pacing and this pass does not reopen that.
+##
+## The name still goes on TWO different objects because two different screens
+## read two different things: `encounter_director.gd`'s engage prompt reads the
+## BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the INSTANCE
+## through `creature_instance.label()`, which prefers `nickname` and falls back
+## to the species name. Writing the nickname rather than overwriting the
+## instance's own `display_name` is what keeps the species underneath -- a
+## player who CATCHES the guardian (legal, and this cave says so out loud) gets
+## a creature called Warren Guardian that still knows it is a Burrowback, and
+## keeps its Earth Fist. That is the bug encounter_director.gd:463 already
+## documents, not to be reintroduced here.
 func _dress_the_guardian(spec: Dictionary) -> void:
 	var nickname := str(spec.get("nickname", ""))
+	var instance: Object = _guardian.get("instance")
 	if nickname != "":
 		_guardian.set("display_name", nickname)
-		var instance: Object = _guardian.get("instance")
 		if instance != null:
 			instance.set("nickname", nickname)
-	var art_scale := float(spec.get("art_scale", 1.0))
-	if not is_equal_approx(art_scale, 1.0) and _guardian.has_method("model_pivot"):
-		var pivot: Node3D = _guardian.call("model_pivot") as Node3D
-		if pivot != null:
-			pivot.scale = Vector3.ONE * art_scale
+
+	# Per-instance, never a species edit: the meadow's own burrowbacks keep
+	# `species.json`'s `tremor_roll`.
+	if instance != null:
+		var quick := str(spec.get("signature_quick", ""))
+		if quick != "":
+			instance.set("move_quick", quick)
+		var charged := str(spec.get("signature_move", ""))
+		if charged != "":
+			instance.set("move_charged", charged)
+
+	# Order matters and is the same order `_make_alpha()` uses: the multiplier
+	# rebuilds the art from the species look, which would discard the dressing
+	# if `set_alpha()` had already applied it.
+	var scale := float(spec.get("scale", spec.get("art_scale", 1.0)))
+	if not is_equal_approx(scale, 1.0) and _guardian.has_method("apply_size_multiplier"):
+		_guardian.call("apply_size_multiplier", scale)
+	if _guardian.has_method("set_alpha"):
+		_guardian.call("set_alpha", true)
+	# Same marker `_make_alpha()` sets, so anything asking "is this an alpha"
+	# gets one answer for the field and the dungeon alike.
+	_guardian.set_meta("alpha", true)
 
 
 ## --- clearing --------------------------------------------------------------
@@ -1057,7 +1192,8 @@ func grant_clear_reward() -> bool:
 		_sync_vault_door()
 		return false
 	progression.call("set_flag", _clear_flag())
-	_sync_vault_door()
+	# The one call that animates: this is the moment the guardian fell.
+	_sync_vault_door(true)
 
 	var reward: Dictionary = _config.get("clear", {}).get("reward", {})
 	var game := get_node_or_null(^"/root/Game")
@@ -1105,15 +1241,60 @@ func grant_clear_reward() -> bool:
 
 ## The branch door follows the flag, both at build time (a returning player
 ## walks into an open branch) and the moment the guardian falls.
-func _sync_vault_door() -> void:
+##
+## CONTENT-0828: `animate` is what separates those two cases. At BUILD time the
+## flag is already set and the door must simply not be there -- a returning
+## player walking into an open branch must not watch a door they already opened
+## grind down again. At the moment the guardian falls it is the payoff beat, so
+## the slab SINKS into the floor rather than blinking out of existence. Same
+## mechanism either way (`is_cleared()` is still the only authority and the
+## collider is still what actually stops a player), just shown rather than
+## skipped -- the door is the one moving part in the cave and the only thing
+## the player's win visibly does to the world.
+func _sync_vault_door(animate := false) -> void:
 	var open := is_cleared()
 	if _vault_door != null:
 		_vault_door.process_mode = Node.PROCESS_MODE_DISABLED if open else Node.PROCESS_MODE_INHERIT
 		for child in _vault_door.get_children():
 			if child is CollisionShape3D:
 				(child as CollisionShape3D).disabled = open
-	if _vault_door_mesh != null:
-		_vault_door_mesh.visible = not open
+	if _vault_door_mesh == null:
+		return
+	if not open:
+		_vault_door_mesh.visible = true
+		_vault_door_mesh.position.y = _door_shut_y()
+		return
+	if not animate or not is_inside_tree():
+		_vault_door_mesh.visible = false
+		return
+	# Down by its own height plus the skirt the walls already extend below the
+	# floor, so it is genuinely gone under the slab rather than parked with its
+	# top edge showing. Hidden at the end because a mesh sunk into geometry is
+	# still drawn.
+	var mesh: MeshInstance3D = _vault_door_mesh
+	var drop := _door_travel()
+	var seconds := float(_config.get("site", {}).get("vault_door_seam", {}).get("open_seconds", 1.4))
+	var tween := create_tween()
+	tween.tween_property(mesh, "position:y", _door_shut_y() - drop, seconds) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(func() -> void:
+		if is_instance_valid(mesh):
+			mesh.visible = false)
+
+
+## Where the slab sits when it is shut. Recomputed rather than remembered so a
+## re-sync after an animated open cannot leave the door parked underground.
+func _door_shut_y() -> float:
+	var height := 0.0
+	var box: BoxMesh = _vault_door_mesh.mesh as BoxMesh if _vault_door_mesh != null else null
+	if box != null:
+		height = box.size.y
+	return _floor_y + height * 0.5
+
+
+func _door_travel() -> float:
+	var box: BoxMesh = _vault_door_mesh.mesh as BoxMesh if _vault_door_mesh != null else null
+	return ((box.size.y if box != null else 3.0) + _skirt * 0.5)
 
 
 func branch_is_open() -> bool:
