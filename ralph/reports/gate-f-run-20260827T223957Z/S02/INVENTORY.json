@@ -1,0 +1,144 @@
+{
+  "blocked": "the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+  "captures": {
+    "absent": 8,
+    "planned": 8,
+    "present": 0,
+    "rows": [
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-01",
+        "intended_proof": "opening stages correctly (incl. player body presence as-shipped)",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-08"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "21",
+        "exists": false,
+        "file": null,
+        "id": "GF-21-WEATHER-01",
+        "intended_proof": "weather identity; palette holds",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-09"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-02",
+        "intended_proof": "mandatory opening reads; dialogue UI",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-17"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "2",
+        "exists": false,
+        "file": null,
+        "id": "GF-02-START-03",
+        "intended_proof": "starter choice presentation",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-21"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "14",
+        "exists": false,
+        "file": null,
+        "id": "GF-14-COMBAT-01",
+        "intended_proof": "per-case: the chapter's first piloted fight reads as a fight",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-35"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "15",
+        "exists": false,
+        "file": null,
+        "id": "GF-15-CATCH-01",
+        "intended_proof": "throw/feedback quality",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-41"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "15",
+        "exists": false,
+        "file": null,
+        "id": "GF-15-CATCH-02",
+        "intended_proof": "throw/feedback quality",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-44"
+      },
+      {
+        "action": "capture",
+        "bytes": 0,
+        "class": "3",
+        "exists": false,
+        "file": null,
+        "id": "GF-03-VILLAGE-01",
+        "intended_proof": "village reads as a settled place from the entry route",
+        "reason": "the step that would have written it never ran",
+        "step": "S02-57"
+      }
+    ]
+  },
+  "complete": false,
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.5,
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  ],
+  "preflight": {
+    "allow_no_capture": true,
+    "capture_available": false,
+    "capture_requested": false,
+    "contradiction": "the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+    "degraded_why": "no display server: DisplayServer reports 'headless'. This process cannot render, so all 8 planned capture(s) and every continuous frame would be written as file:null while the steps reported PASS. Relaunch through tools/gate_f/run_segment.sh --capture (§0.1: xvfb-run WITHOUT --headless, --rendering-driver opengl3).",
+    "display_server": "headless",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json",
+      "key": "display_server"
+    },
+    "measured_frame_cost_s": 0.005919,
+    "planned_captures": 8,
+    "predicted_frames": 35723,
+    "predicted_segment_cost_s": 211.4,
+    "record_baseline_hz": 0.5,
+    "verdict": "BLOCKER",
+    "why": "the freeze record contradicts this process: the freeze record at ralph/reports/gate-f-run-20260827T223957Z/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  },
+  "run_id": "gate-f-run-20260827T223957Z",
+  "segment": "S02",
+  "sha": "c65d9a85cff0e3be09065d52526791dbd96d1bdb",
+  "steps": {
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 75
+  },
+  "uncommittable": []
+}

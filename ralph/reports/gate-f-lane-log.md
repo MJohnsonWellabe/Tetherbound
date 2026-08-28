@@ -2938,3 +2938,92 @@ script and the repository is missing this one. Adding it would be a change to a
 path outside `ralph/` during an authoritative run, which section 13 forbids, and
 it is an import artefact rather than evidence. It is named here so its absence
 from every commit on this branch is a recorded decision rather than an oversight.
+
+## Check-in 3 — S01 stopped, S02 BLOCKED, X08 complete, run-level BLOCKER filed
+
+Correcting check-in 2 before anything else: **its 0.235 s/frame was wrong.** I
+derived it assuming `route.csv` samples every 30 physics frames. It does not —
+`_tick` writes a row when `_t() >= _next_trace_t` and `_t()` is **wall clock**,
+so the trace is wall-gated at 2 Hz and writes at most one row per physics frame.
+Row cadence is therefore a *lower bound on frame cost*, not a frame counter. The
+corrected measurement is in `BLOCKER_RUN.md` and is 27x larger.
+
+### The numbers
+
+| measure | value |
+|---|---|
+| `route.csv` in-world row-to-row wall delta | **median 6.465 s** (n=527) |
+| `Performance.TIME_PROCESS`, rendered frame, Meadows under xvfb | **median 12,721 ms** |
+| same scene, logic mode (X08) | **6.1 ms** |
+| what the cost gate priced S01 at | **0.0465 s/frame → 505 s** |
+
+Two independent measurements of the rendered cost, agreeing at ~2 physics steps
+per rendered frame. Capture mode is **2,069x** logic mode on this box.
+
+### S01 — stopped, evidence preserved
+
+Eight steps PASS including the prescribed capture; stopped inside step S01-09,
+549 of 10,800 physics frames in, at 66 minutes. The step wanted **19.4 hours**
+and the segment was on course for ~5,400 continuous-record PNGs (~10 GB) into
+23 GB of free disk. No `INVENTORY.json` exists and that is the honest signal —
+`run_segment.sh` says so itself. `S01/STOPPED.md` carries the full record.
+
+### S02 — BLOCKER at step 1, provoked deliberately and preserved
+
+Before concluding the degraded lane was unavailable I **ran it**:
+
+```
+$ tools/gate_f/run_segment.sh --allow-no-capture S02
+gate-f harness ERROR: capture pre-flight BLOCKER: the freeze record contradicts
+  this process: ... says display_server=X11 under xvfb-run; this process has none
+  exit=1   steps ran: 0 of 75   INVENTORY.json: INCOMPLETE
+```
+
+CD-8b working exactly as designed, against the freeze record I wrote before the
+run and deliberately stated as the capture-mode fact. `hard_why` is not waivable
+by the acknowledgement flag — Finding 9's fix. **I did not edit the freeze
+record to get past it**: amending a freeze record so a segment will start is
+CD-8b's own sin in mirror image.
+
+So the journey lane is unavailable in **both** modes. That is the run-level
+BLOCKER, filed at `BLOCKER_RUN.md`.
+
+### X08 — ran, complete, clean
+
+The one segment of eighteen that declares neither a capture nor a continuous
+record, so the pre-flight returns *"not required"* and no cost gate applies;
+section E.9 prescribes `--headless` for its CPU half anyway. **Its evidence is
+not degraded and carries no caveat beyond section K's standing [OWNER-ONLY]
+list.**
+
+```
+steps: 62 total, 62 ran, 62 PASS, 0 FAIL, 0 SKIP, 0 refused
+harness_errors: []   complete: true
+```
+
+World boot **71,506 ms**; **1,022 points of interest** in the tree, stable at
+every one of the six sites; `input_context=world` held through every 60 s
+stand-still and 60 s walk window; all six DIAG teleports landed within 0.0 m of
+their site.
+
+CPU frame time by site — **this container, software rasteriser, logic mode.
+Device frame rate, GPU frame time, VRAM and thermals are [OWNER-ONLY] and are
+asserted by nothing here:**
+
+| site | n | frame_ms avg | p95 | max | physics avg |
+|---|---|---|---|---|---|
+| village | 262 | 5.99 | 7.60 | 10.19 | 11.85 |
+| band1 | 263 | 7.47 | 8.89 | **38.35** | 10.24 |
+| band2 | 264 | 8.00 | 9.36 | 29.35 | 15.26 |
+| band3 | 265 | 7.73 | 9.57 | 26.06 | 13.81 |
+| band4 | 264 | 6.54 | 8.27 | 11.07 | 10.99 |
+| stronghold | 264 | 7.24 | 8.79 | 26.08 | 12.90 |
+
+Whole segment avg 7.15 ms, worst frame 38.35 ms. The five worst frames all fall
+at a teleport arrival — (0, 700) and (0, 2200) — i.e. at streaming-in, not in
+steady state. Recorded as measured; classifying it is Phase B's.
+
+### Bookkeeping
+
+No code, data or config changed. `git diff e12a6b60..HEAD -- . ':(exclude)ralph/'`
+is empty. Everything is on `ralph/GATE-F-RUN-2`, pushed per segment.
