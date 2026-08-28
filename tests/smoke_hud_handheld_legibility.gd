@@ -16,30 +16,46 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 const HANDHELD_SIZE := Vector2i(1280, 800)
 
-## The floor a glyph has to clear at handheld scale to count as "legible, not
-## just less bad." `input_glyph.gd::icon()`'s own header puts 36px at the
-## project's 1920x1080 authoring scale as the smallest size that read clearly
-## in a blind crop test for a harder glyph (baked ESC text) than anything the
-## exploration legend draws. This project stretches canvas_items with
-## aspect="expand", so on a real 1280-wide window the physical scale factor
-## is 1280.0/1920.0 -- the same ratio this test derives from the live
-## viewport rather than hard-coding, so a future change to the authored
-## resolution cannot silently stop this test from meaning anything.
-const MIN_PHYSICAL_GLYPH_PX := 24.0
+## HUD-SCALE (owner playtest 2026-08-28). This file used to hold its own
+## legibility model: a glyph or a cap height, multiplied by a `1280/1920 =
+## 0.667` content scale, against a floor in RENDER pixels. Both halves were
+## wrong, and because this test was strict it enforced the error into every
+## HUD constant until the owner reported the HUD as "way too big" a second
+## time.
+##
+## `scripts/ui/hud_scale.gd`'s header sets out the two faults in full. In
+## short: the Ally is 1920x1080, not 1280x800, so there is no 0.667 scale; and
+## `canvas_items` stretch maps the authored canvas onto the whole panel, so an
+## authored pixel is a fixed fraction of the PANEL at any render resolution --
+## rendering smaller makes a glyph blurrier, never smaller. Verified by
+## running `tools/_measure_hud_footprint.gd` at both resolutions and getting
+## byte-identical authored rects.
+##
+## So the model moves to `hud_scale.gd` and this file asserts against it. The
+## checks are not relaxed; they are re-pointed at the quantity that decides
+## whether a human can read the HUD. Two floors, both from that file:
+##
+##   GLANCE_CAP_ARCMIN     labels, counts, badges -- recognised, not read
+##   SENTENCE_CAP_ARCMIN   the objective line and the contextual prompt
+##
+## and a third for button glyphs whose art bakes lettering in, which IS about
+## rasterisation and is measured off a real 1:1 render in
+## `tools/_probe_glyph_ladder.gd` rather than assumed.
+##
+## The window is still forced to 1280x800. That is no longer where the size
+## floors come from, but it is still the right place to run the OVERLAP and
+## CONTAINMENT checks below: `aspect="expand"` gives a 1280x800 window a
+## taller authored canvas (1920x1200) than a 1920x1080 one, and every layout
+## defect this file has ever caught came from that difference.
+const HUD_SCALE := preload("res://scripts/ui/hud_scale.gd")
 
-## OP21 handheld remainder round 2: a blind critic measured real TEXT (not
-## glyph images) at physical pixels a first pass of this file never checked
-## at all -- legend labels came back 11px, "ACTIVE COMPANION" 9px, the hotbar
-## item count 7px, all against the critic's own ~16px cap-height comfort bar
-## for arm's-length handheld reading. `CAP_HEIGHT_RATIO` is not invented: it
-## is the ratio backed out of that same measurement pass, which found
-## `UITokens.FONT_TINY` (19, unchanged by this task) rendering at 9 physical
-## px -- 19 * _content_scale() * 0.7 = 8.9, matching the reported 9 almost
-## exactly. Using the same ratio here keeps this test measuring the thing the
-## critic actually measured, not a more forgiving proxy that would pass a
-## font size the critic already rejected.
-const CAP_HEIGHT_RATIO := 0.7
-const MIN_PHYSICAL_TEXT_PX := 16.0
+## Kept for the crispness half of legibility, which render resolution DOES
+## decide: an authored size below this rasterises to too few pixels to hold a
+## letterform at the lowest window this project supports. Derived from the
+## same ladder render as `HUD_SCALE.GLYPH_ARCMIN` -- the pad badges' two-letter
+## art goes to mush below ~22 authored px, and at a 0.667 window that is ~15
+## render px.
+const MIN_RENDER_PX := 15.0
 
 var _failures: Array[String] = []
 var _world: Node3D = null
@@ -112,6 +128,8 @@ func _run() -> void:
 	await _check_creature_panel_stands_down_while_the_roster_is_up()
 	_check_objective_text_physical_size()
 	_check_vitals_value_physical_size()
+	_check_nothing_is_oversized()
+	_check_hud_occupancy()
 	await _check_cycle_banner_fits_without_clipping()
 	await _check_cycle_banner_destination_is_dominant()
 
@@ -131,13 +149,26 @@ func _content_scale() -> float:
 
 
 func _check_legend_glyph_physical_size() -> void:
-	var scale := _content_scale()
-	var physical_px := PLAYGROUND_HUD.LEGEND_GLYPH_PX * scale
-	if physical_px < MIN_PHYSICAL_GLYPH_PX:
+	_check_glyph(PLAYGROUND_HUD.LEGEND_GLYPH_PX, "exploration legend glyphs")
+
+
+## A button glyph, against both halves of legibility: the angle it subtends on
+## the owner's panel, and the render pixels it gets at the smallest supported
+## window. A glyph that clears the first and fails the second is legible in
+## principle and mush in practice.
+func _check_glyph(authored_px: int, what: String) -> void:
+	var arcmin := HUD_SCALE.arcmin_for_authored_px(float(authored_px))
+	if arcmin < HUD_SCALE.GLYPH_ARCMIN:
 		_fail(
-			"exploration legend glyphs measure %.1f physical px at %dx%d (authored %d px x scale %.3f) -- below the %.0f px legibility floor" % [
-				physical_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y,
-				PLAYGROUND_HUD.LEGEND_GLYPH_PX, scale, MIN_PHYSICAL_GLYPH_PX,
+			"%s subtend %.1f arcmin at %.0fmm (authored %d px) -- below the %.1f arcmin glyph floor" % [
+				what, arcmin, HUD_SCALE.VIEW_DISTANCE_MM, authored_px, HUD_SCALE.GLYPH_ARCMIN,
+			]
+		)
+	var render_px := float(authored_px) * _content_scale()
+	if render_px < MIN_RENDER_PX:
+		_fail(
+			"%s rasterise to %.1f render px at %dx%d (authored %d px) -- below the %.0f px crispness floor" % [
+				what, render_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y, authored_px, MIN_RENDER_PX,
 			]
 		)
 
@@ -186,14 +217,20 @@ func _check_no_horizontal_overflow() -> void:
 		])
 
 
-func _check_cap_height(authored_font_size: int, what: String) -> void:
-	var scale := _content_scale()
-	var physical_px := float(authored_font_size) * scale * CAP_HEIGHT_RATIO
-	if physical_px < MIN_PHYSICAL_TEXT_PX:
+func _check_cap_height(authored_font_size: int, what: String,
+		floor_arcmin: float = HUD_SCALE.GLANCE_CAP_ARCMIN) -> void:
+	var arcmin := HUD_SCALE.cap_arcmin_for_font_size(authored_font_size)
+	if arcmin < floor_arcmin:
 		_fail(
-			"%s measures ~%.1f physical cap-height px at %dx%d (authored %d px x scale %.3f x cap-ratio %.2f) -- below the %.0f px arm's-length floor" % [
-				what, physical_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y,
-				authored_font_size, scale, CAP_HEIGHT_RATIO, MIN_PHYSICAL_TEXT_PX,
+			"%s has a cap height of %.1f arcmin at %.0fmm (authored font %d px) -- below the %.1f arcmin floor" % [
+				what, arcmin, HUD_SCALE.VIEW_DISTANCE_MM, authored_font_size, floor_arcmin,
+			]
+		)
+	var render_px := float(authored_font_size) * _content_scale() * HUD_SCALE.CAP_HEIGHT_RATIO
+	if render_px < MIN_RENDER_PX * HUD_SCALE.CAP_HEIGHT_RATIO:
+		_fail(
+			"%s rasterises to a ~%.1f render px cap height at %dx%d (authored font %d px) -- too few pixels to hold a letterform" % [
+				what, render_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y, authored_font_size,
 			]
 		)
 
@@ -224,15 +261,7 @@ func _check_hotbar_count_physical_size() -> void:
 ## down to 28 -- the one call on this HUD that did, and the thing a blind
 ## critic read as visibly more pixelated than every other glyph on screen.
 func _check_hotbar_glyph_physical_size() -> void:
-	var scale := _content_scale()
-	var physical_px := float(PLAYGROUND_HUD.HOTBAR_GLYPH_PX) * scale
-	if physical_px < MIN_PHYSICAL_GLYPH_PX:
-		_fail(
-			"hotbar slot glyphs measure %.1f physical px at %dx%d (authored %d px x scale %.3f) -- below the %.0f px legibility floor" % [
-				physical_px, HANDHELD_SIZE.x, HANDHELD_SIZE.y,
-				PLAYGROUND_HUD.HOTBAR_GLYPH_PX, scale, MIN_PHYSICAL_GLYPH_PX,
-			]
-		)
+	_check_glyph(PLAYGROUND_HUD.HOTBAR_GLYPH_PX, "hotbar slot glyphs")
 
 
 ## HUD-LAYOUT's own regression, proven against the LIVE scene rather than
@@ -382,7 +411,8 @@ func _check_objective_text_physical_size() -> void:
 	if label == null:
 		_fail("HUD did not build _objective_text_label for the cap-height check")
 		return
-	_check_cap_height(label.get_theme_font_size("font_size"), "quest subtext")
+	_check_cap_height(label.get_theme_font_size("font_size"), "quest subtext",
+		HUD_SCALE.SENTENCE_CAP_ARCMIN)
 
 
 ## HUD-POPUP task 3: the player's own HP readout ("100 / 100") measured ~10
@@ -453,20 +483,27 @@ func _check_cycle_banner_destination_is_dominant() -> void:
 		_fail("cycle banner did not become visible for the destination-dominance check")
 		return
 
-	var scale := _content_scale()
-	var dest_px := float(PARTY_STRIP.CYCLE_DEST_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
-	var source_px := float(PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE) * scale * CAP_HEIGHT_RATIO
-	if dest_px <= source_px:
+	# HUD-SCALE: the RANKING is the claim this check exists to defend, and it
+	# is unchanged. The absolute floor moves off render pixels for the reason
+	# this file's header gives, and onto the angle the announcement subtends.
+	var dest_arcmin := HUD_SCALE.cap_arcmin_for_font_size(PARTY_STRIP.CYCLE_DEST_FONT_SIZE)
+	var source_arcmin := HUD_SCALE.cap_arcmin_for_font_size(PARTY_STRIP.CYCLE_SOURCE_FONT_SIZE)
+	if dest_arcmin <= source_arcmin:
 		_fail(
-			"cycle banner destination name (%.1f physical px) is not larger than the source name (%.1f physical px) -- the exact inversion this task exists to fix" % [
-				dest_px, source_px,
+			"cycle banner destination name (%.1f arcmin) is not larger than the source name (%.1f arcmin) -- the exact inversion this check exists to catch" % [
+				dest_arcmin, source_arcmin,
 			]
 		)
-	const DEST_MIN_PHYSICAL_PX := 18.0
-	if dest_px < DEST_MIN_PHYSICAL_PX:
+	# A dominant announcement has to be clearly above the tier every ordinary
+	# HUD tag sits at, not merely above the readability floor. 1.25x the glance
+	# floor is the same "clearly the loudest thing on screen" claim the old
+	# 18-render-px bar made, restated in the unit that survives a resolution
+	# change.
+	var dest_floor := HUD_SCALE.GLANCE_CAP_ARCMIN * 1.25
+	if dest_arcmin < dest_floor:
 		_fail(
-			"cycle banner destination name measures ~%.1f physical px -- below the %.0f px floor the critic asked for a dominant announcement to clear" % [
-				dest_px, DEST_MIN_PHYSICAL_PX,
+			"cycle banner destination name measures %.1f arcmin cap height -- below the %.1f arcmin a dominant announcement has to clear" % [
+				dest_arcmin, dest_floor,
 			]
 		)
 
@@ -496,3 +533,140 @@ func _report() -> void:
 	for failure: String in _failures:
 		print("FAIL: %s" % failure)
 	quit(1)
+
+
+## --- the half this file never had ------------------------------------------
+##
+## Every check above is a FLOOR. That is how the HUD ended up at 27.4% of the
+## canvas with 40-arcmin button glyphs on it: each legibility pass could only
+## push a number up, nothing could push back, and the owner reported "the hud
+## on screen is way too big" twice before anyone measured it. A floor-only
+## suite does not encode a size requirement, it encodes a direction.
+##
+## So each floor gets a ceiling, and the HUD as a whole gets one.
+
+
+## Nothing on this HUD may exceed `OVERSIZE_FACTOR` x its own floor.
+##
+## 1.6 is chosen so the two text tiers stay distinguishable (SENTENCE is 1.23x
+## GLANCE, well inside the band) and a deliberate emphasis element -- the
+## region title card, the cycle banner's destination -- still has room to be
+## clearly the loudest thing on screen, while a tag quietly drifting to
+## newspaper-body size fails.
+const OVERSIZE_FACTOR := 1.6
+
+
+func _check_nothing_is_oversized() -> void:
+	_check_not_oversized_text(PLAYGROUND_HUD.HUD_READABLE_FONT_SIZE,
+		"HUD glance label", HUD_SCALE.GLANCE_CAP_ARCMIN)
+	_check_not_oversized_text(PLAYGROUND_HUD.LEGEND_FONT_SIZE,
+		"exploration legend label", HUD_SCALE.GLANCE_CAP_ARCMIN)
+	_check_not_oversized_text(PLAYGROUND_HUD.HOTBAR_COUNT_FONT_SIZE,
+		"hotbar item count", HUD_SCALE.GLANCE_CAP_ARCMIN)
+	_check_not_oversized_text(PARTY_STRIP.STRIP_READABLE_FONT_SIZE,
+		"party strip label", HUD_SCALE.GLANCE_CAP_ARCMIN)
+	_check_not_oversized_text(PLAYGROUND_HUD.HUD_SENTENCE_FONT_SIZE,
+		"HUD sentence text", HUD_SCALE.SENTENCE_CAP_ARCMIN)
+	_check_not_oversized_glyph(PLAYGROUND_HUD.LEGEND_GLYPH_PX, "exploration legend glyph")
+	_check_not_oversized_glyph(PLAYGROUND_HUD.HOTBAR_GLYPH_PX, "hotbar slot glyph")
+
+
+func _check_not_oversized_text(font_size: int, what: String, floor_arcmin: float) -> void:
+	var arcmin := HUD_SCALE.cap_arcmin_for_font_size(font_size)
+	var ceiling := floor_arcmin * OVERSIZE_FACTOR
+	if arcmin > ceiling:
+		_fail(
+			"%s has a cap height of %.1f arcmin (authored font %d px) -- above the %.1f arcmin ceiling (%.1fx the %.1f floor). The HUD is sized for a screen further away than the owner's." % [
+				what, arcmin, font_size, ceiling, OVERSIZE_FACTOR, floor_arcmin,
+			]
+		)
+
+
+func _check_not_oversized_glyph(authored_px: int, what: String) -> void:
+	var arcmin := HUD_SCALE.arcmin_for_authored_px(float(authored_px))
+	var ceiling := HUD_SCALE.GLYPH_ARCMIN * OVERSIZE_FACTOR
+	if arcmin > ceiling:
+		_fail(
+			"%s subtends %.1f arcmin (authored %d px) -- above the %.1f arcmin ceiling" % [
+				what, arcmin, authored_px, ceiling,
+			]
+		)
+
+
+## How much of the screen the persistent HUD is allowed to cover.
+##
+## Measured, not guessed: `tools/_measure_hud_footprint.gd` put the shipped
+## HUD the owner played at 27.4% of the authored canvas persistently and 34.4%
+## with the roster reveal up. This ceiling is the number that turns "way too
+## big" from an adjective into a build failure.
+##
+## 20% is deliberately loose relative to what the HUD measures after
+## HUD-SCALE, so ordinary layout work has room; it is the RATCHET this suite
+## was missing, not a target to design against.
+const MAX_HUD_OCCUPANCY := 0.20
+
+
+func _check_hud_occupancy() -> void:
+	var hud_root := _hud.get_node_or_null(^"Root") as Control
+	if hud_root == null:
+		_fail("HUD has no Root control for the occupancy check")
+		return
+	var canvas := root.get_visible_rect().size
+	var rects: Array[Rect2] = []
+	_collect_ink(hud_root, rects)
+	if rects.is_empty():
+		_fail("occupancy check found no HUD widgets, so it cannot mean anything")
+		return
+
+	# Union by sample grid: the rects overlap, so summing their areas would
+	# over-report and the check would fail for the wrong reason.
+	var covered := 0.0
+	var step := 8.0
+	var y := 0.0
+	while y < canvas.y:
+		var x := 0.0
+		while x < canvas.x:
+			var p := Vector2(x, y)
+			for r: Rect2 in rects:
+				if r.has_point(p):
+					covered += step * step
+					break
+			x += step
+		y += step
+	var fraction := covered / (canvas.x * canvas.y)
+	if fraction > MAX_HUD_OCCUPANCY:
+		_fail(
+			"the persistent HUD covers %.1f%% of the screen at %dx%d -- above the %.0f%% ceiling. This is the owner's \"way too big\" as a number." % [
+				fraction * 100.0, HANDHELD_SIZE.x, HANDHELD_SIZE.y, MAX_HUD_OCCUPANCY * 100.0,
+			]
+		)
+
+
+## Widgets that actually put ink on screen: a leaf Control, or a Panel /
+## PanelContainer, which fills a stylebox behind its own children. Transient
+## widgets are skipped -- the complaint is about what is on screen while the
+## player walks around.
+const TRANSIENT_NAMES: Array[String] = [
+	"PartyStrip", "RegionBanner", "Message", "Prompt", "DebugReadout",
+]
+
+
+func _collect_ink(node: Node, into: Array[Rect2]) -> void:
+	for child in node.get_children():
+		if child is not Control:
+			continue
+		var c := child as Control
+		if not c.is_visible_in_tree() or TRANSIENT_NAMES.has(String(c.name)):
+			continue
+		var draws_ink := true
+		for grand in c.get_children():
+			if grand is Control and (grand as Control).is_visible_in_tree():
+				draws_ink = false
+				break
+		if not draws_ink and (c is PanelContainer or c is Panel):
+			draws_ink = c.has_theme_stylebox_override("panel")
+		if draws_ink:
+			var r := c.get_global_rect()
+			if r.size.x > 1.0 and r.size.y > 1.0:
+				into.append(r)
+		_collect_ink(c, into)
