@@ -516,5 +516,12 @@ The only delta between the passing run 2616 and the failing 2619 is one inn
 recipe entry, two capture tools and this log — none of which is in a wild
 creature's path.
 
-Re-run of the failed jobs requested once, per the drive-to-green rule's single
-allowed confirmation.
+**Re-run: 0 failed jobs.** Both went green on the re-run, which is the
+confirmation the drive-to-green rule allows for a failure that is not the
+diff's. (The first re-run request was cancelled by this lane's own next push —
+`concurrency: cancel-in-progress` applies to non-`main` refs — so it produced
+no signal and was re-requested; that is one confirmation obtained, not two
+spent.)
+
+**Local corroboration on the same head:** the full unit suite, **1472 tests,
+3,353,109 assertions, 0 failed**.
