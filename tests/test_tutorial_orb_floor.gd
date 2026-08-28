@@ -11,9 +11,9 @@ extends "res://tests/test_case.gd"
 ##
 ## Which would be harmless if orbs were replaceable at that point, and they are
 ## not. Grandpa hands over fifteen (`give:orb_basic:15`, data/dialogue/opening.json).
-## The only two resupplies in the game are Tam's `recipe_orb_basic` and the
-## village trader, both of them past the road gate -- and the road gate is past
-## this catch. So an opening that runs dry is a hard dead-end:
+## The renewable recipe is taught by Mira's required opening visit, but the
+## player still cannot craft during this authored practice catch. So an opening
+## that runs dry is a hard dead-end:
 ## `throw_aim.gd::try_begin_aim()` refuses every further press with "no orbs
 ## left" while `sequence_director.gd` holds the beat waiting for a catch that
 ## can no longer be attempted. There is no exit but a new game.

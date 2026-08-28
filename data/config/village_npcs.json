@@ -101,12 +101,7 @@
         {
           "unless_flag": "tam_tools_given",
           "conversation": "village_tam_tools",
-          "_why": "OF30. The blacksmith handover: axe, pickaxe, knife (see village.json's `_comment_of30_knife` for why three, not the owner's two) and the torch line. The conversation sets `tam_tools_given` on the same line as the gifts, so this entry stops matching the moment it has happened -- once, ever, per save."
-        },
-        {
-          "unless_flag": "recipe_orb_basic",
-          "conversation": "village_tam_orbs",
-          "_why": "OF30. The follow-up: he writes down the basic-orb recipe, which sets the flag data/recipes/recipes.json gates `orb_basic` behind."
+          "_why": "FIRST-HOUR-FUN. Mira's required opening visit provides the starter tools and the Basic Orb pattern; Tam remains the later smith handover for the knife and torch. `tam_tools_given` is written on the line that grants those tools, so the handover cannot be repeated."
         },
         {
           "if_flag": "legendary_freed",

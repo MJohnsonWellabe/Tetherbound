@@ -76,20 +76,16 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
 
-	# Tam first: all four tools must enter through the one-time production
-	# conversation before the Satchel route has anything to assign.
-	# TWICE. GATEB-COORD: `village_npcs.json` gives Tam two one-time gift
-	# branches in order -- `village_tam_tools` (which sets `tam_tools_given`)
-	# and then `village_tam_orbs` (which sets `recipe_orb_basic`) -- and one
-	# conversation only fires the first. `recipe_orb_basic` is what unlocks the
-	# Foreman's hammer below, so a single visit left the chapter with no way
-	# into build mode at all. Exactly two: with both flags set his next branch
-	# is `village_tam_challenge`, which is a fight and not this segment's beat.
-	if not await _visit_villager("Tam", "", 2):
+	# Mira has already supplied the axe/pick and Orb pattern; Tam supplies the
+	# remaining knife/torch before the Satchel route has everything to assign.
+	# Mira's required opening visit grants the Basic Orb pattern. Tam supplies
+	# the knife and torch that make its fiber cost gatherable; the Foreman's
+	# hammer below also waits on `recipe_orb_basic`.
+	if not await _visit_villager("Tam", "", 1):
 		return _failures
 	for flag_id in ["tam_tools_given", "recipe_orb_basic"]:
 		if not _progression_has(flag_id):
-			_fail("two conversations with Tam and '%s' is unset; his gift branches are "
+			_fail("Mira's required opening visit left '%s' unset; the gift branch is "
 				% flag_id + "what the Foreman's hammer and the orb recipe wait on")
 			return _failures
 	for tool_id in ["axe", "pickaxe", "knife", "torch"]:

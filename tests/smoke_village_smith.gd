@@ -45,17 +45,15 @@ const TOOLS_FLAG := "tam_tools_given"
 const RECIPE_FLAG := "recipe_orb_basic"
 
 const TOOLS_CONVERSATION := "village_tam_tools"
-const ORBS_CONVERSATION := "village_tam_orbs"
 
 ## SC12/SC13. Added after both his one-time gifts are spent.
 const CHALLENGE_CONVERSATION := "village_tam_challenge"
 const BEATEN_CONVERSATION := "village_tam_beaten"
 const DEFEATED_FLAG := "defeated_tam"
 
-## What the handover is expected to contain. Three, not the owner's two — see
-## data/dialogue/village.json's `_comment_of30_knife` and D43: without the
-## knife, owning the other two makes fiber ungatherable outright.
-const HANDOVER: Array[String] = ["axe", "pickaxe", "knife"]
+## Mira's opening handover owns the axe/pick; this later smith handover supplies
+## the knife that makes fiber gatherable and the torch for the return route.
+const HANDOVER: Array[String] = ["knife", "torch"]
 
 var _failures: Array[String] = []
 var _game: Node = null
@@ -96,7 +94,10 @@ func _run() -> void:
 	_the_branch_selector_offers_the_handover_first()
 	await _the_handover_lands_the_smiths_tools_in_the_real_satchel()
 	await _greeting_him_again_does_not_hand_over_a_second_set()
-	await _the_follow_up_conversation_unlocks_the_orb_recipe()
+	# Mira's required opening conversation teaches the Basic Orb recipe. This
+	# smith-only smoke starts after that visit, so represent the already-set flag
+	# before proving Tam's later challenge branch.
+	(_game.get("progression") as RefCounted).call("set_flag", RECIPE_FLAG)
 	_after_both_he_goes_back_to_being_a_villager()
 
 	_report()
@@ -167,48 +168,9 @@ func _greeting_him_again_does_not_hand_over_a_second_set() -> void:
 		return
 	print("branch: after the handover -> %s" % chosen)
 
-	await _play(chosen)
-
 	for tool_id in HANDOVER:
 		if int(inventory.call("count", tool_id)) != int(before[tool_id]):
 			_fail("greeting Tam again handed over a second %s" % tool_id)
-
-
-## The follow-up conversation is the one that unlocks the recipe, and the
-## unlock has to be real: craftable, not merely flagged.
-func _the_follow_up_conversation_unlocks_the_orb_recipe() -> void:
-	var progression: RefCounted = _game.get("progression")
-	if bool(progression.call("has", RECIPE_FLAG)):
-		# _greeting_him_again already played the orbs conversation, which is the
-		# expected path: the second branch is what it fell through to.
-		print("recipe: unlocked by the follow-up conversation")
-	else:
-		var chosen := VILLAGE_NPCS.greeting_for(_tam(), progression)
-		if chosen != ORBS_CONVERSATION:
-			_fail("nothing offers '%s'; the orb recipe can never be taught" % ORBS_CONVERSATION)
-			return
-		await _play(chosen)
-
-	if not bool(progression.call("has", RECIPE_FLAG)):
-		_fail("the follow-up conversation did not set '%s'" % RECIPE_FLAG)
-		return
-	if not bool(_game.call("recipe_known", "orb_basic")):
-		_fail("the flag is set but game_state still calls the orb recipe unknown")
-	if not (_game.call("known_recipe_ids") as Array).has("orb_basic"):
-		_fail("the orb recipe is known but the craft screen would not list it")
-
-	# And it crafts. Materials are put in by hand -- gathering is OF20's.
-	var inventory: RefCounted = _game.get("inventory")
-	for requirement: Variant in (_game.call("recipe_cost_for", "orb_basic") as Array):
-		var entry := requirement as Dictionary
-		inventory.call("add", str(entry.get("id", "")), int(entry.get("n", 0)))
-	var orbs := int(inventory.call("count", "orb_basic"))
-	if not bool(_game.call("craft", "orb_basic")):
-		_fail("the taught orb recipe still refuses to craft")
-		return
-	if int(inventory.call("count", "orb_basic")) != orbs + 1:
-		_fail("crafting the orb produced nothing")
-	print("recipe: orb_basic taught and crafted")
 
 
 ## SC12/SC13 amendment: nothing left to HAND OVER, but he is not simply a

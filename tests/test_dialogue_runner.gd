@@ -209,7 +209,6 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 const TOOLS_CONVERSATION := "village_tam_tools"
-const ORBS_CONVERSATION := "village_tam_orbs"
 const TOOLS_FLAG := "tam_tools_given"
 const RECIPE_FLAG := "recipe_orb_basic"
 
@@ -228,38 +227,35 @@ func _effects_of(id: String) -> Array[String]:
 	return out
 
 
-func test_the_smith_hands_over_an_axe_and_a_pickaxe_and_says_so_once() -> void:
-	var effects := _effects_of(TOOLS_CONVERSATION)
-	assert_true(effects.has("give:axe:1"), "Tam should give an axe; got %s" % str(effects))
-	assert_true(effects.has("give:pickaxe:1"), "Tam should give a pickaxe; got %s" % str(effects))
+func test_miras_required_first_visit_hands_over_an_axe_and_pickaxe_once() -> void:
+	var effects := _effects_of("village_mira_shop_intro")
+	assert_true(effects.has("give:axe:1"), "Mira should give an axe; got %s" % str(effects))
+	assert_true(effects.has("give:pickaxe:1"), "Mira should give a pickaxe; got %s" % str(effects))
 	assert_eq(effects.count("give:axe:1"), 1, "one axe, once")
 	assert_eq(effects.count("give:pickaxe:1"), 1, "one pickaxe, once")
 
 
-## Every tool the meadow's tool-gated resources need — wood wants an axe, stone
-## a pickaxe, fiber a knife (items.json's `gathered_with`). A handover that gave
-## some other set would read fine and gate nothing; a handover that gave only
-## SOME of them would be worse than nothing, because owning the wrong tool pays
-## zero where bare hands paid half. See village.json's `_comment_of30_knife`,
-## and `test_harvest.gd` for the yields themselves.
+## Mira provides the axe/pick for the required opening interaction; Tam provides
+## the knife/torch follow-up. Together those handovers must cover each early
+## resource's real tool gate.
 func test_the_tools_he_gives_are_the_ones_the_meadow_actually_gates_on() -> void:
 	var db: RefCounted = ITEM_DB.new()
 	var given: Array[String] = []
-	for effect: String in _effects_of(TOOLS_CONVERSATION):
+	for effect: String in _effects_of("village_mira_shop_intro") + _effects_of(TOOLS_CONVERSATION):
 		var parts: Array = RUNNER.parse_effect(effect)
 		if str(parts[0]) == "give":
 			given.append(str(parts[1]).split(":")[0])
 	for resource in ["wood", "stone", "fiber"]:
 		var tool_id: String = str(db.gathered_with(resource))
 		assert_true(given.has(tool_id),
-			"'%s' is gathered with '%s' and Tam never hands one over" % [resource, tool_id])
+			"'%s' is gathered with '%s' and Mira/Tam never hands one over" % [resource, tool_id])
 		assert_eq(db.kind(tool_id), "tool", "'%s' should be a tool" % tool_id)
 
 
 ## The gift and the flag that records it must be on the SAME line, or a
 ## conversation that ends early banks one without the other.
-func test_the_gift_and_the_flag_that_records_it_are_the_same_line() -> void:
-	var lines: Array = (RUNNER.table().get(TOOLS_CONVERSATION, {}) as Dictionary).get("lines", [])
+func test_miras_tools_and_orb_pattern_are_granted_in_the_same_interaction() -> void:
+	var lines: Array = (RUNNER.table().get("village_mira_shop_intro", {}) as Dictionary).get("lines", [])
 	var found := false
 	for raw: Variant in lines:
 		if not raw is Dictionary:
@@ -267,14 +263,25 @@ func test_the_gift_and_the_flag_that_records_it_are_the_same_line() -> void:
 		var effects: Array = ((raw as Dictionary).get("effects", []) as Array)
 		if effects.has("give:axe:1"):
 			found = true
-			assert_true(effects.has("flag:%s" % TOOLS_FLAG),
-				"the line that gives the axe must also set '%s'" % TOOLS_FLAG)
-	assert_true(found, "no line in '%s' gives the axe at all" % TOOLS_CONVERSATION)
+			assert_true(effects.has("flag:%s" % RECIPE_FLAG),
+				"the line that gives the axe must also teach '%s'" % RECIPE_FLAG)
+	assert_true(found, "no line in Mira's first visit gives the axe at all")
 
 
-func test_the_follow_up_conversation_writes_the_orb_recipe_flag() -> void:
-	assert_true(_effects_of(ORBS_CONVERSATION).has("flag:%s" % RECIPE_FLAG),
-		"'%s' should set '%s'" % [ORBS_CONVERSATION, RECIPE_FLAG])
+func test_miras_first_visit_teaches_the_renewable_orb_pattern() -> void:
+	var effects := _effects_of("village_mira_shop_intro")
+	assert_true(effects.has("flag:%s" % RECIPE_FLAG),
+		"Mira's required first visit must set '%s'; a later greeting is too easy to miss" % RECIPE_FLAG)
+	var lines: Array = (RUNNER.table().get("village_mira_shop_intro", {}) as Dictionary).get("lines", [])
+	var recipe_line_has_tools := false
+	for raw: Variant in lines:
+		if not raw is Dictionary:
+			continue
+		var line_effects: Array = ((raw as Dictionary).get("effects", []) as Array)
+		if line_effects.has("flag:%s" % RECIPE_FLAG):
+			recipe_line_has_tools = line_effects.has("give:axe:1") and line_effects.has("give:pickaxe:1")
+	assert_true(recipe_line_has_tools,
+		"the recipe flag and required gathering tools must be granted on the same line")
 
 
 ## OF30 wrote the words that hand a torch over here, at a time when there was
@@ -322,7 +329,6 @@ const TAM := {
 	"greeting": "village_tam",
 	"greeting_when": [
 		{"unless_flag": TOOLS_FLAG, "conversation": TOOLS_CONVERSATION},
-		{"unless_flag": RECIPE_FLAG, "conversation": ORBS_CONVERSATION},
 	],
 }
 
@@ -348,10 +354,9 @@ func test_the_branches_are_walked_in_order_and_then_fall_through() -> void:
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(TAM, progression), TOOLS_CONVERSATION)
 	progression.set_flag(TOOLS_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(TAM, progression), ORBS_CONVERSATION)
 	progression.set_flag(RECIPE_FLAG)
 	assert_eq(VILLAGE_NPCS.greeting_for(TAM, progression), "village_tam",
-		"with both branches spent Tam is a villager again, not a mute")
+		"with the first handover spent Tam is a villager again, not a mute")
 
 
 ## The dual-role rule (D39): SC12 adds his battle offer as a NEW entry and the
@@ -365,7 +370,6 @@ func test_a_later_role_can_be_appended_without_disturbing_the_earlier_ones() -> 
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(extended, progression), TOOLS_CONVERSATION)
 	progression.set_flag(TOOLS_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(extended, progression), ORBS_CONVERSATION)
 	progression.set_flag(RECIPE_FLAG)
 	assert_eq(VILLAGE_NPCS.greeting_for(extended, progression), "village_tam_battle")
 
@@ -717,10 +721,10 @@ func test_the_creature_traders_branches_resolve_in_order() -> void:
 		"NP3's Bridgehand line must survive him becoming a trader and a trainer")
 
 
-## Tam has no standing vendor branch to carry forward -- both of his gifts are
-## one-time and spent before he is even challengeable -- so his own real
-## branches are checked end to end here: tools, then the orb recipe, then
-## (once BOTH are spent) the challenge repeatedly until beaten, then his
+## Tam has no standing vendor branch to carry forward -- Mira's required first
+## visit teaches the Orb recipe, then Tam's one-time handover supplies the
+## knife/torch before he is challengeable -- so his real branches are checked
+## end to end here: handover, then the challenge repeatedly until beaten, then his
 ## flavour-only beaten line forever after.
 func test_the_smiths_branches_resolve_in_order_including_the_challenge() -> void:
 	var tam := _villager("Tam")
@@ -728,7 +732,6 @@ func test_the_smiths_branches_resolve_in_order_including_the_challenge() -> void
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), TOOLS_CONVERSATION)
 	progression.set_flag(TOOLS_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), ORBS_CONVERSATION)
 	progression.set_flag(RECIPE_FLAG)
 	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), TAM_CHALLENGE,
 		"once both gifts are spent and he is unbeaten, greeting him should offer the Band-1 challenge")
