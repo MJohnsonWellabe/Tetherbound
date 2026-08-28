@@ -83,6 +83,18 @@ var quest_log: RefCounted = null
 ## change recomputes it.
 var objective_text: String = ""
 
+## OBJECTIVE-HINT-ON-HUD (`HIST-036`, OP23-04). The HOW that goes with
+## `objective_text`'s WHAT — `quest_log.gd::tracked_hint()`, with its
+## `{action}` placeholders already resolved to the buttons the player has
+## actually bound. Kept in step with `objective_text` by exactly the same two
+## writes, so the pair can never disagree about which rung the player is on.
+##
+## "" is the normal state, not an error: OP23-04's directive authors a `how`
+## for the opening ladder only, so every beat past tournament entry has none,
+## and so does a chapter that is finished. A drawing caller must render an
+## empty hint as NOTHING — never as a blank line under the objective.
+var objective_hint: String = ""
+
 ## `progression.revision` last seen by `_process()` — see `objective_text`'s
 ## own comment.
 var _last_progression_revision: int = -1
@@ -371,6 +383,7 @@ func reset_for_new_game() -> void:
 	progression = PROGRESSION_STATE.new()
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
+	objective_hint = quest_log.call("tracked_hint", progression)
 	_last_progression_revision = int(progression.get("revision"))
 
 	day = 1
@@ -494,6 +507,7 @@ func _process(delta: float) -> void:
 	if progression_revision != _last_progression_revision:
 		_last_progression_revision = progression_revision
 		objective_text = quest_log.call("tracked_text", progression)
+		objective_hint = quest_log.call("tracked_hint", progression)
 
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
@@ -579,6 +593,13 @@ func player_vitals() -> RefCounted:
 ## previous objective left behind.
 func set_objective(text: String, world_pos: Variant = null) -> void:
 	objective_text = text
+	# A posed objective has no authored `how` behind it, and carrying the
+	# previous rung's hint under someone else's line would be worse than
+	# carrying none: the capture tools that use this pose a demo objective the
+	# quest log has never heard of. Cleared rather than left, and it comes back
+	# the moment `_process()` next sees `progression.revision` move, same as
+	# `objective_text` itself.
+	objective_hint = ""
 	if world_pos is Vector3:
 		map.add_dynamic_marker("objective", "objective", world_pos as Vector3)
 	else:

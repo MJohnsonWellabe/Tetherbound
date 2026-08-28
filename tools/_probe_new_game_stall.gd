@@ -45,6 +45,25 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# A save left behind by a PREVIOUS run of this probe stops the next one
+	# measuring anything: the title takes its overwrite path instead of
+	# changing scene, the world never arrives, and the probe reports 3,000
+	# quiet frames as though the stall had vanished. It also fails
+	# `tests/smoke_title_new_game.gd` for the same reason, which reads as a
+	# code regression and is not one -- an hour was spent on that here.
+	#
+	# Reported rather than deleted. A probe that silently removes a save is a
+	# worse failure than one that refuses to run.
+	if DirAccess.dir_exists_absolute("user://saves"):
+		var slots := DirAccess.get_files_at("user://saves")
+		if slots.size() > 0:
+			print("REFUSING TO MEASURE: user://saves holds %s." % ", ".join(slots))
+			print("Start New Game will hit the overwrite path instead of loading the world,")
+			print("and every number below would be a measurement of nothing. Clear the")
+			print("directory (it is container-local state, not repository content) and re-run.")
+			quit(1)
+			return
+
 	var title_started := Time.get_ticks_msec()
 	var packed := load(TITLE_SCENE) as PackedScene
 	var title: Node = packed.instantiate() if packed != null else null

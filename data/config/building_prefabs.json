@@ -2998,6 +2998,16 @@
           ],
           "yaw_deg": 0.0,
           "_why": "front wall, clear of door and window"
+        },
+        {
+          "module": "Prop_Chimney",
+          "at": [
+            -0.9,
+            8.9,
+            3.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "HIST-164. A second stack at the opposite end of the ridge -- the taproom fire and the kitchen, against farmhouse_shell's single hearth. Deliberately a DIFFERENT module from the Prop_Chimney2 at [0.9, 8.9, -3.0], so the two do not read as one chimney duplicated: measured, Prop_Chimney is 3.18 tall against Prop_Chimney2's 3.00, and at the distance the square sees this building from that is the only silhouette difference it has. Mirrored in both x and z from the existing stack, so it meets the roof at the same surface height that stack's own 'base buried in the tiles' seat was tuned for."
         }
       ],
       "_why_colliders": "R7.9. Same shape as cottage_a/cottage_b's own doorway-hole colliders, scaled up to this shell's 6x10 footprint (wall lines x=+-3/z=+-5): the front wall is authored as two pieces either side of a 1.6m clear opening centred on the door module's own x=0, plus a lintel over it. The ceiling box's bottom sits at y=3.12 -- the ground-floor wall top -- so it caps the walkable space at the first storey without touching anything below; its top (y=9.6) clears the ridge and the chimney (Prop_Chimney2 tops out at y~9.7) with room to spare, and its footprint (6.4x10.4) covers the roof overhang the same 0.2m the walls themselves overshoot.",
@@ -3030,9 +3040,15 @@
         },
         "MI_RoundTiles": {
           "color": "#8a5a3a"
+        },
+        "MI_WoodTrim": {
+          "color": "#4a3526"
+        },
+        "MI_Plaster": {
+          "color": "#d8c9a8"
         }
       },
-      "_why_retint": "warm pane, same colour every other building in the square carries. MI_RoundTiles retint (confirmed the real material name with a throwaway probe loading the .gltf module directly and printing every surface's resource_name, per ralph/NOTES.md's own R7.9 record) is the inn's only material differentiator from Grandpa's house -- D24/CLAUDE.md's rule against a second roof family rules out a different tile module, so a warmer tile tint is the whole of how it reads as its own building rather than a second copy of the farmhouse shell."
+      "_why_retint": "warm pane, same colour every other building in the square carries. MI_RoundTiles retint (confirmed the real material name with a throwaway probe loading the .gltf module directly and printing every surface's resource_name, per ralph/NOTES.md's own R7.9 record) was written as 'the whole of how it reads as its own building rather than a second copy of the farmhouse shell'. HIST-164 is the finding that it was not enough, and it is measurable rather than a matter of taste: the inn and farmhouse_shell have IDENTICAL module histograms -- 74 modules against 75, and the one extra is a door leaf, which is not visible from outside -- so a blind critic reading a frame of the two side by side called them 'visible twins in the same frame' and concluded 'the world cannot be navigated by looking at it'. MI_WoodTrim (dark stained oak) and MI_Plaster (a warm limewash) are added because half-timbering is the dominant texture on both buildings, so those two named surfaces are what change how the whole facade reads, where the roof alone changes one band of it. Named surfaces, not art.json's single multiply over every surface, which MEADOWS_PROGRESSION_SPEC sec21 names as the failure. STILL OPEN, and recorded rather than buried: the massing is unchanged -- same footprint, same roof module, same window pattern -- which is the other half of what 'the same kit used the same way twice' means. See ralph/reports/hist-clusters-log.md for what an L-plan would cost and why four dormers were tried and rejected."
     },
     "castle": {
       "_why": "RE-MASSED 2026-08-16, owner directive (second playtest): the OF4-rebuild castle read as 'toys in a field' -- 23x17m, 3.9m walls, 6.2m tallest tower against a 1.8m player -- and the owner asked for concept-board scale (docs/reference/owner-board-2026-08-15-*.png, castle panels), rebuilt IN PLACE so the stronghold complex behind it (stronghold.json's five chambers, gauntlet and climax, all sited against this footprint's south edge) stands exactly where it was. The south curtain keeps the shipped gate line z=-8.448 for that reason. Footprint 36x40m on the wall centrelines -- the terrain chose that bound, not timidity: the Rise flank climbs +34m twenty metres west of the wall and the heightfield ends ~30m east (measured, probe grid 2026-08-16), so HEIGHT carries the scale instead: 10.2m two-course curtains at module scale 2.6, 19.4m corner towers, 14.2m twin gatehouse flankers, and a ~29m keep. Generated layout (uniform runs), authored landmarks -- the same author-time-recipe philosophy as before, with the generator's constants recorded here.",

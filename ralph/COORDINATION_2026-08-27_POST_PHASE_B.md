@@ -145,3 +145,58 @@ scratch render directory. It is correct for that. I did not connect it to Gate F
 missing evidence, which was sitting in the same session's context. The operator,
 who had the files on disk, did. Two correct local readings, one missed
 system-level consequence.
+
+## Evening corrections — two of my own claims, and a Phase B item that survives
+
+### GF-B-004 is a REAL game defect. My "five were the instrument" was wrong.
+
+I relayed the defects lane's scene-graph audit — *"THE SPHERE IS NOT THERE"*, no
+floating object above the stronghold, no surface with a missing material — and
+concluded that `GF-B-004` and `GF-B-008` were both rig artefacts, making five of
+Phase B's loudest findings the instrument's.
+
+**The rig lane checked it against the recovered frames and the count is four.**
+`GF-AUD-hall-gameplay.png` is a clean, well-lit exterior of the stronghold gate:
+mean luma 72.8, spread 43.2, 2.4% of the frame below luma 24, player in front,
+HUD legible — **and the black sphere is plainly visible in the archway.** The
+camera is not buried. `GF-B-004` stays a game defect and needs an owner for it.
+
+Why the audit missed it: it enumerated `MeshInstance3D` surfaces and the sphere
+is presumably not one, which the defects lane itself flagged as a limit of the
+method ("does not rule out non-MeshInstance3D geometry, or a sky artefact"). I
+dropped that caveat when I relayed it. The lesson is the one this whole day keeps
+teaching: a negative from an instrument is only as strong as what the instrument
+can see.
+
+### GF-B-008 IS a rig artefact — but not for the reason given
+
+All six `the_rise` frames were taken at the SAME camera position,
+`[88.0, 2.22, -43.0]`, with only yaw varying. Four are wide, fully-lit vistas
+(`the_rise-landmark` is mean luma 111.9). **A camera inside solid geometry is
+black at every yaw**, so it is not buried; at two of six yaws the near field is
+filled by something opaque. The proposed "refuse if the camera is inside
+collision geometry" check would have answered a question neither frame was
+asking.
+
+The rig lane's fix is better than the one I would have specified: gate on the
+IMAGE, not the camera. Every prescribed capture now carries mean luminance,
+spread and dark fraction on its manifest row, and a frame both very dark and
+very flat fails. Calibrated against the 79 recovered frames, and the separation
+is not the obvious one — **mean luminance does not work**, because the two
+darkest frames in the set are legitimate night captures:
+
+    the_pond-night-gameplay   mean 25.1  stddev 41.1  frac<24 0.584  LEGITIMATE
+    the_rise-gameplay         mean 26.6  stddev 29.0  frac<24 0.755  degenerate
+
+A night scene is dark and keeps its contrast; an obstruction is flat. Both
+conditions are required, and this repo's own title screen proves why: mean 50.8,
+spread 32.4 — its spread is below the gate, being a deliberately flat dark UI,
+and only the dark-fraction half saves it from being discarded as broken.
+
+### Also worth knowing for whoever re-transcribes X07
+
+The six `hall` captures were taken with `region=corridor` while step X07-165
+asserts `region_is == hall`. That assertion failed and the captures went ahead
+anyway, filed under the name `hall`. Not a rig bug — §1.6 says an ordinary failed
+assert is a verdict on the game and the run continues — but a capture named for a
+place the run has just measured itself not to be in is worth attention.
