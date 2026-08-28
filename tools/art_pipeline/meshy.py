@@ -147,9 +147,23 @@ HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "g
 ## here rather than silently treated as routine, per CLAUDE.md's "ask instead
 ## of inventing" — this is the owner having already answered, not this file
 ## deciding on its own.
+## TM-ORB owner directive, 2026-08-28. Same shape as BAND1-D1 above: the owner
+## supplied a reference board (docs/art/reference/tm_orb_board.png) and directed
+## the generation, which satisfies the real gate. The owner's playtest reported
+## TMs as "cardboard cards" on every surface they appear -- world pickup,
+## backpack and reward moment -- so this replaces a placeholder rather than
+## adding an object.
+##
+## ONE MESH, TEN MATERIALS. The board's own subtitle is "Generic Mesh +
+## Recolorable Material", and it draws ten type variants as hue/emissive swaps
+## over one body. So this asks Meshy for the BASE orb only; the variants are a
+## material job in-engine, the same economy character_model.gd already uses for
+## villager palettes. Generating ten orbs would be ten times the credits for
+## the same silhouette.
 PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          "camp_tent", "camp_fire_pit", "camp_bed",
-         "camp_firewood", "camp_flame"}
+         "camp_firewood", "camp_flame",
+         "tm_orb"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -670,6 +684,27 @@ SPECIES_PROMPTS = {
     # picture forcing the ridge shape. Rewritten to rule the cone out by
     # name and to describe the ridge as a straight line joining two separate
     # peaks rather than trusting "A-frame" alone to carry it.
+    # TM-ORB. Read off docs/art/reference/tm_orb_board.png. The board is
+    # explicit that this is one mesh recoloured ten ways, so the prompt
+    # describes the BASE (pale stone + brass) and says nothing about type
+    # colour -- a fire-red orb generated here would fight the material swap.
+    #
+    # The two things that must survive generation are the ones the board
+    # leads with: a CLEAN SILHOUETTE (it is a sphere; the panels are inset,
+    # not bolted on) and the RECESSED EMISSIVE CORE, which is what stops it
+    # reading as a plain rock. The board's own scale note is 18-22cm, so it
+    # is a two-handed object sitting in grass, not a boulder.
+    "tm_orb": (
+        "a single spherical orb the size of a melon, 20cm across. Pale "
+        "cream stone shell divided into smooth inset panels by raised "
+        "brass banding. NOT A BALL OF ROCK, NOT A GEODE, NOT CRACKED. "
+        "One circular recessed socket on the front holds a glowing "
+        "spiral core, ringed by concentric brass rings and small square "
+        "gem insets. Faint carved spiral glyphs on the side panels. "
+        "Smooth clean sphere silhouette, panels flush with the surface. "
+        "Hand-painted stylized fantasy game prop, restrained wear, "
+        "single object, resting upright"),
+
     "camp_tent": (
         "small survival tent, canvas over wood poles. NOT A CONE, NOT A "
         "TEEPEE. A straight horizontal ridge joining two separate "
