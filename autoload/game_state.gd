@@ -114,6 +114,13 @@ var _last_progression_revision: int = -1
 ## comparison. `objective_text` is recomputed with it rather than alone,
 ## because the two are written together everywhere else on purpose: the pair
 ## must never disagree about which rung the player is on.
+##
+## ONE EDGE, for a tool author: a capture tool that writes `objective_hint`
+## STRAIGHT onto this node (`tools/_capture_objective_hint_card.gd` does, on
+## purpose, to reproduce the shape `_process()` produces on a real flag change)
+## is not covered by `_objective_is_posed` below -- only `set_objective()` sets
+## that. If such a tool also pins the device, pin it BEFORE the write, or the
+## first `_process()` after the flip resolves the real rung over the posed line.
 var _last_hint_device_was_gamepad: bool = false
 
 ## Whether `objective_text`/`objective_hint` are currently a `set_objective()`
