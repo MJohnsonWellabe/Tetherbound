@@ -94,6 +94,18 @@ static func first_hit_belongs_to_target(collider: Node, target: Node) -> bool:
 var _committed_assist_point := Vector3.INF
 var _released_assist_point := Vector3.INF
 
+## Last `launch_assist_diagnostics()` result, refreshed once per physics tick
+## while aiming. Read by `combat_manager.gd::catch_chance_now()` so the number
+## the reticle shows is the number the throw would actually resolve at -- see
+## that function's header for why it used to be neither.
+var _aim_report: Dictionary = {}
+
+
+## The live aim, for a caller that needs to know where this throw would land
+## rather than whether an assist is legal. Empty between aims.
+func aim_report() -> Dictionary:
+	return _aim_report if state == State.AIMING else {}
+
 
 func _ready() -> void:
 	var cfg: Dictionary = CATCH.config().get("throw", {})
@@ -228,6 +240,12 @@ func _physics_process(delta: float) -> void:
 
 func _tick_aiming(delta: float) -> void:
 	_update_preview()
+	# Refreshed on the PHYSICS tick and cached, not recomputed by the HUD's
+	# draw frame: `launch_assist_diagnostics()` casts a ray, and
+	# `combat_hud.gd` now reads this every frame it draws the capture reticle.
+	# One ray per physics tick is the same cost the throw already pays; one per
+	# draw frame is not.
+	_aim_report = launch_assist_diagnostics()
 
 	# Backing out is free and spends nothing, INCLUDING during the release
 	# wind-up — the orb is only spent in _release() itself. The cancel used to
@@ -304,6 +322,7 @@ func _set_trainer_movable(movable: bool) -> void:
 
 
 func _leave_aim() -> void:
+	_aim_report = {}
 	state = State.IDLE
 	_windup = 0.0
 	_committed_assist_point = Vector3.INF

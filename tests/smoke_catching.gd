@@ -15,6 +15,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 const SETTLE_FRAMES := 300
 ## Attempts before giving up on catching a weakened target. With a common
@@ -62,6 +63,7 @@ func _run() -> void:
 
 	await _aiming_hands_control_to_the_trainer()
 	await _aiming_abandons_your_creature()
+	await _the_advertised_chance_is_the_chance_the_throw_would_use()
 	await _a_throw_at_the_sky_misses_and_still_costs_an_orb()
 	await _a_weakened_creature_can_be_caught()
 	await _a_fainted_creature_cannot_be_caught()
@@ -231,6 +233,86 @@ func _aiming_abandons_your_creature() -> void:
 
 ## Aim at the sky and let go. The orb is a projectile: it has to be able to go
 ## nowhere, and doing so still has to cost something.
+## The reticle must not promise odds the throw will not use.
+##
+## `catch_chance_now()` used to pass `offset = 0.0` unconditionally -- the
+## dead-centre best case, drawn at the creature's screen position with a full
+## percentage under it whether or not the player was pointing anywhere near it.
+## `catching.json`'s `accuracy_bonus` spans `centre_bonus` 1.45 to `edge_bonus`
+## 0.80, which the config itself calls "the ONLY reason the aiming skill
+## exists", so the gap is not cosmetic.
+##
+## And it was not an edge case. This very test's own `catch launch:` log, on the
+## run that first exercised this check, shows FOUR commits in a real fight and
+## `eligible=false` on every one -- three `reticle_outside_body` (offsets 0.415,
+## 0.517, 0.442 against a 0.312 body) and one `line_of_sight_blocked` by the
+## player's OWN creature standing in the way. Both throws that landed struck at
+## offset 0.312, exactly `body_radius`, which is the full edge penalty. So the
+## advertised number was wrong on every throw of the run, and wrong by the
+## whole 1.81x factor.
+##
+## `catch_math.gd`'s own header states this project's rule -- the outcome is
+## decided once, and "dramatising a lie is exactly what makes catch animations
+## feel cheap". Advertising a chance the roll will not use is the same lie one
+## step earlier. This is the guard against it coming back.
+##
+## The claim is stated as "an UNLOCKED aim must advertise less than a
+## dead-centre throw" rather than by driving the aim onto the body and back
+## off. A first version of this check tried the latter and could not reliably
+## achieve a lock at all: `_aim_camera_along()` sets the camera rig's yaw, but
+## the aim profile carries a 1.45m `shoulder_offset`, so pointing the RIG at
+## the creature does not put the screen-centre reticle on it -- and the ally
+## creature intercepts the line of sight often enough to block the lock even
+## when it does. Both of those are real properties of the fight, not harness
+## artefacts, which is exactly why the assertion is written to hold without
+## depending on either.
+func _the_advertised_chance_is_the_chance_the_throw_would_use() -> void:
+	if not bool(_manager.call("is_aiming")):
+		await _press("combat_throw")
+		for i in 10:
+			await physics_frame
+	if not bool(_manager.call("is_aiming")):
+		_fail("could not enter aim mode for the advertised-chance check")
+		return
+
+	var foe: RefCounted = _manager.call("enemy")
+	var foe_body: Node3D = _manager.call("enemy_body")
+	if foe == null or foe_body == null:
+		_fail("no enemy for the advertised-chance check")
+		return
+
+	# Swung well off the body, so the aim is definitely unassisted.
+	var away := (foe_body.global_position - _player.global_position).rotated(Vector3.UP, deg_to_rad(50.0))
+	_aim_camera_along(away)
+	for i in 12:
+		await physics_frame
+
+	if bool(_manager.call("catch_aim_is_locked")):
+		_fail("aimed 50 degrees off the creature and the aim still reports locked")
+		return
+
+	var radius := 0.5
+	if foe_body.has_method("body_radius"):
+		radius = float(foe_body.call("body_radius"))
+	var dead_centre: float = CATCH.catch_chance(
+		SPECIES.catch_rate(foe.species_id), foe.hp_fraction(),
+		str(_manager.call("current_orb_id")), 0.0, radius
+	)
+	var advertised: float = float(_manager.call("catch_chance_now"))
+	if advertised >= dead_centre:
+		_fail(
+			"pointing 50 degrees off the creature, the HUD still advertises the dead-centre chance (%.3f advertised, %.3f dead-centre) -- the reticle is promising a throw the player is not making" % [
+				advertised, dead_centre,
+			]
+		)
+	if float(_manager.call("catch_aim_offset", radius)) <= 0.0:
+		_fail("an unassisted aim 50 degrees off the body reports a zero placement offset")
+
+	_aim_camera_along(foe_body.global_position - _player.global_position)
+	for i in 10:
+		await physics_frame
+
+
 func _a_throw_at_the_sky_misses_and_still_costs_an_orb() -> void:
 	if not bool(_manager.call("is_aiming")):
 		await _press("combat_throw")

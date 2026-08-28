@@ -163,6 +163,8 @@ var _catch_phase: CatchPhase = CatchPhase.NONE
 var _catch_timer: float = 0.0
 var _catch_shakes_total: int = 0
 var _catch_succeeded: bool = false
+## See `last_catch_chance()`.
+var _catch_chance_resolved: float = 0.0
 var _catch_index: int = 0
 
 ## Opening-only reliability policy, configured by SequenceDirector rather than
@@ -1197,6 +1199,7 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 			_tutorial_catch_failures += 1
 	_catch_succeeded = bool(decision["caught"])
 	_catch_shakes_total = int(decision["shakes"])
+	_catch_chance_resolved = float(decision["chance"])
 	_catch_index = 0
 
 	# The performance: a flash says the throw landed, the creature is drawn in
@@ -1571,14 +1574,51 @@ func current_orb_id() -> String:
 ## neither fighter acts, because a creature landing a hit on an orb that is
 ## deciding whether it caught something is nonsense. (The wild creature's own physics
 ## is off for the duration — it is inside the orb.)
+## The chance the LANDED throw actually resolved at, including the placement
+## bonus for where the orb really struck. Valid from the strike until the next
+## throw.
+##
+## The capture reticle's contract animation reads this so the ring that
+## collapses onto the resting orb shows the number the roll USED, not the
+## number the aim last advertised. That closes the loop the shake count alone
+## could not: before this, a player who clipped the edge saw the aim's
+## dead-centre figure, then a wobble, then a breakout, with nothing anywhere in
+## the sequence telling them the throw had been worth much less than the ring
+## said. "Was I unlucky or was I sloppy" was unanswerable, and a skill mechanic
+## you cannot learn from is a slot machine.
+func last_catch_chance() -> float:
+	return _catch_chance_resolved
+
+
 func is_resolving_catch() -> bool:
 	return _catch_phase != CatchPhase.NONE
 
 
-## The odds a clean, dead-centre hit would resolve at RIGHT NOW, for the aim
-## HUD. Purely a readout of the same arithmetic the throw will use — telling
-## the player their odds before they spend an orb is the answer to "I never
-## know if I was close", front half. (The shake count is the back half.)
+## The odds THIS throw would resolve at right now, for the aim HUD.
+##
+## It used to pass `offset = 0.0` unconditionally -- the dead-centre best case,
+## whatever the player was actually pointing at. That is a bigger deal than it
+## reads: `catching.json`'s own `accuracy_bonus` spans `centre_bonus` 1.45 to
+## `edge_bonus` 0.80, an 1.81x spread the config itself calls "the ONLY reason
+## the aiming skill exists". So the reticle showed 73% over a sliver-HP
+## Bramblebun while a throw that clipped its edge resolved at 40%, and it
+## showed that number whether or not the player was lined up at all.
+##
+## `catch_math.gd`'s header states this project's own rule about the wobble:
+## the outcome is decided once, and "dramatising a lie is exactly what makes
+## catch animations feel cheap". Promising odds the throw will not use is the
+## same lie one step earlier, before the orb has even left the hand.
+##
+## OF19 made it worse without meaning to. Widening the orb's collision radius
+## 0.42 -> 0.60 for "too hard to know where the ball is going to go" is pure
+## forgiveness on the miss/no-miss line -- which means it grew the set of
+## throws that LAND while being scored at the edge multiplier. More landed
+## throws, a larger share of them scored well below the advertised number.
+##
+## Now: when the launch assist is eligible the orb is genuinely led to the
+## body's centre, so the dead-centre number IS the honest one and nothing
+## changes. When it is not, the throw is unassisted and the honest estimate is
+## the offset the player's own reticle is sitting at.
 func catch_chance_now() -> float:
 	if _enemy == null:
 		return 0.0
@@ -1586,8 +1626,46 @@ func catch_chance_now() -> float:
 	if _wild != null and _wild.has_method("body_radius"):
 		radius = float(_wild.call("body_radius"))
 	return CATCH.catch_chance(
-		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(), 0.0, radius
+		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(),
+		catch_aim_offset(radius), radius
 	)
+
+
+## Metres off centre this throw would strike at, as best the aim can know
+## before the orb flies.
+##
+## Zero while the launch assist is eligible: `throw_aim.gd::_commit_launch_assist()`
+## aims the orb at the predicted body centre, so an eligible throw really does
+## earn the centre bonus. Otherwise the reticle's own distance from the body
+## axis, clamped to the body -- `accuracy_bonus()` clamps at `body_radius`
+## anyway, and past that the throw is a MISS rather than a poor catch, which is
+## `catch_aim_is_locked()`'s job to say rather than this one's.
+func catch_aim_offset(body_radius: float) -> float:
+	if _throw == null:
+		return 0.0
+	var report: Dictionary = _throw.call("aim_report")
+	if report.is_empty():
+		return 0.0
+	if bool(report.get("eligible", false)):
+		return 0.0
+	return clampf(float(report.get("reticle_offset", 0.0)), 0.0, maxf(body_radius, 0.0))
+
+
+## Whether the aim is genuinely ON the creature -- reticle inside the visible
+## body AND line of sight to it, the same pair `throw_aim.gd` requires before
+## it will grant a launch assist.
+##
+## The HUD needs this separately from the chance because the two say different
+## things. The chance answers "how good is this throw"; this answers "is the
+## game about to help you, or are you about to lob an orb past it". Before this
+## existed the reticle drew an identical ring and an identical percentage in
+## both cases, which is most of why a miss and an unlucky roll were
+## indistinguishable to the player.
+func catch_aim_is_locked() -> bool:
+	if _throw == null:
+		return false
+	var report: Dictionary = _throw.call("aim_report")
+	return not report.is_empty() and bool(report.get("eligible", false))
 
 
 ## The body of the creature currently being fought, or null between fights.

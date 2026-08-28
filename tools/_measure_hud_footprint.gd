@@ -109,6 +109,9 @@ func _read_args() -> void:
 ## strip, the region banner and the hotbar message are not.
 const TRANSIENT_NAMES: Array[String] = [
 	"PartyStrip", "RegionBanner", "Message", "Prompt", "DebugReadout",
+	# Times out on its own clock (`_tick_objective_hint()`), so it is not part
+	# of what is on screen while the player walks around.
+	"ObjectiveHintCard",
 ]
 
 

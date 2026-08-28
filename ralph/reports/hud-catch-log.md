@@ -154,3 +154,145 @@ Two things fell out that are worth naming:
   it once the player has demonstrably used those buttons would save that too.
   That is a design decision about how much teaching the HUD owes a returning
   player, not a scale fix, so it is flagged rather than taken.
+
+---
+
+## 2. "catching still sucks"
+
+There was no evidence file to reconcile against — Gate F's X03 catching lab has
+never run — so this starts from measurement rather than from a document.
+
+### What "sucks" turns out to mean, specifically
+
+**The number on the reticle is not the number the throw uses.**
+
+`combat_manager.gd::catch_chance_now()` passed `offset = 0.0` unconditionally.
+That is the DEAD-CENTRE case. `catching.json`'s `accuracy_bonus` spans
+`centre_bonus` 1.45 to `edge_bonus` 0.80 — a **1.81x spread** that the config
+itself calls *"the ONLY reason the aiming skill exists"*. So the ring showed:
+
+| species | HP | reticle showed | an edge hit resolved at | gap |
+|---|---|---|---|---|
+| bramblebun | sliver | 73.1% | 40.3% | 32.8 pts |
+| bramblebun | half | 42.8% | 23.6% | 19.2 pts |
+| terrapup | half | 21.4% | 11.8% | 9.6 pts |
+
+And it drew that ring, with that number, at the creature's screen position
+**whether or not the player was lined up at all**. There was no visual
+difference between an assist-eligible line-up, where the number is true, and a
+reticle pointing into the grass beside the target, where it is fiction.
+
+**This is not an edge case — in a real fight it was every throw.**
+`smoke_catching.gd` drives an actual fight, and its `catch launch:` log across
+four commits reads:
+
+```
+commit eligible=false reticle=0.415/0.312 first_hit=AllyCreature       los=false reason=reticle_outside_body
+commit eligible=false reticle=0.517/0.312 first_hit=Wild_bramblebun_0_1 los=true  reason=reticle_outside_body
+commit eligible=false reticle=0.305/0.312 first_hit=AllyCreature       los=false reason=line_of_sight_blocked
+commit eligible=false reticle=0.442/0.312 first_hit=Wild_bramblebun_0_1 los=true  reason=reticle_outside_body
+strike  offset=0.312          <- exactly body_radius: the full edge penalty
+strike  offset=0.312
+```
+
+**Zero of four throws earned the assist.** Both throws that landed struck at
+offset 0.312, which is exactly `body_radius` — the maximum penalty
+`accuracy_bonus()` can apply. So the advertised number was wrong on 100% of the
+throws in that run, and wrong by the whole 1.81x factor. Note also that one of
+the four was blocked by the player's **own creature** standing in the line of
+sight.
+
+`catch_math.gd`'s own header states this project's rule: the outcome is decided
+once, and *"dramatising a lie is exactly what makes catch animations feel
+cheap."* Advertising odds the roll will not use is the same lie one step
+earlier, before the orb has left the hand.
+
+**OF19 made it worse without meaning to.** Widening the orb's collision radius
+0.42 -> 0.60 to answer "too hard to know where the ball is going to go" is pure
+forgiveness on the miss/no-miss line — which means it *grew* the set of throws
+that land while being scored at the edge multiplier. More landed throws, a
+larger share of them scored far below the advertised number.
+
+### What I fixed
+
+The readout, not the difficulty. Nothing in `catching.json` changed.
+
+- `catch_chance_now()` now uses the aim's real offset. When the launch assist
+  is eligible the orb is genuinely led to the body centre, so the dead-centre
+  number *is* honest and nothing changes; when it is not, the number is the one
+  the unassisted throw would actually resolve at. The percentage now **moves as
+  you line up**, which is the first time the accuracy bonus has been visible at
+  all.
+- New `catch_aim_is_locked()`, and the capture reticle draws an unlocked aim as
+  a distinct state — ring standing off wider, quieted, and the readout replaced
+  by `-- / NOT ON TARGET` rather than a number. A percentage on screen is read
+  as an answer, and off the body there is no honest answer to give: the throw
+  does not have a low catch chance, it has a miss chance the widget cannot
+  compute.
+- The contract animation — the ring collapsing onto the resting orb — now shows
+  the chance the roll **actually used** (`last_catch_chance()`), not the one the
+  aim last advertised. That closes the loop: you see whether you were on target,
+  then you see what the throw was worth, then you see the shakes.
+- `smoke_catching.gd` gains the regression guard.
+
+Together these answer the specific question a player could not previously ask:
+**was I unlucky, or was I sloppy?** A skill mechanic you cannot learn from is a
+slot machine, and that is what the accuracy system was.
+
+### What I did NOT fix, and why
+
+These are real, measured, and are the owner's call — they are about how hard
+catching should be, which is a design decision, not a defect.
+
+**1. The odds themselves.** At full health the multiplier is 0.10, so a
+terrapup reads 4.3% and a tuskroot 4.1%. That is `GAME_DESIGN.md` §15 working
+as specified ("powerful/full-health creatures should be extremely difficult").
+
+**2. The wall-clock cost of a failure.** A failed attempt costs **7.0–8.6
+seconds**, of which **4.9–6.5 s is non-interactive** — wind-up 0.18, flight
+~0.4, resolve 3.0–4.7, breakout pop 0.35, re-throw cooldown 0.9. Expected time
+to a catch, animation only:
+
+| target | chance | attempts | ~time to catch |
+|---|---|---|---|
+| terrapup, full HP | 4.3% | 23.0 | **164 s** |
+| terrapup, half HP | 21.4% | 4.7 | 37 s |
+| bramblebun, sliver | 73.1% | 1.4 | 13 s |
+
+**3. The shake count carries almost no information at the odds players actually
+play at.** It is designed as the "how close were you" channel, but:
+
+- terrapup at full HP (4.3%): **95% of failures shake once** — the channel says
+  "hopeless" nearly every time.
+- bramblebun at a sliver (73.1%): **91% of failures shake three times** — and
+  `shakes_on_success` is *also* 3, so at high odds the failure animation is
+  indistinguishable in length from the success animation right up to the
+  verdict.
+
+The channel only carries signal in the middle band. Making
+`max_shakes_on_failure` differ from `shakes_on_success` is a one-line config
+change, but it is a change to the drama of the sequence and belongs to whoever
+owns that.
+
+**4. The lock target is small and the player's own creature blocks it.**
+`launch_assist_reticle_fraction` is 1.0 against a `body_radius` of 0.312 m at a
+throwing range of ~7.5 m — about **2.4 degrees** of arc, with
+`aim.sensitivity_scale` at 0.55. That is the "aiming is fiddly" half, and
+widening it is a forgiveness knob, i.e. a difficulty decision. Separately, the
+ally creature intercepting the line of sight (1 of 4 throws in the logged run)
+may be worth treating as a bug rather than a tuning value — the trainer is
+aiming past their own companion — but which of the two it is depends on whether
+"reposition to get a clean line" is meant to be part of the skill.
+
+### What I did not prove
+
+- **How catching feels.** [OWNER-ONLY]. I measured the arithmetic, the wiring
+  and the wall clock; I did not play it on the device.
+- **That the fix improves the feel.** It makes the game stop lying, which is a
+  precondition for the skill being learnable, not a demonstration that the skill
+  is now satisfying.
+- **The four items above are diagnoses, not proposals.** Each has a number
+  attached so the owner can decide against evidence rather than against
+  adjectives — but if the answer is "catching should be probability-based and
+  the wait is the drama", then items 2 and 3 are working as intended and only
+  the readout was ever broken.

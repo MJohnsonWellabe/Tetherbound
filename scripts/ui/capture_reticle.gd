@@ -40,10 +40,18 @@ const BREAK_DURATION := 0.3
 
 const READOUT_GAP := 40.0
 const CAPTION_GAP := 22.0
+## How much wider the ring stands off the body while the aim is NOT on the
+## creature. Enough to read as a different state at a glance rather than as the
+## same ring in a different mood.
+const UNLOCKED_RING_STANDOFF := 14.0
 
 var _active := false
 var _pos := Vector2.ZERO
 var _chance := 0.0
+## Whether the aim is genuinely on the creature (reticle inside the visible
+## body, with line of sight). See `update_target()`'s own note for why the ring
+## has to say this out loud.
+var _locked := true
 
 ## Transient choreography state. Each of `_pulses`' entries and the three
 ## singleton dictionaries below carry their own `t` (seconds elapsed),
@@ -62,10 +70,21 @@ func _ready() -> void:
 ## Called every frame while aiming (and once more with `active=false` the
 ## frame aiming stops). `screen_pos`/`chance` are ignored while inactive —
 ## the ring simply stops drawing until the next active update.
-func update_target(screen_pos: Vector2, chance: float, active: bool) -> void:
+## `locked` is whether the reticle is actually ON the creature. It defaults
+## true so an older caller keeps the previous appearance.
+##
+## The ring used to draw identically whether the player was lined up or lobbing
+## an orb into the grass beside the target, and `catch_chance_now()` fed it the
+## dead-centre chance in both cases. So the one piece of information the player
+## most needed before spending an orb -- am I actually on it -- was the one
+## thing the capture reticle did not say, and a miss and an unlucky roll were
+## indistinguishable both before the throw and after it.
+func update_target(screen_pos: Vector2, chance: float, active: bool,
+		locked: bool = true) -> void:
 	_pos = screen_pos
 	_chance = clampf(chance, 0.0, 1.0)
 	_active = active
+	_locked = locked
 	queue_redraw()
 
 
@@ -73,8 +92,13 @@ func update_target(screen_pos: Vector2, chance: float, active: bool) -> void:
 ## `to_screen_pos` — the orb's strike point, when combat_hud.gd can reach
 ## it, or the ring's own last position otherwise (a fade in place, per the
 ## task brief's "if reachable, else just fade").
-func play_contract(to_screen_pos: Vector2) -> void:
-	_contract = {"from": _pos, "to": to_screen_pos, "t": 0.0, "chance": _chance}
+## `resolved_chance` is the odds the landed throw ACTUALLY rolled at, including
+## where the orb struck. Negative means "unknown", and the ring falls back to
+## whatever the aim last showed -- which is what it always used to do, and is
+## the reason a clipped throw and a centred one contracted identically.
+func play_contract(to_screen_pos: Vector2, resolved_chance: float = -1.0) -> void:
+	var shown := _chance if resolved_chance < 0.0 else clampf(resolved_chance, 0.0, 1.0)
+	_contract = {"from": _pos, "to": to_screen_pos, "t": 0.0, "chance": shown}
 	_active = false
 
 
@@ -139,12 +163,14 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	if _active:
-		_draw_ring(_pos, _chance, 1.0, 1.0)
+		_draw_ring(_pos, _chance, 1.0, 1.0, _locked)
 
 	if not _contract.is_empty():
 		var t: float = float(_contract["t"]) / CONTRACT_DURATION
 		var pos: Vector2 = Vector2(_contract["from"]).lerp(Vector2(_contract["to"]), t)
-		_draw_ring(pos, float(_contract.get("chance", _chance)), lerp(1.0, 0.35, t), 1.0 - t)
+		# A contract only ever plays off a thrown orb, which by then is a
+		# committed throw rather than an aim -- so it always draws locked.
+		_draw_ring(pos, float(_contract.get("chance", _chance)), lerp(1.0, 0.35, t), 1.0 - t, true)
 
 	for pulse in _pulses:
 		_draw_pulse(Vector2(pulse["pos"]), float(pulse["t"]) / PULSE_DURATION)
@@ -160,10 +186,21 @@ func _draw() -> void:
 ## inner teal chance-arc, and the percentage/caption readout below it.
 ## `scale_value` shrinks everything but the stroke widths (a thinner ring
 ## reads as further away, not as a different ring), `alpha` fades the lot.
-func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float) -> void:
+func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float,
+		locked: bool = true) -> void:
 	var radius: float = (RING_DIAMETER * 0.5) * scale_value
 	var tier_colour: Color = UITokens.chance_tier_color(chance)
 	tier_colour.a *= alpha
+	# An unlocked ring is drawn OPEN and quiet: the arcs fade back, the ring
+	# stands off wider, and the readout stops claiming a capture chance. It is
+	# deliberately not just a dimmer version of the same ring -- the two states
+	# mean different things ("this is your chance" vs "you are not on it") and
+	# a player has to be able to tell them apart at a glance, mid-fight, on a
+	# 7-inch panel.
+	if not locked:
+		tier_colour = UITokens.TEXT_MUTED
+		tier_colour.a *= alpha * 0.85
+		radius += UNLOCKED_RING_STANDOFF * scale_value
 
 	var gap_rad := deg_to_rad(GAP_DEGREES)
 	var segment_rad: float = (TAU - float(ARC_SEGMENTS) * gap_rad) / float(ARC_SEGMENTS)
@@ -191,21 +228,26 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
 		# twelve o'clock" — the same direction the shake countdown empties.
 		draw_arc(center, inner_radius, -PI * 0.5, -PI * 0.5 + sweep, 48, inner_colour, ARC_WIDTH, true)
 
-	_draw_readout(center, radius, chance, tier_colour, alpha)
+	_draw_readout(center, radius, chance, tier_colour, alpha, locked)
 
 
-func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: Color, alpha: float) -> void:
+func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: Color,
+		alpha: float, locked: bool = true) -> void:
 	var font := get_theme_default_font()
 	if font == null:
 		return
 
-	var pct_text := "%d%%" % int(round(chance * 100.0))
+	# Withheld rather than greyed. A percentage that is on screen is read as an
+	# answer, and off the body there is no honest answer to give -- the throw
+	# does not have a low catch chance, it has a miss chance this widget cannot
+	# compute. Saying "NOT ON TARGET" is the true statement.
+	var pct_text := "%d%%" % int(round(chance * 100.0)) if locked else "--"
 	var pct_size := UITokens.FONT_BIG_NUMBER - 4
 	var pct_dims: Vector2 = font.get_string_size(pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size)
 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
 
-	var caption_text := "CAPTURE CHANCE"
+	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
 	var caption_colour := UITokens.TEXT_SECONDARY
 	caption_colour.a *= alpha
 	var caption_dims: Vector2 = font.get_string_size(
