@@ -871,59 +871,80 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 ## over, lift it until it is not. A rock over open ground is untouched, so the
 ## outcrop's silhouette from the road is the silhouette that was tuned.
 func _keep_rock_out_of_the_rooms(art: Node3D) -> void:
-	var ceiling := _ceiling_over(art.position.x, art.position.z)
+	var box := _bounds_of(art)
+	if box.size == Vector3.ZERO:
+		return
+	# The rock's OWN extent, not the point it was placed at. The first version
+	# of this tested only `art.position`, and the vault came back still full of
+	# rock: perimeter boulders are placed ON the footprint's bounding-box edge
+	# with up to 1.2 m of jitter, so their origin sits legitimately OUTSIDE the
+	# room while up to 3.6x of scaled geometry reaches back through the wall.
+	# Three walls do this and they are the three the bounding box touches --
+	# the den's far wall, the vault's +x wall and the warren's -x wall.
+	var ceiling := _ceiling_over_box(box)
 	if is_inf(ceiling):
 		return
-	var lowest := _lowest_point_of(art)
-	if is_inf(lowest):
-		return
-	if lowest < ceiling:
-		art.position.y += ceiling - lowest
+	if box.position.y < ceiling:
+		art.position.y += ceiling - box.position.y
 
 
-## The highest ceiling of any chamber whose footprint contains this local
-## `(x, z)`, or -INF where the point stands over open ground.
+## The highest ceiling of any chamber this box actually reaches INTO, or -INF
+## when it clears every room.
+##
+## Tested against each chamber's INTERIOR rect, deliberately without the wall
+## thickness the other footprint tests add. A boulder standing against the
+## outside of a wall is the outcrop doing its job -- two blind rounds tuned
+## those courses so the cave's mass is broken all the way up rather than
+## reading as a grey slab with a hedge on top. Only geometry that comes past
+## the wall's inner face is in a room, and only that is moved.
 ##
 ## Highest rather than nearest because chamber rects are allowed to touch: a
-## rock over the seam between two rooms has to clear the taller of them. Rects
-## are recomputed from each chamber rather than read out of `_footprint` by
-## index, so this cannot drift if anything else ever appends to that array.
-func _ceiling_over(x: float, z: float) -> float:
+## rock over the seam between two rooms has to clear the taller of them.
+func _ceiling_over_box(box: AABB) -> float:
 	var best := -INF
 	for id: String in _chambers:
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
 		var size := _size_of(chamber.get("size", []))
-		if absf(x - centre.x) > size.x * 0.5 + _wall_t:
+		if box.position.x + box.size.x < centre.x - size.x * 0.5:
 			continue
-		if absf(z - centre.z) > size.y * 0.5 + _wall_t:
+		if box.position.x > centre.x + size.x * 0.5:
+			continue
+		if box.position.z + box.size.z < centre.z - size.y * 0.5:
+			continue
+		if box.position.z > centre.z + size.y * 0.5:
 			continue
 		best = maxf(best, _floor_y + float(chamber.get("height", 4.0)))
 	return best
 
 
-## The lowest point anything under `art` actually draws, in THIS node's own
-## local frame -- the frame `_floor_y` and the chamber heights are in.
+## The AABB of everything a placed model draws, in THIS node's own local frame
+## -- the frame `_floor_y` and the chamber rects are in.
 ##
 ## Walked with an accumulated transform rather than read off
 ## `global_transform`, because `_build_mound()` runs during `build()` and must
 ## not depend on whether this node is in the tree yet. `art.transform` is the
 ## starting frame because `Mound` sits at identity under this node.
-func _lowest_point_of(art: Node3D) -> float:
-	return _lowest_under(art, art.transform)
+func _bounds_of(art: Node3D) -> AABB:
+	var box := AABB()
+	var seeded := false
+	for pair: Array in _mesh_boxes(art, art.transform):
+		var found: AABB = pair[0]
+		box = found if not seeded else box.merge(found)
+		seeded = true
+	return box if seeded else AABB()
 
 
-func _lowest_under(node: Node, xform: Transform3D) -> float:
-	var lowest := INF
+func _mesh_boxes(node: Node, xform: Transform3D) -> Array:
+	var found: Array = []
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
 		if instance.mesh != null:
-			lowest = (xform * instance.get_aabb()).position.y
+			found.append([xform * instance.get_aabb()])
 	for child in node.get_children():
 		var child_3d := child as Node3D
-		var next := xform * child_3d.transform if child_3d != null else xform
-		lowest = minf(lowest, _lowest_under(child, next))
-	return lowest
+		found.append_array(_mesh_boxes(child, xform * child_3d.transform if child_3d != null else xform))
+	return found
 
 
 ## The nature pack's rocks ship a cool mint-grey. Beside this cave's own warm
