@@ -1153,8 +1153,11 @@ func _check_evidence_lane(steps: Array) -> String:
 		if owes.is_empty():
 			return ("evidence_lane=capture with an empty \"owes\": a capture lane exists to pay a "
 				+ "named debt. List the §G ids it takes, or make this segment evidence_lane=both.")
+		# Resolved from the step list handed in, not from `_planned_captures`:
+		# this check is about whether the FILE is coherent, and asking the file
+		# rather than a field set from it keeps the two from drifting apart.
 		var planned := {}
-		for entry: Variant in _planned_captures:
+		for entry: Variant in _plan_captures(steps):
 			planned[str((entry as Dictionary).get("id", ""))] = true
 		var missing: Array[String] = []
 		for id: Variant in owes:
