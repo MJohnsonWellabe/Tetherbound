@@ -7,6 +7,8 @@
   "_rule": "E.6's own preamble: 'All on production paths, each with expected/actual telemetry.' Nothing here is granted and free_build stays OFF.",
   "_no_teleport": "X06 is not a DIAG segment and contains no teleport step. Every locked route below is approached by walking, because whether the world explains the lock diegetically on arrival is the whole point of case 11.",
   "_defect_shots": "Protocol G: 'Defect shots (GF-22/DEF-...) are the only operator-added captures: context frame first, then a diagnostic close view if useful, at first occurrence, as-found.' They are therefore NOT pre-planned in this file. Case 6's 'record any clip/soft-lock with position (GF-22 defect shots)' is an instruction to the operator at the moment of a find, not a planned frame.",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "X06 (abuse and failure cases) plans no §G frame, so it hands nothing over and needs no capture lane -- the harness allows exactly that. It is declared a logic lane anyway for the OTHER half of the declaration: without it the segment inherits §H's default 0.1 Hz continuous record, which under a 12.7 s rendered frame is the 4.6-million-frame recording the split was created to delete, and which headless would write as file:null rows while every step said PASS.",
   "steps": [
     {
       "id": "X06-001",
