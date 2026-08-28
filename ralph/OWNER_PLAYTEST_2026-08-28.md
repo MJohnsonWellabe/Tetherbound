@@ -103,3 +103,59 @@ Constraints that bound any answer: five creatures total and no storage; trainer
 creatures cannot be caught; catching is available during wild combat; no new
 creature meshes for the Meadows, so an "alpha" is differentiated by material,
 scale, animation, VFX, traits and encounter context rather than by a new mesh.
+
+---
+
+## 4a. LOCALISED — the weak locations are the CONSTRUCTED ones
+
+Owner, asked which locations looked lame:
+
+> *"burrow warrens and the castle are the lame looking locations. basically
+> everywhere we had to build an under ground or build a building"*
+
+**This reframes item 4 entirely, and it is a better diagnosis than the backlog's.**
+
+The register has been treating this as individual places failing — `GF-B-007`
+(the Old Quarry does not read as a quarry), `HIST-163`/`165` (the mill has no
+wheel, the well no well), `HIST-164` ("three named landmarks are two kits used
+twice"), `HIST-166` ("bridges and gates are overlapped fence panels"). Each was
+filed as its own site.
+
+The owner has named the class instead: **every space this project CONSTRUCTS
+looks worse than every space it GROWS.** The Meadows terrain, the scatter, the
+grass, the sightlines — all praised or unremarked. The Burrow Warrens (an
+underground interior) and the Stronghold/castle (an assembled building) are the
+two called out, and the owner generalises it himself to "everywhere we had to
+build an underground or build a building".
+
+That is a claim about **method**, not about art assets:
+
+- Outdoor space is Terrain3D plus a 762k-placement scatter with authored bands,
+  paths and landmarks — a system with a lot of variety per square metre.
+- Interior and structural space is assembled from a **modular kit** —
+  `burrow_warrens.gd` composes chambers from a footprint; the stronghold
+  composes five spaces along a route (`outer_works -> courtyard ->
+  tether_approach -> warden_arena -> legendary_chamber`); `props.gd` places kit
+  modules. The result reads as rooms made of repeated panels.
+
+**So the question to answer is not "how do we fix the quarry" but "why does
+constructed space in this project read as unfinished, and what would change
+that".** Candidate directions, none chosen: silhouette variety and vertical
+interest rather than flat-walled boxes; lighting authored per space rather than
+inherited; set dressing density inside interiors approaching what the meadow
+gets outside; and landmark-specific geometry where a kit genuinely cannot say
+what a place is.
+
+Two constraints stay binding. New meshes need **owner-supplied reference art**,
+and Meshy generations are reserved for Team Tether hero objects — so this is
+mostly a composition, lighting and dressing problem rather than a modelling one
+until the owner supplies art. And `tools/_probe_village_kit_modules.gd` (from
+the HIST-CLUSTERS lane) found the installed kit has **more modules than were
+being used**, so "the kit cannot express it" should be tested before it is
+believed.
+
+**This also lands directly on the Warrens payoff work in item 6.** The chamber
+holding the alpha and the prize is the one room in that dungeon a player is
+meant to remember. If constructed space is the weakness, that chamber is where
+fixing it matters most, and the two items should be built together rather than
+in sequence.
