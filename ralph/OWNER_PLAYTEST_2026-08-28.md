@@ -159,3 +159,66 @@ holding the alpha and the prize is the one room in that dungeon a player is
 meant to remember. If constructed space is the weakness, that chamber is where
 fixing it matters most, and the two items should be built together rather than
 in sequence.
+
+---
+
+## 7. REGRESSION — grass grows through indoor buildings
+
+> *"grass grows through indoor buildings now"*
+
+**"Now" is the important word: this is a regression introduced by enabling the
+grass field on 2026-08-27**, and it is live in the build the owner is playing.
+
+**Mechanism, read out of `grass_field.gd`.** The field's ONLY exclusion is
+terrain *texture* names:
+
+    for entry: Variant in cfg.get("forbidden_ground", ["rock", "path"]):
+        ...
+    _material.set_shader_parameter("forbidden_base_mask", mask)
+
+That keeps grass off painted rock and painted path. It has **no concept of a
+building footprint, a floor, or an interior.** A structure standing on
+grass-painted terrain therefore has grass growing up through it, because from
+the field's point of view that ground is still grass.
+
+The old scatter did not have this problem in the same way: its placements are
+baked, and `playground_heightfield.gd::_apply_flats` flattens eleven building
+pads that the bake is authored around. The runtime field never learned any of
+that.
+
+**There is already a precedent for the fix in the same file.** `grass_field.gd`
+carries a channel described as *"Tell the grass where the bushes gather, so it
+gives way to them"* — so a mechanism for the field yielding to other content
+exists and works. Buildings plausibly want the same treatment rather than a new
+one.
+
+**This does not license changing the look.** The owner's standing instruction
+holds: density, colour, silhouette, wind and the cover tiers stay as they are.
+Grass should stop existing inside buildings; it should look identical
+everywhere else.
+
+Worth checking while in there, since they share a cause: whether grass also grows
+through any other placed structure — the Warrens' surface entrances, the
+stronghold, jetties, bridges, or the player's own built pieces. The owner named
+buildings; the defect is "the field does not know about placed geometry".
+
+---
+
+## 8. TMs are cardboard cards — all three surfaces
+
+> *"the tms are everywhere that they look bad b there cardboard cards."*
+
+So the answer to "which surface" is **all of them**, and the reason is the asset
+rather than the presentation: a TM is represented as a flat card. World pickup
+(`tm_pickup.gd`), backpack entry (`tab_backpack.gd`) and reward moment
+(`chapter_rewards.json`, `trade.json`) all show the same thing, so fixing one
+surface fixes none of it.
+
+A TM is a permanent, chapter-scale reward — `chapter_rewards.json` hands them out
+at chapter beats and `trade.json` sells four of them. It should read as an
+object worth crossing a map for. A flat card reads as a placeholder.
+
+Note the standing constraint: a new mesh needs owner-supplied reference art, and
+Meshy is reserved for Team Tether hero objects. Whether a TM qualifies for new
+art is an owner call, not a lane's — but material, form and presentation work is
+available without it.
