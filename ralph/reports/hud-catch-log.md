@@ -396,6 +396,48 @@ Neither is this lane's to change, and neither is asserted as a defect.
   warning flashing through every aim adjustment. If the owner reads it as too
   easy to miss, it is one colour constant.
 
+### A controller-first defect on the catching path, found in this lane's frames
+
+`shots/hud_scale/after.png` is captured with the device pinned to GAMEPAD. Every
+glyph on it is a pad glyph — Y, RB, LB, B. And the objective hint card in the
+centre of it reads:
+
+> *"Wear it down in the fight first, then pick an orb on the hotbar and press
+> **F**."*
+
+That is the hint for **the first catch in the game**, telling a ROG Ally player
+to press a key their device does not have.
+
+The content is not at fault. `data/progression/objectives.json` writes the token
+properly:
+
+```
+"how": "... pick an orb on the hotbar and press {combat_throw}."
+```
+
+The binding is. In `project.godot`, `combat_throw` has exactly one event — the
+keyboard `F` — and **no joypad event at all**:
+
+```
+combat_throw={ "deadzone": 0.5, "events": [Object(InputEventKey, ... 70 ...)] }
+```
+
+`throw_aim.gd` says why, and says it was deliberate: *"CONTROLLER-MAP: interact
+(X) is the pad's throw button now — `combat_throw` kept its keyboard F and lost
+its pad binding when the orb became a hotbar item."* The code accepts
+`combat_throw`, `interact` or `combat_quick`, so a pad player really does throw
+with X. Nothing resolving `{combat_throw}` can know that, so it correctly falls
+back to naming the keyboard key.
+
+**Not fixed here, on purpose.** The fix is a one-token decision that lands
+across three lanes' files — the objective content, `input_glyph.gd`'s resolver
+(`ralph/DPAD-COLLISION` owns it), and the input map — and picking `{interact}`
+instead just inverts the problem, because on a keyboard `interact` is E while the
+throw is F. What it actually needs is a device-aware alias: the token should
+name whichever action is bound for the device in hand. Flagged rather than
+taken, because CLAUDE.md makes "Controller first" a hard rule and this is the
+tutorial line for the mechanic the owner says still sucks.
+
 ### A red test on `main`, fixed here
 
 `smoke_controller_catching.gd` fails on clean `origin/main` with *"intentional
