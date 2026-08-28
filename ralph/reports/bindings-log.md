@@ -191,6 +191,14 @@ xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . \
 | **gamepad** | *"...pick an orb on the hotbar and press **F**."* | *"...and press **X**."* |
 | **keyboard** | *"...and press **F**."* | *"...and press **F**."* — unchanged |
 
+Both halves of the pair were re-taken on the tree AFTER `main` was merged
+forward (`shots/bindings2/`), so they show the HUD as it ships today rather than
+as it looked at this branch's base -- `ralph/HUD-CATCH` landed in `main` as
+`c2f1e0f7` mid-lane and its HUD-scale work changes the card's geometry. The
+"before" half is that same merged tree with only `input_glyph.gd`,
+`game_state.gd` and `objectives.json` reverted to `origin/main`, so the pair
+differs by this lane's change and nothing else.
+
 The keyboard column is the point of the second render: a fix that makes the pad
 right by making the desktop wrong is not a fix, which is exactly what swapping
 the token to `{interact}` would have done.
