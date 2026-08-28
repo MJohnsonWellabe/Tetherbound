@@ -157,6 +157,29 @@ and understood: the layer stack stops at `lattice_min_radius` 2.0 m, so inside
 about 2 m of the camera the field plateaus at ~57 tufts/m² where the disc law
 diverges. That ground is under and behind the player.
 
+**All four bands, not just the one the numbers come from.** The held/walk
+sequences are a band-1 meadow seat, which exercises the grass, stone, bush and
+flower tiers but not the forest litter or the path verge.
+`tools/_probe_grass_pass.gd` was run on the merged branch for the other three:
+band 2's forest floor and path verge, band 3's crossing and band 4's high
+pasture all read correctly — grass stops at the painted path, gravel is bedded
+along its edge, the cobbles at band 4 sit in the ground rather than on it,
+drifts and clearings still gather. No concentric density ring follows the
+camera, and the lattice does not read as a lattice at any of them.
+`after-band2-forest-floor.png` and `after-band4-high-pasture.png` are in this
+report's own shots directory.
+
+**One artefact ruled OUT, because it looked like ours.** Band 3's frames show
+faint straight dotted lines across the bare sand of the path, which is exactly
+what a world-aligned lattice leaking through would look like. It is not this
+lane's: a one-boot two-exposure probe took the same seat with the field visible
+and then with every one of its MultiMeshes hidden, and **the lines are
+unchanged in the frame with no field in it at all**
+(`terrain-lines-field-hidden.png`). They are the terrain's own, they predate
+this branch, and they are left alone here — but somebody who owns the ground
+plane should look at them, because on bare path at walking distance they are
+visible.
+
 Item counts, which is where the fit shows up as cost:
 
 | tier | configured | instances built | visible after the ramps |

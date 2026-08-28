@@ -3,6 +3,69 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GRASS-REROLL — the field stops re-rendering as you walk
+
+`tests: test_grass_field (5/31), scatter suite (33/958342), smoke_art, smoke_playground` · `area: scripts/world/grass_field.gd, shaders/{grass_field,stone_field,cover_tier}.gdshader, data/config/grass_field.json` · `report: ralph/reports/GRASS_REROLL_2026-08-28.md`
+
+Answers `ralph/OWNER_PLAYTEST_2026-08-28.md` §1, the owner's main complaint after
+playing the shipped build on real hardware: *"the grass rerenders like every
+step."* The same note carries the other half — *"don't change the look of my
+grass, it's awesome"* — so this was two requirements, and both are measured.
+
+**The mechanism was already written down in `grass_field.gd`'s own comment and
+had never been read as the defect.** Every per-item property in the three field
+shaders is hashed on the item's WORLD position, and the ring follows the camera
+by MOVING, so a move re-rolled which tufts survive, how tall they are, which way
+they lean. `snap` never removed that — it made it periodic: one whole-field
+re-roll every 2 m, one every 0.4 s at `combat.json`'s 5 m/s walk.
+
+The fix states the requirement properly: moving the ring by one snap step has to
+map the set of occupied world positions onto **itself**, and a point set with
+that property is a lattice. Items now sit on a world lattice of `snap` metre
+cells, the node only ever moves in whole cells, and where an item stands — with
+its yaw and its fade rank — is hashed from that cell's INTEGER coordinates in
+the shader. Walk forward and instance 400 takes over the cell instance 617 was
+drawing, at the same offset, the same height, the same lean. `centre_bias`'s
+density gradient could not survive one uniform lattice, so the ring is nested
+lattices fitted numerically to the same analytic profile, each with a dithered
+growth band so its edge is not a density ring following the player.
+
+**Measured** with a new probe, `tools/_probe_grass_walk.gd`, which holds the
+capture camera still while the camera the FIELD is bound to walks — so the only
+thing that can differ between two frames is what the ring did. Wind off. Mean
+absolute pixel difference over the ground band, player column removed:
+
+- **worst single-frame change 46.6 → 6.6** (of 255). That is the complaint.
+- mean over eleven consecutive pairs **16.5 → 2.3**.
+- The SHAPE changed, which matters more: before was four pairs at ~45 and seven
+  at ~0.08 — nothing, then catastrophe. After is a continuous 0.7–6.6 drift.
+  Honest trade: between re-rolls the old field changed by 0.08 and the new one
+  changes by 1–2 every frame, because things now move smoothly all the time
+  instead of not at all and then all at once.
+
+**The look was not allowed to change and did not.** No look parameter was
+touched; the five keys added to `grass_field.json` are lattice geometry and say
+so. `tools/grass_look_compare.py` measures palette, edge energy (density and
+silhouette proxy) and shading in horizontal bands, averaged over all twenty
+frames of each build: every band within 2.5% on the walking sequence.
+
+**One bug worth remembering because it was invisible.** The first working build
+rendered a visibly thinner meadow and it looked exactly like a bad density plan.
+It was not: `lattice_rand` hashed on the item tag's x half only, so layer 0's
+item 5 and layer 3's item 5 in the same cell hashed to the same spot and drew
+exactly on top of each other. Every nested layer above the base was invisible
+underneath it — about a third of the meadow's grass, silently.
+
+**NOT MEASURED, and deliberately not claimed: the performance half.** The owner
+said *"which I think hurts performance"*, which is a hypothesis from feel.
+`PERF-ROG-GPU` still holds — no container in this project can measure device
+frame rate, GPU time, VRAM or thermals, and this one rasterises in software. The
+ring stands up 4% MORE instances than before (468,600 → 487,288) to pay for the
+fade bands, which is an increase, not a saving; visible item counts are within
+0.3% on the two tiers that dominate a frame. If the Ally says no, the levers are
+unchanged: `tuft_count`, `field_radius`, and `enabled` to fall back to the
+scatter path, which is intact.
+
 ## GATE-F — the chapter chained into one record, and the probe that mis-timed it by an hour
 
 `tests: full suite 1362 tests, 836549 assertions, 0 failed` · `smokes: gate_e_finale, warrens, relay, riding, stronghold, tournament_bracket` · `area: tools/gate_f_chapter_run.py, tools/_probe_gate_f_corridor.gd, tools/_probe_pacing.py`
