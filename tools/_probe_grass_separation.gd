@@ -78,6 +78,22 @@ func _run() -> void:
 	_camera.fov = 52.0
 	_camera.make_current()
 
+	# Re-bind the grass field to THIS camera, or the whole probe is worthless.
+	# `grass_field.gd::_process` grows its ring around the camera
+	# `playground_world.gd` bound at startup, and a probe that mints its own
+	# camera gets a creature standing on baked ground cover with no field around
+	# it at all. A first run did exactly that and produced four frames of a
+	# rabbit on a lawn -- which cannot answer a question about tall grass.
+	# `bind()` is grass_field.gd's own public API; nothing in that file changes.
+	var field := _find_grass_field(_world)
+	if field == null:
+		print("WARNING: no GrassField in the scene; these frames do not test the field")
+	else:
+		field.call("bind", field.get("_terrain"), _camera)
+		for i in 30:
+			await physics_frame
+		print("grass field re-bound to the probe camera")
+
 	for variant: Dictionary in [
 		{"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0},
 		{"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0},
@@ -116,6 +132,7 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 		return
 	for i in POSE_FRAMES:
 		await physics_frame
+	print("  %s: rim materials on the model = %d" % [variant["tag"], _count_rim(_body)])
 
 	var path := "%s/grass-%s.png" % [_out_dir, variant["tag"]]
 	var image := get_root().get_texture().get_image()
@@ -143,6 +160,34 @@ func _spawn(at: Vector3) -> Node3D:
 	body.call("populate", SPECIES_ID, null)
 	body.global_position = at
 	return body
+
+
+## How many of the body's surfaces actually carry a rim. A frame where the rim
+## reads faintly and a frame where it was never applied look identical, and
+## only one of them is a tuning question.
+func _count_rim(node: Node) -> int:
+	var count := 0
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var material := instance.get_active_material(surface)
+			if material is BaseMaterial3D and (material as BaseMaterial3D).rim_enabled:
+				count += 1
+	for child in node.get_children():
+		count += _count_rim(child)
+	return count
+
+
+func _find_grass_field(node: Node) -> Node:
+	if node.get_script() != null \
+			and String(node.get_script().resource_path).ends_with("grass_field.gd"):
+		return node
+	for child in node.get_children():
+		var found := _find_grass_field(child)
+		if found != null:
+			return found
+	return null
 
 
 func _ground(at: Vector3) -> float:

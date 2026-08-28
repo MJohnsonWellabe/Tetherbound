@@ -714,3 +714,72 @@ repo** — the log referenced evidence nobody else could open. Everything cited
 above now lives in `ralph/reports/hud-catch/shots/`, which is a nested `shots/`
 directory and therefore carried. Checked with `git check-ignore` rather than
 assumed.
+
+---
+
+# §2b answered with a controlled A/B — and one lever does not work
+
+The previous entry said the height change was unproven because target
+acquisition had moved the camera between the before and after frames. This is
+that test done properly.
+
+`tools/_probe_grass_separation.gd`: one world boot, **one fixed camera pose**, a
+Bramblebun at 7.6 m in real grass, rendered four ways — the two levers crossed
+so each can be attributed separately, which is what the coordinator's rule
+requires (*"if a creature clears the grass and is still invisible, height was
+never its problem"*).
+
+`ralph/reports/hud-catch/shots/grass-compare.png` is the 2×2.
+
+| variant | visible creature | contrast |
+|---|---|---|
+| **A** 0.78 m, no rim (what the owner played) | 7.0% | 1.15 : 1 |
+| **B** 0.96 m, no rim | **10.8%** | 1.08 : 1 |
+| **C** 0.78 m, rim 0.22 | 7.1% | 1.14 : 1 |
+| **D** 0.96 m, rim 0.22 | 10.9% | 1.06 : 1 |
+
+**Scale works: +56% visible creature area** (7.0% → 10.8%). That is the "too
+small to see" half of the owner's report, answered.
+
+**The rim at 0.22 is a measured no-op**: +0.1 percentage point, and contrast
+*unchanged* (1.15→1.14, 1.08→1.06). Confirmed applied, not silently skipped —
+the probe counts rim-enabled surfaces and reports 1 for C/D against 0 for A/B,
+precisely so a faint lever and an unapplied one could be told apart.
+
+**So I set it back to 0 rather than ship it.** The mechanism stays, opted out,
+with the measurement in the species note. Why it fails is consistent with the
+code that already worked: `_apply_alpha_presence()` runs its rim at **0.65** and
+pairs it with an aura *and* a repainted colourway. On a self-lit material — the
+painted albedo wired into the emission slot — a rim under `FIELD_RIM_MAX` (0.30)
+does not register, and the strengths that would register are the alpha's own
+identity tell.
+
+## Per-species levers, as asked
+
+Measured against a tuft standing 0.25–0.86 m, not eyeballed:
+
+| species | height | clears tall grass? | lever used | why |
+|---|---|---|---|---|
+| **bramblebun** | 0.78 → **0.96** | now yes | **modest scale** (+23%) | Owner named it, and it was the only species failing *both* tests. Scale is proven above; the colour half is **not fixed** — see below. |
+| **pipwing** | 0.60 → **0.76** | **still no** (0.86) | **modest scale** (+27%) | Shortest in the roster. Its colour is the roster's second-best separation (1.66:1), so height genuinely is its problem. Fully clearing the tallest tuft needs +43%, which is past modest — so it clears the *near* field and no further. **The remainder is habitat or behaviour, not more scale.** |
+| everything else | 0.95–2.60 m | yes | **none** | All clear the field. Eleven of them measure under 1.35:1 against grass tips on placeholder colour, so they are contrast *candidates* — but that figure is a proxy (the real look comes from the GLB texture, and `placeholder.colour` is documented as "retained only for the fallback capsule"), and none has a rendered measurement. I am not changing art on a proxy. |
+
+## What is still unsolved, plainly
+
+**The "colour of the grass" half.** Even at 0.96 m the Bramblebun measures
+**1.08 : 1** luminance against the field — this repo's own `vegetation.json`
+calls 1.00:1 invisible. Scale made it *findable* (nearly twice the pixels); it
+did not make it *separate*. Contrast actually dips slightly with scale, because
+more of the creature's mid-tone body shows and the average moves toward the
+grass.
+
+Two things would work, and **both are owner decisions rather than mine**:
+
+1. **A repainted colourway.** `_swap_colourway_textures()` is the one lever that
+   demonstrably changes how these self-lit models read, and it is a texture — an
+   art asset, which CLAUDE.md says needs owner-supplied reference art.
+2. **A strong rim on ordinary creatures**, which requires deciding that an
+   alpha's identity tell can be carried by its aura and colourway alone.
+
+I have not picked between them. The measurement says the problem is real and
+that the cheap lever does not touch it.
