@@ -129,7 +129,7 @@ geometry", so eight sites were shot rather than one.
 | Grandpa's house | **meadow indoors** | clean | authored footprint |
 | the inn | clean | clean | authored footprint |
 | the workshop | **grass through the cobbled floor** | clean | self-registered, no footprint existed |
-| cottage_a | **grass inside, visible through its own windows** | clean | self-registered via its `door` |
+| cottage_a | **grass inside, a villager standing in it** | clean | self-registered via its `door` |
 | cottage_b | inconclusive framing | — | 4 m across; see below |
 | Warrens approach ramp | **grass up through the paved steps** | clean | self-registered by the function that builds it |
 | relay station | not affected | — | the grass there is an outdoor yard, and correct |
@@ -152,6 +152,18 @@ things bound it: the radii are the authored convention rather than new numbers
 (§3), and the village was photographed **from outside**, from far enough back
 that the ground between the buildings is most of the frame.
 
+`village-exterior-before.png` and `village-exterior-after.png` are that pair,
+and they are the same meadow: grass, flowers and bushes at the same density
+right up to the stone of both cottages, and no ring anywhere. Every clearing
+disc is under the building it belongs to.
+
+**Do not read a pixel diff off that pair.** Unlike `_probe_grass_walk.gd`, this
+tool leaves the WIND ON -- an interior is judged by whether there is grass in
+it, and switching the wind off there would buy nothing -- so every blade has
+moved between the two exposures and the frames differ by 15/255 on average for
+that reason alone. The exterior comparison is a visual one and is stated as
+such.
+
 ## 7. Left for someone else, deliberately
 
 - **The scatter has the same gap.** `vegetation.json` footprints seven things;
@@ -162,11 +174,12 @@ that the ground between the buildings is most of the frame.
   that must not ride into a consolidation. Whoever owns the next bake should
   fold these in; `village.gd::_ground_clear_radius` already computes the exact
   numbers.
-- **`cottage_b`** is 4 m across and the probe's framing could not get a clean
-  interior view of it. It is self-registered by the same rule that fixed
-  `cottage_a` and `cottage_b` has both a `room` and a `door`, so it is covered
-  by construction — but it is not photographed, and that is stated rather than
-  implied.
+- **`cottage_b`** is 4 m across and even at a 1.6 m setback the probe could not
+  get a clean interior view of it -- the camera ends up in its own wall. It has
+  both a `room` and a `door`, so it is registered by the same rule that fixed
+  `cottage_a`, and the field reports it among the footprints in reach. That is
+  covered by construction rather than by a photograph, and it is stated here
+  rather than implied.
 
 ## 8. Tests
 

@@ -3,6 +3,70 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GRASS-INDOORS — the field learns what is standing on the ground
+
+`tests: test_grass_field (5/31), scatter suite (33/958342), smoke_art, smoke_playground, smoke_warrens` · `area: scripts/world/grass_field.gd, scripts/world/village.gd, scripts/world/burrow_warrens.gd, scripts/world/building_prefabs.gd, shaders/*` · `report: ralph/reports/GRASS_INDOORS_2026-08-28.md`
+
+Answers `ralph/OWNER_PLAYTEST_2026-08-28.md` §7 — a regression live in the build
+the owner is playing: *"grass grows through indoor buildings now"*. The word
+that dates it is **now**; the field was switched on the day before.
+
+Reproduced first, and it is worse than the words: the opening room of the game
+is a meadow. Grass, bushes and flowers at full height through Grandpa's
+floorboards and his rug, with Grandpa standing in it.
+
+**Mechanism.** The field's only exclusion was terrain TEXTURE names, and a
+texture name cannot know that a farmhouse is standing on the grass it names.
+**The scatter solved this long ago and the field never read the answer** —
+`scatter_rules.gd::_inside_a_footprint` has gated every baked placement on a
+footprint list whose own entries describe this exact defect in their own words
+("grass was standing on the floor and the rug").
+
+**Two halves.** The field now reads `vegetation.json`'s own `footprints` through
+`scatter_rules.gd` rather than copying the numbers. And because that list covers
+seven things in 16.8 km² — and adding to it invalidates the scatter bake, fails
+`test_scatter_perf_budget`'s freshness assertion and costs 256 binary region
+files that `conventions.md` says must not ride into a consolidation — a
+structure that knows its own extents now declares it from its own code, through
+a `grass_clear` group that `village.gd` and `burrow_warrens.gd` populate. That
+also covers what no baked list can: geometry built at load, and geometry the
+player builds (`placed_building` floors, 1.45m — `build_grid.gd`'s cell
+half-diagonal, because the inscribed circle leaves a tuft at every floor corner).
+
+**Which structures is decided from data, not a hand-kept list**: a prefab recipe
+with `Floor_` modules, a `room`, or a `door`. A fence, a wagon, an oak and the
+castle shell have none of the three — and the castle is why the rule is three
+named signals: its modules span 36×44m, so a blanket rule would have cleared a
+29m disc of meadow around it.
+
+**The radius formula is validated rather than invented.** Half the diagonal of
+the recipe's own module extent plus 0.7m reproduces every hand-authored
+footprint to within 0.3m (inn 6.53 vs 6.5; mill 5.31 vs 5.5; ranger station 4.31
+vs 4.5), so the structures nobody footprinted get the numbers the authored ones
+would have got.
+
+**Evidence** from `tools/_probe_grass_indoors.gd`, which takes before/after/
+field-hidden from ONE boot because the exclusion is a shader uniform: at
+Grandpa's house the fixed interior and the interior with the whole field hidden
+are **the same room**. Indoors is exactly as it was before the field existed.
+Eight sites audited: Grandpa's house, the workshop, cottage_a and the Warrens'
+approach ramp were all broken and are all clean; the inn was already covered;
+the relay station's grass is an outdoor yard and correct; and the stronghold is
+NOT affected — its floor sits nine metres above the terrain, so the field's
+grass there is under the building where no player can see it.
+
+**Two things recorded rather than fixed.** The baked scatter has the same data
+gap (the workshop, the cottages and the Warrens ramp are not in
+`vegetation.json`), and closing it needs a re-bake that must not ride in this
+branch — `village.gd::_ground_clear_radius` already computes the exact numbers
+for whoever owns the next bake. And `cottage_b` is 4m across and could not be
+framed cleanly; it is covered by construction, not by a photograph.
+
+**A correction worth keeping.** The first probe run reported the stronghold as a
+meadow indoors. It was the probe: a camera seated on the terrain stood nine
+metres below the room, inside the foundation void, photographing ground no
+player will ever see. Sites can now name their floor height.
+
 ## GRASS-REROLL — the field stops re-rendering as you walk
 
 `tests: test_grass_field (5/31), scatter suite (33/958342), smoke_art, smoke_playground` · `area: scripts/world/grass_field.gd, shaders/{grass_field,stone_field,cover_tier}.gdshader, data/config/grass_field.json` · `report: ralph/reports/GRASS_REROLL_2026-08-28.md`
