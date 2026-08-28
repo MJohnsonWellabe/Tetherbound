@@ -176,3 +176,128 @@ mouth, the hall and the dressing — not the two deep rooms."*
 Half-scale before/after pairs are committed at `docs/evidence/content-0828b/`
 (the container is ephemeral and `shots/` is gitignored).
 
+### The blind pass — four rounds, and what each round's frames actually said
+
+Run in this checkout and pushed once, per `ralph/conventions.md`. Every round
+was judged from rendered frames, and **three of the five fixes in §2 exist only
+because a frame showed them** — none was findable by reading the code.
+
+| round | what the frames said | what changed |
+|---|---|---|
+| 1 | members present in the geometry, invisible in the photograph; the Warrens floor is a flat brown plane; the stronghold ceiling is a flat tan plane | role colours separated; three untextured surfaces fixed |
+| 2 | the Warrens floor is now a bright sandy beach and the brightest thing in every room; the course reads as black bars, and in the daylit courtyard as **arrow slits** | floor stopped being washed toward the wall tint; every member became one light dressed stone |
+| 3 | a full blind critique (below) | ragged ribbing, rib corbels, four more untextured/mis-scaled surfaces, a lighting lift |
+| 4 | measured movement on the axes the critique named | the round shipped |
+
+**Round 3 went to an independent blind critic** — no knowledge of what changed,
+no stake in the answer. Its findings split three ways, and the split is the
+useful part:
+
+**Acted on, this lane (all shipped):**
+
+- *"Nothing in W1–W4 reads as burrowed. The Burrow Warrens is built out of the
+  same dressed ashlar as the fortress."* The sharpest finding against this
+  lane's own work, and correct: `jitter` alone gives a member a few degrees of
+  lean, and a full-height member on a regular pitch with a wobble is a
+  colonnade, not a cave. Members now take their own height and width and **die
+  out** partway up the wall, and one that stops short loses its capital,
+  because a capital is a thing masonry has and rock does not. That is now the
+  `ragged` half of the vocabulary split, alongside `jitter`.
+- *"The ribs simply penetrate the masonry. Nothing sags, nothing is broken,
+  nothing carries a load."* Each rib end now sits on a corbel.
+- *"A knee-high plinth has masonry grain sized for a fortress wall, which makes
+  the plinth read as a toy."* The plinth was given the wall's triplanar stone in
+  round 2 and inherited its wall-sized tile with it. It has its own scale now,
+  and so does the stronghold's floor — the critic measured the tether
+  approach's cobbles against the 1.80 m trainer standing in the frame and got
+  paving slabs close to a metre across.
+- *"The wall visible through the doorway is an untextured flat pale-tan surface,
+  a different material from every other wall in the build. Proxy geometry left
+  in shot."* That is **the vault door** — the door the entire payoff is behind,
+  and the one surface in the den still wearing a flat colour.
+- *"The purple pillar does not change value once from top to bottom."* Probed
+  down its full height. `_tether_material()` was another defaulted `textured`
+  argument, on the most prominent vertical element in the courtyard.
+- *"C2-warden-arena is 97.2% below luminance 40... the Warden is a 25-pixel dark
+  smudge on a dark wall"*, and C1's spire *"loses the readability contest to the
+  corridor trim on the floor."* The two most important moments in the chapter,
+  both invisible. Those two rooms' lights are lifted — a measured response to a
+  measured defect, colours unchanged, reasoning recorded in
+  `stronghold.json::_comment_lights_measured`. **Frame cost is `[OWNER-ONLY]`.**
+- *"The centrepiece is an untextured primitive — a flat salmon-pink dome, zero
+  gradient across its whole surface."* Ranked as needing art that is not in the
+  build. **It did not.** The mechanism is that an emissive surface ignores its
+  own normals, so at emission 2.0 no amount of faceting can shade: emission is
+  now a value floor and the albedo and roughness do the work, so the plinth's
+  own light models the cut faces.
+
+**Real, and NOT this lane's — recorded for the coordinator:**
+
+- **The Team Tether cyan is not on the project's own palette board.** The critic
+  sampled it at (188,250,248) against the board's most chromatic cool at
+  (56,102,139), and found it doing three different jobs at once — floor
+  way-finding, wall trim, and the legendary's own crystal — so it currently
+  means "gameplay-relevant", which is nothing. It also *"floats a hand's width
+  above the floor"*, has **constant screen-space width regardless of depth**
+  (so it reads as an overlay, not an object), and in C3 is two segments that do
+  not meet. That is `severed_spokes.gd` plus `_build_conduits`, spanning the
+  spokes, the quarry and this building — a reserved-colour decision across three
+  sites, not a lane's to take.
+- **Placeholder geometry still in the stronghold:** an untextured white cluster
+  at the machine's plinth, an untextured grey cuboid on the arena floor, two
+  white bars in the far doorway.
+- **The machine's own textures are too low-resolution for its screen size** —
+  it is the chapter's hero asset and it resolves as smeared mush.
+- **The stronghold has almost no set dressing.** C4's courtyard contains zero
+  props; C2 has one. This is playtest 4a's own third named direction ("set
+  dressing density inside interiors approaching what the meadow gets outside")
+  and it is the largest remaining piece of the owner's complaint. The Warrens
+  has a dressing set; the fortress has none.
+- **The Warrens' wall tile is high-frequency enough to read as gravel** at
+  `ROCK_UV_SCALE` 0.46. MAT-BLOCKOUT tuned that value against its own frames and
+  this lane did not reopen it, but it is the strongest remaining "unfinished"
+  cue in the cave.
+- **The stylisation gap between creature meshes and environment meshes** — hand-
+  painted plated creatures six inches in front of photo-scan granite. An art
+  direction decision with production cost behind it.
+
+### Honest limits of this evidence
+
+- **Nothing here is a played run.** These are camera stands in a live scene.
+  Whether the fight in the den reads better with the room around it, and whether
+  the lighting lift costs frames, are both unmeasured here.
+- **Software GL.** Composition, silhouette, relative value, density and colour
+  structure are trustworthy; fine lighting judgement is not. Device frame rate
+  and GPU cost remain `[OWNER-ONLY]` — and this lane ADDS 523 mesh instances and
+  raises two omni ranges, so it is a lane a device pass should look at.
+- **The critic's headline verdict is still "no" on both bar questions**, and the
+  reasons it gives for that are mostly the five items in the not-this-lane list
+  above — emptiness, the neon, placeholder geometry and a missing landmark —
+  not the room geometry this lane owns. That is the honest state: the method
+  fixed what it set out to fix and the rooms it fixed are still in a building
+  with no furniture in it.
+
+## Tests
+
+- `tests/smoke_warrens.gd` — passes, and gained the alpha assertions in §1.
+- `tests/smoke_stronghold.gd` — passes; the whole route still walks.
+- `tests/run_tests.gd` — see below.
+
+## For the coordinator
+
+- **New shared file:** `scripts/world/interior_structure.gd`. Its next consumers
+  are the other constructed spaces — `cottage_interior.gd`, `inn_interior.gd`,
+  `grandpa_house.gd`, `old_quarry.gd` — none touched here, because the brief
+  named two and a method proved in two rooms is worth more than five half-passes.
+- **No cross-lane files touched.** Nothing under `tools/gate_f/**`,
+  `scripts/world/grass_field.gd`, `scripts/world/water.gd`, the HUD, or
+  `tm_pickup.gd` (the TM art question is settled and landing on `ralph/LAND-0828C`).
+- **The grass is untouched**, and so is the terrain and the scatter.
+- **No new asset, no sourced asset, no Meshy generation**, so no
+  `docs/ASSET_LEDGER.md` entry is due. `Ground030` was already installed and
+  already ledgered — `build_playground_terrain.gd` uses it for the meadow paths.
+- **Perf is the open risk.** 523 extra `MeshInstance3D` across the two sites,
+  plus two omni ranges raised. All tunable from data (`bay_pitch_m` is the
+  dial; `enabled: false` removes the pass entirely) and both counts are printed
+  at build so a device pass can see them without reading code.
+

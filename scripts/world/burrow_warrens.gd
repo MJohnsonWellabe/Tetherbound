@@ -326,7 +326,17 @@ func _floor_material() -> StandardMaterial3D:
 	# from every light in the room and it should read that way. 0.22 keeps
 	# enough of the tint to sit in the same warm family as the walls while
 	# leaving `site.floor_colour` doing the work it was authored to do.
-	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.22)
+	#
+	# 0.22 was then measured and it had overshot the other way: against
+	# `origin/main` the den went from 38.9% of pixels below luminance 40 to
+	# 56.5% and the hall from 40.4% to 62.3%, because the floor is the largest
+	# surface in the room and a dark floor takes the frame's whole midtone mass
+	# with it. The blind critic's first finding on these rooms was the value
+	# crush, so darkening the floor was making its headline defect worse while
+	# fixing the sandiness. 0.42 reads as packed dirt DARKER than the wall
+	# above it without emptying the histogram -- between round 2's beach and
+	# round 3's hole.
+	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.42)
 	m.normal_enabled = true
 	m.normal_texture = FLOOR_NORMAL
 	m.normal_scale = 1.8
@@ -1663,7 +1673,22 @@ func _build_prize() -> void:
 	sphere.radial_segments = 7
 	sphere.rings = 4
 	gem.mesh = sphere
-	gem.material_override = _material(Color("#c8564a"), 2.0)
+	# FACETS ONLY WORK IF THE FACES SHADE DIFFERENTLY, and at emission 2.0 they
+	# did not. An emissive surface ignores its own normals -- every face renders
+	# at the same brightness whichever way it points -- so cutting the segment
+	# counts changed the silhouette and left the shading exactly as flat as the
+	# dome a blind critic had already called out. Emission drops to a value
+	# FLOOR (the same trick `severed_spokes.gd` uses on the faction colours, and
+	# for the same gl_compatibility reason: without one this reads black in a
+	# room this dark), and the albedo and roughness are given something to do,
+	# so the plinth's own OmniLight models the cut faces. It is still the
+	# brightest object in the chamber -- that is what the light beside it is
+	# for -- it is now an object rather than a decal.
+	var stone := _material(Color("#c8564a"), 0.75).duplicate() as StandardMaterial3D
+	stone.albedo_color = Color("#a8322c")
+	stone.roughness = 0.35
+	stone.metallic = 0.0
+	gem.material_override = stone
 	holder.add_child(gem)
 	var glow := OmniLight3D.new()
 	glow.light_color = Color("#e08a6a")

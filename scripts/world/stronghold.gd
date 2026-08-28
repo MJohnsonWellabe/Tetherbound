@@ -449,6 +449,29 @@ func _stone_dark() -> Color:
 	return Color(str(_config.get("site", {}).get("stone_dark", "#463f37")))
 
 
+## The ceiling slab's tint, and it is NOT `_timber()` -- it is `_timber()`
+## lifted far enough to survive being multiplied by a texture.
+##
+## This is the one number in the pass that was measured rather than judged, and
+## it had to be: texturing the ceiling cost the two inner rooms most of their
+## value range, and two rounds of adjusting the DARKENING did not find it,
+## because darkening was never the cause.
+##
+## `_material(colour, 0, true)` multiplies `T_UnevenBrick` by its colour, and
+## that texture averages (0.53, 0.47, 0.40). So the untextured slab this
+## replaced rendered its flat `_timber()` at luminance 96, and the same colour
+## through the texture lands at 46 -- the ceiling is the largest bright surface
+## in every roofed room, so the warden arena went from 76.0% of pixels below
+## luminance 40 to 96.7% against `origin/main`, and a blind critic's FIRST
+## finding on these frames was already the value crush. Lifting the tint 0.65
+## toward white puts the textured result back at 95.8, which is where the flat
+## slab was: the room keeps the brightness it had and gains the grain and the
+## ribs. TUNABLE via `site.ceiling_lift`.
+func _ceiling_colour() -> Color:
+	var lift := clampf(float(_config.get("site", {}).get("ceiling_lift", 0.65)), 0.0, 1.0)
+	return _timber().lerp(Color.WHITE, lift)
+
+
 func _timber() -> Color:
 	return Color(str(_config.get("site", {}).get("timber", "#7a5c39")))
 
@@ -562,7 +585,8 @@ func _build_chambers() -> void:
 			# under it only read as ribs against a ground they are darker than.
 			_box(Vector3(outer.x, 1.0, outer.y),
 				Vector3(centre.x, _floor_y + height + 0.5, centre.z),
-				_material(_timber().darkened(0.35), 0.0, true))
+			# See `_ceiling_colour()` for why this slab's tint is not `_timber()`.
+				_material(_ceiling_colour(), 0.0, true))
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(centre, size, height, side, _opening_on(id, side))
@@ -716,7 +740,8 @@ func _build_passages() -> void:
 			# seen END-ON above every doorway, which is where `C3` caught it:
 			# a flat tan block over the way through, reading as cardboard.
 			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z),
-				_material(_timber().darkened(0.35), 0.0, true))
+			# See `_ceiling_colour()` for why this slab's tint is not `_timber()`.
+				_material(_ceiling_colour(), 0.0, true))
 
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
