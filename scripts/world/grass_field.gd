@@ -32,6 +32,10 @@ const CONFIG_PATH := "res://data/config/grass_field.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
 const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
 const COVER_SHADER_PATH := "res://shaders/cover_tier.gdshader"
+## Read for its `footprints` list and nothing else -- see the BUILT GROUND note
+## below. The two systems have to exclude the same building ground, and the way
+## to guarantee that is to read one list rather than keep two in step.
+const SCATTER_RULES := preload("res://scripts/world/scatter_rules.gd")
 
 ## Read once and cached, the same way `scatter_rules.gd::config()` does it, so a
 ## test can ask what the config says without standing a world up.
@@ -1104,10 +1108,173 @@ func _bind_region_uniforms(data: Object) -> void:
 		mat.set_shader_parameter("_vertex_density", 1.0 / vertex_spacing)
 		mat.set_shader_parameter("_region_map", map)
 	_bound = true
+	# The first list, before the ring has moved at all: a probe or a boot that
+	# starts the player inside a building must not have to walk a cell before
+	# the floor is clear.
+	_apply_built(global_position)
 	print("[grass_field] bound: %d tufts, radius %.0fm, region_size %.0f, vertex_spacing %.1f, %d region slots" % [
 		multimesh.instance_count if multimesh != null else 0,
 		float(config().get("field_radius", 48.0)), region_size, vertex_spacing, map.size()])
 
+
+# ---------------------------------------------------------------------------
+# BUILT GROUND. Where the field must not grow, because something is standing
+# there.
+#
+# THE DEFECT, in the owner's words on 2026-08-28: "grass grows through indoor
+# buildings now". The word that dates it is NOW -- the field was switched on
+# the day before, and this is what it brought with it. The field's only
+# exclusion was terrain TEXTURE names (`forbidden_ground`, rock and path), and
+# a texture name cannot know that a farmhouse is standing on the grass it
+# names. So the ground under Grandpa's floor is grass-painted, and the field
+# grew grass out of it, through the boards and the rug.
+#
+# THE SCATTER ALREADY SOLVED THIS AND THE FIELD DID NOT READ THE ANSWER.
+# `scatter_rules.gd::_inside_a_footprint` gates every baked placement on a list
+# of building footprints, and that list is authored with this exact defect in
+# its own comments -- "grass was standing on the floor and the rug" against
+# Grandpa's house, "grass out of the tower and from under the wheel" against
+# the mill. So this reads `vegetation.json`'s OWN `footprints` rather than
+# copying the numbers, for the same reason `_apply_clearing` reads the bush
+# tier's own drift numbers: two lists of building positions would be one edit
+# away from disagreeing, and the way you would find out is grass on a rug.
+#
+# RUNTIME BUILDINGS TOO. The player lays floor panels with the Build verb and
+# those did not exist when anything was baked, so authored footprints cannot
+# cover them. Live nodes in `build_placer.gd`'s `placed_building` group are
+# folded into the same list every time the ring moves a cell.
+#
+# COST, and why it is a list rather than a mask texture. The loop below runs
+# `built_count` times per vertex, and `built_count` is ZERO almost everywhere
+# in a 16.8 km2 corridor -- the whole world holds seven authored footprints.
+# Where it is not zero it is one or two, and a bounding circle rejects the rest
+# of the ring in a single test before the loop is entered at all. A mask
+# texture would cost a vertex texture fetch everywhere to save work in the
+# village, which is the wrong trade for this world.
+# ---------------------------------------------------------------------------
+
+## The most footprints the field will consider at once. Shared with the
+## `built[]` uniform's own length in all three field shaders -- raising it here
+## alone would index off the end of that array.
+const MAX_BUILT := 24
+## `build_placer.gd`'s own group and meta names, so a rename there is one grep
+## away rather than a silent failure here.
+const PLACED_GROUP := "placed_building"
+const BUILDING_ID_META := "building_id"
+
+## The authored footprints, resolved once. `scatter_rules.gd` merges them per
+## band and caches; this only keeps the flattened (x, z, radius) form.
+static var _authored: PackedVector3Array = PackedVector3Array()
+static var _authored_ready := false
+
+## The list currently pushed to the materials, so a ring move that changes
+## nothing does not re-upload three uniform arrays.
+var _built: PackedVector3Array = PackedVector3Array()
+
+
+static func authored_footprints() -> PackedVector3Array:
+	if _authored_ready:
+		return _authored
+	_authored_ready = true
+	for entry: Variant in SCATTER_RULES.config().get("footprints", []):
+		if not entry is Dictionary:
+			continue
+		var footprint: Dictionary = entry
+		var radius := float(footprint.get("radius", 0.0))
+		if radius <= 0.0:
+			continue
+		_authored.append(Vector3(float(footprint.get("x", 0.0)),
+				float(footprint.get("z", 0.0)), radius))
+	return _authored
+
+
+## Every footprint the ring can currently see, nearest first, capped.
+##
+## Runtime pieces are filtered by id rather than taken wholesale: a floor panel
+## is ground the player has covered over and grass through it is the reported
+## defect, but a fence rail or a workbench is a thing STANDING in the meadow and
+## clearing a disc of grass around it would read as a scorch mark. `_why` for
+## the radius: pieces snap to `build_grid.gd`'s 2.0m cells, so 1.45m is that
+## cell's half-diagonal -- the circle that covers a panel completely. The
+## inscribed 1.0m circle does not: four of them around a shared corner leave
+## that corner uncovered, and a floor grid would sprout a tuft at every corner
+## in a regular pattern, which is a worse artefact than the one being fixed.
+func _visible_footprints(centre: Vector3) -> PackedVector3Array:
+	var cfg := config()
+	var reach := float(cfg.get("field_radius", 48.0))
+	var found: Array[Vector3] = []
+	for spot: Vector3 in authored_footprints():
+		if Vector2(spot.x - centre.x, spot.y - centre.z).length() <= reach + spot.z:
+			found.append(spot)
+	var ids: Array = cfg.get("built_clear_ids", ["floor"])
+	var piece_radius := float(cfg.get("built_piece_radius", 1.45))
+	if is_inside_tree() and piece_radius > 0.0 and not ids.is_empty():
+		for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+			var body := node as Node3D
+			if body == null or not is_instance_valid(body):
+				continue
+			if not (str(body.get_meta(BUILDING_ID_META, "")) in ids):
+				continue
+			var at := body.global_position
+			if Vector2(at.x - centre.x, at.z - centre.z).length() <= reach + piece_radius:
+				found.append(Vector3(at.x, at.z, piece_radius))
+	if found.size() > MAX_BUILT:
+		# Nearest first, because the ones the player is standing among are the
+		# ones whose grass they can see through.
+		found.sort_custom(func(a: Vector3, b: Vector3) -> bool:
+			return Vector2(a.x - centre.x, a.y - centre.z).length_squared() \
+					< Vector2(b.x - centre.x, b.y - centre.z).length_squared())
+		found.resize(MAX_BUILT)
+	var out := PackedVector3Array()
+	for spot: Vector3 in found:
+		out.append(spot)
+	return out
+
+
+## Push the footprint list to every field material, if it changed.
+func _apply_built(centre: Vector3) -> void:
+	if _material == null:
+		return
+	var built := _visible_footprints(centre)
+	if built == _built:
+		return
+	_built = built
+	# The bounding circle is the early-out: one test rejects the whole ring
+	# wherever nothing is built, which is nearly all of it.
+	var bounds := Vector3(centre.x, centre.z, 0.0)
+	if not built.is_empty():
+		var min_x := INF
+		var max_x := -INF
+		var min_z := INF
+		var max_z := -INF
+		for spot: Vector3 in built:
+			min_x = minf(min_x, spot.x - spot.z)
+			max_x = maxf(max_x, spot.x + spot.z)
+			min_z = minf(min_z, spot.y - spot.z)
+			max_z = maxf(max_z, spot.y + spot.z)
+		var mid := Vector2((min_x + max_x) * 0.5, (min_z + max_z) * 0.5)
+		bounds = Vector3(mid.x, mid.y,
+				Vector2(max_x - mid.x, max_z - mid.y).length())
+	var padded := built.duplicate()
+	padded.resize(MAX_BUILT)
+	for material: ShaderMaterial in _field_materials():
+		material.set_shader_parameter("built", padded)
+		material.set_shader_parameter("built_count", built.size())
+		material.set_shader_parameter("built_bounds", bounds)
+
+
+## Every material the field draws with. The three tiers take the same
+## exclusions -- gravel and bushes inside a farmhouse are the same defect as
+## grass inside it, and `scatter_rules.gd` gates every baked layer on
+## footprints for exactly that reason.
+func _field_materials() -> Array[ShaderMaterial]:
+	var out: Array[ShaderMaterial] = []
+	if _material != null:
+		out.append(_material)
+	if _stone_material != null:
+		out.append(_stone_material)
+	out.append_array(_cover_materials)
+	return out
 
 func _process(delta: float) -> void:
 	if _material == null:
@@ -1146,3 +1313,8 @@ func _process(delta: float) -> void:
 		return
 	_centre = anchor
 	global_position = anchor
+	# Which buildings the ring can currently see. Done on the ring's own move
+	# rather than every frame: the list can only change when the ring has
+	# travelled, and a player laying a floor panel is standing still inside the
+	# cell they are building on, so the next step picks it up.
+	_apply_built(anchor)

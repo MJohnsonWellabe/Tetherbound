@@ -315,6 +315,43 @@ vec2 lattice_yaw(vec2 v, float yaw) {
 	return vec2(v.x * c + v.y * s, v.y * c - v.x * s);
 }
 
+// ---------------------------------------------------------------------------
+// BUILT GROUND. Where something is standing, so nothing grows.
+//
+// The owner's 2026-08-28 report: "grass grows through indoor buildings now".
+// `forbidden_ground` above is a terrain TEXTURE mask and a texture name cannot
+// know that a farmhouse is standing on the grass it names, so the field grew
+// through Grandpa's floor and his rug. `scatter_rules.gd` has gated every
+// BAKED placement on a footprint list since that same defect was found in the
+// scatter; `grass_field.gd::authored_footprints` reads that same list, adds
+// whatever the player has built since, and pushes the nearest few here.
+//
+// `built_count` is ZERO across almost the whole corridor -- seven authored
+// footprints in 16.8 km2 -- so the loop below is skipped outright nearly
+// everywhere, and `built_bounds` rejects the rest of the ring in one test
+// wherever it is not. Each entry is (x, z, radius) in world metres.
+// ---------------------------------------------------------------------------
+uniform vec3 built[24];
+uniform int built_count = 0;
+uniform vec3 built_bounds = vec3(0.0);
+
+bool on_built_ground(vec2 world_xz) {
+	if (built_count <= 0) {
+		return false;
+	}
+	vec2 to_bounds = world_xz - built_bounds.xy;
+	if (dot(to_bounds, to_bounds) > built_bounds.z * built_bounds.z) {
+		return false;
+	}
+	for (int i = 0; i < built_count; i++) {
+		vec2 d = world_xz - built[i].xy;
+		if (dot(d, d) < built[i].z * built[i].z) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void vertex() {
 	// STABLE RING. Which world cell is this instance standing in, and which of
 	// that cell's items is it? The stored translation is a cell plus an
@@ -394,6 +431,7 @@ void vertex() {
 	float keep = drift * density_gain * (1.0 - clearing);
 	bool culled = off_map || hole || forbidden || v_fade <= 0.001
 			|| item_presence <= 0.002
+			|| on_built_ground(world_xz)
 			|| hash12(world_xz * 7.31) > keep;
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;

@@ -180,6 +180,11 @@
       ]
     }
   ],
+  "_comment_built": "BUILT GROUND, and the answer to the owner's 2026-08-28 report that `grass grows through indoor buildings now`. `forbidden_ground` below is a terrain TEXTURE mask, and a texture name cannot know that a farmhouse is standing on the grass it names -- so the field grew up through Grandpa's floor and his rug the day it was switched on. The building list is NOT duplicated here: scripts/world/grass_field.gd reads vegetation.json's own `footprints`, the same list scatter_rules.gd has gated every baked placement on since the identical defect was found in the scatter (that file's entries say so in their own words -- `grass was standing on the floor and the rug`). Two lists of building positions would be one edit away from disagreeing and the way you would find out is grass on a rug. What IS tunable here is the runtime half: `built_clear_ids` names which player-built pieces count as ground that has been covered over. A floor panel is exactly that and grass through it is the reported defect; a fence rail or a workbench is a thing STANDING in the meadow, and clearing a disc of grass around one would read as a scorch mark -- so they are deliberately absent. `built_piece_radius` is build_grid.gd's 2.0m cell half-diagonal: the circle that covers a panel completely. The inscribed 1.0m circle does not -- four of them around a shared corner leave that corner bare of cover, and a floor grid would sprout a tuft at every corner in a regular pattern, which is a worse artefact than the one being fixed.",
+  "built_clear_ids": [
+    "floor"
+  ],
+  "built_piece_radius": 1.45,
   "_comment_forbidden": "Ground the field refuses, by terrain texture NAME rather than by id. terrain_playground.json's `textures` array order is what assigns the ids (0 grass, 1 soil, 2 rock, 3 path, 4 damp, 5 forest_floor), so naming them means a lane that reorders that list does not silently move the mask onto the wrong surface. `path` is what keeps the routes readable -- the same control map the terrain paints its dirt from, so the verge lines up with the road for free instead of being a second exclusion rule that has to be kept in sync.",
   "forbidden_ground": [
     "rock",
