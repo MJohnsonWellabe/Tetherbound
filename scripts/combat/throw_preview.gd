@@ -52,12 +52,37 @@ const DASH_COVERAGE := 0.72
 ## alpha to the end, draws over the grass, and plants a marker that stands UP
 ## out of the field instead of lying in it.
 
-## Half-width of the ribbon at the thrower's hand and at the landing point, in
-## metres. It widens along the flight: narrow where the orb certainly is, wider
-## where it is going, which reads as a cone and is also honest -- the far end is
-## where a moving target and the release timing put the real spread.
-const RIBBON_HALF_NEAR := 0.045
-const RIBBON_HALF_FAR := 0.16
+## The ribbon's width is ANGULAR, not a fixed world-space size.
+##
+## A first pass used fixed metres (0.045 near, 0.16 far) and the render was
+## unusable: the near end of the arc leaves the trainer's hand less than a metre
+## from the aim camera, so a 0.09m band there subtended about ten degrees and
+## drew a teal slab across the middle of the screen, over the player's own
+## creature. World-space width is the wrong unit for something whose entire job
+## is to be legible on screen.
+##
+## So the half-width is a constant ANGLE from the eye, clamped at both ends: it
+## cannot bloom in the player's face, and it cannot thin back to the one-pixel
+## wire this replaces at the far end of a long throw.
+##
+## 0.010 rad is about 0.6 degrees of half-width, so the ribbon reads at roughly
+## 1.2 degrees across -- comfortably wider than the ~0.05 degrees a one-pixel
+## line gave at this canvas, and narrow enough that it does not become the thing
+## it is drawn over. TUNABLE by feel; the clamps are what stop it misbehaving at
+## either extreme of range.
+const RIBBON_ANGULAR_HALF := 0.010
+const RIBBON_HALF_MIN := 0.018
+const RIBBON_HALF_MAX := 0.115
+## The cone: the far end draws this much wider than the near end, on top of the
+## angular width above. This is what makes it read as a cone rather than a
+## constant-width tape, and it is honest -- the far end is where a moving target
+## and the release timing put the real spread.
+const RIBBON_FAR_FLARE := 2.4
+## Metres of the arc closest to the EYE that are not drawn at all. The first
+## stretch leaves the hand right under the camera, where even an angular width
+## is a smear across the view, and it carries no information the player needs --
+## they know where their own hand is.
+const RIBBON_NEAR_SKIP := 1.6
 ## Alpha along the ribbon. Near-transparent at the hand so it does not sit on
 ## the trainer, full at the landing end -- the exact inverse of the fade this
 ## replaces.
@@ -67,7 +92,10 @@ const FADE_FAR_ALPHA := 1.0
 ## (sunlit tips, luminance ~0.46) and dark (shadowed bases, ~0.24), so a single
 ## bright ribbon disappears against one or the other wherever it crosses. An
 ## outline separates it from both.
-const CASING_EXTRA_HALF := 0.055
+## The casing's extra width is a MULTIPLE of the ribbon's own half-width rather
+## than a fixed margin, for the same reason the width itself is angular: a fixed
+## 0.055m outline is invisible at range and a slab up close.
+const CASING_EXTRA_HALF := 0.55
 const CASING_COLOUR := Color(0.03, 0.06, 0.07, 0.85)
 
 ## The landing indicator: a small ring plus a centre dot, restyled from the
@@ -95,6 +123,15 @@ var _marker_stalk: MeshInstance3D = null
 var _marker_bead: MeshInstance3D = null
 var _casing: MeshInstance3D = null
 var _casing_mesh: ImmediateMesh = null
+
+## Whether the arc drawn this frame actually reaches the creature. See
+## `update_arc()`; read by `throw_aim.gd::aim_report()`.
+var trajectory_hits_target := false
+## Metres off the target's centre the previewed flight passes. Valid only while
+## `trajectory_hits_target`; INF otherwise.
+var trajectory_offset := INF
+
+const ORB := preload("res://scripts/combat/orb.gd")
 
 var _gravity: float = 14.0
 var _max_flight: float = 4.0
@@ -247,6 +284,25 @@ func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3
 			end.y = ground + 0.02
 			break
 
+	# Published so the HUD's own on-target readout can agree with the picture.
+	# The arc and the capture reticle were answering two different questions --
+	# "does the predicted flight reach the body" here, "is the screen-centre ray
+	# inside k x body_radius" there -- and a render caught them disagreeing on
+	# screen: the cone visibly ended ON the creature under a caption reading
+	# NOT ON TARGET. Whatever the assist gate needs internally, the thing the
+	# player is told must match the thing the player is shown.
+	trajectory_hits_target = hit_target
+	# How close that flight passes the body's centre, on the same terms
+	# `orb.gd` will score the real strike: the closest approach of the
+	# trajectory, not the distance at whichever sample first entered the
+	# forgiveness sphere. So the percentage the reticle shows before the throw
+	# is the percentage the throw resolves at.
+	trajectory_offset = INF
+	if hit_target and target_centre != Vector3.INF and points.size() >= 2:
+		var closest := INF
+		for i in points.size() - 1:
+			closest = minf(closest, ORB.closest_approach(points[i], points[i + 1], target_centre))
+		trajectory_offset = closest
 	var colour := ON_TARGET if hit_target else ON_GROUND
 
 	# Dashes, not a continuous line (spec §10.3): each [i, i+1) sample
@@ -301,8 +357,11 @@ func _build_ribbon(mesh: ImmediateMesh, points: Array[Vector3], eye: Vector3,
 			continue
 		var near_t := float(i) / float(total)
 		var far_t := float(i + 1) / float(total)
-		var half_a := lerpf(RIBBON_HALF_NEAR, RIBBON_HALF_FAR, near_t) + extra_half
-		var half_b := lerpf(RIBBON_HALF_NEAR, RIBBON_HALF_FAR, far_t) + extra_half
+		# Skipped near the eye -- see RIBBON_NEAR_SKIP.
+		if a.distance_to(eye) < RIBBON_NEAR_SKIP:
+			continue
+		var half_a := _ribbon_half(a, eye, near_t) * (1.0 + extra_half)
+		var half_b := _ribbon_half(b, eye, far_t) * (1.0 + extra_half)
 		var side_a := along.cross(a - eye).normalized()
 		var side_b := along.cross(b - eye).normalized()
 		if side_a.length_squared() < 0.5 or side_b.length_squared() < 0.5:
@@ -323,8 +382,19 @@ func _build_ribbon(mesh: ImmediateMesh, points: Array[Vector3], eye: Vector3,
 	mesh.surface_end()
 
 
+## Half-width at one point on the arc: a constant angle from the eye, flared
+## toward the landing end, clamped so it can neither bloom up close nor thin
+## back to a wire at range. See `RIBBON_ANGULAR_HALF`.
+func _ribbon_half(point: Vector3, eye: Vector3, t: float) -> float:
+	var distance := maxf(point.distance_to(eye), 0.01)
+	var flare := lerpf(1.0, RIBBON_FAR_FLARE, clampf(t, 0.0, 1.0))
+	return clampf(distance * RIBBON_ANGULAR_HALF * flare, RIBBON_HALF_MIN, RIBBON_HALF_MAX)
+
+
 func hide_arc() -> void:
 	visible = false
+	trajectory_hits_target = false
+	trajectory_offset = INF
 	if _line_mesh != null:
 		_line_mesh.clear_surfaces()
 	if _casing_mesh != null:

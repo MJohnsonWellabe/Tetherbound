@@ -1648,6 +1648,13 @@ func catch_aim_offset(body_radius: float) -> float:
 		return 0.0
 	if bool(report.get("eligible", false)):
 		return 0.0
+	# A throw whose predicted flight reaches the body is scored on where that
+	# flight passes, not on where the reticle sits -- the same distinction
+	# `orb.gd::closest_approach_ahead()` makes at the moment of the strike. The
+	# reticle offset is only the honest estimate when the arc does NOT already
+	# answer the question.
+	if bool(report.get("trajectory_hits_target", false)):
+		return clampf(float(report.get("trajectory_offset", 0.0)), 0.0, maxf(body_radius, 0.0))
 	return clampf(float(report.get("reticle_offset", 0.0)), 0.0, maxf(body_radius, 0.0))
 
 
@@ -1665,7 +1672,20 @@ func catch_aim_is_locked() -> bool:
 	if _throw == null:
 		return false
 	var report: Dictionary = _throw.call("aim_report")
-	return not report.is_empty() and bool(report.get("eligible", false))
+	if report.is_empty():
+		return false
+	# EITHER the assist is eligible, OR the previewed flight actually reaches
+	# the creature. The two are different questions and a render caught them
+	# contradicting each other on screen: the throw cone visibly ended on the
+	# Bramblebun while the caption under it read NOT ON TARGET, because the
+	# screen-centre ray sat just outside the assist window even though the arc
+	# did not. The player reads the picture; the words have to agree with it.
+	#
+	# The assist gate itself is unchanged -- it still needs the reticle inside
+	# the window AND line of sight before it will lead a throw. This only widens
+	# what the HUD calls "on target" to include a throw that lands without help.
+	return bool(report.get("eligible", false)) \
+		or bool(report.get("trajectory_hits_target", false))
 
 
 ## The body of the creature currently being fought, or null between fights.

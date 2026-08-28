@@ -254,6 +254,14 @@ func _tick_aiming(delta: float) -> void:
 	# One ray per physics tick is the same cost the throw already pays; one per
 	# draw frame is not.
 	_aim_report = launch_assist_diagnostics()
+	# The arc's own verdict travels with the report, so the HUD can say what the
+	# picture says -- see `throw_preview.gd::update_arc()` for the disagreement
+	# a render caught between the two.
+	var previewing := _preview != null and is_instance_valid(_preview)
+	_aim_report["trajectory_hits_target"] = previewing \
+		and bool(_preview.get("trajectory_hits_target"))
+	_aim_report["trajectory_offset"] = float(_preview.get("trajectory_offset")) \
+		if previewing else INF
 
 	# Backing out is free and spends nothing, INCLUDING during the release
 	# wind-up — the orb is only spent in _release() itself. The cancel used to
