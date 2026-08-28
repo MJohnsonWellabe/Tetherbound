@@ -213,9 +213,85 @@ forgiveness on the miss/no-miss line — which means it *grew* the set of throws
 that land while being scored at the edge multiplier. More landed throws, a
 larger share of them scored far below the advertised number.
 
+### The bigger one, found while proving the first: aiming did nothing at all
+
+Fixing the readout meant checking what the throw actually resolved at — and the
+throw was not using the aim either.
+
+`orb.gd::_check_target()` fires when the orb's centre comes within
+`body_radius + orb_radius`. For a Bramblebun that is 0.312 + 0.60 = **0.912 m**,
+because the orb is a deliberately forgiving 0.60 m sphere. The strike offset
+handed to `accuracy_bonus()` was the distance **at that same sample**, clamped
+to `body_radius` (0.312). Two things then guaranteed the clamp always saturated:
+
+1. Only the orb's **endpoint** was sampled, and at `speed` 17 on a 60 Hz tick it
+   moves 0.283 m per step — so the first sample inside 0.912 m was never inside
+   0.312 m.
+2. Even measuring the whole swept step, the step that *triggers* the hit enters
+   the forgiveness sphere and stops. It never reaches the body.
+
+Simulated across the aim range, a dead-centre throw and one 0.30 m wide both
+reported **exactly 0.312** and both scored at `edge_bonus` 0.80:
+
+```
+aim error       true distance reported offset  scored as
+0.00                    0.826          0.312       0.80x EDGE
+0.10                    0.832          0.312       0.80x EDGE
+0.30                    0.878          0.312       0.80x EDGE
+```
+
+Confirmed in real fights, not just in simulation: **every** `catch launch:
+strike` line in this repo's own logs reads `offset=0.312` — including throws
+where the launch assist led the orb to the body centre. An `assist=true` throw
+aimed dead at the creature logged `closest=0.821`.
+
+So `centre_bonus` (1.45) was **unreachable**, `accuracy_bonus()` was a constant,
+and **aiming changed the catch chance by exactly nothing** — while
+`catching.json` calls that term *"the ONLY reason the aiming skill exists"*,
+`test_catch_math.gd` asserts the two bonuses differ, and the HUD drew a reticle,
+a launch assist, a preview arc and a percentage all promising the player their
+placement mattered.
+
+That is what "catching still sucks" is. The skill was decoration.
+
+The old code's own comment shows it anticipated the *opposite* failure —
+*"Widening `radius` to forgive the input must not silently make every throw
+count as dead centre"* — and guarded against it. The guard was right to exist
+and it overshot: it stopped every throw counting as dead centre by making every
+throw count as dead edge. OF19's radius widening (0.42 -> 0.60) pushed the
+trigger boundary further out and made it worse.
+
+**The fix** separates two questions the one measurement was conflating:
+
+- **Did it hit** is about the collision sphere, and is now answered over the
+  segment actually travelled — which also fixes tunnelling, where a fast orb
+  could step over a small creature between two samples.
+- **How well was it aimed** is about the trajectory, and is answered by the
+  closest approach of the orb's forward heading to the body centre.
+
+Live, after the fix: an assisted throw scores `closest=0.158` (was saturated at
+0.312); an unassisted one scores 0.357 and is still correctly penalised to the
+edge.
+
+**This does change effective difficulty, and the owner should know by how
+much.** A well-aimed throw gains, a badly-aimed one does not:
+
+| species | HP | before (always edge) | well-aimed now | badly-aimed now |
+|---|---|---|---|---|
+| bramblebun | sliver | 40.3% | **56.5%** | 40.3% |
+| bramblebun | half | 23.6% | **33.1%** | 23.6% |
+| terrapup | half | 11.8% | **16.5%** | 11.8% |
+| terrapup | full | 2.4% | **3.4%** | 2.4% |
+
+A uniform **1.40x** for a throw placed as well as the launch assist places one;
+the ceiling is 1.81x for a dead-centre trajectory. If the owner wants the old
+effective difficulty back, `centre_bonus` is the single knob — but the old
+numbers were the *floor* of the design applied to every throw, not a chosen
+difficulty.
+
 ### What I fixed
 
-The readout, not the difficulty. Nothing in `catching.json` changed.
+The readout and the placement measurement. Nothing in `catching.json` changed.
 
 - `catch_chance_now()` now uses the aim's real offset. When the launch assist
   is eligible the orb is genuinely led to the body centre, so the dead-centre

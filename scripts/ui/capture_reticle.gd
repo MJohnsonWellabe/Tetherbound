@@ -39,11 +39,30 @@ const SUCCESS_DURATION := 0.4
 const BREAK_DURATION := 0.3
 
 const READOUT_GAP := 40.0
-const CAPTION_GAP := 22.0
+## Baseline-to-baseline from the percentage to the caption under it. 22 -> 32
+## alongside `CAPTION_FONT_SIZE`: the old value left 22px between baselines for
+## a caption whose glyphs were 13px tall, and at 18px of cap height that is 4px
+## of clearance -- a render showed "CAPTURE CHANCE" crowding the percentage's
+## own descender line.
+const CAPTION_GAP := 32.0
 ## How much wider the ring stands off the body while the aim is NOT on the
 ## creature. Enough to read as a different state at a glance rather than as the
 ## same ring in a different mood.
 const UNLOCKED_RING_STANDOFF := 14.0
+## The caption under the ring ("CAPTURE CHANCE", "NOT ON TARGET").
+##
+## A local override rather than `UITokens.FONT_TINY` (19), which is what it used
+## to draw at: 19 authored px is a cap height of 8.2 arcmin on the owner's
+## panel at arm's length, under the 11.0 arcmin glance floor
+## `scripts/ui/hud_scale.gd` derives. That mattered less when the caption always
+## said the same three words and the number under it carried the meaning; it
+## matters now that the caption is the thing distinguishing "this is your
+## chance" from "you are not on it".
+##
+## Deliberately NOT raised in `UITokens` itself -- `FONT_TINY` is shared by a
+## dozen screens this pass has not measured, the same reasoning
+## `playground_hud.gd::HUD_READABLE_FONT_SIZE` records for its own local floor.
+const CAPTION_FONT_SIZE := 26
 
 var _active := false
 var _pos := Vector2.ZERO
@@ -217,9 +236,15 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
 	draw_line(center + Vector2(0.0, dh), center + Vector2(-dh, 0.0), tier_colour, 2.0)
 	draw_line(center + Vector2(-dh, 0.0), center + Vector2(0.0, -dh), tier_colour, 2.0)
 
+	# The inner arc IS the chance -- its swept fraction is the number. So an
+	# unlocked ring must not draw it: a first render of this state kept the
+	# teal arc sweeping 40% of the circle directly under a caption reading
+	# "NOT ON TARGET", which is the same widget making two contradictory
+	# claims. Withholding the number and still drawing its arc is not
+	# withholding the number.
 	var inner_radius: float = radius - INNER_RING_INSET * scale_value
 	var sweep: float = TAU * chance
-	if sweep > 0.001 and inner_radius > 2.0:
+	if locked and sweep > 0.001 and inner_radius > 2.0:
 		var inner_colour := UITokens.TEAL_SOFT
 		inner_colour.a *= alpha
 		# Clockwise from the top: draw_arc's angle 0 points along +X and grows
@@ -251,10 +276,10 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	var caption_colour := UITokens.TEXT_SECONDARY
 	caption_colour.a *= alpha
 	var caption_dims: Vector2 = font.get_string_size(
-		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, UITokens.FONT_TINY
+		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
 	)
 	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
-	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, UITokens.FONT_TINY, caption_colour)
+	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE, caption_colour)
 
 
 ## A single expanding, fading ring — the visible half of an orb shake.
