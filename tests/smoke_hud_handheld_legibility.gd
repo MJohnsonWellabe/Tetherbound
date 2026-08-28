@@ -190,8 +190,23 @@ func _check_legend_sits_under_hotbar() -> void:
 		])
 	if hotbar_rect.intersects(legend_rect):
 		_fail("hotbar and legend overlap at %dx%d" % [HANDHELD_SIZE.x, HANDHELD_SIZE.y])
-	if legend_rect.intersects(prompt_rect):
-		_fail("legend and contextual prompt overlap at %dx%d" % [HANDHELD_SIZE.x, HANDHELD_SIZE.y])
+	# Only when the prompt is actually on screen. A `VBoxContainer` skips
+	# hidden children when it lays out, so an invisible `Prompt` keeps whatever
+	# rect it held before it was hidden -- with no contextual prompt to show,
+	# this harness leaves it sitting on a stale 640x12 box that can land
+	# anywhere, including inside the legend. Comparing against that rect tests
+	# nothing about what a player sees, and it fails or passes depending on how
+	# tall the legend happens to be, which is exactly the false alarm HUD-SCALE
+	# hit. The same `is_visible_in_tree()` reasoning
+	# `_assert_descendants_inside()` below already spells out.
+	#
+	# The VISIBLE case is not dropped: `smoke_prompt_hotbar_dock.gd` drives
+	# real prompt text through this same dock -- quiet, hotbar-message,
+	# wrapped, and both at once -- and asserts the measured gap in every one.
+	if prompt.is_visible_in_tree() and legend_rect.intersects(prompt_rect):
+		_fail("legend and contextual prompt overlap at %dx%d (legend %s, prompt %s)" % [
+			HANDHELD_SIZE.x, HANDHELD_SIZE.y, legend_rect, prompt_rect,
+		])
 
 	# The whole dock has to still land inside the real handheld canvas -- a
 	# stack that lays out correctly relative to itself but pushes below row
