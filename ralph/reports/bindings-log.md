@@ -220,6 +220,37 @@ the token to `{interact}` would have done.
 tested: deleting the `combat_throw` alias turns three of the eleven red,
 including the content sweep. Restored and re-verified green.
 
+### Suite results, on the merged tree
+
+| check | result |
+|---|---|
+| `tests/run_tests.gd` (whole unit suite) | **1502 tests, 0 failed** |
+| `tests/test_input_glyph_verbs.gd` (new) | 11 tests, 50 assertions, 0 failed |
+| `tests/smoke_exploration_legend.gd` | **PASS** |
+| `godot --headless --import` | clean; no script, parse or resource errors |
+| `tests/smoke_controller_catching.gd` | see below |
+
+### On `smoke_controller_catching.gd` being red on `main`
+
+The brief flagged that the HUD/catch lane recorded this test as **already
+failing on clean `origin/main`** before that lane started, and asked this lane
+to establish whether that is still true rather than assume either way.
+
+**It is no longer true, and the reason is bookkeeping rather than code.**
+`ralph/HUD-CATCH` merged into `main` as `c2f1e0f7` *while this lane was
+running*, and it carries that lane's own fix for the test (`64e264e7`,
+*"Catching: aiming changed the catch chance by exactly nothing"*). That commit
+is **not** an ancestor of this branch's base (`1e135a2a`), which is why the
+first baseline attempt here was made against a tree where the test was still
+red. Their diagnosis stands as written: a stale assertion counting a miss by
+matching the string `"the orb went wide"`, which `orb.gd` stopped emitting when
+miss messages became per-cause.
+
+Either way it is unrelated to this lane's change, which touches no combat code
+and no input map -- and the test is in fact this lane's best evidence that the
+pad throws with X, since `_open_aim()` reaches the aim by tapping a physical
+`JOY_BUTTON_X` and nothing else.
+
 ## 6. What this does not prove
 
 - **How catching feels, or how the pad feels in the hand.** [OWNER-ONLY]. This
