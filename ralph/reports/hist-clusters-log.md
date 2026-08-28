@@ -472,3 +472,49 @@ carry `Roof_RoundTiles_4x4/4x6/4x8/6x4/6x6/6x8/6x10`, so an L-plan or a wider
 inn is possible without new art — but that is a re-authoring of a 75-module
 recipe with its own door, room and collider specs, and it wants owner sight
 before someone spends it. **The ranger station half of the item is untouched.**
+
+---
+
+## CI on this branch
+
+Four runs, one per push. Runs 2610 (`HIST-036`/`HIST-153`) and 2616
+(`HIST-014`, carrying `HIST-013`) concluded **success**. Run 2619 (RC-5b)
+concluded **failure** on two jobs out of 55, and **neither is this branch's**.
+
+**The four guards this lane added all passed** on run 2619:
+`objective_hint_card`, `station_panels_hide_world_hud`,
+`combat_hud_left_column`, `dialogue_clears_the_world_hud`.
+
+### `verify-continuous-core-known-red` — expected
+
+The job is named KNOWN RED, its step is labelled `(KNOWN RED)`, and it carries
+`continue-on-error: true`. It failed identically on run 2616, which GitHub
+still concluded as success — the run-level conclusion is inconsistent for
+`continue-on-error` jobs, not a change in what is red.
+
+### `verify-owner-regressions-shard (party_count_after_catches)` — not this branch's
+
+Failed on run 2619 having passed on run 2616. Four things say it is not the
+diff:
+
+1. **It passes locally on the exact failing SHA.** Three real catches through
+   the real minigame, `TEAM 3 / 5` on screen, three occupied portrait rows
+   agreeing with the counter, surviving a save/reload.
+2. **The reported symptom is upstream of everything this lane touched**: *"could
+   not catch Wild_bramblebun_0_1 in 25 throws"* and *"the winning prompt is
+   EncounterDirector, not the target"*. The party was genuinely empty; the HUD
+   assertions after it read 0 because there was nothing to read.
+3. **The HUD assertions it printed cannot be broken by the `HIST-013` change.**
+   They read `_hp_bars[i].visible` and `_slot_labels[i].visible` — per-row
+   fields, untouched by `ROW_SEPARATION` or `HEADER_HEIGHT`, which are
+   geometry.
+4. **The same arbiter symptom failed the known-red job in the same run**, which
+   points at that runner's world/interaction timing rather than at two
+   different regressions landing at once.
+
+The only delta between the passing run 2616 and the failing 2619 is one inn
+recipe entry, two capture tools and this log — none of which is in a wild
+creature's path.
+
+Re-run of the failed jobs requested once, per the drive-to-green rule's single
+allowed confirmation.
