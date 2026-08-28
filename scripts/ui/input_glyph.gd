@@ -214,6 +214,62 @@ const GLYPHS := {
 }
 
 
+## Actions whose PAD button lives on a DIFFERENT action.
+##
+## CONTROLLER-MAP (`ralph/OWNER_DIRECTIVES_2026-08-22.md` §1, recorded as
+## `docs/decisions/D68`) re-authored the pad map and moved several verbs onto
+## buttons that already had an action of their own. The verb still exists on the
+## pad; the action named for it no longer carries a joypad event.
+##
+## Without this table, every resolver below answers "what is `combat_throw`
+## bound to?" honestly -- nothing on a pad -- and falls through to naming the
+## KEYBOARD key. That is how `data/progression/objectives.json`'s opening rung,
+## which correctly writes the token `{combat_throw}` rather than a hardcoded
+## letter, came to render as *"pick an orb on the hotbar and press F"* on a
+## frame where every other glyph was a pad glyph. On the game's first catch, on
+## a device with no F key. CLAUDE.md makes "Controller first" and "Windows /
+## ROG Ally is primary" hard rules; this is the tutorial line for catching.
+##
+## SWAPPING THE TOKEN TO `{interact}` WOULD ONLY INVERT THE BUG -- on a keyboard
+## `interact` is E and the throw really is F. The token has to mean "the throw",
+## and resolve per device. That is what this table is: one entry per verb the
+## directive moved, consulted ONLY when the action itself has no joypad event,
+## so a player who binds a pad button to `combat_throw` in Settings gets their
+## own button named and never this one.
+##
+## Each entry is a runtime fact, not a guess. The reader that implements the
+## verb ORs the two actions together; the code comment is quoted beside it:
+##
+## - `combat_throw` -> `interact`. `combat_manager.gd::_throw_pressed()` and
+##   `throw_aim.gd` both read `interact` beside `combat_throw`'s surviving
+##   keyboard F ("interact (X) is the pad's throw button now"). Proven by
+##   `tests/smoke_controller_catching.gd`, which opens the aim by tapping a
+##   physical `JOY_BUTTON_X` and nothing else.
+## - `combat_run` -> `creature_recall`. `combat_manager.gd::_flee_pressed()`
+##   reads `creature_recall` beside `combat_run`'s Escape; D68's own summary is
+##   "flee is `creature_recall` on RB", because putting your creature away IS
+##   disengaging.
+## - `use_tool` -> `interact`. `harvest_logic.gd`: "X/`interact` is what chops
+##   and mines". Wired ahead of a caller -- nothing resolves a `use_tool` glyph
+##   today -- for the same reason `build_place`/`build_cancel` were added to
+##   GLYPHS before `build_placer.gd` existed: the next caller should inherit the
+##   right answer rather than rediscover this defect.
+##
+## DELIBERATELY ABSENT: `torch_toggle`, `torch_place` and `build_open`. The
+## directive took their pad buttons too, but it did not MOVE them -- the torch
+## and the hammer became hotbar tools, so the pad path is select-then-press and
+## no single button performs the verb. Aliasing them to `interact` would print
+## "X toggles the torch", which is false until the torch is the selected tool.
+## They are a content problem (say the two steps, as
+## `objectives.json`'s own gather rung already does) rather than a resolver one,
+## and are reported in `ralph/reports/bindings-log.md` rather than guessed at.
+const PAD_VERB_ALIAS := {
+	"combat_throw": "interact",
+	"combat_run": "creature_recall",
+	"use_tool": "interact",
+}
+
+
 static func using_gamepad() -> bool:
 	var tree := Engine.get_main_loop() as SceneTree
 	var game: Node = tree.root.get_node_or_null(^"Game") if tree != null else null
@@ -318,6 +374,32 @@ static func pad_button_name_for_action(id: String) -> String:
 	return ""
 
 
+## The pad button a VERB is reached by, which is not always the pad button its
+## own action carries: "X" for `combat_throw`, "RB" for `combat_run`.
+##
+## `pad_button_name_for_action` above stays literal on purpose -- it answers
+## "what joypad event does this action have", and the Settings tab's gamepad
+## column, which lets the player rebind exactly that, must keep reading the
+## literal answer. This one answers the question every on-screen hint is really
+## asking: "what does the player press to do this". See `PAD_VERB_ALIAS` for why
+## the two came apart and why only three verbs are in it.
+##
+## The action's OWN binding always wins, so a player who binds a pad button to
+## `combat_throw` in Settings is told about their button, not the alias's.
+## Returns "" when neither has one -- the honest answer for a verb a pad
+## genuinely cannot reach in one press, and the caller falls back to naming the
+## bound key exactly as before.
+static func pad_button_name_for_verb(id: String) -> String:
+	var direct := pad_button_name_for_action(id)
+	if not direct.is_empty():
+		return direct
+	var alias := str(PAD_VERB_ALIAS.get(id, ""))
+	if alias.is_empty():
+		return ""
+	return pad_button_name_for_action(alias)
+
+
+
 ## The action's button as PLAIN TEXT for the live device: "X" on a pad, "E" on
 ## a keyboard. No BBCode, no image, no brackets -- for a caller drawing into an
 ## ordinary `Label`, which cannot render `icon()`'s `[img]` tag at all.
@@ -337,7 +419,7 @@ static func action_name(id: String) -> String:
 	if not InputMap.has_action(id):
 		return id
 	if using_gamepad():
-		var pad := pad_button_name_for_action(id)
+		var pad := pad_button_name_for_verb(id)
 		if not pad.is_empty():
 			return pad
 	return key_name_for_action(id)
@@ -368,7 +450,7 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_ove
 		# Text, not invented art: sourcing a glyph is an art decision and this
 		# is a correctness one.
 		if device == "gamepad":
-			var pad_name := pad_button_name_for_action(id)
+			var pad_name := pad_button_name_for_verb(id)
 			if not pad_name.is_empty():
 				return "[%s]" % pad_name
 		return "[%s]" % key_name_for_action(id)

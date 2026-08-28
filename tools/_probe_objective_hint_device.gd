@@ -69,9 +69,6 @@ func _run() -> void:
 	print("device pinned to %s (using_gamepad=%s)" % [_device, INPUT_GLYPH.using_gamepad()])
 	for id in ["combat_throw", "interact", "combat_run", "creature_recall"]:
 		print("  action_name(%s) = %s" % [id, INPUT_GLYPH.action_name(id)])
-	print("Game.objective_text = %s" % str(game.get("objective_text")))
-	print("Game.objective_hint = %s" % str(game.get("objective_hint")))
-
 	var packed: PackedScene = load(HUD_SCENE)
 	if packed == null:
 		print("FAIL: could not load %s" % HUD_SCENE)
@@ -88,6 +85,12 @@ func _run() -> void:
 		print("FAIL: no ObjectiveHintCard/CardHint in the mounted HUD")
 		quit(1)
 		return
+	# AFTER the settle, deliberately. `game_state.gd` caches the resolved hint
+	# and re-resolves it on a device flip in `_process`, so a read taken on the
+	# same line as the pin above would print the pre-flip string and read as a
+	# failure. BINDINGS is the change that made the cache follow the device.
+	print("Game.objective_text = %s" % str(game.get("objective_text")))
+	print("Game.objective_hint = %s" % str(game.get("objective_hint")))
 	print("card visible=%s rect=%s" % [card.visible, card.get_global_rect()])
 	print("CARD TEXT: %s" % label.text)
 

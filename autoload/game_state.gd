@@ -99,6 +99,29 @@ var objective_hint: String = ""
 ## own comment.
 var _last_progression_revision: int = -1
 
+## The DEVICE `objective_hint` was last resolved for.
+##
+## BINDINGS. `objective_hint` is a string with the button names already baked
+## into it, and it was recomputed only when the rung changed — so it froze the
+## device that happened to be live at the moment the player last advanced the
+## chapter. `input_glyph.gd`'s whole `HD1` design is live switching "as the
+## player's hands move between keyboard and pad", and this one cached string
+## was the only place in the HUD that did not follow. Picking up the pad on a
+## desktop left the first-catch card still naming F; setting it down on the
+## Ally left it naming X.
+##
+## Recomputed on a device flip, which is a rare event polled with one boolean
+## comparison. `objective_text` is recomputed with it rather than alone,
+## because the two are written together everywhere else on purpose: the pair
+## must never disagree about which rung the player is on.
+var _last_hint_device_was_gamepad: bool = false
+
+## Whether `objective_text`/`objective_hint` are currently a `set_objective()`
+## pose rather than the quest log's own line. Only the device-flip recompute
+## above reads it: the rung-moved branch has always taken a pose back over, and
+## that is the contract `set_objective()` documents.
+var _objective_is_posed: bool = false
+
 ## In-game day, counted from 1. The release ledger and "time with you" on the
 ## ceremony screen both need a clock that is not wall time, and this is it.
 ## Nothing advances it yet; M10's day/night cycle will.
@@ -385,6 +408,8 @@ func reset_for_new_game() -> void:
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
 	_last_progression_revision = int(progression.get("revision"))
+	_last_hint_device_was_gamepad = _last_input_was_gamepad
+	_objective_is_posed = false
 
 	day = 1
 	pending_build = ""
@@ -504,8 +529,17 @@ func _process(delta: float) -> void:
 			# reading the backpack costs no nourishment.
 			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
 	var progression_revision: int = int(progression.get("revision"))
-	if progression_revision != _last_progression_revision:
+	var rung_moved := progression_revision != _last_progression_revision
+	# BINDINGS. A device flip re-resolves the hint's baked-in button names, but
+	# must NOT take a POSED objective down: `set_objective()`'s contract is that
+	# the capture tools' demo line sticks until the rung moves, and several of
+	# those tools pin the device and pose a line in the same run.
+	var device_flipped := _last_input_was_gamepad != _last_hint_device_was_gamepad \
+			and not _objective_is_posed
+	if rung_moved or device_flipped:
 		_last_progression_revision = progression_revision
+		_last_hint_device_was_gamepad = _last_input_was_gamepad
+		_objective_is_posed = false
 		objective_text = quest_log.call("tracked_text", progression)
 		objective_hint = quest_log.call("tracked_hint", progression)
 
@@ -593,6 +627,7 @@ func player_vitals() -> RefCounted:
 ## previous objective left behind.
 func set_objective(text: String, world_pos: Variant = null) -> void:
 	objective_text = text
+	_objective_is_posed = true
 	# A posed objective has no authored `how` behind it, and carrying the
 	# previous rung's hint under someone else's line would be worse than
 	# carrying none: the capture tools that use this pose a demo objective the
