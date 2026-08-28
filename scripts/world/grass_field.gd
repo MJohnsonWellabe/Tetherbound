@@ -59,8 +59,9 @@ var _stone_material: ShaderMaterial = null
 var _cover_materials: Array[ShaderMaterial] = []
 var _bound := false
 var _wind := 0.0
-## The last snapped centre. The ring only rebuilds its uniform when this moves,
-## which is most frames a no-op.
+## The lattice cell the ring is currently anchored to. The node only moves when
+## this changes, which is most frames a no-op; `field_centre` is written every
+## frame and is a different thing -- see `_process`.
 var _centre := Vector3(INF, INF, INF)
 
 
@@ -94,6 +95,255 @@ static func suppressed_layers() -> Dictionary:
 	return out
 
 
+# ---------------------------------------------------------------------------
+# STABLE RING. Where the items in the ring stand, and why it is not a disc of
+# random points any more.
+#
+# THE DEFECT THIS ANSWERS, in the owner's words on 2026-08-28: "the grass
+# rerenders like every step". `ralph/OWNER_PLAYTEST_2026-08-28.md` is the
+# record, and the same note carries the other half of the report -- "don't
+# change the look of my grass, it's awesome" -- so this is a placement change
+# that is required to leave density, colour, silhouette, wind and every cover
+# tier exactly where they were.
+#
+# THE MECHANISM. The ring is a fixed set of LOCAL positions and it follows the
+# camera by moving this node. Every coverage roll, height, lean and shade in
+# the three field shaders is hashed on the item's WORLD position. So the moment
+# the node moves, every item's world position moves with it and every one of
+# those hashes returns a fresh number: the field does not translate, it
+# RE-ROLLS. `snap` did not remove that, it made it periodic -- one whole-field
+# re-roll every `snap` metres, which at combat.json's 5 m/s walk is one every
+# 0.4 seconds. That is the "every step".
+#
+# THE FIX, stated as the constraint it really is: moving the ring by one snap
+# step must map the set of occupied world positions onto ITSELF. A set of
+# points with that property is a lattice (strictly: any pattern periodic in the
+# snap step, and a lattice is the one that also carries a density gradient
+# cheaply). So the instances are laid out on a world-aligned grid of `snap`
+# metre cells, the node only ever moves in whole cells, and each item's actual
+# position inside its cell -- with its yaw, its rank and everything else that
+# used to be hashed off a moving coordinate -- is hashed from that cell's own
+# INTEGER coordinates in the shader. An item is then a property of the ground,
+# not of the ring: walk forward and instance 400 simply takes over the cell
+# instance 617 was drawing a moment ago, at the same offset, the same height,
+# the same lean. Nothing pops because nothing changed.
+#
+# WHAT HAD TO BE PRESERVED, AND HOW. The old disc drew `r = radius * u^bias`,
+# which is not uniform: `centre_bias` 0.62 puts ~78 tufts/m2 at the camera
+# against ~15 at the ring's edge, and that gradient is most of why the near
+# field reads as thick. A single uniform lattice cannot have it. So the ring is
+# built as NESTED lattices: a base one over the whole disc at the outer
+# density, and a stack of smaller discs each adding the difference, every one
+# of them on the same cell grid so all of them are stable together. The
+# schedule is fitted numerically against the analytic density the old disc law
+# produced -- `_lattice_plan` below is that fit, and it lands within a few per
+# cent of it at every radius the player can see.
+#
+# The joins between those discs would be visible density rings following the
+# camera around, so each layer FADES: `layer_in`/`layer_out` in the shaders,
+# against a per-cell rank, so an item near the boundary grows out of the ground
+# over a metre or two of travel rather than appearing. That is the one thing in
+# this system that still changes as you walk, and it is a smooth height ramp on
+# a fraction of one layer rather than a whole-field re-roll.
+#
+# COST. The layer discs overlap their fade bands, so the ring stands up a few
+# per cent more instances than `tuft_count` asks for. `_build` prints the exact
+# figure at boot; the measured numbers for the shipped config are in
+# `ralph/reports/GRASS_REROLL_2026-08-28.md`. NOT MEASURED HERE: what any of
+# this costs the Ally's GPU. `PERF-ROG-GPU` records that no container in this
+# project can measure that, and it has not become measurable.
+# ---------------------------------------------------------------------------
+
+## How many sub-cell slots a lattice cell is divided into for the purpose of
+## TAGGING an instance. Nothing is placed on this grid: the tag is an identity,
+## not a position, and where an item actually stands is hashed from the world
+## cell it currently occupies. The shader recovers the tag from the instance's
+## world coordinate, so the slot step has to survive float32 at world scale --
+## at 128 slots to a 2m cell the step is 15.6mm, which is two orders of
+## magnitude above the mantissa's resolution eight kilometres down the
+## corridor. It also caps items-per-cell and layer count at 126 each.
+const LATTICE_SLOTS := 128
+## The length of the `layer_in[]`/`layer_out[]` uniform arrays in the three
+## field shaders. A longer plan would index off the end of them.
+const LATTICE_MAX_LAYERS := 16
+
+
+## The cell the whole field is quantised to. Deliberately the SAME number as
+## `snap`: the node may only move in whole cells, and `snap` is what it moves
+## in. Reading one value for both is what makes it impossible to set them to
+## two numbers that do not divide each other, which would silently reintroduce
+## the re-roll while looking correct in a still frame.
+static func lattice_cell() -> float:
+	return maxf(0.25, float(config().get("snap", 2.0)))
+
+
+## The nested-lattice schedule for one tier, fitted against the density profile
+## the old `r = radius * pow(u, bias)` disc produced.
+##
+## That law puts `N * (r/R)^(1/bias)` items inside radius r, so its areal
+## density is `A * r^(1/bias - 2)` with `A = N/(bias * TAU * R^(1/bias))`. Each
+## layer is a uniform lattice over a disc, contributing `per_cell / cell^2`
+## everywhere inside `ramp_in` and fading to nothing at `ramp_out`; `per_cell`
+## is an integer, so the fit is a short integer search rather than a division.
+##
+## Returned outermost-first. Entry 0 is the base layer and never fades -- its
+## ramp radii are pushed past the ring so the shader's `smoothstep` is a
+## constant 1 for every distance that can occur.
+static func _lattice_plan(count: int, radius: float, bias: float, cell: float,
+		cfg: Dictionary) -> Array:
+	var ratio := maxf(1.1, float(cfg.get("lattice_layer_ratio", 1.5)))
+	var band := clampf(float(cfg.get("lattice_band", 0.85)), 0.1, 0.98)
+	var min_radius := maxf(cell, float(cfg.get("lattice_min_radius", 2.0)))
+	# How far a layer has to reach BEYOND the radius it fades out at. The node
+	# is quantised to the cell while the fade is measured from the camera's
+	# true position, so the two disagree by up to half a cell on each axis. A
+	# layer built to exactly its fade radius would come up short on the side
+	# the camera has drifted toward, and the shortfall is a hard edge.
+	var wobble := cell * 0.70711
+	var exponent := 1.0 / maxf(bias, 0.05)
+	var scale := float(count) * exponent / (TAU * pow(radius, exponent))
+
+	var plan: Array = []
+	# The base layer is fitted to the area-weighted mean density of the outer
+	# annulus rather than to the density at the rim, because that annulus is
+	# more than half the disc and fitting the rim leaves the whole of it thin.
+	var outer := radius / ratio
+	var mean := 2.0 * scale * (pow(radius, exponent) - pow(outer, exponent)) \
+			/ (exponent * maxf(radius * radius - outer * outer, 0.0001))
+	plan.append({
+		# Capped at what one cell's tags can address: two items sharing a tag
+		# would hash to the same spot and render on top of each other. Only
+		# reachable by asking for an implausible density -- the shipped grass
+		# tier's base layer is 64 -- but silent if it ever happened.
+		"per_cell": clampi(int(round(mean * cell * cell)), 1, LATTICE_SLOTS - 2),
+		"ramp_in": radius * 4.0,
+		"ramp_out": radius * 8.0,
+		# The base layer gets NO wobble margin, unlike the ones below it, and
+		# it is the one place where that is worth the arithmetic: it is 83% of
+		# the ring, so a margin ring costs ten thousand instances. It can be
+		# dropped because the base layer already has an edge -- `field_radius`,
+		# where `v_fade` culls -- and an item the camera's drift takes past it
+		# was at a few per cent of its own height on the way out anyway. `-
+		# wobble` here means the CELLS reach exactly `radius`, since a cell is
+		# taken whenever any part of it is in reach.
+		"geo": radius - wobble,
+	})
+
+	var ring := outer
+	while ring >= min_radius and plan.size() < LATTICE_MAX_LAYERS:
+		var ramp_in := ring * band
+		var inner := ring / ratio
+		var want := scale * pow(ramp_in, exponent - 2.0) \
+				- _plan_density(plan, cell, ramp_in)
+		var guess := int(round(want * cell * cell))
+		var best := 0
+		var best_err := INF
+		for per in range(maxi(0, guess - 4), maxi(1, guess + 5)):
+			var err := 0.0
+			for i in 48:
+				var r: float = inner + (ring - inner) * (float(i) + 0.5) / 48.0
+				var add := float(per) / (cell * cell) * (1.0 - smoothstep(ramp_in, ring, r))
+				var target := scale * pow(r, exponent - 2.0)
+				var e := (_plan_density(plan, cell, r) + add - target) / target
+				err += e * e * r
+			if err < best_err:
+				best_err = err
+				best = per
+		if best > 0:
+			plan.append({
+				"per_cell": mini(best, LATTICE_SLOTS - 2),
+				"ramp_in": ramp_in,
+				"ramp_out": ring,
+				"geo": ring + wobble,
+			})
+		ring /= ratio
+	return plan
+
+
+## What a plan already delivers at radius r, in items per square metre.
+static func _plan_density(plan: Array, cell: float, r: float) -> float:
+	var out := 0.0
+	for entry: Variant in plan:
+		var layer: Dictionary = entry
+		out += float(layer["per_cell"]) / (cell * cell) \
+				* (1.0 - smoothstep(float(layer["ramp_in"]), float(layer["ramp_out"]), r))
+	return out
+
+
+## An item's tag, as an offset inside its cell. Purely an identity: the x step
+## says which of the cell's items this is and the y step says which layer it
+## belongs to, and the shader reads both back out of the instance's world
+## coordinate. The real position is hashed from the cell, not from this.
+static func _slot_offset(item: int, layer: int, cell: float) -> Vector2:
+	var step := cell / float(LATTICE_SLOTS)
+	return Vector2(float(1 + item % (LATTICE_SLOTS - 2)) * step,
+			float(1 + layer) * step)
+
+
+## Lay a plan out into a MultiMesh, and report how many instances that took.
+##
+## A cell is included in a layer when any part of it is within the layer's
+## reach, so the lattice covers the disc rather than stopping a cell short of
+## it. Every transform is a pure translation: the per-item yaw that used to
+## live in the instance basis is hashed from the cell in the shader now, for
+## the same reason as everything else -- a yaw carried by the instance travels
+## with the instance and would spin every tuft on the spot each time the ring
+## moved a cell.
+static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
+	var per_layer: Array[PackedVector2Array] = []
+	var total := 0
+	for entry: Variant in plan:
+		var layer: Dictionary = entry
+		var reach: float = float(layer["geo"])
+		var steps := int(ceil(reach / cell)) + 1
+		var half := cell * 0.5
+		var corner := cell * 0.70711
+		var cells := PackedVector2Array()
+		for ix in range(-steps, steps + 1):
+			for iz in range(-steps, steps + 1):
+				var origin := Vector2(float(ix) * cell, float(iz) * cell)
+				if (origin + Vector2(half, half)).length() - corner <= reach:
+					cells.append(origin)
+		per_layer.append(cells)
+		total += cells.size() * int(layer["per_cell"])
+
+	mm.instance_count = total
+	var at := 0
+	for index in plan.size():
+		var layer: Dictionary = plan[index]
+		var per: int = int(layer["per_cell"])
+		for origin: Vector2 in per_layer[index]:
+			for item in per:
+				var slot := _slot_offset(item, index, cell)
+				mm.set_instance_transform(at, Transform3D(Basis.IDENTITY,
+						Vector3(origin.x + slot.x, 0.0, origin.y + slot.y)))
+				at += 1
+	return total
+
+
+## Hand a plan to a material. The two arrays are the only per-layer state the
+## shaders need; an instance finds its own row through the layer index encoded
+## in its slot tag. Unused rows are pushed past any distance that can occur so
+## a stale index cannot fade a layer that is not there.
+static func _apply_lattice(mat: ShaderMaterial, plan: Array, cell: float) -> void:
+	if mat == null:
+		return
+	var ins := PackedFloat32Array()
+	var outs := PackedFloat32Array()
+	for entry: Variant in plan:
+		var layer: Dictionary = entry
+		ins.append(float(layer["ramp_in"]))
+		outs.append(float(layer["ramp_out"]))
+	while ins.size() < LATTICE_MAX_LAYERS:
+		ins.append(1.0e9)
+		outs.append(2.0e9)
+	mat.set_shader_parameter("layer_in", ins)
+	mat.set_shader_parameter("layer_out", outs)
+	mat.set_shader_parameter("lattice_cell", cell)
+	var cfg := config()
+	mat.set_shader_parameter("lattice_jitter", float(cfg.get("lattice_jitter", 1.0)))
+	mat.set_shader_parameter("lod_dither", float(cfg.get("lod_dither", 0.3)))
+
 func _ready() -> void:
 	if not (is_enabled() or force_enabled):
 		# Nothing built, nothing bound, no per-frame work. A disabled field is
@@ -117,27 +367,23 @@ func _build() -> void:
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = _tuft_mesh(int(cfg.get("blades_per_tuft", 4)),
 			int(cfg.get("blade_segments", 4)))
-	mm.instance_count = count
 
-	# Distribution. `r = radius * u^centre_bias` with a bias below 0.5 crowds
-	# the middle, which is where the camera is and where a bare patch is most
-	# visible; a uniform disc (bias 0.5) spends most of its tufts in the outer
-	# ring where they are sub-pixel anyway.
-	var bias := float(cfg.get("centre_bias", 0.62))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(cfg.get("seed", 20260825))
-	for i in count:
-		var angle := rng.randf_range(0.0, TAU)
-		var r := radius * pow(rng.randf(), bias)
-		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
-		mm.set_instance_transform(i, Transform3D(basis,
-				Vector3(sin(angle) * r, 0.0, cos(angle) * r)))
+	# Distribution. The disc law `r = radius * u^centre_bias` is still what the
+	# density profile is fitted to -- see the STABLE RING note above -- but the
+	# tufts stand on a world-aligned lattice now rather than at random points,
+	# because a random disc cannot survive its own ring moving.
+	var cell := lattice_cell()
+	var plan := _lattice_plan(count, radius, float(cfg.get("centre_bias", 0.62)), cell, cfg)
+	var placed := _fill_lattice(mm, plan, cell)
 	multimesh = mm
 
 	_material = ShaderMaterial.new()
 	_material.shader = load(SHADER_PATH)
 	material_override = _material
 	_apply_config(cfg)
+	_apply_lattice(_material, plan, cell)
+	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d)" % [
+		placed, plan.size(), "tuft_count", count])
 
 	# The field is ground cover: it must not push the camera around, must not
 	# receive a harvest prompt, and must not cast the black carpet a thousand
@@ -145,9 +391,12 @@ func _build() -> void:
 	# turned its own shadows off for exactly that measured reason).
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# The ring is authored around the origin and moved; without this Godot culls
-	# it against an AABB that does not follow.
-	custom_aabb = AABB(Vector3(-radius, -400.0, -radius),
-			Vector3(radius * 2.0, 800.0, radius * 2.0))
+	# it against an AABB that does not follow. Two cells of slack on each side
+	# because the lattice reaches a fade band past `radius` and each item is
+	# then hash-jittered up to half a cell inside its own square.
+	var slack := lattice_cell() * 2.0
+	custom_aabb = AABB(Vector3(-radius - slack, -400.0, -radius - slack),
+			Vector3((radius + slack) * 2.0, 800.0, (radius + slack) * 2.0))
 
 	# AFTER `custom_aabb` is set, not before: the stone ring copies it, and
 	# built first it copied the default zero AABB instead.
@@ -174,17 +423,14 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
-		mm.instance_count = count
-		# Its own RNG stream, seeded from its own name, so adding or removing a
-		# tier cannot reshuffle where any other tier's items land.
-		var rng := RandomNumberGenerator.new()
-		rng.seed = int(tier.get("seed", hash(str(tier.get("name", "tier")))))
-		var bias := float(tier.get("centre_bias", 0.6))
-		for i in count:
-			var angle := rng.randf_range(0.0, TAU)
-			var r := radius * pow(rng.randf(), bias)
-			mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, rng.randf_range(0.0, TAU)),
-					Vector3(sin(angle) * r, 0.0, cos(angle) * r)))
+		# Its own lattice schedule, fitted to its own count and bias. The tiers
+		# no longer need separate RNG streams to stay independent of each
+		# other: nothing here is drawn from a stream at all, and where an item
+		# stands is hashed from its own world cell and its own tier.
+		var cell := lattice_cell()
+		var plan := _lattice_plan(count, radius,
+				float(tier.get("centre_bias", 0.6)), cell, cfg)
+		var placed := _fill_lattice(mm, plan, cell)
 
 		var node := MultiMeshInstance3D.new()
 		node.name = "Cover_" + str(tier.get("name", "tier"))
@@ -229,7 +475,10 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			if str(names[i]) in allowed:
 				mask |= 1 << i
 		mat.set_shader_parameter("allowed_base_mask", mask)
+		_apply_lattice(mat, plan, cell)
 		_cover_materials.append(mat)
+		print("[grass_field] cover tier %-8s %d instances over %d lattice layers (count %d)" % [
+			str(tier.get("name", "tier")), placed, plan.size(), count])
 	if not _cover_materials.is_empty():
 		print("[grass_field] %d cover tier(s) up" % _cover_materials.size())
 
@@ -517,18 +766,15 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = _stone_mesh(int(stone_cfg.get("sides", 7)))
-	mm.instance_count = count
 
-	# Same disc law as the tufts, drawn from its own stream so adding or
-	# removing stones cannot reshuffle where the grass lands.
-	var bias := float(stone_cfg.get("centre_bias", 0.58))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(stone_cfg.get("seed", 771131))
-	for i in count:
-		var angle := rng.randf_range(0.0, TAU)
-		var r := radius * pow(rng.randf(), bias)
-		mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, rng.randf_range(0.0, TAU)),
-				Vector3(sin(angle) * r, 0.0, cos(angle) * r)))
+	# Same disc law and the same lattice as the tufts, fitted to this tier's
+	# own count and bias. Its own schedule rather than a shared one: the two
+	# tiers have different densities, so a plan good for 300,000 tufts would
+	# quantise 90,000 stones badly.
+	var cell := lattice_cell()
+	var plan := _lattice_plan(count, radius,
+			float(stone_cfg.get("centre_bias", 0.58)), cell, cfg)
+	var placed := _fill_lattice(mm, plan, cell)
 
 	_stones = MultiMeshInstance3D.new()
 	_stones.name = "StoneField"
@@ -543,6 +789,9 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	_stones.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_stones.custom_aabb = custom_aabb
 	add_child(_stones)
+	_apply_lattice(_stone_material, plan, cell)
+	print("[grass_field] stone ring: %d instances over %d lattice layers (count %d)" % [
+		placed, plan.size(), count])
 
 	for key: String in [
 		"stone_size", "size_jitter", "sink", "density_gain", "clump_scale",
@@ -870,20 +1119,30 @@ func _process(delta: float) -> void:
 	if _camera == null or not is_instance_valid(_camera):
 		return
 
-	# Snap to a grid. Following the camera continuously makes every blade swim
-	# against the ground it is supposed to be growing out of, because the ring's
-	# own noise lookup is in WORLD space while the instances are in LOCAL space
-	# -- a sub-metre move re-rolls which tufts survive. Snapping means the set
-	# only changes when the ring has moved a whole cell.
-	var snap := float(config().get("snap", 2.0))
+	# TWO CENTRES, and separating them is half of the re-roll fix.
+	#
+	# `field_centre` is the eye, unquantised, written every frame. Everything
+	# measured FROM it is a smooth function of distance -- the ring's edge
+	# fade, the near-to-far blade height, each lattice layer's ramp -- and all
+	# three used to step 2m at a time because they were reading the snapped
+	# value. A distance that jumps is a height that jumps.
+	#
+	# The NODE, on the other hand, may only sit on whole lattice cells: it is
+	# what anchors every instance to a world cell, and an unquantised node
+	# would put the whole ring between cells and destroy the stability the
+	# lattice exists for. So the eye moves continuously and the ring hops, and
+	# the hop is invisible because nothing in the frame is measured from it.
 	var at := _camera.global_position
-	var centre := Vector3(snappedf(at.x, snap), 0.0, snappedf(at.z, snap))
-	if centre.is_equal_approx(_centre):
-		return
-	_centre = centre
-	global_position = centre
-	_material.set_shader_parameter("field_centre", centre)
+	var eye := Vector3(at.x, 0.0, at.z)
+	_material.set_shader_parameter("field_centre", eye)
 	if _stone_material != null:
-		_stone_material.set_shader_parameter("field_centre", centre)
+		_stone_material.set_shader_parameter("field_centre", eye)
 	for cover: ShaderMaterial in _cover_materials:
-		cover.set_shader_parameter("field_centre", centre)
+		cover.set_shader_parameter("field_centre", eye)
+
+	var cell := lattice_cell()
+	var anchor := Vector3(snappedf(at.x, cell), 0.0, snappedf(at.z, cell))
+	if anchor.is_equal_approx(_centre):
+		return
+	_centre = anchor
+	global_position = anchor

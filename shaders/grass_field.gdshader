@@ -211,22 +211,146 @@ float value_noise(vec2 q) {
 			mix(hash12(i + vec2(0.0, 1.0)), hash12(i + vec2(1.0, 1.0)), f.x), f.y);
 }
 
+// ---------------------------------------------------------------------------
+// STABLE RING. The block below is IDENTICAL in `grass_field.gdshader`,
+// `stone_field.gdshader` and `cover_tier.gdshader`, the same way
+// `get_index_coord` and `value_noise` already are, and it must stay identical:
+// all three tiers ride one node, so a tier that decoded the lattice
+// differently would drift off the ground the other two are standing on.
+//
+// WHAT IT IS FOR. The owner's 2026-08-28 playtest: "the grass rerenders like
+// every step." The ring follows the camera by MOVING, every per-item property
+// here is hashed on the item's WORLD position, so a move re-rolled the lot --
+// which tufts survive, how tall, which way they lean. `snap` did not remove
+// that, it made it periodic, one whole-field re-roll every 2 metres.
+//
+// So an instance's stored translation is no longer where it stands. It is
+// the world LATTICE CELL it belongs to, plus a tag saying which of that cell's
+// items it is and which layer it came from; `grass_field.gd::_fill_lattice`
+// writes it and this reads it back. Where the item actually stands, its yaw
+// and its fade rank are all hashed from the cell's INTEGER coordinates. The
+// node may only sit on whole cells, so moving the ring hands cell C to a
+// different instance and that instance draws exactly what the last one did.
+// The field is a property of the ground now, not of the ring.
+//
+// The one thing that still changes with the camera is a layer's fade: the ring
+// is nested lattices of different densities (the disc law's `centre_bias`
+// gradient, which a single lattice cannot carry), and each one has to arrive
+// smoothly rather than as a density ring following the player about. It
+// arrives as HEIGHT, per item, dithered against a stable per-cell rank, so a
+// fraction of one layer is mid-growth at any moment instead of all of it
+// switching at once.
+// ---------------------------------------------------------------------------
+
+// The cell the field is quantised to, in metres, and always equal to the node's
+// snap step -- `grass_field.gd::lattice_cell` is the single source of both.
+uniform float lattice_cell = 2.0;
+// How much of its own cell an item may wander. 1.0 fills the cell, which is
+// what makes a lattice read as scatter rather than as rows; 0 would put every
+// item dead centre and the grid would be plainly visible.
+uniform float lattice_jitter : hint_range(0.0, 1.5) = 1.0;
+// The width, in rank, of a layer's growth band. Small means each item grows in
+// quickly but few are mid-growth at once; large means the reverse. This is the
+// only knob that trades one kind of visible change for the other.
+uniform float lod_dither : hint_range(0.02, 1.0) = 0.3;
+// Per-layer fade radii, pushed in by `grass_field.gd::_apply_lattice`. An item
+// finds its own row through the layer index in its tag.
+uniform float layer_in[16];
+uniform float layer_out[16];
+
+// Sub-cell slots per axis. The x tag counts items within a cell, the y tag
+// carries the layer index, and both are recovered from the instance's world
+// coordinate -- so the step has to stay far above float32's resolution at
+// world scale. 128 slots in a 2m cell is 15.6mm against a ~0.5mm mantissa step
+// eight kilometres out.
+const float LATTICE_SLOTS = 128.0;
+
+// Integer bit-mix over the lattice. `hash12` above CANNOT be used here: its
+// input would be a cell index in the thousands, and `fract(large * 0.1031)`
+// keeps only the mantissa bits that survive the multiply -- eight or so at
+// world scale, which reads as banding rather than as noise. This mixes the
+// integer coordinates themselves, so a cell's value does not depend on how far
+// from the origin the cell is.
+uint lattice_bits(uvec3 v) {
+	v = v * 1664525u + 1013904223u;
+	v.x += v.y * v.z;
+	v.y += v.z * v.x;
+	v.z += v.x * v.y;
+	v ^= v >> 16u;
+	v.x += v.y * v.z;
+	v.y += v.z * v.x;
+	v.z += v.x * v.y;
+	return v.x;
+}
+
+float lattice_rand(ivec2 cid, int tag, uint salt) {
+	uvec3 v = uvec3(uint(cid.x + 4194304), uint(cid.y + 4194304),
+			uint(tag) * 9781u + salt);
+	return float(lattice_bits(v)) * (1.0 / 4294967296.0);
+}
+
+// A layer is fully present inside `layer_in` and gone by `layer_out`. Guarded
+// because `smoothstep` with two equal edges is a divide by zero, and an unset
+// uniform array is all zeros.
+float lattice_layer_want(int layer, float dist) {
+	float near_r = layer_in[layer];
+	float far_r = max(layer_out[layer], near_r + 0.001);
+	return 1.0 - smoothstep(near_r, far_r, dist);
+}
+
+// Per-item yaw, applied here rather than carried in the instance basis. A yaw
+// stored on the instance travels with the instance, so every item would spin
+// on the spot each time the ring stepped a cell -- the same defect as the
+// coverage re-roll, wearing a different hat.
+vec2 lattice_yaw(vec2 v, float yaw) {
+	float s = sin(yaw);
+	float c = cos(yaw);
+	return vec2(v.x * c + v.y * s, v.y * c - v.x * s);
+}
+
 void vertex() {
-	// MODEL_MATRIX for a MultiMesh is node * instance, so column 3 is this
-	// blade's own world origin. The node is kept unrotated and at y=0 by
-	// `grass_field.gd`, so this is the blade's ground position in XZ and 0 in Y.
-	vec3 base = MODEL_MATRIX[3].xyz;
-	vec2 world_xz = base.xz;
+	// STABLE RING. Which world cell is this instance standing in, and which of
+	// that cell's items is it? The stored translation is a cell plus an
+	// identity tag; everything about where the item really stands comes out of
+	// the cell's integer coordinates, which is what makes it stay put when the
+	// ring moves. See the STABLE RING note above.
+	vec2 anchor = MODEL_MATRIX[3].xz;
+	vec2 cell_f = floor(anchor / lattice_cell);
+	ivec2 cid = ivec2(cell_f);
+	ivec2 tag = ivec2(floor((anchor - cell_f * lattice_cell) / lattice_cell
+			* LATTICE_SLOTS + 0.5));
+	int lattice_layer = clamp(tag.y - 1, 0, 15);
+
+	vec2 lattice_jit = vec2(lattice_rand(cid, tag.x, 11u),
+			lattice_rand(cid, tag.x, 29u)) - 0.5;
+	vec2 world_xz = (vec2(cid) + 0.5) * lattice_cell
+			+ lattice_jit * lattice_cell * lattice_jitter;
+	// What the geometry has to be shifted by to stand there instead of on the
+	// cell tag, in the instance's own space -- the basis is identity now.
+	vec2 lattice_shift = world_xz - anchor;
+	float item_yaw = lattice_rand(cid, tag.x, 53u) * 6.2831853;
+	float item_rank = lattice_rand(cid, tag.x, 71u);
+
 	// Per-BLADE seed. UV2.x is which blade of the tuft this vertex belongs to
-	// (see grass_field.gd::_tuft_mesh). Hashing on the instance origin alone
+	// (see grass_field.gd::_tuft_mesh). Hashing on the tuft position alone
 	// gives every blade in a tuft the same height and the same lean, which is
 	// the "comb" read; offsetting the hash domain by the blade id breaks them
 	// apart at no cost. Coverage and shade stay per-TUFT on purpose -- a tuft
 	// should live or die as a unit, or the drifts dissolve into static.
 	vec2 blade_seed = world_xz + vec2(UV2.x * 37.13, UV2.x * 91.71);
 
+	// `field_centre` is the EYE, written unquantised every frame, while the
+	// node hops in whole cells. Every fade below is therefore continuous;
+	// reading the ring's own position here is what used to make them step.
 	float dist = length(world_xz - field_centre.xz);
 	v_fade = 1.0 - smoothstep(fade_start, field_radius, dist);
+	// LAYER GROWTH. Dithered against the item's own stable rank so a fraction
+	// of the layer is mid-growth at any moment rather than the whole ring
+	// switching together. `* (1.0 - lod_dither)` keeps the top of the rank
+	// range reachable, so a fully-present layer really is fully present.
+	float item_thr = item_rank * (1.0 - lod_dither);
+	float item_presence = smoothstep(item_thr, item_thr + lod_dither,
+			lattice_layer_want(lattice_layer, dist));
 
 	// Terrain height, by Terrain3D's own lookup.
 	ivec3 coord = get_index_coord(world_xz * _vertex_density, 1);
@@ -262,6 +386,7 @@ void vertex() {
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
 	bool culled = off_map || hole || forbidden || v_fade <= 0.001
+			|| item_presence <= 0.002
 			|| hash12(world_xz * 7.31) > keep;
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
@@ -285,6 +410,9 @@ void vertex() {
 		// And shorter at the ring's edge, for the same reason at a different
 		// scale -- see `edge_shorten_floor` above.
 		h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
+		// And shorter while its lattice layer is still arriving, which is the
+		// only reason a blade's height changes as the player walks now.
+		h *= item_presence;
 
 		// Bend. A blade of grass is not a spike: it leans, and each one leans a
 		// different way. Without the per-blade term the whole field renders as
@@ -314,10 +442,16 @@ void vertex() {
 		local.y = t * h;
 		local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
 
+		// Yaw, then stand it on its hashed spot rather than on its cell tag.
+		// Both were the instance transform's job before and are the shader's
+		// now, for the same reason: anything carried by the instance travels
+		// with the instance when the ring steps.
+		local.xz = lattice_yaw(local.xz, item_yaw) + lattice_shift;
 		VERTEX = local;
 		// The blade's own normal faces up-ish, which keeps a field of them from
 		// flickering as they turn edge-on to the sun.
 		NORMAL = normalize(vec3(NORMAL.x * 0.35, 1.0, NORMAL.z * 0.35));
+		NORMAL.xz = lattice_yaw(NORMAL.xz, item_yaw);
 	}
 
 	// Finally: sit the whole blade on the ground. Done after the local build so
