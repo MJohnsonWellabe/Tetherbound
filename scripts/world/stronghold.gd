@@ -466,12 +466,41 @@ func _floor_colour() -> Color:
 	return Color(str(_config.get("site", {}).get("floor_colour", "#57503f")))
 
 
+## The floor's own material -- the same stone as the walls at its OWN grain.
+##
+## Floor and wall shared `STONE_TILE`, and a blind critic measured what that
+## costs against the 1.80 m trainer standing in the frame: the near-field
+## cobbles in the tether approach read close to a metre across, "paving slabs
+## the size of a car bonnet, laid in a corridor". A wall is seen face-on and a
+## floor is seen at a grazing angle running away from the camera, so the same
+## tile size cannot serve both -- the floor needs the tighter one.
+func _floor_material() -> StandardMaterial3D:
+	var key := "floor_stone"
+	if _materials.has(key):
+		return _materials[key]
+	var m: StandardMaterial3D = _material(_floor_colour(), 0.0, true).duplicate() as StandardMaterial3D
+	m.uv1_scale = Vector3.ONE * (STONE_TILE * float(_config.get("site", {}).get("floor_tile_scale", 2.6)))
+	_materials[key] = m
+	return m
+
+
 ## Oxblood: dark faction paint on stone. The emission is a value FLOOR, not a
 ## glow -- severed_spokes.gd's own header records why (under gl_compatibility
 ## the bare albedo shades to pure black and the colour stops being readable as
 ## a colour at all).
 func _tether_material() -> StandardMaterial3D:
-	return _material(_palette("tether_oxblood", Color("#332228")), 0.55)
+	# CONTENT-0828B: `textured` was defaulting to false here, so every girder
+	# and pillar in the complex was a flat unshaded colour. A blind critic
+	# probed the courtyard's tallest pillar down its full height and got the
+	# same three values top to bottom -- "it does not change value once" --
+	# and called it blockout material on the most prominent vertical element in
+	# the frame. It is faction paint ON STONE (this function's own name for it),
+	# so it takes the same masonry the wall behind it does and keeps its
+	# oxblood as the tint. The emission stays: `severed_spokes.gd` records that
+	# it is a value FLOOR, not a glow -- without it the bare albedo shades to
+	# pure black under gl_compatibility and the reserved colour stops reading as
+	# a colour at all.
+	return _material(_palette("tether_oxblood", Color("#332228")), 0.55, true)
 
 
 ## Teal: the reserved ENERGY colour, and it appears only where Team Tether's
@@ -519,7 +548,7 @@ func _build_chambers() -> void:
 		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
 
 		_box(Vector3(outer.x, _skirt, outer.y),
-			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_material())
 		if not bool(chamber.get("open", false)):
 			# CONTENT-0828B: this was `_material(_timber())` -- a flat untextured
 			# colour, on a slab up to 28x28 m. It is the single largest surface
@@ -681,7 +710,7 @@ func _build_passages() -> void:
 		if not along_x:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 1.0, length)
-		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour(), 0.0, true))
+		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _floor_material())
 		if roofed:
 			# Same untextured-ceiling fix as `_build_chambers()`. This one is
 			# seen END-ON above every doorway, which is where `C3` caught it:
@@ -774,7 +803,7 @@ func _build_approach_ramp() -> void:
 	var box := BoxMesh.new()
 	box.size = Vector3(width, thickness, length)
 	mesh.mesh = box
-	mesh.material_override = _material(_floor_colour(), 0.0, true)
+	mesh.material_override = _floor_material()
 	mesh.position = top_mid - up * (thickness * 0.5)
 	mesh.rotation.x = -angle
 	add_child(mesh)
@@ -898,15 +927,25 @@ func _structure_colour(role: String) -> Color:
 	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
 	if tints.has(role):
 		return Color(str(tints[role]))
-	# Structure is a LIGHTER stone than the infill it stands against; the
-	# recessed course and the overhead ribs are darker. Round 1 returned
-	# `_stone()` for shafts and corners -- the same value `_wall_material(false)`
-	# gives the wall behind them -- and `C1`/`C2` came back with walls that had
-	# no members in them at all. Dressed stone against rubble is what this
-	# actually is, and under shadowless omnis the value is the only cue there is.
-	match role:
-		"course", "rib": return _stone_dark()
-		_: return _stone_light().lightened(0.22)
+	# ONE VALUE FOR EVERY MEMBER: structure is a lighter stone than the infill
+	# it stands against. Round 1 returned `_stone()` for shafts and corners --
+	# the same value `_wall_material(false)` gives the wall behind them -- and
+	# `C1`/`C2` came back with walls that had no members in them at all.
+	#
+	# Round 2 then put the course and the ribs at `_stone_dark()`, and `C4`
+	# says why that is wrong: in the courtyard, under the real sun, a near-black
+	# horizontal band on a curtain wall reads as an ARROW SLIT. A dark band is
+	# only a recess when something casts a shadow into it, and nothing in this
+	# building does (`_build_lights` sets `shadow_enabled = false` on every
+	# omni, deliberately). Dressed stone standing proud reads correctly in both
+	# the dark inner rooms and the daylit yards, so that is what all of it is.
+	#
+	# The ribs go light here for the reason they go DARK in the Warrens: a rib
+	# is read against its own ceiling, and this building's ceilings are now the
+	# darkened stone `_build_chambers()` gives them, where the cave's are pale
+	# rock. Same rule, opposite answer, and that is what a per-consumer role
+	# map is for.
+	return _stone_light().lightened(0.22)
 
 
 ## Lit cable runs along the floor between chambers, all of them pointing at the

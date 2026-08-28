@@ -44,16 +44,26 @@ const WARRENS_VIEWS := [
 		# The den across its long axis, from the hall doorway -- the widest
 		# view of the biggest room, which is where a bay rhythm either reads
 		# as structure or does not read at all.
+		# Round 2 stood this at (-6.5, 34), which is 1.5 m off one wall and 1 m
+		# off another -- inside the corner pier, so the left third of the frame
+		# was one blurred slab of stone half a metre from the lens. A stand has
+		# to be somewhere a player can stand.
 		"name": "W1-den-wide",
-		"eye": Vector2(-6.5, 34.0), "eye_h": 1.75,
+		"eye": Vector2(-4.0, 35.5), "eye_h": 1.75,
 		"target": Vector2(4.0, 43.0), "target_h": 1.6,
 	},
 	{
 		# A corner of the den, close. The corner post and the wall/ceiling
 		# junction at the range a player actually stands at during the fight.
-		"name": "W2-den-corner",
-		"eye": Vector2(2.0, 41.0), "eye_h": 1.6,
-		"target": Vector2(-7.0, 46.0), "target_h": 2.6,
+		# Round 3's version of this aimed at a bare corner and a blind critic
+		# said so: 65% undifferentiated wall, no focal point, no reason for the
+		# camera to be here. A frame offered for judgement has to be a frame
+		# somebody would take. Same job -- the wall/ceiling junction and a
+		# corner pier at fighting range -- with the guardian's half of the room
+		# in it, so there is something for the structure to be behind.
+		"name": "W2-den-corner", "aim_guardian": true,
+		"eye": Vector2(-5.5, 45.0), "eye_h": 1.6,
+		"target": Vector2(4.0, 43.0), "target_h": 1.2,
 	},
 	{
 		# The vault, from just inside. The prior pass's own worst frame -- its
@@ -68,8 +78,8 @@ const WARRENS_VIEWS := [
 		# lighting pass. If the method only works where the content is, it is
 		# dressing and not a method. This is the control.
 		"name": "W4-hall",
-		"eye": Vector2(-5.0, 17.0), "eye_h": 1.7,
-		"target": Vector2(4.0, 26.0), "target_h": 1.8,
+		"eye": Vector2(-2.0, 17.5), "eye_h": 1.7,
+		"target": Vector2(3.0, 27.0), "target_h": 2.4,
 	},
 ]
 
@@ -198,6 +208,13 @@ func _run() -> void:
 			var name_value := str(view["name"])
 			var eye: Vector3 = _stand(host, view, "eye")
 			var target: Vector3 = _stand(host, view, "target")
+			# Aim at the guardian's actual body rather than at a hand-guessed
+			# point near it -- it is a wild body with a `home` and it wanders,
+			# so a typed coordinate crops it off the frame edge sooner or later.
+			if bool(view.get("aim_guardian", false)) and host.has_method("guardian"):
+				var creature: Node3D = host.call("guardian") as Node3D
+				if creature != null and is_instance_valid(creature):
+					target = creature.global_position + Vector3.UP * 0.7
 			if eye.is_equal_approx(Vector3.INF) or target.is_equal_approx(Vector3.INF):
 				failures.append("%s: stand is outside the building's footprint" % name_value)
 				continue

@@ -319,7 +319,14 @@ func _floor_material() -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.roughness = 0.98
 	m.albedo_texture = FLOOR_ALBEDO
-	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.6)
+	# Round 2 lerped this 0.6 toward `ROCK_TINT` the way the walls do and the
+	# frames came back with a bright sandy floor that was the LIGHTEST surface
+	# in every room -- a beach, and brighter than the stone above it, which
+	# inverts a cave's own value structure. A floor is the surface furthest
+	# from every light in the room and it should read that way. 0.22 keeps
+	# enough of the tint to sit in the same warm family as the walls while
+	# leaving `site.floor_colour` doing the work it was authored to do.
+	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.22)
 	m.normal_enabled = true
 	m.normal_texture = FLOOR_NORMAL
 	m.normal_scale = 1.8
@@ -538,7 +545,15 @@ func _build_vault_door(centre: Vector3, along_x: bool, width: float, height: flo
 	var box := BoxMesh.new()
 	box.size = size
 	_vault_door_mesh.mesh = box
-	_vault_door_mesh.material_override = _material(colour)
+	# CONTENT-0828B: untextured until now, and a blind critic looking at the den
+	# called it exactly what it was -- "a flat untextured pale-tan surface, a
+	# different material from every other wall in the build. Proxy geometry left
+	# in shot." It is the door the whole payoff is behind and it was the one
+	# surface in the room still wearing a flat colour. Same defaulted `textured`
+	# argument as the floors and the plinth; the slab is cut stone and now looks
+	# like it. The seam and the two spills are what make it read as a DOOR
+	# rather than as more wall, and they are unaffected.
+	_vault_door_mesh.material_override = _material(colour, 0.0, true)
 	_vault_door_mesh.position = Vector3(centre.x, _floor_y + height * 0.5, centre.z)
 	_vault_door_mesh.name = "VaultDoor"
 	add_child(_vault_door_mesh)
@@ -608,6 +623,36 @@ func _build_vault_door_seam(along_x: bool, width: float, height: float, size: Ve
 		toward = Vector3.RIGHT if along_x else Vector3.BACK
 	lamp.position = toward * push + Vector3.UP * (height * -0.5 + 0.8)
 	_vault_door_mesh.add_child(lamp)
+
+	# CONTENT-0828B. AND A SPILL ON THE DEN SIDE, UNDER THE SLAB.
+	#
+	# CONTENT-0828's claim for this door is that "what the player can see across
+	# the den WHILE THE ALPHA IS STILL ALIVE is a sealed way on with something
+	# lit behind it", and its own report flagged that its evidence did not show
+	# that -- the frame meant to prove it had the door out of shot, and the
+	# claim rested on a head-on stand instead.
+	#
+	# `tools/_probe_den_door_sightline.gd` measures it rather than photographing
+	# it again, from the stands a player actually occupies: the den doorway they
+	# enter by, and a ring at engage range around the guardian. The shut door is
+	# within the 70-degree camera and unoccluded at ONE of eight. It reads on
+	# the way in and then leaves the frame for the whole fight, because the
+	# guardian stands in the middle of the room and the door is on a side wall.
+	#
+	# A seam on the door's own face cannot fix that: it is on the surface the
+	# player has turned away from. Light on the FLOOR can, because the floor is
+	# in frame from every facing -- it is what the player is standing on. This
+	# is a low warm pool at the foot of the slab on the DEN side, which is also
+	# the most ordinary thing a shut door with something lit behind it does.
+	# Deliberately weak and short-ranged: it is a glow under a door, not a
+	# second light source, and the den's authored key still owns the room.
+	var under := OmniLight3D.new()
+	under.name = "VaultDoorUnderGlow"
+	under.light_color = glow
+	under.light_energy = energy * float(cfg.get("under_energy_scale", 0.55))
+	under.omni_range = float(cfg.get("under_range_m", 4.5))
+	under.position = -toward * push + Vector3.UP * (height * -0.5 + 0.25)
+	_vault_door_mesh.add_child(under)
 
 
 ## The way in, and the reason this is not just a doorway: the cave floor sits
@@ -1123,16 +1168,33 @@ func _structure_colour(role: String) -> Color:
 	var tints: Dictionary = _config.get("interior_structure", {}).get("tints", {})
 	if tints.has(role):
 		return Color(str(tints[role]))
-	# Structure is a LIGHTER stone than the infill it stands against, and the
-	# recessed line and the overhead members are darker. That is not decoration:
-	# it is what dressed stone against rubble actually looks like, and it is the
-	# only cue available in rooms lit by shadowless omnis. Round 1 returned the
-	# wall's own `site.rock` for shafts and corners -- the member was literally
-	# the same colour as the wall -- and the frames showed exactly nothing.
+	# Structure is a LIGHTER stone than the infill it stands against. That is
+	# not decoration: it is what dressed stone against rubble actually looks
+	# like, and under shadowless omnis (`_build_lights`) the value is the only
+	# cue there is. Round 1 returned the wall's own `site.rock` for shafts and
+	# corners -- the member was literally the same colour as the wall -- and
+	# the frames showed exactly nothing.
+	#
+	# ROUND 2 THEN MADE THE COURSE NEARLY BLACK, on the theory that a recessed
+	# line reads as a shadow. It does, when there are shadows. With none, a
+	# dark band on a lit wall is not a recess, it is a painted stripe -- and in
+	# the stronghold's daylit courtyard the same value read as an arrow slit,
+	# which is an actively wrong thing for a wall to appear to have. Every
+	# member is the light dressed stone now and the geometry's own edges do the
+	# rest, which is the only version of this that survives both a torchlit
+	# cave and a yard under the real sun.
+	#
+	# The ribs are the ONE exception and the reason is per-consumer rather than
+	# general: a rib is read against the CEILING it hangs from, and this cave's
+	# ceiling is the same pale rock as its walls. Darker is what separates them
+	# here. `stronghold.gd::_structure_colour` makes the opposite call for the
+	# same reason -- its ceilings are dark, so its ribs are light.
 	var rock := _rock()
-	match role:
-		"course", "rib": return rock.darkened(0.42)
-		_: return rock.lightened(0.34)
+	# The corbel goes with the rib it carries -- they are one piece of structure
+	# and a bracket in a different stone from its own beam reads as a mistake.
+	if role == "rib" or role == "corbel":
+		return rock.darkened(0.28)
+	return rock.lightened(0.34)
 
 
 ## Is this local point in a passage mouth?
@@ -1557,8 +1619,30 @@ func _build_prize() -> void:
 	# object, where a single cube reads as a crate. It is the same base-course
 	# cue `stronghold.gd::_wall_piece` already puts under every wall in the
 	# fortress, at prop scale.
-	_box(Vector3(1.24, 0.18, 1.24), Vector3(at.x, _floor_y + 0.09, at.z), _rock(), true, true)
-	_box(Vector3(0.96, 0.42, 0.96), Vector3(at.x, _floor_y + 0.39, at.z), _rock(), true, true)
+	# At PROP grain, not wall grain. Round 3 gave the plinth `_material()`, which
+	# is the walls' own triplanar stone at `ROCK_UV_SCALE` -- tuned for a
+	# four-metre wall -- and a blind critic caught the result immediately: "a
+	# knee-high plinth has masonry grain sized for a fortress wall, which makes
+	# the plinth read as a toy." Texel density has to agree with an object's
+	# size, so a metre-wide plinth gets its own scale.
+	var plinth := _material(_rock(), 0.0, true).duplicate() as StandardMaterial3D
+	plinth.uv1_scale = Vector3.ONE * (ROCK_UV_SCALE * 3.4)
+	for step: Array in [[Vector3(1.24, 0.18, 1.24), 0.09], [Vector3(0.96, 0.42, 0.96), 0.39]]:
+		var course := MeshInstance3D.new()
+		var slab := BoxMesh.new()
+		slab.size = step[0]
+		course.mesh = slab
+		course.material_override = plinth
+		course.position = Vector3(at.x, _floor_y + float(step[1]), at.z)
+		add_child(course)
+		var body := StaticBody3D.new()
+		var shape := CollisionShape3D.new()
+		var box_shape := BoxShape3D.new()
+		box_shape.size = step[0]
+		shape.shape = box_shape
+		body.add_child(shape)
+		body.position = course.position
+		add_child(body)
 	var gem := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
 	# Was 0.22. A 44cm stone on a metre plinth across a dark eight-metre room
@@ -1566,6 +1650,18 @@ func _build_prize() -> void:
 	# something is there, and the object itself none.
 	sphere.radius = 0.30
 	sphere.height = 0.60
+	# FACETED, not a dome. A blind critic called the old one "a flat salmon-pink
+	# dome, zero texture, zero gradient across its whole surface" and ranked it
+	# an unfinished asset -- correct about what it looked like, and the cause is
+	# that a smooth emissive sphere under flat ambient light has no shading to
+	# vary: every normal points somewhere the same light reaches equally. Cutting
+	# the segment counts right down gives it flat faces at different angles,
+	# which is the only way this renderer will put a gradient across it, and it
+	# is also what a cut stone IS. No new asset: `SphereMesh` already takes both
+	# counts. The item's own description calls it a stone that beats slowly, so
+	# a rough crystal is what it should have been.
+	sphere.radial_segments = 7
+	sphere.rings = 4
 	gem.mesh = sphere
 	gem.material_override = _material(Color("#c8564a"), 2.0)
 	holder.add_child(gem)

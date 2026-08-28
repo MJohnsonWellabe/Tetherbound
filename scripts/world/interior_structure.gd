@@ -107,7 +107,8 @@ var _placed := 0
 ##                 width:float, height:float} for the `reveals` pass.
 ##   floor_y       the building's own floor level, host-local.
 ##   material_for  Callable(role: String) -> StandardMaterial3D. Roles are
-##                 "shaft", "capital", "course", "rib", "reveal", "corner".
+##                 "shaft", "capital", "course", "rib", "corbel",
+##                 "reveal", "corner".
 ##                 The consumer maps them onto its own palette, so this file
 ##                 never picks a colour and the two buildings cannot drift.
 ##   config        the tuning block out of the consumer's own JSON.
@@ -197,7 +198,19 @@ func _bays(centre: Vector3, size: Vector2, height: float, floor_y: float,
 	var cap_h := maxf(float(config.get("capital_height_m", 0.4)), 0.0)
 	var cap_extra := maxf(float(config.get("capital_project_m", 0.16)), 0.0)
 	var half := size * 0.5
-	var shaft_h := maxf(height - cap_h, MIN_MEMBER_M)
+	var full_h := maxf(height - cap_h, MIN_MEMBER_M)
+	# RAGGED is what actually separates rock from masonry, and `jitter` alone
+	# was not enough. A blind critic given the first ribbed build read the
+	# Warrens as "built out of the same dressed ashlar as the fortress" and said
+	# plainly that nothing in it reads as burrowed -- which is fair, because a
+	# few degrees of lean on a member that still runs floor to ceiling at a
+	# regular pitch is a colonnade with a wobble. What a cave has is ribbing
+	# that DIES OUT: a rib of harder stone stands proud for a couple of metres
+	# and the wall closes over it. So above zero jitter each member takes its
+	# own height, and the ones that stop short lose their capital, because a
+	# capital is a thing masonry has and rock does not.
+	var ragged := bool(config.get("ragged", _jitter > 0.0))
+	var short_at := clampf(float(config.get("ragged_short_at", 0.62)), 0.1, 1.0)
 
 	for axis: String in ["x", "z"]:
 		var along_x := axis == "x"
@@ -212,13 +225,24 @@ func _bays(centre: Vector3, size: Vector2, height: float, floor_y: float,
 				at += _lean()
 				if _in_a_doorway(at, doorways):
 					continue
-				var span := Vector3(width, shaft_h, project) if along_x \
-					else Vector3(project, shaft_h, width)
+				var shaft_h := full_h
+				var wide := width
+				if ragged:
+					shaft_h = full_h * _rng.randf_range(short_at, 1.0)
+					# Width varies too, and for the same reason: a rock rib is
+					# not extruded, it is what is left after the softer stone
+					# around it went.
+					wide = width * _rng.randf_range(0.7, 1.35)
+				var span := Vector3(wide, shaft_h, project) if along_x \
+					else Vector3(project, shaft_h, wide)
 				_member(span, Vector3(at.x, floor_y + shaft_h * 0.5, at.z), "shaft")
-				if cap_h > MIN_MEMBER_M:
-					var cap := Vector3(width + cap_extra, cap_h, project + cap_extra) if along_x \
-						else Vector3(project + cap_extra, cap_h, width + cap_extra)
-					_member(cap, Vector3(at.x, floor_y + shaft_h + cap_h * 0.5, at.z), "capital")
+				# A capital only where the member actually reaches the top. On a
+				# rib that stops short it would read as a shelf hanging off a
+				# wall, which is worse than no capital at all.
+				if cap_h > MIN_MEMBER_M and is_equal_approx(shaft_h, full_h):
+					var cap := Vector3(wide + cap_extra, cap_h, project + cap_extra) if along_x \
+						else Vector3(project + cap_extra, cap_h, wide + cap_extra)
+					_member(cap, Vector3(at.x, floor_y + full_h + cap_h * 0.5, at.z), "capital")
 
 
 ## Pass 2 -- the horizontal course, in one segment per bay.
@@ -280,12 +304,31 @@ func _ribs(centre: Vector3, size: Vector2, height: float, floor_y: float,
 	var axis := "x" if long_is_x else "z"
 	var marks: Array = (divisions[axis] as Dictionary)["marks"]
 	var span_len: float = size.y if long_is_x else size.x
+	# A CORBEL AT EACH END, because a rib that meets a wall and simply stops is
+	# the thing a blind critic named first: "they simply penetrate the masonry.
+	# Nothing sags, nothing is broken, nothing is doubled at a span, nothing
+	# carries a load." A bracket under each end is the smallest honest answer --
+	# it is what the wall does to catch the beam, it puts a second silhouette
+	# where wall meets ceiling, and it costs two boxes per rib.
+	var corbel := maxf(float(config.get("corbel_length_m", 0.0)), 0.0)
+	var half := size * 0.5
 	for mark: float in marks:
 		var at := Vector3(centre.x + mark, floor_y + height - drop * 0.5, centre.z) if long_is_x \
 			else Vector3(centre.x, floor_y + height - drop * 0.5, centre.z + mark)
 		var span := Vector3(width, drop, span_len) if long_is_x \
 			else Vector3(span_len, drop, width)
 		_member(span, at, "rib")
+		if corbel < MIN_MEMBER_M:
+			continue
+		for side in [-1.0, 1.0]:
+			# Deeper than the rib and hanging below it, so it reads as
+			# something the beam sits ON rather than as a thicker beam end.
+			var reach: float = (half.y if long_is_x else half.x) - corbel * 0.5
+			var seat := Vector3(width * 1.5, drop * 1.6, corbel) if long_is_x \
+				else Vector3(corbel, drop * 1.6, width * 1.5)
+			var seat_at := Vector3(at.x, floor_y + height - drop * 0.8, centre.z + side * reach) if long_is_x \
+				else Vector3(centre.x + side * reach, floor_y + height - drop * 0.8, at.z)
+			_member(seat, seat_at, "corbel")
 
 
 ## Pass 4 -- a jamb-and-lintel frame around every cut opening.
