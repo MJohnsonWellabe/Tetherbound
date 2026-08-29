@@ -66,6 +66,80 @@
           "softness": 0.1
         }
       ]
+    },
+    "stormtrail": {
+      "display_name": "Stormtrail",
+      "source_species": "trailpup",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/02_Stormtrail_alpha_trailpup.png",
+      "_comment": "Board palette: Thunder Tan / Storm Fur / Volt Glow / Static Blue. 'Do not overbuild this asset. Most of its identity should come from color + emissive + electricity' -- so the coat darkens toward storm-gray-brown (both fur bands) and the ONE new paint element is a thin gold lightning-vein overlay down the spine/flank, not a full repaint. Live albedo/emission on this species are external .jpg (probed directly), so creature_body._texture_for() falls to its species-keyed extracted-PNG convention -- the generator writes against trailpup_extracted_base_color.png regardless.",
+      "rules": [
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_min": 0.35
+          },
+          "set_hue": 32,
+          "set_sat": 0.26,
+          "val_scale": 0.58
+        },
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_max": 0.35
+          },
+          "set_hue": 28,
+          "set_sat": 0.2,
+          "val_scale": 0.52
+        }
+      ],
+      "overlays": [
+        {
+          "id": "lightning_marks",
+          "_why": "'bright yellow-gold lightning markings'. tint (not grow) so the streaks follow the fur's own value detail instead of sitting on top of it as a flat decal. Narrow radial band keeps it a spine/flank marking, not a full recolour.",
+          "where": {
+            "y_min": 0.4,
+            "up_min": 0.12,
+            "radial_max": 0.4
+          },
+          "mode": "tint",
+          "color": "#f7c948",
+          "sat_floor": 0.7,
+          "val_scale": 1.2,
+          "coverage": 0.32,
+          "grain": 9.0,
+          "clump_softness": 0.06,
+          "softness": 0.08
+        }
+      ],
+      "finish": {
+        "feature_percentile": 3.0,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.02
+      },
+      "glow": [
+        {
+          "id": "storm_veins",
+          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.32,
+            "up_min": 0.1
+          },
+          "percentile": 6.0,
+          "max_val": 0.13,
+          "color": "#5aa7ff",
+          "intensity": 1.6,
+          "softness": 0.1
+        }
+      ]
     }
   }
 }
