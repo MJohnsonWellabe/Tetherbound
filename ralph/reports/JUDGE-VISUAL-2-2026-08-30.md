@@ -339,4 +339,38 @@ also produce real changes (34.5, 32.6). The fog is light-handed — more
 "overcast flattening" than the aerial-perspective fix the horizon needs —
 but the preset pipeline demonstrably reaches the shipped renderer now.
 
+## 9. Terrain macro composition and landmarks
+
+Evidence: the wide reads across `ground-05-band5-approach-day/golden`,
+`C-02-silhouette-far`, `ground-01/03-…-day`, `S-ext-02-flank-wide`,
+`water-02-river-eye`.
+
+**Verdict: ACCEPTABLE — the skeleton still works, and it still points the
+player at the worst surfaces in the game.**
+
+What works, unchanged: the band-5 approach axis is real composition —
+forked path, pylon line with strung cyan cable, crystal clusters, long
+golden-hour shadows (`ground-05-…-golden` is the best macro mood frame
+this pass produced); band 3's half-timbered house is a real mid-scale
+landmark; band 1's rolling ridgelines compose like the keyart's opening
+panel; the castle silhouette still reads at distance.
+
+What reads wrong:
+
+- **The untextured horizon masses are still there.** Band 5's skyline
+  carries flat grey slabs at (114,132,128)/(132,146,143) std ~21–28 —
+  blank — and a floating pale tan rectangle sits on the skyline in the
+  golden variant. The stronghold's west/rear faces are the same
+  near-black blank planes they were ((32,34,28) std 2.2 in `C-02`).
+  The endgame march still aims at blockout.
+- **Aerial perspective is still absent.** `C-02`'s distant fields sample
+  (154,160,112) — full near-field saturation and brightness at
+  kilometre read; no haze gradient ties distance to the sky, so the
+  horizon still reads as a backdrop. The new fog preset proves the
+  pipeline could supply this; nothing applies it to clear-day distance.
+- **Regional identity is still prop-deep.** Bands 1, 3, 4, 5 share one
+  grass carpet, one tree family, one palette; band 2's grove remains the
+  only region with its own light. The spec's "increasingly demanding
+  regions" is still not something the terrain itself says.
+
 ---
