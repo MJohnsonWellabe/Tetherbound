@@ -56,27 +56,39 @@
   },
 
   "beats": {
-    "_comment": "The beat ORDER is the key order of `grandpa_conversations`, and each key's value is the conversation Grandpa runs if you talk to him during that beat. scripts/story/opening_beats.gd reads this; scripts/story/sequence_director.gd holds which one is current.",
+    "_comment": "The beat ORDER is the key order of `grandpa_conversations`, and each key's value is the conversation Grandpa runs if you talk to him during that beat. scripts/story/opening_beats.gd reads this; scripts/story/sequence_director.gd holds which one is current. The opening gives one immediate purpose at a time until tournament registration deliberately opens the qualification goal.",
     "_comment_correction": "This previously said the order lived in scripts/story/opening_beats.gd, 'which is code because it is a state machine rather than content'. That file did not exist when the line was written and the order was nowhere at all. The order is content — it is the shape of the first fifteen minutes and it will be argued with — so it stays here, and the code reads it.",
     "grandpa_conversations": {
       "wake": "",
       "house": "grandpa_house",
       "choose": "grandpa_waiting",
       "name": "grandpa_waiting",
+      "return_starter": "grandpa_first_catch",
       "walk_out": "grandpa_encounter_hint",
       "encounter": "grandpa_encounter_hint",
-      "road": "grandpa_road",
+      "road": "grandpa_after_first_catch",
+      "visit_mira": "",
+      "return_mira": "grandpa_tournament",
+      "tournament_signup": "",
+      "qualification": "",
       "free_play": ""
     },
     "_comment_wake": "Empty for the same reason free_play is: during the wake beat the player is upstairs and he is downstairs, and he has nothing to say through a floor. His prompt stays quiet until they are in the same room.",
-    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating his send-off forever. His last line promises he'll be here when the road brings the player past again; a homecoming conversation is content for the day homecoming means something. Put a conversation id here then.",
-    "named_conversation": "grandpa_named",
-    "_comment_named": "Not reached by walking up to him. The director starts it the instant the name is confirmed, with `$name` substituted into it.",
+    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating a send-off forever. The qualification beat is deliberately not free play: tournament data owns its preparation checklist after the registrar has explained it.",
+    "named_conversation": "",
+    "_comment_named": "Naming grants the starter, then deliberately returns control. The next required conversation is with Grandpa, so the player receives one immediate objective rather than an automatic stack of instructions.",
     "effects": {
       "_comment": "What a `beat:` effect out of data/dialogue/opening.json means in beat terms. The writer names MOMENTS ('starter_choice'); the state machine names BEATS ('choose'), and the two vocabularies deliberately do not have to match — the dialogue system has no idea what a beat is and should not acquire one. This is the join, and it is data because both sides of it are.",
       "starter_choice": "choose",
       "first_encounter": "walk_out",
+      "visit_mira": "visit_mira",
+      "tournament_signup": "tournament_signup",
       "free_play": "free_play"
+    },
+    "advance_when_flags": {
+      "_comment": "Village/tournament interactions own their one-time rewards and write these existing-progression facts. The opening only observes them and advances its saved beat; it does not duplicate NPC or tournament state.",
+      "visit_mira": "opening:mira_visited",
+      "tournament_signup": "opening:tournament_registered"
     }
   },
 

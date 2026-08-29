@@ -53,15 +53,21 @@ func test_at_or_after_locks_rather_than_opens_when_it_does_not_know() -> void:
 	assert_false(BEATS.at_or_after(BEATS.CHOOSE, "no_such_beat"))
 
 
-func test_the_choice_comes_before_the_name_and_the_fight_before_the_road() -> void:
+func test_the_opening_delivers_one_goal_at_a_time_before_qualification() -> void:
 	assert_true(BEATS.index_of(BEATS.WAKE) < BEATS.index_of(BEATS.HOUSE),
 		"you wake before you come downstairs")
 	assert_true(BEATS.index_of(BEATS.HOUSE) < BEATS.index_of(BEATS.CHOOSE),
 		"the briefing comes before the door opens on the starters")
 	assert_true(BEATS.index_of(BEATS.CHOOSE) < BEATS.index_of(BEATS.NAMED))
-	assert_true(BEATS.index_of(BEATS.NAMED) < BEATS.index_of(BEATS.WALK_OUT))
+	assert_true(BEATS.index_of(BEATS.NAMED) < BEATS.index_of(BEATS.RETURN_STARTER),
+		"naming returns the player to Grandpa before the catch objective")
+	assert_true(BEATS.index_of(BEATS.RETURN_STARTER) < BEATS.index_of(BEATS.WALK_OUT))
 	assert_true(BEATS.index_of(BEATS.WALK_OUT) < BEATS.index_of(BEATS.ENCOUNTER))
 	assert_true(BEATS.index_of(BEATS.ENCOUNTER) < BEATS.index_of(BEATS.ROAD))
+	assert_true(BEATS.index_of(BEATS.ROAD) < BEATS.index_of(BEATS.VISIT_MIRA))
+	assert_true(BEATS.index_of(BEATS.VISIT_MIRA) < BEATS.index_of(BEATS.RETURN_MIRA))
+	assert_true(BEATS.index_of(BEATS.RETURN_MIRA) < BEATS.index_of(BEATS.TOURNAMENT_SIGNUP))
+	assert_true(BEATS.index_of(BEATS.TOURNAMENT_SIGNUP) < BEATS.index_of(BEATS.QUALIFICATION))
 	assert_true(BEATS.index_of(BEATS.ROAD) < BEATS.index_of(BEATS.FREE_PLAY))
 
 
@@ -71,9 +77,8 @@ func test_every_conversation_a_beat_names_really_exists() -> void:
 		if id == "":
 			continue
 		assert_true(RUNNER.has(id), "beat '%s' names conversation '%s', which is not in opening.json" % [beat, id])
-	var named := BEATS.named_conversation()
-	assert_ne(named, "", "the reply to the naming is a beat of its own and has to exist")
-	assert_true(RUNNER.has(named), "named_conversation '%s' is not a conversation" % named)
+	assert_eq(BEATS.named_conversation(), "",
+		"naming should return naturally to Grandpa instead of opening another automatic dialogue")
 
 
 func test_he_has_nothing_scripted_left_once_the_sequence_is_over() -> void:
@@ -99,11 +104,19 @@ func test_no_effect_points_at_a_beat_that_does_not_exist() -> void:
 	assert_true(broken.is_empty(), "effect(s) mapped to a missing beat: %s" % ", ".join(broken))
 
 
-func test_the_intro_hands_over_to_the_choice_and_the_naming_to_the_encounter() -> void:
+func test_dialogue_effects_hand_the_player_to_the_next_single_goal() -> void:
 	assert_eq(BEATS.beat_for_effect("starter_choice"), BEATS.CHOOSE)
 	assert_eq(BEATS.beat_for_effect("first_encounter"), BEATS.WALK_OUT)
-	assert_eq(BEATS.beat_for_effect("free_play"), BEATS.FREE_PLAY)
+	assert_eq(BEATS.beat_for_effect("visit_mira"), BEATS.VISIT_MIRA)
+	assert_eq(BEATS.beat_for_effect("tournament_signup"), BEATS.TOURNAMENT_SIGNUP)
 	assert_eq(BEATS.beat_for_effect("no_such_moment"), "")
+
+
+func test_existing_village_and_tournament_facts_advance_the_saved_opening() -> void:
+	assert_eq(BEATS.advance_flag_for(BEATS.VISIT_MIRA), "opening:mira_visited")
+	assert_eq(BEATS.advance_flag_for(BEATS.TOURNAMENT_SIGNUP), "opening:tournament_registered")
+	assert_eq(BEATS.advance_flag_for(BEATS.RETURN_MIRA), "",
+		"Grandpa's required return must not be skipped by a flat flag")
 
 
 func test_the_fade_is_a_real_duration() -> void:

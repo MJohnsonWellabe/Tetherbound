@@ -90,16 +90,6 @@ func test_a_battle_effect_splits_into_the_kind_and_the_trainer_id() -> void:
 	assert_eq(RUNNER.parse_effect("battle:trainer_mira"), ["battle", "trainer_mira"])
 
 
-## The first time the game says a word the player wrote.
-func test_the_creatures_name_is_substituted_into_the_line() -> void:
-	_runner.set_value("name", "Biscuit")
-	_runner.start("grandpa_named")
-	assert_true(
-		str(_runner.line().get("text")).begins_with("Biscuit"),
-		"got '%s'" % str(_runner.line().get("text"))
-	)
-
-
 func test_closing_early_ends_it_cleanly() -> void:
 	_runner.start("grandpa_house")
 	_runner.close()
@@ -118,9 +108,10 @@ func test_every_conversation_the_opening_needs_exists_and_speaks() -> void:
 	var needed := [
 		"grandpa_house",
 		"grandpa_waiting",
-		"grandpa_named",
+		"grandpa_first_catch",
 		"grandpa_encounter_hint",
-		"grandpa_road",
+		"grandpa_after_first_catch",
+		"grandpa_tournament",
 	]
 	for id: String in needed:
 		assert_true(RUNNER.has(id), "conversation '%s' is missing from opening.json" % id)
@@ -143,18 +134,8 @@ func test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there()
 		)
 
 
-## The naming beat is mandatory, so a line that greets the creature by name must
-## actually contain the placeholder. Without this the substitution silently
-## does nothing and Grandpa says "$name" out loud.
-func test_the_naming_line_actually_contains_the_placeholder() -> void:
-	var raw: Dictionary = RUNNER.table().get("grandpa_named", {})
-	var joined := ""
-	for entry: Variant in (raw.get("lines", []) as Array):
-		joined += str(entry) if not entry is Dictionary else str((entry as Dictionary).get("text", ""))
-	assert_true(joined.contains("$name"), "grandpa_named never uses the name the player typed")
-
-
-## Grandpa's briefing hands over the pack through `give:item_id:count` effects.
+## Grandpa's first-catch conversation hands over a generous Basic Orb supply
+## through a `give:item_id:count` effect.
 ## An effect naming an item that data/items/items.json does not define is silent
 ## at run time: the line speaks the gift and the satchel gains a grey unknown
 ## slot, or nothing at all.
@@ -181,7 +162,9 @@ func test_every_give_effect_names_a_real_item_and_a_real_count() -> void:
 					"'%s' gives '%s', which is not in items.json" % [id, item])
 				assert_true(pieces.size() == 2 and int(pieces[1]) > 0,
 					"'%s' gives '%s' without a positive count" % [id, str(parts[1])])
-	assert_true(found >= 3, "the briefing should hand over the pack in give: lines; found %d" % found)
+	assert_true(found >= 1, "dialogue should still contain item grants; found %d give: effects" % found)
+	assert_true(_effects_of("grandpa_first_catch").has("give:orb_basic:15"),
+		"Grandpa must give 15 Basic Orbs immediately before the first catch")
 
 
 ## --- OF30: Tam the blacksmith -----------------------------------------------

@@ -34,20 +34,36 @@ const WAKE := "wake"
 const HOUSE := "house"
 ## Beat 4: the three starters outside the door offer their prompts, and only here.
 const CHOOSE := "choose"
-## Beat 5: the name has been typed and the creature is theirs. Transient — the
-## director moves off it as soon as Grandpa's reply finishes.
+## Beat 5: the name has been typed and the creature is theirs. Kept as a named
+## compatibility state for existing saves; a new opening moves directly to the
+## required return-to-Grandpa beat after granting the starter.
 const NAMED := "name"
-## Beat 6: your creature is following and there is a bramblebun out past the rise.
+## The player has their named starter and must speak to Grandpa before heading
+## out. This prevents the first catch objective being buried under an automatic
+## post-naming conversation.
+const RETURN_STARTER := "return_starter"
+## Your creature is following and there is a bramblebun out past the rise.
 const WALK_OUT := "walk_out"
 ## Beats 7 and 8, which are one state as far as the sequence is concerned: the
 ## fight and the catch both happen inside CombatManager.
 const ENCOUNTER := "encounter"
-## Beat 9: go back and he points you down the dirt road.
+## The first catch has succeeded. Return to Grandpa for the next single goal.
 const ROAD := "road"
-## After beat 9. Nothing is scripted from here on and that is the point.
+## Mira's reward is authored by the village system; this beat waits on its
+## progression fact, then sends the player back to Grandpa.
+const VISIT_MIRA := "visit_mira"
+const RETURN_MIRA := "return_mira"
+## The tournament registrar owns its own dialogue and writes the registration
+## fact. The opening only waits for it, then hands off to qualification.
+const TOURNAMENT_SIGNUP := "tournament_signup"
+const QUALIFICATION := "qualification"
+## After tournament registration. The opening's linear guidance is complete;
+## the tournament/quest systems own the broader preparation path.
 const FREE_PLAY := "free_play"
 
-const NAMED_BEATS := [WAKE, HOUSE, CHOOSE, NAMED, WALK_OUT, ENCOUNTER, ROAD, FREE_PLAY]
+const NAMED_BEATS := [WAKE, HOUSE, CHOOSE, NAMED, RETURN_STARTER, WALK_OUT,
+	ENCOUNTER, ROAD, VISIT_MIRA, RETURN_MIRA, TOURNAMENT_SIGNUP, QUALIFICATION,
+	FREE_PLAY]
 
 static var _config: Dictionary = {}
 
@@ -144,6 +160,17 @@ static func beat_for_effect(effect: String) -> String:
 	if not table is Dictionary:
 		return ""
 	return str((table as Dictionary).get(effect, ""))
+
+
+## A beat can wait on one progression fact owned by an adjacent production
+## system. Mira's village conversation and the registrar's tournament flow set
+## those facts; keeping the names here makes this state machine observe them
+## without reimplementing either interaction.
+static func advance_flag_for(beat: String) -> String:
+	var table: Variant = _beats().get("advance_when_flags", {})
+	if not table is Dictionary:
+		return ""
+	return str((table as Dictionary).get(beat, ""))
 
 
 ## Beat ids this file names in code that the data does not contain. Empty when

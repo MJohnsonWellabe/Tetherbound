@@ -118,9 +118,13 @@ func _earn_the_starter_through_the_production_sequence() -> void:
 	if not bool(progression.call("has", SEQUENCE.STARTER_GRANTED_FLAG)):
 		_fail("starter adoption did not record its durable one-shot flag")
 
-	# Adoption immediately opens Grandpa's named reply. Finish it through the
-	# shared panel so its beat effect advances normally to walk_out.
-	await _finish_open_conversation()
+	# Naming deliberately returns to Grandpa. Take the production first-catch
+	# conversation through the shared panel so its effect advances to walk_out
+	# and its Orb reward is persisted with the same save.
+	if str(_director.call("beat")) != BEATS.RETURN_STARTER:
+		_fail("naming should return to Grandpa before the first catch, got '%s'" % str(_director.call("beat")))
+		return
+	await _play_conversation(BEATS.conversation_for(BEATS.RETURN_STARTER))
 	if BEATS.index_of(str(_director.call("beat"))) < BEATS.index_of(BEATS.WALK_OUT):
 		_fail("the opening did not reach its post-starter world state")
 

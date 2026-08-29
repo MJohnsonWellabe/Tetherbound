@@ -305,8 +305,10 @@ func _set_beat(target: String) -> void:
 ## Restore the latest reached beat, including an older save written before RG7
 ## had opening flags. A party member is definitive evidence that the starter
 ## opportunity must not be offered again; two members additionally mean the
-## tutorial catch has already happened. This compatibility inference grants no
-## item or creature, it only refuses to replay an opportunity already consumed.
+## old tutorial catch has already happened. Compatibility inference is used
+## ONLY when no saved opening beat exists: a current save with two creatures at
+## `road` still needs Grandpa's post-catch conversation, and must not silently
+## skip Mira and tournament registration.
 func _restore_opening_beat() -> void:
 	var restored := ""
 	var game := get_node_or_null(^"/root/Game")
@@ -318,12 +320,16 @@ func _restore_opening_beat() -> void:
 	var party: RefCounted = game.get("party") if game != null else null
 	var party_size := int(party.call("size")) if party != null else 0
 	var starter_recorded := progression != null and bool(progression.call("has", STARTER_GRANTED_FLAG))
-	if party_size > 1:
-		restored = BEATS.FREE_PLAY if restored == "" \
-				or BEATS.index_of(restored) < BEATS.index_of(BEATS.FREE_PLAY) else restored
-	elif party_size > 0 or starter_recorded:
-		restored = BEATS.WALK_OUT if restored == "" \
-				or BEATS.index_of(restored) < BEATS.index_of(BEATS.WALK_OUT) else restored
+	# `name` was transient before this opening gained its required return to
+	# Grandpa. A save made in that small post-adoption window already owns the
+	# starter, so resume at the first meaningful next action instead of showing
+	# the obsolete "still deciding" line forever.
+	if restored == BEATS.NAMED and party_size > 0:
+		restored = BEATS.RETURN_STARTER
+	if restored == "" and party_size > 1:
+		restored = BEATS.FREE_PLAY
+	elif restored == "" and (party_size > 0 or starter_recorded):
+		restored = BEATS.WALK_OUT
 	if party_size > 0:
 		_persist_opening_fact(STARTER_GRANTED_FLAG)
 	if restored == "":
@@ -386,6 +392,7 @@ func _clear_fade() -> void:
 func _process(delta: float) -> void:
 	_tick_fade(delta)
 	_drain_effects()
+	_advance_from_external_progression()
 	_refresh_lockout()
 	_refresh_prompts()
 	_refresh_door_gate()
@@ -394,6 +401,28 @@ func _process(delta: float) -> void:
 	_maybe_open_shop()
 	_maybe_start_battle()
 	_hold_the_tutorial_orb_floor()
+
+
+## Mira and the registrar already own their interactions, rewards and one-time
+## facts. The opening observes only the fact written by those existing systems,
+## then advances its own persisted beat. This is intentionally a poll: a flag
+## can be restored from a save while this node is asleep, and a signal-only
+## connection would miss exactly that case.
+func _advance_from_external_progression() -> void:
+	var required_flag := BEATS.advance_flag_for(_beat)
+	if required_flag == "":
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression == null or not bool(progression.call("has", required_flag)):
+		return
+	var next := BEATS.next(_beat)
+	if next == "":
+		push_error("opening beat '%s' waits for '%s' but has no following beat" % [_beat, required_flag])
+		return
+	_set_beat(next)
 
 
 ## Effects are drained in production, here, every frame.
@@ -1051,11 +1080,11 @@ func _adopt(index: int, chosen: String) -> void:
 
 	# The first time this game says a word the player wrote.
 	_dialogue.call("set_value", NAME_KEY, chosen)
-	_set_beat(BEATS.NAMED)
-	# Started here rather than waiting for them to walk back to him: the reply is
-	# the beat, and data/dialogue/opening.json says so ("Immediately after the
-	# name is entered"). Its last line carries `beat:first_encounter`.
-	_start_conversation(BEATS.named_conversation())
+	# The player now has one named companion. Do not automatically pile the next
+	# instruction over the naming panel: the first-catch supplies come from the
+	# required return to Grandpa, which is both the next objective and the point
+	# at which the existing inventory system grants the 15 Basic Orbs.
+	_set_beat(BEATS.RETURN_STARTER)
 
 
 func _starter_already_granted() -> bool:
