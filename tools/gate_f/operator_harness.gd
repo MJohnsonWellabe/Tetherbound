@@ -3790,8 +3790,21 @@ func _step_assert(args: Dictionary) -> Dictionary:
 					"" if resolved.is_empty() or resolved == want else " = flag_id %s" % resolved,
 					"" if matched.is_empty() else " [matched on %s]" % matched]}
 		"party_size":
-			var want := int(args.get("equals", -1))
+			# RIG-15: catching is probabilistic (data/config/catching.json's own
+			# words -- "nothing is ever certain") and a step-script's catch
+			# attempt can miss on a real, non-buggy roll. `equals` demanded the
+			# team land on EXACTLY the milestone size, so a script that threw
+			# more than once to cover a miss (or one that simply caught an
+			# extra creature along the way) would FAIL a check that a bigger,
+			# perfectly healthy team should pass. `min` is what every one of
+			# these checks actually means -- "did the team reach at least N" --
+			# and is additive with `equals`, which stays for a caller that
+			# genuinely wants exact equality.
 			var have := (_probe.call("party_state") as Array).size()
+			if args.has("min"):
+				var want_min := int(args["min"])
+				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
+			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
 		"region_is":
 			var want := str(args.get("equals", ""))

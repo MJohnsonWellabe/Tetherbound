@@ -127,9 +127,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 2
+        "min": 2
       },
-      "expected": "the starter and the first catch: two of five"
+      "expected": "the starter and the first catch: two of five",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S03-12",
@@ -414,14 +415,195 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32a",
+      "title": "engage another wild creature (retry 1)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+    },
+    {
+      "id": "S03-33a",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35a",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 30
+      },
+      "expected": "same weaken pass as the first attempt"
+    },
+    {
+      "id": "S03-36a",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37a",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38a",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32b",
+      "title": "engage another wild creature (retry 2)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+    },
+    {
+      "id": "S03-33b",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35b",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 30
+      },
+      "expected": "same weaken pass as the first attempt"
+    },
+    {
+      "id": "S03-36b",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37b",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38b",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32c",
+      "title": "engage another wild creature (retry 3)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+    },
+    {
+      "id": "S03-33c",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35c",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 30
+      },
+      "expected": "same weaken pass as the first attempt"
+    },
+    {
+      "id": "S03-36c",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37c",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38c",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
       "id": "S03-39",
       "title": "the team is three",
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 3
+        "min": 3
       },
-      "expected": "`tournament.json` entry.min_party_size = 3, 'a team, not a favourite ... and leaves two slots free so the player is not forced to fill the cap before the tournament'"
+      "expected": "`tournament.json` entry.min_party_size = 3, 'a team, not a favourite ... and leaves two slots free so the player is not forced to fill the cap before the tournament'",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S03-40",

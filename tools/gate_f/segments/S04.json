@@ -113,9 +113,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 3
+        "min": 3
       },
-      "expected": "three entrants, the tournament's `min_party_size`"
+      "expected": "three entrants, the tournament's `min_party_size`",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S04-11",
