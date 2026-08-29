@@ -1627,6 +1627,21 @@
       "expected": "the shell closes and the world is live again, with axe on hotbar_2, pickaxe on hotbar_3, knife on hotbar_4 -- live-verified end to end (equip + real gather of wood/stone/fiber each) by tools/gate_f/probe_tool_equip_sequence.gd."
     },
     {
+      "id": "S03-59a",
+      "title": "step back out to Mira's own door staging point before leaving the shop",
+      "action": "move_to",
+      "args": {
+        "at": [
+          14.464,
+          -4.121
+        ],
+        "budget_frames": 400,
+        "close_enough": 2.0,
+        "answer_prompts": true
+      },
+      "expected": "T2-GATEF-RUN4: S03-60's own straight line from inside Mira's shop to Oskar (22,-6) reproduced BUILDPLACE round 3's stuck-4.5m-short symptom in a live probe (tools/gate_f/probe_mira_walk_trace.gd) -- the same counter/doorway geometry that blocked the ENTRY leg before S03-52's staging fix now blocks the EXIT leg the same way. Routing back out through the exact same staging point S03-52 already uses on the way in (local (1.0, 4.0) of cottage_a, world (14.464, -4.121), door already open since S03-52a and never re-closed) removes the geometry from the path entirely rather than tuning tolerances against it a second time. Live-confirmed in the same probe: from Mira's own position, staging through this point then continuing straight to Oskar arrives cleanly (0 held) where the direct line alone does not converge reliably."
+    },
+    {
       "id": "S03-60",
       "title": "walk past Oskar on the way back",
       "action": "move_to",
