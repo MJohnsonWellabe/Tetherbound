@@ -114,6 +114,55 @@ already-scripted sleep then completes the heal, so the S03 exit save carries
 a healthy party into S04 onward — which should resolve the stranding for
 every segment downstream, since nothing else in the chain needed to change.
 
+## URGENT correction — the exposure boundary, and X04 is NOT immune
+
+Two lanes and the coordinator have each stated a different boundary for
+which entry saves are clean. Here is the one built directly on the event
+log, checked exit save by exit save, this run's own files:
+
+| Exit save | Party | Fainted? |
+|---|---|---|
+| `S02-exit.json` | Moss, hp 117.6 | **No — clean** |
+| `S03-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S04-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S05-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S06-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S07-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S08-exit.json` | Moss, hp 0.0 | **Yes** |
+| `S09-exit.json` | Moss, hp 0.0 | **Yes** |
+
+**The boundary is exactly `S02-exit` / `S03-exit`, not S05 or S06.** Every
+exit save from S03 onward carries the permanently fainted party.
+
+**Consequence: X04 is not structurally immune, and should not be run against
+its declared entry saves as currently seeded.** X04.json seeds from
+`S04-exit.json` (`X04-007`), presses `creature_recall` (`X04-013a`, which
+will silently fail exactly like every other segment — the ally is fainted),
+then walks to `south_bridge_grunt` and asserts `input_context == combat`
+(`X04-021`) — **the identical shape that FAILED in S05** (`S05-48`, this
+run's own telemetry). Every later X04 case that depends on that fight
+starting (CB-07 intentional loss, CB-08 faint-mid-fight, CB-09 switching
+under pressure) is built on a fight that cannot start, for the same reason
+S05-S09 could not. `S06-exit.json` and `S09-exit.json` (X04's other two entry
+saves) are equally fainted (see the table above) — there is no clean X04
+entry point anywhere in this run.
+
+**X01 is also seeded from a contaminated save** (`S03-exit.json`,
+`X01-006`) — I did not verify whether its own matrix includes any
+combat-context cell sourced from a fight that needs to actually start (much
+of X01 is menu/UI navigation, which does not depend on `can_challenge()`),
+so I am not calling it contaminated the way X04 clearly is — but "entry save
+predates the stranding" is simply false for X01 as currently seeded, and
+whoever runs it should check for combat-context cells specifically before
+trusting them.
+
+**X07, X08 and X05 remain the segments I can actually confirm are unaffected**
+— X07/X08 are teleport-permitted DIAG audits with no save dependency, and
+X05 (session lifecycle) tests save/load mechanics themselves rather than
+combat, so a fainted party does not change what it is measuring (though its
+own party-state checks should expect a fainted Moss on every save from S03
+onward, not a healthy one, until this fix's saves replace them).
+
 ## Impact on other lanes / comparability of prior results
 
 **The fix touches only `tools/gate_f/segments/S03.json` — a rig step-script.
@@ -140,13 +189,99 @@ Consequences for comparability, stated directly per the coordinator's ask:
   makes that re-run possible, not a change to what those nine "complete"
   segments already recorded.
 
-## What is NOT yet independently re-verified by a full run
+## The player-facing dialogue question — my read, per the coordinator's ask
 
-The probe confirms the underlying game mechanism, not the new step-script's
-own execution. `S03-205a`..`S03-205e` mirror `X02.json`'s own already-working
-`interact -> panel -> ui_accept -> menu_cancel` bed sequence
-(`X02-091`..`X02-094`, part of a segment that finished 146/170 PASS with
-nothing flagged wrong in that sequence), but a full S03 re-run to confirm the
-new steps execute correctly end-to-end and produce a healthy exit save was
-not completed by the time this finding was written — see the handover for
-whether it finished by the end of the session.
+The coordinator asked me to assess `trainer_npc.gd::_on_challenged()`
+showing the `defeated` conversation line whenever `can_challenge()` is false
+for any reason, including "your only creature is fainted" — is this
+player-reachable, is it a soft-lock, and is the obvious-looking fix actually
+small? My read, checked against the tree rather than assumed:
+
+1. **Player-reachable: yes, confirmed.** `autoload/party.gd::all_fainted()`
+   is defined and has **zero callers anywhere in the codebase** — grepped
+   across `scripts/`, `autoload/`, `tools/`. Nothing auto-heals, blacks out,
+   or otherwise intervenes when the party's only usable creature faints.
+   Player movement itself is never gated on creature state (human never
+   fights, by hard rule), so a real player can walk up to the South Bridge
+   grunt with a fainted-only party exactly as this run's rig did, with no
+   safety net catching them first.
+2. **Not a soft-lock — a confusing dead end.** Creature beds (built during
+   the S03 tutorial, before the player ever leaves for the bridge) and
+   camp-placed beds anywhere in the field (X02's own build lab exercises
+   this) are a real, always-available recovery path, and the player's own
+   movement is never blocked by creature state, so backtracking to heal and
+   returning is always possible. The actual failure is that the game gives
+   **no explanation at all**: the trainer's `defeated` line falsely claims a
+   win that never happened, and `encounter_director.gd::_creature_control_
+   offer()` shows no prompt whatsoever (not even an explanatory one) when the
+   only creature is fainted — so a player without genre knowledge could sit
+   confused at the gate for a while, but is never unable to recover.
+3. **The fix is not as small as the diff would suggest, because of where it
+   lives, not what it does.** Distinguishing "already beaten" from "no
+   usable creature" is a small, safe-looking change in isolation (`can_
+   challenge()` already computes the exact reason at L1568; giving it a
+   sibling query rather than changing its boolean contract — which 8+ call
+   sites across `scripts/` and `tests/` depend on as a bare bool, grepped and
+   confirmed — is the low-risk shape). But the query lives in
+   `scripts/combat/encounter_director.gd`, which my brief explicitly does
+   not own (a type-system lane, T3-TYPECHART, is changing damage resolution
+   there concurrently), and the branch consuming it lives in `trainer_npc.gd`,
+   shared by every one of the ~17+3 trainers in the game. **I have not
+   implemented this and do not think I should** — not because the change
+   itself is large, but because it sits in a file I was told is someone
+   else's, actively being edited, right now. Whoever routes it: the smallest
+   safe shape is a new method (e.g. `no_usable_ally() -> bool`) beside `can_
+   challenge()`, consumed by one new branch in `_on_challenged()`, with a
+   single generic line (not per-trainer data) rather than touching all
+   ~20 trainer entries in `data/config/bands/**/trainers.json`.
+
+## Full-segment and isolated validation, both done
+
+**A real S03 replay** (`tools/gate_f/run_segment.sh S03`, from a scratch copy
+of this run's own `S02-exit.json`, logic mode) finished `INVENTORY.json
+"complete": true`. Its exit save's Moss is **still fainted** — but not
+because of anything wrong with the new steps. `S03-205` (unmodified,
+pre-existing) itself FAILs — `creature_bed_built_3 NOT set` — and this is
+**not new**: the same run's original evidence copy shows the identical FAIL
+at the identical step (`S03-173`/`S03-205` both FAIL in
+`gate-f-run-20260828T183531Z/S03/notes/S03.md` too). The tutorial's
+build-placement sequence (analog-stick ghost placement) fails to register
+`home_built`/`creature_bed_built_3` in this environment, in both runs,
+independent of this fix — a separate, pre-existing, already-recorded defect,
+not something I introduced or something in scope for this task. With no bed
+ever actually built, my new steps correctly and safely FAILed rather than
+mis-firing: `S03-205b` refused to press the wrong live prompt ("Ripplet is
+out of the fight." does not contain "Rest a Creature" — not pressed), exactly
+the safety `interact_with`'s prompt-matching is there for.
+
+**Because that pre-existing failure blocked validating the new steps' own
+correctness via the full segment, I validated them in isolation instead**:
+`tools/gate_f/probe_bed_rest_sequence.gd` loads this run's real
+`S05-exit.json` (fainted Moss), builds a REAL `creature_bed.gd` the way
+`build_placer.gd` does (`build_real()` + `set_build_index()`), then drives
+the exact sequence `S03-205a`..`S03-205e` assumes:
+
+```
+live prompt near the bed: "...Rest a Creature"
+panel open: true, visible=true
+assign_creature(0) returned: true
+bed occupied after assign: true
+active creature resting=true rest_bed_index=0
+--- ticking creature-bed recovery forward ---
+hp after simulated recovery: 1.18/1.18  fainted=false
+PROBE PASS
+```
+
+Every assumption the new steps make — the exact prompt text, the panel
+opening, row 0 resolving to the party's only creature, the recovery actually
+clearing `fainted` — is confirmed against real game code. **The fix is
+correct; it is untested against a live segment run only because of an
+unrelated, pre-existing bug in the tutorial's own build-placement steps**,
+which is worth a separate ticket (I did not chase it further — out of scope,
+and it does not touch the South Bridge stranding this task was about) but
+should be named: whoever picks it up should look at why the `stick`-driven
+ghost placement in `S03-118`..`204` doesn't register with `home_progress.gd`
+in this environment, since it blocks BOTH the home and creature-bed tutorial
+objectives from ever completing in an automated run, which is very likely
+inflating the FAIL counts already recorded against S03 in the original
+evidence for reasons that have nothing to do with the stranding.
