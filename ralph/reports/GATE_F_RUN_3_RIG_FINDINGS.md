@@ -472,6 +472,40 @@ evidence.
 
 ---
 
+## RIG-22 — the RIG-14 fixed-tab-cycle defect also lives in X05's own save-verification steps, and was never fixed
+
+**Severity: BLOCKER for evidence quality.** Not fixed. Found by this
+operator directly, stopping X05 partway through (see
+`X05/INCOMPLETE.md`).
+
+X05's own repeated "verify a normal save" steps (one per `S0n-exit` block,
+e.g. `X05-015`) open the pause shell with a bare `open_menu` and press
+`menu_tab_right` a fixed 5 times, assuming a Backpack(0) start — the exact
+RIG-14 shape, unfixed in this file, same as the fresh instance this rewrite
+already found in `X02.json` (see RIG-14 above). Confirmed directly in the
+telemetry of the 8 `S0n-exit` blocks that completed before this segment was
+stopped: **at least 7 of them** land on the wrong tab
+(`input_context=menu_backpack`/`menu_quest_log`/`menu_creatures`/
+`menu_settings` — wanted `menu_save`) and the following save-write assert
+correctly reports `FAIL slot N has no file ... did the Save tab actually
+write?` — because the Save tab was never actually reached, not because
+saving itself failed.
+
+**Consequence: this run has no confirmed evidence that the production Save
+tab actually writes a file, across any of the 8 `S0n-exit` blocks X05
+completed.** Every one of its "does save actually write" checks is reading
+the same tab-navigation miss RIG-14 already named, not the save system.
+This is the single most direct instance yet of RIG-7's thesis: the
+underlying save mechanism may well work (S07-S09's own `save_out` steps in
+the journey segments successfully wrote real files, per `HANDOFF_
+PROVENANCE.md`, once RIG-14 was fixed there) — X05 simply never asked the
+question correctly. **Recommend the same fix as RIG-14**: open the shell via
+a named tab and adjust the press count from wherever that tab actually
+lands, applied here and swept across every other tab-cycle step in every
+segment rather than patched file-by-file as each one is discovered.
+
+---
+
 ## RESOLVED — does the South Bridge gate ever actually open? (formerly an open finding, closed by RIG-21)
 
 **This was open in the previous draft and in this rewrite's own first pass.
@@ -488,13 +522,13 @@ no-ally branch.
 
 ---
 
-## What these twenty-one have in common
+## What these twenty-two have in common
 
 Read together, RIG-1 through RIG-12 are mostly *instrument* defects: they
 would be misread as findings about the game if taken at face value (26
 objectives that never advance, a chapter too expensive to play, a village
 with a spot you cannot walk out of, an opening whose first fight never
-happens). RIG-13 through RIG-21 are a different shape: real fixes that
+happens). RIG-13 through RIG-22 are a different shape: real fixes that
 **worked exactly as intended and still did not produce the evidence they were
 fixed to produce**, because each fix closed one gap and the next segment hit
 a different one — no ally deployed (RIG-11), only some segments fixed

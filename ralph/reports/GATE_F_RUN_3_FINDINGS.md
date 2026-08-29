@@ -248,6 +248,7 @@ safe shape (per T2-STRANDING's own assessment) is a new query beside
 | S10 | 27/121 (BLOCKED) | 19 | 6 | 2 | stranding through step 22; genuine cost-gate BLOCKER at step 27 |
 | X02 | 170 | 146 | 20 | 4 | build-catalogue focus defect (GAME-3), craft-panel context ambiguity (GAME-4), RIG-14 tab-cycle shape (see companion doc) |
 | X04 | 124 | 104 | 12 | 8 | **zero combat_start events, entry saves compromised** — all three of X04's entry saves carry a permanently fainted party (RIG-21) and its own move_to steps separately undershoot every combat site regardless (RIG-19); see `X04/CONTAMINATED_ENTRY_SAVES.md` — none of its combat/faint/switching assertions are readable as findings |
+| X05 | 313 (STOPPED at ~250, 10/16 seed blocks) | n/a — no INVENTORY.json | n/a | n/a | 8 real `S0n-exit` blocks + 2 extra slot saves completed and are readable; every one of those 8 blocks' own "verify save actually writes" check FAILs on the same RIG-14-shaped tab-navigation miss (RIG-22) — no confirmed evidence the Save tab writes a file anywhere in this run; operator stopped the segment once its remaining 6 blocks (missing `S10-exit` + 5 missing `X06-awkward-*` saves) had reproduced RIG-4's known pattern 4 times in a row — see `X05/INCOMPLETE.md` |
 
 `HANDOFF_PROVENANCE.md` in the run directory records which entry save each
 segment actually had — not in every case the one §B names (RIG-10/RIG-12).
