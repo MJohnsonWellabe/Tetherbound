@@ -152,6 +152,16 @@
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 1.2,
       "_why": "T3-RELAY. The second half of the same 679m stretch, on the near-bank approach to the Old Mill Crossing itself -- the gear Sela hands over on rescue is what reopens this exact crossing, so gathering here is the first thing the player does on ground that was Team Tether's a few minutes ago and is the player's own again now."
+    },
+    {
+      "order": 3015,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [152.0, 4563.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "T3-RELAY, band4-seams follow-up. The chapter's own band3/4 seam gap (674m, `ralph/T3-BAND4` had already cut it from the finding's original 1,064m before this pass merged its work in) runs from Captain Riverwatch to T3-BAND4's own tree-line grove just past the region boundary at (0,4760) -- and the geometric midpoint of that gap (chapter distance ~7130 of 11519, checked against `tools/_probe_gate_f_corridor.gd`'s own 30m/spine-segment geometry the way every node in this file has been) falls on this band's OWN last leg (spine points 13->14, `terrain_playground.json`), not band4's. Placed here rather than in band4_upper_meadows_ironwood/harvest.json for that reason -- the fix belongs where the gap actually is. Splits the 674m gap into ~325m/~349m, both inside the owner's 60-90s/240-360m cadence band. Matches the region's own fiber convention (order 3010/3012)."
     }
   ]
 }

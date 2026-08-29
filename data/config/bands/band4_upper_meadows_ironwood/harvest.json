@@ -141,6 +141,16 @@
       "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
       "model_scale": 1.1,
       "_why": "T3-BAND4. The tree-line grove's understorey, so the beat is 'a place with more than one reason to stop' rather than a single resource type -- the same layered-discovery shape docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 13 asks for, kept small on purpose. 10.0m off the route."
+    },
+    {
+      "order": 4020,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-178.0, 6643.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "_why": "T3-RELAY, band4-seams follow-up. The band4/5 seam gap (852m in the original finding; `ralph/T3-BAND4` had already cut it to 475m, Captain Ridge -> this branch's own RuinedWatchtower/tm_riptide_lance beat, before this pass merged that work in) is closed further here rather than left at 475m. Sited on the spine's own points 15->16 (`terrain_playground.json`), checked against `tools/_probe_gate_f_corridor.gd`'s own 30m/spine-segment geometry the way T3-BAND4's own siting-bug writeup insists on -- entry at chapter distance ~10329, splitting the gap into ~210m/~265m, both inside the owner's 60-90s/240-360m cadence band. Rock_Medium_3 rather than _1/_2 (already used at orders 4006/4009) for the same visual-variety reason band3's own stone nodes vary their model."
     }
   ]
 }
