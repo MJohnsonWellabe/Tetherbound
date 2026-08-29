@@ -514,12 +514,22 @@ func _shoot_dialogue_panel() -> void:
 ## Ordering is explicit here rather than left to default-canvas semantics,
 ## because "which draws first, a CanvasLayer(0) or a Control parented to root"
 ## is precisely the question that got this wrong once already.
-func _widget_stage() -> Array:
+## VIS-UI-r2. The default near-black backdrop is right for `party_strip.gd`
+## (an opaque card, so the backdrop behind it is never actually judged) but
+## wrong for `stamina_arc.gd`: the arc's own unfilled track is a dark neutral
+## at 40% alpha (`ui_tokens.gd::TRACK`), authored to sit over a LIT 3D world in
+## real play, and against the default `Color(0.08, 0.09, 0.10)` backdrop that
+## track all but vanishes — a blind critic read the widget as "a bracket, not
+## a meter" because half of it was never visible. `backdrop_color` lets a
+## caller opt into a mid value that competes with neither end of what the
+## widget draws, without changing the party-strip closeup this stage was
+## built for.
+func _widget_stage(backdrop_color := Color(0.08, 0.09, 0.10)) -> Array:
 	var backdrop_layer := CanvasLayer.new()
 	backdrop_layer.layer = 0
 	root.add_child(backdrop_layer)
 	var backdrop := ColorRect.new()
-	backdrop.color = Color(0.08, 0.09, 0.10)
+	backdrop.color = backdrop_color
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	backdrop_layer.add_child(backdrop)
 
@@ -560,7 +570,13 @@ func _shoot_party_strip_closeup() -> void:
 
 	var strip: Control = PARTY_STRIP.new()
 	stage[1].add_child(strip)
-	var strip_crop := _place_widget(strip, Vector2(250.0, 540.0), 60.0)
+	# The hardcoded `Vector2(250.0, 540.0)` this replaced was stale against the
+	# widget's OWN authored size (`party_strip.gd`'s own header: "WIDTH grows
+	# 250 -> 420" -- current `ROW_SIZE.x` is 336, `TOTAL_HEIGHT` 308) and cropped
+	# the strip's real right edge (the HP bars) out of the frame. Read live off
+	# the widget's own constants so a future resize cannot go stale here again.
+	var strip_crop := _place_widget(
+		strip, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT), 60.0)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
@@ -575,6 +591,16 @@ func _shoot_party_strip_closeup() -> void:
 			"portrait": "res://assets/ui/portraits/creatures/tuskroot.png", "fainted": false, "resting": false},
 	]
 	strip.call("update_from_party", entries, 0, true)
+	# VIS-UI-r1. `_place_widget()` above set `position` directly, but
+	# `party_strip.gd::_ready()` had already captured `_rest_position` as
+	# whatever `position` was at mount (the origin, before `_place_widget` ever
+	# ran) — and `set_pinned(true)` below reveals through `_reveal()`, which
+	# snaps `position` straight back to that stale `_rest_position`, undoing
+	# the placement and leaving the strip drawing off in the frame's top-left
+	# corner outside the crop. `set_rest_position()` is the widget's own,
+	# correct way to move its anchor; call it with the SAME origin
+	# `_place_widget` used before the reveal, so nothing snaps it away again.
+	strip.call("set_rest_position", strip.position)
 	strip.call("set_pinned", true) # stays revealed; no fade timer to race against the shutter
 	await _settle(8)
 	await _shoot("08-party-strip", strip_crop)
@@ -588,7 +614,7 @@ func _shoot_party_strip_closeup() -> void:
 ## mid-sprint. Mid-value and draining puts it in the warning colour tier
 ## (`WARNING_BELOW`), which is more informative than a full or empty arc.
 func _shoot_stamina_arc_closeup() -> void:
-	var stage := _widget_stage()
+	var stage := _widget_stage(Color(0.45, 0.47, 0.50))
 
 	var arc: Control = STAMINA_ARC.new()
 	stage[1].add_child(arc)
