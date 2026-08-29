@@ -287,6 +287,49 @@ ACCEPTABLE, unchanged in structure from the first judge's split.**
   pixels at the right edge. A player sent to this stream still cannot
   find it. Unmoved.
 
+## 7a. Sky and the day cycle — driven clock, first real deep night
+
+Frames: `hour-{14.00,17.50,17.90,18.10,19.00,20.00,20.50,22.00,23.90,00.10,02.00,08.00}.png`
+(`tools/_capture_day_night_transition.gd`, which now parks the player
+above ground at distance — the y=−500 drowning-vignette bug is fixed in
+the tool, so **this is the first pass that has actually seen 22:00–02:00**).
+
+**Verdict: ACCEPTABLE — two of the first judge's three failures moved;
+deep night is real now and mostly holds, with one new named defect.**
+
+- **Golden hour happens on the driven clock now.** 17:54 and 18:06
+  render warm low sun with long tree shadows (ground samples
+  (84,81,34) and (93,93,44) — R≥G with the warm cast, where the first
+  judge measured a flat grey-blue wash at the same hours). The 17:30
+  frame samples darker (luma 53) but the pixels show why: tree-shadow
+  coverage across the sample area, not a wash — checked before calling
+  it a defect. The keyart's sunset panel is still richer than this
+  (no orange sky gradient, no sun presence in frame), but the
+  "golden hour never happens" finding is **closed**.
+- **Deep night is blue, not red.** 22:00: sky (31,63,82), ground
+  (30,60,63) — moonlit blue with real directional moon shadows and dark
+  cloud bands. It is the best night frame the game has produced and it
+  is genuinely dark-but-readable. **No trace of the red vignette.**
+- **New defect: night runs backwards after midnight.** Ground luma:
+  20:00 → 44, 20:30 → 43, 23:54 → 53, 00:06 → 56, **02:00 → 78** — the
+  world gets steadily *brighter* from mid-evening to 2 AM, and the
+  02:00 frame is a flat pale-mint wash: ground brighter than the sky,
+  no shadow direction, moonlight from nowhere. 02:00's ground (48,90,95)
+  is brighter than the 17:54 golden ground. The night's darkest,
+  moodiest hour is 20:00–22:00 and it *loses* mood from there. The
+  torch/campfire justification (§13) holds at 22:00 and is gone by
+  02:00.
+- Artefact, with the llvmpipe caveat attached: the moonlit/shadow
+  boundaries at 22:00 quantise into large rectangular stair-steps
+  (loud, bottom-left of frame; also faintly at 17:54). Software GL
+  makes fine shadow judgement unsafe, so this needs one look on real
+  hardware before anyone chases it — but the block size is far above
+  "fine lighting quality."
+- The bands 3–5 "dark navy ink-blots over sunlit terrain" sky
+  disagreement has softened: most day skies now carry tan/cream cloud
+  streaks that agree with the light; a few dark smudge clouds persist
+  (`ground-04-…-day` top-left corner).
+
 ## 7. Weather presets (band 2 sweep)
 
 **Moved.** `fog` is no longer a no-op: it renders as occluded sun plus a
