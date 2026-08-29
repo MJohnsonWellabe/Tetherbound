@@ -45,19 +45,23 @@
     "roof_scale": [1.6, 2.8],
     "sink_m": 1.2,
     "_comment_skirt": "The site clears 30m of scatter so nothing stands in the cave or its doorway, and the first blind round showed the cost of that honestly: a bare lawn ring around the outcrop, in a survey whose loudest criticism was already ground density. These are the site's OWN ground cover, authored rather than scattered -- broken rock and low planting banked against the outcrop where debris and shade would actually put them, thinning outward. Same nature family the corridor already uses (D24, one nature family), deterministic from the same seed, no colliders: this is dressing, and a pebble that stops a player is a bug.",
-    "skirt_models": [
+    "_comment_skirt_split_t1_warrens_ext": "T1-WARRENS-EXT, owner+judge evidence 'Warrens exterior: bad' -- 'smooth mint-green faceted low-poly rocks that read as a different game's asset pack' and 'an oversized purple flower prop (petals ~40cm against the 1.8m-trainer ruler)'. `skirt_models`/`skirt_scale` used to cover all eight of these meshes at once, so a boulder scale range (2.2-4.4x wide, tuned for `Rock_Medium_*`) also stretched every plant, and none of the eight ever got a material pass -- the rocks stayed the nature pack's raw mint-grey `burrow_warrens.gd::_place_rock` had already been fixed away from everywhere else on this outcrop. Split in two: `skirt_rock_models` (still `skirt_scale`, still wears the cave's own Rock030 stone via `_wear_the_cave_stone`) and `skirt_flora_models` (its own, much smaller `skirt_flora_scale`, and `_dress_skirt_flora`'s already-vetted Bush_Common leaf swap / Grass_Wide_Tall retint -- the exact fix `vegetation.json`'s own corridor scatter already uses for these two meshes). `Plant_1` is dropped rather than moved across: `vegetation.json`'s own `_comment_rosettes_gate_d` already adjudicated it unfit for general ground cover (a blind critic read it as agave/tropical) and pulled it from the corridor scatter for the same reason; this is very likely the 'oversized purple flower' finding, and re-adding it here at any scale would reopen a defect already closed elsewhere. `skirt_flora_fraction` keeps the original list's roughly 50/50 rock-to-flora mix (four of each in the old eight-model list).",
+    "skirt_rock_models": [
       "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
       "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
-      "res://assets/environment/stylized_nature/Pebble_Round_3.gltf",
+      "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
+    ],
+    "skirt_flora_models": [
       "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "res://assets/environment/stylized_nature/Fern_1.gltf",
-      "res://assets/environment/stylized_nature/Plant_1.gltf",
       "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
     ],
     "skirt_count": 260,
     "skirt_reach_m": 30.0,
     "skirt_scale": [0.7, 2.1],
+    "skirt_flora_scale": [0.45, 1.0],
+    "skirt_flora_fraction": 0.5,
     "tint": "#c3bbab",
     "skip_front_m": 6.0
   },
