@@ -218,6 +218,91 @@ func test_starter_species_never_spawn_in_the_ordinary_wild_population() -> void:
 	for id: String in ordinary_wilds:
 		assert_false(STARTER_SPECIES.has(id),
 			"'%s' is a starter species and must remain unique to the opening choice, not an ordinary wild" % id)
+	# T3-ENCOUNTER: this reads the TABLE, and since rolled clusters exist the
+	# table is no longer the whole population -- a starter could reach the wild
+	# through a spawn table without ever being named here. That half is pinned by
+	# `test_spawn_tables.gd::test_no_starter_species_can_be_rolled`, and the two
+	# together are what the promise now needs. Same split for
+	# `test_no_evolved_form_spawns_wild` above.
+
+
+# --- T3-ENCOUNTER: what the roll is not allowed to take away ------------------
+#
+# A rolled population can make a species unobtainable, and unobtainable is not
+# the same problem as rare. The roller only ever touches clusters that opt in by
+# naming a `table`; these pin that the clusters gameplay actually DEPENDS on
+# never do -- so the guarantee holds at every world seed, not just at the
+# authored one. See ralph/reports/ENCOUNTER_DESIGN_2026-08-30.md for the full
+# anchor/rolled split.
+
+func test_every_role_species_keeps_an_anchored_cluster() -> void:
+	# `encounter_director.gd::_role_species()` resolves a role to a species and
+	# then looks for a LIVE creature of it. If every cluster of that species
+	# rolled into something else, the accessor returns null forever and
+	# smoke_combat/smoke_aggression report "no wild creature was spawned" -- a
+	# test telling the truth about a lie, which is the exact phrasing this
+	# file's own roles test already uses for the same failure.
+	var roles: Dictionary = _config().get("roles", {}) as Dictionary
+	for role: String in ["practice", "aggressor", "nocturnal", "weather_gated"]:
+		var id := str(roles.get(role, ""))
+		if id == "":
+			continue
+		var anchored := false
+		for entry: Variant in _spawns():
+			var spawn: Dictionary = entry
+			if str(spawn.get("species", "")) == id and str(spawn.get("table", "")) == "":
+				anchored = true
+		assert_true(anchored,
+			("the '%s' role names '%s', and every cluster of it is rolled -- at a non-zero world "
+			+ "seed the role could resolve to nothing that is actually in the world") % [role, id])
+
+
+func test_the_species_gameplay_systems_require_keep_anchored_clusters() -> void:
+	# Two species are load-bearing for whole systems rather than for a role:
+	#
+	#   * the rideable one. It is the only rideable species in the chapter
+	#     (species.json's `rideable` block, R6.1) and the saddle is a Band 2/3
+	#     unlock -- SH47 moved a cluster specifically so the mount is met "in
+	#     stride". If a roll could remove every reachable one, riding becomes
+	#     uncraftable-in-practice and the saddle recipe is a dead end.
+	#   * the one that evolves. D20 makes Tuskroot obtainable ONLY by evolving a
+	#     caught Mudsnout, so a chapter with no catchable Mudsnout has no
+	#     evolution in it at all.
+	#
+	# Derived from species.json rather than named, so a second rideable or a
+	# second evolution line is covered the day it lands.
+	var required: Array[String] = []
+	for id: Variant in SPECIES.table():
+		if str(id).begins_with("_"):
+			continue
+		if SPECIES.is_rideable(str(id)):
+			required.append(str(id))
+		var evolves_from := str(SPECIES.definition(str(id)).get("evolves_from", ""))
+		if evolves_from != "" and not required.has(evolves_from):
+			required.append(evolves_from)
+
+	for id: String in required:
+		var spawned_anywhere := false
+		var anchored := false
+		for entry: Variant in _spawns():
+			var spawn: Dictionary = entry
+			if str(spawn.get("species", "")) != id:
+				continue
+			spawned_anywhere = true
+			# Anchored AND ungated: a night-only or rain-only cluster is not a
+			# guarantee, because a player who never explores after dark meets it
+			# zero times -- the same argument T3-REWARD made about Band 2's
+			# night-gated roster temptation.
+			var weather_gate: Variant = spawn.get("weather", [])
+			var gated := str(spawn.get("time", "")) != "" \
+				or (weather_gate is Array and not (weather_gate as Array).is_empty())
+			if str(spawn.get("table", "")) == "" and not gated:
+				anchored = true
+		if not spawned_anywhere:
+			continue  # not part of the wild population at all; nothing to guarantee
+		assert_true(anchored,
+			("'%s' is required by a gameplay system but has no anchored, ungated cluster -- a "
+			+ "non-zero world seed could roll it out of the chapter entirely") % id)
 
 
 func test_warrens_elder_is_not_a_second_guardian() -> void:

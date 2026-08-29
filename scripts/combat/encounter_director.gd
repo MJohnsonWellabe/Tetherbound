@@ -85,6 +85,19 @@ const SPAWNS_CONFIG := "res://data/config/spawns.json"
 ## merged array is identical to the pre-split one.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
+## T3-ENCOUNTER. The weighted tables the ROLLED half of the population draws
+## from, and the pure function that turns them into a plan. Owner directive,
+## 2026-08-30: "We should build the new encounter system that spawns the
+## creatures randomly, but some of the alphas and such will always get placed in
+## the same spots as that's part of the storyline."
+##
+## Reused rather than paralleled, per CLAUDE.md: this is the same director, the
+## same spawn table, the same alpha/elder/gate/cooldown machinery. The only new
+## idea is that an entry may name a `table` instead of committing to its own
+## species -- and an entry that does not is an ANCHOR, untouched, which is every
+## entry that carries authored design (see `_spawn_plan`).
+const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
+
 ## Fallback if spawns.json is missing or does not give respawn_seconds. Matches
 ## the file's own value rather than M2's old 6.0: with a whole meadow of
 ## creatures there is always another fight to walk to, so a beaten one staying
@@ -271,8 +284,23 @@ func _spawn_creatures() -> void:
 	if entries.is_empty():
 		push_error("spawns.json has no spawn table; the meadow will be empty")
 
+	# T3-ENCOUNTER. Decided once, for the whole table, before anything is
+	# instanced -- the caps ("one major Alpha within a local region at a time")
+	# and the rare-separation rule are global properties, and a decision made
+	# per cluster at spawn time cannot see the clusters it has not reached yet.
+	# Empty at the authored world seed, which is what makes seed 0 reproduce
+	# today's world exactly rather than approximately.
+	var plan := _spawn_plan(entries)
+
 	for index in entries.size():
 		var spawn: Dictionary = entries[index] as Dictionary
+		# The ROLLED species where this cluster named a table and the world seed
+		# asked for one; the authored species otherwise. Everything below reads
+		# `spawn`, so the roll reaches the level band, the alpha treatment, the
+		# gates and the cooldown through exactly the paths an authored entry
+		# already uses -- there is no second kind of wild creature, the same
+		# promise `spawn_wild()`'s own header makes.
+		spawn = _apply_plan(spawn, plan)
 		var species := str(spawn.get("species", ""))
 		if not SPECIES.has(species):
 			push_error("spawns.json names '%s', which is not in species.json" % species)
@@ -416,6 +444,78 @@ func _spawn_creatures() -> void:
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
 		# calling it bare would hand back a coroutine and leave the creature unplaced.
 		await adopt_starter(default_starter)
+
+
+## T3-ENCOUNTER. The world seed this boot is building, resolved once.
+##
+## `Game.world_seed` is save state (save_game.gd VERSION 15), so a loaded save
+## rebuilds the population it was saved with -- the roll is a pure function of
+## (seed, order), which is why a rolled population needs no per-creature
+## persistence and nothing to migrate. `TB_WORLD_SEED` in the environment
+## overrides it for one process, which is how a Gate F run pins a world and how
+## the system is playable while `roll_new_worlds` ships false.
+##
+## No `/root/Game` (the combat sandbox, and the unit suite, which starts no
+## autoloads at all -- see `_party()`'s own header) reads as the authored seed.
+## That is the right answer there and not merely a safe one: the sandbox is where
+## five smoke tests boot expecting a specific meadow.
+func world_seed() -> int:
+	var game := get_node_or_null(^"/root/Game")
+	var saved := int(game.get("world_seed")) if game != null and game.get("world_seed") != null else 0
+	return SPAWN_TABLES.resolve_seed(saved)
+
+
+## The rolled half of the population, decided for the whole table at once.
+##
+## `exceptional_species` is every species carrying `variant_of` -- the four
+## aspect variants T3-CREATURES landed (Nightburrow, Stormtrail, Riftfrill,
+## Ashtusk). They are ANCHORED individuals, and passing them here is what makes
+## an anchored one spend its region's exceptional budget BEFORE any roll gets to,
+## so a rolled rarity can never crowd the individual the story placed. Derived
+## from species.json rather than listed, so a fifth variant is counted the day it
+## lands with no edit here.
+func _spawn_plan(entries: Array) -> Dictionary:
+	var exceptional: Array = []
+	for id: Variant in SPECIES.table():
+		# `_`-prefixed keys are documentation, not species. `creature_species.gd`
+		# does not filter them and a `_comment` inside the `species` object is
+		# iterated as a real entry -- T3-CREATURES hit this exact trap twice and
+		# wrote it up (its handover 7.7). Skipping them here costs one line.
+		if str(id).begins_with("_"):
+			continue
+		if SPECIES.definition(str(id)).has("variant_of"):
+			exceptional.append(str(id))
+	return SPAWN_TABLES.plan_for(
+		entries, world_seed(), SPAWN_TABLES.config(), CHAPTER_CURVE.config(), exceptional
+	)
+
+
+## Fold this entry's rolled result back into the entry, or hand it back
+## untouched.
+##
+## Returns a COPY when the plan has something to say, so the loaded spawn config
+## -- which is cached on this node and read by `_role_species()` and the tests --
+## is never mutated. An entry with no plan result is returned as-is rather than
+## copied, which is every anchor and, at the authored seed, every entry.
+##
+## `alpha` from the plan is only ever ADDED, never overwritten: an entry that
+## authored its own alpha block is an anchor by definition and `plan_for()`
+## refuses to promote it, but stating it here too costs one condition and means
+## the invariant survives somebody changing their mind about the other end.
+func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
+	var order := int(spawn.get("order", -1))
+	if not plan.has(order):
+		return spawn
+	var rolled: Dictionary = plan[order]
+	var merged := spawn.duplicate(true)
+	merged["species"] = str(rolled.get("species", spawn.get("species", "")))
+	if rolled.has("time"):
+		merged["time"] = str(rolled["time"])
+	if rolled.has("weather"):
+		merged["weather"] = (rolled["weather"] as Array).duplicate()
+	if rolled.has("alpha") and not merged.has("alpha") and not merged.has("elder"):
+		merged["alpha"] = (rolled["alpha"] as Dictionary).duplicate()
+	return merged
 
 
 ## SD17: one wild creature, placed by somebody else.

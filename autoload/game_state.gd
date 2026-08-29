@@ -35,6 +35,10 @@ const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+## T3-ENCOUNTER. Only for `reset_for_new_game()`'s world-seed decision; the
+## roll itself lives in `encounter_director.gd`, which is where the spawn table
+## is.
+const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## R7.6. Only for `fresh()`/`sanitised()` — the shape of a farm bed is that
 ## file's business, and this autoload should not carry a second opinion about
 ## what a valid plot dictionary looks like.
@@ -268,6 +272,22 @@ var death_satchels: Array = []
 ## VERSION 1 -> 2 gave `map`.
 var harvested_vegetation: Dictionary = {}
 
+## T3-ENCOUNTER. Which world this save's rolled wild population is.
+##
+## `encounter_director.gd` builds the ROLLED half of the population as a pure
+## function of `(world_seed, order)` -- so this one integer IS the population,
+## and a rolled world needs no per-creature persistence: reload derives the same
+## answer it derived before. Joined the save format at VERSION 15; a save written
+## before this migrates to 0.
+##
+## **0 is the authored world**, and is the default deliberately. At 0 the roller
+## is never entered and every rolled cluster stands up the species `spawns.json`
+## authors, which is the world every smoke test, every `tools/gate_f` segment and
+## every existing save already knows. A new game takes a real seed only when
+## `data/config/spawn_tables.json`'s `roll_new_worlds` says so (it ships false);
+## `TB_WORLD_SEED` in the environment overrides this for one process either way.
+var world_seed: int = 0
+
 ## RG9. Every chopped placement whose felled pickup has NOT yet been gathered
 ## -- `{"<layer>#<index>": {"item": String, "amount": int, "position":
 ## [x,y,z]}}`. A tree/rock present in `harvested_vegetation` but ABSENT here
@@ -442,6 +462,14 @@ func reset_for_new_game() -> void:
 	felled_vegetation = {}
 	saved_player_pose = {}
 	satiety = 100.0
+	# T3-ENCOUNTER. A new run gets a new world only when the data says so, and
+	# `roll_new_worlds` ships false -- so today this resets to 0, the authored
+	# world, and every existing smoke test that starts a fresh game sees exactly
+	# the meadow it has always seen. `TB_WORLD_SEED` overrides it at the point of
+	# use (`encounter_director.world_seed()`) rather than here, so pinning a seed
+	# for a Gate F capture cannot leak into what gets written to a save slot.
+	world_seed = SPAWN_TABLES.new_world_seed() \
+		if SPAWN_TABLES.rolls_new_worlds(SPAWN_TABLES.config()) else 0
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
 
