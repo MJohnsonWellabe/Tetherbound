@@ -34,7 +34,8 @@
             "give:pickaxe:1",
             "flag:recipe_orb_basic",
             "give:coin:30",
-            "flag:mira_shop_open"
+            "flag:mira_shop_open",
+            "flag:opening:mira_visited"
           ]
         },
         {

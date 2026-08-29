@@ -1,6 +1,6 @@
 {
   "_comment": "BAND-SPLIT-2. This band's own dialogue container. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Unlike the four content configs BAND-SPLIT cut, this is a dictionary keyed by conversation id, not a positional array -- there is no `order` to preserve, because lookup is always by id and never by position. A trainer or NPC placed in band1_lower_meadows gets its dialogue written here instead of appended to trainers.json, so a band author never has to touch a file another band is also writing to.",
-  "_comment_tournament_1": "TOURNAMENT-1. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); which of her five conversations she opens is decided by her `greeting_when` list against the tournament's own progression flags, exactly the way Mira's vendor and challenge branches are chosen -- there is no tournament state machine and no quest engine, which CLAUDE.md/spec sec19 both forbid. The three round conversations end on `battle:<trainer_id>` and are spoken by the OPPONENT rather than by Halda, because the fight starts the frame that box closes and the last voice the player hears should be the person about to send a creature out.",
+  "_comment_tournament_1": "TOURNAMENT-1 / FIRST-HOUR-FUN-REBUILD. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); her ordered `greeting_when` list uses existing progression flags, not a tournament state machine. Her first registration conversation sets `opening:tournament_registered` and names the complete-team, camp, Creature Bed, rest/recovery and strength requirements. The three round conversations end on `battle:<trainer_id>` and are spoken by the OPPONENT rather than by Halda, because the fight starts the frame that box closes and the last voice the player hears should be the person about to send a creature out.",
   "_comment_saddle": "`tournament_halda_champion` is the NPC line the owner directive asks for: it says out loud that a Meadowhart can be ridden, and that the saddle needs rootstone from past the crossing. It does NOT carry a `flag:` effect -- the saddle pattern is granted by `tournament_final_oskar`'s own `reward.flags` the moment the final is won, so a player who never walks back to Halda still has it. The line explains the prize; it is not the prize. That split is deliberate: a reward that can only be collected by re-reading a conversation is a reward that gets lost.",
   "_comment_portraits": "Every conversation here uses the trainer portrait plate, the only villager portrait on disk (assets/ui/portraits/ holds grandpa.png and trainer.png and nothing else). tests/test_dialogue_runner.gd::test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there requires a real file, and CLAUDE.md's prototyping rule allows the stand-in. The grunt in particular should get a faction plate when Team Tether has portrait art of its own.",
   "conversations": {
@@ -18,14 +18,27 @@
       "lines": [
         "You'll want the tournament, then. Everyone does, first week.",
         "Rule's the rule: I don't put a name on that board unless there's a proper team stood behind it. One creature isn't a team, it's a favourite.",
-        "Go and make some friends out in the meadow. Come back with three and I'll hear you out."
+        "Fill out all five places. Then we can talk about whether they're ready."
+      ]
+    },
+    "tournament_halda_register": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You want your name on the board? Good. Here is what I need to see before I take it.",
+        "Five creatures. Not borrowed bodies -- your whole team. Train them until they can stand in the ring.",
+        {
+          "text": "Make a real camp: tent, fire and your bedroll. Build a Creature Bed, let one of them recover there, then come back with everyone rested, fed and happy.",
+          "effect": "flag:opening:tournament_registered"
+        },
+        "No walls or fancy workshop required. I need proof you can keep a team, not a house."
       ]
     },
     "tournament_halda_train": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Three of them. Good. Now look at them.",
+        "All five of them. Good. Now look at them.",
         "Half of that lot have never taken a real hit. I'd be signing them up for a hiding, and I'd be the one who did it.",
         "Take them out. Fight things. Feed them, rest them, let them grow into it. Then we'll talk about the board."
       ]
@@ -38,6 +51,14 @@
         "Levels aren't the whole of it. Look at the state of them.",
         "That one's dead on its feet, and that one hasn't eaten since you found it. I've seen tired creatures put in front of a crowd before. It doesn't go well for them and it doesn't go well for the person who entered them.",
         "Beds at home, a proper feed, and time out with you where nothing's trying to bite them. Berries do fine. Then come back and I'll put your name up."
+      ]
+    },
+    "tournament_halda_camp": {
+      "speaker": "Halda",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "They look strong enough. Now show me they have somewhere safe to come back to.",
+        "I want a proper camp, a Creature Bed, and one real night of recovery there. A team that can fight is not yet a team you can keep."
       ]
     },
     "tournament_halda_signup": {

@@ -1,7 +1,7 @@
 {
   "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
   "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
-  "_comment_gateb": "GATE B (68-CHAPTER/17-RG18), re-authored by TUTORIAL-CHAIN (OP23-04). Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's GUIDED LADDER, and it is now a teaching order rather than a list of systems: catch -> open the gate -> take Tam's tools -> build a team -> train it -> gather -> build a home -> build a bed per entrant -> sleep -> feed -> sign up -> win -> cross. Thirteen rungs. Two of them are new (Tam's tools, feeding) and one became a count (three beds); see each entry's own `_comment` for the evidence behind it. The ORDER is the load-bearing part: rest and food are the two rungs immediately before sign-up because both expire, so a chain that taught them earlier would send a rested, fed team to the marshal an hour later as a tired, hungry one.",
+  "_comment_gateb": "FIRST-HOUR-FUN-REBUILD. Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's guided ladder: catch -> open the gate -> take Tam's tools -> build a full team -> train it -> gather -> make camp -> build one Creature Bed -> rest/recover -> feed -> sign up -> win -> cross. The qualifier is intentionally compact: a Tent, Campfire and Player Bedroll through the existing Camp, plus one Creature Bed and a real recovery. Workbench crafting remains useful after Mira teaches Orbs, but it is not a tournament or camp prerequisite. Rest and food remain immediately before sign-up because they expire.",
   "_comment_guided": "OP23-04 (owner, 2026-08-23): \"the opening should tell you the NEXT thing to do (gather, catch a pal, ...) one step at a time like Palworld's early game, walking you through every tournament prerequisite until all are cleared -- never fronting the full list.\" Two things implement that, and neither is a quest engine (sec19/CLAUDE.md still ban one):\n\n1. `how` (new, optional). One short line per entry naming the CONCRETE action and the controller verb for it. `{action}` is a project.godot input-action id -- `{interact}`, `{inventory}`, `{combat_throw}` -- resolved at display time by scripts/world/quest_log.gd through scripts/ui/input_glyph.gd, so it names the button the player has actually BOUND rather than a letter typed into this file. Never hardcode a button here; a rebind in Settings would turn it into a lie.\n\nBINDINGS: the resolution is DEVICE-AWARE, and a token whose action the authored pad map leaves unbound is still safe to write. `{combat_throw}` renders \"F\" on a keyboard and \"X\" on a pad even though `combat_throw` itself has only the keyboard event -- `input_glyph.gd`'s `PAD_VERB_ALIAS` knows CONTROLLER-MAP moved the pad's throw onto `interact`, and `pad_button_name_for_verb()` follows it. This rung used to render \"press F\" on a controller frame, on the game's first catch, which is what that table exists to stop. Not every padless action is aliasable: the torch and the build hammer were RETIRED from the pad rather than moved (select the tool on the hotbar, then interact), so a hint for those must name BOTH steps in prose the way the gather and build rungs below already do, and `{torch_toggle}`/`{build_open}` must not be written here. `tests/test_input_glyph_verbs.gd` sweeps every token in this file and fails on one that resolves to no pad button.\n2. The guided view. `quest_log.gd::guided_entries()` returns what is DONE plus the ONE current rung and nothing after it, and scripts/ui/tab_quest_log.gd renders that instead of the whole file. The log becomes a record of where the player is, and the chapter reveals itself a rung at a time.\n\nThe DATA is still flat: no prerequisites, no branching, no visibility conditions per entry. The guided rule is one uniform sentence about presentation applied to the whole list, which is why it is here and not a new key on every row.",
   "_comment_gateb_flags": "What is real and what is contract, kept current. REAL, wired today: `opening:beat:road` (sequence_director.gd, on a successful catch), `road_gate_open` (key_pickup.gd/road_gate.gd), `tam_tools_given` (data/dialogue/village.json's `village_tam_tools`), `home_materials_gathered`/`home_built`/`creature_bed_built*` (scripts/build/home_progress.gd), `player_slept_at_home` (camp.gd::_on_rest), `tournament_team_ready`/`tournament_training_ready`/`tournament_team_fed` (tournament.gd::_write_entry_flags, from data/config/tournament.json + creature_condition.json thresholds), `tournament_entered` (Halda's sign-up dialogue), `tournament_won` (the final round's trainer reward), `south_bridge_open` (gated_crossing.gd/south_bridge.gd). quest_log.gd still only ever reads `progression`'s flag store (SB9) and still has no live view of party size, XP, placed buildings or sleep -- the owning systems call `set_flag` on these exact ids and this file only names them. `tournament_team_fed` is the one flag here that is CLEARED as well as set; see its entry.",
   "main": [
@@ -29,9 +29,9 @@
     {
       "id": "tournament_build_team",
       "flag_id": "tournament_team_ready",
-      "label": "Catch and raise a team for the village tournament.",
-      "how": "Talk to Tam again for the Basic Orb recipe, craft orbs at the workbench, then weaken and catch.",
-      "_comment": "CONTRACT flag -- RG19 owns the real roster-size/eligibility rule (spec: tied to the five-creature cap). Set this once a party is tournament-ready by that rule, not a second copy of the number here. The `how` line deliberately names no NUMBER for the same reason the label does not: `data/config/tournament.json`'s `min_party_size` is the one place that lives, tournament.gd reads it, and Halda's own readiness summary says it in words the player can act on."
+      "label": "Build your full team of five for the village tournament.",
+      "how": "Catch creatures that fit your team. Halda registers only a complete five-creature team; the Workbench is useful later for preparation, not a registration requirement.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. tournament.json owns the five-creature threshold and clamps it to the hard five-creature ownership cap. The opening objective makes the destination clear without adding storage, a sixth slot, or a Workbench prerequisite."
     },
     {
       "id": "tournament_train_team",
@@ -44,34 +44,29 @@
       "id": "tournament_gather_materials",
       "flag_id": "home_materials_gathered",
       "label": "Gather supplies for your team's camp.",
-      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush. Your camp lets the team rest and recover.",
-      "_comment": "FIRST-HOUR-FUN-REBUILD. Gathering has a creature-training purpose: the compact camp gives the player a tent, fire and bedroll, and the Creature Bed gives one companion a physical recovery place. The legacy flag is set once the player holds the exact costs of `home.required_pieces` in progression.json, which now names camp + creature bed rather than a house shell."
+      "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house."
     },
     {
       "id": "tournament_build_home",
       "flag_id": "home_built",
       "label": "Make camp for your team.",
-      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Camp (tent, fire and bedroll), then a Creature Bed.",
-      "_comment": "FIRST-HOUR-FUN-REBUILD. This is deliberately a compact campsite, not a mandatory floor/wall/roof/door exercise. `camp` is the composed tent + fire + player bedroll; the following Creature Bed makes care physical. The Workbench stays optional until Mira teaches why it is useful. The legacy home_built flag is retained for save compatibility; home_progress.gd reads progression.json's camp + creature-bed requirement."
+      "how": "Select the hammer on the hotbar and {interact} to open Build. Place a Camp: its tent, fire and bedroll are your team's base.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. `home_built` is retained as the existing save-compatible completion flag, but the owning camp configuration now defines it as one Camp -- Tent, Campfire and Player Bedroll -- with no wall, roof or door requirement."
     },
     {
       "id": "tournament_build_creature_beds",
-      "flag_id": "creature_bed_built_3",
-      "label": "Care for your team: build a Creature Bed for each entrant.",
-      "count_flags": [
-        "creature_bed_built",
-        "creature_bed_built_2",
-        "creature_bed_built_3"
-      ],
-      "how": "One creature to a bed -- a tournament team of three needs three. Place them beside your camp with the hammer, then {interact} at each bed to let a tired creature rest.",
-      "_comment": "The physical care lesson follows the camp: a player sees that each entrant needs a bed and then uses it in the next rung. `count_flags` reads 1/3 and 2/3 while the player is mid-build; the three flags are written from real placed beds by home_progress.gd. The count is pinned to tournament.json's min_party_size in test_quest_log.gd, so the camp teaches the actual tournament team's needs rather than a separate arbitrary number."
+      "flag_id": "creature_bed_built",
+      "label": "Build a Creature Bed for your team.",
+      "how": "Place one by your camp with the hammer, then leave a creature there to recover before you sleep.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. One player-built Creature Bed is the mandatory care lesson and tournament proof. More beds remain a useful optional investment for a five-creature team; they are not a qualification wall."
     },
     {
       "id": "tournament_sleep",
       "flag_id": "player_slept_at_home",
-      "label": "Rest at camp until morning.",
-      "how": "Put each creature in a bed with {interact}, then {interact} at the camp. Only creatures physically resting in beds wake recovered and rested.",
-      "_comment": "The visible resolution of the care lesson. camp.gd completes occupied creature-bed rests only when the player actually sleeps; a placed but empty bed does not recover anyone. This fires on that completed rest, not when the prompt merely opens."
+      "label": "Rest at camp and let a creature recover.",
+      "how": "Put a creature in the Creature Bed with {interact}, then {interact} at the camp. The occupied bed completes recovery overnight.",
+      "_comment": "FIRST-HOUR-FUN-REBUILD. `camp.gd::_on_rest()` writes this existing flag on an actual overnight rest, so the qualification needs care in use, not merely placed furniture."
     },
     {
       "id": "tournament_feed_team",

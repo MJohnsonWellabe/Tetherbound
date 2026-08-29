@@ -259,14 +259,37 @@
           "_why": "Round 1. Ends on `battle:tournament_quarter_mira`."
         },
         {
+          "unless_flag": "opening:tournament_registered",
+          "conversation": "tournament_halda_register",
+          "_why": "FIRST-HOUR-FUN-REBUILD. Halda's first interaction is the explicit registration briefing, and its effect writes the controller-facing opening:tournament_registered handoff only when the player has actually read the requirements. It sits below active-bracket branches and above every readiness branch, so a late-game player is never sent backward into onboarding."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready",
+            "tournament_condition_ready",
+            "home_built",
+            "creature_bed_built",
+            "player_slept_at_home"
+          ],
+          "unless_flag": "tournament_entered",
+          "conversation": "tournament_halda_signup",
+          "_why": "FIRST-HOUR-FUN-REBUILD sign-up. The complete five-creature team, strength and volatile rested/fed/happy state still come from tournament.gd. `home_built` is the save-compatible compact Camp requirement owned by home_progress; `creature_bed_built` proves a real physical bed; `player_slept_at_home` proves the player actually rested/recovered at camp. No Workbench or house architecture flag is required. The conversation's last line sets `tournament_entered`."
+        },
+        {
           "if_flag": [
             "tournament_team_ready",
             "tournament_training_ready",
             "tournament_condition_ready"
           ],
-          "unless_flag": "tournament_entered",
-          "conversation": "tournament_halda_signup",
-          "_why": "Sign-up. All THREE entry flags: the two contract flags written from tournament.json's thresholds, and RG19-spec/D68's volatile `tournament_condition_ready`, which scripts/world/tournament.gd sets AND clears as the team is rested, fed and cared for. The numbers live in data; this file never carries a second copy of them. The conversation's last line sets `tournament_entered`."
+          "unless_flag": [
+            "home_built",
+            "creature_bed_built",
+            "player_slept_at_home",
+            "tournament_entered"
+          ],
+          "conversation": "tournament_halda_camp",
+          "_why": "FIRST-HOUR-FUN-REBUILD. A ready five-creature team without the camp/bed/recovery proof gets one concrete next step instead of falling back to generic banter. This branch is below sign-up and above the ordinary condition branch, so it never interrupts an entered bracket."
         },
         {
           "if_flag": [
@@ -289,7 +312,7 @@
         {
           "unless_flag": "tournament_team_ready",
           "conversation": "tournament_halda_closed",
-          "_why": "The first thing she ever says to a player who has one creature: three, and they have to be a team. LAST of the conditional branches so every later stage of the ladder wins over it, and above the plain `greeting` so a fresh save meets the tournament as a goal rather than as banter."
+          "_why": "After registration, the team-size reminder. The threshold is tournament.json's five-creature cap-aligned value; the dialogue says five rather than carrying a second gameplay number."
         }
       ]
     }

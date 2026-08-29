@@ -190,6 +190,16 @@ func test_the_threshold_can_never_exceed_the_five_creature_cap() -> void:
 			% [TOURNAMENT.required_party_size(), PARTY.MAX_CREATURES])
 
 
+## FIRST-HOUR-FUN-REBUILD. Halda asks for the full permanent roster, not the
+## older three-creature bracket. The cap makes this a precise, finishable rule.
+func test_registration_requires_the_full_five_creature_roster() -> void:
+	assert_eq(TOURNAMENT.required_party_size(), PARTY.MAX_CREATURES,
+		"tournament registration should require all five permanent creature slots")
+	_fill_party(PARTY.MAX_CREATURES - 1, TOURNAMENT.required_level())
+	assert_false(TOURNAMENT.team_ready(party),
+		"four creatures should not satisfy the full-roster registration requirement")
+
+
 func test_one_creature_is_not_a_team() -> void:
 	_fill_party(1, 20)
 	assert_false(TOURNAMENT.team_ready(party),
@@ -225,17 +235,16 @@ func test_one_level_below_the_threshold_is_not_trained() -> void:
 		"a party one level below min_level read as trained")
 
 
-## And catching a fresh creature on the way to the bracket must not undo an
-## entry the player already earned. The rule reads the STRONGEST
-## `min_party_size` creatures, so a level-1 tag-along is irrelevant.
-func test_a_freshly_caught_creature_does_not_untrain_a_ready_team() -> void:
+## A full qualification roster occupies every legal creature slot. It must not
+## suggest an impossible sixth-slot reserve merely to prove a sorting rule.
+func test_a_ready_full_roster_cannot_add_a_sixth_creature() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
 	assert_true(TOURNAMENT.training_ready(party))
 	var tagalong: RefCounted = SPECIES.spawn("bramblebun")
 	tagalong.set_level(1, PROGRESSION.config())
-	assert_true(party.add(tagalong), "the party should have had room for a fourth")
+	assert_false(party.add(tagalong), "a full five-creature roster must not grow a hidden sixth slot")
 	assert_true(TOURNAMENT.training_ready(party),
-		"catching a level-1 creature revoked an entry the player had already earned")
+		"rejecting an impossible sixth creature should not revoke a ready entry")
 
 
 ## A null party is the capture-tool / bare-test-scene case. It must read as NOT
@@ -272,8 +281,12 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 	if marshal.is_empty():
 		return
 
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_register",
+		"Halda's first meeting should register the tournament requirements")
+
+	progression.set_flag("opening:tournament_registered")
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_closed",
-		"a fresh save should be told what a team is before anything else")
+		"after registration, an incomplete roster should be told to fill all five places")
 
 	progression.set_flag("tournament_team_ready")
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_train",
@@ -286,6 +299,11 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 	# RG19-spec/D68's volatile flag, written by `tournament.gd`'s poll once the
 	# entrants are rested, fed and happy.
 	progression.set_flag("tournament_condition_ready")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_camp",
+		"a complete ready team without camp/bed/recovery proof should be sent to make camp")
+
+	for flag: String in ["home_built", "creature_bed_built", "player_slept_at_home"]:
+		progression.set_flag(flag)
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_signup",
 		"a ready team should be offered the sign-up")
 
@@ -379,6 +397,44 @@ func test_the_sign_up_line_is_what_writes_tournament_entered() -> void:
 		if effects.has("flag:tournament_entered"):
 			found = true
 	assert_true(found, "the sign-up conversation never sets tournament_entered")
+
+
+## The opening controller waits for this actual dialogue effect before it
+## advances its own handoff. Pin the effect to the first Registrar visit rather
+## than treating proximity to Halda as registration.
+func test_the_registrar_briefing_writes_the_opening_registration_handoff() -> void:
+	var lines: Array = (RUNNER.table().get("tournament_halda_register", {}) as Dictionary).get("lines", [])
+	var found := false
+	for raw: Variant in lines:
+		if not raw is Dictionary:
+			continue
+		var line := raw as Dictionary
+		var effects: Array = (line.get("effects", []) as Array).duplicate()
+		if str(line.get("effect", "")) != "":
+			effects.append(str(line.get("effect", "")))
+		if effects.has("flag:opening:tournament_registered"):
+			found = true
+	assert_true(found, "Halda's first registration briefing never sets opening:tournament_registered")
+
+
+## Qualification is intentionally a compact camp, not legacy house architecture
+## or a Workbench gate. These are the durable existing-system proof flags that
+## the ordered sign-up branch is allowed to require.
+func test_tournament_sign_up_requires_compact_camp_and_care_not_a_workbench() -> void:
+	var marshal := _marshal()
+	var signup: Dictionary = {}
+	for raw: Variant in (marshal.get("greeting_when", []) as Array):
+		var branch := raw as Dictionary
+		if str(branch.get("conversation", "")) == "tournament_halda_signup":
+			signup = branch
+			break
+	assert_false(signup.is_empty(), "Halda has no tournament sign-up branch")
+	var required: Array = signup.get("if_flag", []) as Array
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_condition_ready", "home_built", "creature_bed_built", "player_slept_at_home"]:
+		assert_true(required.has(flag), "tournament sign-up does not require '%s'" % flag)
+	assert_false(required.has("workbench_built"), "the Workbench must remain optional for tournament qualification")
+	assert_false(required.has("wall_built") or required.has("roof_built") or required.has("door_built"),
+		"tournament qualification must not restore mandatory house architecture")
 
 
 ## --- the prize ----------------------------------------------------------------
@@ -673,17 +729,16 @@ func test_a_ready_team_has_nothing_to_report() -> void:
 	assert_eq(TOURNAMENT.readiness_report(party).size(), 0)
 
 
-## The condition check looks at the entrants -- the strongest `min_party_size`
-## -- so a fresh capture picked up on the walk over cannot disqualify a team
-## that is otherwise ready. Same rule `training_ready()` already follows.
-func test_a_freshly_caught_creature_does_not_disqualify_a_ready_team() -> void:
+## A full qualified roster has no sixth slot to sneak an unready creature into.
+## Refusing that impossible add preserves the existing five entrants' condition.
+func test_an_impossible_sixth_creature_cannot_disqualify_a_ready_team() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
 	_bring_the_party_into_condition()
 	var stray: RefCounted = SPECIES.spawn("bramblebun")
 	CONDITION.start(stray, CONDITION.config())
-	party.add(stray)
+	assert_false(party.add(stray), "the party must reject a sixth creature at the five-creature cap")
 	assert_true(TOURNAMENT.condition_ready(party),
-		"a level-1 stray in the sixth-strongest slot cost the team its entry")
+		"rejecting an impossible sixth creature should leave the ready five qualified")
 
 
 ## --- TUTORIAL-CHAIN (OP23-04): "feed your team" on its own ------------------

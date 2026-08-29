@@ -587,42 +587,28 @@ func test_an_entry_with_no_how_line_resolves_to_an_empty_hint_not_a_blank_line()
 			"rung '%s' authors a whitespace-only `how`" % str(entry.get("id", "")))
 
 
-## --- the owner's two 2026-08-23 directives ----------------------------------
-
-## "Three creature beds before the tournament... Each of the three entrants
-## gets its own bed." The count is not authored twice: it is pinned here
-## against the number of creatures the tournament actually enters.
-func test_the_bed_rung_asks_for_one_bed_per_tournament_entrant() -> void:
-	var wanted := int(_entry_config().get("min_party_size", 0))
-	assert_true(wanted >= 1, "tournament.json's entry.min_party_size is missing or zero")
-	var beds: Array = []
+## FIRST-HOUR-FUN-REBUILD. One Creature Bed is the compact mandatory care
+## lesson; additional beds are useful, but never a five-bed qualifier.
+func test_the_bed_rung_requires_one_real_player_built_creature_bed() -> void:
+	var bed_entry: Dictionary = {}
 	for raw: Variant in _main_data():
 		var entry: Dictionary = raw as Dictionary
 		if str(entry.get("id", "")) == "tournament_build_creature_beds":
-			beds = entry.get("count_flags", []) as Array
-	assert_false(beds.is_empty(), "objectives.json has no counted creature-bed rung")
-	assert_eq(beds.size(), wanted,
-		("the chain teaches %d creature beds and the tournament enters %d creatures. "
-		+ "The owner's 2026-08-23 directive is one bed per entrant; whichever number "
-		+ "moved, the other has to move with it.") % [beds.size(), wanted])
+			bed_entry = entry
+			break
+	assert_false(bed_entry.is_empty(), "objectives.json has no creature-bed care rung")
+	assert_eq(str(bed_entry.get("flag_id", "")), "creature_bed_built",
+		"one placed Creature Bed should complete the care-rung proof")
+	assert_false(bed_entry.has("count_flags"),
+		"the compact first-hour care lesson must not require one bed per tournament entrant")
 
 
-func test_the_bed_rung_reads_a_count_and_is_done_only_on_the_last_bed() -> void:
-	var line := ""
-	for entry: Dictionary in log_reader.main_entries(progression):
-		if str(entry.get("label", "")).find("Creature Bed") != -1:
-			line = str(entry.get("label", ""))
-	assert_true(line.ends_with("0/3"), "the bed rung should start at 0/3; got '%s'" % line)
-
+func test_the_bed_rung_finishes_when_the_first_creature_bed_is_built() -> void:
 	progression.set_flag("creature_bed_built")
 	for entry: Dictionary in log_reader.main_entries(progression):
 		if str(entry.get("label", "")).find("Creature Bed") != -1:
-			assert_true(str(entry.get("label", "")).ends_with("1/3"),
-				"one bed should read 1/3; got '%s'" % str(entry.get("label", "")))
-			assert_false(bool(entry.get("done", true)),
-				"the bed rung read DONE after one bed. This is the exact defect the "
-					+ "owner's three-bed directive is about: a player who builds one, "
-					+ "sleeps, and arrives with two tired creatures is told nothing.")
+			assert_true(bool(entry.get("done", false)),
+				"the compact care rung should finish when the first player-built Creature Bed is placed")
 
 
 ## "Keep the satiety drain rate; teach it... an explicit 'feed your team' step

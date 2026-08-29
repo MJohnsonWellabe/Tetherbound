@@ -18,7 +18,8 @@ extends SceneTree
 ##
 ## This drives that path end to end:
 ##
-##   1. a party too small to enter meets the marshal's CLOSED line, and the two
+##   1. after the first-registration briefing, a party too small to enter meets
+##      the marshal's CLOSED line, and the two
 ##      entry flags are still unwritten
 ##   2. a party of the authored size but under the authored level meets her
 ##      TRAIN line — the entry condition is a reason, not a wall
@@ -79,7 +80,8 @@ const STALL_FRAMES := 900
 const FLAGS_TO_CLEAR: PackedStringArray = [
 	"tournament_team_ready", "tournament_training_ready", "tournament_entered",
 	"tournament_quarter_won", "tournament_semi_won", "tournament_won",
-	"tournament_condition_ready", "recipe_saddle",
+	"tournament_condition_ready", "recipe_saddle", "opening:tournament_registered",
+	"home_built", "creature_bed_built", "player_slept_at_home",
 ]
 
 ## Where the player stands to fight. `practice_trainer`'s own vetted-clear spot
@@ -131,6 +133,10 @@ func _run() -> void:
 	_load_attack_ranges()
 
 	_clear_the_slate()
+	# The first Halda conversation is covered as data by test_tournament. This
+	# bracket smoke starts just after that briefing so its first rung can keep
+	# exercising the incomplete-team refusal and every fought round after it.
+	(_game.get("progression") as RefCounted).call("set_flag", "opening:tournament_registered")
 	await _ensure_ally()
 	_reduce_the_party_to_the_ally()
 	_stand_in_the_clear_spot()
@@ -361,6 +367,11 @@ func _a_ready_party_is_offered_the_sign_up() -> bool:
 		_fail("a rested, fed and happy team still did not write tournament_condition_ready: %s"
 			% str(TOURNAMENT.readiness_report(_game.get("party"))))
 		return false
+	# The camp/bed/recovery path is exercised by Gate A. This bracket harness
+	# stages those durable completion flags after proving the live five-creature
+	# condition poll, then continues with the tournament's own sign-up and fights.
+	for flag: String in ["home_built", "creature_bed_built", "player_slept_at_home"]:
+		progression.call("set_flag", flag)
 	return _marshal_says("tournament_halda_signup", "a team that qualifies")
 
 
