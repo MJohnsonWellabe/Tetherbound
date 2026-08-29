@@ -345,84 +345,25 @@
       "expected": "Section F's POI set for the dead-travel meter"
     },
     {
-      "id": "S03-32",
-      "title": "engage a wild creature",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "a third entrant has to be caught, not granted"
-    },
-    {
-      "id": "S03-33",
-      "title": "let the fight stage",
-      "action": "wait",
-      "args": {
-        "seconds": 3
-      },
-      "expected": "the combat camera acquires both combatants"
-    },
-    {
-      "id": "S03-34",
-      "title": "combat owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "combat"
-      },
-      "expected": "input_context is 'combat'"
-    },
-    {
-      "id": "S03-35",
-      "title": "weaken it",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 14,
-        "settle_frames": 30
-      },
-      "expected": "Section E.2 CT-05: 'throw at full-HP moving wild vs weakened one; record shown percent vs result'"
-    },
-    {
-      "id": "S03-36",
-      "title": "begin the aim",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "the throw is aimed, not commanded"
-    },
-    {
-      "id": "S03-37",
-      "title": "throw the orb",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
-    },
-    {
-      "id": "S03-38",
-      "title": "let the catch resolve",
-      "action": "wait",
-      "args": {
-        "seconds": 6
-      },
-      "expected": "the `catch_result` event carries the outcome"
-    },
-    {
       "id": "S03-32a",
-      "title": "engage another wild creature (retry 1)",
-      "action": "press",
+      "title": "walk to a live bramblebun (attempt 1)",
+      "action": "move_to_entity",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "bramblebun",
+        "within": 3.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
       },
-      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+    },
+    {
+      "id": "S03-32a2",
+      "title": "challenge it (attempt 1)",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun"
+      },
+      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
     },
     {
       "id": "S03-33a",
@@ -440,10 +381,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 20,
         "settle_frames": 30
       },
-      "expected": "same weaken pass as the first attempt"
+      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
     },
     {
       "id": "S03-36a",
@@ -476,13 +417,24 @@
     },
     {
       "id": "S03-32b",
-      "title": "engage another wild creature (retry 2)",
-      "action": "press",
+      "title": "walk to a live bramblebun (attempt 2)",
+      "action": "move_to_entity",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "bramblebun",
+        "within": 3.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
       },
-      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+    },
+    {
+      "id": "S03-32b2",
+      "title": "challenge it (attempt 2)",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun"
+      },
+      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
     },
     {
       "id": "S03-33b",
@@ -500,10 +452,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 20,
         "settle_frames": 30
       },
-      "expected": "same weaken pass as the first attempt"
+      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
     },
     {
       "id": "S03-36b",
@@ -536,13 +488,24 @@
     },
     {
       "id": "S03-32c",
-      "title": "engage another wild creature (retry 3)",
-      "action": "press",
+      "title": "walk to a live bramblebun (attempt 3)",
+      "action": "move_to_entity",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "bramblebun",
+        "within": 3.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
       },
-      "expected": "RIG-15: a single throw is not guaranteed (data/config/catching.json: 'nothing is ever certain and nothing that is legal is ever impossible'). One prior throw already resolved (a miss, since party size did not grow) -- this repeats the whole engage/weaken/throw cycle against the bramblebun cluster at (30,-40) rather than assume the first throw was the only one a real player would need."
+      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+    },
+    {
+      "id": "S03-32c2",
+      "title": "challenge it (attempt 3)",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun"
+      },
+      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
     },
     {
       "id": "S03-33c",
@@ -560,10 +523,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 20,
         "settle_frames": 30
       },
-      "expected": "same weaken pass as the first attempt"
+      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
     },
     {
       "id": "S03-36c",
@@ -587,6 +550,148 @@
     },
     {
       "id": "S03-38c",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32d",
+      "title": "walk to a live bramblebun (attempt 4)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 3.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+    },
+    {
+      "id": "S03-32d2",
+      "title": "challenge it (attempt 4)",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun"
+      },
+      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+    },
+    {
+      "id": "S03-33d",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35d",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+    },
+    {
+      "id": "S03-36d",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37d",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38d",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32e",
+      "title": "walk to a live bramblebun (attempt 5)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 3.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+    },
+    {
+      "id": "S03-32e2",
+      "title": "challenge it (attempt 5)",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun"
+      },
+      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+    },
+    {
+      "id": "S03-33e",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35e",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+    },
+    {
+      "id": "S03-36e",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37e",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38e",
       "title": "let the catch resolve",
       "action": "wait",
       "args": {
