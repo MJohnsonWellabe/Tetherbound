@@ -670,6 +670,10 @@ func _party_to_array(party: Variant) -> Array:
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
 			"creature_type": str(instance.get("creature_type")),
+			# T3-CREATURES. "" for every mono-typed creature, which is every one
+			# that existed before the creature-expansion brief -- so this key is
+			# additive and a save written before it round-trips unchanged.
+			"secondary_type": str(instance.get("secondary_type")),
 			"nickname": str(instance.get("nickname")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
@@ -721,6 +725,12 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.species_id = str(d.get("species_id", ""))
 		creature.display_name = str(d.get("display_name", creature.species_id))
 		creature.creature_type = str(d.get("creature_type", "ground"))
+		# T3-CREATURES. Absent in a save written before dual typing existed,
+		# and "" is the honest answer there: that creature was mono-typed when
+		# it was stored. If its species has since gained a second type,
+		# `apply_species_definition` repairs it from species.json the same way
+		# every other species-owned field on this class is repaired.
+		creature.secondary_type = str(d.get("secondary_type", ""))
 		creature.nickname = str(d.get("nickname", ""))
 		# Defaulted to 0, which is what a pre-VERSION-14 save honestly means:
 		# the history was not being kept, so the ceremony says nothing about it
