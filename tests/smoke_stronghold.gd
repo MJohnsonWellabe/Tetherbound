@@ -34,12 +34,26 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 
 const SETTLE_FRAMES := 240
-## 600 physics frames at 4 m/s is 40m of walking — the longest hop on the route
-## (the outer works to the courtyard) is 32m centre to centre. A budget that
-## merely ALMOST covers the distance reads as a wall in the report, which is
-## exactly how the first run of this test mis-reported two perfectly good
-## doorways.
+## 600 physics frames at 4 m/s is 40m of walking — the longest hop ON THE
+## ROUTE ITSELF (the outer works to the courtyard) is 32m centre to centre. A
+## budget that merely ALMOST covers the distance reads as a wall in the
+## report, which is exactly how the first run of this test mis-reported two
+## perfectly good doorways.
 const PUSH_FRAMES := 600
+## T1-HALL (2026-08-30): the entrance-to-outer-works hop is NOT a route hop —
+## it is the approach ramp, and `HALL_DESIGN_2026-08-30.md` §2 deliberately
+## lengthened `stronghold.json`'s `site.ramp_run` 26 -> 40 (a real ~14.5° climb
+## to a real fortress, re-derived against the re-sited ground, replacing a
+## shorter ramp authored before the re-site). That took the entrance-to-
+## outer-works distance from ~38m to ~53.5m, past what `PUSH_FRAMES` above
+## budgets — this smoke test's own walk-in check started reporting the ramp
+## as a wall 14.6m short of the works, when the ramp itself was never the
+## defect: `PUSH_FRAMES` was tuned against the OLD ramp length, not this one.
+## `ENTRANCE_PUSH_FRAMES` gives the entrance walk-in its own, larger budget
+## (comfortable margin over the measured 53.5m at ~3.9 m/s effective speed on
+## the incline) without changing `PUSH_FRAMES` for every chamber-to-chamber
+## hop this file also drives with it.
+const ENTRANCE_PUSH_FRAMES := 950
 
 ## §8's five spaces, in §8's order. Hard-coded HERE on purpose: this is the one
 ## thing in the item that is not tunable, and a test that read the order out of
@@ -148,7 +162,7 @@ func _the_way_in_is_walkable(player: CharacterBody3D, hold: Node3D) -> void:
 	var first: Vector3 = hold.call("marker", "outer_works")
 	await _put_down(player, entrance + Vector3(0.0, 1.5, 0.0))
 	var start := player.global_position
-	await _push(player, (first - entrance).normalized())
+	await _push(player, (first - entrance).normalized(), ENTRANCE_PUSH_FRAMES)
 	var reached := player.global_position.distance_to(first)
 	print("walked %.1fm in from the entrance; %.1fm from the Outer Works' centre" % [
 		start.distance_to(player.global_position), reached])
@@ -404,10 +418,10 @@ func _put_down(player: CharacterBody3D, at: Vector3) -> void:
 ## `_physics_process` — that `smoke_warrens.gd` documents: two `move_and_slide()`
 ## calls a frame with two different velocities is a race, and it showed up there
 ## as a push that travelled 1.4m through an open doorway.
-func _push(player: CharacterBody3D, direction: Vector3) -> void:
+func _push(player: CharacterBody3D, direction: Vector3, frames := PUSH_FRAMES) -> void:
 	var flat := Vector3(direction.x, 0.0, direction.z).normalized()
 	player.set_physics_process(false)
-	for i in PUSH_FRAMES:
+	for i in frames:
 		player.velocity.x = flat.x * 4.0
 		player.velocity.z = flat.z * 4.0
 		player.velocity.y = 0.0 if player.is_on_floor() else player.velocity.y - 0.5

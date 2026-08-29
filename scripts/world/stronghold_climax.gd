@@ -122,6 +122,14 @@ func _ground_at(x: float, z: float) -> float:
 	return 0.0
 
 
+## The stronghold's own world yaw, or 0 when it is not in the tree (the bare
+## fallback-coordinate case every other lookup in this file also degrades to).
+func _stronghold_yaw_deg() -> float:
+	if _stronghold != null and _stronghold is Node3D:
+		return rad_to_deg((_stronghold as Node3D).rotation.y)
+	return 0.0
+
+
 ## --- R8.3: the Warden ---------------------------------------------------------
 
 ## Placed through `trainer_npc.gd` with his own group, so his body, his prompt,
@@ -150,7 +158,15 @@ func _place_warden() -> void:
 		_player,
 		str(spec.get("placed_by", "stronghold_climax")),
 		{id: Vector2(at.x, at.z)},
-		{id: float(spec.get("facing_deg", 0.0))}
+		# T1-HALL (2026-08-30): `facing_deg` is authored in the stronghold's own
+		# LOCAL frame, same as `stronghold.gd::_place_gauntlet()`'s gauntlet
+		# trainers -- and the Warden's body lands under this same world-parented
+		# Trainers node, so his facing needs the same yaw composition theirs
+		# does, for the same reason (see that function's own comment). Missing
+		# here, the Warden faces 90 degrees off in his own arena the moment
+		# `stronghold.json`'s `site.yaw_deg` is anything but the value his
+		# `facing_deg` was tuned against.
+		{id: float(spec.get("facing_deg", 0.0)) + _stronghold_yaw_deg()}
 	)
 	if int(_trainers.call("placed")) == 0:
 		push_warning("the Warden was not placed; trainers.json has no row '%s'" % id)

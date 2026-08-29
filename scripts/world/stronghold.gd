@@ -1622,7 +1622,25 @@ func _place_gauntlet() -> void:
 		var at := to_global(Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
 		var trainer := str(spec.get("trainer", ""))
 		positions[trainer] = Vector2(at.x, at.z)
-		facings[trainer] = float(spec.get("facing_deg", 0.0))
+		# T1-HALL (2026-08-30): `facing_deg` is authored in the complex's own
+		# LOCAL frame (the same frame `offset`/`at` above are), but the Trainers
+		# node these bodies land under is parented to the WORLD, unrotated --
+		# `trainer_npc.gd::_spawn` sets `npc.rotation.y` from this value
+		# directly as a WORLD angle, with no yaw composition of its own. Every
+		## OTHER placement in this function goes through `to_global()`, which DOES
+		## carry the site's `yaw_deg` -- position was always yaw-safe, facing was
+		## not. That was invisible while `yaw_deg` stayed 90 for this content's
+		## whole life (the authored facing_deg values were tuned to look right at
+		## that one yaw and nobody ever changed it), and it broke silently the
+		## moment T1-HALL's re-site moved `yaw_deg` 90 -> 0: `smoke_gate_e_finale`
+		## started reporting the elite's and the Warden's own fights forming
+		## metres under the floor, because the trainer's wrong-by-90-degrees
+		## facing put the player's engagement position somewhere this room's
+		## narrower footprint had never been exercised against. Adding the site's
+		## own rotation composes it back, exactly the way `add_child`'s ordinary
+		## parent-child rotation composition already does for free everywhere
+		## else in this file (the recovery bed, every wall, every prop).
+		facings[trainer] = float(spec.get("facing_deg", 0.0)) + rad_to_deg(rotation.y)
 		_markers["trainer_%s" % trainer] = at
 
 	_trainers = TRAINER_NPCS.new()
@@ -1749,11 +1767,32 @@ func ground_height_at(x: float, z: float) -> float:
 ##
 ## That is a gauntlet fight held seven metres below the room it started in.
 ## `scripts/world/built_floor.gd` is the reader; its header carries the rest.
+##
+## T1-HALL (2026-08-30): the margin below grew from `_wall_t` (1.2m) alone to
+## `_wall_t + FLOOR_CLAIM_MARGIN_M`. `combat_manager.gd::_place_fighters()`
+## (owned by `scripts/combat/**`, not this file) can place a fight up to
+## `deploy_offset + separation` (~7.6m by default) past wherever the player
+## engaged from, and a multi-creature trainer battle re-places its next
+## fighter from wherever the PREVIOUS one ended up, so successive rounds can
+## walk a fight several more metres in the same direction -- a pre-existing
+## combat-placement characteristic, not something this file's re-site
+## introduced. `smoke_gate_e_finale` measured it landing a genuine 5-6m past
+## the ORIGINAL 1.2m pad for `stronghold_elite` (tether_approach, the
+## smallest roofed chamber) and the Warden (a multi-creature battle in
+## warden_arena), and the historical example quoted above (`foe(77.2, ...)`)
+## shows the same class of overflow already living in this codebase before
+## this pass touched it. This function only answers "whose floor is this",
+## never where a fighter may stand or how far a fight may drift -- containing
+## that drift is `combat_manager.gd`'s own arena-bounds job and stays there;
+## widening this margin only stops a fight that has already drifted past a
+## wall from being told its floor is metres of open meadow below it.
+const FLOOR_CLAIM_MARGIN_M := 10.0
 func built_floor_height_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
+	var margin := _wall_t + FLOOR_CLAIM_MARGIN_M
 	for rect: Array in _footprint:
-		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
-				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+		if local.x >= float(rect[0]) - margin and local.x <= float(rect[2]) + margin \
+				and local.z >= float(rect[1]) - margin and local.z <= float(rect[3]) + margin:
 			return global_position.y + _floor_y
 	return NAN
 
