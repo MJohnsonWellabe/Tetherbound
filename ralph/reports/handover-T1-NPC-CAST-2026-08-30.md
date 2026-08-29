@@ -1,5 +1,39 @@
 # Handover — T1-NPC-CAST, 2026-08-30
 
+## SECOND UPDATE, same session — owner directive: generate all 24, not just the one captain fix
+
+After the captain correction below, the owner's follow-up direction went
+further: *"NPCs are going to be the same. just generate the people on the
+original art."* Applied the render's lesson to the whole cast rather than
+patching only the one proven-broken rank. Full account, budget, and the
+list of what's prepared: `ralph/reports/NPC_CAST_PLAN_2026-08-30.md`'s
+**SECOND CORRECTION** section (near the top). Short version:
+
+- **24 reference crops** committed at `assets/creatures/tetherbound/
+  <slug>/reference/board_panel_source.png` — one per board panel, every
+  NPC except the Warden (untouched, per CLAUDE.md). Panel boundaries
+  measured programmatically off the board's own divider lines, spot-checked
+  by eye after cutting.
+- **24 new prompt blocks** in `tools/art_pipeline/meshy.py`'s
+  `SPECIES_PROMPTS`, plus the same 24 slugs added to that file's `HUMANS`
+  set. First-pass prompts, expected to need a round 2 after the first
+  contact sheet, same as every other subject's first round in this
+  pipeline.
+- **Supersedes** the captain-coat-accessory proposal below — generating
+  `captain_a`/`captain_b` as full bodies with the cape built into the mesh
+  gets the same result more directly; the accessory crops are left in
+  place as a cheap fallback, not deleted.
+- **Budget:** ~1,440 credits to preview all 24 (3 candidates × 20 × 24),
+  then refine only the winners (0–960 more) — worst case 2,400, which
+  still clears the 900 reserved for the sibling T1-CREATURE-MESH lane by
+  20 credits. The 1,800-credit envelope this lane started with is no
+  longer the number to check against; the 900 reserve is.
+- **Still not done, and not this lane's to do:** actually calling
+  `meshy.py generate` — no API key in this lane, by design, not sought.
+- Tried to reach the coordinator directly (`ListAgents`) to hand this off
+  for execution; no other session was reachable at the time. Left for
+  whoever next picks up this branch or the coordinator's own check-in.
+
 ## CORRECTION, same session — the captain finding below was wrong until it was rendered
 
 This handover originally matched the plan doc's first pass: zero Meshy
