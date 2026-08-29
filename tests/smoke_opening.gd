@@ -121,9 +121,10 @@ func _run() -> void:
 	await _grandpa_says_his_piece()
 	await _a_starter_can_be_chosen()
 	await _the_creature_is_named_on_the_grid()
-	_grandpa_handed_over_the_orbs()
 	_the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
+	await _grandpa_hands_over_the_first_catch_orbs()
+	_grandpa_handed_over_the_orbs()
 	await _the_road_gate_stops_until_the_key_is_found()
 	_report()
 
@@ -349,9 +350,33 @@ func _the_trainer_gets_up_from_the_bed() -> void:
 	print("wake: got up from the bed, beat is now '%s', standing again" % str(_director.call("beat")))
 
 
-## Grandpa gives the catch-up supply after the starter is named, not during the
-## first briefing. The new opening deliberately promises only generous Basic
-## Orbs here; potions and revives are no longer part of this handover.
+## Naming intentionally returns control with one task: go back to Grandpa.
+## The Basic Orbs arrive in that required follow-up conversation, not during
+## the starter choice or as a hidden automatic reward.
+func _grandpa_hands_over_the_first_catch_orbs() -> void:
+	var grandpa := _find_interactable_matching(["grandpa", "talk"])
+	if grandpa == null:
+		_fail("nothing offers Grandpa's required first-catch conversation")
+		return
+	if not await _walk_to_and_activate(grandpa):
+		return
+	if not bool(_dialogue.call("is_open")):
+		_fail("returning to Grandpa after naming opened no first-catch conversation")
+		return
+	var lines := 0
+	for _i in 20:
+		if not bool(_dialogue.call("is_open")):
+			break
+		await _press_polled("interact")
+		lines += 1
+	if bool(_dialogue.call("is_open")):
+		_fail("Grandpa's first-catch conversation would not close after %d presses" % lines)
+		return
+	print("first catch: returned to Grandpa and received the catch supplies")
+
+
+## The new opening deliberately promises only generous Basic Orbs here;
+## potions and revives are no longer part of this handover.
 func _grandpa_handed_over_the_orbs() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var orbs := int(inventory.call("count", "orb_basic"))

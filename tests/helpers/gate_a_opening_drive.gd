@@ -184,11 +184,22 @@ func run(tree: SceneTree) -> Dictionary:
 		return _result()
 	_checkpoint("starter selected and named")
 
-	if not await _close_dialogue(20):
-		_fail("Grandpa's post-name reply did not return control")
-		return _result()
 	if not await _walk_toward(house.call("marker", "grandpa"), 500):
 		_fail("could not cross the ground floor after naming")
+	# Naming deliberately leaves the player with one purpose: return to Grandpa.
+	# Do the real follow-up interaction before attempting the tutorial catch;
+	# this is where the live dialogue grants its 10–15 Basic Orbs.
+	if grandpa == null or not await _walk_to_and_activate(grandpa, 700):
+		_fail("Grandpa's required first-catch interaction could not be completed")
+		return _result()
+	if not await _close_dialogue(20):
+		_fail("Grandpa's first-catch conversation did not return control")
+		return _result()
+	var opening_orbs := int(_game.inventory.count("orb_basic"))
+	if opening_orbs < 10 or opening_orbs > 15:
+		_fail("Grandpa's first-catch conversation left %d Basic Orbs; expected 10–15" % opening_orbs)
+		return _result()
+	_checkpoint("Grandpa's first-catch supplies received (%d Basic Orbs)" % opening_orbs)
 	if _failures.is_empty() and not await _walk_toward(house.call("marker", "door"), 700):
 		_fail("could not leave the now-unlocked front doorway")
 	if not _failures.is_empty():
