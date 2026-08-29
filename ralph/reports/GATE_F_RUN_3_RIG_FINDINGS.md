@@ -470,6 +470,26 @@ itself, not bands 2-5**, and does not become valid retroactively; a real
 re-run from a healthy S03 onward is still needed for band 2-5 content
 evidence.
 
+**Update, 2026-08-30, after T2-BUILDPLACE's own handover landed
+(`origin/ralph/T2-BUILDPLACE`, `ralph/reports/handover-T2-BUILDPLACE-2026-08-30.md`):
+still not complete, and the remaining gap has changed shape.** T2-BUILDPLACE
+fixed the S03 build-placement RIG defect this section already named
+(confirmed live: `S03.json`'s gathering loop never equipped a tool before
+harvesting tool-gated resources) and independently re-derived GAME-0 while
+proving it out. **But ten full-segment replays did not converge on a
+100%-reliable walk to Mira** — the catch loop's own upstream RNG varies the
+player's exact position entering that leg enough that the same walk target
+lands anywhere from 0-120 held frames and 2.27-4.9m short, run to run.
+**No healthy `S03-exit.json` exists yet.** This operator is explicitly NOT
+starting the S03-S10 re-run on this basis, per the coordinator's own
+stated fallback: "if the build-placement fix does not land, say so plainly
+rather than running the re-run against a party you know is fainted."
+T2-BUILDPLACE's own handover names the exact next diagnostic (replicate
+`interactable.gd::_has_line_of_sight`'s clearance-trimmed raycast in a
+probe, or add temporary logging inside `interaction_offer()` itself, rather
+than continuing to guess at `move_to`/`move_to_entity` tolerances) for
+whoever picks this up next.
+
 ---
 
 ## RIG-22 — the RIG-14 fixed-tab-cycle defect also lives in X05's own save-verification steps, and was never fixed

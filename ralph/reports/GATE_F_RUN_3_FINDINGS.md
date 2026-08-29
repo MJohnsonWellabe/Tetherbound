@@ -123,6 +123,21 @@ exactly this prompt) rather than inferred. Whoever owns
 `scripts/combat/encounter_director.gd` next should treat this as the
 highest-priority item in this document.
 
+**Independently re-derived, not just repeated, by T2-STRANDING and
+T2-BUILDPLACE separately** (`ralph/reports/FINDING-T2-BUILDPLACE-2026-08-30.md`,
+`ralph/reports/handover-T2-BUILDPLACE-2026-08-30.md`, `origin/ralph/
+T2-BUILDPLACE`): T2-BUILDPLACE hit this defect independently while proving
+out its own, unrelated fix (Mira's dialogue in S03), traced it to the same
+line (`interaction_offer()`), and its own handover states its severity
+assessment even more strongly than this document originally did — "a
+genuine soft-lock risk in the opening tutorial," and explicitly *more
+severe than the South Bridge stranding it superficially resembles*, because
+the stranding had a documented recovery path (creature beds) while this
+defect blocks reaching that recovery path too, with nothing reachable
+through ordinary play once it triggers. Two lanes finding the identical
+mechanism from two different starting investigations is real corroboration,
+not restated hearsay — treat GAME-0 as confirmed, not merely alleged.
+
 ---
 
 ## What this run DOES establish about the game, positively
