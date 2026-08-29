@@ -230,6 +230,24 @@ safe shape (per T2-STRANDING's own assessment) is a new query beside
 `_on_challenged()`, since `can_challenge()`'s existing boolean contract has
 8+ call sites depending on it as a bare bool.
 
+### GAME-6 — `menu_cancel` (B) does not close the pause shell from the Backpack or Creatures tabs
+
+**Severity: SHIP candidate.** Found in X01's controller/menu exhaustion
+matrix, and it is not a one-off: **10 separate matrix cells** all reproduce
+the identical shape — `FAIL menu_cancel left the shell open: context
+menu_backpack -> menu_backpack` (7 times, `X01-056/059/064/067/078/084/101`)
+and `context menu_creatures -> menu_creatures` (3 times,
+`X01-1539/1569/1647` by line, matrix cells on that tab). **Confirmed as
+tab-specific, not universal**: the identical probe on the Map tab
+(`X01-350`) correctly reports `menu_cancel closed the shell: context
+menu_map -> world`. B/`menu_cancel` is the controller's back button and the
+standard way to leave any menu — a player on the Satchel or Creatures tab
+(two of the most-visited tabs in the game) pressing the expected button to
+back out finds it does nothing, repeatably, regardless of which control was
+pressed immediately before it in the matrix. Independent of the stranding,
+independent of RIG-14's tab-cycle-count issue (this is about a press that
+should close the shell entirely, not about landing on the wrong tab).
+
 ---
 
 ## Per-segment summary
@@ -249,6 +267,7 @@ safe shape (per T2-STRANDING's own assessment) is a new query beside
 | X02 | 170 | 146 | 20 | 4 | build-catalogue focus defect (GAME-3), craft-panel context ambiguity (GAME-4), RIG-14 tab-cycle shape (see companion doc) |
 | X04 | 124 | 104 | 12 | 8 | **zero combat_start events, entry saves compromised** — all three of X04's entry saves carry a permanently fainted party (RIG-21) and its own move_to steps separately undershoot every combat site regardless (RIG-19); see `X04/CONTAMINATED_ENTRY_SAVES.md` — none of its combat/faint/switching assertions are readable as findings |
 | X05 | 313 (STOPPED at ~250, 10/16 seed blocks) | n/a — no INVENTORY.json | n/a | n/a | 8 real `S0n-exit` blocks + 2 extra slot saves completed and are readable; every one of those 8 blocks' own "verify save actually writes" check FAILs on the same RIG-14-shaped tab-navigation miss (RIG-22) — no confirmed evidence the Save tab writes a file anywhere in this run; operator stopped the segment once its remaining 6 blocks (missing `S10-exit` + 5 missing `X06-awkward-*` saves) had reproduced RIG-4's known pattern 4 times in a row — see `X05/INCOMPLETE.md` |
+| X01 | 1203 | 1092 | 103 | 8 | `menu_cancel` fails to close the shell on Backpack/Creatures tabs, 10 cells (GAME-6); locomotion held 3601 frames by a narrative modal twice (RIG-5's already-documented shape recurring); only 4-5 of 103 FAILs mention combat, consistent with T2-STRANDING's read that X01 is low-exposure despite its S03-exit/S08-exit entries also being fainted-party saves |
 
 `HANDOFF_PROVENANCE.md` in the run directory records which entry save each
 segment actually had — not in every case the one §B names (RIG-10/RIG-12).
