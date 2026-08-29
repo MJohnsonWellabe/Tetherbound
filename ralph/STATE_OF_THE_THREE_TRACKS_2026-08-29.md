@@ -96,30 +96,48 @@ and 5 share one grass carpet, one tree family, one palette, differing only by
 what is parked on them. Only band 2's grove has its own light identity.
 "Increasingly demanding regions" is not yet something the terrain itself says.
 
-### The most serious open visual defect: the day cycle
+### The day cycle: one real defect, one capture-tool artefact
 
-Subject 7 is the one that most damages the game as a whole, because it affects
-every location at once:
+**Read this carefully — the judge overturned its own blind verdict here, and
+an earlier draft of this document repeated the mistake.**
 
-- **Deep night renders crimson.** From ~20:30 through at least 02:00 the entire
-  world renders in a blood-red wash — red sky, red-orange ground *brighter*
-  than the 20:30 dusk, golden-hour-length shadows at midnight. This also breaks
-  the project's own palette rule: oxblood is reserved for Team Tether danger,
-  and the passive clock paints the whole safe world with it for a third of
-  every day.
-- **Golden hour never happens on the driven clock.** Frames bracketing the
-  18:00 keyframe are flat grey-blue overcast.
-- **But both looks exist and are good** via the snap presets:
-  `apply_time("night")` is blue, moonlit and navigable; `apply_time("golden")`
-  is genuinely lovely. So the keyframes are right and the **continuous blend
-  path is what is broken**.
+- **Golden hour never happens on the driven clock. THIS IS REAL and stands.**
+  Frames bracketing the 18:00 keyframe are a flat grey-blue overcast wash — no
+  warm cast, no long shadows, no sun presence. The snap preset
+  `apply_time("golden")` produces a genuinely lovely warm frame, so the look
+  exists in the keyframe set and **the continuous blend never displays it**.
+  These frames are in the clean early-capture window, unaffected by the bug
+  below.
 
-That last point matters and is new. A standing rule has said "do not fix the
-golden-hour frame blind — settled: a Terrain3D streaming defect, not lighting."
-The judge's evidence is narrower and points elsewhere: snap presets produce the
-correct look, the driven clock does not, at the same viewpoint. **That reopens
-the question in a specific, testable direction** — compare the blend path
-against the snap path — rather than reopening it blind.
+- **Deep night rendering crimson was a CAPTURE BUG, not a game defect.**
+  Judged blind, four blood-red night frames looked like the clock blending to a
+  danger colour, and this document originally reported it as the single worst
+  visual defect in the game. It is not. Reconciliation found the cause:
+  `tools/_capture_day_night_transition.gd:91` parks the Player at **y = −500**,
+  500m underground, and `water.gd` ramps a red drowning vignette over the whole
+  frame. `ralph/DONE.md`'s SURVEY_BAND2 entry documents this exact
+  anti-pattern, and the fix was already ported into `survey_band2.gd` and
+  `capture_band3_region.gd` — **but not into this tool**. The red frames are
+  the last four captured, tracking capture wall-time rather than any hour
+  window.
+
+  Consequence: **the real 22:00–02:00 look is unverified.** Those frames are
+  evidence about the tool, not the sky. The snap `apply_time("night")` is blue,
+  navigable and good, and is probably closer to the truth. Port the
+  above-ground parking fix into `_capture_day_night_transition.gd` and re-run
+  its last four hours before believing anything about deep night.
+
+The standing rule "do not fix the golden-hour frame blind — settled: a
+Terrain3D streaming defect, not lighting" is narrowed but not overturned: the
+golden-hour finding is now backed by a same-viewpoint comparison between the
+snap path (correct) and the blend path (wrong), which is a specific testable
+lead rather than a blind reopening.
+
+**The methodological point is worth more than either finding.** The judge's
+blind eyes caught defects six rounds of lane prose had missed; the repo's own
+prose caught the judge's misattribution. Neither alone was sufficient. Keep
+both, and keep the reconciliation step where a judge reads the reports *after*
+writing its verdicts.
 
 ### Other named Track 1 defects, none yet fixed
 
@@ -327,9 +345,21 @@ what it authored).
 3. **Resolve the two open questions** on the stronghold/Hall rebuild, then set
    it up. It is the owner's live directive and the highest-value work on the
    board.
-4. **Fix the day cycle.** It is the single visual defect that degrades every
-   location simultaneously, and the judge's evidence points at a specific,
-   testable cause.
+4. **Port the capture parking fix and re-judge deep night**, before anyone
+   "fixes" a night that may not be broken. `_capture_day_night_transition.gd:91`
+   parks the player 500m underground; the fix already exists in two other
+   capture tools. Then fix the golden-hour blend, which is a real defect and
+   stands on clean frames.
+
+   Two other findings the judge raised against landed work, both worth acting
+   on: the **black-rendering NPC persists** despite `DONE.md` recording an
+   emission-floor fix as verified — so either a different material path misses
+   the floor or it regressed on the landing branch; and the **castle needs a
+   value-ladder retune plus coursing/openings-scale detail**, not more octaves
+   of weathering noise. Two lanes' accurate diagnoses and real fixes did not
+   move the owner-level verdict, and the judge measured why: post-fix wall
+   patches read (212,203,185) — essentially off-white, whiter than the tan the
+   albedo intends.
 5. **Finish Gate F run 3** — X04, X07 and X08 are cheap and can start
    immediately. Rewrite the two stale findings documents from the run's own
    inventories.
